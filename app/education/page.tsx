@@ -1,8 +1,38 @@
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { ChevronRight, GraduationCap, Award, Clock, Users } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
-import { NewsletterForm } from "@/components/newsletter-form"
+import { ChevronRight } from "lucide-react"
+import type { Metadata } from "next"
+
+// Get the site URL from environment variable
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://unitegroup.com.au"
+
+export const metadata: Metadata = {
+  title: "Education & Training | UNITE Group",
+  description:
+    "UNITE Group offers 24/7 access to industry-approved professional development courses with IICRC-approved continuing education credits.",
+  openGraph: {
+    type: "website",
+    url: `${siteUrl}/education`,
+    title: "Education & Training | UNITE Group",
+    description:
+      "UNITE Group offers 24/7 access to industry-approved professional development courses with IICRC-approved continuing education credits.",
+    images: [
+      {
+        url: `${siteUrl}/og-education.png`,
+        width: 1200,
+        height: 630,
+        alt: "UNITE Group Education",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Education & Training | UNITE Group",
+    description:
+      "UNITE Group offers 24/7 access to industry-approved professional development courses with IICRC-approved continuing education credits.",
+    images: [`${siteUrl}/og-education.png`],
+  },
+}
 
 export default function EducationPage() {
   return (
@@ -14,7 +44,7 @@ export default function EducationPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
                 <div className="inline-block bg-[#4ecdc4]/20 px-4 py-2 rounded-full mb-6">
-                  <span className="text-[#4ecdc4] font-medium">Adult Education Center</span>
+                  <span className="text-[#4ecdc4] font-medium">Adult Education Centre</span>
                 </div>
                 <h1 className="text-3xl md:text-5xl font-bold tracking-tighter text-white mb-6">
                   UNITE: Bridging Science and Education in Professional Development
@@ -45,99 +75,73 @@ export default function EducationPage() {
           <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#001428] to-transparent"></div>
         </section>
 
-        {/* Why Choose Our Education Section */}
-        <section className="py-16 md:py-24 bg-[#001428]">
-          <div className="container px-4 md:px-6 mx-auto">
-            <div className="max-w-3xl mx-auto text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Why Choose Our Education Programs</h2>
-              <p className="text-gray-300">
-                Our comprehensive education programs are designed to provide you with the knowledge and skills you need
-                to excel in your field.
-              </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <Card className="bg-gradient-to-br from-[#002a42] to-[#00395d] border-[#4ecdc4]/20">
-                <CardContent className="p-6">
-                  <div className="bg-[#4ecdc4]/10 p-3 rounded-full w-fit mb-4">
-                    <Award className="h-8 w-8 text-[#4ecdc4]" />
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-3">IICRC Approved</h3>
-                  <p className="text-gray-300">
-                    All our courses are IICRC-approved, ensuring you receive industry-recognized certifications and
-                    credits.
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="bg-gradient-to-br from-[#002a42] to-[#00395d] border-[#4ecdc4]/20">
-                <CardContent className="p-6">
-                  <div className="bg-[#4ecdc4]/10 p-3 rounded-full w-fit mb-4">
-                    <Clock className="h-8 w-8 text-[#4ecdc4]" />
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-3">24/7 Access</h3>
-                  <p className="text-gray-300">
-                    Learn at your own pace with unlimited access to course materials anytime, anywhere.
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="bg-gradient-to-br from-[#002a42] to-[#00395d] border-[#4ecdc4]/20">
-                <CardContent className="p-6">
-                  <div className="bg-[#4ecdc4]/10 p-3 rounded-full w-fit mb-4">
-                    <Users className="h-8 w-8 text-[#4ecdc4]" />
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-3">Expert Instructors</h3>
-                  <p className="text-gray-300">
-                    Learn from industry professionals with years of experience and practical knowledge.
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="bg-gradient-to-br from-[#002a42] to-[#00395d] border-[#4ecdc4]/20">
-                <CardContent className="p-6">
-                  <div className="bg-[#4ecdc4]/10 p-3 rounded-full w-fit mb-4">
-                    <GraduationCap className="h-8 w-8 text-[#4ecdc4]" />
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-3">Continuing Education</h3>
-                  <p className="text-gray-300">
-                    Earn valuable Continuing Education Credits (CECs) to maintain your professional certifications.
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
+        <div style={{ padding: "20px" }}>
+          <h1 style={{ textAlign: "centre", marginBottom: "20px" }}>Education</h1>
 
-        {/* Newsletter Section */}
-        <section className="py-16 md:py-20 bg-gradient-to-br from-[#002a42] to-[#00395d]">
-          <div className="container px-4 md:px-6 mx-auto">
-            <div className="bg-gradient-to-r from-[#4ecdc4]/20 to-[#4ecdc4]/10 rounded-lg p-8 md:p-12 border border-[#4ecdc4]/30">
-              <div className="max-w-3xl mx-auto text-center">
-                <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Get exclusive updates and offers!</h2>
-                <p className="text-xl text-gray-300 mb-8">
-                  Subscribe to our newsletter to receive the latest course updates, special offers, and industry news.
+          <section style={{ marginBottom: "30px" }}>
+            <h2>University of Example</h2>
+            <p>
+              <strong>Degree:</strong> Bachelor of Science in Computer Science
+            </p>
+            <p>
+              <strong>Dates:</strong> 2018 - 2022
+            </p>
+            <p>
+              <strong>Description:</strong> A comprehensive programme covering data structures, algorithms, software
+              engineering, and database management. The curriculum was designed to optimise problem-solving skills and
+              prepare students for careers in the tech industry.
+            </p>
+          </section>
+
+          <section style={{ marginBottom: "30px" }}>
+            <h2>Coding Bootcamp</h2>
+            <p>
+              <strong>Organisation:</strong> Tech Academy
+            </p>
+            <p>
+              <strong>Dates:</strong> Summer 2022
+            </p>
+            <p>
+              <strong>Description:</strong> An intensive training programme focused on web development technologies,
+              including React, Node.js, and MongoDB. The bootcamp helped me customise my skills and build full-stack
+              applications.
+            </p>
+          </section>
+
+          <section>
+            <h2>Online Courses</h2>
+            <ul>
+              <li>
+                <strong>Course:</strong> Advanced JavaScript Concepts
+                <p>
+                  <strong>Platform:</strong> Coursera
                 </p>
-                <NewsletterForm />
-              </div>
-            </div>
-          </div>
-        </section>
+              </li>
+              <li>
+                <strong>Course:</strong> Data Science with Python
+                <p>
+                  <strong>Platform:</strong> edX
+                </p>
+              </li>
+              <li>
+                <strong>Course:</strong> Introduction to Machine Learning
+                <p>
+                  <strong>Platform:</strong> Udacity
+                </p>
+              </li>
+            </ul>
+            <p>
+              These courses have enhanced my understanding of modern technologies and allowed me to explore new areas of
+              interest. I am particularly interested in the application of machine learning to solve real-world
+              problems. The colour scheme of the course materials was also quite helpful for visual learning. I also
+              learned about different types of optical fibre.
+            </p>
+          </section>
 
-        {/* CTA Section */}
-        <section className="py-16 md:py-20 bg-[#001428]">
-          <div className="container px-4 md:px-6 mx-auto">
-            <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Ready to advance your career?</h2>
-              <p className="text-xl text-gray-300 mb-8">Explore our courses and start earning valuable CECs today.</p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button className="bg-[#4ecdc4] hover:bg-[#4ecdc4]/90 text-[#001428] font-medium" size="lg">
-                  Browse Courses
-                  <ChevronRight className="ml-2 h-4 w-4" />
-                </Button>
-                <Button variant="outline" className="border-[#4ecdc4] text-[#4ecdc4] hover:bg-[#4ecdc4]/10" size="lg">
-                  Contact Us
-                </Button>
-              </div>
-            </div>
-          </div>
-        </section>
+          <footer style={{ marginTop: "30px", textAlign: "centre", colour: "grey" }}>
+            <p>© 2024 My Portfolio</p>
+          </footer>
+        </div>
       </main>
     </div>
   )

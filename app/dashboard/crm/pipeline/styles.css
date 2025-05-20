@@ -1,0 +1,9 @@
+.dragging {
+  opacity: 0.5;
+  transform: scale(0.98);
+}
+
+.drag-over {
+  background-color: rgba(78, 205, 196, 0.05);
+  border: 1px dashed rgba(78, 205, 196, 0.4);
+}

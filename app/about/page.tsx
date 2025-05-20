@@ -1,6 +1,38 @@
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { ChevronRight, Users, Target, Award, Zap } from "lucide-react"
+import { ChevronRight } from "lucide-react"
+import type { Metadata } from "next"
+
+// Get the site URL from environment variable
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://unitegroup.com.au"
+
+export const metadata: Metadata = {
+  title: "About UNITE Group | Our Story, Values & Team",
+  description:
+    "Learn about UNITE Group's mission, values, and the team behind our success. United in vision. Independent in spirit.",
+  openGraph: {
+    type: "website",
+    url: `${siteUrl}/about`,
+    title: "About UNITE Group | Our Story, Values & Team",
+    description:
+      "Learn about UNITE Group's mission, values, and the team behind our success. United in vision. Independent in spirit.",
+    images: [
+      {
+        url: `${siteUrl}/og-about.png`,
+        width: 1200,
+        height: 630,
+        alt: "About UNITE Group",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About UNITE Group | Our Story, Values & Team",
+    description:
+      "Learn about UNITE Group's mission, values, and the team behind our success. United in vision. Independent in spirit.",
+    images: [`${siteUrl}/og-about.png`],
+  },
+}
 
 export default function AboutPage() {
   return (
@@ -38,222 +70,50 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Our Story Section */}
-        <section className="py-16 md:py-24 bg-[#001428]">
-          <div className="container px-4 md:px-6 mx-auto">
-            <div className="max-w-3xl mx-auto text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Our Story</h2>
-              <p className="text-gray-300">
-                The journey of UNITE Group began with a simple yet powerful idea: to create a company that combines
-                expertise across multiple disciplines to provide comprehensive solutions for businesses of all sizes.
-              </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-              <div className="relative">
-                <div className="absolute -inset-4 bg-[#4ecdc4]/20 rounded-lg blur-xl"></div>
-                <Image
-                  src="/our-story.png"
-                  alt="Our Story"
-                  width={600}
-                  height={400}
-                  className="rounded-lg border border-[#4ecdc4]/30 relative"
-                />
-              </div>
-              <div>
-                <p className="text-gray-300 mb-4">
-                  Founded in 2018, UNITE Group was established by a team of industry veterans who recognized the need
-                  for integrated business solutions that address the complex challenges of the modern digital landscape.
-                </p>
-                <p className="text-gray-300 mb-4">
-                  Our founders brought together their diverse expertise in education, software development, digital
-                  marketing, and business consulting to create a company that could offer truly comprehensive services.
-                </p>
-                <p className="text-gray-300 mb-4">
-                  Over the years, we've grown from a small team of passionate professionals to a thriving organization
-                  serving clients across various industries. Throughout our growth, we've remained committed to our core
-                  values of excellence, innovation, integrity, and client satisfaction.
-                </p>
-                <p className="text-gray-300">
-                  Today, UNITE Group continues to evolve and expand our service offerings to meet the changing needs of
-                  our clients, while staying true to our founding vision of being united in vision and independent in
-                  spirit.
-                </p>
-              </div>
-            </div>
+        <section className="container mx-auto py-10">
+          <div className="mb-8">
+            <h2 className="text-2xl font-semibold mb-3">Our Mission</h2>
+            <p className="text-gray-700">
+              Our mission is to provide high-quality, innovative solutions to our clients. We strive to optimise their
+              processes and help them achieve their business goals. We are a leading organisation in our field,
+              dedicated to excellence and customer satisfaction.
+            </p>
           </div>
-        </section>
 
-        {/* Our Values Section */}
-        <section className="py-16 md:py-24 bg-gradient-to-br from-[#002a42] to-[#00395d]">
-          <div className="container px-4 md:px-6 mx-auto">
-            <div className="max-w-3xl mx-auto text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Our Values</h2>
-              <p className="text-gray-300">
-                Our core values guide everything we do at UNITE Group, from how we work with clients to how we
-                collaborate as a team.
-              </p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="bg-gradient-to-br from-[#001428] to-[#00253e] rounded-lg p-6 border border-[#4ecdc4]/20 hover:border-[#4ecdc4]/50 transition-all">
-                <div className="bg-[#4ecdc4]/10 p-3 rounded-full w-fit mb-4">
-                  <Users className="h-8 w-8 text-[#4ecdc4]" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">Collaboration</h3>
-                <p className="text-gray-300">
-                  We believe in the power of teamwork and collaboration, both within our organization and with our
-                  clients. By working together, we achieve greater results than we could individually.
-                </p>
-              </div>
-              <div className="bg-gradient-to-br from-[#001428] to-[#00253e] rounded-lg p-6 border border-[#4ecdc4]/20 hover:border-[#4ecdc4]/50 transition-all">
-                <div className="bg-[#4ecdc4]/10 p-3 rounded-full w-fit mb-4">
-                  <Zap className="h-8 w-8 text-[#4ecdc4]" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">Innovation</h3>
-                <p className="text-gray-300">
-                  We constantly seek new and better ways to solve problems and deliver value. Innovation is at the heart
-                  of our approach to every project and challenge.
-                </p>
-              </div>
-              <div className="bg-gradient-to-br from-[#001428] to-[#00253e] rounded-lg p-6 border border-[#4ecdc4]/20 hover:border-[#4ecdc4]/50 transition-all">
-                <div className="bg-[#4ecdc4]/10 p-3 rounded-full w-fit mb-4">
-                  <Award className="h-8 w-8 text-[#4ecdc4]" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">Excellence</h3>
-                <p className="text-gray-300">
-                  We are committed to delivering the highest quality in everything we do. We set high standards for
-                  ourselves and continuously strive to exceed expectations.
-                </p>
-              </div>
-              <div className="bg-gradient-to-br from-[#001428] to-[#00253e] rounded-lg p-6 border border-[#4ecdc4]/20 hover:border-[#4ecdc4]/50 transition-all">
-                <div className="bg-[#4ecdc4]/10 p-3 rounded-full w-fit mb-4">
-                  <Target className="h-8 w-8 text-[#4ecdc4]" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">Integrity</h3>
-                <p className="text-gray-300">
-                  We conduct our business with honesty, transparency, and ethical practices. We build trust through our
-                  actions and stand behind our work.
-                </p>
-              </div>
-            </div>
+          <div className="mb-8">
+            <h2 className="text-2xl font-semibold mb-3">Our Values</h2>
+            <ul className="list-disc list-inside text-gray-700">
+              <li>Integrity: We operate with honesty and transparency in all our dealings.</li>
+              <li>Innovation: We constantly seek new and better ways to serve our clients.</li>
+              <li>Collaboration: We work together as a team to achieve common goals.</li>
+              <li>Excellence: We are committed to delivering the highest quality results.</li>
+            </ul>
           </div>
-        </section>
 
-        {/* Our Team Section */}
-        <section className="py-16 md:py-24 bg-[#001428]">
-          <div className="container px-4 md:px-6 mx-auto">
-            <div className="max-w-3xl mx-auto text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Our Leadership Team</h2>
-              <p className="text-gray-300">
-                Meet the experienced professionals who lead UNITE Group and drive our mission forward.
-              </p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              <div className="bg-gradient-to-br from-[#002a42] to-[#00395d] rounded-lg overflow-hidden border border-[#4ecdc4]/20 hover:border-[#4ecdc4]/50 transition-all">
-                <Image
-                  src="/team-member-1.png"
-                  alt="Sarah Johnson"
-                  width={400}
-                  height={400}
-                  className="w-full h-64 object-cover"
-                />
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-1">Sarah Johnson</h3>
-                  <p className="text-[#4ecdc4] mb-4">Chief Executive Officer</p>
-                  <p className="text-gray-300 mb-4">
-                    With over 15 years of experience in business leadership and technology, Sarah leads our company with
-                    vision and strategic direction.
-                  </p>
-                </div>
-              </div>
-              <div className="bg-gradient-to-br from-[#002a42] to-[#00395d] rounded-lg overflow-hidden border border-[#4ecdc4]/20 hover:border-[#4ecdc4]/50 transition-all">
-                <Image
-                  src="/team-member-2.png"
-                  alt="Michael Chen"
-                  width={400}
-                  height={400}
-                  className="w-full h-64 object-cover"
-                />
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-1">Michael Chen</h3>
-                  <p className="text-[#4ecdc4] mb-4">Chief Technology Officer</p>
-                  <p className="text-gray-300 mb-4">
-                    Michael brings extensive expertise in software development and technology innovation to lead our
-                    technical initiatives.
-                  </p>
-                </div>
-              </div>
-              <div className="bg-gradient-to-br from-[#002a42] to-[#00395d] rounded-lg overflow-hidden border border-[#4ecdc4]/20 hover:border-[#4ecdc4]/50 transition-all">
-                <Image
-                  src="/team-member-3.png"
-                  alt="Emily Rodriguez"
-                  width={400}
-                  height={400}
-                  className="w-full h-64 object-cover"
-                />
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-1">Emily Rodriguez</h3>
-                  <p className="text-[#4ecdc4] mb-4">Director of Education</p>
-                  <p className="text-gray-300 mb-4">
-                    Emily oversees our educational programs, bringing her background in instructional design and adult
-                    learning to create impactful courses.
-                  </p>
-                </div>
-              </div>
-            </div>
+          <div className="mb-8">
+            <h2 className="text-2xl font-semibold mb-3">Our Team</h2>
+            <p className="text-gray-700">
+              We have a team of experienced professionals with diverse backgrounds and expertise. Our team is passionate
+              about what they do and dedicated to providing exceptional service. We offer a comprehensive training
+              programme to ensure our team stays at the forefront of industry best practices.
+            </p>
           </div>
-        </section>
 
-        {/* Mission & Vision Section */}
-        <section className="py-16 md:py-24 bg-gradient-to-br from-[#002a42] to-[#00395d]">
-          <div className="container px-4 md:px-6 mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-              <div className="bg-gradient-to-br from-[#001428] to-[#00253e] p-8 rounded-lg border border-[#4ecdc4]/30">
-                <h3 className="text-2xl font-bold text-white mb-4">Our Mission</h3>
-                <p className="text-gray-300 mb-6">
-                  To empower businesses with innovative solutions and expert knowledge that drive growth, efficiency,
-                  and success in an ever-evolving digital landscape.
-                </p>
-                <p className="text-gray-300">
-                  We are committed to delivering exceptional value through our comprehensive range of services, helping
-                  our clients overcome challenges and capitalize on opportunities.
-                </p>
-              </div>
-              <div className="bg-gradient-to-br from-[#001428] to-[#00253e] p-8 rounded-lg border border-[#4ecdc4]/30">
-                <h3 className="text-2xl font-bold text-white mb-4">Our Vision</h3>
-                <p className="text-gray-300 mb-6">
-                  To be the leading provider of integrated business solutions, recognized for our expertise, innovation,
-                  and commitment to client success.
-                </p>
-                <p className="text-gray-300">
-                  We envision a future where businesses of all sizes have access to the tools, knowledge, and support
-                  they need to thrive in a competitive marketplace.
-                </p>
-              </div>
-            </div>
+          <div className="mb-8">
+            <h2 className="text-2xl font-semibold mb-3">Our Products</h2>
+            <p className="text-gray-700">
+              We offer a wide range of products designed to meet the needs of our clients. Our products are made with
+              high-quality materials and are built to last. We also offer customisation options to tailor our products
+              to your specific requirements. We use advanced fibre technology in our manufacturing processes.
+            </p>
           </div>
-        </section>
 
-        {/* CTA Section */}
-        <section className="py-16 md:py-20 bg-[#001428]">
-          <div className="container px-4 md:px-6 mx-auto">
-            <div className="bg-gradient-to-r from-[#4ecdc4]/20 to-[#4ecdc4]/10 rounded-lg p-8 md:p-12 border border-[#4ecdc4]/30">
-              <div className="max-w-3xl mx-auto text-center">
-                <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Join Our Journey</h2>
-                <p className="text-xl text-gray-300 mb-8">
-                  Partner with UNITE Group and experience the difference our integrated approach can make for your
-                  business.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button className="bg-[#4ecdc4] hover:bg-[#4ecdc4]/90 text-[#001428] font-medium" size="lg">
-                    Contact Us
-                    <ChevronRight className="ml-2 h-4 w-4" />
-                  </Button>
-                  <Button variant="outline" className="border-[#4ecdc4] text-[#4ecdc4] hover:bg-[#4ecdc4]/10" size="lg">
-                    Our Services
-                  </Button>
-                </div>
-              </div>
-            </div>
+          <div>
+            <h2 className="text-2xl font-semibold mb-3">Contact Us</h2>
+            <p className="text-gray-700">
+              If you have any questions or would like to learn more about our services, please don't hesitate to contact
+              us.
+            </p>
           </div>
         </section>
       </main>

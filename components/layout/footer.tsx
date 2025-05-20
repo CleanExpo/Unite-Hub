@@ -1,5 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
+import { Facebook, Linkedin, Youtube, AtSign } from "lucide-react"
 
 export function Footer() {
   return (
@@ -13,78 +14,57 @@ export function Footer() {
             </Link>
             <p className="text-gray-400">United in vision. Independent in spirit.</p>
             <div className="flex space-x-4">
-              <Link href="#" className="text-gray-400 hover:text-[#4ecdc4]">
+              <a
+                href="https://www.facebook.com/CARSIaus/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-[#4ecdc4] transition-colors duration-200 flex items-center justify-center w-10 h-10 rounded-full bg-[#0c2340]/30"
+                aria-label="Facebook"
+              >
+                <Facebook size={20} />
+              </a>
+              <a
+                href="https://www.linkedin.com/company/carsiaus/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-[#4ecdc4] transition-colors duration-200 flex items-center justify-center w-10 h-10 rounded-full bg-[#0c2340]/30"
+                aria-label="LinkedIn"
+              >
+                <Linkedin size={20} />
+              </a>
+              <a
+                href="https://www.youtube.com/@carsi6767/videos"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-[#4ecdc4] transition-colors duration-200 flex items-center justify-center w-10 h-10 rounded-full bg-[#0c2340]/30"
+                aria-label="YouTube"
+              >
+                <Youtube size={20} />
+              </a>
+              <a
+                href="https://www.reddit.com/r/CARSIGeneral/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-[#4ecdc4] transition-colors duration-200 flex items-center justify-center w-10 h-10 rounded-full bg-[#0c2340]/30"
+                aria-label="Reddit"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
+                  width="20"
+                  height="20"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="h-5 w-5"
                 >
-                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                  <circle cx="12" cy="12" r="9" />
+                  <circle cx="8" cy="9" r="1" />
+                  <circle cx="16" cy="9" r="1" />
+                  <path d="M12 16a4 4 0 0 0 4-4H8a4 4 0 0 0 4 4Z" />
                 </svg>
-                <span className="sr-only">Facebook</span>
-              </Link>
-              <Link href="#" className="text-gray-400 hover:text-[#4ecdc4]">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="h-5 w-5"
-                >
-                  <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
-                </svg>
-                <span className="sr-only">Twitter</span>
-              </Link>
-              <Link href="#" className="text-gray-400 hover:text-[#4ecdc4]">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="h-5 w-5"
-                >
-                  <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
-                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                  <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
-                </svg>
-                <span className="sr-only">Instagram</span>
-              </Link>
-              <Link href="#" className="text-gray-400 hover:text-[#4ecdc4]">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="h-5 w-5"
-                >
-                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                  <rect width="4" height="12" x="2" y="9"></rect>
-                  <circle cx="4" cy="4" r="2"></circle>
-                </svg>
-                <span className="sr-only">LinkedIn</span>
-              </Link>
+              </a>
             </div>
           </div>
 
@@ -92,28 +72,34 @@ export function Footer() {
             <h3 className="text-lg font-semibold text-white mb-4">Services</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/services#education" className="text-gray-400 hover:text-[#4ecdc4] transition-colors">
+                <Link
+                  href="/services/rest-api-development"
+                  className="text-gray-400 hover:text-[#4ecdc4] transition-colors"
+                >
+                  REST API Development
+                </Link>
+              </li>
+              <li>
+                <Link href="/services/app-development" className="text-gray-400 hover:text-[#4ecdc4] transition-colors">
+                  App Development
+                </Link>
+              </li>
+              <li>
+                <Link href="/services/gmb-strategies" className="text-gray-400 hover:text-[#4ecdc4] transition-colors">
+                  GMB Strategies
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/services/nextjs-website-creators"
+                  className="text-gray-400 hover:text-[#4ecdc4] transition-colors"
+                >
+                  Next.js Website Creation
+                </Link>
+              </li>
+              <li>
+                <Link href="/education" className="text-gray-400 hover:text-[#4ecdc4] transition-colors">
                   Online Education
-                </Link>
-              </li>
-              <li>
-                <Link href="/services#credits" className="text-gray-400 hover:text-[#4ecdc4] transition-colors">
-                  IICRC Credits
-                </Link>
-              </li>
-              <li>
-                <Link href="/services#software" className="text-gray-400 hover:text-[#4ecdc4] transition-colors">
-                  Software Development
-                </Link>
-              </li>
-              <li>
-                <Link href="/services#seo" className="text-gray-400 hover:text-[#4ecdc4] transition-colors">
-                  SEO Services
-                </Link>
-              </li>
-              <li>
-                <Link href="/services#consulting" className="text-gray-400 hover:text-[#4ecdc4] transition-colors">
-                  Business Consulting
                 </Link>
               </li>
             </ul>
@@ -133,8 +119,8 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/careers" className="text-gray-400 hover:text-[#4ecdc4] transition-colors">
-                  Careers
+                <Link href="/podcast" className="text-gray-400 hover:text-[#4ecdc4] transition-colors">
+                  Podcast
                 </Link>
               </li>
               <li>
@@ -152,28 +138,105 @@ export function Footer() {
 
           <div>
             <h3 className="text-lg font-semibold text-white mb-4">Contact</h3>
-            <ul className="space-y-2">
-              <li className="text-gray-400">123 Business Avenue</li>
-              <li className="text-gray-400">Suite 456</li>
-              <li className="text-gray-400">New York, NY 10001</li>
-              <li className="text-gray-400">info@unitegroup.com</li>
-              <li className="text-gray-400">+1 (555) 123-4567</li>
+            <ul className="space-y-3">
+              <li className="flex items-start space-x-3">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-[#4ecdc4] mt-1"
+                >
+                  <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+                <span className="text-gray-400">Wacol, QLD, Australia</span>
+              </li>
+              <li className="flex items-start space-x-3">
+                <AtSign className="text-[#4ecdc4] mt-1" size={20} />
+                <span className="text-gray-400">support@carsi.com.au</span>
+              </li>
+              <li className="flex items-start space-x-3">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-[#4ecdc4] mt-1"
+                >
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                </svg>
+                <span className="text-gray-400">0457 123 005</span>
+              </li>
+              <li className="flex items-start space-x-3">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="text-[#4ecdc4] mt-1"
+                >
+                  <rect width="20" height="16" x="2" y="4" rx="2" />
+                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                </svg>
+                <a href="mailto:support@carsi.com.au" className="text-gray-400 hover:text-[#4ecdc4] transition-colors">
+                  Email Us
+                </a>
+              </li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-[#4ecdc4]/10">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400 text-sm">© {new Date().getFullYear()} UNITE Group. All rights reserved.</p>
-            <div className="flex space-x-6 mt-4 md:mt-0">
+        <div className="mt-8 pt-8 border-t border-[#4ecdc4]/10">
+          <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
+            <div className="flex flex-col md:flex-row gap-2 md:gap-8 items-center">
+              <p className="text-gray-400 text-sm">© {new Date().getFullYear()} CARSI. All rights reserved.</p>
+              <p className="text-gray-400 text-sm">ABN: 12 345 678 901</p>
+            </div>
+
+            {/* Podcast Link in Footer */}
+            <div className="flex items-center">
+              <a
+                href="https://open.spotify.com/show/2PtpuuiYKKlKa7fWI0IvaV?si=vLpI88DpSUK0JsmXGKJvPw&nd=1&dlsi=b17b9673a73c443e"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center text-gray-400 hover:text-[#4ecdc4] transition-colors"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="mr-2"
+                >
+                  <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
+                </svg>
+                The Science of Property Restoration Podcast
+              </a>
+            </div>
+
+            <div className="flex space-x-6">
               <Link href="/privacy" className="text-gray-400 hover:text-[#4ecdc4] text-sm">
                 Privacy Policy
               </Link>
               <Link href="/terms" className="text-gray-400 hover:text-[#4ecdc4] text-sm">
                 Terms of Service
-              </Link>
-              <Link href="/cookies" className="text-gray-400 hover:text-[#4ecdc4] text-sm">
-                Cookie Policy
               </Link>
             </div>
           </div>

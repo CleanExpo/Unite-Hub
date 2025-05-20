@@ -3,34 +3,28 @@
 import type React from "react"
 
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { useToast } from "@/hooks/use-toast"
 
-export function ContactForm() {
-  const { toast } = useToast()
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    subject: "",
-    message: "",
-  })
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { id, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [id]: value,
-    }))
-  }
+const ContactForm = () => {
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [phone, setPhone] = useState("")
+  const [organisation, setOrganisation] = useState("")
+  const [message, setMessage] = useState("")
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle")
+  const [statusMessage, setStatusMessage] = useState("")
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsSubmitting(true)
+
+    // Basic form validation
+    if (!name || !email || !message) {
+      setStatus("error")
+      setStatusMessage("Please fill in all required fields.")
+      return
+    }
+
+    setStatus("submitting")
+    setStatusMessage("")
 
     try {
       const response = await fetch("/api/contact", {
@@ -38,139 +32,122 @@ export function ContactForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          name: `${formData.firstName} ${formData.lastName}`,
-          email: formData.email,
-          phone: formData.phone,
-          subject: formData.subject,
-          message: formData.message,
-        }),
+        body: JSON.stringify({ name, email, phone, organisation, message }),
       })
 
       const data = await response.json()
 
       if (response.ok) {
-        toast({
-          title: "Success!",
-          description: data.message,
-        })
-        // Reset form
-        setFormData({
-          firstName: "",
-          lastName: "",
-          email: "",
-          phone: "",
-          subject: "",
-          message: "",
-        })
+        setStatus("success")
+        setStatusMessage("Your message has been sent successfully. We'll get back to you soon!")
+        // Clear the form
+        setName("")
+        setEmail("")
+        setPhone("")
+        setOrganisation("")
+        setMessage("")
       } else {
-        toast({
-          title: "Error",
-          description: data.error || "Something went wrong. Please try again.",
-          variant: "destructive",
-        })
+        setStatus("error")
+        setStatusMessage(data.error || "Failed to send message. Please try again later.")
       }
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "An error occurred. Please try again later.",
-        variant: "destructive",
-      })
-    } finally {
-      setIsSubmitting(false)
+      console.error("Error sending message:", error)
+      setStatus("error")
+      setStatusMessage("An unexpected error occurred. Please try again later.")
     }
   }
 
   return (
-    <form className="space-y-6" onSubmit={handleSubmit}>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <label htmlFor="firstName" className="text-white font-medium">
-            First Name
-          </label>
-          <Input
-            id="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-            placeholder="Enter your first name"
-            className="bg-[#002a42] border-[#4ecdc4]/30 focus:border-[#4ecdc4] text-white"
-            required
-          />
-        </div>
-        <div className="space-y-2">
-          <label htmlFor="lastName" className="text-white font-medium">
-            Last Name
-          </label>
-          <Input
-            id="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-            placeholder="Enter your last name"
-            className="bg-[#002a42] border-[#4ecdc4]/30 focus:border-[#4ecdc4] text-white"
-            required
-          />
-        </div>
-      </div>
-      <div className="space-y-2">
-        <label htmlFor="email" className="text-white font-medium">
-          Email Address
+    <form onSubmit={handleSubmit} className="max-w-lg mx-auto">
+      {status === "success" && (
+        <div className="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded">{statusMessage}</div>
+      )}
+
+      {status === "error" && (
+        <div className="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded">{statusMessage}</div>
+      )}
+
+      <div className="mb-4">
+        <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">
+          Name: <span className="text-red-500">*</span>
         </label>
-        <Input
-          id="email"
+        <input
+          type="text"
+          id="name"
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+      </div>
+
+      <div className="mb-4">
+        <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
+          Email: <span className="text-red-500">*</span>
+        </label>
+        <input
           type="email"
-          value={formData.email}
-          onChange={handleChange}
-          placeholder="Enter your email address"
-          className="bg-[#002a42] border-[#4ecdc4]/30 focus:border-[#4ecdc4] text-white"
+          id="email"
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           required
         />
       </div>
-      <div className="space-y-2">
-        <label htmlFor="phone" className="text-white font-medium">
-          Phone Number
+
+      <div className="mb-4">
+        <label htmlFor="phone" className="block text-gray-700 text-sm font-bold mb-2">
+          Phone:
         </label>
-        <Input
-          id="phone"
+        <input
           type="tel"
-          value={formData.phone}
-          onChange={handleChange}
-          placeholder="Enter your phone number"
-          className="bg-[#002a42] border-[#4ecdc4]/30 focus:border-[#4ecdc4] text-white"
+          id="phone"
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
         />
       </div>
-      <div className="space-y-2">
-        <label htmlFor="subject" className="text-white font-medium">
-          Subject
+
+      <div className="mb-4">
+        <label htmlFor="organisation" className="block text-gray-700 text-sm font-bold mb-2">
+          Organisation:
         </label>
-        <Input
-          id="subject"
-          value={formData.subject}
-          onChange={handleChange}
-          placeholder="What is this regarding?"
-          className="bg-[#002a42] border-[#4ecdc4]/30 focus:border-[#4ecdc4] text-white"
+        <input
+          type="text"
+          id="organisation"
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          value={organisation}
+          onChange={(e) => setOrganisation(e.target.value)}
         />
       </div>
-      <div className="space-y-2">
-        <label htmlFor="message" className="text-white font-medium">
-          Message
+
+      <div className="mb-6">
+        <label htmlFor="message" className="block text-gray-700 text-sm font-bold mb-2">
+          Message: <span className="text-red-500">*</span>
         </label>
-        <Textarea
+        <textarea
           id="message"
-          value={formData.message}
-          onChange={handleChange}
-          placeholder="How can we help you?"
-          className="min-h-[150px] bg-[#002a42] border-[#4ecdc4]/30 focus:border-[#4ecdc4] text-white"
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          rows={4}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
           required
-        />
+        ></textarea>
       </div>
-      <Button
-        type="submit"
-        className="w-full bg-[#4ecdc4] hover:bg-[#4ecdc4]/90 text-[#001428] font-medium"
-        size="lg"
-        disabled={isSubmitting}
-      >
-        {isSubmitting ? "Sending..." : "Send Message"}
-      </Button>
+
+      <div className="flex items-center justify-between">
+        <button
+          className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
+            status === "submitting" ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+          type="submit"
+          disabled={status === "submitting"}
+        >
+          {status === "submitting" ? "Sending..." : "Send Message"}
+        </button>
+      </div>
     </form>
   )
 }
+
+export default ContactForm

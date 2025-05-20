@@ -1,27 +1,48 @@
 import { NextResponse } from "next/server"
+import { Resend } from "resend"
+import { ContactFormEmail } from "@/emails/contact-form-email"
 
-export async function POST(request: Request) {
+// Initialize Resend with the API key
+const resend = new Resend(process.env.RESEND_API_KEY)
+
+export async function POST(req: Request) {
   try {
-    const body = await request.json()
-    const { name, email, phone, subject, message } = body
+    // Parse the request body
+    const body = await req.json()
+    const { name, email, phone, organisation, message } = body
 
-    // Validate the required fields
+    // Validate required fields
     if (!name || !email || !message) {
-      return NextResponse.json({ error: "Name, email, and message are required fields" }, { status: 400 })
+      return NextResponse.json({ error: "Name, email, and message are required" }, { status: 400 })
     }
 
-    // Here you would typically send the data to your email service or CRM
-    // For example, using a service like SendGrid, Mailchimp, etc.
+    // Send email using Resend
+    const { data, error } = await resend.emails.send({
+      from: "Contact Form <onboarding@resend.dev>", // Update with your verified domain
+      to: ["your-email@example.com"], // Update with your email address
+      subject: `New contact form submission from ${name}`,
+      react: ContactFormEmail({
+        name,
+        email,
+        phone: phone || undefined,
+        organisation: organisation || undefined,
+        message,
+      }),
+      reply_to: email,
+    })
 
-    // For now, we'll just log the data and return a success response
-    console.log("Contact form submission:", { name, email, phone, subject, message })
+    if (error) {
+      console.error("Error sending email:", error)
+      return NextResponse.json({ error: "Failed to send email" }, { status: 500 })
+    }
 
-    return NextResponse.json(
-      { success: true, message: "Thank you for your message. We will get back to you soon!" },
-      { status: 200 },
-    )
+    return NextResponse.json({
+      success: true,
+      message: "Email sent successfully",
+      data,
+    })
   } catch (error) {
-    console.error("Error processing contact form:", error)
-    return NextResponse.json({ error: "An error occurred while processing your request" }, { status: 500 })
+    console.error("Unexpected error:", error)
+    return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 })
   }
 }
