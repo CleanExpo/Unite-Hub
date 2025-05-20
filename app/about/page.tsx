@@ -2,6 +2,7 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { ChevronRight } from "lucide-react"
 import type { Metadata } from "next"
+import Link from "next/link"
 
 // Get the site URL from environment variable
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://unitegroup.com.au"
@@ -50,10 +51,12 @@ export default function AboutPage() {
                   together to deliver exceptional results while maintaining the independent thinking that drives
                   creativity and problem-solving.
                 </p>
-                <Button className="bg-[#4ecdc4] hover:bg-[#4ecdc4]/90 text-[#001428] font-medium">
-                  Our Services
-                  <ChevronRight className="ml-2 h-4 w-4" />
-                </Button>
+                <Link href="/services">
+                  <Button className="bg-[#4ecdc4] hover:bg-[#4ecdc4]/90 text-[#001428] font-medium">
+                    Our Services
+                    <ChevronRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
               </div>
               <div className="relative">
                 <div className="absolute -inset-4 bg-[#4ecdc4]/20 rounded-lg blur-xl"></div>
@@ -110,10 +113,16 @@ export default function AboutPage() {
 
           <div>
             <h2 className="text-2xl font-semibold mb-3">Contact Us</h2>
-            <p className="text-gray-700">
+            <p className="text-gray-700 mb-4">
               If you have any questions or would like to learn more about our services, please don't hesitate to contact
               us.
             </p>
+            <Link href="/contact">
+              <Button className="bg-[#4ecdc4] hover:bg-[#4ecdc4]/90 text-[#001428] font-medium">
+                Get in Touch
+                <ChevronRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
           </div>
         </section>
       </main>

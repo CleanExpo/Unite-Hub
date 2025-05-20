@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Loader2, Mail, MessageSquare, Key, ArrowRight, Check } from "lucide-react"
-import { supabase } from "@/lib/supabase"
+import { getSupabaseClient } from "@/lib/supabase"
 import { getSecurityQuestions, logRecoveryAttempt, verifySecurityQuestionAnswers } from "@/lib/account-recovery"
 import type { SecurityQuestion } from "@/types/account-recovery"
 import Link from "next/link"
@@ -42,6 +42,7 @@ export function RecoveryForm() {
 
     setIsLoading(true)
     try {
+      const supabase = getSupabaseClient()
       // Log recovery attempt
       await logRecoveryAttempt(email, "email", "initiated")
 
@@ -83,6 +84,7 @@ export function RecoveryForm() {
 
     setIsLoading(true)
     try {
+      const supabase = getSupabaseClient()
       // Log recovery attempt
       await logRecoveryAttempt(email, "recovery_code", "initiated")
 
@@ -145,6 +147,7 @@ export function RecoveryForm() {
 
     setIsLoading(true)
     try {
+      const supabase = getSupabaseClient()
       // Log recovery attempt
       await logRecoveryAttempt(email, "security_questions", "initiated")
 

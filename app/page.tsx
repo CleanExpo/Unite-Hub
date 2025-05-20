@@ -1,7 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ChevronRight, ArrowRight, Code, Search, Globe } from "lucide-react"
+import { ChevronRight, ArrowRight, Code, Search } from "lucide-react"
 import type { Metadata } from "next"
 
 // Get the site URL from environment variable
@@ -52,13 +52,21 @@ export default function HomePage() {
                   to help your business thrive.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Button className="bg-[#4ecdc4] hover:bg-[#4ecdc4]/90 text-[#001428] font-medium" size="lg">
-                    Explore Our Services
-                    <ChevronRight className="ml-2 h-4 w-4" />
-                  </Button>
-                  <Button variant="outline" className="border-[#4ecdc4] text-[#4ecdc4] hover:bg-[#4ecdc4]/10" size="lg">
-                    Contact Us
-                  </Button>
+                  <Link href="/services">
+                    <Button className="bg-[#4ecdc4] hover:bg-[#4ecdc4]/90 text-[#001428] font-medium" size="lg">
+                      Explore Our Services
+                      <ChevronRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
+                  <Link href="/contact">
+                    <Button
+                      variant="outline"
+                      className="border-[#4ecdc4] text-[#4ecdc4] hover:bg-[#4ecdc4]/10"
+                      size="lg"
+                    >
+                      Contact Us
+                    </Button>
+                  </Link>
                 </div>
               </div>
               <div className="flex justify-center">
@@ -75,20 +83,27 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Rest of the page content remains unchanged */}
+        {/* Services Section */}
         <section className="py-12 md:py-24">
           <div className="container px-4 md:px-6 mx-auto">
             <h2 className="text-3xl font-bold text-center mb-8">Our Services</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Education */}
+              {/* Education with CARSI Logo */}
               <div className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                <div className="flex items-center justify-center h-16 w-16 rounded-full bg-[#4ecdc4]/20 mb-4">
-                  <Globe className="h-8 w-8 text-[#4ecdc4]" />
+                <div className="flex justify-center mb-4">
+                  <div className="w-24 h-24 relative">
+                    <Image
+                      src="/carsi-logo.png"
+                      alt="CARSI - Cleaning and Restoration Science Institute"
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
                 </div>
                 <h3 className="text-xl font-semibold mb-2">Expert-Led Education</h3>
                 <p className="text-gray-600">
-                  Upskill your workforce with our tailored education programs, designed to meet the evolving demands of
-                  the industry.
+                  Upskill your workforce with CARSI-certified education programs, designed to meet the evolving demands
+                  of the cleaning and restoration industry.
                 </p>
                 <Link
                   href="/education"
@@ -109,7 +124,10 @@ export default function HomePage() {
                   Transform your ideas into reality with our bespoke software solutions, crafted for efficiency and
                   scalability.
                 </p>
-                <Link href="/software" className="inline-flex items-center mt-4 text-[#4ecdc4] hover:text-[#4ecdc4]/80">
+                <Link
+                  href="/services/app-development"
+                  className="inline-flex items-center mt-4 text-[#4ecdc4] hover:text-[#4ecdc4]/80"
+                >
                   Explore Solutions
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
@@ -125,7 +143,10 @@ export default function HomePage() {
                   Elevate your online presence with our data-driven SEO strategies, designed to drive traffic and
                   increase conversions.
                 </p>
-                <Link href="/seo" className="inline-flex items-center mt-4 text-[#4ecdc4] hover:text-[#4ecdc4]/80">
+                <Link
+                  href="/services/gmb-strategies"
+                  className="inline-flex items-center mt-4 text-[#4ecdc4] hover:text-[#4ecdc4]/80"
+                >
                   Boost Your Visibility
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>

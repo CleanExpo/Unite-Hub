@@ -1,93 +1,60 @@
 "use client"
 
-import type React from "react"
-
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { Paperclip } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Paperclip, X, LayoutTemplateIcon as Template } from "lucide-react"
-import {
-  getEmailAccounts,
-  getEmailTemplates,
-  sendEmail,
-  type EmailAccount,
-  type EmailTemplate,
-} from "@/lib/email-integration"
+import { sendEmail, getEmailTemplates, type EmailTemplate } from "@/lib/email-integration"
 
 interface EmailComposerProps {
   isOpen: boolean
   onClose: () => void
-  initialTo?: string
+  threadId?: string
+  initialTo?: { email: string; name?: string }[]
   initialSubject?: string
   initialBody?: string
-  threadId?: string
-  clientId?: number
-  opportunityId?: number
-  contactId?: number
 }
 
 export function EmailComposer({
   isOpen,
   onClose,
-  initialTo = "",
+  threadId,
+  initialTo = [],
   initialSubject = "",
   initialBody = "",
-  threadId,
-  clientId,
-  opportunityId,
-  contactId,
 }: EmailComposerProps) {
-  const [to, setTo] = useState(initialTo)
+  const [to, setTo] = useState(initialTo.map((p) => p.email).join(", "))
   const [cc, setCc] = useState("")
   const [bcc, setBcc] = useState("")
   const [subject, setSubject] = useState(initialSubject)
   const [body, setBody] = useState(initialBody)
-  const [fromAccount, setFromAccount] = useState<string>("")
-  const [accounts, setAccounts] = useState<EmailAccount[]>([])
-  const [templates, setTemplates] = useState<EmailTemplate[]>([])
-  const [attachments, setAttachments] = useState<File[]>([])
   const [showCcBcc, setShowCcBcc] = useState(false)
+  const [templates, setTemplates] = useState<EmailTemplate[]>([])
+  const [selectedTemplate, setSelectedTemplate] = useState<string>("")
   const [isSending, setIsSending] = useState(false)
-  const router = useRouter()
 
   useEffect(() => {
-    async function loadData() {
+    async function loadTemplates() {
       try {
-        // Load email accounts
-        const accountsData = await getEmailAccounts()
-        setAccounts(accountsData)
-
-        // Set default from account (primary)
-        const primaryAccount = accountsData.find((a) => a.is_primary)
-        if (primaryAccount) {
-          setFromAccount(primaryAccount.id)
-        } else if (accountsData.length > 0) {
-          setFromAccount(accountsData[0].id)
-        }
-
-        // Load email templates
-        const templatesData = await getEmailTemplates()
-        setTemplates(templatesData)
+        const data = await getEmailTemplates()
+        setTemplates(data)
       } catch (error) {
-        console.error("Failed to load email data:", error)
+        console.error("Failed to load email templates:", error)
       }
     }
 
     if (isOpen) {
-      loadData()
+      loadTemplates()
     }
   }, [isOpen])
 
   // Reset form when dialog opens/closes
   useEffect(() => {
     if (isOpen) {
-      setTo(initialTo)
+      setTo(initialTo.map((p) => p.email).join(", "))
       setSubject(initialSubject)
       setBody(initialBody)
     } else {
@@ -96,245 +63,180 @@ export function EmailComposer({
       setBcc("")
       setSubject("")
       setBody("")
-      setAttachments([])
       setShowCcBcc(false)
+      setSelectedTemplate("")
     }
   }, [isOpen, initialTo, initialSubject, initialBody])
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const newFiles = Array.from(e.target.files)
-      setAttachments((prev) => [...prev, ...newFiles])
+  // Apply template when selected
+  useEffect(() => {
+    if (selectedTemplate) {
+      const template = templates.find((t) => t.id === selectedTemplate)
+      if (template) {
+        setSubject(template.subject)
+        setBody(template.body)
+      }
     }
-  }
-
-  const removeAttachment = (index: number) => {
-    setAttachments((prev) => prev.filter((_, i) => i !== index))
-  }
-
-  const applyTemplate = (templateId: string) => {
-    const template = templates.find((t) => t.id === templateId)
-    if (template) {
-      setSubject(template.subject)
-      setBody(template.body)
-    }
-  }
+  }, [selectedTemplate, templates])
 
   const handleSend = async () => {
-    if (!to || !subject || !body || !fromAccount) {
-      alert("Please fill in all required fields")
+    if (!to.trim()) {
+      alert("Please specify at least one recipient")
       return
     }
 
     setIsSending(true)
-
     try {
-      const account = accounts.find((a) => a.id === fromAccount)
-      if (!account) throw new Error("Selected email account not found")
-
-      // Parse recipients
-      const toRecipients = to.split(",").map((email) => {
-        const trimmed = email.trim()
-        return { email: trimmed }
-      })
+      const toRecipients = to.split(",").map((email) => ({
+        email: email.trim(),
+      }))
 
       const ccRecipients = cc
-        ? cc.split(",").map((email) => {
-            const trimmed = email.trim()
-            return { email: trimmed }
-          })
-        : []
+        ? cc.split(",").map((email) => ({
+            email: email.trim(),
+          }))
+        : undefined
 
       const bccRecipients = bcc
-        ? bcc.split(",").map((email) => {
-            const trimmed = email.trim()
-            return { email: trimmed }
-          })
-        : []
+        ? bcc.split(",").map((email) => ({
+            email: email.trim(),
+          }))
+        : undefined
 
-      // Send the email
-      await sendEmail({
-        thread_id: threadId,
-        user_id: account.user_id,
-        from_email: account.email,
-        from_name: account.name,
-        to_recipients: toRecipients,
-        cc_recipients: ccRecipients,
-        bcc_recipients: bccRecipients,
+      const result = await sendEmail({
+        to: toRecipients,
+        cc: ccRecipients,
+        bcc: bccRecipients,
         subject,
-        body_html: body,
-        body_text: body.replace(/<[^>]*>/g, ""), // Simple HTML to text conversion
-        is_read: true,
-        has_attachments: attachments.length > 0,
-        is_draft: false,
-        is_sent_by_user: true,
-        client_id: clientId,
-        opportunity_id: opportunityId,
-        contact_id: contactId,
+        body,
+        threadId,
       })
 
-      // TODO: Handle attachments upload
-
-      // Close the composer and refresh the page
-      onClose()
-      router.refresh()
+      if (result.success) {
+        onClose()
+      } else {
+        alert(`Failed to send email: ${result.error || "Unknown error"}`)
+      }
     } catch (error) {
-      console.error("Failed to send email:", error)
+      console.error("Error sending email:", error)
       alert("Failed to send email. Please try again.")
     } finally {
       setIsSending(false)
     }
   }
 
+  // Sample templates for demonstration
+  const sampleTemplates: EmailTemplate[] = [
+    {
+      id: "1",
+      name: "Meeting Follow-up",
+      subject: "Follow-up: Our Meeting on {{date}}",
+      body: "Dear {{name}},\n\nThank you for taking the time to meet with me today. I wanted to follow up on our discussion about {{topic}}.\n\nAs discussed, I will {{action}} by {{deadline}}.\n\nPlease let me know if you have any questions or need any additional information.\n\nBest regards,\n{{sender}}",
+      isShared: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+    {
+      id: "2",
+      name: "Project Update",
+      subject: "Project Update: {{project}}",
+      body: "Hi {{name}},\n\nI wanted to provide you with an update on the {{project}} project.\n\nCurrent Status:\n- {{status}}\n\nNext Steps:\n- {{next_steps}}\n\nTimeline:\n- {{timeline}}\n\nPlease let me know if you have any questions or concerns.\n\nBest regards,\n{{sender}}",
+      isShared: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    },
+  ]
+
+  // Use sample templates for now
+  const displayTemplates = templates.length > 0 ? templates : sampleTemplates
+
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[700px] max-h-[90vh] flex flex-col">
+      <DialogContent className="sm:max-w-[700px] h-[80vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle>Compose Email</DialogTitle>
+          <DialogTitle>New Message</DialogTitle>
         </DialogHeader>
 
-        <div className="flex-1 overflow-y-auto py-4">
-          <div className="space-y-4">
-            <div className="flex items-center gap-4">
-              <Label htmlFor="from" className="w-16">
-                From:
-              </Label>
-              <Select value={fromAccount} onValueChange={setFromAccount}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select an email account" />
-                </SelectTrigger>
-                <SelectContent>
-                  {accounts.map((account) => (
-                    <SelectItem key={account.id} value={account.id}>
-                      {account.name} ({account.email})
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+        <div className="grid gap-4 py-4 flex-1 overflow-hidden">
+          <div className="flex items-center gap-2">
+            <label htmlFor="to" className="w-12 text-right text-sm font-medium">
+              To:
+            </label>
+            <Input id="to" value={to} onChange={(e) => setTo(e.target.value)} placeholder="recipient@example.com" />
+          </div>
 
-            <div className="flex items-center gap-4">
-              <Label htmlFor="to" className="w-16">
-                To:
-              </Label>
-              <Input id="to" value={to} onChange={(e) => setTo(e.target.value)} placeholder="recipient@example.com" />
-            </div>
+          {showCcBcc && (
+            <>
+              <div className="flex items-center gap-2">
+                <label htmlFor="cc" className="w-12 text-right text-sm font-medium">
+                  Cc:
+                </label>
+                <Input id="cc" value={cc} onChange={(e) => setCc(e.target.value)} placeholder="cc@example.com" />
+              </div>
 
-            {showCcBcc && (
-              <>
-                <div className="flex items-center gap-4">
-                  <Label htmlFor="cc" className="w-16">
-                    Cc:
-                  </Label>
-                  <Input id="cc" value={cc} onChange={(e) => setCc(e.target.value)} placeholder="cc@example.com" />
-                </div>
+              <div className="flex items-center gap-2">
+                <label htmlFor="bcc" className="w-12 text-right text-sm font-medium">
+                  Bcc:
+                </label>
+                <Input id="bcc" value={bcc} onChange={(e) => setBcc(e.target.value)} placeholder="bcc@example.com" />
+              </div>
+            </>
+          )}
 
-                <div className="flex items-center gap-4">
-                  <Label htmlFor="bcc" className="w-16">
-                    Bcc:
-                  </Label>
-                  <Input id="bcc" value={bcc} onChange={(e) => setBcc(e.target.value)} placeholder="bcc@example.com" />
-                </div>
-              </>
-            )}
-
+          <div className="flex items-center gap-2">
             {!showCcBcc && (
-              <div className="ml-20">
-                <Button variant="link" className="p-0 h-auto text-xs" onClick={() => setShowCcBcc(true)}>
-                  Add Cc/Bcc
-                </Button>
-              </div>
+              <Button variant="link" className="w-12 justify-end p-0 h-auto text-xs" onClick={() => setShowCcBcc(true)}>
+                Cc/Bcc
+              </Button>
             )}
+            {showCcBcc && <div className="w-12" />}
+            <Input value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="Subject" />
+          </div>
 
-            <div className="flex items-center gap-4">
-              <Label htmlFor="subject" className="w-16">
-                Subject:
-              </Label>
-              <Input
-                id="subject"
-                value={subject}
-                onChange={(e) => setSubject(e.target.value)}
-                placeholder="Email subject"
-              />
-            </div>
+          <div className="flex items-center gap-2">
+            <label htmlFor="template" className="w-12 text-right text-sm font-medium">
+              Template:
+            </label>
+            <Select value={selectedTemplate} onValueChange={setSelectedTemplate}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select a template" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">None</SelectItem>
+                {displayTemplates.map((template) => (
+                  <SelectItem key={template.id} value={template.id}>
+                    {template.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-            <div className="flex flex-col gap-2">
-              <div className="flex justify-between items-center">
-                <div className="flex gap-2">
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button variant="outline" size="sm" className="h-8">
-                        <Template className="h-4 w-4 mr-2" />
-                        Templates
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-56 p-0">
-                      <div className="p-2">
-                        <p className="text-sm font-medium">Apply Template</p>
-                      </div>
-                      <div className="max-h-80 overflow-auto">
-                        {templates.length === 0 ? (
-                          <p className="text-sm text-muted-foreground p-2">No templates available</p>
-                        ) : (
-                          templates.map((template) => (
-                            <Button
-                              key={template.id}
-                              variant="ghost"
-                              className="w-full justify-start text-sm p-2 h-auto"
-                              onClick={() => applyTemplate(template.id)}
-                            >
-                              {template.name}
-                            </Button>
-                          ))
-                        )}
-                      </div>
-                    </PopoverContent>
-                  </Popover>
-
-                  <label htmlFor="file-upload" className="cursor-pointer">
-                    <Button variant="outline" size="sm" className="h-8" type="button">
-                      <Paperclip className="h-4 w-4 mr-2" />
-                      Attach
-                    </Button>
-                    <input id="file-upload" type="file" multiple className="hidden" onChange={handleFileChange} />
-                  </label>
-                </div>
-              </div>
-
-              {attachments.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {attachments.map((file, index) => (
-                    <div key={index} className="flex items-center gap-1 bg-gray-100 rounded-full px-3 py-1 text-xs">
-                      <span className="truncate max-w-[150px]">{file.name}</span>
-                      <button
-                        type="button"
-                        onClick={() => removeAttachment(index)}
-                        className="text-gray-500 hover:text-gray-700"
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              <Textarea
-                value={body}
-                onChange={(e) => setBody(e.target.value)}
-                placeholder="Write your email here..."
-                className="min-h-[200px] mt-2"
-              />
-            </div>
+          <div className="flex-1 overflow-hidden">
+            <Textarea
+              className="h-full resize-none"
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+              placeholder="Write your message here..."
+            />
           </div>
         </div>
 
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button onClick={handleSend} disabled={isSending}>
-            {isSending ? "Sending..." : "Send Email"}
-          </Button>
+        <DialogFooter className="flex justify-between items-center">
+          <div>
+            <Button variant="outline" size="sm" className="mr-2">
+              <Paperclip className="h-4 w-4 mr-2" />
+              Attach
+            </Button>
+          </div>
+          <div>
+            <Button variant="outline" onClick={onClose} className="mr-2">
+              Discard
+            </Button>
+            <Button onClick={handleSend} disabled={isSending}>
+              {isSending ? "Sending..." : "Send"}
+            </Button>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -39,6 +39,45 @@ export const metadata: Metadata = {
 // Sample blog posts data
 const blogPosts = [
   {
+    id: "commercial-property-restoration",
+    title: "Commercial Property Restoration: Minimising Business Downtime",
+    excerpt:
+      "Strategies for efficient commercial property restoration that prioritises business continuity and minimises financial impact.",
+    coverImage: "/blog/commercial-restoration.png",
+    category: "Commercial",
+    author: "Jennifer Lee",
+    authorImage: "/team-member-4.png",
+    date: "February 5, 2023",
+    readTime: "7 min read",
+    tags: ["Commercial Restoration", "Business Continuity", "Property Management", "Disaster Recovery"],
+  },
+  {
+    id: "insurance-claims-process",
+    title: "Navigating the Insurance Claims Process for Water and Fire Damage",
+    excerpt:
+      "Expert advice on how to document damage, file claims, and work with insurance adjusters to ensure fair compensation.",
+    coverImage: "/blog/insurance-claims.png",
+    category: "Insurance",
+    author: "Robert Thompson",
+    authorImage: "/team-member-5.png",
+    date: "January 18, 2023",
+    readTime: "9 min read",
+    tags: ["Insurance Claims", "Property Damage", "Claim Documentation", "Adjuster Negotiation"],
+  },
+  {
+    id: "restoration-technology-trends",
+    title: "Emerging Technologies in the Restoration Industry",
+    excerpt:
+      "Explore how cutting-edge technologies like thermal imaging, moisture mapping, and AI are transforming restoration processes.",
+    coverImage: "/blog/restoration-technology.png",
+    category: "Technology",
+    author: "Michelle Wong",
+    authorImage: "/team-member-6.png",
+    date: "December 7, 2022",
+    readTime: "8 min read",
+    tags: ["Restoration Technology", "Thermal Imaging", "Moisture Mapping", "Industry Trends"],
+  },
+  {
     id: "water-damage-restoration-tips",
     title: "Essential Water Damage Restoration Tips for Property Owners",
     excerpt:
@@ -76,45 +115,6 @@ const blogPosts = [
     date: "March 12, 2023",
     readTime: "10 min read",
     tags: ["Fire Damage", "Damage Assessment", "Insurance Claims", "Restoration Process"],
-  },
-  {
-    id: "commercial-property-restoration",
-    title: "Commercial Property Restoration: Minimising Business Downtime",
-    excerpt:
-      "Strategies for efficient commercial property restoration that prioritises business continuity and minimises financial impact.",
-    coverImage: "/blog/commercial-restoration.png",
-    category: "Commercial",
-    author: "Jennifer Lee",
-    authorImage: "/team-member-4.png",
-    date: "February 5, 2023",
-    readTime: "7 min read",
-    tags: ["Commercial Restoration", "Business Continuity", "Disaster Recovery", "Property Management"],
-  },
-  {
-    id: "insurance-claims-process",
-    title: "Navigating the Insurance Claims Process for Water and Fire Damage",
-    excerpt:
-      "Expert advice on how to document damage, file claims, and work with insurance adjusters to ensure fair compensation.",
-    coverImage: "/blog/insurance-claims.png",
-    category: "Insurance",
-    author: "Robert Thompson",
-    authorImage: "/team-member-5.png",
-    date: "January 18, 2023",
-    readTime: "9 min read",
-    tags: ["Insurance Claims", "Property Damage", "Claim Documentation", "Adjuster Negotiation"],
-  },
-  {
-    id: "restoration-technology-trends",
-    title: "Emerging Technologies in the Restoration Industry",
-    excerpt:
-      "Explore how cutting-edge technologies like thermal imaging, moisture mapping, and AI are transforming restoration processes.",
-    coverImage: "/blog/restoration-technology.png",
-    category: "Technology",
-    author: "Michelle Wong",
-    authorImage: "/team-member-6.png",
-    date: "December 7, 2022",
-    readTime: "8 min read",
-    tags: ["Restoration Technology", "Thermal Imaging", "Moisture Mapping", "Industry Trends"],
   },
 ]
 

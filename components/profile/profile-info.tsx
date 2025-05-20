@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { getUserProfile, updateUserProfile } from "@/lib/db"
 import { toast } from "@/components/ui/use-toast"
 import { Upload, Check } from "lucide-react"
-import { supabase } from "@/lib/supabase"
+import { getSupabaseClient } from "@/lib/supabase"
 
 export function ProfileInfo() {
   const { user } = useAuth()
@@ -83,6 +83,7 @@ export function ProfileInfo() {
       })
 
       // Also update user metadata
+      const supabase = getSupabaseClient()
       await supabase.auth.updateUser({
         data: {
           full_name: formData.full_name,
@@ -112,6 +113,7 @@ export function ProfileInfo() {
 
     setIsUploading(true)
     try {
+      const supabase = getSupabaseClient()
       // Create a unique file path
       const fileExt = file.name.split(".").pop()
       const fileName = `${user.id}-${Math.random().toString(36).substring(2)}.${fileExt}`

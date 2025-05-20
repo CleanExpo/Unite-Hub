@@ -1,199 +1,200 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { Search, Plus, Inbox, Send, Archive, Trash, Tag } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Badge } from "@/components/ui/badge"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Search, Plus, Inbox, Archive } from "lucide-react"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { getEmailThreads, type EmailThread } from "@/lib/email-integration"
 
 interface EmailSidebarProps {
   selectedThreadId?: string
-  clientId?: number
+  onThreadSelect?: (threadId: string) => void
   onComposeClick: () => void
 }
 
-export function EmailSidebar({ selectedThreadId, clientId, onComposeClick }: EmailSidebarProps) {
+export function EmailSidebar({ selectedThreadId, onThreadSelect, onComposeClick }: EmailSidebarProps) {
   const [threads, setThreads] = useState<EmailThread[]>([])
   const [loading, setLoading] = useState(true)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [activeTab, setActiveTab] = useState("inbox")
-  const router = useRouter()
+  const [filter, setFilter] = useState("inbox")
 
   useEffect(() => {
     async function loadThreads() {
       setLoading(true)
       try {
-        const options = clientId ? { client_id: clientId } : undefined
-        const data = await getEmailThreads(options)
+        const data = await getEmailThreads({ folder: filter })
         setThreads(data)
       } catch (error) {
         console.error("Failed to load email threads:", error)
+        setThreads([])
       } finally {
         setLoading(false)
       }
     }
 
     loadThreads()
-  }, [clientId])
+  }, [filter])
 
-  const filteredThreads = threads.filter((thread) => {
-    // Filter by search query
-    if (searchQuery && !thread.subject.toLowerCase().includes(searchQuery.toLowerCase())) {
-      return false
-    }
+  // Sample data for demonstration
+  const sampleThreads: EmailThread[] = [
+    {
+      id: "1",
+      subject: "Project Proposal Discussion",
+      snippet: "I've reviewed the proposal and have some feedback...",
+      participants: [
+        { email: "client@example.com", name: "John Client" },
+        { email: "me@streamline.com", name: "Me" },
+      ],
+      unread: true,
+      lastMessageAt: new Date(Date.now() - 1000 * 60 * 30).toISOString(), // 30 minutes ago
+      folder: "inbox",
+      labels: ["important"],
+    },
+    {
+      id: "2",
+      subject: "Meeting Confirmation",
+      snippet: "This is to confirm our meeting scheduled for tomorrow at 2 PM...",
+      participants: [
+        { email: "partner@example.com", name: "Business Partner" },
+        { email: "me@streamline.com", name: "Me" },
+      ],
+      unread: false,
+      lastMessageAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(), // 2 hours ago
+      folder: "inbox",
+      labels: [],
+    },
+    {
+      id: "3",
+      subject: "Invoice #1234",
+      snippet: "Please find attached the invoice for services rendered...",
+      participants: [
+        { email: "accounting@streamline.com", name: "Accounting" },
+        { email: "client@example.com", name: "John Client" },
+      ],
+      unread: false,
+      lastMessageAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(), // 1 day ago
+      folder: "sent",
+      labels: ["invoice"],
+    },
+  ]
 
-    // Filter by tab
-    if (activeTab === "inbox") {
-      return true // Show all in inbox for now
-    } else if (activeTab === "unread") {
-      return !thread.is_read
-    } else if (activeTab === "attachments") {
-      return thread.has_attachments
-    }
+  // Use sample data for now
+  const displayThreads = loading ? [] : threads.length > 0 ? threads : sampleThreads
 
+  // Filter threads based on the selected folder
+  const filteredThreads = displayThreads.filter((thread) => {
+    if (filter === "inbox") return thread.folder === "inbox"
+    if (filter === "sent") return thread.folder === "sent"
+    if (filter === "archive") return thread.folder === "archive"
+    if (filter === "trash") return thread.folder === "trash"
     return true
   })
 
-  const handleThreadClick = (threadId: string) => {
-    if (clientId) {
-      router.push(`/dashboard/crm/clients/${clientId}/email/${threadId}`)
-    } else {
-      router.push(`/dashboard/crm/email/${threadId}`)
-    }
-  }
-
   return (
-    <div className="w-full md:w-80 border-r border-gray-200 h-full flex flex-col">
-      <div className="p-4 border-b border-gray-200">
-        <Button onClick={onComposeClick} className="w-full flex items-center justify-center gap-2">
-          <Plus size={16} />
-          <span>Compose</span>
+    <div className="w-80 border-r flex flex-col h-full">
+      <div className="p-4 border-b">
+        <Button onClick={onComposeClick} className="w-full justify-start" size="sm">
+          <Plus className="h-4 w-4 mr-2" />
+          Compose
         </Button>
-
-        <div className="mt-4 relative">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+        <div className="mt-2">
           <Input
+            type="search"
             placeholder="Search emails..."
-            className="pl-8"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            className="h-8"
+            prefix={<Search className="h-4 w-4 text-muted-foreground" />}
           />
         </div>
       </div>
 
-      <Tabs defaultValue="inbox" className="flex-1 flex flex-col" onValueChange={setActiveTab}>
-        <div className="border-b border-gray-200">
-          <TabsList className="w-full justify-start p-0 h-auto bg-transparent border-b-0">
-            <TabsTrigger value="inbox" className="data-[state=active]:bg-gray-100 rounded-none py-2 px-4">
-              <Inbox className="h-4 w-4 mr-2" />
-              Inbox
-            </TabsTrigger>
-            <TabsTrigger value="unread" className="data-[state=active]:bg-gray-100 rounded-none py-2 px-4">
-              <Badge variant="secondary" className="mr-2">
-                {threads.filter((t) => !t.is_read).length}
-              </Badge>
-              Unread
-            </TabsTrigger>
-            <TabsTrigger value="attachments" className="data-[state=active]:bg-gray-100 rounded-none py-2 px-4">
-              <Archive className="h-4 w-4 mr-2" />
-              Attachments
-            </TabsTrigger>
-          </TabsList>
+      <div className="p-2">
+        <nav className="grid gap-1">
+          <Button
+            variant={filter === "inbox" ? "secondary" : "ghost"}
+            size="sm"
+            className="justify-start"
+            onClick={() => setFilter("inbox")}
+          >
+            <Inbox className="h-4 w-4 mr-2" />
+            Inbox
+            {filteredThreads.filter((t) => t.folder === "inbox" && t.unread).length > 0 && (
+              <span className="ml-auto bg-primary text-primary-foreground text-xs rounded-full px-2 py-0.5">
+                {filteredThreads.filter((t) => t.folder === "inbox" && t.unread).length}
+              </span>
+            )}
+          </Button>
+          <Button
+            variant={filter === "sent" ? "secondary" : "ghost"}
+            size="sm"
+            className="justify-start"
+            onClick={() => setFilter("sent")}
+          >
+            <Send className="h-4 w-4 mr-2" />
+            Sent
+          </Button>
+          <Button
+            variant={filter === "archive" ? "secondary" : "ghost"}
+            size="sm"
+            className="justify-start"
+            onClick={() => setFilter("archive")}
+          >
+            <Archive className="h-4 w-4 mr-2" />
+            Archive
+          </Button>
+          <Button
+            variant={filter === "trash" ? "secondary" : "ghost"}
+            size="sm"
+            className="justify-start"
+            onClick={() => setFilter("trash")}
+          >
+            <Trash className="h-4 w-4 mr-2" />
+            Trash
+          </Button>
+          <Button
+            variant={filter === "labels" ? "secondary" : "ghost"}
+            size="sm"
+            className="justify-start"
+            onClick={() => setFilter("labels")}
+          >
+            <Tag className="h-4 w-4 mr-2" />
+            Labels
+          </Button>
+        </nav>
+      </div>
+
+      <ScrollArea className="flex-1">
+        <div className="p-2">
+          {filteredThreads.length === 0 ? (
+            <div className="text-center p-4 text-muted-foreground text-sm">No emails found</div>
+          ) : (
+            <div className="grid gap-1">
+              {filteredThreads.map((thread) => (
+                <button
+                  key={thread.id}
+                  className={`p-2 text-left rounded-md hover:bg-accent w-full ${
+                    thread.id === selectedThreadId ? "bg-accent" : ""
+                  } ${thread.unread ? "font-medium" : ""}`}
+                  onClick={() => onThreadSelect?.(thread.id)}
+                >
+                  <div className="flex justify-between items-start">
+                    <span className="block truncate font-medium">
+                      {thread.participants
+                        .filter((p) => p.email !== "me@streamline.com")
+                        .map((p) => p.name || p.email)
+                        .join(", ")}
+                    </span>
+                    <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">
+                      {new Date(thread.lastMessageAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                    </span>
+                  </div>
+                  <span className="block truncate">{thread.subject}</span>
+                  <span className="block truncate text-sm text-muted-foreground">{thread.snippet}</span>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
-
-        <div className="flex-1 overflow-auto">
-          <TabsContent value="inbox" className="m-0 p-0 h-full">
-            {loading ? (
-              <div className="p-4 space-y-4">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <div key={i} className="flex flex-col gap-2">
-                    <Skeleton className="h-5 w-3/4" />
-                    <Skeleton className="h-4 w-1/2" />
-                    <Skeleton className="h-3 w-1/4" />
-                  </div>
-                ))}
-              </div>
-            ) : filteredThreads.length === 0 ? (
-              <div className="p-8 text-center text-muted-foreground">
-                {searchQuery ? "No emails match your search" : "No emails found"}
-              </div>
-            ) : (
-              <div>
-                {filteredThreads.map((thread) => (
-                  <div
-                    key={thread.id}
-                    className={`p-3 border-b border-gray-100 cursor-pointer hover:bg-gray-50 ${
-                      selectedThreadId === thread.id ? "bg-gray-100" : ""
-                    } ${!thread.is_read ? "font-semibold" : ""}`}
-                    onClick={() => handleThreadClick(thread.id)}
-                  >
-                    <div className="flex justify-between items-start">
-                      <h4 className="text-sm truncate">{thread.subject}</h4>
-                      <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">
-                        {new Date(thread.last_message_date).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-1 truncate">
-                      {thread.snippet || "No preview available"}
-                    </p>
-                    <div className="flex items-center mt-1 gap-2">
-                      {!thread.is_read && (
-                        <Badge variant="secondary" className="text-xs px-1.5 py-0">
-                          New
-                        </Badge>
-                      )}
-                      {thread.has_attachments && <Archive className="h-3 w-3 text-muted-foreground" />}
-                      <span className="text-xs text-muted-foreground ml-auto">
-                        {thread.message_count} {thread.message_count === 1 ? "message" : "messages"}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </TabsContent>
-
-          <TabsContent value="unread" className="m-0 p-0 h-full">
-            {/* Same structure as inbox but filtered for unread */}
-            {loading ? (
-              <div className="p-4 space-y-4">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="flex flex-col gap-2">
-                    <Skeleton className="h-5 w-3/4" />
-                    <Skeleton className="h-4 w-1/2" />
-                  </div>
-                ))}
-              </div>
-            ) : filteredThreads.length === 0 ? (
-              <div className="p-8 text-center text-muted-foreground">No unread emails</div>
-            ) : (
-              <div>{/* Thread list - same as inbox tab */}</div>
-            )}
-          </TabsContent>
-
-          <TabsContent value="attachments" className="m-0 p-0 h-full">
-            {/* Same structure as inbox but filtered for attachments */}
-            {loading ? (
-              <div className="p-4 space-y-4">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="flex flex-col gap-2">
-                    <Skeleton className="h-5 w-3/4" />
-                    <Skeleton className="h-4 w-1/2" />
-                  </div>
-                ))}
-              </div>
-            ) : filteredThreads.length === 0 ? (
-              <div className="p-8 text-center text-muted-foreground">No emails with attachments</div>
-            ) : (
-              <div>{/* Thread list - same as inbox tab */}</div>
-            )}
-          </TabsContent>
-        </div>
-      </Tabs>
+      </ScrollArea>
     </div>
   )
 }

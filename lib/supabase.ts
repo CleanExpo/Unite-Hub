@@ -1,23 +1,38 @@
-import { createClient } from "@supabase/supabase-js"
+import { createClient as createSupabaseClient } from "@supabase/supabase-js"
+
 export { createClient } from "@supabase/supabase-js"
 
-// Create a single supabase client for interacting with your database
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+// Create a singleton Supabase client for the browser
+let supabaseClient: ReturnType<typeof createSupabaseClient> | null = null
 
-// Client-side supabase client (uses anon key)
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+// Export the supabase client directly for backward compatibility
+export const supabase =
+  typeof window !== "undefined"
+    ? createSupabaseClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
+    : null
 
-// This function should only be used in server components or API routes
-export const createServerSupabaseClient = () => {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+export function getSupabaseClient() {
+  if (!supabaseClient && typeof window !== "undefined") {
+    // Only create the client on the client side
+    supabaseClient = createSupabaseClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    )
+  }
+  return supabaseClient
+}
 
-  // Only create service role client on the server
-  return createClient(supabaseUrl, supabaseServiceKey, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  })
+// Create a singleton Supabase client for server components
+let supabaseServerClient: ReturnType<typeof createSupabaseClient> | null = null
+
+export function getServerSupabaseClient() {
+  if (!supabaseServerClient) {
+    supabaseServerClient = createSupabaseClient(
+      process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY ||
+        process.env.SUPABASE_ANON_KEY ||
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    )
+  }
+  return supabaseServerClient
 }

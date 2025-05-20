@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useAuth } from "@/contexts/auth-context"
 import { Button } from "@/components/ui/button"
 import { toast } from "@/components/ui/use-toast"
-import { supabase } from "@/lib/supabase"
+import { getSupabaseClient } from "@/lib/supabase"
 import { FcGoogle } from "react-icons/fc"
 import { FaFacebook, FaTwitter, FaGithub } from "react-icons/fa"
 import { Link2, Unlink, AlertTriangle } from "lucide-react"
@@ -22,6 +22,7 @@ export function ConnectedAccounts() {
 
       setIsLoading(true)
       try {
+        const supabase = getSupabaseClient()
         // Get the user's identities
         const { data: identities, error } = await supabase.auth.admin.getUserIdentities(user.id)
 
@@ -48,6 +49,7 @@ export function ConnectedAccounts() {
   const handleLink = async (provider: string) => {
     setIsLinking(provider)
     try {
+      const supabase = getSupabaseClient()
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: provider as any,
         options: {

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { supabase } from "@/lib/supabase"
+import { getSupabaseClient } from "@/lib/supabase"
 import { Button } from "@/components/ui/button"
 import { CheckCircle, XCircle } from "lucide-react"
 import Link from "next/link"
@@ -27,6 +27,7 @@ export default function VerifyPage() {
         }
 
         // Verify the token with Supabase
+        const supabase = getSupabaseClient()
         const { error } = await supabase.auth.verifyOtp({
           token_hash: token,
           type: "signup",

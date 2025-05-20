@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import type { Metadata } from "next"
 
@@ -81,88 +82,178 @@ export default function ServicesPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Service Card 1 */}
             <div className="bg-white shadow-md rounded-lg overflow-hidden">
-              <img src="https://via.placeholder.com/600x400" alt="Service 1" className="w-full h-48 object-cover" />
+              <Image
+                src="/web-design-modern.png"
+                alt="Web Design"
+                width={600}
+                height={400}
+                className="w-full h-48 object-cover"
+              />
               <div className="p-6">
                 <h2 className="text-xl font-semibold text-gray-700 mb-2">Web Design</h2>
                 <p className="text-gray-600">
                   We offer professional web design services to help your organisation establish a strong online
                   presence. We customise our designs to meet your specific needs.
                 </p>
-                <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                  Learn More
-                </button>
+                <div className="flex space-x-4 mt-4">
+                  <Link href="/services/nextjs-website-creators">
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                      Learn More
+                    </button>
+                  </Link>
+                  <Link href="/services/web-design-contact">
+                    <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                      Contact Us
+                    </button>
+                  </Link>
+                </div>
               </div>
             </div>
 
             {/* Service Card 2 */}
             <div className="bg-white shadow-md rounded-lg overflow-hidden">
-              <img src="https://via.placeholder.com/600x400" alt="Service 2" className="w-full h-48 object-cover" />
+              <Image
+                src="/digital-marketing-modern.png"
+                alt="Digital Marketing"
+                width={600}
+                height={400}
+                className="w-full h-48 object-cover"
+              />
               <div className="p-6">
                 <h2 className="text-xl font-semibold text-gray-700 mb-2">Digital Marketing</h2>
                 <p className="text-gray-600">
                   Our digital marketing programme is designed to optimise your online visibility and drive targeted
                   traffic to your website.
                 </p>
-                <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                  Learn More
-                </button>
+                <div className="flex space-x-4 mt-4">
+                  <Link href="/services/gmb-strategies">
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                      Learn More
+                    </button>
+                  </Link>
+                  <Link href="/services/digital-marketing-contact">
+                    <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                      Contact Us
+                    </button>
+                  </Link>
+                </div>
               </div>
             </div>
 
             {/* Service Card 3 */}
             <div className="bg-white shadow-md rounded-lg overflow-hidden">
-              <img src="https://via.placeholder.com/600x400" alt="Service 3" className="w-full h-48 object-cover" />
+              <Image
+                src="/content-creation-modern.png"
+                alt="Content Creation"
+                width={600}
+                height={400}
+                className="w-full h-48 object-cover"
+              />
               <div className="p-6">
                 <h2 className="text-xl font-semibold text-gray-700 mb-2">Content Creation</h2>
                 <p className="text-gray-600">
                   We create engaging and informative content that resonates with your audience and helps you achieve
                   your business goals.
                 </p>
-                <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                  Learn More
-                </button>
+                <div className="flex space-x-4 mt-4">
+                  <Link href="/blog">
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                      Learn More
+                    </button>
+                  </Link>
+                  <Link href="/services/content-creation-contact">
+                    <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                      Contact Us
+                    </button>
+                  </Link>
+                </div>
               </div>
             </div>
 
             {/* Service Card 4 */}
             <div className="bg-white shadow-md rounded-lg overflow-hidden">
-              <img src="https://via.placeholder.com/600x400" alt="Service 4" className="w-full h-48 object-cover" />
+              <Image
+                src="/seo-services-modern.png"
+                alt="SEO Services"
+                width={600}
+                height={400}
+                className="w-full h-48 object-cover"
+              />
               <div className="p-6">
                 <h2 className="text-xl font-semibold text-gray-700 mb-2">SEO Services</h2>
                 <p className="text-gray-600">
                   We optimise your website for search engines to improve your rankings and drive organic traffic.
                 </p>
-                <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                  Learn More
-                </button>
+                <div className="flex space-x-4 mt-4">
+                  <Link href="/services/gmb-strategies">
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                      Learn More
+                    </button>
+                  </Link>
+                  <Link href="/services/seo-services-contact">
+                    <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                      Contact Us
+                    </button>
+                  </Link>
+                </div>
               </div>
             </div>
 
             {/* Service Card 5 */}
             <div className="bg-white shadow-md rounded-lg overflow-hidden">
-              <img src="https://via.placeholder.com/600x400" alt="Service 5" className="w-full h-48 object-cover" />
+              <Image
+                src="/branding-modern.png"
+                alt="Branding"
+                width={600}
+                height={400}
+                className="w-full h-48 object-cover"
+              />
               <div className="p-6">
                 <h2 className="text-xl font-semibold text-gray-700 mb-2">Branding</h2>
                 <p className="text-gray-600">
                   We help you create a strong brand identity that resonates with your target audience.
                 </p>
-                <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                  Learn More
-                </button>
+                <div className="flex space-x-4 mt-4">
+                  <Link href="/services/app-development">
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                      Learn More
+                    </button>
+                  </Link>
+                  <Link href="/services/branding-contact">
+                    <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                      Contact Us
+                    </button>
+                  </Link>
+                </div>
               </div>
             </div>
 
             {/* Service Card 6 */}
             <div className="bg-white shadow-md rounded-lg overflow-hidden">
-              <img src="https://via.placeholder.com/600x400" alt="Service 6" className="w-full h-48 object-cover" />
+              <Image
+                src="/consulting-modern.png"
+                alt="Consulting"
+                width={600}
+                height={400}
+                className="w-full h-48 object-cover"
+              />
               <div className="p-6">
                 <h2 className="text-xl font-semibold text-gray-700 mb-2">Consulting</h2>
                 <p className="text-gray-600">
                   We provide expert consulting services to help you achieve your business goals.
                 </p>
-                <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                  Learn More
-                </button>
+                <div className="flex space-x-4 mt-4">
+                  <Link href="/services/rest-api-development">
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                      Learn More
+                    </button>
+                  </Link>
+                  <Link href="/services/consulting-contact">
+                    <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                      Contact Us
+                    </button>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

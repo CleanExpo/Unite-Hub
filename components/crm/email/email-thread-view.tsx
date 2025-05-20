@@ -1,118 +1,109 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { Reply, Forward, Archive, Trash, MoreHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Avatar } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Reply, ReplyAll, Forward, Archive, Trash, Download, ChevronDown, ChevronUp, Paperclip } from "lucide-react"
-import { getEmailMessages, markThreadAsRead, type EmailMessage, type EmailThread } from "@/lib/email-integration"
-import { EmailComposer } from "./email-composer"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { getEmailThread, getEmailMessages, type EmailThread, type EmailMessage } from "@/lib/email-integration"
 
 interface EmailThreadViewProps {
   threadId: string
   thread?: EmailThread
-  clientId?: number
 }
 
-export function EmailThreadView({ threadId, thread, clientId }: EmailThreadViewProps) {
+export function EmailThreadView({ threadId, thread: initialThread }: EmailThreadViewProps) {
+  const [thread, setThread] = useState<EmailThread | null>(initialThread || null)
   const [messages, setMessages] = useState<EmailMessage[]>([])
   const [loading, setLoading] = useState(true)
-  const [expandedMessages, setExpandedMessages] = useState<Record<string, boolean>>({})
-  const [isComposerOpen, setIsComposerOpen] = useState(false)
-  const [replyType, setReplyType] = useState<"reply" | "replyAll" | "forward">("reply")
-  const [replyToMessage, setReplyToMessage] = useState<EmailMessage | null>(null)
-  const router = useRouter()
 
   useEffect(() => {
-    async function loadMessages() {
+    async function loadThreadAndMessages() {
       setLoading(true)
       try {
-        const data = await getEmailMessages(threadId)
-        setMessages(data)
-
-        // Mark thread as read
-        await markThreadAsRead(threadId)
-
-        // Expand the last message by default
-        if (data.length > 0) {
-          setExpandedMessages({
-            [data[data.length - 1].id]: true,
-          })
+        // Load thread if not provided
+        let threadData = initialThread
+        if (!threadData) {
+          threadData = await getEmailThread(threadId)
+          if (threadData) {
+            setThread(threadData)
+          }
         }
+
+        // Load messages
+        const messagesData = await getEmailMessages(threadId)
+        setMessages(messagesData)
       } catch (error) {
-        console.error("Failed to load email messages:", error)
+        console.error("Failed to load email thread or messages:", error)
       } finally {
         setLoading(false)
       }
     }
 
     if (threadId) {
-      loadMessages()
+      loadThreadAndMessages()
     }
-  }, [threadId])
+  }, [threadId, initialThread])
 
-  const toggleMessageExpand = (messageId: string) => {
-    setExpandedMessages((prev) => ({
-      ...prev,
-      [messageId]: !prev[messageId],
-    }))
+  // Sample data for demonstration
+  const sampleThread: EmailThread = {
+    id: threadId,
+    subject: "Project Proposal Discussion",
+    snippet: "I've reviewed the proposal and have some feedback...",
+    participants: [
+      { email: "client@example.com", name: "John Client" },
+      { email: "me@streamline.com", name: "Me" },
+    ],
+    unread: false,
+    lastMessageAt: new Date().toISOString(),
+    folder: "inbox",
+    labels: ["important"],
   }
 
-  const handleReply = (message: EmailMessage, type: "reply" | "replyAll" | "forward") => {
-    setReplyType(type)
-    setReplyToMessage(message)
-    setIsComposerOpen(true)
-  }
+  const sampleMessages: EmailMessage[] = [
+    {
+      id: "1",
+      threadId,
+      from: { email: "client@example.com", name: "John Client" },
+      to: [{ email: "me@streamline.com", name: "Me" }],
+      subject: "Project Proposal Discussion",
+      body: "Hi,\n\nI've reviewed the proposal you sent over and I have some feedback. Overall, I think it looks good, but I have a few questions about the timeline and budget.\n\nCould we schedule a call to discuss these points?\n\nBest regards,\nJohn",
+      sentAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(), // 1 day ago
+    },
+    {
+      id: "2",
+      threadId,
+      from: { email: "me@streamline.com", name: "Me" },
+      to: [{ email: "client@example.com", name: "John Client" }],
+      subject: "Re: Project Proposal Discussion",
+      body: "Hi John,\n\nThank you for reviewing the proposal. I'd be happy to schedule a call to discuss your questions about the timeline and budget.\n\nHow does tomorrow at 2 PM your time sound?\n\nBest regards,\nMe",
+      sentAt: new Date(Date.now() - 1000 * 60 * 60 * 12).toISOString(), // 12 hours ago
+    },
+    {
+      id: "3",
+      threadId,
+      from: { email: "client@example.com", name: "John Client" },
+      to: [{ email: "me@streamline.com", name: "Me" }],
+      subject: "Re: Project Proposal Discussion",
+      body: "That works for me. I'll send a calendar invite with the meeting details.\n\nTalk to you tomorrow!\n\nJohn",
+      sentAt: new Date(Date.now() - 1000 * 60 * 60 * 6).toISOString(), // 6 hours ago
+    },
+  ]
 
-  const getReplyDetails = () => {
-    if (!replyToMessage) return { to: "", subject: "", body: "" }
-
-    let to = ""
-    let subject = ""
-    let body = ""
-
-    if (replyType === "reply") {
-      to = replyToMessage.from_email
-      subject = `Re: ${replyToMessage.subject}`
-    } else if (replyType === "replyAll") {
-      // Include original sender and all recipients except current user
-      const allRecipients = [
-        replyToMessage.from_email,
-        ...replyToMessage.to_recipients.map((r) => r.email),
-        ...(replyToMessage.cc_recipients?.map((r) => r.email) || []),
-      ]
-      // TODO: Filter out current user's email
-      to = allRecipients.join(", ")
-      subject = `Re: ${replyToMessage.subject}`
-    } else if (replyType === "forward") {
-      to = ""
-      subject = `Fwd: ${replyToMessage.subject}`
-    }
-
-    // Create quoted reply
-    const date = new Date(replyToMessage.sent_at || replyToMessage.created_at).toLocaleString()
-    const sender = replyToMessage.from_name || replyToMessage.from_email
-
-    body = `
-<br><br>
-<div style="padding-left: 1em; border-left: 2px solid #ccc; margin: 1em 0;">
-  <p>On ${date}, ${sender} wrote:</p>
-  ${replyToMessage.body_html || replyToMessage.body_text || ""}
-</div>
-`
-
-    return { to, subject, body }
-  }
+  // Use sample data for now
+  const displayThread = thread || sampleThread
+  const displayMessages = messages.length > 0 ? messages : sampleMessages
 
   if (loading) {
     return (
       <div className="p-6 space-y-6">
         <Skeleton className="h-8 w-3/4" />
-        <div className="space-y-4">
-          {[1, 2, 3].map((i) => (
+        <div className="space-y-8">
+          {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="space-y-2">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center space-x-2">
                 <Skeleton className="h-10 w-10 rounded-full" />
                 <div>
                   <Skeleton className="h-4 w-40" />
@@ -127,170 +118,80 @@ export function EmailThreadView({ threadId, thread, clientId }: EmailThreadViewP
     )
   }
 
-  if (messages.length === 0) {
-    return (
-      <div className="p-8 text-center">
-        <p className="text-muted-foreground">No messages found in this thread</p>
-        <Button
-          variant="outline"
-          className="mt-4"
-          onClick={() => router.push(clientId ? `/dashboard/crm/clients/${clientId}/email` : "/dashboard/crm/email")}
-        >
-          Back to Inbox
-        </Button>
-      </div>
-    )
-  }
-
   return (
     <div className="flex flex-col h-full">
-      <div className="p-4 border-b border-gray-200">
-        <h2 className="text-xl font-semibold">{thread?.subject || messages[0].subject}</h2>
-        <div className="flex gap-2 mt-4">
-          <Button variant="outline" size="sm" onClick={() => handleReply(messages[messages.length - 1], "reply")}>
-            <Reply className="h-4 w-4 mr-2" />
-            Reply
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => handleReply(messages[messages.length - 1], "replyAll")}>
-            <ReplyAll className="h-4 w-4 mr-2" />
-            Reply All
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => handleReply(messages[messages.length - 1], "forward")}>
-            <Forward className="h-4 w-4 mr-2" />
-            Forward
-          </Button>
-          <div className="ml-auto flex gap-2">
-            <Button variant="ghost" size="icon">
-              <Archive className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <Trash className="h-4 w-4" />
-            </Button>
-          </div>
+      <div className="p-4 border-b">
+        <h2 className="text-xl font-semibold">{displayThread.subject}</h2>
+        <div className="flex items-center text-sm text-muted-foreground mt-1">
+          <span>
+            {displayThread.participants
+              .filter((p) => p.email !== "me@streamline.com")
+              .map((p) => p.name || p.email)
+              .join(", ")}
+          </span>
+          <span className="mx-2">•</span>
+          <span>{new Date(displayThread.lastMessageAt).toLocaleDateString()}</span>
         </div>
       </div>
 
-      <div className="flex-1 overflow-auto p-4">
-        <div className="space-y-6">
-          {messages.map((message, index) => {
-            const isExpanded = expandedMessages[message.id] || false
-            const isLastMessage = index === messages.length - 1
-
-            return (
-              <div
-                key={message.id}
-                className={`border rounded-lg ${isLastMessage ? "border-gray-300 bg-gray-50" : "border-gray-200"}`}
-              >
-                <div
-                  className="p-3 flex items-center justify-between cursor-pointer"
-                  onClick={() => toggleMessageExpand(message.id)}
-                >
-                  <div className="flex items-center gap-3">
-                    <Avatar className="h-8 w-8">
-                      <div className="bg-primary text-primary-foreground rounded-full h-full w-full flex items-center justify-center text-sm font-medium">
-                        {message.from_name?.[0] || message.from_email[0]}
-                      </div>
-                    </Avatar>
-                    <div>
-                      <div className="font-medium">{message.from_name || message.from_email}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {new Date(message.sent_at || message.created_at).toLocaleString()}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {message.has_attachments && <Paperclip className="h-4 w-4 text-muted-foreground" />}
-                    {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+      <ScrollArea className="flex-1">
+        <div className="p-6 space-y-8">
+          {displayMessages.map((message) => (
+            <div key={message.id} className="space-y-2">
+              <div className="flex justify-between items-start">
+                <div className="flex items-center space-x-2">
+                  <Avatar>
+                    <AvatarFallback>{(message.from.name || message.from.email).charAt(0).toUpperCase()}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <div className="font-medium">{message.from.name || message.from.email}</div>
+                    <div className="text-xs text-muted-foreground">{new Date(message.sentAt).toLocaleString()}</div>
                   </div>
                 </div>
 
-                {isExpanded && (
-                  <div className="px-4 pb-4">
-                    <div className="text-sm mb-2">
-                      <span className="font-medium">To:</span>{" "}
-                      {message.to_recipients.map((r) => r.name || r.email).join(", ")}
-                    </div>
-
-                    {message.cc_recipients && message.cc_recipients.length > 0 && (
-                      <div className="text-sm mb-2">
-                        <span className="font-medium">Cc:</span>{" "}
-                        {message.cc_recipients.map((r) => r.name || r.email).join(", ")}
-                      </div>
-                    )}
-
-                    <div
-                      className="mt-4 prose prose-sm max-w-none"
-                      dangerouslySetInnerHTML={{ __html: message.body_html || message.body_text || "" }}
-                    />
-
-                    {message.has_attachments && (
-                      <div className="mt-4 pt-4 border-t border-gray-200">
-                        <h4 className="text-sm font-medium mb-2">Attachments</h4>
-                        <div className="flex flex-wrap gap-2">
-                          {/* Placeholder for attachments */}
-                          <div className="flex items-center gap-2 bg-gray-100 rounded-lg p-2 text-sm">
-                            <Paperclip className="h-4 w-4" />
-                            <span>attachment.pdf</span>
-                            <Button variant="ghost" size="icon" className="h-6 w-6">
-                              <Download className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="mt-4 flex gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleReply(message, "reply")
-                        }}
-                      >
-                        <Reply className="h-3 w-3 mr-1" />
-                        Reply
+                <div className="flex items-center">
+                  <Button variant="ghost" size="icon">
+                    <Reply className="h-4 w-4" />
+                  </Button>
+                  <Button variant="ghost" size="icon">
+                    <Forward className="h-4 w-4" />
+                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <MoreHorizontal className="h-4 w-4" />
                       </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleReply(message, "replyAll")
-                        }}
-                      >
-                        <ReplyAll className="h-3 w-3 mr-1" />
-                        Reply All
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          handleReply(message, "forward")
-                        }}
-                      >
-                        <Forward className="h-3 w-3 mr-1" />
-                        Forward
-                      </Button>
-                    </div>
-                  </div>
-                )}
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem>
+                        <Archive className="h-4 w-4 mr-2" />
+                        Archive
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Trash className="h-4 w-4 mr-2" />
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
               </div>
-            )
-          })}
-        </div>
-      </div>
 
-      <EmailComposer
-        isOpen={isComposerOpen}
-        onClose={() => setIsComposerOpen(false)}
-        initialTo={getReplyDetails().to}
-        initialSubject={getReplyDetails().subject}
-        initialBody={getReplyDetails().body}
-        threadId={replyType !== "forward" ? threadId : undefined}
-        clientId={clientId}
-      />
+              <div className="pl-12 whitespace-pre-wrap">{message.body}</div>
+            </div>
+          ))}
+        </div>
+      </ScrollArea>
+
+      <div className="p-4 border-t flex space-x-2">
+        <Button>
+          <Reply className="h-4 w-4 mr-2" />
+          Reply
+        </Button>
+        <Button variant="outline">
+          <Forward className="h-4 w-4 mr-2" />
+          Forward
+        </Button>
+      </div>
     </div>
   )
 }

@@ -19,7 +19,7 @@ import {
   Phone,
   MessageSquare,
 } from "lucide-react"
-import { supabase } from "@/lib/supabase"
+import { getSupabaseClient } from "@/lib/supabase"
 import {
   generateTOTPSecret,
   generateTOTPUri,
@@ -202,6 +202,7 @@ export function SecuritySettings() {
 
     setIsChangingPassword(true)
     try {
+      const supabase = getSupabaseClient()
       // First verify the current password
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email: user.email,
@@ -482,6 +483,7 @@ export function SecuritySettings() {
     if (!user || !backupEmail) return
 
     try {
+      const supabase = getSupabaseClient()
       await addRecoveryMethod(user.id, "email", backupEmail, false)
 
       // Send verification email
@@ -515,6 +517,7 @@ export function SecuritySettings() {
     if (!user || !backupPhone) return
 
     try {
+      const supabase = getSupabaseClient()
       await addRecoveryMethod(user.id, "phone", backupPhone, false)
 
       // Send verification SMS
