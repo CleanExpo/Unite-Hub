@@ -1,52 +1,58 @@
-import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs"
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
+import { getToken } from "next-auth/jwt"
+
+// Required environment variables:
+// - NEXTAUTH_SECRET: Secret for NextAuth
 
 export async function middleware(request: NextRequest) {
-  const response = NextResponse.next()
-  const supabase = createMiddlewareClient({ req: request, res: response })
+  // Get the pathname
+  const path = request.nextUrl.pathname
 
-  // Check if we have a session
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
+  // Public paths that don't require authentication
+  const publicPaths = [
+    "/",
+    "/auth/signin",
+    "/auth/signup",
+    "/auth/forgot-password",
+    "/auth/reset-password",
+    "/auth/verify",
+    "/services",
+    "/about",
+    "/contact",
+    "/blog",
+    "/podcast",
+  ]
 
-  // If no session and trying to access protected routes, redirect to login
-  const protectedRoutes = ["/dashboard", "/profile", "/onboarding"]
-  const isProtectedRoute = protectedRoutes.some((route) => request.nextUrl.pathname.startsWith(route))
+  // Check if the path is public
+  const isPublicPath = publicPaths.some((publicPath) => path === publicPath || path.startsWith(`${publicPath}/`))
 
-  if (!session && isProtectedRoute) {
-    const redirectUrl = new URL("/auth/signin", request.url)
-    redirectUrl.searchParams.set("redirect", request.nextUrl.pathname)
-    return NextResponse.redirect(redirectUrl)
+  // Special case for static files and API routes
+  if (path.startsWith("/_next") || path.startsWith("/api/") || path.includes(".") || path.startsWith("/favicon")) {
+    return NextResponse.next()
   }
 
-  // If session exists and user is trying to access auth routes, redirect to dashboard
-  const authRoutes = ["/auth/signin", "/auth/signup"]
-  const isAuthRoute = authRoutes.some((route) => request.nextUrl.pathname.startsWith(route))
+  // Get the token
+  const token = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+  })
 
-  if (session && isAuthRoute) {
+  // Redirect unauthenticated users to the login page for protected routes
+  if (!token && !isPublicPath) {
+    const url = new URL("/auth/signin", request.url)
+    url.searchParams.set("callbackUrl", encodeURI(request.url))
+    return NextResponse.redirect(url)
+  }
+
+  // Redirect authenticated users away from auth pages
+  if (token && (path.startsWith("/auth/signin") || path.startsWith("/auth/signup"))) {
     return NextResponse.redirect(new URL("/dashboard", request.url))
   }
 
-  // If user is authenticated, check onboarding status for protected routes
-  if (session && isProtectedRoute && request.nextUrl.pathname !== "/onboarding") {
-    // Get user profile to check onboarding status
-    const { data: profile } = await supabase
-      .from("user_profiles")
-      .select("onboarding_completed")
-      .eq("user_id", session.user.id)
-      .single()
-
-    // If onboarding is not completed and user is not on onboarding page, redirect to onboarding
-    if ((!profile || !profile.onboarding_completed) && request.nextUrl.pathname !== "/onboarding") {
-      return NextResponse.redirect(new URL("/onboarding", request.url))
-    }
-  }
-
-  return response
+  return NextResponse.next()
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/profile/:path*", "/auth/:path*", "/onboarding/:path*"],
+  matcher: ["/((?!api/auth|_next/static|_next/image|favicon.ico).*)"],
 }

@@ -44,14 +44,23 @@ export default function EducationPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
                 <div className="flex items-center gap-3 mb-6">
-                  {/* Direct img tag with inline styles for maximum compatibility */}
-                  <img
-                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/CARSI%20images-4enOeAtKJxRp19qJlew0jidfKfoc1D.png"
-                    alt="CARSI"
-                    width="24"
-                    height="24"
-                    style={{ display: "inline-block" }}
-                  />
+                  {/* Using standard img tag with fallback */}
+                  <div className="w-6 h-6 relative">
+                    <img
+                      src="/carsi-logo.png"
+                      alt="CARSI"
+                      width="24"
+                      height="24"
+                      style={{ display: "inline-block" }}
+                      onError={(e) => {
+                        // Fallback to a simple styled div if image fails to load
+                        e.currentTarget.style.display = "none"
+                        e.currentTarget.parentElement.innerHTML = `
+                          <div style="width: 24px; height: 24px; background-color: #4ecdc4; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; font-weight: bold;">C</div>
+                        `
+                      }}
+                    />
+                  </div>
                   <span className="text-white text-lg">CARSI - Cleaning and Restoration Science Institute</span>
                 </div>
 
@@ -84,7 +93,7 @@ export default function EducationPage() {
                 </div>
               </div>
 
-              {/* Rest of the component remains the same */}
+              {/* Hero image with fallback */}
               <div className="relative">
                 <div className="absolute -inset-4 bg-[#4ecdc4]/20 rounded-lg blur-xl"></div>
                 <div className="relative bg-white rounded-lg overflow-hidden">
@@ -95,6 +104,15 @@ export default function EducationPage() {
                       display: "block",
                       width: "100%",
                       height: "auto",
+                    }}
+                    onError={(e) => {
+                      // Fallback to a styled div if image fails to load
+                      e.currentTarget.style.display = "none"
+                      e.currentTarget.parentElement.innerHTML = `
+                        <div style="height: 300px; background-color: #f3f4f6; display: flex; align-items: center; justify-content: center;">
+                          <span style="color: #9ca3af; font-size: 18px;">Education Hero Image</span>
+                        </div>
+                      `
                     }}
                   />
                 </div>
@@ -144,7 +162,7 @@ export default function EducationPage() {
           </div>
         </section>
 
-        {/* Featured Courses Section */}
+        {/* Featured Courses Section with fallbacks */}
         <section className="py-16">
           <div className="container px-4 md:px-6 mx-auto">
             <h2 className="text-3xl font-bold text-center mb-12">Featured CARSI Courses</h2>
@@ -159,6 +177,14 @@ export default function EducationPage() {
                       height: "100%",
                       objectFit: "cover",
                       display: "block",
+                    }}
+                    onError={(e) => {
+                      e.currentTarget.style.display = "none"
+                      e.currentTarget.parentElement.innerHTML = `
+                        <div style="height: 200px; background-color: #e5f7f7; display: flex; align-items: center; justify-content: center;">
+                          <span style="color: #4ecdc4; font-weight: bold;">Water Damage Course</span>
+                        </div>
+                      `
                     }}
                   />
                 </div>
@@ -190,6 +216,14 @@ export default function EducationPage() {
                       objectFit: "cover",
                       display: "block",
                     }}
+                    onError={(e) => {
+                      e.currentTarget.style.display = "none"
+                      e.currentTarget.parentElement.innerHTML = `
+                        <div style="height: 200px; background-color: #fff5f5; display: flex; align-items: center; justify-content: center;">
+                          <span style="color: #f56565; font-weight: bold;">Fire Damage Course</span>
+                        </div>
+                      `
+                    }}
                   />
                 </div>
                 <div className="p-6">
@@ -219,6 +253,14 @@ export default function EducationPage() {
                       height: "100%",
                       objectFit: "cover",
                       display: "block",
+                    }}
+                    onError={(e) => {
+                      e.currentTarget.style.display = "none"
+                      e.currentTarget.parentElement.innerHTML = `
+                        <div style="height: 200px; background-color: #f0fff4; display: flex; align-items: center; justify-content: center;">
+                          <span style="color: #48bb78; font-weight: bold;">Mold Remediation Course</span>
+                        </div>
+                      `
                     }}
                   />
                 </div>

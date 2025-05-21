@@ -1,22 +1,60 @@
+"use client"
+
 import Image from "next/image"
+import { useState } from "react"
 
 export const SocialFeed = () => {
+  // Add error handling for images
+  const [imageError, setImageError] = useState({
+    profile1: false,
+    profile2: false,
+    post1: false,
+    post2: false,
+  })
+
+  const handleImageError = (imageKey) => {
+    setImageError((prev) => ({
+      ...prev,
+      [imageKey]: true,
+    }))
+  }
+
   return (
     <div className="space-y-4">
       {/* Post 1 */}
       <div className="bg-white rounded-lg shadow-md p-4">
         <div className="flex items-center space-x-2">
-          <Image src="/profile-placeholder.jpg" alt="Profile" width={40} height={40} className="rounded-full" />
+          {imageError.profile1 ? (
+            <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+              <span className="text-gray-500 text-xs">JD</span>
+            </div>
+          ) : (
+            <Image
+              src="/profile-placeholder.png"
+              alt="Profile"
+              width={40}
+              height={40}
+              className="rounded-full"
+              onError={() => handleImageError("profile1")}
+            />
+          )}
           <p className="text-sm font-semibold">John Doe</p>
         </div>
         <p className="text-gray-700 text-sm mt-2">Check out my latest blog post on digital marketing strategies!</p>
-        <Image
-          src="/digital-marketing.png"
-          alt="Social media post"
-          width={300}
-          height={200}
-          className="rounded-lg object-cover mt-2"
-        />
+        {imageError.post1 ? (
+          <div className="w-full h-40 bg-gray-100 rounded-lg mt-2 flex items-center justify-center">
+            <span className="text-gray-400">Digital Marketing Post</span>
+          </div>
+        ) : (
+          <Image
+            src="/digital-marketing.png"
+            alt="Social media post"
+            width={300}
+            height={200}
+            className="rounded-lg object-cover mt-2"
+            onError={() => handleImageError("post1")}
+          />
+        )}
         <div className="flex justify-between items-center mt-2">
           <div className="flex space-x-2">
             <button className="text-gray-500 hover:text-gray-700 focus:outline-none">
@@ -41,19 +79,39 @@ export const SocialFeed = () => {
       {/* Post 2 */}
       <div className="bg-white rounded-lg shadow-md p-4">
         <div className="flex items-center space-x-2">
-          <Image src="/profile-placeholder.jpg" alt="Profile" width={40} height={40} className="rounded-full" />
+          {imageError.profile2 ? (
+            <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+              <span className="text-gray-500 text-xs">JS</span>
+            </div>
+          ) : (
+            <Image
+              src="/profile-placeholder.png"
+              alt="Profile"
+              width={40}
+              height={40}
+              className="rounded-full"
+              onError={() => handleImageError("profile2")}
+            />
+          )}
           <p className="text-sm font-semibold">Jane Smith</p>
         </div>
         <p className="text-gray-700 text-sm mt-2">
           Excited to announce our new product launch! Stay tuned for more details.
         </p>
-        <Image
-          src="/digital-marketing.png"
-          alt="Social media post"
-          width={300}
-          height={200}
-          className="rounded-lg object-cover mt-2"
-        />
+        {imageError.post2 ? (
+          <div className="w-full h-40 bg-gray-100 rounded-lg mt-2 flex items-center justify-center">
+            <span className="text-gray-400">Product Launch Post</span>
+          </div>
+        ) : (
+          <Image
+            src="/digital-marketing.png"
+            alt="Social media post"
+            width={300}
+            height={200}
+            className="rounded-lg object-cover mt-2"
+            onError={() => handleImageError("post2")}
+          />
+        )}
         <div className="flex justify-between items-center mt-2">
           <div className="flex space-x-2">
             <button className="text-gray-500 hover:text-gray-700 focus:outline-none">

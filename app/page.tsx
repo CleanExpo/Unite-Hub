@@ -91,12 +91,19 @@ export default function HomePage() {
               {/* Education with CARSI Logo */}
               <div className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
                 <div className="flex justify-center mb-4">
-                  <div className="w-24 h-24 relative">
-                    <Image
+                  <div className="w-24 h-24 relative flex items-center justify-center">
+                    {/* Using standard img tag with fallback */}
+                    <img
                       src="/carsi-logo.png"
                       alt="CARSI - Cleaning and Restoration Science Institute"
-                      fill
-                      className="object-contain"
+                      style={{ maxWidth: "100%", maxHeight: "100%" }}
+                      onError={(e) => {
+                        // Fallback to a styled div if image fails to load
+                        e.currentTarget.style.display = "none"
+                        e.currentTarget.parentElement.innerHTML = `
+                          <div style="width: 80px; height: 80px; background-color: #4ecdc4; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; font-weight: bold;">C</div>
+                        `
+                      }}
                     />
                   </div>
                 </div>
