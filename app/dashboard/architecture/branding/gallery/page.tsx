@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Download, Search, Filter, Star } from "lucide-react"
+import Link from "next/link"
 
 export default function TemplateGalleryPage() {
   const { toast } = useToast()
@@ -90,10 +91,17 @@ export default function TemplateGalleryPage() {
     <div className="container mx-auto py-8">
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-bold">Template Gallery</h1>
-          <p className="text-muted-foreground">
-            Browse and import professionally designed PDF templates for your architecture blueprints.
-          </p>
+          <div className="flex justify-between items-center mb-8">
+            <div>
+              <h1 className="text-3xl font-bold">Template Gallery</h1>
+              <p className="text-muted-foreground">
+                Browse and import professionally designed PDF templates for your architecture blueprints.
+              </p>
+            </div>
+            <Link href="/dashboard/architecture/branding">
+              <Button variant="outline">Back to Branding Settings</Button>
+            </Link>
+          </div>
         </div>
 
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">

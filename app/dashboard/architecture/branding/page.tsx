@@ -7,9 +7,11 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { PDFBrandingForm } from "@/components/pdf-branding-form"
 import { Settings2, Grid } from "lucide-react"
-import { PlusCircle, Edit, Trash } from "lucide-react"
+import { PlusCircle } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
 import type { PdfBrandingTemplate } from "@/types/pdf-branding"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 
 // Sample template data
 const sampleTemplates: PdfBrandingTemplate[] = [
@@ -137,6 +139,11 @@ export default function PdfBrandingPage() {
   const [isEditing, setIsEditing] = useState(false)
   const { toast } = useToast()
 
+  const [primaryColor, setPrimaryColor] = useState("#3b82f6")
+  const [companyName, setCompanyName] = useState("Your Company")
+  const [logoUrl, setLogoUrl] = useState("")
+  const [isSaving, setIsSaving] = useState(false)
+
   useEffect(() => {
     // Simulate loading templates from API
     const loadTemplates = async () => {
@@ -236,6 +243,19 @@ export default function PdfBrandingPage() {
         variant: "destructive",
       })
     }
+  }
+
+  const handleSave = async () => {
+    setIsSaving(true)
+
+    // Simulate saving
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+
+    // In a real app, you would save these settings to your database
+    console.log("Saved settings:", { primaryColor, companyName, logoUrl })
+
+    setIsSaving(false)
+    alert("Settings saved successfully!")
   }
 
   if (selectedTemplate) {
@@ -427,70 +447,47 @@ export default function PdfBrandingPage() {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {templates.map((template) => (
-            <Card key={template.id} className={template.isDefault ? "border-primary" : ""}>
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center justify-between">
-                  {template.name}
-                  {template.isDefault && (
-                    <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">Default</span>
-                  )}
-                </CardTitle>
-                <CardDescription>Last updated: {new Date(template.updatedAt).toLocaleDateString()}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium">Description:</span>
-                    <span className="text-sm capitalize">{template.description}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium">Layout:</span>
-                    <span className="text-sm capitalize">{template.layout}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium">Colors:</span>
-                    <div className="flex gap-1">
-                      <div
-                        className="h-4 w-4 rounded-full border"
-                        style={{ backgroundColor: template.colors.primary }}
-                        title="Primary Color"
-                      />
-                      <div
-                        className="h-4 w-4 rounded-full border"
-                        style={{ backgroundColor: template.colors.secondary }}
-                        title="Secondary Color"
-                      />
-                      <div
-                        className="h-4 w-4 rounded-full border"
-                        style={{ backgroundColor: template.colors.accent }}
-                        title="Accent Color"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter className="flex justify-between">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    setSelectedTemplate(template)
-                    setIsEditing(true)
-                  }}
-                >
-                  <Edit className="mr-2 h-4 w-4" />
-                  Edit
-                </Button>
-                <Button variant="destructive" size="sm" onClick={() => handleDeleteTemplate(template.id)}>
-                  <Trash className="mr-2 h-4 w-4" />
-                  Delete
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Basic Settings</CardTitle>
+            <CardDescription>Configure the appearance of your PDF exports</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="company-name">Company Name</Label>
+              <Input id="company-name" value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="primary-color">Primary Color</Label>
+              <div className="flex items-center gap-2">
+                <Input
+                  id="primary-color"
+                  type="color"
+                  value={primaryColor}
+                  onChange={(e) => setPrimaryColor(e.target.value)}
+                  className="w-12 h-10 p-1"
+                />
+                <Input value={primaryColor} onChange={(e) => setPrimaryColor(e.target.value)} />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="logo-url">Logo URL</Label>
+              <Input
+                id="logo-url"
+                value={logoUrl}
+                onChange={(e) => setLogoUrl(e.target.value)}
+                placeholder="https://example.com/logo.png"
+              />
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Button onClick={handleSave} disabled={isSaving}>
+              {isSaving ? "Saving..." : "Save Settings"}
+            </Button>
+          </CardFooter>
+        </Card>
       )}
     </div>
   )

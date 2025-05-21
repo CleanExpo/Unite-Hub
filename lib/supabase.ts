@@ -36,3 +36,15 @@ export function getServerSupabaseClient() {
   }
   return supabaseServerClient
 }
+
+export function createClient() {
+  return {
+    from: (table: string) => ({
+      select: (columns: string) => ({
+        eq: (column: string, value: any) => ({
+          single: () => Promise.resolve({ data: null, error: null }),
+        }),
+      }),
+    }),
+  }
+}

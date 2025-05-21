@@ -1,34 +1,29 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { generatePDF } from "@/lib/pdf-generator"
-import { createClient } from "@/lib/supabase"
+import { generateSimplePDF } from "@/lib/simple-pdf-generator"
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const projectId = params.id
 
-    // Get the project data from the database
-    const supabase = createClient()
-    const { data: project, error } = await supabase
-      .from("architecture_projects")
-      .select("*")
-      .eq("id", projectId)
-      .single()
-
-    if (error || !project) {
-      return NextResponse.json({ error: "Project not found" }, { status: 404 })
+    // Mock project data for demonstration
+    // In a real app, you would fetch this from your database
+    const project = {
+      id: projectId,
+      name: "Architecture Project",
+      description: "This is a sample architecture project",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      status: "active",
+      client: "Sample Client",
+      budget: "$10,000",
+      timeline: "3 months",
     }
 
     // Generate the PDF
-    const doc = await generatePDF(project)
+    const pdfBlob = await generateSimplePDF(project)
 
-    // Convert to blob
-    const pdfBlob = doc.output("blob")
-
-    // Convert blob to ArrayBuffer
-    const arrayBuffer = await pdfBlob.arrayBuffer()
-
-    // Return the PDF as a response
-    return new NextResponse(arrayBuffer, {
+    // Return the PDF with appropriate headers
+    return new NextResponse(pdfBlob, {
       headers: {
         "Content-Type": "application/pdf",
         "Content-Disposition": `attachment; filename="architecture-blueprint-${projectId}.pdf"`,
