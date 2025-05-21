@@ -2,9 +2,10 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { LayoutDashboard, Users, MessageSquare, Settings, FileImage } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { Building, LayoutDashboard, MessageSquare, Users } from "lucide-react"
 
-const navItems = [
+const items = [
   {
     title: "Dashboard",
     href: "/dashboard",
@@ -17,7 +18,7 @@ const navItems = [
     children: [
       {
         title: "Clients",
-        href: "/dashboard/crm/clients",
+        href: "/dashboard/crm",
       },
       {
         title: "Pipeline",
@@ -37,21 +38,11 @@ const navItems = [
     title: "Social",
     href: "/dashboard/social",
     icon: MessageSquare,
-    children: [
-      {
-        title: "Feed",
-        href: "/dashboard/social",
-      },
-      {
-        title: "Templates",
-        href: "/dashboard/social/templates",
-      },
-    ],
   },
   {
     title: "Architecture",
     href: "/dashboard/architecture",
-    icon: FileImage,
+    icon: Building,
     children: [
       {
         title: "Projects",
@@ -61,20 +52,7 @@ const navItems = [
         title: "New Project",
         href: "/dashboard/architecture/new",
       },
-      {
-        title: "PDF Branding",
-        href: "/dashboard/architecture/branding",
-      },
-      {
-        title: "Template Gallery",
-        href: "/dashboard/architecture/branding/gallery",
-      },
     ],
-  },
-  {
-    title: "Settings",
-    href: "/settings",
-    icon: Settings,
   },
 ]
 
@@ -82,46 +60,37 @@ export function DashboardNav() {
   const pathname = usePathname()
 
   return (
-    <nav className="space-y-1">
-      {navItems.map((item) => {
-        const isActive = pathname === item.href || pathname?.startsWith(`${item.href}/`)
-
-        return (
-          <div key={item.href} className="space-y-1">
-            <Link
-              href={item.href}
-              className={`flex items-center px-3 py-2 text-sm font-medium rounded-md ${
-                isActive ? "bg-gray-100 text-gray-900" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-              }`}
-            >
-              <item.icon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
-              {item.title}
-            </Link>
-
-            {item.children && isActive && (
-              <div className="ml-8 space-y-1">
-                {item.children.map((child) => {
-                  const isChildActive = pathname === child.href
-
-                  return (
-                    <Link
-                      key={child.href}
-                      href={child.href}
-                      className={`block px-3 py-2 text-sm font-medium rounded-md ${
-                        isChildActive
-                          ? "bg-gray-100 text-gray-900"
-                          : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                      }`}
-                    >
-                      {child.title}
-                    </Link>
-                  )
-                })}
-              </div>
+    <nav className="grid items-start gap-2">
+      {items.map((item, index) => (
+        <div key={index} className="mb-2">
+          <Link
+            href={item.href}
+            className={cn(
+              "group flex items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
+              pathname === item.href ? "bg-accent text-accent-foreground" : "transparent",
             )}
-          </div>
-        )
-      })}
+          >
+            <item.icon className="mr-2 h-4 w-4" />
+            <span>{item.title}</span>
+          </Link>
+          {item.children && (
+            <div className="ml-4 mt-1 space-y-1">
+              {item.children.map((child, childIndex) => (
+                <Link
+                  key={childIndex}
+                  href={child.href}
+                  className={cn(
+                    "group flex items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
+                    pathname === child.href ? "bg-accent/50 text-accent-foreground" : "transparent",
+                  )}
+                >
+                  <span>{child.title}</span>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
     </nav>
   )
 }

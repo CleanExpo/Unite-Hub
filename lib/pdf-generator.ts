@@ -1,5 +1,5 @@
-import { jsPDF } from "jspdf"
-import "jspdf-autotable"
+import jsPDF from "jspdf"
+import autoTable from "jspdf-autotable"
 import type { ArchitectureProject } from "@/lib/architecture-schema"
 
 // Add the missing type for jsPDF with autotable
@@ -380,4 +380,89 @@ export async function generateArchitecturePDF(project: ArchitectureProject): Pro
 
   // Return the PDF as a blob
   return doc.output("blob")
+}
+
+export async function generatePDF(projectData: any) {
+  // Create a new PDF document
+  const doc = new jsPDF()
+
+  // Add title
+  doc.setFontSize(20)
+  doc.text("Architecture Blueprint", 105, 15, { align: "center" })
+
+  // Add project info
+  doc.setFontSize(12)
+  doc.text(`Project: ${projectData.name || "Untitled Project"}`, 14, 30)
+  doc.text(`Created: ${new Date().toLocaleDateString()}`, 14, 38)
+
+  // Add requirements section
+  doc.setFontSize(16)
+  doc.text("Project Requirements", 14, 50)
+
+  const requirementsData = [
+    ["Requirement", "Details"],
+    ["Business Goals", projectData.businessGoals || "N/A"],
+    ["Target Audience", projectData.targetAudience || "N/A"],
+    ["Key Features", projectData.keyFeatures || "N/A"],
+  ]
+
+  autoTable(doc, {
+    startY: 55,
+    head: [requirementsData[0]],
+    body: requirementsData.slice(1),
+  })
+
+  // Add technical specifications
+  const currentY = (doc as any).lastAutoTable.finalY + 10
+  doc.setFontSize(16)
+  doc.text("Technical Specifications", 14, currentY)
+
+  const techSpecsData = [
+    ["Specification", "Details"],
+    ["Frontend Framework", projectData.frontendFramework || "N/A"],
+    ["Backend Technology", projectData.backendTechnology || "N/A"],
+    ["Database", projectData.database || "N/A"],
+    ["Hosting", projectData.hosting || "N/A"],
+  ]
+
+  autoTable(doc, {
+    startY: currentY + 5,
+    head: [techSpecsData[0]],
+    body: techSpecsData.slice(1),
+  })
+
+  // Add cost estimate
+  const costY = (doc as any).lastAutoTable.finalY + 10
+  doc.setFontSize(16)
+  doc.text("Cost Estimate", 14, costY)
+
+  const costData = [
+    ["Item", "Cost"],
+    ["Development", `$${projectData.developmentCost || "0"}`],
+    ["Design", `$${projectData.designCost || "0"}`],
+    ["Hosting", `$${projectData.hostingCost || "0"}`],
+    ["Maintenance", `$${projectData.maintenanceCost || "0"}`],
+    ["Total", `$${projectData.totalCost || "0"}`],
+  ]
+
+  autoTable(doc, {
+    startY: costY + 5,
+    head: [costData[0]],
+    body: costData.slice(1),
+  })
+
+  // Add footer
+  const pageCount = doc.getNumberOfPages()
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i)
+    doc.setFontSize(10)
+    doc.text(
+      `Page ${i} of ${pageCount} - Generated on ${new Date().toLocaleDateString()}`,
+      105,
+      doc.internal.pageSize.height - 10,
+      { align: "center" },
+    )
+  }
+
+  return doc
 }
