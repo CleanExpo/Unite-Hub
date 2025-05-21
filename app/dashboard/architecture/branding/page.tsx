@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { PDFBrandingForm } from "@/components/pdf-branding-form"
 import type { PDFBrandingSettings, PDFBrandingFormData } from "@/types/pdf-branding"
-import { Plus, Settings2 } from "lucide-react"
+import { Plus, Settings2, Grid } from "lucide-react"
 
 export default function PDFBrandingPage() {
   const router = useRouter()
@@ -197,10 +197,16 @@ export default function PDFBrandingPage() {
           <h1 className="text-3xl font-bold tracking-tight">PDF Branding Settings</h1>
           <p className="text-gray-500">Customize how your architecture blueprints look when exported as PDFs</p>
         </div>
-        <Button onClick={handleCreateNew}>
-          <Plus className="mr-2 h-4 w-4" />
-          New Template
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => router.push("/dashboard/architecture/branding/gallery")}>
+            <Grid className="mr-2 h-4 w-4" />
+            Browse Gallery
+          </Button>
+          <Button onClick={handleCreateNew}>
+            <Plus className="mr-2 h-4 w-4" />
+            New Template
+          </Button>
+        </div>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -221,10 +227,16 @@ export default function PDFBrandingPage() {
               <Settings2 className="mx-auto h-12 w-12 text-gray-400" />
               <h3 className="mt-4 text-lg font-medium">No templates yet</h3>
               <p className="mt-2 text-gray-500">Create your first PDF template to get started</p>
-              <Button onClick={handleCreateNew} className="mt-4">
-                <Plus className="mr-2 h-4 w-4" />
-                Create Template
-              </Button>
+              <div className="mt-4 flex flex-col sm:flex-row gap-4 justify-center">
+                <Button onClick={handleCreateNew}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  Create Template
+                </Button>
+                <Button variant="outline" onClick={() => router.push("/dashboard/architecture/branding/gallery")}>
+                  <Grid className="mr-2 h-4 w-4" />
+                  Browse Gallery
+                </Button>
+              </div>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
