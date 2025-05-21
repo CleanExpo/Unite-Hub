@@ -2,57 +2,50 @@ import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 import { getToken } from "next-auth/jwt"
 
-// Required environment variables:
-// - NEXTAUTH_SECRET: Secret for NextAuth
+// Define paths that require authentication
+const authRequiredPaths = ["/dashboard", "/profile", "/architecture", "/admin"]
+
+// Define paths that require specific roles
+const roleRequiredPaths = {
+  "/admin": ["admin", "superadmin"],
+  "/dashboard/architecture/branding": ["admin", "superadmin", "designer"],
+}
 
 export async function middleware(request: NextRequest) {
-  // Get the pathname
-  const path = request.nextUrl.pathname
+  const { pathname } = request.nextUrl
 
-  // Public paths that don't require authentication
-  const publicPaths = [
-    "/",
-    "/auth/signin",
-    "/auth/signup",
-    "/auth/forgot-password",
-    "/auth/reset-password",
-    "/auth/verify",
-    "/services",
-    "/about",
-    "/contact",
-    "/blog",
-    "/podcast",
-  ]
+  // Check if path requires authentication
+  const requiresAuth = authRequiredPaths.some((path) => pathname.startsWith(path))
 
-  // Check if the path is public
-  const isPublicPath = publicPaths.some((publicPath) => path === publicPath || path.startsWith(`${publicPath}/`))
+  if (requiresAuth) {
+    const token = await getToken({
+      req: request,
+      secret: process.env.NEXTAUTH_SECRET,
+    })
 
-  // Special case for static files and API routes
-  if (path.startsWith("/_next") || path.startsWith("/api/") || path.includes(".") || path.startsWith("/favicon")) {
-    return NextResponse.next()
-  }
+    // If no token, redirect to login
+    if (!token) {
+      const url = new URL(`/auth/signin`, request.url)
+      url.searchParams.set("callbackUrl", encodeURI(request.url))
+      return NextResponse.redirect(url)
+    }
 
-  // Get the token
-  const token = await getToken({
-    req: request,
-    secret: process.env.NEXTAUTH_SECRET,
-  })
-
-  // Redirect unauthenticated users to the login page for protected routes
-  if (!token && !isPublicPath) {
-    const url = new URL("/auth/signin", request.url)
-    url.searchParams.set("callbackUrl", encodeURI(request.url))
-    return NextResponse.redirect(url)
-  }
-
-  // Redirect authenticated users away from auth pages
-  if (token && (path.startsWith("/auth/signin") || path.startsWith("/auth/signup"))) {
-    return NextResponse.redirect(new URL("/dashboard", request.url))
+    // Check role requirements
+    for (const [path, roles] of Object.entries(roleRequiredPaths)) {
+      if (pathname.startsWith(path)) {
+        const userRole = token.role as string
+        if (!roles.includes(userRole)) {
+          // Redirect to unauthorized page
+          return NextResponse.redirect(new URL("/unauthorized", request.url))
+        }
+      }
+    }
   }
 
   return NextResponse.next()
 }
 
+// Configure middleware to run only on specific paths
 export const config = {
-  matcher: ["/((?!api/auth|_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/dashboard/:path*", "/profile/:path*", "/architecture/:path*", "/admin/:path*"],
 }
