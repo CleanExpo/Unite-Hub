@@ -1,5 +1,20 @@
 import { z } from "zod"
 
+// Constants for calculations
+export const POINTS_MAP = {
+  xs: 2,
+  s: 5,
+  m: 8,
+  l: 13,
+  xl: 21,
+}
+
+export const HOURS_PER_POINT = 5
+export const QA_PERCENTAGE = 0.2
+export const CONTINGENCY_PERCENTAGE = 0.15
+export const BLUEPRINT_FEE = 1500
+export const EXTRA_CONSULTATION_FEE = 150
+
 // Schema for brand assets
 export const BrandAssetSchema = z.object({
   name: z.string().min(1, "Asset name is required"),
@@ -8,21 +23,63 @@ export const BrandAssetSchema = z.object({
 })
 
 // Schema for architecture project
-export const ArchitectureProjectSchema = z.object({
-  name: z.string().min(3, "Project name must be at least 3 characters"),
-  description: z.string().min(10, "Description must be at least 10 characters"),
-  clientName: z.string().min(2, "Client name must be at least 2 characters"),
-  clientEmail: z.string().email("Must be a valid email address"),
-  projectType: z.string().min(1, "Project type is required"),
-  budget: z.number().min(0, "Budget must be a positive number"),
-  timeline: z.string().min(1, "Timeline is required"),
-  requirements: z.array(z.string()).min(1, "At least one requirement is needed"),
-  technologies: z.array(z.string()),
-  brandAssets: z.array(BrandAssetSchema).optional().default([]),
+export const architectureSchema = z.object({
+  projectBasics: z.object({
+    projectName: z.string().min(3, "Project name must be at least 3 characters"),
+    businessOverview: z.string().min(10, "Business overview must be at least 10 characters"),
+    projectGoals: z.string().min(10, "Project goals must be at least 10 characters"),
+    targetLaunchDate: z.string(),
+    expectedUserCount: z.string(),
+  }),
+  mvpFeatures: z.array(
+    z.object({
+      name: z.string().min(1, "Feature name is required"),
+      description: z.string().min(1, "Feature description is required"),
+      priority: z.string(),
+      complexity: z.string(),
+      userStories: z.array(z.string()),
+    }),
+  ),
+  futureFeatures: z
+    .array(
+      z.object({
+        name: z.string(),
+        description: z.string(),
+        priority: z.string(),
+        complexity: z.string(),
+        userStories: z.array(z.string()).optional(),
+      }),
+    )
+    .optional()
+    .default([]),
+  integrations: z
+    .array(
+      z.object({
+        name: z.string(),
+        purpose: z.string(),
+        apiDocumentation: z.string().optional(),
+      }),
+    )
+    .optional()
+    .default([]),
+  personas: z.array(
+    z.object({
+      name: z.string().min(1, "Persona name is required"),
+      role: z.string().min(1, "Persona role is required"),
+      goals: z.string().min(1, "Persona goals are required"),
+      painPoints: z.string().min(1, "Persona pain points are required"),
+    }),
+  ),
+  technicalConstraints: z.string(),
+  businessConstraints: z.string(),
+  preferredTechnologies: z.string(),
+  budget: z.number(),
+  timeline: z.string(),
+  additionalComments: z.string().optional(),
 })
 
-// Type for architecture project
-export type ArchitectureProject = z.infer<typeof ArchitectureProjectSchema>
+// Type for architecture input
+export type ArchitectureInput = z.infer<typeof architectureSchema>
 
 // Schema for PDF branding
 export const PdfBrandingSchema = z.object({

@@ -255,7 +255,10 @@ export default function PdfBrandingPage() {
     console.log("Saved settings:", { primaryColor, companyName, logoUrl })
 
     setIsSaving(false)
-    alert("Settings saved successfully!")
+    toast({
+      title: "Settings saved",
+      description: "Your settings have been saved successfully.",
+    })
   }
 
   if (selectedTemplate) {

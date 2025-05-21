@@ -61,14 +61,54 @@ export interface PdfBrandingTemplate {
   isDefault: boolean
   createdAt: string
   updatedAt: string
-  colors: PdfBrandingColors
-  fonts: PdfBrandingFonts
-  logo: PdfBrandingLogo
-  header: PdfBrandingHeader
-  footer: PdfBrandingFooter
-  cover: PdfBrandingCover
-  watermark: PdfBrandingWatermark
-  companyInfo: PdfBrandingCompanyInfo
+  colors: {
+    primary: string
+    secondary: string
+    accent: string
+    background: string
+    text: string
+  }
+  fonts: {
+    heading: string
+    body: string
+  }
+  logo: {
+    url: string
+    width: number
+    height: number
+    position: "left" | "center" | "right"
+  }
+  header: {
+    enabled: boolean
+    text: string
+    includePageNumber: boolean
+    includeLogo: boolean
+  }
+  footer: {
+    enabled: boolean
+    text: string
+    includePageNumber: boolean
+    includeTimestamp: boolean
+  }
+  cover: {
+    enabled: boolean
+    title: string
+    subtitle: string
+    backgroundUrl: string
+    includeLogo: boolean
+  }
+  watermark: {
+    enabled: boolean
+    text: string
+    opacity: number
+  }
+  companyInfo: {
+    name: string
+    address: string
+    phone: string
+    email: string
+    website: string
+  }
   layout: "classic" | "modern" | "minimal" | "bold"
 }
 

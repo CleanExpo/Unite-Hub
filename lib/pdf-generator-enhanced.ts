@@ -2,8 +2,27 @@ import jsPDF from "jspdf"
 import autoTable from "jspdf-autotable"
 import type { PdfBrandingTemplate } from "@/types/pdf-branding"
 
+// Mock function to generate a PDF blob
+export async function generateCustomPDF(project: any, settings: any): Promise<Blob> {
+  // In a real implementation, this would use jsPDF or another library
+  // to generate a PDF with the project data and settings
+
+  // For now, we'll just return a simple text blob
+  const content = `
+    Project: ${project.name || "Unnamed Project"}
+    Generated on: ${new Date().toLocaleString()}
+    
+    This is a placeholder PDF for ${settings?.companyName || "Your Company"}.
+    
+    In a real implementation, this would be a properly formatted PDF
+    with all the project details and custom branding.
+  `
+
+  return new Blob([content], { type: "application/pdf" })
+}
+
 // Default template to use if none is provided
-const defaultTemplate: PdfBrandingTemplate = {
+export const defaultTemplate: PdfBrandingTemplate = {
   id: "default",
   name: "Default Template",
   description: "Default PDF template",
