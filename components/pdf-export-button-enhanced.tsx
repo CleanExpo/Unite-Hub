@@ -1,181 +1,95 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Download, ChevronDown, Loader2 } from "lucide-react"
-import type { PDFBrandingSettings } from "@/types/pdf-branding"
+import { Download, ChevronDown } from "lucide-react"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { useToast } from "@/components/ui/use-toast"
 
-interface PDFExportButtonProps {
+interface PdfExportButtonProps {
   projectId: string
-  onExport?: () => void
+  templates?: { id: string; name: string }[]
+  defaultTemplateId?: string
 }
 
-export function PDFExportButtonEnhanced({ projectId, onExport }: PDFExportButtonProps) {
+export function PdfExportButtonEnhanced({ projectId, templates = [], defaultTemplateId }: PdfExportButtonProps) {
+  const { toast } = useToast()
   const [isExporting, setIsExporting] = useState(false)
-  const [templates, setTemplates] = useState<PDFBrandingSettings[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const [selectedTemplateId, setSelectedTemplateId] = useState(defaultTemplateId || "default")
 
-  useEffect(() => {
-    fetchTemplates()
-  }, [])
-
-  const fetchTemplates = async () => {
-    setIsLoading(true)
-    try {
-      // In a real app, fetch from your API
-      // For demo, we'll use mock data
-      const mockTemplates: PDFBrandingSettings[] = [
-        {
-          id: "default",
-          name: "Default Template",
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          isDefault: true,
-          primaryColor: "#2c3e50",
-          secondaryColor: "#3498db",
-          accentColor: "#e74c3c",
-          fontFamily: "helvetica",
-          includeTimestamp: true,
-          includePageNumbers: true,
-          includeCoverPage: true,
-          templateStyle: "classic",
-        },
-        {
-          id: "modern",
-          name: "Modern Template",
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          isDefault: false,
-          primaryColor: "#1a202c",
-          secondaryColor: "#4299e1",
-          accentColor: "#f56565",
-          fontFamily: "arial",
-          headerTitle: "Architecture Blueprint",
-          footerText: "Confidential & Proprietary",
-          includeTimestamp: true,
-          includePageNumbers: true,
-          includeCoverPage: true,
-          templateStyle: "modern",
-          companyName: "Modern Solutions Inc.",
-        },
-        {
-          id: "minimal",
-          name: "Minimal Template",
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          isDefault: false,
-          primaryColor: "#000000",
-          secondaryColor: "#718096",
-          accentColor: "#f56565",
-          fontFamily: "helvetica",
-          includeTimestamp: false,
-          includePageNumbers: true,
-          includeCoverPage: false,
-          templateStyle: "minimal",
-        },
-      ]
-
-      setTemplates(mockTemplates)
-    } catch (error) {
-      console.error("Failed to fetch templates:", error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const handleExport = async (templateId?: string) => {
+  const exportPdf = async (templateId: string) => {
     setIsExporting(true)
     try {
-      // Call the API to generate the PDF
-      const response = await fetch(`/api/architecture/export/${projectId}?templateId=${templateId || ""}`, {
+      const response = await fetch(`/api/architecture/export/${projectId}?templateId=${templateId}`, {
         method: "GET",
       })
 
       if (!response.ok) {
-        throw new Error("Failed to generate PDF")
+        throw new Error("Failed to export PDF")
       }
 
-      // Get the PDF blob from the response
-      const pdfBlob = await response.blob()
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = `architecture-blueprint-${projectId}.pdf`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
 
-      // Create a URL for the blob
-      const url = URL.createObjectURL(pdfBlob)
-
-      // Create a link element
-      const link = document.createElement("a")
-      link.href = url
-      link.download = `architecture-blueprint-${projectId}.pdf`
-
-      // Append the link to the body
-      document.body.appendChild(link)
-
-      // Click the link to download the file
-      link.click()
-
-      // Remove the link from the body
-      document.body.removeChild(link)
-
-      // Clean up the URL object
-      URL.revokeObjectURL(url)
-
-      // Call the onExport callback if provided
-      if (onExport) {
-        onExport()
-      }
+      toast({
+        title: "Export successful",
+        description: "Your PDF has been downloaded successfully.",
+      })
     } catch (error) {
       console.error("Error exporting PDF:", error)
-      alert("Failed to export PDF. Please try again.")
+      toast({
+        title: "Export failed",
+        description: "There was an error exporting your PDF. Please try again.",
+        variant: "destructive",
+      })
     } finally {
       setIsExporting(false)
     }
   }
 
-  // Find the default template
-  const defaultTemplate = templates.find((t) => t.isDefault)
+  // If no templates are provided, just show a simple button
+  if (templates.length === 0) {
+    return (
+      <Button onClick={() => exportPdf(selectedTemplateId)} disabled={isExporting} className="flex items-center gap-2">
+        <Download className="h-4 w-4" />
+        {isExporting ? "Exporting..." : "Export PDF"}
+      </Button>
+    )
+  }
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm">
-          <Download className="mr-2 h-4 w-4" />
-          Export PDF
-          <ChevronDown className="ml-2 h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-60">
-        <DropdownMenuLabel>Export Options</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => handleExport()}>
-          {isExporting ? (
-            <>
-              Exporting <Loader2 className="ml-2 h-4 w-4 animate-spin" />
-            </>
-          ) : (
-            "Export with Default Template"
-          )}
-        </DropdownMenuItem>
-        {templates
-          .filter((t) => !t.isDefault)
-          .map((template) => (
-            <DropdownMenuItem key={template.id} onClick={() => handleExport(template.id)}>
-              {isExporting ? (
-                <>
-                  Exporting <Loader2 className="ml-2 h-4 w-4 animate-spin" />
-                </>
-              ) : (
-                `Export with ${template.name}`
-              )}
+    <div className="flex items-center gap-2">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" className="flex items-center gap-2" disabled={isExporting}>
+            <span>Template</span>
+            <ChevronDown className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          {templates.map((template) => (
+            <DropdownMenuItem
+              key={template.id}
+              onClick={() => setSelectedTemplateId(template.id)}
+              className={selectedTemplateId === template.id ? "bg-muted" : ""}
+            >
+              {template.name}
             </DropdownMenuItem>
           ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <Button onClick={() => exportPdf(selectedTemplateId)} disabled={isExporting} className="flex items-center gap-2">
+        <Download className="h-4 w-4" />
+        {isExporting ? "Exporting..." : "Export PDF"}
+      </Button>
+    </div>
   )
 }

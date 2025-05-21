@@ -1,41 +1,79 @@
-export type TemplateStyle = "classic" | "modern" | "minimal" | "bold" | "technical"
-
-export interface PDFBrandingSettings {
-  id: string
-  name: string
-  createdAt: string
-  updatedAt: string
-  isDefault: boolean
-  primaryColor: string
-  secondaryColor: string
-  accentColor: string
-  fontFamily: string
-  headerTitle?: string
-  footerText?: string
-  includeTimestamp: boolean
-  includePageNumbers: boolean
-  includeCoverPage: boolean
-  templateStyle: TemplateStyle
-  companyName?: string
-  contactInfo?: string
-  watermark?: string
-  logo?: string
+export interface PdfBrandingColors {
+  primary: string
+  secondary: string
+  accent: string
+  background: string
+  text: string
 }
 
-export type PDFBrandingFormData = Omit<PDFBrandingSettings, "id" | "createdAt" | "updatedAt">
+export interface PdfBrandingFonts {
+  heading: string
+  body: string
+}
 
-export const defaultBrandingSettings: PDFBrandingSettings = {
-  id: "default",
-  name: "Default Template",
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
-  isDefault: true,
-  primaryColor: "#2c3e50",
-  secondaryColor: "#3498db",
-  accentColor: "#e74c3c",
-  fontFamily: "helvetica",
-  includeTimestamp: true,
-  includePageNumbers: true,
-  includeCoverPage: true,
-  templateStyle: "classic",
+export interface PdfBrandingLogo {
+  url: string
+  width: number
+  height: number
+  position: "left" | "center" | "right"
+}
+
+export interface PdfBrandingHeader {
+  enabled: boolean
+  text: string
+  includePageNumber: boolean
+  includeLogo: boolean
+}
+
+export interface PdfBrandingFooter {
+  enabled: boolean
+  text: string
+  includePageNumber: boolean
+  includeTimestamp: boolean
+}
+
+export interface PdfBrandingCover {
+  enabled: boolean
+  title: string
+  subtitle: string
+  backgroundUrl: string
+  includeLogo: boolean
+}
+
+export interface PdfBrandingWatermark {
+  enabled: boolean
+  text: string
+  opacity: number
+}
+
+export interface PdfBrandingCompanyInfo {
+  name: string
+  address: string
+  phone: string
+  email: string
+  website: string
+}
+
+export interface PdfBrandingTemplate {
+  id: string
+  name: string
+  description: string
+  isDefault: boolean
+  createdAt: string
+  updatedAt: string
+  colors: PdfBrandingColors
+  fonts: PdfBrandingFonts
+  logo: PdfBrandingLogo
+  header: PdfBrandingHeader
+  footer: PdfBrandingFooter
+  cover: PdfBrandingCover
+  watermark: PdfBrandingWatermark
+  companyInfo: PdfBrandingCompanyInfo
+  layout: "classic" | "modern" | "minimal" | "bold"
+}
+
+export interface PdfBrandingFormProps {
+  template: PdfBrandingTemplate
+  onSave: (template: PdfBrandingTemplate) => Promise<void>
+  onPreview: (template: PdfBrandingTemplate) => Promise<string>
 }

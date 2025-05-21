@@ -1,31 +1,29 @@
-import type { PDFBrandingSettings } from "./pdf-branding"
-
-export type TemplateCategory =
-  | "all"
-  | "featured"
-  | "business"
-  | "technical"
-  | "creative"
-  | "minimal"
-  | "modern"
-  | "classic"
-  | "bold"
-
-export interface GalleryTemplate extends PDFBrandingSettings {
-  description: string
-  thumbnailUrl: string
-  previewUrl: string
-  category: TemplateCategory[]
-  tags: string[]
-  popularity: number
-  author: string
-  authorUrl?: string
-  isPremium: boolean
+export interface TemplateCategory {
+  id: string
+  name: string
 }
 
-export interface TemplateGalleryState {
+export interface GalleryTemplate {
+  id: string
+  name: string
+  description: string
+  previewUrl: string
+  category: string
+  tags: string[]
+  isPremium: boolean
+  isNew: boolean
+}
+
+export interface TemplateFilter {
+  categories: string[]
+  tags: string[]
   searchQuery: string
-  selectedCategory: TemplateCategory
-  sortBy: "popular" | "newest" | "name"
-  filterPremium: boolean
+  showPremiumOnly: boolean
+  showNewOnly: boolean
+}
+
+export interface TemplateGalleryProps {
+  templates: GalleryTemplate[]
+  categories: TemplateCategory[]
+  onImport: (templateId: string) => Promise<void>
 }

@@ -2,10 +2,9 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils"
-import { Building, FileText, LayoutDashboard, MessageSquare, Settings } from "lucide-react"
+import { LayoutDashboard, Users, MessageSquare, Settings, FileImage } from "lucide-react"
 
-const items = [
+const navItems = [
   {
     title: "Dashboard",
     href: "/dashboard",
@@ -14,11 +13,11 @@ const items = [
   {
     title: "CRM",
     href: "/dashboard/crm",
-    icon: Building,
-    submenu: [
+    icon: Users,
+    children: [
       {
         title: "Clients",
-        href: "/dashboard/crm",
+        href: "/dashboard/crm/clients",
       },
       {
         title: "Pipeline",
@@ -38,9 +37,9 @@ const items = [
     title: "Social",
     href: "/dashboard/social",
     icon: MessageSquare,
-    submenu: [
+    children: [
       {
-        title: "Dashboard",
+        title: "Feed",
         href: "/dashboard/social",
       },
       {
@@ -52,8 +51,8 @@ const items = [
   {
     title: "Architecture",
     href: "/dashboard/architecture",
-    icon: FileText,
-    submenu: [
+    icon: FileImage,
+    children: [
       {
         title: "Projects",
         href: "/dashboard/architecture",
@@ -66,54 +65,55 @@ const items = [
         title: "PDF Branding",
         href: "/dashboard/architecture/branding",
       },
+      {
+        title: "Template Gallery",
+        href: "/dashboard/architecture/branding/gallery",
+      },
     ],
   },
   {
     title: "Settings",
-    href: "/admin/settings",
+    href: "/settings",
     icon: Settings,
   },
 ]
 
-interface DashboardNavProps {
-  className?: string
-}
-
-export function DashboardNav({ className }: DashboardNavProps) {
+export function DashboardNav() {
   const pathname = usePathname()
 
   return (
-    <nav className={cn("grid items-start gap-2", className)}>
-      {items.map((item, index) => {
+    <nav className="space-y-1">
+      {navItems.map((item) => {
         const isActive = pathname === item.href || pathname?.startsWith(`${item.href}/`)
 
         return (
-          <div key={index} className="grid gap-1">
+          <div key={item.href} className="space-y-1">
             <Link
               href={item.href}
-              className={cn(
-                "group flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
-                isActive ? "bg-accent text-accent-foreground" : "transparent",
-              )}
+              className={`flex items-center px-3 py-2 text-sm font-medium rounded-md ${
+                isActive ? "bg-gray-100 text-gray-900" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+              }`}
             >
-              <item.icon className="h-4 w-4" />
-              <span>{item.title}</span>
+              <item.icon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
+              {item.title}
             </Link>
-            {isActive && item.submenu && (
-              <div className="grid gap-1 pl-6">
-                {item.submenu.map((submenuItem, submenuIndex) => {
-                  const isSubmenuActive = pathname === submenuItem.href
+
+            {item.children && isActive && (
+              <div className="ml-8 space-y-1">
+                {item.children.map((child) => {
+                  const isChildActive = pathname === child.href
 
                   return (
                     <Link
-                      key={submenuIndex}
-                      href={submenuItem.href}
-                      className={cn(
-                        "flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
-                        isSubmenuActive ? "bg-accent/50 text-accent-foreground" : "transparent",
-                      )}
+                      key={child.href}
+                      href={child.href}
+                      className={`block px-3 py-2 text-sm font-medium rounded-md ${
+                        isChildActive
+                          ? "bg-gray-100 text-gray-900"
+                          : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                      }`}
                     >
-                      <span>{submenuItem.title}</span>
+                      {child.title}
                     </Link>
                   )
                 })}

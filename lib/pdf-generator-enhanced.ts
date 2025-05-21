@@ -1,16 +1,90 @@
-import { jsPDF } from "jspdf"
-import "jspdf-autotable"
-import type { ArchitectureProject } from "@/lib/architecture-schema"
-import type { PDFBrandingFormData } from "@/types/pdf-branding"
+import jsPDF from "jspdf"
+import autoTable from "jspdf-autotable"
+import type { PdfBrandingTemplate } from "@/types/pdf-branding"
 
-// Add the missing type for jsPDF with autotable
-declare module "jspdf" {
-  interface jsPDF {
-    autoTable: (options: any) => jsPDF
-  }
+// Default template to use if none is provided
+const defaultTemplate: PdfBrandingTemplate = {
+  id: "default",
+  name: "Default Template",
+  description: "Default PDF template",
+  isDefault: true,
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
+  colors: {
+    primary: "#3b82f6",
+    secondary: "#6b7280",
+    accent: "#10b981",
+    background: "#ffffff",
+    text: "#1f2937",
+  },
+  fonts: {
+    heading: "Helvetica",
+    body: "Helvetica",
+  },
+  logo: {
+    url: "/logo.png",
+    width: 100,
+    height: 50,
+    position: "left",
+  },
+  header: {
+    enabled: true,
+    text: "Architecture Blueprint",
+    includePageNumber: true,
+    includeLogo: false,
+  },
+  footer: {
+    enabled: true,
+    text: "© 2023 Company Name",
+    includePageNumber: true,
+    includeTimestamp: true,
+  },
+  cover: {
+    enabled: true,
+    title: "Architecture Blueprint",
+    subtitle: "Project Details",
+    backgroundUrl: "",
+    includeLogo: true,
+  },
+  watermark: {
+    enabled: false,
+    text: "CONFIDENTIAL",
+    opacity: 0.1,
+  },
+  companyInfo: {
+    name: "Company Name",
+    address: "123 Main St, City, State, ZIP",
+    phone: "(123) 456-7890",
+    email: "info@company.com",
+    website: "www.company.com",
+  },
+  layout: "classic",
 }
 
-export async function generateCustomPDF(project: ArchitectureProject, settings: PDFBrandingFormData): Promise<Blob> {
+export interface ArchitectureProject {
+  id: string
+  name: string
+  description: string
+  clientName: string
+  clientEmail: string
+  projectType: string
+  budget: number
+  timeline: string
+  requirements: string[]
+  technologies: string[]
+  brandAssets: {
+    name: string
+    url: string
+    type: string
+  }[]
+  createdAt: string
+  updatedAt: string
+}
+
+export async function generatePDF(
+  project: ArchitectureProject,
+  template: PdfBrandingTemplate = defaultTemplate,
+): Promise<Blob> {
   // Create a new PDF document
   const doc = new jsPDF({
     orientation: "portrait",
@@ -18,418 +92,365 @@ export async function generateCustomPDF(project: ArchitectureProject, settings: 
     format: "a4",
   })
 
-  // Set document properties
-  doc.setProperties({
-    title: `Architecture Blueprint - ${project.name}`,
-    subject: "Software Architecture Blueprint",
-    author: settings.companyName || "Streamline Architecture",
-    creator: "Architecture Blueprint Generator",
-  })
+  // Set default font
+  doc.setFont(template.fonts.body)
 
-  // Apply font family
-  doc.setFont(settings.fontFamily)
+  // Add watermark if enabled
+  if (template.watermark.enabled) {
+    const watermarkText = template.watermark.text
+    doc.setTextColor(200, 200, 200)
+    doc.setFontSize(60)
+    doc.setGState(new doc.GState({ opacity: template.watermark.opacity }))
 
-  // Parse colors
-  const primaryColor = hexToRgb(settings.primaryColor)
-  const secondaryColor = hexToRgb(settings.secondaryColor)
-  const accentColor = hexToRgb(settings.accentColor)
+    // Rotate and position the watermark
+    doc.saveGraphicsState()
+    doc.translate(doc.internal.pageSize.getWidth() / 2, doc.internal.pageSize.getHeight() / 2)
+    doc.rotate(-45)
+    doc.text(watermarkText, 0, 0, { align: "center" })
+    doc.restoreGraphicsState()
 
-  // Add watermark if specified
-  if (settings.watermark) {
-    const watermarkPages = doc.getNumberOfPages()
-    for (let i = 1; i <= watermarkPages; i++) {
+    // Reset opacity
+    doc.setGState(new doc.GState({ opacity: 1.0 }))
+  }
+
+  // Add cover page if enabled
+  if (template.cover.enabled) {
+    // Set background color
+    doc.setFillColor(
+      hexToRgb(template.colors.background).r,
+      hexToRgb(template.colors.background).g,
+      hexToRgb(template.colors.background).b,
+    )
+    doc.rect(0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight(), "F")
+
+    // Add logo if enabled
+    if (template.cover.includeLogo) {
+      try {
+        // In a real implementation, you would load the image and add it
+        // For this simplified version, we'll just add a placeholder
+        const logoX =
+          template.logo.position === "left"
+            ? 20
+            : template.logo.position === "right"
+              ? doc.internal.pageSize.getWidth() - 20 - template.logo.width / 4
+              : (doc.internal.pageSize.getWidth() - template.logo.width / 4) / 2
+
+        // Add colored rectangle as logo placeholder
+        doc.setFillColor(
+          hexToRgb(template.colors.primary).r,
+          hexToRgb(template.colors.primary).g,
+          hexToRgb(template.colors.primary).b,
+        )
+        doc.rect(logoX, 20, template.logo.width / 4, template.logo.height / 4, "F")
+      } catch (error) {
+        console.error("Error adding logo:", error)
+      }
+    }
+
+    // Add title
+    doc.setFont(template.fonts.heading, "bold")
+    doc.setFontSize(24)
+    doc.setTextColor(
+      hexToRgb(template.colors.primary).r,
+      hexToRgb(template.colors.primary).g,
+      hexToRgb(template.colors.primary).b,
+    )
+    doc.text(template.cover.title, doc.internal.pageSize.getWidth() / 2, 100, { align: "center" })
+
+    // Add project name
+    doc.setFontSize(36)
+    doc.text(project.name, doc.internal.pageSize.getWidth() / 2, 120, { align: "center" })
+
+    // Add subtitle
+    doc.setFontSize(16)
+    doc.setTextColor(
+      hexToRgb(template.colors.secondary).r,
+      hexToRgb(template.colors.secondary).g,
+      hexToRgb(template.colors.secondary).b,
+    )
+    doc.text(template.cover.subtitle, doc.internal.pageSize.getWidth() / 2, 140, { align: "center" })
+
+    // Add date
+    doc.setFontSize(12)
+    doc.text(`Generated on: ${new Date().toLocaleDateString()}`, doc.internal.pageSize.getWidth() / 2, 160, {
+      align: "center",
+    })
+
+    // Add company info at the bottom
+    doc.setFontSize(10)
+    doc.text(template.companyInfo.name, doc.internal.pageSize.getWidth() / 2, 250, { align: "center" })
+    doc.text(template.companyInfo.address, doc.internal.pageSize.getWidth() / 2, 255, { align: "center" })
+    doc.text(
+      `${template.companyInfo.phone} | ${template.companyInfo.email}`,
+      doc.internal.pageSize.getWidth() / 2,
+      260,
+      { align: "center" },
+    )
+    doc.text(template.companyInfo.website, doc.internal.pageSize.getWidth() / 2, 265, { align: "center" })
+
+    // Add a new page for the content
+    doc.addPage()
+  }
+
+  // Add header if enabled
+  if (template.header.enabled) {
+    // We'll add the header to all pages except the cover page
+    const totalPages = doc.getNumberOfPages()
+    for (let i = template.cover.enabled ? 2 : 1; i <= totalPages; i++) {
       doc.setPage(i)
-      doc.setTextColor(230, 230, 230)
-      doc.setFontSize(60)
-      doc.text(settings.watermark, 105, 150, {
+
+      // Set header text
+      doc.setFont(template.fonts.heading)
+      doc.setFontSize(10)
+      doc.setTextColor(
+        hexToRgb(template.colors.secondary).r,
+        hexToRgb(template.colors.secondary).g,
+        hexToRgb(template.colors.secondary).b,
+      )
+
+      let headerText = template.header.text
+      if (template.header.includePageNumber) {
+        headerText += ` | Page ${i} of ${totalPages}`
+      }
+
+      doc.text(headerText, doc.internal.pageSize.getWidth() - 20, 10, { align: "right" })
+
+      // Add a line under the header
+      doc.setDrawColor(
+        hexToRgb(template.colors.primary).r,
+        hexToRgb(template.colors.primary).g,
+        hexToRgb(template.colors.primary).b,
+      )
+      doc.line(20, 15, doc.internal.pageSize.getWidth() - 20, 15)
+    }
+  }
+
+  // Add footer if enabled
+  if (template.footer.enabled) {
+    // We'll add the footer to all pages except the cover page
+    const totalPages = doc.getNumberOfPages()
+    for (let i = template.cover.enabled ? 2 : 1; i <= totalPages; i++) {
+      doc.setPage(i)
+
+      // Set footer text
+      doc.setFont(template.fonts.body)
+      doc.setFontSize(8)
+      doc.setTextColor(
+        hexToRgb(template.colors.secondary).r,
+        hexToRgb(template.colors.secondary).g,
+        hexToRgb(template.colors.secondary).b,
+      )
+
+      let footerText = template.footer.text
+      if (template.footer.includePageNumber) {
+        footerText += ` | Page ${i} of ${totalPages}`
+      }
+      if (template.footer.includeTimestamp) {
+        footerText += ` | Generated on: ${new Date().toLocaleString()}`
+      }
+
+      // Add a line above the footer
+      doc.setDrawColor(
+        hexToRgb(template.colors.primary).r,
+        hexToRgb(template.colors.primary).g,
+        hexToRgb(template.colors.primary).b,
+      )
+      doc.line(
+        20,
+        doc.internal.pageSize.getHeight() - 20,
+        doc.internal.pageSize.getWidth() - 20,
+        doc.internal.pageSize.getHeight() - 20,
+      )
+
+      doc.text(footerText, doc.internal.pageSize.getWidth() / 2, doc.internal.pageSize.getHeight() - 10, {
         align: "center",
-        angle: 45,
       })
     }
   }
 
-  // Add cover page if enabled
-  if (settings.includeCoverPage) {
-    addCoverPage(doc, project, settings, primaryColor, secondaryColor, accentColor)
+  // Set the current page to the first content page
+  doc.setPage(template.cover.enabled ? 2 : 1)
+
+  // Add project details
+  doc.setFont(template.fonts.heading, "bold")
+  doc.setFontSize(18)
+  doc.setTextColor(
+    hexToRgb(template.colors.primary).r,
+    hexToRgb(template.colors.primary).g,
+    hexToRgb(template.colors.primary).b,
+  )
+  doc.text("Project Details", 20, 30)
+
+  // Add project info table
+  autoTable(doc, {
+    startY: 40,
+    head: [["Property", "Value"]],
+    body: [
+      ["Project Name", project.name],
+      ["Description", project.description],
+      ["Client", project.clientName],
+      ["Client Email", project.clientEmail],
+      ["Project Type", project.projectType],
+      ["Budget", `$${project.budget.toLocaleString()}`],
+      ["Timeline", project.timeline],
+      ["Created", new Date(project.createdAt).toLocaleDateString()],
+      ["Last Updated", new Date(project.updatedAt).toLocaleDateString()],
+    ],
+    theme: "grid",
+    styles: {
+      font: template.fonts.body,
+      textColor: hexToRgb(template.colors.text),
+    },
+    headStyles: {
+      fillColor: hexToRgb(template.colors.primary),
+      textColor: [255, 255, 255],
+      fontStyle: "bold",
+    },
+    alternateRowStyles: {
+      fillColor: [245, 245, 245],
+    },
+  })
+
+  // Add requirements section
+  const requirementsY = (doc as any).lastAutoTable.finalY + 20
+  doc.setFont(template.fonts.heading, "bold")
+  doc.setFontSize(18)
+  doc.setTextColor(
+    hexToRgb(template.colors.primary).r,
+    hexToRgb(template.colors.primary).g,
+    hexToRgb(template.colors.primary).b,
+  )
+  doc.text("Requirements", 20, requirementsY)
+
+  // Add requirements list
+  autoTable(doc, {
+    startY: requirementsY + 10,
+    head: [["Requirement"]],
+    body: project.requirements.map((req) => [req]),
+    theme: "grid",
+    styles: {
+      font: template.fonts.body,
+      textColor: hexToRgb(template.colors.text),
+    },
+    headStyles: {
+      fillColor: hexToRgb(template.colors.primary),
+      textColor: [255, 255, 255],
+      fontStyle: "bold",
+    },
+  })
+
+  // Add technologies section
+  const technologiesY = (doc as any).lastAutoTable.finalY + 20
+
+  // Check if we need a new page
+  if (technologiesY > doc.internal.pageSize.getHeight() - 40) {
     doc.addPage()
-  }
-
-  // Current Y position tracker
-  let currentY = settings.includeCoverPage ? 20 : 40
-
-  // Add logo and header if not on cover page or if cover page is disabled
-  if (!settings.includeCoverPage) {
-    try {
-      // Try to load the logo image if provided
-      if (settings.logo) {
-        const logoImg = new Image()
-        logoImg.src = settings.logo
-        await new Promise((resolve, reject) => {
-          logoImg.onload = resolve
-          logoImg.onerror = reject
-          // Set a timeout in case the image never loads
-          setTimeout(reject, 3000)
-        })
-
-        // Add logo to the PDF
-        doc.addImage(logoImg, "PNG", 10, 10, 30, 15)
-      }
-    } catch (error) {
-      console.error("Failed to load logo image:", error)
-      // Continue without the logo
-    }
-
-    // Add title
-    doc.setFontSize(22)
-    doc.setTextColor(primaryColor.r, primaryColor.g, primaryColor.b)
-    doc.text(settings.headerTitle || "Architecture Blueprint", 105, 20, { align: "center" })
-
-    // Add project name
+    doc.setFont(template.fonts.heading, "bold")
     doc.setFontSize(18)
-    doc.text(project.name, 105, 30, { align: "center" })
+    doc.setTextColor(
+      hexToRgb(template.colors.primary).r,
+      hexToRgb(template.colors.primary).g,
+      hexToRgb(template.colors.primary).b,
+    )
+    doc.text("Technologies", 20, 30)
 
-    // Add date if timestamp is enabled
-    if (settings.includeTimestamp) {
-      doc.setFontSize(10)
-      doc.setTextColor(100, 100, 100)
-      doc.text(
-        `Generated on: ${new Date().toLocaleDateString("en-AU", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        })}`,
-        105,
-        35,
-        { align: "center" },
+    autoTable(doc, {
+      startY: 40,
+      head: [["Technology"]],
+      body: project.technologies.map((tech) => [tech]),
+      theme: "grid",
+      styles: {
+        font: template.fonts.body,
+        textColor: hexToRgb(template.colors.text),
+      },
+      headStyles: {
+        fillColor: hexToRgb(template.colors.primary),
+        textColor: [255, 255, 255],
+        fontStyle: "bold",
+      },
+    })
+  } else {
+    doc.setFont(template.fonts.heading, "bold")
+    doc.setFontSize(18)
+    doc.setTextColor(
+      hexToRgb(template.colors.primary).r,
+      hexToRgb(template.colors.primary).g,
+      hexToRgb(template.colors.primary).b,
+    )
+    doc.text("Technologies", 20, technologiesY)
+
+    autoTable(doc, {
+      startY: technologiesY + 10,
+      head: [["Technology"]],
+      body: project.technologies.map((tech) => [tech]),
+      theme: "grid",
+      styles: {
+        font: template.fonts.body,
+        textColor: hexToRgb(template.colors.text),
+      },
+      headStyles: {
+        fillColor: hexToRgb(template.colors.primary),
+        textColor: [255, 255, 255],
+        fontStyle: "bold",
+      },
+    })
+  }
+
+  // Add brand assets section if there are any
+  if (project.brandAssets && project.brandAssets.length > 0) {
+    const brandAssetsY = (doc as any).lastAutoTable.finalY + 20
+
+    // Check if we need a new page
+    if (brandAssetsY > doc.internal.pageSize.getHeight() - 40) {
+      doc.addPage()
+      doc.setFont(template.fonts.heading, "bold")
+      doc.setFontSize(18)
+      doc.setTextColor(
+        hexToRgb(template.colors.primary).r,
+        hexToRgb(template.colors.primary).g,
+        hexToRgb(template.colors.primary).b,
       )
-    }
-  }
+      doc.text("Brand Assets", 20, 30)
 
-  // Add project overview section
-  doc.setFontSize(14)
-  doc.setTextColor(primaryColor.r, primaryColor.g, primaryColor.b)
-  doc.text("Project Overview", 14, currentY)
+      autoTable(doc, {
+        startY: 40,
+        head: [["Asset Name", "Type"]],
+        body: project.brandAssets.map((asset) => [asset.name, asset.type]),
+        theme: "grid",
+        styles: {
+          font: template.fonts.body,
+          textColor: hexToRgb(template.colors.text),
+        },
+        headStyles: {
+          fillColor: hexToRgb(template.colors.primary),
+          textColor: [255, 255, 255],
+          fontStyle: "bold",
+        },
+      })
+    } else {
+      doc.setFont(template.fonts.heading, "bold")
+      doc.setFontSize(18)
+      doc.setTextColor(
+        hexToRgb(template.colors.primary).r,
+        hexToRgb(template.colors.primary).g,
+        hexToRgb(template.colors.primary).b,
+      )
+      doc.text("Brand Assets", 20, brandAssetsY)
 
-  doc.setDrawColor(secondaryColor.r, secondaryColor.g, secondaryColor.b)
-  doc.line(14, currentY + 2, 196, currentY + 2)
-
-  doc.setFontSize(10)
-  doc.setTextColor(60, 60, 60)
-
-  // Project details table
-  const projectDetails = [
-    ["Project ID:", project.id],
-    ["Status:", project.status.charAt(0).toUpperCase() + project.status.slice(1)],
-    ["Created:", new Date(project.createdAt).toLocaleDateString("en-AU")],
-    ["Total Story Points:", project.totalPoints?.toString() || "N/A"],
-    ["Estimated Hours:", project.totalHours?.toString() || "N/A"],
-    ["Budget:", project.budget ? `$${project.budget.toLocaleString()}` : "N/A"],
-  ]
-
-  doc.autoTable({
-    startY: currentY + 5,
-    head: [],
-    body: projectDetails,
-    theme: "plain",
-    styles: {
-      cellPadding: 1,
-      fontSize: 10,
-      fontStyle: settings.fontFamily,
-    },
-    columnStyles: {
-      0: { fontStyle: "bold", cellWidth: 40 },
-      1: { cellWidth: "auto" },
-    },
-  })
-
-  // Add reality check if exists
-  if (project.realityCheck) {
-    currentY = (doc as any).lastAutoTable.finalY + 10
-
-    doc.setFillColor(255, 248, 225)
-    doc.rect(14, currentY, 182, 20, "F")
-
-    doc.setFontSize(12)
-    doc.setTextColor(accentColor.r, accentColor.g, accentColor.b)
-    doc.text("Reality Check", 20, currentY + 6)
-
-    doc.setFontSize(10)
-    doc.setTextColor(60, 60, 60)
-    doc.text(project.realityCheck, 20, currentY + 12, {
-      maxWidth: 170,
-    })
-  }
-
-  // Add MVP Features section
-  currentY = project.realityCheck ? (doc as any).lastAutoTable.finalY + 35 : (doc as any).lastAutoTable.finalY + 15
-
-  doc.setFontSize(14)
-  doc.setTextColor(primaryColor.r, primaryColor.g, primaryColor.b)
-  doc.text("MVP Features", 14, currentY)
-
-  doc.setDrawColor(secondaryColor.r, secondaryColor.g, secondaryColor.b)
-  doc.line(14, currentY + 2, 196, currentY + 2)
-
-  // MVP Features table
-  if (project.roadmap?.mvp.features && project.roadmap.mvp.features.length > 0) {
-    const mvpFeatures = project.roadmap.mvp.features.map((feature) => [
-      feature.name,
-      feature.description,
-      feature.priority.charAt(0).toUpperCase() + feature.priority.slice(1),
-      feature.complexity.toUpperCase(),
-      feature.points,
-      feature.hours,
-    ])
-
-    doc.autoTable({
-      startY: currentY + 5,
-      head: [["Feature", "Description", "Priority", "Complexity", "Points", "Hours"]],
-      body: mvpFeatures,
-      theme: "striped",
-      headStyles: {
-        fillColor: [primaryColor.r, primaryColor.g, primaryColor.b],
-        textColor: [255, 255, 255],
-        fontStyle: "bold",
-      },
-      styles: {
-        cellPadding: 2,
-        fontSize: 9,
-        fontStyle: settings.fontFamily,
-      },
-      columnStyles: {
-        0: { fontStyle: "bold" },
-        2: { halign: "center" },
-        3: { halign: "center" },
-        4: { halign: "center" },
-        5: { halign: "center" },
-      },
-    })
-  } else {
-    doc.setFontSize(10)
-    doc.setTextColor(100, 100, 100)
-    doc.text("No MVP features defined.", 14, currentY + 10)
-    currentY += 15
-  }
-
-  // Check if we need a new page for future features
-  if ((doc as any).lastAutoTable.finalY > 230) {
-    doc.addPage()
-    currentY = 20
-  } else {
-    currentY = (doc as any).lastAutoTable.finalY + 15
-  }
-
-  // Add Future Features section
-  doc.setFontSize(14)
-  doc.setTextColor(primaryColor.r, primaryColor.g, primaryColor.b)
-  doc.text("Future Features", 14, currentY)
-
-  doc.setDrawColor(secondaryColor.r, secondaryColor.g, secondaryColor.b)
-  doc.line(14, currentY + 2, 196, currentY + 2)
-
-  // Future Features table
-  if (project.roadmap?.future.features && project.roadmap.future.features.length > 0) {
-    const futureFeatures = project.roadmap.future.features.map((feature) => [
-      feature.name,
-      feature.description,
-      feature.priority.charAt(0).toUpperCase() + feature.priority.slice(1),
-      feature.complexity.toUpperCase(),
-      feature.points,
-      feature.hours,
-    ])
-
-    doc.autoTable({
-      startY: currentY + 5,
-      head: [["Feature", "Description", "Priority", "Complexity", "Points", "Hours"]],
-      body: futureFeatures,
-      theme: "striped",
-      headStyles: {
-        fillColor: [primaryColor.r, primaryColor.g, primaryColor.b],
-        textColor: [255, 255, 255],
-        fontStyle: "bold",
-      },
-      styles: {
-        cellPadding: 2,
-        fontSize: 9,
-        fontStyle: settings.fontFamily,
-      },
-      columnStyles: {
-        0: { fontStyle: "bold" },
-        2: { halign: "center" },
-        3: { halign: "center" },
-        4: { halign: "center" },
-        5: { halign: "center" },
-      },
-    })
-  } else {
-    doc.setFontSize(10)
-    doc.setTextColor(100, 100, 100)
-    doc.text("No future features defined.", 14, currentY + 10)
-    currentY += 15
-  }
-
-  // Check if we need a new page for integrations
-  if ((doc as any).lastAutoTable.finalY > 230) {
-    doc.addPage()
-    currentY = 20
-  } else {
-    currentY = (doc as any).lastAutoTable.finalY + 15
-  }
-
-  // Add Integrations section
-  doc.setFontSize(14)
-  doc.setTextColor(primaryColor.r, primaryColor.g, primaryColor.b)
-  doc.text("Integrations", 14, currentY)
-
-  doc.setDrawColor(secondaryColor.r, secondaryColor.g, secondaryColor.b)
-  doc.line(14, currentY + 2, 196, currentY + 2)
-
-  // Integrations table
-  if (project.roadmap?.integrations && project.roadmap.integrations.length > 0) {
-    const integrations = project.roadmap.integrations.map((integration) => [
-      integration.name,
-      integration.purpose,
-      integration.apiDocumentation || "N/A",
-    ])
-
-    doc.autoTable({
-      startY: currentY + 5,
-      head: [["Integration", "Purpose", "API Documentation"]],
-      body: integrations,
-      theme: "striped",
-      headStyles: {
-        fillColor: [primaryColor.r, primaryColor.g, primaryColor.b],
-        textColor: [255, 255, 255],
-        fontStyle: "bold",
-      },
-      styles: {
-        cellPadding: 2,
-        fontSize: 9,
-        fontStyle: settings.fontFamily,
-      },
-      columnStyles: {
-        0: { fontStyle: "bold" },
-      },
-    })
-  } else {
-    doc.setFontSize(10)
-    doc.setTextColor(100, 100, 100)
-    doc.text("No integrations defined.", 14, currentY + 10)
-    currentY += 15
-  }
-
-  // Check if we need a new page for personas
-  if ((doc as any).lastAutoTable.finalY > 230) {
-    doc.addPage()
-    currentY = 20
-  } else {
-    currentY = (doc as any).lastAutoTable.finalY + 15
-  }
-
-  // Add User Personas section
-  doc.setFontSize(14)
-  doc.setTextColor(primaryColor.r, primaryColor.g, primaryColor.b)
-  doc.text("User Personas", 14, currentY)
-
-  doc.setDrawColor(secondaryColor.r, secondaryColor.g, secondaryColor.b)
-  doc.line(14, currentY + 2, 196, currentY + 2)
-
-  // Personas
-  if (project.personas && project.personas.length > 0) {
-    let personaY = currentY + 10
-
-    for (const persona of project.personas) {
-      // Check if we need a new page
-      if (personaY > 250) {
-        doc.addPage()
-        personaY = 20
-      }
-
-      doc.setFillColor(245, 245, 245)
-      doc.rect(14, personaY, 182, 30, "F")
-
-      doc.setFontSize(12)
-      doc.setTextColor(primaryColor.r, primaryColor.g, primaryColor.b)
-      doc.text(`${persona.name} - ${persona.role}`, 20, personaY + 6)
-
-      doc.setFontSize(10)
-      doc.setTextColor(60, 60, 60)
-      doc.text("Goals:", 20, personaY + 12)
-      doc.text(persona.goals, 40, personaY + 12, { maxWidth: 150 })
-
-      doc.text("Pain Points:", 20, personaY + 20)
-      doc.text(persona.painPoints, 40, personaY + 20, { maxWidth: 150 })
-
-      personaY += 35
-    }
-
-    currentY = personaY
-  } else {
-    doc.setFontSize(10)
-    doc.setTextColor(100, 100, 100)
-    doc.text("No personas defined.", 14, currentY + 10)
-    currentY += 15
-  }
-
-  // Check if we need a new page for constraints
-  if (currentY > 230) {
-    doc.addPage()
-    currentY = 20
-  } else {
-    currentY += 15
-  }
-
-  // Add Constraints section
-  doc.setFontSize(14)
-  doc.setTextColor(primaryColor.r, primaryColor.g, primaryColor.b)
-  doc.text("Constraints & Preferences", 14, currentY)
-
-  doc.setDrawColor(secondaryColor.r, secondaryColor.g, secondaryColor.b)
-  doc.line(14, currentY + 2, 196, currentY + 2)
-
-  // Constraints table
-  const constraints = [
-    ["Technical Constraints", project.technicalConstraints || "None specified"],
-    ["Business Constraints", project.businessConstraints || "None specified"],
-    ["Preferred Technologies", project.preferredTechnologies || "None specified"],
-  ]
-
-  doc.autoTable({
-    startY: currentY + 5,
-    head: [],
-    body: constraints,
-    theme: "plain",
-    styles: {
-      cellPadding: 3,
-      fontSize: 10,
-      fontStyle: settings.fontFamily,
-    },
-    columnStyles: {
-      0: { fontStyle: "bold", cellWidth: 50 },
-      1: { cellWidth: "auto" },
-    },
-  })
-
-  // Add footer with page numbers if enabled
-  if (settings.includePageNumbers) {
-    const pageCount = doc.getNumberOfPages()
-    for (let i = 1; i <= pageCount; i++) {
-      doc.setPage(i)
-      doc.setFontSize(8)
-      doc.setTextColor(100, 100, 100)
-
-      let footerText = `Page ${i} of ${pageCount}`
-
-      if (settings.footerText) {
-        footerText += ` | ${settings.footerText}`
-      }
-
-      if (settings.companyName) {
-        footerText += ` | ${settings.companyName}`
-      }
-
-      doc.text(footerText, 105, 290, {
-        align: "center",
+      autoTable(doc, {
+        startY: brandAssetsY + 10,
+        head: [["Asset Name", "Type"]],
+        body: project.brandAssets.map((asset) => [asset.name, asset.type]),
+        theme: "grid",
+        styles: {
+          font: template.fonts.body,
+          textColor: hexToRgb(template.colors.text),
+        },
+        headStyles: {
+          fillColor: hexToRgb(template.colors.primary),
+          textColor: [255, 255, 255],
+          fontStyle: "bold",
+        },
       })
     }
   }
@@ -438,442 +459,15 @@ export async function generateCustomPDF(project: ArchitectureProject, settings: 
   return doc.output("blob")
 }
 
-// Helper function to add a cover page
-function addCoverPage(
-  doc: jsPDF,
-  project: ArchitectureProject,
-  settings: PDFBrandingFormData,
-  primaryColor: { r: number; g: number; b: number },
-  secondaryColor: { r: number; g: number; b: number },
-  accentColor: { r: number; g: number; b: number },
-) {
-  // Apply template style
-  switch (settings.templateStyle) {
-    case "modern":
-      addModernCoverPage(doc, project, settings, primaryColor, secondaryColor, accentColor)
-      break
-    case "minimal":
-      addMinimalCoverPage(doc, project, settings, primaryColor, secondaryColor, accentColor)
-      break
-    case "bold":
-      addBoldCoverPage(doc, project, settings, primaryColor, secondaryColor, accentColor)
-      break
-    case "classic":
-    default:
-      addClassicCoverPage(doc, project, settings, primaryColor, secondaryColor, accentColor)
-      break
-  }
-}
-
-// Classic cover page
-function addClassicCoverPage(
-  doc: jsPDF,
-  project: ArchitectureProject,
-  settings: PDFBrandingFormData,
-  primaryColor: { r: number; g: number; b: number },
-  secondaryColor: { r: number; g: number; b: number },
-  accentColor: { r: number; g: number; b: number },
-) {
-  // Add background color
-  doc.setFillColor(250, 250, 250)
-  doc.rect(0, 0, 210, 297, "F")
-
-  // Add header bar
-  doc.setFillColor(primaryColor.r, primaryColor.g, primaryColor.b)
-  doc.rect(0, 0, 210, 40, "F")
-
-  // Add logo if available
-  if (settings.logo) {
-    try {
-      const logoImg = new Image()
-      logoImg.src = settings.logo
-      doc.addImage(logoImg, "PNG", 15, 10, 40, 20)
-    } catch (error) {
-      console.error("Failed to add logo to cover page:", error)
-    }
-  }
-
-  // Add title
-  doc.setFontSize(28)
-  doc.setTextColor(255, 255, 255)
-  doc.text("Architecture Blueprint", 105, 25, { align: "center" })
-
-  // Add project name
-  doc.setFontSize(36)
-  doc.setTextColor(primaryColor.r, primaryColor.g, primaryColor.b)
-  doc.text(project.name, 105, 80, { align: "center" })
-
-  // Add divider
-  doc.setDrawColor(secondaryColor.r, secondaryColor.g, secondaryColor.b)
-  doc.setLineWidth(1)
-  doc.line(50, 90, 160, 90)
-
-  // Add project details
-  doc.setFontSize(14)
-  doc.setTextColor(60, 60, 60)
-
-  let detailsY = 110
-
-  if (project.totalPoints) {
-    doc.text(`Story Points: ${project.totalPoints}`, 105, detailsY, { align: "center" })
-    detailsY += 10
-  }
-
-  if (project.totalHours) {
-    doc.text(`Estimated Hours: ${project.totalHours}`, 105, detailsY, { align: "center" })
-    detailsY += 10
-  }
-
-  if (project.budget) {
-    doc.text(`Budget: $${project.budget.toLocaleString()}`, 105, detailsY, { align: "center" })
-    detailsY += 10
-  }
-
-  // Add timestamp if enabled
-  if (settings.includeTimestamp) {
-    doc.setFontSize(12)
-    doc.setTextColor(100, 100, 100)
-    doc.text(
-      `Generated on: ${new Date().toLocaleDateString("en-AU", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })}`,
-      105,
-      detailsY + 10,
-      { align: "center" },
-    )
-  }
-
-  // Add company info
-  if (settings.companyName) {
-    doc.setFontSize(16)
-    doc.setTextColor(primaryColor.r, primaryColor.g, primaryColor.b)
-    doc.text(settings.companyName, 105, 240, { align: "center" })
-
-    if (settings.contactInfo) {
-      doc.setFontSize(12)
-      doc.setTextColor(80, 80, 80)
-      doc.text(settings.contactInfo, 105, 250, { align: "center" })
-    }
-  }
-
-  // Add footer
-  doc.setFillColor(primaryColor.r, primaryColor.g, primaryColor.b)
-  doc.rect(0, 277, 210, 20, "F")
-}
-
-// Modern cover page
-function addModernCoverPage(
-  doc: jsPDF,
-  project: ArchitectureProject,
-  settings: PDFBrandingFormData,
-  primaryColor: { r: number; g: number; b: number },
-  secondaryColor: { r: number; g: number; b: number },
-  accentColor: { r: number; g: number; b: number },
-) {
-  // Add background color
-  doc.setFillColor(250, 250, 250)
-  doc.rect(0, 0, 210, 297, "F")
-
-  // Add side bar
-  doc.setFillColor(primaryColor.r, primaryColor.g, primaryColor.b)
-  doc.rect(0, 0, 60, 297, "F")
-
-  // Add accent bar
-  doc.setFillColor(accentColor.r, accentColor.g, accentColor.b)
-  doc.rect(60, 0, 5, 297, "F")
-
-  // Add logo if available
-  if (settings.logo) {
-    try {
-      const logoImg = new Image()
-      logoImg.src = settings.logo
-      doc.addImage(logoImg, "PNG", 10, 20, 40, 20)
-    } catch (error) {
-      console.error("Failed to add logo to cover page:", error)
-    }
-  }
-
-  // Add title
-  doc.setFontSize(24)
-  doc.setTextColor(255, 255, 255)
-  doc.text("Architecture", 30, 80, { align: "center" })
-  doc.text("Blueprint", 30, 90, { align: "center" })
-
-  // Add project name
-  doc.setFontSize(36)
-  doc.setTextColor(primaryColor.r, primaryColor.g, primaryColor.b)
-  doc.text(project.name, 135, 80, { align: "center" })
-
-  // Add divider
-  doc.setDrawColor(secondaryColor.r, secondaryColor.g, secondaryColor.b)
-  doc.setLineWidth(1)
-  doc.line(80, 90, 190, 90)
-
-  // Add project details
-  doc.setFontSize(14)
-  doc.setTextColor(60, 60, 60)
-
-  let detailsY = 110
-
-  if (project.totalPoints) {
-    doc.text(`Story Points: ${project.totalPoints}`, 135, detailsY, { align: "center" })
-    detailsY += 10
-  }
-
-  if (project.totalHours) {
-    doc.text(`Estimated Hours: ${project.totalHours}`, 135, detailsY, { align: "center" })
-    detailsY += 10
-  }
-
-  if (project.budget) {
-    doc.text(`Budget: $${project.budget.toLocaleString()}`, 135, detailsY, { align: "center" })
-    detailsY += 10
-  }
-
-  // Add timestamp if enabled
-  if (settings.includeTimestamp) {
-    doc.setFontSize(12)
-    doc.setTextColor(100, 100, 100)
-    doc.text(
-      `Generated on: ${new Date().toLocaleDateString("en-AU", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })}`,
-      135,
-      detailsY + 10,
-      { align: "center" },
-    )
-  }
-
-  // Add company info
-  if (settings.companyName) {
-    doc.setFontSize(16)
-    doc.setTextColor(primaryColor.r, primaryColor.g, primaryColor.b)
-    doc.text(settings.companyName, 135, 240, { align: "center" })
-
-    if (settings.contactInfo) {
-      doc.setFontSize(12)
-      doc.setTextColor(80, 80, 80)
-      doc.text(settings.contactInfo, 135, 250, { align: "center" })
-    }
-  }
-}
-
-// Minimal cover page
-function addMinimalCoverPage(
-  doc: jsPDF,
-  project: ArchitectureProject,
-  settings: PDFBrandingFormData,
-  primaryColor: { r: number; g: number; b: number },
-  secondaryColor: { r: number; g: number; b: number },
-  accentColor: { r: number; g: number; b: number },
-) {
-  // Add background color
-  doc.setFillColor(255, 255, 255)
-  doc.rect(0, 0, 210, 297, "F")
-
-  // Add thin top border
-  doc.setFillColor(primaryColor.r, primaryColor.g, primaryColor.b)
-  doc.rect(0, 0, 210, 5, "F")
-
-  // Add logo if available
-  if (settings.logo) {
-    try {
-      const logoImg = new Image()
-      logoImg.src = settings.logo
-      doc.addImage(logoImg, "PNG", 15, 20, 40, 20)
-    } catch (error) {
-      console.error("Failed to add logo to cover page:", error)
-    }
-  }
-
-  // Add title
-  doc.setFontSize(16)
-  doc.setTextColor(primaryColor.r, primaryColor.g, primaryColor.b)
-  doc.text("ARCHITECTURE BLUEPRINT", 105, 60, { align: "center" })
-
-  // Add project name
-  doc.setFontSize(36)
-  doc.setTextColor(60, 60, 60)
-  doc.text(project.name, 105, 100, { align: "center" })
-
-  // Add divider
-  doc.setDrawColor(primaryColor.r, primaryColor.g, primaryColor.b)
-  doc.setLineWidth(0.5)
-  doc.line(80, 110, 130, 110)
-
-  // Add project details
-  doc.setFontSize(12)
-  doc.setTextColor(80, 80, 80)
-
-  let detailsY = 130
-
-  if (project.totalPoints) {
-    doc.text(`Story Points: ${project.totalPoints}`, 105, detailsY, { align: "center" })
-    detailsY += 8
-  }
-
-  if (project.totalHours) {
-    doc.text(`Estimated Hours: ${project.totalHours}`, 105, detailsY, { align: "center" })
-    detailsY += 8
-  }
-
-  if (project.budget) {
-    doc.text(`Budget: $${project.budget.toLocaleString()}`, 105, detailsY, { align: "center" })
-    detailsY += 8
-  }
-
-  // Add timestamp if enabled
-  if (settings.includeTimestamp) {
-    doc.setFontSize(10)
-    doc.setTextColor(120, 120, 120)
-    doc.text(
-      `Generated on: ${new Date().toLocaleDateString("en-AU", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })}`,
-      105,
-      detailsY + 10,
-      { align: "center" },
-    )
-  }
-
-  // Add company info
-  if (settings.companyName) {
-    doc.setFontSize(14)
-    doc.setTextColor(primaryColor.r, primaryColor.g, primaryColor.b)
-    doc.text(settings.companyName, 105, 240, { align: "center" })
-
-    if (settings.contactInfo) {
-      doc.setFontSize(10)
-      doc.setTextColor(100, 100, 100)
-      doc.text(settings.contactInfo, 105, 250, { align: "center" })
-    }
-  }
-
-  // Add thin bottom border
-  doc.setFillColor(primaryColor.r, primaryColor.g, primaryColor.b)
-  doc.rect(0, 292, 210, 5, "F")
-}
-
-// Bold cover page
-function addBoldCoverPage(
-  doc: jsPDF,
-  project: ArchitectureProject,
-  settings: PDFBrandingFormData,
-  primaryColor: { r: number; g: number; b: number },
-  secondaryColor: { r: number; g: number; b: number },
-  accentColor: { r: number; g: number; b: number },
-) {
-  // Add background color
-  doc.setFillColor(primaryColor.r, primaryColor.g, primaryColor.b)
-  doc.rect(0, 0, 210, 297, "F")
-
-  // Add diagonal accent
-  doc.setFillColor(accentColor.r, accentColor.g, accentColor.b)
-  doc.rect(0, 0, 210, 60, "F")
-
-  // Add logo if available
-  if (settings.logo) {
-    try {
-      const logoImg = new Image()
-      logoImg.src = settings.logo
-      doc.addImage(logoImg, "PNG", 15, 15, 40, 20)
-    } catch (error) {
-      console.error("Failed to add logo to cover page:", error)
-    }
-  }
-
-  // Add title
-  doc.setFontSize(28)
-  doc.setTextColor(255, 255, 255)
-  doc.text("ARCHITECTURE", 105, 90, { align: "center" })
-  doc.text("BLUEPRINT", 105, 105, { align: "center" })
-
-  // Add project name
-  doc.setFontSize(36)
-  doc.setTextColor(255, 255, 255)
-  doc.text(project.name, 105, 150, { align: "center" })
-
-  // Add divider
-  doc.setDrawColor(255, 255, 255)
-  doc.setLineWidth(1)
-  doc.line(70, 160, 140, 160)
-
-  // Add project details
-  doc.setFontSize(14)
-  doc.setTextColor(255, 255, 255)
-
-  let detailsY = 180
-
-  if (project.totalPoints) {
-    doc.text(`Story Points: ${project.totalPoints}`, 105, detailsY, { align: "center" })
-    detailsY += 10
-  }
-
-  if (project.totalHours) {
-    doc.text(`Estimated Hours: ${project.totalHours}`, 105, detailsY, { align: "center" })
-    detailsY += 10
-  }
-
-  if (project.budget) {
-    doc.text(`Budget: $${project.budget.toLocaleString()}`, 105, detailsY, { align: "center" })
-    detailsY += 10
-  }
-
-  // Add timestamp if enabled
-  if (settings.includeTimestamp) {
-    doc.setFontSize(12)
-    doc.setTextColor(220, 220, 220)
-    doc.text(
-      `Generated on: ${new Date().toLocaleDateString("en-AU", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })}`,
-      105,
-      detailsY + 10,
-      { align: "center" },
-    )
-  }
-
-  // Add company info
-  if (settings.companyName) {
-    doc.setFontSize(16)
-    doc.setTextColor(255, 255, 255)
-    doc.text(settings.companyName, 105, 240, { align: "center" })
-
-    if (settings.contactInfo) {
-      doc.setFontSize(12)
-      doc.setTextColor(220, 220, 220)
-      doc.text(settings.contactInfo, 105, 250, { align: "center" })
-    }
-  }
-}
-
 // Helper function to convert hex color to RGB
 function hexToRgb(hex: string) {
-  // Remove # if present
-  hex = hex.replace(/^#/, "")
+  // Remove the # if it exists
+  hex = hex.replace("#", "")
 
-  // Parse hex values
-  let r, g, b
-  if (hex.length === 3) {
-    r = Number.parseInt(hex.charAt(0) + hex.charAt(0), 16)
-    g = Number.parseInt(hex.charAt(1) + hex.charAt(1), 16)
-    b = Number.parseInt(hex.charAt(2) + hex.charAt(2), 16)
-  } else {
-    r = Number.parseInt(hex.substring(0, 2), 16)
-    g = Number.parseInt(hex.substring(2, 4), 16)
-    b = Number.parseInt(hex.substring(4, 6), 16)
-  }
+  // Parse the hex values
+  const r = Number.parseInt(hex.substring(0, 2), 16)
+  const g = Number.parseInt(hex.substring(2, 4), 16)
+  const b = Number.parseInt(hex.substring(4, 6), 16)
 
   return { r, g, b }
 }
-
-// Export the original function for backward compatibility
-export { generateArchitecturePDF } from "./pdf-generator"
