@@ -1,7 +1,16 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { DropdownMenu } from "@/components/ui/dropdown-menu"
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Download, ChevronDown, Loader2 } from "lucide-react"
 import type { PDFBrandingSettings } from "@/types/pdf-branding"
 
 interface PDFExportButtonProps {
@@ -134,4 +143,35 @@ export function PDFExportButtonEnhanced({ projectId, onExport }: PDFExportButton
 
   return (
     <DropdownMenu>
-      <DropdownMenu\
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="sm">
+          <Download className="mr-2 h-4 w-4" />
+          Export PDF
+          <ChevronDown className="ml-2 h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-60">
+        <DropdownMenuLabel>Export Options</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => handleExport()}>
+          {isExporting ? (
+            <>
+              Exporting <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+            </>
+          ) : (
+            "Export with Default Template"
+          )}
+        </DropdownMenuItem>
+        {templates.filter(t => !t.isDefault).map((template) => (
+          <DropdownMenuItem key={template.id} onClick={() => handleExport(template.id)}>
+            {isExporting ? (
+              <>
+                Exporting <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+              </>
+            ) : (
+              `Export with ${template.name}`
+            )}
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>\
+    </DropdownMenu>
