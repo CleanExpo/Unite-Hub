@@ -1,7 +1,5 @@
 import { createClient as createSupabaseClient } from "@supabase/supabase-js"
 
-export { createClient } from "@supabase/supabase-js"
-
 // Create a singleton Supabase client for the browser
 let supabaseClient: ReturnType<typeof createSupabaseClient> | null = null
 
@@ -37,7 +35,8 @@ export function getServerSupabaseClient() {
   return supabaseServerClient
 }
 
-export function createClient() {
+// Create a mock client for fallback
+export function createMockClient() {
   return {
     from: (table: string) => ({
       select: (columns: string) => ({
