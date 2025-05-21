@@ -95,7 +95,7 @@ export function PDFExportButtonEnhanced({ projectId, onExport }: PDFExportButton
     setIsExporting(true)
     try {
       // Call the API to generate the PDF
-      const response = await fetch(`/api/architecture/export/${projectId}?templateId=${templateId || ''}`, {
+      const response = await fetch(`/api/architecture/export/${projectId}?templateId=${templateId || ""}`, {
         method: "GET",
       })
 
@@ -139,7 +139,7 @@ export function PDFExportButtonEnhanced({ projectId, onExport }: PDFExportButton
   }
 
   // Find the default template
-  const defaultTemplate = templates.find(t => t.isDefault)
+  const defaultTemplate = templates.find((t) => t.isDefault)
 
   return (
     <DropdownMenu>
@@ -162,16 +162,20 @@ export function PDFExportButtonEnhanced({ projectId, onExport }: PDFExportButton
             "Export with Default Template"
           )}
         </DropdownMenuItem>
-        {templates.filter(t => !t.isDefault).map((template) => (
-          <DropdownMenuItem key={template.id} onClick={() => handleExport(template.id)}>
-            {isExporting ? (
-              <>
-                Exporting <Loader2 className="ml-2 h-4 w-4 animate-spin" />
-              </>
-            ) : (
-              `Export with ${template.name}`
-            )}
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>\
+        {templates
+          .filter((t) => !t.isDefault)
+          .map((template) => (
+            <DropdownMenuItem key={template.id} onClick={() => handleExport(template.id)}>
+              {isExporting ? (
+                <>
+                  Exporting <Loader2 className="ml-2 h-4 w-4 animate-spin" />
+                </>
+              ) : (
+                `Export with ${template.name}`
+              )}
+            </DropdownMenuItem>
+          ))}
+      </DropdownMenuContent>
     </DropdownMenu>
+  )
+}

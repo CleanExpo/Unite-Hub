@@ -2,14 +2,14 @@ import type { PDFBrandingSettings } from "./pdf-branding"
 
 export type TemplateCategory =
   | "all"
+  | "featured"
   | "business"
-  | "creative"
   | "technical"
+  | "creative"
   | "minimal"
   | "modern"
   | "classic"
   | "bold"
-  | "featured"
 
 export interface GalleryTemplate extends PDFBrandingSettings {
   description: string

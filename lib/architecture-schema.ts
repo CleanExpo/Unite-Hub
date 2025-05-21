@@ -65,3 +65,53 @@ export const architectureSchema = z.object({
 
 // Export the type
 export type ArchitectureInput = z.infer<typeof architectureSchema>
+
+export interface ArchitectureProject {
+  id: string
+  name: string
+  status: string
+  createdAt: string
+  updatedAt: string
+  meetingDate?: string
+  deliveryDate?: string
+  totalPoints?: number
+  totalHours?: number
+  budget?: number
+  roadmap?: {
+    mvp: {
+      features: Array<{
+        name: string
+        description: string
+        priority: string
+        complexity: string
+        points: number
+        hours: number
+      }>
+    }
+    future: {
+      features: Array<{
+        name: string
+        description: string
+        priority: string
+        complexity: string
+        points: number
+        hours: number
+      }>
+    }
+    integrations?: Array<{
+      name: string
+      purpose: string
+      apiDocumentation?: string
+    }>
+  }
+  personas?: Array<{
+    name: string
+    role: string
+    goals: string
+    painPoints: string
+  }>
+  technicalConstraints?: string
+  businessConstraints?: string
+  preferredTechnologies?: string
+  realityCheck?: string
+}
