@@ -1,5 +1,14 @@
 import { createClient as createSupabaseClient } from "@supabase/supabase-js"
 
+// Create a singleton Supabase client for the browser
+const browserClient: ReturnType<typeof createSupabaseClient> | null = null
+
+// Export the supabase client directly for backward compatibility
+export const supabase =
+  typeof window !== "undefined"
+    ? createSupabaseClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
+    : null
+
 // Create a custom client function that uses environment variables
 export function createClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
@@ -10,6 +19,21 @@ export function createClient() {
       persistSession: false,
     },
   })
+}
+
+// Create a singleton Supabase client for server components
+let serverClient: ReturnType<typeof createSupabaseClient> | null = null
+
+export function getServerClient() {
+  if (!serverClient) {
+    serverClient = createSupabaseClient(
+      process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY ||
+        process.env.SUPABASE_ANON_KEY ||
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    )
+  }
+  return serverClient
 }
 
 // Export a mock client for testing or development
