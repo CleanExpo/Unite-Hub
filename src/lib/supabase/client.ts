@@ -3,7 +3,7 @@
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import type { Database } from '@/types/supabase';
 
-// Export the createClient function as required by Vercel
+// Export the createClient function explicitly as required by Vercel
 export function createClient() {
   return createClientComponentClient<Database>();
 }
