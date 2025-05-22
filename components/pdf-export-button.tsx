@@ -2,53 +2,91 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Download, Loader2 } from "lucide-react"
+import { FileDown, Loader2 } from "lucide-react"
+import { logError } from "@/lib/error-logger"
 
 interface PdfExportButtonProps {
-  projectId: string
+  documentId: string
+  documentType: string
+  fileName?: string
+  onSuccess?: () => void
+  onError?: (error: Error) => void
 }
 
-export function PdfExportButton({ projectId }: PdfExportButtonProps) {
+export default function PdfExportButton({
+  documentId,
+  documentType,
+  fileName = "document.pdf",
+  onSuccess,
+  onError,
+}: PdfExportButtonProps) {
   const [isExporting, setIsExporting] = useState(false)
 
   const handleExport = async () => {
-    try {
-      setIsExporting(true)
+    setIsExporting(true)
 
-      // Simple fetch to the API endpoint
-      const response = await fetch(`/api/architecture/export/${projectId}`)
+    try {
+      // Make API call to generate PDF
+      const response = await fetch(`/api/pdf/generate`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          documentId,
+          documentType,
+          fileName,
+        }),
+      })
 
       if (!response.ok) {
-        throw new Error("Failed to export PDF")
+        const errorData = await response.json()
+        throw new Error(errorData.message || "Failed to generate PDF")
       }
 
-      // Get the blob from the response
       const blob = await response.blob()
 
-      // Create a URL for the blob
+      // Create download link
       const url = window.URL.createObjectURL(blob)
-
-      // Create a link element
-      const a = document.createElement("a")
-      a.href = url
-      a.download = `architecture-blueprint-${projectId}.pdf`
-
-      // Append to the body and click
-      document.body.appendChild(a)
-      a.click()
+      const link = document.createElement("a")
+      link.href = url
+      link.setAttribute("download", fileName)
+      document.body.appendChild(link)
+      link.click()
 
       // Clean up
+      link.parentNode?.removeChild(link)
       window.URL.revokeObjectURL(url)
-      document.body.removeChild(a)
+
+      if (onSuccess) {
+        onSuccess()
+      }
     } catch (error) {
       console.error("Error exporting PDF:", error)
+
+      // Log the error to our error logging system
+      await logError({
+        message: `Failed to export PDF: ${error instanceof Error ? error.message : "Unknown error"}`,
+        severity: "error",
+        category: "pdf",
+        stackTrace: error instanceof Error ? error.stack : undefined,
+        context: {
+          documentId,
+          documentType,
+          fileName,
+        },
+      })
+
+      if (onError && error instanceof Error) {
+        onError(error)
+      }
     } finally {
       setIsExporting(false)
     }
   }
 
   return (
-    <Button onClick={handleExport} disabled={isExporting}>
+    <Button onClick={handleExport} disabled={isExporting} variant="outline" size="sm">
       {isExporting ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -56,7 +94,7 @@ export function PdfExportButton({ projectId }: PdfExportButtonProps) {
         </>
       ) : (
         <>
-          <Download className="mr-2 h-4 w-4" />
+          <FileDown className="mr-2 h-4 w-4" />
           Export PDF
         </>
       )}
