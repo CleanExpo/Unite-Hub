@@ -1,0 +1,23 @@
+{
+  "buildCommand": "next build",
+  "devCommand": "next dev",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "outputDirectory": ".next",
+  "regions": ["iad1"],
+  "git": {
+    "deploymentEnabled": {
+      "main": true
+    }
+  },
+  "env": {
+    "NEXT_PUBLIC_SITE_URL": {
+      "type": "string",
+      "description": "The public URL of your site"
+    },
+    "NEXT_PUBLIC_APP_URL": {
+      "type": "string",
+      "description": "The public URL of your app"
+    }
+  }
+}

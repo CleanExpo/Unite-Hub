@@ -1,192 +1,224 @@
 import { NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
-import { generatePdfReport, type ReportType } from "@/lib/pdf-export-service"
+import { logger } from "@/lib/logger"
+import { createStyledPDFWithBranding, StyledPDF } from "@/lib/pdf-styling"
+import { createProjectReportPDF, createTaskReportPDF, createUserReportPDF } from "@/lib/pdf-templates"
 
 export async function POST(request: Request) {
   try {
-    const { reportType, timeRange, filters } = await request.json()
+    logger.info("PDF export request received")
 
-    // Validate the report type
-    if (
-      ![
-        "error-trends",
-        "error-distribution",
-        "resolution-times",
-        "category-distribution",
-        "heatmap",
-        "prediction",
-      ].includes(reportType)
-    ) {
-      return NextResponse.json({ error: "Invalid report type" }, { status: 400 })
-    }
+    const { content, filename = "export.pdf", type = "generic", data = {}, options = {} } = await request.json()
 
-    // Parse the time range
-    const days = Number.parseInt(timeRange.replace("d", ""), 10) || 30
-
-    // Fetch the data based on the report type
-    const data = await fetchReportData(reportType as ReportType, days, filters)
-
-    // Generate the PDF report
-    const pdfBuffer = await generatePdfReport({
-      title: getReportTitle(reportType as ReportType),
-      subtitle: "Error Monitoring System",
-      timeRange: `Last ${days} days`,
-      data,
-      type: reportType as ReportType,
-      filters,
-    })
-
-    // Return the PDF as a response
-    return new NextResponse(pdfBuffer, {
-      headers: {
-        "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="${getReportFileName(reportType as ReportType)}"`,
-      },
-    })
-  } catch (error) {
-    console.error("Error generating PDF report:", error)
-    return NextResponse.json({ error: "Failed to generate PDF report" }, { status: 500 })
-  }
-}
-
-// Fetch the report data based on the report type
-async function fetchReportData(reportType: ReportType, days: number, filters: any = {}) {
-  const supabase = createClient()
-  const startDate = new Date()
-  startDate.setDate(startDate.getDate() - days)
-
-  switch (reportType) {
-    case "error-trends": {
-      const { data, error } = await supabase.rpc("get_error_trends_by_time_period", {
-        start_date: startDate.toISOString(),
-        end_date: new Date().toISOString(),
-        interval_type: "day",
-      })
-
-      if (error) throw error
-
-      return data.map((item) => ({
-        date: new Date(item.time_period).toISOString(),
-        total: item.total_count,
-        critical: item.critical_count,
-        error: item.error_count,
-        warning: item.warning_count,
-        info: item.info_count,
-        debug: item.debug_count,
-        resolved: item.resolved_count,
-      }))
-    }
-
-    case "error-distribution": {
-      // Similar to error-trends but formatted differently
-      const { data, error } = await supabase.rpc("get_error_trends_by_time_period", {
-        start_date: startDate.toISOString(),
-        end_date: new Date().toISOString(),
-        interval_type: "day",
-      })
-
-      if (error) throw error
-
-      return data.map((item) => ({
-        date: new Date(item.time_period).toISOString(),
-        critical: item.critical_count,
-        error: item.error_count,
-        warning: item.warning_count,
-        info: item.info_count,
-        debug: item.debug_count,
-      }))
-    }
-
-    case "resolution-times": {
-      const groupBy = filters.groupBy || "severity"
-      const { data, error } = await supabase.rpc("get_error_resolution_times_by_type", {
-        group_by_field: groupBy,
-        start_date: startDate.toISOString(),
-      })
-
-      if (error) throw error
-
-      return data || []
-    }
-
-    case "category-distribution": {
-      const { data, error } = await supabase.rpc("get_error_category_distribution", {
-        start_date: startDate.toISOString(),
-      })
-
-      if (error) throw error
-
-      return data || []
-    }
-
-    case "heatmap": {
-      const { data, error } = await supabase.rpc("get_error_heatmap_data", {
-        start_date: startDate.toISOString(),
-      })
-
-      if (error) throw error
-
-      return data || []
-    }
-
-    case "prediction": {
-      // For prediction, we'll need to call the prediction API
-      const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/errors/predict?days=${days}&forecast=30`, {
-        headers: {
-          "Cache-Control": "no-cache",
+    if (!content && type === "generic") {
+      logger.warn("PDF export request missing content for generic type")
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Content is required for generic PDF exports",
         },
-      })
-
-      if (!response.ok) {
-        throw new Error(`Failed to fetch prediction data: ${response.statusText}`)
-      }
-
-      const result = await response.json()
-      return result.data || []
+        { status: 400 },
+      )
     }
 
-    default:
-      return []
-  }
-}
+    logger.info(`Generating ${type} PDF with filename: ${filename}`)
 
-// Get the report title based on the report type
-function getReportTitle(reportType: ReportType): string {
-  switch (reportType) {
-    case "error-trends":
-      return "Error Trends Report"
-    case "error-distribution":
-      return "Error Distribution Report"
-    case "resolution-times":
-      return "Error Resolution Times Report"
-    case "category-distribution":
-      return "Error Category Distribution Report"
-    case "heatmap":
-      return "Error Occurrence Heatmap Report"
-    case "prediction":
-      return "Error Prediction Report"
-    default:
-      return "Error Report"
-  }
-}
+    let doc
 
-// Get the report file name based on the report type
-function getReportFileName(reportType: ReportType): string {
-  const date = new Date().toISOString().split("T")[0]
-  switch (reportType) {
-    case "error-trends":
-      return `error-trends-report-${date}.pdf`
-    case "error-distribution":
-      return `error-distribution-report-${date}.pdf`
-    case "resolution-times":
-      return `error-resolution-times-report-${date}.pdf`
-    case "category-distribution":
-      return `error-category-distribution-report-${date}.pdf`
-    case "heatmap":
-      return `error-heatmap-report-${date}.pdf`
-    case "prediction":
-      return `error-prediction-report-${date}.pdf`
-    default:
-      return `error-report-${date}.pdf`
+    // Generate PDF based on type
+    try {
+      switch (type) {
+        case "preview":
+          // Create a preview PDF with custom colors and fonts
+          doc = new StyledPDF({
+            headerText: options.headerText || "Preview",
+            colorScheme: "custom",
+            customColors: options.customColors,
+            companyName: "Your Company",
+            fontSettings: options.fontSettings,
+          })
+
+          // Try to load custom font if specified
+          if (options.fontSettings?.useCustomFont && options.fontSettings?.customFontUrl) {
+            try {
+              await doc.addCustomFont(
+                options.fontSettings.customFontUrl,
+                options.fontSettings.customFontName || "CustomFont",
+              )
+            } catch (error) {
+              console.error("Error loading custom font for preview:", error)
+            }
+          }
+
+          // Add content to the PDF
+          const previewLines = content.split("\n")
+
+          previewLines.forEach((line: string) => {
+            // Simple markdown-like parsing
+            if (line.startsWith("# ")) {
+              doc.addHeading(line.substring(2), 1)
+            } else if (line.startsWith("## ")) {
+              doc.addHeading(line.substring(3), 2)
+            } else if (line.startsWith("### ")) {
+              doc.addHeading(line.substring(4), 3)
+            } else if (line.startsWith("---")) {
+              doc.addHorizontalLine()
+            } else if (line.trim() === "") {
+              doc.addSpacer(5)
+            } else {
+              doc.addParagraph(line)
+            }
+          })
+
+          // Add a font sample section
+          doc.addSpacer(10)
+          doc.addHeading("Font Samples", 2)
+
+          // Heading font sample
+          doc.addParagraph("Heading Font Sample", {
+            fontSize: 14,
+            style: "bold",
+            font: options.fontSettings?.headingFont || "helvetica",
+          })
+          doc.addParagraph("ABCDEFGHIJKLMNOPQRSTUVWXYZ", {
+            fontSize: 12,
+            font: options.fontSettings?.headingFont || "helvetica",
+          })
+          doc.addParagraph("abcdefghijklmnopqrstuvwxyz 0123456789", {
+            fontSize: 12,
+            font: options.fontSettings?.headingFont || "helvetica",
+          })
+
+          doc.addSpacer(5)
+
+          // Body font sample
+          doc.addParagraph("Body Font Sample", {
+            fontSize: 14,
+            style: "bold",
+            font: options.fontSettings?.bodyFont || "helvetica",
+          })
+          doc.addParagraph("ABCDEFGHIJKLMNOPQRSTUVWXYZ", {
+            fontSize: 12,
+            font: options.fontSettings?.bodyFont || "helvetica",
+          })
+          doc.addParagraph("abcdefghijklmnopqrstuvwxyz 0123456789", {
+            fontSize: 12,
+            font: options.fontSettings?.bodyFont || "helvetica",
+          })
+
+          // Custom font sample if available
+          if (options.fontSettings?.useCustomFont && doc.customFontLoaded) {
+            doc.addSpacer(5)
+            doc.addParagraph("Custom Font Sample", {
+              fontSize: 14,
+              style: "bold",
+            })
+            doc.addParagraph("ABCDEFGHIJKLMNOPQRSTUVWXYZ", {
+              fontSize: 12,
+            })
+            doc.addParagraph("abcdefghijklmnopqrstuvwxyz 0123456789", {
+              fontSize: 12,
+            })
+          }
+
+          break
+        case "project":
+          doc = await createProjectReportPDF(data.project, data.tasks || [], data.members || [])
+          break
+        case "task":
+          doc = await createTaskReportPDF(data.task, data.comments || [])
+          break
+        case "user":
+          doc = await createUserReportPDF(data.user, data.projects || [], data.tasks || [])
+          break
+        case "generic":
+        default:
+          // Create a styled PDF for generic content with company branding
+          doc = await createStyledPDFWithBranding({
+            headerText: options.headerText || "Document",
+            colorScheme: options.colorScheme || "custom",
+            customColors: options.customColors,
+            fontSettings: options.fontSettings,
+          })
+
+          // Add content to the PDF
+          const lines = content.split("\n")
+
+          lines.forEach((line: string) => {
+            // Simple markdown-like parsing
+            if (line.startsWith("# ")) {
+              doc.addHeading(line.substring(2), 1)
+            } else if (line.startsWith("## ")) {
+              doc.addHeading(line.substring(3), 2)
+            } else if (line.startsWith("### ")) {
+              doc.addHeading(line.substring(4), 3)
+            } else if (line.startsWith("---")) {
+              doc.addHorizontalLine()
+            } else if (line.trim() === "") {
+              doc.addSpacer(5)
+            } else {
+              doc.addParagraph(line)
+            }
+          })
+          break
+      }
+    } catch (error) {
+      logger.error(`Error generating ${type} PDF:`, error)
+      return NextResponse.json(
+        {
+          success: false,
+          error: `Failed to generate ${type} PDF. The server may be missing required dependencies.`,
+          details: error instanceof Error ? error.message : "Unknown error",
+          fallbackUrl: `/api/fallback-pdf?type=${type}&filename=${encodeURIComponent(filename)}`,
+        },
+        { status: 500 },
+      )
+    }
+
+    if (!doc) {
+      logger.error("PDF document was not created")
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Failed to generate PDF document",
+          fallbackUrl: `/api/fallback-pdf?type=${type}&filename=${encodeURIComponent(filename)}`,
+        },
+        { status: 500 },
+      )
+    }
+
+    try {
+      // Convert to base64
+      const pdfBase64 = doc.output("datauristring")
+
+      logger.info("PDF generated successfully")
+
+      return NextResponse.json({
+        success: true,
+        data: pdfBase64,
+        filename,
+      })
+    } catch (error) {
+      logger.error("Error converting PDF to base64:", error)
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Failed to convert PDF to base64",
+          details: error instanceof Error ? error.message : "Unknown error",
+          fallbackUrl: `/api/fallback-pdf?type=${type}&filename=${encodeURIComponent(filename)}`,
+        },
+        { status: 500 },
+      )
+    }
+  } catch (error) {
+    logger.error("PDF generation error:", error)
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Failed to generate PDF",
+        details: error instanceof Error ? error.message : "Unknown error",
+        fallbackUrl: `/api/fallback-pdf?type=generic&filename=export.pdf`,
+      },
+      { status: 500 },
+    )
   }
 }

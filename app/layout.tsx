@@ -1,20 +1,30 @@
-import type { Metadata } from 'next'
-import './globals.css'
+import type React from "react"
+import "./globals.css"
+import type { Metadata } from "next"
+import Navigation from "./components/navigation"
+import Footer from "./components/footer"
+import { ThemeProvider } from "./components/theme-provider"
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.dev',
+  title: "UNITE Group - Project Management",
+  description: "Empowering Your Success Through Innovation",
+    generator: 'v0.dev'
 }
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
+}) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className="min-h-screen bg-[#0a192f] text-white">
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          <Navigation />
+          <main>{children}</main>
+          <Footer />
+        </ThemeProvider>
+      </body>
     </html>
   )
 }

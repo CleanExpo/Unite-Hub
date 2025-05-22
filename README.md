@@ -1,30 +1,101 @@
-# Modern landing page design
+# Streamline App
 
-*Automatically synced with your [v0.dev](https://v0.dev) deployments*
+A modern task and project management application with PDF export capabilities and company branding customization.
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/admin-cleanexpo247s-projects/v0-modern-landing-page-design)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/c68l1gvqxvq)
+## Features
 
-## Overview
-
-This repository will stay in sync with your deployed chats on [v0.dev](https://v0.dev).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.dev](https://v0.dev).
+- Project and task management
+- User authentication and profiles
+- Company branding customization
+- PDF export with custom styling
+- Database integration with Supabase
 
 ## Deployment
 
-Your project is live at:
+You can deploy this project to Vercel with one click:
 
-**[https://vercel.com/admin-cleanexpo247s-projects/v0-modern-landing-page-design](https://vercel.com/admin-cleanexpo247s-projects/v0-modern-landing-page-design)**
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyourusername%2Fstreamline-app&project-name=streamline-app&repository-name=streamline-app)
 
-## Build your app
+**Important:** After deployment, you'll need to configure the required environment variables in your Vercel dashboard.
 
-Continue building your app on:
+## Environment Variables
 
-**[https://v0.dev/chat/projects/c68l1gvqxvq](https://v0.dev/chat/projects/c68l1gvqxvq)**
+To run this project, you will need to add the following environment variables to your Vercel project:
 
-## How It Works
+### Required Environment Variables
 
-1. Create and modify your project using [v0.dev](https://v0.dev)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+| Variable | Description | Where to find |
+|----------|-------------|---------------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Your Supabase project URL | Supabase Dashboard → Settings → API |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Your Supabase anonymous key | Supabase Dashboard → Settings → API |
+| `SUPABASE_SERVICE_ROLE_KEY` | Your Supabase service role key | Supabase Dashboard → Settings → API |
+
+### Setting up Environment Variables in Vercel
+
+1. Go to your Vercel dashboard
+2. Select your deployed project
+3. Navigate to Settings → Environment Variables
+4. Add each variable with its corresponding value from your Supabase project
+
+### Setting up Supabase
+
+1. Create a new project at [supabase.com](https://supabase.com)
+2. Go to Settings → API to find your project URL and keys
+3. Run the database setup by visiting `/admin/setup-database` after deployment
+4. Configure your database tables using the provided admin tools
+
+## Getting Started
+
+### Local Development
+
+1. Clone the repository
+\`\`\`bash
+git clone <your-repo-url>
+cd streamline-app
+\`\`\`
+
+2. Install dependencies
+\`\`\`bash
+npm install
+\`\`\`
+
+3. Set up environment variables
+\`\`\`bash
+cp .env.example .env.local
+# Edit .env.local with your Supabase credentials
+\`\`\`
+
+4. Run the development server
+\`\`\`bash
+npm run dev
+\`\`\`
+
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+## Database Setup
+
+After deployment, visit `/admin/setup-database` to:
+- Create all necessary database tables
+- Set up Row Level Security policies
+- Add seed data for testing
+
+## Admin Tools
+
+The application includes several admin tools accessible at:
+- `/admin/setup-database` - Database setup and migration
+- `/admin/test-database` - Database connectivity testing
+- `/admin/health-check` - System health monitoring
+
+## Tech Stack
+
+- **Framework:** Next.js 14 with App Router
+- **Database:** Supabase (PostgreSQL)
+- **Authentication:** Supabase Auth
+- **Styling:** Tailwind CSS
+- **UI Components:** shadcn/ui
+- **PDF Generation:** jsPDF with custom styling
+- **Deployment:** Vercel
+
+## License
+
+This project is licensed under the MIT License.
