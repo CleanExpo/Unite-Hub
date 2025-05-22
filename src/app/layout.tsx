@@ -1,5 +1,5 @@
-import type { Metadata } from 'next'
-import Navigation from '@/components/Navigation'
+﻿import type { Metadata } from 'next'
+import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Unite Group',
@@ -13,10 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <Navigation />
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   )
 }
