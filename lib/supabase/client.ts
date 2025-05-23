@@ -1,15 +1,25 @@
-"use client"
-
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
+import { createBrowserClient } from "@supabase/ssr"
 import type { Database } from "@/types/supabase"
 
-// Export the createClient function explicitly as required by the deployment error
+/**
+ * Creates a Supabase client for browser environments
+ * @returns Supabase browser client
+ */
 export function createClient() {
-  return createClientComponentClient<Database>()
+  return createBrowserClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  )
 }
 
-// Also export the client instance for convenience
+/**
+ * Singleton instance of the Supabase client
+ * This is the named export that was missing and causing the deployment error
+ */
 export const supabaseClient = createClient()
 
-// Default export as a fallback
+/**
+ * Default export for convenience
+ * Includes both the createClient function and the supabaseClient instance
+ */
 export default { createClient, supabaseClient }
