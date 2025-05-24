@@ -102,7 +102,7 @@ export default function Home() {
                 </div>
                 <CardTitle className="text-xl text-white">Expert Education</CardTitle>
                 <CardDescription className="text-slate-300">
-                  Professional training and development programs to enhance your team's capabilities and drive innovation.
+                  Professional training and development programs to enhance your team&apos;s capabilities and drive innovation.
                 </CardDescription>
               </CardHeader>
             </Card>
