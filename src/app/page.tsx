@@ -76,6 +76,7 @@ export default function Home() {
                         width={96}
                         height={96}
                         className="w-full h-full object-contain"
+                        priority
                         onError={(e) => {
                           // Fallback to icon if image fails to load
                           const target = e.target as HTMLImageElement;
@@ -84,7 +85,7 @@ export default function Home() {
                           if (fallback) fallback.style.display = 'flex';
                         }}
                       />
-                      <div className="hidden w-full h-full items-center justify-center">
+                      <div className="hidden w-full h-full items-center justify-center absolute inset-0">
                         <div className="relative">
                           <Cog className="h-12 w-12 text-slate-900 absolute" />
                           <Handshake className="h-8 w-8 text-slate-900 relative top-2 left-2" />
