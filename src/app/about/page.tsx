@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Target, Award, Lightbulb, ArrowRight, CheckCircle } from "lucide-react";
@@ -296,89 +297,139 @@ export default function About() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {/* Phill McGurk - Co-Founder */}
+            {/* Phill McGurk - Co-Owner */}
             <Card className="bg-slate-800 border-slate-700 hover:bg-slate-700 transition-colors">
               <CardContent className="p-6 text-center">
-                <div className="w-24 h-24 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full mx-auto mb-4 flex items-center justify-center">
-                  <span className="text-2xl font-bold text-white">PM</span>
+                <div className="w-24 h-24 mx-auto mb-4 relative overflow-hidden rounded-full">
+                  <Image
+                    src="/placeholder-user.jpg"
+                    alt="Phill McGurk - Co-Owner, Product Development"
+                    width={96}
+                    height={96}
+                    className="object-cover w-full h-full"
+                  />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">Phill McGurk</h3>
-                <p className="text-teal-400 font-semibold mb-3">Co-Founder</p>
+                <p className="text-teal-400 font-semibold mb-3">Co-Owner</p>
                 <p className="text-purple-400 font-medium mb-3">Product Development</p>
+                <div className="text-xs text-slate-400 mb-3 space-y-1">
+                  <div>Product Manager</div>
+                  <div>Product Development Engineer</div>
+                  <div>Product Owner</div>
+                  <div>Product Analyst</div>
+                </div>
                 <p className="text-sm text-slate-300 leading-relaxed">
-                  Expert in product strategy and development lifecycle management. Specializes in product management, development engineering, product ownership, and analytical insights to drive innovation and market success.
+                  Expert in product strategy and development lifecycle management. Drives innovation through comprehensive product management and analytical insights.
                 </p>
               </CardContent>
             </Card>
 
-            {/* Claire Booth - Co-Founder */}
+            {/* Claire Booth - Co-Owner */}
             <Card className="bg-slate-800 border-slate-700 hover:bg-slate-700 transition-colors">
               <CardContent className="p-6 text-center">
                 <div className="w-24 h-24 bg-gradient-to-br from-pink-400 to-red-500 rounded-full mx-auto mb-4 flex items-center justify-center">
                   <span className="text-2xl font-bold text-white">CB</span>
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">Claire Booth</h3>
-                <p className="text-teal-400 font-semibold mb-3">Co-Founder</p>
+                <p className="text-teal-400 font-semibold mb-3">Co-Owner</p>
                 <p className="text-purple-400 font-medium mb-3">Marketing</p>
+                <div className="text-xs text-slate-400 mb-3 space-y-1">
+                  <div>Digital Marketing Manager</div>
+                  <div>Marketing Technologist</div>
+                  <div>Product Marketing Manager</div>
+                  <div>SEO Specialist</div>
+                  <div>Growth Hacker</div>
+                  <div>Social Media Manager</div>
+                </div>
                 <p className="text-sm text-slate-300 leading-relaxed">
-                  Digital marketing strategist with expertise in marketing technology, product marketing, SEO optimization, growth hacking, and social media management to accelerate business growth and brand visibility.
+                  Digital marketing strategist specializing in growth acceleration and brand visibility through comprehensive marketing solutions.
                 </p>
               </CardContent>
             </Card>
 
-            {/* Yasir Sarfraz - Co-Founder */}
+            {/* Yasir Sarfraz - Team Leader */}
             <Card className="bg-slate-800 border-slate-700 hover:bg-slate-700 transition-colors">
               <CardContent className="p-6 text-center">
                 <div className="w-24 h-24 bg-gradient-to-br from-green-400 to-emerald-600 rounded-full mx-auto mb-4 flex items-center justify-center">
                   <span className="text-2xl font-bold text-white">YS</span>
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">Yasir Sarfraz</h3>
-                <p className="text-teal-400 font-semibold mb-3">Co-Founder</p>
+                <p className="text-emerald-400 font-semibold mb-3">Team Leader</p>
                 <p className="text-blue-400 font-medium mb-3">Software Builder</p>
+                <div className="text-xs text-slate-400 mb-3 space-y-1">
+                  <div>Software Engineer</div>
+                  <div>Software Developer</div>
+                  <div>Programmer</div>
+                  <div>Full Stack Developer</div>
+                  <div>Backend/Frontend Developer</div>
+                  <div>DevOps Engineer</div>
+                </div>
                 <p className="text-sm text-slate-300 leading-relaxed">
-                  Full-stack software architect with comprehensive expertise in software engineering, development, programming, backend/frontend technologies, and DevOps practices for scalable solution delivery.
+                  Technical leader with comprehensive expertise in full-stack development and DevOps practices for scalable solutions.
                 </p>
               </CardContent>
             </Card>
 
-            {/* Afifa - Design */}
+            {/* Afifa - Software Builder */}
             <Card className="bg-slate-800 border-slate-700 hover:bg-slate-700 transition-colors">
               <CardContent className="p-6 text-center">
-                <div className="w-24 h-24 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+                <div className="w-24 h-24 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full mx-auto mb-4 flex items-center justify-center">
                   <span className="text-2xl font-bold text-white">AF</span>
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">Afifa</h3>
-                <p className="text-orange-400 font-medium mb-3">Design</p>
+                <p className="text-blue-400 font-medium mb-3">Software Builder</p>
+                <div className="text-xs text-slate-400 mb-3 space-y-1">
+                  <div>Software Engineer</div>
+                  <div>Software Developer</div>
+                  <div>Programmer</div>
+                  <div>Full Stack Developer</div>
+                  <div>Backend/Frontend Developer</div>
+                  <div>DevOps Engineer</div>
+                </div>
                 <p className="text-sm text-slate-300 leading-relaxed">
-                  Creative design specialist focused on user experience, user interface design, product design, graphic design, and interaction design to create intuitive and engaging digital experiences.
+                  Skilled software engineer proficient in full-stack development and modern programming practices for robust applications.
                 </p>
               </CardContent>
             </Card>
 
-            {/* Ayesha - Team Leader */}
+            {/* Ayesha - Design */}
             <Card className="bg-slate-800 border-slate-700 hover:bg-slate-700 transition-colors">
               <CardContent className="p-6 text-center">
                 <div className="w-24 h-24 bg-gradient-to-br from-purple-400 to-indigo-600 rounded-full mx-auto mb-4 flex items-center justify-center">
                   <span className="text-2xl font-bold text-white">AY</span>
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">Ayesha</h3>
-                <p className="text-indigo-400 font-medium mb-3">Team Leader</p>
+                <p className="text-orange-400 font-medium mb-3">Design</p>
+                <div className="text-xs text-slate-400 mb-3 space-y-1">
+                  <div>UX Designer</div>
+                  <div>UI Designer</div>
+                  <div>Product Designer</div>
+                  <div>Graphic Designer</div>
+                  <div>Interaction Designer</div>
+                </div>
                 <p className="text-sm text-slate-300 leading-relaxed">
-                  Technical leadership expert specializing in tech lead roles, engineering leadership, team management, software engineering management, and project coordination to drive team success and delivery excellence.
+                  Creative design specialist focused on user experience and interface design to create intuitive digital experiences.
                 </p>
               </CardContent>
             </Card>
 
-            {/* Shahid - Software Builder */}
+            {/* Amina - Design */}
             <Card className="bg-slate-800 border-slate-700 hover:bg-slate-700 transition-colors">
               <CardContent className="p-6 text-center">
-                <div className="w-24 h-24 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-full mx-auto mb-4 flex items-center justify-center">
-                  <span className="text-2xl font-bold text-white">SH</span>
+                <div className="w-24 h-24 bg-gradient-to-br from-rose-400 to-pink-600 rounded-full mx-auto mb-4 flex items-center justify-center">
+                  <span className="text-2xl font-bold text-white">AM</span>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">Shahid</h3>
-                <p className="text-blue-400 font-medium mb-3">Software Builder</p>
+                <h3 className="text-xl font-bold text-white mb-2">Amina</h3>
+                <p className="text-orange-400 font-medium mb-3">Design</p>
+                <div className="text-xs text-slate-400 mb-3 space-y-1">
+                  <div>UX Designer</div>
+                  <div>UI Designer</div>
+                  <div>Product Designer</div>
+                  <div>Graphic Designer</div>
+                  <div>Interaction Designer</div>
+                </div>
                 <p className="text-sm text-slate-300 leading-relaxed">
-                  Skilled software engineer with expertise in software development, programming, full-stack development, backend/frontend technologies, and DevOps engineering for robust application development.
+                  Talented design professional specializing in user-centered design and visual communication for compelling solutions.
                 </p>
               </CardContent>
             </Card>
@@ -391,22 +442,37 @@ export default function About() {
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">Usman</h3>
                 <p className="text-blue-400 font-medium mb-3">Software Builder</p>
+                <div className="text-xs text-slate-400 mb-3 space-y-1">
+                  <div>Software Engineer</div>
+                  <div>Software Developer</div>
+                  <div>Programmer</div>
+                  <div>Full Stack Developer</div>
+                  <div>Backend/Frontend Developer</div>
+                  <div>DevOps Engineer</div>
+                </div>
                 <p className="text-sm text-slate-300 leading-relaxed">
-                  Dedicated software engineer proficient in software development, programming, full-stack development, backend/frontend technologies, and DevOps practices for comprehensive solution development.
+                  Dedicated software engineer with expertise in full-stack development and DevOps practices for comprehensive solutions.
                 </p>
               </CardContent>
             </Card>
 
-            {/* Amara - Design */}
+            {/* Shahid - Design */}
             <Card className="bg-slate-800 border-slate-700 hover:bg-slate-700 transition-colors">
               <CardContent className="p-6 text-center">
-                <div className="w-24 h-24 bg-gradient-to-br from-rose-400 to-pink-600 rounded-full mx-auto mb-4 flex items-center justify-center">
-                  <span className="text-2xl font-bold text-white">AM</span>
+                <div className="w-24 h-24 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+                  <span className="text-2xl font-bold text-white">SH</span>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">Amara</h3>
+                <h3 className="text-xl font-bold text-white mb-2">Shahid</h3>
                 <p className="text-orange-400 font-medium mb-3">Design</p>
+                <div className="text-xs text-slate-400 mb-3 space-y-1">
+                  <div>UX Designer</div>
+                  <div>UI Designer</div>
+                  <div>Product Designer</div>
+                  <div>Graphic Designer</div>
+                  <div>Interaction Designer</div>
+                </div>
                 <p className="text-sm text-slate-300 leading-relaxed">
-                  Talented design professional specializing in user experience design, user interface design, product design, graphic design, and interaction design to create compelling and user-centered solutions.
+                  Experienced design professional with expertise in user experience and visual design for engaging digital products.
                 </p>
               </CardContent>
             </Card>
