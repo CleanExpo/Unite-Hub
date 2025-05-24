@@ -1,94 +1,46 @@
 ﻿import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   return (
-    <div style={{ 
-      minHeight: "100vh", 
-      background: "linear-gradient(to bottom right, #0f172a, #581c87, #0f172a)",
-      color: "white"
-    }}>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
       {/* Navigation */}
-      <nav style={{
-        position: "fixed",
-        width: "100%",
-        backdropFilter: "blur(12px)",
-        backgroundColor: "rgba(0,0,0,0.2)",
-        zIndex: 50,
-        borderBottom: "1px solid rgba(255,255,255,0.1)"
-      }}>
-        <div style={{
-          maxWidth: "1280px",
-          margin: "0 auto",
-          padding: "0 1rem",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          height: "64px"
-        }}>
-          <h1 style={{ fontSize: "1.5rem", fontWeight: "bold" }}>Unite Group</h1>
-          <div style={{ display: "flex", gap: "1rem" }}>
-            <Link href="/login" style={{ 
-              color: "rgba(255,255,255,0.8)", 
-              textDecoration: "none",
-              padding: "0.5rem 1rem"
-            }}>Login</Link>
-            <Link href="/register" style={{
-              backgroundColor: "#9333ea",
-              color: "white",
-              padding: "0.5rem 1.5rem",
-              borderRadius: "0.5rem",
-              textDecoration: "none"
-            }}>Get Started</Link>
+      <nav className="fixed w-full backdrop-blur-md bg-black/20 z-50 border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
+          <h1 className="text-2xl font-bold">Unite Group</h1>
+          <div className="flex gap-4">
+            <Link href="/login" className="text-white/80 hover:text-white px-4 py-2 rounded-md transition-colors">
+              Login
+            </Link>
+            <Button asChild className="bg-purple-600 hover:bg-purple-700">
+              <Link href="/register">Get Started</Link>
+            </Button>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section style={{ paddingTop: "8rem", paddingBottom: "5rem", textAlign: "center" }}>
-        <div style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 1rem" }}>
-          <h1 style={{ 
-            fontSize: "4rem", 
-            fontWeight: "bold",
-            marginBottom: "1.5rem",
-            lineHeight: "1.1"
-          }}>
+      <section className="pt-32 pb-20 text-center">
+        <div className="max-w-7xl mx-auto px-4">
+          <h1 className="text-6xl font-bold mb-6 leading-tight">
             Project Management
-            <span style={{ 
-              display: "block",
-              background: "linear-gradient(to right, #a855f7, #ec4899)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent"
-            }}>Reimagined</span>
+            <span className="block bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              Reimagined
+            </span>
           </h1>
-          
-          <p style={{ 
-            fontSize: "1.25rem",
-            color: "#d1d5db",
-            maxWidth: "48rem",
-            margin: "0 auto 3rem"
-          }}>
-            Unite Group brings teams together with intelligent workflows, 
+
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-12">
+            Unite Group brings teams together with intelligent workflows,
             real-time collaboration, and insights that drive results.
           </p>
-          
-          <div style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
-            <Link href="/register" style={{
-              background: "linear-gradient(to right, #9333ea, #ec4899)",
-              color: "white",
-              padding: "1rem 2rem",
-              borderRadius: "0.5rem",
-              textDecoration: "none",
-              fontWeight: "600"
-            }}>Start Free Trial</Link>
-            <Link href="/demo" style={{
-              backgroundColor: "rgba(255,255,255,0.1)",
-              color: "white",
-              padding: "1rem 2rem",
-              borderRadius: "0.5rem",
-              textDecoration: "none",
-              fontWeight: "600",
-              border: "1px solid rgba(255,255,255,0.2)"
-            }}>Watch Demo</Link>
+
+          <div className="flex gap-4 justify-center flex-wrap">
+            <Button asChild size="lg" className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
+              <Link href="/register">Start Free Trial</Link>
+            </Button>
+            <Button asChild variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10">
+              <Link href="/features">Explore Features</Link>
+            </Button>
           </div>
         </div>
       </section>

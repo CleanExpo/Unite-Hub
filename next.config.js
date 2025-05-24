@@ -1,6 +1,8 @@
-/** @type {import('next').NextConfig} */
+﻿/** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Tell Next.js to use the src directory
+  distDir: '.next',
   images: {
     domains: ['localhost'],
     unoptimized: true,

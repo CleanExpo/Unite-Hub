@@ -2,8 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { supabaseClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null);
@@ -25,104 +28,72 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div style={{ padding: "2rem", textAlign: "center" }}>
-        <p>Loading...</p>
+      <div className="p-8 text-center">
+        <p className="text-lg">Loading...</p>
       </div>
     );
   }
 
   return (
-    <main style={{ padding: "2rem" }}>
-      <h1 style={{ fontSize: "2rem", fontWeight: "bold", marginBottom: "1.5rem" }}>
+    <main className="p-8 max-w-7xl mx-auto">
+      <h1 className="text-3xl font-bold mb-6">
         Welcome to Your Dashboard
       </h1>
       
-      <div style={{ 
-        backgroundColor: "#f3f4f6", 
-        padding: "1.5rem", 
-        borderRadius: "0.5rem",
-        marginBottom: "2rem"
-      }}>
-        <h2 style={{ fontSize: "1.25rem", fontWeight: "600", marginBottom: "0.5rem" }}>
-          User Information
-        </h2>
-        <p>Email: {user?.email}</p>
-        <p>User ID: {user?.id}</p>
+      <Card className="mb-8">
+        <CardHeader>
+          <CardTitle>User Information</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="mb-2"><strong>Email:</strong> {user?.email}</p>
+          <p><strong>User ID:</strong> {user?.id}</p>
+        </CardContent>
+      </Card>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <Card className="text-center bg-blue-50 border-blue-200">
+          <CardContent className="pt-6">
+            <h3 className="text-lg font-semibold mb-2">Projects</h3>
+            <p className="text-3xl font-bold text-blue-600">0</p>
+            <p className="text-sm text-gray-600">Active Projects</p>
+          </CardContent>
+        </Card>
+        
+        <Card className="text-center bg-green-50 border-green-200">
+          <CardContent className="pt-6">
+            <h3 className="text-lg font-semibold mb-2">Tasks</h3>
+            <p className="text-3xl font-bold text-green-600">0</p>
+            <p className="text-sm text-gray-600">Pending Tasks</p>
+          </CardContent>
+        </Card>
+        
+        <Card className="text-center bg-yellow-50 border-yellow-200">
+          <CardContent className="pt-6">
+            <h3 className="text-lg font-semibold mb-2">Team</h3>
+            <p className="text-3xl font-bold text-yellow-600">1</p>
+            <p className="text-sm text-gray-600">Team Members</p>
+          </CardContent>
+        </Card>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "1rem" }}>
-        <div style={{
-          backgroundColor: "#dbeafe",
-          padding: "1.5rem",
-          borderRadius: "0.5rem",
-          textAlign: "center"
-        }}>
-          <h3 style={{ fontSize: "1.1rem", fontWeight: "600", marginBottom: "0.5rem" }}>Projects</h3>
-          <p style={{ fontSize: "2rem", fontWeight: "bold" }}>0</p>
-          <p style={{ fontSize: "0.875rem", color: "#6b7280" }}>Active Projects</p>
-        </div>
-        
-        <div style={{
-          backgroundColor: "#dcfce7",
-          padding: "1.5rem",
-          borderRadius: "0.5rem",
-          textAlign: "center"
-        }}>
-          <h3 style={{ fontSize: "1.1rem", fontWeight: "600", marginBottom: "0.5rem" }}>Tasks</h3>
-          <p style={{ fontSize: "2rem", fontWeight: "bold" }}>0</p>
-          <p style={{ fontSize: "0.875rem", color: "#6b7280" }}>Pending Tasks</p>
-        </div>
-        
-        <div style={{
-          backgroundColor: "#fef3c7",
-          padding: "1.5rem",
-          borderRadius: "0.5rem",
-          textAlign: "center"
-        }}>
-          <h3 style={{ fontSize: "1.1rem", fontWeight: "600", marginBottom: "0.5rem" }}>Team</h3>
-          <p style={{ fontSize: "2rem", fontWeight: "bold" }}>1</p>
-          <p style={{ fontSize: "0.875rem", color: "#6b7280" }}>Team Members</p>
-        </div>
-      </div>
-
-      <div style={{ marginTop: "2rem" }}>
-        <h2 style={{ fontSize: "1.5rem", fontWeight: "600", marginBottom: "1rem" }}>Quick Actions</h2>
-        <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-          <button style={{
-            backgroundColor: "#3b82f6",
-            color: "white",
-            padding: "0.75rem 1.5rem",
-            borderRadius: "0.375rem",
-            border: "none",
-            cursor: "pointer",
-            fontWeight: "500"
-          }}>
-            Create New Project
-          </button>
-          <button style={{
-            backgroundColor: "#10b981",
-            color: "white",
-            padding: "0.75rem 1.5rem",
-            borderRadius: "0.375rem",
-            border: "none",
-            cursor: "pointer",
-            fontWeight: "500"
-          }}>
-            Add Task
-          </button>
-          <button style={{
-            backgroundColor: "#f59e0b",
-            color: "white",
-            padding: "0.75rem 1.5rem",
-            borderRadius: "0.375rem",
-            border: "none",
-            cursor: "pointer",
-            fontWeight: "500"
-          }}>
-            Invite Team Member
-          </button>
-        </div>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Quick Actions</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex gap-4 flex-wrap">
+            <Button asChild className="bg-blue-600 hover:bg-blue-700">
+              <Link href="/organizations">Manage Organizations</Link>
+            </Button>
+            <Button className="bg-green-600 hover:bg-green-700">
+              Add Task
+            </Button>
+            <Button className="bg-amber-600 hover:bg-amber-700">
+              Invite Team Member
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </main>
   );
 }
