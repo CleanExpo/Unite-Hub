@@ -69,7 +69,7 @@ const FontPairingRecommendations = () => {
                 key={category.name}
                 variant={filter === category.value ? "default" : "outline"}
                 size="sm"
-                onClick={() => setFilter(category.value)}
+                onClick={() => setFilter(category.value || "all")}
                 className="text-xs"
               >
                 {category.name}

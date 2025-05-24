@@ -148,9 +148,7 @@ export default function TestPdfExport() {
             {testResults.map((result) => (
               <Alert
                 key={result.id}
-                variant={
-                  result.status === "error" ? "destructive" : result.status === "success" ? "default" : "outline"
-                }
+                variant={result.status === "error" ? "destructive" : "default"}
               >
                 {result.status === "success" && <CheckCircle className="h-4 w-4" />}
                 {result.status === "error" && <AlertCircle className="h-4 w-4" />}

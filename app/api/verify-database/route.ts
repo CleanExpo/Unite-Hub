@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server"
 
 export async function GET() {
   try {
-    const supabase = createClient()
+    const supabase = await createClient()
 
     // Check if user is authenticated
     const {
@@ -58,8 +58,9 @@ export async function GET() {
     try {
       // We can't directly test this without executing SQL, so we'll just check if we get a specific error
       const { error } = await supabase.rpc("exec_sql", { sql: "SELECT 1" })
-      hasExecSqlFunction =
+      hasExecSqlFunction = Boolean(
         error?.message?.includes("permission denied") || error?.message?.includes("function exec_sql")
+      )
     } catch (error) {
       hasExecSqlFunction = false
     }

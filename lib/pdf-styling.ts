@@ -90,7 +90,7 @@ export const STANDARD_FONTS = {
 
 // Fetch company settings from Supabase
 export async function getCompanySettings() {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   try {
     const { data, error } = await supabase.from("company_settings").select("*").single()
@@ -792,75 +792,4 @@ export class StyledPDF extends jsPDF {
       console.error("Error adding image to PDF:", error)
       // Add a placeholder for the image
       this.setFillColor("#f3f4f6")
-      this.rect(x, y, width, height, "F")
-      this.setTextColor("#6b7280")
-      this.setFontSize(8)
-      this.text("Image not available", x + width / 2 - 20, y + height / 2)
-    }
-    return this
-  }
-
-  // Add a custom font to the PDF
-  async addCustomFont(fontUrl: string, fontName: string) {
-    try {
-      const fontData = await loadCustomFont(fontUrl, fontName)
-      if (fontData) {
-        // Add the font to the PDF
-        this.addFileToVFS(`${fontName}.ttf`, fontData.fontData)
-        this.addFont(`${fontName}.ttf`, fontName, "normal")
-
-        // Also add bold, italic, and bold-italic variants (these will be simulated)
-        this.addFont(`${fontName}.ttf`, `${fontName}-Bold`, "bold")
-        this.addFont(`${fontName}.ttf`, `${fontName}-Italic`, "italic")
-        this.addFont(`${fontName}.ttf`, `${fontName}-BoldItalic`, "bolditalic")
-
-        this.customFontLoaded = true
-        return true
-      }
-    } catch (error) {
-      console.error("Error adding custom font:", error)
-    }
-    return false
-  }
-}
-
-// Helper function to create a styled PDF with company branding
-export async function createStyledPDFWithBranding(options: Parameters<typeof StyledPDF>[0] = {}) {
-  // Fetch company settings
-  const companySettings = await getCompanySettings()
-
-  // Create PDF with company branding if available
-  const pdf = new StyledPDF({
-    ...options,
-    headerLogo: companySettings?.logo_url || options.headerLogo,
-    companyName: companySettings?.name || options.companyName,
-    footerText: options.footerText || `Generated on ${new Date().toLocaleDateString()}`,
-    colorScheme: options.colorScheme || "custom",
-    customColors: options.customColors || companySettings?.brand_colors || COLOR_SCHEMES.default,
-    fontSettings: options.fontSettings ||
-      companySettings?.font_settings || {
-        headingFont: "helvetica",
-        bodyFont: "helvetica",
-      },
-  })
-
-  // Try to load custom font if specified
-  if (
-    (options.fontSettings?.useCustomFont || companySettings?.font_settings?.useCustomFont) &&
-    (options.fontSettings?.customFontUrl || companySettings?.font_settings?.customFontUrl)
-  ) {
-    const fontUrl = options.fontSettings?.customFontUrl || companySettings?.font_settings?.customFontUrl
-    const fontName =
-      options.fontSettings?.customFontName || companySettings?.font_settings?.customFontName || "CustomFont"
-
-    if (fontUrl) {
-      try {
-        await pdf.addCustomFont(fontUrl, fontName)
-      } catch (error) {
-        console.error("Error loading custom font:", error)
-      }
-    }
-  }
-
-  return pdf
-}
+      this.rect(x, y

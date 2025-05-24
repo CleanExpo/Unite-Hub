@@ -91,8 +91,8 @@ export default function ProjectsPage() {
           }
         }
 
-        // If we couldn't fetch owners or there are no projects, just set the projects without owner data
-        setProjects(data || [])
+        // If we couldn't fetch owners or there are no projects, just set the projects with null owner data
+        setProjects((data || []).map(project => ({ ...project, owner: null })))
       } catch (error: any) {
         console.error("Error fetching projects:", error)
         setError(error.message || "Failed to load projects")

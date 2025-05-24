@@ -22,7 +22,7 @@ export async function POST(request: Request) {
 
     logger.info(`Generating ${type} PDF with filename: ${filename}`)
 
-    let doc
+    let doc: any
 
     // Generate PDF based on type
     try {
@@ -138,7 +138,7 @@ export async function POST(request: Request) {
             colorScheme: options.colorScheme || "custom",
             customColors: options.customColors,
             fontSettings: options.fontSettings,
-          })
+          } as any)
 
           // Add content to the PDF
           const lines = content.split("\n")

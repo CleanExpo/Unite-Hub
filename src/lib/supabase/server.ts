@@ -35,3 +35,6 @@ export async function createClient() {
     }
   )
 }
+
+// Export alias for compatibility
+export const createServerClient = createClient

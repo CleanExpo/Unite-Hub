@@ -1,10 +1,10 @@
 "use server"
 
-import { createServerClient } from "@/lib/supabase/server"
+import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 
 export async function updateProfile(formData: FormData) {
-  const supabase = createServerClient()
+  const supabase = await createClient()
 
   // Get the current user
   const {

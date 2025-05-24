@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server"
 export async function GET() {
   try {
     // Test that our Supabase client is properly exported and working
-    const supabase = createClient()
+    const supabase = await createClient()
 
     // Check environment variables
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL

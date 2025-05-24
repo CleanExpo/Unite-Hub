@@ -5,9 +5,9 @@ import path from "path"
 
 export async function POST(request: Request) {
   try {
-    const supabase = createClient()
+    const supabase = await createClient()
 
-    // Check if user is authenticated and is an admin
+    // Check if user is authenticated
     const {
       data: { user },
       error: authError,

@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation"
-import { createServerClient } from "@/lib/supabase/server"
+import { createClient } from "@/lib/supabase/server"
 import ProfileTabs from "./profile-tabs"
 
 export default async function ProfilePage() {
-  const supabase = createServerClient()
+  const supabase = await createClient()
 
   // Get the current user
   const {
