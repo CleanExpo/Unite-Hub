@@ -19,8 +19,14 @@ export async function middleware(req: NextRequest) {
   const isApiRoute = req.nextUrl.pathname.startsWith("/api")
   const isRootRoute = req.nextUrl.pathname === "/"
   const isTestRoute = req.nextUrl.pathname.startsWith("/auth-test")
+  const isPublicPageRoute = 
+    req.nextUrl.pathname === "/" ||
+    req.nextUrl.pathname === "/features" ||
+    req.nextUrl.pathname === "/pricing" ||
+    req.nextUrl.pathname === "/contact" ||
+    req.nextUrl.pathname === "/about"
   const isPublicRoute =
-    isAuthRoute || isApiRoute || isRootRoute || isTestRoute || req.nextUrl.pathname.startsWith("/_next")
+    isAuthRoute || isApiRoute || isRootRoute || isTestRoute || isPublicPageRoute || req.nextUrl.pathname.startsWith("/_next")
 
   // If user is signed in and trying to access auth page, redirect to dashboard
   if (session && isAuthRoute) {
