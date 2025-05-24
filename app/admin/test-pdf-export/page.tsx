@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { CheckCircle, AlertCircle, Loader2 } from "lucide-react"
-import { ExportPdfButton } from "@/app/components/export-pdf-button"
+import { ExportPdfButton } from "../../components/export-pdf-button"
 
 export default function TestPdfExport() {
   const [content, setContent] = useState(

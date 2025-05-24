@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { BuildStatus } from "../components/build-status"
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -25,5 +26,3 @@ export default function Page() {
     </main>
   )
 }
-
-import { BuildStatus } from "@/app/components/build-status"
