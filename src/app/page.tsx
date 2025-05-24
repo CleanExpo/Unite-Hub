@@ -67,8 +67,12 @@ export default function Home() {
             <div className="relative">
               <div className="bg-slate-800 rounded-2xl shadow-2xl p-8 border border-slate-700">
                 <div className="flex items-center justify-center mb-8">
-                  <div className="w-24 h-24 bg-gradient-to-r from-teal-400 to-cyan-400 rounded-full flex items-center justify-center">
-                    <Handshake className="h-12 w-12 text-slate-900" />
+                  <div className="w-32 h-32 bg-gradient-to-r from-teal-400 to-cyan-400 rounded-full flex items-center justify-center p-4">
+                    <img 
+                      src="/images/handshake-gear.png" 
+                      alt="Handshake and Gear - Partnership Excellence" 
+                      className="w-full h-full object-contain"
+                    />
                   </div>
                 </div>
                 <div className="text-center">
