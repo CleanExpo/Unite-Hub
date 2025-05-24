@@ -42,13 +42,13 @@ export default function Contact() {
     {
       icon: <Mail className="h-6 w-6 text-purple-400" />,
       title: "Email",
-      details: "hello@unitegroup.com",
+      details: "support@carsi.com.au",
       description: "Send us an email anytime"
     },
     {
       icon: <Phone className="h-6 w-6 text-blue-400" />,
       title: "Phone",
-      details: "+1 (555) 123-4567",
+      details: "0457 123 005",
       description: "Mon-Fri from 8am to 6pm"
     },
     {
