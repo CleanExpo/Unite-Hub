@@ -69,13 +69,28 @@ export default function Home() {
               <div className="bg-slate-800 rounded-2xl shadow-2xl p-8 border border-slate-700">
                 <div className="flex items-center justify-center mb-8">
                   <div className="w-32 h-32 bg-gradient-to-r from-teal-400 to-cyan-400 rounded-full flex items-center justify-center p-4">
-                    <Image 
-                      src="/images/handshake-gear.png" 
-                      alt="Handshake and Gear - Partnership Excellence" 
-                      width={96}
-                      height={96}
-                      className="w-full h-full object-contain"
-                    />
+                    <div className="relative w-full h-full">
+                      <Image 
+                        src="/images/handshake-gear.png" 
+                        alt="Handshake and Gear - Partnership Excellence" 
+                        width={96}
+                        height={96}
+                        className="w-full h-full object-contain"
+                        onError={(e) => {
+                          // Fallback to icon if image fails to load
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const fallback = target.nextElementSibling as HTMLElement;
+                          if (fallback) fallback.style.display = 'flex';
+                        }}
+                      />
+                      <div className="hidden w-full h-full items-center justify-center">
+                        <div className="relative">
+                          <Cog className="h-12 w-12 text-slate-900 absolute" />
+                          <Handshake className="h-8 w-8 text-slate-900 relative top-2 left-2" />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div className="text-center">
