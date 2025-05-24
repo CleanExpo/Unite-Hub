@@ -1,120 +1,129 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, X } from "lucide-react";
+import { CheckCircle, Clock, Users, Code, Search } from "lucide-react";
 
 export default function Pricing() {
-  const plans = [
+  const services = [
     {
-      name: "Starter",
-      price: "$0",
-      period: "forever",
-      description: "Perfect for small teams getting started",
+      name: "Initial Consultation",
+      price: "$550",
+      period: "1 hour session",
+      description: "Comprehensive business analysis and strategic planning session",
+      icon: <Clock className="h-8 w-8 text-teal-600" />,
       features: [
-        "Up to 5 team members",
-        "3 projects",
-        "Basic task management",
-        "Email support",
-        "1GB storage",
-        "Basic reporting"
-      ],
-      notIncluded: [
-        "Advanced analytics",
-        "Custom workflows",
-        "Priority support",
-        "API access"
-      ],
-      popular: false,
-      cta: "Get Started Free"
-    },
-    {
-      name: "Professional",
-      price: "$12",
-      period: "per user/month",
-      description: "For growing teams that need more power",
-      features: [
-        "Up to 25 team members",
-        "Unlimited projects",
-        "Advanced task management",
-        "Priority email support",
-        "50GB storage",
-        "Advanced reporting",
-        "Custom workflows",
-        "Time tracking",
-        "Gantt charts"
-      ],
-      notIncluded: [
-        "API access",
-        "Custom integrations",
-        "Dedicated support"
+        "In-depth business assessment",
+        "Technology needs analysis",
+        "Strategic roadmap development",
+        "Custom solution recommendations",
+        "Implementation timeline",
+        "Resource requirement planning",
+        "Follow-up summary report",
+        "30-day email support"
       ],
       popular: true,
-      cta: "Start Free Trial"
+      cta: "Book Consultation"
     },
     {
-      name: "Enterprise",
-      price: "$25",
-      period: "per user/month",
-      description: "For large organizations with advanced needs",
+      name: "Expert Education",
+      price: "Scope-based",
+      period: "custom pricing",
+      description: "Professional training and development programs",
+      icon: <Users className="h-8 w-8 text-purple-600" />,
       features: [
-        "Unlimited team members",
-        "Unlimited projects",
-        "All Professional features",
-        "24/7 phone support",
-        "500GB storage",
-        "Custom reporting",
-        "API access",
-        "Custom integrations",
-        "Advanced security",
-        "Dedicated account manager",
-        "Custom training",
-        "SLA guarantee"
+        "Custom curriculum development",
+        "Expert-led training sessions",
+        "Hands-on workshops",
+        "Team capability enhancement",
+        "Industry best practices",
+        "Certification programs",
+        "Ongoing mentorship",
+        "Progress tracking & assessment"
       ],
-      notIncluded: [],
       popular: false,
-      cta: "Contact Sales"
+      cta: "Request Quote"
+    },
+    {
+      name: "Software Development",
+      price: "Scope-based",
+      period: "custom pricing",
+      description: "Cutting-edge software solutions built with latest technologies",
+      icon: <Code className="h-8 w-8 text-blue-600" />,
+      features: [
+        "Custom application development",
+        "Modern tech stack implementation",
+        "Scalable architecture design",
+        "User experience optimization",
+        "Quality assurance & testing",
+        "Deployment & maintenance",
+        "Performance optimization",
+        "Ongoing technical support"
+      ],
+      popular: false,
+      cta: "Request Quote"
+    },
+    {
+      name: "Strategic SEO",
+      price: "Scope-based",
+      period: "custom pricing",
+      description: "Data-driven SEO strategies to improve online visibility",
+      icon: <Search className="h-8 w-8 text-green-600" />,
+      features: [
+        "Comprehensive SEO audit",
+        "Keyword research & strategy",
+        "Technical SEO optimization",
+        "Content strategy development",
+        "Local SEO enhancement",
+        "Performance monitoring",
+        "Competitor analysis",
+        "Monthly reporting & insights"
+      ],
+      popular: false,
+      cta: "Request Quote"
     }
   ];
 
   const faqs = [
     {
-      question: "Can I change plans at any time?",
-      answer: "Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately, and we'll prorate any billing adjustments."
+      question: "How does the consultation process work?",
+      answer: "Our $550 consultation includes a comprehensive 1-hour session where we analyze your business needs, discuss technology solutions, and create a strategic roadmap. You'll receive a detailed summary report and 30 days of follow-up support."
     },
     {
-      question: "Is there a free trial?",
-      answer: "Yes! We offer a 14-day free trial for our Professional and Enterprise plans. No credit card required to start."
+      question: "How is scope-based pricing determined?",
+      answer: "After your initial consultation, we provide detailed quotes based on project scope, complexity, timeline, and resource requirements. All pricing is transparent with no hidden fees."
     },
     {
       question: "What payment methods do you accept?",
-      answer: "We accept all major credit cards (Visa, MasterCard, American Express) and PayPal. Enterprise customers can also pay by invoice."
+      answer: "We accept all major credit cards, bank transfers, and can arrange invoice billing for larger projects. Payment terms are flexible and discussed during consultation."
     },
     {
-      question: "Can I cancel anytime?",
-      answer: "Absolutely. You can cancel your subscription at any time. Your account will remain active until the end of your current billing period."
+      question: "Do you offer ongoing support?",
+      answer: "Yes! All our services include appropriate support periods. Software development includes maintenance options, and we offer ongoing consulting relationships for continued growth."
     },
     {
-      question: "Do you offer discounts for annual billing?",
-      answer: "Yes! Save 20% when you choose annual billing on any paid plan. The discount is applied automatically at checkout."
+      question: "Can you work with our existing team?",
+      answer: "Absolutely. We specialize in collaborating with existing teams, providing training, mentorship, and seamless integration with your current processes and technologies."
     },
     {
-      question: "Is my data secure?",
-      answer: "Yes, we take security seriously. All data is encrypted in transit and at rest, and we're SOC 2 Type II compliant."
+      question: "What industries do you serve?",
+      answer: "We work across all industries, with particular expertise in technology, healthcare, finance, education, and professional services. Our solutions are tailored to your specific industry needs."
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       {/* Navigation */}
-      <nav className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
+      <nav className="bg-slate-900/80 backdrop-blur-md border-b border-slate-700 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
-          <Link href="/" className="text-2xl font-bold text-gray-900">Unite Group</Link>
+          <Link href="/" className="text-2xl font-bold text-white">
+            <span className="text-teal-400">UG</span> UNITE Group
+          </Link>
           <div className="flex gap-4">
-            <Link href="/login" className="text-gray-600 hover:text-gray-900 px-4 py-2 rounded-md transition-colors">
+            <Link href="/login" className="text-slate-300 hover:text-white px-4 py-2 rounded-md transition-colors">
               Login
             </Link>
-            <Button asChild>
-              <Link href="/register">Get Started</Link>
+            <Button asChild className="bg-teal-600 hover:bg-teal-700">
+              <Link href="/contact">Get Started</Link>
             </Button>
           </div>
         </div>
@@ -123,66 +132,61 @@ export default function Pricing() {
       {/* Hero Section */}
       <section className="py-20 text-center">
         <div className="max-w-4xl mx-auto px-4">
-          <h1 className="text-5xl font-bold text-gray-900 mb-6">
-            Simple, Transparent
-            <span className="block text-purple-600">Pricing</span>
+          <h1 className="text-5xl font-bold text-white mb-6">
+            Transparent, Value-Driven
+            <span className="block bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">
+              Pricing
+            </span>
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Choose the plan that&apos;s right for your team. Start free and scale as you grow.
+          <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
+            Start with our comprehensive consultation, then scale with custom solutions designed for your specific needs.
           </p>
-          <div className="inline-flex items-center bg-white rounded-lg p-1 shadow-sm border">
-            <button className="px-4 py-2 rounded-md bg-purple-600 text-white text-sm font-medium">
-              Monthly
-            </button>
-            <button className="px-4 py-2 rounded-md text-gray-600 text-sm font-medium">
-              Annual (Save 20%)
-            </button>
+          <div className="inline-flex items-center bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700">
+            <div className="px-4 py-2 rounded-md bg-teal-600 text-white text-sm font-medium">
+              Professional Services
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Pricing Cards */}
+      {/* Services Grid */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {plans.map((plan, index) => (
-              <Card key={index} className={`relative h-full ${plan.popular ? 'border-purple-500 shadow-lg scale-105' : ''}`}>
-                {plan.popular && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {services.map((service, index) => (
+              <Card key={index} className={`relative h-full bg-slate-800 border-slate-700 text-white ${service.popular ? 'border-teal-500 shadow-lg shadow-teal-500/20 scale-105' : ''}`}>
+                {service.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-purple-600 text-white px-4 py-1 rounded-full text-sm font-medium">
-                      Most Popular
+                    <span className="bg-teal-600 text-white px-4 py-1 rounded-full text-sm font-medium">
+                      Start Here
                     </span>
                   </div>
                 )}
                 <CardHeader className="text-center">
-                  <CardTitle className="text-2xl">{plan.name}</CardTitle>
-                  <div className="mt-4">
-                    <span className="text-4xl font-bold text-gray-900">{plan.price}</span>
-                    <span className="text-gray-600 ml-2">{plan.period}</span>
+                  <div className="flex justify-center mb-4">
+                    {service.icon}
                   </div>
-                  <CardDescription className="mt-4">{plan.description}</CardDescription>
+                  <CardTitle className="text-xl text-white">{service.name}</CardTitle>
+                  <div className="mt-4">
+                    <span className="text-3xl font-bold text-white">{service.price}</span>
+                    <span className="text-slate-400 ml-2 text-sm">{service.period}</span>
+                  </div>
+                  <CardDescription className="mt-4 text-slate-300">{service.description}</CardDescription>
                 </CardHeader>
                 <CardContent className="flex-1">
                   <ul className="space-y-3 mb-8">
-                    {plan.features.map((feature, featureIndex) => (
+                    {service.features.map((feature, featureIndex) => (
                       <li key={featureIndex} className="flex items-center gap-3">
-                        <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
-                        <span className="text-gray-700">{feature}</span>
-                      </li>
-                    ))}
-                    {plan.notIncluded.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-center gap-3 opacity-50">
-                        <X className="h-5 w-5 text-gray-400 flex-shrink-0" />
-                        <span className="text-gray-500">{feature}</span>
+                        <CheckCircle className="h-4 w-4 text-teal-400 flex-shrink-0" />
+                        <span className="text-slate-300 text-sm">{feature}</span>
                       </li>
                     ))}
                   </ul>
                   <Button 
                     asChild 
-                    className={`w-full ${plan.popular ? 'bg-purple-600 hover:bg-purple-700' : ''}`}
-                    variant={plan.popular ? 'default' : 'outline'}
+                    className={`w-full ${service.popular ? 'bg-teal-600 hover:bg-teal-700' : 'bg-slate-700 hover:bg-slate-600'}`}
                   >
-                    <Link href="/register">{plan.cta}</Link>
+                    <Link href="/contact">{service.cta}</Link>
                   </Button>
                 </CardContent>
               </Card>
@@ -191,20 +195,58 @@ export default function Pricing() {
         </div>
       </section>
 
+      {/* Process Section */}
+      <section className="py-20 bg-slate-800/50">
+        <div className="max-w-6xl mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center text-white mb-12">
+            Our Process
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-teal-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-white">1</span>
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-2">Consultation</h3>
+              <p className="text-slate-300">
+                Start with our comprehensive $550 consultation to understand your needs and create a strategic roadmap.
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-white">2</span>
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-2">Custom Quote</h3>
+              <p className="text-slate-300">
+                Receive a detailed, transparent quote based on your specific project scope and requirements.
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl font-bold text-white">3</span>
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-2">Implementation</h3>
+              <p className="text-slate-300">
+                Expert execution with ongoing support, ensuring your success every step of the way.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20">
         <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+          <h2 className="text-3xl font-bold text-center text-white mb-12">
             Frequently Asked Questions
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {faqs.map((faq, index) => (
-              <Card key={index}>
+              <Card key={index} className="bg-slate-800 border-slate-700">
                 <CardHeader>
-                  <CardTitle className="text-lg">{faq.question}</CardTitle>
+                  <CardTitle className="text-lg text-white">{faq.question}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">{faq.answer}</p>
+                  <p className="text-slate-300">{faq.answer}</p>
                 </CardContent>
               </Card>
             ))}
@@ -213,20 +255,20 @@ export default function Pricing() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-purple-600 text-white">
+      <section className="py-20 bg-gradient-to-r from-teal-600 to-cyan-600">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-6">
-            Ready to Get Started?
+          <h2 className="text-3xl font-bold mb-6 text-white">
+            Ready to Transform Your Business?
           </h2>
-          <p className="text-xl mb-8 opacity-90">
-            Join thousands of teams already using Unite Group to manage their projects better.
+          <p className="text-xl mb-8 text-teal-100">
+            Start with our comprehensive consultation and discover how UNITE Group can accelerate your success.
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
-            <Button asChild size="lg" variant="secondary">
-              <Link href="/register">Start Free Trial</Link>
+            <Button asChild size="lg" className="bg-white text-teal-600 hover:bg-slate-100">
+              <Link href="/contact">Book $550 Consultation</Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-purple-600">
-              <Link href="/features">View Features</Link>
+            <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-teal-600">
+              <Link href="/features">View Our Services</Link>
             </Button>
           </div>
         </div>
