@@ -1,4 +1,5 @@
 ﻿import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CheckCircle, Users, BarChart3, ArrowRight, Star, Menu, Handshake, Cog } from "lucide-react";
@@ -68,9 +69,11 @@ export default function Home() {
               <div className="bg-slate-800 rounded-2xl shadow-2xl p-8 border border-slate-700">
                 <div className="flex items-center justify-center mb-8">
                   <div className="w-32 h-32 bg-gradient-to-r from-teal-400 to-cyan-400 rounded-full flex items-center justify-center p-4">
-                    <img 
+                    <Image 
                       src="/images/handshake-gear.png" 
                       alt="Handshake and Gear - Partnership Excellence" 
+                      width={96}
+                      height={96}
                       className="w-full h-full object-contain"
                     />
                   </div>
