@@ -5,6 +5,7 @@ import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/ca
 import { CheckCircle, Users, BarChart3, ArrowRight, Star, Menu, Handshake, Cog } from "lucide-react";
 
 export default function Home() {
+  // Cache bust: 2025-05-25-00:07 - Force new deployment
   return (
     <div className="min-h-screen bg-slate-900 text-white">
       {/* Navigation */}
