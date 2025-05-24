@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { logger } from "@/lib/logger"
-import { createStyledPDFWithBranding, StyledPDF } from "@/lib/pdf-styling"
+import { createStyledPDFWithBranding } from "@/lib/pdf-styling"
 import { createProjectReportPDF, createTaskReportPDF, createUserReportPDF } from "@/lib/pdf-templates"
 
 export async function POST(request: Request) {
@@ -28,99 +28,27 @@ export async function POST(request: Request) {
     try {
       switch (type) {
         case "preview":
-          // Create a preview PDF with custom colors and fonts
-          doc = new StyledPDF({
+          // Create a basic preview PDF
+          doc = await createStyledPDFWithBranding({
             headerText: options.headerText || "Preview",
-            colorScheme: "custom",
-            customColors: options.customColors,
-            companyName: "Your Company",
-            fontSettings: options.fontSettings,
           })
 
-          // Try to load custom font if specified
-          if (options.fontSettings?.useCustomFont && options.fontSettings?.customFontUrl) {
-            try {
-              await doc.addCustomFont(
-                options.fontSettings.customFontUrl,
-                options.fontSettings.customFontName || "CustomFont",
-              )
-            } catch (error) {
-              console.error("Error loading custom font for preview:", error)
-            }
-          }
-
-          // Add content to the PDF
-          const previewLines = content.split("\n")
-
-          previewLines.forEach((line: string) => {
-            // Simple markdown-like parsing
-            if (line.startsWith("# ")) {
-              doc.addHeading(line.substring(2), 1)
-            } else if (line.startsWith("## ")) {
-              doc.addHeading(line.substring(3), 2)
-            } else if (line.startsWith("### ")) {
-              doc.addHeading(line.substring(4), 3)
-            } else if (line.startsWith("---")) {
-              doc.addHorizontalLine()
-            } else if (line.trim() === "") {
-              doc.addSpacer(5)
-            } else {
-              doc.addParagraph(line)
+          // Add basic content to the PDF
+          doc.setFontSize(16)
+          doc.text("PDF Preview", 20, 30)
+          
+          doc.setFontSize(12)
+          const lines = content.split("\n")
+          let yPosition = 50
+          
+          lines.forEach((line: string) => {
+            if (line.trim()) {
+              doc.text(line, 20, yPosition)
+              yPosition += 10
             }
           })
-
-          // Add a font sample section
-          doc.addSpacer(10)
-          doc.addHeading("Font Samples", 2)
-
-          // Heading font sample
-          doc.addParagraph("Heading Font Sample", {
-            fontSize: 14,
-            style: "bold",
-            font: options.fontSettings?.headingFont || "helvetica",
-          })
-          doc.addParagraph("ABCDEFGHIJKLMNOPQRSTUVWXYZ", {
-            fontSize: 12,
-            font: options.fontSettings?.headingFont || "helvetica",
-          })
-          doc.addParagraph("abcdefghijklmnopqrstuvwxyz 0123456789", {
-            fontSize: 12,
-            font: options.fontSettings?.headingFont || "helvetica",
-          })
-
-          doc.addSpacer(5)
-
-          // Body font sample
-          doc.addParagraph("Body Font Sample", {
-            fontSize: 14,
-            style: "bold",
-            font: options.fontSettings?.bodyFont || "helvetica",
-          })
-          doc.addParagraph("ABCDEFGHIJKLMNOPQRSTUVWXYZ", {
-            fontSize: 12,
-            font: options.fontSettings?.bodyFont || "helvetica",
-          })
-          doc.addParagraph("abcdefghijklmnopqrstuvwxyz 0123456789", {
-            fontSize: 12,
-            font: options.fontSettings?.bodyFont || "helvetica",
-          })
-
-          // Custom font sample if available
-          if (options.fontSettings?.useCustomFont && doc.customFontLoaded) {
-            doc.addSpacer(5)
-            doc.addParagraph("Custom Font Sample", {
-              fontSize: 14,
-              style: "bold",
-            })
-            doc.addParagraph("ABCDEFGHIJKLMNOPQRSTUVWXYZ", {
-              fontSize: 12,
-            })
-            doc.addParagraph("abcdefghijklmnopqrstuvwxyz 0123456789", {
-              fontSize: 12,
-            })
-          }
-
           break
+
         case "project":
           doc = await createProjectReportPDF(data.project, data.tasks || [], data.members || [])
           break
@@ -135,28 +63,20 @@ export async function POST(request: Request) {
           // Create a styled PDF for generic content with company branding
           doc = await createStyledPDFWithBranding({
             headerText: options.headerText || "Document",
-            colorScheme: options.colorScheme || "custom",
-            customColors: options.customColors,
-            fontSettings: options.fontSettings,
-          } as any)
+          })
 
-          // Add content to the PDF
-          const lines = content.split("\n")
-
-          lines.forEach((line: string) => {
-            // Simple markdown-like parsing
-            if (line.startsWith("# ")) {
-              doc.addHeading(line.substring(2), 1)
-            } else if (line.startsWith("## ")) {
-              doc.addHeading(line.substring(3), 2)
-            } else if (line.startsWith("### ")) {
-              doc.addHeading(line.substring(4), 3)
-            } else if (line.startsWith("---")) {
-              doc.addHorizontalLine()
-            } else if (line.trim() === "") {
-              doc.addSpacer(5)
-            } else {
-              doc.addParagraph(line)
+          // Add basic content to the PDF
+          doc.setFontSize(16)
+          doc.text("Document", 20, 30)
+          
+          doc.setFontSize(12)
+          const contentLines = content.split("\n")
+          let yPos = 50
+          
+          contentLines.forEach((line: string) => {
+            if (line.trim()) {
+              doc.text(line, 20, yPos)
+              yPos += 10
             }
           })
           break
