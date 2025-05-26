@@ -19,7 +19,69 @@ export interface AIConfig {
   timeout?: number;
 }
 
-// User Behavior Tracking
+// Recommendation Engine Types
+export enum RecommendationAlgorithm {
+  CONTENT_BASED = 'content_based',
+  COLLABORATIVE_FILTERING = 'collaborative_filtering',
+  POPULARITY_BASED = 'popularity_based',
+  HYBRID = 'hybrid'
+}
+
+export interface ContentItem {
+  id: string;
+  type: 'article' | 'service' | 'case_study' | 'blog_post' | 'resource';
+  title: string;
+  description: string;
+  categories: string[];
+  serviceTypes?: string[];
+  targetAudience?: string[];
+  priceRange?: {
+    min: number;
+    max: number;
+  };
+  relatedPages?: string[];
+  timeRelevance?: string[];
+  viewCount: number;
+  engagementMetrics?: {
+    likes: number;
+    shares: number;
+    comments: number;
+  };
+  mobileOptimized?: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface RecommendationRequest {
+  userProfile: UserProfile;
+  context: PersonalizationContext;
+  availableContent: ContentItem[];
+  maxRecommendations?: number;
+  filters?: Record<string, unknown>;
+}
+
+export interface RecommendationResult {
+  contentId: string;
+  content: ContentItem;
+  score: number;
+  algorithm: RecommendationAlgorithm;
+  reasons: string[];
+  confidence: number;
+  metadata: Record<string, unknown>;
+}
+
+export interface RecommendationMetrics {
+  userId: string;
+  timestamp: string;
+  algorithmUsed: RecommendationAlgorithm;
+  recommendationCount: number;
+  averageScore: number;
+  averageConfidence: number;
+  topCategory: string;
+  context: PersonalizationContext;
+}
+
+// User Behavior Tracking (Enhanced)
 export interface UserBehavior {
   id: string;
   user_id: string;
@@ -34,6 +96,15 @@ export interface UserBehavior {
   timestamp: string;
   ip_address?: string;
   user_agent?: string;
+  // Additional fields for recommendation engine
+  contentId?: string;
+  engagementScore?: number;
+  action_type?: string;
+  target_id?: string;
+  context?: Record<string, unknown>;
+  device_type?: string;
+  location?: string;
+  value?: number;
 }
 
 export type BehaviorEventType = 
@@ -54,8 +125,9 @@ export type BehaviorEventType =
   | 'bounce'
   | 'conversion';
 
-// User Profile and Preferences
+// Enhanced User Profile for Recommendations
 export interface UserProfile {
+  userId: string;
   user_id: string;
   demographics?: {
     age_range?: string;
@@ -83,8 +155,51 @@ export interface UserProfile {
     engagement_score: number;
     conversion_likelihood: number;
   };
+  // Additional fields for recommendation engine
+  interests: string[];
+  preferredServices: string[];
+  experienceLevel: string;
+  budgetRange?: {
+    min: number;
+    max: number;
+  };
   created_at: string;
   updated_at: string;
+}
+
+// Enhanced Personalization Context
+export interface PersonalizationContext {
+  user_id?: string;
+  session_id: string;
+  current_page: string;
+  currentPage?: string; // Alternative naming
+  referrer?: string;
+  utm_parameters?: Record<string, string>;
+  device_info: {
+    type: 'desktop' | 'tablet' | 'mobile';
+    os: string;
+    browser: string;
+  };
+  deviceType?: 'desktop' | 'tablet' | 'mobile'; // Alternative naming
+  location?: {
+    country: string;
+    region: string;
+    city: string;
+    timezone: string;
+  };
+  time_context: {
+    timestamp: string;
+    day_of_week: string;
+    hour_of_day: number;
+    is_business_hours: boolean;
+  };
+  timeOfDay?: string; // Alternative naming
+  behavioral_signals: {
+    pages_viewed_this_session: number;
+    time_on_site: number;
+    scroll_depth: number;
+    interactions: number;
+  };
 }
 
 // Content Recommendation System
@@ -349,38 +464,6 @@ export interface VariantResult {
   conversions: number;
   conversion_rate: number;
   metrics: Record<string, number>;
-}
-
-// Real-time Personalization Context
-export interface PersonalizationContext {
-  user_id?: string;
-  session_id: string;
-  current_page: string;
-  referrer?: string;
-  utm_parameters?: Record<string, string>;
-  device_info: {
-    type: 'desktop' | 'tablet' | 'mobile';
-    os: string;
-    browser: string;
-  };
-  location?: {
-    country: string;
-    region: string;
-    city: string;
-    timezone: string;
-  };
-  time_context: {
-    timestamp: string;
-    day_of_week: string;
-    hour_of_day: number;
-    is_business_hours: boolean;
-  };
-  behavioral_signals: {
-    pages_viewed_this_session: number;
-    time_on_site: number;
-    scroll_depth: number;
-    interactions: number;
-  };
 }
 
 // Performance Metrics
