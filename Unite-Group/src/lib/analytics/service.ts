@@ -11,10 +11,7 @@ import {
   EventType, 
   AnalyticsDimension, 
   AnalyticsMetric,
-  UserJourney,
-  JourneyStep,
-  AnalyticsFunnel,
-  FunnelStep
+  UserJourney
 } from './types';
 import { 
   getAnalyticsConfig, 
@@ -24,13 +21,6 @@ import {
   isMetricEnabled,
   isProviderEnabled
 } from './config';
-
-// Window types are declared in types.ts
-declare global {
-  interface Window {
-    dataLayer: unknown[];
-  }
-}
 
 /**
  * Current session information
@@ -298,27 +288,27 @@ class AnalyticsService {
     }
     
     const eventName = event.type === EventType.CUSTOM 
-      ? (event.properties.name || 'custom_event')
-      : event.type;
-    
+      ? String(event.properties.name || 'custom_event')
+      : String(event.type);
+
     const params: Record<string, unknown> = {
       ...event.properties,
     };
-    
+
     // Add dimensions as parameters
     for (const [dimension, value] of Object.entries(event.dimensions)) {
       if (value !== undefined) {
         params[dimension] = value;
       }
     }
-    
+
     // Add metrics as parameters
     for (const [metric, value] of Object.entries(event.metrics)) {
       if (value !== undefined) {
         params[metric] = value;
       }
     }
-    
+
     // Send event to Google Analytics
     window.gtag('event', eventName, params);
   }
@@ -339,7 +329,7 @@ class AnalyticsService {
     }
     
     // Send event to custom backend (fire and forget)
-    fetch(customConfig.options.endpoint, {
+    fetch(String(customConfig.options.endpoint), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -357,7 +347,7 @@ class AnalyticsService {
   /**
    * Update active journeys with event
    */
-  private updateJourneys(event: AnalyticsEvent): void {
+  private updateJourneys(_event: AnalyticsEvent): void {
     // This would contain complex logic to update user journeys based on events
     // For brevity, we're omitting the implementation
   }
@@ -425,13 +415,13 @@ class AnalyticsService {
         const originalPushState = history.pushState;
         const originalReplaceState = history.replaceState;
         
-        history.pushState = (...args: unknown[]) => {
-          originalPushState.apply(history, args);
+        history.pushState = (data: unknown, unused: string, url?: string | URL | null) => {
+          originalPushState.call(history, data, unused, url);
           this.handleLocationChange();
         };
         
-        history.replaceState = (...args: unknown[]) => {
-          originalReplaceState.apply(history, args);
+        history.replaceState = (data: unknown, unused: string, url?: string | URL | null) => {
+          originalReplaceState.call(history, data, unused, url);
           this.handleLocationChange();
         };
         
@@ -653,7 +643,9 @@ class AnalyticsService {
       // Initialize gtag
       window.dataLayer = window.dataLayer || [];
       window.gtag = function gtag(...args: unknown[]) {
-        window.dataLayer.push(arguments);
+        if (window.dataLayer) {
+          window.dataLayer.push(arguments);
+        }
       };
       
       // Configure Google Analytics

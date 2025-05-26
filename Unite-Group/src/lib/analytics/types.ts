@@ -951,7 +951,14 @@ export interface DashboardConfig {
 
 declare global {
   interface Window {
-    gtag?: (command: string, action: string, params: Record<string, unknown>) => void;
-    fbq?: (command: string, action: string, params?: Record<string, unknown>) => void;
+    gtag?: {
+      (command: 'js', date: Date): void;
+      (command: 'config', targetId: string, config?: Record<string, unknown>): void;
+      (command: 'event', eventName: string, params?: Record<string, unknown>): void;
+      (command: 'set', params: Record<string, unknown>): void;
+      (command: string, ...args: unknown[]): void;
+    };
+    dataLayer?: unknown[];
+    fbq?: (action: string, event?: string, params?: Record<string, unknown>) => void;
   }
 }
