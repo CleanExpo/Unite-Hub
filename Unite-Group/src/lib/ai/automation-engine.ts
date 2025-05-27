@@ -5,11 +5,9 @@
 
 import {
   AutomationWorkflow,
-  WorkflowTrigger,
   WorkflowCondition,
   WorkflowAction,
   UserBehavior,
-  PersonalizationContext,
   PredictionResult
 } from './types';
 
@@ -438,7 +436,7 @@ export class AutomationEngine {
       
       case 'time':
         return event.type === 'scheduled_time' &&
-               this.matchesTimeConfig(trigger.configuration, event.data);
+               this.matchesTimeConfig(trigger.configuration);
       
       case 'data_change':
         return event.type === 'data_change' &&
@@ -472,7 +470,7 @@ export class AutomationEngine {
   /**
    * Check if time configuration matches current time
    */
-  private matchesTimeConfig(config: Record<string, unknown>, eventData: Record<string, unknown>): boolean {
+  private matchesTimeConfig(config: Record<string, unknown>): boolean {
     // Implement time-based matching logic
     const now = new Date();
     
@@ -495,7 +493,7 @@ export class AutomationEngine {
    * Check if prediction configuration matches result
    */
   private matchesPredictionConfig(config: Record<string, unknown>, eventData: Record<string, unknown>): boolean {
-    const predictionResult = eventData as PredictionResult;
+    const predictionResult = eventData as unknown as PredictionResult;
     
     if (config.predictionType && predictionResult.prediction_type !== config.predictionType) {
       return false;

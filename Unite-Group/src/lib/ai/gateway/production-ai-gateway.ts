@@ -321,7 +321,9 @@ export class ProductionAIGateway {
     // Simple LRU: remove oldest if cache is full
     if (this.cache.size >= this.config.cache.maxSize) {
       const oldestKey = this.cache.keys().next().value;
-      this.cache.delete(oldestKey);
+      if (oldestKey) {
+        this.cache.delete(oldestKey);
+      }
     }
     
     this.cache.set(key, entry);

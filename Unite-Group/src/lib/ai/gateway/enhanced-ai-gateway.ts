@@ -86,7 +86,7 @@ export class EnhancedAIGateway extends AIGateway {
    */
   async generateText(request: AIRequest): Promise<AIResponse> {
     // Rate limiting check
-    if (this.config.rateLimit?.enabled) {
+    if (this.enhancedConfig.rateLimit?.enabled) {
       await this.checkRateLimit();
     }
 
@@ -141,7 +141,7 @@ export class EnhancedAIGateway extends AIGateway {
     const errorStrategy = options?.errorStrategy || 'continue';
     
     // Process in chunks to control concurrency
-    const chunks = this.chunkArray(requests, maxConcurrency);
+    const chunks = this.chunkRequestArray(requests, maxConcurrency);
     let completed = 0;
     let failed = 0;
 
@@ -420,11 +420,11 @@ export class EnhancedAIGateway extends AIGateway {
   }
 
   private initializeObservability(): void {
-    if (this.config.observability?.telemetry) {
+    if (this.enhancedConfig.observability?.telemetry) {
       console.log('Telemetry initialized');
     }
     
-    if (this.config.observability?.metrics) {
+    if (this.enhancedConfig.observability?.metrics) {
       console.log('Enhanced metrics collection initialized');
     }
   }
@@ -432,8 +432,8 @@ export class EnhancedAIGateway extends AIGateway {
   private async checkRateLimit(): Promise<void> {
     const now = Date.now();
     const windowDuration = 60 * 1000; // 1 minute
-    const maxRequests = this.config.rateLimit?.maxRequestsPerMinute || 1000;
-    const maxConcurrent = this.config.rateLimit?.maxConcurrentRequests || 50;
+    const maxRequests = this.enhancedConfig.rateLimit?.maxRequestsPerMinute || 1000;
+    const maxConcurrent = this.enhancedConfig.rateLimit?.maxConcurrentRequests || 50;
 
     // Reset window if needed
     if (now - this.rateLimiter.windowStart > windowDuration) {
@@ -517,8 +517,8 @@ export class EnhancedAIGateway extends AIGateway {
     const circuitBreaker = this.circuitBreakers.get(provider);
     if (!circuitBreaker) return;
 
-    const failureThreshold = this.config.circuitBreaker?.failureThreshold || 5;
-    const recoveryTime = this.config.circuitBreaker?.recoveryTime || 60000; // 1 minute
+    const failureThreshold = this.enhancedConfig.circuitBreaker?.failureThreshold || 5;
+    const recoveryTime = this.enhancedConfig.circuitBreaker?.recoveryTime || 60000; // 1 minute
 
     circuitBreaker.failureCount++;
     circuitBreaker.lastFailureTime = Date.now();
@@ -549,7 +549,7 @@ export class EnhancedAIGateway extends AIGateway {
     limitUtilization: number;
     concurrentRequests: number;
   } {
-    const maxRequests = this.config.rateLimit?.maxRequestsPerMinute || 1000;
+    const maxRequests = this.enhancedConfig.rateLimit?.maxRequestsPerMinute || 1000;
     
     return {
       currentRequests: this.rateLimiter.requestCount,
@@ -602,7 +602,7 @@ export class EnhancedAIGateway extends AIGateway {
       recommendations.push('Slow response times - check provider status');
     }
 
-    if (circuitBreaker?.failureCount > 2) {
+    if (circuitBreaker && circuitBreaker.failureCount > 2) {
       recommendations.push('Multiple failures detected - monitor closely');
     }
 
@@ -620,7 +620,7 @@ export class EnhancedAIGateway extends AIGateway {
       const healthScore = stat.status === 'healthy' ? 100 : 
                          stat.status === 'degraded' ? 50 : 0;
       
-      scores[stat.provider] = (responseScore + errorScore + healthScore) / 3;
+      scores[stat.provider as AIProvider] = (responseScore + errorScore + healthScore) / 3;
     });
 
     const totalScore = Object.values(scores).reduce((sum, score) => sum + score, 0);
@@ -680,7 +680,7 @@ export class EnhancedAIGateway extends AIGateway {
     return changes;
   }
 
-  private chunkArray<T>(array: T[], chunkSize: number): T[][] {
+  private chunkRequestArray<T>(array: T[], chunkSize: number): T[][] {
     const chunks: T[][] = [];
     for (let i = 0; i < array.length; i += chunkSize) {
       chunks.push(array.slice(i, i + chunkSize));
