@@ -407,9 +407,12 @@ export class SelfHealingInfrastructureService {
   private async analyzeProblem(trigger: HealingTrigger): Promise<Record<string, unknown>> {
     try {
       const analysis = await this.aiGateway.generateText({
+        id: `analysis_${Date.now()}`,
+        provider: 'openai',
+        type: 'text_analysis',
         prompt: `Analyze this system problem for self-healing:
-        
-        Trigger Type: ${trigger.type}
+
+Trigger Type: ${trigger.type}
         Source: ${trigger.source}
         Reason: ${trigger.reason}
         Urgency: ${trigger.urgency}
@@ -420,7 +423,8 @@ export class SelfHealingInfrastructureService {
         2. Impact analysis
         3. Recommended healing strategies
         4. Risk assessment
-        5. Success probability`
+        5. Success probability`,
+        timestamp: new Date().toISOString()
       });
 
       return {

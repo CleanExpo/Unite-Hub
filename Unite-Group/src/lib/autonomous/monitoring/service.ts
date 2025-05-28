@@ -318,10 +318,11 @@ export class AutonomousMonitoringService {
 
   async optimizeCapacity(forecast: CapacityForecast): Promise<CapacityPlan> {
     try {
+      const action = forecast.forecastedUsage > forecast.currentCapacity ? 'scale_up' as const : 'maintain' as const;
       const recommendations = [
         {
           component: forecast.component,
-          action: forecast.forecastedUsage > forecast.currentCapacity ? 'scale_up' : 'maintain' as const,
+          action,
           currentCapacity: forecast.currentCapacity,
           recommendedCapacity: forecast.recommendedCapacity,
           cost: 100
