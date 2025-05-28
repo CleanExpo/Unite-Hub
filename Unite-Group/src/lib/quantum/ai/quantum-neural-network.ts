@@ -552,3 +552,4 @@ if (require.main === module) {
   const metrics = qnn.train(trainingData, 10);
   console.log('Training metrics:', metrics);
 }
+

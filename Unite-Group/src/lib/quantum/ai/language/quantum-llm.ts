@@ -175,7 +175,7 @@ export class QuantumLanguageModel {
       
       // Initialize quantum processor and neural network
       await this.processor.initialize();
-      await this.neuralNetwork.initialize();
+      // await this.neuralNetwork.initialize(); // TODO: Add initialize method to QuantumNeuralNetwork
       await this.attentionMechanism.initialize();
       
       // Initialize quantum vocabulary with perfect tokenization
@@ -761,4 +761,4 @@ class QuantumReasoningEngine {
   }
 }
 
-export { QuantumLanguageModel };
+

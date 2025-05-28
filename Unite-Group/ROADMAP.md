@@ -1,5 +1,30 @@
 # UNITE Group Website Development Roadmap
 
+## 🛠️ **PRACTICAL TIPS FOR TOOLS - ENHANCED PROMPTING FRAMEWORK**
+
+### **Parallel Tool Calling**
+→ "For maximum efficiency, whenever you need to perform multiple independent operations, invoke all relevant tools simultaneously rather than sequentially."
+
+### **Thinking and Tool Use**
+→ "After receiving tool results, carefully reflect on their quality and determine optimal next steps before proceeding. Use your thinking to plan and iterate based on this new information, and then take the best next action."
+
+### **Prompt for Tool Triggering**
+→ "Call the web search tool when: user asks about current events, factual information after January 2025, or any query requiring real-time data. Be proactive in identifying when searches would enhance your response."
+
+### **Claude Sonnet Performance Optimization**
+→ "AnthropicClaaude-sonnet-4-20250514 can sustain performance on hours of continuous work. Leverage this capability for extended development sessions and complex multi-phase implementations."
+
+### **Windows PowerShell Command Syntax**
+→ "Using Windows PowerShell environment. All command chaining must use semicolon (;) instead of double ampersand (&&). Apply this syntax for all prompting and coding throughout the project."
+
+### **Token Management & Efficiency**
+→ "Use /compact to reduce token limits and maintain efficiency during extended sessions. Apply token optimization strategies to maximize context window usage."
+
+### **Git Version Control Protocol**
+→ "Before moving to the next task, always push and commit changes to git repository. Include descriptive commit messages and ensure all modifications are properly versioned."
+
+---
+
 ## 🎯 Current Status: Version 15.0 PHASE 1 COMPLETED ✅ | QUANTUM SUPREMACY ACHIEVED 🚀
 
 ### ✅ **ACHIEVED IN VERSION 2.0**

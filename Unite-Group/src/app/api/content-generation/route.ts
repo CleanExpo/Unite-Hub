@@ -146,16 +146,23 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ success: true, data: competitors });
 
       case 'identify_opportunities':
-        const opportunities = await service.identifyOpportunities();
+        const opportunities = await service.identifyOpportunities(
+          data.industry || 'business consulting',
+          data.businessGoals || ['growth', 'efficiency']
+        );
         return NextResponse.json({ success: true, data: opportunities });
 
       case 'assess_threats':
-        const threats = await service.assessThreats();
+        const threats = await service.assessThreats(
+          data.industry || 'business consulting',
+          data.businessModel || 'consulting services'
+        );
         return NextResponse.json({ success: true, data: threats });
 
       case 'recommend_content':
         const recommendations = await service.recommendContent(
-          data.marketData
+          data.marketData,
+          data.brandContext || {}
         );
         return NextResponse.json({ success: true, data: recommendations });
 
@@ -213,7 +220,7 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ success: true, data: performance });
 
       case 'get_intelligence_alerts':
-        const alerts = await service.getIntelligenceAlerts();
+        const alerts = await service.getIntelligenceAlerts(['trends', 'competitors']);
         return NextResponse.json({ success: true, data: alerts });
 
       case 'get_insights':

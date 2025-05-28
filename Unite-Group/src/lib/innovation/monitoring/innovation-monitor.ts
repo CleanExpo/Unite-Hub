@@ -736,7 +736,7 @@ export class ContinuousInnovationMonitor extends EventEmitter {
             businessValue: trend.impactPotential,
             technicalFeasibility: 0.6 + Math.random() * 0.3,
             marketReadiness: trend.adoptionRate,
-            competitivePressure: 1 - trend.competitiveAdvantage,
+            competitivePressure: 1 - trend.businessImpact.competitiveAdvantage,
             resourceRequirement: 0.4 + Math.random() * 0.4,
             timeToMarket: Math.ceil((1 - trend.adoptionRate) * 12 + 3), // 3-15 months
             expectedROI: (trend.businessImpact.revenueOpportunity + trend.businessImpact.costReduction) / 100000,
