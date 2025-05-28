@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { autonomousFeatureDevelopmentEngine } from '@/lib/innovation/autonomous-development/feature-engine';
+import { featureEngine } from '@/lib/innovation/autonomous-development/feature-engine';
 import { continuousInnovationMonitor } from '@/lib/innovation/monitoring/innovation-monitor';
 import { marketValidationAutomation } from '@/lib/innovation/validation/market-validator';
 
@@ -35,24 +35,24 @@ export async function GET(request: NextRequest) {
 async function handleFeatureEngineRequests(action: string | null) {
   switch (action) {
     case 'features':
-      const features = autonomousFeatureDevelopmentEngine.getGeneratedFeatures();
+      const features = featureEngine.getGeneratedFeatures();
       return NextResponse.json({
         success: true,
         data: {
           features,
-          metrics: autonomousFeatureDevelopmentEngine.getDevelopmentMetrics()
+          metrics: featureEngine.getDevelopmentMetrics()
         }
       });
     
     case 'pipeline':
-      const pipeline = autonomousFeatureDevelopmentEngine.getDevelopmentPipeline();
+      const pipeline = featureEngine.getDevelopmentPipeline();
       return NextResponse.json({
         success: true,
         data: { pipeline }
       });
     
     case 'metrics':
-      const metrics = autonomousFeatureDevelopmentEngine.getDevelopmentMetrics();
+      const metrics = featureEngine.getDevelopmentMetrics();
       return NextResponse.json({
         success: true,
         data: { metrics }
@@ -62,9 +62,9 @@ async function handleFeatureEngineRequests(action: string | null) {
       return NextResponse.json({
         success: true,
         data: {
-          features: autonomousFeatureDevelopmentEngine.getGeneratedFeatures(),
-          pipeline: autonomousFeatureDevelopmentEngine.getDevelopmentPipeline(),
-          metrics: autonomousFeatureDevelopmentEngine.getDevelopmentMetrics()
+          features: featureEngine.getGeneratedFeatures(),
+          pipeline: featureEngine.getDevelopmentPipeline(),
+          metrics: featureEngine.getDevelopmentMetrics()
         }
       });
   }
@@ -174,7 +174,7 @@ async function handleMarketValidatorRequests(action: string | null) {
 
 async function handleOverviewRequest() {
   // Get overview data from all three systems
-  const featureMetrics = autonomousFeatureDevelopmentEngine.getDevelopmentMetrics();
+  const featureMetrics = featureEngine.getDevelopmentMetrics();
   const innovationMetrics = continuousInnovationMonitor.getInnovationMetrics();
   const validationMetrics = marketValidationAutomation.getValidationMetrics();
   
@@ -183,7 +183,7 @@ async function handleOverviewRequest() {
   const topOpportunities = continuousInnovationMonitor.getInnovationOpportunities('critical').slice(0, 3);
   const topPMF = marketValidationAutomation.getProductMarketFits().slice(0, 3);
   const activeTests = marketValidationAutomation.getABTests('running');
-  const recentFeatures = autonomousFeatureDevelopmentEngine.getGeneratedFeatures().slice(0, 5);
+  const recentFeatures = featureEngine.getGeneratedFeatures().slice(0, 5);
 
   // Calculate combined metrics
   const combinedMetrics = {
@@ -254,11 +254,16 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function handleFeatureEngineActions(action: string, data: any) {
+interface FeatureEngineData {
+  requirements: string;
+  priority?: string;
+}
+
+async function handleFeatureEngineActions(action: string, data: FeatureEngineData) {
   switch (action) {
     case 'generate-feature':
       try {
-        const featureId = await autonomousFeatureDevelopmentEngine.generateFeature(
+        const featureId = await featureEngine.generateFeature(
           data.requirements,
           data.priority || 'medium'
         );
@@ -266,7 +271,7 @@ async function handleFeatureEngineActions(action: string, data: any) {
           success: true,
           data: { featureId, message: 'Feature generation started' }
         });
-      } catch (error) {
+      } catch {
         return NextResponse.json(
           { error: 'Failed to generate feature' },
           { status: 500 }
@@ -275,12 +280,12 @@ async function handleFeatureEngineActions(action: string, data: any) {
     
     case 'force-analysis':
       try {
-        await autonomousFeatureDevelopmentEngine.forceAnalysis();
+        await featureEngine.forceAnalysis();
         return NextResponse.json({
           success: true,
           data: { message: 'Analysis forced successfully' }
         });
-      } catch (error) {
+      } catch {
         return NextResponse.json(
           { error: 'Failed to force analysis' },
           { status: 500 }
@@ -295,7 +300,14 @@ async function handleFeatureEngineActions(action: string, data: any) {
   }
 }
 
-async function handleMarketValidatorActions(action: string, data: any) {
+interface MarketValidatorData {
+  id?: string;
+  feedback?: string;
+  testId?: string;
+  [key: string]: unknown; // Allow additional properties for different actions
+}
+
+async function handleMarketValidatorActions(action: string, data: MarketValidatorData) {
   switch (action) {
     case 'create-ab-test':
       try {
@@ -304,7 +316,7 @@ async function handleMarketValidatorActions(action: string, data: any) {
           success: true,
           data: { testId, message: 'A/B test created successfully' }
         });
-      } catch (error) {
+      } catch {
         return NextResponse.json(
           { error: 'Failed to create A/B test' },
           { status: 500 }
@@ -318,7 +330,7 @@ async function handleMarketValidatorActions(action: string, data: any) {
           success: true,
           data: { feedbackId, message: 'Feedback submitted successfully' }
         });
-      } catch (error) {
+      } catch {
         return NextResponse.json(
           { error: 'Failed to submit feedback' },
           { status: 500 }
@@ -332,7 +344,7 @@ async function handleMarketValidatorActions(action: string, data: any) {
           success: true,
           data: { message: 'Validation forced successfully' }
         });
-      } catch (error) {
+      } catch {
         return NextResponse.json(
           { error: 'Failed to force validation' },
           { status: 500 }
