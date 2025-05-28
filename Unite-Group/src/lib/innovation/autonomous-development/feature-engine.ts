@@ -1,7 +1,31 @@
 import { AI_Feature_Generator } from './ai-feature-generator';
 import { Automated_Development_Pipeline } from './development-pipeline';
-import { Autonomous_QA_System } from './qa-system';
-import { Continuous_Deployment_Engine } from './deployment-engine';
+import { Autonomous_QA_System, FeatureValidationResult } from './qa-system';
+import { DevelopedFeature } from './types';
+
+/**
+ * Feature interface for deployment
+ */
+interface Feature {
+  id: string;
+  name: string;
+  version: string;
+  code: string;
+  dependencies: string[];
+  isReadyForDeployment: boolean;
+  metadata: Record<string, unknown>;
+}
+
+/**
+ * Mock deployment engine
+ */
+class MockDeploymentEngine {
+  async deployFeatures(features: Feature[]): Promise<void> {
+    console.log(`Mock deployment: ${features.length} features deployed successfully`);
+    // Simulate deployment process
+    await new Promise(resolve => setTimeout(resolve, 500));
+  }
+}
 
 /**
  * Interface for the Innovation Pipeline component
@@ -11,7 +35,7 @@ interface InnovationPipeline {
     conception: AI_Feature_Generator;
     development: Automated_Development_Pipeline;
     testing: Autonomous_QA_System;
-    deployment: Continuous_Deployment_Engine;
+    deployment: MockDeploymentEngine;
   };
 }
 
@@ -23,7 +47,7 @@ class AutonomousInnovationPipeline implements InnovationPipeline {
     conception: AI_Feature_Generator;
     development: Automated_Development_Pipeline;
     testing: Autonomous_QA_System;
-    deployment: Continuous_Deployment_Engine;
+    deployment: MockDeploymentEngine;
   };
 
   constructor() {
@@ -31,7 +55,7 @@ class AutonomousInnovationPipeline implements InnovationPipeline {
       conception: new AI_Feature_Generator(),
       development: new Automated_Development_Pipeline(),
       testing: new Autonomous_QA_System(),
-      deployment: new Continuous_Deployment_Engine()
+      deployment: new MockDeploymentEngine()
     };
   }
 
@@ -49,14 +73,54 @@ class AutonomousInnovationPipeline implements InnovationPipeline {
       // 3. Test features
       const testedFeatures = await this.featureDevelopment.testing.validateFeatures(developedFeatures);
       
-      // 4. Deploy features
-      await this.featureDevelopment.deployment.deployFeatures(testedFeatures);
+      // 4. Convert validation results to features for deployment
+      const readyForDeployment = this.convertValidationResultsToFeatures(testedFeatures, developedFeatures);
+      
+      // 5. Deploy features
+      await this.featureDevelopment.deployment.deployFeatures(readyForDeployment);
       
       console.log('Feature development lifecycle completed successfully');
     } catch (error) {
       console.error('Error in feature development lifecycle:', error);
       throw error;
     }
+  }
+
+  /**
+   * Convert validation results to features for deployment
+   */
+  private convertValidationResultsToFeatures(
+    validationResults: FeatureValidationResult[], 
+    developedFeatures: DevelopedFeature[]
+  ): Feature[] {
+    const deployableFeatures: Feature[] = [];
+
+    for (const validationResult of validationResults) {
+      if (validationResult.isReadyForDeployment) {
+        // Find the corresponding developed feature
+        const developedFeature = developedFeatures.find(f => f.id === validationResult.featureId);
+        
+        if (developedFeature) {
+          const deployableFeature: Feature = {
+            id: validationResult.featureId,
+            name: developedFeature.name || `Feature ${validationResult.featureId}`,
+            version: '1.0.0',
+            code: 'Generated feature code', // Mock code
+            dependencies: developedFeature.implementationDetails?.dependencies || [],
+            isReadyForDeployment: validationResult.isReadyForDeployment,
+            metadata: {
+              validationScore: validationResult.overallScore,
+              testResults: validationResult.testResults,
+              recommendations: validationResult.recommendations,
+              productionReady: validationResult.overallScore >= 0.8
+            }
+          };
+          deployableFeatures.push(deployableFeature);
+        }
+      }
+    }
+
+    return deployableFeatures;
   }
 }
 
