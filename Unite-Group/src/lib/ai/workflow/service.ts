@@ -243,25 +243,31 @@ export class AIWorkflowService {
     const prompt = this.buildPromptForStep(step, inputs);
     
     const aiResponse = await this.aiGateway.generateText({
+      id: `workflow-${step.id}-${Date.now()}`,
+      provider: 'openai' as const,
+      type: 'text_generation' as const,
       prompt,
-      model: step.aiModel || this.config.aiProvider,
-      temperature: 0.1, // Lower temperature for business processes
-      maxTokens: 2000,
-      stream: false
+      options: {
+        model: step.aiModel || this.config.aiProvider,
+        temperature: 0.1, // Lower temperature for business processes
+        maxTokens: 2000,
+        stream: false
+      },
+      timestamp: new Date().toISOString()
     });
 
     const processingTime = Date.now() - startTime;
     
     // Parse AI response and extract structured outputs
-    const outputs = this.parseAIResponse(aiResponse.text, step.outputs);
+    const outputs = this.parseAIResponse(aiResponse.content, step.outputs);
     
     return {
       outputs,
-      model: aiResponse.model || step.aiModel || this.config.aiProvider,
-      confidence: aiResponse.confidence || 0.8,
+      model: aiResponse.usage?.model || step.aiModel || this.config.aiProvider,
+      confidence: 0.8, // Default confidence since not available in response
       prompt,
       processingTime,
-      cost: aiResponse.usage?.totalCost || 0
+      cost: aiResponse.usage?.cost || 0
     };
   }
 

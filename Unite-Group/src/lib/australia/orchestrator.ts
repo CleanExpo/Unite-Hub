@@ -355,7 +355,8 @@ export class AustralianBusinessOrchestrator {
   }
 
   private async executeDataOperation(data: unknown, context: AustralianBusinessOperationContext): Promise<Record<string, unknown>> {
-    return await this.dataService.processDataOperation(data, context);
+    const response = await this.dataService.processDataOperation(data, context);
+    return response.data as Record<string, unknown>;
   }
 
   private async generateRecommendations(result: unknown, context: AustralianBusinessOperationContext): Promise<string[]> {

@@ -19,6 +19,22 @@ export interface AIConfig {
   timeout?: number;
 }
 
+// Quantum and classical layer types
+export type ClassicalLayerType = 'dense' | 'convolutional' | 'recurrent' | 'transformer';
+export type QuantumLayerType = 'parameterized_circuit' | 'variational_circuit' | 'quantum_data_encoding';
+
+// Activation functions
+export interface ActivationFunction {
+  type: 'relu' | 'sigmoid' | 'tanh' | 'softmax' | 'linear';
+  parameters?: Record<string, number>;
+}
+
+// Layer gradients for neural network training
+export interface LayerGradients {
+  weights: number[][];
+  biases: number[];
+}
+
 // Recommendation Engine Types
 export enum RecommendationAlgorithm {
   CONTENT_BASED = 'content_based',

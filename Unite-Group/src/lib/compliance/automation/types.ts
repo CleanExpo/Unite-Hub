@@ -3,6 +3,102 @@
  * Unite Group - Version 13.0 Phase 3 Implementation
  */
 
+// Basic shared types
+export type ImpactLevel = 'low' | 'medium' | 'high' | 'critical';
+export type ImpactSeverity = 'minimal' | 'minor' | 'moderate' | 'major' | 'severe';
+export type RiskLevel = 'very_low' | 'low' | 'medium' | 'high' | 'very_high';
+export type PriorityLevel = 'low' | 'medium' | 'high' | 'critical';
+export type ComplianceStatus = 'not_started' | 'in_progress' | 'completed' | 'non_compliant' | 'exception';
+export type ValidationStatus = 'compliant' | 'non_compliant' | 'partial' | 'pending';
+export type ImplementationStatus = 'planned' | 'in_progress' | 'completed' | 'delayed' | 'cancelled';
+export type UpdateStatus = 'pending' | 'in_progress' | 'completed' | 'failed' | 'partial';
+export type ReportFormat = 'pdf' | 'html' | 'json' | 'excel';
+export type EntityType = 'business_unit' | 'system' | 'process' | 'geography' | 'legal_entity';
+export type RegulatoryType = 'financial' | 'privacy' | 'security' | 'environmental' | 'safety' | 'tax' | 'employment';
+export type SubmissionStatus = 'submitted' | 'accepted' | 'rejected' | 'under_review' | 'approved';
+export type DeadlineFrequency = 'one_time' | 'monthly' | 'quarterly' | 'annually' | 'on_demand';
+export type DeadlineStatus = 'upcoming' | 'due_soon' | 'overdue' | 'completed' | 'cancelled';
+export type TaskStatus = 'not_started' | 'in_progress' | 'completed' | 'blocked' | 'cancelled';
+export type RequirementType = 'reporting' | 'disclosure' | 'compliance' | 'certification' | 'audit';
+export type ActivityType = 'data_access' | 'configuration_change' | 'policy_update' | 'user_action' | 'system_event';
+export type MessageType = 'announcement' | 'reminder' | 'alert' | 'training' | 'update';
+export type ViolationSeverity = 'minor' | 'moderate' | 'major' | 'critical';
+export type TrendDirection = 'improving' | 'stable' | 'declining';
+export type RequirementCategory = 'privacy' | 'security' | 'financial' | 'operational' | 'environmental' | 'safety';
+export type EvidenceType = 'document' | 'log' | 'screenshot' | 'recording' | 'certificate' | 'report';
+export type DataClassification = 'public' | 'internal' | 'confidential' | 'restricted';
+export type ControlType = 'preventive' | 'detective' | 'corrective' | 'compensating';
+export type ControlCategory = 'administrative' | 'technical' | 'physical';
+export type EffectivenessRating = 'ineffective' | 'partially_effective' | 'effective' | 'highly_effective';
+export type DeficiencySeverity = 'low' | 'medium' | 'high' | 'critical';
+export type ActionStatus = 'planned' | 'in_progress' | 'completed' | 'overdue' | 'cancelled';
+export type ApprovalStatus = 'pending' | 'approved' | 'rejected' | 'conditional';
+export type MilestoneStatus = 'not_started' | 'in_progress' | 'completed' | 'at_risk' | 'delayed';
+export type ResourceType = 'personnel' | 'technology' | 'infrastructure' | 'training' | 'consulting';
+export type TestingFrequency = 'continuous' | 'monthly' | 'quarterly' | 'annually' | 'ad_hoc';
+export type TestingMethodology = 'automated' | 'manual' | 'walkthrough' | 'inspection' | 'observation';
+export type TestOutcome = 'passed' | 'failed' | 'partial' | 'inconclusive';
+export type FindingSeverity = 'informational' | 'low' | 'medium' | 'high' | 'critical';
+export type AssessmentType = 'gap_analysis' | 'maturity_assessment' | 'risk_assessment' | 'audit_readiness' | 'compliance_review';
+export type AssessmentMethodology = 'documentary_review' | 'interviews' | 'testing' | 'observation' | 'sampling';
+export type ComplianceRating = 'non_compliant' | 'partially_compliant' | 'substantially_compliant' | 'fully_compliant';
+export type DataQuality = 'poor' | 'fair' | 'good' | 'excellent';
+export type ErrorSeverity = 'low' | 'medium' | 'high' | 'critical';
+export type AttachmentType = 'supporting_document' | 'evidence' | 'calculation' | 'certification';
+export type CertificationType = 'management_certification' | 'auditor_certification' | 'legal_certification';
+export type IssueType = 'data_quality' | 'completeness' | 'accuracy' | 'format' | 'compliance';
+export type IssueSeverity = 'low' | 'medium' | 'high' | 'critical';
+export type EvidenceQuality = 'poor' | 'fair' | 'good' | 'excellent';
+export type ControlProcessingStatus = 'updated' | 'failed' | 'skipped' | 'pending';
+export type ChangeType = 'addition' | 'modification' | 'deletion' | 'clarification';
+export type PolicyProcessingStatus = 'updated' | 'failed' | 'pending' | 'requires_approval';
+export type ComparisonOperator = 'equals' | 'not_equals' | 'contains' | 'starts_with' | 'ends_with' | 'greater_than' | 'less_than';
+export type ArchivalFormat = 'json' | 'xml' | 'csv' | 'binary' | 'encrypted';
+export type AuditApproach = 'risk_based' | 'compliance_based' | 'process_based' | 'system_based';
+export type SamplingType = 'random' | 'systematic' | 'stratified' | 'judgmental' | 'statistical';
+export type CheckpointStatus = 'pending' | 'completed' | 'failed' | 'skipped';
+
+// Core interfaces
+export interface Recommendation {
+  priority: PriorityLevel;
+  category: string;
+  description: string;
+  implementation: ImplementationGuidance;
+  impact: string;
+}
+
+export interface ImplementationGuidance {
+  steps: string[];
+  timeline: string;
+  resources: string[];
+  dependencies: string[];
+}
+
+export interface AssessmentScope {
+  frameworks: string[];
+  businessUnits: string[];
+  systems: string[];
+  processes: string[];
+  geographies: string[];
+}
+
+export interface Evidence {
+  id: string;
+  type: EvidenceType;
+  description: string;
+  location: string;
+  collectedDate: Date;
+  retentionPeriod: string;
+  classification: DataClassification;
+}
+
+export interface ResourceAvailability {
+  available: boolean;
+  availableFrom?: Date;
+  constraints: string[];
+}
+
+// Main framework interface
 export interface ComplianceAutomationFramework {
   // Automated Compliance Monitoring
   monitorCompliance(frameworks: ComplianceFramework[]): Promise<ComplianceMonitoringResult>;
@@ -11,7 +107,7 @@ export interface ComplianceAutomationFramework {
   validateComplianceStatus(entity: ComplianceEntity): Promise<ComplianceValidation>;
   
   // Automated Regulatory Reporting
-  generateRegulatoryReport(regulation: RegulatoryFramework, data: any): Promise<RegulatoryReport>;
+  generateRegulatoryReport(regulation: RegulatoryFramework, data: RegulatoryData): Promise<RegulatoryReport>;
   submitRegulatoryFiling(report: RegulatoryReport): Promise<SubmissionResult>;
   trackRegulatoryDeadlines(jurisdiction: string): Promise<RegulatoryDeadline[]>;
   validateRegulatoryCompliance(requirement: RegulatoryRequirement): Promise<RegulatoryValidation>;
@@ -41,7 +137,7 @@ export interface ComplianceAutomationFramework {
   automateComplianceCommunication(message: ComplianceMessage): Promise<CommunicationResult>;
 }
 
-// Core Compliance Types
+// Framework interfaces
 export interface ComplianceFramework {
   id: string;
   name: string;
@@ -52,597 +148,12 @@ export interface ComplianceFramework {
   assessments: ComplianceAssessment[];
 }
 
-export interface ComplianceRequirement {
-  id: string;
-  description: string;
-  category: RequirementCategory;
-  priority: PriorityLevel;
-  dueDate: Date;
-  status: ComplianceStatus;
-  evidence: Evidence[];
-}
-
-export type RequirementCategory = 'privacy' | 'security' | 'financial' | 'operational' | 'environmental' | 'safety';
-export type PriorityLevel = 'low' | 'medium' | 'high' | 'critical';
-export type ComplianceStatus = 'not_started' | 'in_progress' | 'completed' | 'non_compliant' | 'exception';
-
-export interface Evidence {
-  id: string;
-  type: EvidenceType;
-  description: string;
-  location: string;
-  collectedDate: Date;
-  retentionPeriod: string;
-  classification: DataClassification;
-}
-
-export type EvidenceType = 'document' | 'log' | 'screenshot' | 'recording' | 'certificate' | 'report';
-export type DataClassification = 'public' | 'internal' | 'confidential' | 'restricted';
-
-export interface ComplianceControl {
-  id: string;
-  name: string;
-  type: ControlType;
-  category: ControlCategory;
-  effectiveness: ControlEffectiveness;
-  implementation: ControlImplementation;
-  testing: ControlTesting;
-}
-
-export type ControlType = 'preventive' | 'detective' | 'corrective' | 'compensating';
-export type ControlCategory = 'administrative' | 'technical' | 'physical';
-
-export interface ControlEffectiveness {
-  rating: EffectivenessRating;
-  lastAssessed: Date;
-  assessor: string;
-  evidence: Evidence[];
-  deficiencies: ControlDeficiency[];
-}
-
-export type EffectivenessRating = 'ineffective' | 'partially_effective' | 'effective' | 'highly_effective';
-
-export interface ControlDeficiency {
-  id: string;
-  description: string;
-  severity: DeficiencySeverity;
-  impact: string;
-  remediation: RemediationPlan;
-}
-
-export type DeficiencySeverity = 'low' | 'medium' | 'high' | 'critical';
-
-export interface RemediationPlan {
-  actions: RemediationAction[];
-  timeline: string;
-  responsibleParty: string;
-  cost: number;
-  approval: ApprovalStatus;
-}
-
-export interface RemediationAction {
-  id: string;
-  description: string;
-  deadline: Date;
-  status: ActionStatus;
-  evidence: Evidence[];
-}
-
-export type ActionStatus = 'planned' | 'in_progress' | 'completed' | 'overdue' | 'cancelled';
-export type ApprovalStatus = 'pending' | 'approved' | 'rejected' | 'conditional';
-
-export interface ControlImplementation {
-  status: ImplementationStatus;
-  startDate: Date;
-  targetDate: Date;
-  completionDate?: Date;
-  resources: RequiredResource[];
-  milestones: ImplementationMilestone[];
-}
-
-export type ImplementationStatus = 'planned' | 'in_progress' | 'completed' | 'delayed' | 'cancelled';
-
-export interface ImplementationMilestone {
-  id: string;
-  name: string;
-  dueDate: Date;
-  status: MilestoneStatus;
-  deliverables: string[];
-}
-
-export type MilestoneStatus = 'not_started' | 'in_progress' | 'completed' | 'at_risk' | 'delayed';
-
-export interface RequiredResource {
-  type: ResourceType;
-  description: string;
-  quantity: number;
-  cost: number;
-  availability: ResourceAvailability;
-}
-
-export type ResourceType = 'personnel' | 'technology' | 'infrastructure' | 'training' | 'consulting';
-
-export interface ResourceAvailability {
-  available: boolean;
-  availableFrom?: Date;
-  constraints: string[];
-}
-
-export interface ControlTesting {
-  frequency: TestingFrequency;
-  methodology: TestingMethodology;
-  lastTested: Date;
-  nextTest: Date;
-  results: TestResult[];
-}
-
-export type TestingFrequency = 'continuous' | 'monthly' | 'quarterly' | 'annually' | 'ad_hoc';
-export type TestingMethodology = 'automated' | 'manual' | 'walkthrough' | 'inspection' | 'observation';
-
-export interface TestResult {
-  id: string;
-  testDate: Date;
-  tester: string;
-  outcome: TestOutcome;
-  findings: TestFinding[];
-  recommendations: string[];
-}
-
-export type TestOutcome = 'passed' | 'failed' | 'partial' | 'inconclusive';
-
-export interface TestFinding {
-  id: string;
-  description: string;
-  severity: FindingSeverity;
-  impact: string;
-  recommendation: string;
-}
-
-export type FindingSeverity = 'informational' | 'low' | 'medium' | 'high' | 'critical';
-
-export interface ComplianceAssessment {
-  id: string;
-  type: AssessmentType;
-  scope: AssessmentScope;
-  methodology: AssessmentMethodology;
-  timeline: AssessmentTimeline;
-  resources: AssessmentResource[];
-  results: AssessmentResult;
-}
-
-export type AssessmentType = 'gap_analysis' | 'maturity_assessment' | 'risk_assessment' | 'audit_readiness' | 'compliance_review';
-
-export interface AssessmentScope {
-  frameworks: string[];
-  businessUnits: string[];
-  systems: string[];
-  processes: string[];
-  geographies: string[];
-}
-
-export type AssessmentMethodology = 'documentary_review' | 'interviews' | 'testing' | 'observation' | 'sampling';
-
-export interface AssessmentTimeline {
-  startDate: Date;
-  endDate: Date;
-  phases: AssessmentPhase[];
-  milestones: AssessmentMilestone[];
-}
-
-export interface AssessmentPhase {
-  name: string;
-  startDate: Date;
-  endDate: Date;
-  activities: string[];
-  deliverables: string[];
-}
-
-export interface AssessmentMilestone {
-  name: string;
-  date: Date;
-  criteria: string[];
-  dependencies: string[];
-}
-
-export interface AssessmentResource {
-  role: string;
-  name: string;
-  allocation: number;
-  skills: string[];
-  availability: ResourceAvailability;
-}
-
-export interface AssessmentResult {
-  overallRating: ComplianceRating;
-  gapAnalysis: GapAnalysisResult;
-  recommendations: Recommendation[];
-  actionPlan: ActionPlan;
-  riskProfile: RiskProfile;
-}
-
-export type ComplianceRating = 'non_compliant' | 'partially_compliant' | 'substantially_compliant' | 'fully_compliant';
-
-export interface GapAnalysisResult {
-  identifiedGaps: ComplianceGap[];
-  prioritization: GapPrioritization;
-  remediation: GapRemediation;
-}
-
-export interface ComplianceGap {
-  id: string;
-  requirement: string;
-  currentState: string;
-  targetState: string;
-  gapDescription: string;
-  impact: GapImpact;
-  effort: RemediationEffort;
-}
-
-export interface GapImpact {
-  business: BusinessImpact;
-  regulatory: RegulatoryImpact;
-  reputational: ReputationalImpact;
-  financial: FinancialImpact;
-}
-
-export interface BusinessImpact {
-  severity: ImpactSeverity;
-  description: string;
-  affectedProcesses: string[];
-  mitigationOptions: string[];
-}
-
-export interface RegulatoryImpact {
-  enforcementRisk: RiskLevel;
-  penaltyExposure: PenaltyExposure;
-  reportingRequirements: string[];
-  timeToRemediate: string;
-}
-
-export interface PenaltyExposure {
-  monetary: MonetaryPenalty;
-  operational: OperationalPenalty;
-  reputational: ReputationalPenalty;
-}
-
-export interface MonetaryPenalty {
-  minimum: number;
-  maximum: number;
-  currency: string;
-  calculation: PenaltyCalculation;
-}
-
-export interface PenaltyCalculation {
-  method: CalculationMethod;
-  factors: PenaltyFactor[];
-  mitigatingFactors: MitigatingFactor[];
-}
-
-export type CalculationMethod = 'fixed' | 'percentage' | 'per_record' | 'per_day' | 'turnover_based';
-
-export interface PenaltyFactor {
-  factor: string;
-  weight: number;
-  description: string;
-}
-
-export interface MitigatingFactor {
-  factor: string;
-  reduction: number;
-  requirements: string[];
-}
-
-export interface OperationalPenalty {
-  type: OperationalPenaltyType;
-  duration: string;
-  conditions: string[];
-  appealOptions: string[];
-}
-
-export type OperationalPenaltyType = 'license_suspension' | 'operations_halt' | 'oversight_program' | 'consent_decree';
-
-export interface ReputationalPenalty {
-  publicDisclosure: boolean;
-  mediaAttention: MediaAttentionLevel;
-  stakeholderImpact: StakeholderImpact;
-  recoveryTimeframe: string;
-}
-
-export type MediaAttentionLevel = 'minimal' | 'moderate' | 'significant' | 'extensive';
-
-export interface StakeholderImpact {
-  customers: CustomerImpact;
-  investors: InvestorImpact;
-  partners: PartnerImpact;
-  employees: EmployeeImpact;
-}
-
-export interface CustomerImpact {
-  confidenceLoss: ConfidenceLevel;
-  churnRisk: ChurnRisk;
-  acquisitionImpact: AcquisitionImpact;
-}
-
-export type ConfidenceLevel = 'minimal' | 'moderate' | 'significant' | 'severe';
-
-export interface ChurnRisk {
-  percentage: number;
-  segments: CustomerSegment[];
-  timeline: string;
-}
-
-export interface CustomerSegment {
-  segment: string;
-  riskLevel: RiskLevel;
-  mitigationStrategies: string[];
-}
-
-export interface AcquisitionImpact {
-  costIncrease: number;
-  conversionReduction: number;
-  channelImpact: ChannelImpact[];
-}
-
-export interface ChannelImpact {
-  channel: string;
-  impactLevel: ImpactLevel;
-  duration: string;
-}
-
-export interface InvestorImpact {
-  valuationImpact: ValuationImpact;
-  fundingImpact: FundingImpact;
-  governanceRequirements: string[];
-}
-
-export interface ValuationImpact {
-  discount: number;
-  duration: string;
-  recoveryFactors: string[];
-}
-
-export interface FundingImpact {
-  costIncrease: number;
-  availabilityReduction: number;
-  covenantChanges: string[];
-}
-
-export interface PartnerImpact {
-  relationshipStrain: RelationshipStrain;
-  contractualConsequences: string[];
-  futureOpportunities: OpportunityImpact;
-}
-
-export interface RelationshipStrain {
-  severity: StrainSeverity;
-  duration: string;
-  repairActions: string[];
-}
-
-export type StrainSeverity = 'minimal' | 'moderate' | 'significant' | 'severe' | 'relationship_ending';
-
-export interface OpportunityImpact {
-  lostOpportunities: number;
-  delayedOpportunities: number;
-  enhancedDueDiligence: boolean;
-}
-
-export interface EmployeeImpact {
-  morale: MoraleImpact;
-  retention: RetentionImpact;
-  recruitment: RecruitmentImpact;
-}
-
-export interface MoraleImpact {
-  severity: ImpactSeverity;
-  duration: string;
-  mitigationActions: string[];
-}
-
-export interface RetentionImpact {
-  atRiskEmployees: number;
-  keyPersonRisk: KeyPersonRisk[];
-  retentionStrategies: string[];
-}
-
-export interface KeyPersonRisk {
-  role: string;
-  riskLevel: RiskLevel;
-  impactIfLost: string;
-  retentionPlan: string;
-}
-
-export interface RecruitmentImpact {
-  difficultyIncrease: DifficultyLevel;
-  salaryPremium: number;
-  timeToHire: TimeImpact;
-}
-
-export type DifficultyLevel = 'minimal' | 'moderate' | 'significant' | 'severe';
-
-export interface TimeImpact {
-  increase: number;
-  unit: TimeUnit;
-  variability: number;
-}
-
-export type TimeUnit = 'days' | 'weeks' | 'months';
-
-export interface ReputationalImpact {
-  brandDamage: BrandDamage;
-  marketPosition: MarketPositionImpact;
-  trustRecovery: TrustRecovery;
-}
-
-export interface BrandDamage {
-  severity: DamageSeverity;
-  duration: string;
-  affectedMarkets: string[];
-  recoveryInvestment: number;
-}
-
-export type DamageSeverity = 'minimal' | 'moderate' | 'significant' | 'severe' | 'catastrophic';
-
-export interface MarketPositionImpact {
-  competitiveAdvantage: CompetitiveAdvantageImpact;
-  marketShare: MarketShareImpact;
-  pricingPower: PricingPowerImpact;
-}
-
-export interface CompetitiveAdvantageImpact {
-  lostAdvantages: string[];
-  competitorGains: string[];
-  recoveryActions: string[];
-}
-
-export interface MarketShareImpact {
-  lossPercentage: number;
-  timeframe: string;
-  recoveryProbability: number;
-}
-
-export interface PricingPowerImpact {
-  discountRequired: number;
-  duration: string;
-  segmentImpact: PricingSegmentImpact[];
-}
-
-export interface PricingSegmentImpact {
-  segment: string;
-  impact: number;
-  alternatives: string[];
-}
-
-export interface TrustRecovery {
-  timeline: TrustRecoveryTimeline;
-  actions: TrustRecoveryAction[];
-  metrics: TrustMetric[];
-}
-
-export interface TrustRecoveryTimeline {
-  immediate: string[];
-  shortTerm: string[];
-  mediumTerm: string[];
-  longTerm: string[];
-}
-
-export interface TrustRecoveryAction {
-  action: string;
-  timeline: string;
-  investment: number;
-  successProbability: number;
-}
-
-export interface TrustMetric {
-  metric: string;
-  baseline: number;
-  target: number;
-  timeline: string;
-}
-
-export interface FinancialImpact {
-  directCosts: DirectCost[];
-  indirectCosts: IndirectCost[];
-  opportunityCosts: OpportunityCost[];
-  timeline: FinancialTimeline;
-}
-
-export interface DirectCost {
-  category: DirectCostCategory;
-  amount: number;
-  currency: string;
-  timing: CostTiming;
-}
-
-export type DirectCostCategory = 'penalties' | 'legal_fees' | 'consulting' | 'remediation' | 'compliance_program';
-
-export interface CostTiming {
-  oneTime: boolean;
-  recurring: boolean;
-  frequency?: CostFrequency;
-  duration?: string;
-}
-
-export type CostFrequency = 'monthly' | 'quarterly' | 'annually';
-
-export interface IndirectCost {
-  category: IndirectCostCategory;
-  amount: number;
-  currency: string;
-  probability: number;
-}
-
-export type IndirectCostCategory = 'revenue_loss' | 'operational_disruption' | 'insurance_premium' | 'financing_cost';
-
-export interface OpportunityCost {
-  opportunity: string;
-  value: number;
-  currency: string;
-  probability: number;
-  timeframe: string;
-}
-
-export interface FinancialTimeline {
-  immediate: FinancialPeriod;
-  shortTerm: FinancialPeriod;
-  mediumTerm: FinancialPeriod;
-  longTerm: FinancialPeriod;
-}
-
-export interface FinancialPeriod {
-  period: string;
-  costs: number;
-  benefits: number;
-  netImpact: number;
-}
-
-export interface RemediationEffort {
-  complexity: ComplexityLevel;
-  timeframe: string;
-  resources: EffortResource[];
-  dependencies: string[];
-  risks: ImplementationRisk[];
-}
-
-export type ComplexityLevel = 'low' | 'medium' | 'high' | 'very_high';
-
-export interface EffortResource {
-  type: ResourceType;
-  quantity: number;
-  duration: string;
-  skillLevel: SkillLevel;
-}
-
-export type SkillLevel = 'basic' | 'intermediate' | 'advanced' | 'expert';
-
-export interface ImplementationRisk {
-  risk: string;
-  probability: number;
-  impact: ImpactLevel;
-  mitigation: string;
-}
-
-export type ImpactLevel = 'low' | 'medium' | 'high' | 'critical';
-export type ImpactSeverity = 'minimal' | 'minor' | 'moderate' | 'major' | 'severe';
-export type RiskLevel = 'very_low' | 'low' | 'medium' | 'high' | 'very_high';
-
-// Additional missing interfaces for completeness
 export interface ComplianceMonitoringResult {
   status: ComplianceStatus;
   violations: ComplianceViolation[];
   recommendations: string[];
   nextReview: Date;
 }
-
-export interface ComplianceViolation {
-  id: string;
-  severity: ViolationSeverity;
-  description: string;
-  framework: string;
-  remediation: string;
-}
-
-export type ViolationSeverity = 'minor' | 'moderate' | 'major' | 'critical';
 
 export interface ComplianceReportRequest {
   frameworks: string[];
@@ -651,8 +162,6 @@ export interface ComplianceReportRequest {
   format: ReportFormat;
 }
 
-export type ReportFormat = 'pdf' | 'html' | 'json' | 'excel';
-
 export interface ComplianceReport {
   id: string;
   generatedDate: Date;
@@ -660,6 +169,296 @@ export interface ComplianceReport {
   summary: ComplianceSummary;
   details: ComplianceDetail[];
   recommendations: Recommendation[];
+}
+
+export interface ComplianceMetrics {
+  period: string;
+  overall: OverallMetrics;
+  byFramework: FrameworkMetrics[];
+  trends: TrendAnalysis;
+}
+
+export interface ComplianceEntity {
+  id: string;
+  type: EntityType;
+  name: string;
+  scope: string[];
+  frameworks: string[];
+}
+
+export interface ComplianceValidation {
+  entity: string;
+  status: ValidationStatus;
+  findings: ValidationFinding[];
+  score: number;
+  recommendations: string[];
+}
+
+export interface RegulatoryFramework {
+  id: string;
+  name: string;
+  jurisdiction: string;
+  type: RegulatoryType;
+  requirements: RegulatoryRequirement[];
+  deadlines: RegulatoryDeadline[];
+}
+
+export interface RegulatoryData {
+  entity: string;
+  period: string;
+  data: Record<string, unknown>;
+  metadata: DataMetadata;
+}
+
+export interface RegulatoryReport {
+  id: string;
+  framework: string;
+  entity: string;
+  period: string;
+  content: ReportContent;
+  validation: ReportValidation;
+}
+
+export interface SubmissionResult {
+  submissionId: string;
+  status: SubmissionStatus;
+  timestamp: Date;
+  acknowledgment: SubmissionAcknowledgment;
+}
+
+export interface RegulatoryDeadline {
+  id: string;
+  requirement: string;
+  deadline: Date;
+  frequency: DeadlineFrequency;
+  status: DeadlineStatus;
+  preparations: PreparationTask[];
+}
+
+export interface RegulatoryRequirement {
+  id: string;
+  description: string;
+  type: RequirementType;
+  mandatory: boolean;
+  deadline: Date;
+  evidence: Evidence[];
+}
+
+export interface RegulatoryValidation {
+  requirement: string;
+  compliant: boolean;
+  gaps: string[];
+  recommendations: string[];
+  nextReview: Date;
+}
+
+export interface AuditableActivity {
+  id: string;
+  type: ActivityType;
+  description: string;
+  actor: string;
+  timestamp: Date;
+  context: AuditContext;
+}
+
+export interface AuditTrail {
+  id: string;
+  activities: AuditableActivity[];
+  integrity: TrailIntegrity;
+  retention: AuditRetention;
+}
+
+export interface AuditScope {
+  systems: string[];
+  timeRange: AuditTimeRange;
+  activities: ActivityType[];
+  criteria: AuditCriteria[];
+}
+
+export interface AuditEvidence {
+  id: string;
+  scope: AuditScope;
+  evidence: EvidenceItem[];
+  summary: EvidenceSummary;
+}
+
+export interface RetentionResult {
+  processed: number;
+  retained: number;
+  archived: number;
+  deleted: number;
+  errors: RetentionError[];
+}
+
+export interface AuditPlan {
+  id: string;
+  scope: AuditScope;
+  objectives: AuditObjective[];
+  methodology: AuditMethodology;
+  timeline: AuditTimeline;
+  resources: AuditResource[];
+}
+
+export interface AuditResult {
+  id: string;
+  plan: AuditPlan;
+  findings: AuditFinding[];
+  conclusions: AuditConclusion[];
+  recommendations: AuditRecommendation[];
+}
+
+export interface ComplianceContext {
+  entity: string;
+  scope: AssessmentScope;
+  timeframe: string;
+  regulations: string[];
+  businessContext: BusinessContext;
+}
+
+export interface ComplianceRisk {
+  overallRisk: RiskLevel;
+  categories: ComplianceRiskCategory[];
+  mitigationStrategies: RiskMitigationStrategy[];
+  assessment: ComplianceRiskAssessment;
+}
+
+export interface ControlUpdate {
+  controlId: string;
+  changes: ControlChange[];
+  reason: string;
+  approver: string;
+  effectiveDate: Date;
+}
+
+export interface ControlUpdateResult {
+  updateId: string;
+  status: UpdateStatus;
+  processedControls: ProcessedControl[];
+  errors: UpdateError[];
+}
+
+export interface PolicyRequirement {
+  id: string;
+  name: string;
+  description: string;
+  regulations: string[];
+  priority: PriorityLevel;
+  deadline: Date;
+}
+
+export interface PolicyFramework {
+  id: string;
+  policies: CompliancePolicy[];
+  implementation: PolicyImplementationPlan;
+  governance: PolicyGovernance;
+}
+
+export interface CompliancePolicy {
+  id: string;
+  name: string;
+  version: string;
+  content: PolicyContent;
+  applicability: PolicyApplicability;
+  enforcement: PolicyEnforcement;
+}
+
+export interface PolicyImplementation {
+  id: string;
+  policy: string;
+  status: ImplementationStatus;
+  progress: ImplementationProgress;
+  issues: ImplementationIssue[];
+}
+
+export interface PolicyCompliance {
+  policy: string;
+  compliance_rate: number;
+  violations: PolicyViolation[];
+  trends: ComplianceTrend[];
+  recommendations: string[];
+}
+
+export interface PolicyUpdate {
+  policyId: string;
+  version: string;
+  changes: PolicyChange[];
+  reason: string;
+  approver: string;
+  effectiveDate: Date;
+}
+
+export interface PolicyUpdateResult {
+  updateId: string;
+  status: UpdateStatus;
+  processedPolicies: ProcessedPolicy[];
+  errors: PolicyUpdateError[];
+}
+
+export interface TrainingAudience {
+  group: string;
+  size: number;
+  requirements: string[];
+  schedule: string;
+}
+
+export interface TrainingProgram {
+  id: string;
+  name: string;
+  description: string;
+  modules: TrainingModule[];
+  assessment: TrainingAssessment;
+  certification: TrainingCertification;
+}
+
+export interface TrainingMetrics {
+  program: string;
+  enrollment: number;
+  completion: number;
+  pass_rate: number;
+  satisfaction: number;
+  effectiveness: EffectivenessMetrics;
+}
+
+export interface AwarenessAssessment {
+  id: string;
+  target_audience: string;
+  topics: string[];
+  methodology: AssessmentMethodology;
+  timeline: string;
+}
+
+export interface AwarenessResult {
+  assessment: string;
+  overall_score: number;
+  topic_scores: TopicScore[];
+  gaps: AwarenessGap[];
+  recommendations: string[];
+}
+
+export interface ComplianceMessage {
+  id: string;
+  type: MessageType;
+  audience: string[];
+  content: MessageContent;
+  delivery: MessageDelivery;
+}
+
+export interface CommunicationResult {
+  messageId: string;
+  sent: number;
+  delivered: number;
+  opened: number;
+  clicked: number;
+  responded: number;
+}
+
+// Supporting interfaces
+export interface ComplianceViolation {
+  id: string;
+  severity: ViolationSeverity;
+  description: string;
+  framework: string;
+  remediation: string;
 }
 
 export interface ComplianceSummary {
@@ -681,8 +480,6 @@ export interface ComplianceMetric {
   target: number;
   trend: TrendDirection;
 }
-
-export type TrendDirection = 'improving' | 'stable' | 'declining';
 
 export interface ComplianceDetail {
   framework: string;
@@ -710,41 +507,6 @@ export interface EvidenceDetail {
   type: EvidenceType;
   quality: EvidenceQuality;
   completeness: number;
-}
-
-export type EvidenceQuality = 'poor' | 'fair' | 'good' | 'excellent';
-
-export interface Recommendation {
-  priority: PriorityLevel;
-  category: RecommendationCategory;
-  description: string;
-  implementation: ImplementationGuidance;
-  impact: RecommendationImpact;
-}
-
-export type RecommendationCategory = 'policy' | 'process' | 'technology' | 'training' | 'governance';
-
-export interface ImplementationGuidance {
-  steps: string[];
-  timeline: string;
-  resources: string[];
-  dependencies: string[];
-}
-
-export interface RecommendationImpact {
-  riskReduction: number;
-  complianceImprovement: number;
-  cost: number;
-  effort: EffortLevel;
-}
-
-export type EffortLevel = 'low' | 'medium' | 'high' | 'very_high';
-
-export interface ComplianceMetrics {
-  period: string;
-  overall: OverallMetrics;
-  byFramework: FrameworkMetrics[];
-  trends: TrendAnalysis;
 }
 
 export interface OverallMetrics {
@@ -775,26 +537,6 @@ export interface TrendPrediction {
   timeframe: string;
 }
 
-export interface ComplianceEntity {
-  id: string;
-  type: EntityType;
-  name: string;
-  scope: string[];
-  frameworks: string[];
-}
-
-export type EntityType = 'business_unit' | 'system' | 'process' | 'geography' | 'legal_entity';
-
-export interface ComplianceValidation {
-  entity: string;
-  status: ValidationStatus;
-  findings: ValidationFinding[];
-  score: number;
-  recommendations: string[];
-}
-
-export type ValidationStatus = 'compliant' | 'non_compliant' | 'partial' | 'pending';
-
 export interface ValidationFinding {
   requirement: string;
   status: ComplianceStatus;
@@ -802,174 +544,481 @@ export interface ValidationFinding {
   gaps: string[];
 }
 
-// Australian Regulatory Framework Types
-export interface AustralianRegulatoryFramework {
-  privacyAct: PrivacyActCompliance;
-  corporationsAct: CorporationsActCompliance;
-  australianSecuritiesExchange: ASXCompliance;
-  australianPrudentialRegulation: APRACompliance;
-  australianCompetitionConsumer: ACCCCompliance;
-  australianTaxOffice: ATOCompliance;
-  workplaceSafety: WorkplaceSafetyCompliance;
-  environmentalRegulation: EnvironmentalCompliance;
-  consumerProtection: ConsumerProtectionCompliance;
-  financialServicesLicensing: AFSLCompliance;
+export interface DataMetadata {
+  source: string;
+  quality: DataQuality;
+  completeness: number;
+  lastUpdated: Date;
 }
 
-export interface PrivacyActCompliance {
-  australianPrivacyPrinciples: APPCompliance[];
-  notifiableDataBreaches: NotifiableDataBreachCompliance;
-  consentManagement: ConsentManagementCompliance;
-  dataSubjectRights: DataSubjectRightsCompliance;
-  crossBorderTransfers: CrossBorderTransferCompliance;
-  privacyImpactAssessments: PIACompliance;
-  complaintHandling: ComplaintHandlingCompliance;
-  recordKeeping: RecordKeepingCompliance;
+export interface ReportContent {
+  sections: ReportSection[];
+  attachments: ReportAttachment[];
+  certifications: ReportCertification[];
 }
 
-export interface APPCompliance {
-  principleNumber: number;
-  principleTitle: string;
-  complianceStatus: ComplianceStatus;
-  requirements: APPRequirement[];
-  controls: ComplianceControl[];
-  evidence: ComplianceEvidence[];
-  lastAssessment: Date;
-  nextReview: Date;
-  riskLevel: RiskLevel;
+export interface ReportSection {
+  name: string;
+  content: string;
+  data: Record<string, unknown>;
+  validation: SectionValidation;
 }
 
-export interface APPRequirement {
-  requirementId: string;
-  description: string;
-  mandatoryActions: string[];
-  implementationStatus: ImplementationStatus;
-  responsibleParty: string;
-  dueDate: Date;
-  evidence: Evidence[];
-  exceptions: ComplianceException[];
+export interface SectionValidation {
+  valid: boolean;
+  errors: ValidationError[];
+  warnings: ValidationWarning[];
 }
 
-export interface ComplianceException {
-  id: string;
-  reason: string;
-  approvedBy: string;
-  approvalDate: Date;
-  reviewDate: Date;
+export interface ValidationError {
+  field: string;
+  message: string;
+  severity: ErrorSeverity;
+}
+
+export interface ValidationWarning {
+  field: string;
+  message: string;
+  recommendation: string;
+}
+
+export interface ReportAttachment {
+  name: string;
+  type: AttachmentType;
+  location: string;
+  required: boolean;
+}
+
+export interface ReportCertification {
+  type: CertificationType;
+  certifier: string;
+  date: Date;
+  validity: CertificationValidity;
+}
+
+export interface CertificationValidity {
+  valid: boolean;
+  expiryDate: Date;
   conditions: string[];
 }
 
-export interface ComplianceEvidence {
+export interface ReportValidation {
+  status: ValidationStatus;
+  score: number;
+  issues: ValidationIssue[];
+  recommendations: string[];
+}
+
+export interface ValidationIssue {
+  type: IssueType;
+  severity: IssueSeverity;
+  description: string;
+  resolution: string;
+}
+
+export interface SubmissionAcknowledgment {
+  received: boolean;
+  referenceNumber: string;
+  receivedDate: Date;
+  expectedResponse: Date;
+}
+
+export interface PreparationTask {
+  task: string;
+  dueDate: Date;
+  responsible: string;
+  status: TaskStatus;
+}
+
+export interface AuditContext {
+  system: string;
+  module: string;
+  function: string;
+  metadata: Record<string, unknown>;
+}
+
+export interface TrailIntegrity {
+  checksum: string;
+  signed: boolean;
+  tamperEvident: boolean;
+  lastVerified: Date;
+}
+
+export interface AuditRetention {
+  period: string;
+  location: string;
+  backup: boolean;
+  archival: ArchivalPolicy;
+}
+
+export interface ArchivalPolicy {
+  enabled: boolean;
+  schedule: string;
+  location: string;
+  format: ArchivalFormat;
+}
+
+export interface AuditTimeRange {
+  start: Date;
+  end: Date;
+  timezone: string;
+}
+
+export interface AuditCriteria {
+  field: string;
+  operator: ComparisonOperator;
+  value: string;
+  required: boolean;
+}
+
+export interface EvidenceItem {
   id: string;
   type: EvidenceType;
-  description: string;
-  location: string;
+  content: string;
+  metadata: EvidenceMetadata;
+}
+
+export interface EvidenceMetadata {
+  source: string;
+  timestamp: Date;
+  integrity: EvidenceIntegrity;
   classification: DataClassification;
-  retentionPeriod: string;
 }
 
-export interface NotifiableDataBreachCompliance {
-  breachDetection: BreachDetectionCompliance;
-  riskAssessment: BreachRiskAssessment;
-  notification: BreachNotificationCompliance;
-  remediation: BreachRemediationCompliance;
-  reporting: BreachReportingCompliance;
+export interface EvidenceIntegrity {
+  hash: string;
+  signature: string;
+  verified: boolean;
 }
 
-export interface BreachDetectionCompliance {
-  detectionMechanisms: DetectionMechanism[];
-  monitoringCoverage: MonitoringCoverage;
-  alertingSystems: AlertingSystem[];
-  responseTime: ResponseTimeMetrics;
-  automatedDetection: boolean;
+export interface EvidenceSummary {
+  totalItems: number;
+  categories: EvidenceCategory[];
+  quality: EvidenceQualityAssessment;
 }
 
-export interface DetectionMechanism {
-  type: DetectionType;
-  coverage: string[];
-  sensitivity: SensitivityLevel;
-  accuracy: AccuracyMetrics;
-  automationLevel: AutomationLevel;
+export interface EvidenceCategory {
+  category: string;
+  count: number;
+  percentage: number;
 }
 
-export type DetectionType = 
-  | 'technical_monitoring'
-  | 'access_logging'
-  | 'behavior_analytics'
-  | 'data_loss_prevention'
-  | 'intrusion_detection'
-  | 'manual_reporting'
-  | 'third_party_notification';
-
-export type SensitivityLevel = 'low' | 'medium' | 'high' | 'critical';
-
-export interface AccuracyMetrics {
-  truePositiveRate: number;
-  falsePositiveRate: number;
-  trueNegativeRate: number;
-  falseNegativeRate: number;
-  precision: number;
-  recall: number;
-  f1Score: number;
+export interface EvidenceQualityAssessment {
+  score: number;
+  completeness: number;
+  accuracy: number;
+  timeliness: number;
 }
 
-export type AutomationLevel = 'manual' | 'semi_automated' | 'fully_automated' | 'ai_enhanced';
-
-export interface MonitoringCoverage {
-  dataTypes: DataType[];
-  systems: SystemCoverage[];
-  processes: ProcessCoverage[];
-  geographicScope: GeographicScope[];
-  temporalCoverage: TemporalCoverage;
+export interface RetentionError {
+  evidenceId: string;
+  error: string;
+  resolution: string;
 }
 
-export interface DataType {
-  category: DataCategory;
-  sensitivity: DataSensitivity;
-  volume: DataVolume;
-  criticality: DataCriticality;
-  retentionPeriod: string;
+export interface AuditObjective {
+  objective: string;
+  criteria: string[];
+  evidence: string[];
+  riskLevel: RiskLevel;
 }
 
-export type DataCategory = 
-  | 'personal_information'
-  | 'sensitive_information'
-  | 'health_information'
-  | 'financial_information'
-  | 'biometric_information'
-  | 'location_information'
-  | 'behavioral_information';
-
-export type DataSensitivity = 'public' | 'internal' | 'confidential' | 'restricted' | 'top_secret';
-
-export interface DataVolume {
-  recordCount: number;
-  dataSize: string;
-  growthRate: number;
-  peakUsage: PeakUsageMetrics;
+export interface AuditMethodology {
+  approach: AuditApproach;
+  techniques: AuditTechnique[];
+  sampling: SamplingMethod;
 }
 
-export interface PeakUsageMetrics {
-  peakTime: string;
-  peakVolume: number;
-  averageVolume: number;
-  variability: number;
+export interface AuditTechnique {
+  technique: string;
+  description: string;
+  applicability: string[];
 }
 
-export type DataCriticality = 'low' | 'medium' | 'high' | 'critical' | 'mission_critical';
-
-export interface SystemCoverage {
-  systemId: string;
-  systemType: SystemType;
-  monitoringLevel: MonitoringLevel;
-  coverage: CoverageLevel;
-  integration: IntegrationLevel;
+export interface SamplingMethod {
+  method: SamplingType;
+  sampleSize: number;
+  criteria: SamplingCriteria;
 }
 
-export type SystemType = 
-  | 'database'
-  | 'application'
-  | 'file_system'
-  | 'network'
-  | 'cloud_service'
-  | 'mobile_application
+export interface SamplingCriteria {
+  population: string;
+  parameters: SamplingParameter[];
+  confidence: number;
+}
+
+export interface SamplingParameter {
+  parameter: string;
+  value: string;
+  weight: number;
+}
+
+export interface AuditTimeline {
+  startDate: Date;
+  endDate: Date;
+  phases: AuditPhase[];
+  checkpoints: AuditCheckpoint[];
+}
+
+export interface AuditPhase {
+  name: string;
+  startDate: Date;
+  endDate: Date;
+  activities: string[];
+  deliverables: string[];
+  resources: AuditResource[];
+}
+
+export interface AuditCheckpoint {
+  name: string;
+  date: Date;
+  criteria: string[];
+  status: CheckpointStatus;
+}
+
+export interface AuditResource {
+  type: ResourceType;
+  name: string;
+  allocation: number;
+  cost: number;
+  skills: string[];
+}
+
+export interface AuditFinding {
+  id: string;
+  type: string;
+  severity: FindingSeverity;
+  description: string;
+  evidence: string[];
+  recommendations: string[];
+}
+
+export interface AuditConclusion {
+  area: string;
+  conclusion: string;
+  confidence: number;
+  supporting_evidence: string[];
+}
+
+export interface AuditRecommendation {
+  priority: PriorityLevel;
+  description: string;
+  implementation: ImplementationGuidance;
+  expected_benefit: string;
+}
+
+export interface BusinessContext {
+  industry: string;
+  jurisdiction: string[];
+  businessModel: string;
+  riskProfile: string;
+}
+
+export interface ComplianceRiskCategory {
+  category: string;
+  level: RiskLevel;
+  probability: number;
+  impact: ImpactLevel;
+  factors: ComplianceRiskFactor[];
+}
+
+export interface ComplianceRiskFactor {
+  factor: string;
+  weight: number;
+  current_level: string;
+  target_level: string;
+}
+
+export interface RiskMitigationStrategy {
+  strategy: string;
+  effectiveness: number;
+  cost: number;
+  timeline: string;
+  implementation: ImplementationStatus;
+}
+
+export interface ComplianceRiskAssessment {
+  methodology: RiskAssessmentMethodology;
+  results: RiskAssessmentResult[];
+  recommendations: RiskRecommendation[];
+}
+
+export interface RiskAssessmentMethodology {
+  approach: string;
+  criteria: RiskCriteria[];
+  scoring: RiskScoringMethod;
+}
+
+export interface RiskCriteria {
+  criterion: string;
+  weight: number;
+  scale: string;
+}
+
+export interface RiskScoringMethod {
+  method: string;
+  scale: RiskScale;
+  thresholds: RiskThreshold[];
+}
+
+export interface RiskScale {
+  minimum: number;
+  maximum: number;
+  intervals: RiskInterval[];
+}
+
+export interface RiskInterval {
+  level: string;
+  min: number;
+  max: number;
+  description: string;
+}
+
+export interface RiskThreshold {
+  level: RiskLevel;
+  score: number;
+  action: string;
+}
+
+export interface RiskAssessmentResult {
+  area: string;
+  score: number;
+  level: RiskLevel;
+  factors: string[];
+  recommendations: string[];
+}
+
+export interface RiskRecommendation {
+  priority: PriorityLevel;
+  description: string;
+  implementation: ImplementationGuidance;
+  expected_benefit: string;
+}
+
+export interface ControlChange {
+  field: string;
+  oldValue: string;
+  newValue: string;
+  justification: string;
+}
+
+export interface ProcessedControl {
+  controlId: string;
+  status: ControlProcessingStatus;
+  changes: string[];
+  timestamp: Date;
+}
+
+export interface UpdateError {
+  controlId: string;
+  error: string;
+  resolution: string;
+}
+
+export interface ComplianceRequirement {
+  id: string;
+  description: string;
+  category: RequirementCategory;
+  priority: PriorityLevel;
+  dueDate: Date;
+  status: ComplianceStatus;
+  evidence: Evidence[];
+}
+
+export interface ComplianceControl {
+  id: string;
+  name: string;
+  type: ControlType;
+  category: ControlCategory;
+  effectiveness: ControlEffectiveness;
+  implementation: ControlImplementation;
+  testing: ControlTesting;
+}
+
+export interface ControlEffectiveness {
+  rating: EffectivenessRating;
+  lastAssessed: Date;
+  assessor: string;
+  evidence: Evidence[];
+  deficiencies: ControlDeficiency[];
+}
+
+export interface ControlDeficiency {
+  id: string;
+  description: string;
+  severity: DeficiencySeverity;
+  impact: string;
+  remediation: RemediationPlan;
+}
+
+export interface RemediationPlan {
+  actions: RemediationAction[];
+  timeline: string;
+  responsibleParty: string;
+  cost: number;
+  approval: ApprovalStatus;
+}
+
+export interface RemediationAction {
+  id: string;
+  description: string;
+  deadline: Date;
+  status: ActionStatus;
+  evidence: Evidence[];
+}
+
+export interface ControlImplementation {
+  status: ImplementationStatus;
+  startDate: Date;
+  targetDate: Date;
+  completionDate?: Date;
+  resources: RequiredResource[];
+  milestones: ImplementationMilestone[];
+}
+
+export interface ImplementationMilestone {
+  id: string;
+  name: string;
+  dueDate: Date;
+  status: MilestoneStatus;
+  deliverables: string[];
+}
+
+export interface RequiredResource {
+  type: ResourceType;
+  description: string;
+  quantity: number;
+  cost: number;
+  availability: ResourceAvailability;
+}
+
+export interface ControlTesting {
+  frequency: TestingFrequency;
+  methodology: TestingMethodology;
+  lastTested: Date;
+  nextTest: Date;
+  results: TestResult[];
+}
+
+export interface TestResult {
+  id: string;
+  testDate: Date;
+  tester: string;
+  outcome: TestOutcome;
+  findings: TestFinding[];
+  recommendations: string[];
+}
+
+export interface TestFinding {
+  id: string;
+  description: string;
+  severity: FindingSeverity;
+  impact: string;
+  recommendation: string;
+}
+
+export interface ComplianceAssessment {
+  id: string;
+  type: AssessmentType;
+  scope: AssessmentScope;
+  methodology

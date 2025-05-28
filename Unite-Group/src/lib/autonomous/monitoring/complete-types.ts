@@ -3,6 +3,24 @@
  * Unite Group - Version 14.0 Phase 1 Implementation
  */
 
+// Core Framework Types
+export interface AutonomousMonitoringFramework {
+  id: string;
+  status: 'active' | 'inactive' | 'maintenance' | 'error';
+  capabilities: string[];
+  configuration: MonitoringConfiguration;
+  performance: SystemPerformance;
+}
+
+export interface SystemHealthReport {
+  timestamp: Date;
+  overallHealth: 'healthy' | 'degraded' | 'unhealthy' | 'critical';
+  metrics: SystemMetrics;
+  anomalies: Anomaly[];
+  recommendations: HealthRecommendation[];
+  predictions: PredictiveInsight[];
+}
+
 // Core Missing Types for Autonomous Monitoring Framework
 export interface SystemMetrics {
   cpu: number;
@@ -343,6 +361,8 @@ export interface ResolutionRisk {
   mitigation: string;
 }
 
+export type CommunicationChannel = 'email' | 'slack' | 'teams' | 'webhook' | 'dashboard' | 'sms';
+
 export interface CommunicationStrategy {
   stakeholders: Stakeholder[];
   channels: CommunicationChannel[];
@@ -390,6 +410,28 @@ export interface DecisionCriteria {
   weight: number;
   measurement: string;
   threshold?: number;
+}
+
+export interface ApprovalLevel {
+  level: number;
+  approver: string;
+  role: string;
+  timeout: number;
+  required: boolean;
+}
+
+export interface EscalationLevel {
+  level: number;
+  contact: string;
+  method: 'email' | 'phone' | 'slack' | 'sms';
+  timeout: number;
+}
+
+export interface EscalationTrigger {
+  condition: string;
+  threshold: number;
+  action: string;
+  automatic: boolean;
 }
 
 export interface ApprovalProcess {
@@ -444,14 +486,14 @@ export interface SelfHealingConfiguration {
 export interface HealingAction {
   trigger: string;
   action: string;
-  parameters: Record<string, any>;
+  parameters: Record<string, unknown>;
   timeout: number;
   rollback?: string;
 }
 
 export interface Safeguard {
   type: 'rate_limit' | 'approval_required' | 'time_window' | 'resource_limit';
-  configuration: Record<string, any>;
+  configuration: Record<string, unknown>;
   enforcement: 'advisory' | 'warning' | 'blocking';
 }
 

@@ -535,3 +535,101 @@ export interface ModelPerformance {
   falseNegatives: number;
   predictions: number;
 }
+
+// Additional interfaces needed for complete-service.ts
+export interface SelfHealingConfig {
+  monitoring: {
+    interval: number;
+    enabled: boolean;
+  };
+  prediction: Record<string, any>;
+  recovery: Record<string, any>;
+  optimization: Record<string, any>;
+  logging: Record<string, any>;
+}
+
+export interface SystemHealthMetrics {
+  componentId: string;
+  timestamp: Date;
+  status: 'healthy' | 'warning' | 'critical';
+  metrics: Record<string, any>;
+  trend: 'improving' | 'stable' | 'degrading';
+  alertLevel: 'low' | 'medium' | 'high';
+  lastUpdated: Date;
+}
+
+export interface HealthCheckResult {
+  component: string;
+  status: 'healthy' | 'warning' | 'critical';
+  message: string;
+  timestamp: Date;
+  metrics: Record<string, any>;
+  suggestions: string[];
+}
+
+export interface RecoveryAction {
+  id: string;
+  type: string;
+  priority: 'low' | 'medium' | 'high';
+  component: string;
+  description: string;
+  estimatedDuration: number;
+  automated: boolean;
+  rollbackPossible: boolean;
+}
+
+export interface FailurePrediction {
+  component: string;
+  failureType: string;
+  confidence: number;
+  timeframe: string;
+  impact: string;
+}
+
+export interface AutomatedResponse {
+  id: string;
+  trigger: string;
+  action: string;
+  enabled: boolean;
+  conditions: string[];
+}
+
+export interface SystemOptimization {
+  id: string;
+  type: string;
+  description: string;
+  impact: string;
+  implementation: string;
+}
+
+export interface PerformanceMetrics {
+  throughput: number;
+  latency: number;
+  errorRate: number;
+  availability: number;
+}
+
+export interface RecoveryStrategy {
+  id: string;
+  name: string;
+  actions: RecoveryAction[];
+  conditions: string[];
+  priority: number;
+}
+
+export interface SelfHealingEvent {
+  type: string;
+  message: string;
+  timestamp: Date;
+  level: 'info' | 'warning' | 'error';
+  component: string;
+  data?: any;
+}
+
+export interface ComponentHealth {
+  componentId: string;
+  status: 'healthy' | 'warning' | 'critical';
+  healthScore: number;
+  trend: 'improving' | 'stable' | 'degrading';
+  lastCheck: Date;
+}

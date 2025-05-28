@@ -33,6 +33,16 @@ fi
 echo -e "\n${YELLOW}Installing dependencies...${NC}"
 npm install
 
+# Run database migrations
+echo -e "\n${YELLOW}Running database migrations...${NC}"
+npx prisma migrate deploy
+if [ $? -eq 0 ]; then
+  echo -e "${GREEN}Database migrations completed successfully!${NC}"
+else
+  echo -e "${RED}Database migration failed. Please check your Prisma schema and database connection.${NC}"
+  exit 1
+fi
+
 # Run pre-deployment check
 echo -e "\n${YELLOW}Running pre-deployment checks...${NC}"
 if command -v pwsh &> /dev/null; then
