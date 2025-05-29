@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
     const leadData = validationResult.data;
     
     // Track IP and timestamp for analytics
-    const ipAddress = request.headers.get('x-forwarded-for') || request.ip || 'unknown';
+    const ipAddress = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
     const userAgent = request.headers.get('user-agent') || 'unknown';
     const timestamp = new Date().toISOString();
     

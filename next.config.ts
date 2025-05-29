@@ -13,6 +13,16 @@ const nextConfig: NextConfig = {
     // Enable server components
     serverComponentsExternalPackages: ['jspdf', 'jspdf-autotable'],
   },
+  // Exclude backup directories and quantum files from build
+  webpack: (config, { isServer }) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      // Exclude quantum files from build
+      '@/lib/quantum/quantum-optimization-engine': false,
+      '@/lib/quantum/quantum-processor': false,
+    };
+    return config;
+  },
 };
 
 export default nextConfig;

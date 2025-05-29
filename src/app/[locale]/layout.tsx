@@ -7,15 +7,11 @@ import dynamic from 'next/dynamic';
 import { defaultMetadata, viewport } from '@/lib/metadata';
 import type { Metadata } from 'next';
 
-// Import client components dynamically
-const ClientWrapper = dynamic(() => import('../../components/ClientWrapper'), {
-  ssr: false
-});
+// Import client components dynamically (Next.js 15 compatible)
+const ClientWrapper = dynamic(() => import('../../components/ClientWrapper'));
 
-// Import the Navigation component dynamically with SSR disabled to avoid client/server mismatch issues
-const Navigation = dynamic(() => import('../../components/Navigation'), { 
-  ssr: false 
-});
+// Import the Navigation component dynamically
+const Navigation = dynamic(() => import('../../components/Navigation'));
 
 const inter = Inter({ subsets: ['latin'] });
 
