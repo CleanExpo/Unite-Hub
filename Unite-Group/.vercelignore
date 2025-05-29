@@ -1,0 +1,24 @@
+# Backup directories
+backups/
+src-backup/
+vercel-export-*/
+
+# Development files
+.env.local
+*.log
+.DS_Store
+
+# Build artifacts
+.next/
+node_modules/
+
+# Git
+.git/
+
+# IDE
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.temp

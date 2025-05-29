@@ -1,0 +1,19 @@
+# robots.txt for Unite Group
+# Version 1.0
+
+User-agent: *
+Allow: /
+
+# Disallow admin and authentication paths to avoid indexing
+Disallow: /dashboard/
+Disallow: /login/
+Disallow: /register/
+Disallow: /reset-password/
+Disallow: /update-password/
+Disallow: /api/
+
+# Sitemaps
+Sitemap: https://unite-group.vercel.app/sitemap.xml
+
+# Crawl delay to be respectful of server resources
+Crawl-delay: 10

@@ -1,0 +1,109 @@
+{
+  "site": {
+    "name": "UNITE Group",
+    "tagline": "Construyendo Excelencia Digital Juntos",
+    "description": "Servicios profesionales de desarrollo web y consultoría"
+  },
+  "nav": {
+    "home": "Inicio",
+    "features": "Características",
+    "pricing": "Precios",
+    "contact": "Contacto",
+    "about": "Nosotros",
+    "blog": "Blog",
+    "caseStudies": "Casos de Éxito",
+    "login": "Iniciar Sesión",
+    "register": "Registrarse",
+    "dashboard": "Panel de Control"
+  },
+  "auth": {
+    "login": {
+      "title": "Inicia sesión en tu cuenta",
+      "emailLabel": "Correo electrónico",
+      "passwordLabel": "Contraseña",
+      "submitButton": "Iniciar sesión",
+      "forgotPassword": "¿Olvidaste tu contraseña?"
+    },
+    "register": {
+      "title": "Crear una cuenta",
+      "nameLabel": "Nombre completo",
+      "emailLabel": "Correo electrónico",
+      "passwordLabel": "Contraseña",
+      "confirmPasswordLabel": "Confirmar contraseña",
+      "submitButton": "Registrarse",
+      "alreadyHaveAccount": "¿Ya tienes una cuenta?"
+    },
+    "resetPassword": {
+      "title": "Restablecer tu contraseña",
+      "emailLabel": "Correo electrónico",
+      "submitButton": "Enviar enlace de restablecimiento",
+      "backToLogin": "Volver al inicio de sesión"
+    }
+  },
+  "contact": {
+    "title": "Contáctanos",
+    "nameLabel": "Nombre completo",
+    "emailLabel": "Correo electrónico",
+    "phoneLabel": "Número de teléfono",
+    "messageLabel": "Mensaje",
+    "submitButton": "Enviar mensaje",
+    "successMessage": "Tu mensaje ha sido enviado correctamente. Nos pondremos en contacto contigo pronto.",
+    "errorMessage": "Hubo un error al enviar tu mensaje. Por favor, inténtalo de nuevo."
+  },
+  "consultation": {
+    "title": "Reservar una Consulta",
+    "description": "Tarifa de consulta de $550, aplicable a tu proyecto al contratarnos",
+    "nameLabel": "Nombre completo",
+    "emailLabel": "Correo electrónico",
+    "phoneLabel": "Número de teléfono",
+    "dateLabel": "Fecha preferida",
+    "timeLabel": "Hora preferida",
+    "projectTypeLabel": "Tipo de proyecto",
+    "budgetLabel": "Rango de presupuesto",
+    "detailsLabel": "Detalles del proyecto",
+    "submitButton": "Reservar consulta",
+    "successMessage": "Tu solicitud de consulta ha sido enviada. Confirmaremos los detalles en breve.",
+    "errorMessage": "Hubo un error al reservar tu consulta. Por favor, inténtalo de nuevo."
+  },
+  "footer": {
+    "copyright": "© 2025 UNITE Group. Todos los derechos reservados.",
+    "privacyPolicy": "Política de Privacidad",
+    "termsOfService": "Términos de Servicio",
+    "contactUs": "Contáctanos",
+    "followUs": "Síguenos"
+  },
+  "buttons": {
+    "learnMore": "Saber Más",
+    "getStarted": "Comenzar",
+    "readMore": "Leer Más",
+    "viewAll": "Ver Todo",
+    "submit": "Enviar",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "back": "Atrás",
+    "next": "Siguiente"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Ha ocurrido un error",
+    "notFound": "No encontrado",
+    "success": "¡Éxito!",
+    "required": "Requerido",
+    "optional": "Opcional",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "sort": "Ordenar",
+    "language": "Idioma"
+  },
+  "dateTime": {
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "tomorrow": "Mañana",
+    "days": "Días",
+    "weeks": "Semanas",
+    "months": "Meses",
+    "years": "Años"
+  }
+}

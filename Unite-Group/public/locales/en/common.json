@@ -1,0 +1,109 @@
+{
+  "site": {
+    "name": "UNITE Group",
+    "tagline": "Building Digital Excellence Together",
+    "description": "Professional web development and consultation services"
+  },
+  "nav": {
+    "home": "Home",
+    "features": "Features",
+    "pricing": "Pricing",
+    "contact": "Contact",
+    "about": "About",
+    "blog": "Blog",
+    "caseStudies": "Case Studies",
+    "login": "Log In",
+    "register": "Register",
+    "dashboard": "Dashboard"
+  },
+  "auth": {
+    "login": {
+      "title": "Sign in to your account",
+      "emailLabel": "Email address",
+      "passwordLabel": "Password",
+      "submitButton": "Sign in",
+      "forgotPassword": "Forgot your password?"
+    },
+    "register": {
+      "title": "Create an account",
+      "nameLabel": "Full name",
+      "emailLabel": "Email address",
+      "passwordLabel": "Password",
+      "confirmPasswordLabel": "Confirm password",
+      "submitButton": "Register",
+      "alreadyHaveAccount": "Already have an account?"
+    },
+    "resetPassword": {
+      "title": "Reset your password",
+      "emailLabel": "Email address",
+      "submitButton": "Send reset link",
+      "backToLogin": "Back to login"
+    }
+  },
+  "contact": {
+    "title": "Contact Us",
+    "nameLabel": "Full name",
+    "emailLabel": "Email address",
+    "phoneLabel": "Phone number",
+    "messageLabel": "Message",
+    "submitButton": "Send message",
+    "successMessage": "Your message has been sent successfully. We'll get back to you soon.",
+    "errorMessage": "There was an error sending your message. Please try again."
+  },
+  "consultation": {
+    "title": "Book a Consultation",
+    "description": "$550 consultation fee, applicable to your project upon engagement",
+    "nameLabel": "Full name",
+    "emailLabel": "Email address",
+    "phoneLabel": "Phone number",
+    "dateLabel": "Preferred date",
+    "timeLabel": "Preferred time",
+    "projectTypeLabel": "Project type",
+    "budgetLabel": "Budget range",
+    "detailsLabel": "Project details",
+    "submitButton": "Book consultation",
+    "successMessage": "Your consultation request has been submitted. We'll confirm the details shortly.",
+    "errorMessage": "There was an error booking your consultation. Please try again."
+  },
+  "footer": {
+    "copyright": "© 2025 UNITE Group. All rights reserved.",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "contactUs": "Contact Us",
+    "followUs": "Follow Us"
+  },
+  "buttons": {
+    "learnMore": "Learn More",
+    "getStarted": "Get Started",
+    "readMore": "Read More",
+    "viewAll": "View All",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "back": "Back",
+    "next": "Next"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "notFound": "Not found",
+    "success": "Success!",
+    "required": "Required",
+    "optional": "Optional",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "language": "Language"
+  },
+  "dateTime": {
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "tomorrow": "Tomorrow",
+    "days": "Days",
+    "weeks": "Weeks",
+    "months": "Months",
+    "years": "Years"
+  }
+}

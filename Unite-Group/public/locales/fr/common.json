@@ -1,0 +1,109 @@
+{
+  "site": {
+    "name": "UNITE Group",
+    "tagline": "Construire l'Excellence Numérique Ensemble",
+    "description": "Services professionnels de développement web et de consultation"
+  },
+  "nav": {
+    "home": "Accueil",
+    "features": "Fonctionnalités",
+    "pricing": "Tarifs",
+    "contact": "Contact",
+    "about": "À Propos",
+    "blog": "Blog",
+    "caseStudies": "Études de Cas",
+    "login": "Se Connecter",
+    "register": "S'inscrire",
+    "dashboard": "Tableau de Bord"
+  },
+  "auth": {
+    "login": {
+      "title": "Connectez-vous à votre compte",
+      "emailLabel": "Adresse e-mail",
+      "passwordLabel": "Mot de passe",
+      "submitButton": "Se connecter",
+      "forgotPassword": "Mot de passe oublié ?"
+    },
+    "register": {
+      "title": "Créer un compte",
+      "nameLabel": "Nom complet",
+      "emailLabel": "Adresse e-mail",
+      "passwordLabel": "Mot de passe",
+      "confirmPasswordLabel": "Confirmer le mot de passe",
+      "submitButton": "S'inscrire",
+      "alreadyHaveAccount": "Vous avez déjà un compte ?"
+    },
+    "resetPassword": {
+      "title": "Réinitialiser votre mot de passe",
+      "emailLabel": "Adresse e-mail",
+      "submitButton": "Envoyer le lien de réinitialisation",
+      "backToLogin": "Retour à la connexion"
+    }
+  },
+  "contact": {
+    "title": "Contactez-Nous",
+    "nameLabel": "Nom complet",
+    "emailLabel": "Adresse e-mail",
+    "phoneLabel": "Numéro de téléphone",
+    "messageLabel": "Message",
+    "submitButton": "Envoyer le message",
+    "successMessage": "Votre message a été envoyé avec succès. Nous vous répondrons bientôt.",
+    "errorMessage": "Une erreur est survenue lors de l'envoi de votre message. Veuillez réessayer."
+  },
+  "consultation": {
+    "title": "Réserver une Consultation",
+    "description": "Frais de consultation de 550$, applicables à votre projet lors de l'engagement",
+    "nameLabel": "Nom complet",
+    "emailLabel": "Adresse e-mail",
+    "phoneLabel": "Numéro de téléphone",
+    "dateLabel": "Date préférée",
+    "timeLabel": "Heure préférée",
+    "projectTypeLabel": "Type de projet",
+    "budgetLabel": "Fourchette de budget",
+    "detailsLabel": "Détails du projet",
+    "submitButton": "Réserver la consultation",
+    "successMessage": "Votre demande de consultation a été soumise. Nous confirmerons les détails sous peu.",
+    "errorMessage": "Une erreur est survenue lors de la réservation de votre consultation. Veuillez réessayer."
+  },
+  "footer": {
+    "copyright": "© 2025 UNITE Group. Tous droits réservés.",
+    "privacyPolicy": "Politique de Confidentialité",
+    "termsOfService": "Conditions d'Utilisation",
+    "contactUs": "Contactez-Nous",
+    "followUs": "Suivez-Nous"
+  },
+  "buttons": {
+    "learnMore": "En Savoir Plus",
+    "getStarted": "Commencer",
+    "readMore": "Lire Plus",
+    "viewAll": "Voir Tout",
+    "submit": "Soumettre",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "back": "Retour",
+    "next": "Suivant"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur est survenue",
+    "notFound": "Non trouvé",
+    "success": "Succès !",
+    "required": "Requis",
+    "optional": "Optionnel",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "sort": "Trier",
+    "language": "Langue"
+  },
+  "dateTime": {
+    "today": "Aujourd'hui",
+    "yesterday": "Hier",
+    "tomorrow": "Demain",
+    "days": "Jours",
+    "weeks": "Semaines",
+    "months": "Mois",
+    "years": "Années"
+  }
+}
