@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies, headers } from 'next/headers';
+import { cookies } from 'next/headers';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 
 import { ComplianceService } from '@/lib/compliance/service';
@@ -60,10 +60,11 @@ export async function POST(request: NextRequest) {
       message: 'Cookie consent recorded successfully',
       consent
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error recording cookie consent:', error);
+    const message = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
-      { error: `Internal server error: ${error.message}` },
+      { error: `Internal server error: ${message}` },
       { status: 500 }
     );
   }
@@ -111,10 +112,11 @@ export async function GET(request: NextRequest) {
         marketing: consent.marketing
       }
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error getting cookie consent:', error);
+    const message = error instanceof Error ? error.message : 'Unknown error';
     return NextResponse.json(
-      { error: `Internal server error: ${error.message}` },
+      { error: `Internal server error: ${message}` },
       { status: 500 }
     );
   }
