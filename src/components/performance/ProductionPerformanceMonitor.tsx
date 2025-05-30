@@ -673,4 +673,10 @@ export default function ProductionPerformanceMonitor() {
       </Tabs>
 
       {/* Footer */}
-      <div className="text-center text-sm text-muted-fore
+      <div className="text-center text-sm text-muted-foreground">
+        Last updated: {lastUpdate.toLocaleTimeString()} | 
+        Monitoring: {isMonitoring ? 'Active' : 'Paused'}
+      </div>
+    </div>
+  );
+}
