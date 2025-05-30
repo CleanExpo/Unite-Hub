@@ -4,6 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { aiGateway } from '@/lib/ai-gateway/gateway';
 
 /**
  * GET /api/ai-gateway - Get AI Gateway status and metrics
@@ -16,105 +17,74 @@ export async function GET(request: NextRequest) {
 
     switch (action) {
       case 'metrics':
-        // Mock metrics data - replace with actual gateway metrics
-        const metrics = {
-          requestCount: 15420,
-          successCount: 15200,
-          errorCount: 220,
-          averageResponseTime: 1250,
-          totalTokensUsed: 245000,
-          totalCost: 45.82,
-          providerDistribution: {
-            openai: 8420,
-            claude: 4200,
-            google: 2100,
-            azure: 700
-          },
-          requestTypeDistribution: {
-            chat: 10500,
-            completion: 3200,
-            embedding: 1720
-          },
-          errorDistribution: {
-            'rate_limit': 120,
-            'timeout': 80,
-            'authentication': 20
-          },
+        // Get real metrics from AI Gateway
+        const gatewayMetrics = aiGateway.getMetrics();
+        return NextResponse.json({
+          ...gatewayMetrics,
           timeRange: parseTimeRange(timeRange)
-        };
-        return NextResponse.json(metrics);
+        });
 
       case 'providers':
-        // Mock provider status - replace with actual gateway provider status
-        const providers = [
-          {
-            id: 'openai',
-            name: 'OpenAI GPT-4',
-            status: 'healthy',
-            responseTime: 1100,
-            errorRate: 1.2,
-            requestCount: 8420,
-            cost: 28.45,
-            lastCheck: new Date().toISOString()
-          },
-          {
-            id: 'claude',
-            name: 'Anthropic Claude',
-            status: 'healthy',
-            responseTime: 1350,
-            errorRate: 0.8,
-            requestCount: 4200,
-            cost: 12.20,
-            lastCheck: new Date().toISOString()
-          },
-          {
-            id: 'google',
-            name: 'Google Gemini',
-            status: 'degraded',
-            responseTime: 2100,
-            errorRate: 3.4,
-            requestCount: 2100,
-            cost: 3.89,
-            lastCheck: new Date().toISOString()
-          },
-          {
-            id: 'azure',
-            name: 'Azure OpenAI',
-            status: 'healthy',
-            responseTime: 980,
-            errorRate: 0.6,
-            requestCount: 700,
-            cost: 1.28,
-            lastCheck: new Date().toISOString()
-          }
-        ];
+        // Get real provider status from AI Gateway
+        const healthStatus = await aiGateway.checkProviderHealth();
+        const providerMetrics = aiGateway.getMetrics();
+        
+        const providers = Object.entries(providerMetrics.providerStats).map(([id, stats]) => ({
+          id,
+          name: id === 'openai' ? 'OpenAI GPT-4' :
+                id === 'claude' ? 'Anthropic Claude' :
+                id === 'google' ? 'Google Gemini' :
+                id === 'azure' ? 'Azure OpenAI' : id,
+          status: healthStatus[id] ? 'healthy' : 'unhealthy',
+          responseTime: Math.round(stats.averageResponseTime),
+          errorRate: stats.requests > 0 ? ((stats.failures / stats.requests) * 100).toFixed(1) : 0,
+          requestCount: stats.requests,
+          cost: parseFloat(stats.totalCost.toFixed(2)),
+          lastCheck: new Date().toISOString(),
+          lastUsed: stats.lastUsed
+        }));
+        
         return NextResponse.json(providers);
 
       case 'alerts':
-        // Mock alerts - replace with actual gateway alerts
-        const alerts = [
-          {
-            id: '1',
-            type: 'response_time',
-            severity: 'medium',
-            message: 'Google Gemini showing elevated response times (2.1s avg)',
-            provider: 'google',
-            timestamp: new Date(Date.now() - 5 * 60 * 1000).toISOString()
-          },
-          {
-            id: '2',
+        // Get real errors from AI Gateway
+        const errors = aiGateway.getErrors();
+        const alertMetrics = aiGateway.getMetrics();
+        
+        const alerts = [];
+        
+        // Convert recent errors to alerts
+        errors.slice(-10).forEach((error, index) => {
+          alerts.push({
+            id: `error_${index}`,
+            type: 'error',
+            severity: 'high',
+            message: `${error.provider}: ${error.error}`,
+            provider: error.provider,
+            timestamp: new Date(error.timestamp).toISOString()
+          });
+        });
+        
+        // Check for cost alerts
+        if (alertMetrics.totalCost > 100) {
+          alerts.push({
+            id: 'cost_alert',
             type: 'cost',
-            severity: 'low',
-            message: 'Daily AI costs approaching budget threshold',
-            timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString()
-          }
-        ];
+            severity: 'medium',
+            message: `Total AI costs: $${alertMetrics.totalCost.toFixed(2)}`,
+            timestamp: new Date().toISOString()
+          });
+        }
+        
         return NextResponse.json(alerts);
 
       case 'health':
-        // Mock health check - replace with actual gateway health check
-        const health = {
-          status: 'healthy',
+        // Get real health status from AI Gateway
+        const health = await aiGateway.checkProviderHealth();
+        const allHealthy = Object.values(health).every(status => status);
+        
+        return NextResponse.json({
+          status: allHealthy ? 'healthy' : 'degraded',
           timestamp: new Date().toISOString(),
           services: {
             gateway: 'healthy',
@@ -122,70 +92,48 @@ export async function GET(request: NextRequest) {
             monitoring: 'healthy',
             security: 'healthy'
           },
+          providers: health,
           uptime: 99.7,
           version: '1.0.0'
-        };
-        return NextResponse.json(health);
+        });
 
       default:
         // Return overview dashboard data
+        const overviewMetrics = aiGateway.getMetrics();
+        const overviewHealth = await aiGateway.checkProviderHealth();
+        const overviewErrors = aiGateway.getErrors();
+        
         const overview = {
           metrics: {
-            totalRequests: 15420,
-            successRate: 98.7,
-            averageResponseTime: 1250,
-            totalCost: 45.82,
-            cacheHitRate: 76.3,
-            activeProviders: 4
+            totalRequests: overviewMetrics.totalRequests,
+            successRate: overviewMetrics.totalRequests > 0 ? 
+              ((overviewMetrics.successfulRequests / overviewMetrics.totalRequests) * 100).toFixed(1) : 0,
+            averageResponseTime: Math.round(overviewMetrics.averageResponseTime),
+            totalCost: parseFloat(overviewMetrics.totalCost.toFixed(2)),
+            cacheHitRate: overviewMetrics.cacheHits + overviewMetrics.cacheMisses > 0 ?
+              ((overviewMetrics.cacheHits / (overviewMetrics.cacheHits + overviewMetrics.cacheMisses)) * 100).toFixed(1) : 0,
+            activeProviders: Object.values(overviewHealth).filter(status => status).length
           },
-          providers: [
-            {
-              id: 'openai',
-              name: 'OpenAI GPT-4',
-              status: 'healthy',
-              responseTime: 1100,
-              errorRate: 1.2,
-              requestCount: 8420,
-              cost: 28.45
-            },
-            {
-              id: 'claude',
-              name: 'Anthropic Claude',
-              status: 'healthy',
-              responseTime: 1350,
-              errorRate: 0.8,
-              requestCount: 4200,
-              cost: 12.20
-            },
-            {
-              id: 'google',
-              name: 'Google Gemini',
-              status: 'degraded',
-              responseTime: 2100,
-              errorRate: 3.4,
-              requestCount: 2100,
-              cost: 3.89
-            },
-            {
-              id: 'azure',
-              name: 'Azure OpenAI',
-              status: 'healthy',
-              responseTime: 980,
-              errorRate: 0.6,
-              requestCount: 700,
-              cost: 1.28
-            }
-          ],
-          alerts: [
-            {
-              id: '1',
-              type: 'response_time',
-              severity: 'medium',
-              message: 'Google Gemini showing elevated response times (2.1s avg)',
-              provider: 'google',
-              timestamp: new Date(Date.now() - 5 * 60 * 1000).toISOString()
-            }
-          ],
+          providers: Object.entries(overviewMetrics.providerStats).map(([id, stats]) => ({
+            id,
+            name: id === 'openai' ? 'OpenAI GPT-4' :
+                  id === 'claude' ? 'Anthropic Claude' :
+                  id === 'google' ? 'Google Gemini' :
+                  id === 'azure' ? 'Azure OpenAI' : id,
+            status: overviewHealth[id] ? 'healthy' : 'unhealthy',
+            responseTime: Math.round(stats.averageResponseTime),
+            errorRate: stats.requests > 0 ? ((stats.failures / stats.requests) * 100).toFixed(1) : 0,
+            requestCount: stats.requests,
+            cost: parseFloat(stats.totalCost.toFixed(2))
+          })),
+          alerts: overviewErrors.slice(-5).map((error, index) => ({
+            id: `${index}`,
+            type: 'error',
+            severity: 'high',
+            message: `${error.provider}: ${error.error}`,
+            provider: error.provider,
+            timestamp: new Date(error.timestamp).toISOString()
+          })),
           timestamp: new Date().toISOString()
         };
 
@@ -206,43 +154,28 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { prompt, type, provider } = body;
+    const { prompt, model, maxTokens, temperature, provider } = body;
 
     // Validate required fields
-    if (!prompt || !type) {
+    if (!prompt) {
       return NextResponse.json(
-        { error: 'Missing required fields: prompt and type' },
+        { error: 'Missing required field: prompt' },
         { status: 400 }
       );
     }
 
-    // Mock AI request processing - replace with actual AI Gateway processing
-    const requestId = `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
-    // Simulate processing time
-    await new Promise(resolve => setTimeout(resolve, 100));
-
-    // Mock response based on provider
-    const mockResponse = {
-      content: `This is a mock response for prompt: "${prompt.substring(0, 50)}..." processed by ${provider || 'openai'}`,
-      usage: {
-        promptTokens: Math.floor(prompt.length / 4),
-        completionTokens: 150,
-        totalTokens: Math.floor(prompt.length / 4) + 150,
-        cost: 0.002,
-        model: provider === 'claude' ? 'claude-3-sonnet-20240229' : 
-               provider === 'google' ? 'gemini-pro' :
-               provider === 'azure' ? 'gpt-4' : 'gpt-4'
-      },
-      provider: provider || 'openai',
-      processingTime: 1200 + Math.random() * 800,
-      cached: false
-    };
+    // Process through real AI Gateway
+    const response = await aiGateway.processRequest({
+      prompt,
+      model,
+      maxTokens,
+      temperature,
+      provider,
+    });
 
     return NextResponse.json({
       success: true,
-      requestId,
-      response: mockResponse
+      response
     });
 
   } catch (error) {
@@ -289,6 +222,16 @@ export async function PUT(request: NextRequest) {
         console.log('Updating security configuration:', data);
         return NextResponse.json({ success: true, message: 'Security configuration updated' });
 
+      case 'cache':
+        // Clear cache
+        aiGateway.clearCache();
+        return NextResponse.json({ success: true, message: 'Cache cleared successfully' });
+
+      case 'metrics':
+        // Reset metrics
+        aiGateway.resetMetrics();
+        return NextResponse.json({ success: true, message: 'Metrics reset successfully' });
+
       default:
         return NextResponse.json(
           { error: 'Invalid action specified' },
@@ -314,13 +257,13 @@ export async function DELETE(request: NextRequest) {
 
     switch (action) {
       case 'cache':
-        // Mock cache clear
-        console.log('Clearing AI Gateway cache');
+        // Clear cache
+        aiGateway.clearCache();
         return NextResponse.json({ success: true, message: 'Cache cleared' });
 
       case 'metrics':
-        // Mock metrics reset
-        console.log('Resetting AI Gateway metrics');
+        // Reset metrics
+        aiGateway.resetMetrics();
         return NextResponse.json({ success: true, message: 'Metrics reset' });
 
       default:
