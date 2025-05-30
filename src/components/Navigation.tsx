@@ -8,6 +8,11 @@ import { User } from "@supabase/supabase-js";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { Locale, defaultLocale } from "@/i18n";
 
+// Helper function to create locale-aware paths
+function getLocalizedPath(path: string, locale: string): string {
+  return `/${locale}${path}`;
+}
+
 export default function Navigation() {
   const params = useParams();
   const currentLocale = (params?.locale as Locale) || defaultLocale;
@@ -35,7 +40,7 @@ export default function Navigation() {
 
   const handleLogout = async () => {
     await supabaseClient.auth.signOut();
-    router.push("/");
+    router.push(getLocalizedPath("/", currentLocale));
   };
 
   return (
@@ -47,7 +52,7 @@ export default function Navigation() {
       borderBottom: "1px solid #e5e7eb",
       backgroundColor: "white"
     }}>
-      <Link href="/" style={{ fontSize: "1.25rem", fontWeight: "bold", textDecoration: "none", color: "black" }}>
+      <Link href={getLocalizedPath("/", currentLocale)} style={{ fontSize: "1.25rem", fontWeight: "bold", textDecoration: "none", color: "black" }}>
         Unite Group
       </Link>
 
@@ -58,7 +63,7 @@ export default function Navigation() {
           <>
             {user ? (
               <>
-                <Link href="/dashboard" style={{ textDecoration: "none", color: "#0070f3" }}>
+                <Link href={getLocalizedPath("/dashboard", currentLocale)} style={{ textDecoration: "none", color: "#0070f3" }}>
                   Dashboard
                 </Link>
                 <button
@@ -77,11 +82,11 @@ export default function Navigation() {
               </>
             ) : (
               <>
-                <Link href="/login" style={{ textDecoration: "none", color: "#0070f3" }}>
+                <Link href={getLocalizedPath("/login", currentLocale)} style={{ textDecoration: "none", color: "#0070f3" }}>
                   Login
                 </Link>
                 <Link
-                  href="/register"
+                  href={getLocalizedPath("/register", currentLocale)}
                   style={{
                     padding: "0.5rem 1rem",
                     backgroundColor: "#0070f3",

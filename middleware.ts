@@ -10,13 +10,34 @@ export async function middleware(req: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession()
 
-  // Extract locale from path (if present)
   const pathname = req.nextUrl.pathname
+  const supportedLocales = ['en', 'es', 'fr']
+  const defaultLocale = 'en'
+
+  // Check if the pathname starts with a supported locale
   const localeMatch = pathname.match(/^\/([a-z]{2})(\/.*)?$/)
   const locale = localeMatch ? localeMatch[1] : null
   const pathWithoutLocale = localeMatch ? (localeMatch[2] || '/') : pathname
 
-  // Check auth condition - handle both locale and non-locale paths
+  // Skip middleware for API routes and static files
+  const isApiRoute = pathname.startsWith("/api")
+  const isStaticRoute = pathname.startsWith("/_next") || 
+                       pathname.startsWith("/favicon") || 
+                       pathname.startsWith("/images") || 
+                       pathname.startsWith("/public") ||
+                       pathname.includes(".")
+
+  if (isApiRoute || isStaticRoute) {
+    return res
+  }
+
+  // If no locale is present and it's not a static file, redirect to default locale
+  if (!locale || !supportedLocales.includes(locale)) {
+    const newUrl = new URL(`/${defaultLocale}${pathname}`, req.url)
+    return NextResponse.redirect(newUrl)
+  }
+
+  // Auth condition checks (for paths within locale)
   const isAuthRoute =
     pathWithoutLocale.startsWith("/login") ||
     pathWithoutLocale.startsWith("/register") ||
@@ -24,10 +45,7 @@ export async function middleware(req: NextRequest) {
     pathWithoutLocale.startsWith("/reset-password") ||
     pathWithoutLocale.startsWith("/update-password")
 
-  const isApiRoute = pathname.startsWith("/api")
   const isRootRoute = pathWithoutLocale === "/"
-  const isTestRoute = pathWithoutLocale.startsWith("/auth-test")
-  const isStaticRoute = pathname.startsWith("/_next") || pathname.startsWith("/favicon") || pathname.startsWith("/images") || pathname.startsWith("/public")
   
   const isPublicPageRoute = 
     pathWithoutLocale === "/" ||
@@ -41,19 +59,16 @@ export async function middleware(req: NextRequest) {
     pathWithoutLocale === "/case-studies" ||
     pathWithoutLocale === "/book-consultation"
 
-  const isPublicRoute =
-    isAuthRoute || isApiRoute || isRootRoute || isTestRoute || isPublicPageRoute || isStaticRoute
+  const isPublicRoute = isAuthRoute || isRootRoute || isPublicPageRoute
 
   // If user is signed in and trying to access auth page, redirect to dashboard
   if (session && isAuthRoute) {
-    const dashboardUrl = locale ? `/${locale}/dashboard` : "/dashboard"
-    return NextResponse.redirect(new URL(dashboardUrl, req.url))
+    return NextResponse.redirect(new URL(`/${locale}/dashboard`, req.url))
   }
 
   // If user is not signed in and trying to access a protected page, redirect to login
   if (!session && !isPublicRoute) {
-    const loginUrl = locale ? `/${locale}/login` : "/login"
-    return NextResponse.redirect(new URL(loginUrl, req.url))
+    return NextResponse.redirect(new URL(`/${locale}/login`, req.url))
   }
 
   return res
