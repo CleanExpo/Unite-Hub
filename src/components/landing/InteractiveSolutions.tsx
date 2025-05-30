@@ -81,6 +81,7 @@ const solutions: Solution[] = [
     id: 'business-intelligence',
     icon: BarChart3,
     title: 'Business Intelligence',
+    href: '/services/business-intelligence',
     description: 'Advanced analytics and performance monitoring with AI-powered insights',
     features: [
       'Real-time analytics dashboards',
@@ -104,6 +105,7 @@ const solutions: Solution[] = [
     id: 'security-compliance',
     icon: Shield,
     title: 'Security & Compliance',
+    href: '/services/security-compliance',
     description: 'Enterprise-grade security and regulatory compliance frameworks',
     features: [
       'SOC2 Type II compliance framework',
@@ -127,6 +129,7 @@ const solutions: Solution[] = [
     id: 'performance',
     icon: Zap,
     title: 'Performance Optimization',
+    href: '/services/performance',
     description: 'Lightning-fast applications with global reach and enterprise performance',
     features: [
       'CDN optimization and image processing',
@@ -150,6 +153,7 @@ const solutions: Solution[] = [
     id: 'global-solutions',
     icon: Globe,
     title: 'Global Solutions',
+    href: '/services/global-solutions',
     description: 'Multi-language and multi-region capabilities for worldwide deployment',
     features: [
       'Multi-language support (i18n)',
@@ -309,11 +313,13 @@ export function InteractiveSolutions() {
               </div>
 
               {/* CTA */}
-              <Button 
+              <Button asChild
                 className={`w-full bg-gradient-to-r ${activeSolution.color} hover:opacity-90 text-white font-semibold py-6 text-lg shadow-lg hover:shadow-xl transition-all duration-300 group`}
               >
-                Learn More About {activeSolution.title}
-                <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <Link href={activeSolution.href}>
+                  Learn More About {activeSolution.title}
+                  <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
               </Button>
             </CardContent>
           </Card>
