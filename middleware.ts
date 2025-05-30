@@ -10,32 +10,50 @@ export async function middleware(req: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession()
 
-  // Check auth condition
-  const isAuthRoute =
-    req.nextUrl.pathname.startsWith("/login") ||
-    req.nextUrl.pathname.startsWith("/register") ||
-    req.nextUrl.pathname.startsWith("/forgot-password")
+  // Extract locale from path (if present)
+  const pathname = req.nextUrl.pathname
+  const localeMatch = pathname.match(/^\/([a-z]{2})(\/.*)?$/)
+  const locale = localeMatch ? localeMatch[1] : null
+  const pathWithoutLocale = localeMatch ? (localeMatch[2] || '/') : pathname
 
-  const isApiRoute = req.nextUrl.pathname.startsWith("/api")
-  const isRootRoute = req.nextUrl.pathname === "/"
-  const isTestRoute = req.nextUrl.pathname.startsWith("/auth-test")
+  // Check auth condition - handle both locale and non-locale paths
+  const isAuthRoute =
+    pathWithoutLocale.startsWith("/login") ||
+    pathWithoutLocale.startsWith("/register") ||
+    pathWithoutLocale.startsWith("/forgot-password") ||
+    pathWithoutLocale.startsWith("/reset-password") ||
+    pathWithoutLocale.startsWith("/update-password")
+
+  const isApiRoute = pathname.startsWith("/api")
+  const isRootRoute = pathWithoutLocale === "/"
+  const isTestRoute = pathWithoutLocale.startsWith("/auth-test")
+  const isStaticRoute = pathname.startsWith("/_next") || pathname.startsWith("/favicon") || pathname.startsWith("/images") || pathname.startsWith("/public")
+  
   const isPublicPageRoute = 
-    req.nextUrl.pathname === "/" ||
-    req.nextUrl.pathname === "/features" ||
-    req.nextUrl.pathname === "/pricing" ||
-    req.nextUrl.pathname === "/contact" ||
-    req.nextUrl.pathname === "/about"
+    pathWithoutLocale === "/" ||
+    pathWithoutLocale === "/features" ||
+    pathWithoutLocale === "/pricing" ||
+    pathWithoutLocale === "/contact" ||
+    pathWithoutLocale === "/about" ||
+    pathWithoutLocale === "/privacy" ||
+    pathWithoutLocale === "/terms" ||
+    pathWithoutLocale === "/blog" ||
+    pathWithoutLocale === "/case-studies" ||
+    pathWithoutLocale === "/book-consultation"
+
   const isPublicRoute =
-    isAuthRoute || isApiRoute || isRootRoute || isTestRoute || isPublicPageRoute || req.nextUrl.pathname.startsWith("/_next")
+    isAuthRoute || isApiRoute || isRootRoute || isTestRoute || isPublicPageRoute || isStaticRoute
 
   // If user is signed in and trying to access auth page, redirect to dashboard
   if (session && isAuthRoute) {
-    return NextResponse.redirect(new URL("/dashboard", req.url))
+    const dashboardUrl = locale ? `/${locale}/dashboard` : "/dashboard"
+    return NextResponse.redirect(new URL(dashboardUrl, req.url))
   }
 
   // If user is not signed in and trying to access a protected page, redirect to login
   if (!session && !isPublicRoute) {
-    return NextResponse.redirect(new URL("/login", req.url))
+    const loginUrl = locale ? `/${locale}/login` : "/login"
+    return NextResponse.redirect(new URL(loginUrl, req.url))
   }
 
   return res
@@ -48,7 +66,8 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
+     * - api (API routes)
      */
-    "/((?!_next/static|_next/image|favicon.ico).*)",
+    "/((?!_next/static|_next/image|favicon.ico|api).*)",
   ],
 }
