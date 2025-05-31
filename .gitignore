@@ -34,6 +34,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -44,6 +45,9 @@ next-env.d.ts
 
 .vercel
 .env*.local
+
+# IDE / Editor specific
+.vscode/
 
 # Specific subdirectory exclusions
 deployment/frontend/node_modules/
