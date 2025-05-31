@@ -1,343 +1,178 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { 
-  Bot, 
-  Building2, 
-  BarChart3, 
-  Shield, 
-  Zap, 
-  Globe,
-  ChevronRight,
+  Clock, 
+  Users, 
+  Code, 
+  Search, 
+  Target, 
+  Award,
   CheckCircle2,
-  Star,
-  ArrowUpRight
+  ArrowRight
 } from 'lucide-react';
 
-interface Solution {
+interface Service {
   id: string;
-  icon: typeof Bot;
+  icon: typeof Clock;
   title: string;
-  href?: string;
   description: string;
   features: string[];
-  benefits: string[];
-  tags: string[];
-  color: string;
-  bgGradient: string;
-  iconColor: string;
+  href: string;
+  iconBg: string;
 }
 
-const solutions: Solution[] = [
+const services: Service[] = [
   {
-    id: 'ai-infrastructure',
-    icon: Bot,
-    title: 'AI Infrastructure',
-    description: 'Production-ready AI gateway with multi-provider support and intelligent routing',
+    id: 'initial-consultation',
+    icon: Clock,
+    title: 'Initial Consultation',
+    description: 'Comprehensive business analysis and strategic planning to understand your unique needs and challenges.',
     features: [
-      'OpenAI, Claude, Google AI, Azure integration',
-      'Automatic failover and load balancing',
-      'Intelligent caching and rate limiting',
-      'Real-time monitoring and analytics',
-      'Cost optimization and usage tracking'
+      'In-depth business assessment',
+      'Technology needs analysis', 
+      'Strategic roadmap development',
+      'Custom solution recommendations'
     ],
-    benefits: [
-      '99.9% API uptime guarantee',
-      '503 error resolution',
-      '40% cost reduction',
-      'Real-time failover'
-    ],
-    tags: ['Multi-Provider', '503 Resolution', 'Cost Optimized'],
-    color: 'from-blue-500 to-cyan-500',
-    bgGradient: 'from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20',
-    iconColor: 'text-blue-600'
+    href: '/services/initial-consultation',
+    iconBg: 'bg-green-500'
   },
   {
-    id: 'saas-platform',
-    icon: Building2,
-    title: 'SaaS Platform Development',
-    description: 'Full-stack enterprise applications with modern architecture and scalable design',
+    id: 'expert-education',
+    icon: Users,
+    title: 'Expert Education',
+    description: 'Professional training and development programs designed to enhance your team\'s capabilities and drive innovation.',
     features: [
-      'Next.js 15 with App Router',
-      'TypeScript and modern React patterns',
-      'Supabase database and authentication',
-      'Stripe payment integration',
-      'PWA capabilities and offline support'
+      'Custom curriculum development',
+      'Expert-led training sessions',
+      'Hands-on workshops',
+      'Certification programs'
     ],
-    benefits: [
-      'Rapid development cycles',
-      'Enterprise-grade security',
-      'Scalable architecture',
-      'Modern tech stack'
-    ],
-    tags: ['Next.js 15', 'TypeScript', 'Enterprise'],
-    color: 'from-purple-500 to-pink-500',
-    bgGradient: 'from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20',
-    iconColor: 'text-purple-600'
+    href: '/services/expert-education',
+    iconBg: 'bg-blue-500'
   },
   {
-    id: 'business-intelligence',
-    icon: BarChart3,
-    title: 'Business Intelligence',
-    href: `/services/business-intelligence`,
-    description: 'Advanced analytics and performance monitoring with AI-powered insights',
+    id: 'software-development',
+    icon: Code,
+    title: 'Software Development',
+    description: 'Cutting-edge software solutions built with modern technologies to streamline your operations and boost efficiency.',
     features: [
-      'Real-time analytics dashboards',
-      'Performance optimization tools',
-      'User behavior tracking',
-      'Custom reporting and insights',
-      'Predictive analytics with AI'
+      'Custom application development',
+      'Modern tech stack implementation',
+      'Scalable architecture design',
+      'Quality assurance & testing'
     ],
-    benefits: [
-      'Data-driven decisions',
-      'Performance insights',
-      'Predictive forecasting',
-      'Custom reporting'
-    ],
-    tags: ['Real-time', 'Predictive AI', 'Custom Reports'],
-    color: 'from-green-500 to-emerald-500',
-    bgGradient: 'from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20',
-    iconColor: 'text-green-600'
+    href: '/services/software-development',
+    iconBg: 'bg-blue-600'
   },
   {
-    id: 'security-compliance',
-    icon: Shield,
-    title: 'Security & Compliance',
-    href: `/services/security-compliance`,
-    description: 'Enterprise-grade security and regulatory compliance frameworks',
+    id: 'strategic-seo',
+    icon: Search,
+    title: 'Strategic SEO',
+    description: 'Data-driven SEO strategies to improve your online visibility, drive organic growth, and reach your target audience.',
     features: [
-      'SOC2 Type II compliance framework',
-      'GDPR and privacy protection',
-      'Multi-factor authentication (MFA)',
-      'Role-based access control (RBAC)',
-      'Advanced security monitoring'
-    ],
-    benefits: [
-      'Regulatory compliance',
-      'Data protection',
-      'Zero trust security',
-      'Audit ready'
-    ],
-    tags: ['SOC2', 'GDPR', 'Zero Trust'],
-    color: 'from-red-500 to-orange-500',
-    bgGradient: 'from-red-50 to-orange-50 dark:from-red-950/20 dark:to-orange-950/20',
-    iconColor: 'text-red-600'
-  },
-  {
-    id: 'performance',
-    icon: Zap,
-    title: 'Performance Optimization',
-    href: `/services/performance`,
-    description: 'Lightning-fast applications with global reach and enterprise performance',
-    features: [
-      'CDN optimization and image processing',
-      'Database query optimization',
-      'Caching strategies and Redis integration',
-      'Bundle optimization and code splitting',
-      'Load testing and performance monitoring'
-    ],
-    benefits: [
-      'Sub-second load times',
-      'Global CDN delivery',
-      'Optimized databases',
+      'Comprehensive SEO audit',
+      'Keyword research & strategy',
+      'Technical SEO optimization',
       'Performance monitoring'
     ],
-    tags: ['CDN', 'Caching', 'Global'],
-    color: 'from-yellow-500 to-amber-500',
-    bgGradient: 'from-yellow-50 to-amber-50 dark:from-yellow-950/20 dark:to-amber-950/20',
-    iconColor: 'text-yellow-600'
+    href: '/services/strategic-seo',
+    iconBg: 'bg-green-600'
   },
   {
-    id: 'global-solutions',
-    icon: Globe,
-    title: 'Global Solutions',
-    href: `/services/global-solutions`,
-    description: 'Multi-language and multi-region capabilities for worldwide deployment',
+    id: 'business-strategy',
+    icon: Target,
+    title: 'Business Strategy',
+    description: 'Strategic consulting to help you navigate challenges, identify opportunities, and achieve sustainable growth.',
     features: [
-      'Multi-language support (i18n)',
-      'Regional content management',
-      'Global CDN deployment',
-      'Currency and payment localization',
-      'Cultural adaptation and UX'
+      'Market analysis',
+      'Competitive research',
+      'Growth strategy development',
+      'Performance optimization'
     ],
-    benefits: [
-      'Global market reach',
-      'Localized experiences',
-      'Multi-currency support',
-      'Cultural adaptation'
+    href: '/services/business-strategy',
+    iconBg: 'bg-orange-500'
+  },
+  {
+    id: 'quality-assurance',
+    icon: Award,
+    title: 'Quality Assurance',
+    description: 'Rigorous testing and quality assurance processes to ensure your solutions meet the highest standards.',
+    features: [
+      'Comprehensive testing',
+      'Performance optimization',
+      'Security audits',
+      'Ongoing maintenance'
     ],
-    tags: ['i18n', 'Global CDN', 'Multi-Currency'],
-    color: 'from-indigo-500 to-purple-500',
-    bgGradient: 'from-indigo-50 to-purple-50 dark:from-indigo-950/20 dark:to-purple-950/20',
-    iconColor: 'text-indigo-600'
+    href: '/services/quality-assurance',
+    iconBg: 'bg-red-500'
   }
 ];
 
 export function InteractiveSolutions() {
-  const [selectedSolution, setSelectedSolution] = useState<string>(solutions[0].id);
-  const [hoveredSolution, setHoveredSolution] = useState<string | null>(null);
   const params = useParams();
   const locale = (params?.locale as string) || 'en';
 
-  const activeSolution = solutions.find(s => s.id === selectedSolution) || solutions[0];
-
   return (
-    <section className="container mx-auto px-4 py-24">
-      <div className="text-center mb-16">
-        <h2 className="text-4xl md:text-5xl font-bold mb-6">
-          <span className="bg-gradient-to-r from-gray-900 to-gray-600 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">
-            Our Solutions
-          </span>
-        </h2>
-        <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-          Comprehensive enterprise solutions designed to transform your business operations 
-          and accelerate digital innovation.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Solution Cards */}
-        <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-          {solutions.map((solution) => (
-            <Card
-              key={solution.id}
-              className={`cursor-pointer transition-all duration-300 hover:shadow-xl border-2 ${
-                selectedSolution === solution.id
-                  ? 'border-blue-500 shadow-lg scale-105'
-                  : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
-              } ${
-                hoveredSolution === solution.id ? 'scale-102' : ''
-              } bg-gradient-to-br ${solution.bgGradient}`}
-              onClick={() => setSelectedSolution(solution.id)}
-              onMouseEnter={() => setHoveredSolution(solution.id)}
-              onMouseLeave={() => setHoveredSolution(null)}
-            >
-              <CardHeader className="pb-4">
-                <div className="flex items-center justify-between">
-                  <div className={`p-3 rounded-xl bg-gradient-to-r ${solution.color} text-white`}>
-                    <solution.icon className="w-6 h-6" />
-                  </div>
-                  {selectedSolution === solution.id && (
-                    <CheckCircle2 className="w-6 h-6 text-blue-500" />
-                  )}
-                </div>
-                <CardTitle className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                  {solution.title}
-                </CardTitle>
-                <CardDescription className="text-gray-600 dark:text-gray-400">
-                  {solution.description}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-wrap gap-2">
-                  {solution.tags.slice(0, 2).map((tag) => (
-                    <Badge 
-                      key={tag} 
-                      variant="secondary" 
-                      className="text-xs bg-white/60 dark:bg-gray-800/60"
-                    >
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+    <section className="bg-slate-900 py-24">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+            Our Services
+          </h2>
+          <p className="text-xl text-slate-300 max-w-3xl mx-auto">
+            Comprehensive enterprise solutions designed to transform your business operations 
+            and accelerate digital innovation.
+          </p>
         </div>
 
-        {/* Selected Solution Details */}
-        <div className="lg:col-span-1">
-          <Card className="sticky top-8 shadow-2xl border-0 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
-            <CardHeader className="pb-6">
-              <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-r ${activeSolution.color} text-white mb-4`}>
-                <activeSolution.icon className="w-8 h-8" />
-              </div>
-              <CardTitle className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                {activeSolution.title}
-              </CardTitle>
-              <CardDescription className="text-gray-600 dark:text-gray-400 text-base">
-                {activeSolution.description}
-              </CardDescription>
-            </CardHeader>
-            
-            <CardContent className="space-y-8">
-              {/* Key Features */}
-              <div>
-                <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
-                  <Star className="w-5 h-5 mr-2 text-yellow-500" />
-                  Key Features
-                </h4>
-                <ul className="space-y-3">
-                  {activeSolution.features.map((feature, index) => (
+        {/* Services Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          {services.map((service) => (
+            <Card
+              key={service.id}
+              className="bg-white hover:shadow-2xl transition-all duration-300 hover:scale-105 border-0 overflow-hidden group"
+            >
+              <CardHeader className="pb-4">
+                <div className="flex items-start justify-between mb-4">
+                  <div className={`p-4 rounded-full ${service.iconBg} text-white`}>
+                    <service.icon className="w-8 h-8" />
+                  </div>
+                </div>
+                <CardTitle className="text-2xl font-bold text-slate-900 mb-2">
+                  {service.title}
+                </CardTitle>
+                <CardDescription className="text-slate-600 text-base leading-relaxed">
+                  {service.description}
+                </CardDescription>
+              </CardHeader>
+              
+              <CardContent className="pt-0">
+                {/* Features List */}
+                <ul className="space-y-3 mb-6">
+                  {service.features.map((feature, index) => (
                     <li key={index} className="flex items-start">
                       <CheckCircle2 className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
-                      <span className="text-gray-700 dark:text-gray-300 text-sm">{feature}</span>
+                      <span className="text-slate-700">{feature}</span>
                     </li>
                   ))}
                 </ul>
-              </div>
 
-              {/* Benefits */}
-              <div>
-                <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
-                  <ArrowUpRight className="w-5 h-5 mr-2 text-blue-500" />
-                  Key Benefits
-                </h4>
-                <div className="grid grid-cols-1 gap-3">
-                  {activeSolution.benefits.map((benefit, index) => (
-                    <div 
-                      key={index} 
-                      className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 p-3 rounded-lg border border-blue-200 dark:border-blue-800"
-                    >
-                      <span className="text-gray-800 dark:text-gray-200 text-sm font-medium">
-                        {benefit}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* All Tags */}
-              <div>
-                <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Technologies</h4>
-                <div className="flex flex-wrap gap-2">
-                  {activeSolution.tags.map((tag) => (
-                    <Badge 
-                      key={tag} 
-                      className={`bg-gradient-to-r ${activeSolution.color} text-white border-0`}
-                    >
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-
-              {/* CTA */}
-              {activeSolution.href ? (
+                {/* CTA Button */}
                 <Button asChild
-                  className={`w-full bg-gradient-to-r ${activeSolution.color} hover:opacity-90 text-white font-semibold py-6 text-lg shadow-lg hover:shadow-xl transition-all duration-300 group`}
+                  className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 group transition-all duration-300"
                 >
-                  <Link href={`/${locale}${activeSolution.href}`}>
-                    Learn More About {activeSolution.title}
-                    <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  <Link href={`/${locale}${service.href}`}>
+                    Learn More
+                    <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </Button>
-              ) : (
-                <Button
-                  className={`w-full bg-gradient-to-r ${activeSolution.color} hover:opacity-90 text-white font-semibold py-6 text-lg shadow-lg hover:shadow-xl transition-all duration-300 group`}
-                  onClick={() => alert('Coming Soon!')}
-                >
-                  Learn More About {activeSolution.title}
-                  <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              )}
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
     </section>
