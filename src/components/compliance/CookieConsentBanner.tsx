@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { CookieConsentFormData } from '@/lib/compliance/types';
-import { nanoid } from 'nanoid';
 
 interface CookieConsentBannerProps {
   onAccept: (consent: CookieConsentFormData) => Promise<void>;
@@ -23,19 +22,7 @@ export default function CookieConsentBanner({
 }: CookieConsentBannerProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [sessionId, setSessionId] = useState<string>('');
 
-  // Generate a session ID if one doesn't exist
-  useEffect(() => {
-    const existingSessionId = localStorage.getItem('sessionId');
-    if (existingSessionId) {
-      setSessionId(existingSessionId);
-    } else {
-      const newSessionId = nanoid();
-      localStorage.setItem('sessionId', newSessionId);
-      setSessionId(newSessionId);
-    }
-  }, []);
 
   const handleAcceptAll = async () => {
     setIsSubmitting(true);
@@ -49,9 +36,9 @@ export default function CookieConsentBanner({
       };
       
       await onAccept(consent);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error accepting cookies:', err);
-      setError(err.message || 'Failed to save cookie preferences');
+      setError(err instanceof Error ? err.message : 'Failed to save cookie preferences');
     } finally {
       setIsSubmitting(false);
     }
@@ -62,23 +49,17 @@ export default function CookieConsentBanner({
     setError(null);
     
     try {
-      const consent: CookieConsentFormData = {
-        preferences: false,
-        analytics: false,
-        marketing: false
-      };
-      
-      await onAccept(consent);
-    } catch (err: any) {
+      await onReject();
+    } catch (err: unknown) {
       console.error('Error accepting necessary cookies:', err);
-      setError(err.message || 'Failed to save cookie preferences');
+      setError(err instanceof Error ? err.message : 'Failed to save cookie preferences');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className={`fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-gray-800 shadow-lg border-t border-gray-200 dark:border-gray-700 p-4 md:p-6 ${className}`}>
+    <div className={`fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-gray-800 shadow-lg border-t border-gray-200 dark:border-gray-700 p-3 md:p-4 transform transition-transform duration-300 ${className}`}>
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
           <div className="mb-4 md:mb-0 md:pr-8">
@@ -87,7 +68,7 @@ export default function CookieConsentBanner({
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-300">
               We use cookies to enhance your browsing experience, serve personalized ads or content, and analyze our traffic. 
-              By clicking "Accept All", you consent to our use of cookies. Necessary cookies are required for the website to function properly.
+              By clicking &ldquo;Accept All&rdquo;, you consent to our use of cookies. Necessary cookies are required for the website to function properly.
             </p>
             
             {error && (

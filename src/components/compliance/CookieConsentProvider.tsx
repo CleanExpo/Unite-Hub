@@ -75,7 +75,28 @@ export default function CookieConsentProvider({ children }: CookieConsentProvide
         }
       } catch (error) {
         console.error('Error checking cookie consent:', error);
-        // If there's an error, default to showing the banner
+        
+        // Check local storage as fallback to prevent blocking UX
+        const localConsent = localStorage.getItem('cookieConsent');
+        if (localConsent) {
+          try {
+            const parsed = JSON.parse(localConsent);
+            if (parsed.hasConsented) {
+              setHasConsented(true);
+              setPreferences(parsed.preferences || {
+                preferences: false,
+                analytics: false,
+                marketing: false
+              });
+              setShowBanner(false);
+              return;
+            }
+          } catch (parseError) {
+            console.error('Error parsing local consent:', parseError);
+          }
+        }
+        
+        // Only show banner if no local consent found
         setShowBanner(true);
       }
     };
@@ -142,11 +163,32 @@ export default function CookieConsentProvider({ children }: CookieConsentProvide
   };
   
   // Handle rejecting non-essential cookies
-  const handleReject = () => {
-    setShowBanner(false);
-    // We don't save this to the server as we don't want to track users who rejected cookies
-    // But we do need to set hasConsented to true to prevent the banner from showing again
-    setHasConsented(true);
+  const handleReject = async () => {
+    try {
+      // Save rejection to server (necessary cookies only)
+      const consent: CookieConsentFormData = {
+        preferences: false,
+        analytics: false,
+        marketing: false
+      };
+      await saveConsent(consent);
+    } catch (error) {
+      console.error('Error saving cookie rejection:', error);
+      // Even if server fails, hide banner to prevent blocking UX
+      setShowBanner(false);
+      setHasConsented(true);
+      
+      // Save rejection locally as fallback
+      localStorage.setItem('cookieConsent', JSON.stringify({
+        hasConsented: true,
+        preferences: {
+          preferences: false,
+          analytics: false,
+          marketing: false
+        },
+        timestamp: Date.now()
+      }));
+    }
   };
   
   // Show the preferences modal
