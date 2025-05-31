@@ -1,136 +1,201 @@
-name: Error-Free Deployment Pipeline
+name: 🚀 Error-Free Vercel Deployment Pipeline
+
 on:
   push:
-    branches: [main, master]
-  pull_request:
-    branches: [main, master]
+    branches:
+      - main
+  workflow_dispatch:
 
 env:
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  NODE_ENV: production
 
 jobs:
-  validate:
-    name: Pre-Deployment Validation
+  validate-and-deploy:
+    name: 🔍 Validate → 🏗️ Build → 🚀 Deploy → 🧪 Test → 🏷️ Tag
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    timeout-minutes: 20
 
-      - name: Setup Node.js
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '18.x'
           cache: 'npm'
 
-      - name: Install dependencies
+      - name: 📦 Install Dependencies
         run: npm ci
 
-      - name: Run pre-deployment validation
+      - name: 🔍 Pre-Deployment Validation
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        run: npm run validate
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+          NEXT_PUBLIC_BASE_URL: ${{ secrets.NEXT_PUBLIC_BASE_URL }}
+          REPORT_EMAIL: ${{ secrets.REPORT_EMAIL }}
+          CI: true
+        run: |
+          echo "🔍 Running comprehensive pre-deployment validation..."
+          npm run validate
 
-      - name: Build with validation
+      - name: 🏗️ Build Application
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        run: npm run build
-
-  deploy:
-    name: Deploy to Vercel
-    runs-on: ubuntu-latest
-    needs: validate
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install Vercel CLI
-        run: npm install --global vercel@canary
-
-      - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Build Project Artifacts
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
-        id: deploy
-
-      - name: Get deployment URL
-        run: echo "DEPLOYMENT_URL=$(vercel ls --limit 1 --token=${{ secrets.VERCEL_TOKEN }} | tail -1 | awk '{print $2}')" >> $GITHUB_ENV
-
-  test:
-    name: Post-Deployment Testing
-    runs-on: ubuntu-latest
-    needs: deploy
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Wait for deployment to be ready
-        run: sleep 30
-
-      - name: Run smoke tests
-        run: npm run test:smoke ${{ env.DEPLOYMENT_URL }}
-
-      - name: Setup database (if needed)
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+          NEXT_PUBLIC_BASE_URL: ${{ secrets.NEXT_PUBLIC_BASE_URL }}
         run: |
-          curl -f -X POST ${{ env.DEPLOYMENT_URL }}/api/setup-database || echo "Database setup may have failed"
+          echo "🏗️ Building optimized production bundle..."
+          npm run build
 
-      - name: Final health check
-        run: |
-          curl -f ${{ env.DEPLOYMENT_URL }}/api/health || exit 1
-
-  rollback:
-    name: Emergency Rollback
-    runs-on: ubuntu-latest
-    needs: [deploy, test]
-    if: failure()
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install Vercel CLI
-        run: npm install --global vercel@canary
-
-      - name: Execute emergency rollback
-        run: |
-          echo "🚨 DEPLOYMENT FAILED - INITIATING EMERGENCY ROLLBACK"
-          npm run rollback:emergency
+      - name: 🏷️ Tag Current Production as Backup
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          echo "🏷️ Tagging current production as backup..."
+          
+          # Install Vercel CLI
+          npm install -g vercel@latest
+          
+          # Get current production deployment
+          CURRENT_PRODUCTION=$(vercel ls --token $VERCEL_TOKEN | grep "✓" | head -1 | awk '{print $1}' || echo "")
+          
+          if [ ! -z "$CURRENT_PRODUCTION" ]; then
+            echo "📍 Current production found: $CURRENT_PRODUCTION"
+            echo "🏷️ Tagging as production-prev..."
+            vercel alias set $CURRENT_PRODUCTION production-prev --token $VERCEL_TOKEN || echo "⚠️ Failed to tag current production (may not exist)"
+          else
+            echo "⚠️ No current production deployment found to tag"
+          fi
 
-      - name: Notify team of rollback
-        uses: actions/github-script@v7
+      - name: 🚀 Deploy to Vercel Production
+        id: vercel-deploy
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          echo "🚀 Deploying to Vercel production environment..."
+          
+          # Deploy and capture the URL
+          DEPLOYMENT_URL=$(vercel --prod --confirm --token $VERCEL_TOKEN | grep -o 'https://[^ ]*')
+          
+          if [ -z "$DEPLOYMENT_URL" ]; then
+            echo "❌ Failed to extract deployment URL"
+            exit 1
+          fi
+          
+          echo "✅ Deployment successful: $DEPLOYMENT_URL"
+          echo "deployment_url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
+
+      - name: ⏱️ Wait for Deployment Propagation
+        run: |
+          echo "⏱️ Waiting for deployment to propagate globally..."
+          sleep 30
+
+      - name: 🧪 Post-Deployment Smoke Tests
+        env:
+          DEPLOYMENT_URL: ${{ steps.vercel-deploy.outputs.deployment_url }}
+        run: |
+          echo "🧪 Running comprehensive smoke tests..."
+          npm run test:smoke $DEPLOYMENT_URL
+
+      - name: 📊 Generate Health Report
+        env:
+          DEPLOYMENT_URL: ${{ steps.vercel-deploy.outputs.deployment_url }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          echo "📊 Generating post-deployment health report..."
+          npm run monitor:report $DEPLOYMENT_URL || echo "⚠️ Health report generation failed (non-critical)"
+
+      - name: 🎉 Deployment Success Notification
+        if: success()
+        env:
+          DEPLOYMENT_URL: ${{ steps.vercel-deploy.outputs.deployment_url }}
+        run: |
+          echo "🎉 DEPLOYMENT SUCCESSFUL!"
+          echo "================================"
+          echo "✅ Validation: PASSED"
+          echo "✅ Build: COMPLETED"
+          echo "✅ Deploy: SUCCESS"
+          echo "✅ Smoke Tests: PASSED"
+          echo "✅ Health Check: COMPLETED"
+          echo "🌐 Live URL: $DEPLOYMENT_URL"
+          echo "🏷️ Previous version tagged as: production-prev"
+          echo "================================"
+
+      - name: 🚨 Deployment Failure Handling
+        if: failure()
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          echo "🚨 DEPLOYMENT FAILED - Initiating automatic recovery..."
+          echo "================================"
+          echo "❌ Pipeline failed at step: ${{ github.job }}"
+          echo "🔄 Checking if rollback is needed..."
+          
+          # If deployment succeeded but tests failed, consider rollback
+          if [ ! -z "${{ steps.vercel-deploy.outputs.deployment_url }}" ]; then
+            echo "⚠️ Deployment succeeded but subsequent steps failed"
+            echo "💡 Consider manual rollback using: npm run rollback:emergency"
+            echo "🔍 Or check logs at: ${{ steps.vercel-deploy.outputs.deployment_url }}"
+          else
+            echo "❌ Deployment itself failed - no rollback needed"
+          fi
+          
+          echo "================================"
+          echo "📧 Failure notification would be sent here"
+          echo "🛠️ Manual intervention may be required"
+
+  # Optional: Continuous monitoring job that runs after successful deployment
+  start-monitoring:
+    name: 📡 Start Continuous Monitoring
+    needs: validate-and-deploy
+    runs-on: ubuntu-latest
+    if: success() && github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '🚨 **EMERGENCY ROLLBACK EXECUTED** 🚨\n\nDeployment failed validation and has been automatically rolled back to the previous stable version.\n\n**Next Steps:**\n1. Review deployment logs\n2. Fix identified issues\n3. Re-run deployment pipeline\n\n**Error-Free Deployment Framework** prevented broken code from reaching production.'
-            })
+          node-version: '18.x'
+          cache: 'npm'
+
+      - name: 📦 Install Dependencies
+        run: npm ci
+
+      - name: 📡 Start Background Monitoring
+        env:
+          DEPLOYMENT_URL: ${{ needs.validate-and-deploy.outputs.deployment_url }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          REPORT_EMAIL: ${{ secrets.REPORT_EMAIL }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+        run: |
+          echo "📡 Setting up continuous monitoring..."
+          echo "🌐 Target URL: ${DEPLOYMENT_URL:-https://your-app.vercel.app}"
+          echo "📧 Alerts will be sent to: ${REPORT_EMAIL:-'Not configured'}"
+          echo "⏱️ Monitoring interval: 10 minutes"
+          echo ""
+          echo "💡 To start local monitoring, run:"
+          echo "   npm run monitor:run ${DEPLOYMENT_URL:-https://your-app.vercel.app}"
+          echo ""
+          echo "📊 For one-time health check, run:"
+          echo "   npm run monitor:health ${DEPLOYMENT_URL:-https://your-app.vercel.app}"

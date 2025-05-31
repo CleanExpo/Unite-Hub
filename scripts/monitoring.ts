@@ -1,295 +1,401 @@
-#!/usr/bin/env tsx
+import axios from 'axios';
+import nodemailer from 'nodemailer';
+import process from 'process';
+import { config } from 'dotenv';
 
-import { exec } from 'child_process';
-import { promisify } from 'util';
+// Load environment variables
+config({ path: process.cwd() + '/.env.local' });
+config({ path: process.cwd() + '/.env' });
 
-const execAsync = promisify(exec);
+const HEALTH_ENDPOINT = '/api/health';
+const REPORT_EMAIL = process.env.REPORT_EMAIL;
 
-interface HealthStatus {
-  status: 'healthy' | 'unhealthy';
-  database?: string;
-  compliance?: {
-    ready: boolean;
-    tables: Record<string, boolean>;
-  };
-  environment?: {
-    hasSupabaseUrl: boolean;
-    hasAnonKey: boolean;
-    hasServiceKey: boolean;
-  };
-  timestamp: string;
-  version?: string;
+interface HealthCheckResult {
+  healthy: boolean;
+  details: string;
+  timestamp: Date;
 }
 
-interface MonitoringAlert {
-  level: 'info' | 'warning' | 'error' | 'critical';
-  message: string;
-  timestamp: string;
-  deployment?: string;
-}
-
-export class DeploymentMonitor {
-  private baseUrl: string;
-  private alertWebhook?: string;
+class AdvancedMonitoringSystem {
   
-  constructor(baseUrl: string, alertWebhook?: string) {
-    this.baseUrl = baseUrl;
-    this.alertWebhook = alertWebhook;
-  }
-  
-  async checkHealth(): Promise<HealthStatus> {
+  async checkServiceHealth(baseUrl: string): Promise<HealthCheckResult> {
     try {
-      const response = await fetch(`${this.baseUrl}/api/health`);
+      const res = await axios.get(`${baseUrl}${HEALTH_ENDPOINT}`, { 
+        timeout: 5000,
+        validateStatus: () => true 
+      });
       
-      if (!response.ok) {
+      if (res.status === 200) {
+        const data = res.data;
+        const isHealthy = data.healthy || data.status === 'healthy' || data.ok;
+        
+        console.log(isHealthy ? '✅ Service health OK.' : '❌ Service health NOT OK.');
+        
         return {
-          status: 'unhealthy',
-          timestamp: new Date().toISOString()
+          healthy: isHealthy,
+          details: JSON.stringify(data),
+          timestamp: new Date()
+        };
+      } else {
+        console.error(`❌ Health endpoint returned status ${res.status}`);
+        return {
+          healthy: false,
+          details: `HTTP ${res.status}: ${res.statusText}`,
+          timestamp: new Date()
         };
       }
-      
-      const healthData = await response.json();
-      return healthData;
-    } catch (error) {
-      console.error('Health check failed:', error);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+      console.error(`❌ Health endpoint failed: ${errorMessage}`);
       return {
-        status: 'unhealthy',
-        timestamp: new Date().toISOString()
+        healthy: false,
+        details: `Connection error: ${errorMessage}`,
+        timestamp: new Date()
       };
     }
   }
-  
-  async runContinuousMonitoring(intervalMinutes: number = 5): Promise<void> {
-    console.log(`🔍 Starting continuous monitoring every ${intervalMinutes} minutes...`);
-    console.log(`📊 Monitoring: ${this.baseUrl}`);
-    console.log('='.repeat(60));
-    
-    let consecutiveFailures = 0;
-    const maxFailures = 3;
-    
-    const monitor = async () => {
-      const timestamp = new Date().toLocaleString();
-      console.log(`\n⏰ Health check at ${timestamp}`);
+
+  async checkDatabaseConnectivity(): Promise<HealthCheckResult> {
+    try {
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
       
-      try {
-        const health = await this.checkHealth();
-        
-        if (health.status === 'healthy') {
-          console.log('✅ System healthy');
-          if (health.compliance?.ready) {
-            console.log('✅ Compliance system ready');
-          } else {
-            console.log('⚠️  Compliance system not ready');
-          }
-          consecutiveFailures = 0;
-        } else {
-          consecutiveFailures++;
-          console.log(`❌ System unhealthy (${consecutiveFailures}/${maxFailures})`);
-          
-          await this.sendAlert({
-            level: consecutiveFailures >= maxFailures ? 'critical' : 'warning',
-            message: `Health check failed ${consecutiveFailures} times`,
-            timestamp: new Date().toISOString(),
-            deployment: this.baseUrl
+      if (!supabaseUrl || !serviceKey) {
+        console.warn('⚠️ Database connectivity check skipped - missing configuration');
+        return {
+          healthy: true,
+          details: 'Database check skipped - missing configuration',
+          timestamp: new Date()
+        };
+      }
+
+      await axios.get(`${supabaseUrl}/rest/v1/`, {
+        headers: { apiKey: serviceKey },
+        timeout: 5000
+      });
+      
+      console.log('✅ Database connectivity OK.');
+      return {
+        healthy: true,
+        details: 'Database connection successful',
+        timestamp: new Date()
+      };
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      console.error('❌ Database connectivity failed:', errorMessage);
+      return {
+        healthy: false,
+        details: `Database error: ${errorMessage}`,
+        timestamp: new Date()
+      };
+    }
+  }
+
+  async checkEnvVarsIntegrity(): Promise<HealthCheckResult> {
+    try {
+      const requiredVars = [
+        'NEXT_PUBLIC_SUPABASE_URL',
+        'NEXT_PUBLIC_SUPABASE_ANON_KEY', 
+        'SUPABASE_SERVICE_ROLE_KEY'
+      ];
+      
+      const missing = requiredVars.filter(key => !process.env[key]);
+      
+      if (missing.length > 0) {
+        console.error(`❌ Missing environment variables: ${missing.join(', ')}`);
+        return {
+          healthy: false,
+          details: `Missing required environment variables: ${missing.join(', ')}`,
+          timestamp: new Date()
+        };
+      }
+      
+      console.log('✅ Environment variables integrity OK.');
+      return {
+        healthy: true,
+        details: 'All required environment variables present',
+        timestamp: new Date()
+      };
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      return {
+        healthy: false,
+        details: `Environment check error: ${errorMessage}`,
+        timestamp: new Date()
+      };
+    }
+  }
+
+  async checkCriticalPages(baseUrl: string): Promise<HealthCheckResult> {
+    try {
+      const criticalPages = ['/', '/api/health'];
+      const failures: string[] = [];
+      
+      for (const page of criticalPages) {
+        try {
+          const res = await axios.get(`${baseUrl}${page}`, { 
+            timeout: 5000,
+            validateStatus: () => true 
           });
           
-          if (consecutiveFailures >= maxFailures) {
-            await this.triggerEmergencyResponse();
+          if (res.status >= 500) {
+            failures.push(`${page} (${res.status})`);
           }
+        } catch (error: unknown) {
+          failures.push(`${page} (connection failed)`);
         }
-      } catch (error) {
-        consecutiveFailures++;
-        console.error(`💥 Monitoring error: ${error}`);
-        
-        await this.sendAlert({
-          level: 'error',
-          message: `Monitoring system error: ${error instanceof Error ? error.message : 'Unknown error'}`,
-          timestamp: new Date().toISOString(),
-          deployment: this.baseUrl
-        });
       }
-    };
-    
-    // Initial check
-    await monitor();
-    
-    // Set up interval monitoring
-    setInterval(monitor, intervalMinutes * 60 * 1000);
-  }
-  
-  async triggerEmergencyResponse(): Promise<void> {
-    console.log('\n🚨 TRIGGERING EMERGENCY RESPONSE');
-    console.log('='.repeat(60));
-    
-    await this.sendAlert({
-      level: 'critical',
-      message: 'CRITICAL: System unhealthy for extended period - triggering emergency rollback',
-      timestamp: new Date().toISOString(),
-      deployment: this.baseUrl
-    });
-    
-    try {
-      console.log('🔄 Attempting emergency rollback...');
-      const { stdout } = await execAsync('npm run rollback:emergency');
-      console.log('✅ Emergency rollback completed');
-      console.log(stdout);
       
-      await this.sendAlert({
-        level: 'info',
-        message: 'Emergency rollback completed successfully',
-        timestamp: new Date().toISOString(),
-        deployment: this.baseUrl
-      });
-    } catch (error) {
-      console.error('💥 Emergency rollback failed:', error);
+      if (failures.length > 0) {
+        console.error(`❌ Critical pages failing: ${failures.join(', ')}`);
+        return {
+          healthy: false,
+          details: `Critical pages failing: ${failures.join(', ')}`,
+          timestamp: new Date()
+        };
+      }
       
-      await this.sendAlert({
-        level: 'critical',
-        message: `Emergency rollback FAILED: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        timestamp: new Date().toISOString(),
-        deployment: this.baseUrl
-      });
+      console.log('✅ Critical pages accessible.');
+      return {
+        healthy: true,
+        details: 'All critical pages accessible',
+        timestamp: new Date()
+      };
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      return {
+        healthy: false,
+        details: `Critical pages check error: ${errorMessage}`,
+        timestamp: new Date()
+      };
     }
   }
-  
-  async sendAlert(alert: MonitoringAlert): Promise<void> {
-    const alertMessage = `[${alert.level.toUpperCase()}] ${alert.message}`;
-    console.log(`📢 Alert: ${alertMessage}`);
+
+  async sendAlert(subject: string, body: string): Promise<void> {
+    try {
+      if (!REPORT_EMAIL) {
+        console.warn('⚠️ REPORT_EMAIL not configured. Skipping email alert.');
+        console.log(`📧 Would send alert: ${subject}`);
+        return;
+      }
+
+      // Check if SMTP configuration is available
+      const smtpHost = process.env.SMTP_HOST;
+      const smtpPort = process.env.SMTP_PORT;
+      const smtpUser = process.env.SMTP_USER;
+      const smtpPass = process.env.SMTP_PASS;
+
+      if (!smtpHost || !smtpPort || !smtpUser || !smtpPass) {
+        console.warn('⚠️ SMTP configuration incomplete. Skipping email alert.');
+        console.log(`📧 Would send alert: ${subject}`);
+        return;
+      }
+
+      // Configure transporter
+      const transporter = nodemailer.createTransport({
+        host: smtpHost,
+        port: Number(smtpPort),
+        secure: Number(smtpPort) === 465, // true for 465, false for other ports
+        auth: {
+          user: smtpUser,
+          pass: smtpPass,
+        },
+      });
+
+      // Send mail
+      await transporter.sendMail({
+        from: `"Error-Free Deployment Monitor" <${smtpUser}>`,
+        to: REPORT_EMAIL,
+        subject,
+        text: body,
+        html: `<pre>${body}</pre>`,
+      });
+
+      console.log(`📧 Alert email sent to ${REPORT_EMAIL}`);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      console.error(`❌ Failed to send alert email: ${errorMessage}`);
+    }
+  }
+
+  async performFullHealthCheck(baseUrl: string): Promise<{ 
+    overall: boolean; 
+    results: HealthCheckResult[]; 
+    summary: string 
+  }> {
+    console.log(`🔍 Performing comprehensive health check for: ${baseUrl}`);
     
-    if (this.alertWebhook) {
+    const checks = [
+      { name: 'Service Health', check: () => this.checkServiceHealth(baseUrl) },
+      { name: 'Database Connectivity', check: () => this.checkDatabaseConnectivity() },
+      { name: 'Environment Variables', check: () => this.checkEnvVarsIntegrity() },
+      { name: 'Critical Pages', check: () => this.checkCriticalPages(baseUrl) }
+    ];
+
+    const results: HealthCheckResult[] = [];
+    const failedChecks: string[] = [];
+
+    for (const { name, check } of checks) {
+      console.log(`\n🔎 Checking: ${name}`);
       try {
-        await fetch(this.alertWebhook, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            text: alertMessage,
-            timestamp: alert.timestamp,
-            deployment: alert.deployment
-          })
-        });
-      } catch (error) {
-        console.error('Failed to send webhook alert:', error);
+        const result = await check();
+        results.push(result);
+        
+        if (!result.healthy) {
+          failedChecks.push(`${name}: ${result.details}`);
+        }
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        const errorResult: HealthCheckResult = {
+          healthy: false,
+          details: `${name} check failed: ${errorMessage}`,
+          timestamp: new Date()
+        };
+        results.push(errorResult);
+        failedChecks.push(`${name}: Check failed with error`);
+      }
+    }
+
+    const overall = results.every(r => r.healthy);
+    const summary = overall 
+      ? '✅ All health checks passed'
+      : `❌ ${failedChecks.length} health check(s) failed:\n${failedChecks.join('\n')}`;
+
+    console.log(`\n📊 Health Check Summary: ${overall ? 'HEALTHY' : 'ISSUES DETECTED'}`);
+    
+    return { overall, results, summary };
+  }
+
+  async runContinuousMonitor(baseUrl: string, intervalMs: number): Promise<void> {
+    console.log(`🔁 Starting continuous monitoring every ${intervalMs / 1000}s for ${baseUrl}`);
+    
+    let consecutiveFailures = 0;
+    const maxConsecutiveFailures = 3;
+    
+    while (true) {
+      try {
+        const healthCheck = await this.performFullHealthCheck(baseUrl);
+        
+        if (!healthCheck.overall) {
+          consecutiveFailures++;
+          console.error(`❌ Health check failed (${consecutiveFailures}/${maxConsecutiveFailures})`);
+          
+          if (consecutiveFailures >= maxConsecutiveFailures) {
+            await this.sendAlert(
+              `🚨 CRITICAL: Service Unhealthy (${consecutiveFailures} consecutive failures)`,
+              `Service health monitoring has detected ${consecutiveFailures} consecutive failures for ${baseUrl}.\n\n` +
+              `Time: ${new Date().toISOString()}\n\n` +
+              `Details:\n${healthCheck.summary}\n\n` +
+              `Please investigate immediately.`
+            );
+            
+            // Reset counter after sending alert to avoid spam
+            consecutiveFailures = 0;
+          }
+        } else {
+          // Reset counter on successful check
+          if (consecutiveFailures > 0) {
+            console.log(`✅ Service recovered after ${consecutiveFailures} failures`);
+            await this.sendAlert(
+              `✅ Service Recovered`,
+              `Service health monitoring detected recovery for ${baseUrl}.\n\n` +
+              `Time: ${new Date().toISOString()}\n\n` +
+              `The service is now healthy after ${consecutiveFailures} previous failures.`
+            );
+          }
+          consecutiveFailures = 0;
+        }
+        
+        console.log(`⏱️  Next check in ${intervalMs / 1000}s...`);
+        await new Promise((resolve) => setTimeout(resolve, intervalMs));
+        
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        console.error(`❌ Monitoring error: ${errorMessage}`);
+        await new Promise((resolve) => setTimeout(resolve, intervalMs));
       }
     }
   }
-  
-  async runSmokeTestMonitoring(): Promise<boolean> {
-    console.log('🧪 Running smoke test monitoring...');
-    
-    try {
-      const { runSmokeTests } = await import('./post-deploy-tests');
-      const result = await runSmokeTests(this.baseUrl);
-      
-      if (result) {
-        await this.sendAlert({
-          level: 'info',
-          message: 'Smoke tests passed - system functioning correctly',
-          timestamp: new Date().toISOString(),
-          deployment: this.baseUrl
-        });
-      } else {
-        await this.sendAlert({
-          level: 'error',
-          message: 'Smoke tests failed - system may have issues',
-          timestamp: new Date().toISOString(),
-          deployment: this.baseUrl
-        });
-      }
-      
-      return result;
-    } catch (error) {
-      await this.sendAlert({
-        level: 'error',
-        message: `Smoke test monitoring failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
-        timestamp: new Date().toISOString(),
-        deployment: this.baseUrl
-      });
-      
-      return false;
-    }
-  }
-  
-  async generateHealthReport(): Promise<void> {
-    console.log('\n📊 GENERATING HEALTH REPORT');
-    console.log('='.repeat(60));
-    
-    const health = await this.checkHealth();
-    const smokeTestResult = await this.runSmokeTestMonitoring();
-    
-    console.log('\n📋 SYSTEM STATUS SUMMARY:');
-    console.log(`Status: ${health.status}`);
-    console.log(`Database: ${health.database || 'Unknown'}`);
-    console.log(`Compliance Ready: ${health.compliance?.ready ? 'Yes' : 'No'}`);
-    console.log(`Environment Variables: ${health.environment ? 'Configured' : 'Missing'}`);
-    console.log(`Smoke Tests: ${smokeTestResult ? 'Passing' : 'Failing'}`);
-    console.log(`Last Check: ${health.timestamp}`);
-    console.log(`Version: ${health.version || 'Unknown'}`);
-    
-    if (health.compliance?.tables) {
-      console.log('\n📊 COMPLIANCE TABLES STATUS:');
-      Object.entries(health.compliance.tables).forEach(([table, status]) => {
-        console.log(`  ${table}: ${status ? '✅' : '❌'}`);
-      });
-    }
-    
-    if (health.environment) {
-      console.log('\n🔧 ENVIRONMENT STATUS:');
-      console.log(`  Supabase URL: ${health.environment.hasSupabaseUrl ? '✅' : '❌'}`);
-      console.log(`  Anon Key: ${health.environment.hasAnonKey ? '✅' : '❌'}`);
-      console.log(`  Service Key: ${health.environment.hasServiceKey ? '✅' : '❌'}`);
-    }
+
+  printUsage(): void {
+    console.log(`
+Usage: tsx scripts/monitoring.ts <command> <baseUrl> [options]
+
+Commands:
+  health <baseUrl>                    - Single health check
+  monitor <baseUrl> [intervalMs]      - Continuous monitoring (default: 10min)  
+  report <baseUrl>                    - Generate detailed health report
+
+Examples:
+  tsx scripts/monitoring.ts health https://your-app.vercel.app
+  tsx scripts/monitoring.ts monitor https://your-app.vercel.app 300000
+  tsx scripts/monitoring.ts report https://your-app.vercel.app
+
+Environment Variables Required:
+  REPORT_EMAIL                        - Email address for alerts
+  SMTP_HOST, SMTP_PORT               - SMTP server configuration
+  SMTP_USER, SMTP_PASS               - SMTP authentication
+  NEXT_PUBLIC_SUPABASE_URL           - For database checks
+  SUPABASE_SERVICE_ROLE_KEY          - For database connectivity
+    `);
   }
 }
 
-// CLI interface
 async function main() {
-  const args = process.argv.slice(2);
-  const command = args[0];
-  const url = args[1] || process.env.DEPLOYMENT_URL;
+  const monitor = new AdvancedMonitoringSystem();
   
-  if (!url) {
-    console.error('Usage: tsx scripts/monitoring.ts <command> <deployment-url>');
-    console.error('Commands: health, monitor, report, smoke-test');
-    console.error('Example: tsx scripts/monitoring.ts health https://your-app.vercel.app');
+  const mode = process.argv[2];
+  const baseUrl = process.argv[3];
+  const intervalMs = parseInt(process.argv[4] || '600000', 10); // default 10 minutes
+
+  if (!mode || !baseUrl) {
+    monitor.printUsage();
     process.exit(1);
   }
-  
-  const webhook = process.env.ALERT_WEBHOOK_URL;
-  const monitor = new DeploymentMonitor(url, webhook);
-  
+
   try {
-    switch (command) {
-      case 'health':
-        const health = await monitor.checkHealth();
-        console.log('Health Status:', health);
-        process.exit(health.status === 'healthy' ? 0 : 1);
+    switch (mode) {
+      case 'health': {
+        const healthCheck = await monitor.performFullHealthCheck(baseUrl);
+        process.exit(healthCheck.overall ? 0 : 1);
         break;
-        
-      case 'monitor':
-        const interval = parseInt(args[2]) || 5;
-        await monitor.runContinuousMonitoring(interval);
+      }
+      
+      case 'monitor': {
+        await monitor.runContinuousMonitor(baseUrl, intervalMs);
         break;
-        
-      case 'report':
-        await monitor.generateHealthReport();
+      }
+      
+      case 'report': {
+        const healthCheck = await monitor.performFullHealthCheck(baseUrl);
+        console.log(`\n📝 HEALTH REPORT FOR: ${baseUrl}`);
+        console.log('='.repeat(60));
+        console.log(`Overall Status: ${healthCheck.overall ? '✅ HEALTHY' : '❌ ISSUES DETECTED'}`);
+        console.log(`Timestamp: ${new Date().toISOString()}`);
+        console.log('\nDetailed Results:');
+        healthCheck.results.forEach((result, i) => {
+          console.log(`${i + 1}. ${result.healthy ? '✅' : '❌'} ${result.details}`);
+        });
+        console.log('\n' + '='.repeat(60));
+        process.exit(healthCheck.overall ? 0 : 1);
         break;
-        
-      case 'smoke-test':
-        const smokeResult = await monitor.runSmokeTestMonitoring();
-        process.exit(smokeResult ? 0 : 1);
-        break;
-        
-      default:
-        console.error('Unknown command:', command);
+      }
+      
+      default: {
+        console.error(`❌ Unknown command: ${mode}`);
+        monitor.printUsage();
         process.exit(1);
+      }
     }
-  } catch (error) {
-    console.error('💥 Monitoring failed:', error);
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error(`❌ Monitoring script error: ${errorMessage}`);
     process.exit(1);
   }
 }
 
-// Run CLI if this file is executed directly
-if (require.main === module) {
-  main();
-}
+main().catch((err: unknown) => {
+  const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+  console.error(`❌ Monitoring script error: ${errorMessage}`);
+  process.exit(1);
+});
