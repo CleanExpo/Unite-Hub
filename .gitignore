@@ -54,3 +54,5 @@ deployment/frontend/node_modules/
 deployment/frontend/.next/
 landing-page/node_modules/
 frontend-minimal/node_modules/
+
+.vercel
