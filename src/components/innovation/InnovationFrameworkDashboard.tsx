@@ -7,7 +7,6 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Separator } from '@/components/ui/separator';
 import { 
   TrendingUp, 
   Lightbulb, 
@@ -98,14 +97,7 @@ export default function InnovationFrameworkDashboard() {
       impactPotential: 0.91,
       timeHorizon: 'short_term'
     },
-    {
-      id: '2',
-      name: 'Quantum-Ready Security Frameworks',
-      category: 'technology',
-      relevanceScore: 0.86,
-      impactPotential: 0.93,
-      timeHorizon: 'medium_term'
-    },
+
     {
       id: '3',
       name: 'Edge AI and Distributed Intelligence',
@@ -127,16 +119,7 @@ export default function InnovationFrameworkDashboard() {
       expectedROI: 2.4,
       timeToMarket: 6
     },
-    {
-      id: '2',
-      title: 'Implement Quantum Security Framework',
-      category: 'technology',
-      businessValue: 0.93,
-      technicalFeasibility: 0.72,
-      priority: 'high',
-      expectedROI: 1.8,
-      timeToMarket: 12
-    }
+
   ]);
 
   const [productMarketFits] = useState<ProductMarketFit[]>([
