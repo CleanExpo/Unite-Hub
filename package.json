@@ -75,6 +75,7 @@
         "remark-gfm": "^4.0.1",
         "remark-parse": "^11.0.0",
         "remark-rehype": "^11.1.2",
+        "resend": "^4.5.1",
         "sharp": "^0.34.2",
         "sonner": "^2.0.3",
         "tailwind-merge": "^3.3.0",

@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 
 type EmailOptions = {
   to: string;
@@ -8,45 +8,52 @@ type EmailOptions = {
   cc?: string | string[];
   bcc?: string | string[];
   replyTo?: string;
-  attachments?: any[];
 };
 
-// Default environment variable for email configuration
-const SMTP_HOST = process.env.SMTP_HOST || 'smtp.example.com';
-const SMTP_PORT = parseInt(process.env.SMTP_PORT || '587');
-const SMTP_USER = process.env.SMTP_USER || 'user@example.com';
-const SMTP_PASSWORD = process.env.SMTP_PASSWORD || 'password';
-const DEFAULT_FROM = process.env.DEFAULT_FROM || 'no-reply@unite-group.com';
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@unite-group.com';
+// Resend configuration
+const resend = new Resend(process.env.RESEND_API_KEY);
+const DEFAULT_FROM = process.env.DEFAULT_FROM || 'support@carsi.com.au';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'phill.mcgurk@gmail.com';
 
 /**
- * Send an email using nodemailer
+ * Send an email using Resend
  */
 export async function sendEmail(options: EmailOptions): Promise<{ success: boolean; message: string }> {
   try {
-    // Create a nodemailer transporter
-    const transporter = nodemailer.createTransport({
-      host: SMTP_HOST,
-      port: SMTP_PORT,
-      secure: SMTP_PORT === 465, // true for 465, false for other ports
-      auth: {
-        user: SMTP_USER,
-        pass: SMTP_PASSWORD,
-      },
-    });
+    if (!process.env.RESEND_API_KEY) {
+      throw new Error('RESEND_API_KEY environment variable is not set');
+    }
 
-    // Send email
-    await transporter.sendMail({
+    const emailData: any = {
       from: options.from || DEFAULT_FROM,
-      to: options.to,
-      cc: options.cc,
-      bcc: options.bcc,
+      to: Array.isArray(options.to) ? options.to : [options.to],
       subject: options.subject,
       html: options.html,
-      replyTo: options.replyTo,
-      attachments: options.attachments,
-    });
+    };
 
+    if (options.cc) {
+      emailData.cc = Array.isArray(options.cc) ? options.cc : [options.cc];
+    }
+
+    if (options.bcc) {
+      emailData.bcc = Array.isArray(options.bcc) ? options.bcc : [options.bcc];
+    }
+
+    if (options.replyTo) {
+      emailData.replyTo = options.replyTo;
+    }
+
+    const { data, error } = await resend.emails.send(emailData);
+
+    if (error) {
+      console.error('Error sending email with Resend:', error);
+      return { 
+        success: false, 
+        message: error.message || 'Failed to send email'
+      };
+    }
+
+    console.log('Email sent successfully with Resend:', data?.id);
     return { success: true, message: 'Email sent successfully' };
   } catch (error) {
     console.error('Error sending email:', error);
