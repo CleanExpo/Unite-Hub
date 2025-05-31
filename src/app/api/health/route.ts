@@ -5,8 +5,8 @@ export async function GET() {
   try {
     // Test database connection
     const { error: dbError } = await supabaseAdmin
-      .from('users')
-      .select('count(*)')
+      .from('profiles')
+      .select('id')
       .limit(1);
       
     if (dbError) {
@@ -26,7 +26,7 @@ export async function GET() {
       try {
         const { error } = await supabaseAdmin
           .from(table)
-          .select('count(*)')
+          .select('id')
           .limit(1);
         complianceStatus[table] = !error;
       } catch {
