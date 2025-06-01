@@ -22,3 +22,15 @@ export interface ActivityLog {
     avatar_url?: string;
   };
 }
+
+export interface Task {
+  id: string;
+  title: string;
+  description: string;
+  status: string;
+  due_date?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export type Database = Record<string, any>;
