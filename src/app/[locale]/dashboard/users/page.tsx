@@ -1,45 +1,34 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
+import { createClient } from '@/lib/supabase/server';
+import UserTable from '@/components/users/UserTable';
 
-export async function GET(req: NextRequest) {
-  const supabase = createClient();
+export default async function UsersPage() {
+  const supabase = await createClient();
   
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  // Get current user
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  if (authError || !user) {
+    return <div>Unauthorized</div>;
   }
 
-  // Check if user has permission to view users
-  const { data: hasPermission } = await supabase
-    .rpc('has_permission', { 
-      user_id: user.id, 
-      permission_name: 'system.users.view' 
-    });
+  // Check permissions
+  const { data: hasPermission, error: permError } = await supabase.rpc('has_permission', {
+    user_id: user.id,
+    permission_name: 'system.users.view'
+  });
 
-  if (!hasPermission) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (permError || !hasPermission) {
+    return <div>Forbidden</div>;
   }
 
-  // Get all users from profiles table
-  const { data: profiles, error } = await supabase
+  // Fetch users
+  const { data: profiles, error: profileError } = await supabase
     .from('profiles')
     .select('*')
     .order('created_at', { ascending: false });
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 400 });
+  if (profileError) {
+    return <div>Error loading users</div>;
   }
 
-  // Get emails from auth.users for each profile
-  const users = await Promise.all(
-    profiles.map(async (profile) => {
-      const { data: authUser } = await supabase.auth.admin.getUserById(profile.id);
-      return {
-        ...profile,
-        email: authUser?.user?.email
-      };
-    })
-  );
-
-  return NextResponse.json(users);
+  return <UserTable users={profiles} />;
 }
