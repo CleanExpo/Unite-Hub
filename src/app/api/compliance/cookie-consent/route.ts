@@ -88,7 +88,8 @@ export async function GET(request: NextRequest) {
     }
 
     // Get user information if logged in
-    const supabase = createRouteHandlerClient({ cookies });
+    const cookieStore = cookies();
+    const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
     const { data: { session } } = await supabase.auth.getSession();
     const userId = session?.user?.id;
 

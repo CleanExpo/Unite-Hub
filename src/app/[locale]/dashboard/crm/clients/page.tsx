@@ -1,37 +1,43 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useRole, usePermissions } from '@/hooks/usePermissions';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Skeleton } from '@/components/ui/skeleton';
+import { PlusCircle } from 'lucide-react';
 
 interface Client {
   id: string;
-  company_name: string;
+  name: string;
   email: string;
-  client_status: string;
+  phone: string;
   created_at: string;
 }
 
-export default function ClientList() {
-  const supabase = createClientComponentClient();
+export default function CRMClientsPage() {
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
+  const [newClient, setNewClient] = useState({ name: '', email: '', phone: '' });
+  
+  const { user } = useRole();
+  const { hasPermission } = usePermissions(user);
 
   useEffect(() => {
     fetchClients();
   }, []);
 
   const fetchClients = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('clients')
-        .select('id, company_name, email, client_status, created_at')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setClients(data || []);
+      const response = await fetch('/api/crm/clients');
+      if (!response.ok) {
+        throw new Error('Failed to fetch clients');
+      }
+      const data = await response.json();
+      setClients(data);
     } catch (error) {
       console.error('Error fetching clients:', error);
     } finally {
@@ -39,59 +45,147 @@ export default function ClientList() {
     }
   };
 
-  if (loading) {
+  const handleCreateClient = async () => {
+    try {
+      const response = await fetch('/api/crm/clients', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newClient)
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create client');
+      }
+
+      const createdClient = await response.json();
+      setClients([createdClient, ...clients]);
+      setNewClient({ name: '', email: '', phone: '' });
+    } catch (error) {
+      console.error('Error creating client:', error);
+    }
+  };
+
+  const handleDeleteClient = async (clientId: string) => {
+    try {
+      const response = await fetch(`/api/crm/clients/${clientId}`, {
+        method: 'DELETE'
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete client');
+      }
+
+      setClients(clients.filter(client => client.id !== clientId));
+    } catch (error) {
+      console.error('Error deleting client:', error);
+    }
+  };
+
+  if (!hasPermission('crm.clients.view')) {
     return (
-      <div className="flex justify-center py-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <div className="container mx-auto py-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>Access Denied</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p>You do not have permission to view this page.</p>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto py-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Client Management</h1>
-        <Button>Add New Client</Button>
-      </div>
+    <div className="container mx-auto py-8">
+      <Card>
+        <CardHeader>
+          <CardTitle>CRM Clients</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {hasPermission('crm.clients.create') && (
+            <div className="mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <Input
+                  placeholder="Client Name"
+                  value={newClient.name}
+                  onChange={(e) => setNewClient({ ...newClient, name: e.target.value })}
+                />
+                <Input
+                  placeholder="Email"
+                  value={newClient.email}
+                  onChange={(e) => setNewClient({ ...newClient, email: e.target.value })}
+                />
+                <Input
+                  placeholder="Phone"
+                  value={newClient.phone}
+                  onChange={(e) => setNewClient({ ...newClient, phone: e.target.value })}
+                />
+                <Button onClick={handleCreateClient}>
+                  <PlusCircle className="mr-2 h-4 w-4" />
+                  Add Client
+                </Button>
+              </div>
+            </div>
+          )}
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Company</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Created</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {clients.map((client) => (
-            <TableRow key={client.id}>
-              <TableCell className="font-medium">{client.company_name}</TableCell>
-              <TableCell>{client.email}</TableCell>
-              <TableCell>
-                <span className={`px-2 py-1 rounded-full text-xs ${
-                  client.client_status === 'active' 
-                    ? 'bg-green-100 text-green-800' 
-                    : client.client_status === 'lead'
-                    ? 'bg-blue-100 text-blue-800'
-                    : 'bg-gray-100 text-gray-800'
-                }`}>
-                  {client.client_status}
-                </span>
-              </TableCell>
-              <TableCell>
-                {new Date(client.created_at).toLocaleDateString()}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      
-      {clients.length === 0 && !loading && (
-        <div className="text-center py-8 text-gray-500">
-          No clients found. Add your first client to get started.
-        </div>
-      )}
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Phone</TableHead>
+                <TableHead>Created</TableHead>
+                <TableHead>Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {loading ? (
+                <TableRow>
+                  <TableCell colSpan={5}>
+                    <div className="space-y-2">
+                      {[...Array(5)].map((_, i) => (
+                        <Skeleton key={i} className="h-4 w-full" />
+                      ))}
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : clients.length > 0 ? (
+                clients.map((client) => (
+                  <TableRow key={client.id}>
+                    <TableCell>{client.name}</TableCell>
+                    <TableCell>{client.email}</TableCell>
+                    <TableCell>{client.phone}</TableCell>
+                    <TableCell>{new Date(client.created_at).toLocaleDateString()}</TableCell>
+                    <TableCell className="flex space-x-2">
+                      {hasPermission('crm.clients.update') && (
+                        <Button variant="outline" size="sm">
+                          Edit
+                        </Button>
+                      )}
+                      {hasPermission('crm.clients.delete') && (
+                        <Button 
+                          variant="destructive" 
+                          size="sm"
+                          onClick={() => handleDeleteClient(client.id)}
+                        >
+                          Delete
+                        </Button>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center">
+                    No clients found
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </div>
   );
 }
