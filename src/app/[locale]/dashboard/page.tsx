@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   Table, 
   TableBody, 
@@ -17,7 +17,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabaseClient } from "@/lib/supabase/client";
-import { Calendar, Clock, User, Briefcase, FileText, Loader2, PlusCircle, BarChart } from "lucide-react";
+import { User } from '@supabase/supabase-js';
+import { Calendar, Clock, User as UserIcon, Briefcase, Loader2, PlusCircle, BarChart } from "lucide-react";
 
 interface Consultation {
   id: string;
@@ -56,18 +57,18 @@ export default function Dashboard() {
   const [projectsLoading, setProjectsLoading] = useState(true);
   const [consultations, setConsultations] = useState<Consultation[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [consultationError, setConsultationError] = useState<string | null>(null);
   const [projectsError, setProjectsError] = useState<string | null>(null);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const checkUser = async () => {
-      const { data: { session }, error } = await supabaseClient.auth.getSession();
+      const { data: { session }, error: sessionError } = await supabaseClient.auth.getSession();
       
-      if (error) {
-        console.error("Error checking session:", error);
-        setError("Error checking authentication status");
+      if (sessionError) {
+        console.error("Error checking session:", sessionError);
+        setConsultationError("Error checking authentication status");
         setLoading(false);
         return;
       }
@@ -100,7 +101,12 @@ export default function Dashboard() {
   const fetchConsultations = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/consultations");
+      const response = await fetch("/api/consultations", {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
       
       if (!response.ok) {
         throw new Error("Failed to fetch consultations");
@@ -115,7 +121,7 @@ export default function Dashboard() {
       }
     } catch (error) {
       console.error("Error fetching consultations:", error);
-      setError(error instanceof Error ? error.message : "Failed to load your consultations");
+      setConsultationError(error instanceof Error ? error.message : "Failed to load your consultations. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -182,7 +188,7 @@ export default function Dashboard() {
         month: 'long',
         day: 'numeric'
       });
-    } catch (error) {
+    } catch {
       return dateString;
     }
   };
@@ -273,10 +279,10 @@ export default function Dashboard() {
                     <Loader2 className="h-8 w-8 text-teal-400 animate-spin" />
                     <span className="ml-3 text-slate-300">Loading your consultations...</span>
                   </div>
-                ) : error ? (
+                ) : consultationError ? (
                   <div className="bg-red-900/20 text-red-400 border border-red-800 rounded-md p-4">
                     <p className="font-medium">Error loading consultations</p>
-                    <p className="text-sm">{error}</p>
+                    <p className="text-sm">{consultationError}</p>
                   </div>
                 ) : consultations.length === 0 ? (
                   <div className="text-center py-12">
@@ -485,13 +491,13 @@ export default function Dashboard() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="bg-slate-750 p-4 rounded-md border border-slate-700">
                         <div className="flex items-center mb-3">
-                          <User className="h-5 w-5 mr-2 text-teal-400" />
+                          <UserIcon className="h-5 w-5 mr-2 text-teal-400" />
                           <h3 className="text-lg font-medium text-white">Account Information</h3>
                         </div>
                         <div className="space-y-2 text-slate-300">
                           <p>
                             <span className="text-slate-400 text-sm">Email:</span><br />
-                            {user?.email}
+                            {user?.email || 'N/A'}
                           </p>
                           <p>
                             <span className="text-slate-400 text-sm">Account Created:</span><br />
