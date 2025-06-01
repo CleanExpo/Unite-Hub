@@ -16,7 +16,7 @@ interface Task {
 
 interface TaskFormProps {
   task?: Task;
-  onSubmit: (task: Task) => void;
+  onSubmit?: (task: Task) => void;
 }
 
 export default function TaskForm({ task, onSubmit }: TaskFormProps) {
@@ -27,13 +27,15 @@ export default function TaskForm({ task, onSubmit }: TaskFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({
-      id: task?.id || '',
-      title,
-      description,
-      status,
-      due_date: dueDate
-    });
+    if (onSubmit) {
+      onSubmit({
+        id: task?.id || '',
+        title,
+        description,
+        status,
+        due_date: dueDate
+      });
+    }
   };
 
   return (

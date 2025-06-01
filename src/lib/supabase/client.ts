@@ -1,15 +1,10 @@
-﻿'use client';
-
-import { createBrowserClient } from '@supabase/ssr';
+﻿import { createClient } from '@supabase/supabase-js';
 import type { Database } from '@/types/supabase';
 
-// Export the createClient function explicitly as required by Vercel
-export function createClient() {
-  return createBrowserClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
-}
+// Export as both supabase and supabaseClient for compatibility
+export const supabase = createClient<Database>(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
-// Also export the client instance for convenience
-export const supabaseClient = createClient();
+export const supabaseClient = supabase;

@@ -1,8 +1,7 @@
-import { createClient } from '@/lib/supabase/server';
+import { supabase } from '@/lib/supabase/client';
 import { Task } from '@/types/supabase';
 
 export async function getTask(id: string) {
-  const supabase = await createClient();
   const { data, error } = await supabase
     .from('tasks')
     .select('*')
@@ -18,7 +17,6 @@ export async function getTask(id: string) {
 }
 
 export async function updateTask(task: Task) {
-  const supabase = await createClient();
   const { data, error } = await supabase
     .from('tasks')
     .update(task)
@@ -34,7 +32,6 @@ export async function updateTask(task: Task) {
 }
 
 export async function createTask(task: Omit<Task, 'id'>) {
-  const supabase = await createClient();
   const { data, error } = await supabase
     .from('tasks')
     .insert([task])
