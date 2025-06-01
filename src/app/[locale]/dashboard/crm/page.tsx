@@ -5,20 +5,20 @@ import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
 import { 
   Users, 
   Briefcase, 
   Calendar, 
   DollarSign, 
-  TrendingUp,
   Clock,
   CheckCircle,
-  AlertCircle,
   PlusCircle,
   Building,
-  Activity
+  Activity,
+  TrendingUp
 } from 'lucide-react';
+import PipelineBoard from '@/components/crm/PipelineBoard';
+import PipelineAnalytics from '@/components/crm/PipelineAnalytics';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { formatCurrency } from '@/lib/utils';
 
@@ -179,70 +179,94 @@ export default function CRMDashboard() {
 
   return (
     <div className="container mx-auto py-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold">CRM Dashboard</h1>
-          <p className="text-muted-foreground">
-            Manage your clients, projects, and business relationships
-          </p>
+      {/* Welcome Banner */}
+      <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl p-6 text-white">
+        <div className="flex justify-between items-start">
+          <div>
+            <h1 className="text-3xl font-bold">CRM Dashboard</h1>
+            <p className="text-blue-100">
+              Manage your clients, projects, and business relationships
+            </p>
+          </div>
+          <Button 
+            variant="secondary" 
+            onClick={() => router.push('/dashboard/crm/clients/new')}
+            className="bg-white text-indigo-600 hover:bg-gray-100"
+          >
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Add Client
+          </Button>
         </div>
-        <Button onClick={() => router.push('/dashboard/crm/clients/new')}>
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Add Client
-        </Button>
       </div>
 
+
       {/* Stats Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <Card className="border-0 shadow-lg">
+          <CardHeader className="flex flex-row items-center justify-between pb-3">
             <CardTitle className="text-sm font-medium">Total Clients</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <Users className="h-5 w-5 text-indigo-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.totalClients}</div>
-            <p className="text-xs text-muted-foreground">
-              {stats.activeClients} active
-            </p>
+            <div className="flex items-center mt-1">
+              <span className="text-xs text-green-600 font-medium">
+                +{Math.floor(stats.activeClients/stats.totalClients*100)}%
+              </span>
+              <span className="text-xs text-muted-foreground ml-2">
+                {stats.activeClients} active
+              </span>
+            </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <Card className="border-0 shadow-lg">
+          <CardHeader className="flex flex-row items-center justify-between pb-3">
             <CardTitle className="text-sm font-medium">Active Projects</CardTitle>
-            <Briefcase className="h-4 w-4 text-muted-foreground" />
+            <Briefcase className="h-5 w-5 text-indigo-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.activeProjects}</div>
-            <p className="text-xs text-muted-foreground">
-              of {stats.totalProjects} total
-            </p>
+            <div className="flex items-center mt-1">
+              <div className="w-full bg-gray-200 rounded-full h-1.5">
+                <div 
+                  className="bg-indigo-600 h-1.5 rounded-full" 
+                  style={{ width: `${Math.floor(stats.activeProjects/stats.totalProjects*100)}%` }}
+                ></div>
+              </div>
+              <span className="text-xs text-muted-foreground ml-2">
+                {stats.activeProjects}/{stats.totalProjects}
+              </span>
+            </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <Card className="border-0 shadow-lg">
+          <CardHeader className="flex flex-row items-center justify-between pb-3">
             <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <DollarSign className="h-5 w-5 text-indigo-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{formatCurrency(stats.totalRevenue)}</div>
-            <p className="text-xs text-muted-foreground">
-              From all projects
-            </p>
+            <div className="flex items-center mt-1">
+              <TrendingUp className="h-4 w-4 text-green-600" />
+              <span className="text-xs text-green-600 font-medium ml-1">
+                +12% from last month
+              </span>
+            </div>
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <Card className="border-0 shadow-lg">
+          <CardHeader className="flex flex-row items-center justify-between pb-3">
             <CardTitle className="text-sm font-medium">Pending Tasks</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
+            <Clock className="h-5 w-5 text-indigo-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.pendingTasks}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className="text-xs text-muted-foreground mt-1">
               {stats.completedTasksThisMonth} completed this month
-            </p>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -254,6 +278,8 @@ export default function CRMDashboard() {
           <TabsTrigger value="clients">Clients</TabsTrigger>
           <TabsTrigger value="projects">Projects</TabsTrigger>
           <TabsTrigger value="tasks">Tasks</TabsTrigger>
+          <TabsTrigger value="pipeline">Pipeline</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4">
@@ -337,51 +363,54 @@ export default function CRMDashboard() {
             </Card>
           </div>
 
-          {/* Performance Metrics */}
+          {/* Pipeline & Analytics Section */}
+          <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
+            <Card>
+              <CardHeader>
+                <CardTitle>Deal Pipeline</CardTitle>
+                <CardDescription>Current sales pipeline status</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[400px] overflow-auto">
+                  <PipelineBoard />
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>Pipeline Analytics</CardTitle>
+                <CardDescription>Key metrics and insights</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[400px]">
+                  <PipelineAnalytics />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="pipeline">
           <Card>
             <CardHeader>
-              <CardTitle>Performance Metrics</CardTitle>
-              <CardDescription>Key performance indicators</CardDescription>
+              <CardTitle>Deal Pipeline</CardTitle>
+              <CardDescription>Manage your sales pipeline</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-4 md:grid-cols-3">
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">Client Retention</span>
-                    <Badge variant="success">
-                      <TrendingUp className="mr-1 h-3 w-3" />
-                      85%
-                    </Badge>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-green-600 h-2 rounded-full" style={{ width: '85%' }}></div>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">Project Success Rate</span>
-                    <Badge variant="success">
-                      <CheckCircle className="mr-1 h-3 w-3" />
-                      92%
-                    </Badge>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-blue-600 h-2 rounded-full" style={{ width: '92%' }}></div>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium">Task Completion</span>
-                    <Badge>
-                      <Clock className="mr-1 h-3 w-3" />
-                      78%
-                    </Badge>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-purple-600 h-2 rounded-full" style={{ width: '78%' }}></div>
-                  </div>
-                </div>
-              </div>
+              <PipelineBoard />
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="analytics">
+          <Card>
+            <CardHeader>
+              <CardTitle>Pipeline Analytics</CardTitle>
+              <CardDescription>Detailed performance metrics</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <PipelineAnalytics />
             </CardContent>
           </Card>
         </TabsContent>
