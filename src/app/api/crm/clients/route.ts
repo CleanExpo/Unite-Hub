@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { checkPermission } from '@/lib/auth/permissions';
+import { logActivity } from '@/lib/crm/activity';
 
 export async function GET() {
   const supabase = createClient();
@@ -17,7 +18,7 @@ export async function GET() {
 
   // Fetch CRM clients from database
   const { data: clients, error } = await supabase
-    .from('crm_clients')
+    .from('clients')
     .select('*')
     .order('created_at', { ascending: false });
 
@@ -25,6 +26,7 @@ export async function GET() {
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
 
+  // Return the clients data
   return NextResponse.json(clients);
 }
 
@@ -44,13 +46,13 @@ export async function POST(req: NextRequest) {
   const clientData = await req.json();
   
   // Validate required fields
-  if (!clientData.name || !clientData.email) {
-    return NextResponse.json({ error: 'Name and email are required' }, { status: 400 });
+  if (!clientData.company_name || !clientData.email) {
+    return NextResponse.json({ error: 'Company name and email are required' }, { status: 400 });
   }
 
   // Create new client
   const { data: newClient, error } = await supabase
-    .from('crm_clients')
+    .from('clients')
     .insert({
       ...clientData,
       created_by: user.id
@@ -61,6 +63,15 @@ export async function POST(req: NextRequest) {
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
+
+  // Log the activity
+  await logActivity({
+    user_id: user.id,
+    action: 'create',
+    entity_type: 'clients',
+    entity_id: newClient.id,
+    new_values: newClient
+  });
 
   return NextResponse.json(newClient, { status: 201 });
 }
@@ -85,15 +96,35 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: 'Client ID is required' }, { status: 400 });
   }
 
+  // Get client data before deletion
+  const { data: client, error: fetchError } = await supabase
+    .from('clients')
+    .select('*')
+    .eq('id', clientId)
+    .single();
+
+  if (fetchError) {
+    return NextResponse.json({ error: fetchError.message }, { status: 400 });
+  }
+
   // Delete client
   const { error } = await supabase
-    .from('crm_clients')
+    .from('clients')
     .delete()
     .eq('id', clientId);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
+
+  // Log the activity
+  await logActivity({
+    user_id: user.id,
+    action: 'delete',
+    entity_type: 'clients',
+    entity_id: clientId,
+    old_values: client
+  });
 
   return NextResponse.json({ success: true }, { status: 200 });
 }

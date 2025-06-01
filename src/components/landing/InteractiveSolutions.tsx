@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { 
   Clock, 
@@ -145,9 +145,9 @@ export function InteractiveSolutions() {
                 <CardTitle className="text-2xl font-bold text-slate-900 mb-2">
                   {service.title}
                 </CardTitle>
-                <CardDescription className="text-slate-600 text-base leading-relaxed">
+                <div className="text-slate-600 text-base leading-relaxed mt-2">
                   {service.description}
-                </CardDescription>
+                </div>
               </CardHeader>
               
               <CardContent className="pt-0">

@@ -1,52 +1,75 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
+import { checkPermission } from '@/lib/auth/permissions';
+
+export async function POST(req: NextRequest) {
+  const supabase = createClient();
+  
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // Check permission to create CRM activities
+  if (!await checkPermission(user, 'crm.activities.create')) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  }
+
+  const activityData = await req.json();
+  
+  // Validate required fields
+  if (!activityData.client_id || !activityData.interaction_type) {
+    return NextResponse.json({ error: 'Client ID and interaction type are required' }, { status: 400 });
+  }
+
+  // Create new activity
+  const { data: newActivity, error } = await supabase
+    .from('crm_activities')
+    .insert({
+      ...activityData,
+      performed_by: user.id,
+      interaction_date: new Date().toISOString()
+    })
+    .select()
+    .single();
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 400 });
+  }
+
+  return NextResponse.json(newActivity, { status: 201 });
+}
 
 export async function GET(req: NextRequest) {
   const supabase = createClient();
   
-  // Extract query parameters
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // Check permission to view CRM activities
+  if (!await checkPermission(user, 'crm.activities.view')) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  }
+
   const { searchParams } = new URL(req.url);
-  const resourceType = searchParams.get('resource');
-  const resourceId = searchParams.get('id');
+  const clientId = searchParams.get('client_id');
   
-  if (!resourceType || !resourceId) {
-    return NextResponse.json(
-      { error: 'Resource type and ID are required' },
-      { status: 400 }
-    );
+  if (!clientId) {
+    return NextResponse.json({ error: 'Client ID is required' }, { status: 400 });
   }
 
-  try {
-    const { data: activities, error } = await supabase
-      .from('crm_activity_logs')
-      .select(`
-        id,
-        action,
-        resource_type,
-        resource_id,
-        details,
-        created_at,
-        user:profiles!crm_activity_logs_user_id_fkey (
-          id,
-          full_name,
-          avatar_url
-        )
-      `)
-      .eq('resource_type', resourceType)
-      .eq('resource_id', resourceId)
-      .order('created_at', { ascending: false });
+  // Fetch activities for client
+  const { data: activities, error } = await supabase
+    .from('crm_activities')
+    .select('*')
+    .eq('client_id', clientId)
+    .order('interaction_date', { ascending: false });
 
-    if (error) {
-      throw error;
-    }
-
-    return NextResponse.json(activities);
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    console.error('Error fetching activities:', errorMessage);
-    return NextResponse.json(
-      { error: 'Failed to fetch activities' },
-      { status: 500 }
-    );
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 400 });
   }
+
+  return NextResponse.json(activities);
 }

@@ -2,6 +2,8 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
+import { checkPermission } from '@/lib/auth/permissions'
+import { logActivity } from '@/lib/crm/activity'
 
 // Project schema for validation
 const projectSchema = z.object({
@@ -29,6 +31,17 @@ export async function GET(request: Request) {
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
   const supabase = createRouteHandlerClient({ cookies })
+  
+  // Check user authentication
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  // Check permission to view CRM projects
+  if (!await checkPermission(user, 'crm.projects.view')) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
   
   try {
     // Build query with optional filters
@@ -71,6 +84,17 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const supabase = createRouteHandlerClient({ cookies })
   const projectData = await request.json()
+  
+  // Check user authentication
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  // Check permission to create CRM projects
+  if (!await checkPermission(user, 'crm.projects.create')) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
 
   // Validate request body
   const validation = projectSchema.safeParse(projectData)
@@ -89,6 +113,16 @@ export async function POST(request: Request) {
       .single()
 
     if (error) throw error
+    
+    // Log the activity
+    await logActivity({
+      user_id: user.id,
+      action: 'create',
+      entity_type: 'projects',
+      entity_id: data.id,
+      new_values: data
+    });
+
     return NextResponse.json(data, { status: 201 })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error'
