@@ -10,19 +10,27 @@ type EmailOptions = {
   replyTo?: string;
 };
 
-// Resend configuration
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Resend configuration - initialize lazily
+let resend: Resend | null = null;
 const DEFAULT_FROM = process.env.DEFAULT_FROM || 'support@carsi.com.au';
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'phill.mcgurk@gmail.com';
+
+function getResendClient(): Resend {
+  if (!resend) {
+    if (!process.env.RESEND_API_KEY) {
+      throw new Error('RESEND_API_KEY environment variable is not set');
+    }
+    resend = new Resend(process.env.RESEND_API_KEY);
+  }
+  return resend;
+}
 
 /**
  * Send an email using Resend
  */
 export async function sendEmail(options: EmailOptions): Promise<{ success: boolean; message: string }> {
   try {
-    if (!process.env.RESEND_API_KEY) {
-      throw new Error('RESEND_API_KEY environment variable is not set');
-    }
+    const resendClient = getResendClient();
 
     const emailData: any = {
       from: options.from || DEFAULT_FROM,
@@ -43,7 +51,7 @@ export async function sendEmail(options: EmailOptions): Promise<{ success: boole
       emailData.replyTo = options.replyTo;
     }
 
-    const { data, error } = await resend.emails.send(emailData);
+    const { data, error } = await resendClient.emails.send(emailData);
 
     if (error) {
       console.error('Error sending email with Resend:', error);
@@ -110,7 +118,7 @@ export async function sendContactFormConfirmation(formData: {
   const html = `
     <h1>Thank You for Contacting UNITE Group</h1>
     <p>Dear ${name},</p>
-    <p>Thank you for reaching out to us regarding <strong>${service}</strong>. We've received your message and will get back to you within 24 hours.</p>
+    <p>Thank you for reaching out to us regarding <strong>${service}</strong>. We&apos;ve received your message and will get back to you within 24 hours.</p>
     <p>If you need immediate assistance, please call us at <strong>0457 123 005</strong>.</p>
     <br />
     <p>Best regards,</p>
@@ -121,7 +129,7 @@ export async function sendContactFormConfirmation(formData: {
 
   return sendEmail({
     to: email,
-    subject: 'We\'ve Received Your Message - UNITE Group',
+    subject: 'We&apos;ve Received Your Message - UNITE Group',
     html,
   });
 }
@@ -222,8 +230,8 @@ export async function sendConsultationBookingConfirmation(bookingData: {
   const html = `
     <h1>Your Consultation Booking Confirmation</h1>
     <p>Dear ${client_name},</p>
-    <p>Thank you for booking a consultation with UNITE Group. We've received your booking request for a <strong>${service_type}</strong> on <strong>${formattedPreferredDate}</strong> at <strong>${preferred_time}</strong>.</p>
-    <p>Our team will review your preferred time and confirm your appointment within 24 hours. If your preferred time is unavailable, we'll contact you to arrange an alternative.</p>
+    <p>Thank you for booking a consultation with UNITE Group. We&apos;ve received your booking request for a <strong>${service_type}</strong> on <strong>${formattedPreferredDate}</strong> at <strong>${preferred_time}</strong>.</p>
+    <p>Our team will review your preferred time and confirm your appointment within 24 hours. If your preferred time is unavailable, we&apos;ll contact you to arrange an alternative.</p>
     <p>If you need to make any changes to your booking, please contact us at <strong>support@unite-group.com</strong> or call us at <strong>0457 123 005</strong>.</p>
     <br />
     <p>We look forward to speaking with you!</p>

@@ -3,7 +3,18 @@ import { createClient } from '@/utils/supabase/server';
 import { checkPermission } from '@/lib/auth/permissions';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy initialization of Resend client
+let resend: Resend | null = null;
+
+function getResendClient(): Resend {
+  if (!resend) {
+    if (!process.env.RESEND_API_KEY) {
+      throw new Error('RESEND_API_KEY environment variable is not set');
+    }
+    resend = new Resend(process.env.RESEND_API_KEY);
+  }
+  return resend;
+}
 
 export async function POST(req: NextRequest) {
   const supabase = createClient();
@@ -40,7 +51,8 @@ export async function POST(req: NextRequest) {
     }
 
     // Send email
-    const { data: emailResponse, error: emailError } = await resend.emails.send({
+    const resendClient = getResendClient();
+    const { data: emailResponse, error: emailError } = await resendClient.emails.send({
       from: 'noreply@unitegroup.au',
       to: client.email,
       subject: emailData.subject,
