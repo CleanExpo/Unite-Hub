@@ -1,462 +1,193 @@
-'use client';
-
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { DashboardOverview } from '@/components/crm/DashboardOverview';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Users, 
-  Briefcase, 
-  Calendar, 
-  DollarSign, 
-  Clock,
-  CheckCircle,
-  PlusCircle,
-  Building,
-  Activity,
-  TrendingUp
-} from 'lucide-react';
-import PipelineBoard from '@/components/crm/PipelineBoard';
-import PipelineAnalytics from '@/components/crm/PipelineAnalytics';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { formatCurrency } from '@/lib/utils';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Calendar, CheckCircle } from 'lucide-react';
+import { apiClient } from '@/lib/apiClient';
+import { useState, useEffect } from 'react';
 
-interface DashboardStats {
-  totalClients: number;
-  activeClients: number;
-  totalProjects: number;
-  activeProjects: number;
-  totalRevenue: number;
-  upcomingConsultations: number;
-  pendingTasks: number;
-  completedTasksThisMonth: number;
+interface DashboardData {
+  dealsCount: number;
+  revenue: number;
+  tasksCount: number;
+  activitiesCount: number;
+  pipelineData: { stage: string; value: number }[];
+  recentActivities: any[];
+  upcomingTasks: any[];
 }
 
-interface RecentActivity {
-  id: string;
-  entity_type: string;
-  action: string;
-  entity_name?: string;
-  performed_at: string;
-  performed_by_name?: string;
-}
-
-export default function CRMDashboard() {
-  const router = useRouter();
-  const supabase = createClientComponentClient();
+export default function CRMDashboardPage() {
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState<DashboardStats>({
-    totalClients: 0,
-    activeClients: 0,
-    totalProjects: 0,
-    activeProjects: 0,
-    totalRevenue: 0,
-    upcomingConsultations: 0,
-    pendingTasks: 0,
-    completedTasksThisMonth: 0,
-  });
-  const [recentActivities, setRecentActivities] = useState<RecentActivity[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadDashboardData();
-  }, []);
-
-  const loadDashboardData = async () => {
+  const fetchDashboardData = async () => {
+    setLoading(true);
+    setError(null);
     try {
-      setLoading(true);
-
-      // Fetch client stats
-      const { count: totalClients } = await supabase
-        .from('clients')
-        .select('*', { count: 'exact', head: true });
-
-      const { count: activeClients } = await supabase
-        .from('clients')
-        .select('*', { count: 'exact', head: true })
-        .eq('client_status', 'active');
-
-      // Fetch project stats
-      const { count: totalProjects } = await supabase
-        .from('projects')
-        .select('*', { count: 'exact', head: true });
-
-      const { count: activeProjects } = await supabase
-        .from('projects')
-        .select('*', { count: 'exact', head: true })
-        .eq('status', 'active');
-
-      // Calculate total revenue from projects
-      const { data: projectRevenue } = await supabase
-        .from('projects')
-        .select('budget');
-      
-      const totalRevenue = projectRevenue?.reduce((sum, project) => sum + (project.budget || 0), 0) || 0;
-
-      // Fetch upcoming consultations
-      const { count: upcomingConsultations } = await supabase
-        .from('consultations')
-        .select('*', { count: 'exact', head: true })
-        .gte('preferred_date', new Date().toISOString())
-        .eq('status', 'scheduled');
-
-      // Fetch task stats
-      const { count: pendingTasks } = await supabase
-        .from('tasks')
-        .select('*', { count: 'exact', head: true })
-        .in('status', ['todo', 'in_progress']);
-
-      // Fetch completed tasks this month
-      const startOfMonth = new Date();
-      startOfMonth.setDate(1);
-      startOfMonth.setHours(0, 0, 0, 0);
-
-      const { count: completedTasksThisMonth } = await supabase
-        .from('tasks')
-        .select('*', { count: 'exact', head: true })
-        .eq('status', 'done')
-        .gte('completed_date', startOfMonth.toISOString());
-
-      // Fetch recent activities
-      const { data: activities } = await supabase
-        .from('activity_log')
-        .select('*')
-        .order('performed_at', { ascending: false })
-        .limit(10);
-
-      setStats({
-        totalClients: totalClients || 0,
-        activeClients: activeClients || 0,
-        totalProjects: totalProjects || 0,
-        activeProjects: activeProjects || 0,
-        totalRevenue,
-        upcomingConsultations: upcomingConsultations || 0,
-        pendingTasks: pendingTasks || 0,
-        completedTasksThisMonth: completedTasksThisMonth || 0,
-      });
-
-      setRecentActivities(activities || []);
-    } catch (error) {
-      console.error('Error loading dashboard data:', error);
+      const data = await apiClient.get('crm/dashboard');
+      setDashboardData(data);
+    } catch (err) {
+      console.error('Failed to fetch dashboard data:', err);
+      setError('Failed to load dashboard data. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  const getActivityIcon = (entityType: string) => {
-    switch (entityType) {
-      case 'client':
-        return <Building className="h-4 w-4" />;
-      case 'project':
-        return <Briefcase className="h-4 w-4" />;
-      case 'task':
-        return <CheckCircle className="h-4 w-4" />;
-      default:
-        return <Activity className="h-4 w-4" />;
-    }
-  };
-
-  const getActivityColor = (action: string) => {
-    switch (action) {
-      case 'created':
-        return 'text-green-600';
-      case 'updated':
-        return 'text-blue-600';
-      case 'deleted':
-        return 'text-red-600';
-      default:
-        return 'text-gray-600';
-    }
-  };
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
+        <div className="max-w-7xl mx-auto flex justify-center items-center h-64">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-teal-400"></div>
+            <p className="mt-4 text-slate-300">Loading dashboard data...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-red-900/20 border border-red-800 rounded-lg p-6 text-center">
+            <h3 className="text-lg font-medium text-red-400">Error loading dashboard</h3>
+            <p className="text-slate-300 mt-2">{error}</p>
+            <Button 
+              onClick={fetchDashboardData}
+              className="mt-4 bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white"
+            >
+              Retry
+            </Button>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
-      {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl p-6 text-white">
-        <div className="flex justify-between items-start">
-          <div>
-            <h1 className="text-3xl font-bold">CRM Dashboard</h1>
-            <p className="text-blue-100">
-              Manage your clients, projects, and business relationships
-            </p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-white">CRM Dashboard</h1>
+          <div className="flex items-center gap-4">
+            <Button 
+              variant="outline" 
+              className="border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white"
+              onClick={fetchDashboardData}
+            >
+              Refresh Data
+            </Button>
+            <Button className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white">
+              Create New Deal
+            </Button>
           </div>
-          <Button 
-            variant="secondary" 
-            onClick={() => router.push('/dashboard/crm/clients/new')}
-            className="bg-white text-indigo-600 hover:bg-gray-100"
-          >
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Add Client
-          </Button>
         </div>
-      </div>
 
+        {dashboardData && (
+          <>
+            <DashboardOverview 
+              dealsCount={dashboardData.dealsCount}
+              revenue={dashboardData.revenue}
+              tasksCount={dashboardData.tasksCount}
+              activitiesCount={dashboardData.activitiesCount}
+              pipelineData={dashboardData.pipelineData}
+            />
 
-      {/* Stats Grid */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="border-0 shadow-lg">
-          <CardHeader className="flex flex-row items-center justify-between pb-3">
-            <CardTitle className="text-sm font-medium">Total Clients</CardTitle>
-            <Users className="h-5 w-5 text-indigo-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.totalClients}</div>
-            <div className="flex items-center mt-1">
-              <span className="text-xs text-green-600 font-medium">
-                +{Math.floor(stats.activeClients/stats.totalClients*100)}%
-              </span>
-              <span className="text-xs text-muted-foreground ml-2">
-                {stats.activeClients} active
-              </span>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 shadow-lg">
-          <CardHeader className="flex flex-row items-center justify-between pb-3">
-            <CardTitle className="text-sm font-medium">Active Projects</CardTitle>
-            <Briefcase className="h-5 w-5 text-indigo-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.activeProjects}</div>
-            <div className="flex items-center mt-1">
-              <div className="w-full bg-gray-200 rounded-full h-1.5">
-                <div 
-                  className="bg-indigo-600 h-1.5 rounded-full" 
-                  style={{ width: `${Math.floor(stats.activeProjects/stats.totalProjects*100)}%` }}
-                ></div>
-              </div>
-              <span className="text-xs text-muted-foreground ml-2">
-                {stats.activeProjects}/{stats.totalProjects}
-              </span>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 shadow-lg">
-          <CardHeader className="flex flex-row items-center justify-between pb-3">
-            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-            <DollarSign className="h-5 w-5 text-indigo-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(stats.totalRevenue)}</div>
-            <div className="flex items-center mt-1">
-              <TrendingUp className="h-4 w-4 text-green-600" />
-              <span className="text-xs text-green-600 font-medium ml-1">
-                +12% from last month
-              </span>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="border-0 shadow-lg">
-          <CardHeader className="flex flex-row items-center justify-between pb-3">
-            <CardTitle className="text-sm font-medium">Pending Tasks</CardTitle>
-            <Clock className="h-5 w-5 text-indigo-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.pendingTasks}</div>
-            <div className="text-xs text-muted-foreground mt-1">
-              {stats.completedTasksThisMonth} completed this month
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Main Content Tabs */}
-      <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="clients">Clients</TabsTrigger>
-          <TabsTrigger value="projects">Projects</TabsTrigger>
-          <TabsTrigger value="tasks">Tasks</TabsTrigger>
-          <TabsTrigger value="pipeline">Pipeline</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="overview" className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            {/* Quick Actions */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Quick Actions</CardTitle>
-                <CardDescription>Common tasks and shortcuts</CardDescription>
-              </CardHeader>
-              <CardContent className="grid gap-2">
-                <Button 
-                  variant="outline" 
-                  className="justify-start"
-                  onClick={() => router.push('/dashboard/crm/clients/new')}
-                >
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  Add New Client
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="justify-start"
-                  onClick={() => router.push('/dashboard/crm/projects/new')}
-                >
-                  <Briefcase className="mr-2 h-4 w-4" />
-                  Create Project
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="justify-start"
-                  onClick={() => router.push('/dashboard/crm/tasks')}
-                >
-                  <CheckCircle className="mr-2 h-4 w-4" />
-                  View Tasks
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="justify-start"
-                  onClick={() => router.push('/consultations')}
-                >
-                  <Calendar className="mr-2 h-4 w-4" />
-                  Schedule Consultation
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Recent Activity */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Recent Activity</CardTitle>
-                <CardDescription>Latest changes in your CRM</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {recentActivities.map((activity) => (
-                    <div key={activity.id} className="flex items-start space-x-3">
-                      <div className={`mt-0.5 ${getActivityColor(activity.action)}`}>
-                        {getActivityIcon(activity.entity_type)}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
+              {/* Recent Activities */}
+              <Card className="bg-slate-800 border-slate-700">
+                <CardHeader>
+                  <CardTitle className="text-lg text-white">Recent Activities</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {dashboardData.recentActivities.map((activity) => (
+                      <div key={activity.id} className="flex items-start">
+                        <div className="bg-slate-700 rounded-full p-2 mr-3">
+                          <Calendar className="h-4 w-4 text-teal-400" />
+                        </div>
+                        <div>
+                          <p className="text-slate-300 font-medium">{activity.description}</p>
+                          <p className="text-slate-500 text-sm">
+                            {new Date(activity.timestamp).toLocaleString()}
+                          </p>
+                        </div>
                       </div>
-                      <div className="flex-1 space-y-1">
-                        <p className="text-sm">
-                          <span className="font-medium capitalize">{activity.entity_type}</span>
-                          {' '}
-                          <span className={getActivityColor(activity.action)}>
-                            {activity.action}
-                          </span>
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {new Date(activity.performed_at).toLocaleDateString()}
-                        </p>
+                    ))}
+                    {dashboardData.recentActivities.length === 0 && (
+                      <p className="text-slate-500 text-center py-4">No recent activities</p>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Upcoming Tasks */}
+              <Card className="bg-slate-800 border-slate-700">
+                <CardHeader>
+                  <CardTitle className="text-lg text-white">Upcoming Tasks</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {dashboardData.upcomingTasks.map((task) => (
+                      <div key={task.id} className="flex items-start">
+                        <div className="bg-slate-700 rounded-full p-2 mr-3">
+                          <CheckCircle className="h-4 w-4 text-teal-400" />
+                        </div>
+                        <div>
+                          <p className="text-slate-300 font-medium">{task.title}</p>
+                          <p className="text-slate-500 text-sm">
+                            Due: {new Date(task.due_date).toLocaleDateString()}
+                          </p>
+                        </div>
                       </div>
+                    ))}
+                    {dashboardData.upcomingTasks.length === 0 && (
+                      <p className="text-slate-500 text-center py-4">No upcoming tasks</p>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Performance Metrics */}
+              <Card className="bg-slate-800 border-slate-700">
+                <CardHeader>
+                  <CardTitle className="text-lg text-white">Performance Metrics</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex justify-between">
+                      <span className="text-slate-300">Conversion Rate</span>
+                      <span className="text-teal-400 font-medium">
+                        {dashboardData.pipelineData.length > 0 
+                          ? `${Math.round((dashboardData.pipelineData[dashboardData.pipelineData.length-1].value / dashboardData.dealsCount) * 100)}%` 
+                          : 'N/A'}
+                      </span>
                     </div>
-                  ))}
-                  {recentActivities.length === 0 && (
-                    <p className="text-sm text-muted-foreground text-center py-4">
-                      No recent activity
-                    </p>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Pipeline & Analytics Section */}
-          <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Deal Pipeline</CardTitle>
-                <CardDescription>Current sales pipeline status</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[400px] overflow-auto">
-                  <PipelineBoard />
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader>
-                <CardTitle>Pipeline Analytics</CardTitle>
-                <CardDescription>Key metrics and insights</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="h-[400px]">
-                  <PipelineAnalytics />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="pipeline">
-          <Card>
-            <CardHeader>
-              <CardTitle>Deal Pipeline</CardTitle>
-              <CardDescription>Manage your sales pipeline</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <PipelineBoard />
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="analytics">
-          <Card>
-            <CardHeader>
-              <CardTitle>Pipeline Analytics</CardTitle>
-              <CardDescription>Detailed performance metrics</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <PipelineAnalytics />
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="clients">
-          <Card>
-            <CardHeader>
-              <CardTitle>Client Management</CardTitle>
-              <CardDescription>View and manage all your clients</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button onClick={() => router.push('/dashboard/crm/clients')}>
-                View All Clients
-              </Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="projects">
-          <Card>
-            <CardHeader>
-              <CardTitle>Project Management</CardTitle>
-              <CardDescription>Track and manage your projects</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button onClick={() => router.push('/dashboard/crm/projects')}>
-                View All Projects
-              </Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="tasks">
-          <Card>
-            <CardHeader>
-              <CardTitle>Task Management</CardTitle>
-              <CardDescription>Manage your tasks and to-dos</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button onClick={() => router.push('/dashboard/crm/tasks')}>
-                View All Tasks
-              </Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+                    <div className="flex justify-between">
+                      <span className="text-slate-300">Avg. Deal Size</span>
+                      <span className="text-teal-400 font-medium">
+                        {dashboardData.dealsCount > 0 
+                          ? `$${Math.round(dashboardData.revenue / dashboardData.dealsCount).toLocaleString()}` 
+                          : 'N/A'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-slate-300">Sales Cycle</span>
+                      <span className="text-teal-400 font-medium">Calculating...</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }

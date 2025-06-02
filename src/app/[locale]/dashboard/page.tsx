@@ -17,6 +17,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabaseClient } from "@/lib/supabase/client";
+import { apiClient } from "@/lib/apiClient";
 import { User } from '@supabase/supabase-js';
 import { Calendar, Clock, User as UserIcon, Briefcase, Loader2, PlusCircle, BarChart } from "lucide-react";
 
@@ -101,24 +102,8 @@ export default function Dashboard() {
   const fetchConsultations = async () => {
     try {
       setLoading(true);
-      const response = await fetch("/api/consultations", {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      
-      if (!response.ok) {
-        throw new Error("Failed to fetch consultations");
-      }
-      
-      const data = await response.json();
-      
-      if (data.success) {
-        setConsultations(data.data);
-      } else {
-        throw new Error(data.error || "Unknown error fetching consultations");
-      }
+      const data = await apiClient.get('consultations');
+      setConsultations(data.data);
     } catch (error) {
       console.error("Error fetching consultations:", error);
       setConsultationError(error instanceof Error ? error.message : "Failed to load your consultations. Please try again later.");
@@ -130,19 +115,8 @@ export default function Dashboard() {
   const fetchProjects = async () => {
     try {
       setProjectsLoading(true);
-      const response = await fetch("/api/projects");
-      
-      if (!response.ok) {
-        throw new Error("Failed to fetch projects");
-      }
-      
-      const data = await response.json();
-      
-      if (data.success) {
-        setProjects(data.data);
-      } else {
-        throw new Error(data.error || "Unknown error fetching projects");
-      }
+      const data = await apiClient.get('crm/projects');
+      setProjects(data.data);
     } catch (error) {
       console.error("Error fetching projects:", error);
       setProjectsError(error instanceof Error ? error.message : "Failed to load your projects");
@@ -246,6 +220,9 @@ export default function Dashboard() {
                 </Link>
               </Button>
             )}
+            <Button asChild variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white">
+              <Link href="/dashboard/crm">CRM Dashboard</Link>
+            </Button>
             <Button asChild className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white">
               <Link href="/book-consultation">Book New Consultation</Link>
             </Button>
@@ -286,7 +263,7 @@ export default function Dashboard() {
                   </div>
                 ) : consultations.length === 0 ? (
                   <div className="text-center py-12">
-                    <p className="text-slate-300 mb-6">You haven't booked any consultations yet.</p>
+                    <p className="text-slate-300 mb-6">You haven&#39;t booked any consultations yet.</p>
                     <Button asChild className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white">
                       <Link href="/book-consultation">Book Your First Consultation</Link>
                     </Button>
@@ -374,7 +351,7 @@ export default function Dashboard() {
                   </div>
                 ) : projects.length === 0 ? (
                   <div className="text-center py-12">
-                    <p className="text-slate-300 mb-6">You don't have any active projects yet.</p>
+                    <p className="text-slate-300 mb-6">You don&#39;t have any active projects yet.</p>
                     <p className="text-slate-400 mb-6">Projects are created after your consultation is complete and a work plan is established.</p>
                   </div>
                 ) : (
