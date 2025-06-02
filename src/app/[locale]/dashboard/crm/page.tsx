@@ -1,3 +1,5 @@
+'use client';
+
 import { DashboardOverview } from '@/components/crm/DashboardOverview';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,8 +13,16 @@ interface DashboardData {
   tasksCount: number;
   activitiesCount: number;
   pipelineData: { stage: string; value: number }[];
-  recentActivities: any[];
-  upcomingTasks: any[];
+  recentActivities: Array<{
+    id: string;
+    description: string;
+    timestamp: string;
+  }>;
+  upcomingTasks: Array<{
+    id: string;
+    title: string;
+    due_date: string;
+  }>;
 }
 
 export default function CRMDashboardPage() {
