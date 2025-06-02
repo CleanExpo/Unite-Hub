@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 
-export async function GET() {
+async function handleGET(req, userId) () {
   const supabase = await createClient();
   
   const { data: rules, error } = await supabase
@@ -16,7 +16,7 @@ export async function GET() {
   return NextResponse.json(rules);
 }
 
-export async function POST(request: Request) {
+async function handlePOST(req, userId) (request: Request) {
   const supabase = await createClient();
   const ruleData = await request.json();
 
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
   return NextResponse.json(data[0], { status: 201 });
 }
 
-export async function PUT(request: Request) {
+async function handlePUT(req, userId) (request: Request) {
   const supabase = await createClient();
   const { id, ...updateData } = await request.json();
 
@@ -49,7 +49,7 @@ export async function PUT(request: Request) {
   return NextResponse.json(data[0]);
 }
 
-export async function DELETE(request: Request) {
+async function handleDELETE(req, userId) (request: Request) {
   const supabase = await createClient();
   const { id } = await request.json();
 
@@ -64,3 +64,8 @@ export async function DELETE(request: Request) {
 
   return NextResponse.json({ success: true });
 }
+
+export const GET = withApiAuth(handleGET);
+export const POST = withApiAuth(handlePOST);
+export const PUT = withApiAuth(handlePUT);
+export const DELETE = withApiAuth(handleDELETE);

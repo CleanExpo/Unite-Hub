@@ -1,5 +1,5 @@
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
+import { withApiAuth } from '@/lib/supabase/apiAuth';
+
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 
@@ -25,7 +25,7 @@ const projectSchema = z.object({
   milestones: z.any().optional()
 })
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+async function handleGET(req, userId) (request: Request, { params }: { params: { id: string } }) {
   const supabase = createRouteHandlerClient({ cookies })
   const projectId = params.id
 
@@ -55,7 +55,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+async function handlePUT(req, userId) (request: Request, { params }: { params: { id: string } }) {
   const supabase = createRouteHandlerClient({ cookies })
   const projectId = params.id
   const projectData = await request.json()
@@ -96,7 +96,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+async function handleDELETE(req, userId) (request: Request, { params }: { params: { id: string } }) {
   const supabase = createRouteHandlerClient({ cookies })
   const projectId = params.id
 
@@ -127,3 +127,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
     )
   }
 }
+
+export const GET = withApiAuth(handleGET);
+export const PUT = withApiAuth(handlePUT);
+export const DELETE = withApiAuth(handleDELETE);

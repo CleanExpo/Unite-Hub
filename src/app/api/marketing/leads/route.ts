@@ -22,7 +22,7 @@ const leadSchema = z.object({
  * API handler for lead submissions
  * Handles form submissions, email list subscriptions, and lead tracking
  */
-export async function POST(request: NextRequest) {
+async function handlePOST(req, userId) (request: NextRequest) {
   try {
     // Parse request data
     const data = await request.json();
@@ -136,3 +136,5 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+export const POST = withApiAuth(handlePOST);

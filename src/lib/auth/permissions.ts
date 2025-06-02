@@ -1,19 +1,17 @@
-import { createClient } from '@/utils/supabase/server';
-import { User } from '@supabase/supabase-js';
+import { createClient } from '@/lib/supabase/server'
 
-// Function to check user permissions
-export async function checkPermission(user: User, permissionName: string): Promise<boolean> {
-  const supabase = createClient();
+export async function checkPermission(userId: string, permissionName: string): Promise<boolean> {
+  const supabase = createClient()
   
   const { data, error } = await supabase.rpc('has_permission', {
-    user_id: user.id,
+    user_id: userId,
     permission_name: permissionName
-  });
+  })
 
   if (error) {
-    console.error('Permission check error:', error);
-    return false;
+    console.error('Permission check error:', error)
+    return false
   }
 
-  return data as boolean;
+  return data as boolean
 }

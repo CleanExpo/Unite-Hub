@@ -2,7 +2,7 @@
     "name": "unite-group",
     "version": "1.0.0",
     "description": "This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).",
-    "main": "next.config.js",
+    "type": "module",
     "engines": {
         "node": ">=18.18.0",
         "npm": ">=10.9.0"

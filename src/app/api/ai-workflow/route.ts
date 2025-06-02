@@ -58,7 +58,7 @@ const workflowService = new AIWorkflowService(aiGateway, workflowConfig);
 /**
  * GET /api/ai-workflow - List all workflows
  */
-export async function GET(request: NextRequest) {
+async function handleGET(req, userId) (request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category');
@@ -98,7 +98,7 @@ export async function GET(request: NextRequest) {
 /**
  * POST /api/ai-workflow - Execute a workflow
  */
-export async function POST(request: NextRequest) {
+async function handlePOST(req, userId) (request: NextRequest) {
   try {
     const body = await request.json();
     const { workflowId, inputs, executedBy } = body;
@@ -136,3 +136,6 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+export const GET = withApiAuth(handleGET);
+export const POST = withApiAuth(handlePOST);

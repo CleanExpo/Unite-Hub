@@ -1,10 +1,9 @@
 import { NextResponse } from 'next/server';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
 import type { Database } from '@/types/supabase';
 
 // Get all projects (with filtering and pagination)
-export async function GET(request: Request) {
+async function handleGET(req, userId) (request: Request) {
   try {
     // Initialize Supabase client
     const supabase = createServerComponentClient<Database>({ cookies });
@@ -94,7 +93,7 @@ export async function GET(request: Request) {
 }
 
 // Create a new project
-export async function POST(request: Request) {
+async function handlePOST(req, userId) (request: Request) {
   try {
     const body = await request.json();
     const { 
@@ -211,3 +210,6 @@ export async function POST(request: Request) {
     );
   }
 }
+
+export const GET = withApiAuth(handleGET);
+export const POST = withApiAuth(handlePOST);

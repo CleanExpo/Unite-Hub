@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 
-export async function POST(req: NextRequest) {
+async function handlePOST(req, userId) (req: NextRequest) {
   try {
-    const supabase = createClient();
+    const supabase = await createClient();
     
     // For security, only allow this in development or if specifically enabled
     if (process.env.NODE_ENV === 'production' && process.env.ALLOW_ADMIN_SETUP !== 'true') {
@@ -73,3 +73,5 @@ export async function POST(req: NextRequest) {
     }, { status: 500 });
   }
 }
+
+export const POST = withApiAuth(handlePOST);

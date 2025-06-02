@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cognitivePredictiveEngine } from '@/lib/cognitive/business-intelligence/predictive-engine';
 
-export async function GET(request: NextRequest) {
+async function handleGET(req, userId) (request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const action = searchParams.get('action');
@@ -94,7 +94,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: NextRequest) {
+async function handlePOST(req, userId) (request: NextRequest) {
   try {
     const body = await request.json();
     const { action, data } = body;
@@ -158,3 +158,6 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+export const GET = withApiAuth(handleGET);
+export const POST = withApiAuth(handlePOST);

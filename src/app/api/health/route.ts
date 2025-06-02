@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 
-export async function GET() {
+async function handleGET(req, userId) () {
   try {
     // Test database connection
     const { error: dbError } = await supabaseAdmin
@@ -59,3 +59,5 @@ export async function GET() {
     }, { status: 503 });
   }
 }
+
+export const GET = withApiAuth(handleGET);

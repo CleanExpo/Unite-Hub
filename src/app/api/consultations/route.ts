@@ -1,12 +1,13 @@
 import { NextResponse } from 'next/server';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { createClient } from '@/lib/supabase/server';
+import { NextRequest } from 'next/server';
+import { withApiAuth } from '@/lib/supabase/apiAuth';
 import type { Database } from '@/types/supabase';
 import { sendConsultationBookingNotification, sendConsultationBookingConfirmation } from '@/lib/email/sendEmail';
 
-export async function POST(request: Request) {
+async function handlePOST(req: NextRequest, userId: string) {
   try {
-    const body = await request.json();
+    const body = await req.json();
     const { 
       client_name, 
       client_email, 
@@ -44,7 +45,7 @@ export async function POST(request: Request) {
     }
     
     // Initialize Supabase client
-    const supabase = createServerComponentClient<Database>({ cookies });
+    const supabase = await createClient();
     
     // Insert consultation booking into database
     const { data, error } = await supabase
@@ -58,7 +59,7 @@ export async function POST(request: Request) {
           service_type,
           preferred_date: parsedPreferredDate,
           preferred_time,
-      alternate_date: parsedAlternateDate || undefined,
+      alternate_date: parsedAlternateDate || null,
           message: message || null,
           status: 'pending',
           payment_status: 'unpaid',
@@ -121,61 +122,26 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET(request: Request) {
+async function handleGET(req: NextRequest, userId: string) {
   try {
     // Initialize Supabase client
-    const supabase = createServerComponentClient<Database>({ cookies });
-    
-    // Get the user session
-    const { data: { session } } = await supabase.auth.getSession();
-    
-    if (!session) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
-    
-    // Get user profile to check role
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', session.user.id)
-      .single();
-    
-    // Determine if user is admin
-    const isAdmin = profile?.role === 'admin';
+    const supabase = await createClient();
     
     // Query parameters
-    const { searchParams } = new URL(request.url);
+    const { searchParams } = new URL(req.url);
     const status = searchParams.get('status');
     const limit = parseInt(searchParams.get('limit') || '10');
     const page = parseInt(searchParams.get('page') || '1');
     const offset = (page - 1) * limit;
     
     // Build query
-    let query = supabase
+    const { data, error, count } = await supabase
       .from('consultations')
-      .select('*', { count: 'exact' });
-    
-    // Filter by status if provided
-    if (status) {
-      query = query.eq('status', status);
-    }
-    
-    // If not admin, only show user's own consultations
-    if (!isAdmin) {
-      query = query.eq('client_email', session.user.email);
-    }
-    
-    // Add pagination
-    query = query.range(offset, offset + limit - 1);
-    
-    // Order by created_at
-    query = query.order('created_at', { ascending: false });
-    
-    // Execute query
-    const { data, error, count } = await query;
+      .select('*', { count: 'exact' })
+      .eq(status ? 'status' : '', status || '')
+      .eq('client_email', (await supabase.auth.getUser()).data.user?.email || '')
+      .range(offset, offset + limit - 1)
+      .order('created_at', { ascending: false });
     
     if (error) {
       console.error('Error fetching consultations:', error);
@@ -203,3 +169,6 @@ export async function GET(request: Request) {
     );
   }
 }
+
+export const GET = withApiAuth(handleGET);
+export const POST = withApiAuth(handlePOST);

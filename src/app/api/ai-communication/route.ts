@@ -84,7 +84,7 @@ function getCommunicationService(): AICommunicationService {
   return communicationService;
 }
 
-export async function POST(request: NextRequest) {
+async function handlePOST(req, userId) (request: NextRequest) {
   try {
     const service = getCommunicationService();
     const { action, ...data } = await request.json();
@@ -177,7 +177,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
+async function handleGET(req, userId) (request: NextRequest) {
   try {
     const service = getCommunicationService();
     const url = new URL(request.url);
@@ -220,3 +220,6 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
+export const GET = withApiAuth(handleGET);
+export const POST = withApiAuth(handlePOST);

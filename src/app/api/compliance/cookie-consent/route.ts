@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-
+import { createClient } from '@/lib/supabase/server';
 import { ComplianceService } from '@/lib/compliance/service';
 import { CookieConsentFormData } from '@/lib/compliance/types';
 
@@ -9,10 +7,10 @@ import { CookieConsentFormData } from '@/lib/compliance/types';
  * POST /api/compliance/cookie-consent
  * Record cookie consent preferences
  */
-export async function POST(request: NextRequest) {
+async function handlePOST(req: NextRequest, userId: string) {
   try {
     // Parse request body
-    const body = await request.json();
+    const body = await req.json();
     const { sessionId, preferences }: { sessionId: string; preferences: CookieConsentFormData } = body;
 
     if (!sessionId) {
@@ -30,15 +28,22 @@ export async function POST(request: NextRequest) {
     }
 
     // Get user information if logged in
-    const supabase = createRouteHandlerClient({ cookies });
-    const { data: { session } } = await supabase.auth.getSession();
+    const supabase = await createClient();
+    const { data: { session }, error } = await supabase.auth.getSession();
+    if (error) {
+      console.error('Error getting session:', error);
+      return NextResponse.json(
+        { error: 'Failed to get user session' },
+        { status: 500 }
+      );
+    }
     const userId = session?.user?.id;
 
-    // Get IP address and user agent
-    const ipAddress = request.headers.get('x-forwarded-for') || 
-                     request.headers.get('x-real-ip') || 
+    // Get IP address and user agent from the request
+    const ipAddress = req.headers.get('x-forwarded-for') || 
+                     req.headers.get('x-real-ip') || 
                      'unknown';
-    const userAgent = request.headers.get('user-agent') || 'unknown';
+    const userAgent = req.headers.get('user-agent') || 'unknown';
 
     // Record cookie consent
     const consent = await ComplianceService.recordCookieConsent(
@@ -70,14 +75,16 @@ export async function POST(request: NextRequest) {
   }
 }
 
+import { withApiAuth } from '@/lib/supabase/apiAuth';
+
 /**
  * GET /api/compliance/cookie-consent?sessionId=xxx
  * Get cookie consent preferences for a session
  */
-export async function GET(request: NextRequest) {
+async function handleGET(req: NextRequest, userId: string) {
   try {
     // Get session ID from query parameters
-    const { searchParams } = new URL(request.url);
+    const { searchParams } = new URL(req.url);
     const sessionId = searchParams.get('sessionId');
 
     if (!sessionId) {
@@ -87,17 +94,10 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get user information if logged in
-    const cookieStore = cookies();
-    const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
-    const { data: { session } } = await supabase.auth.getSession();
-    const userId = session?.user?.id;
+    // Use the userId passed from withApiAuth directly
 
     // Get cookie consent
-    const consent = await ComplianceService.getCookieConsent(
-      sessionId,
-      userId
-    );
+    const consent = await ComplianceService.getCookieConsent(sessionId, userId);
 
     if (!consent) {
       return NextResponse.json(
@@ -122,3 +122,6 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
+export const GET = withApiAuth(handleGET);
+export const POST = withApiAuth(handlePOST);

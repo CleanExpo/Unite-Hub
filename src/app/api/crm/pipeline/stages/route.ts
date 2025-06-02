@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 
-export async function GET() {
+async function handleGET(req, userId) () {
   const supabase = await createClient();
   
   const { data: stages, error } = await supabase
@@ -16,7 +16,7 @@ export async function GET() {
   return NextResponse.json(stages);
 }
 
-export async function POST(request: Request) {
+async function handlePOST(req, userId) (request: Request) {
   const supabase = await createClient();
   const stageData = await request.json();
 
@@ -31,3 +31,6 @@ export async function POST(request: Request) {
 
   return NextResponse.json(data[0], { status: 201 });
 }
+
+export const GET = withApiAuth(handleGET);
+export const POST = withApiAuth(handlePOST);

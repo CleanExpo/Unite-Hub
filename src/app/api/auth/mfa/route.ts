@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { withApiAuth } from '@/lib/supabase/apiAuth';;
 
 import { 
   generateMFASetup, 
@@ -14,7 +13,7 @@ import {
  * POST /api/auth/mfa/setup
  * Generate MFA setup for a user
  */
-export async function POST(request: NextRequest) {
+async function handlePOST(req, userId) (request: NextRequest) {
   try {
     // Get the current session
     const supabase = createRouteHandlerClient({ cookies });
@@ -56,7 +55,7 @@ export async function POST(request: NextRequest) {
  * PUT /api/auth/mfa/enable
  * Enable MFA for a user
  */
-export async function PUT(request: NextRequest) {
+async function handlePUT(req, userId) (request: NextRequest) {
   try {
     // Get the current session
     const supabase = createRouteHandlerClient({ cookies });
@@ -106,7 +105,7 @@ export async function PUT(request: NextRequest) {
  * POST /api/auth/mfa/verify
  * Verify MFA token during login
  */
-export async function PATCH(request: NextRequest) {
+async function handlePATCH(req, userId) (request: NextRequest) {
   try {
     // For verification during login, we need to handle the case
     // where the user is partially authenticated (after password)
@@ -147,7 +146,7 @@ export async function PATCH(request: NextRequest) {
  * DELETE /api/auth/mfa
  * Disable MFA for a user
  */
-export async function DELETE(request: NextRequest) {
+async function handleDELETE(req, userId) (request: NextRequest) {
   try {
     // Get the current session
     const supabase = createRouteHandlerClient({ cookies });
@@ -220,3 +219,8 @@ export const GET = async (request: NextRequest) => {
     );
   }
 };
+
+export const POST = withApiAuth(handlePOST);
+export const PUT = withApiAuth(handlePUT);
+export const DELETE = withApiAuth(handleDELETE);
+export const PATCH = withApiAuth(handlePATCH);

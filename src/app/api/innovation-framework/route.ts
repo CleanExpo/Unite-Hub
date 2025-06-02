@@ -45,7 +45,7 @@ const featureEngine = {
   }
 };
 
-export async function GET(request: NextRequest) {
+async function handleGET(req, userId) (request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const component = searchParams.get('component');
@@ -269,7 +269,7 @@ async function handleOverviewRequest() {
   });
 }
 
-export async function POST(request: NextRequest) {
+async function handlePOST(req, userId) (request: NextRequest) {
   try {
     const body = await request.json();
     const { component, action, data } = body;
@@ -405,3 +405,6 @@ async function handleMarketValidatorActions(action: string, data: MarketValidato
 export async function HEAD() {
   return new NextResponse(null, { status: 200 });
 }
+
+export const GET = withApiAuth(handleGET);
+export const POST = withApiAuth(handlePOST);

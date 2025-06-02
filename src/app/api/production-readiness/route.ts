@@ -280,7 +280,7 @@ function calculateReadinessScore(
  * GET /api/production-readiness
  * Get comprehensive production readiness assessment
  */
-export async function GET(request: NextRequest) {
+async function handleGET(req, userId) (request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const action = searchParams.get('action');
@@ -414,7 +414,7 @@ export async function GET(request: NextRequest) {
  * POST /api/production-readiness
  * Trigger specific checks or optimizations
  */
-export async function POST(request: NextRequest) {
+async function handlePOST(req, userId) (request: NextRequest) {
   try {
     const body = await request.json();
     const { action, config } = body;
@@ -499,3 +499,6 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+export const GET = withApiAuth(handleGET);
+export const POST = withApiAuth(handlePOST);

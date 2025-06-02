@@ -30,8 +30,14 @@ export const apiClient = {
 
   async handleResponse(response: Response) {
     if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'API request failed');
+      let errorMessage = 'API request failed';
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorMessage;
+      } catch {
+        errorMessage = await response.text() || errorMessage;
+      }
+      throw new Error(errorMessage);
     }
     return response.json();
   },

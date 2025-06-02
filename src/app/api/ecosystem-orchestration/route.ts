@@ -739,7 +739,7 @@ class EcosystemOrchestrationService {
   }
 }
 
-export async function POST(request: NextRequest) {
+async function handlePOST(req, userId) (request: NextRequest) {
   try {
     const body: EcosystemRequest = await request.json();
     const service = new EcosystemOrchestrationService();
@@ -795,7 +795,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET() {
+async function handleGET(req, userId) () {
   return NextResponse.json({
     success: true,
     service: 'Advanced Ecosystem Orchestration Platform',
@@ -876,3 +876,6 @@ export async function GET() {
     timestamp: new Date().toISOString()
   });
 }
+
+export const GET = withApiAuth(handleGET);
+export const POST = withApiAuth(handlePOST);

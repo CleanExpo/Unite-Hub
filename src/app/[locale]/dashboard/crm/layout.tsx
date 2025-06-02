@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sidebar } from '@/components/crm/Sidebar';
+import Sidebar from '@/components/crm/Sidebar';
 import { createClient } from '@/lib/supabase/server';
 
 interface CRMLayoutProps {

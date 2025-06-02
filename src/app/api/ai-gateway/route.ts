@@ -9,7 +9,7 @@ import { aiGateway } from '@/lib/ai-gateway/gateway';
 /**
  * GET /api/ai-gateway - Get AI Gateway status and metrics
  */
-export async function GET(request: NextRequest) {
+async function handleGET(req, userId) (request: NextRequest) {
   try {
     const url = new URL(request.url);
     const action = url.searchParams.get('action');
@@ -151,7 +151,7 @@ export async function GET(request: NextRequest) {
 /**
  * POST /api/ai-gateway - Process AI requests through the gateway
  */
-export async function POST(request: NextRequest) {
+async function handlePOST(req, userId) (request: NextRequest) {
   try {
     const body = await request.json();
     const { prompt, model, maxTokens, temperature, provider } = body;
@@ -201,7 +201,7 @@ export async function POST(request: NextRequest) {
 /**
  * PUT /api/ai-gateway - Update AI Gateway configuration
  */
-export async function PUT(request: NextRequest) {
+async function handlePUT(req, userId) (request: NextRequest) {
   try {
     const body = await request.json();
     const { action, data } = body;
@@ -250,7 +250,7 @@ export async function PUT(request: NextRequest) {
 /**
  * DELETE /api/ai-gateway - Reset cache or clear data
  */
-export async function DELETE(request: NextRequest) {
+async function handleDELETE(req, userId) (request: NextRequest) {
   try {
     const url = new URL(request.url);
     const action = url.searchParams.get('action');
@@ -308,3 +308,8 @@ function parseTimeRange(timeRange: string): { start: string; end: string } {
   
   return { start: start.toISOString(), end };
 }
+
+export const GET = withApiAuth(handleGET);
+export const POST = withApiAuth(handlePOST);
+export const PUT = withApiAuth(handlePUT);
+export const DELETE = withApiAuth(handleDELETE);

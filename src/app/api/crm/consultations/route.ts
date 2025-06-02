@@ -1,0 +1,54 @@
+import { createClient } from '@/lib/supabase/server'
+import { NextResponse } from 'next/server'
+
+async function handleGET(req, userId) () {
+  try {
+    const supabase = await createClient()
+    const { data, error } = await supabase
+      .from('consultations')
+      .select('*')
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      console.error('Error fetching consultations:', error)
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    return NextResponse.json(data)
+  } catch (error) {
+    console.error('Server error:', error)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
+  }
+}
+
+async function handlePOST(req, userId) (request: Request) {
+  try {
+    const supabase = await createClient()
+    const consultationData = await request.json()
+
+    const { data, error } = await supabase
+      .from('consultations')
+      .insert(consultationData)
+      .select()
+      .single()
+
+    if (error) {
+      console.error('Error creating consultation:', error)
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    return NextResponse.json(data, { status: 201 })
+  } catch (error) {
+    console.error('Server error:', error)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
+  }
+}
+
+export const GET = withApiAuth(handleGET);
+export const POST = withApiAuth(handlePOST);

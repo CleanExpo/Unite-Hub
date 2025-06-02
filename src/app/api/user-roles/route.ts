@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 
-export async function GET(req: NextRequest) {
-  const supabase = createClient();
+async function handleGET(req, userId) (req: NextRequest) {
+  const supabase = await createClient();
   
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
@@ -47,8 +47,8 @@ export async function GET(req: NextRequest) {
   return NextResponse.json(data);
 }
 
-export async function POST(req: NextRequest) {
-  const supabase = createClient();
+async function handlePOST(req, userId) (req: NextRequest) {
+  const supabase = await createClient();
   
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
@@ -82,8 +82,8 @@ export async function POST(req: NextRequest) {
   return NextResponse.json(data);
 }
 
-export async function DELETE(req: NextRequest) {
-  const supabase = createClient();
+async function handleDELETE(req, userId) (req: NextRequest) {
+  const supabase = await createClient();
   
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
@@ -121,3 +121,7 @@ export async function DELETE(req: NextRequest) {
 
   return NextResponse.json({ success: true });
 }
+
+export const GET = withApiAuth(handleGET);
+export const POST = withApiAuth(handlePOST);
+export const DELETE = withApiAuth(handleDELETE);
