@@ -575,3 +575,14 @@ export class WorkflowEngine {
 
 // Export singleton instance
 export const workflowEngine = new WorkflowEngine();
+
+export function executeWorkflow(eventType: string, payload: Record<string, unknown>): void {
+  // Implementation to trigger workflows based on event type
+  console.log(`[Workflow Engine] Executing workflow for event: ${eventType}`, payload);
+  
+  // Add actual workflow execution logic here
+  // workflowEngine.executeTrigger(eventType, 'deal', payload.dealId as string, {
+  //   from_stage: payload.previousStage,
+  //   to_stage: payload.newStage
+  // });
+}
