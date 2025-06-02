@@ -3,7 +3,7 @@
 import { DashboardOverview } from '@/components/crm/DashboardOverview';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Calendar, CheckCircle } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
 import { apiClient } from '@/lib/apiClient';
 import { useState, useEffect } from 'react';
 
@@ -107,35 +107,17 @@ export default function CRMDashboardPage() {
               tasksCount={dashboardData.tasksCount}
               activitiesCount={dashboardData.activitiesCount}
               pipelineData={dashboardData.pipelineData}
+              recentActivities={dashboardData.recentActivities.map(act => ({
+                id: act.id,
+                type: 'note',
+                title: act.description,
+                user: 'System',
+                time: new Date(act.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+              }))}
             />
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
-              {/* Recent Activities */}
-              <Card className="bg-slate-800 border-slate-700">
-                <CardHeader>
-                  <CardTitle className="text-lg text-white">Recent Activities</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {dashboardData.recentActivities.map((activity) => (
-                      <div key={activity.id} className="flex items-start">
-                        <div className="bg-slate-700 rounded-full p-2 mr-3">
-                          <Calendar className="h-4 w-4 text-teal-400" />
-                        </div>
-                        <div>
-                          <p className="text-slate-300 font-medium">{activity.description}</p>
-                          <p className="text-slate-500 text-sm">
-                            {new Date(activity.timestamp).toLocaleString()}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                    {dashboardData.recentActivities.length === 0 && (
-                      <p className="text-slate-500 text-center py-4">No recent activities</p>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
+              {/* Upcoming Tasks */}
 
               {/* Upcoming Tasks */}
               <Card className="bg-slate-800 border-slate-700">

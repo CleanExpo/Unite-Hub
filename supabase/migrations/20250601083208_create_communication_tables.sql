@@ -58,14 +58,6 @@ FOR SELECT USING (
   (entity_type = 'client' AND EXISTS (
     SELECT 1 FROM clients WHERE clients.id = crm_notes.entity_id
   ))
-  OR
-  (entity_type = 'project' AND EXISTS (
-    SELECT 1 FROM projects WHERE projects.id = crm_notes.entity_id
-  ))
-  OR
-  (entity_type = 'task' AND EXISTS (
-    SELECT 1 FROM tasks WHERE tasks.id = crm_notes.entity_id
-  ))
 );
 
 -- Create triggers for updated_at
