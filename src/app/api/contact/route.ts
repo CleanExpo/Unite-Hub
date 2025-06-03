@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server';
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 import type { Database } from '@/types/supabase';
 import { sendContactFormNotification, sendContactFormConfirmation } from '@/lib/email/sendEmail';
 
-async function handlePOST(req, userId) (request: Request) {
+async function handlePOST(request: Request) {
   try {
     const body = await request.json();
     const { name, email, company, service, message } = body;
@@ -83,4 +84,4 @@ async function handlePOST(req, userId) (request: Request) {
   }
 }
 
-export const POST = withApiAuth(handlePOST);
+export const POST = handlePOST;

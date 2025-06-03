@@ -45,7 +45,7 @@ const featureEngine = {
   }
 };
 
-async function handleGET(req, userId) (request: NextRequest) {
+async function handleGET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const component = searchParams.get('component');
@@ -269,7 +269,7 @@ async function handleOverviewRequest() {
   });
 }
 
-async function handlePOST(req, userId) (request: NextRequest) {
+async function handlePOST(request: NextRequest) {
   try {
     const body = await request.json();
     const { component, action, data } = body;
@@ -406,5 +406,5 @@ export async function HEAD() {
   return new NextResponse(null, { status: 200 });
 }
 
-export const GET = withApiAuth(handleGET);
-export const POST = withApiAuth(handlePOST);
+export const GET = handleGET;
+export const POST = handlePOST;

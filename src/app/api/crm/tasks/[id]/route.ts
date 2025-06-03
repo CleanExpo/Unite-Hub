@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 
-async function handleGET(req, userId) (req: NextRequest, { params }: { params: { id: string } }) {
-  const supabase = await createClient();
+export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+  const supabase = createClient();
 
   const { data, error } = await supabase
     .from('tasks')
@@ -17,8 +17,8 @@ async function handleGET(req, userId) (req: NextRequest, { params }: { params: {
   return NextResponse.json(data);
 }
 
-async function handlePUT(req, userId) (req: NextRequest, { params }: { params: { id: string } }) {
-  const supabase = await createClient();
+export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+  const supabase = createClient();
   const taskData = await req.json();
 
   const { data, error } = await supabase
@@ -34,6 +34,3 @@ async function handlePUT(req, userId) (req: NextRequest, { params }: { params: {
 
   return NextResponse.json(data);
 }
-
-export const GET = withApiAuth(handleGET);
-export const PUT = withApiAuth(handlePUT);

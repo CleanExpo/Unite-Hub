@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { autonomousCustomerExperienceEngine } from '@/lib/cognitive/customer-experience/autonomous-engine';
 
-async function handleGET(req, userId) (request: NextRequest) {
+async function handleGET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const action = searchParams.get('action');
@@ -105,7 +105,7 @@ async function handleGET(req, userId) (request: NextRequest) {
   }
 }
 
-async function handlePOST(req, userId) (request: NextRequest) {
+async function handlePOST(request: NextRequest) {
   try {
     const body = await request.json();
     const { action, data } = body;
@@ -214,5 +214,5 @@ async function handlePOST(req, userId) (request: NextRequest) {
   }
 }
 
-export const GET = withApiAuth(handleGET);
-export const POST = withApiAuth(handlePOST);
+export const GET = handleGET;
+export const POST = handlePOST;

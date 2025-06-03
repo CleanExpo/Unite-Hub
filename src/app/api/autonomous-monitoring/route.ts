@@ -460,7 +460,7 @@ class AutonomousMonitoringService {
   }
 }
 
-async function handlePOST(req, userId) (request: NextRequest) {
+async function handlePOST(request: NextRequest) {
   try {
     const body: AutonomousMonitoringRequest = await request.json();
     const service = new AutonomousMonitoringService();
@@ -530,7 +530,7 @@ async function handlePOST(req, userId) (request: NextRequest) {
   }
 }
 
-async function handleGET(req, userId) () {
+async function handleGET(request: NextRequest) {
   // Return autonomous monitoring status and capabilities
   return NextResponse.json({
     success: true,
@@ -569,5 +569,5 @@ async function handleGET(req, userId) () {
   });
 }
 
-export const GET = withApiAuth(handleGET);
-export const POST = withApiAuth(handlePOST);
+export const GET = handleGET;
+export const POST = handlePOST;

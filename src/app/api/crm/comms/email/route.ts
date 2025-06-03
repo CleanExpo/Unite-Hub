@@ -16,8 +16,8 @@ function getResendClient(): Resend {
   return resend;
 }
 
-async function handlePOST(req, userId) (req: NextRequest) {
-  const supabase = await createClient();
+export async function POST(req: NextRequest) {
+  const supabase = createClient();
   
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
@@ -87,5 +87,3 @@ async function handlePOST(req, userId) (req: NextRequest) {
     }, { status: 500 });
   }
 }
-
-export const POST = withApiAuth(handlePOST);

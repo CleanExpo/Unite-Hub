@@ -9,7 +9,7 @@ import { aiGateway } from '@/lib/ai-gateway/gateway';
 /**
  * GET /api/ai-gateway - Get AI Gateway status and metrics
  */
-async function handleGET(req, userId) (request: NextRequest) {
+async function handleGET(request: NextRequest) {
   try {
     const url = new URL(request.url);
     const action = url.searchParams.get('action');
@@ -151,7 +151,7 @@ async function handleGET(req, userId) (request: NextRequest) {
 /**
  * POST /api/ai-gateway - Process AI requests through the gateway
  */
-async function handlePOST(req, userId) (request: NextRequest) {
+async function handlePOST(request: NextRequest) {
   try {
     const body = await request.json();
     const { prompt, model, maxTokens, temperature, provider } = body;
@@ -201,7 +201,7 @@ async function handlePOST(req, userId) (request: NextRequest) {
 /**
  * PUT /api/ai-gateway - Update AI Gateway configuration
  */
-async function handlePUT(req, userId) (request: NextRequest) {
+async function handlePUT(request: NextRequest) {
   try {
     const body = await request.json();
     const { action, data } = body;
@@ -250,7 +250,7 @@ async function handlePUT(req, userId) (request: NextRequest) {
 /**
  * DELETE /api/ai-gateway - Reset cache or clear data
  */
-async function handleDELETE(req, userId) (request: NextRequest) {
+async function handleDELETE(request: NextRequest) {
   try {
     const url = new URL(request.url);
     const action = url.searchParams.get('action');
@@ -309,7 +309,7 @@ function parseTimeRange(timeRange: string): { start: string; end: string } {
   return { start: start.toISOString(), end };
 }
 
-export const GET = withApiAuth(handleGET);
-export const POST = withApiAuth(handlePOST);
-export const PUT = withApiAuth(handlePUT);
-export const DELETE = withApiAuth(handleDELETE);
+export const GET = handleGET;
+export const POST = handlePOST;
+export const PUT = handlePUT;
+export const DELETE = handleDELETE;

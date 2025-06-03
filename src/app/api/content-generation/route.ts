@@ -77,7 +77,7 @@ function getContentService(): SmartContentGenerationService {
   return contentService;
 }
 
-async function handlePOST(req, userId) (request: NextRequest) {
+async function handlePOST(request: NextRequest) {
   try {
     const service = getContentService();
     const { action, ...data } = await request.json();
@@ -196,7 +196,7 @@ async function handlePOST(req, userId) (request: NextRequest) {
   }
 }
 
-async function handleGET(req, userId) (request: NextRequest) {
+async function handleGET(request: NextRequest) {
   try {
     const service = getContentService();
     const url = new URL(request.url);
@@ -245,5 +245,5 @@ async function handleGET(req, userId) (request: NextRequest) {
   }
 }
 
-export const GET = withApiAuth(handleGET);
-export const POST = withApiAuth(handlePOST);
+export const GET = handleGET;
+export const POST = handlePOST;

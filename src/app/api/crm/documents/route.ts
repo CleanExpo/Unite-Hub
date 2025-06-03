@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
 
-async function handlePOST(req, userId) (request: NextRequest) {
+export async function POST(request: NextRequest) {
   const supabase = await createClient();
   const formData = await request.formData();
   
@@ -60,7 +60,7 @@ async function handlePOST(req, userId) (request: NextRequest) {
   return NextResponse.json(data[0], { status: 201 });
 }
 
-async function handleGET(req, userId) (request: NextRequest) {
+export async function GET(request: NextRequest) {
   const supabase = await createClient();
   const dealId = request.nextUrl.searchParams.get('dealId');
   
@@ -86,6 +86,3 @@ async function handleGET(req, userId) (request: NextRequest) {
 
   return NextResponse.json(documents);
 }
-
-export const GET = withApiAuth(handleGET);
-export const POST = withApiAuth(handlePOST);

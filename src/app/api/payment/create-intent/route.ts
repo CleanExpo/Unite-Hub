@@ -19,7 +19,7 @@ const createIntentSchema = z.object({
  * 
  * @route POST /api/payment/create-intent
  */
-async function handlePOST(req, userId) (request: NextRequest) {
+async function handlePOST(request: NextRequest) {
   try {
     // Parse and validate the request body
     const body = await request.json();
@@ -79,4 +79,4 @@ async function handlePOST(req, userId) (request: NextRequest) {
   }
 }
 
-export const POST = withApiAuth(handlePOST);
+export const POST = handlePOST;

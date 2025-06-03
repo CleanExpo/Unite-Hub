@@ -275,7 +275,7 @@ class NeuralInterface {
   }
 }
 
-async function handlePOST(req, userId) (request: NextRequest) {
+async function handlePOST(request: NextRequest) {
   try {
     const body: PlatformEvolutionRequest = await request.json();
     const service = new PlatformEvolutionService();
@@ -319,7 +319,7 @@ async function handlePOST(req, userId) (request: NextRequest) {
   }
 }
 
-async function handleGET(req, userId) () {
+async function handleGET() {
   return NextResponse.json({
     success: true,
     service: 'Next-Generation Platform Evolution',
@@ -345,5 +345,5 @@ async function handleGET(req, userId) () {
   });
 }
 
-export const GET = withApiAuth(handleGET);
-export const POST = withApiAuth(handlePOST);
+export const GET = handleGET;
+export const POST = handlePOST;

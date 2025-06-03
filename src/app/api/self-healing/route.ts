@@ -23,7 +23,7 @@ const selfHealingService = new SelfHealingInfrastructureService(aiGateway, {
   learningEnabled: true
 });
 
-async function handleGET(req, userId) (req: NextRequest) {
+async function handleGET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
     const action = searchParams.get('action');
@@ -79,7 +79,7 @@ async function handleGET(req, userId) (req: NextRequest) {
   }
 }
 
-async function handlePOST(req, userId) (req: NextRequest) {
+async function handlePOST(req: NextRequest) {
   try {
     const body = await req.json();
     const { action, data } = body;
@@ -126,7 +126,7 @@ async function handlePOST(req, userId) (req: NextRequest) {
   }
 }
 
-async function handlePUT(req, userId) (req: NextRequest) {
+async function handlePUT(req: NextRequest) {
   try {
     const body = await req.json();
     const { action } = body;
@@ -171,7 +171,7 @@ async function handlePUT(req, userId) (req: NextRequest) {
   }
 }
 
-async function handleDELETE(req, userId) () {
+async function handleDELETE() {
   try {
     await selfHealingService.stop();
     return NextResponse.json({
@@ -187,7 +187,7 @@ async function handleDELETE(req, userId) () {
   }
 }
 
-export const GET = withApiAuth(handleGET);
-export const POST = withApiAuth(handlePOST);
-export const PUT = withApiAuth(handlePUT);
-export const DELETE = withApiAuth(handleDELETE);
+export const GET = handleGET;
+export const POST = handlePOST;
+export const PUT = handlePUT;
+export const DELETE = handleDELETE;

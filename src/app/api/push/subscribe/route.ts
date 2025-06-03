@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { withApiAuth } from '@/lib/supabase/apiAuth';;
-import { Database } from '@/types/supabase';
+import { createClient } from '@/lib/supabase/server';
 
 // Schema for push subscription validation
 const PushSubscriptionSchema = z.object({
@@ -17,7 +16,7 @@ const PushSubscriptionSchema = z.object({
  * API Route to handle push notification subscription registration
  * POST /api/push/subscribe
  */
-async function handlePOST(req, userId) (request: NextRequest) {
+async function handlePOST(request: NextRequest) {
   try {
     // Get the subscription object from the request
     const subscription = await request.json();
@@ -32,7 +31,7 @@ async function handlePOST(req, userId) (request: NextRequest) {
     }
     
     // Get the Supabase client
-    const supabase = createRouteHandlerClient<Database>({ cookies });
+    const supabase = await createClient();
     
     // Get the user's session
     const { data: { session } } = await supabase.auth.getSession();
@@ -108,4 +107,4 @@ async function handlePOST(req, userId) (request: NextRequest) {
   }
 }
 
-export const POST = withApiAuth(handlePOST);
+export const POST = handlePOST;

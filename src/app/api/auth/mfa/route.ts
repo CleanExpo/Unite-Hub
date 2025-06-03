@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { withApiAuth } from '@/lib/supabase/apiAuth';;
-
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
+import { withApiAuth } from '@/lib/supabase/apiAuth';
 import { 
   generateMFASetup, 
   enableMFA, 
@@ -13,7 +14,7 @@ import {
  * POST /api/auth/mfa/setup
  * Generate MFA setup for a user
  */
-async function handlePOST(req, userId) (request: NextRequest) {
+async function handlePOST(request: NextRequest) {
   try {
     // Get the current session
     const supabase = createRouteHandlerClient({ cookies });
@@ -55,7 +56,7 @@ async function handlePOST(req, userId) (request: NextRequest) {
  * PUT /api/auth/mfa/enable
  * Enable MFA for a user
  */
-async function handlePUT(req, userId) (request: NextRequest) {
+async function handlePUT(request: NextRequest) {
   try {
     // Get the current session
     const supabase = createRouteHandlerClient({ cookies });
@@ -105,7 +106,7 @@ async function handlePUT(req, userId) (request: NextRequest) {
  * POST /api/auth/mfa/verify
  * Verify MFA token during login
  */
-async function handlePATCH(req, userId) (request: NextRequest) {
+async function handlePATCH(request: NextRequest) {
   try {
     // For verification during login, we need to handle the case
     // where the user is partially authenticated (after password)
@@ -146,7 +147,7 @@ async function handlePATCH(req, userId) (request: NextRequest) {
  * DELETE /api/auth/mfa
  * Disable MFA for a user
  */
-async function handleDELETE(req, userId) (request: NextRequest) {
+async function handleDELETE(request: NextRequest) {
   try {
     // Get the current session
     const supabase = createRouteHandlerClient({ cookies });
@@ -220,7 +221,7 @@ export const GET = async (request: NextRequest) => {
   }
 };
 
-export const POST = withApiAuth(handlePOST);
-export const PUT = withApiAuth(handlePUT);
-export const DELETE = withApiAuth(handleDELETE);
-export const PATCH = withApiAuth(handlePATCH);
+export const POST = handlePOST;
+export const PUT = handlePUT;
+export const DELETE = handleDELETE;
+export const PATCH = handlePATCH;

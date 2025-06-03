@@ -3,8 +3,8 @@ import { createClient } from '@/utils/supabase/server';
 import { checkPermission } from '@/lib/auth/permissions';
 import { logActivity } from '@/lib/crm/activity';
 
-async function handlePOST(req, userId) (req: NextRequest) {
-  const supabase = await createClient();
+export async function POST(req: NextRequest) {
+  const supabase = createClient();
   
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
@@ -53,8 +53,8 @@ async function handlePOST(req, userId) (req: NextRequest) {
   return NextResponse.json(newEmail, { status: 201 });
 }
 
-async function handleGET(req, userId) (req: NextRequest) {
-  const supabase = await createClient();
+export async function GET(req: NextRequest) {
+  const supabase = createClient();
   
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
@@ -96,6 +96,3 @@ async function handleGET(req, userId) (req: NextRequest) {
 
   return NextResponse.json(data);
 }
-
-export const GET = withApiAuth(handleGET);
-export const POST = withApiAuth(handlePOST);

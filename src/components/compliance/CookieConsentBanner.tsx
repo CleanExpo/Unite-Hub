@@ -59,7 +59,7 @@ export default function CookieConsentBanner({
   };
 
   return (
-    <div className={`fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-gray-800 shadow-lg border-t border-gray-200 dark:border-gray-700 p-3 md:p-4 transform transition-transform duration-300 ${className}`}>
+    <div className={`fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-gray-800 shadow-lg border-t border-gray-200 dark:border-gray-700 p-3 md:p-4 transform transition-transform duration-300 pointer-events-auto ${className}`}>
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
           <div className="mb-4 md:mb-0 md:pr-8">

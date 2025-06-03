@@ -3,8 +3,8 @@ import { createClient } from '@/utils/supabase/server';
 import { checkPermission } from '@/lib/auth/permissions';
 import { logActivity } from '@/lib/crm/activity';
 
-async function handleGET(req, userId) () {
-  const supabase = await createClient();
+export async function GET() {
+  const supabase = createClient();
   
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
@@ -30,8 +30,8 @@ async function handleGET(req, userId) () {
   return NextResponse.json(clients);
 }
 
-async function handlePOST(req, userId) (req: NextRequest) {
-  const supabase = await createClient();
+export async function POST(req: NextRequest) {
+  const supabase = createClient();
   
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
@@ -76,8 +76,8 @@ async function handlePOST(req, userId) (req: NextRequest) {
   return NextResponse.json(newClient, { status: 201 });
 }
 
-async function handleDELETE(req, userId) (req: NextRequest) {
-  const supabase = await createClient();
+export async function DELETE(req: NextRequest) {
+  const supabase = createClient();
   
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
@@ -128,7 +128,3 @@ async function handleDELETE(req, userId) (req: NextRequest) {
 
   return NextResponse.json({ success: true }, { status: 200 });
 }
-
-export const GET = withApiAuth(handleGET);
-export const POST = withApiAuth(handlePOST);
-export const DELETE = withApiAuth(handleDELETE);

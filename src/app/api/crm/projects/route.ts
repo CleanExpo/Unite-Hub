@@ -1,5 +1,5 @@
-import { withApiAuth } from '@/lib/supabase/apiAuth'
-import { createClient } from '@/lib/supabase/server'
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { checkPermission } from '@/lib/auth/permissions'
@@ -27,18 +27,23 @@ const projectSchema = z.object({
   milestones: z.any().optional()
 })
 
-async function handleGET(req: Request, userId: string) {
-  const url = new URL(req.url)
+export async function GET(request: Request) {
+  const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
+  const supabase = createRouteHandlerClient({ cookies })
+  
+  // Check user authentication
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  // Check permission to view CRM projects
+  if (!await checkPermission(user, 'crm.projects.view')) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
   
   try {
-    const supabase = await createClient()
-    
-    // Check permission to view CRM projects
-    if (!await checkPermission(userId, 'crm.projects.view')) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    }
-    
     // Build query with optional filters
     let query = supabase
       .from('projects')
@@ -76,28 +81,34 @@ async function handleGET(req: Request, userId: string) {
   }
 }
 
-async function handlePOST(req: Request, userId: string) {
+export async function POST(request: Request) {
+  const supabase = createRouteHandlerClient({ cookies })
+  const projectData = await request.json()
+  
+  // Check user authentication
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  // Check permission to create CRM projects
+  if (!await checkPermission(user, 'crm.projects.create')) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  }
+
+  // Validate request body
+  const validation = projectSchema.safeParse(projectData)
+  if (!validation.success) {
+    return NextResponse.json(
+      { error: validation.error.errors },
+      { status: 400 }
+    )
+  }
+
   try {
-    const supabase = await createClient()
-    const projectData = await req.json()
-    
-    // Check permission to create CRM projects
-    if (!await checkPermission(userId, 'crm.projects.create')) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-    }
-
-    // Validate request body
-    const validation = projectSchema.safeParse(projectData)
-    if (!validation.success) {
-      return NextResponse.json(
-        { error: validation.error.errors },
-        { status: 400 }
-      )
-    }
-
     const { data, error } = await supabase
       .from('projects')
-      .insert([{ ...validation.data, created_by: userId }])
+      .insert([validation.data])
       .select()
       .single()
 
@@ -105,7 +116,7 @@ async function handlePOST(req: Request, userId: string) {
     
     // Log the activity
     await logActivity({
-      user_id: userId,
+      user_id: user.id,
       action: 'create',
       entity_type: 'projects',
       entity_id: data.id,
@@ -122,6 +133,3 @@ async function handlePOST(req: Request, userId: string) {
     )
   }
 }
-
-export const GET = withApiAuth(handleGET)
-export const POST = withApiAuth(handlePOST)

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 
-async function handleGET(req, userId) () {
+async function handleGET() {
   const supabase = await createClient();
   
   const { data: { user } } = await supabase.auth.getUser();
@@ -44,4 +44,4 @@ async function handleGET(req, userId) () {
   return NextResponse.json(users);
 }
 
-export const GET = withApiAuth(handleGET);
+export const GET = handleGET;

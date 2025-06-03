@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 
-async function handleGET(req, userId) () {
+export async function GET() {
   const supabase = await createClient();
   
   const { data: deals, error } = await supabase
@@ -16,7 +16,7 @@ async function handleGET(req, userId) () {
   return NextResponse.json(deals);
 }
 
-async function handlePOST(req, userId) (request: Request) {
+export async function POST(request: Request) {
   const supabase = await createClient();
   const dealData = await request.json();
 
@@ -32,7 +32,7 @@ async function handlePOST(req, userId) (request: Request) {
   return NextResponse.json(data[0], { status: 201 });
 }
 
-async function handlePUT(req, userId) (request: Request) {
+export async function PUT(request: Request) {
   const supabase = await createClient();
   const { id, ...updateData } = await request.json();
 
@@ -48,7 +48,3 @@ async function handlePUT(req, userId) (request: Request) {
 
   return NextResponse.json(data[0]);
 }
-
-export const GET = withApiAuth(handleGET);
-export const POST = withApiAuth(handlePOST);
-export const PUT = withApiAuth(handlePUT);

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 
-async function handlePOST(req, userId) (req: NextRequest) {
+async function handlePOST(req: NextRequest) {
   try {
     const supabase = await createClient();
     
@@ -74,4 +74,4 @@ async function handlePOST(req, userId) (req: NextRequest) {
   }
 }
 
-export const POST = withApiAuth(handlePOST);
+export const POST = handlePOST;

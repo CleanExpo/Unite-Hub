@@ -6,7 +6,7 @@ import { supabaseAdmin } from '@/lib/supabase/admin';
  * Run database migrations and setup
  * This endpoint uses admin client for initial setup
  */
-async function handlePOST(req, userId) (request: NextRequest) {
+async function handlePOST(request: NextRequest) {
   try {
     console.log('🚀 Starting database setup...');
 
@@ -230,7 +230,7 @@ async function handlePOST(req, userId) (request: NextRequest) {
  * GET /api/setup-database
  * Check database setup status
  */
-async function handleGET(req, userId) () {
+async function handleGET() {
   try {
     console.log('🔍 Checking database status...');
 
@@ -276,5 +276,5 @@ async function handleGET(req, userId) () {
   }
 }
 
-export const GET = withApiAuth(handleGET);
-export const POST = withApiAuth(handlePOST);
+export const GET = handleGET;
+export const POST = handlePOST;

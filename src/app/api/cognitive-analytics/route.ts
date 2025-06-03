@@ -589,7 +589,7 @@ class CognitiveBIService {
   }
 }
 
-async function handlePOST(req, userId) (request: NextRequest) {
+async function handlePOST(request: NextRequest) {
   try {
     const body: CognitiveBIRequest = await request.json();
     const service = new CognitiveBIService();
@@ -641,7 +641,7 @@ async function handlePOST(req, userId) (request: NextRequest) {
   }
 }
 
-async function handleGET(req, userId) () {
+async function handleGET(request: NextRequest) {
   return NextResponse.json({
     success: true,
     service: 'Cognitive Business Intelligence & Predictive Analytics',
@@ -689,5 +689,5 @@ async function handleGET(req, userId) () {
   });
 }
 
-export const GET = withApiAuth(handleGET);
-export const POST = withApiAuth(handlePOST);
+export const GET = handleGET;
+export const POST = handlePOST;

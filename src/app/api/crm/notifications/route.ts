@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
 
-async function handleGET(req, userId) (request: NextRequest) {
+export async function GET(request: NextRequest) {
   const supabase = await createClient();
   const userId = request.nextUrl.searchParams.get('userId');
   
@@ -28,7 +28,7 @@ async function handleGET(req, userId) (request: NextRequest) {
   return NextResponse.json(notifications);
 }
 
-async function handlePOST(req, userId) (request: NextRequest) {
+export async function POST(request: NextRequest) {
   const supabase = await createClient();
   const notificationData = await request.json();
   
@@ -60,6 +60,3 @@ async function handlePOST(req, userId) (request: NextRequest) {
 
   return NextResponse.json(data[0], { status: 201 });
 }
-
-export const GET = withApiAuth(handleGET);
-export const POST = withApiAuth(handlePOST);
