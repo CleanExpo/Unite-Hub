@@ -1,0 +1,33 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    ports:
+      - "8000:8000"
+
+    environment:
+      - ENV_VAR_NAME=value
+
+    volumes:
+      - ./data:/app/data
+
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13
+
+    environment:
+      - POSTGRES_DB=your_db
+      - POSTGRES_USER=your_user
+      - POSTGRES_PASSWORD=your_password
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # Add more services as needed (e.g., cache, queue, etc.)
+
+volumes:
+  postgres_data:
