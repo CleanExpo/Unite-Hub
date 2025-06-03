@@ -1,0 +1,2 @@
+scikit-learn==0.24.2
+tensorflow==2.15.0
