@@ -20,44 +20,52 @@ export async function GET() {
 
     if (tasksError) throw tasksError;
 
-    // Fetch activities data
+    // Fetch activities data (from interactions table)
     const oneWeekAgo = new Date();
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
     
     const { data: activitiesData, error: activitiesError } = await supabase
-      .from('activities')
-      .select('id, type, timestamp, description')
-      .gte('timestamp', oneWeekAgo.toISOString());
+      .from('interactions')
+      .select('id, interaction_type as type, interaction_date as timestamp, summary as description')
+      .gte('interaction_date', oneWeekAgo.toISOString());
 
     if (activitiesError) throw activitiesError;
 
     // Process pipeline data (count of deals per stage)
-    const pipelineData = dealsData.reduce((acc, deal) => {
+    const pipelineData = dealsData?.reduce<{stage: string, count: number}[]>((acc, deal) => {
       const existing = acc.find(item => item.stage === deal.stage);
       if (existing) {
         existing.count += 1;
       } else {
         acc.push({
-          stage: deal.stage,
+          stage: deal.stage || 'Unknown',
           count: 1
         });
       }
       return acc;
-    }, []);
+    }, []) || [];
 
     // Calculate metrics
-    const dealsCount = dealsData.length;
-    // Since the 'value' column doesn't exist, we can't calculate revenue
-    const tasksCount = tasksData.length;
-    const activitiesCount = activitiesData.length;
+    const dealsCount = dealsData?.length || 0;
+    const tasksCount = tasksData?.length || 0;
+    const activitiesCount = activitiesData?.length || 0;
+    
+    // Calculate revenue from won deals
+    const { data: wonDeals } = await supabase
+      .from('deals')
+      .select('amount')
+      .eq('status', 'won');
+    
+    const revenue = wonDeals?.reduce((sum, deal) => sum + (deal.amount || 0), 0) || 0;
 
     return NextResponse.json({
       dealsCount,
+      revenue,
       tasksCount,
       activitiesCount,
-      pipelineData: pipelineData.map(p => ({ stage: p.stage, count: p.count })),
-      recentActivities: activitiesData.slice(0, 3),
-      upcomingTasks: tasksData.slice(0, 3)
+      pipelineData: pipelineData.map(p => ({ stage: p.stage, value: p.count })), // Changed 'count' to 'value' to match frontend
+      recentActivities: activitiesData?.slice(0, 3) || [],
+      upcomingTasks: tasksData?.slice(0, 3) || []
     });
 
   } catch (error) {

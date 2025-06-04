@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createApiClient } from '@/lib/supabase/api';
 import { NextRequest } from 'next/server';
-import { withApiAuth } from '@/lib/supabase/apiAuth';
+import { withApiAuthNew } from '@/lib/supabase/apiAuthNew';
 import type { Database } from '@/types/supabase';
 import { sendConsultationBookingNotification, sendConsultationBookingConfirmation } from '@/lib/email/sendEmail';
 
@@ -45,7 +45,7 @@ async function handlePOST(req: NextRequest, userId: string) {
     }
     
     // Initialize Supabase client
-    const supabase = await createClient();
+    const supabase = await createApiClient();
     
     // Insert consultation booking into database
     const { data, error } = await supabase
@@ -125,7 +125,7 @@ async function handlePOST(req: NextRequest, userId: string) {
 async function handleGET(req: NextRequest, userId: string) {
   try {
     // Initialize Supabase client
-    const supabase = await createClient();
+    const supabase = await createApiClient();
     
     // Query parameters
     const { searchParams } = new URL(req.url);
@@ -170,5 +170,5 @@ async function handleGET(req: NextRequest, userId: string) {
   }
 }
 
-export const GET = withApiAuth(handleGET);
-export const POST = withApiAuth(handlePOST);
+export const GET = withApiAuthNew(handleGET);
+export const POST = withApiAuthNew(handlePOST);

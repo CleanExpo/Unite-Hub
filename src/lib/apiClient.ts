@@ -1,30 +1,59 @@
 // Unified API client for frontend-backend communication
 export const apiClient = {
+  async getAuthHeaders() {
+    // Get auth token from Supabase client (if using in browser)
+    if (typeof window !== 'undefined') {
+      const { supabaseClient } = await import('@/lib/supabase/client');
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (session?.access_token) {
+        return {
+          'Authorization': `Bearer ${session.access_token}`
+        };
+      }
+    }
+    return {};
+  },
+
   async get(endpoint: string) {
-    const response = await fetch(`/api/${endpoint}`);
+    const authHeaders = await this.getAuthHeaders();
+    const response = await fetch(`/api/${endpoint}`, {
+      headers: authHeaders
+    });
     return this.handleResponse(response);
   },
 
   async post<T>(endpoint: string, data: T) {
+    const authHeaders = await this.getAuthHeaders();
     const response = await fetch(`/api/${endpoint}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        ...authHeaders
+      },
       body: JSON.stringify(data)
     });
     return this.handleResponse(response);
   },
 
   async put<T>(endpoint: string, data: T) {
+    const authHeaders = await this.getAuthHeaders();
     const response = await fetch(`/api/${endpoint}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        ...authHeaders
+      },
       body: JSON.stringify(data)
     });
     return this.handleResponse(response);
   },
 
   async delete(endpoint: string) {
-    const response = await fetch(`/api/${endpoint}`, { method: 'DELETE' });
+    const authHeaders = await this.getAuthHeaders();
+    const response = await fetch(`/api/${endpoint}`, { 
+      method: 'DELETE',
+      headers: authHeaders
+    });
     return this.handleResponse(response);
   },
 
