@@ -117,31 +117,50 @@ export default function CookieConsentProvider({ children }: CookieConsentProvide
           preferences: newPreferences
         })
       });
-      
+
+      // Handle API errors gracefully without throwing
       if (!response.ok) {
-        throw new Error('Failed to save cookie preferences');
+        console.warn(`Failed to save cookie preferences to server: ${response.status}`);
+      } else {
+        // Only update local state on successful response
+        setPreferences(newPreferences);
+        setHasConsented(true);
+        setShowBanner(false);
+        setIsModalOpen(false);
+
+        if (newPreferences.analytics) {
+          initializeAnalytics();
+        }
+
+        if (newPreferences.marketing) {
+          initializeMarketingTools();
+        }
       }
-      
-      // Update local state
-      setPreferences(newPreferences);
-      setHasConsented(true);
-      setShowBanner(false);
-      setIsModalOpen(false);
-      
-      // If analytics cookies are accepted, initialize analytics
-      if (newPreferences.analytics) {
-        initializeAnalytics();
-      }
-      
-      // If marketing cookies are accepted, initialize marketing tools
-      if (newPreferences.marketing) {
-        initializeMarketingTools();
-      }
-      
-      // No return value needed, function returns void
     } catch (error) {
-      console.error('Error saving cookie consent:', error);
-      throw error;
+      console.error('Error saving cookie consent to server:', error);
+      // Continue with fallback instead of throwing
+    }
+
+    // Always update local state and save to localStorage as backup
+    setPreferences(newPreferences);
+    setHasConsented(true);
+    setShowBanner(false);
+    setIsModalOpen(false);
+
+    // Save to localStorage as backup
+    localStorage.setItem('cookieConsent', JSON.stringify({
+      hasConsented: true,
+      preferences: newPreferences,
+      timestamp: Date.now()
+    }));
+
+    // Initialize services based on preferences
+    if (newPreferences.analytics) {
+      initializeAnalytics();
+    }
+
+    if (newPreferences.marketing) {
+      initializeMarketingTools();
     }
   };
   
