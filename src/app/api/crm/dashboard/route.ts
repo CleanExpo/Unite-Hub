@@ -1,14 +1,14 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 
-async function handleGET() {
-  const supabase = await createClient();
-
+export async function GET() {
   try {
+    const supabase = await createClient();
+
     // Fetch deals data
     const { data: dealsData, error: dealsError } = await supabase
       .from('deals')
-      .select('id, value, stage, status, created_at');
+      .select('id, stage, status, created_at');
 
     if (dealsError) throw dealsError;
 
@@ -31,34 +31,31 @@ async function handleGET() {
 
     if (activitiesError) throw activitiesError;
 
-    // Process pipeline data
+    // Process pipeline data (count of deals per stage)
     const pipelineData = dealsData.reduce((acc, deal) => {
       const existing = acc.find(item => item.stage === deal.stage);
       if (existing) {
-        existing.value += 1;
-        existing.totalValue += deal.value || 0;
+        existing.count += 1;
       } else {
         acc.push({
           stage: deal.stage,
-          value: 1,
-          totalValue: deal.value || 0
+          count: 1
         });
       }
       return acc;
     }, []);
 
     // Calculate metrics
-    const dealsCount = dealsData.filter(d => d.status === 'active').length;
-    const revenue = pipelineData.reduce((sum, stage) => sum + stage.totalValue, 0);
+    const dealsCount = dealsData.length;
+    // Since the 'value' column doesn't exist, we can't calculate revenue
     const tasksCount = tasksData.length;
     const activitiesCount = activitiesData.length;
 
     return NextResponse.json({
       dealsCount,
-      revenue,
       tasksCount,
       activitiesCount,
-      pipelineData: pipelineData.map(p => ({ stage: p.stage, value: p.value })),
+      pipelineData: pipelineData.map(p => ({ stage: p.stage, count: p.count })),
       recentActivities: activitiesData.slice(0, 3),
       upcomingTasks: tasksData.slice(0, 3)
     });
@@ -71,5 +68,3 @@ async function handleGET() {
     );
   }
 }
-
-export const GET = handleGET;

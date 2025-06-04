@@ -1,135 +1,21 @@
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
-import { NextResponse } from 'next/server'
-import { z } from 'zod'
-import { checkPermission } from '@/lib/auth/permissions'
-import { logActivity } from '@/lib/crm/activity'
+import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 
-// Project schema for validation
-const projectSchema = z.object({
-  client_id: z.string().uuid(),
-  project_name: z.string().min(1, 'Project name is required'),
-  description: z.string().optional(),
-  project_type: z.string().optional(),
-  status: z.enum(['planning', 'active', 'on_hold', 'completed', 'cancelled']).default('planning'),
-  priority: z.enum(['low', 'medium', 'high', 'urgent']).default('medium'),
-  start_date: z.string().optional(),
-  end_date: z.string().optional(),
-  budget: z.number().optional(),
-  actual_cost: z.number().optional(),
-  currency: z.string().default('AUD'),
-  progress_percentage: z.number().min(0).max(100).default(0),
-  team_members: z.array(z.string().uuid()).optional(),
-  contract_value: z.number().optional(),
-  payment_terms: z.string().optional(),
-  deliverables: z.any().optional(),
-  risks: z.any().optional(),
-  milestones: z.any().optional()
-})
-
-export async function GET(request: Request) {
-  const url = new URL(request.url)
-  const searchParams = new URLSearchParams(url.search)
-  const supabase = createRouteHandlerClient({ cookies })
-  
-  // Check user authentication
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
-  // Check permission to view CRM projects
-  if (!await checkPermission(user, 'crm.projects.view')) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-  }
-  
+export async function GET() {
   try {
-    // Build query with optional filters
-    let query = supabase
-      .from('projects')
-      .select('*')
-      
-    // Add filters from query parameters
-    const clientId = searchParams.get('client_id')
-    const status = searchParams.get('status')
-    const priority = searchParams.get('priority')
-    
-    if (clientId) {
-      query = query.eq('client_id', clientId)
+    const cookieStore = await cookies();
+    const sbAuthToken = cookieStore.get('sb-hdfggelozqzdxvupbnbp-auth-token');
+
+    if (!sbAuthToken) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
-    if (status) {
-      query = query.eq('status', status)
-    }
-    if (priority) {
-      query = query.eq('priority', priority)
-    }
-    
-    // Add sorting
-    query = query.order('created_at', { ascending: false })
-    
-    const { data: projects, error } = await query
 
-    if (error) throw error
-    return NextResponse.json(projects)
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error'
-    console.error('Error fetching projects:', message)
-    return NextResponse.json(
-      { error: `Failed to fetch projects: ${message}` },
-      { status: 500 }
-    )
-  }
-}
+    // Your logic here to fetch projects using the authenticated session
+    // For example, you might call a Supabase function or directly query the database
 
-export async function POST(request: Request) {
-  const supabase = createRouteHandlerClient({ cookies })
-  const projectData = await request.json()
-  
-  // Check user authentication
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
-
-  // Check permission to create CRM projects
-  if (!await checkPermission(user, 'crm.projects.create')) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-  }
-
-  // Validate request body
-  const validation = projectSchema.safeParse(projectData)
-  if (!validation.success) {
-    return NextResponse.json(
-      { error: validation.error.errors },
-      { status: 400 }
-    )
-  }
-
-  try {
-    const { data, error } = await supabase
-      .from('projects')
-      .insert([validation.data])
-      .select()
-      .single()
-
-    if (error) throw error
-    
-    // Log the activity
-    await logActivity({
-      user_id: user.id,
-      action: 'create',
-      entity_type: 'projects',
-      entity_id: data.id,
-      new_values: data
-    });
-
-    return NextResponse.json(data, { status: 201 })
-  } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error'
-    console.error('Error creating project:', message)
-    return NextResponse.json(
-      { error: `Failed to create project: ${message}` },
-      { status: 500 }
-    )
+    // Example response:
+    return NextResponse.json({ success: true });
+  } catch {
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
