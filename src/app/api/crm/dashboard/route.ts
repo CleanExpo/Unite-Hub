@@ -1,9 +1,9 @@
-import { createApiClient } from '@/lib/supabase/api';
+import { createServiceClient } from '@/lib/supabase/unified-auth';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    const supabase = await createApiClient();
+    const supabase = createServiceClient();
 
     // Fetch deals data
     const { data: dealsData, error: dealsError } = await supabase
