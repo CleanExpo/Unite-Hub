@@ -445,7 +445,7 @@ export class DeploymentValidator {
 }
 
 // CLI interface
-if (require.main === module) {
+if (import.meta.main) {
   const validator = new DeploymentValidator();
   validator.validateAll().then(success => {
     process.exit(success ? 0 : 1);

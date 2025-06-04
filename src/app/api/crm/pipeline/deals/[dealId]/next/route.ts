@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
-import { MoveDealToNextStageUseCase } from '@/application/usecases/MoveDealToNextStage';
-import { SupabaseDealRepository } from '@/infrastructure/persistence/supabase/SupabaseDealRepository';
+import { createClient } from '@/lib/supabase/server';
+import { type Database } from '@/types/supabase';
+import { DealRepository } from '@/core/domain/interfaces/repositories';
 import { RealWorkflowEngine } from '@/infrastructure/workflow/RealWorkflowEngine';
 import { SupabaseEventBus } from '@/infrastructure/eventbus/supabase/SupabaseEventBus';
 
@@ -9,11 +10,12 @@ export async function POST(
   { params }: { params: { dealId: string } }
 ) {
   const dealId = params.dealId;
+  const supabase = await createClient();
   
   try {
-    const dealRepo = new SupabaseDealRepository();
+    const dealRepo = new SupabaseDealRepository(supabase);
     const workflowEngine = new RealWorkflowEngine();
-    const eventBus = new SupabaseEventBus();
+    const eventBus = new SupabaseEventBus(supabase);
     
     const useCase = new MoveDealToNextStageUseCase(
       dealRepo,
@@ -34,4 +36,35 @@ export async function POST(
       { status: 500 }
     );
   }
+}
+
+// Update the SupabaseDealRepository to use the injected client
+class SupabaseDealRepository implements DealRepository {
+  private supabaseClient: Database;
+
+  constructor(supabaseClient: Database) {
+    this.supabaseClient = supabaseClient;
+  }
+
+  async findById(id: string): Promise<Deal> {
+    const { data, error } = await this.supabaseClient
+      .from('deals')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error || !data) throw new Error(`Deal not found: ${id}`);
+
+    return {
+      id: data.id,
+      title: data.title,
+      value: data.value,
+      stage: data.stage as DealStage,
+      clientId: data.client_id,
+      createdAt: new Date(data.created_at),
+      updatedAt: new Date(data.updated_at)
+    };
+  }
+
+  // ... keep other methods the same ...
 }

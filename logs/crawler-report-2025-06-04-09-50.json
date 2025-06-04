@@ -1,0 +1,12 @@
+{
+  "success": true,
+  "timestamp": "2025-06-03T23:50:02.618Z",
+  "pages": [],
+  "summary": {
+    "totalPages": 0,
+    "totalErrors": 14,
+    "errorsByType": {
+      "AggregateError": 14
+    }
+  }
+}

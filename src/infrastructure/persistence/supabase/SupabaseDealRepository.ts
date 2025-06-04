@@ -1,22 +1,23 @@
-import { createClient } from '@/lib/supabase/server';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { Deal, DealStage } from '@/core/domain/types';
 import { DealRepository } from '@/core/domain/interfaces/repositories';
 
 export class SupabaseDealRepository implements DealRepository {
-  private async getSupabase() {
-    return await createClient();
+  private supabaseClient: SupabaseClient;
+
+  constructor(supabaseClient: SupabaseClient) {
+    this.supabaseClient = supabaseClient;
   }
 
   async findById(id: string): Promise<Deal> {
-    const supabase = await this.getSupabase();
-    const { data, error } = await supabase
+    const { data, error } = await this.supabaseClient
       .from('deals')
       .select('*')
       .eq('id', id)
       .single();
-    
+
     if (error || !data) throw new Error(`Deal not found: ${id}`);
-    
+
     return {
       id: data.id,
       title: data.title,
@@ -29,8 +30,7 @@ export class SupabaseDealRepository implements DealRepository {
   }
 
   async save(deal: Deal): Promise<void> {
-    const supabase = await this.getSupabase();
-    const { error } = await supabase
+    const { error } = await this.supabaseClient
       .from('deals')
       .upsert({
         id: deal.id,
@@ -41,19 +41,18 @@ export class SupabaseDealRepository implements DealRepository {
         created_at: deal.createdAt.toISOString(),
         updated_at: new Date().toISOString()
       });
-    
+
     if (error) throw new Error(`Failed to save deal: ${error.message}`);
   }
 
   async findByStage(stage: DealStage): Promise<Deal[]> {
-    const supabase = await this.getSupabase();
-    const { data, error } = await supabase
+    const { data, error } = await this.supabaseClient
       .from('deals')
       .select('*')
       .eq('stage', stage);
-    
+
     if (error) throw new Error(`Failed to find deals by stage: ${error.message}`);
-    
+
     return data.map(deal => ({
       id: deal.id,
       title: deal.title,
@@ -66,15 +65,14 @@ export class SupabaseDealRepository implements DealRepository {
   }
 
   async updateStage(dealId: string, newStage: DealStage): Promise<void> {
-    const supabase = await this.getSupabase();
-    const { error } = await supabase
+    const { error } = await this.supabaseClient
       .from('deals')
       .update({ 
         stage: newStage,
         updated_at: new Date().toISOString()
       })
       .eq('id', dealId);
-    
+
     if (error) throw new Error(`Failed to update deal stage: ${error.message}`);
   }
 }
