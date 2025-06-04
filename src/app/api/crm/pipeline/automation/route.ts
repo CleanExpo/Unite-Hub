@@ -1,8 +1,8 @@
-import { createClient } from '@/lib/supabase/server';
+import { createApiClient } from '@/lib/supabase/api';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const supabase = await createClient();
+  const supabase = await createApiClient();
   
   const { data: rules, error } = await supabase
     .from('pipeline_automation_rules')
@@ -17,7 +17,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const supabase = await createClient();
+  const supabase = await createApiClient();
   const ruleData = await request.json();
 
   const { data, error } = await supabase
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
 }
 
 export async function PUT(request: Request) {
-  const supabase = await createClient();
+  const supabase = await createApiClient();
   const { id, ...updateData } = await request.json();
 
   const { data, error } = await supabase
@@ -50,7 +50,7 @@ export async function PUT(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-  const supabase = await createClient();
+  const supabase = await createApiClient();
   const { id } = await request.json();
 
   const { error } = await supabase

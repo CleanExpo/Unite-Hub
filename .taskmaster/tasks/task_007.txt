@@ -1,0 +1,62 @@
+# Task ID: 7
+# Title: Implement Input Validation
+# Status: pending
+# Dependencies: 3, 4, 5, 6
+# Priority: high
+# Description: Add validation for all API endpoints to ensure data integrity and security.
+# Details:
+Implement input validation for all endpoints using a library like zod or joi:
+
+1. Create validation schemas for deal data
+2. Apply validation before processing requests
+3. Return appropriate error messages for invalid inputs
+
+```typescript
+import { z } from 'zod';
+
+const dealSchema = z.object({
+  title: z.string().min(1, 'Title is required'),
+  value: z.number().optional(),
+  status: z.string().optional(),
+  company: z.string().optional(),
+  contact_name: z.string().optional(),
+  contact_email: z.string().email().optional(),
+  notes: z.string().optional(),
+  stage: z.string().optional()
+});
+
+const updateDealSchema = dealSchema.partial().extend({
+  id: z.string().uuid('Invalid deal ID format')
+});
+
+// Example usage in POST endpoint
+export async function POST(request: Request) {
+  const supabase = createClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_KEY!
+  );
+  
+  try {
+    const dealData = dealSchema.parse(await request.json());
+    
+    const { data, error } = await supabase
+      .from('pipeline_deals')
+      .insert([dealData])
+      .select();
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json(data[0], { status: 201 });
+  } catch (err) {
+    if (err instanceof z.ZodError) {
+      return NextResponse.json({ error: err.errors }, { status: 400 });
+    }
+    return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
+  }
+}
+```
+
+# Test Strategy:
+Create comprehensive test cases for validation rules. Test with valid data, invalid data, edge cases, and malicious inputs. Verify that appropriate error messages are returned for each validation failure. Test that valid data passes through without issues.

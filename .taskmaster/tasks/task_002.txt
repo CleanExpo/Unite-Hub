@@ -1,0 +1,35 @@
+# Task ID: 2
+# Title: Create Supabase Pipeline Deals Table
+# Status: pending
+# Dependencies: 1
+# Priority: high
+# Description: Design and create the 'pipeline_deals' table in Supabase with appropriate columns and constraints.
+# Details:
+Using Supabase dashboard or SQL editor, create the 'pipeline_deals' table with the following structure:
+
+```sql
+CREATE TABLE pipeline_deals (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  title TEXT NOT NULL,
+  value DECIMAL(10,2),
+  status TEXT,
+  company TEXT,
+  contact_name TEXT,
+  contact_email TEXT,
+  notes TEXT,
+  stage TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Create a trigger to update the updated_at column
+CREATE TRIGGER update_pipeline_deals_updated_at
+BEFORE UPDATE ON pipeline_deals
+FOR EACH ROW
+EXECUTE PROCEDURE update_updated_at_column();
+```
+
+Adjust fields as needed based on specific CRM requirements.
+
+# Test Strategy:
+Verify table creation by connecting to Supabase and running a SELECT query. Test the automatic timestamp functionality by inserting and updating records. Ensure the UUID generation works correctly for new records.

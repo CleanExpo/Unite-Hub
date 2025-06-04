@@ -1,5 +1,5 @@
 import { withApiAuth } from '@/lib/supabase/apiAuth';
-import { createClient } from '@/lib/supabase/server';
+import { createApiClient } from '@/lib/supabase/api';
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { checkPermission } from '@/lib/auth/permissions';
@@ -32,7 +32,7 @@ const workflowTemplateSchema = z.object({
 
 async function handleGET(req: NextRequest, userId: string) {
   try {
-    const supabase = await createClient();
+    const supabase = await createApiClient();
     
     // Check permission
     if (!await checkPermission(userId, 'crm.workflows.view')) {
@@ -83,7 +83,7 @@ async function handleGET(req: NextRequest, userId: string) {
 
 async function handlePOST(req: NextRequest, userId: string) {
   try {
-    const supabase = await createClient();
+    const supabase = await createApiClient();
     const body = await req.json();
     
     // Check permission

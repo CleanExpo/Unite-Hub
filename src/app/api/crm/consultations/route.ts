@@ -1,9 +1,9 @@
-import { createClient } from '@/lib/supabase/server'
+import { createApiClient } from '@/lib/supabase/api'
 import { NextResponse } from 'next/server'
 
 async function handleGET() {
   try {
-    const supabase = await createClient()
+    const supabase = await createApiClient()
     const { data, error } = await supabase
       .from('consultations')
       .select('*')
@@ -26,7 +26,7 @@ async function handleGET() {
 
 async function handlePOST(request: Request) {
   try {
-    const supabase = await createClient()
+    const supabase = await createApiClient()
     const consultationData = await request.json()
 
     const { data, error } = await supabase

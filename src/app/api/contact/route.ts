@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { createApiClient } from '@/lib/supabase/api';
 import type { Database } from '@/types/supabase';
 import { sendContactFormNotification, sendContactFormConfirmation } from '@/lib/email/sendEmail';
 
@@ -18,7 +17,7 @@ async function handlePOST(request: Request) {
     }
     
     // Initialize Supabase client
-    const supabase = createServerComponentClient<Database>({ cookies });
+    const supabase = createApiClient();
     
     // Insert contact form submission into database
     const { data, error } = await supabase

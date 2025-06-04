@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { createApiClient } from '@/lib/supabase/api';
 import { withApiAuth } from '@/lib/supabase/apiAuth';
 import { 
   generateMFASetup, 
@@ -17,7 +16,7 @@ import {
 async function handlePOST(request: NextRequest) {
   try {
     // Get the current session
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = createApiClient();
     const { data: { session } } = await supabase.auth.getSession();
 
     if (!session) {
@@ -59,7 +58,7 @@ async function handlePOST(request: NextRequest) {
 async function handlePUT(request: NextRequest) {
   try {
     // Get the current session
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = createApiClient();
     const { data: { session } } = await supabase.auth.getSession();
 
     if (!session) {
@@ -150,7 +149,7 @@ async function handlePATCH(request: NextRequest) {
 async function handleDELETE(request: NextRequest) {
   try {
     // Get the current session
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = createApiClient();
     const { data: { session } } = await supabase.auth.getSession();
 
     if (!session) {
@@ -189,7 +188,7 @@ async function handleDELETE(request: NextRequest) {
 export const GET = async (request: NextRequest) => {
   try {
     // Get the current session
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = createApiClient();
     const { data: { session } } = await supabase.auth.getSession();
 
     if (!session) {

@@ -1,8 +1,8 @@
-import { createClient } from '@/lib/supabase/server';
+import { createApiClient } from '@/lib/supabase/api';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
-  const supabase = await createClient();
+  const supabase = await createApiClient();
   const formData = await request.formData();
   
   const file = formData.get('file') as File;
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
-  const supabase = await createClient();
+  const supabase = await createApiClient();
   const dealId = request.nextUrl.searchParams.get('dealId');
   
   if (!dealId) {

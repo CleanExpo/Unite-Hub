@@ -1,0 +1,36 @@
+# Task ID: 4
+# Title: Implement POST Endpoint for Pipeline Deals
+# Status: pending
+# Dependencies: 1, 2
+# Priority: medium
+# Description: Create the POST endpoint to add new deals to the pipeline.
+# Details:
+Implement the POST function in the route.ts file that:
+1. Creates a Supabase client using environment variables
+2. Extracts deal data from the request body
+3. Inserts the data into the pipeline_deals table
+4. Returns the created deal or an error response
+
+```typescript
+export async function POST(request: Request) {
+  const supabase = createClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_KEY!
+  );
+  const dealData = await request.json();
+
+  const { data, error } = await supabase
+    .from('pipeline_deals')
+    .insert([dealData])
+    .select();
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json(data[0], { status: 201 });
+}
+```
+
+# Test Strategy:
+Test the endpoint with various valid and invalid payloads. Verify proper error handling for malformed requests. Check that the endpoint returns the newly created deal with a 201 status code. Implement integration tests that validate the data is correctly stored in the database.

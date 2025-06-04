@@ -1,0 +1,43 @@
+# Task ID: 6
+# Title: Implement DELETE Endpoint for Pipeline Deals
+# Status: pending
+# Dependencies: 1, 2
+# Priority: medium
+# Description: Create a DELETE endpoint to remove deals from the pipeline.
+# Details:
+Implement a DELETE function in the route.ts file that:
+1. Creates a Supabase client using environment variables
+2. Extracts the deal ID from the request (either from URL or body)
+3. Deletes the specified deal from the pipeline_deals table
+4. Returns a success message or an error response
+
+```typescript
+export async function DELETE(request: Request) {
+  const supabase = createClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_KEY!
+  );
+  
+  // Extract ID from URL or request body as needed
+  const url = new URL(request.url);
+  const id = url.searchParams.get('id');
+  
+  if (!id) {
+    return NextResponse.json({ error: 'Deal ID is required' }, { status: 400 });
+  }
+
+  const { error } = await supabase
+    .from('pipeline_deals')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ success: true, message: 'Deal deleted successfully' });
+}
+```
+
+# Test Strategy:
+Test the endpoint with valid and invalid IDs. Verify proper error handling for non-existent records. Check that the endpoint returns appropriate status codes. Implement integration tests that confirm the record is actually removed from the database.

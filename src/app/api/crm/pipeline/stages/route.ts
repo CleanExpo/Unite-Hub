@@ -1,8 +1,8 @@
-import { createClient } from '@/lib/supabase/server';
+import { createApiClient } from '@/lib/supabase/api';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const supabase = await createClient();
+  const supabase = await createApiClient();
   
   const { data: stages, error } = await supabase
     .from('pipeline_stages')
@@ -17,7 +17,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const supabase = await createClient();
+  const supabase = await createApiClient();
   const stageData = await request.json();
 
   const { data, error } = await supabase

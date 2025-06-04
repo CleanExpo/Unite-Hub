@@ -1,8 +1,8 @@
-import { createClient } from '@/lib/supabase/server';
+import { createApiClient } from '@/lib/supabase/api';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
-  const supabase = await createClient();
+  const supabase = await createApiClient();
   const userId = request.nextUrl.searchParams.get('userId');
   
   if (!userId) {
@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const supabase = await createClient();
+  const supabase = await createApiClient();
   const notificationData = await request.json();
   
   if (!notificationData.user_id || !notificationData.title || !notificationData.message) {
