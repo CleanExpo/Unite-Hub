@@ -1,2 +1,5 @@
-export { RedisService } from './redis';
-export { SupabaseService } from './supabase';
+/**
+ * Redis service exports
+ */
+
+export { RedisService, getRedis } from './RedisService';

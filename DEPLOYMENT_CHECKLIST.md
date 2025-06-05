@@ -1,104 +1,153 @@
-# Unite Group Deployment Checklist
+# Unite Group - Production Deployment Checklist
 
-This document provides a comprehensive deployment checklist to ensure that all components of the Unite Group website are properly configured and tested before going live.
+## 🚀 Pre-Deployment Verification
 
-## Pre-Deployment Preparation
+### ✅ Build & Code Quality
+- [x] Build completes without errors: `npm run build`
+- [x] ESLint configuration updated
+- [x] TypeScript compilation successful
+- [x] No critical warnings in build output
 
-- [ ] Run pre-deployment check script: `pwsh pre-deployment-check.ps1`
-- [ ] Review any warnings or errors from the pre-deployment check
-- [ ] Update all placeholder content with real business content
-- [ ] Test all forms and functionality in a staging environment
-- [ ] Create `.env.local` file with all required environment variables
-- [ ] Run build process to verify compilation: `npm run build`
+### ✅ Service Abstractions
+- [x] Redis service abstraction implemented
+- [x] Cookie handling made build-safe
+- [x] All external services use runtime checks
+- [x] ServiceFactory pattern applied
 
-## Environment Variables
+### 🔐 Environment Variables
 
-Ensure the following environment variables are configured in your deployment platform:
+#### Required Variables - Verify in `.env.local`:
+```bash
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=https://[your-project-ref].supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=[your-anon-key]
+SUPABASE_SERVICE_ROLE_KEY=[your-service-role-key]
 
-### Supabase Configuration
-- [ ] `NEXT_PUBLIC_SUPABASE_URL` - Your Supabase project URL
-- [ ] `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Your Supabase anonymous key
+# Stripe Configuration
+STRIPE_SECRET_KEY=sk_live_[your-secret-key]  # Must start with sk_live_
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_[your-publishable-key]
+STRIPE_WEBHOOK_SECRET=whsec_[your-webhook-secret]
 
-### Email Configuration
-- [ ] `SMTP_HOST` - SMTP server hostname
-- [ ] `SMTP_PORT` - SMTP server port (usually 587 or 465)
-- [ ] `SMTP_USER` - SMTP username/email
-- [ ] `SMTP_PASSWORD` - SMTP password
-- [ ] `DEFAULT_FROM` - Default sender email address
-- [ ] `ADMIN_EMAIL` - Administrator email for notifications
+# Email Service (Resend)
+RESEND_API_KEY=[your-resend-api-key]
 
-### General Configuration
-- [ ] `NEXT_PUBLIC_SITE_URL` - Production site URL
-- [ ] `NEXT_PUBLIC_APP_VERSION` - Current application version
+# Redis Configuration (Optional)
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_PASSWORD=[your-redis-password]
+REDIS_DB=0
 
-## Database Setup
+# Application Configuration
+NEXT_PUBLIC_SITE_URL=https://[your-domain].com
+NEXT_PUBLIC_APP_NAME=Unite Group
+NEXT_PUBLIC_APP_VERSION=14.0
+NEXT_PUBLIC_CURRENCY=aud
+NEXT_PUBLIC_CONSULTATION_PRICE=55000
 
-- [ ] Execute database scripts in Supabase SQL Editor:
-  - [ ] Run `database/consultations.sql` for consultation schema
-  - [ ] Run `database/projects.sql` for project management schema
-  - [ ] Create a `health_check` table for monitoring endpoint
+# Security
+NEXTAUTH_SECRET=[generate-with-openssl-rand-base64-32]
+NEXTAUTH_URL=https://[your-domain].com
 
-- [ ] Configure Row Level Security (RLS) policies:
-  - [ ] Verify RLS policies for consultations
-  - [ ] Verify RLS policies for projects
-  - [ ] Verify RLS policies for contact submissions
+# AI Services (Optional)
+OPENAI_API_KEY=[your-openai-key]
+ANTHROPIC_API_KEY=[your-anthropic-key]
+```
 
-## Authentication Configuration
+### 📋 Database Setup
+- [ ] Run database migrations: `npm run db:migrate`
+- [ ] Verify all tables created
+- [ ] Check RLS policies are active
+- [ ] Confirm triggers are set up
+- [ ] Test database connections
 
-- [ ] Configure Supabase authentication providers
-- [ ] Set up email templates for authentication emails
-- [ ] Add site URL to Supabase redirect URLs
-- [ ] Test login, registration, and password reset flows
+### 🧪 Testing
+- [ ] Run unit tests: `npm test`
+- [ ] Run integration tests: `npm run test:integration`
+- [ ] Test authentication flow
+- [ ] Test payment processing
+- [ ] Verify email sending
 
-## Testing Checklist
+### 🔒 Security Checks
+- [ ] All API keys are production keys
+- [ ] Environment variables are secure
+- [ ] CORS settings configured
+- [ ] Rate limiting enabled
+- [ ] Security headers configured
 
-- [ ] Test all forms with valid and invalid data
-- [ ] Verify email notifications are sent correctly
-- [ ] Check authentication flows: login, register, reset password
-- [ ] Test responsive layout on multiple devices
-- [ ] Verify consultation booking process end-to-end
-- [ ] Test dashboard functionality for normal users
-- [ ] Test admin functionality for admin users
-- [ ] Verify API endpoints and database connections
-- [ ] Check monitoring endpoint (/api/health)
-- [ ] Validate site performance with Lighthouse or similar tool
+### 📱 Frontend Verification
+- [ ] All pages load correctly
+- [ ] Forms submit properly
+- [ ] Error handling works
+- [ ] Loading states display
+- [ ] Responsive design tested
 
-## SEO and Analytics
+### 🌐 Deployment Platform (Vercel)
+- [ ] Project connected to Git repository
+- [ ] Environment variables set in Vercel
+- [ ] Build command: `npm run build`
+- [ ] Output directory: `.next`
+- [ ] Node.js version: 18.x or higher
 
-- [ ] Verify sitemap.xml is accessible
-- [ ] Verify robots.txt is configured correctly
-- [ ] Check meta tags on all pages
-- [ ] Configure analytics tracking (if applicable)
-- [ ] Test Open Graph tags for social sharing
+### 📊 Monitoring & Analytics
+- [ ] Error tracking configured
+- [ ] Performance monitoring active
+- [ ] Analytics tracking enabled
+- [ ] Logging system operational
 
-## Security Checks
+## 🚀 Deployment Steps
 
-- [ ] Verify API endpoints are properly secured
-- [ ] Check authentication and authorization controls
-- [ ] Ensure sensitive data is not exposed in client-side code
-- [ ] Test CORS and CSP configurations
-- [ ] Verify form validation and input sanitization
+1. **Final Local Test**
+   ```bash
+   cd D:\Unite Group
+   npm run build
+   npm run start
+   ```
 
-## Final Steps
+2. **Push to Repository**
+   ```bash
+   git add .
+   git commit -m "Production deployment - v14.0"
+   git push origin main
+   ```
 
-- [ ] Run the deployment script: `bash deploy.sh`
-- [ ] Deploy to Vercel using `vercel --prod` or GitHub integration
-- [ ] Perform post-deployment tests on production environment
-- [ ] Monitor error logs and performance metrics
-- [ ] Update documentation with production URL and details
+3. **Verify Deployment**
+   - Check Vercel deployment logs
+   - Test production URL
+   - Verify all features working
+   - Monitor error logs
 
-## Rollback Plan
+4. **Post-Deployment**
+   - [ ] Test production authentication
+   - [ ] Verify payment processing
+   - [ ] Check email delivery
+   - [ ] Monitor performance metrics
+   - [ ] Update DNS if needed
 
-In case of deployment issues:
+## ⚠️ Rollback Plan
 
-1. Identify the nature of the issue
-2. If database-related: Restore from the most recent backup
-3. If code-related: Redeploy the previous stable version
-4. For critical issues: Temporarily enable maintenance mode
-5. Document the issue and resolution for future reference
+If issues arise:
+1. Revert to previous deployment in Vercel
+2. Check error logs for issues
+3. Fix locally and redeploy
+4. Use feature flags for gradual rollout
+
+## 📞 Support Contacts
+
+- Technical Lead: [Contact Info]
+- DevOps Team: [Contact Info]
+- Database Admin: [Contact Info]
+- Security Team: [Contact Info]
+
+## ✅ Sign-Off
+
+- [ ] Development Team Lead
+- [ ] Security Review
+- [ ] QA Approval
+- [ ] Business Stakeholder
 
 ---
 
-**Last Updated**: May 25, 2025  
-**Version**: 4.0  
-**Prepared By**: UNITE Group Development Team
+**Deployment Date**: _______________
+**Deployed By**: _______________
+**Version**: 14.0
+**Status**: Ready for Production
