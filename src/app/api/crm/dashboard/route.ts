@@ -5,10 +5,16 @@ export async function GET() {
   try {
     const supabase = createServiceClient();
 
-    // Fetch deals data
+    // Fetch deals data with proper stage names
     const { data: dealsData, error: dealsError } = await supabase
       .from('deals')
-      .select('id, stage, status, created_at');
+      .select(`
+        id, 
+        status, 
+        created_at,
+        stage_id,
+        pipeline_stages (name)
+      `);
 
     if (dealsError) throw dealsError;
 
@@ -32,13 +38,14 @@ export async function GET() {
     if (activitiesError) throw activitiesError;
 
     // Process pipeline data (count of deals per stage)
-    const pipelineData = dealsData?.reduce<{stage: string, count: number}[]>((acc, deal) => {
-      const existing = acc.find(item => item.stage === deal.stage);
+    const pipelineData = dealsData?.reduce<{stage: string, count: number}[]>((acc, deal: any) => {
+      const stageName = deal.pipeline_stages?.name || 'Unknown';
+      const existing = acc.find(item => item.stage === stageName);
       if (existing) {
         existing.count += 1;
       } else {
         acc.push({
-          stage: deal.stage || 'Unknown',
+          stage: stageName,
           count: 1
         });
       }
