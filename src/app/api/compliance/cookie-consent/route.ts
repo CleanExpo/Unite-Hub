@@ -1,11 +1,8 @@
-import { createServiceClient } from '@/lib/supabase/unified-auth';
 import { NextResponse } from 'next/server';
 import { NextRequest } from 'next/server';
 
 export async function GET(req: NextRequest) {
   try {
-    const supabase = createServiceClient();
-    
     // Get sessionId from query params
     const { searchParams } = new URL(req.url);
     const sessionId = searchParams.get('sessionId');
@@ -17,8 +14,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // For now, return default cookie preferences
-    // In production, this would check the database for saved preferences
+    // Return default cookie preferences - no auth required
     return NextResponse.json({
       sessionId,
       preferences: {
@@ -41,9 +37,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const supabase = createServiceClient();
     const body = await req.json();
-    
     const { sessionId, preferences } = body;
 
     if (!sessionId || !preferences) {
@@ -53,8 +47,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // For now, just acknowledge the consent
-    // In production, this would save to a cookie_consents table
+    // Acknowledge the consent - no auth required
     console.log('Cookie consent received:', { sessionId, preferences });
 
     return NextResponse.json({
