@@ -42,8 +42,14 @@ export default function About() {
       {/* Navigation */}
       <nav className="bg-slate-900/80 backdrop-blur-md border-b border-slate-700 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
-          <Link href="/" className="text-2xl font-bold text-white">
-            <span className="text-teal-400">UG</span> UNITE Group
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/images/unite-logo.png"
+              alt="UNITE Group"
+              width={150}
+              height={40}
+              className="h-10 w-auto"
+            />
           </Link>
           <div className="hidden md:flex items-center gap-8">
             <Link href="/features" className="text-slate-300 hover:text-white transition-colors">Services</Link>
@@ -302,7 +308,7 @@ export default function About() {
               <CardContent className="p-6 text-center">
                 <div className="w-24 h-24 mx-auto mb-4 relative overflow-hidden rounded-full">
                   <Image
-                    src="/placeholder-user.jpg"
+                    src="/images/team-phill-mcgurk.png"
                     alt="Phill McGurk - Co-Owner, Product Development"
                     width={96}
                     height={96}

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter, useParams } from "next/navigation";
 import { supabaseClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
@@ -52,8 +53,14 @@ export default function Navigation() {
       borderBottom: "1px solid #e5e7eb",
       backgroundColor: "white"
     }}>
-      <Link href={getLocalizedPath("/", currentLocale)} style={{ fontSize: "1.25rem", fontWeight: "bold", textDecoration: "none", color: "black" }}>
-        Unite Group
+      <Link href={getLocalizedPath("/", currentLocale)} style={{ display: "flex", alignItems: "center" }}>
+        <Image
+          src="/images/unite-logo.png"
+          alt="UNITE Group"
+          width={120}
+          height={32}
+          style={{ height: "32px", width: "auto" }}
+        />
       </Link>
 
       <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
