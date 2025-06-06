@@ -434,13 +434,13 @@ export default function About() {
               </CardContent>
             </Card>
 
-            {/* Usman - Software Builder */}
+            {/* Rana - Software Builder */}
             <Card className="bg-slate-800 border-slate-700 hover:bg-slate-700 transition-colors">
               <CardContent className="p-6 text-center">
                 <div className="w-24 h-24 bg-gradient-to-br from-emerald-400 to-teal-600 rounded-full mx-auto mb-4 flex items-center justify-center">
-                  <span className="text-2xl font-bold text-white">US</span>
+                  <span className="text-2xl font-bold text-white">RN</span>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">Usman</h3>
+                <h3 className="text-xl font-bold text-white mb-2">Rana</h3>
                 <p className="text-blue-400 font-medium mb-3">Software Builder</p>
                 <div className="text-xs text-slate-400 mb-3 space-y-1">
                   <div>Software Engineer</div>
