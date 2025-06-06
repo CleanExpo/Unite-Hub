@@ -57,6 +57,22 @@ export default function Navigation() {
       </Link>
 
       <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+        {/* Main navigation links */}
+        <Link href={getLocalizedPath("/services", currentLocale)} style={{ textDecoration: "none", color: "#0070f3" }}>
+          Services
+        </Link>
+        <Link href={getLocalizedPath("/pricing", currentLocale)} style={{ textDecoration: "none", color: "#0070f3" }}>
+          Pricing
+        </Link>
+        <Link href={getLocalizedPath("/about", currentLocale)} style={{ textDecoration: "none", color: "#0070f3" }}>
+          About
+        </Link>
+        <Link href={getLocalizedPath("/contact", currentLocale)} style={{ textDecoration: "none", color: "#0070f3" }}>
+          Contact
+        </Link>
+        
+        <div style={{ width: "1px", height: "24px", backgroundColor: "#e5e7eb", margin: "0 0.5rem" }} />
+        
         <LanguageSwitcher currentLocale={currentLocale} />
         
         {!loading && (
