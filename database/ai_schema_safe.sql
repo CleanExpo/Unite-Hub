@@ -1,12 +1,43 @@
--- AI System Schema for Version 14.0
--- This schema stores all AI-related metrics, predictions, threats, and deployments
+-- AI System Schema for Version 14.0 - SAFE VERSION
+-- This version checks for existing objects before creating them
 
 -- Enable UUID extension if not already enabled
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
+-- Drop existing indexes if they exist (to recreate them properly)
+DROP INDEX IF EXISTS idx_ai_system_metrics_component;
+DROP INDEX IF EXISTS idx_ai_system_metrics_name;
+DROP INDEX IF EXISTS idx_ai_system_metrics_timestamp;
+DROP INDEX IF EXISTS idx_ai_system_metrics_env;
+DROP INDEX IF EXISTS idx_ai_predictions_type;
+DROP INDEX IF EXISTS idx_ai_predictions_status;
+DROP INDEX IF EXISTS idx_ai_predictions_severity;
+DROP INDEX IF EXISTS idx_ai_predictions_predicted;
+DROP INDEX IF EXISTS idx_ai_threats_type;
+DROP INDEX IF EXISTS idx_ai_threats_severity;
+DROP INDEX IF EXISTS idx_ai_threats_status;
+DROP INDEX IF EXISTS idx_ai_threats_detected;
+DROP INDEX IF EXISTS idx_ai_threat_detections_type;
+DROP INDEX IF EXISTS idx_ai_threat_detections_severity;
+DROP INDEX IF EXISTS idx_ai_threat_detections_status;
+DROP INDEX IF EXISTS idx_ai_threat_detections_detected;
+DROP INDEX IF EXISTS idx_ai_deployments_status;
+DROP INDEX IF EXISTS idx_ai_deployments_environment;
+DROP INDEX IF EXISTS idx_ai_deployments_started;
+DROP INDEX IF EXISTS idx_ai_optimizations_type;
+DROP INDEX IF EXISTS idx_ai_optimizations_status;
+DROP INDEX IF EXISTS idx_ai_optimizations_applied;
+DROP INDEX IF EXISTS idx_ai_events_type;
+DROP INDEX IF EXISTS idx_ai_events_severity;
+DROP INDEX IF EXISTS idx_ai_events_component;
+DROP INDEX IF EXISTS idx_ai_events_created;
+DROP INDEX IF EXISTS idx_ai_system_health_recorded;
+DROP INDEX IF EXISTS idx_ai_validation_rules_type;
+DROP INDEX IF EXISTS idx_ai_validation_rules_category;
+DROP INDEX IF EXISTS idx_ai_validation_rules_enabled;
+
 -- =====================================================
 -- AI SYSTEM METRICS TABLE
--- Stores system metrics collected by the AI monitoring system
 -- =====================================================
 CREATE TABLE IF NOT EXISTS ai_system_metrics (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -19,15 +50,14 @@ CREATE TABLE IF NOT EXISTS ai_system_metrics (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Indexes for performance
-CREATE INDEX idx_ai_system_metrics_component ON ai_system_metrics(component);
-CREATE INDEX idx_ai_system_metrics_name ON ai_system_metrics(metric_name);
-CREATE INDEX idx_ai_system_metrics_timestamp ON ai_system_metrics(timestamp DESC);
-CREATE INDEX idx_ai_system_metrics_env ON ai_system_metrics(environment);
+-- Create indexes
+CREATE INDEX IF NOT EXISTS idx_ai_system_metrics_component ON ai_system_metrics(component);
+CREATE INDEX IF NOT EXISTS idx_ai_system_metrics_name ON ai_system_metrics(metric_name);
+CREATE INDEX IF NOT EXISTS idx_ai_system_metrics_timestamp ON ai_system_metrics(timestamp DESC);
+CREATE INDEX IF NOT EXISTS idx_ai_system_metrics_env ON ai_system_metrics(environment);
 
 -- =====================================================
 -- AI PREDICTIONS TABLE
--- Stores failure predictions made by the AI system
 -- =====================================================
 CREATE TABLE IF NOT EXISTS ai_predictions (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -36,7 +66,7 @@ CREATE TABLE IF NOT EXISTS ai_predictions (
     prediction JSONB NOT NULL,
     confidence DECIMAL(3, 2) NOT NULL CHECK (confidence >= 0 AND confidence <= 1),
     probability DECIMAL(3, 2) CHECK (probability >= 0 AND probability <= 1),
-    time_to_failure INTEGER, -- Hours until predicted failure
+    time_to_failure INTEGER,
     severity VARCHAR(20) CHECK (severity IN ('low', 'medium', 'high', 'critical')),
     description TEXT,
     recommendation TEXT,
@@ -47,15 +77,14 @@ CREATE TABLE IF NOT EXISTS ai_predictions (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Indexes
-CREATE INDEX idx_ai_predictions_type ON ai_predictions(prediction_type);
-CREATE INDEX idx_ai_predictions_status ON ai_predictions(status);
-CREATE INDEX idx_ai_predictions_severity ON ai_predictions(severity);
-CREATE INDEX idx_ai_predictions_predicted ON ai_predictions(predicted_at DESC);
+-- Create indexes
+CREATE INDEX IF NOT EXISTS idx_ai_predictions_type ON ai_predictions(prediction_type);
+CREATE INDEX IF NOT EXISTS idx_ai_predictions_status ON ai_predictions(status);
+CREATE INDEX IF NOT EXISTS idx_ai_predictions_severity ON ai_predictions(severity);
+CREATE INDEX IF NOT EXISTS idx_ai_predictions_predicted ON ai_predictions(predicted_at DESC);
 
 -- =====================================================
 -- AI THREAT DETECTIONS TABLE
--- Stores security threats detected by the AI system
 -- =====================================================
 CREATE TABLE IF NOT EXISTS ai_threat_detections (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -76,15 +105,14 @@ CREATE TABLE IF NOT EXISTS ai_threat_detections (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Indexes
-CREATE INDEX idx_ai_threats_type ON ai_threat_detections(threat_type);
-CREATE INDEX idx_ai_threats_severity ON ai_threat_detections(severity);
-CREATE INDEX idx_ai_threats_status ON ai_threat_detections(mitigation_status);
-CREATE INDEX idx_ai_threats_detected ON ai_threat_detections(detected_at DESC);
+-- Create indexes (using correct table name)
+CREATE INDEX IF NOT EXISTS idx_ai_threat_detections_type ON ai_threat_detections(threat_type);
+CREATE INDEX IF NOT EXISTS idx_ai_threat_detections_severity ON ai_threat_detections(severity);
+CREATE INDEX IF NOT EXISTS idx_ai_threat_detections_status ON ai_threat_detections(mitigation_status);
+CREATE INDEX IF NOT EXISTS idx_ai_threat_detections_detected ON ai_threat_detections(detected_at DESC);
 
 -- =====================================================
 -- AI DEPLOYMENTS TABLE
--- Stores deployment history and status
 -- =====================================================
 CREATE TABLE IF NOT EXISTS ai_deployments (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -105,14 +133,13 @@ CREATE TABLE IF NOT EXISTS ai_deployments (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Indexes
-CREATE INDEX idx_ai_deployments_status ON ai_deployments(status);
-CREATE INDEX idx_ai_deployments_environment ON ai_deployments(environment);
-CREATE INDEX idx_ai_deployments_started ON ai_deployments(started_at DESC);
+-- Create indexes
+CREATE INDEX IF NOT EXISTS idx_ai_deployments_status ON ai_deployments(status);
+CREATE INDEX IF NOT EXISTS idx_ai_deployments_environment ON ai_deployments(environment);
+CREATE INDEX IF NOT EXISTS idx_ai_deployments_started ON ai_deployments(started_at DESC);
 
 -- =====================================================
 -- AI OPTIMIZATION TABLE
--- Stores performance optimizations performed
 -- =====================================================
 CREATE TABLE IF NOT EXISTS ai_optimizations (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -129,14 +156,13 @@ CREATE TABLE IF NOT EXISTS ai_optimizations (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Indexes
-CREATE INDEX idx_ai_optimizations_type ON ai_optimizations(optimization_type);
-CREATE INDEX idx_ai_optimizations_status ON ai_optimizations(status);
-CREATE INDEX idx_ai_optimizations_applied ON ai_optimizations(applied_at DESC);
+-- Create indexes
+CREATE INDEX IF NOT EXISTS idx_ai_optimizations_type ON ai_optimizations(optimization_type);
+CREATE INDEX IF NOT EXISTS idx_ai_optimizations_status ON ai_optimizations(status);
+CREATE INDEX IF NOT EXISTS idx_ai_optimizations_applied ON ai_optimizations(applied_at DESC);
 
 -- =====================================================
 -- AI EVENTS TABLE
--- Stores all AI system events for audit trail
 -- =====================================================
 CREATE TABLE IF NOT EXISTS ai_events (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -148,15 +174,14 @@ CREATE TABLE IF NOT EXISTS ai_events (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Indexes
-CREATE INDEX idx_ai_events_type ON ai_events(event_type);
-CREATE INDEX idx_ai_events_severity ON ai_events(severity);
-CREATE INDEX idx_ai_events_component ON ai_events(component);
-CREATE INDEX idx_ai_events_created ON ai_events(created_at DESC);
+-- Create indexes
+CREATE INDEX IF NOT EXISTS idx_ai_events_type ON ai_events(event_type);
+CREATE INDEX IF NOT EXISTS idx_ai_events_severity ON ai_events(severity);
+CREATE INDEX IF NOT EXISTS idx_ai_events_component ON ai_events(component);
+CREATE INDEX IF NOT EXISTS idx_ai_events_created ON ai_events(created_at DESC);
 
 -- =====================================================
 -- AI SYSTEM HEALTH TABLE
--- Stores overall AI system health status
 -- =====================================================
 CREATE TABLE IF NOT EXISTS ai_system_health (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -174,12 +199,11 @@ CREATE TABLE IF NOT EXISTS ai_system_health (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Index
-CREATE INDEX idx_ai_system_health_recorded ON ai_system_health(recorded_at DESC);
+-- Create index
+CREATE INDEX IF NOT EXISTS idx_ai_system_health_recorded ON ai_system_health(recorded_at DESC);
 
 -- =====================================================
 -- AI VALIDATION RULES TABLE
--- Stores custom validation rules for deployments
 -- =====================================================
 CREATE TABLE IF NOT EXISTS ai_validation_rules (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -196,16 +220,16 @@ CREATE TABLE IF NOT EXISTS ai_validation_rules (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
--- Indexes
-CREATE INDEX idx_ai_validation_rules_type ON ai_validation_rules(rule_type);
-CREATE INDEX idx_ai_validation_rules_category ON ai_validation_rules(category);
-CREATE INDEX idx_ai_validation_rules_enabled ON ai_validation_rules(enabled);
+-- Create indexes
+CREATE INDEX IF NOT EXISTS idx_ai_validation_rules_type ON ai_validation_rules(rule_type);
+CREATE INDEX IF NOT EXISTS idx_ai_validation_rules_category ON ai_validation_rules(category);
+CREATE INDEX IF NOT EXISTS idx_ai_validation_rules_enabled ON ai_validation_rules(enabled);
 
 -- =====================================================
 -- ROW LEVEL SECURITY (RLS)
 -- =====================================================
 
--- Enable RLS on all tables
+-- Enable RLS on all tables (safe to re-run)
 ALTER TABLE ai_system_metrics ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ai_predictions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ai_threat_detections ENABLE ROW LEVEL SECURITY;
@@ -215,8 +239,29 @@ ALTER TABLE ai_events ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ai_system_health ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ai_validation_rules ENABLE ROW LEVEL SECURITY;
 
+-- Drop existing policies if they exist
+DROP POLICY IF EXISTS "Authenticated users can read AI system metrics" ON ai_system_metrics;
+DROP POLICY IF EXISTS "Authenticated users can read AI predictions" ON ai_predictions;
+DROP POLICY IF EXISTS "Authenticated users can read AI threat detections" ON ai_threat_detections;
+DROP POLICY IF EXISTS "Authenticated users can read AI deployments" ON ai_deployments;
+DROP POLICY IF EXISTS "Authenticated users can read AI optimizations" ON ai_optimizations;
+DROP POLICY IF EXISTS "Authenticated users can read AI events" ON ai_events;
+DROP POLICY IF EXISTS "Authenticated users can read AI system health" ON ai_system_health;
+DROP POLICY IF EXISTS "Authenticated users can read AI validation rules" ON ai_validation_rules;
+DROP POLICY IF EXISTS "Service role can insert AI system metrics" ON ai_system_metrics;
+DROP POLICY IF EXISTS "Service role can insert AI predictions" ON ai_predictions;
+DROP POLICY IF EXISTS "Service role can update AI predictions" ON ai_predictions;
+DROP POLICY IF EXISTS "Service role can insert AI threat detections" ON ai_threat_detections;
+DROP POLICY IF EXISTS "Service role can update AI threat detections" ON ai_threat_detections;
+DROP POLICY IF EXISTS "Service role can insert AI deployments" ON ai_deployments;
+DROP POLICY IF EXISTS "Service role can update AI deployments" ON ai_deployments;
+DROP POLICY IF EXISTS "Service role can insert AI optimizations" ON ai_optimizations;
+DROP POLICY IF EXISTS "Service role can update AI optimizations" ON ai_optimizations;
+DROP POLICY IF EXISTS "Service role can insert AI events" ON ai_events;
+DROP POLICY IF EXISTS "Service role can insert AI system health" ON ai_system_health;
+DROP POLICY IF EXISTS "Service role can manage AI validation rules" ON ai_validation_rules;
+
 -- Create policies for authenticated users
--- Read access for all authenticated users
 CREATE POLICY "Authenticated users can read AI system metrics" ON ai_system_metrics
     FOR SELECT USING (auth.role() = 'authenticated');
 
@@ -241,7 +286,7 @@ CREATE POLICY "Authenticated users can read AI system health" ON ai_system_healt
 CREATE POLICY "Authenticated users can read AI validation rules" ON ai_validation_rules
     FOR SELECT USING (auth.role() = 'authenticated');
 
--- Write access for service role only (server-side operations)
+-- Write access for service role only
 CREATE POLICY "Service role can insert AI system metrics" ON ai_system_metrics
     FOR INSERT WITH CHECK (auth.jwt()->>'role' = 'service_role');
 
@@ -282,7 +327,7 @@ CREATE POLICY "Service role can manage AI validation rules" ON ai_validation_rul
 -- FUNCTIONS FOR DATA CLEANUP
 -- =====================================================
 
--- Function to clean up old AI system metrics (keeps 30 days)
+-- Function to clean up old AI system metrics
 CREATE OR REPLACE FUNCTION cleanup_old_ai_system_metrics()
 RETURNS void AS $$
 BEGIN
@@ -291,7 +336,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Function to clean up old AI events (keeps 90 days)
+-- Function to clean up old AI events
 CREATE OR REPLACE FUNCTION cleanup_old_ai_events()
 RETURNS void AS $$
 BEGIN
@@ -300,7 +345,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Function to clean up old system health records (keeps 7 days of detailed records)
+-- Function to clean up old system health records
 CREATE OR REPLACE FUNCTION cleanup_old_ai_system_health()
 RETURNS void AS $$
 BEGIN
@@ -310,9 +355,10 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- =====================================================
--- SCHEDULED CLEANUP (Optional - requires pg_cron extension)
+-- VERIFICATION QUERY
 -- =====================================================
--- Uncomment if pg_cron is available:
--- SELECT cron.schedule('cleanup-ai-system-metrics', '0 2 * * *', 'SELECT cleanup_old_ai_system_metrics();');
--- SELECT cron.schedule('cleanup-ai-events', '0 3 * * *', 'SELECT cleanup_old_ai_events();');
--- SELECT cron.schedule('cleanup-ai-health', '0 4 * * *', 'SELECT cleanup_old_ai_system_health();');
+-- Run this after migration to verify all tables were created:
+SELECT 'Tables created:' as status, COUNT(*) as count 
+FROM information_schema.tables 
+WHERE table_schema = 'public' 
+AND table_name LIKE 'ai_%';
