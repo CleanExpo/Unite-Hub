@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import WorkflowBuilder from '@/components/crm/WorkflowBuilder';
 
 export default function NewWorkflowPage() {

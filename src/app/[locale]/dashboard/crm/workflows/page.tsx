@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = 'force-dynamic'
+
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -218,7 +220,7 @@ export default function WorkflowsPage() {
                       <div className="flex justify-end gap-2">
                         <Button
                           variant="ghost"
-                          size="icon"
+                          size="sm"
                           onClick={() => toggleWorkflowStatus(workflow)}
                           title={workflow.is_active ? 'Deactivate' : 'Activate'}
                         >
@@ -229,13 +231,13 @@ export default function WorkflowsPage() {
                           )}
                         </Button>
                         <Link href={`/en/dashboard/crm/workflows/${workflow.id}/edit`}>
-                          <Button variant="ghost" size="icon">
+                          <Button variant="ghost" size="sm">
                             <Edit className="h-4 w-4" />
                           </Button>
                         </Link>
                         <Button
                           variant="ghost"
-                          size="icon"
+                          size="sm"
                           onClick={() => setDeleteWorkflowId(workflow.id)}
                         >
                           <Trash2 className="h-4 w-4" />

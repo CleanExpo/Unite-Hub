@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic'
+
 import { TaskForm } from '../task-form';
 import { useState, useEffect } from 'react';
 
