@@ -59,7 +59,7 @@ export default function Navigation() {
           alt="UNITE Group"
           width={120}
           height={32}
-          style={{ height: "32px", width: "auto" }}
+          style={{ height: "32px", width: "120px" }}
         />
       </Link>
 
