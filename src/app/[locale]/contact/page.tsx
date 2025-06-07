@@ -1,7 +1,5 @@
 'use client'
 
-export const dynamic = 'force-dynamic'
-
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
@@ -13,6 +11,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Phone, Mail, MapPin, Clock, Send, CheckCircle } from 'lucide-react'
 import { toast } from 'sonner'
+import { CONTACT_INFO, getPhoneLink, getEmailLink, getGoogleMapsLink } from '@/lib/constants/contact'
 
 const services = [
   'Strategic Consultation ($550)',
@@ -132,8 +131,13 @@ export default function ContactPage() {
                 <CardContent className="p-6 text-center">
                   <Phone className="w-12 h-12 mx-auto mb-4 text-primary" />
                   <h3 className="font-semibold mb-2">Phone</h3>
-                  <p className="text-muted-foreground">+1 (555) 123-4567</p>
-                  <p className="text-muted-foreground">Mon-Fri 9AM-6PM EST</p>
+                  <a 
+                    href={getPhoneLink()} 
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    {CONTACT_INFO.phone}
+                  </a>
+                  <p className="text-muted-foreground text-sm mt-1">{CONTACT_INFO.businessHours.weekdays}</p>
                 </CardContent>
               </Card>
             </motion.div>
@@ -147,8 +151,13 @@ export default function ContactPage() {
                 <CardContent className="p-6 text-center">
                   <Mail className="w-12 h-12 mx-auto mb-4 text-primary" />
                   <h3 className="font-semibold mb-2">Email</h3>
-                  <p className="text-muted-foreground">hello@unite-group.in</p>
-                  <p className="text-muted-foreground">24/7 Support</p>
+                  <a 
+                    href={getEmailLink()} 
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    {CONTACT_INFO.email}
+                  </a>
+                  <p className="text-muted-foreground text-sm mt-1">{CONTACT_INFO.support.responseTime} Response</p>
                 </CardContent>
               </Card>
             </motion.div>
@@ -162,8 +171,15 @@ export default function ContactPage() {
                 <CardContent className="p-6 text-center">
                   <MapPin className="w-12 h-12 mx-auto mb-4 text-primary" />
                   <h3 className="font-semibold mb-2">Office</h3>
-                  <p className="text-muted-foreground">123 Business Ave</p>
-                  <p className="text-muted-foreground">New York, NY 10001</p>
+                  <a 
+                    href={getGoogleMapsLink()} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    <p>{CONTACT_INFO.address.street}</p>
+                    <p>{CONTACT_INFO.address.city} CBD, {CONTACT_INFO.address.state}</p>
+                  </a>
                 </CardContent>
               </Card>
             </motion.div>
@@ -176,9 +192,9 @@ export default function ContactPage() {
               <Card className="h-full">
                 <CardContent className="p-6 text-center">
                   <Clock className="w-12 h-12 mx-auto mb-4 text-primary" />
-                  <h3 className="font-semibold mb-2">Response Time</h3>
-                  <p className="text-muted-foreground">Within 24 hours</p>
-                  <p className="text-muted-foreground">Priority support available</p>
+                  <h3 className="font-semibold mb-2">Business Hours</h3>
+                  <p className="text-muted-foreground">{CONTACT_INFO.businessHours.weekdays}</p>
+                  <p className="text-muted-foreground text-sm">Saturday: {CONTACT_INFO.businessHours.saturday}</p>
                 </CardContent>
               </Card>
             </motion.div>

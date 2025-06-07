@@ -121,11 +121,11 @@ export function InteractiveSolutions() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-            Our Services
+            Transform Your Business with Unite Group
           </h2>
           <p className="text-xl text-slate-300 max-w-3xl mx-auto">
-            Comprehensive enterprise solutions designed to transform your business operations 
-            and accelerate digital innovation.
+            From strategic consulting to cutting-edge development, we provide end-to-end solutions 
+            that drive measurable business outcomes and sustainable growth.
           </p>
         </div>
 
@@ -166,7 +166,7 @@ export function InteractiveSolutions() {
                   className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 group transition-all duration-300"
                 >
                   <Link href={`/${locale}${service.href}`}>
-                    Learn More
+                    Explore Service
                     <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </Button>

@@ -41,6 +41,7 @@
         "@supabase/auth-ui-react": "^0.4.7",
         "@supabase/auth-ui-shared": "^0.1.8",
         "@supabase/ssr": "^0.6.1",
+        "@supabase/supabase-js": "^2.49.10",
         "@types/ioredis": "^4.28.10",
         "@types/mixpanel-browser": "^2.60.0",
         "@types/nodemailer": "^6.4.17",
@@ -121,7 +122,6 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "@supabase/supabase-js": "^2.49.10",
         "@types/node": "18.18.0",
         "@types/react": "^18.2.0",
         "@types/react-dom": "18.2.0",

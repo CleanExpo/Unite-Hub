@@ -1,268 +1,167 @@
-// UNITE Group Service Worker
-// Version 1.0.0
+// Unite Group Service Worker v1.0
+const CACHE_NAME = 'unite-group-v1';
+const DYNAMIC_CACHE = 'unite-group-dynamic-v1';
 
-const CACHE_NAME = 'unite-group-cache-v1';
+// Assets to cache on install
 const STATIC_ASSETS = [
   '/',
+  '/offline.html',
   '/manifest.json',
-  '/favicon.ico',
   '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png',
-  '/images/og-image.jpg',
+  '/icons/icon-512x512.png'
 ];
 
-// Service Worker Installation
+// Install event - cache static assets
 self.addEventListener('install', event => {
-  console.log('[Service Worker] Installing Service Worker...');
-  self.skipWaiting();
-  
+  console.log('[SW] Installing Service Worker...');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('[Service Worker] Caching Static Assets');
+        console.log('[SW] Precaching static assets');
         return cache.addAll(STATIC_ASSETS);
       })
+      .then(() => self.skipWaiting())
   );
 });
 
-// Service Worker Activation
+// Activate event - clean up old caches
 self.addEventListener('activate', event => {
-  console.log('[Service Worker] Activating Service Worker...');
-  
-  // Clean up old caches
+  console.log('[SW] Activating Service Worker...');
   event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheName !== CACHE_NAME) {
-            console.log('[Service Worker] Removing Old Cache:', cacheName);
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
+    caches.keys()
+      .then(cacheNames => {
+        return Promise.all(
+          cacheNames
+            .filter(name => name !== CACHE_NAME && name !== DYNAMIC_CACHE)
+            .map(name => caches.delete(name))
+        );
+      })
+      .then(() => self.clients.claim())
   );
-  
-  return self.clients.claim();
 });
 
-// Fetch Event Handler
+// Fetch event - serve from cache, fallback to network
 self.addEventListener('fetch', event => {
-  // Skip cross-origin requests
-  if (!event.request.url.startsWith(self.location.origin)) {
-    return;
-  }
-  
-  // Skip API requests
-  if (event.request.url.includes('/api/')) {
-    return;
-  }
-  
-  // Network with Cache Fallback Strategy for page navigations
-  if (event.request.mode === 'navigate') {
+  const { request } = event;
+
+  // Skip non-GET requests
+  if (request.method !== 'GET') return;
+
+  // Skip chrome-extension and other non-http(s) requests
+  if (!request.url.startsWith('http')) return;
+
+  // API calls - Network first, cache fallback
+  if (request.url.includes('/api/')) {
     event.respondWith(
-      fetch(event.request)
-        .catch(() => {
-          return caches.match(event.request)
-            .then(response => {
-              if (response) {
-                return response;
-              }
-              
-              // If the request is for a page, return the offline page
-              if (event.request.headers.get('accept').includes('text/html')) {
-                return caches.match('/');
-              }
+      fetch(request)
+        .then(response => {
+          // Clone the response before caching
+          const responseToCache = response.clone();
+          
+          caches.open(DYNAMIC_CACHE)
+            .then(cache => {
+              cache.put(request, responseToCache);
             });
+          
+          return response;
+        })
+        .catch(() => {
+          return caches.match(request);
         })
     );
     return;
   }
-  
-  // Cache First, Network Fallback strategy for static assets
-  if (
-    event.request.method === 'GET' && 
-    (
-      event.request.url.endsWith('.js') || 
-      event.request.url.endsWith('.css') || 
-      event.request.url.includes('/images/') || 
-      event.request.url.includes('/icons/') ||
-      event.request.url.endsWith('.woff2')
-    )
-  ) {
-    event.respondWith(
-      caches.match(event.request)
-        .then(cachedResponse => {
-          if (cachedResponse) {
-            return cachedResponse;
-          }
-          
-          return fetch(event.request).then(response => {
-            // Clone the response
-            const responseToCache = response.clone();
-            
-            // Add to cache
-            caches.open(CACHE_NAME)
-              .then(cache => {
-                cache.put(event.request, responseToCache);
-              });
+
+  // Static assets - Cache first, network fallback
+  event.respondWith(
+    caches.match(request)
+      .then(cachedResponse => {
+        if (cachedResponse) {
+          // Update cache in background
+          fetch(request)
+            .then(response => {
+              caches.open(DYNAMIC_CACHE)
+                .then(cache => {
+                  cache.put(request, response);
+                });
+            });
+          return cachedResponse;
+        }
+
+        return fetch(request)
+          .then(response => {
+            // Cache successful responses
+            if (response && response.status === 200 && response.type === 'basic') {
+              const responseToCache = response.clone();
               
+              caches.open(DYNAMIC_CACHE)
+                .then(cache => {
+                  cache.put(request, responseToCache);
+                });
+            }
+            
             return response;
           });
-        })
-    );
-    return;
-  }
-  
-  // Network First, Cache Fallback for everything else
-  event.respondWith(
-    fetch(event.request)
+      })
       .catch(() => {
-        return caches.match(event.request)
-          .then(response => {
-            if (response) {
-              return response;
-            }
-          });
+        // Offline fallback for navigation requests
+        if (request.destination === 'document') {
+          return caches.match('/offline.html');
+        }
       })
   );
 });
 
-// Background Sync for Offline Support
+// Background sync for form submissions
 self.addEventListener('sync', event => {
-  if (event.tag === 'contact-form-sync') {
-    event.waitUntil(syncContactForm());
+  if (event.tag === 'sync-forms') {
+    event.waitUntil(syncFormData());
   }
 });
 
-// Push Notifications
+// Push notifications
 self.addEventListener('push', event => {
-  const data = event.data.json();
-  
   const options = {
-    body: data.body,
+    body: event.data ? event.data.text() : 'New update from Unite Group',
     icon: '/icons/icon-192x192.png',
-    badge: '/icons/icon-72x72.png',
+    badge: '/icons/badge-72x72.png',
     vibrate: [100, 50, 100],
     data: {
-      url: data.url || '/'
-    }
+      dateOfArrival: Date.now(),
+      primaryKey: 1
+    },
+    actions: [
+      {
+        action: 'explore',
+        title: 'Go to Dashboard',
+        icon: '/icons/checkmark.png'
+      },
+      {
+        action: 'close',
+        title: 'Close notification',
+        icon: '/icons/xmark.png'
+      }
+    ]
   };
-  
+
   event.waitUntil(
-    self.registration.showNotification(data.title, options)
+    self.registration.showNotification('Unite Group', options)
   );
 });
 
-// Notification Click Handler
+// Notification click handler
 self.addEventListener('notificationclick', event => {
-  const notification = event.notification;
-  const url = notification.data.url;
-  
-  notification.close();
-  
-  event.waitUntil(
-    clients.matchAll({ type: 'window' })
-      .then(windowClients => {
-        // Check if there is already a window open with the target URL
-        for (let client of windowClients) {
-          if (client.url === url && 'focus' in client) {
-            return client.focus();
-          }
-        }
-        
-        // If no window is open, open a new one
-        if (clients.openWindow) {
-          return clients.openWindow(url);
-        }
-      })
-  );
+  event.notification.close();
+
+  if (event.action === 'explore') {
+    event.waitUntil(
+      clients.openWindow('/dashboard')
+    );
+  }
 });
 
-// Helper Functions
-async function syncContactForm() {
-  try {
-    const db = await getOfflineDb();
-    const pendingRequests = await db.getAll('contact-forms');
-    
-    for (const request of pendingRequests) {
-      try {
-        const response = await fetch('/api/contact', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(request.data)
-        });
-        
-        if (response.ok) {
-          await db.delete('contact-forms', request.id);
-        }
-      } catch (err) {
-        console.error('Failed to sync contact form:', err);
-      }
-    }
-  } catch (err) {
-    console.error('Error during contact form sync:', err);
-  }
-}
-
-// IndexedDB setup for offline data
-function getOfflineDb() {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open('unite-group-offline', 1);
-    
-    request.onerror = (event) => {
-      reject('Error opening offline database');
-    };
-    
-    request.onupgradeneeded = (event) => {
-      const db = event.target.result;
-      
-      if (!db.objectStoreNames.contains('contact-forms')) {
-        db.createObjectStore('contact-forms', { keyPath: 'id', autoIncrement: true });
-      }
-    };
-    
-    request.onsuccess = (event) => {
-      const db = event.target.result;
-      
-      const dbWrapper = {
-        add: (storeName, data) => {
-          return new Promise((resolve, reject) => {
-            const transaction = db.transaction(storeName, 'readwrite');
-            const store = transaction.objectStore(storeName);
-            const request = store.add({ data, timestamp: Date.now() });
-            
-            request.onsuccess = () => resolve(request.result);
-            request.onerror = () => reject(request.error);
-          });
-        },
-        
-        getAll: (storeName) => {
-          return new Promise((resolve, reject) => {
-            const transaction = db.transaction(storeName, 'readonly');
-            const store = transaction.objectStore(storeName);
-            const request = store.getAll();
-            
-            request.onsuccess = () => resolve(request.result);
-            request.onerror = () => reject(request.error);
-          });
-        },
-        
-        delete: (storeName, id) => {
-          return new Promise((resolve, reject) => {
-            const transaction = db.transaction(storeName, 'readwrite');
-            const store = transaction.objectStore(storeName);
-            const request = store.delete(id);
-            
-            request.onsuccess = () => resolve();
-            request.onerror = () => reject(request.error);
-          });
-        }
-      };
-      
-      resolve(dbWrapper);
-    };
-  });
+// Helper function to sync form data
+async function syncFormData() {
+  // Implement form sync logic here
+  console.log('[SW] Syncing form data...');
 }

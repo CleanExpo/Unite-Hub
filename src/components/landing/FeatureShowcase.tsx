@@ -106,11 +106,11 @@ export default function FeatureShowcase() {
             <Sparkles className="h-6 w-6 text-blue-600" />
           </div>
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Everything You Need to Succeed
+            Enterprise-Grade Solutions for Digital Excellence
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Our comprehensive platform provides all the tools and features your business needs 
-            to thrive in the digital age.
+            Unite Group delivers cutting-edge technology solutions that empower businesses to 
+            achieve operational excellence, drive innovation, and accelerate growth in today&apos;s competitive market.
           </p>
         </motion.div>
 

@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState } from 'react'
 import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin } from 'lucide-react'
 
@@ -87,7 +88,13 @@ const Footer = () => {
             {/* Company Info */}
             <div className="lg:col-span-2">
               <Link href="/" className="inline-block mb-4">
-                <h3 className="text-2xl font-bold text-white">Unite Group</h3>
+                <Image
+                  src="/images/unite-logo.png"
+                  alt="Unite Group"
+                  width={150}
+                  height={40}
+                  className="h-10 w-auto brightness-0 invert"
+                />
               </Link>
               <p className="text-gray-400 mb-4">
                 Empowering businesses with cutting-edge technology solutions. Transform your operations with our AI-powered platform and expert services.
@@ -97,22 +104,22 @@ const Footer = () => {
               <div className="space-y-2">
                 <div className="flex items-center">
                   <Mail className="h-4 w-4 mr-2" />
-                  <a href="mailto:contact@unite-group.in" className="hover:text-white transition-colors">
-                    contact@unite-group.in
+                  <a href="mailto:support@united-group.in" className="hover:text-white transition-colors">
+                    support@united-group.in
                   </a>
                 </div>
                 <div className="flex items-center">
                   <Phone className="h-4 w-4 mr-2" />
-                  <a href="tel:+911204567890" className="hover:text-white transition-colors">
-                    +91 120 456 7890
+                  <a href="tel:+61457123005" className="hover:text-white transition-colors">
+                    0457 123 005
                   </a>
                 </div>
                 <div className="flex items-start">
                   <MapPin className="h-4 w-4 mr-2 mt-0.5" />
                   <span>
-                    Unite Business Park<br />
-                    Sector 62, Noida<br />
-                    Uttar Pradesh 201309, India
+                    Union Place<br />
+                    Ipswich CBD<br />
+                    Queensland, Australia
                   </span>
                 </div>
               </div>

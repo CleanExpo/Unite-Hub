@@ -20,7 +20,7 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import ConsultationBookingModal from '@/components/consultation/ConsultationBookingModal'
+// Consultation booking functionality temporarily disabled
 
 const services = [
   {
@@ -104,15 +104,9 @@ const services = [
 ]
 
 export default function ServicesPage() {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedService, setSelectedService] = useState<{
-    id: string
-    title: string
-  } | null>(null)
-
   const handleBookConsultation = (service: { id: string; title: string }) => {
-    setSelectedService(service)
-    setIsModalOpen(true)
+    // Redirect to contact page with service pre-selected
+    window.location.href = `/contact?service=${service.id}`
   }
 
   return (
@@ -225,18 +219,7 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* Consultation Booking Modal */}
-      {selectedService && (
-        <ConsultationBookingModal
-          isOpen={isModalOpen}
-          onClose={() => {
-            setIsModalOpen(false)
-            setSelectedService(null)
-          }}
-          serviceType={selectedService.id}
-          serviceName={selectedService.title}
-        />
-      )}
+      {/* Consultation booking redirects to contact page */}
     </div>
   )
 }

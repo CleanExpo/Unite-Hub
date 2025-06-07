@@ -8,14 +8,8 @@ import type { Database } from '@/types/supabase'
  * This is build-safe and handles cookie access gracefully
  */
 export async function createClient() {
-  // Check if we're in a build environment
-  const isBuildTime = process.env.NODE_ENV === 'production' && 
-                      !global.process?.send && 
-                      typeof window === 'undefined';
-  
-  // During build time, return a mock client that won't break the build
-  if (isBuildTime || process.env.BUILDING === 'true') {
-    console.log('Skipping Supabase server client creation during build');
+  // Always return a build-safe client during static generation
+  if (process.env.NODE_ENV === 'production' && !process.env.NEXT_RUNTIME) {
     return createSupabaseServerClient<Database>(
       process.env.NEXT_PUBLIC_SUPABASE_URL || '',
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '',
@@ -36,8 +30,7 @@ export async function createClient() {
     // Only access cookies in runtime context
     cookieStore = await cookies();
   } catch (error) {
-    console.warn('Cookie access failed, using fallback:', error);
-    // Return a client with no cookie support if cookies are not available
+    // During build time or when cookies are not available
     return createSupabaseServerClient<Database>(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -108,7 +101,6 @@ export async function safeCreateClient() {
   try {
     return await createClient();
   } catch (error) {
-    console.error('Failed to create Supabase client:', error);
     // Return a minimal client that won't break the build
     return createSupabaseServerClient<Database>(
       process.env.NEXT_PUBLIC_SUPABASE_URL || '',
