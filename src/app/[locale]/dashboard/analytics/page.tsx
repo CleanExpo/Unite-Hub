@@ -1,374 +1,428 @@
-'use client'
-
-import { useState, useEffect } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { StatsCard } from '@/components/dashboard/StatsCard'
+import { Metadata } from 'next';
+import { redirect } from 'next/navigation';
+import { createClient } from '@/lib/supabase/server';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
 import { 
-  BarChart, 
-  Bar, 
-  LineChart, 
-  Line, 
-  PieChart, 
-  Pie, 
-  Cell,
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  Legend, 
-  ResponsiveContainer,
-  AreaChart,
-  Area
-} from 'recharts'
+  LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
+  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+  AreaChart, Area, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar
+} from 'recharts';
 import { 
-  TrendingUp, 
-  Users, 
-  DollarSign, 
-  Calendar,
-  Activity,
-  Briefcase,
-  Target,
-  Award
-} from 'lucide-react'
-import { motion } from 'framer-motion'
+  TrendingUp, DollarSign, Users, BookOpen, Package, 
+  Target, Award, Calendar, Activity, Zap
+} from 'lucide-react';
 
-// Sample data - in production this would come from API
-const monthlyRevenue = [
-  { month: 'Jan', revenue: 45000, projects: 12 },
-  { month: 'Feb', revenue: 52000, projects: 15 },
-  { month: 'Mar', revenue: 48000, projects: 13 },
-  { month: 'Apr', revenue: 61000, projects: 18 },
-  { month: 'May', revenue: 72000, projects: 22 },
-  { month: 'Jun', revenue: 85000, projects: 25 },
-]
+export const metadata: Metadata = {
+  title: 'Analytics Dashboard | Unite Group + CARSI',
+  description: 'Advanced analytics for revenue attribution and cross-platform ROI',
+};
 
-const projectTypes = [
-  { name: 'AI Implementation', value: 35, color: '#0ea5e9' },
-  { name: 'SaaS Development', value: 28, color: '#8b5cf6' },
-  { name: 'Cloud Migration', value: 22, color: '#10b981' },
-  { name: 'Digital Transformation', value: 15, color: '#f59e0b' },
-]
+// Mock data for charts
+const revenueData = [
+  { month: 'Jan', unite: 125000, carsi: 45000, bundles: 30000 },
+  { month: 'Feb', unite: 135000, carsi: 52000, bundles: 38000 },
+  { month: 'Mar', unite: 142000, carsi: 58000, bundles: 45000 },
+  { month: 'Apr', unite: 155000, carsi: 65000, bundles: 52000 },
+  { month: 'May', unite: 168000, carsi: 72000, bundles: 60000 },
+  { month: 'Jun', unite: 175000, carsi: 78000, bundles: 68000 },
+];
 
-const clientSatisfaction = [
-  { metric: 'Very Satisfied', value: 75 },
-  { metric: 'Satisfied', value: 20 },
-  { metric: 'Neutral', value: 4 },
-  { metric: 'Dissatisfied', value: 1 },
-]
+const crossSellData = [
+  { name: 'Unite → CARSI', value: 35, fill: '#14b8a6' },
+  { name: 'CARSI → Unite', value: 25, fill: '#0ea5e9' },
+  { name: 'Direct Unite', value: 25, fill: '#8b5cf6' },
+  { name: 'Direct CARSI', value: 15, fill: '#f59e0b' },
+];
+
+const customerJourneyData = [
+  { stage: 'Awareness', unite: 1000, carsi: 800 },
+  { stage: 'Interest', unite: 750, carsi: 600 },
+  { stage: 'Consideration', unite: 500, carsi: 450 },
+  { stage: 'Purchase', unite: 300, carsi: 280 },
+  { stage: 'Retention', unite: 250, carsi: 240 },
+  { stage: 'Advocacy', unite: 180, carsi: 175 },
+];
 
 const performanceMetrics = [
-  { day: 'Mon', tasks: 45, completed: 42 },
-  { day: 'Tue', tasks: 52, completed: 50 },
-  { day: 'Wed', tasks: 38, completed: 35 },
-  { day: 'Thu', tasks: 60, completed: 58 },
-  { day: 'Fri', tasks: 55, completed: 53 },
-  { day: 'Sat', tasks: 20, completed: 20 },
-  { day: 'Sun', tasks: 15, completed: 14 },
-]
+  { metric: 'Customer Acquisition', unite: 85, carsi: 78, bundle: 92 },
+  { metric: 'Retention Rate', unite: 88, carsi: 90, bundle: 95 },
+  { metric: 'Satisfaction Score', unite: 82, carsi: 85, bundle: 91 },
+  { metric: 'Revenue per Customer', unite: 75, carsi: 70, bundle: 88 },
+  { metric: 'Cross-sell Success', unite: 65, carsi: 68, bundle: 85 },
+];
 
-export default function AnalyticsPage() {
-  const [timeRange, setTimeRange] = useState('month')
-  
+export default async function AnalyticsPage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect('/login');
+  }
+
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat('en-AU', {
+      style: 'currency',
+      currency: 'AUD',
+      minimumFractionDigits: 0,
+    }).format(value);
+  };
+
+  const totalRevenue = revenueData[revenueData.length - 1].unite + 
+                      revenueData[revenueData.length - 1].carsi + 
+                      revenueData[revenueData.length - 1].bundles;
+
+  const growthRate = ((totalRevenue - (revenueData[0].unite + revenueData[0].carsi + revenueData[0].bundles)) / 
+                     (revenueData[0].unite + revenueData[0].carsi + revenueData[0].bundles)) * 100;
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-8"
-        >
-          <h1 className="text-3xl font-bold text-white mb-2">Analytics Dashboard</h1>
-          <p className="text-slate-400">Real-time insights into your business performance</p>
-        </motion.div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-teal-600 to-cyan-600 text-white">
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold mb-2">Analytics Dashboard</h1>
+              <p className="text-teal-100">
+                Revenue attribution and cross-platform performance metrics
+              </p>
+            </div>
+            <Select defaultValue="last-6-months">
+              <SelectTrigger className="w-48 bg-white/20 border-white/40 text-white">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="last-30-days">Last 30 Days</SelectItem>
+                <SelectItem value="last-3-months">Last 3 Months</SelectItem>
+                <SelectItem value="last-6-months">Last 6 Months</SelectItem>
+                <SelectItem value="last-year">Last Year</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </div>
 
-        {/* Stats Cards */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
-        >
-          <StatsCard
-            title="Total Revenue"
-            value="$385,000"
-            icon={<DollarSign className="h-5 w-5" />}
-            description="Year to date"
-            trend={{ value: 23.5, isPositive: true }}
-          />
-          <StatsCard
-            title="Active Clients"
-            value="127"
-            icon={<Users className="h-5 w-5" />}
-            description="Currently engaged"
-            trend={{ value: 12.3, isPositive: true }}
-          />
-          <StatsCard
-            title="Projects Completed"
-            value="105"
-            icon={<Briefcase className="h-5 w-5" />}
-            description="This year"
-            trend={{ value: 18.7, isPositive: true }}
-          />
-          <StatsCard
-            title="Success Rate"
-            value="98.5%"
-            icon={<Target className="h-5 w-5" />}
-            description="Client satisfaction"
-            trend={{ value: 2.1, isPositive: true }}
-          />
-        </motion.div>
+      <div className="container mx-auto px-4 py-8">
+        {/* Key Metrics */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center justify-between text-sm font-medium">
+                <span>Total Revenue</span>
+                <DollarSign className="h-4 w-4 text-gray-400" />
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{formatCurrency(totalRevenue)}</div>
+              <p className="text-xs text-muted-foreground">
+                <span className="text-green-600">+{growthRate.toFixed(1)}%</span> from Jan
+              </p>
+            </CardContent>
+          </Card>
 
-        {/* Charts */}
-        <Tabs defaultValue="revenue" className="space-y-8">
-          <TabsList className="bg-slate-800 border-slate-700">
-            <TabsTrigger value="revenue" className="data-[state=active]:bg-slate-700">
-              Revenue & Growth
-            </TabsTrigger>
-            <TabsTrigger value="projects" className="data-[state=active]:bg-slate-700">
-              Project Analytics
-            </TabsTrigger>
-            <TabsTrigger value="performance" className="data-[state=active]:bg-slate-700">
-              Performance
-            </TabsTrigger>
-            <TabsTrigger value="clients" className="data-[state=active]:bg-slate-700">
-              Client Insights
-            </TabsTrigger>
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center justify-between text-sm font-medium">
+                <span>Cross-sell Rate</span>
+                <Target className="h-4 w-4 text-gray-400" />
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">60%</div>
+              <p className="text-xs text-muted-foreground">
+                <span className="text-green-600">+15%</span> vs target
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center justify-between text-sm font-medium">
+                <span>Bundle Adoption</span>
+                <Package className="h-4 w-4 text-gray-400" />
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">28%</div>
+              <p className="text-xs text-muted-foreground">
+                <span className="text-green-600">+8%</span> this quarter
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center justify-between text-sm font-medium">
+                <span>Combined LTV</span>
+                <TrendingUp className="h-4 w-4 text-gray-400" />
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{formatCurrency(85000)}</div>
+              <p className="text-xs text-muted-foreground">
+                <span className="text-green-600">+22%</span> with bundles
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Tabs defaultValue="revenue" className="space-y-4">
+          <TabsList>
+            <TabsTrigger value="revenue">Revenue Analysis</TabsTrigger>
+            <TabsTrigger value="attribution">Attribution</TabsTrigger>
+            <TabsTrigger value="journey">Customer Journey</TabsTrigger>
+            <TabsTrigger value="performance">Performance</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="revenue" className="space-y-6">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <Card className="bg-slate-800 border-slate-700">
+          <TabsContent value="revenue" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Revenue Streams</CardTitle>
+                <CardDescription>
+                  Monthly revenue breakdown across platforms and bundles
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={400}>
+                  <AreaChart data={revenueData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis tickFormatter={(value) => `$${value/1000}k`} />
+                    <Tooltip formatter={(value) => formatCurrency(Number(value))} />
+                    <Legend />
+                    <Area type="monotone" dataKey="unite" stackId="1" stroke="#8b5cf6" fill="#8b5cf6" />
+                    <Area type="monotone" dataKey="carsi" stackId="1" stroke="#14b8a6" fill="#14b8a6" />
+                    <Area type="monotone" dataKey="bundles" stackId="1" stroke="#0ea5e9" fill="#0ea5e9" />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              <Card>
                 <CardHeader>
-                  <CardTitle className="text-white">Monthly Revenue Trend</CardTitle>
-                  <CardDescription className="text-slate-400">
-                    Revenue and project count over the last 6 months
-                  </CardDescription>
+                  <CardTitle>Revenue Distribution</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ResponsiveContainer width="100%" height={300}>
-                    <AreaChart data={monthlyRevenue}>
-                      <defs>
-                        <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.8}/>
-                          <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0}/>
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                      <XAxis dataKey="month" stroke="#94a3b8" />
-                      <YAxis stroke="#94a3b8" />
-                      <Tooltip 
-                        contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155' }}
-                        labelStyle={{ color: '#f1f5f9' }}
-                      />
-                      <Area 
-                        type="monotone" 
-                        dataKey="revenue" 
-                        stroke="#0ea5e9" 
-                        fillOpacity={1} 
-                        fill="url(#colorRevenue)" 
-                        strokeWidth={2}
-                      />
-                    </AreaChart>
+                    <PieChart>
+                      <Pie
+                        data={crossSellData}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        label={(entry) => `${entry.name}: ${entry.value}%`}
+                        outerRadius={80}
+                        dataKey="value"
+                      >
+                        {crossSellData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.fill} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                    </PieChart>
                   </ResponsiveContainer>
                 </CardContent>
               </Card>
-            </motion.div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-              >
-                <Card className="bg-slate-800 border-slate-700">
-                  <CardHeader>
-                    <CardTitle className="text-white">Revenue by Project Type</CardTitle>
-                    <CardDescription className="text-slate-400">
-                      Distribution of revenue across different services
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <ResponsiveContainer width="100%" height={250}>
-                      <PieChart>
-                        <Pie
-                          data={projectTypes}
-                          cx="50%"
-                          cy="50%"
-                          labelLine={false}
-                          label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                          outerRadius={80}
-                          fill="#8884d8"
-                          dataKey="value"
-                        >
-                          {projectTypes.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.color} />
-                          ))}
-                        </Pie>
-                        <Tooltip 
-                          contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155' }}
-                        />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </CardContent>
-                </Card>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-              >
-                <Card className="bg-slate-800 border-slate-700">
-                  <CardHeader>
-                    <CardTitle className="text-white">Growth Metrics</CardTitle>
-                    <CardDescription className="text-slate-400">
-                      Key performance indicators
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex justify-between items-center p-3 bg-slate-700/50 rounded">
-                      <span className="text-slate-300">Average Project Value</span>
-                      <span className="text-xl font-bold text-white">$15,400</span>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Bundle Performance</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-medium">Digital Transformation</span>
+                        <span className="text-sm text-muted-foreground">45 sold</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700">
+                        <div className="bg-teal-600 h-2 rounded-full" style={{ width: '45%' }} />
+                      </div>
                     </div>
-                    <div className="flex justify-between items-center p-3 bg-slate-700/50 rounded">
-                      <span className="text-slate-300">Monthly Recurring Revenue</span>
-                      <span className="text-xl font-bold text-white">$42,000</span>
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-medium">SEO Mastery</span>
+                        <span className="text-sm text-muted-foreground">32 sold</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700">
+                        <div className="bg-cyan-600 h-2 rounded-full" style={{ width: '32%' }} />
+                      </div>
                     </div>
-                    <div className="flex justify-between items-center p-3 bg-slate-700/50 rounded">
-                      <span className="text-slate-300">Customer Lifetime Value</span>
-                      <span className="text-xl font-bold text-white">$85,000</span>
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-medium">Business Growth</span>
+                        <span className="text-sm text-muted-foreground">23 sold</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2 dark:bg-gray-700">
+                        <div className="bg-blue-600 h-2 rounded-full" style={{ width: '23%' }} />
+                      </div>
                     </div>
-                    <div className="flex justify-between items-center p-3 bg-slate-700/50 rounded">
-                      <span className="text-slate-300">Revenue Per Employee</span>
-                      <span className="text-xl font-bold text-white">$125,000</span>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </TabsContent>
 
-          <TabsContent value="projects" className="space-y-6">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <Card className="bg-slate-800 border-slate-700">
-                <CardHeader>
-                  <CardTitle className="text-white">Project Completion Timeline</CardTitle>
-                  <CardDescription className="text-slate-400">
-                    Average time to complete projects by type
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={[
-                      { type: 'AI Implementation', days: 45 },
-                      { type: 'SaaS Development', days: 60 },
-                      { type: 'Cloud Migration', days: 30 },
-                      { type: 'Digital Transformation', days: 90 },
-                      { type: 'API Integration', days: 15 },
-                    ]}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                      <XAxis dataKey="type" stroke="#94a3b8" angle={-45} textAnchor="end" height={80} />
-                      <YAxis stroke="#94a3b8" />
-                      <Tooltip 
-                        contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155' }}
-                        labelStyle={{ color: '#f1f5f9' }}
-                      />
-                      <Bar dataKey="days" fill="#8b5cf6" />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
-            </motion.div>
+          <TabsContent value="attribution" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Multi-Touch Attribution</CardTitle>
+                <CardDescription>
+                  Customer touchpoints leading to conversion
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid md:grid-cols-3 gap-4 mb-6">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-teal-600">42%</div>
+                    <p className="text-sm text-muted-foreground">Unite First Touch</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-cyan-600">35%</div>
+                    <p className="text-sm text-muted-foreground">CARSI First Touch</p>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-purple-600">23%</div>
+                    <p className="text-sm text-muted-foreground">Bundle Direct</p>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <h4 className="font-semibold">Common Conversion Paths</h4>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 text-sm">
+                      <Badge className="bg-purple-100 text-purple-800">1</Badge>
+                      <span>Blog → Consultation → Software Dev → Training (28%)</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm">
+                      <Badge className="bg-teal-100 text-teal-800">2</Badge>
+                      <span>CARSI Course → Unite SEO → Bundle Purchase (22%)</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm">
+                      <Badge className="bg-cyan-100 text-cyan-800">3</Badge>
+                      <span>Direct Bundle → Additional Services (18%)</span>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
-          <TabsContent value="performance" className="space-y-6">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <Card className="bg-slate-800 border-slate-700">
-                <CardHeader>
-                  <CardTitle className="text-white">Weekly Task Performance</CardTitle>
-                  <CardDescription className="text-slate-400">
-                    Tasks created vs completed this week
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <LineChart data={performanceMetrics}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                      <XAxis dataKey="day" stroke="#94a3b8" />
-                      <YAxis stroke="#94a3b8" />
-                      <Tooltip 
-                        contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155' }}
-                        labelStyle={{ color: '#f1f5f9' }}
-                      />
-                      <Legend />
-                      <Line 
-                        type="monotone" 
-                        dataKey="tasks" 
-                        stroke="#f59e0b" 
-                        strokeWidth={2}
-                        name="Total Tasks"
-                      />
-                      <Line 
-                        type="monotone" 
-                        dataKey="completed" 
-                        stroke="#10b981" 
-                        strokeWidth={2}
-                        name="Completed"
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </CardContent>
-              </Card>
-            </motion.div>
+          <TabsContent value="journey" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Customer Journey Funnel</CardTitle>
+                <CardDescription>
+                  Conversion rates through each stage
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={400}>
+                  <BarChart data={customerJourneyData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="stage" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="unite" fill="#8b5cf6" />
+                    <Bar dataKey="carsi" fill="#14b8a6" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
           </TabsContent>
 
-          <TabsContent value="clients" className="space-y-6">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <Card className="bg-slate-800 border-slate-700">
+          <TabsContent value="performance" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Performance Comparison</CardTitle>
+                <CardDescription>
+                  Key metrics across service types
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={400}>
+                  <RadarChart data={performanceMetrics}>
+                    <PolarGrid />
+                    <PolarAngleAxis dataKey="metric" />
+                    <PolarRadiusAxis angle={90} domain={[0, 100]} />
+                    <Radar name="Unite Only" dataKey="unite" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.6} />
+                    <Radar name="CARSI Only" dataKey="carsi" stroke="#14b8a6" fill="#14b8a6" fillOpacity={0.6} />
+                    <Radar name="Bundle" dataKey="bundle" stroke="#0ea5e9" fill="#0ea5e9" fillOpacity={0.6} />
+                    <Legend />
+                  </RadarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              <Card>
                 <CardHeader>
-                  <CardTitle className="text-white">Client Satisfaction Metrics</CardTitle>
-                  <CardDescription className="text-slate-400">
-                    Based on recent client feedback surveys
-                  </CardDescription>
+                  <CardTitle>ROI by Channel</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={clientSatisfaction} layout="horizontal">
-                      <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                      <XAxis type="number" stroke="#94a3b8" />
-                      <YAxis dataKey="metric" type="category" stroke="#94a3b8" />
-                      <Tooltip 
-                        contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155' }}
-                        labelStyle={{ color: '#f1f5f9' }}
-                      />
-                      <Bar dataKey="value" fill="#10b981" />
-                    </BarChart>
-                  </ResponsiveContainer>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">Bundle Packages</span>
+                      <span className="font-semibold text-green-600">312%</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">Cross-sell Unite → CARSI</span>
+                      <span className="font-semibold text-green-600">285%</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">Cross-sell CARSI → Unite</span>
+                      <span className="font-semibold text-green-600">267%</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">Direct Unite Services</span>
+                      <span className="font-semibold">198%</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">Direct CARSI Courses</span>
+                      <span className="font-semibold">175%</span>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
-            </motion.div>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Success Metrics</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <Activity className="h-5 w-5 text-teal-600" />
+                      <div className="flex-grow">
+                        <div className="text-sm font-medium">Engagement Score</div>
+                        <div className="text-2xl font-bold">85%</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Zap className="h-5 w-5 text-cyan-600" />
+                      <div className="flex-grow">
+                        <div className="text-sm font-medium">Time to Value</div>
+                        <div className="text-2xl font-bold">14 days</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Award className="h-5 w-5 text-purple-600" />
+                      <div className="flex-grow">
+                        <div className="text-sm font-medium">Certification Rate</div>
+                        <div className="text-2xl font-bold">78%</div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
         </Tabs>
       </div>
     </div>
-  )
+  );
 }
