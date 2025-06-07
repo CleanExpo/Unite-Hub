@@ -25,7 +25,7 @@ import {
   subscribeToConversation,
   subscribeToTyping,
   broadcastTyping
-} from '@/lib/services/chat';
+} from '@/lib/services/chat-client';
 import type { 
   ChatMessage, 
   ChatConversation,

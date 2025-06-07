@@ -341,8 +341,8 @@ function PredictionsDisplay() {
 
   useEffect(() => {
     fetch('/api/ai/predictions')
-      .then(res => res.json())
-      .then(data => {
+      .then((res: Response) => res.json())
+      .then((data: { activePredictions?: Prediction[] }) => {
         setPredictions(data.activePredictions || []);
         setLoading(false);
       })
@@ -394,8 +394,8 @@ function ThreatsDisplay() {
 
   useEffect(() => {
     fetch('/api/ai/threats')
-      .then(res => res.json())
-      .then(data => {
+      .then((res: Response) => res.json())
+      .then((data: { activeThreats?: Threat[] }) => {
         setThreats(data.activeThreats || []);
         setLoading(false);
       })
@@ -485,8 +485,8 @@ function DeploymentsDisplay() {
 
   useEffect(() => {
     fetch('/api/ai/deployments')
-      .then(res => res.json())
-      .then(data => {
+      .then((res: Response) => res.json())
+      .then((data: { activeDeployments?: Deployment[] }) => {
         setDeployments(data.activeDeployments || []);
         setLoading(false);
       })

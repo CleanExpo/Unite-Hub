@@ -3,7 +3,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CaseStudyCard } from "@/components/case-studies/CaseStudyCard";
-import { motion } from "framer-motion";
 import { 
   Filter, 
   TrendingUp,
@@ -77,11 +76,7 @@ export default async function CaseStudiesPage({
       <section className="relative py-20 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-teal-600/20 to-cyan-600/20 animate-pulse" />
         <div className="relative max-w-7xl mx-auto px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
+          <div>
             <div className="inline-flex p-3 bg-gradient-to-br from-teal-600 to-cyan-600 rounded-full mb-6">
               <Award className="h-8 w-8 text-white" />
             </div>
@@ -107,7 +102,7 @@ export default async function CaseStudiesPage({
                 <div className="text-sm text-slate-400">Industries Served</div>
               </div>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -172,14 +167,7 @@ export default async function CaseStudiesPage({
                 {caseStudies.length > 0 ? (
                   <div className="grid md:grid-cols-2 gap-6">
                     {caseStudies.map((caseStudy, index) => (
-                      <motion.div
-                        key={caseStudy.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.4, delay: index * 0.1 }}
-                      >
-                        <CaseStudyCard caseStudy={caseStudy} />
-                      </motion.div>
+                      <CaseStudyCard key={caseStudy.id} caseStudy={caseStudy} />
                     ))}
                   </div>
                 ) : (

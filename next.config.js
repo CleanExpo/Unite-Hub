@@ -9,9 +9,6 @@ const nextConfig = {
   // Enable React strict mode for better development experience
   reactStrictMode: true,
   
-  // Use SWC for faster builds and minification
-  swcMinify: true,
-  
   // Optimize images
   images: {
     domains: ['localhost', 'unite-group.com'],

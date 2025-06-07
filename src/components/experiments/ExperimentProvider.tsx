@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { ExperimentService } from '@/lib/services/experiments';
+import { ExperimentService } from '@/lib/services/experiments-client';
 import type { AssignmentResult, ExperimentContext as IExperimentContext } from '@/types/experiments';
 
 // Create context

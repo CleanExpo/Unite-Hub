@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { ExperimentService } from '@/lib/services/experiments';
+import { ExperimentService } from '@/lib/services/experiments-client';
 import type { Experiment, ExperimentStats } from '@/types/experiments';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

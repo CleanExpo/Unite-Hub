@@ -5,19 +5,19 @@ import { useParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { 
-  Clock, 
-  Users, 
-  Code, 
-  Search, 
-  Target, 
-  Award,
+  Cpu, 
+  Code2, 
+  BarChart3, 
+  Shield, 
+  Zap, 
+  Globe2,
   CheckCircle2,
   ArrowRight
 } from 'lucide-react';
 
 interface Service {
   id: string;
-  icon: typeof Clock;
+  icon: typeof Cpu;
   title: string;
   description: string;
   features: string[];
@@ -27,88 +27,88 @@ interface Service {
 
 const services: Service[] = [
   {
-    id: 'initial-consultation',
-    icon: Clock,
-    title: 'Initial Consultation',
-    description: 'Comprehensive business analysis and strategic planning to understand your unique needs and challenges.',
+    id: 'ai-infrastructure',
+    icon: Cpu,
+    title: 'AI Infrastructure',
+    description: 'Enterprise-grade AI Gateway with multi-provider support, advanced security, and intelligent optimization.',
     features: [
-      'In-depth business assessment',
-      'Technology needs analysis', 
-      'Strategic roadmap development',
-      'Custom solution recommendations'
+      'Multi-provider AI gateway',
+      'Advanced security framework',
+      'Performance optimization',
+      'Predictive analytics'
     ],
-    href: '/services/initial-consultation',
-    iconBg: 'bg-green-500'
+    href: '/services/ai-infrastructure',
+    iconBg: 'bg-purple-500'
   },
   {
-    id: 'expert-education',
-    icon: Users,
-    title: 'Expert Education',
-    description: 'Professional training and development programs designed to enhance your team\'s capabilities and drive innovation.',
+    id: 'saas-development',
+    icon: Code2,
+    title: 'SaaS Development',
+    description: 'Build next-generation SaaS platforms with modern architecture, scalable infrastructure, and comprehensive security.',
     features: [
-      'Custom curriculum development',
-      'Expert-led training sessions',
-      'Hands-on workshops',
-      'Certification programs'
+      'Modern tech stack',
+      'Scalable architecture',
+      'Cloud-native deployment',
+      'Enterprise security'
     ],
-    href: '/services/expert-education',
+    href: '/services/saas-development',
     iconBg: 'bg-blue-500'
   },
   {
-    id: 'software-development',
-    icon: Code,
-    title: 'Software Development',
-    description: 'Cutting-edge software solutions built with modern technologies to streamline your operations and boost efficiency.',
+    id: 'business-intelligence',
+    icon: BarChart3,
+    title: 'Business Intelligence',
+    description: 'Transform your data into actionable insights with AI-powered analytics and real-time dashboards.',
     features: [
-      'Custom application development',
-      'Modern tech stack implementation',
-      'Scalable architecture design',
-      'Quality assurance & testing'
+      'Real-time analytics',
+      'AI-powered insights',
+      'Predictive analytics',
+      'Custom reporting'
     ],
-    href: '/services/software-development',
-    iconBg: 'bg-blue-600'
+    href: '/services/business-intelligence',
+    iconBg: 'bg-green-500'
   },
   {
-    id: 'strategic-seo',
-    icon: Search,
-    title: 'Strategic SEO',
-    description: 'Data-driven SEO strategies to improve your online visibility, drive organic growth, and reach your target audience.',
+    id: 'security-compliance',
+    icon: Shield,
+    title: 'Security & Compliance',
+    description: 'Enterprise-grade security solutions with comprehensive compliance frameworks including SOC 2, GDPR, and ISO 27001.',
     features: [
-      'Comprehensive SEO audit',
-      'Keyword research & strategy',
-      'Technical SEO optimization',
-      'Performance monitoring'
+      'Zero-trust architecture',
+      'Advanced threat protection',
+      'Compliance automation',
+      '24/7 security monitoring'
     ],
-    href: '/services/strategic-seo',
-    iconBg: 'bg-green-600'
-  },
-  {
-    id: 'business-strategy',
-    icon: Target,
-    title: 'Business Strategy',
-    description: 'Strategic consulting to help you navigate challenges, identify opportunities, and achieve sustainable growth.',
-    features: [
-      'Market analysis',
-      'Competitive research',
-      'Growth strategy development',
-      'Performance optimization'
-    ],
-    href: '/services/business-strategy',
-    iconBg: 'bg-orange-500'
-  },
-  {
-    id: 'quality-assurance',
-    icon: Award,
-    title: 'Quality Assurance',
-    description: 'Rigorous testing and quality assurance processes to ensure your solutions meet the highest standards.',
-    features: [
-      'Comprehensive testing',
-      'Performance optimization',
-      'Security audits',
-      'Ongoing maintenance'
-    ],
-    href: '/services/quality-assurance',
+    href: '/services/security-compliance',
     iconBg: 'bg-red-500'
+  },
+  {
+    id: 'performance',
+    icon: Zap,
+    title: 'Performance Optimization',
+    description: 'Achieve sub-second load times and optimal user experience with advanced performance optimization.',
+    features: [
+      'Lightning-fast load times',
+      'Core Web Vitals optimization',
+      'Global CDN deployment',
+      'Server optimization'
+    ],
+    href: '/services/performance',
+    iconBg: 'bg-yellow-500'
+  },
+  {
+    id: 'global-solutions',
+    icon: Globe2,
+    title: 'Global Solutions',
+    description: 'Expand worldwide with multi-language support, global payments, and regional compliance.',
+    features: [
+      'Multi-language support',
+      'Multi-currency platform',
+      'Regional compliance',
+      'Cultural localization'
+    ],
+    href: '/services/global-solutions',
+    iconBg: 'bg-teal-500'
   }
 ];
 

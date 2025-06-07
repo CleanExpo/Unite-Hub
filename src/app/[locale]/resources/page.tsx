@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ResourceCard } from "@/components/resources/ResourceCard";
 import { NewsletterSubscribe } from "@/components/blog/NewsletterSubscribe";
-import { motion } from "framer-motion";
 import { 
   Search, 
   Filter, 
@@ -75,11 +74,7 @@ export default async function ResourcesPage({
       <section className="relative py-20 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-teal-600/20 to-cyan-600/20 animate-pulse" />
         <div className="relative max-w-7xl mx-auto px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
+          <div>
             <div className="inline-flex p-3 bg-gradient-to-br from-teal-600 to-cyan-600 rounded-full mb-6">
               <Download className="h-8 w-8 text-white" />
             </div>
@@ -128,7 +123,7 @@ export default async function ResourcesPage({
                 </Button>
               </form>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -193,14 +188,7 @@ export default async function ResourcesPage({
                 {resources.length > 0 ? (
                   <div className="grid md:grid-cols-2 gap-6">
                     {resources.map((resource, index) => (
-                      <motion.div
-                        key={resource.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.4, delay: index * 0.1 }}
-                      >
-                        <ResourceCard resource={resource} />
-                      </motion.div>
+                      <ResourceCard key={resource.id} resource={resource} />
                     ))}
                   </div>
                 ) : (
@@ -313,11 +301,7 @@ export default async function ResourcesPage({
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-r from-teal-600 to-cyan-600">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
+          <div>
             <h2 className="text-4xl font-bold text-white mb-6">
               Need a Custom Solution?
             </h2>
@@ -330,7 +314,7 @@ export default async function ResourcesPage({
                 <ChevronRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-          </motion.div>
+          </div>
         </div>
       </section>
     </div>

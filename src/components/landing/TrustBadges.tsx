@@ -1,3 +1,5 @@
+'use client';
+
 import { Shield, Award, CheckCircle, Globe } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';

@@ -8,7 +8,6 @@ import {
   Code2, Smartphone, Globe, Database, Cloud, Shield,
   ArrowRight, CheckCircle, Zap, Users, TrendingUp, Clock
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { generateMetadata as generateSEOMetadata } from '@/components/seo/SEOHead';
 import { JsonLd } from '@/components/seo/SEOHead';
 import { generateServiceSchema } from '@/lib/seo/schema';
@@ -172,12 +171,7 @@ export default function SoftwareDevelopmentPage() {
         <section className="relative py-20 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-blue-600/10" />
           <div className="relative container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="max-w-4xl mx-auto text-center"
-            >
+            <div className="max-w-4xl mx-auto text-center">
               <Badge className="mb-4 bg-purple-600 text-white">Full-Stack Excellence</Badge>
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
                 Custom Software Development
@@ -199,37 +193,25 @@ export default function SoftwareDevelopmentPage() {
                   </Button>
                 </Link>
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 
         {/* Services Grid */}
         <section className="py-20">
           <div className="container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-12"
-            >
+            <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
                 Our Development Services
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
                 End-to-end software development solutions tailored to your business needs
               </p>
-            </motion.div>
+            </div>
 
             <div className="grid md:grid-cols-2 gap-8">
               {services.map((service, index) => (
-                <motion.div
-                  key={service.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                >
+                <div key={service.title}>
                   <Card className="h-full hover:shadow-xl transition-shadow">
                     <CardHeader>
                       <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg flex items-center justify-center text-white mb-4">
@@ -251,7 +233,7 @@ export default function SoftwareDevelopmentPage() {
                       </ul>
                     </CardContent>
                   </Card>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
@@ -260,20 +242,14 @@ export default function SoftwareDevelopmentPage() {
         {/* Tech Stack */}
         <section className="py-20 bg-gray-50 dark:bg-slate-900">
           <div className="container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-12"
-            >
+            <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
                 Our Technology Stack
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
                 Cutting-edge technologies to build modern, scalable applications
               </p>
-            </motion.div>
+            </div>
 
             <Tabs defaultValue="frontend" className="max-w-4xl mx-auto">
               <TabsList className="grid w-full grid-cols-4">
@@ -287,11 +263,8 @@ export default function SoftwareDevelopmentPage() {
                 <TabsContent key={category} value={category} className="mt-8">
                   <div className="grid md:grid-cols-2 gap-4">
                     {technologies.map((tech, index) => (
-                      <motion.div
+                      <div
                         key={tech.name}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.4, delay: index * 0.1 }}
                         className="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm"
                       >
                         <div className="flex items-center justify-between">
@@ -305,7 +278,7 @@ export default function SoftwareDevelopmentPage() {
                             {tech.level}
                           </Badge>
                         </div>
-                      </motion.div>
+                      </div>
                     ))}
                   </div>
                 </TabsContent>
@@ -317,29 +290,19 @@ export default function SoftwareDevelopmentPage() {
         {/* Pricing */}
         <section className="py-20">
           <div className="container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-12"
-            >
+            <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
                 Transparent Pricing
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
                 Choose the package that fits your needs, or let us create a custom solution
               </p>
-            </motion.div>
+            </div>
 
             <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               {pricingTiers.map((tier, index) => (
-                <motion.div
+                <div
                   key={tier.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
                   className={`relative ${tier.recommended ? 'md:-mt-4' : ''}`}
                 >
                   {tier.recommended && (
@@ -384,7 +347,7 @@ export default function SoftwareDevelopmentPage() {
                       </Button>
                     </CardContent>
                   </Card>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
@@ -393,30 +356,20 @@ export default function SoftwareDevelopmentPage() {
         {/* Process */}
         <section className="py-20 bg-gray-50 dark:bg-slate-900">
           <div className="container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-12"
-            >
+            <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
                 Our Development Process
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
                 Agile methodology with continuous delivery and transparent communication
               </p>
-            </motion.div>
+            </div>
 
             <div className="max-w-4xl mx-auto">
               <div className="relative">
                 {process.map((phase, index) => (
-                  <motion.div
+                  <div
                     key={phase.phase}
-                    initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
                     className="mb-8 flex items-center"
                   >
                     <div className="flex-shrink-0 w-32 text-right pr-8">
@@ -435,7 +388,7 @@ export default function SoftwareDevelopmentPage() {
                         {phase.description}
                       </p>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -445,12 +398,7 @@ export default function SoftwareDevelopmentPage() {
         {/* CTA */}
         <section className="py-20 bg-gradient-to-r from-purple-600 to-blue-600">
           <div className="container mx-auto px-4 text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
+            <div>
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
                 Ready to Build Something Amazing?
               </h2>
@@ -473,7 +421,7 @@ export default function SoftwareDevelopmentPage() {
               <p className="mt-8 text-sm text-purple-100">
                 🚀 Fast delivery • 🛡️ Secure by design • 📱 Mobile-first approach
               </p>
-            </motion.div>
+            </div>
           </div>
         </section>
       </div>

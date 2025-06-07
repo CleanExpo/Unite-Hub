@@ -8,7 +8,6 @@ import {
   Lightbulb, Target, TrendingUp, Users, BarChart3, Brain,
   ArrowRight, CheckCircle, Rocket, Shield, LineChart, Briefcase
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { generateMetadata as generateSEOMetadata } from '@/components/seo/SEOHead';
 import { JsonLd } from '@/components/seo/SEOHead';
 import { generateServiceSchema } from '@/lib/seo/schema';
@@ -165,12 +164,7 @@ export default function BusinessStrategyPage() {
         <section className="relative py-20 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/10 to-purple-600/10" />
           <div className="relative container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="max-w-4xl mx-auto text-center"
-            >
+            <div className="max-w-4xl mx-auto text-center">
               <Badge className="mb-4 bg-indigo-600 text-white">Strategic Excellence</Badge>
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
                 Business Strategy Consulting
@@ -192,7 +186,7 @@ export default function BusinessStrategyPage() {
                   </Button>
                 </Link>
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
 
@@ -201,12 +195,8 @@ export default function BusinessStrategyPage() {
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {caseStudyResults.map((result, index) => (
-                <motion.div
+                <div
                   key={result.metric}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
                   className="text-center"
                 >
                   <div className="text-3xl md:text-4xl font-bold text-indigo-600 dark:text-indigo-400 mb-2">
@@ -214,7 +204,7 @@ export default function BusinessStrategyPage() {
                   </div>
                   <div className="font-semibold text-gray-900 dark:text-white">{result.metric}</div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">{result.description}</div>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
@@ -223,30 +213,18 @@ export default function BusinessStrategyPage() {
         {/* Strategy Services */}
         <section className="py-20">
           <div className="container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-12"
-            >
+            <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
                 Strategic Solutions
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
                 Comprehensive strategies tailored to your unique challenges and opportunities
               </p>
-            </motion.div>
+            </div>
 
             <div className="grid md:grid-cols-2 gap-8">
               {strategies.map((strategy, index) => (
-                <motion.div
-                  key={strategy.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                >
+                <div key={strategy.title}>
                   <Card className="h-full hover:shadow-xl transition-shadow">
                     <CardHeader>
                       <div className="w-16 h-16 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center text-white mb-4">
@@ -268,7 +246,7 @@ export default function BusinessStrategyPage() {
                       </ul>
                     </CardContent>
                   </Card>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
@@ -277,20 +255,14 @@ export default function BusinessStrategyPage() {
         {/* Frameworks */}
         <section id="frameworks" className="py-20 bg-gray-50 dark:bg-slate-900">
           <div className="container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-12"
-            >
+            <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
                 Proven Methodologies
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
                 World-class frameworks adapted to your specific context
               </p>
-            </motion.div>
+            </div>
 
             <Tabs defaultValue="analysis" className="max-w-4xl mx-auto">
               <TabsList className="grid w-full grid-cols-3">
@@ -303,11 +275,8 @@ export default function BusinessStrategyPage() {
                 <TabsContent key={category} value={category} className="mt-8">
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {items.map((framework, index) => (
-                      <motion.div
+                      <div
                         key={framework}
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.4, delay: index * 0.1 }}
                         className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow"
                       >
                         <div className="flex items-center gap-3">
@@ -316,7 +285,7 @@ export default function BusinessStrategyPage() {
                             {framework}
                           </span>
                         </div>
-                      </motion.div>
+                      </div>
                     ))}
                   </div>
                 </TabsContent>
@@ -328,29 +297,19 @@ export default function BusinessStrategyPage() {
         {/* Engagement Models */}
         <section className="py-20">
           <div className="container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-12"
-            >
+            <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
                 Engagement Models
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
                 Flexible engagement options to match your needs and timeline
               </p>
-            </motion.div>
+            </div>
 
             <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               {engagementModels.map((model, index) => (
-                <motion.div
+                <div
                   key={model.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
                   className={`relative ${model.recommended ? 'md:-mt-4' : ''}`}
                 >
                   {model.recommended && (
@@ -400,7 +359,7 @@ export default function BusinessStrategyPage() {
                       </Button>
                     </CardContent>
                   </Card>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
@@ -409,29 +368,17 @@ export default function BusinessStrategyPage() {
         {/* Why Choose Us */}
         <section className="py-20 bg-gray-50 dark:bg-slate-900">
           <div className="container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-12"
-            >
+            <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
                 The Unite Group Advantage
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
                 What sets our strategic consulting apart
               </p>
-            </motion.div>
+            </div>
 
             <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="text-center"
-              >
+              <div className="text-center">
                 <div className="w-16 h-16 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
                   <BarChart3 className="h-8 w-8 text-indigo-600" />
                 </div>
@@ -441,15 +388,9 @@ export default function BusinessStrategyPage() {
                 <p className="text-gray-600 dark:text-gray-400">
                   Every recommendation backed by rigorous analysis and market data
                 </p>
-              </motion.div>
+              </div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="text-center"
-              >
+              <div className="text-center">
                 <div className="w-16 h-16 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Rocket className="h-8 w-8 text-purple-600" />
                 </div>
@@ -459,15 +400,9 @@ export default function BusinessStrategyPage() {
                 <p className="text-gray-600 dark:text-gray-400">
                   Practical strategies designed for real-world execution and results
                 </p>
-              </motion.div>
+              </div>
 
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-center"
-              >
+              <div className="text-center">
                 <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Shield className="h-8 w-8 text-green-600" />
                 </div>
@@ -477,7 +412,7 @@ export default function BusinessStrategyPage() {
                 <p className="text-gray-600 dark:text-gray-400">
                   Comprehensive scenario planning to navigate uncertainty
                 </p>
-              </motion.div>
+              </div>
             </div>
           </div>
         </section>
@@ -485,12 +420,7 @@ export default function BusinessStrategyPage() {
         {/* CTA */}
         <section className="py-20 bg-gradient-to-r from-indigo-600 to-purple-600">
           <div className="container mx-auto px-4 text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
+            <div>
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
                 Ready to Transform Your Business?
               </h2>
@@ -513,7 +443,7 @@ export default function BusinessStrategyPage() {
               <p className="mt-8 text-sm text-indigo-100">
                 🎯 Custom strategies • 📊 Data-driven approach • 🚀 Proven results
               </p>
-            </motion.div>
+            </div>
           </div>
         </section>
       </div>

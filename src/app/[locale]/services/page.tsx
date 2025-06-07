@@ -19,7 +19,6 @@ import {
   Award,
   Zap
 } from "lucide-react";
-import { motion } from "framer-motion";
 
 export const metadata: Metadata = {
   title: "Our Services | Unite Group - Business Solutions & Technology",
@@ -133,11 +132,7 @@ export default function ServicesPage() {
       <section className="relative py-20 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-teal-600/20 to-cyan-600/20 animate-pulse" />
         <div className="relative max-w-7xl mx-auto px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
+          <div>
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
               Our Services
             </h1>
@@ -159,7 +154,7 @@ export default function ServicesPage() {
                 </Link>
               </Button>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -168,17 +163,11 @@ export default function ServicesPage() {
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-                className="text-center"
-              >
+              <div key={stat.label} className="text-center">
                 <stat.icon className="h-8 w-8 text-teal-400 mx-auto mb-3" />
                 <div className="text-3xl font-bold text-white">{stat.value}</div>
                 <div className="text-slate-400">{stat.label}</div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -187,28 +176,18 @@ export default function ServicesPage() {
       {/* Services Grid */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
+          <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-4">
               Choose Your Path to Success
             </h2>
             <p className="text-xl text-slate-300 max-w-3xl mx-auto">
               Each service is tailored to address specific business challenges and opportunities
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service, index) => (
-              <motion.div
-                key={service.title}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-              >
+              <div key={service.title}>
                 <Card className="h-full bg-slate-800 border-slate-700 hover:border-teal-600 transition-all hover:shadow-xl group relative overflow-hidden">
                   {service.popular && (
                     <div className="absolute top-4 right-4 z-10">
@@ -261,7 +240,7 @@ export default function ServicesPage() {
                     </Button>
                   </CardContent>
                 </Card>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -270,66 +249,43 @@ export default function ServicesPage() {
       {/* Comparison Table Section */}
       <section className="py-20 bg-slate-800/50">
         <div className="max-w-7xl mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
+          <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-white mb-4">
               Compare Our Services
             </h2>
             <p className="text-xl text-slate-300 max-w-3xl mx-auto">
               Find the perfect combination of services for your business needs
             </p>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="bg-slate-900 rounded-2xl p-8 shadow-xl"
-          >
+          <div className="bg-slate-900 rounded-2xl p-8 shadow-xl">
             <ServiceComparisonTable />
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* Service Recommendation Quiz */}
       <section id="quiz" className="py-20">
         <div className="max-w-7xl mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
+          <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-white mb-4">
               Not Sure Where to Start?
             </h2>
             <p className="text-xl text-slate-300 max-w-3xl mx-auto">
               Take our quick quiz to get personalized service recommendations
             </p>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
+          <div>
             <ServiceRecommendationQuiz />
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-r from-teal-600 to-cyan-600">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
+          <div>
             <div className="inline-flex p-4 bg-white/10 rounded-full mb-6">
               <Zap className="h-12 w-12 text-white" />
             </div>
@@ -352,7 +308,7 @@ export default function ServicesPage() {
                 </Link>
               </Button>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
     </div>

@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { BlogCard } from "@/components/blog/BlogCard";
 import { NewsletterSubscribe } from "@/components/blog/NewsletterSubscribe";
-import { motion } from "framer-motion";
 import { 
   Search, 
   Filter, 
@@ -60,11 +59,7 @@ export default async function BlogPage({
       <section className="relative py-20 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-teal-600/20 to-cyan-600/20 animate-pulse" />
         <div className="relative max-w-7xl mx-auto px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
+          <div>
             <div className="inline-flex p-3 bg-gradient-to-br from-teal-600 to-cyan-600 rounded-full mb-6">
               <BookOpen className="h-8 w-8 text-white" />
             </div>
@@ -94,7 +89,7 @@ export default async function BlogPage({
                 </Button>
               </form>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -156,14 +151,7 @@ export default async function BlogPage({
                 {posts.length > 0 ? (
                   <div className="grid md:grid-cols-2 gap-6">
                     {posts.map((post, index) => (
-                      <motion.div
-                        key={post.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.4, delay: index * 0.1 }}
-                      >
-                        <BlogCard post={post} />
-                      </motion.div>
+                      <BlogCard key={post.id} post={post} />
                     ))}
                   </div>
                 ) : (
@@ -263,11 +251,7 @@ export default async function BlogPage({
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-r from-teal-600 to-cyan-600">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
+          <div>
             <h2 className="text-4xl font-bold text-white mb-6">
               Ready to Transform Your Business?
             </h2>
@@ -280,7 +264,7 @@ export default async function BlogPage({
                 <ChevronRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-          </motion.div>
+          </div>
         </div>
       </section>
     </div>

@@ -1,133 +1,105 @@
+/**
+ * Business Intelligence Services Page
+ */
+
 import { Metadata } from 'next';
-import { BarChart3, CheckCircle2, ArrowRight, TrendingUp, PieChart, Activity, LineChart } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { CheckCircle2, BarChart3, TrendingUp, Brain, Database, LineChart } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Business Intelligence Services | Unite Group',
-  description: 'Advanced analytics and performance monitoring with AI-powered insights. Real-time dashboards, predictive analytics, and custom reporting.',
-  keywords: ['Business Intelligence', 'Analytics', 'Data Visualization', 'Predictive Analytics', 'Real-time Dashboards', 'Performance Monitoring', 'AI Insights'],
+  description: 'Transform your data into actionable insights with AI-powered analytics, real-time dashboards, and predictive intelligence.',
 };
 
 const features = [
   {
+    icon: BarChart3,
     title: 'Real-Time Analytics',
-    description: 'Live dashboards with instant data updates and interactive visualizations',
-    icon: Activity,
+    description: 'Monitor key metrics with live dashboards that update in real-time, giving you instant visibility into your business performance.',
   },
   {
-    title: 'Predictive Analytics',
-    description: 'AI-powered forecasting and trend analysis for data-driven decisions',
+    icon: Brain,
+    title: 'AI-Powered Insights',
+    description: 'Machine learning algorithms analyze patterns and provide actionable recommendations for business optimization.',
+  },
+  {
     icon: TrendingUp,
+    title: 'Predictive Analytics',
+    description: '95%+ accuracy in forecasting sales, customer behavior, and market trends to stay ahead of the competition.',
   },
   {
-    title: 'Custom Reporting',
-    description: 'Tailored reports and insights specific to your business needs',
-    icon: PieChart,
+    icon: Database,
+    title: 'Data Integration',
+    description: 'Seamlessly connect all your data sources into a unified platform for comprehensive analysis.',
   },
   {
-    title: 'Performance Monitoring',
-    description: 'Track KPIs and business metrics with automated alerting',
     icon: LineChart,
+    title: 'Custom Reporting',
+    description: 'Build tailored reports and visualizations that match your specific business needs and KPIs.',
   },
 ];
 
 const capabilities = [
-  {
-    title: 'Data Sources',
-    items: ['Databases', 'APIs', 'CSV/Excel', 'Real-time Streams', 'Cloud Storage', 'Third-party Services'],
-  },
-  {
-    title: 'Analytics Features',
-    items: ['Trend Analysis', 'Cohort Analysis', 'Funnel Analytics', 'User Behavior', 'Revenue Analytics', 'Churn Prediction'],
-  },
-  {
-    title: 'Visualization Types',
-    items: ['Interactive Charts', 'Heat Maps', 'Geographic Maps', 'Custom Dashboards', 'Mobile Reports', 'Embedded Analytics'],
-  },
+  'Sales pipeline analytics and forecasting',
+  'Customer behavior and segmentation analysis',
+  'Financial performance tracking',
+  'Marketing campaign effectiveness',
+  'Operational efficiency metrics',
+  'Competitive market analysis',
+  'Risk assessment and mitigation',
+  'Resource optimization insights',
 ];
 
 export default function BusinessIntelligencePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-slate-900">
       {/* Hero Section */}
-      <section className="container mx-auto px-4 py-24">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex p-4 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-500 text-white mb-8">
-            <BarChart3 className="w-12 h-12" />
-          </div>
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-gray-900 to-gray-600 dark:from-gray-100 dark:to-gray-300 bg-clip-text text-transparent">
-            Business Intelligence
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400 mb-8 max-w-3xl mx-auto">
-            Transform your data into actionable insights with advanced analytics and AI-powered intelligence. 
-            Make informed decisions with real-time dashboards and predictive analytics.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="bg-gradient-to-r from-green-500 to-emerald-500 hover:opacity-90">
-              <Link href="/[locale]/contact">
-                Get Started
-                <ArrowRight className="ml-2 w-5 h-5" />
+      <section className="relative py-20 px-4">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center space-y-6">
+            <h1 className="text-5xl font-bold text-white">
+              Business Intelligence Services
+            </h1>
+            <p className="text-xl text-slate-300 max-w-3xl mx-auto">
+              Unlock the power of your data with AI-driven analytics. Make informed 
+              decisions faster with real-time insights and predictive intelligence 
+              that drives business growth.
+            </p>
+            <div className="flex gap-4 justify-center pt-4">
+              <Link href="/contact">
+                <Button size="lg" className="bg-teal-600 hover:bg-teal-700">
+                  Transform Your Data
+                </Button>
               </Link>
-            </Button>
-            <Button asChild size="lg" variant="outline">
-              <Link href="/[locale]/contact">
-                View Demo
+              <Link href="/consultation">
+                <Button size="lg" variant="outline" className="text-white border-white hover:bg-white hover:text-slate-900">
+                  Book Consultation
+                </Button>
               </Link>
-            </Button>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Features Grid */}
-      <section className="container mx-auto px-4 py-16">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-          Business Intelligence Features
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          {features.map((feature, index) => (
-            <Card key={index} className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="flex items-center gap-4">
-                  <div className="p-3 rounded-lg bg-gradient-to-r from-green-500 to-emerald-500 text-white">
-                    <feature.icon className="w-6 h-6" />
-                  </div>
-                  <CardTitle>{feature.title}</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <CardDescription className="text-base">
-                  {feature.description}
-                </CardDescription>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
-
-      {/* Capabilities */}
-      <section className="container mx-auto px-4 py-16 bg-gray-50 dark:bg-gray-900/50">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            Comprehensive Analytics Capabilities
+      <section className="py-20 px-4 bg-slate-800/50">
+        <div className="container mx-auto max-w-6xl">
+          <h2 className="text-3xl font-bold text-white text-center mb-12">
+            Advanced Analytics Capabilities
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {capabilities.map((capability, index) => (
-              <Card key={index}>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {features.map((feature, index) => (
+              <Card key={index} className="bg-slate-800 border-slate-700">
                 <CardHeader>
-                  <CardTitle>{capability.title}</CardTitle>
+                  <feature.icon className="h-10 w-10 text-teal-500 mb-2" />
+                  <CardTitle className="text-white">{feature.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ul className="space-y-2">
-                    {capability.items.map((item, itemIndex) => (
-                      <li key={itemIndex} className="flex items-start gap-2">
-                        <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5" />
-                        <span className="text-sm">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  <CardDescription className="text-slate-300">
+                    {feature.description}
+                  </CardDescription>
                 </CardContent>
               </Card>
             ))}
@@ -135,106 +107,82 @@ export default function BusinessIntelligencePage() {
         </div>
       </section>
 
-      {/* Use Cases */}
-      <section className="container mx-auto px-4 py-16">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            Industry Applications
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {/* Analytics Capabilities */}
+      <section className="py-20 px-4">
+        <div className="container mx-auto max-w-6xl">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h3 className="text-xl font-semibold mb-4">E-Commerce & Retail</h3>
-              <ul className="space-y-3">
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5" />
-                  <span>Sales performance analytics</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5" />
-                  <span>Customer behavior insights</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5" />
-                  <span>Inventory optimization</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5" />
-                  <span>Revenue forecasting</span>
-                </li>
+              <h2 className="text-3xl font-bold text-white mb-8">
+                Comprehensive Business Analytics
+              </h2>
+              <ul className="space-y-4">
+                {capabilities.map((capability, index) => (
+                  <li key={index} className="flex items-start gap-3">
+                    <CheckCircle2 className="h-6 w-6 text-teal-500 flex-shrink-0 mt-0.5" />
+                    <span className="text-slate-300">{capability}</span>
+                  </li>
+                ))}
               </ul>
             </div>
-            <div>
-              <h3 className="text-xl font-semibold mb-4">SaaS & Technology</h3>
-              <ul className="space-y-3">
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5" />
-                  <span>User engagement metrics</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5" />
-                  <span>Churn prediction & prevention</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5" />
-                  <span>Feature adoption tracking</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5" />
-                  <span>Growth analytics</span>
-                </li>
-              </ul>
+            <div className="bg-slate-800 rounded-lg p-8 border border-slate-700">
+              <h3 className="text-2xl font-bold text-white mb-4">
+                Data-Driven Decision Making
+              </h3>
+              <div className="space-y-4 text-slate-300">
+                <p>Our BI platform delivers:</p>
+                <ul className="list-disc list-inside space-y-2 ml-4">
+                  <li>360-degree view of your business</li>
+                  <li>Automated data collection and processing</li>
+                  <li>AI-generated insights and recommendations</li>
+                  <li>Customizable alerts and notifications</li>
+                  <li>Mobile-responsive dashboards</li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Benefits */}
-      <section className="container mx-auto px-4 py-16 bg-gray-50 dark:bg-gray-900/50">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-12">
-            The Unite Group Advantage
+      {/* ROI Section */}
+      <section className="py-20 px-4 bg-slate-800/50">
+        <div className="container mx-auto max-w-6xl">
+          <h2 className="text-3xl font-bold text-white text-center mb-12">
+            Proven Business Impact
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              'Real-time insights',
-              'AI-powered analytics',
-              'Custom dashboards',
-              'Predictive modeling',
-              'Automated reporting',
-              'Data integration',
-              'Mobile access',
-              'Enterprise security',
-            ].map((benefit, index) => (
-              <div key={index} className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 p-4 rounded-lg border border-green-200 dark:border-green-800">
-                <span className="text-sm font-medium">{benefit}</span>
-              </div>
-            ))}
+          <div className="grid md:grid-cols-3 gap-8 text-center">
+            <div>
+              <div className="text-5xl font-bold text-teal-500 mb-2">45%</div>
+              <p className="text-xl text-white mb-2">Average Revenue Increase</p>
+              <p className="text-slate-300">Through data-driven optimization</p>
+            </div>
+            <div>
+              <div className="text-5xl font-bold text-teal-500 mb-2">60%</div>
+              <p className="text-xl text-white mb-2">Faster Decision Making</p>
+              <p className="text-slate-300">With real-time insights</p>
+            </div>
+            <div>
+              <div className="text-5xl font-bold text-teal-500 mb-2">95%+</div>
+              <p className="text-xl text-white mb-2">Forecast Accuracy</p>
+              <p className="text-slate-300">Using AI predictive models</p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="container mx-auto px-4 py-24 text-center">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+      <section className="py-20 px-4 bg-gradient-to-r from-teal-600 to-cyan-600">
+        <div className="container mx-auto max-w-4xl text-center">
+          <h2 className="text-3xl font-bold text-white mb-4">
             Ready to Unlock Your Data&apos;s Potential?
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-400 mb-8">
-            Transform your business with data-driven insights and AI-powered analytics.
+          <p className="text-xl text-white/90 mb-8">
+            Start with our $550 consultation to design your custom analytics solution
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="bg-gradient-to-r from-green-500 to-emerald-500 hover:opacity-90">
-              <Link href="/[locale]/contact">
-                Start Your Analytics Journey
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Link>
+          <Link href="/consultation">
+            <Button size="lg" variant="secondary" className="bg-white text-slate-900 hover:bg-slate-100">
+              Get Started Today
             </Button>
-            <Button asChild size="lg" variant="outline">
-              <Link href="/[locale]/pricing">
-                View Pricing
-              </Link>
-            </Button>
-          </div>
+          </Link>
         </div>
       </section>
     </div>
