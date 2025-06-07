@@ -1,5 +1,7 @@
 import { HeroSection } from '@/components/landing/HeroSection';
 import { InteractiveSolutions } from '@/components/landing/InteractiveSolutions';
+import Testimonials from '@/components/landing/Testimonials';
+import FeatureShowcase from '@/components/landing/FeatureShowcase';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -69,6 +71,16 @@ export default function HomePage() {
 
       <Separator className="container mx-auto" />
 
+      {/* Feature Showcase */}
+      <FeatureShowcase />
+
+      <Separator className="container mx-auto" />
+
+      {/* Testimonials Section */}
+      <Testimonials />
+
+      <Separator className="container mx-auto" />
+
       {/* Technology Stack */}
       <section className="container mx-auto px-4 py-16">
         <h2 className="text-3xl font-bold text-center mb-12 animate-fade-in-up">Our Technology Stack</h2>
@@ -112,24 +124,24 @@ export default function HomePage() {
           <h2 className="text-3xl font-bold text-center mb-12 animate-fade-in-up">Proven Results</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
             <div className="animate-scale-in">
-              <div className="text-4xl font-bold text-blue-600 mb-2">99.9%</div>
-              <div className="text-lg font-semibold mb-1">Uptime Guarantee</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Enterprise reliability with AI failover</div>
+              <div className="text-4xl font-bold text-blue-600 mb-2">500+</div>
+              <div className="text-lg font-semibold mb-1">Enterprise Clients</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Trusted by leading organizations globally</div>
             </div>
             <div className="animate-scale-in" style={{ animationDelay: '0.1s' }}>
-              <div className="text-4xl font-bold text-green-600 mb-2">&lt;1s</div>
-              <div className="text-lg font-semibold mb-1">Response Time</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Lightning-fast performance globally</div>
+              <div className="text-4xl font-bold text-green-600 mb-2">300%</div>
+              <div className="text-lg font-semibold mb-1">ROI Average</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Proven return on investment</div>
             </div>
             <div className="animate-scale-in" style={{ animationDelay: '0.2s' }}>
-              <div className="text-4xl font-bold text-purple-600 mb-2">50+</div>
-              <div className="text-lg font-semibold mb-1">Features Built</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Comprehensive enterprise platform</div>
+              <div className="text-4xl font-bold text-purple-600 mb-2">$10M+</div>
+              <div className="text-lg font-semibold mb-1">Cost Savings</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Delivered to our clients annually</div>
             </div>
             <div className="animate-scale-in" style={{ animationDelay: '0.3s' }}>
               <div className="text-4xl font-bold text-orange-600 mb-2">24/7</div>
-              <div className="text-lg font-semibold mb-1">Monitoring</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Advanced analytics and alerting</div>
+              <div className="text-lg font-semibold mb-1">Expert Support</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Round-the-clock assistance</div>
             </div>
           </div>
         </div>

@@ -1,141 +1,307 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { motion } from 'framer-motion'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Shield, Lock, Eye, Database, UserCheck, Globe, Mail, Phone } from 'lucide-react'
 
-export default function PrivacyPolicy() {
+export default function PrivacyPolicyPage() {
+  const lastUpdated = '2025-01-01'
+  
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      {/* Navigation */}
-      <nav className="bg-slate-900/80 backdrop-blur-md border-b border-slate-700 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
-          <Link href="/" className="text-2xl font-bold text-white">
-            <span className="text-teal-400">UG</span> UNITE Group
-          </Link>
-          <div className="hidden md:flex items-center gap-8">
-            <Link href="/features" className="text-slate-300 hover:text-white transition-colors">Services</Link>
-            <Link href="/pricing" className="text-slate-300 hover:text-white transition-colors">Pricing</Link>
-            <Link href="/contact" className="text-slate-300 hover:text-white transition-colors">Contact</Link>
-            <Link href="/about" className="text-slate-300 hover:text-white transition-colors">About</Link>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-12"
+        >
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+            <Shield className="h-8 w-8 text-blue-600" />
           </div>
-          <div className="flex gap-4">
-            <Link href="/login" className="text-slate-300 hover:text-white px-4 py-2 rounded-md transition-colors">
-              Login
-            </Link>
-            <Button asChild className="bg-teal-600 hover:bg-teal-700">
-              <Link href="/book-consultation">Book Now</Link>
-            </Button>
-          </div>
-        </div>
-      </nav>
-
-      {/* Header */}
-      <section className="py-16 md:py-24">
-        <div className="max-w-4xl mx-auto px-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Privacy Policy
           </h1>
-          <p className="text-slate-400 text-lg">
-            Last Updated: May 25, 2025
+          <p className="text-lg text-gray-600">
+            Your privacy is important to us. This policy explains how we collect, use, and protect your information.
           </p>
-        </div>
-      </section>
+          <p className="text-sm text-gray-500 mt-2">
+            Last updated: {new Date(lastUpdated).toLocaleDateString('en-US', { 
+              year: 'numeric', 
+              month: 'long', 
+              day: 'numeric' 
+            })}
+          </p>
+        </motion.div>
 
-      {/* Content */}
-      <section className="pb-24">
-        <div className="max-w-4xl mx-auto px-4">
-          <Card className="bg-slate-800 border-slate-700 shadow-xl">
-            <CardContent className="p-8">
-              <div className="prose prose-invert max-w-none prose-headings:text-teal-400 prose-a:text-teal-400 prose-strong:text-white">
-                <h2>1. Introduction</h2>
-                <p>UNITE Group ("we", "our", or "us") respects your privacy and is committed to protecting your personal data. This privacy policy will inform you about how we look after your personal data when you visit our website and inform you of your privacy rights and how the law protects you.</p>
-                <p>This privacy policy applies to personal data we collect when you use our website, sign up for our services, or interact with us in any way.</p>
-
-                <h2>2. The Data We Collect About You</h2>
-                <p>We may collect, use, store, and transfer different kinds of personal data about you, including:</p>
-                <ul>
-                  <li><strong>Identity Data</strong>: includes first name, last name, username or similar identifier</li>
-                  <li><strong>Contact Data</strong>: includes email address, telephone numbers, and physical address</li>
-                  <li><strong>Technical Data</strong>: includes internet protocol (IP) address, browser type and version, time zone setting and location, operating system and platform</li>
-                  <li><strong>Usage Data</strong>: includes information about how you use our website and services</li>
-                  <li><strong>Marketing Data</strong>: includes your preferences in receiving marketing from us</li>
-                  <li><strong>Business Data</strong>: includes information about your business needs and objectives shared during consultations</li>
-                </ul>
-
-                <h2>3. How We Collect Your Personal Data</h2>
-                <p>We use different methods to collect data from and about you including through:</p>
-                <ul>
-                  <li><strong>Direct interactions</strong>: You may give us your Identity and Contact Data by filling in forms or by corresponding with us by email, phone, or otherwise.</li>
-                  <li><strong>Automated technologies</strong>: As you interact with our website, we may automatically collect Technical Data about your browsing actions and patterns.</li>
-                  <li><strong>Third parties</strong>: We may receive personal data about you from various third parties such as analytics providers and advertising networks.</li>
-                </ul>
-
-                <h2>4. How We Use Your Personal Data</h2>
-                <p>We will only use your personal data when the law allows us to. Most commonly, we will use your personal data in the following circumstances:</p>
-                <ul>
-                  <li>To register you as a new customer</li>
-                  <li>To process and deliver our services to you</li>
-                  <li>To manage our relationship with you</li>
-                  <li>To administer and protect our business and website</li>
-                  <li>To deliver relevant website content and advertisements to you</li>
-                  <li>To use data analytics to improve our website, products/services, marketing, customer relationships, and experiences</li>
-                </ul>
-
-                <h2>5. Data Security</h2>
-                <p>We have put in place appropriate security measures to prevent your personal data from being accidentally lost, used, or accessed in an unauthorized way, altered, or disclosed. We limit access to your personal data to those employees, agents, contractors, and other third parties who have a business need to know.</p>
-                <p>We have procedures in place to deal with any suspected personal data breach and will notify you and any applicable regulator of a breach where we are legally required to do so.</p>
-
-                <h2>6. Data Retention</h2>
-                <p>We will only retain your personal data for as long as necessary to fulfill the purposes we collected it for, including for the purposes of satisfying any legal, accounting, or reporting requirements.</p>
-                <p>To determine the appropriate retention period for personal data, we consider the amount, nature, and sensitivity of the personal data, the potential risk of harm from unauthorized use or disclosure of your personal data, the purposes for which we process your personal data, and whether we can achieve those purposes through other means, and the applicable legal requirements.</p>
-
-                <h2>7. Your Legal Rights</h2>
-                <p>Under certain circumstances, you have rights under data protection laws in relation to your personal data, including the right to:</p>
-                <ul>
-                  <li>Request access to your personal data</li>
-                  <li>Request correction of your personal data</li>
-                  <li>Request erasure of your personal data</li>
-                  <li>Object to processing of your personal data</li>
-                  <li>Request restriction of processing your personal data</li>
-                  <li>Request transfer of your personal data</li>
-                  <li>Right to withdraw consent</li>
-                </ul>
-                <p>You will not have to pay a fee to access your personal data (or to exercise any of the other rights). However, we may charge a reasonable fee if your request is clearly unfounded, repetitive, or excessive. Alternatively, we may refuse to comply with your request in these circumstances.</p>
-
-                <h2>8. Third-Party Links</h2>
-                <p>This website may include links to third-party websites, plug-ins, and applications. Clicking on those links or enabling those connections may allow third parties to collect or share data about you. We do not control these third-party websites and are not responsible for their privacy statements. When you leave our website, we encourage you to read the privacy policy of every website you visit.</p>
-
-                <h2>9. Cookies</h2>
-                <p>We use cookies and similar tracking technologies to track the activity on our Service and hold certain information. Cookies are files with a small amount of data which may include an anonymous unique identifier.</p>
-                <p>You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent. However, if you do not accept cookies, you may not be able to use some portions of our Service.</p>
-                <p>Examples of Cookies we use:</p>
-                <ul>
-                  <li><strong>Session Cookies</strong>: We use Session Cookies to operate our Service.</li>
-                  <li><strong>Preference Cookies</strong>: We use Preference Cookies to remember your preferences and various settings.</li>
-                  <li><strong>Security Cookies</strong>: We use Security Cookies for security purposes.</li>
-                  <li><strong>Advertising Cookies</strong>: Advertising Cookies are used to serve you with advertisements that may be relevant to you and your interests.</li>
-                </ul>
-
-                <h2>10. Children's Privacy</h2>
-                <p>Our Service does not address anyone under the age of 18. We do not knowingly collect personally identifiable information from anyone under the age of 18. If you are a parent or guardian and you are aware that your child has provided us with Personal Data, please contact us. If we become aware that we have collected Personal Data from children without verification of parental consent, we take steps to remove that information from our servers.</p>
-
-                <h2>11. Changes to This Privacy Policy</h2>
-                <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date at the top of this Privacy Policy.</p>
-                <p>You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.</p>
-
-                <h2>12. Contact Us</h2>
-                <p>If you have any questions about this Privacy Policy, please contact us:</p>
-                <p>
-                  <strong>Email:</strong> privacy@unite-group.com<br />
-                  <strong>Phone:</strong> 0457 123 005<br />
-                  <strong>Address:</strong> 123 Business Street, Sydney NSW 2000, Australia
-                </p>
+        {/* Quick Summary */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="mb-12"
+        >
+          <Card className="bg-blue-50 border-blue-200">
+            <CardHeader>
+              <CardTitle className="text-blue-900">Privacy at a Glance</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex items-start">
+                  <Lock className="h-5 w-5 text-blue-600 mr-2 mt-0.5" />
+                  <div>
+                    <h4 className="font-semibold text-blue-900">Data Security</h4>
+                    <p className="text-sm text-blue-700">256-bit encryption for all data</p>
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <UserCheck className="h-5 w-5 text-blue-600 mr-2 mt-0.5" />
+                  <div>
+                    <h4 className="font-semibold text-blue-900">GDPR Compliant</h4>
+                    <p className="text-sm text-blue-700">Full compliance with EU regulations</p>
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <Eye className="h-5 w-5 text-blue-600 mr-2 mt-0.5" />
+                  <div>
+                    <h4 className="font-semibold text-blue-900">No Tracking</h4>
+                    <p className="text-sm text-blue-700">We don&apos;t sell your data</p>
+                  </div>
+                </div>
+                <div className="flex items-start">
+                  <Database className="h-5 w-5 text-blue-600 mr-2 mt-0.5" />
+                  <div>
+                    <h4 className="font-semibold text-blue-900">Data Control</h4>
+                    <p className="text-sm text-blue-700">Request deletion anytime</p>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
+        </motion.div>
+
+        {/* Content Sections */}
+        <div className="space-y-8">
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Information We Collect</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-600 mb-4">
+                We collect information you provide directly to us, such as when you create an account, 
+                use our services, or contact us for support.
+              </p>
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">Information you provide:</h3>
+              <ul className="list-disc list-inside text-gray-600 space-y-1 mb-4">
+                <li>Name and contact information (email, phone number)</li>
+                <li>Company information</li>
+                <li>Payment information (processed securely through Stripe)</li>
+                <li>Communications with our team</li>
+                <li>Any other information you choose to provide</li>
+              </ul>
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">Information collected automatically:</h3>
+              <ul className="list-disc list-inside text-gray-600 space-y-1">
+                <li>Usage data (features used, time spent)</li>
+                <li>Device information (browser type, operating system)</li>
+                <li>IP address and approximate location</li>
+                <li>Cookies and similar tracking technologies</li>
+              </ul>
+            </div>
+          </motion.section>
+
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">2. How We Use Your Information</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-600 mb-4">
+                We use the information we collect to provide, maintain, and improve our services.
+              </p>
+              <ul className="list-disc list-inside text-gray-600 space-y-1">
+                <li>Provide and deliver our services</li>
+                <li>Process transactions and send related information</li>
+                <li>Send technical notices and support messages</li>
+                <li>Respond to your comments and questions</li>
+                <li>Analyze usage patterns to improve our services</li>
+                <li>Protect against fraudulent or illegal activity</li>
+                <li>Comply with legal obligations</li>
+              </ul>
+            </div>
+          </motion.section>
+
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">3. Information Sharing</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-600 mb-4">
+                We do not sell, trade, or rent your personal information to third parties. 
+                We may share your information in the following situations:
+              </p>
+              <ul className="list-disc list-inside text-gray-600 space-y-1">
+                <li>With your consent or at your direction</li>
+                <li>With service providers who assist in our operations</li>
+                <li>To comply with legal obligations or protect rights</li>
+                <li>In connection with a merger or acquisition</li>
+              </ul>
+            </div>
+          </motion.section>
+
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+          >
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">4. Data Security</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-600 mb-4">
+                We implement appropriate technical and organizational measures to protect your personal information:
+              </p>
+              <ul className="list-disc list-inside text-gray-600 space-y-1">
+                <li>256-bit SSL encryption for data in transit</li>
+                <li>Encrypted storage for sensitive data at rest</li>
+                <li>Regular security audits and penetration testing</li>
+                <li>Access controls and authentication measures</li>
+                <li>Employee training on data protection</li>
+                <li>Incident response procedures</li>
+              </ul>
+            </div>
+          </motion.section>
+
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+          >
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">5. Your Rights</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-600 mb-4">
+                You have the following rights regarding your personal information:
+              </p>
+              <ul className="list-disc list-inside text-gray-600 space-y-1">
+                <li><strong>Access:</strong> Request a copy of your personal data</li>
+                <li><strong>Correction:</strong> Update or correct inaccurate data</li>
+                <li><strong>Deletion:</strong> Request deletion of your data</li>
+                <li><strong>Portability:</strong> Receive your data in a structured format</li>
+                <li><strong>Objection:</strong> Object to certain processing activities</li>
+                <li><strong>Restriction:</strong> Request limited processing of your data</li>
+              </ul>
+            </div>
+          </motion.section>
+
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+          >
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">6. Cookies</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-600 mb-4">
+                We use cookies and similar technologies to:
+              </p>
+              <ul className="list-disc list-inside text-gray-600 space-y-1">
+                <li>Keep you logged in</li>
+                <li>Remember your preferences</li>
+                <li>Analyze site usage</li>
+                <li>Improve performance</li>
+              </ul>
+              <p className="text-gray-600 mt-4">
+                You can control cookies through your browser settings. Note that disabling cookies 
+                may affect the functionality of our services.
+              </p>
+            </div>
+          </motion.section>
+
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+          >
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">7. Data Retention</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-600">
+                We retain your information for as long as necessary to provide our services and comply 
+                with legal obligations. When we no longer need your information, we will securely delete 
+                or anonymize it.
+              </p>
+            </div>
+          </motion.section>
+
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.9 }}
+          >
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">8. International Data Transfers</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-600">
+                Your information may be transferred to and processed in countries other than your own. 
+                We ensure appropriate safeguards are in place to protect your information in accordance 
+                with this privacy policy.
+              </p>
+            </div>
+          </motion.section>
+
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.0 }}
+          >
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">9. Changes to This Policy</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-600">
+                We may update this privacy policy from time to time. We will notify you of any changes 
+                by posting the new policy on this page and updating the &quot;Last updated&quot; date.
+              </p>
+            </div>
+          </motion.section>
+
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.1 }}
+          >
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">10. Contact Us</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-600 mb-4">
+                If you have any questions about this privacy policy or our practices, please contact us:
+              </p>
+              <Card className="bg-gray-50">
+                <CardContent className="p-6">
+                  <div className="space-y-3">
+                    <div className="flex items-center">
+                      <Mail className="h-5 w-5 text-gray-500 mr-3" />
+                      <a href="mailto:privacy@unite-group.in" className="text-blue-600 hover:underline">
+                        privacy@unite-group.in
+                      </a>
+                    </div>
+                    <div className="flex items-center">
+                      <Phone className="h-5 w-5 text-gray-500 mr-3" />
+                      <span className="text-gray-700">+91 88888 88888</span>
+                    </div>
+                    <div className="flex items-start">
+                      <Globe className="h-5 w-5 text-gray-500 mr-3 mt-0.5" />
+                      <div className="text-gray-700">
+                        Unite Group<br />
+                        Unite Business Park<br />
+                        Sector 62, Noida<br />
+                        Uttar Pradesh 201309, India
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </motion.section>
         </div>
-      </section>
+      </div>
     </div>
-  );
+  )
 }

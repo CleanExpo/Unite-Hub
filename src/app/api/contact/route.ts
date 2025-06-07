@@ -1,86 +1,58 @@
-import { NextResponse } from 'next/server';
-import { createApiClient } from '@/lib/supabase/api';
-import type { Database } from '@/types/supabase';
-import { sendContactFormNotification, sendContactFormConfirmation } from '@/lib/email/sendEmail';
+import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@/lib/supabase/server'
 
-async function handlePOST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { name, email, company, service, message } = body;
+    const data = await request.json()
     
     // Validate required fields
-    if (!name || !email || !service || !message) {
+    if (!data.firstName || !data.lastName || !data.email || !data.message) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
-      );
+      )
     }
-    
-    // Initialize Supabase client
-    const supabase = createApiClient();
-    
-    // Insert contact form submission into database
-    const { data, error } = await supabase
+
+    // Create Supabase client
+    const supabase = await createClient()
+
+    // Store contact form submission
+    const { error } = await supabase
       .from('contact_submissions')
-      .insert([
-        { 
-          name,
-          email,
-          company: company || null,
-          service_interest: service,
-          message,
-          status: 'new',
-          submitted_at: new Date().toISOString()
-        }
-      ])
-      .select();
-      
+      .insert({
+        first_name: data.firstName,
+        last_name: data.lastName,
+        email: data.email,
+        phone: data.phone,
+        company: data.company,
+        service: data.service,
+        budget: data.budget,
+        timeline: data.timeline,
+        message: data.message,
+        status: 'new',
+        created_at: new Date().toISOString()
+      })
+
     if (error) {
-      console.error('Error submitting contact form:', error);
+      console.error('Error saving contact submission:', error)
       return NextResponse.json(
-        { error: 'Failed to submit contact form' },
+        { error: 'Failed to save submission' },
         { status: 500 }
-      );
+      )
     }
-    
-    // Send email notification to admin
-    const adminNotification = await sendContactFormNotification({
-      name,
-      email,
-      company,
-      service,
-      message
-    });
-    
-    if (!adminNotification.success) {
-      console.warn('Failed to send admin notification:', adminNotification.message);
-      // Continue with the process even if admin notification fails
-    }
-    
-    // Send confirmation email to user
-    const userConfirmation = await sendContactFormConfirmation({
-      name,
-      email,
-      service
-    });
-    
-    if (!userConfirmation.success) {
-      console.warn('Failed to send user confirmation:', userConfirmation.message);
-      // Continue with the process even if user confirmation fails
-    }
-    
-    return NextResponse.json({
-      success: true,
-      message: 'Contact form submitted successfully',
-      data: data[0]
-    });
-  } catch (error) {
-    console.error('Error processing contact form:', error);
+
+    // Send email notification (you can implement this later)
+    // await sendNotificationEmail(data)
+
     return NextResponse.json(
-      { error: 'An unexpected error occurred' },
+      { success: true, message: 'Contact form submitted successfully' },
+      { status: 200 }
+    )
+  } catch (error) {
+    console.error('Contact form error:', error)
+    return NextResponse.json(
+      { error: 'Internal server error' },
       { status: 500 }
-    );
+    )
   }
 }
-
-export const POST = handlePOST;

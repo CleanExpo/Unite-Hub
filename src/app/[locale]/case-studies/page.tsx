@@ -1,186 +1,413 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ArrowRight } from "lucide-react";
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { 
+  TrendingUp, 
+  Users, 
+  Clock, 
+  DollarSign,
+  Zap,
+  Shield,
+  ArrowRight,
+  BarChart3,
+  Building2,
+  Rocket
+} from 'lucide-react'
 
-export default function CaseStudies() {
-  // Sample case studies data
-  const caseStudies = [
-    {
-      id: 1,
-      title: "Digital Transformation for ABC Manufacturing",
-      description: "How we helped a traditional manufacturing company implement IoT solutions to improve operational efficiency by 35%.",
-      image: "/images/handshake-gear.png",
-      industry: "Manufacturing",
-      services: ["Digital Transformation", "IoT Implementation", "Process Automation"],
-      results: "35% improvement in operational efficiency",
-      year: "2024",
-      link: "/case-studies/abc-manufacturing"
+const caseStudies = [
+  {
+    id: 1,
+    company: 'TechStart Solutions',
+    industry: 'Technology',
+    logo: 'https://api.dicebear.com/7.x/shapes/svg?seed=TechStart',
+    title: 'Scaling from Startup to Enterprise with Unite Group CRM',
+    challenge: 'TechStart was struggling with disparate systems and manual processes that couldn\'t scale with their rapid growth.',
+    solution: 'Implemented Unite Group\'s CRM with AI-powered analytics and automated workflows across sales, marketing, and support.',
+    results: [
+      { metric: 'Sales Efficiency', improvement: '+300%', icon: <TrendingUp className="h-5 w-5" /> },
+      { metric: 'Customer Satisfaction', improvement: '+45%', icon: <Users className="h-5 w-5" /> },
+      { metric: 'Response Time', improvement: '-75%', icon: <Clock className="h-5 w-5" /> },
+      { metric: 'Revenue Growth', improvement: '+250%', icon: <DollarSign className="h-5 w-5" /> }
+    ],
+    testimonial: {
+      quote: 'Unite Group transformed our operations completely. Their AI-powered solutions increased our operational efficiency by 300%.',
+      author: 'Sarah Mitchell',
+      role: 'CEO, TechStart Solutions'
     },
-    {
-      id: 2,
-      title: "E-Commerce Overhaul for XYZ Retail",
-      description: "Complete redesign and backend implementation for a retail chain, resulting in 85% increase in online sales.",
-      image: "/software-code-blue-teal.png",
-      industry: "Retail",
-      services: ["E-Commerce Development", "UX Design", "Payment Integration"],
-      results: "85% increase in online sales",
-      year: "2024",
-      link: "/case-studies/xyz-retail"
+    featured: true
+  },
+  {
+    id: 2,
+    company: 'Global Logistics Inc.',
+    industry: 'Logistics',
+    logo: 'https://api.dicebear.com/7.x/shapes/svg?seed=GlobalLogistics',
+    title: 'Revolutionizing Supply Chain Management with AI',
+    challenge: 'Managing complex global supply chains with legacy systems led to inefficiencies and poor visibility.',
+    solution: 'Deployed Unite Group\'s cloud infrastructure with real-time tracking and predictive analytics.',
+    results: [
+      { metric: 'Delivery Time', improvement: '-40%', icon: <Clock className="h-5 w-5" /> },
+      { metric: 'Cost Savings', improvement: '$2.5M/year', icon: <DollarSign className="h-5 w-5" /> },
+      { metric: 'Accuracy', improvement: '+95%', icon: <Shield className="h-5 w-5" /> },
+      { metric: 'Efficiency', improvement: '+200%', icon: <Zap className="h-5 w-5" /> }
+    ],
+    testimonial: {
+      quote: 'The CRM system Unite Group implemented has revolutionized how we manage client relationships.',
+      author: 'David Chen',
+      role: 'Operations Director'
     },
-    {
-      id: 3,
-      title: "Data Analytics Platform for Financial Services Firm",
-      description: "Custom analytics dashboard development for a financial services company to track client portfolios and market trends.",
-      image: "/modern-office-collaboration.png",
-      industry: "Finance",
-      services: ["Custom Software Development", "Data Analytics", "Dashboard Design"],
-      results: "42% reduction in reporting time",
-      year: "2023",
-      link: "/case-studies/financial-services-analytics"
+    featured: false
+  },
+  {
+    id: 3,
+    company: 'FinTech Pioneers',
+    industry: 'Finance',
+    logo: 'https://api.dicebear.com/7.x/shapes/svg?seed=FinTech',
+    title: 'Achieving 95% Prediction Accuracy with AI Analytics',
+    challenge: 'Needed advanced analytics to predict market trends and manage risk in real-time.',
+    solution: 'Built custom AI models integrated with Unite Group\'s platform for predictive analytics.',
+    results: [
+      { metric: 'Prediction Accuracy', improvement: '95%', icon: <BarChart3 className="h-5 w-5" /> },
+      { metric: 'Risk Reduction', improvement: '-60%', icon: <Shield className="h-5 w-5" /> },
+      { metric: 'Trading Volume', improvement: '+400%', icon: <TrendingUp className="h-5 w-5" /> },
+      { metric: 'ROI', improvement: '350%', icon: <DollarSign className="h-5 w-5" /> }
+    ],
+    testimonial: {
+      quote: 'The AI predictive analytics platform Unite Group built for us has given us a competitive edge.',
+      author: 'Michael Thompson',
+      role: 'CTO'
     },
-    {
-      id: 4,
-      title: "Cloud Migration for Healthcare Provider",
-      description: "Secure migration of patient data and applications to a cloud-based infrastructure with HIPAA compliance.",
-      image: "/placeholder.jpg",
-      industry: "Healthcare",
-      services: ["Cloud Migration", "Security Implementation", "Compliance Consulting"],
-      results: "99.9% uptime and full HIPAA compliance",
-      year: "2023",
-      link: "/case-studies/healthcare-cloud-migration"
-    }
-  ];
+    featured: false
+  },
+  {
+    id: 4,
+    company: 'HealthTech Innovations',
+    industry: 'Healthcare',
+    logo: 'https://api.dicebear.com/7.x/shapes/svg?seed=HealthTech',
+    title: 'HIPAA-Compliant Digital Transformation',
+    challenge: 'Required secure, compliant systems while improving patient care and operational efficiency.',
+    solution: 'Implemented Unite Group\'s healthcare-specific solutions with end-to-end encryption.',
+    results: [
+      { metric: 'System Performance', improvement: '+200%', icon: <Zap className="h-5 w-5" /> },
+      { metric: 'Compliance Score', improvement: '100%', icon: <Shield className="h-5 w-5" /> },
+      { metric: 'Patient Satisfaction', improvement: '+85%', icon: <Users className="h-5 w-5" /> },
+      { metric: 'Cost Reduction', improvement: '-45%', icon: <DollarSign className="h-5 w-5" /> }
+    ],
+    testimonial: {
+      quote: 'Unite Group\'s expertise in healthcare technology is exceptional.',
+      author: 'Lisa Wang',
+      role: 'Founder & CEO'
+    },
+    featured: false
+  },
+  {
+    id: 5,
+    company: 'Innovate Retail',
+    industry: 'Retail',
+    logo: 'https://api.dicebear.com/7.x/shapes/svg?seed=InnovateRetail',
+    title: 'Cloud Migration Saves 40% on IT Costs',
+    challenge: 'On-premise infrastructure was costly and couldn\'t handle peak shopping seasons.',
+    solution: 'Migrated to Unite Group\'s cloud platform with auto-scaling and optimization.',
+    results: [
+      { metric: 'IT Cost Savings', improvement: '40%', icon: <DollarSign className="h-5 w-5" /> },
+      { metric: 'Uptime', improvement: '99.99%', icon: <Shield className="h-5 w-5" /> },
+      { metric: 'Page Load Speed', improvement: '-70%', icon: <Zap className="h-5 w-5" /> },
+      { metric: 'Conversion Rate', improvement: '+35%', icon: <TrendingUp className="h-5 w-5" /> }
+    ],
+    testimonial: {
+      quote: 'Working with Unite Group was a game-changer. Their cloud migration service was seamless.',
+      author: 'Emma Rodriguez',
+      role: 'Marketing Director'
+    },
+    featured: false
+  },
+  {
+    id: 6,
+    company: 'EduTech Solutions',
+    industry: 'Education',
+    logo: 'https://api.dicebear.com/7.x/shapes/svg?seed=EduTech',
+    title: 'Transforming Education with Custom LMS',
+    challenge: 'Needed a scalable learning platform to support millions of students worldwide.',
+    solution: 'Developed custom learning management system on Unite Group\'s platform.',
+    results: [
+      { metric: 'Student Engagement', improvement: '+180%', icon: <Users className="h-5 w-5" /> },
+      { metric: 'Platform Uptime', improvement: '99.9%', icon: <Shield className="h-5 w-5" /> },
+      { metric: 'Course Completion', improvement: '+65%', icon: <TrendingUp className="h-5 w-5" /> },
+      { metric: 'Support Tickets', improvement: '-80%', icon: <Clock className="h-5 w-5" /> }
+    ],
+    testimonial: {
+      quote: 'The custom learning management system Unite Group developed has transformed our business.',
+      author: 'James Anderson',
+      role: 'VP of Engineering'
+    },
+    featured: false
+  }
+]
+
+export default function CaseStudiesPage() {
+  const featuredStudy = caseStudies.find(study => study.featured)
+  const otherStudies = caseStudies.filter(study => !study.featured)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      {/* Navigation */}
-      <nav className="bg-slate-900/80 backdrop-blur-md border-b border-slate-700 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
-          <Link href="/" className="text-2xl font-bold text-white">
-            <span className="text-teal-400">UG</span> UNITE Group
-          </Link>
-          <div className="hidden md:flex items-center gap-8">
-            <Link href="/features" className="text-slate-300 hover:text-white transition-colors">Services</Link>
-            <Link href="/pricing" className="text-slate-300 hover:text-white transition-colors">Pricing</Link>
-            <Link href="/contact" className="text-slate-300 hover:text-white transition-colors">Contact</Link>
-            <Link href="/about" className="text-slate-300 hover:text-white transition-colors">About</Link>
-          </div>
-          <div className="flex gap-4">
-            <Link href="/login" className="text-slate-300 hover:text-white px-4 py-2 rounded-md transition-colors">
-              Login
-            </Link>
-            <Button asChild className="bg-teal-600 hover:bg-teal-700">
-              <Link href="/book-consultation">Book Now</Link>
-            </Button>
-          </div>
-        </div>
-      </nav>
-
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Hero Section */}
-      <section className="py-20 text-center">
-        <div className="max-w-4xl mx-auto px-4">
-          <h1 className="text-5xl font-bold text-white mb-6">
-            Our Success
-            <span className="block bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">
-              Stories
-            </span>
-          </h1>
-          <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
-            Explore how we've helped businesses across various industries achieve their technology and business goals with our strategic consulting approach.
-          </p>
-          <div className="flex flex-wrap gap-4 justify-center mb-6">
-            <Badge className="bg-slate-700 hover:bg-slate-600 text-white">All Industries</Badge>
-            <Badge className="bg-slate-700 hover:bg-slate-600 text-white">Manufacturing</Badge>
-            <Badge className="bg-slate-700 hover:bg-slate-600 text-white">Retail</Badge>
-            <Badge className="bg-slate-700 hover:bg-slate-600 text-white">Finance</Badge>
-            <Badge className="bg-slate-700 hover:bg-slate-600 text-white">Healthcare</Badge>
-            <Badge className="bg-slate-700 hover:bg-slate-600 text-white">Technology</Badge>
+      <section className="relative py-20 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center max-w-3xl mx-auto"
+          >
+            <h1 className="text-5xl font-bold mb-6">
+              Real Results, Real Impact
+            </h1>
+            <p className="text-xl opacity-90">
+              Discover how leading companies transformed their operations and achieved 
+              exceptional results with Unite Group&apos;s solutions.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Stats Overview */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <div className="text-4xl font-bold text-blue-600 mb-2">500+</div>
+              <p className="text-gray-600">Happy Clients</p>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              viewport={{ once: true }}
+            >
+              <div className="text-4xl font-bold text-green-600 mb-2">300%</div>
+              <p className="text-gray-600">Average ROI</p>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+            >
+              <div className="text-4xl font-bold text-purple-600 mb-2">$10M+</div>
+              <p className="text-gray-600">Client Savings</p>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              viewport={{ once: true }}
+            >
+              <div className="text-4xl font-bold text-orange-600 mb-2">98%</div>
+              <p className="text-gray-600">Client Satisfaction</p>
+            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Case Studies Grid */}
-      <section className="py-10 pb-20">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {caseStudies.map((study) => (
-              <Card key={study.id} className="bg-slate-800 border-slate-700 hover:bg-slate-750 transition-colors overflow-hidden h-full flex flex-col">
-                <div className="relative h-52 w-full">
-                  <Image 
-                    src={study.image} 
-                    alt={study.title}
-                    fill
-                    style={{ objectFit: 'cover' }}
-                    className="transition-transform hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
-                  <Badge className="absolute top-4 right-4 bg-slate-800/80 text-teal-400 backdrop-blur-sm">
-                    {study.industry}
-                  </Badge>
+      {/* Featured Case Study */}
+      {featuredStudy && (
+        <section className="py-16 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="text-center mb-12"
+            >
+              <Badge className="mb-4">Featured Success Story</Badge>
+              <h2 className="text-3xl font-bold">
+                {featuredStudy.title}
+              </h2>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              viewport={{ once: true }}
+            >
+              <Card className="overflow-hidden">
+                <div className="grid md:grid-cols-2 gap-0">
+                  <div className="p-8 lg:p-12">
+                    <div className="flex items-center mb-6">
+                      <img 
+                        src={featuredStudy.logo} 
+                        alt={featuredStudy.company} 
+                        className="w-16 h-16 mr-4"
+                      />
+                      <div>
+                        <h3 className="text-xl font-semibold">{featuredStudy.company}</h3>
+                        <p className="text-gray-600">{featuredStudy.industry}</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-6">
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-2">The Challenge</h4>
+                        <p className="text-gray-600">{featuredStudy.challenge}</p>
+                      </div>
+
+                      <div>
+                        <h4 className="font-semibold text-gray-900 mb-2">Our Solution</h4>
+                        <p className="text-gray-600">{featuredStudy.solution}</p>
+                      </div>
+
+                      <blockquote className="border-l-4 border-blue-500 pl-4 italic">
+                        <p className="text-gray-700 mb-2">&ldquo;{featuredStudy.testimonial.quote}&rdquo;</p>
+                        <footer className="text-sm text-gray-600">
+                          — {featuredStudy.testimonial.author}, {featuredStudy.testimonial.role}
+                        </footer>
+                      </blockquote>
+
+                      <Link href={`/case-studies/${featuredStudy.id}`}>
+                        <Button>
+                          Read Full Case Study
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+
+                  <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-8 lg:p-12">
+                    <h4 className="font-semibold text-gray-900 mb-6">Key Results</h4>
+                    <div className="space-y-4">
+                      {featuredStudy.results.map((result, index) => (
+                        <motion.div
+                          key={index}
+                          initial={{ opacity: 0, x: 20 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.6, delay: index * 0.1 }}
+                          viewport={{ once: true }}
+                          className="flex items-center bg-white p-4 rounded-lg shadow-sm"
+                        >
+                          <div className="text-blue-600 mr-4">{result.icon}</div>
+                          <div className="flex-1">
+                            <div className="text-sm text-gray-600">{result.metric}</div>
+                            <div className="text-xl font-semibold text-gray-900">{result.improvement}</div>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-                <CardHeader className="pb-2">
-                  <div className="flex justify-between items-center mb-2">
-                    <Badge variant="outline" className="text-slate-400 border-slate-600">
-                      {study.year}
-                    </Badge>
-                    <Badge className="bg-green-900/50 text-green-400 border-green-800">
-                      {study.results}
-                    </Badge>
-                  </div>
-                  <CardTitle className="text-xl text-white">{study.title}</CardTitle>
-                  <CardDescription className="text-slate-300">{study.description}</CardDescription>
-                </CardHeader>
-                <CardContent className="pt-0 pb-4 flex-grow">
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    {study.services.map((service, idx) => (
-                      <Badge key={idx} className="bg-slate-700 text-slate-200">
-                        {service}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-                <CardFooter className="pt-0 border-t border-slate-700">
-                  <Button asChild variant="ghost" className="text-teal-400 hover:text-teal-300 hover:bg-slate-700 w-full justify-between">
-                    <Link href={study.link}>
-                      View Case Study
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                </CardFooter>
               </Card>
+            </motion.div>
+          </div>
+        </section>
+      )}
+
+      {/* Other Case Studies */}
+      <section className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-3xl font-bold mb-4">More Success Stories</h2>
+            <p className="text-xl text-gray-600">
+              See how we&apos;ve helped businesses across industries achieve their goals
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {otherStudies.map((study, index) => (
+              <motion.div
+                key={study.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <Card className="h-full hover:shadow-lg transition-shadow duration-300">
+                  <CardHeader>
+                    <div className="flex items-center mb-4">
+                      <img 
+                        src={study.logo} 
+                        alt={study.company} 
+                        className="w-12 h-12 mr-3"
+                      />
+                      <div>
+                        <CardTitle className="text-lg">{study.company}</CardTitle>
+                        <Badge variant="secondary">{study.industry}</Badge>
+                      </div>
+                    </div>
+                    <CardDescription className="text-base font-medium text-gray-900">
+                      {study.title}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 mb-6">{study.challenge}</p>
+                    
+                    <div className="grid grid-cols-2 gap-4 mb-6">
+                      {study.results.slice(0, 4).map((result, idx) => (
+                        <div key={idx} className="text-center">
+                          <div className="text-2xl font-bold text-blue-600">{result.improvement}</div>
+                          <div className="text-xs text-gray-600">{result.metric}</div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <Link href={`/case-studies/${study.id}`}>
+                      <Button variant="outline" className="w-full">
+                        View Case Study
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-slate-800/50">
-        <div className="max-w-5xl mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Transform Your Business?
-          </h2>
-          <p className="text-xl text-slate-300 mb-8 max-w-3xl mx-auto">
-            Schedule your $550 consultation session today and start your journey toward business transformation and growth.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white px-8 py-6 text-lg">
-              <Link href="/book-consultation">
-                Book Your Consultation
-              </Link>
-            </Button>
-            <Button asChild variant="outline" className="border-slate-600 text-slate-200 hover:bg-slate-700 px-8 py-6 text-lg">
+      <section className="py-16 bg-blue-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <Rocket className="h-16 w-16 text-blue-600 mx-auto mb-6" />
+            <h2 className="text-3xl font-bold mb-4">Ready to Write Your Success Story?</h2>
+            <p className="text-xl text-gray-600 mb-8">
+              Join hundreds of companies that have transformed their business with Unite Group.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/contact">
-                Contact Us
+                <Button size="lg">
+                  Start Your Journey
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
               </Link>
-            </Button>
-          </div>
+              <Link href="/pricing">
+                <Button size="lg" variant="outline">
+                  View Our Solutions
+                </Button>
+              </Link>
+            </div>
+          </motion.div>
         </div>
       </section>
     </div>
-  );
+  )
 }

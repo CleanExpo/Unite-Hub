@@ -12,6 +12,8 @@ const ClientWrapper = dynamic(() => import('../../components/ClientWrapper'));
 
 // Import the Navigation component dynamically
 const Navigation = dynamic(() => import('../../components/Navigation'));
+// Import the Footer component dynamically
+const Footer = dynamic(() => import('../../components/Footer'));
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -56,6 +58,7 @@ export default async function LocaleLayout({
           <ClientWrapper>
             <Navigation />
             <main>{children}</main>
+            <Footer />
           </ClientWrapper>
         </ThemeProvider>
         <PWAInitializer />

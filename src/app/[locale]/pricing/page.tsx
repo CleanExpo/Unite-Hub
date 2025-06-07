@@ -1,278 +1,293 @@
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle, Clock, Users, Code, Search } from "lucide-react";
+'use client'
 
-export default function Pricing() {
-  const services = [
-    {
-      name: "Initial Consultation",
-      price: "$550",
-      period: "1 hour session",
-      description: "Comprehensive business analysis and strategic planning session",
-      icon: <Clock className="h-8 w-8 text-teal-600" />,
-      features: [
-        "In-depth business assessment",
-        "Technology needs analysis",
-        "Strategic roadmap development",
-        "Custom solution recommendations",
-        "Implementation timeline",
-        "Resource requirement planning",
-        "Follow-up summary report",
-        "30-day email support"
-      ],
-      popular: true,
-      cta: "Book Consultation"
-    },
-    {
-      name: "Expert Education",
-      price: "Scope-based",
-      period: "custom pricing",
-      description: "Professional training and development programs",
-      icon: <Users className="h-8 w-8 text-purple-600" />,
-      features: [
-        "Custom curriculum development",
-        "Expert-led training sessions",
-        "Hands-on workshops",
-        "Team capability enhancement",
-        "Industry best practices",
-        "Certification programs",
-        "Ongoing mentorship",
-        "Progress tracking & assessment"
-      ],
-      popular: false,
-      cta: "Request Quote"
-    },
-    {
-      name: "Software Development",
-      price: "Scope-based",
-      period: "custom pricing",
-      description: "Cutting-edge software solutions built with latest technologies",
-      icon: <Code className="h-8 w-8 text-blue-600" />,
-      features: [
-        "Custom application development",
-        "Modern tech stack implementation",
-        "Scalable architecture design",
-        "User experience optimization",
-        "Quality assurance & testing",
-        "Deployment & maintenance",
-        "Performance optimization",
-        "Ongoing technical support"
-      ],
-      popular: false,
-      cta: "Request Quote"
-    },
-    {
-      name: "Strategic SEO",
-      price: "Scope-based",
-      period: "custom pricing",
-      description: "Data-driven SEO strategies to improve online visibility",
-      icon: <Search className="h-8 w-8 text-green-600" />,
-      features: [
-        "Comprehensive SEO audit",
-        "Keyword research & strategy",
-        "Technical SEO optimization",
-        "Content strategy development",
-        "Local SEO enhancement",
-        "Performance monitoring",
-        "Competitor analysis",
-        "Monthly reporting & insights"
-      ],
-      popular: false,
-      cta: "Request Quote"
-    }
-  ];
+import { useState } from 'react'
+import { motion } from 'framer-motion'
+import { Check, X, ArrowRight } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import Link from 'next/link'
 
-  const faqs = [
-    {
-      question: "How does the consultation process work?",
-      answer: "Our $550 consultation includes a comprehensive 1-hour session where we analyze your business needs, discuss technology solutions, and create a strategic roadmap. You'll receive a detailed summary report and 30 days of follow-up support."
+const pricingPlans = [
+  {
+    name: 'Startup',
+    description: 'Perfect for small businesses and startups',
+    price: {
+      monthly: 299,
+      annually: 2990
     },
-    {
-      question: "How is scope-based pricing determined?",
-      answer: "After your initial consultation, we provide detailed quotes based on project scope, complexity, timeline, and resource requirements. All pricing is transparent with no hidden fees."
+    features: [
+      'CRM for up to 10 users',
+      'Cloud infrastructure setup',
+      'Basic AI analytics',
+      '24/7 email support',
+      '5GB storage',
+      'Mobile app access',
+      'Basic integrations',
+      'Monthly reports'
+    ],
+    notIncluded: [
+      'Custom AI solutions',
+      'Dedicated account manager',
+      'Advanced security features',
+      'Custom integrations'
+    ],
+    popular: false,
+    cta: 'Start Free Trial'
+  },
+  {
+    name: 'Professional',
+    description: 'Ideal for growing businesses',
+    price: {
+      monthly: 799,
+      annually: 7990
     },
-    {
-      question: "What payment methods do you accept?",
-      answer: "We accept all major credit cards, bank transfers, and can arrange invoice billing for larger projects. Payment terms are flexible and discussed during consultation."
+    features: [
+      'CRM for up to 50 users',
+      'Advanced cloud solutions',
+      'AI-powered analytics & insights',
+      '24/7 priority support',
+      '50GB storage',
+      'Mobile app access',
+      'Advanced integrations',
+      'Weekly reports',
+      'Custom workflows',
+      'API access',
+      'Team collaboration tools',
+      'Data backup & recovery'
+    ],
+    notIncluded: [
+      'White-label options',
+      'On-premise deployment'
+    ],
+    popular: true,
+    cta: 'Start Free Trial'
+  },
+  {
+    name: 'Enterprise',
+    description: 'For large organizations with custom needs',
+    price: {
+      monthly: 'Custom',
+      annually: 'Custom'
     },
-    {
-      question: "Do you offer ongoing support?",
-      answer: "Yes! All our services include appropriate support periods. Software development includes maintenance options, and we offer ongoing consulting relationships for continued growth."
-    },
-    {
-      question: "Can you work with our existing team?",
-      answer: "Absolutely. We specialize in collaborating with existing teams, providing training, mentorship, and seamless integration with your current processes and technologies."
-    },
-    {
-      question: "What industries do you serve?",
-      answer: "We work across all industries, with particular expertise in technology, healthcare, finance, education, and professional services. Our solutions are tailored to your specific industry needs."
-    }
-  ];
+    features: [
+      'Unlimited users',
+      'Full cloud infrastructure',
+      'Custom AI solutions',
+      'Dedicated account manager',
+      'Unlimited storage',
+      'Mobile app access',
+      'Custom integrations',
+      'Real-time analytics',
+      'Advanced security features',
+      'SLA guarantee',
+      'On-premise options',
+      'White-label solutions',
+      'Custom training',
+      'Compliance support',
+      '24/7 dedicated support'
+    ],
+    notIncluded: [],
+    popular: false,
+    cta: 'Contact Sales'
+  }
+]
+
+export default function PricingPage() {
+  const [billingCycle, setBillingCycle] = useState<'monthly' | 'annually'>('monthly')
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      {/* Navigation */}
-      <nav className="bg-slate-900/80 backdrop-blur-md border-b border-slate-700 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
-          <Link href="/" className="text-2xl font-bold text-white">
-            <span className="text-teal-400">UG</span> UNITE Group
-          </Link>
-          <div className="flex gap-4">
-            <Link href="/login" className="text-slate-300 hover:text-white px-4 py-2 rounded-md transition-colors">
-              Login
-            </Link>
-            <Button asChild className="bg-teal-600 hover:bg-teal-700">
-              <Link href="/contact">Get Started</Link>
-            </Button>
-          </div>
-        </div>
-      </nav>
-
-      {/* Hero Section */}
-      <section className="py-20 text-center">
-        <div className="max-w-4xl mx-auto px-4">
-          <h1 className="text-5xl font-bold text-white mb-6">
-            Transparent, Value-Driven
-            <span className="block bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">
-              Pricing
-            </span>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-12"
+        >
+          <h1 className="text-5xl font-bold text-gray-900 mb-4">
+            Simple, Transparent Pricing
           </h1>
-          <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
-            Start with our comprehensive consultation, then scale with custom solutions designed for your specific needs.
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+            Choose the perfect plan for your business. All plans include our core features with no hidden fees.
           </p>
-          <div className="inline-flex items-center bg-slate-800 rounded-lg p-1 shadow-lg border border-slate-700">
-            <div className="px-4 py-2 rounded-md bg-teal-600 text-white text-sm font-medium">
-              Professional Services
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Services Grid */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {services.map((service, index) => (
-              <Card key={index} className={`relative h-full bg-slate-800 border-slate-700 text-white ${service.popular ? 'border-teal-500 shadow-lg shadow-teal-500/20 scale-105' : ''}`}>
-                {service.popular && (
+          {/* Billing Toggle */}
+          <div className="inline-flex items-center p-1 bg-gray-100 rounded-lg">
+            <button
+              onClick={() => setBillingCycle('monthly')}
+              className={`px-4 py-2 rounded-md transition-colors ${
+                billingCycle === 'monthly'
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Monthly
+            </button>
+            <button
+              onClick={() => setBillingCycle('annually')}
+              className={`px-4 py-2 rounded-md transition-colors ${
+                billingCycle === 'annually'
+                  ? 'bg-white text-gray-900 shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Annually
+              <Badge className="ml-2" variant="secondary">Save 20%</Badge>
+            </button>
+          </div>
+        </motion.div>
+
+        {/* Pricing Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          {pricingPlans.map((plan, index) => (
+            <motion.div
+              key={plan.name}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+            >
+              <Card className={`relative h-full ${plan.popular ? 'border-blue-500 shadow-xl' : ''}`}>
+                {plan.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-teal-600 text-white px-4 py-1 rounded-full text-sm font-medium">
-                      Start Here
-                    </span>
+                    <Badge className="bg-blue-500 text-white">Most Popular</Badge>
                   </div>
                 )}
-                <CardHeader className="text-center">
-                  <div className="flex justify-center mb-4">
-                    {service.icon}
+                
+                <CardHeader className="text-center pb-8 pt-6">
+                  <CardTitle className="text-2xl font-bold">{plan.name}</CardTitle>
+                  <CardDescription className="mt-2">{plan.description}</CardDescription>
+                  
+                  <div className="mt-6">
+                    {typeof plan.price.monthly === 'number' ? (
+                      <>
+                        <span className="text-4xl font-bold">
+                          ${billingCycle === 'monthly' ? plan.price.monthly : Math.floor((plan.price.annually as number) / 12)}
+                        </span>
+                        <span className="text-gray-600">/month</span>
+                        {billingCycle === 'annually' && (
+                          <p className="text-sm text-gray-500 mt-1">
+                            ${plan.price.annually} billed annually
+                          </p>
+                        )}
+                      </>
+                    ) : (
+                      <span className="text-4xl font-bold">Custom Pricing</span>
+                    )}
                   </div>
-                  <CardTitle className="text-xl text-white">{service.name}</CardTitle>
-                  <div className="mt-4">
-                    <span className="text-3xl font-bold text-white">{service.price}</span>
-                    <span className="text-slate-400 ml-2 text-sm">{service.period}</span>
-                  </div>
-                  <CardDescription className="mt-4 text-slate-300">{service.description}</CardDescription>
                 </CardHeader>
-                <CardContent className="flex-1">
-                  <ul className="space-y-3 mb-8">
-                    {service.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-center gap-3">
-                        <CheckCircle className="h-4 w-4 text-teal-400 flex-shrink-0" />
-                        <span className="text-slate-300 text-sm">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
+
+                <CardContent className="space-y-4">
                   <Button 
-                    asChild 
-                    className={`w-full ${service.popular ? 'bg-teal-600 hover:bg-teal-700' : 'bg-slate-700 hover:bg-slate-600'}`}
+                    className="w-full"
+                    variant={plan.popular ? 'default' : 'outline'}
+                    size="lg"
+                    asChild
                   >
-                    <Link href="/contact">{service.cta}</Link>
+                    <Link href={plan.cta === 'Contact Sales' ? '/contact' : '/register'}>
+                      {plan.cta}
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Link>
                   </Button>
+
+                  <div className="space-y-4 pt-6">
+                    <h4 className="font-medium text-gray-900">What&apos;s included:</h4>
+                    <ul className="space-y-3">
+                      {plan.features.map((feature) => (
+                        <li key={feature} className="flex items-start">
+                          <Check className="h-5 w-5 text-green-500 mr-3 flex-shrink-0 mt-0.5" />
+                          <span className="text-gray-700 text-sm">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {plan.notIncluded.length > 0 && (
+                      <>
+                        <div className="pt-4 border-t border-gray-200">
+                          <ul className="space-y-3">
+                            {plan.notIncluded.map((feature) => (
+                              <li key={feature} className="flex items-start">
+                                <X className="h-5 w-5 text-gray-400 mr-3 flex-shrink-0 mt-0.5" />
+                                <span className="text-gray-500 text-sm">{feature}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
-            ))}
-          </div>
+            </motion.div>
+          ))}
         </div>
-      </section>
 
-      {/* Process Section */}
-      <section className="py-20 bg-slate-800/50">
-        <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center text-white mb-12">
-            Our Process
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-teal-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-white">1</span>
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-2">Consultation</h3>
-              <p className="text-slate-300">
-                Start with our comprehensive $550 consultation to understand your needs and create a strategic roadmap.
+        {/* FAQ Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="max-w-4xl mx-auto"
+        >
+          <h2 className="text-3xl font-bold text-center mb-8">Frequently Asked Questions</h2>
+          
+          <div className="space-y-6">
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <h3 className="font-semibold text-lg mb-2">Can I change my plan later?</h3>
+              <p className="text-gray-600">
+                Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately, and we&apos;ll prorate any differences.
               </p>
             </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-white">2</span>
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-2">Custom Quote</h3>
-              <p className="text-slate-300">
-                Receive a detailed, transparent quote based on your specific project scope and requirements.
+
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <h3 className="font-semibold text-lg mb-2">Do you offer a free trial?</h3>
+              <p className="text-gray-600">
+                Yes! All our plans come with a 14-day free trial. No credit card required to start.
               </p>
             </div>
-            <div className="text-center">
-              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold text-white">3</span>
-              </div>
-              <h3 className="text-xl font-semibold text-white mb-2">Implementation</h3>
-              <p className="text-slate-300">
-                Expert execution with ongoing support, ensuring your success every step of the way.
+
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <h3 className="font-semibold text-lg mb-2">What payment methods do you accept?</h3>
+              <p className="text-gray-600">
+                We accept all major credit cards, bank transfers, and can arrange custom billing for enterprise clients.
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <h3 className="font-semibold text-lg mb-2">Is there a setup fee?</h3>
+              <p className="text-gray-600">
+                No setup fees for any of our plans. You only pay for the subscription.
               </p>
             </div>
           </div>
-        </div>
-      </section>
+        </motion.div>
 
-      {/* FAQ Section */}
-      <section className="py-20">
-        <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center text-white mb-12">
-            Frequently Asked Questions
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {faqs.map((faq, index) => (
-              <Card key={index} className="bg-slate-800 border-slate-700">
-                <CardHeader>
-                  <CardTitle className="text-lg text-white">{faq.question}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-slate-300">{faq.answer}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-teal-600 to-cyan-600">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-6 text-white">
-            Ready to Transform Your Business?
-          </h2>
-          <p className="text-xl mb-8 text-teal-100">
-            Start with our comprehensive consultation and discover how UNITE Group can accelerate your success.
+        {/* CTA Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          className="text-center mt-16 bg-blue-50 rounded-2xl p-12"
+        >
+          <h2 className="text-3xl font-bold mb-4">Ready to transform your business?</h2>
+          <p className="text-xl text-gray-600 mb-8">
+            Join over 500+ companies already using Unite Group to power their growth.
           </p>
-          <div className="flex gap-4 justify-center flex-wrap">
-            <Button asChild size="lg" className="bg-white text-teal-600 hover:bg-slate-100">
-              <Link href="/contact">Book $550 Consultation</Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" asChild>
+              <Link href="/register">
+                Start Your Free Trial
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-teal-600">
-              <Link href="/features">View Our Services</Link>
+            <Button size="lg" variant="outline" asChild>
+              <Link href="/contact">
+                Talk to Sales
+              </Link>
             </Button>
           </div>
-        </div>
-      </section>
+        </motion.div>
+      </div>
     </div>
-  );
+  )
 }

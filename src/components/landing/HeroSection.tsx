@@ -1,153 +1,104 @@
-'use client';
-
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Sparkles, Zap, Shield, Globe } from 'lucide-react';
+import { ArrowRight, CheckCircle, Sparkles, Zap } from 'lucide-react';
+import Image from 'next/image';
 
 export function HeroSection() {
-  const [animationPhase, setAnimationPhase] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setAnimationPhase(prev => (prev + 1) % 4);
-    }, 3000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const features = [
-    { icon: Zap, text: '99.9% Uptime', color: 'text-yellow-400' },
-    { icon: Shield, text: 'Enterprise Security', color: 'text-green-400' },
-    { icon: Globe, text: 'Global Scale', color: 'text-blue-400' },
-    { icon: Sparkles, text: 'AI-Powered', color: 'text-purple-400' }
-  ];
-
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Animated Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.1),transparent_50%)] animate-pulse" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(147,51,234,0.1),transparent_50%)] animate-pulse" style={{ animationDelay: '1s' }} />
+    <section className="relative overflow-hidden">
+      {/* Background gradient effect */}
+      <div className="absolute inset-0 bg-gradient-to-br from-teal-50 via-white to-cyan-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900" />
+      
+      {/* Animated background shapes */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-teal-300 rounded-full opacity-20 blur-3xl animate-pulse" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-300 rounded-full opacity-20 blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
       </div>
 
-      {/* Floating Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(6)].map((_, i) => (
-          <div
-            key={i}
-            className={`absolute w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full opacity-30 animate-float`}
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${i * 0.5}s`,
-              animationDuration: `${3 + Math.random() * 2}s`
-            }}
-          />
-        ))}
-      </div>
+      <div className="relative container mx-auto px-4 py-24 lg:py-32">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          {/* Left content */}
+          <div className="animate-fade-in-up">
+            <div className="inline-flex items-center gap-2 bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 px-4 py-2 rounded-full text-sm font-medium mb-6">
+              <Sparkles className="w-4 h-4" />
+              Australia&apos;s Premier Business Solutions Partner
+            </div>
+            
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6">
+              Transform Your Business with{' '}
+              <span className="bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
+                Unite Group
+              </span>
+            </h1>
+            
+            <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
+              Expert consultation, cutting-edge software development, strategic SEO, and professional training. 
+              Start with our comprehensive <strong className="text-teal-600">A$550 consultation</strong> to unlock your business potential.
+            </p>
 
-      <div className="container mx-auto px-4 py-16 text-center relative z-10">
-        <div className="max-w-5xl mx-auto">
-          {/* Dynamic Badge */}
-          <div className="mb-8 flex justify-center">
-            <Badge 
-              variant="secondary" 
-              className="mb-4 text-sm font-medium px-6 py-2 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 border-0 hover:scale-105 transition-transform duration-300"
-            >
-              <Sparkles className="w-4 h-4 mr-2 text-purple-600" />
-              Enterprise-Grade AI Solutions
-            </Badge>
-          </div>
-
-          {/* Main Heading with Gradient */}
-          <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight">
-            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent bg-size-200 animate-gradient">
-              Unite Group
-            </span>
-          </h1>
-
-          {/* Animated Subheading */}
-          <div className="text-2xl md:text-3xl text-gray-600 dark:text-gray-300 mb-4 font-semibold">
-            <span className="bg-gradient-to-r from-gray-800 to-gray-600 dark:from-gray-200 dark:to-gray-400 bg-clip-text text-transparent">
-              Next-Generation Business Intelligence
-            </span>
-          </div>
-
-          {/* Feature Carousel */}
-          <div className="h-8 mb-8 flex justify-center items-center">
-            {features.map((feature, index) => (
-              <div
-                key={index}
-                className={`flex items-center gap-2 transition-all duration-500 ${
-                  animationPhase === index 
-                    ? 'opacity-100 scale-100 translate-y-0' 
-                    : 'opacity-0 scale-95 translate-y-2 absolute'
-                }`}
-              >
-                <feature.icon className={`w-5 h-5 ${feature.color}`} />
-                <span className="text-lg font-medium text-gray-700 dark:text-gray-300">
-                  {feature.text}
-                </span>
+            {/* Key benefits */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+              <div className="flex items-center gap-3">
+                <CheckCircle className="w-5 h-5 text-teal-600 flex-shrink-0" />
+                <span className="text-gray-700 dark:text-gray-300">Brisbane-based experts</span>
               </div>
-            ))}
+              <div className="flex items-center gap-3">
+                <CheckCircle className="w-5 h-5 text-teal-600 flex-shrink-0" />
+                <span className="text-gray-700 dark:text-gray-300">10+ years experience</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <CheckCircle className="w-5 h-5 text-teal-600 flex-shrink-0" />
+                <span className="text-gray-700 dark:text-gray-300">500+ projects delivered</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <CheckCircle className="w-5 h-5 text-teal-600 flex-shrink-0" />
+                <span className="text-gray-700 dark:text-gray-300">24/7 support</span>
+              </div>
+            </div>
+
+            {/* CTA buttons */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link href="/book-consultation">
+                <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white">
+                  Book A$550 Consultation
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </Link>
+              <Link href="/services">
+                <Button size="lg" variant="outline" className="w-full sm:w-auto">
+                  Explore Services
+                </Button>
+              </Link>
+            </div>
           </div>
 
-          {/* Description */}
-          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-12 max-w-4xl mx-auto leading-relaxed">
-            We deliver enterprise-grade SaaS platforms with advanced AI capabilities, 
-            bulletproof reliability, and comprehensive business solutions that scale with your organization.
-          </p>
-          
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <Link href="/book-consultation">
-              <Button 
-                size="lg" 
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 px-8 py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 group"
-              >
-                Schedule Consultation
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </Link>
-            <Link href="/dashboard/ai-gateway">
-              <Button 
-                variant="outline" 
-                size="lg"
-                className="px-8 py-6 text-lg font-semibold border-2 border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-all duration-300 hover:scale-105"
-              >
-                View AI Gateway Demo
-                <Zap className="ml-2 w-5 h-5" />
-              </Button>
-            </Link>
+          {/* Right content - Hero image */}
+          <div className="relative animate-fade-in-right">
+            <div className="relative z-10">
+              <Image
+                src="/images/unite-logo.png"
+                alt="Unite Group - Business Solutions"
+                width={600}
+                height={400}
+                className="w-full h-auto rounded-2xl shadow-2xl"
+                priority
+              />
+              {/* Floating stats */}
+              <div className="absolute -bottom-6 -left-6 bg-white dark:bg-slate-800 p-4 rounded-xl shadow-lg">
+                <div className="flex items-center gap-3">
+                  <div className="bg-teal-100 dark:bg-teal-900/30 p-3 rounded-lg">
+                    <Zap className="w-6 h-6 text-teal-600" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-gray-900 dark:text-white">99.9%</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">Client Satisfaction</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* Background decoration */}
+            <div className="absolute inset-0 bg-gradient-to-r from-teal-600 to-cyan-600 rounded-2xl transform rotate-3 scale-105 opacity-10" />
           </div>
-
-          {/* Trust Indicators */}
-          <div className="flex flex-wrap justify-center items-center gap-8 text-sm text-gray-500 dark:text-gray-400">
-            <div className="flex items-center gap-2">
-              <Shield className="w-4 h-4 text-green-500" />
-              <span>SOC2 Compliant</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Globe className="w-4 h-4 text-blue-500" />
-              <span>Global Infrastructure</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-purple-500" />
-              <span>AI-Powered</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Zap className="w-4 h-4 text-yellow-500" />
-              <span>Enterprise Performance</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <div className="w-6 h-10 border-2 border-gray-400 dark:border-gray-600 rounded-full p-1">
-          <div className="w-1 h-3 bg-gray-400 dark:bg-gray-600 rounded-full animate-pulse" />
         </div>
       </div>
     </section>

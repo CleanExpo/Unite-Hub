@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Users, Handshake, ClipboardList, Activity, Settings, BarChart } from 'lucide-react';
+import { Home, Users, Handshake, ClipboardList, Activity, Settings, BarChart, MessageCircle } from 'lucide-react';
 
 interface SidebarProps {
   isAdmin: boolean;
@@ -18,6 +18,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isAdmin }) => {
     { name: 'Deals', href: '/dashboard/crm/deals', icon: <Handshake className="h-5 w-5" /> },
     { name: 'Tasks', href: '/dashboard/crm/tasks', icon: <ClipboardList className="h-5 w-5" /> },
     { name: 'Activities', href: '/dashboard/crm/activities', icon: <Activity className="h-5 w-5" /> },
+    { name: 'Messages', href: '/dashboard/crm/messaging', icon: <MessageCircle className="h-5 w-5" /> },
   ];
   
   if (isAdmin) {

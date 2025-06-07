@@ -19,7 +19,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabaseClient } from "@/lib/supabase/client";
 import { apiClient } from "@/lib/apiClient";
 import { User } from '@supabase/supabase-js';
-import { Calendar, Clock, User as UserIcon, Briefcase, Loader2, PlusCircle, BarChart } from "lucide-react";
+import { Calendar, Clock, User as UserIcon, Briefcase, Loader2, PlusCircle, BarChart, DollarSign, TrendingUp, Activity } from "lucide-react";
+import { StatsCard } from "@/components/dashboard/StatsCard";
+import { motion } from "framer-motion";
 
 interface Consultation {
   id: string;
@@ -167,48 +169,52 @@ export default function Dashboard() {
     }
   };
 
+  // Calculate stats
+  const activeProjects = projects.filter(p => p.status.toLowerCase() === 'in-progress').length;
+  const completedProjects = projects.filter(p => p.status.toLowerCase() === 'completed').length;
+  const upcomingConsultations = consultations.filter(c => c.status.toLowerCase() === 'scheduled').length;
+  const totalRevenue = projects.reduce((sum, p) => sum + (p.budget || 0), 0);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      {/* Navigation */}
-      <nav className="bg-slate-900/80 backdrop-blur-md border-b border-slate-700 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
-          <Link href="/" className="text-2xl font-bold text-white">
-            <span className="text-teal-400">UG</span> UNITE Group
-          </Link>
-          <div className="hidden md:flex items-center gap-8">
-            <Link href="/features" className="text-slate-300 hover:text-white transition-colors">Services</Link>
-            <Link href="/pricing" className="text-slate-300 hover:text-white transition-colors">Pricing</Link>
-            <Link href="/contact" className="text-slate-300 hover:text-white transition-colors">Contact</Link>
-            <Link href="/about" className="text-slate-300 hover:text-white transition-colors">About</Link>
-          </div>
-          <div className="flex items-center gap-4">
-            {user ? (
-              <>
-                <span className="text-slate-300">
-                  {user.email}
-                </span>
-                <Button 
-                  variant="ghost" 
-                  className="text-slate-300 hover:text-white hover:bg-slate-700"
-                  onClick={async () => {
-                    await supabaseClient.auth.signOut();
-                    router.push("/login");
-                  }}
-                >
-                  Logout
-                </Button>
-              </>
-            ) : (
-              <Link href="/login" className="text-slate-300 hover:text-white px-4 py-2 rounded-md transition-colors">
-                Login
-              </Link>
-            )}
-          </div>
-        </div>
-      </nav>
-
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 py-12">
+        {/* Stats Cards */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+        >
+          <StatsCard
+            title="Active Projects"
+            value={activeProjects}
+            icon={<Activity className="h-5 w-5" />}
+            description="Currently in progress"
+            trend={{ value: 12, isPositive: true }}
+          />
+          <StatsCard
+            title="Completed Projects"
+            value={completedProjects}
+            icon={<TrendingUp className="h-5 w-5" />}
+            description="Successfully delivered"
+            trend={{ value: 25, isPositive: true }}
+          />
+          <StatsCard
+            title="Upcoming Consultations"
+            value={upcomingConsultations}
+            icon={<Calendar className="h-5 w-5" />}
+            description="Scheduled meetings"
+            trend={{ value: 8, isPositive: true }}
+          />
+          <StatsCard
+            title="Total Revenue"
+            value={`$${totalRevenue.toLocaleString()}`}
+            icon={<DollarSign className="h-5 w-5" />}
+            description="All-time earnings"
+            trend={{ value: 32, isPositive: true }}
+          />
+        </motion.div>
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-white">My Dashboard</h1>
           <div className="flex items-center gap-4">

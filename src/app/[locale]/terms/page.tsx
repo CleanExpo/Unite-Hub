@@ -1,123 +1,340 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { motion } from 'framer-motion'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { FileText, AlertCircle, Scale, Shield, Users, Globe, Mail } from 'lucide-react'
 
-export default function TermsOfService() {
+export default function TermsOfServicePage() {
+  const effectiveDate = '2025-01-01'
+  
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      {/* Navigation */}
-      <nav className="bg-slate-900/80 backdrop-blur-md border-b border-slate-700 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
-          <Link href="/" className="text-2xl font-bold text-white">
-            <span className="text-teal-400">UG</span> UNITE Group
-          </Link>
-          <div className="hidden md:flex items-center gap-8">
-            <Link href="/features" className="text-slate-300 hover:text-white transition-colors">Services</Link>
-            <Link href="/pricing" className="text-slate-300 hover:text-white transition-colors">Pricing</Link>
-            <Link href="/contact" className="text-slate-300 hover:text-white transition-colors">Contact</Link>
-            <Link href="/about" className="text-slate-300 hover:text-white transition-colors">About</Link>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-12"
+        >
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+            <FileText className="h-8 w-8 text-blue-600" />
           </div>
-          <div className="flex gap-4">
-            <Link href="/login" className="text-slate-300 hover:text-white px-4 py-2 rounded-md transition-colors">
-              Login
-            </Link>
-            <Button asChild className="bg-teal-600 hover:bg-teal-700">
-              <Link href="/book-consultation">Book Now</Link>
-            </Button>
-          </div>
-        </div>
-      </nav>
-
-      {/* Header */}
-      <section className="py-16 md:py-24">
-        <div className="max-w-4xl mx-auto px-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Terms of Service
           </h1>
-          <p className="text-slate-400 text-lg">
-            Last Updated: May 25, 2025
+          <p className="text-lg text-gray-600">
+            Please read these terms carefully before using Unite Group services.
           </p>
-        </div>
-      </section>
+          <p className="text-sm text-gray-500 mt-2">
+            Effective Date: {new Date(effectiveDate).toLocaleDateString('en-US', { 
+              year: 'numeric', 
+              month: 'long', 
+              day: 'numeric' 
+            })}
+          </p>
+        </motion.div>
 
-      {/* Content */}
-      <section className="pb-24">
-        <div className="max-w-4xl mx-auto px-4">
-          <Card className="bg-slate-800 border-slate-700 shadow-xl">
-            <CardContent className="p-8">
-              <div className="prose prose-invert max-w-none prose-headings:text-teal-400 prose-a:text-teal-400 prose-strong:text-white">
-                <h2>1. Introduction</h2>
-                <p>Welcome to UNITE Group ("Company", "we", "our", "us"). These Terms of Service ("Terms", "Terms of Service") govern your use of our website located at <a href="https://unite-group.com">https://unite-group.com</a> (the "Service") operated by UNITE Group.</p>
-                <p>By accessing or using the Service, you agree to be bound by these Terms. If you disagree with any part of the terms, then you may not access the Service.</p>
-
-                <h2>2. Consultations and Services</h2>
-                <p>UNITE Group provides business and technology consulting services. Our standard consultation fee is $550, which includes:</p>
-                <ul>
-                  <li>A one-hour consultation session with our experts</li>
-                  <li>Business needs assessment</li>
-                  <li>Strategic recommendations</li>
-                  <li>Follow-up documentation of key insights</li>
-                </ul>
-                <p>Consultation bookings are subject to availability and confirmation from our team. We reserve the right to reschedule consultations with reasonable notice.</p>
-
-                <h2>3. Communications</h2>
-                <p>By creating an account on our service, you agree to subscribe to newsletters, marketing or promotional materials, and other information we may send. However, you may opt out of receiving any, or all, of these communications from us by following the unsubscribe link or instructions provided in any email we send.</p>
-
-                <h2>4. Accounts</h2>
-                <p>When you create an account with us, you must provide information that is accurate, complete, and current at all times. Failure to do so constitutes a breach of the Terms, which may result in immediate termination of your account on our Service.</p>
-                <p>You are responsible for safeguarding the password that you use to access the Service and for any activities or actions under your password.</p>
-                <p>You agree not to disclose your password to any third party. You must notify us immediately upon becoming aware of any breach of security or unauthorized use of your account.</p>
-
-                <h2>5. Payment and Refunds</h2>
-                <p>Payment for consultations is due at the time of booking unless otherwise agreed upon in writing. We accept major credit cards and electronic transfers.</p>
-                <p>Refund Policy:</p>
-                <ul>
-                  <li>Full refund if cancellation is made at least 48 hours before the scheduled consultation</li>
-                  <li>50% refund if cancellation is made between 24-48 hours before the scheduled consultation</li>
-                  <li>No refund for cancellations less than 24 hours before the scheduled consultation</li>
-                </ul>
-
-                <h2>6. Intellectual Property</h2>
-                <p>The Service and its original content, features, and functionality are and will remain the exclusive property of UNITE Group and its licensors. The Service is protected by copyright, trademark, and other laws of both Australia and foreign countries.</p>
-                <p>Our trademarks and trade dress may not be used in connection with any product or service without the prior written consent of UNITE Group.</p>
-
-                <h2>7. Confidentiality</h2>
-                <p>We understand the sensitive nature of business consultations. Any information shared during consultations will be kept confidential unless permission is granted for its use in case studies or testimonials.</p>
-
-                <h2>8. Limitation Of Liability</h2>
-                <p>In no event shall UNITE Group, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from:</p>
-                <ul>
-                  <li>Your access to or use of or inability to access or use the Service;</li>
-                  <li>Any conduct or content of any third party on the Service;</li>
-                  <li>Any content obtained from the Service; and</li>
-                  <li>Unauthorized access, use, or alteration of your transmissions or content.</li>
-                </ul>
-
-                <h2>9. Disclaimer</h2>
-                <p>Your use of the Service is at your sole risk. The Service is provided on an "AS IS" and "AS AVAILABLE" basis. The Service is provided without warranties of any kind, whether express or implied.</p>
-                <p>UNITE Group does not warrant that the results of using our services will meet your requirements.</p>
-
-                <h2>10. Governing Law</h2>
-                <p>These Terms shall be governed and construed in accordance with the laws of Australia, without regard to its conflict of law provisions.</p>
-                <p>Our failure to enforce any right or provision of these Terms will not be considered a waiver of those rights. If any provision of these Terms is held to be invalid or unenforceable by a court, the remaining provisions of these Terms will remain in effect.</p>
-
-                <h2>11. Changes</h2>
-                <p>We reserve the right, at our sole discretion, to modify or replace these Terms at any time. We will provide at least 30 days' notice prior to any new terms taking effect. What constitutes a material change will be determined at our sole discretion.</p>
-                <p>By continuing to access or use our Service after those revisions become effective, you agree to be bound by the revised terms. If you do not agree to the new terms, please stop using the Service.</p>
-
-                <h2>12. Contact Us</h2>
-                <p>If you have any questions about these Terms, please contact us at:</p>
-                <p>
-                  <strong>Email:</strong> support@unite-group.com<br />
-                  <strong>Phone:</strong> 0457 123 005
-                </p>
-              </div>
+        {/* Important Notice */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="mb-12"
+        >
+          <Card className="bg-amber-50 border-amber-200">
+            <CardHeader>
+              <CardTitle className="flex items-center text-amber-900">
+                <AlertCircle className="h-5 w-5 mr-2" />
+                Important Legal Agreement
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-amber-800">
+                By accessing or using Unite Group&apos;s services, you agree to be bound by these Terms of Service 
+                and all applicable laws and regulations. If you do not agree with any of these terms, you are 
+                prohibited from using or accessing our services.
+              </p>
             </CardContent>
           </Card>
+        </motion.div>
+
+        {/* Terms Sections */}
+        <div className="space-y-8">
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Acceptance of Terms</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-600 mb-4">
+                By creating an account or using Unite Group services (&quot;Services&quot;), you agree to these 
+                Terms of Service (&quot;Terms&quot;). These Terms constitute a legally binding agreement between 
+                you and Unite Group.
+              </p>
+              <p className="text-gray-600">
+                We may update these Terms from time to time. Your continued use of the Services after any 
+                changes indicates your acceptance of the updated Terms.
+              </p>
+            </div>
+          </motion.section>
+
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">2. Service Description</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-600 mb-4">
+                Unite Group provides enterprise software solutions including:
+              </p>
+              <ul className="list-disc list-inside text-gray-600 space-y-1">
+                <li>Customer Relationship Management (CRM) system</li>
+                <li>AI-powered analytics and insights</li>
+                <li>Cloud infrastructure services</li>
+                <li>Software development and consulting</li>
+                <li>Integration and automation tools</li>
+              </ul>
+            </div>
+          </motion.section>
+
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">3. Account Registration</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-600 mb-4">
+                To use our Services, you must:
+              </p>
+              <ul className="list-disc list-inside text-gray-600 space-y-1 mb-4">
+                <li>Provide accurate and complete registration information</li>
+                <li>Maintain the security of your account credentials</li>
+                <li>Promptly update any changes to your information</li>
+                <li>Be responsible for all activities under your account</li>
+                <li>Notify us immediately of any unauthorized access</li>
+              </ul>
+              <p className="text-gray-600">
+                We reserve the right to suspend or terminate accounts that violate these Terms or engage 
+                in fraudulent or illegal activities.
+              </p>
+            </div>
+          </motion.section>
+
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+          >
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">4. Acceptable Use Policy</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-600 mb-4">
+                You agree not to use our Services to:
+              </p>
+              <ul className="list-disc list-inside text-gray-600 space-y-1">
+                <li>Violate any laws or regulations</li>
+                <li>Infringe on intellectual property rights</li>
+                <li>Transmit malware or harmful code</li>
+                <li>Engage in unauthorized access or hacking</li>
+                <li>Harass, abuse, or harm others</li>
+                <li>Send spam or unsolicited communications</li>
+                <li>Misrepresent your identity or affiliation</li>
+                <li>Interfere with the proper functioning of the Services</li>
+              </ul>
+            </div>
+          </motion.section>
+
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+          >
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">5. Payment Terms</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-600 mb-4">
+                For paid Services:
+              </p>
+              <ul className="list-disc list-inside text-gray-600 space-y-1 mb-4">
+                <li>Payment is due according to your selected billing cycle</li>
+                <li>All fees are non-refundable unless otherwise specified</li>
+                <li>Prices may change with 30 days&apos; notice</li>
+                <li>Late payments may result in service suspension</li>
+                <li>You are responsible for all applicable taxes</li>
+              </ul>
+              <p className="text-gray-600">
+                We use third-party payment processors and do not store your payment card information.
+              </p>
+            </div>
+          </motion.section>
+
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+          >
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">6. Intellectual Property</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-600 mb-4">
+                <strong>Our Property:</strong> All content, features, and functionality of the Services 
+                are owned by Unite Group and protected by intellectual property laws.
+              </p>
+              <p className="text-gray-600 mb-4">
+                <strong>Your Content:</strong> You retain ownership of content you submit to the Services. 
+                By submitting content, you grant us a license to use, modify, and display it as necessary 
+                to provide the Services.
+              </p>
+              <p className="text-gray-600">
+                <strong>Feedback:</strong> Any feedback or suggestions you provide may be used by us 
+                without compensation or attribution.
+              </p>
+            </div>
+          </motion.section>
+
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+          >
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">7. Data Protection</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-600 mb-4">
+                Your use of our Services is also governed by our Privacy Policy. We implement 
+                industry-standard security measures to protect your data, including:
+              </p>
+              <ul className="list-disc list-inside text-gray-600 space-y-1">
+                <li>Encryption of data in transit and at rest</li>
+                <li>Regular security audits and updates</li>
+                <li>Access controls and authentication</li>
+                <li>Compliance with data protection regulations</li>
+              </ul>
+            </div>
+          </motion.section>
+
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.9 }}
+          >
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">8. Service Level Agreement</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-600 mb-4">
+                For enterprise customers, we offer:
+              </p>
+              <ul className="list-disc list-inside text-gray-600 space-y-1">
+                <li>99.9% uptime guarantee</li>
+                <li>24/7 technical support</li>
+                <li>Priority issue resolution</li>
+                <li>Regular backups and disaster recovery</li>
+                <li>Performance monitoring and optimization</li>
+              </ul>
+            </div>
+          </motion.section>
+
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.0 }}
+          >
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">9. Limitation of Liability</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-600 mb-4">
+                TO THE MAXIMUM EXTENT PERMITTED BY LAW, UNITE GROUP SHALL NOT BE LIABLE FOR ANY 
+                INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING FROM YOUR 
+                USE OF THE SERVICES.
+              </p>
+              <p className="text-gray-600">
+                Our total liability shall not exceed the amount paid by you for the Services in the 
+                twelve months preceding the claim.
+              </p>
+            </div>
+          </motion.section>
+
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.1 }}
+          >
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">10. Indemnification</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-600">
+                You agree to indemnify and hold Unite Group harmless from any claims, losses, damages, 
+                liabilities, and expenses arising from your use of the Services, violation of these Terms, 
+                or infringement of any third-party rights.
+              </p>
+            </div>
+          </motion.section>
+
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.2 }}
+          >
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">11. Termination</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-600 mb-4">
+                Either party may terminate these Terms:
+              </p>
+              <ul className="list-disc list-inside text-gray-600 space-y-1 mb-4">
+                <li>By you: Cancel your account at any time</li>
+                <li>By us: For violation of these Terms or non-payment</li>
+                <li>Upon termination, your access to the Services will cease</li>
+                <li>Certain provisions of these Terms will survive termination</li>
+              </ul>
+            </div>
+          </motion.section>
+
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.3 }}
+          >
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">12. Governing Law</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-600">
+                These Terms are governed by the laws of India, without regard to conflict of law principles. 
+                Any disputes shall be resolved in the courts of Noida, Uttar Pradesh, India.
+              </p>
+            </div>
+          </motion.section>
+
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.4 }}
+          >
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">13. Contact Information</h2>
+            <div className="prose prose-gray max-w-none">
+              <p className="text-gray-600 mb-4">
+                For questions about these Terms, please contact us:
+              </p>
+              <Card className="bg-gray-50">
+                <CardContent className="p-6">
+                  <div className="space-y-3">
+                    <div className="flex items-center">
+                      <Mail className="h-5 w-5 text-gray-500 mr-3" />
+                      <a href="mailto:legal@unite-group.in" className="text-blue-600 hover:underline">
+                        legal@unite-group.in
+                      </a>
+                    </div>
+                    <div className="flex items-start">
+                      <Globe className="h-5 w-5 text-gray-500 mr-3 mt-0.5" />
+                      <div className="text-gray-700">
+                        Unite Group Legal Department<br />
+                        Unite Business Park<br />
+                        Sector 62, Noida<br />
+                        Uttar Pradesh 201309, India
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </motion.section>
         </div>
-      </section>
+      </div>
     </div>
-  );
+  )
 }
