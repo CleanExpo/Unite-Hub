@@ -103,18 +103,19 @@ const services = [
   },
   {
     title: "Expert Education",
-    description: "Empower your team with cutting-edge skills",
+    description: "Powered by CARSI - Industry-leading certifications and training",
     href: "/services/expert-education",
     icon: <GraduationCap className="h-6 w-6" />,
-    price: "From $5,000",
+    price: "From $499",
     features: [
-      "Team training",
-      "Workshops",
-      "Certifications",
-      "Mentorship"
+      "IICRC Certifications",
+      "Corporate training",
+      "Technical workshops",
+      "Industry compliance"
     ],
-    color: "from-indigo-500 to-purple-500",
-    popular: false
+    color: "from-teal-500 to-cyan-500",
+    popular: false,
+    partnership: "Powered by CARSI"
   }
 ];
 
@@ -193,6 +194,14 @@ export default function ServicesPage() {
                     <div className="absolute top-4 right-4 z-10">
                       <span className="bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-xs font-bold px-3 py-1 rounded-full">
                         MOST POPULAR
+                      </span>
+                    </div>
+                  )}
+                  
+                  {service.partnership && (
+                    <div className="absolute top-4 right-4 z-10">
+                      <span className="bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                        {service.partnership}
                       </span>
                     </div>
                   )}

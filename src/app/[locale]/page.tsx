@@ -5,6 +5,7 @@ import FeatureShowcase from '@/components/landing/FeatureShowcase';
 import { ClientLogosCarousel } from '@/components/landing/ClientLogosCarousel';
 import { SuccessMetricsCounter } from '@/components/landing/SuccessMetricsCounter';
 import { TrustBadges } from '@/components/landing/TrustBadges';
+import { CARSIPartnership } from '@/components/services/CARSIPartnership';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,6 +26,13 @@ export default function HomePage() {
 
       {/* Trust Badges - Security & Partners */}
       <TrustBadges />
+
+      {/* CARSI Partnership Section */}
+      <section className="container mx-auto px-4 py-16">
+        <CARSIPartnership />
+      </section>
+
+      <Separator className="container mx-auto" />
 
       {/* Key Benefits */}
       <section className="container mx-auto px-4 py-16">
