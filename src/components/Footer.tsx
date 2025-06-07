@@ -1,10 +1,44 @@
 'use client'
 
 import Link from 'next/link'
+import { useState } from 'react'
 import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin } from 'lucide-react'
 
 const Footer = () => {
   const currentYear = new Date().getFullYear()
+  const [email, setEmail] = useState('')
+  const [subscribing, setSubscribing] = useState(false)
+  const [subscribeMessage, setSubscribeMessage] = useState('')
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (!email) return
+    
+    setSubscribing(true)
+    setSubscribeMessage('')
+    
+    try {
+      const response = await fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      })
+      
+      const data = await response.json()
+      
+      if (response.ok) {
+        setSubscribeMessage('Thank you for subscribing!')
+        setEmail('')
+      } else {
+        setSubscribeMessage(data.error || 'Something went wrong. Please try again.')
+      }
+    } catch (error) {
+      setSubscribeMessage('Failed to subscribe. Please try again.')
+    } finally {
+      setSubscribing(false)
+    }
+  }
 
   const footerLinks = {
     company: [
@@ -38,10 +72,10 @@ const Footer = () => {
   }
 
   const socialLinks = [
-    { icon: <Facebook className="h-5 w-5" />, href: 'https://facebook.com/unitegroup', label: 'Facebook' },
-    { icon: <Twitter className="h-5 w-5" />, href: 'https://twitter.com/unitegroup', label: 'Twitter' },
-    { icon: <Linkedin className="h-5 w-5" />, href: 'https://linkedin.com/company/unitegroup', label: 'LinkedIn' },
-    { icon: <Instagram className="h-5 w-5" />, href: 'https://instagram.com/unitegroup', label: 'Instagram' }
+    { icon: <Facebook className="h-5 w-5" />, href: 'https://facebook.com/unitegroupindia', label: 'Facebook' },
+    { icon: <Twitter className="h-5 w-5" />, href: 'https://twitter.com/unitegroupin', label: 'Twitter' },
+    { icon: <Linkedin className="h-5 w-5" />, href: 'https://linkedin.com/company/unite-group-india', label: 'LinkedIn' },
+    { icon: <Instagram className="h-5 w-5" />, href: 'https://instagram.com/unitegroupindia', label: 'Instagram' }
   ]
 
   return (
@@ -69,8 +103,8 @@ const Footer = () => {
                 </div>
                 <div className="flex items-center">
                   <Phone className="h-4 w-4 mr-2" />
-                  <a href="tel:+918888888888" className="hover:text-white transition-colors">
-                    +91 88888 88888
+                  <a href="tel:+911204567890" className="hover:text-white transition-colors">
+                    +91 120 456 7890
                   </a>
                 </div>
                 <div className="flex items-start">
@@ -179,19 +213,28 @@ const Footer = () => {
                 Get the latest updates on new features, products, and exclusive offers.
               </p>
             </div>
-            <form className="flex gap-2">
+            <form onSubmit={handleSubscribe} className="flex gap-2">
               <input
                 type="email"
                 placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="flex-1 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
+                disabled={subscribing}
               />
               <button
                 type="submit"
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                disabled={subscribing || !email}
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Subscribe
+                {subscribing ? 'Subscribing...' : 'Subscribe'}
               </button>
             </form>
+            {subscribeMessage && (
+              <p className={`mt-2 text-sm ${subscribeMessage.includes('Thank you') ? 'text-green-400' : 'text-red-400'}`}>
+                {subscribeMessage}
+              </p>
+            )}
           </div>
         </div>
 

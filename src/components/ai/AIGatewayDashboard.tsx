@@ -25,6 +25,19 @@ import {
   Shield,
   TrendingUp
 } from 'lucide-react';
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  Cell
+} from 'recharts';
 
 interface AIProvider {
   id: string;
@@ -354,9 +367,26 @@ const AIGatewayDashboard: React.FC = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="h-64 flex items-center justify-center text-muted-foreground">
-                  Chart placeholder - integrate with your preferred charting library
-                </div>
+                <ResponsiveContainer width="100%" height={250}>
+                  <BarChart 
+                    data={[
+                      { provider: 'OpenAI', requests: 8420, cost: 28.45 },
+                      { provider: 'Claude', requests: 4200, cost: 12.20 },
+                      { provider: 'Gemini', requests: 2100, cost: 3.89 },
+                      { provider: 'Azure', requests: 700, cost: 1.28 },
+                    ]}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="provider" />
+                    <YAxis yAxisId="left" orientation="left" stroke="#8884d8" />
+                    <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" />
+                    <Tooltip />
+                    <Legend />
+                    <Bar yAxisId="left" dataKey="requests" fill="#8884d8" name="Requests" />
+                    <Bar yAxisId="right" dataKey="cost" fill="#82ca9d" name="Cost ($)" />
+                  </BarChart>
+                </ResponsiveContainer>
               </CardContent>
             </Card>
 

@@ -42,7 +42,7 @@ const activities: Activity[] = [
     description: 'Sarah mentioned you in the project discussion',
     user: {
       name: 'Sarah Chen',
-      email: 'sarah@example.com',
+      email: 'sarah.chen@unite-group.com',
       avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah'
     },
     timestamp: new Date(Date.now() - 1000 * 60 * 5), // 5 minutes ago
@@ -54,7 +54,7 @@ const activities: Activity[] = [
     description: 'Phase 2 of AI Implementation is now complete',
     user: {
       name: 'Michael Torres',
-      email: 'michael@example.com',
+      email: 'michael.torres@unite-group.com',
       avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Michael'
     },
     timestamp: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
@@ -70,7 +70,7 @@ const activities: Activity[] = [
     description: 'Invoice #INV-2024-003 has been paid',
     user: {
       name: 'System',
-      email: 'system@unitegroup.com'
+      email: 'system@unite-group.com'
     },
     timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
     metadata: {
@@ -84,7 +84,7 @@ const activities: Activity[] = [
     description: 'Alex Kim has joined the development team',
     user: {
       name: 'Alex Kim',
-      email: 'alex@example.com',
+      email: 'alex.kim@unite-group.com',
       avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex'
     },
     timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24), // 1 day ago

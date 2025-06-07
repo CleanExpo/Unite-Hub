@@ -58,47 +58,66 @@ export default function CookieConsentProvider({ children }: CookieConsentProvide
     
     setSessionId(newSessionId);
     
-    // Then check if the user has already consented
+    // Check local storage first to prevent blocking
+    const localConsent = localStorage.getItem('cookieConsent');
+    if (localConsent) {
+      try {
+        const parsed = JSON.parse(localConsent);
+        if (parsed.hasConsented) {
+          setHasConsented(true);
+          setPreferences(parsed.preferences || {
+            preferences: false,
+            analytics: false,
+            marketing: false
+          });
+          setShowBanner(false);
+          return;
+        }
+      } catch (parseError) {
+        console.error('Error parsing local consent:', parseError);
+      }
+    }
+    
+    // Then check if the user has already consented via API (non-blocking)
     const checkConsent = async () => {
       try {
-        const response = await fetch(`/api/compliance/cookie-consent?sessionId=${newSessionId}`);
-        const data = await response.json();
+        // Set a timeout for the API call to prevent hanging
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3000);
         
-        if (data.exists) {
-          // User has already provided consent
-          setHasConsented(true);
-          setPreferences(data.consent);
-          setShowBanner(false);
-        } else {
-          // User hasn't consented yet, show the banner
-          setShowBanner(true);
-        }
-      } catch (error) {
-        console.error('Error checking cookie consent:', error);
+        const response = await fetch(`/api/compliance/cookie-consent?sessionId=${newSessionId}`, {
+          signal: controller.signal
+        });
         
-        // Check local storage as fallback to prevent blocking UX
-        const localConsent = localStorage.getItem('cookieConsent');
-        if (localConsent) {
-          try {
-            const parsed = JSON.parse(localConsent);
-            if (parsed.hasConsented) {
-              setHasConsented(true);
-              setPreferences(parsed.preferences || {
-                preferences: false,
-                analytics: false,
-                marketing: false
-              });
-              setShowBanner(false);
-              return;
-            }
-          } catch (parseError) {
-            console.error('Error parsing local consent:', parseError);
+        clearTimeout(timeoutId);
+        
+        if (response.ok) {
+          const data = await response.json();
+          
+          if (data.exists) {
+            // User has already provided consent
+            setHasConsented(true);
+            setPreferences(data.consent);
+            setShowBanner(false);
+            
+            // Save to localStorage as backup
+            localStorage.setItem('cookieConsent', JSON.stringify({
+              hasConsented: true,
+              preferences: data.consent,
+              timestamp: Date.now()
+            }));
+            return;
           }
         }
-        
-        // Only show banner if no local consent found
-        setShowBanner(true);
+      } catch (error) {
+        console.warn('Cookie consent API check failed, using local storage fallback:', error);
       }
+      
+      // Show banner only if no consent found anywhere
+      // Add a small delay to prevent flash of banner on fast connections
+      setTimeout(() => {
+        setShowBanner(true);
+      }, 500);
     };
     
     checkConsent();
@@ -106,48 +125,13 @@ export default function CookieConsentProvider({ children }: CookieConsentProvide
   
   // Save consent preferences to the server
   const saveConsent = async (newPreferences: CookieConsentFormData) => {
-    try {
-      const response = await fetch('/api/compliance/cookie-consent', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          sessionId,
-          preferences: newPreferences
-        })
-      });
-
-      // Handle API errors gracefully without throwing
-      if (!response.ok) {
-        console.warn(`Failed to save cookie preferences to server: ${response.status}`);
-      } else {
-        // Only update local state on successful response
-        setPreferences(newPreferences);
-        setHasConsented(true);
-        setShowBanner(false);
-        setIsModalOpen(false);
-
-        if (newPreferences.analytics) {
-          initializeAnalytics();
-        }
-
-        if (newPreferences.marketing) {
-          initializeMarketingTools();
-        }
-      }
-    } catch (error) {
-      console.error('Error saving cookie consent to server:', error);
-      // Continue with fallback instead of throwing
-    }
-
-    // Always update local state and save to localStorage as backup
+    // Always update local state and save to localStorage first
     setPreferences(newPreferences);
     setHasConsented(true);
     setShowBanner(false);
     setIsModalOpen(false);
 
-    // Save to localStorage as backup
+    // Save to localStorage immediately
     localStorage.setItem('cookieConsent', JSON.stringify({
       hasConsented: true,
       preferences: newPreferences,
@@ -161,6 +145,32 @@ export default function CookieConsentProvider({ children }: CookieConsentProvide
 
     if (newPreferences.marketing) {
       initializeMarketingTools();
+    }
+
+    // Try to save to server (non-blocking)
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
+      
+      const response = await fetch('/api/compliance/cookie-consent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          sessionId,
+          preferences: newPreferences
+        }),
+        signal: controller.signal
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        console.warn(`Failed to save cookie preferences to server: ${response.status}`);
+      }
+    } catch (error) {
+      console.warn('Error saving cookie consent to server (will use local storage):', error);
     }
   };
   
@@ -183,31 +193,12 @@ export default function CookieConsentProvider({ children }: CookieConsentProvide
   
   // Handle rejecting non-essential cookies
   const handleReject = async () => {
-    try {
-      // Save rejection to server (necessary cookies only)
-      const consent: CookieConsentFormData = {
-        preferences: false,
-        analytics: false,
-        marketing: false
-      };
-      await saveConsent(consent);
-    } catch (error) {
-      console.error('Error saving cookie rejection:', error);
-      // Even if server fails, hide banner to prevent blocking UX
-      setShowBanner(false);
-      setHasConsented(true);
-      
-      // Save rejection locally as fallback
-      localStorage.setItem('cookieConsent', JSON.stringify({
-        hasConsented: true,
-        preferences: {
-          preferences: false,
-          analytics: false,
-          marketing: false
-        },
-        timestamp: Date.now()
-      }));
-    }
+    const consent: CookieConsentFormData = {
+      preferences: false,
+      analytics: false,
+      marketing: false
+    };
+    await saveConsent(consent);
   };
   
   // Show the preferences modal

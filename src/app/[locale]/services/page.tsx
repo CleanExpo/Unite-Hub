@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { 
   Code2, 
@@ -13,11 +14,13 @@ import {
   Rocket,
   Target,
   Palette,
-  HeartHandshake
+  HeartHandshake,
+  Calendar
 } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import ConsultationBookingModal from '@/components/consultation/ConsultationBookingModal'
 
 const services = [
   {
@@ -101,6 +104,17 @@ const services = [
 ]
 
 export default function ServicesPage() {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedService, setSelectedService] = useState<{
+    id: string
+    title: string
+  } | null>(null)
+
+  const handleBookConsultation = (service: { id: string; title: string }) => {
+    setSelectedService(service)
+    setIsModalOpen(true)
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
       {/* Hero Section */}
@@ -155,15 +169,25 @@ export default function ServicesPage() {
                         </li>
                       ))}
                     </ul>
-                    <Button 
-                      variant="outline" 
-                      className="w-full mt-6 group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
-                      asChild
-                    >
-                      <Link href={`/contact?service=${service.id}`}>
-                        Learn More
-                      </Link>
-                    </Button>
+                    <div className="flex gap-2 mt-6">
+                      <Button 
+                        variant="outline" 
+                        className="flex-1 group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+                        onClick={() => handleBookConsultation({ id: service.id, title: service.title })}
+                      >
+                        <Calendar className="w-4 h-4 mr-2" />
+                        Book Consultation
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        className="px-3"
+                        asChild
+                      >
+                        <Link href={`/contact?service=${service.id}`} title="More Info">
+                          <Target className="w-4 h-4" />
+                        </Link>
+                      </Button>
+                    </div>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -200,6 +224,19 @@ export default function ServicesPage() {
           </motion.div>
         </div>
       </section>
+
+      {/* Consultation Booking Modal */}
+      {selectedService && (
+        <ConsultationBookingModal
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false)
+            setSelectedService(null)
+          }}
+          serviceType={selectedService.id}
+          serviceName={selectedService.title}
+        />
+      )}
     </div>
   )
 }

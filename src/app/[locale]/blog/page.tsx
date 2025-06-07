@@ -97,6 +97,39 @@ const categories = [
 export default function BlogPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All Posts')
+  const [newsletterEmail, setNewsletterEmail] = useState('')
+  const [subscribing, setSubscribing] = useState(false)
+  const [subscribeMessage, setSubscribeMessage] = useState('')
+
+  const handleNewsletterSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (!newsletterEmail) return
+    
+    setSubscribing(true)
+    setSubscribeMessage('')
+    
+    try {
+      const response = await fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: newsletterEmail })
+      })
+      
+      const data = await response.json()
+      
+      if (response.ok) {
+        setSubscribeMessage('Thank you for subscribing!')
+        setNewsletterEmail('')
+      } else {
+        setSubscribeMessage(data.error || 'Something went wrong. Please try again.')
+      }
+    } catch (error) {
+      setSubscribeMessage('Failed to subscribe. Please try again.')
+    } finally {
+      setSubscribing(false)
+    }
+  }
 
   const filteredPosts = blogPosts.filter(post => {
     const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -273,16 +306,24 @@ export default function BlogPage() {
           <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
             Subscribe to our newsletter and never miss our latest insights, product updates, and industry news.
           </p>
-          <form className="max-w-md mx-auto flex gap-2">
+          <form onSubmit={handleNewsletterSubscribe} className="max-w-md mx-auto flex gap-2">
             <Input
               type="email"
               placeholder="Enter your email"
+              value={newsletterEmail}
+              onChange={(e) => setNewsletterEmail(e.target.value)}
               className="flex-1"
+              disabled={subscribing}
             />
-            <Button type="submit">
-              Subscribe
+            <Button type="submit" disabled={subscribing || !newsletterEmail}>
+              {subscribing ? 'Subscribing...' : 'Subscribe'}
             </Button>
           </form>
+          {subscribeMessage && (
+            <p className={`mt-4 text-sm ${subscribeMessage.includes('Thank you') ? 'text-green-600' : 'text-red-600'}`}>
+              {subscribeMessage}
+            </p>
+          )}
         </motion.div>
       </div>
     </div>

@@ -44,6 +44,23 @@ import type {
   ReportMetric,
   AnalyticsMetric
 } from '@/lib/analytics'
+import { 
+  LineChart, 
+  Line, 
+  BarChart, 
+  Bar, 
+  PieChart, 
+  Pie, 
+  AreaChart, 
+  Area,
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  Legend, 
+  ResponsiveContainer,
+  Cell 
+} from 'recharts'
 
 // Define analytics metric values for comparison (since we can't use the enum as a value)
 const BOUNCE_RATE = 'bounce_rate';
@@ -129,19 +146,154 @@ const COMPARISON_OPTIONS = [
   { label: 'None', value: 'none' },
 ];
 
-// Placeholder for chart component
-const Chart = ({ type, data, options }: { type: string; data: any; options: any }) => (
-  <div className="h-64 w-full flex items-center justify-center bg-muted/20">
-    <p className="text-muted-foreground">Chart: {type} (Placeholder)</p>
-  </div>
-);
+// Chart colors
+const CHART_COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D'];
 
-// Placeholder for table component
-const Table = ({ columns, rows }: { columns: any[]; rows: any[] }) => (
-  <div className="h-64 w-full flex items-center justify-center bg-muted/20">
-    <p className="text-muted-foreground">Table: {columns.length} columns, {rows.length} rows (Placeholder)</p>
-  </div>
-);
+// Functional Chart component using recharts
+const Chart = ({ type, data, options }: { type: string; data: any; options: any }) => {
+  // Default chart data if none provided
+  const chartData = data || [
+    { name: 'Jan', value: 400, value2: 240 },
+    { name: 'Feb', value: 300, value2: 139 },
+    { name: 'Mar', value: 200, value2: 980 },
+    { name: 'Apr', value: 278, value2: 390 },
+    { name: 'May', value: 189, value2: 480 },
+    { name: 'Jun', value: 239, value2: 380 },
+  ];
+
+  const { showLegend = true, stacked = false } = options || {};
+
+  switch (type) {
+    case 'line':
+      return (
+        <ResponsiveContainer width="100%" height={250}>
+          <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            {showLegend && <Legend />}
+            <Line type="monotone" dataKey="value" stroke="#0088FE" activeDot={{ r: 8 }} />
+            <Line type="monotone" dataKey="value2" stroke="#00C49F" />
+          </LineChart>
+        </ResponsiveContainer>
+      );
+
+    case 'bar':
+      return (
+        <ResponsiveContainer width="100%" height={250}>
+          <BarChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            {showLegend && <Legend />}
+            <Bar dataKey="value" stackId={stacked ? "a" : undefined} fill="#0088FE" />
+            <Bar dataKey="value2" stackId={stacked ? "a" : undefined} fill="#00C49F" />
+          </BarChart>
+        </ResponsiveContainer>
+      );
+
+    case 'pie':
+      const pieData = chartData.map((item: any, index: number) => ({
+        name: item.name,
+        value: item.value,
+      }));
+      
+      return (
+        <ResponsiveContainer width="100%" height={250}>
+          <PieChart>
+            <Pie
+              data={pieData}
+              cx="50%"
+              cy="50%"
+              labelLine={false}
+              label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+              outerRadius={80}
+              fill="#8884d8"
+              dataKey="value"
+            >
+              {pieData.map((entry: any, index: number) => (
+                <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+              ))}
+            </Pie>
+            <Tooltip />
+          </PieChart>
+        </ResponsiveContainer>
+      );
+
+    case 'area':
+      return (
+        <ResponsiveContainer width="100%" height={250}>
+          <AreaChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            {showLegend && <Legend />}
+            <Area type="monotone" dataKey="value" stackId="1" stroke="#0088FE" fill="#0088FE" />
+            <Area type="monotone" dataKey="value2" stackId="1" stroke="#00C49F" fill="#00C49F" />
+          </AreaChart>
+        </ResponsiveContainer>
+      );
+
+    default:
+      return (
+        <div className="h-64 w-full flex items-center justify-center bg-muted/20">
+          <p className="text-muted-foreground">Chart type &quot;{type}&quot; not implemented</p>
+        </div>
+      );
+  }
+};
+
+// Functional Table component
+const Table = ({ columns, rows }: { columns: any[]; rows: any[] }) => {
+  // Default data if none provided
+  const tableData = rows.length > 0 ? rows : [
+    { id: 1, page: '/home', views: 1234, bounceRate: 45.2, avgTime: '2:34' },
+    { id: 2, page: '/about', views: 987, bounceRate: 52.1, avgTime: '1:45' },
+    { id: 3, page: '/services', views: 756, bounceRate: 38.9, avgTime: '3:12' },
+    { id: 4, page: '/contact', views: 543, bounceRate: 65.4, avgTime: '0:58' },
+  ];
+
+  const tableColumns = columns.length > 0 ? columns : [
+    { key: 'page', label: 'Page' },
+    { key: 'views', label: 'Views' },
+    { key: 'bounceRate', label: 'Bounce Rate' },
+    { key: 'avgTime', label: 'Avg. Time' },
+  ];
+
+  return (
+    <div className="w-full overflow-auto">
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="border-b">
+            {tableColumns.map((col) => (
+              <th key={col.key} className="text-left p-2 font-medium text-muted-foreground">
+                {col.label}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {tableData.map((row, index) => (
+            <tr key={row.id || index} className="border-b hover:bg-muted/50">
+              {tableColumns.map((col) => (
+                <td key={col.key} className="p-2">
+                  {col.format && row[col.key] !== undefined
+                    ? col.format === 'percent'
+                      ? `${row[col.key]}%`
+                      : row[col.key]
+                    : row[col.key]}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
 
 // Format metric value
 const formatMetricValue = (value: number, format?: string, prefix?: string, suffix?: string): string => {
