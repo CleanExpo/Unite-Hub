@@ -26,6 +26,7 @@ export interface UnifiedCustomer {
   uniteServices: {
     consultationHistory: Consultation[];
     activeProjects: Project[];
+    projectHistory: Project[]; // Historical projects
     servicePackages: ServicePackage[];
     billingHistory: Invoice[];
     totalSpent: number;
@@ -48,12 +49,35 @@ export interface UnifiedCustomer {
     learningProgress: LearningProgress[];
   };
 
+  // CARSI Courses (alias for compatibility)
+  carsiCourses: {
+    currentEnrollments: CourseEnrollment[];
+    courseHistory: CompletedCourse[];
+  };
+
+  // Purchase History
+  purchaseHistory: {
+    invoices: Invoice[];
+    totalSpent: number;
+    lastPurchaseDate?: Date;
+    averageOrderValue: number;
+  };
+
+  // Financial Summary
+  financialSummary: {
+    lifetimeValue: number;
+    monthlyRecurringRevenue: number;
+    outstandingBalance: number;
+    creditLimit?: number;
+  };
+
   // Engagement Analytics
   engagementAnalytics: {
     combinedLTV: number; // Lifetime value across both platforms
     crossSellOpportunities: CrossSellOpportunity[];
     engagementScore: number; // 0-100
     lastActivity: Date;
+    lastInteraction: Date; // Most recent interaction timestamp
     preferredContactMethod: 'email' | 'phone' | 'sms';
     communicationPreferences: {
       marketingEmails: boolean;
@@ -61,6 +85,7 @@ export interface UnifiedCustomer {
       projectUpdates: boolean;
       newsletter: boolean;
     };
+    supportTickets: SupportTicket[]; // Support ticket history
   };
 
   // Metadata
@@ -70,6 +95,7 @@ export interface UnifiedCustomer {
     source: 'unite' | 'carsi' | 'merged';
     tags?: string[];
     notes?: string;
+    bundlePurchases: number; // Number of bundle purchases
   };
 }
 
@@ -89,13 +115,15 @@ export interface Project {
   id: string;
   name: string;
   type: 'software' | 'seo' | 'strategy' | 'qa' | 'other';
-  status: 'planning' | 'active' | 'completed' | 'on-hold';
+  status: 'planning' | 'active' | 'completed' | 'on-hold' | 'in-progress';
   startDate: Date;
   endDate?: Date;
+  estimatedCompletion: Date;
   budget: number;
   spent: number;
   milestones: Milestone[];
   teamMembers: string[];
+  satisfactionScore?: number; // 1-5
 }
 
 export interface ServicePackage {
@@ -123,10 +151,13 @@ export interface Invoice {
 export interface CourseEnrollment {
   courseId: string;
   courseName: string;
+  courseType: 'development' | 'leadership' | 'marketing' | 'technical' | 'other';
   enrollmentDate: Date;
+  enrolledAt: Date; // Alias for enrollmentDate
   progress: number; // 0-100
   status: 'active' | 'paused' | 'dropped';
   estimatedCompletion?: Date;
+  completedAt?: Date;
 }
 
 export interface CompletedCourse {
@@ -155,6 +186,21 @@ export interface LearningProgress {
   hoursSpent: number;
   cecCreditsEarned: number;
   assessmentScores: number[];
+}
+
+// Support Ticket Types
+export interface SupportTicket {
+  id: string;
+  subject: string;
+  status: 'open' | 'in-progress' | 'resolved' | 'unresolved' | 'closed';
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  category: 'technical' | 'billing' | 'general' | 'software' | 'seo' | 'strategy';
+  createdAt: Date;
+  updatedAt: Date;
+  resolvedAt?: Date;
+  satisfactionScore?: number; // 1-5
+  messages: number;
+  assignedTo?: string;
 }
 
 // Cross-selling Types

@@ -1,742 +1,726 @@
+// Unite Group + CARSI Advanced AI Features
+
+import { createClient } from '@/lib/supabase/server';
+import { UnifiedCustomer, Project, CourseEnrollment } from '@/lib/types/crm-integration';
+
+// AI Model Types
+export type PredictionType = 
+  | 'churn-risk'
+  | 'course-timing'
+  | 'bundle-recommendation'
+  | 'ltv-forecast'
+  | 'engagement-drop'
+  | 'cross-sell-opportunity';
+
+export type RiskLevel = 'low' | 'medium' | 'high' | 'critical';
+
+// Prediction Interfaces
+export interface ChurnPrediction {
+  customerId: string;
+  riskScore: number; // 0-100
+  riskLevel: RiskLevel;
+  factors: ChurnFactor[];
+  recommendedActions: RecommendedAction[];
+  predictedChurnDate?: Date;
+  confidence: number; // 0-1
+}
+
+export interface ChurnFactor {
+  factor: string;
+  impact: number; // -100 to 100 (negative reduces churn, positive increases)
+  description: string;
+}
+
+export interface RecommendedAction {
+  id: string;
+  action: string;
+  priority: 'low' | 'medium' | 'high';
+  expectedImpact: number; // Expected reduction in churn risk
+  automationAvailable: boolean;
+}
+
+export interface CourseTiming {
+  customerId: string;
+  courseId: string;
+  optimalStartDate: Date;
+  reasoning: string[];
+  readinessScore: number; // 0-100
+  completionProbability: number; // 0-1
+}
+
+export interface DynamicBundle {
+  id: string;
+  name: string;
+  services: BundleService[];
+  totalPrice: number;
+  discount: number;
+  estimatedValue: number;
+  personalizationScore: number; // 0-100
+  conversionProbability: number; // 0-1
+}
+
+export interface BundleService {
+  serviceId: string;
+  serviceName: string;
+  provider: 'unite' | 'carsi';
+  price: number;
+  relevanceScore: number; // 0-100
+}
+
 /**
- * Predictive Analytics Engine
- * Unite Group AI-Powered Business Intelligence
+ * Predict customer churn risk using behavioral patterns
  */
+export async function predictChurnRisk(customer: UnifiedCustomer): Promise<ChurnPrediction> {
+  const factors: ChurnFactor[] = [];
+  let baseRisk = 20; // Base churn risk
 
-import {
-  PredictionRequest,
-  PredictionResult,
-  PredictionType,
-  UserProfile,
-  UserBehavior,
-  CustomerSegment,
-  MLModel,
-  ModelType,
-  AIMetrics
-} from './types';
-
-export interface PredictiveAnalyticsConfig {
-  enableModelTraining: boolean;
-  minDataPointsForPrediction: number;
-  predictionCacheExpirationMinutes: number;
-  modelRetrainingIntervalHours: number;
-  confidenceThreshold: number;
-  enableExplainableAI: boolean;
-  enableRealTimePredictions: boolean;
-}
-
-export const DEFAULT_PREDICTIVE_CONFIG: PredictiveAnalyticsConfig = {
-  enableModelTraining: true,
-  minDataPointsForPrediction: 50,
-  predictionCacheExpirationMinutes: 60,
-  modelRetrainingIntervalHours: 24,
-  confidenceThreshold: 0.7,
-  enableExplainableAI: true,
-  enableRealTimePredictions: true
-};
-
-interface PredictionCache {
-  prediction: PredictionResult;
-  timestamp: number;
-}
-
-interface TrainingDataPoint {
-  features: Record<string, number>;
-  label: number;
-  timestamp: string;
-  userId?: string;
-}
-
-interface ModelMetrics {
-  accuracy: number;
-  precision: number;
-  recall: number;
-  f1Score: number;
-  roc_auc?: number;
-  lastTrained: string;
-  trainingDataSize: number;
-}
-
-export class PredictiveAnalyticsEngine {
-  private config: PredictiveAnalyticsConfig;
-  private models: Map<PredictionType, MLModel> = new Map();
-  private predictionCache: Map<string, PredictionCache> = new Map();
-  private trainingData: Map<PredictionType, TrainingDataPoint[]> = new Map();
-  private modelMetrics: Map<PredictionType, ModelMetrics> = new Map();
-
-  constructor(config: Partial<PredictiveAnalyticsConfig> = {}) {
-    this.config = { ...DEFAULT_PREDICTIVE_CONFIG, ...config };
-    this.initializeModels();
+  // 1. Engagement Analysis
+  const engagementScore = customer.engagementAnalytics.engagementScore;
+  if (engagementScore < 30) {
+    factors.push({
+      factor: 'Low Engagement',
+      impact: 40,
+      description: 'Customer engagement is significantly below average',
+    });
+    baseRisk += 40;
+  } else if (engagementScore > 70) {
+    factors.push({
+      factor: 'High Engagement',
+      impact: -20,
+      description: 'Customer is highly engaged with services',
+    });
+    baseRisk -= 20;
   }
 
-  /**
-   * Generate prediction based on user data and context
-   */
-  async generatePrediction(request: PredictionRequest): Promise<PredictionResult> {
-    try {
-      // Check cache first
-      const cacheKey = this.generateCacheKey(request);
-      const cached = this.getCachedPrediction(cacheKey);
-      if (cached) return cached;
-
-      // Validate minimum data requirements
-      if (!this.hasMinimumData(request.prediction_type)) {
-        return this.generateFallbackPrediction(request);
-      }
-
-      // Get or create model for prediction type
-      const model = await this.getOrCreateModel(request.prediction_type);
-      
-      // Prepare features for prediction
-      const features = await this.prepareFeatures(request);
-      
-      // Generate prediction
-      const prediction = await this.runPrediction(model, features);
-      
-      // Create prediction result
-      const result: PredictionResult = {
-        prediction_type: request.prediction_type,
-        predicted_value: prediction.value,
-        confidence: prediction.confidence,
-        probability_distribution: prediction.probabilities,
-        feature_importance: prediction.featureImportance,
-        explanation: this.generateExplanation(request, prediction),
-        model_version: model.version,
-        created_at: new Date().toISOString()
-      };
-
-      // Cache result
-      this.cachePrediction(cacheKey, result);
-
-      // Log prediction for model improvement
-      await this.logPrediction(request, result);
-
-      return result;
-    } catch (error) {
-      console.error('Error generating prediction:', error);
-      return this.generateFallbackPrediction(request);
-    }
+  // 2. Activity Recency
+  const lastActivity = customer.engagementAnalytics.lastInteraction;
+  const daysSinceActivity = Math.floor((Date.now() - lastActivity.getTime()) / (1000 * 60 * 60 * 24));
+  
+  if (daysSinceActivity > 60) {
+    factors.push({
+      factor: 'Inactive Account',
+      impact: 30,
+      description: `No activity in ${daysSinceActivity} days`,
+    });
+    baseRisk += 30;
+  } else if (daysSinceActivity < 7) {
+    factors.push({
+      factor: 'Recent Activity',
+      impact: -15,
+      description: 'Customer was active within the last week',
+    });
+    baseRisk -= 15;
   }
 
-  /**
-   * Initialize prediction models
-   */
-  private initializeModels(): void {
-    const predictionTypes: PredictionType[] = [
-      'churn_risk',
-      'conversion_likelihood',
-      'lead_quality_score',
-      'project_success_probability',
-      'revenue_forecast',
-      'optimal_pricing',
-      'next_best_action',
-      'engagement_prediction'
-    ];
+  // 3. Project/Course Completion
+  const completedProjects = customer.uniteServices.activeProjects.filter(p => p.status === 'completed').length;
+  const completedCourses = customer.carsiCourses.currentEnrollments.filter(c => c.progress === 100).length;
+  
+  if (completedProjects + completedCourses === 0) {
+    factors.push({
+      factor: 'No Completions',
+      impact: 25,
+      description: 'Customer has not completed any projects or courses',
+    });
+    baseRisk += 25;
+  } else if (completedProjects + completedCourses > 3) {
+    factors.push({
+      factor: 'Multiple Completions',
+      impact: -30,
+      description: 'Customer has successfully completed multiple services',
+    });
+    baseRisk -= 30;
+  }
 
-    predictionTypes.forEach(type => {
-      this.models.set(type, this.createDefaultModel(type));
-      this.trainingData.set(type, []);
+  // 4. Support Ticket Analysis
+  const recentTickets = customer.engagementAnalytics.supportTickets.filter(
+    t => t.status === 'unresolved' || (t.satisfactionScore !== undefined && t.satisfactionScore < 3)
+  );
+  
+  if (recentTickets.length > 2) {
+    factors.push({
+      factor: 'Unresolved Issues',
+      impact: 35,
+      description: 'Multiple unresolved or low-satisfaction support tickets',
+    });
+    baseRisk += 35;
+  }
+
+  // 5. Payment Behavior
+  const overdueInvoices = customer.purchaseHistory.invoices.filter(i => i.status === 'overdue').length;
+  
+  if (overdueInvoices > 0) {
+    factors.push({
+      factor: 'Payment Issues',
+      impact: 20,
+      description: `${overdueInvoices} overdue invoice(s)`,
+    });
+    baseRisk += 20;
+  }
+
+  // Calculate final risk score
+  const riskScore = Math.max(0, Math.min(100, baseRisk));
+  const riskLevel: RiskLevel = 
+    riskScore >= 70 ? 'critical' :
+    riskScore >= 50 ? 'high' :
+    riskScore >= 30 ? 'medium' : 'low';
+
+  // Generate recommendations
+  const recommendedActions: RecommendedAction[] = [];
+  
+  if (engagementScore < 30) {
+    recommendedActions.push({
+      id: 'engagement-campaign',
+      action: 'Launch personalized re-engagement email campaign',
+      priority: 'high',
+      expectedImpact: 15,
+      automationAvailable: true,
     });
   }
 
-  /**
-   * Create default model configuration
-   */
-  private createDefaultModel(predictionType: PredictionType): MLModel {
-    const modelConfigs: Record<PredictionType, Partial<MLModel>> = {
-      churn_risk: {
-        model_type: 'classification',
-        algorithm: 'gradient_boosting',
-        feature_schema: {
-          days_since_last_login: 'number',
-          session_frequency: 'number',
-          avg_session_duration: 'number',
-          feature_usage_count: 'number',
-          support_tickets: 'number',
-          payment_delays: 'number',
-          engagement_score: 'number'
-        }
-      },
-      conversion_likelihood: {
-        model_type: 'classification',
-        algorithm: 'logistic_regression',
-        feature_schema: {
-          page_views: 'number',
-          time_on_site: 'number',
-          consultation_requests: 'number',
-          email_opens: 'number',
-          demo_requests: 'number',
-          pricing_page_views: 'number',
-          referral_source: 'string'
-        }
-      },
-      lead_quality_score: {
-        model_type: 'regression',
-        algorithm: 'random_forest',
-        feature_schema: {
-          company_size: 'number',
-          industry_match: 'number',
-          budget_indicated: 'number',
-          urgency_score: 'number',
-          engagement_level: 'number',
-          fit_score: 'number'
-        }
-      },
-      project_success_probability: {
-        model_type: 'classification',
-        algorithm: 'neural_network',
-        feature_schema: {
-          project_complexity: 'number',
-          client_experience: 'number',
-          budget_adequacy: 'number',
-          timeline_realism: 'number',
-          team_capacity: 'number',
-          stakeholder_engagement: 'number'
-        }
-      },
-      revenue_forecast: {
-        model_type: 'time_series',
-        algorithm: 'lstm',
-        feature_schema: {
-          historical_revenue: 'number',
-          lead_pipeline: 'number',
-          market_conditions: 'number',
-          seasonality: 'number',
-          marketing_spend: 'number'
-        }
-      },
-      optimal_pricing: {
-        model_type: 'regression',
-        algorithm: 'gradient_boosting',
-        feature_schema: {
-          service_complexity: 'number',
-          client_budget: 'number',
-          market_rate: 'number',
-          competition_level: 'number',
-          urgency: 'number',
-          relationship_strength: 'number'
-        }
-      },
-      next_best_action: {
-        model_type: 'recommendation',
-        algorithm: 'collaborative_filtering',
-        feature_schema: {
-          user_segment: 'string',
-          current_stage: 'string',
-          engagement_history: 'string',
-          preferences: 'string',
-          context: 'string'
-        }
-      },
-      engagement_prediction: {
-        model_type: 'regression',
-        algorithm: 'xgboost',
-        feature_schema: {
-          content_type: 'string',
-          user_interests: 'string',
-          time_of_day: 'number',
-          device_type: 'string',
-          previous_engagement: 'number',
-          content_freshness: 'number'
-        }
-      }
-    };
-
-    const baseConfig = modelConfigs[predictionType] || {};
-
-    return {
-      id: `model_${predictionType}_${Date.now()}`,
-      name: `${predictionType} Prediction Model`,
-      description: `AI model for predicting ${predictionType.replace('_', ' ')}`,
-      model_type: baseConfig.model_type || 'classification',
-      version: '1.0.0',
-      algorithm: baseConfig.algorithm || 'random_forest',
-      training_data_size: 0,
-      accuracy_metrics: {
-        accuracy: 0.75,
-        precision: 0.72,
-        recall: 0.78,
-        f1_score: 0.75
-      },
-      feature_schema: baseConfig.feature_schema || {},
-      deployment_status: 'deployed',
-      last_trained: new Date().toISOString(),
-      created_at: new Date().toISOString()
-    };
-  }
-
-  /**
-   * Get or create model for prediction type
-   */
-  private async getOrCreateModel(predictionType: PredictionType): Promise<MLModel> {
-    let model = this.models.get(predictionType);
-    
-    if (!model) {
-      model = this.createDefaultModel(predictionType);
-      this.models.set(predictionType, model);
-    }
-
-    // Check if model needs retraining
-    if (this.shouldRetrain(model)) {
-      model = await this.retrainModel(predictionType);
-    }
-
-    return model;
-  }
-
-  /**
-   * Prepare features for prediction
-   */
-  private async prepareFeatures(request: PredictionRequest): Promise<Record<string, number>> {
-    const { prediction_type, features, context, user_id } = request;
-    const normalizedFeatures: Record<string, number> = {};
-
-    // Get model schema
-    const model = this.models.get(prediction_type);
-    if (!model) throw new Error(`Model not found for ${prediction_type}`);
-
-    // Normalize features based on model schema
-    for (const [featureName, featureType] of Object.entries(model.feature_schema)) {
-      const rawValue = features[featureName] || context?.[featureName];
-      
-      if (rawValue !== undefined) {
-        normalizedFeatures[featureName] = this.normalizeFeature(rawValue, featureType);
-      } else {
-        // Use default values for missing features
-        normalizedFeatures[featureName] = this.getDefaultFeatureValue(featureName, prediction_type);
-      }
-    }
-
-    // Add derived features
-    normalizedFeatures.timestamp_hour = new Date().getHours();
-    normalizedFeatures.timestamp_day_of_week = new Date().getDay();
-    
-    if (user_id) {
-      const userFeatures = await this.getUserDerivedFeatures(user_id);
-      Object.assign(normalizedFeatures, userFeatures);
-    }
-
-    return normalizedFeatures;
-  }
-
-  /**
-   * Run prediction using model
-   */
-  private async runPrediction(model: MLModel, features: Record<string, number>): Promise<{
-    value: number;
-    confidence: number;
-    probabilities?: Record<string, number>;
-    featureImportance: Record<string, number>;
-  }> {
-    // This is a simplified prediction engine
-    // In production, this would interface with actual ML models (TensorFlow, PyTorch, etc.)
-    
-    const prediction = this.simulatePrediction(model, features);
-    
-    return {
-      value: prediction.value,
-      confidence: prediction.confidence,
-      probabilities: prediction.probabilities,
-      featureImportance: this.calculateFeatureImportance(model, features)
-    };
-  }
-
-  /**
-   * Simulate ML prediction (placeholder for actual ML inference)
-   */
-  private simulatePrediction(model: MLModel, features: Record<string, number>): {
-    value: number;
-    confidence: number;
-    probabilities?: Record<string, number>;
-  } {
-    // Calculate weighted score based on features
-    const featureWeights = this.getFeatureWeights(model.algorithm);
-    let score = 0;
-    let totalWeight = 0;
-
-    for (const [feature, value] of Object.entries(features)) {
-      const weight = featureWeights[feature] || 0.1;
-      score += value * weight;
-      totalWeight += weight;
-    }
-
-    const normalizedScore = totalWeight > 0 ? score / totalWeight : 0.5;
-    
-    // Add some randomness for simulation
-    const noise = (Math.random() - 0.5) * 0.1;
-    const finalScore = Math.max(0, Math.min(1, normalizedScore + noise));
-
-    let result: { value: number; confidence: number; probabilities?: Record<string, number> };
-
-    switch (model.model_type) {
-      case 'classification':
-        result = {
-          value: finalScore > 0.5 ? 1 : 0,
-          confidence: Math.abs(finalScore - 0.5) * 2,
-          probabilities: {
-            '0': 1 - finalScore,
-            '1': finalScore
-          }
-        };
-        break;
-      
-      case 'regression':
-        result = {
-          value: finalScore,
-          confidence: 1 - Math.abs(finalScore - 0.5) * 2
-        };
-        break;
-      
-      default:
-        result = {
-          value: finalScore,
-          confidence: 0.7
-        };
-    }
-
-    return result;
-  }
-
-  /**
-   * Calculate feature importance
-   */
-  private calculateFeatureImportance(model: MLModel, features: Record<string, number>): Record<string, number> {
-    const importance: Record<string, number> = {};
-    const featureWeights = this.getFeatureWeights(model.algorithm);
-    
-    const totalImportance = Object.values(featureWeights).reduce((sum, weight) => sum + weight, 0);
-    
-    for (const feature of Object.keys(features)) {
-      importance[feature] = (featureWeights[feature] || 0.1) / totalImportance;
-    }
-
-    return importance;
-  }
-
-  /**
-   * Get feature weights based on algorithm
-   */
-  private getFeatureWeights(algorithm: string): Record<string, number> {
-    const weights: Record<string, Record<string, number>> = {
-      gradient_boosting: {
-        days_since_last_login: 0.25,
-        session_frequency: 0.20,
-        engagement_score: 0.20,
-        support_tickets: 0.15,
-        avg_session_duration: 0.10,
-        payment_delays: 0.10
-      },
-      logistic_regression: {
-        page_views: 0.20,
-        time_on_site: 0.18,
-        consultation_requests: 0.25,
-        demo_requests: 0.20,
-        pricing_page_views: 0.17
-      },
-      random_forest: {
-        company_size: 0.20,
-        budget_indicated: 0.25,
-        engagement_level: 0.20,
-        industry_match: 0.15,
-        urgency_score: 0.15,
-        fit_score: 0.05
-      },
-      neural_network: {
-        project_complexity: 0.20,
-        budget_adequacy: 0.25,
-        timeline_realism: 0.20,
-        team_capacity: 0.15,
-        client_experience: 0.15,
-        stakeholder_engagement: 0.05
-      },
-      xgboost: {
-        content_type: 0.15,
-        user_interests: 0.25,
-        previous_engagement: 0.30,
-        content_freshness: 0.15,
-        time_of_day: 0.10,
-        device_type: 0.05
-      }
-    };
-
-    return weights[algorithm] || {};
-  }
-
-  /**
-   * Generate explanation for prediction
-   */
-  private generateExplanation(request: PredictionRequest, prediction: any): string {
-    const { prediction_type } = request;
-    const confidence = prediction.confidence;
-    const featureImportance = prediction.featureImportance;
-    
-    // Get top contributing factors
-    const topFactors = Object.entries(featureImportance)
-      .sort(([, a], [, b]) => (b as number) - (a as number))
-      .slice(0, 3)
-      .map(([factor]) => factor.replace('_', ' '));
-
-    const explanations: Record<PredictionType, string> = {
-      churn_risk: `Based on user behavior patterns, this prediction considers ${topFactors.join(', ')} as key indicators. Confidence: ${Math.round(confidence * 100)}%`,
-      conversion_likelihood: `Analysis of engagement metrics including ${topFactors.join(', ')} suggests this conversion probability. Confidence: ${Math.round(confidence * 100)}%`,
-      lead_quality_score: `Quality assessment based on ${topFactors.join(', ')} and company profile matching. Confidence: ${Math.round(confidence * 100)}%`,
-      project_success_probability: `Success prediction considering ${topFactors.join(', ')} and project parameters. Confidence: ${Math.round(confidence * 100)}%`,
-      revenue_forecast: `Revenue projection based on ${topFactors.join(', ')} and historical trends. Confidence: ${Math.round(confidence * 100)}%`,
-      optimal_pricing: `Pricing recommendation considering ${topFactors.join(', ')} and market conditions. Confidence: ${Math.round(confidence * 100)}%`,
-      next_best_action: `Action recommendation based on ${topFactors.join(', ')} and user journey stage. Confidence: ${Math.round(confidence * 100)}%`,
-      engagement_prediction: `Engagement forecast considering ${topFactors.join(', ')} and content attributes. Confidence: ${Math.round(confidence * 100)}%`
-    };
-
-    return explanations[prediction_type] || `Prediction based on available data with ${Math.round(confidence * 100)}% confidence.`;
-  }
-
-  /**
-   * Additional utility methods
-   */
-  private normalizeFeature(value: any, type: string): number {
-    if (type === 'number') {
-      return typeof value === 'number' ? Math.max(0, Math.min(1, value)) : 0.5;
-    }
-    
-    if (type === 'string') {
-      // Convert string to numerical representation
-      return this.stringToNumber(value as string);
-    }
-    
-    return 0.5; // Default value
-  }
-
-  private stringToNumber(str: string): number {
-    if (!str) return 0;
-    
-    // Simple hash function to convert string to number between 0 and 1
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      const char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash; // Convert to 32-bit integer
-    }
-    return Math.abs(hash) % 100 / 100;
-  }
-
-  private getDefaultFeatureValue(featureName: string, predictionType: PredictionType): number {
-    // Default values based on feature type and context
-    const defaults: Record<string, number> = {
-      days_since_last_login: 7,
-      session_frequency: 0.3,
-      avg_session_duration: 0.5,
-      engagement_score: 0.5,
-      page_views: 5,
-      time_on_site: 300,
-      company_size: 0.3,
-      budget_indicated: 0.5,
-      project_complexity: 0.5,
-      timestamp_hour: new Date().getHours() / 24,
-      timestamp_day_of_week: new Date().getDay() / 7
-    };
-
-    return defaults[featureName] || 0.5;
-  }
-
-  private async getUserDerivedFeatures(userId: string): Promise<Record<string, number>> {
-    // This would typically query user behavior data
-    // For now, return mock derived features
-    return {
-      user_tenure_days: 30,
-      avg_session_per_week: 3,
-      total_interactions: 25,
-      conversion_history: 0.2
-    };
-  }
-
-  private hasMinimumData(predictionType: PredictionType): boolean {
-    const trainingData = this.trainingData.get(predictionType);
-    return (trainingData?.length || 0) >= this.config.minDataPointsForPrediction;
-  }
-
-  private shouldRetrain(model: MLModel): boolean {
-    if (!this.config.enableModelTraining) return false;
-    
-    const lastTrained = new Date(model.last_trained);
-    const now = new Date();
-    const hoursSinceTraining = (now.getTime() - lastTrained.getTime()) / (1000 * 60 * 60);
-    
-    return hoursSinceTraining >= this.config.modelRetrainingIntervalHours;
-  }
-
-  private async retrainModel(predictionType: PredictionType): Promise<MLModel> {
-    // This would implement actual model retraining
-    const model = this.models.get(predictionType)!;
-    const trainingData = this.trainingData.get(predictionType) || [];
-    
-    // Simulate training metrics improvement
-    const metrics = this.modelMetrics.get(predictionType) || {
-      accuracy: 0.75,
-      precision: 0.72,
-      recall: 0.78,
-      f1Score: 0.75,
-      lastTrained: new Date().toISOString(),
-      trainingDataSize: trainingData.length
-    };
-
-    // Simulate slight improvement
-    metrics.accuracy = Math.min(0.95, metrics.accuracy + 0.01);
-    metrics.precision = Math.min(0.95, metrics.precision + 0.01);
-    metrics.recall = Math.min(0.95, metrics.recall + 0.01);
-    metrics.f1Score = Math.min(0.95, metrics.f1Score + 0.01);
-    metrics.lastTrained = new Date().toISOString();
-    metrics.trainingDataSize = trainingData.length;
-
-    this.modelMetrics.set(predictionType, metrics);
-
-    // Update model
-    model.last_trained = new Date().toISOString();
-    model.training_data_size = trainingData.length;
-    model.accuracy_metrics = {
-      accuracy: metrics.accuracy,
-      precision: metrics.precision,
-      recall: metrics.recall,
-      f1_score: metrics.f1Score
-    };
-
-    console.log(`Model retrained for ${predictionType}:`, metrics);
-    return model;
-  }
-
-  private generateFallbackPrediction(request: PredictionRequest): PredictionResult {
-    return {
-      prediction_type: request.prediction_type,
-      predicted_value: 0.5,
-      confidence: 0.3,
-      feature_importance: {},
-      explanation: 'Insufficient data for accurate prediction. Using baseline estimate.',
-      model_version: '1.0.0',
-      created_at: new Date().toISOString()
-    };
-  }
-
-  private generateCacheKey(request: PredictionRequest): string {
-    const featureHash = JSON.stringify(request.features);
-    return `pred_${request.prediction_type}_${request.user_id}_${featureHash}`;
-  }
-
-  private getCachedPrediction(cacheKey: string): PredictionResult | null {
-    const cached = this.predictionCache.get(cacheKey);
-    if (!cached) return null;
-
-    const now = Date.now();
-    const expirationTime = this.config.predictionCacheExpirationMinutes * 60 * 1000;
-    
-    if (now - cached.timestamp > expirationTime) {
-      this.predictionCache.delete(cacheKey);
-      return null;
-    }
-
-    return cached.prediction;
-  }
-
-  private cachePrediction(cacheKey: string, prediction: PredictionResult): void {
-    this.predictionCache.set(cacheKey, {
-      prediction,
-      timestamp: Date.now()
-    });
-
-    // Cleanup old cache entries
-    if (this.predictionCache.size > 1000) {
-      const entries = Array.from(this.predictionCache.entries());
-      const oldestEntries = entries
-        .sort(([, a], [, b]) => a.timestamp - b.timestamp)
-        .slice(0, 100);
-      
-      oldestEntries.forEach(([key]) => this.predictionCache.delete(key));
-    }
-  }
-
-  private async logPrediction(request: PredictionRequest, result: PredictionResult): Promise<void> {
-    // This would typically log to analytics service
-    console.log('Prediction logged:', {
-      type: request.prediction_type,
-      userId: request.user_id,
-      prediction: result.predicted_value,
-      confidence: result.confidence,
-      timestamp: result.created_at
+  if (daysSinceActivity > 30) {
+    recommendedActions.push({
+      id: 'personal-outreach',
+      action: 'Schedule personal check-in call from account manager',
+      priority: 'high',
+      expectedImpact: 20,
+      automationAvailable: false,
     });
   }
 
-  /**
-   * Public methods for training and evaluation
-   */
-  async addTrainingData(predictionType: PredictionType, data: TrainingDataPoint[]): Promise<void> {
-    const existing = this.trainingData.get(predictionType) || [];
-    existing.push(...data);
+  if (recentTickets.length > 0) {
+    recommendedActions.push({
+      id: 'escalate-support',
+      action: 'Escalate unresolved tickets to senior support',
+      priority: 'high',
+      expectedImpact: 25,
+      automationAvailable: true,
+    });
+  }
+
+  // Predict churn date if high risk
+  let predictedChurnDate: Date | undefined;
+  if (riskScore > 50) {
+    const daysUntilChurn = Math.floor((100 - riskScore) * 3.6); // Rough estimate
+    predictedChurnDate = new Date(Date.now() + daysUntilChurn * 24 * 60 * 60 * 1000);
+  }
+
+  return {
+    customerId: customer.customerId,
+    riskScore,
+    riskLevel,
+    factors,
+    recommendedActions,
+    predictedChurnDate,
+    confidence: 0.75 + (factors.length * 0.05), // More factors = higher confidence
+  };
+}
+
+/**
+ * Recommend optimal course timing based on project progress and learning patterns
+ */
+export async function recommendCourseTiming(
+  customer: UnifiedCustomer,
+  courseId: string
+): Promise<CourseTiming> {
+  const reasoning: string[] = [];
+  let readinessScore = 50; // Base readiness
+
+  // 1. Check current project load
+  const activeProjects = customer.uniteServices.activeProjects.filter(
+    p => p.status === 'in-progress'
+  );
+  
+  if (activeProjects.length > 2) {
+    reasoning.push('Customer has multiple active projects - course should be delayed');
+    readinessScore -= 30;
+  } else if (activeProjects.length === 0) {
+    reasoning.push('No active projects - ideal time for course enrollment');
+    readinessScore += 20;
+  }
+
+  // 2. Analyze course completion patterns
+  const completedCourses = customer.carsiCourses.currentEnrollments.filter(
+    c => c.progress === 100
+  );
+  
+  if (completedCourses.length > 0) {
+    const avgCompletionTime = completedCourses.reduce((sum, c) => {
+      const duration = c.completedAt 
+        ? c.completedAt.getTime() - c.enrolledAt.getTime()
+        : 0;
+      return sum + duration;
+    }, 0) / completedCourses.length;
+
+    const avgDays = avgCompletionTime / (1000 * 60 * 60 * 24);
+    reasoning.push(`Average course completion time: ${Math.round(avgDays)} days`);
+    readinessScore += 15;
+  }
+
+  // 3. Check for related project completions
+  const relatedProjects = activeProjects.filter(p => {
+    // Logic to determine if project is related to course
+    return p.type === 'software' && courseId.includes('development');
+  });
+
+  if (relatedProjects.length > 0) {
+    const nearestCompletion = relatedProjects
+      .map(p => p.estimatedCompletion)
+      .sort((a, b) => a.getTime() - b.getTime())[0];
+
+    reasoning.push('Course timing aligned with related project completion');
+    readinessScore += 25;
     
-    // Keep only recent data (last 10000 points)
-    if (existing.length > 10000) {
-      existing.splice(0, existing.length - 10000);
+    // Set optimal start date after project completion
+    const optimalStartDate = new Date(nearestCompletion.getTime() + 7 * 24 * 60 * 60 * 1000);
+    
+    return {
+      customerId: customer.customerId,
+      courseId,
+      optimalStartDate,
+      reasoning,
+      readinessScore: Math.min(100, readinessScore),
+      completionProbability: calculateCompletionProbability(customer, readinessScore),
+    };
+  }
+
+  // 4. Default timing based on current load
+  const weeksDelay = activeProjects.length * 2;
+  const optimalStartDate = new Date(Date.now() + weeksDelay * 7 * 24 * 60 * 60 * 1000);
+
+  return {
+    customerId: customer.customerId,
+    courseId,
+    optimalStartDate,
+    reasoning,
+    readinessScore: Math.max(0, Math.min(100, readinessScore)),
+    completionProbability: calculateCompletionProbability(customer, readinessScore),
+  };
+}
+
+/**
+ * Generate dynamic bundle recommendations based on customer profile
+ */
+export async function generateDynamicBundle(customer: UnifiedCustomer): Promise<DynamicBundle> {
+  const services: BundleService[] = [];
+  let totalPrice = 0;
+
+  // 1. Analyze customer needs based on current projects
+  const projectTypes = new Set(customer.uniteServices.activeProjects.map(p => p.type));
+  
+  // Add Unite services based on gaps
+  if (!projectTypes.has('seo')) {
+    services.push({
+      serviceId: 'unite-seo-audit',
+      serviceName: 'Strategic SEO Audit & Implementation',
+      provider: 'unite',
+      price: 15000,
+      relevanceScore: calculateServiceRelevance(customer, 'seo'),
+    });
+    totalPrice += 15000;
+  }
+
+  if (!projectTypes.has('strategy')) {
+    services.push({
+      serviceId: 'unite-business-strategy',
+      serviceName: 'Business Strategy Consultation',
+      provider: 'unite',
+      price: 25000,
+      relevanceScore: calculateServiceRelevance(customer, 'strategy'),
+    });
+    totalPrice += 25000;
+  }
+
+  // 2. Add complementary CARSI courses
+  const enrolledCourseTypes = new Set(
+    customer.carsiCourses.currentEnrollments.map(c => c.courseType)
+  );
+
+  if (!enrolledCourseTypes.has('leadership')) {
+    services.push({
+      serviceId: 'carsi-leadership',
+      serviceName: 'Leadership Excellence Program',
+      provider: 'carsi',
+      price: 5000,
+      relevanceScore: 85,
+    });
+    totalPrice += 5000;
+  }
+
+  if (projectTypes.has('software') && !enrolledCourseTypes.has('development')) {
+    services.push({
+      serviceId: 'carsi-advanced-dev',
+      serviceName: 'Advanced Development Masterclass',
+      provider: 'carsi',
+      price: 3000,
+      relevanceScore: 92,
+    });
+    totalPrice += 3000;
+  }
+
+  // 3. Calculate dynamic discount based on bundle size and customer value
+  const bundleSize = services.length;
+  const customerLTV = customer.financialSummary.lifetimeValue;
+  
+  let discountPercentage = 10; // Base discount
+  if (bundleSize >= 4) discountPercentage += 5;
+  if (customerLTV > 50000) discountPercentage += 5;
+  if (customer.metadata.bundlePurchases > 0) discountPercentage += 3; // Loyalty bonus
+
+  const discount = Math.round(totalPrice * (discountPercentage / 100));
+  const finalPrice = totalPrice - discount;
+
+  // 4. Calculate personalization score
+  const avgRelevance = services.reduce((sum, s) => sum + s.relevanceScore, 0) / services.length;
+  const personalizationScore = Math.round(avgRelevance);
+
+  // 5. Estimate conversion probability
+  const conversionProbability = calculateBundleConversionProbability(
+    customer,
+    services,
+    discountPercentage
+  );
+
+  return {
+    id: `dynamic-bundle-${customer.customerId}-${Date.now()}`,
+    name: generateBundleName(services),
+    services,
+    totalPrice: finalPrice,
+    discount,
+    estimatedValue: totalPrice,
+    personalizationScore,
+    conversionProbability,
+  };
+}
+
+/**
+ * Calculate service relevance score for customer
+ */
+function calculateServiceRelevance(customer: UnifiedCustomer, serviceType: string): number {
+  let relevance = 50; // Base relevance
+
+  // Industry match
+  if (customer.basicInfo.company?.industry) {
+    // In production, would have industry-service mapping
+    relevance += 20;
+  }
+
+  // Company size match
+  if (customer.basicInfo.company?.size === 'enterprise' && serviceType === 'strategy') {
+    relevance += 15;
+  }
+
+  // Past success with similar services
+  const similarProjects = customer.uniteServices.projectHistory.filter(
+    p => p.type === serviceType && p.satisfactionScore !== undefined && p.satisfactionScore >= 4
+  );
+  
+  if (similarProjects.length > 0) {
+    relevance += 10;
+  }
+
+  // Identified needs from support tickets
+  const relatedTickets = customer.engagementAnalytics.supportTickets.filter(
+    t => t.category === serviceType
+  );
+  
+  if (relatedTickets.length > 0) {
+    relevance += 15;
+  }
+
+  return Math.min(100, relevance);
+}
+
+/**
+ * Calculate course completion probability
+ */
+function calculateCompletionProbability(customer: UnifiedCustomer, readinessScore: number): number {
+  const baseProb = 0.5;
+  
+  // Historical completion rate
+  const enrollments = customer.carsiCourses.currentEnrollments;
+  const completed = enrollments.filter(c => c.progress === 100).length;
+  const completionRate = enrollments.length > 0 ? completed / enrollments.length : 0.5;
+  
+  // Adjust based on readiness and history
+  const probability = baseProb + (readinessScore / 200) + (completionRate * 0.3);
+  
+  return Math.min(0.95, Math.max(0.1, probability));
+}
+
+/**
+ * Calculate bundle conversion probability
+ */
+function calculateBundleConversionProbability(
+  customer: UnifiedCustomer,
+  services: BundleService[],
+  discountPercentage: number
+): number {
+  let probability = 0.3; // Base probability
+
+  // Previous bundle purchases
+  if (customer.metadata.bundlePurchases > 0) {
+    probability += 0.2;
+  }
+
+  // High relevance score
+  const avgRelevance = services.reduce((sum, s) => sum + s.relevanceScore, 0) / services.length;
+  if (avgRelevance > 80) {
+    probability += 0.15;
+  }
+
+  // Good discount
+  if (discountPercentage >= 20) {
+    probability += 0.1;
+  }
+
+  // Customer engagement
+  if (customer.engagementAnalytics.engagementScore > 70) {
+    probability += 0.15;
+  }
+
+  // Budget availability (based on company size)
+  if (customer.basicInfo.company?.size === 'enterprise') {
+    probability += 0.1;
+  }
+
+  return Math.min(0.85, probability);
+}
+
+/**
+ * Generate bundle name based on services
+ */
+function generateBundleName(services: BundleService[]): string {
+  const hasUnite = services.some(s => s.provider === 'unite');
+  const hasCarsi = services.some(s => s.provider === 'carsi');
+  
+  if (hasUnite && hasCarsi) {
+    if (services.some(s => s.serviceName.includes('Strategy'))) {
+      return 'Executive Transformation Bundle';
     }
-    
-    this.trainingData.set(predictionType, existing);
+    if (services.some(s => s.serviceName.includes('Development'))) {
+      return 'Technical Excellence Bundle';
+    }
+    return 'Complete Business Growth Bundle';
   }
-
-  async evaluateModel(predictionType: PredictionType): Promise<ModelMetrics | null> {
-    return this.modelMetrics.get(predictionType) || null;
+  
+  if (hasUnite) {
+    return 'Unite Professional Services Bundle';
   }
+  
+  return 'CARSI Education Bundle';
+}
 
-  getModelStatus(): Record<PredictionType, { deployed: boolean; lastTrained: string; dataPoints: number }> {
-    const status: any = {};
+/**
+ * Analyze customer lifetime value trends
+ */
+export async function analyzeLTVTrends(customerId: string): Promise<{
+  currentLTV: number;
+  predictedLTV: number;
+  growthRate: number;
+  confidence: number;
+}> {
+  try {
+    const supabase = await createClient();
     
-    for (const [type, model] of this.models.entries()) {
-      const trainingData = this.trainingData.get(type) || [];
-      status[type] = {
-        deployed: model.deployment_status === 'deployed',
-        lastTrained: model.last_trained,
-        dataPoints: trainingData.length
+    // Get historical purchase data
+    const { data: purchases } = await supabase
+      .from('purchases')
+      .select('amount, created_at')
+      .eq('customer_id', customerId)
+      .order('created_at', { ascending: true });
+
+    if (!purchases || purchases.length === 0) {
+      return {
+        currentLTV: 0,
+        predictedLTV: 0,
+        growthRate: 0,
+        confidence: 0,
       };
     }
-    
-    return status;
-  }
 
-  async getAIMetrics(): Promise<AIMetrics> {
-    const allMetrics = Array.from(this.modelMetrics.values());
+    // Calculate current LTV
+    const currentLTV = purchases.reduce((sum, p) => sum + p.amount, 0);
+
+    // Calculate growth trend
+    const monthlySpend = purchases.reduce((acc, p) => {
+      const month = new Date(p.created_at).toISOString().substring(0, 7);
+      acc[month] = (acc[month] || 0) + p.amount;
+      return acc;
+    }, {} as Record<string, number>);
+
+    const months = Object.keys(monthlySpend).sort();
+    const recentMonths = months.slice(-6);
     
+    if (recentMonths.length < 2) {
+      return {
+        currentLTV,
+        predictedLTV: currentLTV * 1.1,
+        growthRate: 10,
+        confidence: 0.3,
+      };
+    }
+
+    // Calculate growth rate
+    const firstMonth = monthlySpend[recentMonths[0]];
+    const lastMonth = monthlySpend[recentMonths[recentMonths.length - 1]];
+    const monthlyGrowthRate = firstMonth > 0 
+      ? ((lastMonth - firstMonth) / firstMonth) / recentMonths.length 
+      : 0;
+
+    // Project future LTV (next 12 months)
+    const avgMonthlySpend = recentMonths.reduce((sum, m) => sum + monthlySpend[m], 0) / recentMonths.length;
+    const projectedAnnualSpend = avgMonthlySpend * 12 * (1 + monthlyGrowthRate * 12);
+    const predictedLTV = currentLTV + projectedAnnualSpend;
+
     return {
-      model_performance: {
-        accuracy: allMetrics.reduce((sum, m) => sum + m.accuracy, 0) / allMetrics.length || 0.75,
-        precision: allMetrics.reduce((sum, m) => sum + m.precision, 0) / allMetrics.length || 0.72,
-        recall: allMetrics.reduce((sum, m) => sum + m.recall, 0) / allMetrics.length || 0.78,
-        f1_score: allMetrics.reduce((sum, m) => sum + m.f1Score, 0) / allMetrics.length || 0.75
-      },
-      business_impact: {
-        conversion_lift: 0.15, // 15% improvement
-        engagement_improvement: 0.22, // 22% improvement
-        revenue_impact: 50000, // $50k additional revenue
-        cost_savings: 25000 // $25k cost savings
-      },
-      system_performance: {
-        response_time: 150, // 150ms average
-        throughput: 1000, // 1000 predictions/hour
-        error_rate: 0.02, // 2% error rate
-        uptime: 0.999 // 99.9% uptime
-      },
-      user_satisfaction: {
-        relevance_rating: 4.2, // 4.2/5 rating
-        click_through_rate: 0.08, // 8% CTR
-        time_to_value: 30, // 30 seconds
-        user_feedback_score: 4.1 // 4.1/5 feedback
-      }
+      currentLTV,
+      predictedLTV: Math.round(predictedLTV),
+      growthRate: Math.round(monthlyGrowthRate * 100),
+      confidence: Math.min(0.9, 0.5 + (purchases.length * 0.02)),
+    };
+  } catch (error) {
+    console.error('LTV analysis error:', error);
+    return {
+      currentLTV: 0,
+      predictedLTV: 0,
+      growthRate: 0,
+      confidence: 0,
     };
   }
 }
 
-// Export singleton instance
-let predictiveAnalyticsInstance: PredictiveAnalyticsEngine | null = null;
+/**
+ * Detect engagement drop patterns
+ */
+export async function detectEngagementDrop(customer: UnifiedCustomer): Promise<{
+  hasDropped: boolean;
+  dropPercentage: number;
+  peakEngagement: number;
+  currentEngagement: number;
+  recommendation: string;
+}> {
+  // Get engagement history (in production, would query from database)
+  const currentEngagement = customer.engagementAnalytics.engagementScore;
+  
+  // Simulate historical data
+  const peakEngagement = Math.max(currentEngagement * 1.5, 85);
+  const dropPercentage = peakEngagement > 0 
+    ? ((peakEngagement - currentEngagement) / peakEngagement) * 100 
+    : 0;
 
-export function getPredictiveAnalyticsEngine(config?: Partial<PredictiveAnalyticsConfig>): PredictiveAnalyticsEngine {
-  if (!predictiveAnalyticsInstance) {
-    predictiveAnalyticsInstance = new PredictiveAnalyticsEngine(config);
+  const hasDropped = dropPercentage > 30;
+
+  let recommendation = 'Maintain current engagement strategies';
+  
+  if (dropPercentage > 50) {
+    recommendation = 'Urgent: Launch immediate re-engagement campaign with personalized outreach';
+  } else if (dropPercentage > 30) {
+    recommendation = 'Schedule check-in call and offer exclusive benefits to re-engage';
+  } else if (dropPercentage > 15) {
+    recommendation = 'Send personalized content and course recommendations';
   }
-  return predictiveAnalyticsInstance;
+
+  return {
+    hasDropped,
+    dropPercentage: Math.round(dropPercentage),
+    peakEngagement,
+    currentEngagement,
+    recommendation,
+  };
 }
 
-export default PredictiveAnalyticsEngine;
+/**
+ * Identify cross-sell opportunities with AI scoring
+ */
+export async function identifyCrossSellOpportunities(customer: UnifiedCustomer): Promise<{
+  opportunities: Array<{
+    serviceId: string;
+    serviceName: string;
+    provider: 'unite' | 'carsi';
+    score: number;
+    reasoning: string[];
+    estimatedRevenue: number;
+  }>;
+  totalPotentialRevenue: number;
+}> {
+  const opportunities: Array<{
+    serviceId: string;
+    serviceName: string;
+    provider: 'unite' | 'carsi';
+    score: number;
+    reasoning: string[];
+    estimatedRevenue: number;
+  }> = [];
+  
+  // Analyze gaps in customer's service portfolio
+  const hasUniteSEO = customer.uniteServices.activeProjects.some(p => p.type === 'seo');
+  const hasCARSIMarketing = customer.carsiCourses.currentEnrollments.some(
+    c => c.courseName.toLowerCase().includes('marketing')
+  );
+
+  if (hasUniteSEO && !hasCARSIMarketing) {
+    opportunities.push({
+      serviceId: 'carsi-digital-marketing',
+      serviceName: 'Digital Marketing Certification',
+      provider: 'carsi' as const,
+      score: 85,
+      reasoning: [
+        'Customer has SEO project with Unite',
+        'No marketing education from CARSI',
+        'Natural progression from SEO to broader marketing',
+      ],
+      estimatedRevenue: 5000,
+    });
+  }
+
+  // Check for business strategy opportunities
+  const hasStrategy = customer.uniteServices.activeProjects.some(p => p.type === 'strategy');
+  const hasLeadership = customer.carsiCourses.currentEnrollments.some(
+    c => c.courseName.toLowerCase().includes('leadership')
+  );
+
+  if (!hasStrategy && hasLeadership) {
+    opportunities.push({
+      serviceId: 'unite-strategic-planning',
+      serviceName: 'Strategic Business Planning',
+      provider: 'unite' as const,
+      score: 78,
+      reasoning: [
+        'Customer enrolled in leadership training',
+        'No strategic planning services from Unite',
+        'Leadership training indicates executive-level interest',
+      ],
+      estimatedRevenue: 35000,
+    });
+  }
+
+  // Software development opportunities
+  const hasSoftwareProject = customer.uniteServices.activeProjects.some(p => p.type === 'software');
+  const hasDevTraining = customer.carsiCourses.currentEnrollments.some(
+    c => c.courseType === 'development'
+  );
+
+  if (hasSoftwareProject && !hasDevTraining) {
+    opportunities.push({
+      serviceId: 'carsi-dev-masterclass',
+      serviceName: 'Advanced Development Masterclass',
+      provider: 'carsi' as const,
+      score: 92,
+      reasoning: [
+        'Active software project with Unite',
+        'No development training from CARSI',
+        'Team upskilling would improve project outcomes',
+        'High correlation between project type and training need',
+      ],
+      estimatedRevenue: 8000,
+    });
+  }
+
+  const totalPotentialRevenue = opportunities.reduce((sum, opp) => sum + opp.estimatedRevenue, 0);
+
+  return {
+    opportunities: opportunities.sort((a, b) => b.score - a.score),
+    totalPotentialRevenue,
+  };
+}
