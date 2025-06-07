@@ -12,20 +12,34 @@ import { JsonLd } from '@/components/seo/SEOHead';
 import { generateServiceSchema } from '@/lib/seo/schema';
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: 'Expert Education & Training Services',
-  description: 'Transform your team with expert-led training. Corporate workshops, technical certifications, and custom learning programs designed for measurable skill advancement.',
-  keywords: ['corporate training', 'expert education', 'technical workshops', 'professional development', 'team training', 'Brisbane training'],
+  title: 'Expert Education & Training Services - Powered by CARSI',
+  description: 'Transform your team with expert-led training powered by CARSI. IICRC certifications, corporate workshops, technical training, and custom learning programs designed for measurable skill advancement.',
+  keywords: ['corporate training', 'expert education', 'IICRC certification', 'CARSI training', 'technical workshops', 'professional development', 'team training', 'Brisbane training'],
   url: 'https://unitegroup.com.au/services/expert-education',
 });
 
 export default function ExpertEducationPage() {
   const serviceSchema = generateServiceSchema({
-    name: 'Expert Education Services',
-    description: 'Professional training and education services including workshops, certifications, and custom learning programs',
+    name: 'Expert Education Services - Powered by CARSI',
+    description: 'Professional training and education services powered by CARSI. IICRC certifications, corporate workshops, and custom learning programs',
     serviceType: 'Educational Services',
   });
 
   const trainingPrograms = [
+    {
+      icon: <Award className="h-8 w-8" />,
+      title: 'IICRC Certifications',
+      description: 'Industry-leading restoration certifications through CARSI',
+      topics: [
+        'Water Damage Restoration (WRT)',
+        'Applied Structural Drying (ASD)',
+        'Fire & Smoke Restoration (FSRT)',
+        'Mold Remediation (AMRT)',
+        'Carpet Cleaning (CCT)',
+        'Odor Control (OCT)',
+      ],
+      featured: true,
+    },
     {
       icon: <Laptop className="h-8 w-8" />,
       title: 'Technical Training',
@@ -41,41 +55,28 @@ export default function ExpertEducationPage() {
     },
     {
       icon: <Briefcase className="h-8 w-8" />,
-      title: 'Business Skills',
-      description: 'Develop leadership and strategic thinking capabilities',
+      title: 'Corporate Programs',
+      description: 'Custom training solutions aligned with your business goals',
       topics: [
-        'Agile & Scrum Mastery',
-        'Project Management',
+        'Leadership Development',
+        'Change Management',
         'Digital Transformation',
-        'Data-Driven Decision Making',
-        'Innovation Management',
+        'Innovation Workshops',
+        'Team Performance',
         'Strategic Planning',
       ],
     },
     {
       icon: <Users className="h-8 w-8" />,
-      title: 'Team Workshops',
-      description: 'Collaborative sessions that transform team dynamics',
+      title: 'Industry Training',
+      description: 'Specialized programs for specific industry needs',
       topics: [
-        'Design Thinking Workshops',
-        'Team Building & Communication',
-        'Problem-Solving Bootcamps',
-        'Cross-functional Collaboration',
-        'Remote Team Excellence',
-        'Culture & Innovation Labs',
-      ],
-    },
-    {
-      icon: <Award className="h-8 w-8" />,
-      title: 'Certification Programs',
-      description: 'Industry-recognized certifications for career advancement',
-      topics: [
-        'AWS Certified Solutions Architect',
-        'Google Cloud Professional',
-        'Certified Scrum Master',
-        'PMP Preparation',
-        'Six Sigma Green Belt',
-        'ITIL Foundation',
+        'Construction Safety',
+        'Healthcare Compliance',
+        'Financial Services',
+        'Manufacturing Excellence',
+        'Retail Management',
+        'Hospitality Standards',
       ],
     },
   ];
@@ -168,24 +169,39 @@ export default function ExpertEducationPage() {
           <div className="absolute inset-0 bg-gradient-to-r from-teal-600/10 to-cyan-600/10" />
           <div className="relative container mx-auto px-4">
             <div className="max-w-4xl mx-auto text-center">
-              <Badge className="mb-4 bg-teal-600 text-white">Transform Your Team</Badge>
+              <Badge className="mb-4 bg-teal-600 text-white">Powered by CARSI</Badge>
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-                Expert Education & Training
+                Expert Education & Training Services
               </h1>
-              <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
-                Empower your team with world-class training. From technical skills to leadership 
-                development, we deliver transformative learning experiences that drive real results.
+              <p className="text-xl text-gray-600 dark:text-gray-300 mb-4">
+                Unite Group partners with CARSI to deliver world-class training and certifications. 
+                From IICRC restoration certifications to corporate leadership programs, we provide 
+                comprehensive education solutions that transform teams and drive business growth.
               </p>
+              <div className="flex items-center justify-center gap-4 mb-8">
+                <Badge variant="outline" className="text-sm">
+                  <Trophy className="h-4 w-4 mr-1" />
+                  IICRC Approved School
+                </Badge>
+                <Badge variant="outline" className="text-sm">
+                  <Award className="h-4 w-4 mr-1" />
+                  500+ Certifications Issued
+                </Badge>
+                <Badge variant="outline" className="text-sm">
+                  <Users className="h-4 w-4 mr-1" />
+                  10,000+ Professionals Trained
+                </Badge>
+              </div>
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Link href="/contact">
+                <Link href="https://carsi.au" target="_blank" rel="noopener noreferrer">
                   <Button size="lg" className="bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700">
-                    Design Your Program
+                    View Full CARSI Catalog
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
-                <Link href="#programs">
+                <Link href="/contact">
                   <Button size="lg" variant="outline">
-                    Explore Programs
+                    Design Custom Program
                   </Button>
                 </Link>
               </div>
@@ -228,8 +244,11 @@ export default function ExpertEducationPage() {
             <div className="grid md:grid-cols-2 gap-8">
               {trainingPrograms.map((program, index) => (
                 <div key={program.title}>
-                  <Card className="h-full hover:shadow-xl transition-shadow">
+                  <Card className={`h-full hover:shadow-xl transition-shadow ${program.featured ? 'border-2 border-teal-600' : ''}`}>
                     <CardHeader>
+                      {program.featured && (
+                        <Badge className="w-fit mb-2 bg-teal-600 text-white">Featured Partnership</Badge>
+                      )}
                       <div className="w-16 h-16 bg-gradient-to-br from-teal-600 to-cyan-600 rounded-lg flex items-center justify-center text-white mb-4">
                         {program.icon}
                       </div>
