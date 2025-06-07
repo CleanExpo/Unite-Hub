@@ -1,245 +1,522 @@
 import { Metadata } from 'next';
-import { Target, CheckCircle2, ArrowRight, TrendingUp, Lightbulb, Users, BarChart3 } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { 
+  Lightbulb, Target, TrendingUp, Users, BarChart3, Brain,
+  ArrowRight, CheckCircle, Rocket, Shield, LineChart, Briefcase
+} from 'lucide-react';
+import { motion } from 'framer-motion';
+import { generateMetadata as generateSEOMetadata } from '@/components/seo/SEOHead';
+import { JsonLd } from '@/components/seo/SEOHead';
+import { generateServiceSchema } from '@/lib/seo/schema';
 
-export const metadata: Metadata = {
-  title: 'Business Strategy | Unite Group',
-  description: 'Strategic consulting to help you navigate challenges, identify opportunities, and achieve sustainable growth.',
-};
+export const metadata: Metadata = generateSEOMetadata({
+  title: 'Business Strategy Consulting - Transform Your Vision',
+  description: 'Expert business strategy consulting to accelerate growth. Market analysis, competitive positioning, digital transformation, and strategic planning for sustainable success.',
+  keywords: ['business strategy', 'strategic consulting', 'business transformation', 'growth strategy', 'Brisbane consultants', 'digital transformation'],
+  url: 'https://unitegroup.com.au/services/business-strategy',
+});
 
 export default function BusinessStrategyPage() {
-  const features = [
-    'Market analysis',
-    'Competitive research',
-    'Growth strategy development',
-    'Performance optimization'
-  ];
+  const serviceSchema = generateServiceSchema({
+    name: 'Business Strategy Consulting',
+    description: 'Comprehensive business strategy services including market analysis, growth planning, and digital transformation',
+    serviceType: 'Management Consulting',
+  });
 
-  const benefits = [
+  const strategies = [
     {
-      icon: TrendingUp,
-      title: 'Sustainable Growth',
-      description: 'Develop strategies that drive long-term business success'
+      icon: <Lightbulb className="h-8 w-8" />,
+      title: 'Innovation Strategy',
+      description: 'Transform ideas into market-leading products and services',
+      outcomes: [
+        'Innovation framework development',
+        'R&D process optimization',
+        'Product-market fit analysis',
+        'Technology roadmapping',
+        'Innovation culture building',
+      ],
     },
     {
-      icon: Lightbulb,
-      title: 'Innovation Focus',
-      description: 'Identify opportunities for innovation and market leadership'
+      icon: <Target className="h-8 w-8" />,
+      title: 'Market Expansion',
+      description: 'Identify and capture new market opportunities for growth',
+      outcomes: [
+        'Market entry strategies',
+        'Geographic expansion planning',
+        'Channel development',
+        'Partnership strategies',
+        'International growth plans',
+      ],
     },
     {
-      icon: Users,
-      title: 'Team Alignment',
-      description: 'Align your organization around clear strategic objectives'
-    },
-    {
-      icon: BarChart3,
-      title: 'Data-Driven Decisions',
-      description: 'Make informed decisions based on comprehensive analysis'
-    }
-  ];
-
-  const services = [
-    {
-      title: 'Strategic Planning',
-      description: 'Comprehensive strategic planning to define your vision, mission, and roadmap for success.',
-      features: ['Vision & Mission Development', 'Strategic Roadmapping', 'Goal Setting & KPIs', 'Resource Planning'],
-      timeframe: '4-6 weeks'
-    },
-    {
-      title: 'Market Analysis',
-      description: 'In-depth analysis of your market, competitors, and opportunities for growth.',
-      features: ['Market Research', 'Competitive Analysis', 'Customer Segmentation', 'Trend Analysis'],
-      timeframe: '2-3 weeks'
-    },
-    {
+      icon: <TrendingUp className="h-8 w-8" />,
       title: 'Digital Transformation',
-      description: 'Guide your organization through digital transformation initiatives and technology adoption.',
-      features: ['Technology Assessment', 'Digital Strategy', 'Change Management', 'Implementation Planning'],
-      timeframe: '6-8 weeks'
+      description: 'Leverage technology to revolutionize your business model',
+      outcomes: [
+        'Digital maturity assessment',
+        'Technology stack planning',
+        'Process digitization',
+        'Data strategy development',
+        'Change management',
+      ],
     },
     {
-      title: 'Performance Optimization',
-      description: 'Optimize your business processes and operations for maximum efficiency and profitability.',
-      features: ['Process Analysis', 'Efficiency Improvements', 'Cost Optimization', 'Quality Enhancement'],
-      timeframe: '3-4 weeks'
-    }
+      icon: <Users className="h-8 w-8" />,
+      title: 'Organizational Excellence',
+      description: 'Build high-performing teams and scalable operations',
+      outcomes: [
+        'Organizational design',
+        'Leadership development',
+        'Performance frameworks',
+        'Culture transformation',
+        'Talent strategy',
+      ],
+    },
   ];
 
-  const industries = [
-    'Technology & Software',
-    'Healthcare & Life Sciences',
-    'Financial Services',
-    'Retail & E-commerce',
-    'Manufacturing',
-    'Professional Services'
+  const frameworks = {
+    analysis: [
+      'SWOT Analysis',
+      'Porter\'s Five Forces',
+      'Value Chain Analysis',
+      'PESTLE Analysis',
+      'BCG Matrix',
+    ],
+    planning: [
+      'OKR Framework',
+      'Balanced Scorecard',
+      'Blue Ocean Strategy',
+      'Scenario Planning',
+      'Strategic Roadmapping',
+    ],
+    execution: [
+      'Agile Transformation',
+      'Change Management',
+      'KPI Development',
+      'Risk Management',
+      'Performance Tracking',
+    ],
+  };
+
+  const engagementModels = [
+    {
+      name: 'Strategic Sprint',
+      duration: '2-4 weeks',
+      price: '$15,000',
+      description: 'Rapid strategy development for specific challenges',
+      features: [
+        'Focused problem-solving',
+        'Quick market analysis',
+        'Action plan development',
+        'Executive workshop',
+        'Implementation roadmap',
+      ],
+      ideal: 'Urgent strategic decisions',
+    },
+    {
+      name: 'Transformation Program',
+      duration: '3-6 months',
+      price: '$50,000',
+      description: 'Comprehensive business transformation initiative',
+      features: [
+        'Full strategic assessment',
+        'Multi-phase planning',
+        'Change management',
+        'Team enablement',
+        'Progress monitoring',
+        'Executive coaching',
+      ],
+      ideal: 'Major business pivots',
+      recommended: true,
+    },
+    {
+      name: 'Strategic Partnership',
+      duration: '12+ months',
+      price: 'Custom',
+      description: 'Ongoing strategic advisory and implementation support',
+      features: [
+        'Dedicated strategy team',
+        'Quarterly planning cycles',
+        'Board advisory services',
+        'Continuous optimization',
+        'Market intelligence',
+        'C-suite mentoring',
+      ],
+      ideal: 'Long-term growth ambitions',
+    },
+  ];
+
+  const caseStudyResults = [
+    { metric: 'Revenue Growth', value: '234%', description: 'Average 3-year growth' },
+    { metric: 'Market Share', value: '+18%', description: 'Competitive gain' },
+    { metric: 'Operational Efficiency', value: '47%', description: 'Cost reduction' },
+    { metric: 'Time to Market', value: '-65%', description: 'Speed improvement' },
   ];
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white py-24">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex p-4 rounded-full bg-orange-500 text-white mb-6">
-              <Target className="w-8 h-8" />
-            </div>
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              Business Strategy
-            </h1>
-            <p className="text-xl md:text-2xl text-slate-300 mb-8 leading-relaxed">
-              Strategic consulting to help you navigate challenges, identify opportunities, and achieve sustainable growth.
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center mb-8">
-              <Badge className="bg-orange-500 text-white px-4 py-2 text-sm">
-                Strategic Planning
-              </Badge>
-              <Badge className="bg-blue-500 text-white px-4 py-2 text-sm">
-                Market Analysis
-              </Badge>
-              <Badge className="bg-green-500 text-white px-4 py-2 text-sm">
-                Growth Strategy
-              </Badge>
-            </div>
-            <Button size="lg" className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 text-lg">
-              Start Strategic Planning
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-slate-900">
-              Strategic Consulting Services
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {features.map((feature, index) => (
-                <div key={index} className="flex items-center p-6 bg-white rounded-lg shadow-sm">
-                  <CheckCircle2 className="w-6 h-6 text-orange-500 mr-4 flex-shrink-0" />
-                  <span className="text-lg text-slate-700">{feature}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Benefits Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-slate-900">
-              Strategic Advantages
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {benefits.map((benefit, index) => (
-                <Card key={index} className="text-center hover:shadow-lg transition-shadow">
-                  <CardHeader>
-                    <div className="mx-auto p-3 rounded-full bg-orange-100 text-orange-500 w-fit">
-                      <benefit.icon className="w-8 h-8" />
-                    </div>
-                    <CardTitle className="text-xl">{benefit.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-slate-600">
-                      {benefit.description}
-                    </CardDescription>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Services Section */}
-      <section className="py-20 bg-slate-900 text-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-              Strategy Services
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {services.map((service, index) => (
-                <Card key={index} className="bg-white text-slate-900">
-                  <CardHeader>
-                    <div className="flex justify-between items-start mb-2">
-                      <CardTitle className="text-2xl text-orange-500">{service.title}</CardTitle>
-                      <Badge variant="outline">{service.timeframe}</Badge>
-                    </div>
-                    <CardDescription className="text-slate-600 text-base">
-                      {service.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-2 mb-4">
-                      {service.features.map((feature, featureIndex) => (
-                        <li key={featureIndex} className="flex items-center">
-                          <CheckCircle2 className="w-4 h-4 text-green-500 mr-2" />
-                          <span className="text-slate-700">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white">
-                      Learn More
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Industries Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-12 text-slate-900">
-              Industries We Serve
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {industries.map((industry, index) => (
-                <div key={index} className="p-6 bg-white rounded-lg shadow-sm border-l-4 border-orange-500">
-                  <h3 className="font-semibold text-lg text-slate-900">{industry}</h3>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-orange-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-slate-900">
-              Ready to Transform Your Business?
-            </h2>
-            <p className="text-xl text-slate-600 mb-8">
-              Let&apos;s develop a strategic plan that positions your business for sustainable growth and success.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4">
-                Schedule Strategy Session
-                <Target className="ml-2 w-5 h-5" />
-              </Button>
-              <Button size="lg" variant="outline" className="px-8 py-4" asChild>
-                <Link href="/contact">
-                  Contact Our Team
-                  <ArrowRight className="ml-2 w-5 h-5" />
+    <>
+      <JsonLd data={serviceSchema} />
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+        {/* Hero Section */}
+        <section className="relative py-20 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/10 to-purple-600/10" />
+          <div className="relative container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="max-w-4xl mx-auto text-center"
+            >
+              <Badge className="mb-4 bg-indigo-600 text-white">Strategic Excellence</Badge>
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+                Business Strategy Consulting
+              </h1>
+              <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
+                Transform your vision into reality with data-driven strategies. We help ambitious 
+                companies navigate complexity, seize opportunities, and achieve sustainable growth.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Link href="/book-consultation">
+                  <Button size="lg" className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700">
+                    Schedule Strategy Session
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
                 </Link>
-              </Button>
+                <Link href="#frameworks">
+                  <Button size="lg" variant="outline">
+                    Explore Our Approach
+                  </Button>
+                </Link>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Results Showcase */}
+        <section className="py-16 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              {caseStudyResults.map((result, index) => (
+                <motion.div
+                  key={result.metric}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="text-center"
+                >
+                  <div className="text-3xl md:text-4xl font-bold text-indigo-600 dark:text-indigo-400 mb-2">
+                    {result.value}
+                  </div>
+                  <div className="font-semibold text-gray-900 dark:text-white">{result.metric}</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">{result.description}</div>
+                </motion.div>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
-    </div>
+        </section>
+
+        {/* Strategy Services */}
+        <section className="py-20">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-12"
+            >
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                Strategic Solutions
+              </h2>
+              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                Comprehensive strategies tailored to your unique challenges and opportunities
+              </p>
+            </motion.div>
+
+            <div className="grid md:grid-cols-2 gap-8">
+              {strategies.map((strategy, index) => (
+                <motion.div
+                  key={strategy.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                >
+                  <Card className="h-full hover:shadow-xl transition-shadow">
+                    <CardHeader>
+                      <div className="w-16 h-16 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center text-white mb-4">
+                        {strategy.icon}
+                      </div>
+                      <CardTitle className="text-2xl">{strategy.title}</CardTitle>
+                      <CardDescription className="text-base">
+                        {strategy.description}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="space-y-2">
+                        {strategy.outcomes.map((outcome) => (
+                          <li key={outcome} className="flex items-start gap-2">
+                            <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                            <span className="text-gray-700 dark:text-gray-300">{outcome}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Frameworks */}
+        <section id="frameworks" className="py-20 bg-gray-50 dark:bg-slate-900">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-12"
+            >
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                Proven Methodologies
+              </h2>
+              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                World-class frameworks adapted to your specific context
+              </p>
+            </motion.div>
+
+            <Tabs defaultValue="analysis" className="max-w-4xl mx-auto">
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="analysis">Analysis</TabsTrigger>
+                <TabsTrigger value="planning">Planning</TabsTrigger>
+                <TabsTrigger value="execution">Execution</TabsTrigger>
+              </TabsList>
+
+              {Object.entries(frameworks).map(([category, items]) => (
+                <TabsContent key={category} value={category} className="mt-8">
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {items.map((framework, index) => (
+                      <motion.div
+                        key={framework}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.4, delay: index * 0.1 }}
+                        className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                      >
+                        <div className="flex items-center gap-3">
+                          <Brain className="h-6 w-6 text-indigo-600" />
+                          <span className="font-medium text-gray-900 dark:text-white">
+                            {framework}
+                          </span>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </TabsContent>
+              ))}
+            </Tabs>
+          </div>
+        </section>
+
+        {/* Engagement Models */}
+        <section className="py-20">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-12"
+            >
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                Engagement Models
+              </h2>
+              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                Flexible engagement options to match your needs and timeline
+              </p>
+            </motion.div>
+
+            <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+              {engagementModels.map((model, index) => (
+                <motion.div
+                  key={model.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className={`relative ${model.recommended ? 'md:-mt-4' : ''}`}
+                >
+                  {model.recommended && (
+                    <div className="absolute -top-4 left-0 right-0 flex justify-center">
+                      <Badge className="bg-indigo-600 text-white">Most Popular</Badge>
+                    </div>
+                  )}
+                  <Card className={`h-full ${model.recommended ? 'border-indigo-600 shadow-xl' : ''}`}>
+                    <CardHeader>
+                      <CardTitle className="text-2xl">{model.name}</CardTitle>
+                      <div className="flex items-baseline gap-2 mt-4">
+                        <span className="text-4xl font-bold text-gray-900 dark:text-white">
+                          {model.price}
+                        </span>
+                        {model.price !== 'Custom' && (
+                          <span className="text-gray-600 dark:text-gray-400">starting</span>
+                        )}
+                      </div>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                        {model.duration}
+                      </p>
+                      <CardDescription className="mt-4">
+                        {model.description}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="space-y-3 mb-6">
+                        {model.features.map((feature) => (
+                          <li key={feature} className="flex items-start gap-2">
+                            <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                            <span className="text-gray-700 dark:text-gray-300 text-sm">{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <div className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                        <strong>Ideal for:</strong> {model.ideal}
+                      </div>
+                      <Button 
+                        className={`w-full ${
+                          model.recommended 
+                            ? 'bg-indigo-600 hover:bg-indigo-700' 
+                            : ''
+                        }`}
+                        variant={model.recommended ? 'default' : 'outline'}
+                      >
+                        Learn More
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Why Choose Us */}
+        <section className="py-20 bg-gray-50 dark:bg-slate-900">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-12"
+            >
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                The Unite Group Advantage
+              </h2>
+              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                What sets our strategic consulting apart
+              </p>
+            </motion.div>
+
+            <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="text-center"
+              >
+                <div className="w-16 h-16 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <BarChart3 className="h-8 w-8 text-indigo-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                  Data-Driven Insights
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400">
+                  Every recommendation backed by rigorous analysis and market data
+                </p>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="text-center"
+              >
+                <div className="w-16 h-16 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Rocket className="h-8 w-8 text-purple-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                  Implementation Focus
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400">
+                  Practical strategies designed for real-world execution and results
+                </p>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="text-center"
+              >
+                <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Shield className="h-8 w-8 text-green-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                  Risk Mitigation
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400">
+                  Comprehensive scenario planning to navigate uncertainty
+                </p>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="py-20 bg-gradient-to-r from-indigo-600 to-purple-600">
+          <div className="container mx-auto px-4 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                Ready to Transform Your Business?
+              </h2>
+              <p className="text-xl text-indigo-100 mb-8 max-w-2xl mx-auto">
+                Let&apos;s create a strategy that turns your vision into measurable success
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Link href="/book-consultation">
+                  <Button size="lg" className="bg-white text-indigo-600 hover:bg-gray-100">
+                    <Briefcase className="mr-2 h-5 w-5" />
+                    Book Strategy Session
+                  </Button>
+                </Link>
+                <Link href="/case-studies">
+                  <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-indigo-600">
+                    View Success Stories
+                  </Button>
+                </Link>
+              </div>
+              <p className="mt-8 text-sm text-indigo-100">
+                🎯 Custom strategies • 📊 Data-driven approach • 🚀 Proven results
+              </p>
+            </motion.div>
+          </div>
+        </section>
+      </div>
+    </>
   );
 }

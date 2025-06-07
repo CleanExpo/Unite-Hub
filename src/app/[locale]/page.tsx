@@ -2,6 +2,9 @@ import { HeroSection } from '@/components/landing/HeroSection';
 import { InteractiveSolutions } from '@/components/landing/InteractiveSolutions';
 import Testimonials from '@/components/landing/Testimonials';
 import FeatureShowcase from '@/components/landing/FeatureShowcase';
+import { ClientLogosCarousel } from '@/components/landing/ClientLogosCarousel';
+import { SuccessMetricsCounter } from '@/components/landing/SuccessMetricsCounter';
+import { TrustBadges } from '@/components/landing/TrustBadges';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,6 +16,15 @@ export default function HomePage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       {/* Enhanced Hero Section */}
       <HeroSection />
+
+      {/* Client Logos - Trust Signals */}
+      <ClientLogosCarousel />
+
+      {/* Success Metrics Counter */}
+      <SuccessMetricsCounter />
+
+      {/* Trust Badges - Security & Partners */}
+      <TrustBadges />
 
       {/* Key Benefits */}
       <section className="container mx-auto px-4 py-16">

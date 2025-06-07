@@ -1,331 +1,288 @@
-'use client'
+import { Metadata } from "next";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { BlogCard } from "@/components/blog/BlogCard";
+import { NewsletterSubscribe } from "@/components/blog/NewsletterSubscribe";
+import { motion } from "framer-motion";
+import { 
+  Search, 
+  Filter, 
+  BookOpen, 
+  TrendingUp,
+  Calendar,
+  Eye,
+  ChevronRight
+} from "lucide-react";
+import {
+  getBlogPosts,
+  getBlogCategories,
+  getBlogTags,
+  getFeaturedPosts,
+  getPopularPosts
+} from "@/lib/services/blog";
 
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import Link from 'next/link'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Calendar, Clock, User, ArrowRight, Search } from 'lucide-react'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
+export const metadata: Metadata = {
+  title: "Blog & Resources | Unite Group - Business Insights",
+  description: "Explore our latest articles on business strategy, technology, SEO, and digital transformation. Get insights from industry experts.",
+};
 
-const blogPosts = [
-  {
-    id: 1,
-    title: 'The Future of AI in Enterprise Software',
-    excerpt: 'Discover how artificial intelligence is revolutionizing enterprise software development and what it means for your business.',
-    author: 'Dr. Sarah Chen',
-    authorRole: 'Chief AI Officer',
-    date: '2025-01-05',
-    readTime: '8 min read',
-    category: 'AI & Technology',
-    featured: true,
-    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=400&fit=crop'
-  },
-  {
-    id: 2,
-    title: 'Building Scalable Cloud Infrastructure: A Complete Guide',
-    excerpt: 'Learn the best practices for designing and implementing cloud infrastructure that scales with your business needs.',
-    author: 'Michael Rodriguez',
-    authorRole: 'VP of Engineering',
-    date: '2025-01-03',
-    readTime: '12 min read',
-    category: 'Cloud Computing',
-    featured: false,
-    image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=400&fit=crop'
-  },
-  {
-    id: 3,
-    title: 'CRM Implementation Success Stories',
-    excerpt: 'Real-world examples of how companies transformed their customer relationships with our CRM solution.',
-    author: 'Emma Wilson',
-    authorRole: 'Customer Success Manager',
-    date: '2024-12-28',
-    readTime: '6 min read',
-    category: 'Case Studies',
-    featured: false,
-    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=400&fit=crop'
-  },
-  {
-    id: 4,
-    title: 'Security Best Practices for SaaS Applications',
-    excerpt: 'Essential security measures every SaaS platform should implement to protect user data and maintain compliance.',
-    author: 'James Thompson',
-    authorRole: 'Security Architect',
-    date: '2024-12-25',
-    readTime: '10 min read',
-    category: 'Security',
-    featured: false,
-    image: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&h=400&fit=crop'
-  },
-  {
-    id: 5,
-    title: 'Maximizing ROI with Process Automation',
-    excerpt: 'How intelligent automation can streamline your operations and deliver measurable business value.',
-    author: 'Lisa Zhang',
-    authorRole: 'Head of Innovation',
-    date: '2024-12-20',
-    readTime: '7 min read',
-    category: 'Business Strategy',
-    featured: false,
-    image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&h=400&fit=crop'
-  },
-  {
-    id: 6,
-    title: 'The Rise of No-Code Solutions in Enterprise',
-    excerpt: 'Exploring how no-code platforms are democratizing software development and empowering business users.',
-    author: 'David Park',
-    authorRole: 'Product Manager',
-    date: '2024-12-15',
-    readTime: '9 min read',
-    category: 'Technology Trends',
-    featured: false,
-    image: 'https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?w=800&h=400&fit=crop'
-  }
-]
+export default async function BlogPage({
+  searchParams
+}: {
+  searchParams: { category?: string; tag?: string; search?: string; page?: string }
+}) {
+  const currentPage = parseInt(searchParams.page || '1');
+  const postsPerPage = 9;
 
-const categories = [
-  'All Posts',
-  'AI & Technology',
-  'Cloud Computing',
-  'Case Studies',
-  'Security',
-  'Business Strategy',
-  'Technology Trends'
-]
+  // Fetch data
+  const [posts, categories, tags, featuredPosts, popularPosts] = await Promise.all([
+    getBlogPosts({
+      category: searchParams.category,
+      tag: searchParams.tag,
+      search: searchParams.search,
+      limit: postsPerPage,
+      offset: (currentPage - 1) * postsPerPage
+    }),
+    getBlogCategories(),
+    getBlogTags(),
+    getFeaturedPosts(3),
+    getPopularPosts(5)
+  ]);
 
-export default function BlogPage() {
-  const [searchTerm, setSearchTerm] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('All Posts')
-  const [newsletterEmail, setNewsletterEmail] = useState('')
-  const [subscribing, setSubscribing] = useState(false)
-  const [subscribeMessage, setSubscribeMessage] = useState('')
-
-  const handleNewsletterSubscribe = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    if (!newsletterEmail) return
-    
-    setSubscribing(true)
-    setSubscribeMessage('')
-    
-    try {
-      const response = await fetch('/api/newsletter/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: newsletterEmail })
-      })
-      
-      const data = await response.json()
-      
-      if (response.ok) {
-        setSubscribeMessage('Thank you for subscribing!')
-        setNewsletterEmail('')
-      } else {
-        setSubscribeMessage(data.error || 'Something went wrong. Please try again.')
-      }
-    } catch (error) {
-      setSubscribeMessage('Failed to subscribe. Please try again.')
-    } finally {
-      setSubscribing(false)
-    }
-  }
-
-  const filteredPosts = blogPosts.filter(post => {
-    const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         post.excerpt.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesCategory = selectedCategory === 'All Posts' || post.category === selectedCategory
-    return matchesSearch && matchesCategory
-  })
-
-  const featuredPost = blogPosts.find(post => post.featured)
+  const totalPosts = posts.length; // In a real app, you'd get total count from DB
+  const totalPages = Math.ceil(totalPosts / postsPerPage);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
-          <h1 className="text-5xl font-bold text-gray-900 mb-4">
-            Unite Group Blog
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Insights, updates, and expert perspectives on technology, business transformation, and industry trends.
-          </p>
-        </motion.div>
-
-        {/* Search and Filter */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="mb-12"
-        >
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-              <Input
-                type="text"
-                placeholder="Search articles..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-          </div>
-
-          <div className="flex flex-wrap gap-2">
-            {categories.map((category) => (
-              <Badge
-                key={category}
-                variant={selectedCategory === category ? 'default' : 'secondary'}
-                className="cursor-pointer"
-                onClick={() => setSelectedCategory(category)}
-              >
-                {category}
-              </Badge>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Featured Post */}
-        {featuredPost && selectedCategory === 'All Posts' && (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+      {/* Hero Section */}
+      <section className="relative py-20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-teal-600/20 to-cyan-600/20 animate-pulse" />
+        <div className="relative max-w-7xl mx-auto px-4 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="mb-12"
+            transition={{ duration: 0.6 }}
           >
-            <Card className="overflow-hidden hover:shadow-xl transition-shadow duration-300">
-              <div className="grid md:grid-cols-2 gap-0">
-                <div className="h-64 md:h-full">
-                  <img
-                    src={featuredPost.image}
-                    alt={featuredPost.title}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <CardContent className="p-8 flex flex-col justify-center">
-                  <Badge className="w-fit mb-4">Featured</Badge>
-                  <h2 className="text-3xl font-bold mb-4">{featuredPost.title}</h2>
-                  <p className="text-gray-600 mb-6">{featuredPost.excerpt}</p>
-                  
-                  <div className="flex items-center gap-4 text-sm text-gray-500 mb-6">
-                    <div className="flex items-center gap-1">
-                      <User className="h-4 w-4" />
-                      <span>{featuredPost.author}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-4 w-4" />
-                      <span>{new Date(featuredPost.date).toLocaleDateString()}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="h-4 w-4" />
-                      <span>{featuredPost.readTime}</span>
-                    </div>
-                  </div>
-
-                  <Link href={`/blog/${featuredPost.id}`}>
-                    <Button>
-                      Read Article
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </Link>
-                </CardContent>
-              </div>
-            </Card>
-          </motion.div>
-        )}
-
-        {/* Blog Posts Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredPosts
-            .filter(post => !post.featured || selectedCategory !== 'All Posts')
-            .map((post, index) => (
-            <motion.div
-              key={post.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 * index }}
-            >
-              <Card className="h-full hover:shadow-lg transition-shadow duration-300 overflow-hidden">
-                <div className="h-48 overflow-hidden">
-                  <img
-                    src={post.image}
-                    alt={post.title}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                
-                <CardHeader>
-                  <Badge variant="secondary" className="w-fit mb-2">
-                    {post.category}
-                  </Badge>
-                  <CardTitle className="line-clamp-2">{post.title}</CardTitle>
-                  <CardDescription className="line-clamp-3">
-                    {post.excerpt}
-                  </CardDescription>
-                </CardHeader>
-
-                <CardContent>
-                  <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
-                    <div className="flex items-center gap-1">
-                      <User className="h-4 w-4" />
-                      <span>{post.author}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="h-4 w-4" />
-                      <span>{post.readTime}</span>
-                    </div>
-                  </div>
-
-                  <Link href={`/blog/${post.id}`}>
-                    <Button variant="ghost" className="p-0 h-auto text-blue-600 hover:text-blue-700">
-                      Read More
-                      <ArrowRight className="ml-1 h-4 w-4" />
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Newsletter CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-16 bg-blue-50 rounded-2xl p-12 text-center"
-        >
-          <h2 className="text-3xl font-bold mb-4">Stay Updated</h2>
-          <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-            Subscribe to our newsletter and never miss our latest insights, product updates, and industry news.
-          </p>
-          <form onSubmit={handleNewsletterSubscribe} className="max-w-md mx-auto flex gap-2">
-            <Input
-              type="email"
-              placeholder="Enter your email"
-              value={newsletterEmail}
-              onChange={(e) => setNewsletterEmail(e.target.value)}
-              className="flex-1"
-              disabled={subscribing}
-            />
-            <Button type="submit" disabled={subscribing || !newsletterEmail}>
-              {subscribing ? 'Subscribing...' : 'Subscribe'}
-            </Button>
-          </form>
-          {subscribeMessage && (
-            <p className={`mt-4 text-sm ${subscribeMessage.includes('Thank you') ? 'text-green-600' : 'text-red-600'}`}>
-              {subscribeMessage}
+            <div className="inline-flex p-3 bg-gradient-to-br from-teal-600 to-cyan-600 rounded-full mb-6">
+              <BookOpen className="h-8 w-8 text-white" />
+            </div>
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
+              Blog & Resources
+            </h1>
+            <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-8">
+              Insights, tutorials, and strategies to help you grow your business 
+              and stay ahead of the competition
             </p>
-          )}
-        </motion.div>
-      </div>
+
+            {/* Search Bar */}
+            <div className="max-w-2xl mx-auto">
+              <form action="/blog" method="get" className="flex gap-2">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
+                  <Input
+                    name="search"
+                    type="search"
+                    placeholder="Search articles..."
+                    defaultValue={searchParams.search}
+                    className="pl-10 bg-slate-800 border-slate-700 text-white placeholder:text-slate-400 h-12"
+                  />
+                </div>
+                <Button type="submit" className="bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-500 hover:to-cyan-500 h-12">
+                  Search
+                </Button>
+              </form>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Categories Filter */}
+      <section className="py-8 bg-slate-800/50">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex items-center gap-4 overflow-x-auto pb-2">
+            <Link href="/blog">
+              <Badge 
+                variant={!searchParams.category ? "default" : "secondary"}
+                className="whitespace-nowrap cursor-pointer hover:bg-teal-600 hover:text-white transition-colors"
+              >
+                All Posts
+              </Badge>
+            </Link>
+            {categories.map((category) => (
+              <Link key={category.id} href={`/blog?category=${category.slug}`}>
+                <Badge
+                  variant={searchParams.category === category.slug ? "default" : "secondary"}
+                  className="whitespace-nowrap cursor-pointer hover:bg-teal-600 hover:text-white transition-colors"
+                  style={searchParams.category === category.slug ? { backgroundColor: category.color } : {}}
+                >
+                  {category.name}
+                </Badge>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Main Content */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid lg:grid-cols-3 gap-12">
+            {/* Blog Posts */}
+            <div className="lg:col-span-2">
+              {/* Featured Posts */}
+              {currentPage === 1 && !searchParams.category && !searchParams.tag && !searchParams.search && featuredPosts.length > 0 && (
+                <div className="mb-12">
+                  <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+                    <TrendingUp className="h-6 w-6 text-teal-400" />
+                    Featured Articles
+                  </h2>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {featuredPosts.map((post) => (
+                      <BlogCard key={post.id} post={post} featured />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Regular Posts */}
+              <div>
+                <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+                  <Calendar className="h-6 w-6 text-teal-400" />
+                  {searchParams.category ? `${categories.find(c => c.slug === searchParams.category)?.name} Articles` : 'Latest Articles'}
+                </h2>
+                
+                {posts.length > 0 ? (
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {posts.map((post, index) => (
+                      <motion.div
+                        key={post.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.4, delay: index * 0.1 }}
+                      >
+                        <BlogCard post={post} />
+                      </motion.div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <p className="text-slate-400 text-lg">No articles found.</p>
+                    <Button asChild className="mt-4">
+                      <Link href="/blog">View All Articles</Link>
+                    </Button>
+                  </div>
+                )}
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="mt-12 flex justify-center gap-2">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                      <Link
+                        key={page}
+                        href={`/blog?${new URLSearchParams({
+                          ...searchParams,
+                          page: page.toString()
+                        }).toString()}`}
+                      >
+                        <Button
+                          variant={currentPage === page ? "default" : "outline"}
+                          size="sm"
+                          className={currentPage === page ? "bg-teal-600 hover:bg-teal-700" : ""}
+                        >
+                          {page}
+                        </Button>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Sidebar */}
+            <div className="space-y-8">
+              {/* Newsletter */}
+              <NewsletterSubscribe variant="card" showCategories />
+
+              {/* Popular Posts */}
+              {popularPosts.length > 0 && (
+                <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                  <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                    <Eye className="h-5 w-5 text-teal-400" />
+                    Popular Articles
+                  </h3>
+                  <div className="space-y-4">
+                    {popularPosts.map((post) => (
+                      <Link
+                        key={post.id}
+                        href={`/blog/${post.slug}`}
+                        className="block group"
+                      >
+                        <h4 className="font-medium text-white group-hover:text-teal-400 transition-colors mb-1">
+                          {post.title}
+                        </h4>
+                        <div className="flex items-center gap-3 text-sm text-slate-400">
+                          <span>{post.views.toLocaleString()} views</span>
+                          {post.reading_time && (
+                            <span>{post.reading_time} min read</span>
+                          )}
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Tags */}
+              {tags.length > 0 && (
+                <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                  <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                    <Filter className="h-5 w-5 text-teal-400" />
+                    Popular Tags
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {tags.map((tag) => (
+                      <Link key={tag.id} href={`/blog?tag=${tag.slug}`}>
+                        <Badge
+                          variant="secondary"
+                          className="cursor-pointer hover:bg-teal-600 hover:text-white transition-colors"
+                        >
+                          {tag.name}
+                        </Badge>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-teal-600 to-cyan-600">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-4xl font-bold text-white mb-6">
+              Ready to Transform Your Business?
+            </h2>
+            <p className="text-xl mb-8 text-teal-100">
+              Let our expertise guide your digital transformation journey
+            </p>
+            <Button asChild size="lg" className="bg-white text-teal-600 hover:bg-slate-100">
+              <Link href="/book-consultation">
+                Book Your $550 Consultation
+                <ChevronRight className="ml-2 h-5 w-5" />
+              </Link>
+            </Button>
+          </motion.div>
+        </div>
+      </section>
     </div>
-  )
+  );
 }

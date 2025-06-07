@@ -1,187 +1,264 @@
-'use client'
-
-import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { Metadata } from "next";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ServiceComparisonTable } from "@/components/services/ServiceComparisonTable";
+import { ServiceRecommendationQuiz } from "@/components/services/ServiceRecommendationQuiz";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
-  Code2, 
-  Smartphone, 
-  Cloud, 
+  ArrowRight, 
+  Code, 
+  Search, 
+  BarChart3, 
   Shield, 
-  Zap, 
-  Users,
-  Briefcase,
-  Brain,
-  Rocket,
+  GraduationCap,
+  MessageSquare,
+  CheckCircle,
+  Sparkles,
   Target,
-  Palette,
-  HeartHandshake,
-  Calendar
-} from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import Link from 'next/link'
-// Consultation booking functionality temporarily disabled
+  Users,
+  Award,
+  Zap
+} from "lucide-react";
+import { motion } from "framer-motion";
+
+export const metadata: Metadata = {
+  title: "Our Services | Unite Group - Business Solutions & Technology",
+  description: "Explore Unite Group's comprehensive business services: Software Development, Strategic SEO, Business Strategy, Quality Assurance, and Expert Education.",
+};
 
 const services = [
   {
-    id: 'web-development',
-    icon: Code2,
-    title: 'Web Development',
-    description: 'Custom web applications built with modern frameworks and best practices',
+    title: "Initial Consultation",
+    description: "Start your transformation journey with expert guidance",
+    href: "/services/initial-consultation",
+    icon: <MessageSquare className="h-6 w-6" />,
+    price: "$550",
     features: [
-      'React, Next.js, Vue.js development',
-      'Progressive Web Applications (PWA)',
-      'E-commerce solutions',
-      'API development and integration'
+      "Business analysis",
+      "Strategy roadmap",
+      "Risk assessment",
+      "ROI projections"
     ],
-    color: 'from-blue-500 to-cyan-500'
+    color: "from-teal-500 to-cyan-500",
+    popular: false
   },
   {
-    id: 'mobile-development',
-    icon: Smartphone,
-    title: 'Mobile Development',
-    description: 'Native and cross-platform mobile applications for iOS and Android',
+    title: "Software Development",
+    description: "Custom solutions that scale with your business",
+    href: "/services/software-development",
+    icon: <Code className="h-6 w-6" />,
+    price: "Custom Quote",
     features: [
-      'React Native development',
-      'Flutter applications',
-      'Native iOS/Android apps',
-      'App Store optimization'
+      "Web applications",
+      "Mobile apps",
+      "API development",
+      "Cloud solutions"
     ],
-    color: 'from-purple-500 to-pink-500'
+    color: "from-blue-500 to-indigo-500",
+    popular: true
   },
   {
-    id: 'cloud-solutions',
-    icon: Cloud,
-    title: 'Cloud Solutions',
-    description: 'Scalable cloud infrastructure and DevOps implementation',
+    title: "Strategic SEO",
+    description: "Dominate search results and drive organic growth",
+    href: "/services/strategic-seo",
+    icon: <Search className="h-6 w-6" />,
+    price: "From $2,000/mo",
     features: [
-      'AWS, Azure, Google Cloud',
-      'Kubernetes orchestration',
-      'CI/CD pipelines',
-      'Infrastructure as Code'
+      "SEO audit",
+      "Content strategy",
+      "Link building",
+      "Monthly reports"
     ],
-    color: 'from-green-500 to-teal-500'
+    color: "from-purple-500 to-pink-500",
+    popular: false
   },
   {
-    id: 'cybersecurity',
-    icon: Shield,
-    title: 'Cybersecurity',
-    description: 'Comprehensive security solutions to protect your digital assets',
+    title: "Business Strategy",
+    description: "Data-driven insights for competitive advantage",
+    href: "/services/business-strategy",
+    icon: <BarChart3 className="h-6 w-6" />,
+    price: "Custom Quote",
     features: [
-      'Security audits and assessments',
-      'Penetration testing',
-      'Compliance implementation',
-      'Security training'
+      "Market analysis",
+      "Growth planning",
+      "Digital transformation",
+      "KPI tracking"
     ],
-    color: 'from-red-500 to-orange-500'
+    color: "from-green-500 to-emerald-500",
+    popular: false
   },
   {
-    id: 'ai-solutions',
-    icon: Brain,
-    title: 'AI & Machine Learning',
-    description: 'Intelligent solutions powered by cutting-edge AI technology',
+    title: "Quality Assurance",
+    description: "Ensure excellence in every release",
+    href: "/services/quality-assurance",
+    icon: <Shield className="h-6 w-6" />,
+    price: "From $1,500/mo",
     features: [
-      'Predictive analytics',
-      'Natural Language Processing',
-      'Computer vision',
-      'Process automation'
+      "Test automation",
+      "Performance testing",
+      "Security audits",
+      "Compliance checks"
     ],
-    color: 'from-indigo-500 to-purple-500'
+    color: "from-orange-500 to-red-500",
+    popular: false
   },
   {
-    id: 'consulting',
-    icon: Briefcase,
-    title: 'IT Consulting',
-    description: 'Strategic technology consulting to drive digital transformation',
+    title: "Expert Education",
+    description: "Empower your team with cutting-edge skills",
+    href: "/services/expert-education",
+    icon: <GraduationCap className="h-6 w-6" />,
+    price: "From $5,000",
     features: [
-      'Digital strategy development',
-      'Technology roadmapping',
-      'Architecture design',
-      'Team augmentation'
+      "Team training",
+      "Workshops",
+      "Certifications",
+      "Mentorship"
     ],
-    color: 'from-amber-500 to-yellow-500'
+    color: "from-indigo-500 to-purple-500",
+    popular: false
   }
-]
+];
+
+const stats = [
+  { value: "500+", label: "Projects Delivered", icon: CheckCircle },
+  { value: "99.9%", label: "Client Satisfaction", icon: Award },
+  { value: "24/7", label: "Support Available", icon: Users },
+  { value: "10+", label: "Years Experience", icon: Target }
+];
 
 export default function ServicesPage() {
-  const handleBookConsultation = (service: { id: string; title: string }) => {
-    // Redirect to contact page with service pre-selected
-    window.location.href = `/contact?service=${service.id}`
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       {/* Hero Section */}
-      <section className="relative py-24 px-4">
-        <div className="max-w-7xl mx-auto text-center">
-          <motion.h1
+      <section className="relative py-20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-teal-600/20 to-cyan-600/20 animate-pulse" />
+        <div className="relative max-w-7xl mx-auto px-4 text-center">
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent mb-6"
+            transition={{ duration: 0.6 }}
           >
-            Our Services
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-xl text-muted-foreground max-w-3xl mx-auto"
-          >
-            Comprehensive technology solutions tailored to accelerate your business growth and digital transformation
-          </motion.p>
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
+              Our Services
+            </h1>
+            <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-8">
+              Comprehensive business solutions designed to accelerate your growth 
+              and transform your digital presence
+            </p>
+            <div className="flex gap-4 justify-center flex-wrap">
+              <Button asChild size="lg" className="bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-500 hover:to-cyan-500">
+                <Link href="/book-consultation">
+                  Book Your $550 Consultation
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="border-slate-600 text-white hover:bg-slate-800">
+                <Link href="#quiz">
+                  Find Your Perfect Service
+                  <Sparkles className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-12 bg-slate-800/50">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {stats.map((stat, index) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4, delay: index * 0.1 }}
+                className="text-center"
+              >
+                <stat.icon className="h-8 w-8 text-teal-400 mx-auto mb-3" />
+                <div className="text-3xl font-bold text-white">{stat.value}</div>
+                <div className="text-slate-400">{stat.label}</div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Services Grid */}
-      <section className="py-16 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl font-bold text-white mb-4">
+              Choose Your Path to Success
+            </h2>
+            <p className="text-xl text-slate-300 max-w-3xl mx-auto">
+              Each service is tailored to address specific business challenges and opportunities
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service, index) => (
               <motion.div
-                key={service.id}
+                key={service.title}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
               >
-                <Card className="h-full hover:shadow-2xl transition-shadow duration-300 group">
-                  <CardHeader>
-                    <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${service.color} p-4 mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                      <service.icon className="w-full h-full text-white" />
+                <Card className="h-full bg-slate-800 border-slate-700 hover:border-teal-600 transition-all hover:shadow-xl group relative overflow-hidden">
+                  {service.popular && (
+                    <div className="absolute top-4 right-4 z-10">
+                      <span className="bg-gradient-to-r from-teal-600 to-cyan-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                        MOST POPULAR
+                      </span>
                     </div>
-                    <CardTitle className="text-2xl mb-2">{service.title}</CardTitle>
-                    <CardDescription className="text-base">
+                  )}
+                  
+                  <div className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-0 group-hover:opacity-10 transition-opacity`} />
+                  
+                  <CardHeader>
+                    <div className={`inline-flex p-3 rounded-lg bg-gradient-to-br ${service.color} text-white mb-4`}>
+                      {service.icon}
+                    </div>
+                    <CardTitle className="text-2xl text-white group-hover:text-teal-400 transition-colors">
+                      {service.title}
+                    </CardTitle>
+                    <CardDescription className="text-lg">
                       {service.description}
                     </CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-2">
-                      {service.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-center text-sm text-muted-foreground">
-                          <Zap className="w-4 h-4 mr-2 text-primary" />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="flex gap-2 mt-6">
-                      <Button 
-                        variant="outline" 
-                        className="flex-1 group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
-                        onClick={() => handleBookConsultation({ id: service.id, title: service.title })}
-                      >
-                        <Calendar className="w-4 h-4 mr-2" />
-                        Book Consultation
-                      </Button>
-                      <Button 
-                        variant="ghost" 
-                        className="px-3"
-                        asChild
-                      >
-                        <Link href={`/contact?service=${service.id}`} title="More Info">
-                          <Target className="w-4 h-4" />
-                        </Link>
-                      </Button>
+                  
+                  <CardContent className="space-y-6">
+                    <div>
+                      <div className="text-3xl font-bold text-white mb-2">
+                        {service.price}
+                      </div>
+                      <ul className="space-y-2">
+                        {service.features.map((feature) => (
+                          <li key={feature} className="flex items-center gap-2 text-slate-400">
+                            <CheckCircle className="h-4 w-4 text-teal-500 flex-shrink-0" />
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
                     </div>
+                    
+                    <Button
+                      asChild
+                      className={service.popular 
+                        ? "w-full bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-500 hover:to-cyan-500"
+                        : "w-full bg-slate-700 hover:bg-slate-600"
+                      }
+                    >
+                      <Link href={service.href}>
+                        Learn More
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
+                    </Button>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -190,36 +267,94 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-24 px-4 bg-gradient-to-r from-primary/10 to-primary/5">
-        <div className="max-w-4xl mx-auto text-center">
+      {/* Comparison Table Section */}
+      <section className="py-20 bg-slate-800/50">
+        <div className="max-w-7xl mx-auto px-4">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
           >
-            <Users className="w-16 h-16 mx-auto mb-6 text-primary" />
-            <h2 className="text-4xl font-bold mb-4">Ready to Transform Your Business?</h2>
-            <p className="text-xl text-muted-foreground mb-8">
+            <h2 className="text-4xl font-bold text-white mb-4">
+              Compare Our Services
+            </h2>
+            <p className="text-xl text-slate-300 max-w-3xl mx-auto">
+              Find the perfect combination of services for your business needs
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="bg-slate-900 rounded-2xl p-8 shadow-xl"
+          >
+            <ServiceComparisonTable />
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Service Recommendation Quiz */}
+      <section id="quiz" className="py-20">
+        <div className="max-w-7xl mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl font-bold text-white mb-4">
+              Not Sure Where to Start?
+            </h2>
+            <p className="text-xl text-slate-300 max-w-3xl mx-auto">
+              Take our quick quiz to get personalized service recommendations
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            <ServiceRecommendationQuiz />
+          </motion.div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-teal-600 to-cyan-600">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="inline-flex p-4 bg-white/10 rounded-full mb-6">
+              <Zap className="h-12 w-12 text-white" />
+            </div>
+            <h2 className="text-4xl font-bold text-white mb-6">
+              Ready to Transform Your Business?
+            </h2>
+            <p className="text-xl mb-8 text-teal-100">
               Let&apos;s discuss how our services can help you achieve your goals
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" asChild>
-                <Link href="/contact">
-                  Get Started Today
+            <div className="flex gap-4 justify-center flex-wrap">
+              <Button asChild size="lg" className="bg-white text-teal-600 hover:bg-slate-100">
+                <Link href="/book-consultation">
+                  Book Your $550 Consultation
+                  <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" asChild>
-                <Link href="/case-studies">
-                  View Case Studies
+              <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-teal-600">
+                <Link href="/contact">
+                  Contact Our Team
                 </Link>
               </Button>
             </div>
           </motion.div>
         </div>
       </section>
-
-      {/* Consultation booking redirects to contact page */}
     </div>
-  )
+  );
 }

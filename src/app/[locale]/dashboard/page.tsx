@@ -19,9 +19,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabaseClient } from "@/lib/supabase/client";
 import { apiClient } from "@/lib/apiClient";
 import { User } from '@supabase/supabase-js';
-import { Calendar, Clock, User as UserIcon, Briefcase, Loader2, PlusCircle, BarChart, DollarSign, TrendingUp, Activity } from "lucide-react";
+import { Calendar, Clock, User as UserIcon, Briefcase, Loader2, PlusCircle, BarChart, DollarSign, TrendingUp, Activity, Bell } from "lucide-react";
 import { StatsCard } from "@/components/dashboard/StatsCard";
 import { motion } from "framer-motion";
+import { NotificationCenter } from "@/components/dashboard/NotificationCenter";
+import { ActivityTimeline } from "@/components/dashboard/ActivityTimeline";
+import { QuickActions } from "@/components/dashboard/QuickActions";
+import { PersonalizedRecommendations } from "@/components/dashboard/PersonalizedRecommendations";
+import { ProjectProgress } from "@/components/dashboard/ProjectProgress";
+import { DashboardService } from "@/lib/services/dashboard";
 
 interface Consultation {
   id: string;
@@ -64,6 +70,8 @@ export default function Dashboard() {
   const [projectsError, setProjectsError] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [unreadNotifications, setUnreadNotifications] = useState(0);
+  const [showNotifications, setShowNotifications] = useState(false);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -96,6 +104,9 @@ export default function Dashboard() {
       // Fetch consultations and projects
       fetchConsultations();
       fetchProjects();
+      
+      // Load notification count
+      loadNotificationCount(session.user.id);
     };
     
     checkUser();
@@ -155,6 +166,15 @@ export default function Dashboard() {
     }
   };
   
+  const loadNotificationCount = async (userId: string) => {
+    try {
+      const count = await DashboardService.getUnreadNotificationCount(userId);
+      setUnreadNotifications(count);
+    } catch (error) {
+      console.error('Failed to load notification count:', error);
+    }
+  };
+
   const formatDate = (dateString: string) => {
     try {
       const date = new Date(dateString);
@@ -218,6 +238,19 @@ export default function Dashboard() {
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-white">My Dashboard</h1>
           <div className="flex items-center gap-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowNotifications(!showNotifications)}
+              className="relative border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white p-2"
+            >
+              <Bell className="h-5 w-5" />
+              {unreadNotifications > 0 && (
+                <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center">
+                  {unreadNotifications > 9 ? '9+' : unreadNotifications}
+                </span>
+              )}
+            </Button>
             {isAdmin && (
               <Button asChild variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white">
                 <Link href="/dashboard/analytics">
@@ -235,8 +268,18 @@ export default function Dashboard() {
           </div>
         </div>
         
-        <Tabs defaultValue="consultations" className="w-full">
+        {/* Notification Panel */}
+        {showNotifications && user && (
+          <div className="mb-8">
+            <NotificationCenter userId={user.id} />
+          </div>
+        )}
+        
+        <Tabs defaultValue="overview" className="w-full">
           <TabsList className="bg-slate-800 border-slate-700 mb-8">
+            <TabsTrigger value="overview" className="data-[state=active]:bg-slate-700 data-[state=active]:text-white">
+              Overview
+            </TabsTrigger>
             <TabsTrigger value="consultations" className="data-[state=active]:bg-slate-700 data-[state=active]:text-white">
               My Consultations
             </TabsTrigger>
@@ -247,6 +290,50 @@ export default function Dashboard() {
               Profile
             </TabsTrigger>
           </TabsList>
+          
+          <TabsContent value="overview">
+            {user && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="space-y-8"
+              >
+                {/* Quick Actions */}
+                <QuickActions userId={user.id} />
+                
+                {/* Main Grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                  {/* Left Column - Activity Timeline */}
+                  <div className="lg:col-span-2 space-y-8">
+                    <ActivityTimeline userId={user.id} />
+                    
+                    {/* Active Projects Progress */}
+                    {projects.filter(p => p.status.toLowerCase() === 'in-progress').length > 0 && (
+                      <div className="space-y-4">
+                        <h3 className="text-lg font-semibold text-white">Active Projects</h3>
+                        {projects
+                          .filter(p => p.status.toLowerCase() === 'in-progress')
+                          .slice(0, 2)
+                          .map(project => (
+                            <ProjectProgress
+                              key={project.id}
+                              projectId={project.id}
+                              projectTitle={project.title}
+                            />
+                          ))}
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Right Column - Recommendations */}
+                  <div className="space-y-8">
+                    <PersonalizedRecommendations userId={user.id} />
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </TabsContent>
           
           <TabsContent value="consultations">
             <Card className="bg-slate-800 border-slate-700">

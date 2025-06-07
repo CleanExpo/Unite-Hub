@@ -2,6 +2,8 @@
 
 import { useEffect } from 'react';
 import { registerServiceWorker, setupPeriodicSWUpdates } from './registerSW';
+import { InstallPrompt } from '@/components/pwa/InstallPrompt';
+import { OfflineIndicator } from '@/components/pwa/OfflineIndicator';
 
 /**
  * PWAInitializer component
@@ -20,6 +22,11 @@ export default function PWAInitializer() {
     console.log('PWA functionality initialized');
   }, []);
 
-  // This component doesn't render anything visible
-  return null;
+  // Render PWA UI components
+  return (
+    <>
+      <InstallPrompt />
+      <OfflineIndicator />
+    </>
+  );
 }

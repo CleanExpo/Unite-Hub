@@ -14,6 +14,10 @@ const ClientWrapper = dynamic(() => import('../../components/ClientWrapper'));
 const Navigation = dynamic(() => import('../../components/Navigation'));
 // Import the Footer component dynamically
 const Footer = dynamic(() => import('../../components/Footer'));
+// Import the ChatWidget component dynamically
+const ChatWidget = dynamic(() => import('../../components/chat/ChatWidget'), {
+  ssr: false // Disable SSR for chat widget as it uses browser-only features
+});
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -59,6 +63,7 @@ export default async function LocaleLayout({
             <Navigation />
             <main>{children}</main>
             <Footer />
+            <ChatWidget />
           </ClientWrapper>
         </ThemeProvider>
         <PWAInitializer />

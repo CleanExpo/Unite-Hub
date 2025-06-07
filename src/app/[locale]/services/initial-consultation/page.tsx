@@ -1,201 +1,353 @@
 import { Metadata } from 'next';
-import { Clock, CheckCircle2, ArrowRight, Calendar, Target, BarChart3, Users } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { 
+  CheckCircle, Clock, Users, TrendingUp, MessageSquare, 
+  FileText, Target, ArrowRight, Calendar, Shield
+} from 'lucide-react';
+import { motion } from 'framer-motion';
+import { generateMetadata as generateSEOMetadata } from '@/components/seo/SEOHead';
+import { JsonLd } from '@/components/seo/SEOHead';
+import { generateServiceSchema } from '@/lib/seo/schema';
 
-export const metadata: Metadata = {
-  title: 'Initial Consultation | Unite Group',
-  description: 'Comprehensive business analysis and strategic planning to understand your unique needs and challenges. Start your transformation journey with expert consultation.',
-};
+export const metadata: Metadata = generateSEOMetadata({
+  title: 'Initial Business Consultation - $550',
+  description: 'Transform your business with our comprehensive consultation service. Get expert insights, strategic recommendations, and a clear roadmap for success.',
+  keywords: ['business consultation', 'strategic planning', 'business analysis', 'expert advice', 'Brisbane consultant'],
+  url: 'https://unitegroup.com.au/services/initial-consultation',
+});
 
 export default function InitialConsultationPage() {
-  const features = [
-    'In-depth business assessment',
-    'Technology needs analysis', 
-    'Strategic roadmap development',
-    'Custom solution recommendations'
-  ];
+  const serviceSchema = generateServiceSchema({
+    name: 'Initial Business Consultation',
+    description: 'Comprehensive business consultation service providing strategic insights and actionable recommendations',
+    price: '550',
+    serviceType: 'Business Consulting',
+  });
 
-  const benefits = [
+  const processSteps = [
     {
-      icon: Target,
-      title: 'Strategic Clarity',
-      description: 'Get clear direction on your business objectives and technology needs'
+      icon: <MessageSquare className="h-8 w-8" />,
+      title: 'Discovery Call',
+      description: '30-minute preliminary discussion to understand your business needs and objectives',
+      duration: '30 mins'
     },
     {
-      icon: BarChart3,
-      title: 'Data-Driven Insights',
-      description: 'Receive actionable insights based on comprehensive analysis'
+      icon: <FileText className="h-8 w-8" />,
+      title: 'Business Analysis',
+      description: 'In-depth analysis of your current business model, challenges, and opportunities',
+      duration: '2 hours'
     },
     {
-      icon: Users,
-      title: 'Expert Guidance',
-      description: 'Work with experienced consultants who understand your industry'
+      icon: <Users className="h-8 w-8" />,
+      title: 'Strategy Session',
+      description: 'Interactive workshop with key stakeholders to develop strategic recommendations',
+      duration: '3 hours'
     },
     {
-      icon: Calendar,
-      title: 'Roadmap Planning',
-      description: 'Develop a clear timeline and implementation strategy'
+      icon: <Target className="h-8 w-8" />,
+      title: 'Action Plan Delivery',
+      description: 'Comprehensive report with prioritized recommendations and implementation roadmap',
+      duration: '1 week'
     }
   ];
 
-  const process = [
-    {
-      step: '01',
-      title: 'Discovery Session',
-      description: 'We start with an in-depth discussion about your business goals, challenges, and current technology landscape.'
-    },
-    {
-      step: '02',
-      title: 'Analysis & Assessment',
-      description: 'Our team conducts a comprehensive analysis of your systems, processes, and market position.'
-    },
-    {
-      step: '03',
-      title: 'Strategic Planning',
-      description: 'We develop a customized strategic roadmap with clear milestones and actionable recommendations.'
-    },
-    {
-      step: '04',
-      title: 'Presentation & Next Steps',
-      description: 'Receive a detailed presentation of findings and recommendations with clear next steps for implementation.'
-    }
+  const deliverables = [
+    'Executive Summary Report',
+    'SWOT Analysis',
+    'Market Opportunity Assessment',
+    'Technology Stack Recommendations',
+    'Growth Strategy Blueprint',
+    '90-Day Action Plan',
+    'KPI Framework',
+    'Budget Projections',
+    'Risk Assessment Matrix',
+    'Follow-up Support (30 days)'
+  ];
+
+  const industries = [
+    'Healthcare & Medical',
+    'Financial Services',
+    'E-commerce & Retail',
+    'Education & Training',
+    'Manufacturing & Logistics',
+    'Technology & SaaS',
+    'Professional Services',
+    'Real Estate'
   ];
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white py-24">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex p-4 rounded-full bg-green-500 text-white mb-6">
-              <Clock className="w-8 h-8" />
-            </div>
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              Initial Consultation
-            </h1>
-            <p className="text-xl md:text-2xl text-slate-300 mb-8 leading-relaxed">
-              Comprehensive business analysis and strategic planning to understand your unique needs and challenges.
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center mb-8">
-              <Badge className="bg-green-500 text-white px-4 py-2 text-sm">
-                Strategic Planning
-              </Badge>
-              <Badge className="bg-blue-500 text-white px-4 py-2 text-sm">
-                Business Analysis
-              </Badge>
-              <Badge className="bg-purple-500 text-white px-4 py-2 text-sm">
-                Expert Consultation
-              </Badge>
-            </div>
-            <Button size="lg" className="bg-green-500 hover:bg-green-600 text-white px-8 py-4 text-lg">
-              Schedule Your Consultation
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
+    <>
+      <JsonLd data={serviceSchema} />
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+        {/* Hero Section */}
+        <section className="relative py-20 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10" />
+          <div className="relative container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="max-w-4xl mx-auto text-center"
+            >
+              <Badge className="mb-4 bg-blue-600 text-white">Most Popular Service</Badge>
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+                Initial Business Consultation
+              </h1>
+              <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
+                Transform your business vision into reality with our comprehensive consultation service. 
+                Get expert insights, strategic recommendations, and a clear roadmap for success.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Link href="/book-consultation">
+                  <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                    Book Your Consultation - $550
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
+                <Link href="/contact">
+                  <Button size="lg" variant="outline">
+                    Have Questions? Contact Us
+                  </Button>
+                </Link>
+              </div>
+            </motion.div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Features Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-slate-900">
-              What's Included
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {features.map((feature, index) => (
-                <div key={index} className="flex items-center p-6 bg-white rounded-lg shadow-sm">
-                  <CheckCircle2 className="w-6 h-6 text-green-500 mr-4 flex-shrink-0" />
-                  <span className="text-lg text-slate-700">{feature}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Benefits Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-slate-900">
-              Key Benefits
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {benefits.map((benefit, index) => (
-                <Card key={index} className="text-center hover:shadow-lg transition-shadow">
+        {/* Value Proposition */}
+        <section className="py-16 bg-white dark:bg-slate-800">
+          <div className="container mx-auto px-4">
+            <div className="grid md:grid-cols-3 gap-8">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
+                <Card className="h-full border-t-4 border-t-blue-600">
                   <CardHeader>
-                    <div className="mx-auto p-3 rounded-full bg-green-100 text-green-600 w-fit">
-                      <benefit.icon className="w-8 h-8" />
-                    </div>
-                    <CardTitle className="text-xl">{benefit.title}</CardTitle>
+                    <Clock className="h-10 w-10 text-blue-600 mb-4" />
+                    <CardTitle>Fast Results</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <CardDescription className="text-slate-600">
-                      {benefit.description}
-                    </CardDescription>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      Get actionable insights and recommendations within one week of your consultation.
+                    </p>
                   </CardContent>
                 </Card>
-              ))}
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+              >
+                <Card className="h-full border-t-4 border-t-green-600">
+                  <CardHeader>
+                    <TrendingUp className="h-10 w-10 text-green-600 mb-4" />
+                    <CardTitle>ROI Focused</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      Average client sees 300% ROI within 6 months of implementing our recommendations.
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                <Card className="h-full border-t-4 border-t-purple-600">
+                  <CardHeader>
+                    <Shield className="h-10 w-10 text-purple-600 mb-4" />
+                    <CardTitle>Risk-Free</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      100% satisfaction guarantee. If you&apos;re not completely satisfied, we&apos;ll refund your investment.
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Process Section */}
-      <section className="py-20 bg-slate-900 text-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-              Our Consultation Process
-            </h2>
-            <div className="space-y-8">
-              {process.map((step, index) => (
-                <div key={index} className="flex items-start">
-                  <div className="flex-shrink-0 mr-6">
-                    <div className="w-16 h-16 rounded-full bg-green-500 flex items-center justify-center text-white font-bold text-xl">
-                      {step.step}
+        {/* Process Section */}
+        <section className="py-20">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-12"
+            >
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                Our Proven Process
+              </h2>
+              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                A structured approach to understanding your business and delivering transformative insights
+              </p>
+            </motion.div>
+
+            <div className="max-w-4xl mx-auto">
+              {processSteps.map((step, index) => (
+                <motion.div
+                  key={step.title}
+                  initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="mb-8"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0">
+                      <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white">
+                        {step.icon}
+                      </div>
+                    </div>
+                    <div className="flex-grow">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                          Step {index + 1}: {step.title}
+                        </h3>
+                        <Badge variant="secondary">{step.duration}</Badge>
+                      </div>
+                      <p className="text-gray-600 dark:text-gray-400">
+                        {step.description}
+                      </p>
                     </div>
                   </div>
-                  <div className="flex-1">
-                    <h3 className="text-2xl font-bold mb-3">{step.title}</h3>
-                    <p className="text-slate-300 text-lg leading-relaxed">{step.description}</p>
-                  </div>
-                </div>
+                  {index < processSteps.length - 1 && (
+                    <div className="ml-8 mt-4 mb-4 h-8 w-0.5 bg-gradient-to-b from-blue-600 to-purple-600" />
+                  )}
+                </motion.div>
               ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-green-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-slate-900">
-              Ready to Get Started?
-            </h2>
-            <p className="text-xl text-slate-600 mb-8">
-              Schedule your initial consultation today and take the first step towards transforming your business.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-green-500 hover:bg-green-600 text-white px-8 py-4">
-                Schedule Consultation
-                <Calendar className="ml-2 w-5 h-5" />
-              </Button>
-              <Button size="lg" variant="outline" className="px-8 py-4" asChild>
-                <Link href="/contact">
-                  Contact Us
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Link>
-              </Button>
+        {/* Deliverables */}
+        <section className="py-16 bg-gray-50 dark:bg-slate-900">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-12"
+            >
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                What You&apos;ll Receive
+              </h2>
+              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                Comprehensive deliverables designed to drive immediate action and long-term success
+              </p>
+            </motion.div>
+
+            <div className="max-w-4xl mx-auto">
+              <div className="grid md:grid-cols-2 gap-4">
+                {deliverables.map((item, index) => (
+                  <motion.div
+                    key={item}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: index * 0.05 }}
+                    className="flex items-center gap-3 bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm"
+                  >
+                    <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
+                    <span className="text-gray-700 dark:text-gray-300">{item}</span>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-    </div>
+        </section>
+
+        {/* Industries */}
+        <section className="py-16">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-12"
+            >
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                Industry Expertise
+              </h2>
+              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                Specialized knowledge across diverse industries
+              </p>
+            </motion.div>
+
+            <div className="flex flex-wrap justify-center gap-3">
+              {industries.map((industry, index) => (
+                <motion.div
+                  key={industry}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                >
+                  <Badge 
+                    variant="outline" 
+                    className="px-4 py-2 text-sm hover:bg-blue-50 dark:hover:bg-blue-900 transition-colors cursor-default"
+                  >
+                    {industry}
+                  </Badge>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600">
+          <div className="container mx-auto px-4 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                Ready to Transform Your Business?
+              </h2>
+              <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+                Join 500+ businesses that have accelerated their growth with our strategic consultation
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Link href="/book-consultation">
+                  <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
+                    <Calendar className="mr-2 h-5 w-5" />
+                    Schedule Your Consultation
+                  </Button>
+                </Link>
+                <Link href="/case-studies">
+                  <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600">
+                    View Success Stories
+                  </Button>
+                </Link>
+              </div>
+              <p className="mt-8 text-sm text-blue-100">
+                ⚡ Limited slots available this month • 💰 100% Money-back guarantee
+              </p>
+            </motion.div>
+          </div>
+        </section>
+      </div>
+    </>
   );
 }

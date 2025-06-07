@@ -1,211 +1,452 @@
 import { Metadata } from 'next';
-import { Users, CheckCircle2, ArrowRight, BookOpen, Award, Target, Lightbulb } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { 
+  GraduationCap, BookOpen, Users, Award, Video, FileText,
+  ArrowRight, CheckCircle, Star, Calendar, Laptop, Trophy, Briefcase
+} from 'lucide-react';
+import { motion } from 'framer-motion';
+import { generateMetadata as generateSEOMetadata } from '@/components/seo/SEOHead';
+import { JsonLd } from '@/components/seo/SEOHead';
+import { generateServiceSchema } from '@/lib/seo/schema';
 
-export const metadata: Metadata = {
-  title: 'Expert Education | Unite Group',
-  description: 'Professional training and development programs designed to enhance your team capabilities and drive innovation.',
-};
+export const metadata: Metadata = generateSEOMetadata({
+  title: 'Expert Education & Training Services',
+  description: 'Transform your team with expert-led training. Corporate workshops, technical certifications, and custom learning programs designed for measurable skill advancement.',
+  keywords: ['corporate training', 'expert education', 'technical workshops', 'professional development', 'team training', 'Brisbane training'],
+  url: 'https://unitegroup.com.au/services/expert-education',
+});
 
 export default function ExpertEducationPage() {
-  const features = [
-    'Custom curriculum development',
-    'Expert-led training sessions',
-    'Hands-on workshops',
-    'Certification programs'
+  const serviceSchema = generateServiceSchema({
+    name: 'Expert Education Services',
+    description: 'Professional training and education services including workshops, certifications, and custom learning programs',
+    serviceType: 'Educational Services',
+  });
+
+  const trainingPrograms = [
+    {
+      icon: <Laptop className="h-8 w-8" />,
+      title: 'Technical Training',
+      description: 'Master cutting-edge technologies with hands-on workshops',
+      topics: [
+        'Modern Web Development',
+        'Cloud Architecture (AWS/Azure)',
+        'DevOps & CI/CD',
+        'AI & Machine Learning',
+        'Cybersecurity Fundamentals',
+        'Database Design & Optimization',
+      ],
+    },
+    {
+      icon: <Briefcase className="h-8 w-8" />,
+      title: 'Business Skills',
+      description: 'Develop leadership and strategic thinking capabilities',
+      topics: [
+        'Agile & Scrum Mastery',
+        'Project Management',
+        'Digital Transformation',
+        'Data-Driven Decision Making',
+        'Innovation Management',
+        'Strategic Planning',
+      ],
+    },
+    {
+      icon: <Users className="h-8 w-8" />,
+      title: 'Team Workshops',
+      description: 'Collaborative sessions that transform team dynamics',
+      topics: [
+        'Design Thinking Workshops',
+        'Team Building & Communication',
+        'Problem-Solving Bootcamps',
+        'Cross-functional Collaboration',
+        'Remote Team Excellence',
+        'Culture & Innovation Labs',
+      ],
+    },
+    {
+      icon: <Award className="h-8 w-8" />,
+      title: 'Certification Programs',
+      description: 'Industry-recognized certifications for career advancement',
+      topics: [
+        'AWS Certified Solutions Architect',
+        'Google Cloud Professional',
+        'Certified Scrum Master',
+        'PMP Preparation',
+        'Six Sigma Green Belt',
+        'ITIL Foundation',
+      ],
+    },
   ];
 
-  const benefits = [
+  const deliveryFormats = [
     {
-      icon: BookOpen,
-      title: 'Customized Learning',
-      description: 'Tailored curriculum designed specifically for your team and industry needs'
+      format: 'On-site Workshops',
+      duration: '1-5 days',
+      participants: 'Up to 30',
+      features: ['Hands-on labs', 'Interactive sessions', 'Team exercises', 'Q&A sessions'],
     },
     {
-      icon: Award,
-      title: 'Expert Instructors',
-      description: 'Learn from industry professionals with real-world experience'
-    },
-    {
-      icon: Target,
-      title: 'Practical Skills',
-      description: 'Hands-on workshops that provide immediately applicable skills'
-    },
-    {
-      icon: Lightbulb,
-      title: 'Innovation Focus',
-      description: 'Training programs designed to drive innovation and growth'
-    }
-  ];
-
-  const programs = [
-    {
-      title: 'Technology Training',
-      description: 'Modern development practices, cloud technologies, and emerging tech trends',
-      duration: '2-4 weeks',
-      format: 'Hybrid'
-    },
-    {
-      title: 'Leadership Development',
-      description: 'Executive coaching and leadership skills for technical and business leaders',
-      duration: '6-8 weeks',
-      format: 'In-person'
-    },
-    {
-      title: 'Digital Transformation',
-      description: 'Strategic planning and implementation of digital transformation initiatives',
-      duration: '4-6 weeks',
-      format: 'Virtual'
-    },
-    {
-      title: 'Custom Workshops',
-      description: 'Tailored training programs designed specifically for your organization',
+      format: 'Virtual Training',
       duration: 'Flexible',
-      format: 'Hybrid'
-    }
+      participants: 'Unlimited',
+      features: ['Live instruction', 'Screen sharing', 'Breakout rooms', 'Recording available'],
+    },
+    {
+      format: 'Hybrid Programs',
+      duration: '2-12 weeks',
+      participants: 'Customizable',
+      features: ['Self-paced + live sessions', 'Mentorship', 'Project work', 'Certification'],
+    },
+  ];
+
+  const outcomes = [
+    { metric: 'Skill Improvement', value: '87%', description: 'Average skill advancement' },
+    { metric: 'Knowledge Retention', value: '92%', description: 'After 6 months' },
+    { metric: 'ROI on Training', value: '340%', description: 'Within first year' },
+    { metric: 'Employee Satisfaction', value: '95%', description: 'Training rating' },
+  ];
+
+  const packages = [
+    {
+      name: 'Workshop Day',
+      price: '$2,500',
+      duration: '/day',
+      description: 'Single-day intensive workshop for your team',
+      features: [
+        'Up to 20 participants',
+        'Custom curriculum',
+        'Hands-on exercises',
+        'Digital materials',
+        'Completion certificates',
+        'Follow-up resources',
+      ],
+      ideal: 'Quick skill boost',
+    },
+    {
+      name: 'Learning Program',
+      price: '$12,000',
+      duration: '/month',
+      description: 'Comprehensive learning journey with ongoing support',
+      features: [
+        'Everything in Workshop',
+        'Weekly sessions',
+        'Personal mentoring',
+        'Project assignments',
+        'Progress tracking',
+        'Team assessments',
+        'Certification prep',
+      ],
+      ideal: 'Deep skill development',
+      recommended: true,
+    },
+    {
+      name: 'Enterprise Academy',
+      price: 'Custom',
+      duration: 'Annual',
+      description: 'Build a culture of continuous learning',
+      features: [
+        'Unlimited participants',
+        'Custom learning paths',
+        'Leadership programs',
+        'Technical bootcamps',
+        'Learning portal',
+        'Quarterly reviews',
+        'Executive briefings',
+      ],
+      ideal: 'Organization-wide transformation',
+    },
   ];
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white py-24">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex p-4 rounded-full bg-blue-500 text-white mb-6">
-              <Users className="w-8 h-8" />
-            </div>
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              Expert Education
-            </h1>
-            <p className="text-xl md:text-2xl text-slate-300 mb-8 leading-relaxed">
-              Professional training and development programs designed to enhance your team&apos;s capabilities and drive innovation.
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center mb-8">
-              <Badge className="bg-blue-500 text-white px-4 py-2 text-sm">
-                Custom Training
-              </Badge>
-              <Badge className="bg-green-500 text-white px-4 py-2 text-sm">
-                Expert Instructors
-              </Badge>
-              <Badge className="bg-purple-500 text-white px-4 py-2 text-sm">
-                Certification
-              </Badge>
-            </div>
-            <Button size="lg" className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-4 text-lg">
-              Explore Training Programs
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-slate-900">
-              Program Features
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {features.map((feature, index) => (
-                <div key={index} className="flex items-center p-6 bg-white rounded-lg shadow-sm">
-                  <CheckCircle2 className="w-6 h-6 text-blue-500 mr-4 flex-shrink-0" />
-                  <span className="text-lg text-slate-700">{feature}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Benefits Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 text-slate-900">
-              Why Choose Our Training
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {benefits.map((benefit, index) => (
-                <Card key={index} className="text-center hover:shadow-lg transition-shadow">
-                  <CardHeader>
-                    <div className="mx-auto p-3 rounded-full bg-blue-100 text-blue-600 w-fit">
-                      <benefit.icon className="w-8 h-8" />
-                    </div>
-                    <CardTitle className="text-xl">{benefit.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-slate-600">
-                      {benefit.description}
-                    </CardDescription>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Programs Section */}
-      <section className="py-20 bg-slate-900 text-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-              Training Programs
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {programs.map((program, index) => (
-                <Card key={index} className="bg-white text-slate-900">
-                  <CardHeader>
-                    <CardTitle className="text-2xl text-blue-600">{program.title}</CardTitle>
-                    <CardDescription className="text-slate-600 text-base">
-                      {program.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex justify-between items-center mb-4">
-                      <span className="text-sm text-slate-500">Duration: {program.duration}</span>
-                      <Badge variant="outline">{program.format}</Badge>
-                    </div>
-                    <Button className="w-full bg-blue-500 hover:bg-blue-600 text-white">
-                      Learn More
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-blue-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-slate-900">
-              Ready to Invest in Your Team?
-            </h2>
-            <p className="text-xl text-slate-600 mb-8">
-              Contact us to discuss custom training programs tailored to your organization&apos;s needs.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-4">
-                Get Custom Quote
-                <BookOpen className="ml-2 w-5 h-5" />
-              </Button>
-              <Button size="lg" variant="outline" className="px-8 py-4" asChild>
+    <>
+      <JsonLd data={serviceSchema} />
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+        {/* Hero Section */}
+        <section className="relative py-20 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-teal-600/10 to-cyan-600/10" />
+          <div className="relative container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="max-w-4xl mx-auto text-center"
+            >
+              <Badge className="mb-4 bg-teal-600 text-white">Transform Your Team</Badge>
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+                Expert Education & Training
+              </h1>
+              <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
+                Empower your team with world-class training. From technical skills to leadership 
+                development, we deliver transformative learning experiences that drive real results.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Link href="/contact">
-                  Contact Us
-                  <ArrowRight className="ml-2 w-5 h-5" />
+                  <Button size="lg" className="bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700">
+                    Design Your Program
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
                 </Link>
-              </Button>
+                <Link href="#programs">
+                  <Button size="lg" variant="outline">
+                    Explore Programs
+                  </Button>
+                </Link>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Outcomes */}
+        <section className="py-16 bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              {outcomes.map((outcome, index) => (
+                <motion.div
+                  key={outcome.metric}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="text-center"
+                >
+                  <div className="text-3xl md:text-4xl font-bold text-teal-600 dark:text-teal-400 mb-2">
+                    {outcome.value}
+                  </div>
+                  <div className="font-semibold text-gray-900 dark:text-white">{outcome.metric}</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">{outcome.description}</div>
+                </motion.div>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
-    </div>
+        </section>
+
+        {/* Training Programs */}
+        <section id="programs" className="py-20">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-12"
+            >
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                Training Programs
+              </h2>
+              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                Comprehensive programs designed for immediate impact and lasting transformation
+              </p>
+            </motion.div>
+
+            <div className="grid md:grid-cols-2 gap-8">
+              {trainingPrograms.map((program, index) => (
+                <motion.div
+                  key={program.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                >
+                  <Card className="h-full hover:shadow-xl transition-shadow">
+                    <CardHeader>
+                      <div className="w-16 h-16 bg-gradient-to-br from-teal-600 to-cyan-600 rounded-lg flex items-center justify-center text-white mb-4">
+                        {program.icon}
+                      </div>
+                      <CardTitle className="text-2xl">{program.title}</CardTitle>
+                      <CardDescription className="text-base">
+                        {program.description}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-2 gap-2">
+                        {program.topics.map((topic) => (
+                          <div key={topic} className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
+                            <span className="text-sm text-gray-700 dark:text-gray-300">{topic}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Delivery Formats */}
+        <section className="py-20 bg-gray-50 dark:bg-slate-900">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-12"
+            >
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                Flexible Delivery Options
+              </h2>
+              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                Choose the format that works best for your team and schedule
+              </p>
+            </motion.div>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              {deliveryFormats.map((format, index) => (
+                <motion.div
+                  key={format.format}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow"
+                >
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+                    {format.format}
+                  </h3>
+                  <div className="space-y-3 mb-6">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600 dark:text-gray-400">Duration:</span>
+                      <span className="font-medium text-gray-900 dark:text-white">{format.duration}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600 dark:text-gray-400">Participants:</span>
+                      <span className="font-medium text-gray-900 dark:text-white">{format.participants}</span>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    {format.features.map((feature) => (
+                      <div key={feature} className="flex items-center gap-2">
+                        <Star className="h-4 w-4 text-teal-600 flex-shrink-0" />
+                        <span className="text-sm text-gray-700 dark:text-gray-300">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Packages */}
+        <section className="py-20">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-12"
+            >
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                Training Packages
+              </h2>
+              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                Investment in your team&apos;s future starts here
+              </p>
+            </motion.div>
+
+            <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+              {packages.map((pkg, index) => (
+                <motion.div
+                  key={pkg.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className={`relative ${pkg.recommended ? 'md:-mt-4' : ''}`}
+                >
+                  {pkg.recommended && (
+                    <div className="absolute -top-4 left-0 right-0 flex justify-center">
+                      <Badge className="bg-teal-600 text-white">Most Popular</Badge>
+                    </div>
+                  )}
+                  <Card className={`h-full ${pkg.recommended ? 'border-teal-600 shadow-xl' : ''}`}>
+                    <CardHeader>
+                      <CardTitle className="text-2xl">{pkg.name}</CardTitle>
+                      <div className="mt-4">
+                        <span className="text-4xl font-bold text-gray-900 dark:text-white">
+                          {pkg.price}
+                        </span>
+                        {pkg.price !== 'Custom' && (
+                          <span className="text-gray-600 dark:text-gray-400">{pkg.duration}</span>
+                        )}
+                      </div>
+                      <CardDescription className="mt-4">
+                        {pkg.description}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="space-y-3 mb-6">
+                        {pkg.features.map((feature) => (
+                          <li key={feature} className="flex items-start gap-2">
+                            <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                            <span className="text-gray-700 dark:text-gray-300 text-sm">{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <div className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                        <strong>Ideal for:</strong> {pkg.ideal}
+                      </div>
+                      <Button 
+                        className={`w-full ${
+                          pkg.recommended 
+                            ? 'bg-teal-600 hover:bg-teal-700' 
+                            : ''
+                        }`}
+                        variant={pkg.recommended ? 'default' : 'outline'}
+                      >
+                        Get Started
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="py-20 bg-gradient-to-r from-teal-600 to-cyan-600">
+          <div className="container mx-auto px-4 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <Badge className="mb-4 bg-white text-teal-600">Limited Availability</Badge>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                Invest in Your Team&apos;s Future Today
+              </h2>
+              <p className="text-xl text-teal-100 mb-8 max-w-2xl mx-auto">
+                Join 500+ companies that have transformed their teams through our expert-led 
+                training programs. Start your learning journey today.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Link href="/contact">
+                  <Button size="lg" className="bg-white text-teal-600 hover:bg-gray-100">
+                    <Calendar className="mr-2 h-5 w-5" />
+                    Schedule Training
+                  </Button>
+                </Link>
+                <Link href="/download-catalog">
+                  <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-teal-600">
+                    Download Course Catalog
+                  </Button>
+                </Link>
+              </div>
+              <p className="mt-8 text-sm text-teal-100">
+                🎓 Expert instructors • 📈 Measurable results • 🏆 Certification available
+              </p>
+            </motion.div>
+          </div>
+        </section>
+      </div>
+    </>
   );
 }

@@ -1,110 +1,78 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
 
-// Schema for push subscription validation
-const PushSubscriptionSchema = z.object({
-  endpoint: z.string().url(),
-  expirationTime: z.number().nullable().optional(),
-  keys: z.object({
-    p256dh: z.string(),
-    auth: z.string(),
-  }),
-});
-
-/**
- * API Route to handle push notification subscription registration
- * POST /api/push/subscribe
- */
-async function handlePOST(request: NextRequest) {
+export async function POST(request: NextRequest) {
   try {
-    // Get the subscription object from the request
-    const subscription = await request.json();
-    
-    // Validate the subscription object
-    const validationResult = PushSubscriptionSchema.safeParse(subscription);
-    if (!validationResult.success) {
+    const supabase = await createClient();
+    const { subscription, userId } = await request.json();
+
+    // Validate subscription data
+    if (!subscription || !subscription.endpoint || !subscription.keys) {
       return NextResponse.json(
-        { error: 'Invalid subscription format', details: validationResult.error.format() },
+        { error: 'Invalid subscription data' },
         { status: 400 }
       );
     }
-    
-    // Get the Supabase client
-    const supabase = await createClient();
-    
-    // Get the user's session
-    const { data: { session } } = await supabase.auth.getSession();
-    
-    // Common subscription data
-    const subscriptionData = {
-      endpoint: subscription.endpoint,
-      p256dh: subscription.keys.p256dh,
-      auth: subscription.keys.auth,
-      expiration_time: subscription.expirationTime || null,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    };
-    
-    // If the user is logged in, associate the subscription with their user ID
-    if (session) {
-      const userId = session.user.id;
-      
-      // Store the subscription in the database
-      const { data, error } = await supabase
-        .from('push_subscriptions')
-        .upsert(
-          {
-            ...subscriptionData,
-            user_id: userId,
-          },
-          { onConflict: 'endpoint' }
-        )
-        .select();
-      
-      if (error) {
-        console.error('Error storing push subscription:', error);
-        return NextResponse.json(
-          { error: 'Failed to store subscription' },
-          { status: 500 }
-        );
-      }
-      
-      return NextResponse.json(
-        { success: true, message: 'Subscription stored successfully', data },
-        { status: 200 }
-      );
-    } else {
-      // For anonymous users, store the subscription without a user ID
-      // This allows for site-wide notifications even for non-logged-in users
-      const { data, error } = await supabase
-        .from('push_subscriptions')
-        .upsert(
-          subscriptionData,
-          { onConflict: 'endpoint' }
-        )
-        .select();
-      
-      if (error) {
-        console.error('Error storing anonymous push subscription:', error);
-        return NextResponse.json(
-          { error: 'Failed to store subscription' },
-          { status: 500 }
-        );
-      }
-      
-      return NextResponse.json(
-        { success: true, message: 'Anonymous subscription stored successfully', data },
-        { status: 200 }
-      );
+
+    // Get authenticated user if no userId provided
+    let subscriptionUserId = userId;
+    if (!subscriptionUserId) {
+      const { data: { user } } = await supabase.auth.getUser();
+      subscriptionUserId = user?.id;
     }
+
+    // Check for existing subscription
+    const { data: existingSubscription } = await supabase
+      .from('push_subscriptions')
+      .select('id')
+      .eq('endpoint', subscription.endpoint)
+      .single();
+
+    if (existingSubscription) {
+      // Update existing subscription
+      const { error } = await supabase
+        .from('push_subscriptions')
+        .update({
+          p256dh: subscription.keys.p256dh,
+          auth: subscription.keys.auth,
+          user_id: subscriptionUserId,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', existingSubscription.id);
+
+      if (error) {
+        console.error('Error updating subscription:', error);
+        return NextResponse.json(
+          { error: 'Failed to update subscription' },
+          { status: 500 }
+        );
+      }
+    } else {
+      // Create new subscription
+      const { error } = await supabase
+        .from('push_subscriptions')
+        .insert({
+          endpoint: subscription.endpoint,
+          p256dh: subscription.keys.p256dh,
+          auth: subscription.keys.auth,
+          user_id: subscriptionUserId,
+        });
+
+      if (error) {
+        console.error('Error creating subscription:', error);
+        return NextResponse.json(
+          { error: 'Failed to save subscription' },
+          { status: 500 }
+        );
+      }
+    }
+
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Unexpected error in push subscription handler:', error);
+    console.error('Push subscription error:', error);
     return NextResponse.json(
-      { error: 'Server error processing push subscription' },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }
 }
-
-export const POST = handlePOST;
