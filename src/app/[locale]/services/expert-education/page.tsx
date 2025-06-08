@@ -111,12 +111,12 @@ export default function ExpertEducationPage() {
 
   const packages = [
     {
-      name: 'Workshop Day',
-      price: '$2,500',
-      duration: '/day',
+      name: 'Workshop Days',
+      price: '$165',
+      duration: '/day/person',
       description: 'Single-day intensive workshop for your team',
       features: [
-        'Up to 20 participants',
+        'Expert-led instruction',
         'Custom curriculum',
         'Hands-on exercises',
         'Digital materials',
@@ -126,26 +126,32 @@ export default function ExpertEducationPage() {
       ideal: 'Quick skill boost',
     },
     {
-      name: 'Learning Program',
-      price: '$12,000',
-      duration: '/month',
+      name: 'Learning Program - CARSI Membership',
+      price: 'Tiered',
+      duration: '',
       description: 'Comprehensive learning journey with ongoing support',
       features: [
-        'Everything in Workshop',
+        'Free Library - Access to basic resources',
+        'Foundation Membership - $44/month',
+        'Growth Membership - $99/month',
         'Weekly sessions',
         'Personal mentoring',
         'Project assignments',
         'Progress tracking',
-        'Team assessments',
         'Certification prep',
       ],
       ideal: 'Deep skill development',
       recommended: true,
+      tiers: [
+        { name: 'Free Library', price: 'Free', description: 'Basic resources and guides' },
+        { name: 'Foundation', price: '$44/mo', description: 'Core training modules' },
+        { name: 'Growth', price: '$99/mo', description: 'Full access with mentoring' },
+      ]
     },
     {
       name: 'Enterprise Academy',
-      price: 'Custom',
-      duration: 'Annual',
+      price: 'Coming Soon',
+      duration: '',
       description: 'Build a culture of continuous learning',
       features: [
         'Unlimited participants',
@@ -157,6 +163,7 @@ export default function ExpertEducationPage() {
         'Executive briefings',
       ],
       ideal: 'Organization-wide transformation',
+      comingSoon: true,
     },
   ];
 
@@ -342,15 +349,33 @@ export default function ExpertEducationPage() {
                       <Badge className="bg-teal-600 text-white">Most Popular</Badge>
                     </div>
                   )}
-                  <Card className={`h-full ${pkg.recommended ? 'border-teal-600 shadow-xl' : ''}`}>
+                  {pkg.comingSoon && (
+                    <div className="absolute -top-4 left-0 right-0 flex justify-center">
+                      <Badge className="bg-orange-600 text-white">Coming Soon</Badge>
+                    </div>
+                  )}
+                  <Card className={`h-full ${pkg.recommended ? 'border-teal-600 shadow-xl' : ''} ${pkg.comingSoon ? 'opacity-75' : ''}`}>
                     <CardHeader>
                       <CardTitle className="text-2xl">{pkg.name}</CardTitle>
                       <div className="mt-4">
-                        <span className="text-4xl font-bold text-gray-900 dark:text-white">
-                          {pkg.price}
-                        </span>
-                        {pkg.price !== 'Custom' && (
-                          <span className="text-gray-600 dark:text-gray-400">{pkg.duration}</span>
+                        {pkg.tiers ? (
+                          <div className="space-y-2">
+                            {pkg.tiers.map((tier) => (
+                              <div key={tier.name} className="flex justify-between items-center p-2 bg-gray-50 dark:bg-slate-800 rounded">
+                                <span className="text-sm font-medium">{tier.name}</span>
+                                <span className="text-lg font-bold text-teal-600">{tier.price}</span>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <>
+                            <span className="text-4xl font-bold text-gray-900 dark:text-white">
+                              {pkg.price}
+                            </span>
+                            {pkg.duration && (
+                              <span className="text-gray-600 dark:text-gray-400">{pkg.duration}</span>
+                            )}
+                          </>
                         )}
                       </div>
                       <CardDescription className="mt-4">
@@ -358,14 +383,29 @@ export default function ExpertEducationPage() {
                       </CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <ul className="space-y-3 mb-6">
-                        {pkg.features.map((feature) => (
-                          <li key={feature} className="flex items-start gap-2">
-                            <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                            <span className="text-gray-700 dark:text-gray-300 text-sm">{feature}</span>
-                          </li>
-                        ))}
-                      </ul>
+                      {!pkg.tiers && (
+                        <ul className="space-y-3 mb-6">
+                          {pkg.features.map((feature) => (
+                            <li key={feature} className="flex items-start gap-2">
+                              <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                              <span className="text-gray-700 dark:text-gray-300 text-sm">{feature}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                      {pkg.tiers && (
+                        <div className="space-y-4 mb-6">
+                          <div className="text-sm font-semibold text-gray-700 dark:text-gray-300">Includes:</div>
+                          <ul className="space-y-2">
+                            {pkg.features.filter(f => !f.includes('$')).map((feature) => (
+                              <li key={feature} className="flex items-start gap-2">
+                                <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
+                                <span className="text-gray-700 dark:text-gray-300 text-sm">{feature}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
                       <div className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                         <strong>Ideal for:</strong> {pkg.ideal}
                       </div>
@@ -376,8 +416,9 @@ export default function ExpertEducationPage() {
                             : ''
                         }`}
                         variant={pkg.recommended ? 'default' : 'outline'}
+                        disabled={pkg.comingSoon}
                       >
-                        Get Started
+                        {pkg.comingSoon ? 'Coming Soon' : 'Get Started'}
                       </Button>
                     </CardContent>
                   </Card>
