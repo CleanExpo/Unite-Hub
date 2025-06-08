@@ -2,7 +2,6 @@
 
 import React, { ReactNode } from 'react';
 import CookieConsentProvider from './compliance/CookieConsentProvider';
-// import { ExperimentProvider } from './experiments/ExperimentProvider'; // Temporarily disabled
 
 interface ClientWrapperProps {
   children: ReactNode;
@@ -15,9 +14,7 @@ interface ClientWrapperProps {
 export default function ClientWrapper({ children }: ClientWrapperProps) {
   return (
     <CookieConsentProvider>
-      {/* <ExperimentProvider> - Temporarily disabled to fix console errors */}
-        {children}
-      {/* </ExperimentProvider> */}
+      {children}
     </CookieConsentProvider>
   );
 }
