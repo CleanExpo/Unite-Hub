@@ -1,6 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
+// Handle GET requests (return method info)
+export async function GET() {
+  return NextResponse.json({
+    message: 'Contact API endpoint',
+    methods: ['POST'],
+    description: 'Submit contact form data via POST request'
+  }, { status: 200 })
+}
+
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json()
