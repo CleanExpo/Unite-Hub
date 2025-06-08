@@ -8,15 +8,15 @@ interface CRMLayoutProps {
 
 export default async function CRMLayout({ children }: CRMLayoutProps) {
   const supabase = await createClient();
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { user }, error } = await supabase.auth.getUser();
   
   // Check if user is admin
   let isAdmin = false;
-  if (session?.user) {
+  if (user && !error) {
     const { data: profile } = await supabase
       .from('profiles')
       .select('role')
-      .eq('id', session.user.id)
+      .eq('id', user.id)
       .single();
       
     isAdmin = profile?.role === 'admin';

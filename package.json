@@ -119,7 +119,17 @@
         "rollback:to": "tsx scripts/rollback.ts to",
         "rollback:interactive": "tsx scripts/rollback.ts interactive",
         "rollback:verify": "tsx scripts/rollback.ts verify",
-        "rollback:tag": "tsx scripts/rollback.ts tag"
+        "rollback:tag": "tsx scripts/rollback.ts tag",
+        "test:comprehensive": "tsx tests/comprehensive-test-runner.ts",
+        "test:comprehensive:critical": "tsx tests/comprehensive-test-runner.ts --priority critical",
+        "test:comprehensive:crm": "tsx tests/comprehensive-test-runner.ts --categories CRM",
+        "test:comprehensive:ai": "tsx tests/comprehensive-test-runner.ts --categories AI",
+        "test:comprehensive:no-docker": "tsx tests/comprehensive-test-runner.ts --no-docker",
+        "test:pre-deploy": "tsx tests/pre-deployment-automation.ts",
+        "test:pre-deploy:fast": "tsx tests/pre-deployment-automation.ts --skip-docker --retries 1",
+        "test:pre-deploy:full": "tsx tests/pre-deployment-automation.ts",
+        "deploy:automated": "npm run test:pre-deploy && vercel --prod",
+        "deploy:with-webhook": "npm run test:pre-deploy --webhook $WEBHOOK_URL && vercel --prod"
     },
     "keywords": [],
     "author": "",

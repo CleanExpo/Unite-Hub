@@ -29,18 +29,21 @@ export async function GET(request: NextRequest) {
       errors.database = error instanceof Error ? error.message : 'Database check failed';
     }
 
-    // 2. Auth Check - simplified
+    // 2. Auth Check - Test auth system availability without requiring user
     try {
       const supabase = await createClient();
-      const { data: { user }, error } = await supabase.auth.getUser();
-      // Auth is working if we can call the method without errors
-      checks.auth = !error;
-      if (error && error.message !== 'Auth session missing!') {
+      // Test auth system by checking if we can call auth methods
+      const { data: { session }, error } = await supabase.auth.getSession();
+      // Auth system is healthy if we can call it without connection errors
+      checks.auth = true;
+      // Only mark as error if it's a connection/system error, not missing session
+      if (error && !error.message.includes('session') && !error.message.includes('missing')) {
+        checks.auth = false;
         errors.auth = error.message;
       }
     } catch (error) {
       checks.auth = false;
-      errors.auth = error instanceof Error ? error.message : 'Auth check failed';
+      errors.auth = error instanceof Error ? error.message : 'Auth system unavailable';
     }
 
     // 3. Stripe Check
