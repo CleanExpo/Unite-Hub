@@ -32,7 +32,7 @@ export default function ResourcesPage() {
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
               Free Resources & Downloads
             </h1>
-            <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-8">
+            <p className="text-xl text-slate-200 max-w-3xl mx-auto mb-8">
               Templates, guides, checklists, and whitepapers to accelerate your business growth
             </p>
           </div>
@@ -49,7 +49,7 @@ export default function ResourcesPage() {
             <h2 className="text-3xl font-bold text-white mb-4">
               Resources Coming Soon!
             </h2>
-            <p className="text-lg text-slate-300 mb-8 max-w-2xl mx-auto">
+            <p className="text-lg text-slate-200 mb-8 max-w-2xl mx-auto">
               We&apos;re preparing valuable resources to help you succeed. Check back soon for whitepapers, templates, checklists, and more!
             </p>
 
@@ -58,32 +58,32 @@ export default function ResourcesPage() {
               <div className="bg-slate-700/50 rounded-xl p-6 border border-slate-600">
                 <FileText className="h-8 w-8 text-teal-400 mb-3 mx-auto" />
                 <h3 className="font-semibold text-white mb-2">Whitepapers</h3>
-                <p className="text-sm text-slate-400">In-depth research and insights</p>
+                <p className="text-sm text-slate-300">In-depth research and insights</p>
               </div>
               <div className="bg-slate-700/50 rounded-xl p-6 border border-slate-600">
                 <FileSpreadsheet className="h-8 w-8 text-cyan-400 mb-3 mx-auto" />
                 <h3 className="font-semibold text-white mb-2">Templates</h3>
-                <p className="text-sm text-slate-400">Ready-to-use business documents</p>
+                <p className="text-sm text-slate-300">Ready-to-use business documents</p>
               </div>
               <div className="bg-slate-700/50 rounded-xl p-6 border border-slate-600">
                 <CheckSquare className="h-8 w-8 text-purple-400 mb-3 mx-auto" />
                 <h3 className="font-semibold text-white mb-2">Checklists</h3>
-                <p className="text-sm text-slate-400">Step-by-step guides</p>
+                <p className="text-sm text-slate-300">Step-by-step guides</p>
               </div>
               <div className="bg-slate-700/50 rounded-xl p-6 border border-slate-600">
                 <Book className="h-8 w-8 text-pink-400 mb-3 mx-auto" />
                 <h3 className="font-semibold text-white mb-2">E-books</h3>
-                <p className="text-sm text-slate-400">Comprehensive learning materials</p>
+                <p className="text-sm text-slate-300">Comprehensive learning materials</p>
               </div>
               <div className="bg-slate-700/50 rounded-xl p-6 border border-slate-600">
                 <BookOpen className="h-8 w-8 text-orange-400 mb-3 mx-auto" />
                 <h3 className="font-semibold text-white mb-2">Guides</h3>
-                <p className="text-sm text-slate-400">Practical how-to resources</p>
+                <p className="text-sm text-slate-300">Practical how-to resources</p>
               </div>
               <div className="bg-slate-700/50 rounded-xl p-6 border border-slate-600">
                 <Briefcase className="h-8 w-8 text-blue-400 mb-3 mx-auto" />
                 <h3 className="font-semibold text-white mb-2">Case Studies</h3>
-                <p className="text-sm text-slate-400">Real-world success stories</p>
+                <p className="text-sm text-slate-300">Real-world success stories</p>
               </div>
             </div>
 
@@ -104,7 +104,7 @@ export default function ResourcesPage() {
             <h2 className="text-4xl font-bold text-white mb-6">
               Need a Custom Solution?
             </h2>
-            <p className="text-xl mb-8 text-teal-100">
+            <p className="text-xl mb-8 text-white/90">
               Let&apos;s discuss how we can create tailored strategies for your business
             </p>
             <Button asChild size="lg" className="bg-white text-teal-600 hover:bg-slate-100">

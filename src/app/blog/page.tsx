@@ -31,7 +31,7 @@ export default function BlogPage() {
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-6">
               Blog & Resources
             </h1>
-            <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-8">
+            <p className="text-xl text-slate-200 max-w-3xl mx-auto mb-8">
               Insights, tutorials, and strategies to help you grow your business 
               and stay ahead of the competition
             </p>
@@ -49,7 +49,7 @@ export default function BlogPage() {
             <h2 className="text-3xl font-bold text-white mb-4">
               Blog Coming Soon!
             </h2>
-            <p className="text-lg text-slate-300 mb-8 max-w-2xl mx-auto">
+            <p className="text-lg text-slate-200 mb-8 max-w-2xl mx-auto">
               We&apos;re crafting insightful content to help you navigate the digital landscape. 
               Stay tuned for expert articles, industry insights, and practical guides!
             </p>
@@ -59,32 +59,32 @@ export default function BlogPage() {
               <div className="bg-slate-700/50 rounded-xl p-6 border border-slate-600">
                 <PenTool className="h-8 w-8 text-teal-400 mb-3 mx-auto" />
                 <h3 className="font-semibold text-white mb-2">Industry Insights</h3>
-                <p className="text-sm text-slate-400">Latest trends and analysis</p>
+                <p className="text-sm text-slate-300">Latest trends and analysis</p>
               </div>
               <div className="bg-slate-700/50 rounded-xl p-6 border border-slate-600">
                 <Lightbulb className="h-8 w-8 text-cyan-400 mb-3 mx-auto" />
                 <h3 className="font-semibold text-white mb-2">How-To Guides</h3>
-                <p className="text-sm text-slate-400">Practical tutorials and tips</p>
+                <p className="text-sm text-slate-300">Practical tutorials and tips</p>
               </div>
               <div className="bg-slate-700/50 rounded-xl p-6 border border-slate-600">
                 <Target className="h-8 w-8 text-purple-400 mb-3 mx-auto" />
                 <h3 className="font-semibold text-white mb-2">Strategy Articles</h3>
-                <p className="text-sm text-slate-400">Business growth tactics</p>
+                <p className="text-sm text-slate-300">Business growth tactics</p>
               </div>
               <div className="bg-slate-700/50 rounded-xl p-6 border border-slate-600">
                 <TrendingUp className="h-8 w-8 text-pink-400 mb-3 mx-auto" />
                 <h3 className="font-semibold text-white mb-2">SEO & Marketing</h3>
-                <p className="text-sm text-slate-400">Digital marketing expertise</p>
+                <p className="text-sm text-slate-300">Digital marketing expertise</p>
               </div>
               <div className="bg-slate-700/50 rounded-xl p-6 border border-slate-600">
                 <BookOpen className="h-8 w-8 text-orange-400 mb-3 mx-auto" />
                 <h3 className="font-semibold text-white mb-2">Tech Tutorials</h3>
-                <p className="text-sm text-slate-400">Development best practices</p>
+                <p className="text-sm text-slate-300">Development best practices</p>
               </div>
               <div className="bg-slate-700/50 rounded-xl p-6 border border-slate-600">
                 <MessageSquare className="h-8 w-8 text-blue-400 mb-3 mx-auto" />
                 <h3 className="font-semibold text-white mb-2">Expert Interviews</h3>
-                <p className="text-sm text-slate-400">Insights from leaders</p>
+                <p className="text-sm text-slate-300">Insights from leaders</p>
               </div>
             </div>
 
@@ -105,7 +105,7 @@ export default function BlogPage() {
             <h2 className="text-4xl font-bold text-white mb-6">
               Ready to Transform Your Business?
             </h2>
-            <p className="text-xl mb-8 text-teal-100">
+            <p className="text-xl mb-8 text-white/90">
               Let our expertise guide your digital transformation journey
             </p>
             <Button asChild size="lg" className="bg-white text-teal-600 hover:bg-slate-100">
