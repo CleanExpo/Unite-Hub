@@ -50,15 +50,16 @@ export function ExperimentProvider({ children }: ExperimentProviderProps) {
 
         // Try to get from Supabase auth if available
         if (typeof window !== 'undefined') {
-          const { createClient } = await import('@supabase/supabase-js');
-          const supabase = createClient(
-            process.env.NEXT_PUBLIC_SUPABASE_URL || '',
-            process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-          );
-          const { data: { user } } = await supabase.auth.getUser();
-          if (user) {
-            setUserId(user.id);
-            localStorage.setItem('experiment_user_id', user.id);
+          try {
+            const { supabase } = await import('@/lib/supabase/client');
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+              setUserId(user.id);
+              localStorage.setItem('experiment_user_id', user.id);
+            }
+          } catch (authError) {
+            // If Supabase is not available or configured, just continue without user ID
+            console.log('Supabase auth not available for experiments');
           }
         }
       } catch (error) {
