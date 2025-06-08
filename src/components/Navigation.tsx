@@ -9,17 +9,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { ServiceMegaMenu } from "@/components/navigation/ServiceMegaMenu";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { supabaseClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
-import LanguageSwitcher from "./LanguageSwitcher";
-import { Locale, defaultLocale } from "@/i18n";
 import { GlobalSearch } from "@/components/search/GlobalSearch";
-
-// Helper function to create locale-aware paths
-function getLocalizedPath(path: string, locale: string): string {
-  return `/${locale}${path}`;
-}
 
 const navigation = [
   { name: "About", href: "/about-us" },
@@ -31,8 +24,6 @@ const navigation = [
 ];
 
 export default function Navigation() {
-  const params = useParams();
-  const currentLocale = (params?.locale as Locale) || defaultLocale;
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -70,7 +61,7 @@ export default function Navigation() {
 
   const handleLogout = async () => {
     await supabaseClient.auth.signOut();
-    router.push(getLocalizedPath("/", currentLocale));
+    router.push("/");
   };
 
   return (
@@ -86,7 +77,7 @@ export default function Navigation() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link 
-            href={getLocalizedPath("/", currentLocale)} 
+            href="/" 
             className="flex items-center"
           >
             <Image
@@ -106,10 +97,10 @@ export default function Navigation() {
             {navigation.map((item) => (
               <Link
                 key={item.name}
-                href={getLocalizedPath(item.href, currentLocale)}
+                href={item.href}
                 className={cn(
                   "text-sm font-medium transition-colors",
-                  pathname === getLocalizedPath(item.href, currentLocale)
+                  pathname === item.href
                     ? "text-teal-400"
                     : "text-slate-300 hover:text-white"
                 )}
@@ -129,14 +120,12 @@ export default function Navigation() {
                 <Search className="h-5 w-5" />
               </button>
 
-              <LanguageSwitcher currentLocale={currentLocale} />
-
               {!loading && (
                 <>
                   {user ? (
                     <>
                       <Link
-                        href={getLocalizedPath("/dashboard", currentLocale)}
+                        href="/dashboard"
                         className="text-sm font-medium text-slate-300 hover:text-white transition-colors"
                       >
                         Dashboard
@@ -153,7 +142,7 @@ export default function Navigation() {
                   ) : (
                     <>
                       <Link
-                        href={getLocalizedPath("/login", currentLocale)}
+                        href="/login"
                         className="text-sm font-medium text-slate-300 hover:text-white transition-colors"
                       >
                         Login
@@ -163,7 +152,7 @@ export default function Navigation() {
                         size="sm"
                         className="bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-500 hover:to-cyan-500"
                       >
-                        <Link href={getLocalizedPath("/register", currentLocale)}>
+                        <Link href="/register">
                           Get Started
                           <ArrowRight className="ml-2 h-4 w-4" />
                         </Link>
@@ -203,7 +192,7 @@ export default function Navigation() {
           >
             <div className="px-4 pt-4 pb-6 space-y-4">
               <Link
-                href={getLocalizedPath("/services", currentLocale)}
+                href="/services"
                 className="block text-base font-medium text-slate-300 hover:text-white transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -213,10 +202,10 @@ export default function Navigation() {
               {navigation.map((item) => (
                 <Link
                   key={item.name}
-                  href={getLocalizedPath(item.href, currentLocale)}
+                  href={item.href}
                   className={cn(
                     "block text-base font-medium transition-colors",
-                    pathname === getLocalizedPath(item.href, currentLocale)
+                    pathname === item.href
                       ? "text-teal-400"
                       : "text-slate-300 hover:text-white"
                   )}
@@ -227,17 +216,12 @@ export default function Navigation() {
               ))}
 
               <div className="pt-4 space-y-4 border-t border-slate-800">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-slate-400">Language</span>
-                  <LanguageSwitcher currentLocale={currentLocale} />
-                </div>
-
                 {!loading && (
                   <>
                     {user ? (
                       <>
                         <Link
-                          href={getLocalizedPath("/dashboard", currentLocale)}
+                          href="/dashboard"
                           className="block text-base font-medium text-slate-300 hover:text-white transition-colors"
                           onClick={() => setMobileMenuOpen(false)}
                         >
@@ -257,7 +241,7 @@ export default function Navigation() {
                     ) : (
                       <>
                         <Link
-                          href={getLocalizedPath("/login", currentLocale)}
+                          href="/login"
                           className="block text-base font-medium text-slate-300 hover:text-white transition-colors"
                           onClick={() => setMobileMenuOpen(false)}
                         >
@@ -267,7 +251,7 @@ export default function Navigation() {
                           asChild
                           className="w-full bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-500 hover:to-cyan-500"
                         >
-                          <Link href={getLocalizedPath("/register", currentLocale)}>
+                          <Link href="/register">
                             Get Started
                             <ArrowRight className="ml-2 h-4 w-4" />
                           </Link>
