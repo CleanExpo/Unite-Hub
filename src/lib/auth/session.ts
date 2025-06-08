@@ -28,10 +28,10 @@ export async function getCurrentUser(request: NextRequest): Promise<User | null>
       return null;
     }
 
-    // Get user details with role
+    // Get user details with role from user_profiles (NOT users)
     const { data: userData } = await supabaseClient
-      .from('users')
-      .select('id, email, role, is_active, created_at, updated_at, last_login, login_count, created_by')
+      .from('user_profiles')  // FIXED: Changed from 'users' to 'user_profiles'
+      .select('id, email, role, is_active, created_at, updated_at, created_by')
       .eq('id', authUser.id)
       .single();
 
@@ -41,13 +41,11 @@ export async function getCurrentUser(request: NextRequest): Promise<User | null>
 
     return {
       id: userData.id,
-      email: userData.email,
+      email: userData.email || authUser.email || '',
       role: userData.role,
       isActive: userData.is_active,
       createdAt: new Date(userData.created_at),
       updatedAt: new Date(userData.updated_at),
-      lastLogin: userData.last_login ? new Date(userData.last_login) : undefined,
-      loginCount: userData.login_count,
       createdBy: userData.created_by,
     };
   } catch (error) {
@@ -106,10 +104,10 @@ export async function getCurrentUserServer(): Promise<User | null> {
       return null;
     }
 
-    // Get user details with role
+    // Get user details with role from user_profiles (NOT users)
     const { data: userData, error } = await supabase
-      .from('users')
-      .select('id, email, role, is_active, created_at, updated_at, last_login, login_count, created_by')
+      .from('user_profiles')  // FIXED: Changed from 'users' to 'user_profiles'
+      .select('id, email, role, is_active, created_at, updated_at, created_by')
       .eq('id', authUser.id)
       .single();
 
@@ -119,13 +117,11 @@ export async function getCurrentUserServer(): Promise<User | null> {
 
     return {
       id: userData.id,
-      email: userData.email,
+      email: userData.email || authUser.email || '',
       role: userData.role,
       isActive: userData.is_active,
       createdAt: new Date(userData.created_at),
       updatedAt: new Date(userData.updated_at),
-      lastLogin: userData.last_login ? new Date(userData.last_login) : undefined,
-      loginCount: userData.login_count,
       createdBy: userData.created_by,
     };
   } catch (error) {
@@ -145,9 +141,9 @@ export async function checkUserPermissionServer(
   try {
     const supabase = createSupabaseServerClient();
 
-    // Get user role
+    // Get user role from user_profiles
     const { data: userData } = await supabase
-      .from('users')
+      .from('user_profiles')  // FIXED: Changed from 'users' to 'user_profiles'
       .select('role')
       .eq('id', userId)
       .single();
@@ -157,28 +153,15 @@ export async function checkUserPermissionServer(
     // Master role has all permissions
     if (userData.role === 'Master') return true;
 
-    // Check role permissions
-    const { data: permissions } = await supabase
-      .from('role_permissions')
-      .select('*')
-      .eq('role', userData.role)
-      .eq('module', module)
-      .single();
+    // Check specific permission using the check_user_permission function
+    const { data: hasPermission } = await supabase
+      .rpc('check_user_permission', {
+        p_user_id: userId,
+        p_resource: module,
+        p_action: action
+      });
 
-    if (!permissions) return false;
-
-    switch (action) {
-      case 'read':
-        return permissions.can_read;
-      case 'write':
-        return permissions.can_write;
-      case 'delete':
-        return permissions.can_delete;
-      case 'admin':
-        return permissions.can_admin;
-      default:
-        return false;
-    }
+    return hasPermission || false;
   } catch (error) {
     console.error('Check permission server error:', error);
     return false;
