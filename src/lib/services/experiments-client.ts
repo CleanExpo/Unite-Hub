@@ -3,7 +3,7 @@
  * Uses client-side Supabase instance
  */
 
-import { supabaseClient } from '@/lib/supabase/client';
+import { getSupabaseClient } from '@/lib/supabase/client';
 import type { 
   Experiment, 
   ExperimentVariant, 
@@ -12,51 +12,79 @@ import type {
 
 export class ExperimentService {
   /**
+   * Get Supabase client with error handling
+   */
+  private static getClient() {
+    try {
+      return getSupabaseClient();
+    } catch (error) {
+      console.error('Failed to get Supabase client:', error);
+      return null;
+    }
+  }
+
+  /**
    * Get list of experiments
    */
   static async getExperiments(status?: string): Promise<Experiment[]> {
-    let query = supabaseClient
-      .from('experiments')
-      .select(`
-        *,
-        variants:experiment_variants(*)
-      `)
-      .order('created_at', { ascending: false });
+    try {
+      const supabase = this.getClient();
+      if (!supabase) return [];
 
-    if (status) {
-      query = query.eq('status', status);
+      let query = supabase
+        .from('experiments')
+        .select(`
+          *,
+          variants:experiment_variants(*)
+        `)
+        .order('created_at', { ascending: false });
+
+      if (status) {
+        query = query.eq('status', status);
+      }
+
+      const { data, error } = await query;
+
+      if (error) {
+        console.error('Error fetching experiments:', error);
+        return [];
+      }
+
+      return data || [];
+    } catch (error) {
+      console.error('Error in getExperiments:', error);
+      return [];
     }
-
-    const { data, error } = await query;
-
-    if (error) {
-      console.error('Error fetching experiments:', error);
-      throw error;
-    }
-
-    return data || [];
   }
 
   /**
    * Get a specific experiment by ID
    */
   static async getExperiment(id: string): Promise<Experiment | null> {
-    const { data, error } = await supabaseClient
-      .from('experiments')
-      .select(`
-        *,
-        variants:experiment_variants(*),
-        goals:experiment_goals(*)
-      `)
-      .eq('id', id)
-      .single();
+    try {
+      const supabase = this.getClient();
+      if (!supabase) return null;
 
-    if (error) {
-      console.error('Error fetching experiment:', error);
-      throw error;
+      const { data, error } = await supabase
+        .from('experiments')
+        .select(`
+          *,
+          variants:experiment_variants(*),
+          goals:experiment_goals(*)
+        `)
+        .eq('id', id)
+        .single();
+
+      if (error) {
+        console.error('Error fetching experiment:', error);
+        return null;
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Error in getExperiment:', error);
+      return null;
     }
-
-    return data;
   }
 
   /**
@@ -65,7 +93,10 @@ export class ExperimentService {
   static async createExperiment(
     experiment: Omit<Experiment, 'id' | 'created_at' | 'updated_at'>
   ): Promise<Experiment> {
-    const { data, error } = await supabaseClient
+    const supabase = this.getClient();
+    if (!supabase) throw new Error('Supabase client not available');
+
+    const { data, error } = await supabase
       .from('experiments')
       .insert(experiment)
       .select()
@@ -86,7 +117,10 @@ export class ExperimentService {
     id: string,
     updates: Partial<Experiment>
   ): Promise<Experiment> {
-    const { data, error } = await supabaseClient
+    const supabase = this.getClient();
+    if (!supabase) throw new Error('Supabase client not available');
+
+    const { data, error } = await supabase
       .from('experiments')
       .update(updates)
       .eq('id', id)
@@ -105,7 +139,10 @@ export class ExperimentService {
    * Delete an experiment
    */
   static async deleteExperiment(id: string): Promise<void> {
-    const { error } = await supabaseClient
+    const supabase = this.getClient();
+    if (!supabase) throw new Error('Supabase client not available');
+
+    const { error } = await supabase
       .from('experiments')
       .delete()
       .eq('id', id);
@@ -120,18 +157,26 @@ export class ExperimentService {
    * Get experiment statistics
    */
   static async getExperimentStats(experimentId: string): Promise<ExperimentStats[]> {
-    const { data, error } = await supabaseClient
-      .from('experiment_stats')
-      .select('*')
-      .eq('experiment_id', experimentId)
-      .order('variant_name', { ascending: true });
+    try {
+      const supabase = this.getClient();
+      if (!supabase) return [];
 
-    if (error) {
-      console.error('Error fetching experiment stats:', error);
-      throw error;
+      const { data, error } = await supabase
+        .from('experiment_stats')
+        .select('*')
+        .eq('experiment_id', experimentId)
+        .order('variant_name', { ascending: true });
+
+      if (error) {
+        console.error('Error fetching experiment stats:', error);
+        return [];
+      }
+
+      return data || [];
+    } catch (error) {
+      console.error('Error in getExperimentStats:', error);
+      return [];
     }
-
-    return data || [];
   }
 
   /**
@@ -144,19 +189,25 @@ export class ExperimentService {
     user_id?: string;
     session_id?: string;
   }): Promise<void> {
-    const { error } = await supabaseClient
-      .from('experiment_events')
-      .insert({
-        experiment_id: event.experiment_id,
-        event_name: event.event_name,
-        value: event.event_value,
-        user_id: event.user_id || await this.getUserId(),
-        session_id: event.session_id || this.getSessionId(),
-      });
+    try {
+      const supabase = this.getClient();
+      if (!supabase) return;
 
-    if (error) {
-      console.error('Error tracking experiment event:', error);
-      throw error;
+      const { error } = await supabase
+        .from('experiment_events')
+        .insert({
+          experiment_id: event.experiment_id,
+          event_name: event.event_name,
+          value: event.event_value,
+          user_id: event.user_id || await this.getUserId(),
+          session_id: event.session_id || this.getSessionId(),
+        });
+
+      if (error) {
+        console.error('Error tracking experiment event:', error);
+      }
+    } catch (error) {
+      console.error('Error in trackEvent:', error);
     }
   }
 
@@ -164,22 +215,29 @@ export class ExperimentService {
    * Get or create a user ID for tracking
    */
   private static async getUserId(): Promise<string> {
-    // Check for authenticated user first
-    const { data: { user } } = await supabaseClient.auth.getUser();
-    if (user) {
-      return user.id;
-    }
+    try {
+      const supabase = this.getClient();
+      if (supabase) {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          return user.id;
+        }
+      }
 
-    // Use anonymous ID from localStorage
-    const storageKey = 'experiment_user_id';
-    let userId = localStorage.getItem(storageKey);
-    
-    if (!userId) {
-      userId = `anon_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      localStorage.setItem(storageKey, userId);
-    }
+      // Use anonymous ID from localStorage
+      const storageKey = 'experiment_user_id';
+      let userId = localStorage.getItem(storageKey);
+      
+      if (!userId) {
+        userId = `anon_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        localStorage.setItem(storageKey, userId);
+      }
 
-    return userId;
+      return userId;
+    } catch (error) {
+      console.error('Error getting user ID:', error);
+      return `anon_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    }
   }
 
   /**
@@ -201,22 +259,30 @@ export class ExperimentService {
    * Get experiment by name
    */
   static async getExperimentByName(name: string): Promise<Experiment | null> {
-    const { data, error } = await supabaseClient
-      .from('experiments')
-      .select(`
-        *,
-        variants:experiment_variants(*),
-        goals:experiment_goals(*)
-      `)
-      .eq('name', name)
-      .single();
+    try {
+      const supabase = this.getClient();
+      if (!supabase) return null;
 
-    if (error) {
-      console.error('Error fetching experiment by name:', error);
+      const { data, error } = await supabase
+        .from('experiments')
+        .select(`
+          *,
+          variants:experiment_variants(*),
+          goals:experiment_goals(*)
+        `)
+        .eq('name', name)
+        .single();
+
+      if (error) {
+        console.error('Error fetching experiment by name:', error);
+        return null;
+      }
+
+      return data;
+    } catch (error) {
+      console.error('Error in getExperimentByName:', error);
       return null;
     }
-
-    return data;
   }
 
   /**
