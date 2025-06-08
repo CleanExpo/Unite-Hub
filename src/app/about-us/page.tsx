@@ -48,7 +48,7 @@ export default function AboutUsPage() {
     {
       name: "Claire Booth",
       role: "Co-Founder & CMO",
-      image: null, // Image pending
+      image: "/images/team-claire-booth.png",
       linkedin: "https://linkedin.com/in/clairebooth",
       bio: "Digital marketing expert with 15+ years experience in growth strategies and brand development.",
       expertise: ["Digital Marketing", "Growth Strategy", "Brand Development"]
@@ -56,7 +56,7 @@ export default function AboutUsPage() {
     {
       name: "Yasir Sarfraz",
       role: "CTO & Team Leader",
-      image: null, // Image pending
+      image: "/images/team-yasir-sarfraz.png",
       linkedin: "https://linkedin.com/in/yasirsarfraz",
       bio: "Full-stack architect with expertise in scalable enterprise solutions and DevOps practices.",
       expertise: ["Software Architecture", "Cloud Solutions", "DevOps"]
@@ -64,7 +64,7 @@ export default function AboutUsPage() {
     {
       name: "Afifa",
       role: "Lead Developer",
-      image: null, // Image pending
+      image: "/images/team-afifa.png",
       linkedin: "https://linkedin.com/in/afifa",
       bio: "Skilled engineer specializing in modern web technologies and robust application development.",
       expertise: ["Full-Stack Development", "React/Next.js", "API Design"]
