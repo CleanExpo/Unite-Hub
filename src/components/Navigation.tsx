@@ -10,7 +10,7 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { ServiceMegaMenu } from "@/components/navigation/ServiceMegaMenu";
 import { useRouter } from "next/navigation";
-import { supabaseClient } from "@/lib/supabase/client";
+import { getSupabaseClient } from "@/lib/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { GlobalSearch } from "@/components/search/GlobalSearch";
 
@@ -34,20 +34,31 @@ export default function Navigation() {
 
   useEffect(() => {
     const getUser = async () => {
-      const { data } = await supabaseClient.auth.getUser();
-      setUser(data.user);
-      setLoading(false);
+      try {
+        const supabase = getSupabaseClient();
+        const { data } = await supabase.auth.getUser();
+        setUser(data.user);
+      } catch (error) {
+        console.error('Error getting user:', error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     getUser();
 
-    const { data: authListener } = supabaseClient.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user ?? null);
-    });
+    try {
+      const supabase = getSupabaseClient();
+      const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+        setUser(session?.user ?? null);
+      });
 
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
+      return () => {
+        authListener.subscription.unsubscribe();
+      };
+    } catch (error) {
+      console.error('Error setting up auth listener:', error);
+    }
   }, []);
 
   useEffect(() => {
@@ -60,8 +71,13 @@ export default function Navigation() {
   }, []);
 
   const handleLogout = async () => {
-    await supabaseClient.auth.signOut();
-    router.push("/");
+    try {
+      const supabase = getSupabaseClient();
+      await supabase.auth.signOut();
+      router.push("/");
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
   };
 
   return (
