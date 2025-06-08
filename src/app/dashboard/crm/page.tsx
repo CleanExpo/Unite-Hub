@@ -60,34 +60,34 @@ export default function CRMDashboardPage() {
       const data = await apiClient.get('crm/dashboard');
       setDashboardData(data);
 
-      // Transform to metrics format
+      // Transform to metrics format using real data
       const metrics: DashboardMetricsData = {
         revenue: {
-          mtd: data.revenue || 0,
-          ytd: (data.revenue || 0) * 12, // Rough estimate for YTD
-          growth: 15, // Mock growth percentage
+          mtd: data.monthlyRevenue || 0,
+          ytd: data.yearlyRevenue || 0,
+          growth: data.revenueGrowth || 0,
         },
         clients: {
-          active: data.clientsCount || 0,
-          new: Math.floor((data.clientsCount || 0) * 0.1), // Mock new clients
-          retention: 92, // Mock retention rate
+          active: data.activeClientsCount || 0,
+          new: data.newClientsThisMonth || 0,
+          retention: data.clientsCount > 0 
+            ? Math.round((data.activeClientsCount / data.clientsCount) * 100) 
+            : 0,
         },
         deals: {
           pipeline: data.pipelineValue || 0,
-          conversion: 25, // Mock conversion rate
+          conversion: data.conversionRate || 0,
           averageSize: data.dealsCount > 0 ? Math.round(data.revenue / data.dealsCount) : 0,
         },
         tasks: {
           completed: data.completedTasksCount || 0,
-          pending: data.tasksCount || 0,
-          completionRate: data.tasksCount > 0 
-            ? Math.round((data.completedTasksCount / data.tasksCount) * 100) 
-            : 0,
+          pending: data.tasksCount - data.completedTasksCount || 0,
+          completionRate: data.taskCompletionRate || 0,
         },
-        carsi: {
-          enrollments: 145, // Mock CARSI data
-          courses: 23,
-          revenue: 45000,
+        carsi: data.carsiData || {
+          enrollments: 0,
+          courses: 0,
+          revenue: 0,
         },
       };
       setMetricsData(metrics);
@@ -306,30 +306,26 @@ export default function CRMDashboardPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center">
-                          <Users className="h-5 w-5 text-teal-600" />
+                    {dashboardData?.topPerformers?.length > 0 ? (
+                      dashboardData.topPerformers.map((performer: any, index: number) => (
+                        <div key={performer.userId} className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className={`h-10 w-10 rounded-full ${index === 0 ? 'bg-teal-100 dark:bg-teal-900/30' : 'bg-blue-100 dark:bg-blue-900/30'} flex items-center justify-center`}>
+                              <Users className={`h-5 w-5 ${index === 0 ? 'text-teal-600' : 'text-blue-600'}`} />
+                            </div>
+                            <div>
+                              <p className="font-medium">Team Member {index + 1}</p>
+                              <p className="text-sm text-gray-600 dark:text-gray-400">{performer.activitiesCount} activities</p>
+                            </div>
+                          </div>
+                          <span className={`font-bold ${index === 0 ? 'text-teal-600' : 'text-blue-600'}`}>
+                            ${performer.revenue.toLocaleString()}
+                          </span>
                         </div>
-                        <div>
-                          <p className="font-medium">Sarah Johnson</p>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">12 deals closed</p>
-                        </div>
-                      </div>
-                      <span className="font-bold text-teal-600">$125,000</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                          <Users className="h-5 w-5 text-blue-600" />
-                        </div>
-                        <div>
-                          <p className="font-medium">Mike Chen</p>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">10 deals closed</p>
-                        </div>
-                      </div>
-                      <span className="font-bold text-blue-600">$98,000</span>
-                    </div>
+                      ))
+                    ) : (
+                      <p className="text-sm text-gray-500 dark:text-gray-400">No activity data available yet</p>
+                    )}
                   </div>
                 </CardContent>
               </Card>
