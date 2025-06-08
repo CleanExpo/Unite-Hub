@@ -4,7 +4,7 @@
 
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { getUserRoleFromSession } from '@/lib/auth/session';
+import { getUserRoleFromSession } from '@/lib/auth/session-middleware';
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
