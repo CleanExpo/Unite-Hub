@@ -1,4 +1,5 @@
-import { Metadata } from 'next';
+'use client';
+
 import dynamic from 'next/dynamic';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -18,11 +19,6 @@ const SiteAuditDashboard = dynamic(
     )
   }
 );
-
-export const metadata: Metadata = {
-  title: 'Site Health - Admin',
-  description: 'Monitor and manage site health, audit issues, and sitemap',
-};
 
 // Mock audit function for development
 // In production, this would be replaced with actual file scanning

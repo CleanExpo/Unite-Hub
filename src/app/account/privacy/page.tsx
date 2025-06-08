@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Session } from '@supabase/supabase-js';
 import { supabaseClient } from '@/lib/supabase/client';
-import { CookiePreferencesButton } from '../../../../components/compliance/CookieConsentProvider';
+import { CookiePreferencesButton } from '@/components/compliance/CookieConsentProvider';
 import { 
   UserPrivacySettings, 
   DataExportRequest, 

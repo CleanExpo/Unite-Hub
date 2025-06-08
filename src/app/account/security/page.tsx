@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Session } from '@supabase/supabase-js';
 import { supabaseClient } from '@/lib/supabase/client';
-import MFASetup from '../../../../components/auth/MFASetup';
+import MFASetup from '@/components/auth/MFASetup';
 
 interface SecurityState {
   loading: boolean;
@@ -219,16 +219,14 @@ export default function SecurityPage() {
       
       {state.showMfaSetup ? (
         <MFASetup 
-          userId={session?.user.id || ''}
-          userEmail={session?.user.email || ''}
-          onSetupComplete={handleMFASetupComplete}
+          onComplete={() => handleMFASetupComplete('')}
           onCancel={handleMFASetupCancel}
         />
       ) : state.showBackupCodes ? (
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-md mx-auto">
           <h2 className="text-2xl font-bold mb-4">Backup Codes</h2>
           <p className="mb-4">
-            Store these backup codes in a secure location. Each code can only be used once to sign in if you don't have access to your authenticator app.
+            Store these backup codes in a secure location. Each code can only be used once to sign in if you don&apos;t have access to your authenticator app.
           </p>
           
           <div className="grid grid-cols-2 gap-2 mb-6">
