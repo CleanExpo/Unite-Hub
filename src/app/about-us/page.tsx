@@ -70,36 +70,36 @@ export default function AboutUsPage() {
       expertise: ["Full-Stack Development", "React/Next.js", "API Design"]
     },
     {
-      name: "Michael Chen",
-      role: "Head of Operations",
-      image: "/images/team-michael-chen.png",
-      linkedin: "https://linkedin.com/in/michaelchen",
-      bio: "Operations expert with 12+ years optimizing business processes and driving organizational efficiency.",
-      expertise: ["Operations Management", "Process Optimization", "Project Management"]
+      name: "Amina",
+      role: "Senior Full-Stack Developer",
+      image: "/images/team-amina.png",
+      linkedin: "https://linkedin.com/in/amina",
+      bio: "Expert in modern web frameworks with a passion for creating intuitive user experiences and scalable applications.",
+      expertise: ["Full-Stack Development", "UI/UX Design", "System Architecture"]
     },
     {
-      name: "Sarah Thompson",
-      role: "Director of Sales",
-      image: "/images/team-sarah-thompson.png",
-      linkedin: "https://linkedin.com/in/sarahthompson",
-      bio: "Strategic sales leader with proven track record in enterprise client acquisition and relationship management.",
-      expertise: ["Sales Strategy", "Client Relations", "Business Growth"]
+      name: "Ayesha",
+      role: "Marketing Specialist",
+      image: "/images/team-ayesha.png",
+      linkedin: "https://linkedin.com/in/ayesha",
+      bio: "Creative marketing professional with expertise in digital campaigns, content strategy, and brand development.",
+      expertise: ["Digital Marketing", "Content Strategy", "Brand Management"]
     },
     {
-      name: "David Park",
-      role: "Senior Solutions Architect",
-      image: "/images/team-david-park.png",
-      linkedin: "https://linkedin.com/in/davidpark",
-      bio: "Enterprise architect specializing in complex system integrations and scalable infrastructure design.",
-      expertise: ["System Integration", "Enterprise Architecture", "Technical Consulting"]
+      name: "Rana",
+      role: "Senior Backend Developer",
+      image: "/images/team-rana.png",
+      linkedin: "https://linkedin.com/in/rana",
+      bio: "Backend specialist with deep expertise in database optimization, API development, and cloud infrastructure.",
+      expertise: ["Backend Development", "Database Design", "Cloud Architecture"]
     },
     {
-      name: "Emma Williams",
-      role: "Head of Customer Success",
-      image: "/images/team-emma-williams.png",
-      linkedin: "https://linkedin.com/in/emmawilliams",
-      bio: "Customer-focused leader dedicated to ensuring client satisfaction and driving long-term partnerships.",
-      expertise: ["Customer Success", "Account Management", "Service Excellence"]
+      name: "Shahid",
+      role: "DevOps Engineer",
+      image: "/images/team-shahid.png",
+      linkedin: "https://linkedin.com/in/shahid",
+      bio: "DevOps expert focused on CI/CD pipelines, infrastructure automation, and ensuring reliable system deployments.",
+      expertise: ["DevOps", "CI/CD", "Infrastructure Automation"]
     }
   ];
 

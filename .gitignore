@@ -56,3 +56,4 @@ landing-page/node_modules/
 frontend-minimal/node_modules/
 
 .vercel
+.env*.local
