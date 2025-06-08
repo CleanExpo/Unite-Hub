@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -18,6 +19,7 @@ import {
 interface Service {
   id: string;
   icon: typeof Cpu;
+  image?: string;
   title: string;
   description: string;
   features: string[];
@@ -29,6 +31,7 @@ const services: Service[] = [
   {
     id: 'ai-infrastructure',
     icon: Cpu,
+    image: '/images/SAP_System_and_Products.png',
     title: 'AI Infrastructure',
     description: 'Enterprise-grade AI Gateway with multi-provider support, advanced security, and intelligent optimization.',
     features: [
@@ -43,6 +46,7 @@ const services: Service[] = [
   {
     id: 'saas-development',
     icon: Code2,
+    image: '/images/Software_Development.png',
     title: 'SaaS Development',
     description: 'Build next-generation SaaS platforms with modern architecture, scalable infrastructure, and comprehensive security.',
     features: [
@@ -57,6 +61,7 @@ const services: Service[] = [
   {
     id: 'business-intelligence',
     icon: BarChart3,
+    image: '/images/Strategic_Planning.png',
     title: 'Business Intelligence',
     description: 'Transform your data into actionable insights with AI-powered analytics and real-time dashboards.',
     features: [
@@ -71,6 +76,7 @@ const services: Service[] = [
   {
     id: 'security-compliance',
     icon: Shield,
+    image: '/images/Professional_Training.png',
     title: 'Security & Compliance',
     description: 'Enterprise-grade security solutions with comprehensive compliance frameworks including SOC 2, GDPR, and ISO 27001.',
     features: [
@@ -85,6 +91,7 @@ const services: Service[] = [
   {
     id: 'performance',
     icon: Zap,
+    image: '/images/Strategic_Growth.png',
     title: 'Performance Optimization',
     description: 'Achieve sub-second load times and optimal user experience with advanced performance optimization.',
     features: [
@@ -99,6 +106,7 @@ const services: Service[] = [
   {
     id: 'global-solutions',
     icon: Globe2,
+    image: '/images/Strategic_SEO.png',
     title: 'Global Solutions',
     description: 'Expand worldwide with multi-language support, global payments, and regional compliance.',
     features: [
@@ -138,9 +146,20 @@ export function InteractiveSolutions() {
             >
               <CardHeader className="pb-4">
                 <div className="flex items-start justify-between mb-4">
-                  <div className={`p-4 rounded-full ${service.iconBg} text-white`}>
-                    <service.icon className="w-8 h-8" />
-                  </div>
+                  {service.image ? (
+                    <div className="relative w-full h-48 mb-4 rounded-lg overflow-hidden">
+                      <Image
+                        src={service.image}
+                        alt={service.title}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className={`p-4 rounded-full ${service.iconBg} text-white`}>
+                      <service.icon className="w-8 h-8" />
+                    </div>
+                  )}
                 </div>
                 <CardTitle className="text-2xl font-bold text-slate-900 mb-2">
                   {service.title}
