@@ -68,6 +68,38 @@ export default function AboutUsPage() {
       linkedin: "https://linkedin.com/in/afifa",
       bio: "Skilled engineer specializing in modern web technologies and robust application development.",
       expertise: ["Full-Stack Development", "React/Next.js", "API Design"]
+    },
+    {
+      name: "Michael Chen",
+      role: "Head of Operations",
+      image: "/images/team-michael-chen.png",
+      linkedin: "https://linkedin.com/in/michaelchen",
+      bio: "Operations expert with 12+ years optimizing business processes and driving organizational efficiency.",
+      expertise: ["Operations Management", "Process Optimization", "Project Management"]
+    },
+    {
+      name: "Sarah Thompson",
+      role: "Director of Sales",
+      image: "/images/team-sarah-thompson.png",
+      linkedin: "https://linkedin.com/in/sarahthompson",
+      bio: "Strategic sales leader with proven track record in enterprise client acquisition and relationship management.",
+      expertise: ["Sales Strategy", "Client Relations", "Business Growth"]
+    },
+    {
+      name: "David Park",
+      role: "Senior Solutions Architect",
+      image: "/images/team-david-park.png",
+      linkedin: "https://linkedin.com/in/davidpark",
+      bio: "Enterprise architect specializing in complex system integrations and scalable infrastructure design.",
+      expertise: ["System Integration", "Enterprise Architecture", "Technical Consulting"]
+    },
+    {
+      name: "Emma Williams",
+      role: "Head of Customer Success",
+      image: "/images/team-emma-williams.png",
+      linkedin: "https://linkedin.com/in/emmawilliams",
+      bio: "Customer-focused leader dedicated to ensuring client satisfaction and driving long-term partnerships.",
+      expertise: ["Customer Success", "Account Management", "Service Excellence"]
     }
   ];
 
