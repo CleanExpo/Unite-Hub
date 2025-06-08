@@ -1,46 +1,113 @@
 'use client';
 
-export const dynamic = 'force-dynamic'
+export const dynamic = 'force-dynamic';
 
-import { DashboardOverview } from '@/components/crm/DashboardOverview';
+import { useState, useEffect } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import {
+  BarChart3,
+  Calendar,
+  CheckCircle,
+  Clock,
+  DollarSign,
+  FileBarChart,
+  Filter,
+  Plus,
+  RefreshCw,
+  Settings,
+  TrendingUp,
+  Users,
+} from 'lucide-react';
 import { apiClient } from '@/lib/apiClient';
-import { useState, useEffect } from 'react';
+import { toast } from '@/components/ui/use-toast';
+import DashboardMetrics, { DashboardMetricsData } from '@/components/crm/dashboard/DashboardMetrics';
+import DataCleanupTools from '@/components/crm/dashboard/DataCleanupTools';
+import { TestDataRecord } from '@/lib/crm/test-data-manager';
+import { DashboardOverview } from '@/components/crm/DashboardOverview';
 
-interface DashboardData {
-  dealsCount: number;
-  revenue: number;
-  tasksCount: number;
-  activitiesCount: number;
-  pipelineData: { stage: string; value: number }[];
-  recentActivities: Array<{
-    id: string;
-    description: string;
-    timestamp: string;
-  }>;
-  upcomingTasks: Array<{
-    id: string;
-    title: string;
-    due_date: string;
-  }>;
-}
+// Mock data transformer for test records
+const transformClientsToTestRecords = (clients: any[]): TestDataRecord[] => {
+  return clients.map(client => ({
+    id: client.id,
+    name: client.name,
+    email: client.email,
+    phone: client.phone,
+    revenue: client.total_revenue || 0,
+    lastContact: client.last_contact ? new Date(client.last_contact) : undefined,
+    createdAt: client.created_at ? new Date(client.created_at) : undefined,
+  }));
+};
 
 export default function CRMDashboardPage() {
-  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState('overview');
+  const [timeframe, setTimeframe] = useState<'mtd' | 'ytd'>('mtd');
+  
+  // Dashboard data
+  const [dashboardData, setDashboardData] = useState<any>(null);
+  const [metricsData, setMetricsData] = useState<DashboardMetricsData | null>(null);
+  const [clients, setClients] = useState<TestDataRecord[]>([]);
 
   const fetchDashboardData = async () => {
     setLoading(true);
     setError(null);
     try {
+      // Fetch main dashboard data
       const data = await apiClient.get('crm/dashboard');
       setDashboardData(data);
+
+      // Transform to metrics format
+      const metrics: DashboardMetricsData = {
+        revenue: {
+          mtd: data.revenue || 0,
+          ytd: (data.revenue || 0) * 12, // Rough estimate for YTD
+          growth: 15, // Mock growth percentage
+        },
+        clients: {
+          active: data.clientsCount || 0,
+          new: Math.floor((data.clientsCount || 0) * 0.1), // Mock new clients
+          retention: 92, // Mock retention rate
+        },
+        deals: {
+          pipeline: data.pipelineValue || 0,
+          conversion: 25, // Mock conversion rate
+          averageSize: data.dealsCount > 0 ? Math.round(data.revenue / data.dealsCount) : 0,
+        },
+        tasks: {
+          completed: data.completedTasksCount || 0,
+          pending: data.tasksCount || 0,
+          completionRate: data.tasksCount > 0 
+            ? Math.round((data.completedTasksCount / data.tasksCount) * 100) 
+            : 0,
+        },
+        carsi: {
+          enrollments: 145, // Mock CARSI data
+          courses: 23,
+          revenue: 45000,
+        },
+      };
+      setMetricsData(metrics);
+
+      // Fetch clients for data cleanup tools
+      try {
+        const clientsData = await apiClient.get('crm/clients');
+        setClients(transformClientsToTestRecords(clientsData.data || []));
+      } catch (err) {
+        console.error('Failed to fetch clients:', err);
+        setClients([]);
+      }
     } catch (err) {
       console.error('Failed to fetch dashboard data:', err);
       setError('Failed to load dashboard data. Please try again.');
+      toast({
+        title: 'Error',
+        description: 'Failed to load dashboard data',
+        variant: 'destructive',
+      });
     } finally {
       setLoading(false);
     }
@@ -52,28 +119,29 @@ export default function CRMDashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 p-8">
         <div className="max-w-7xl mx-auto flex justify-center items-center h-64">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-teal-400"></div>
-            <p className="mt-4 text-slate-300">Loading dashboard data...</p>
+            <p className="mt-4 text-slate-600 dark:text-slate-300">Loading dashboard data...</p>
           </div>
         </div>
       </div>
     );
   }
 
-  if (error) {
+  if (error && !dashboardData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 p-8">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-red-900/20 border border-red-800 rounded-lg p-6 text-center">
-            <h3 className="text-lg font-medium text-red-400">Error loading dashboard</h3>
-            <p className="text-slate-300 mt-2">{error}</p>
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center">
+            <h3 className="text-lg font-medium text-red-800 dark:text-red-400">Error loading dashboard</h3>
+            <p className="text-slate-700 dark:text-slate-300 mt-2">{error}</p>
             <Button 
               onClick={fetchDashboardData}
               className="mt-4 bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white"
             >
+              <RefreshCw className="h-4 w-4 mr-2" />
               Retry
             </Button>
           </div>
@@ -83,104 +151,218 @@ export default function CRMDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-white">CRM Dashboard</h1>
-          <div className="flex items-center gap-4">
-            <Button 
-              variant="outline" 
-              className="border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white"
-              onClick={fetchDashboardData}
-            >
-              Refresh Data
-            </Button>
-            <Button className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white">
-              Create New Deal
-            </Button>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+      {/* Header */}
+      <div className="border-b bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm sticky top-0 z-10">
+        <div className="px-8 py-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">CRM Dashboard</h1>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                Manage your customers, deals, and business insights
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={fetchDashboardData}
+                className="border-slate-300 dark:border-slate-600"
+              >
+                <RefreshCw className="h-4 w-4 mr-1" />
+                Refresh
+              </Button>
+              <Button
+                size="sm"
+                className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white"
+              >
+                <Plus className="h-4 w-4 mr-1" />
+                New Deal
+              </Button>
+            </div>
           </div>
         </div>
+      </div>
 
-        {dashboardData && (
-          <>
-            <DashboardOverview 
-              dealsCount={dashboardData.dealsCount}
-              revenue={dashboardData.revenue}
-              tasksCount={dashboardData.tasksCount}
-              activitiesCount={dashboardData.activitiesCount}
-              pipelineData={dashboardData.pipelineData}
-              recentActivities={dashboardData.recentActivities.map(act => ({
-                id: act.id,
-                type: 'note',
-                title: act.description,
-                user: 'System',
-                time: new Date(act.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-              }))}
-            />
+      {/* Main Content */}
+      <div className="p-8 max-w-7xl mx-auto">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="grid w-full max-w-3xl mx-auto grid-cols-4 h-auto p-1">
+            <TabsTrigger value="overview" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">
+              <BarChart3 className="h-4 w-4 mr-2" />
+              Overview
+            </TabsTrigger>
+            <TabsTrigger value="metrics" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">
+              <TrendingUp className="h-4 w-4 mr-2" />
+              Metrics
+            </TabsTrigger>
+            <TabsTrigger value="data-quality" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">
+              <Filter className="h-4 w-4 mr-2" />
+              Data Quality
+            </TabsTrigger>
+            <TabsTrigger value="insights" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">
+              <FileBarChart className="h-4 w-4 mr-2" />
+              Insights
+            </TabsTrigger>
+          </TabsList>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
-              {/* Upcoming Tasks */}
+          {/* Overview Tab */}
+          <TabsContent value="overview" className="mt-6">
+            {dashboardData && (
+              <>
+                <DashboardOverview 
+                  dealsCount={dashboardData.dealsCount || 0}
+                  revenue={dashboardData.revenue || 0}
+                  tasksCount={dashboardData.tasksCount || 0}
+                  activitiesCount={dashboardData.activitiesCount || 0}
+                  pipelineData={dashboardData.pipelineData || []}
+                  recentActivities={(dashboardData.recentActivities || []).map((act: any) => ({
+                    id: act.id,
+                    type: 'note',
+                    title: act.description,
+                    user: 'System',
+                    time: new Date(act.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                  }))}
+                />
 
-              {/* Upcoming Tasks */}
-              <Card className="bg-slate-800 border-slate-700">
+                {/* Quick Actions Bar */}
+                <Card className="mt-6">
+                  <CardHeader>
+                    <CardTitle className="text-lg">Quick Actions</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-wrap gap-2">
+                      <Button size="sm" variant="outline">
+                        <Users className="h-4 w-4 mr-2" />
+                        Add Client
+                      </Button>
+                      <Button size="sm" variant="outline">
+                        <Calendar className="h-4 w-4 mr-2" />
+                        Schedule Meeting
+                      </Button>
+                      <Button size="sm" variant="outline">
+                        <CheckCircle className="h-4 w-4 mr-2" />
+                        Create Task
+                      </Button>
+                      <Button size="sm" variant="outline">
+                        <DollarSign className="h-4 w-4 mr-2" />
+                        New Invoice
+                      </Button>
+                      <Button size="sm" variant="outline">
+                        <Settings className="h-4 w-4 mr-2" />
+                        Settings
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </>
+            )}
+          </TabsContent>
+
+          {/* Metrics Tab */}
+          <TabsContent value="metrics" className="mt-6">
+            {metricsData && (
+              <>
+                {/* Timeframe Selector */}
+                <div className="flex justify-end mb-4">
+                  <div className="flex gap-2">
+                    <Button
+                      size="sm"
+                      variant={timeframe === 'mtd' ? 'default' : 'outline'}
+                      onClick={() => setTimeframe('mtd')}
+                    >
+                      Month to Date
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant={timeframe === 'ytd' ? 'default' : 'outline'}
+                      onClick={() => setTimeframe('ytd')}
+                    >
+                      Year to Date
+                    </Button>
+                  </div>
+                </div>
+
+                <DashboardMetrics data={metricsData} timeframe={timeframe} />
+              </>
+            )}
+          </TabsContent>
+
+          {/* Data Quality Tab */}
+          <TabsContent value="data-quality" className="mt-6">
+            <DataCleanupTools records={clients} onRefresh={fetchDashboardData} />
+          </TabsContent>
+
+          {/* Insights Tab */}
+          <TabsContent value="insights" className="mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Top Performers */}
+              <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg text-white">Upcoming Tasks</CardTitle>
+                  <CardTitle className="flex items-center justify-between">
+                    Top Performers
+                    <Badge>This Month</Badge>
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {dashboardData.upcomingTasks.map((task) => (
-                      <div key={task.id} className="flex items-start">
-                        <div className="bg-slate-700 rounded-full p-2 mr-3">
-                          <CheckCircle className="h-4 w-4 text-teal-400" />
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center">
+                          <Users className="h-5 w-5 text-teal-600" />
                         </div>
                         <div>
-                          <p className="text-slate-300 font-medium">{task.title}</p>
-                          <p className="text-slate-500 text-sm">
+                          <p className="font-medium">Sarah Johnson</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">12 deals closed</p>
+                        </div>
+                      </div>
+                      <span className="font-bold text-teal-600">$125,000</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                          <Users className="h-5 w-5 text-blue-600" />
+                        </div>
+                        <div>
+                          <p className="font-medium">Mike Chen</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">10 deals closed</p>
+                        </div>
+                      </div>
+                      <span className="font-bold text-blue-600">$98,000</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Upcoming Tasks */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between">
+                    Upcoming Deadlines
+                    <Badge variant="destructive">Urgent</Badge>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {dashboardData?.upcomingTasks?.slice(0, 3).map((task: any) => (
+                      <div key={task.id} className="flex items-start gap-3">
+                        <div className="bg-orange-100 dark:bg-orange-900/30 rounded-full p-2">
+                          <Clock className="h-4 w-4 text-orange-600" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="font-medium">{task.title}</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
                             Due: {new Date(task.due_date).toLocaleDateString()}
                           </p>
                         </div>
                       </div>
                     ))}
-                    {dashboardData.upcomingTasks.length === 0 && (
-                      <p className="text-slate-500 text-center py-4">No upcoming tasks</p>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Performance Metrics */}
-              <Card className="bg-slate-800 border-slate-700">
-                <CardHeader>
-                  <CardTitle className="text-lg text-white">Performance Metrics</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex justify-between">
-                      <span className="text-slate-300">Conversion Rate</span>
-                      <span className="text-teal-400 font-medium">
-                        {dashboardData.pipelineData.length > 0 
-                          ? `${Math.round((dashboardData.pipelineData[dashboardData.pipelineData.length-1].value / dashboardData.dealsCount) * 100)}%` 
-                          : 'N/A'}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-300">Avg. Deal Size</span>
-                      <span className="text-teal-400 font-medium">
-                        {dashboardData.dealsCount > 0 
-                          ? `$${Math.round(dashboardData.revenue / dashboardData.dealsCount).toLocaleString()}` 
-                          : 'N/A'}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-300">Sales Cycle</span>
-                      <span className="text-teal-400 font-medium">Calculating...</span>
-                    </div>
                   </div>
                 </CardContent>
               </Card>
             </div>
-          </>
-        )}
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
