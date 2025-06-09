@@ -1,111 +1,62 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { DealPipelineWorkflows } from '@/lib/crm/business-logic/DealPipelineWorkflows';
 
 // =============================================================================
-// REAL DEALS API - NO MOCK DATA
+// DEALS API - USING BUSINESS LOGIC LAYER
 // =============================================================================
-// This replaces all fake/mock deal data with actual database operations
+// This uses the DealPipelineWorkflows business logic for consistent operations
 
-// GET /api/crm/deals - Fetch all deals from database
+// GET /api/crm/deals - Fetch deals using business logic
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    console.log('🎯 Deals API: Fetching deals using business logic layer...');
     
-    // Get URL parameters for filtering/pagination
+    // Get URL parameters for filtering
     const { searchParams } = new URL(request.url);
-    const stage = searchParams.get('stage');
-    const clientId = searchParams.get('client_id');
-    const search = searchParams.get('search');
+    const status = searchParams.get('status');
+    const stage = searchParams.get('stage'); // Legacy support
     const limit = parseInt(searchParams.get('limit') || '50');
     const offset = parseInt(searchParams.get('offset') || '0');
 
-    // Build query with client information
-    let query = supabase
-      .from('deals')
-      .select(`
-        id,
-        title,
-        description,
-        value,
-        stage,
-        probability,
-        expected_close_date,
-        actual_close_date,
-        lost_reason,
-        next_action,
-        competitor,
-        created_at,
-        updated_at,
-        client_id,
-        clients!inner(
-          id,
-          name,
-          email,
-          company,
-          status
-        )
-      `)
-      .order('created_at', { ascending: false });
+    // Use business logic to get deals
+    const dealStatus = status || stage; // Support both 'status' and 'stage' params
+    const result = await DealPipelineWorkflows.getDealsByStage(dealStatus as any);
 
-    // Apply filters
-    if (stage) {
-      query = query.eq('stage', stage);
-    }
-
-    if (clientId) {
-      query = query.eq('client_id', clientId);
-    }
-
-    if (search) {
-      query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%`);
-    }
-
-    // Apply pagination
-    query = query.range(offset, offset + limit - 1);
-
-    const { data: deals, error } = await query;
-
-    if (error) {
-      console.error('Error fetching deals:', error);
+    if (!result.success) {
+      console.error('❌ Failed to fetch deals:', result.error);
       return NextResponse.json(
-        { error: 'Failed to fetch deals', details: error.message },
+        { error: 'Failed to fetch deals', details: result.error },
         { status: 500 }
       );
     }
 
-    // Get total count for pagination
-    const { count: totalCount } = await supabase
-      .from('deals')
-      .select('*', { count: 'exact', head: true });
+    const deals = result.deals || [];
+    const analytics = result.analytics;
 
-    // Calculate pipeline statistics
-    const { data: pipelineStats } = await supabase
-      .from('deals')
-      .select('stage, value, probability')
-      .neq('stage', 'closed_lost');
+    // Apply pagination to results
+    const paginatedDeals = deals.slice(offset, offset + limit);
+    const totalCount = deals.length;
 
-    const stats = {
-      totalValue: pipelineStats?.reduce((sum, deal) => sum + parseFloat(deal.value), 0) || 0,
-      weightedValue: pipelineStats?.reduce((sum, deal) => 
-        sum + (parseFloat(deal.value) * (deal.probability / 100)), 0) || 0,
-      averageDealSize: pipelineStats?.length > 0 ? 
-        (pipelineStats.reduce((sum, deal) => sum + parseFloat(deal.value), 0) / pipelineStats.length) : 0
-    };
+    console.log(`✅ Fetched ${paginatedDeals.length} deals (${totalCount} total)`);
 
     return NextResponse.json({
-      data: deals || [],
+      data: paginatedDeals,
       pagination: {
-        total: totalCount || 0,
+        total: totalCount,
         limit,
         offset,
-        hasMore: (offset + limit) < (totalCount || 0)
+        hasMore: (offset + limit) < totalCount
       },
-      stats
+      analytics: analytics ? {
+        totalValue: analytics.totalValue,
+        weightedValue: analytics.weightedValue,
+        averageDealSize: analytics.averageValue,
+        dealCount: analytics.count
+      } : null
     });
 
   } catch (error) {
-    console.error('Unexpected error in deals API:', error);
+    console.error('❌ Unexpected error in deals API:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -113,94 +64,107 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/crm/deals - Create new deal in database
+// POST /api/crm/deals - Create new deal using business logic
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    console.log('🎯 Deals API: Creating deal using business logic layer...');
     
     const body = await request.json();
     
-    // Validate required fields
-    if (!body.title || !body.client_id || !body.value) {
-      return NextResponse.json(
-        { error: 'Title, client_id, and value are required' },
-        { status: 400 }
-      );
-    }
+    // For now, use a placeholder user ID - this will be replaced with proper auth later
+    const placeholderUserId = '00000000-0000-0000-0000-000000000000';
 
-    // Validate numeric fields
-    if (isNaN(parseFloat(body.value)) || parseFloat(body.value) < 0) {
-      return NextResponse.json(
-        { error: 'Value must be a positive number' },
-        { status: 400 }
-      );
-    }
-
-    if (body.probability && (isNaN(parseInt(body.probability)) || 
-        parseInt(body.probability) < 0 || parseInt(body.probability) > 100)) {
-      return NextResponse.json(
-        { error: 'Probability must be between 0 and 100' },
-        { status: 400 }
-      );
-    }
-
-    // Check if client exists
-    const { data: clientExists, error: clientError } = await supabase
-      .from('clients')
-      .select('id')
-      .eq('id', body.client_id)
-      .single();
-
-    if (clientError || !clientExists) {
-      return NextResponse.json(
-        { error: 'Client not found' },
-        { status: 404 }
-      );
-    }
-
-    // Prepare deal data
-    const dealData = {
-      title: body.title.trim(),
-      description: body.description?.trim() || null,
-      client_id: body.client_id,
+    // Prepare input for business logic
+    const dealInput = {
+      title: body.title,
+      description: body.description,
       value: parseFloat(body.value),
-      stage: body.stage || 'prospecting',
-      probability: parseInt(body.probability) || 0,
-      expected_close_date: body.expected_close_date || null,
-      next_action: body.next_action?.trim() || null,
-      competitor: body.competitor?.trim() || null
+      clientId: body.client_id,
+      status: body.status || body.stage || 'lead', // Support both field names
+      expectedCloseDate: body.expected_close_date,
+      probability: body.probability || undefined,
+      userId: body.userId || placeholderUserId // Allow override or use placeholder
     };
 
-    // Insert into database
-    const { data: deal, error } = await supabase
-      .from('deals')
-      .insert([dealData])
-      .select(`
-        *,
-        clients!inner(
-          id,
-          name,
-          email,
-          company
-        )
-      `)
-      .single();
+    // Use business logic to create deal
+    const result = await DealPipelineWorkflows.createDeal(dealInput);
 
-    if (error) {
-      console.error('Error creating deal:', error);
+    if (!result.success) {
+      console.error('❌ Failed to create deal:', result.error);
       return NextResponse.json(
-        { error: 'Failed to create deal', details: error.message },
-        { status: 500 }
+        { error: result.error },
+        { status: 400 }
       );
     }
 
+    console.log('✅ Deal created successfully:', result.deal?.id);
+
     return NextResponse.json(
-      { data: deal, message: 'Deal created successfully' },
+      { 
+        data: result.deal, 
+        message: 'Deal created successfully',
+        success: true 
+      },
       { status: 201 }
     );
 
   } catch (error) {
-    console.error('Unexpected error in deal creation:', error);
+    console.error('❌ Unexpected error in deal creation:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+
+// PUT /api/crm/deals - Update deal status using business logic workflows
+export async function PUT(request: NextRequest) {
+  try {
+    console.log('🎯 Deals API: Updating deal status using business logic layer...');
+    
+    const body = await request.json();
+    
+    // For now, use a placeholder user ID - this will be replaced with proper auth later
+    const placeholderUserId = '00000000-0000-0000-0000-000000000000';
+
+    // Validate required fields for status update
+    if (!body.dealId || !body.fromStatus || !body.toStatus) {
+      return NextResponse.json(
+        { error: 'dealId, fromStatus, and toStatus are required' },
+        { status: 400 }
+      );
+    }
+
+    // Prepare input for business logic
+    const statusUpdateInput = {
+      dealId: body.dealId,
+      fromStatus: body.fromStatus,
+      toStatus: body.toStatus,
+      notes: body.notes,
+      userId: body.userId || placeholderUserId // Allow override or use placeholder
+    };
+
+    // Use business logic to update deal status
+    const result = await DealPipelineWorkflows.moveDealsStatus(statusUpdateInput);
+
+    if (!result.success) {
+      console.error('❌ Failed to update deal status:', result.error);
+      return NextResponse.json(
+        { error: result.error },
+        { status: 400 }
+      );
+    }
+
+    console.log('✅ Deal status updated successfully:', result.deal?.id);
+
+    return NextResponse.json({
+      data: result.deal,
+      message: 'Deal status updated successfully',
+      success: true
+    });
+
+  } catch (error) {
+    console.error('❌ Unexpected error in deal status update:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

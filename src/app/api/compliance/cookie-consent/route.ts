@@ -37,8 +37,27 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const { sessionId, preferences } = body;
+    // Check if request has content
+    const contentLength = req.headers.get('content-length');
+    if (!contentLength || contentLength === '0') {
+      return NextResponse.json(
+        { error: 'No request body provided' },
+        { status: 400 }
+      );
+    }
+
+    let body;
+    try {
+      body = await req.json();
+    } catch (jsonError) {
+      console.error('JSON parsing error:', jsonError);
+      return NextResponse.json(
+        { error: 'Invalid JSON in request body' },
+        { status: 400 }
+      );
+    }
+
+    const { sessionId, preferences } = body || {};
 
     if (!sessionId || !preferences) {
       return NextResponse.json(

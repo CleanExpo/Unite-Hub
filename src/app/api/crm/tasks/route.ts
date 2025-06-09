@@ -1,16 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { TaskManagementSystem } from '@/lib/crm/business-logic/TaskManagementSystem';
 
 // =============================================================================
-// REAL TASKS API - NO MOCK DATA
+// TASKS API - USING BUSINESS LOGIC LAYER
 // =============================================================================
-// This replaces all fake/mock task data with actual database operations
+// This uses the TaskManagementSystem business logic for consistent operations
 
-// GET /api/crm/tasks - Fetch all tasks from database
+// GET /api/crm/tasks - Fetch tasks using business logic
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    console.log('✅ Tasks API: Fetching tasks using business logic layer...');
     
     // Get URL parameters for filtering/pagination
     const { searchParams } = new URL(request.url);
@@ -18,119 +17,56 @@ export async function GET(request: NextRequest) {
     const priority = searchParams.get('priority');
     const clientId = searchParams.get('client_id');
     const dealId = searchParams.get('deal_id');
-    const search = searchParams.get('search');
-    const overdue = searchParams.get('overdue') === 'true';
     const limit = parseInt(searchParams.get('limit') || '50');
     const offset = parseInt(searchParams.get('offset') || '0');
 
-    // Build query with related information
-    let query = supabase
-      .from('tasks')
-      .select(`
-        id,
-        title,
-        description,
-        status,
-        priority,
-        due_date,
-        completed_at,
-        estimated_hours,
-        actual_hours,
-        assigned_to,
-        created_at,
-        updated_at,
-        client_id,
-        deal_id,
-        clients(
-          id,
-          name,
-          email,
-          company
-        ),
-        deals(
-          id,
-          title,
-          stage,
-          value
-        )
-      `)
-      .order('created_at', { ascending: false });
+    // Build filters for business logic
+    const filters: any = {};
+    if (status) filters.status = status;
+    if (priority) filters.priority = priority;
+    if (clientId) filters.client_id = clientId;
+    if (dealId) filters.deal_id = dealId;
 
-    // Apply filters
-    if (status) {
-      query = query.eq('status', status);
-    }
+    // Use business logic to get tasks
+    const result = await TaskManagementSystem.getTasks(filters);
 
-    if (priority) {
-      query = query.eq('priority', priority);
-    }
-
-    if (clientId) {
-      query = query.eq('client_id', clientId);
-    }
-
-    if (dealId) {
-      query = query.eq('deal_id', dealId);
-    }
-
-    if (search) {
-      query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%`);
-    }
-
-    if (overdue) {
-      query = query.lt('due_date', new Date().toISOString())
-                   .neq('status', 'completed');
-    }
-
-    // Apply pagination
-    query = query.range(offset, offset + limit - 1);
-
-    const { data: tasks, error } = await query;
-
-    if (error) {
-      console.error('Error fetching tasks:', error);
+    if (!result.success) {
+      console.error('❌ Failed to fetch tasks:', result.error);
       return NextResponse.json(
-        { error: 'Failed to fetch tasks', details: error.message },
+        { error: 'Failed to fetch tasks', details: result.error },
         { status: 500 }
       );
     }
 
-    // Get total count for pagination
-    const { count: totalCount } = await supabase
-      .from('tasks')
-      .select('*', { count: 'exact', head: true });
+    const tasks = result.tasks || [];
+    const analytics = result.analytics;
 
-    // Calculate task statistics
-    const { data: taskStats } = await supabase
-      .from('tasks')
-      .select('status, priority, due_date, completed_at, estimated_hours, actual_hours');
+    // Apply pagination to results
+    const paginatedTasks = tasks.slice(offset, offset + limit);
+    const totalCount = tasks.length;
 
-    const now = new Date();
-    const stats = {
-      total: taskStats?.length || 0,
-      completed: taskStats?.filter(t => t.status === 'completed').length || 0,
-      pending: taskStats?.filter(t => t.status === 'pending').length || 0,
-      inProgress: taskStats?.filter(t => t.status === 'in_progress').length || 0,
-      overdue: taskStats?.filter(t => 
-        t.due_date && new Date(t.due_date) < now && t.status !== 'completed'
-      ).length || 0,
-      completionRate: taskStats?.length > 0 ? 
-        ((taskStats.filter(t => t.status === 'completed').length / taskStats.length) * 100) : 0
-    };
+    console.log(`✅ Fetched ${paginatedTasks.length} tasks (${totalCount} total)`);
 
     return NextResponse.json({
-      data: tasks || [],
+      data: paginatedTasks,
       pagination: {
-        total: totalCount || 0,
+        total: totalCount,
         limit,
         offset,
-        hasMore: (offset + limit) < (totalCount || 0)
+        hasMore: (offset + limit) < totalCount
       },
-      stats
+      analytics: analytics ? {
+        totalTasks: analytics.totalTasks,
+        completedTasks: analytics.completedTasks,
+        pendingTasks: analytics.pendingTasks,
+        completionRate: analytics.completionRate,
+        overdueTasks: analytics.overdueTasks,
+        priorityDistribution: analytics.priorityDistribution
+      } : null
     });
 
   } catch (error) {
-    console.error('Unexpected error in tasks API:', error);
+    console.error('❌ Unexpected error in tasks API:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -138,120 +74,178 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/crm/tasks - Create new task in database
+// POST /api/crm/tasks - Create new task using business logic
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    console.log('✅ Tasks API: Creating task using business logic layer...');
     
     const body = await request.json();
     
-    // Validate required fields
-    if (!body.title) {
-      return NextResponse.json(
-        { error: 'Title is required' },
-        { status: 400 }
-      );
-    }
+    // For now, use a placeholder user ID - this will be replaced with proper auth later
+    const placeholderUserId = '00000000-0000-0000-0000-000000000000';
 
-    // Validate client exists if provided
-    if (body.client_id) {
-      const { data: clientExists, error: clientError } = await supabase
-        .from('clients')
-        .select('id')
-        .eq('id', body.client_id)
-        .single();
-
-      if (clientError || !clientExists) {
-        return NextResponse.json(
-          { error: 'Client not found' },
-          { status: 404 }
-        );
-      }
-    }
-
-    // Validate deal exists if provided
-    if (body.deal_id) {
-      const { data: dealExists, error: dealError } = await supabase
-        .from('deals')
-        .select('id')
-        .eq('id', body.deal_id)
-        .single();
-
-      if (dealError || !dealExists) {
-        return NextResponse.json(
-          { error: 'Deal not found' },
-          { status: 404 }
-        );
-      }
-    }
-
-    // Validate priority
-    const validPriorities = ['low', 'medium', 'high', 'urgent'];
-    if (body.priority && !validPriorities.includes(body.priority)) {
-      return NextResponse.json(
-        { error: 'Priority must be one of: low, medium, high, urgent' },
-        { status: 400 }
-      );
-    }
-
-    // Validate status
-    const validStatuses = ['pending', 'in_progress', 'completed', 'cancelled'];
-    if (body.status && !validStatuses.includes(body.status)) {
-      return NextResponse.json(
-        { error: 'Status must be one of: pending, in_progress, completed, cancelled' },
-        { status: 400 }
-      );
-    }
-
-    // Prepare task data
-    const taskData = {
-      title: body.title.trim(),
-      description: body.description?.trim() || null,
-      client_id: body.client_id || null,
-      deal_id: body.deal_id || null,
-      status: body.status || 'pending',
+    // Prepare input for business logic
+    const taskInput = {
+      title: body.title,
+      description: body.description,
       priority: body.priority || 'medium',
-      due_date: body.due_date || null,
-      estimated_hours: body.estimated_hours ? parseInt(body.estimated_hours) : null,
-      assigned_to: body.assigned_to || null
+      due_date: body.due_date,
+      assigned_to: body.assigned_to,
+      client_id: body.client_id,
+      deal_id: body.deal_id,
+      userId: body.userId || placeholderUserId // Allow override or use placeholder
     };
 
-    // Insert into database
-    const { data: task, error } = await supabase
-      .from('tasks')
-      .insert([taskData])
-      .select(`
-        *,
-        clients(
-          id,
-          name,
-          email,
-          company
-        ),
-        deals(
-          id,
-          title,
-          stage,
-          value
-        )
-      `)
-      .single();
+    // Use business logic to create task
+    const result = await TaskManagementSystem.createTask(taskInput);
 
-    if (error) {
-      console.error('Error creating task:', error);
+    if (!result.success) {
+      console.error('❌ Failed to create task:', result.error);
       return NextResponse.json(
-        { error: 'Failed to create task', details: error.message },
-        { status: 500 }
+        { error: result.error },
+        { status: 400 }
       );
     }
 
+    console.log('✅ Task created successfully:', result.task?.id);
+
     return NextResponse.json(
-      { data: task, message: 'Task created successfully' },
+      { 
+        data: result.task, 
+        message: 'Task created successfully',
+        success: true 
+      },
       { status: 201 }
     );
 
   } catch (error) {
-    console.error('Unexpected error in task creation:', error);
+    console.error('❌ Unexpected error in task creation:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+
+// PUT /api/crm/tasks - Update task status using business logic workflows
+export async function PUT(request: NextRequest) {
+  try {
+    console.log('✅ Tasks API: Updating task using business logic layer...');
+    
+    const body = await request.json();
+    
+    // For now, use a placeholder user ID - this will be replaced with proper auth later
+    const placeholderUserId = '00000000-0000-0000-0000-000000000000';
+
+    // Check if this is a status update or general update
+    if (body.fromStatus && body.toStatus) {
+      // Status update workflow
+      const statusUpdateInput = {
+        taskId: body.taskId,
+        fromStatus: body.fromStatus,
+        toStatus: body.toStatus,
+        notes: body.notes,
+        userId: body.userId || placeholderUserId
+      };
+
+      const result = await TaskManagementSystem.updateTaskStatus(statusUpdateInput);
+
+      if (!result.success) {
+        console.error('❌ Failed to update task status:', result.error);
+        return NextResponse.json(
+          { error: result.error },
+          { status: 400 }
+        );
+      }
+
+      console.log('✅ Task status updated successfully:', result.task?.id);
+
+      return NextResponse.json({
+        data: result.task,
+        message: 'Task status updated successfully',
+        success: true
+      });
+
+    } else {
+      // General task update
+      const updateInput = {
+        taskId: body.taskId,
+        title: body.title,
+        description: body.description,
+        priority: body.priority,
+        due_date: body.due_date,
+        assigned_to: body.assigned_to,
+        client_id: body.client_id,
+        deal_id: body.deal_id,
+        userId: body.userId || placeholderUserId
+      };
+
+      const result = await TaskManagementSystem.updateTask(updateInput);
+
+      if (!result.success) {
+        console.error('❌ Failed to update task:', result.error);
+        return NextResponse.json(
+          { error: result.error },
+          { status: 400 }
+        );
+      }
+
+      console.log('✅ Task updated successfully:', result.task?.id);
+
+      return NextResponse.json({
+        data: result.task,
+        message: 'Task updated successfully',
+        success: true
+      });
+    }
+
+  } catch (error) {
+    console.error('❌ Unexpected error in task update:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+
+// DELETE /api/crm/tasks - Delete task using business logic
+export async function DELETE(request: NextRequest) {
+  try {
+    console.log('✅ Tasks API: Deleting task using business logic layer...');
+    
+    const { searchParams } = new URL(request.url);
+    const taskId = searchParams.get('id');
+    
+    if (!taskId) {
+      return NextResponse.json(
+        { error: 'Task ID is required' },
+        { status: 400 }
+      );
+    }
+    
+    // For now, use a placeholder user ID - this will be replaced with proper auth later
+    const placeholderUserId = '00000000-0000-0000-0000-000000000000';
+
+    // Use business logic to delete task
+    const result = await TaskManagementSystem.deleteTask(taskId, placeholderUserId);
+
+    if (!result.success) {
+      console.error('❌ Failed to delete task:', result.error);
+      return NextResponse.json(
+        { error: result.error },
+        { status: 400 }
+      );
+    }
+
+    console.log('✅ Task deleted successfully:', taskId);
+
+    return NextResponse.json({
+      message: 'Task deleted successfully',
+      success: true
+    });
+
+  } catch (error) {
+    console.error('❌ Unexpected error in task deletion:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
