@@ -1,33 +1,141 @@
 services:
+  # Next.js CRM Application
   web:
     build:
       context: .
-      dockerfile: Dockerfile
-
+      dockerfile: Dockerfile.web
     ports:
-      - "8000:8000"
-
+      - "3000:3000"
     environment:
-      - ENV_VAR_NAME=value
-
+      - NODE_ENV=development
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      - DATABASE_URL=${DATABASE_URL}
     volumes:
-      - ./data:/app/data
-
+      - .:/app
+      - /app/node_modules
+      - /app/.next
     depends_on:
       - db
+      - redis
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
-  db:
-    image: postgres:13
-
+  # Pydantic Agent Framework Service
+  ai-agents:
+    build:
+      context: ./ai-agent-framework
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
     environment:
-      - POSTGRES_DB=your_db
-      - POSTGRES_USER=your_user
-      - POSTGRES_PASSWORD=your_password
+      - PYTHONPATH=/app
+      - PYTHON_ENV=development
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./ai-agent-framework:/app
+      - ai-agent-data:/app/data
+    depends_on:
+      - db
+      - redis
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
+  # PostgreSQL Database
+  db:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=unite_crm
+      - POSTGRES_USER=unite_user
+      - POSTGRES_PASSWORD=unite_password
+      - POSTGRES_HOST_AUTH_METHOD=trust
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./database:/docker-entrypoint-initdb.d
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U unite_user -d unite_crm"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  # Add more services as needed (e.g., cache, queue, etc.)
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # Test Runner Service
+  test-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    environment:
+      - NODE_ENV=test
+      - TEST_BASE_URL=http://web:3000
+      - AI_AGENT_URL=http://ai-agents:8000
+      - DATABASE_URL=postgresql://unite_user:unite_password@db:5432/unite_crm
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - test-reports:/app/tests/reports
+    depends_on:
+      - web
+      - ai-agents
+      - db
+      - redis
+    networks:
+      - app-network
+    profiles:
+      - testing
+
+  # Nginx Load Balancer
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - nginx-cache:/var/cache/nginx
+    depends_on:
+      - web
+      - ai-agents
+    networks:
+      - app-network
+    profiles:
+      - production
 
 volumes:
   postgres_data:
+  redis_data:
+  ai-agent-data:
+  test-reports:
+  nginx-cache:
+
+networks:
+  app-network:
+    driver: bridge
