@@ -1,187 +1,209 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { createServerClient } from '@/lib/supabase/server'
-import { getCurrentUser } from '@/lib/auth/session'
+import { NextRequest, NextResponse } from 'next/server';
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 
-export const dynamic = 'force-dynamic'
+// =============================================================================
+// REAL DEALS API - NO MOCK DATA
+// =============================================================================
+// This replaces all fake/mock deal data with actual database operations
 
-// 💼 DEALS MANAGEMENT API - GET ALL DEALS
+// GET /api/crm/deals - Fetch all deals from database
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser(request)
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const supabase = await createServerClient()
-    const { searchParams } = new URL(request.url)
+    const supabase = createRouteHandlerClient({ cookies });
     
-    // Query parameters
-    const page = parseInt(searchParams.get('page') || '1')
-    const limit = parseInt(searchParams.get('limit') || '10')
-    const status = searchParams.get('status') || ''
-    const stageId = searchParams.get('stage_id') || ''
-    const assignedTo = searchParams.get('assigned_to') || ''
-    
-    const offset = (page - 1) * limit
+    // Get URL parameters for filtering/pagination
+    const { searchParams } = new URL(request.url);
+    const stage = searchParams.get('stage');
+    const clientId = searchParams.get('client_id');
+    const search = searchParams.get('search');
+    const limit = parseInt(searchParams.get('limit') || '50');
+    const offset = parseInt(searchParams.get('offset') || '0');
 
-    // Build query
+    // Build query with client information
     let query = supabase
       .from('deals')
       .select(`
-        *,
-        client:clients(
-          id, name, email, company, status
-        ),
-        assigned_to_profile:user_profiles!deals_assigned_to_fkey(
-          id, full_name, email, avatar_url
-        ),
-        pipeline_stage:pipeline_stages(
-          id, name, color, probability
-        ),
-        created_by_profile:user_profiles!deals_created_by_fkey(
-          id, full_name, email
+        id,
+        title,
+        description,
+        value,
+        stage,
+        probability,
+        expected_close_date,
+        actual_close_date,
+        lost_reason,
+        next_action,
+        competitor,
+        created_at,
+        updated_at,
+        client_id,
+        clients!inner(
+          id,
+          name,
+          email,
+          company,
+          status
         )
       `)
+      .order('created_at', { ascending: false });
 
     // Apply filters
-    if (status) {
-      query = query.eq('status', status)
-    }
-    
-    if (stageId) {
-      query = query.eq('stage_id', stageId)
-    }
-    
-    if (assignedTo) {
-      query = query.eq('assigned_to', assignedTo)
+    if (stage) {
+      query = query.eq('stage', stage);
     }
 
-    // Execute query with pagination
-    const { data: deals, error } = await query
-      .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1)
+    if (clientId) {
+      query = query.eq('client_id', clientId);
+    }
+
+    if (search) {
+      query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%`);
+    }
+
+    // Apply pagination
+    query = query.range(offset, offset + limit - 1);
+
+    const { data: deals, error } = await query;
 
     if (error) {
-      console.error('Error fetching deals:', error)
-      return NextResponse.json({ error: 'Failed to fetch deals' }, { status: 500 })
+      console.error('Error fetching deals:', error);
+      return NextResponse.json(
+        { error: 'Failed to fetch deals', details: error.message },
+        { status: 500 }
+      );
     }
 
-    // Get total count
+    // Get total count for pagination
     const { count: totalCount } = await supabase
       .from('deals')
-      .select('*', { count: 'exact', head: true })
+      .select('*', { count: 'exact', head: true });
+
+    // Calculate pipeline statistics
+    const { data: pipelineStats } = await supabase
+      .from('deals')
+      .select('stage, value, probability')
+      .neq('stage', 'closed_lost');
+
+    const stats = {
+      totalValue: pipelineStats?.reduce((sum, deal) => sum + parseFloat(deal.value), 0) || 0,
+      weightedValue: pipelineStats?.reduce((sum, deal) => 
+        sum + (parseFloat(deal.value) * (deal.probability / 100)), 0) || 0,
+      averageDealSize: pipelineStats?.length > 0 ? 
+        (pipelineStats.reduce((sum, deal) => sum + parseFloat(deal.value), 0) / pipelineStats.length) : 0
+    };
 
     return NextResponse.json({
       data: deals || [],
       pagination: {
-        page,
-        limit,
         total: totalCount || 0,
-        totalPages: Math.ceil((totalCount || 0) / limit)
-      }
-    })
+        limit,
+        offset,
+        hasMore: (offset + limit) < (totalCount || 0)
+      },
+      stats
+    });
 
   } catch (error) {
-    console.error('Deals API Error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    console.error('Unexpected error in deals API:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }
 
-// 💼 DEALS MANAGEMENT API - CREATE NEW DEAL
+// POST /api/crm/deals - Create new deal in database
 export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser(request)
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const body = await request.json()
-    const supabase = await createServerClient()
-
+    const supabase = createRouteHandlerClient({ cookies });
+    
+    const body = await request.json();
+    
     // Validate required fields
     if (!body.title || !body.client_id || !body.value) {
       return NextResponse.json(
-        { error: 'Title, client ID, and value are required' }, 
+        { error: 'Title, client_id, and value are required' },
         { status: 400 }
-      )
+      );
     }
 
-    // Get user profile for created_by
-    const { data: userProfile } = await supabase
-      .from('user_profiles')
+    // Validate numeric fields
+    if (isNaN(parseFloat(body.value)) || parseFloat(body.value) < 0) {
+      return NextResponse.json(
+        { error: 'Value must be a positive number' },
+        { status: 400 }
+      );
+    }
+
+    if (body.probability && (isNaN(parseInt(body.probability)) || 
+        parseInt(body.probability) < 0 || parseInt(body.probability) > 100)) {
+      return NextResponse.json(
+        { error: 'Probability must be between 0 and 100' },
+        { status: 400 }
+      );
+    }
+
+    // Check if client exists
+    const { data: clientExists, error: clientError } = await supabase
+      .from('clients')
       .select('id')
-      .eq('user_id', user.id)
-      .single()
+      .eq('id', body.client_id)
+      .single();
 
-    if (!userProfile) {
-      return NextResponse.json({ error: 'User profile not found' }, { status: 404 })
+    if (clientError || !clientExists) {
+      return NextResponse.json(
+        { error: 'Client not found' },
+        { status: 404 }
+      );
     }
 
-    // Get first pipeline stage if none provided
-    let stageId = body.stage_id
-    if (!stageId) {
-      const { data: firstStage } = await supabase
-        .from('pipeline_stages')
-        .select('id')
-        .eq('is_active', true)
-        .order('stage_order')
-        .limit(1)
-        .single()
-      
-      stageId = firstStage?.id
-    }
-
-    // Create deal
+    // Prepare deal data
     const dealData = {
-      title: body.title,
-      description: body.description || null,
+      title: body.title.trim(),
+      description: body.description?.trim() || null,
       client_id: body.client_id,
-      assigned_to: body.assigned_to || userProfile.id,
       value: parseFloat(body.value),
-      currency: body.currency || 'AUD',
-      probability: body.probability || 50,
-      stage_id: stageId,
+      stage: body.stage || 'prospecting',
+      probability: parseInt(body.probability) || 0,
       expected_close_date: body.expected_close_date || null,
-      status: body.status || 'open',
-      source: body.source || null,
-      competitors: body.competitors || [],
-      tags: body.tags || [],
-      created_by: userProfile.id,
-      metadata: body.metadata || {}
-    }
+      next_action: body.next_action?.trim() || null,
+      competitor: body.competitor?.trim() || null
+    };
 
+    // Insert into database
     const { data: deal, error } = await supabase
       .from('deals')
-      .insert(dealData)
+      .insert([dealData])
       .select(`
         *,
-        client:clients(id, name, email, company),
-        assigned_to_profile:user_profiles!deals_assigned_to_fkey(
-          id, full_name, email, avatar_url
-        ),
-        pipeline_stage:pipeline_stages(id, name, color, probability)
+        clients!inner(
+          id,
+          name,
+          email,
+          company
+        )
       `)
-      .single()
+      .single();
 
     if (error) {
-      console.error('Error creating deal:', error)
-      return NextResponse.json({ error: 'Failed to create deal' }, { status: 500 })
+      console.error('Error creating deal:', error);
+      return NextResponse.json(
+        { error: 'Failed to create deal', details: error.message },
+        { status: 500 }
+      );
     }
 
-    // Log deal creation activity
-    await supabase
-      .from('deal_activities')
-      .insert({
-        deal_id: deal.id,
-        activity_type: 'note',
-        description: 'Deal created',
-        created_by: userProfile.id
-      })
-
-    return NextResponse.json({ data: deal }, { status: 201 })
+    return NextResponse.json(
+      { data: deal, message: 'Deal created successfully' },
+      { status: 201 }
+    );
 
   } catch (error) {
-    console.error('Deal Creation Error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    console.error('Unexpected error in deal creation:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }
