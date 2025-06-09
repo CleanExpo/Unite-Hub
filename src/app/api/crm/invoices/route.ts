@@ -4,7 +4,7 @@ import { getCurrentUser } from '@/lib/auth/session'
 
 export const dynamic = 'force-dynamic'
 
-// 👥 CLIENT MANAGEMENT API - GET ALL CLIENTS
+// 💰 INVOICE MANAGEMENT API - GET ALL INVOICES
 export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentUser(request)
@@ -18,55 +18,53 @@ export async function GET(request: NextRequest) {
     // Query parameters
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '10')
-    const search = searchParams.get('search') || ''
     const status = searchParams.get('status') || ''
-    const assignedTo = searchParams.get('assigned_to') || ''
+    const clientId = searchParams.get('client_id') || ''
     
     const offset = (page - 1) * limit
 
     // Build query
     let query = supabase
-      .from('clients')
+      .from('invoices')
       .select(`
         *,
-        assigned_to_profile:user_profiles!clients_assigned_to_fkey(
-          id, full_name, email, avatar_url
+        client:clients(
+          id, name, email, company
         ),
-        created_by_profile:user_profiles!clients_created_by_fkey(
+        created_by_profile:user_profiles!invoices_created_by_fkey(
           id, full_name, email
+        ),
+        invoice_items(
+          id, description, quantity, unit_price, amount
         )
       `)
 
     // Apply filters
-    if (search) {
-      query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,company.ilike.%${search}%`)
-    }
-    
     if (status) {
       query = query.eq('status', status)
     }
     
-    if (assignedTo) {
-      query = query.eq('assigned_to', assignedTo)
+    if (clientId) {
+      query = query.eq('client_id', clientId)
     }
 
     // Execute query with pagination
-    const { data: clients, error, count } = await query
+    const { data: invoices, error } = await query
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1)
 
     if (error) {
-      console.error('Error fetching clients:', error)
-      return NextResponse.json({ error: 'Failed to fetch clients' }, { status: 500 })
+      console.error('Error fetching invoices:', error)
+      return NextResponse.json({ error: 'Failed to fetch invoices' }, { status: 500 })
     }
 
-    // Get total count for pagination
+    // Get total count
     const { count: totalCount } = await supabase
-      .from('clients')
+      .from('invoices')
       .select('*', { count: 'exact', head: true })
 
     return NextResponse.json({
-      data: clients || [],
+      data: invoices || [],
       pagination: {
         page,
         limit,
@@ -76,12 +74,12 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Client API Error:', error)
+    console.error('Invoices API Error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
 
-// 👥 CLIENT MANAGEMENT API - CREATE NEW CLIENT
+// 💰 INVOICE MANAGEMENT API - CREATE NEW INVOICE
 export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser(request)
@@ -93,9 +91,9 @@ export async function POST(request: NextRequest) {
     const supabase = await createServerClient()
 
     // Validate required fields
-    if (!body.name || !body.email) {
+    if (!body.client_id || !body.amount || !body.items || !Array.isArray(body.items)) {
       return NextResponse.json(
-        { error: 'Name and email are required' }, 
+        { error: 'Client ID, amount, and items are required' }, 
         { status: 400 }
       )
     }
@@ -111,51 +109,60 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'User profile not found' }, { status: 404 })
     }
 
-    // Create client
-    const clientData = {
-      name: body.name,
-      email: body.email,
-      phone: body.phone || null,
-      company: body.company || null,
-      address_line_1: body.address_line_1 || null,
-      address_line_2: body.address_line_2 || null,
-      city: body.city || null,
-      state: body.state || null,
-      postal_code: body.postal_code || null,
-      country: body.country || 'Australia',
-      industry: body.industry || null,
-      company_size: body.company_size || null,
-      annual_revenue: body.annual_revenue || null,
-      source: body.source || null,
-      status: body.status || 'prospect',
-      priority: body.priority || 'medium',
-      assigned_to: body.assigned_to || userProfile.id,
+    // Generate invoice number
+    const invoiceNumber = `INV-${Date.now()}`
+
+    // Calculate due date (30 days from now by default)
+    const dueDate = new Date()
+    dueDate.setDate(dueDate.getDate() + (body.payment_terms || 30))
+
+    // Create invoice
+    const invoiceData = {
+      invoice_number: invoiceNumber,
+      client_id: body.client_id,
+      amount: parseFloat(body.amount),
+      currency: body.currency || 'AUD',
+      status: 'draft',
+      due_date: dueDate.toISOString(),
+      payment_terms: body.payment_terms || 30,
       notes: body.notes || null,
-      tags: body.tags || [],
       created_by: userProfile.id,
       metadata: body.metadata || {}
     }
 
-    const { data: client, error } = await supabase
-      .from('clients')
-      .insert(clientData)
+    const { data: invoice, error } = await supabase
+      .from('invoices')
+      .insert(invoiceData)
       .select(`
         *,
-        assigned_to_profile:user_profiles!clients_assigned_to_fkey(
-          id, full_name, email, avatar_url
-        )
+        client:clients(id, name, email, company)
       `)
       .single()
 
     if (error) {
-      console.error('Error creating client:', error)
-      return NextResponse.json({ error: 'Failed to create client' }, { status: 500 })
+      console.error('Error creating invoice:', error)
+      return NextResponse.json({ error: 'Failed to create invoice' }, { status: 500 })
     }
 
-    return NextResponse.json({ data: client }, { status: 201 })
+    // Create invoice items
+    if (body.items.length > 0) {
+      const invoiceItems = body.items.map((item: any) => ({
+        invoice_id: invoice.id,
+        description: item.description,
+        quantity: item.quantity || 1,
+        unit_price: parseFloat(item.unit_price),
+        amount: parseFloat(item.amount || (item.quantity * item.unit_price))
+      }))
+
+      await supabase
+        .from('invoice_items')
+        .insert(invoiceItems)
+    }
+
+    return NextResponse.json({ data: invoice }, { status: 201 })
 
   } catch (error) {
-    console.error('Client Creation Error:', error)
+    console.error('Invoice Creation Error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

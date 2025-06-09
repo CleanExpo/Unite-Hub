@@ -1,222 +1,191 @@
-import { createApiClient } from '@/lib/supabase/api';
+import { NextRequest, NextResponse } from 'next/server'
+import { createServerClient } from '@/lib/supabase/server'
+import { getCurrentUser } from '@/lib/auth/session'
 
-import { NextResponse } from 'next/server';
-import { z } from 'zod';
+export const dynamic = 'force-dynamic'
 
-// Validation schema for client update
-const updateClientSchema = z.object({
-  company_name: z.string().min(1).optional(),
-  contact_person: z.string().optional(),
-  email: z.string().email().optional(),
-  phone: z.string().optional(),
-  website: z.string().url().optional().or(z.literal('')),
-  industry: z.string().optional(),
-  company_size: z.enum(['small', 'medium', 'large', 'enterprise']).optional(),
-  annual_revenue: z.number().optional(),
-  client_status: z.enum(['lead', 'active', 'inactive', 'archived']).optional(),
-  tags: z.array(z.string()).optional(),
-  notes: z.string().optional(),
-  address_line1: z.string().optional(),
-  address_line2: z.string().optional(),
-  city: z.string().optional(),
-  state: z.string().optional(),
-  postal_code: z.string().optional(),
-  country: z.string().optional(),
-});
-
-// GET /api/crm/clients/[id] - Get a specific client
+// 👤 GET INDIVIDUAL CLIENT
 export async function GET(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const supabase = createApiClient();
-    
-    // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const user = await getCurrentUser(request)
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Get client with related data
+    const supabase = await createServerClient()
+    const clientId = params.id
+
+    // Get client with all related data
     const { data: client, error } = await supabase
       .from('clients')
       .select(`
         *,
-        projects:projects(
-          id,
-          project_name,
-          status,
-          start_date,
-          end_date,
-          budget,
-          progress_percentage
+        assigned_to_profile:user_profiles!clients_assigned_to_fkey(
+          id, full_name, email, avatar_url, job_title
         ),
-        interactions:interactions(
-          id,
-          interaction_type,
-          subject,
-          interaction_date,
-          created_by
+        created_by_profile:user_profiles!clients_created_by_fkey(
+          id, full_name, email
         ),
-        consultations:consultations(
-          id,
-          preferred_date,
-          service_type,
-          status
+        contacts:client_contacts(
+          id, contact_type, subject, description, contact_date,
+          created_by, duration_minutes, outcome,
+          created_by_profile:user_profiles!client_contacts_created_by_fkey(
+            id, full_name, email
+          )
+        ),
+        documents:client_documents(
+          id, filename, file_type, document_type, 
+          description, created_at,
+          uploaded_by_profile:user_profiles!client_documents_uploaded_by_fkey(
+            id, full_name, email
+          )
+        ),
+        deals(
+          id, title, value, status, stage_id, expected_close_date,
+          pipeline_stage:pipeline_stages(name, color)
         )
       `)
-      .eq('id', params.id)
-      .single();
+      .eq('id', clientId)
+      .single()
 
     if (error) {
-      if (error.code === 'PGRST116') {
-        return NextResponse.json({ error: 'Client not found' }, { status: 404 });
-      }
-      console.error('Error fetching client:', error);
-      return NextResponse.json({ error: 'Failed to fetch client' }, { status: 500 });
+      console.error('Error fetching client:', error)
+      return NextResponse.json({ error: 'Client not found' }, { status: 404 })
     }
 
-    return NextResponse.json({ client });
+    return NextResponse.json({ data: client })
+
   } catch (error) {
-    console.error('Unexpected error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('Client Detail API Error:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
 
-// PUT /api/crm/clients/[id] - Update a client
+// ✏️ UPDATE CLIENT
 export async function PUT(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const supabase = createApiClient();
-    
-    // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const user = await getCurrentUser(request)
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Parse and validate request body
-    const body = await request.json();
-    const validationResult = updateClientSchema.safeParse(body);
+    const body = await request.json()
+    const supabase = await createServerClient()
+    const clientId = params.id
 
-    if (!validationResult.success) {
-      return NextResponse.json(
-        { error: 'Validation failed', details: validationResult.error.errors },
-        { status: 400 }
-      );
-    }
-
-    // Get the original client data for activity logging
-    const { data: originalClient } = await supabase
+    // Validate client exists and user has permission
+    const { data: existingClient } = await supabase
       .from('clients')
-      .select('*')
-      .eq('id', params.id)
-      .single();
+      .select('id, assigned_to, created_by')
+      .eq('id', clientId)
+      .single()
 
-    // Update client
+    if (!existingClient) {
+      return NextResponse.json({ error: 'Client not found' }, { status: 404 })
+    }
+
+    // Update client data
+    const updateData = {
+      name: body.name,
+      email: body.email,
+      phone: body.phone,
+      company: body.company,
+      address_line_1: body.address_line_1,
+      address_line_2: body.address_line_2,
+      city: body.city,
+      state: body.state,
+      postal_code: body.postal_code,
+      country: body.country,
+      industry: body.industry,
+      company_size: body.company_size,
+      annual_revenue: body.annual_revenue,
+      source: body.source,
+      status: body.status,
+      priority: body.priority,
+      assigned_to: body.assigned_to,
+      notes: body.notes,
+      tags: body.tags,
+      metadata: body.metadata || {},
+      updated_at: new Date().toISOString()
+    }
+
     const { data: client, error } = await supabase
       .from('clients')
-      .update({
-        ...validationResult.data,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', params.id)
-      .select()
-      .single();
+      .update(updateData)
+      .eq('id', clientId)
+      .select(`
+        *,
+        assigned_to_profile:user_profiles!clients_assigned_to_fkey(
+          id, full_name, email, avatar_url
+        )
+      `)
+      .single()
 
     if (error) {
-      if (error.code === 'PGRST116') {
-        return NextResponse.json({ error: 'Client not found' }, { status: 404 });
-      }
-      console.error('Error updating client:', error);
-      return NextResponse.json({ error: 'Failed to update client' }, { status: 500 });
+      console.error('Error updating client:', error)
+      return NextResponse.json({ error: 'Failed to update client' }, { status: 500 })
     }
 
-    // Log activity with changes
-    const changes: Record<string, any> = {};
-    if (originalClient) {
-      Object.keys(validationResult.data).forEach(key => {
-        if (originalClient[key] !== validationResult.data[key as keyof typeof validationResult.data]) {
-          changes[key] = {
-            old: originalClient[key],
-            new: validationResult.data[key as keyof typeof validationResult.data],
-          };
-        }
-      });
-    }
+    return NextResponse.json({ data: client })
 
-    await supabase.from('activity_log').insert([{
-      entity_type: 'client',
-      entity_id: params.id,
-      action: 'updated',
-      changes,
-      performed_by: user.id,
-    }]);
-
-    return NextResponse.json({ client });
   } catch (error) {
-    console.error('Unexpected error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('Client Update Error:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
 
-// DELETE /api/crm/clients/[id] - Delete a client
+// 🗑️ DELETE CLIENT
 export async function DELETE(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const supabase = createApiClient();
-    
-    // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const user = await getCurrentUser(request)
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Check if client has active projects
-    const { data: activeProjects } = await supabase
-      .from('projects')
+    const supabase = await createServerClient()
+    const clientId = params.id
+
+    // Check if client has active deals or invoices
+    const { data: activeDependencies } = await supabase
+      .from('deals')
       .select('id')
-      .eq('client_id', params.id)
-      .eq('status', 'active')
-      .limit(1);
+      .eq('client_id', clientId)
+      .eq('status', 'open')
 
-    if (activeProjects && activeProjects.length > 0) {
+    if (activeDependencies && activeDependencies.length > 0) {
       return NextResponse.json(
-        { error: 'Cannot delete client with active projects' },
+        { error: 'Cannot delete client with active deals' }, 
         { status: 400 }
-      );
+      )
     }
 
-    // Delete client (will cascade delete related records)
+    // Soft delete by updating status
     const { error } = await supabase
       .from('clients')
-      .delete()
-      .eq('id', params.id);
+      .update({ 
+        status: 'inactive',
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', clientId)
 
     if (error) {
-      if (error.code === 'PGRST116') {
-        return NextResponse.json({ error: 'Client not found' }, { status: 404 });
-      }
-      console.error('Error deleting client:', error);
-      return NextResponse.json({ error: 'Failed to delete client' }, { status: 500 });
+      console.error('Error deleting client:', error)
+      return NextResponse.json({ error: 'Failed to delete client' }, { status: 500 })
     }
 
-    // Log activity
-    await supabase.from('activity_log').insert([{
-      entity_type: 'client',
-      entity_id: params.id,
-      action: 'deleted',
-      performed_by: user.id,
-    }]);
+    return NextResponse.json({ message: 'Client deleted successfully' })
 
-    return NextResponse.json({ message: 'Client deleted successfully' });
   } catch (error) {
-    console.error('Unexpected error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('Client Delete Error:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

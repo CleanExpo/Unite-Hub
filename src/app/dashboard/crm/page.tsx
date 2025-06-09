@@ -27,6 +27,11 @@ import DashboardMetrics, { DashboardMetricsData } from '@/components/crm/dashboa
 import DataCleanupTools from '@/components/crm/dashboard/DataCleanupTools';
 import { TestDataRecord } from '@/lib/crm/test-data-manager';
 import { DashboardOverview } from '@/components/crm/DashboardOverview';
+import { AddClientModal } from '@/components/crm/clients/AddClientModal';
+import { AddDealModal } from '@/components/crm/deals/AddDealModal';
+import { AddTaskModal } from '@/components/crm/tasks/AddTaskModal';
+import { AddInvoiceModal } from '@/components/crm/invoices/AddInvoiceModal';
+import { ScheduleMeetingModal } from '@/components/crm/meetings/ScheduleMeetingModal';
 
 // Mock data transformer for test records
 const transformClientsToTestRecords = (clients: any[]): TestDataRecord[] => {
@@ -172,13 +177,7 @@ export default function CRMDashboardPage() {
                 <RefreshCw className="h-4 w-4 mr-1" />
                 Refresh
               </Button>
-              <Button
-                size="sm"
-                className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600 text-white"
-              >
-                <Plus className="h-4 w-4 mr-1" />
-                New Deal
-              </Button>
+              <AddDealModal onDealAdded={fetchDashboardData} />
             </div>
           </div>
         </div>
@@ -232,22 +231,42 @@ export default function CRMDashboardPage() {
                   </CardHeader>
                   <CardContent>
                     <div className="flex flex-wrap gap-2">
-                      <Button size="sm" variant="outline">
-                        <Users className="h-4 w-4 mr-2" />
-                        Add Client
-                      </Button>
-                      <Button size="sm" variant="outline">
-                        <Calendar className="h-4 w-4 mr-2" />
-                        Schedule Meeting
-                      </Button>
-                      <Button size="sm" variant="outline">
-                        <CheckCircle className="h-4 w-4 mr-2" />
-                        Create Task
-                      </Button>
-                      <Button size="sm" variant="outline">
-                        <DollarSign className="h-4 w-4 mr-2" />
-                        New Invoice
-                      </Button>
+                      <AddClientModal 
+                        onClientAdded={fetchDashboardData}
+                        trigger={
+                          <Button size="sm" variant="outline">
+                            <Users className="h-4 w-4 mr-2" />
+                            Add Client
+                          </Button>
+                        }
+                      />
+                      <ScheduleMeetingModal 
+                        onMeetingScheduled={fetchDashboardData}
+                        trigger={
+                          <Button size="sm" variant="outline">
+                            <Calendar className="h-4 w-4 mr-2" />
+                            Schedule Meeting
+                          </Button>
+                        }
+                      />
+                      <AddTaskModal 
+                        onTaskAdded={fetchDashboardData}
+                        trigger={
+                          <Button size="sm" variant="outline">
+                            <CheckCircle className="h-4 w-4 mr-2" />
+                            Create Task
+                          </Button>
+                        }
+                      />
+                      <AddInvoiceModal 
+                        onInvoiceAdded={fetchDashboardData}
+                        trigger={
+                          <Button size="sm" variant="outline">
+                            <DollarSign className="h-4 w-4 mr-2" />
+                            New Invoice
+                          </Button>
+                        }
+                      />
                       <Button size="sm" variant="outline">
                         <Settings className="h-4 w-4 mr-2" />
                         Settings

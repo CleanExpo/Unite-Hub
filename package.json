@@ -128,6 +128,10 @@
         "test:pre-deploy": "tsx tests/pre-deployment-automation.ts",
         "test:pre-deploy:fast": "tsx tests/pre-deployment-automation.ts --skip-docker --retries 1",
         "test:pre-deploy:full": "tsx tests/pre-deployment-automation.ts",
+        "test:placeholder-audit": "tsx tests/feature-tests/placeholder-audit.ts",
+        "test:feature-analysis": "tsx tests/feature-tests/placeholder-audit.ts",
+        "test:api-foundation": "tsx tests/feature-tests/api-foundation-test.ts",
+        "test:foundation": "npm run test:api-foundation && npm run test:placeholder-audit",
         "deploy:automated": "npm run test:pre-deploy && vercel --prod",
         "deploy:with-webhook": "npm run test:pre-deploy --webhook $WEBHOOK_URL && vercel --prod"
     },

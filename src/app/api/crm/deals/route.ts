@@ -4,7 +4,7 @@ import { getCurrentUser } from '@/lib/auth/session'
 
 export const dynamic = 'force-dynamic'
 
-// ✅ TASK MANAGEMENT API - GET ALL TASKS
+// 💼 DEALS MANAGEMENT API - GET ALL DEALS
 export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentUser(request)
@@ -19,34 +19,26 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '10')
     const status = searchParams.get('status') || ''
-    const priority = searchParams.get('priority') || ''
+    const stageId = searchParams.get('stage_id') || ''
     const assignedTo = searchParams.get('assigned_to') || ''
-    const clientId = searchParams.get('client_id') || ''
-    const dealId = searchParams.get('deal_id') || ''
     
     const offset = (page - 1) * limit
 
     // Build query
     let query = supabase
-      .from('tasks')
+      .from('deals')
       .select(`
         *,
-        assigned_to_profile:user_profiles!tasks_assigned_to_fkey(
+        client:clients(
+          id, name, email, company, status
+        ),
+        assigned_to_profile:user_profiles!deals_assigned_to_fkey(
           id, full_name, email, avatar_url
         ),
-        assigned_by_profile:user_profiles!tasks_assigned_by_fkey(
-          id, full_name, email
+        pipeline_stage:pipeline_stages(
+          id, name, color, probability
         ),
-        client:clients(
-          id, name, email, company
-        ),
-        deal:deals(
-          id, title, value, status
-        ),
-        category:task_categories(
-          id, name, color
-        ),
-        created_by_profile:user_profiles!tasks_created_by_fkey(
+        created_by_profile:user_profiles!deals_created_by_fkey(
           id, full_name, email
         )
       `)
@@ -56,39 +48,31 @@ export async function GET(request: NextRequest) {
       query = query.eq('status', status)
     }
     
-    if (priority) {
-      query = query.eq('priority', priority)
+    if (stageId) {
+      query = query.eq('stage_id', stageId)
     }
     
     if (assignedTo) {
       query = query.eq('assigned_to', assignedTo)
     }
-    
-    if (clientId) {
-      query = query.eq('client_id', clientId)
-    }
-    
-    if (dealId) {
-      query = query.eq('deal_id', dealId)
-    }
 
     // Execute query with pagination
-    const { data: tasks, error } = await query
+    const { data: deals, error } = await query
       .order('created_at', { ascending: false })
       .range(offset, offset + limit - 1)
 
     if (error) {
-      console.error('Error fetching tasks:', error)
-      return NextResponse.json({ error: 'Failed to fetch tasks' }, { status: 500 })
+      console.error('Error fetching deals:', error)
+      return NextResponse.json({ error: 'Failed to fetch deals' }, { status: 500 })
     }
 
     // Get total count
     const { count: totalCount } = await supabase
-      .from('tasks')
+      .from('deals')
       .select('*', { count: 'exact', head: true })
 
     return NextResponse.json({
-      data: tasks || [],
+      data: deals || [],
       pagination: {
         page,
         limit,
@@ -98,12 +82,12 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Tasks API Error:', error)
+    console.error('Deals API Error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
 
-// ✅ TASK MANAGEMENT API - CREATE NEW TASK
+// 💼 DEALS MANAGEMENT API - CREATE NEW DEAL
 export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentUser(request)
@@ -115,9 +99,9 @@ export async function POST(request: NextRequest) {
     const supabase = await createServerClient()
 
     // Validate required fields
-    if (!body.title) {
+    if (!body.title || !body.client_id || !body.value) {
       return NextResponse.json(
-        { error: 'Title is required' }, 
+        { error: 'Title, client ID, and value are required' }, 
         { status: 400 }
       )
     }
@@ -133,62 +117,71 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'User profile not found' }, { status: 404 })
     }
 
-    // Get default category if none provided
-    let categoryId = body.category_id
-    if (!categoryId) {
-      const { data: defaultCategory } = await supabase
-        .from('task_categories')
+    // Get first pipeline stage if none provided
+    let stageId = body.stage_id
+    if (!stageId) {
+      const { data: firstStage } = await supabase
+        .from('pipeline_stages')
         .select('id')
         .eq('is_active', true)
+        .order('stage_order')
         .limit(1)
         .single()
       
-      categoryId = defaultCategory?.id
+      stageId = firstStage?.id
     }
 
-    // Create task
-    const taskData = {
+    // Create deal
+    const dealData = {
       title: body.title,
       description: body.description || null,
+      client_id: body.client_id,
       assigned_to: body.assigned_to || userProfile.id,
-      assigned_by: userProfile.id,
-      category_id: categoryId,
-      priority: body.priority || 'medium',
-      status: body.status || 'pending',
-      progress_percentage: body.progress_percentage || 0,
-      due_date: body.due_date || null,
-      estimated_hours: body.estimated_hours || null,
-      client_id: body.client_id || null,
-      deal_id: body.deal_id || null,
-      parent_task_id: body.parent_task_id || null,
+      value: parseFloat(body.value),
+      currency: body.currency || 'AUD',
+      probability: body.probability || 50,
+      stage_id: stageId,
+      expected_close_date: body.expected_close_date || null,
+      status: body.status || 'open',
+      source: body.source || null,
+      competitors: body.competitors || [],
       tags: body.tags || [],
       created_by: userProfile.id,
       metadata: body.metadata || {}
     }
 
-    const { data: task, error } = await supabase
-      .from('tasks')
-      .insert(taskData)
+    const { data: deal, error } = await supabase
+      .from('deals')
+      .insert(dealData)
       .select(`
         *,
-        assigned_to_profile:user_profiles!tasks_assigned_to_fkey(
+        client:clients(id, name, email, company),
+        assigned_to_profile:user_profiles!deals_assigned_to_fkey(
           id, full_name, email, avatar_url
         ),
-        client:clients(id, name, email, company),
-        deal:deals(id, title, value, status),
-        category:task_categories(id, name, color)
+        pipeline_stage:pipeline_stages(id, name, color, probability)
       `)
       .single()
 
     if (error) {
-      console.error('Error creating task:', error)
-      return NextResponse.json({ error: 'Failed to create task' }, { status: 500 })
+      console.error('Error creating deal:', error)
+      return NextResponse.json({ error: 'Failed to create deal' }, { status: 500 })
     }
 
-    return NextResponse.json({ data: task }, { status: 201 })
+    // Log deal creation activity
+    await supabase
+      .from('deal_activities')
+      .insert({
+        deal_id: deal.id,
+        activity_type: 'note',
+        description: 'Deal created',
+        created_by: userProfile.id
+      })
+
+    return NextResponse.json({ data: deal }, { status: 201 })
 
   } catch (error) {
-    console.error('Task Creation Error:', error)
+    console.error('Deal Creation Error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
