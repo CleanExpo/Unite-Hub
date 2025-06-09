@@ -37,12 +37,11 @@ import { AddTaskModal } from '@/components/crm/tasks/AddTaskModal';
 import { AddInvoiceModal } from '@/components/crm/invoices/AddInvoiceModal';
 import { ScheduleMeetingModal } from '@/components/crm/meetings/ScheduleMeetingModal';
 
-// AI-Enhanced Components (Based on Agent Recommendations)
+// Real CRM Components (Mock Data Eliminated)
 import ClientAnalytics from '@/components/crm/clients/ClientAnalytics';
 import DealProbabilityEngine from '@/components/crm/deals/DealProbabilityEngine';
 import FinancialAnalytics from '@/components/crm/financial/FinancialAnalytics';
 import TaskIntelligence from '@/components/crm/tasks/TaskIntelligence';
-import IntelligenceHub from '@/components/crm/intelligence/IntelligenceHub';
 
 // Mock data transformer for test records
 const transformClientsToTestRecords = (clients: any[]): TestDataRecord[] => {
@@ -197,7 +196,7 @@ export default function CRMDashboardPage() {
       {/* Main Content */}
       <div className="p-8 max-w-7xl mx-auto">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full max-w-7xl mx-auto grid-cols-9 h-auto p-1 gap-1">
+          <TabsList className="grid w-full max-w-7xl mx-auto grid-cols-8 h-auto p-1 gap-1">
             <TabsTrigger value="overview" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">
               <BarChart3 className="h-4 w-4 mr-2" />
               Overview
@@ -208,23 +207,19 @@ export default function CRMDashboardPage() {
             </TabsTrigger>
             <TabsTrigger value="clients-ai" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
               <Users className="h-4 w-4 mr-2" />
-              AI Clients
+              Clients
             </TabsTrigger>
             <TabsTrigger value="deals-ai" className="data-[state=active]:bg-blue-600 data-[state=active]:text-white">
               <Target className="h-4 w-4 mr-2" />
-              AI Pipeline
+              Deals
             </TabsTrigger>
             <TabsTrigger value="financial-ai" className="data-[state=active]:bg-green-600 data-[state=active]:text-white">
               <DollarSign className="h-4 w-4 mr-2" />
-              AI Finance
+              Finance
             </TabsTrigger>
             <TabsTrigger value="tasks-ai" className="data-[state=active]:bg-orange-600 data-[state=active]:text-white">
               <Brain className="h-4 w-4 mr-2" />
-              AI Tasks
-            </TabsTrigger>
-            <TabsTrigger value="intelligence-hub" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
-              <Zap className="h-4 w-4 mr-2" />
-              AI Hub
+              Tasks
             </TabsTrigger>
             <TabsTrigger value="data-quality" className="data-[state=active]:bg-teal-600 data-[state=active]:text-white">
               <Filter className="h-4 w-4 mr-2" />
@@ -338,79 +333,64 @@ export default function CRMDashboardPage() {
             )}
           </TabsContent>
 
-          {/* AI Client Intelligence Tab */}
+          {/* Client Analytics Tab */}
           <TabsContent value="clients-ai" className="mt-6">
             <div className="mb-4">
               <div className="flex items-center gap-2 mb-2">
                 <Users className="h-5 w-5 text-purple-600" />
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">AI Client Intelligence</h2>
-                <Badge className="bg-purple-100 text-purple-800">Powered by AI Agent Analysis</Badge>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Client Analytics</h2>
+                <Badge className="bg-purple-100 text-purple-800">Real Data Analytics</Badge>
               </div>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Advanced client analytics with AI-powered segmentation, lead scoring, and relationship mapping
+                Client analytics with real data from your CRM database
               </p>
             </div>
             <ClientAnalytics />
           </TabsContent>
 
-          {/* AI Deal Pipeline Tab */}
+          {/* Deal Pipeline Tab */}
           <TabsContent value="deals-ai" className="mt-6">
             <div className="mb-4">
               <div className="flex items-center gap-2 mb-2">
                 <Target className="h-5 w-5 text-blue-600" />
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">AI Pipeline Analytics</h2>
-                <Badge className="bg-blue-100 text-blue-800">90% Confidence AI Analysis</Badge>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Deal Pipeline</h2>
+                <Badge className="bg-blue-100 text-blue-800">Real Data Analysis</Badge>
               </div>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Intelligent deal probability analysis, revenue forecasting, and competitive intelligence
+                Deal analysis and pipeline management with real database data
               </p>
             </div>
             <DealProbabilityEngine />
           </TabsContent>
 
-          {/* AI Financial Intelligence Tab */}
+          {/* Financial Analytics Tab */}
           <TabsContent value="financial-ai" className="mt-6">
             <div className="mb-4">
               <div className="flex items-center gap-2 mb-2">
                 <DollarSign className="h-5 w-5 text-green-600" />
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">AI Financial Intelligence</h2>
-                <Badge className="bg-green-100 text-green-800">Predictive Analytics</Badge>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Financial Analytics</h2>
+                <Badge className="bg-green-100 text-green-800">Real Financial Data</Badge>
               </div>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Advanced financial forecasting, payment predictions, and automated workflow management
+                Financial analytics and reporting with real transaction data
               </p>
             </div>
             <FinancialAnalytics />
           </TabsContent>
 
-          {/* AI Task Intelligence Tab */}
+          {/* Task Management Tab */}
           <TabsContent value="tasks-ai" className="mt-6">
             <div className="mb-4">
               <div className="flex items-center gap-2 mb-2">
                 <Brain className="h-5 w-5 text-orange-600" />
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">AI Task Intelligence</h2>
-                <Badge className="bg-orange-100 text-orange-800">Smart Automation</Badge>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Task Management</h2>
+                <Badge className="bg-orange-100 text-orange-800">Real Task Data</Badge>
               </div>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Intelligent task prioritization, automated assignment, and team productivity optimization
+                Task management and analytics with real data from your CRM database
               </p>
             </div>
             <TaskIntelligence />
-          </TabsContent>
-
-          {/* AI Intelligence Hub Tab */}
-          <TabsContent value="intelligence-hub" className="mt-6">
-            <div className="mb-4">
-              <div className="flex items-center gap-2 mb-2">
-                <Zap className="h-5 w-5 text-purple-600" />
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">AI Intelligence Hub</h2>
-                <Badge className="bg-purple-100 text-purple-800">78% Overall Intelligence Score</Badge>
-              </div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Unified AI intelligence center with cross-component insights, performance monitoring, and real-time recommendations
-              </p>
-            </div>
-            <IntelligenceHub />
           </TabsContent>
 
           {/* Data Quality Tab */}
