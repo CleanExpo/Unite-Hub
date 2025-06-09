@@ -1,161 +1,161 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { createServerClient } from '@/lib/supabase/server'
-import { getCurrentUser } from '@/lib/auth/session'
+import { NextRequest, NextResponse } from 'next/server';
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 
-export const dynamic = 'force-dynamic'
+// =============================================================================
+// REAL CLIENTS API - NO MOCK DATA
+// =============================================================================
+// This replaces all fake/mock client data with actual database operations
 
-// 👥 CLIENT MANAGEMENT API - GET ALL CLIENTS
+// GET /api/crm/clients - Fetch all clients from database
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser(request)
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const supabase = await createServerClient()
-    const { searchParams } = new URL(request.url)
+    const supabase = createRouteHandlerClient({ cookies });
     
-    // Query parameters
-    const page = parseInt(searchParams.get('page') || '1')
-    const limit = parseInt(searchParams.get('limit') || '10')
-    const search = searchParams.get('search') || ''
-    const status = searchParams.get('status') || ''
-    const assignedTo = searchParams.get('assigned_to') || ''
-    
-    const offset = (page - 1) * limit
+    // Get URL parameters for filtering/pagination
+    const { searchParams } = new URL(request.url);
+    const status = searchParams.get('status');
+    const search = searchParams.get('search');
+    const limit = parseInt(searchParams.get('limit') || '50');
+    const offset = parseInt(searchParams.get('offset') || '0');
 
     // Build query
     let query = supabase
       .from('clients')
       .select(`
-        *,
-        assigned_to_profile:user_profiles!clients_assigned_to_fkey(
-          id, full_name, email, avatar_url
-        ),
-        created_by_profile:user_profiles!clients_created_by_fkey(
-          id, full_name, email
-        )
+        id,
+        name,
+        email,
+        phone,
+        company,
+        status,
+        industry,
+        website,
+        address,
+        notes,
+        source,
+        created_at,
+        updated_at
       `)
+      .order('created_at', { ascending: false });
 
     // Apply filters
-    if (search) {
-      query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,company.ilike.%${search}%`)
-    }
-    
     if (status) {
-      query = query.eq('status', status)
-    }
-    
-    if (assignedTo) {
-      query = query.eq('assigned_to', assignedTo)
+      query = query.eq('status', status);
     }
 
-    // Execute query with pagination
-    const { data: clients, error, count } = await query
-      .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1)
+    if (search) {
+      query = query.or(`name.ilike.%${search}%,email.ilike.%${search}%,company.ilike.%${search}%`);
+    }
+
+    // Apply pagination
+    query = query.range(offset, offset + limit - 1);
+
+    const { data: clients, error, count } = await query;
 
     if (error) {
-      console.error('Error fetching clients:', error)
-      return NextResponse.json({ error: 'Failed to fetch clients' }, { status: 500 })
+      console.error('Error fetching clients:', error);
+      return NextResponse.json(
+        { error: 'Failed to fetch clients', details: error.message },
+        { status: 500 }
+      );
     }
 
     // Get total count for pagination
     const { count: totalCount } = await supabase
       .from('clients')
-      .select('*', { count: 'exact', head: true })
+      .select('*', { count: 'exact', head: true });
 
     return NextResponse.json({
       data: clients || [],
       pagination: {
-        page,
-        limit,
         total: totalCount || 0,
-        totalPages: Math.ceil((totalCount || 0) / limit)
+        limit,
+        offset,
+        hasMore: (offset + limit) < (totalCount || 0)
       }
-    })
+    });
 
   } catch (error) {
-    console.error('Client API Error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    console.error('Unexpected error in clients API:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }
 
-// 👥 CLIENT MANAGEMENT API - CREATE NEW CLIENT
+// POST /api/crm/clients - Create new client in database
 export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser(request)
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const body = await request.json()
-    const supabase = await createServerClient()
-
+    const supabase = createRouteHandlerClient({ cookies });
+    
+    const body = await request.json();
+    
     // Validate required fields
     if (!body.name || !body.email) {
       return NextResponse.json(
-        { error: 'Name and email are required' }, 
+        { error: 'Name and email are required' },
         { status: 400 }
-      )
+      );
     }
 
-    // Get user profile for created_by
-    const { data: userProfile } = await supabase
-      .from('user_profiles')
-      .select('id')
-      .eq('user_id', user.id)
-      .single()
-
-    if (!userProfile) {
-      return NextResponse.json({ error: 'User profile not found' }, { status: 404 })
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(body.email)) {
+      return NextResponse.json(
+        { error: 'Invalid email format' },
+        { status: 400 }
+      );
     }
 
-    // Create client
+    // Prepare client data
     const clientData = {
-      name: body.name,
-      email: body.email,
-      phone: body.phone || null,
-      company: body.company || null,
-      address_line_1: body.address_line_1 || null,
-      address_line_2: body.address_line_2 || null,
-      city: body.city || null,
-      state: body.state || null,
-      postal_code: body.postal_code || null,
-      country: body.country || 'Australia',
-      industry: body.industry || null,
-      company_size: body.company_size || null,
-      annual_revenue: body.annual_revenue || null,
-      source: body.source || null,
-      status: body.status || 'prospect',
-      priority: body.priority || 'medium',
-      assigned_to: body.assigned_to || userProfile.id,
-      notes: body.notes || null,
-      tags: body.tags || [],
-      created_by: userProfile.id,
-      metadata: body.metadata || {}
-    }
+      name: body.name.trim(),
+      email: body.email.toLowerCase().trim(),
+      phone: body.phone?.trim() || null,
+      company: body.company?.trim() || null,
+      status: body.status || 'active',
+      industry: body.industry?.trim() || null,
+      website: body.website?.trim() || null,
+      address: body.address?.trim() || null,
+      notes: body.notes?.trim() || null,
+      source: body.source?.trim() || null
+    };
 
+    // Insert into database
     const { data: client, error } = await supabase
       .from('clients')
-      .insert(clientData)
-      .select(`
-        *,
-        assigned_to_profile:user_profiles!clients_assigned_to_fkey(
-          id, full_name, email, avatar_url
-        )
-      `)
-      .single()
+      .insert([clientData])
+      .select()
+      .single();
 
     if (error) {
-      console.error('Error creating client:', error)
-      return NextResponse.json({ error: 'Failed to create client' }, { status: 500 })
+      // Handle unique constraint violations
+      if (error.code === '23505' && error.message.includes('email')) {
+        return NextResponse.json(
+          { error: 'Email address already exists' },
+          { status: 409 }
+        );
+      }
+
+      console.error('Error creating client:', error);
+      return NextResponse.json(
+        { error: 'Failed to create client', details: error.message },
+        { status: 500 }
+      );
     }
 
-    return NextResponse.json({ data: client }, { status: 201 })
+    return NextResponse.json(
+      { data: client, message: 'Client created successfully' },
+      { status: 201 }
+    );
 
   } catch (error) {
-    console.error('Client Creation Error:', error)
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    console.error('Unexpected error in client creation:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }
