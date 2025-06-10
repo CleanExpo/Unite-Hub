@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { createClient } from '@/lib/supabase/server';
 
 // =============================================================================
 // REAL CLIENTS API - NO MOCK DATA
@@ -10,7 +9,7 @@ import { cookies } from 'next/headers';
 // GET /api/crm/clients - Fetch all clients from database
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = await createClient();
     
     // Get URL parameters for filtering/pagination
     const { searchParams } = new URL(request.url);
@@ -88,7 +87,7 @@ export async function GET(request: NextRequest) {
 // POST /api/crm/clients - Create new client in database
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = await createClient();
     
     const body = await request.json();
     

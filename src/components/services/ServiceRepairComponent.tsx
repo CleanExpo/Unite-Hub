@@ -5,7 +5,7 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useChunkedOperation } from '@/hooks/useChunkedOperation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,45 +20,76 @@ import {
   StopCircle,
   RefreshCw
 } from 'lucide-react';
+import { apiClient } from '@/lib/apiClient';
+import { toast } from '@/components/ui/use-toast';
 
 interface ServiceItem {
   id: string;
   name: string;
   type: 'component' | 'api' | 'database' | 'cache';
   status: 'healthy' | 'warning' | 'error';
+  description?: string;
+  last_check?: string;
 }
 
-// Mock service items for demonstration
-const mockServices: ServiceItem[] = Array.from({ length: 50 }, (_, i) => ({
-  id: `service-${i}`,
-  name: `Service ${i + 1}`,
-  type: ['component', 'api', 'database', 'cache'][Math.floor(Math.random() * 4)] as any,
-  status: ['healthy', 'warning', 'error'][Math.floor(Math.random() * 3)] as any
-}));
-
 export function ServiceRepairComponent() {
-  const [services] = useState<ServiceItem[]>(mockServices);
+  const [services, setServices] = useState<ServiceItem[]>([]);
   const [selectedServices, setSelectedServices] = useState<Set<string>>(new Set());
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Mock repair function
+  // Fetch real services from API
+  const fetchServices = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await apiClient.get('services');
+      setServices(data.data || []);
+    } catch (err) {
+      console.error('Failed to fetch services:', err);
+      setError('Failed to load services. Please try again.');
+      toast({
+        title: 'Error',
+        description: 'Failed to load services',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchServices();
+  }, []);
+
+  // Real repair function using API
   const repairService = async (service: ServiceItem): Promise<{
     serviceId: string;
     success: boolean;
     message: string;
   }> => {
-    // Simulate repair time
-    await new Promise(resolve => setTimeout(resolve, 500 + Math.random() * 1000));
-    
-    // Simulate success/failure
-    const success = Math.random() > 0.2;
-    
-    return {
-      serviceId: service.id,
-      success,
-      message: success 
-        ? `Successfully repaired ${service.name}` 
-        : `Failed to repair ${service.name}`
-    };
+    try {
+      const response = await apiClient.post('services/repair', {
+        serviceIds: [service.id]
+      });
+      
+      const result = response.results?.[0];
+      if (result) {
+        return {
+          serviceId: service.id,
+          success: result.success,
+          message: result.message
+        };
+      } else {
+        throw new Error('No repair result received');
+      }
+    } catch (err) {
+      return {
+        serviceId: service.id,
+        success: false,
+        message: `Failed to repair ${service.name}: ${err instanceof Error ? err.message : 'Unknown error'}`
+      };
+    }
   };
 
   // Use chunked operation hook

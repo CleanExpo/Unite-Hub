@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -31,9 +31,12 @@ import {
   Key,
   LogOut,
   Save,
-  X
+  X,
+  Loader2
 } from 'lucide-react'
 import { motion } from 'framer-motion'
+import { apiClient } from '@/lib/apiClient'
+import { toast } from '@/components/ui/use-toast'
 
 interface UserProfileData {
   id: string
@@ -55,39 +58,97 @@ interface UserProfileData {
   twoFactor: boolean
 }
 
-const mockUser: UserProfileData = {
-  id: '1',
-  name: 'John Doe',
-  email: 'john.doe@unitegroup.com',
-  phone: '+1 (555) 123-4567',
-  avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=John',
-  role: 'Senior Developer',
-  department: 'Engineering',
-  location: 'San Francisco, CA',
-  timezone: 'America/Los_Angeles',
-  bio: 'Passionate about building scalable SaaS solutions and leading engineering teams.',
-  website: 'https://johndoe.dev',
-  notifications: {
-    email: true,
-    push: true,
-    sms: false
-  },
-  twoFactor: true
-}
-
 export function UserProfile() {
-  const [user, setUser] = useState<UserProfileData>(mockUser)
+  const [user, setUser] = useState<UserProfileData | null>(null)
   const [isEditing, setIsEditing] = useState(false)
-  const [editedUser, setEditedUser] = useState<UserProfileData>(mockUser)
+  const [editedUser, setEditedUser] = useState<UserProfileData | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const handleSave = () => {
-    setUser(editedUser)
-    setIsEditing(false)
+  // Fetch real user profile from API
+  const fetchUserProfile = async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const data = await apiClient.get('users/profile')
+      setUser(data.data)
+      setEditedUser(data.data)
+    } catch (err) {
+      console.error('Failed to fetch user profile:', err)
+      setError('Failed to load user profile. Please try again.')
+      toast({
+        title: 'Error',
+        description: 'Failed to load user profile',
+        variant: 'destructive',
+      })
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchUserProfile()
+  }, [])
+
+  const handleSave = async () => {
+    if (!editedUser) return
+    
+    setSaving(true)
+    try {
+      const response = await apiClient.put('users/profile', editedUser)
+      setUser(response.data)
+      setIsEditing(false)
+      toast({
+        title: 'Success',
+        description: 'Profile updated successfully',
+      })
+    } catch (err) {
+      console.error('Failed to update profile:', err)
+      toast({
+        title: 'Error',
+        description: 'Failed to update profile. Please try again.',
+        variant: 'destructive',
+      })
+    } finally {
+      setSaving(false)
+    }
   }
 
   const handleCancel = () => {
     setEditedUser(user)
     setIsEditing(false)
+  }
+
+  if (loading) {
+    return (
+      <div className="max-w-4xl mx-auto space-y-6">
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-center h-32">
+              <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  if (error || !user) {
+    return (
+      <div className="max-w-4xl mx-auto space-y-6">
+        <Card>
+          <CardContent className="p-6">
+            <div className="text-center">
+              <p className="text-red-600 mb-4">{error || 'Failed to load user profile'}</p>
+              <Button onClick={fetchUserProfile}>
+                Retry
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
   }
 
   const getUserInitials = (name: string) => {
@@ -129,8 +190,8 @@ export function UserProfile() {
               <div>
                 {isEditing ? (
                   <Input
-                    value={editedUser.name}
-                    onChange={(e) => setEditedUser({ ...editedUser, name: e.target.value })}
+                    value={editedUser?.name || ''}
+                    onChange={(e) => editedUser && setEditedUser({ ...editedUser, name: e.target.value })}
                     className="text-2xl font-bold mb-2"
                   />
                 ) : (
@@ -196,8 +257,8 @@ export function UserProfile() {
                   <Input
                     id="email"
                     type="email"
-                    value={isEditing ? editedUser.email : user.email}
-                    onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })}
+                    value={isEditing ? editedUser?.email || '' : user.email}
+                    onChange={(e) => editedUser && setEditedUser({ ...editedUser, email: e.target.value })}
                     disabled={!isEditing}
                   />
                 </div>
@@ -210,8 +271,8 @@ export function UserProfile() {
                   <Input
                     id="phone"
                     type="tel"
-                    value={isEditing ? editedUser.phone : user.phone}
-                    onChange={(e) => setEditedUser({ ...editedUser, phone: e.target.value })}
+                    value={isEditing ? editedUser?.phone || '' : user.phone || ''}
+                    onChange={(e) => editedUser && setEditedUser({ ...editedUser, phone: e.target.value })}
                     disabled={!isEditing}
                   />
                 </div>

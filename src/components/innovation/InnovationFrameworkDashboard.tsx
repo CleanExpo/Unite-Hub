@@ -24,8 +24,12 @@ import {
   Minus,
   Rocket,
   Brain,
-  Eye
+  Eye,
+  RefreshCw,
+  Settings
 } from 'lucide-react';
+import { apiClient } from '@/lib/apiClient';
+import { toast } from '@/components/ui/use-toast';
 
 interface MarketTrend {
   id: string;
@@ -86,105 +90,98 @@ interface InnovationMetrics {
 export default function InnovationFrameworkDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [configured, setConfigured] = useState(false);
   
-  // Mock data - in production, this would come from the actual services
-  const [marketTrends] = useState<MarketTrend[]>([
-    {
-      id: '1',
-      name: 'AI-Powered Autonomous Business Operations',
-      category: 'technology',
-      relevanceScore: 0.94,
-      impactPotential: 0.91,
-      timeHorizon: 'short_term'
-    },
-
-    {
-      id: '3',
-      name: 'Edge AI and Distributed Intelligence',
-      category: 'technology',
-      relevanceScore: 0.91,
-      impactPotential: 0.88,
-      timeHorizon: 'short_term'
-    }
-  ]);
-
-  const [opportunities] = useState<InnovationOpportunity[]>([
-    {
-      id: '1',
-      title: 'Leverage AI-Powered Operations for Business Advantage',
-      category: 'feature',
-      businessValue: 0.91,
-      technicalFeasibility: 0.87,
-      priority: 'critical',
-      expectedROI: 2.4,
-      timeToMarket: 6
-    },
-
-  ]);
-
-  const [productMarketFits] = useState<ProductMarketFit[]>([
-    {
-      productId: 'unite-ai-platform',
-      productName: 'Unite AI Platform',
-      fitScore: 0.82,
-      userAdoption: 0.78,
-      customerSatisfaction: 0.85,
-      marketReadiness: 0.82,
-      recommendations: ['Excellent PMF - Scale marketing and sales efforts', 'Focus on market expansion']
-    },
-    {
-      productId: 'cognitive-analytics',
-      productName: 'Cognitive Analytics Suite',
-      fitScore: 0.88,
-      userAdoption: 0.84,
-      customerSatisfaction: 0.88,
-      marketReadiness: 0.79,
-      recommendations: ['Outstanding PMF - Consider new market segments', 'Enhance competitive positioning']
-    }
-  ]);
-
-  const [abTests] = useState<ABTest[]>([
-    {
-      id: '1',
-      name: 'AI Dashboard Layout Optimization',
-      status: 'running',
-      primaryMetric: 'engagement_time',
-      variants: [
-        { name: 'Control', conversionRate: 0.597, visitors: 1420 },
-        { name: 'Simplified Layout', conversionRate: 0.669, visitors: 1380 }
-      ]
-    },
-    {
-      id: '2',
-      name: 'Onboarding Flow Enhancement',
-      status: 'completed',
-      primaryMetric: 'time_to_first_value',
-      variants: [
-        { name: 'Standard Onboarding', conversionRate: 0.513, visitors: 456 },
-        { name: 'Interactive Onboarding', conversionRate: 0.671, visitors: 444 }
-      ],
-      results: {
-        winningVariant: 'Interactive Onboarding',
-        improvementPercent: 30.8,
-        recommendation: 'implement'
-      }
-    }
-  ]);
-
-  const [metrics] = useState<InnovationMetrics>({
-    totalOpportunities: 12,
-    averageROI: 2.1,
-    trendAccuracy: 0.87,
-    validationAccuracy: 0.91,
-    activeFeatures: 8,
-    marketTimingAccuracy: 0.84
+  // Real data from API - NO MOCK DATA
+  const [marketTrends, setMarketTrends] = useState<MarketTrend[]>([]);
+  const [opportunities, setOpportunities] = useState<InnovationOpportunity[]>([]);
+  const [productMarketFits, setProductMarketFits] = useState<ProductMarketFit[]>([]);
+  const [abTests, setAbTests] = useState<ABTest[]>([]);
+  const [metrics, setMetrics] = useState<InnovationMetrics>({
+    totalOpportunities: 0,
+    averageROI: 0,
+    trendAccuracy: 0,
+    validationAccuracy: 0,
+    activeFeatures: 0,
+    marketTimingAccuracy: 0
   });
 
   useEffect(() => {
-    // Simulate loading
-    const timer = setTimeout(() => setIsLoading(false), 1000);
-    return () => clearTimeout(timer);
+    fetchInnovationData();
   }, []);
+
+  const fetchInnovationData = async () => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const response = await apiClient.get('innovation/framework');
+      
+      if (response.configured) {
+        // Innovation Framework is configured, use real data
+        setConfigured(true);
+        setMarketTrends(response.data.marketTrends || []);
+        setOpportunities(response.data.opportunities || []);
+        setProductMarketFits(response.data.productMarketFits || []);
+        setAbTests(response.data.abTests || []);
+        setMetrics(response.data.metrics);
+      } else {
+        // Innovation Framework not configured
+        setConfigured(false);
+        setMarketTrends([]);
+        setOpportunities([]);
+        setProductMarketFits([]);
+        setAbTests([]);
+        setMetrics({
+          totalOpportunities: 0,
+          averageROI: 0,
+          trendAccuracy: 0,
+          validationAccuracy: 0,
+          activeFeatures: 0,
+          marketTimingAccuracy: 0
+        });
+      }
+    } catch (err) {
+      console.error('Error fetching Innovation Framework data:', err);
+      setError('Failed to load Innovation Framework data. Please try again.');
+      toast({
+        title: 'Error',
+        description: 'Failed to load Innovation Framework data',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRefresh = () => {
+    fetchInnovationData();
+  };
+
+  const handleConfigure = async () => {
+    try {
+      await apiClient.post('innovation/framework', {
+        action: 'configure',
+        name: 'Innovation Framework',
+        settings: {}
+      });
+      
+      toast({
+        title: 'Success',
+        description: 'Innovation Framework configured successfully',
+      });
+      
+      // Refresh data
+      fetchInnovationData();
+    } catch (err) {
+      toast({
+        title: 'Error',
+        description: 'Failed to configure Innovation Framework',
+        variant: 'destructive',
+      });
+    }
+  };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -222,6 +219,85 @@ export default function InnovationFrameworkDashboard() {
           </div>
           <div className="h-96 bg-gray-200 rounded"></div>
         </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-6">
+        <Card>
+          <CardContent className="p-12">
+            <div className="text-center">
+              <AlertCircle className="h-16 w-16 mx-auto mb-4 text-red-400" />
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                Error Loading Innovation Framework
+              </h3>
+              <p className="text-red-600 mb-4">{error}</p>
+              <Button onClick={handleRefresh}>
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Try Again
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!configured) {
+    return (
+      <div className="p-6 space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Innovation Framework</h1>
+            <p className="text-muted-foreground">
+              AI-powered innovation management and market validation
+            </p>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Button variant="outline" size="sm" onClick={handleRefresh}>
+              <RefreshCw className="h-4 w-4" />
+            </Button>
+            <Button size="sm" onClick={handleConfigure}>
+              <Settings className="h-4 w-4 mr-2" />
+              Configure
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardContent className="p-12">
+            <div className="text-center">
+              <Brain className="h-16 w-16 mx-auto mb-4 text-gray-400" />
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                Innovation Framework Not Configured
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
+                Set up your Innovation Framework to enable AI-powered market intelligence, 
+                opportunity identification, and autonomous feature development.
+              </p>
+              
+              <div className="space-y-4 mb-6">
+                <div className="text-left max-w-md mx-auto">
+                  <h4 className="font-semibold mb-2">Setup includes:</h4>
+                  <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                    <li>• Market intelligence API integration</li>
+                    <li>• A/B testing framework configuration</li>
+                    <li>• Product analytics setup</li>
+                    <li>• Business intelligence tools</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <Button onClick={handleConfigure}>
+                <Settings className="h-4 w-4 mr-2" />
+                Configure Innovation Framework
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }

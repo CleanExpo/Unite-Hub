@@ -29,8 +29,11 @@ import {
   AlertCircle,
   CheckCircle,
   Clock,
-  Lightbulb
+  Lightbulb,
+  RefreshCw
 } from 'lucide-react';
+import { apiClient } from '@/lib/apiClient';
+import { toast } from '@/components/ui/use-toast';
 
 interface AIInsight {
   id: string;
@@ -84,160 +87,78 @@ const AIPersonalizationDashboard: React.FC = () => {
   });
   const [modelStatus, setModelStatus] = useState<AIModelStatus[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [configured, setConfigured] = useState(false);
 
   useEffect(() => {
     fetchAIData();
   }, []);
 
+  // Real API integration - NO MOCK DATA
   const fetchAIData = async () => {
+    setLoading(true);
+    setError(null);
+    
     try {
-      setLoading(true);
+      const response = await apiClient.get('ai/personalization');
       
-      // Simulate API calls - in production, these would be real API endpoints
-      const [insightsData, recommendationsData, metricsData, modelsData] = await Promise.all([
-        fetchInsights(),
-        fetchRecommendations(),
-        fetchMetrics(),
-        fetchModelStatus()
-      ]);
-
-      setInsights(insightsData);
-      setRecommendations(recommendationsData);
-      setMetrics(metricsData);
-      setModelStatus(modelsData);
-    } catch (error) {
-      console.error('Failed to fetch AI data:', error);
+      if (response.configured) {
+        // AI Personalization is configured, use real data
+        setConfigured(true);
+        setInsights(response.data.insights || []);
+        setRecommendations(response.data.recommendations || []);
+        setMetrics(response.data.metrics);
+        setModelStatus(response.data.modelStatus || []);
+      } else {
+        // AI Personalization not configured
+        setConfigured(false);
+        setInsights([]);
+        setRecommendations([]);
+        setMetrics({
+          total_users: 0,
+          personalized_sessions: 0,
+          improvement_rate: 0,
+          conversion_lift: 0,
+          engagement_increase: 0,
+          content_recommendations: 0
+        });
+        setModelStatus([]);
+      }
+    } catch (err) {
+      console.error('Error fetching AI Personalization data:', err);
+      setError('Failed to load AI Personalization data. Please try again.');
+      toast({
+        title: 'Error',
+        description: 'Failed to load AI Personalization data',
+        variant: 'destructive',
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  // Mock data functions - in production, these would be real API calls
-  const fetchInsights = async (): Promise<AIInsight[]> => {
-    return [
-      {
-        id: '1',
-        title: 'High-Value User Segment Identified',
-        description: 'Users from technology sector show 3x higher consultation conversion rate',
-        impact_score: 9,
-        confidence: 0.92,
-        status: 'active',
-        recommendations: [
-          'Create technology-specific landing pages',
-          'Increase targeted content for tech industry',
-          'Implement personalized pricing for enterprise clients'
-        ],
-        created_at: new Date().toISOString()
-      },
-      {
-        id: '2',
-        title: 'Optimal Engagement Time Window',
-        description: 'Peak user engagement occurs between 2-4 PM on weekdays',
-        impact_score: 7,
-        confidence: 0.85,
-        status: 'active',
-        recommendations: [
-          'Schedule email campaigns for 2-4 PM',
-          'Increase live chat availability during peak hours',
-          'Launch time-sensitive offers during optimal windows'
-        ],
-        created_at: new Date().toISOString()
-      },
-      {
-        id: '3',
-        title: 'Content Personalization Opportunity',
-        description: 'Users prefer case studies over blog posts by 2:1 ratio',
-        impact_score: 6,
-        confidence: 0.78,
-        status: 'implemented',
-        recommendations: [
-          'Prioritize case study content creation',
-          'Convert top blog posts to case study format',
-          'Recommend case studies to new visitors'
-        ],
-        created_at: new Date().toISOString()
-      }
-    ];
-  };
-
-  const fetchRecommendations = async (): Promise<ContentRecommendation[]> => {
-    return [
-      {
-        id: '1',
-        title: 'Enterprise Digital Transformation Case Study',
-        description: 'How we helped a Fortune 500 company modernize their digital infrastructure',
-        relevance_score: 0.94,
-        confidence: 0.89,
-        reasoning: ['User viewed enterprise content 3x', 'Similar users converted at 40% rate'],
-        recommendation_type: 'behavioral'
-      },
-      {
-        id: '2',
-        title: 'Cloud Migration Best Practices Guide',
-        description: 'Comprehensive guide for planning and executing cloud migrations',
-        relevance_score: 0.87,
-        confidence: 0.82,
-        reasoning: ['Strong correlation with user industry', 'High engagement on related topics'],
-        recommendation_type: 'content_based'
-      },
-      {
-        id: '3',
-        title: '$550 Technology Consultation Booking',
-        description: 'Book a consultation to discuss your technology needs',
-        relevance_score: 0.91,
-        confidence: 0.95,
-        reasoning: ['User in target segment', 'Viewed pricing page multiple times'],
-        recommendation_type: 'contextual'
-      }
-    ];
-  };
-
-  const fetchMetrics = async (): Promise<PersonalizationMetrics> => {
-    return {
-      total_users: 2847,
-      personalized_sessions: 1892,
-      improvement_rate: 34.5,
-      conversion_lift: 28.3,
-      engagement_increase: 42.1,
-      content_recommendations: 15623
-    };
-  };
-
-  const fetchModelStatus = async (): Promise<AIModelStatus[]> => {
-    return [
-      {
-        id: '1',
-        name: 'Content Recommendation Engine',
-        status: 'deployed',
-        accuracy: 0.94,
-        last_updated: '2 hours ago',
-        version: 'v2.1.3'
-      },
-      {
-        id: '2',
-        name: 'User Segmentation Model',
-        status: 'deployed',
-        accuracy: 0.87,
-        last_updated: '1 day ago',
-        version: 'v1.8.2'
-      },
-      {
-        id: '3',
-        name: 'Churn Prediction Model',
-        status: 'training',
-        accuracy: 0.82,
-        last_updated: '5 hours ago',
-        version: 'v1.5.1'
-      },
-      {
-        id: '4',
-        name: 'Lead Quality Scorer',
-        status: 'testing',
-        accuracy: 0.91,
-        last_updated: '3 hours ago',
-        version: 'v2.0.0-beta'
-      }
-    ];
+  const handleConfigure = async () => {
+    try {
+      await apiClient.post('ai/personalization', {
+        action: 'configure',
+        name: 'AI Personalization',
+        settings: {}
+      });
+      
+      toast({
+        title: 'Success',
+        description: 'AI Personalization configured successfully',
+      });
+      
+      // Refresh data
+      fetchAIData();
+    } catch (err) {
+      toast({
+        title: 'Error',
+        description: 'Failed to configure AI Personalization',
+        variant: 'destructive',
+      });
+    }
   };
 
   const getStatusIcon = (status: string) => {
@@ -271,6 +192,103 @@ const AIPersonalizationDashboard: React.FC = () => {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
+              <Brain className="h-8 w-8 text-teal-600" />
+              AI Personalization Dashboard
+            </h1>
+            <p className="text-gray-600 mt-1">
+              Monitor AI-powered personalization performance and insights
+            </p>
+          </div>
+          <Button onClick={fetchAIData} className="bg-teal-600 hover:bg-teal-700">
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Try Again
+          </Button>
+        </div>
+
+        <Card>
+          <CardContent className="p-12">
+            <div className="text-center">
+              <AlertCircle className="h-16 w-16 mx-auto mb-4 text-red-400" />
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                Error Loading AI Personalization
+              </h3>
+              <p className="text-red-600 mb-4">{error}</p>
+              <Button onClick={fetchAIData}>
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Try Again
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!configured) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
+              <Brain className="h-8 w-8 text-teal-600" />
+              AI Personalization Dashboard
+            </h1>
+            <p className="text-gray-600 mt-1">
+              Monitor AI-powered personalization performance and insights
+            </p>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Button variant="outline" onClick={fetchAIData}>
+              <RefreshCw className="h-4 w-4" />
+            </Button>
+            <Button onClick={handleConfigure} className="bg-teal-600 hover:bg-teal-700">
+              <Settings className="h-4 w-4 mr-2" />
+              Configure
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardContent className="p-12">
+            <div className="text-center">
+              <Brain className="h-16 w-16 mx-auto mb-4 text-teal-400" />
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                AI Personalization Not Configured
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
+                Set up AI Personalization to enable intelligent content recommendations, 
+                user behavior analytics, and automated personalization workflows.
+              </p>
+              
+              <div className="space-y-4 mb-6">
+                <div className="text-left max-w-md mx-auto">
+                  <h4 className="font-semibold mb-2">Setup includes:</h4>
+                  <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                    <li>• User behavior tracking configuration</li>
+                    <li>• Content recommendation engine setup</li>
+                    <li>• Personalization algorithm enablement</li>
+                    <li>• A/B testing framework integration</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <Button onClick={handleConfigure} className="bg-teal-600 hover:bg-teal-700">
+                <Settings className="h-4 w-4 mr-2" />
+                Configure AI Personalization
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }

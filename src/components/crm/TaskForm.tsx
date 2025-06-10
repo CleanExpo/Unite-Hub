@@ -62,16 +62,19 @@ export default function TaskForm({ task, onSubmit }: TaskFormProps) {
       
       <div>
         <Label htmlFor="status">Status</Label>
-        <select
-          id="status"
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-          className="block w-full p-2 border rounded"
-        >
-          <option value="pending">Pending</option>
-          <option value="in-progress">In Progress</option>
-          <option value="completed">Completed</option>
-        </select>
+        <div className="ui-dropdown">
+          <select
+            id="status"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="ui-select"
+            aria-label="Task status"
+          >
+            <option value="pending">Pending</option>
+            <option value="in-progress">In Progress</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
       </div>
       
       <div>

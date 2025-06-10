@@ -143,13 +143,15 @@ export default function AddDealModal() {
           </div>
           <div className="mb-4">
             <label htmlFor="deal-stage" className="block text-gray-700 mb-1">Stage</label>
-            <select
-              id="deal-stage"
-              value={stageId}
-              onChange={(e) => setStageId(e.target.value)}
-              className="w-full p-2 border rounded mt-1"
-              required
-            >
+            <div className="ui-dropdown">
+              <select
+                id="deal-stage"
+                value={stageId}
+                onChange={(e) => setStageId(e.target.value)}
+                className="ui-select"
+                aria-label="Deal stage"
+                required
+              >
               <option value="">Select a stage</option>
               {stages.map((stage) => (
                 <option key={stage.id} value={stage.id}>
@@ -157,16 +159,19 @@ export default function AddDealModal() {
                 </option>
               ))}
             </select>
+            </div>
           </div>
           <div className="mb-4">
             <label htmlFor="deal-status" className="block text-gray-700 mb-1">Status</label>
-            <select
-              id="deal-status"
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-              className="w-full p-2 border rounded mt-1"
-              required
-            >
+            <div className="ui-dropdown">
+              <select
+                id="deal-status"
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                className="ui-select"
+                aria-label="Deal status"
+                required
+              >
               <option value="">Select a status</option>
               <option value="prospect">Prospect</option>
               <option value="qualified">Qualified</option>
@@ -174,22 +179,26 @@ export default function AddDealModal() {
               <option value="won">Won</option>
               <option value="lost">Lost</option>
             </select>
+            </div>
           </div>
           <div className="mb-6">
             <label htmlFor="deal-client" className="block text-gray-700 mb-1">Client</label>
-            <select
-              id="deal-client"
-              value={clientId}
-              onChange={(e) => setClientId(e.target.value)}
-              className="w-full p-2 border rounded mt-1"
-            >
-              <option value="">Select a client</option>
-              {clients.map((client) => (
-                <option key={client.id} value={client.id}>
-                  {client.name} ({client.company})
-                </option>
-              ))}
-            </select>
+            <div className="ui-dropdown">
+              <select
+                id="deal-client"
+                value={clientId}
+                onChange={(e) => setClientId(e.target.value)}
+                className="ui-select"
+                aria-label="Deal client"
+              >
+                <option value="">Select a client</option>
+                {clients.map((client) => (
+                  <option key={client.id} value={client.id}>
+                    {client.name} ({client.company})
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
           <div className="flex justify-end gap-2">
             <button

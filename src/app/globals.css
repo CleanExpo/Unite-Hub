@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import unified dropdown styles */
+@import '../styles/dropdowns.css';
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

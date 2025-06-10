@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase/client';
+import { getSupabaseClient } from '@/lib/supabase/client';
 import type { 
   SearchOptions, 
   SearchResult, 
@@ -17,6 +17,7 @@ export class SearchService {
     queryId: string;
   }> {
     try {
+      const supabase = getSupabaseClient();
       const { 
         query, 
         type = null, 
@@ -68,6 +69,7 @@ export class SearchService {
     try {
       if (partialQuery.length < 2) return [];
 
+      const supabase = getSupabaseClient();
       const { data, error } = await supabase
         .rpc('get_search_suggestions', {
           partial_query: partialQuery,
@@ -88,6 +90,7 @@ export class SearchService {
    */
   static async recordClickedResult(queryId: string, resultUrl: string): Promise<void> {
     try {
+      const supabase = getSupabaseClient();
       const { error } = await supabase
         .from('search_queries')
         .update({ clicked_result: resultUrl })
@@ -104,6 +107,7 @@ export class SearchService {
    */
   static async getPopularSearches(limit: number = 10): Promise<Array<{ query: string; count: number }>> {
     try {
+      const supabase = getSupabaseClient();
       const { data, error } = await supabase
         .from('search_queries')
         .select('query')
@@ -113,10 +117,10 @@ export class SearchService {
       if (error) throw error;
 
       // Count occurrences
-      const searchCounts = (data || []).reduce((acc, { query }) => {
+      const searchCounts = (data || []).reduce<Record<string, number>>((acc, { query }) => {
         acc[query] = (acc[query] || 0) + 1;
         return acc;
-      }, {} as Record<string, number>);
+      }, {});
 
       // Sort by count and return top results
       return Object.entries(searchCounts)
@@ -134,6 +138,8 @@ export class SearchService {
    */
   static async getSearchAnalytics(): Promise<SearchAnalytics> {
     try {
+      const supabase = getSupabaseClient();
+      
       // Get popular searches
       const popularSearches = await this.getPopularSearches();
 
@@ -146,11 +152,11 @@ export class SearchService {
       if (volumeError) throw volumeError;
 
       // Group by date
-      const volumeByDate = (volumeData || []).reduce((acc, { created_at }) => {
+      const volumeByDate = (volumeData || []).reduce<Record<string, number>>((acc, { created_at }) => {
         const date = new Date(created_at).toISOString().split('T')[0];
         acc[date] = (acc[date] || 0) + 1;
         return acc;
-      }, {} as Record<string, number>);
+      }, {});
 
       const searchVolume = Object.entries(volumeByDate)
         .map(([date, count]) => ({ date, count }))
@@ -210,6 +216,7 @@ export class SearchService {
     locale?: string;
   }): Promise<void> {
     try {
+      const supabase = getSupabaseClient();
       const { error } = await supabase
         .from('search_indices')
         .upsert({
@@ -232,6 +239,7 @@ export class SearchService {
    */
   static async removeFromIndex(url: string): Promise<void> {
     try {
+      const supabase = getSupabaseClient();
       const { error } = await supabase
         .from('search_indices')
         .delete()
@@ -258,6 +266,7 @@ export class SearchService {
     locale?: string;
   }>): Promise<void> {
     try {
+      const supabase = getSupabaseClient();
       const indexedContents = contents.map(content => ({
         ...content,
         locale: content.locale || 'en',

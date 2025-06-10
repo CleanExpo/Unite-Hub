@@ -1,510 +1,455 @@
-import Link from "next/link";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Target, Award, Lightbulb, ArrowRight, CheckCircle } from "lucide-react";
+Here's an enhanced, fully coded "About Us" page with animations and performance optimizations:
 
-export default function About() {
-  const values = [
-    {
-      icon: <Lightbulb className="h-8 w-8 text-teal-400" />,
-      title: "Innovation",
-      description: "We leverage cutting-edge technologies and methodologies to deliver solutions that keep our clients ahead of the competition."
-    },
-    {
-      icon: <Users className="h-8 w-8 text-purple-400" />,
-      title: "Collaboration",
-      description: "We believe in building strong partnerships with our clients, working together to achieve exceptional results."
-    },
-    {
-      icon: <Target className="h-8 w-8 text-blue-400" />,
-      title: "Excellence",
-      description: "We are committed to delivering the highest quality solutions that exceed expectations and drive measurable results."
-    },
-    {
-      icon: <Award className="h-8 w-8 text-green-400" />,
-      title: "Integrity",
-      description: "We operate with transparency, honesty, and ethical practices in all our business relationships and projects."
-    }
-  ];
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Brisbane Business Consulting | [Your Company Name]</title>
+    
+    <!-- Performance Optimizations -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="preload" as="image" href="images/brisbane-skyline.webp">
+    
+    <!-- Meta Tags for SEO -->
+    <meta name="description" content="Expert Brisbane-based consulting services. Local expertise, global standards. Helping Queensland businesses thrive since [Year].">
+    <meta name="keywords" content="Brisbane consulting, Queensland business consultants, local business experts">
+    
+    <style>
+        /* CSS Variables for easy theming */
+        :root {
+            --primary-color: #1a365d;
+            --secondary-color: #2d5aa0;
+            --accent-color: #f7941e; /* Brisbane orange */
+            --text-color: #2d3748;
+            --text-light: #718096;
+            --background-light: #f7fafc;
+            --white: #ffffff;
+            --shadow: 0 10px 25px rgba(0,0,0,0.1);
+            --shadow-hover: 0 20px 40px rgba(0,0,0,0.15);
+            --border-radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-  const achievements = [
-    "Years of combined expertise across diverse industries",
-    "Successful projects delivered on time and within budget",
-    "Long-term partnerships with satisfied clients",
-    "Cutting-edge solutions using modern technologies",
-    "Comprehensive training programs delivered",
-    "Strategic SEO campaigns that drive results"
-  ];
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      {/* Navigation */}
-      <nav className="bg-slate-900/80 backdrop-blur-md border-b border-slate-700 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center h-16">
-          <Link href="/" className="flex items-center">
-            <Image
-              src="/images/unite-logo.png"
-              alt="UNITE Group"
-              width={150}
-              height={40}
-              className="h-10 w-auto"
-            />
-          </Link>
-          <div className="hidden md:flex items-center gap-8">
-            <Link href="/features" className="text-slate-300 hover:text-white transition-colors">Services</Link>
-            <Link href="/pricing" className="text-slate-300 hover:text-white transition-colors">Pricing</Link>
-            <Link href="/contact" className="text-slate-300 hover:text-white transition-colors">Contact</Link>
-            <Link href="/about" className="text-white font-medium">About</Link>
-          </div>
-          <div className="flex gap-4">
-            <Link href="/login" className="text-slate-300 hover:text-white px-4 py-2 rounded-md transition-colors">
-              Login
-            </Link>
-            <Button asChild className="bg-teal-600 hover:bg-teal-700">
-              <Link href="/contact">Get Started</Link>
-            </Button>
-          </div>
-        </div>
-      </nav>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--white);
+            overflow-x: hidden;
+        }
 
-      {/* Hero Section */}
-      <section className="py-20 text-center">
-        <div className="max-w-4xl mx-auto px-4">
-          <h1 className="text-5xl font-bold text-white mb-6">
-            About
-            <span className="block bg-gradient-to-r from-teal-400 to-cyan-400 bg-clip-text text-transparent">
-              UNITE Group
-            </span>
-          </h1>
-          <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
-            We are a team of passionate professionals dedicated to empowering businesses through expert education, 
-            innovative software development, and strategic SEO services.
-          </p>
-        </div>
-      </section>
+        /* Performance: Use will-change sparingly and remove after animation */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: var(--transition);
+        }
 
-      {/* Mission Section */}
-      <section className="py-20">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-3xl font-bold text-white mb-6">
-                Our Mission
-              </h2>
-              <p className="text-lg text-slate-300 mb-6">
-                At UNITE Group, we believe that every business has the potential to achieve extraordinary success. 
-                Our mission is to unlock that potential through comprehensive consultation, expert education, 
-                cutting-edge software development, and strategic SEO services.
-              </p>
-              <p className="text-lg text-slate-300 mb-8">
-                We start every relationship with our signature $550 consultation, providing deep business analysis 
-                and strategic roadmap development that sets the foundation for transformative growth.
-              </p>
-              <Button asChild className="bg-gradient-to-r from-teal-500 to-cyan-500 hover:from-teal-600 hover:to-cyan-600">
-                <Link href="/pricing">
-                  Book Your Consultation
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-            </div>
-            <div className="relative">
-              <Card className="bg-slate-800 border-slate-700 p-8">
-                <div className="text-center">
-                  <div className="w-20 h-20 bg-gradient-to-r from-teal-400 to-cyan-400 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <Target className="h-10 w-10 text-slate-900" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-white mb-4">Our Vision</h3>
-                  <p className="text-slate-300">
-                    To be the trusted partner that businesses turn to when they need expert guidance, 
-                    innovative solutions, and strategic growth acceleration.
-                  </p>
-                </div>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </section>
+        .animate-on-scroll.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-      {/* Values Section */}
-      <section className="py-20 bg-slate-800/50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Our Core Values
-            </h2>
-            <p className="text-xl text-slate-300 max-w-2xl mx-auto">
-              These principles guide everything we do and shape how we serve our clients.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {values.map((value, index) => (
-              <Card key={index} className="h-full bg-slate-800 border-slate-700 hover:bg-slate-700 transition-colors">
-                <CardHeader className="text-center">
-                  <div className="mb-4">{value.icon}</div>
-                  <CardTitle className="text-xl text-white">{value.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-slate-300 text-sm text-center">{value.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
-      {/* What We Do Section */}
-      <section className="py-20">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              What We Do
-            </h2>
-            <p className="text-xl text-slate-300 max-w-2xl mx-auto">
-              We provide comprehensive solutions that address every aspect of your business growth journey.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <Card className="bg-slate-800 border-slate-700">
-              <CardHeader>
-                <CardTitle className="text-xl text-white">Strategic Consultation</CardTitle>
-                <CardDescription className="text-slate-300">
-                  Our signature $550 consultation provides comprehensive business analysis and strategic planning.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2">
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-teal-400" />
-                    <span className="text-slate-300 text-sm">In-depth business assessment</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-teal-400" />
-                    <span className="text-slate-300 text-sm">Technology needs analysis</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-teal-400" />
-                    <span className="text-slate-300 text-sm">Strategic roadmap development</span>
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
+        /* Header Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: var(--white);
+            padding: 120px 0 80px;
+            position: relative;
+            overflow: hidden;
+        }
 
-            <Card className="bg-slate-800 border-slate-700">
-              <CardHeader>
-                <CardTitle className="text-xl text-white">Expert Education</CardTitle>
-                <CardDescription className="text-slate-300">
-                  Professional training and development programs to enhance your team&apos;s capabilities.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2">
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-purple-400" />
-                    <span className="text-slate-300 text-sm">Custom curriculum development</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-purple-400" />
-                    <span className="text-slate-300 text-sm">Expert-led training sessions</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-purple-400" />
-                    <span className="text-slate-300 text-sm">Hands-on workshops</span>
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300"><path d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,208C1248,224,1344,192,1392,176L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z" fill="rgba(255,255,255,0.1)"/></svg>') bottom;
+            background-size: cover;
+            animation: wave 20s ease-in-out infinite;
+        }
 
-            <Card className="bg-slate-800 border-slate-700">
-              <CardHeader>
-                <CardTitle className="text-xl text-white">Software Development</CardTitle>
-                <CardDescription className="text-slate-300">
-                  Cutting-edge software solutions built with modern technologies.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2">
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-blue-400" />
-                    <span className="text-slate-300 text-sm">Custom application development</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-blue-400" />
-                    <span className="text-slate-300 text-sm">Modern tech stack implementation</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-blue-400" />
-                    <span className="text-slate-300 text-sm">Scalable architecture design</span>
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
+        @keyframes wave {
+            0%, 100% { transform: translateX(0%) translateZ(0) scaleY(1); }
+            50% { transform: translateX(-25%) translateZ(0) scaleY(0.55); }
+        }
 
-            <Card className="bg-slate-800 border-slate-700">
-              <CardHeader>
-                <CardTitle className="text-xl text-white">Strategic SEO</CardTitle>
-                <CardDescription className="text-slate-300">
-                  Data-driven SEO strategies to improve your online visibility and drive growth.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-2">
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-400" />
-                    <span className="text-slate-300 text-sm">Comprehensive SEO audit</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-400" />
-                    <span className="text-slate-300 text-sm">Keyword research & strategy</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-400" />
-                    <span className="text-slate-300 text-sm">Technical SEO optimization</span>
-                  </li>
-                </ul>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
 
-      {/* Achievements Section */}
-      <section className="py-20 bg-slate-800/50">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Our Track Record
-            </h2>
-            <p className="text-xl text-slate-300 max-w-2xl mx-auto">
-              We are proud of what we have accomplished and the relationships we have built.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {achievements.map((achievement, index) => (
-              <div key={index} className="flex items-center gap-3 bg-slate-800 p-4 rounded-lg border border-slate-700">
-                <CheckCircle className="h-5 w-5 text-teal-400 flex-shrink-0" />
-                <span className="text-slate-300">{achievement}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+        .hero h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            animation: slideInFromTop 1s ease-out;
+        }
 
-      {/* Team Section */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Meet Our Team
-            </h2>
-            <p className="text-xl text-slate-300 max-w-2xl mx-auto">
-              Our diverse team of experts brings together decades of experience in product development, marketing, software engineering, design, and leadership.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {/* Phill McGurk - Co-Owner */}
-            <Card className="bg-slate-800 border-slate-700 hover:bg-slate-700 transition-colors">
-              <CardContent className="p-6 text-center">
-                <div className="w-24 h-24 mx-auto mb-4 relative overflow-hidden rounded-full">
-                  <Image
-                    src="/images/team-phill-mcgurk.png"
-                    alt="Phill McGurk - Co-Owner, Product Development"
-                    width={96}
-                    height={96}
-                    className="object-cover w-full h-full"
-                  />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-2">Phill McGurk</h3>
-                <p className="text-teal-400 font-semibold mb-3">Co-Owner</p>
-                <p className="text-purple-400 font-medium mb-3">Product Development</p>
-                <div className="text-xs text-slate-400 mb-3 space-y-1">
-                  <div>Product Manager</div>
-                  <div>Product Development Engineer</div>
-                  <div>Product Owner</div>
-                  <div>Product Analyst</div>
-                </div>
-                <p className="text-sm text-slate-300 leading-relaxed">
-                  Expert in product strategy and development lifecycle management. Drives innovation through comprehensive product management and analytical insights.
-                </p>
-              </CardContent>
-            </Card>
+        .hero .subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            font-weight: 300;
+            animation: slideInFromBottom 1s ease-out 0.3s both;
+        }
 
-            {/* Claire Booth - Co-Owner */}
-            <Card className="bg-slate-800 border-slate-700 hover:bg-slate-700 transition-colors">
-              <CardContent className="p-6 text-center">
-                <div className="w-24 h-24 bg-gradient-to-br from-pink-400 to-red-500 rounded-full mx-auto mb-4 flex items-center justify-center">
-                  <span className="text-2xl font-bold text-white">CB</span>
-                </div>
-                <h3 className="text-xl font-bold text-white mb-2">Claire Booth</h3>
-                <p className="text-teal-400 font-semibold mb-3">Co-Owner</p>
-                <p className="text-purple-400 font-medium mb-3">Marketing</p>
-                <div className="text-xs text-slate-400 mb-3 space-y-1">
-                  <div>Digital Marketing Manager</div>
-                  <div>Marketing Technologist</div>
-                  <div>Product Marketing Manager</div>
-                  <div>SEO Specialist</div>
-                  <div>Growth Hacker</div>
-                  <div>Social Media Manager</div>
-                </div>
-                <p className="text-sm text-slate-300 leading-relaxed">
-                  Digital marketing strategist specializing in growth acceleration and brand visibility through comprehensive marketing solutions.
-                </p>
-              </CardContent>
-            </Card>
+        @keyframes slideInFromTop {
+            0% { opacity: 0; transform: translateY(-50px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
 
-            {/* Yasir Sarfraz - Team Leader */}
-            <Card className="bg-slate-800 border-slate-700 hover:bg-slate-700 transition-colors">
-              <CardContent className="p-6 text-center">
-                <div className="w-24 h-24 bg-gradient-to-br from-green-400 to-emerald-600 rounded-full mx-auto mb-4 flex items-center justify-center">
-                  <span className="text-2xl font-bold text-white">YS</span>
-                </div>
-                <h3 className="text-xl font-bold text-white mb-2">Yasir Sarfraz</h3>
-                <p className="text-emerald-400 font-semibold mb-3">Team Leader</p>
-                <p className="text-blue-400 font-medium mb-3">Software Builder</p>
-                <div className="text-xs text-slate-400 mb-3 space-y-1">
-                  <div>Software Engineer</div>
-                  <div>Software Developer</div>
-                  <div>Programmer</div>
-                  <div>Full Stack Developer</div>
-                  <div>Backend/Frontend Developer</div>
-                  <div>DevOps Engineer</div>
-                </div>
-                <p className="text-sm text-slate-300 leading-relaxed">
-                  Technical leader with comprehensive expertise in full-stack development and DevOps practices for scalable solutions.
-                </p>
-              </CardContent>
-            </Card>
+        @keyframes slideInFromBottom {
+            0% { opacity: 0; transform: translateY(50px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
 
-            {/* Afifa - Software Builder */}
-            <Card className="bg-slate-800 border-slate-700 hover:bg-slate-700 transition-colors">
-              <CardContent className="p-6 text-center">
-                <div className="w-24 h-24 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full mx-auto mb-4 flex items-center justify-center">
-                  <span className="text-2xl font-bold text-white">AF</span>
-                </div>
-                <h3 className="text-xl font-bold text-white mb-2">Afifa</h3>
-                <p className="text-blue-400 font-medium mb-3">Software Builder</p>
-                <div className="text-xs text-slate-400 mb-3 space-y-1">
-                  <div>Software Engineer</div>
-                  <div>Software Developer</div>
-                  <div>Programmer</div>
-                  <div>Full Stack Developer</div>
-                  <div>Backend/Frontend Developer</div>
-                  <div>DevOps Engineer</div>
-                </div>
-                <p className="text-sm text-slate-300 leading-relaxed">
-                  Skilled software engineer proficient in full-stack development and modern programming practices for robust applications.
-                </p>
-              </CardContent>
-            </Card>
+        /* Main Content Sections */
+        .section {
+            padding: 80px 0;
+        }
 
-            {/* Ayesha - Design */}
-            <Card className="bg-slate-800 border-slate-700 hover:bg-slate-700 transition-colors">
-              <CardContent className="p-6 text-center">
-                <div className="w-24 h-24 bg-gradient-to-br from-purple-400 to-indigo-600 rounded-full mx-auto mb-4 flex items-center justify-center">
-                  <span className="text-2xl font-bold text-white">AY</span>
-                </div>
-                <h3 className="text-xl font-bold text-white mb-2">Ayesha</h3>
-                <p className="text-orange-400 font-medium mb-3">Design</p>
-                <div className="text-xs text-slate-400 mb-3 space-y-1">
-                  <div>UX Designer</div>
-                  <div>UI Designer</div>
-                  <div>Product Designer</div>
-                  <div>Graphic Designer</div>
-                  <div>Interaction Designer</div>
-                </div>
-                <p className="text-sm text-slate-300 leading-relaxed">
-                  Creative design specialist focused on user experience and interface design to create intuitive digital experiences.
-                </p>
-              </CardContent>
-            </Card>
+        .section:nth-child(even) {
+            background-color: var(--background-light);
+        }
 
-            {/* Amina - Design */}
-            <Card className="bg-slate-800 border-slate-700 hover:bg-slate-700 transition-colors">
-              <CardContent className="p-6 text-center">
-                <div className="w-24 h-24 bg-gradient-to-br from-rose-400 to-pink-600 rounded-full mx-auto mb-4 flex items-center justify-center">
-                  <span className="text-2xl font-bold text-white">AM</span>
-                </div>
-                <h3 className="text-xl font-bold text-white mb-2">Amina</h3>
-                <p className="text-orange-400 font-medium mb-3">Design</p>
-                <div className="text-xs text-slate-400 mb-3 space-y-1">
-                  <div>UX Designer</div>
-                  <div>UI Designer</div>
-                  <div>Product Designer</div>
-                  <div>Graphic Designer</div>
-                  <div>Interaction Designer</div>
-                </div>
-                <p className="text-sm text-slate-300 leading-relaxed">
-                  Talented design professional specializing in user-centered design and visual communication for compelling solutions.
-                </p>
-              </CardContent>
-            </Card>
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
 
-            {/* Rana - Software Builder */}
-            <Card className="bg-slate-800 border-slate-700 hover:bg-slate-700 transition-colors">
-              <CardContent className="p-6 text-center">
-                <div className="w-24 h-24 bg-gradient-to-br from-emerald-400 to-teal-600 rounded-full mx-auto mb-4 flex items-center justify-center">
-                  <span className="text-2xl font-bold text-white">RN</span>
-                </div>
-                <h3 className="text-xl font-bold text-white mb-2">Rana</h3>
-                <p className="text-blue-400 font-medium mb-3">Software Builder</p>
-                <div className="text-xs text-slate-400 mb-3 space-y-1">
-                  <div>Software Engineer</div>
-                  <div>Software Developer</div>
-                  <div>Programmer</div>
-                  <div>Full Stack Developer</div>
-                  <div>Backend/Frontend Developer</div>
-                  <div>DevOps Engineer</div>
-                </div>
-                <p className="text-sm text-slate-300 leading-relaxed">
-                  Dedicated software engineer with expertise in full-stack development and DevOps practices for comprehensive solutions.
-                </p>
-              </CardContent>
-            </Card>
+        .section-header h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            position: relative;
+        }
 
-            {/* Shahid - Design */}
-            <Card className="bg-slate-800 border-slate-700 hover:bg-slate-700 transition-colors">
-              <CardContent className="p-6 text-center">
-                <div className="w-24 h-24 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full mx-auto mb-4 flex items-center justify-center">
-                  <span className="text-2xl font-bold text-white">SH</span>
-                </div>
-                <h3 className="text-xl font-bold text-white mb-2">Shahid</h3>
-                <p className="text-orange-400 font-medium mb-3">Design</p>
-                <div className="text-xs text-slate-400 mb-3 space-y-1">
-                  <div>UX Designer</div>
-                  <div>UI Designer</div>
-                  <div>Product Designer</div>
-                  <div>Graphic Designer</div>
-                  <div>Interaction Designer</div>
-                </div>
-                <p className="text-sm text-slate-300 leading-relaxed">
-                  Experienced design professional with expertise in user experience and visual design for engaging digital products.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
+        .section-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-color), var(--secondary-color));
+            border-radius: 2px;
+        }
 
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-teal-600 to-cyan-600">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-white mb-6">
-            Ready to Work Together?
-          </h2>
-          <p className="text-xl mb-8 text-teal-100">
-            Start with our comprehensive $550 consultation and discover how UNITE Group can help transform your business.
-          </p>
-          <div className="flex gap-4 justify-center flex-wrap">
-            <Button asChild size="lg" className="bg-white text-teal-600 hover:bg-slate-100">
-              <Link href="/pricing">Book Consultation</Link>
-            </Button>
-            <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-teal-600">
-              <Link href="/contact">Contact Us</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-    </div>
-  );
-}
+        .section-header p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Story Section */
+        .story-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .story-content h3 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .story-content p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            color: var(--text-light);
+        }
+
+        .story-image {
+            position: relative;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .story-image:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .story-image img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .story-image:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Values Section */
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .value-card {
+            background: var(--white);
+            padding: 2.5rem 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .value-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-color), var(--secondary-color));
+            transform: translateX(-100%);
+            transition: var(--transition);
+        }
+
+        .value-card:hover::before {
+            transform: translateX(0);
+        }
+
+        .value-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .value-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent-color), var(--secondary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.5rem;
+            color: var(--white);
+            transition: var(--transition);
+        }
+
+        .value-card:hover .value-icon {
+            transform: rotate(360deg) scale(1.1);
+        }
+
+        .value-card h3 {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .value-card p {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Team Section */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .team-member {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .team-member:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .team-avatar {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-avatar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="35" r="15" fill="rgba(255,255,255,0.3)"/><path d="M20 80 C20 60, 35 50, 50 50 C65 50, 80 60, 80 80 Z" fill="rgba(255,255,255,0.3)"/></svg>');
+            background-size: 80px;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .team-info {
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .team-info h4 {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .team-info .role {
+            color: var(--accent-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .team-info p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Approach Section */
+        .approach-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 3rem;
+        }
+
+        .step {
+            text-align: center;
+            padding: 2rem 1rem;
+            position: relative;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent-color), var(--secondary-color));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-weight: 700;
+            color: var(--white);
+            font-size: 1.2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step::after {
+            content: '';
+            position: absolute;
+            top: 25px;
+            right: -50%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-color), transparent);
+            z-index: 1;
+        }
+
+        .step:last-child::after {
+            display: none;
+        }
+
+        .step h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .step p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Testimonials */
+        .testimonials {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .testimonial:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .testimonial::before {
+            content: '"';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            font-size: 4rem;
+            color: var(--accent-color);
+            line-height: 1;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            padding-left: 1rem;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .testimonial-company {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* CTA Section */
+        .cta {

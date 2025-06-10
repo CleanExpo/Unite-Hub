@@ -23,7 +23,9 @@ import {
   Settings,
   Zap,
   Shield,
-  TrendingUp
+  TrendingUp,
+  Loader2,
+  RefreshCw
 } from 'lucide-react';
 import {
   LineChart,
@@ -38,6 +40,8 @@ import {
   ResponsiveContainer,
   Cell
 } from 'recharts';
+import { apiClient } from '@/lib/apiClient';
+import { toast } from '@/components/ui/use-toast';
 
 interface AIProvider {
   id: string;
@@ -82,85 +86,101 @@ const AIGatewayDashboard: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [selectedTimeRange, setSelectedTimeRange] = useState('24h');
 
-  // Mock data - In production, this would fetch from the AI Gateway API
+  // Fetch real AI Gateway data from API - NO MOCK DATA
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setMetrics({
-        totalRequests: 15420,
-        successRate: 98.7,
-        averageResponseTime: 1250,
-        totalCost: 45.82,
-        cacheHitRate: 76.3,
-        activeProviders: 4
-      });
-
-      setProviders([
-        {
-          id: 'openai',
-          name: 'OpenAI GPT-4',
-          status: 'healthy',
-          responseTime: 1100,
-          errorRate: 1.2,
-          requestCount: 8420,
-          cost: 28.45
-        },
-        {
-          id: 'claude',
-          name: 'Anthropic Claude',
-          status: 'healthy',
-          responseTime: 1350,
-          errorRate: 0.8,
-          requestCount: 4200,
-          cost: 12.20
-        },
-        {
-          id: 'google',
-          name: 'Google Gemini',
-          status: 'degraded',
-          responseTime: 2100,
-          errorRate: 3.4,
-          requestCount: 2100,
-          cost: 3.89
-        },
-        {
-          id: 'azure',
-          name: 'Azure OpenAI',
-          status: 'healthy',
-          responseTime: 980,
-          errorRate: 0.6,
-          requestCount: 700,
-          cost: 1.28
+      try {
+        const data = await apiClient.get(`ai/gateway?timeRange=${selectedTimeRange}`);
+        
+        if (data.configured) {
+          // AI Gateway is configured, use real data
+          setMetrics(data.data.metrics);
+          setProviders(data.data.providers || []);
+          setAlerts(data.data.alerts || []);
+        } else {
+          // AI Gateway not configured, show setup required state
+          setMetrics({
+            totalRequests: 0,
+            successRate: 0,
+            averageResponseTime: 0,
+            totalCost: 0,
+            cacheHitRate: 0,
+            activeProviders: 0
+          });
+          setProviders([]);
+          setAlerts([{
+            id: 'setup',
+            type: 'provider_down',
+            severity: 'medium',
+            message: 'AI Gateway requires configuration. Click Configure to get started.',
+            timestamp: new Date().toISOString()
+          }]);
         }
-      ]);
-
-      setAlerts([
-        {
-          id: '1',
-          type: 'response_time',
-          severity: 'medium',
-          message: 'Google Gemini showing elevated response times (2.1s avg)',
-          provider: 'google',
-          timestamp: new Date(Date.now() - 5 * 60 * 1000).toISOString()
-        },
-        {
-          id: '2',
-          type: 'cost',
-          severity: 'low',
-          message: 'Daily AI costs approaching budget threshold',
-          timestamp: new Date(Date.now() - 15 * 60 * 1000).toISOString()
-        }
-      ]);
-
-      setLoading(false);
+      } catch (err) {
+        console.error('Failed to fetch AI Gateway data:', err);
+        toast({
+          title: 'Error',
+          description: 'Failed to load AI Gateway data',
+          variant: 'destructive',
+        });
+        
+        // Show error state
+        setMetrics({
+          totalRequests: 0,
+          successRate: 0,
+          averageResponseTime: 0,
+          totalCost: 0,
+          cacheHitRate: 0,
+          activeProviders: 0
+        });
+        setProviders([]);
+        setAlerts([{
+          id: 'error',
+          type: 'provider_down',
+          severity: 'critical',
+          message: 'Failed to connect to AI Gateway. Please check your configuration.',
+          timestamp: new Date().toISOString()
+        }]);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchData();
   }, [selectedTimeRange]);
+
+  // Handle refresh functionality
+  const handleRefresh = () => {
+    const fetchData = async () => {
+      setLoading(true);
+      
+      try {
+        const data = await apiClient.get(`ai/gateway?timeRange=${selectedTimeRange}`);
+        
+        if (data.configured) {
+          setMetrics(data.data.metrics);
+          setProviders(data.data.providers || []);
+          setAlerts(data.data.alerts || []);
+          toast({
+            title: 'Success',
+            description: 'AI Gateway data refreshed',
+          });
+        }
+      } catch (err) {
+        toast({
+          title: 'Error',
+          description: 'Failed to refresh AI Gateway data',
+          variant: 'destructive',
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchData();
+  };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -213,17 +233,19 @@ const AIGatewayDashboard: React.FC = () => {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <select 
-            value={selectedTimeRange}
-            onChange={(e) => setSelectedTimeRange(e.target.value)}
-            className="px-3 py-2 border rounded-md"
-            aria-label="Select time range for metrics"
-          >
-            <option value="1h">Last Hour</option>
-            <option value="24h">Last 24 Hours</option>
-            <option value="7d">Last 7 Days</option>
-            <option value="30d">Last 30 Days</option>
-          </select>
+          <div className="ui-dropdown ui-dropdown-sm">
+            <select 
+              value={selectedTimeRange}
+              onChange={(e) => setSelectedTimeRange(e.target.value)}
+              className="ui-select"
+              aria-label="Select time range for metrics"
+            >
+              <option value="1h">Last Hour</option>
+              <option value="24h">Last 24 Hours</option>
+              <option value="7d">Last 7 Days</option>
+              <option value="30d">Last 30 Days</option>
+            </select>
+          </div>
           <Button variant="outline" size="sm">
             <Settings className="h-4 w-4 mr-2" />
             Configure
