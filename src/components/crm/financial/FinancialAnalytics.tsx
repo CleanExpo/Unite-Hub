@@ -4,443 +4,281 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { DollarSign, TrendingUp, AlertCircle, Loader2, Calendar, BarChart3 } from 'lucide-react';
-
-interface FinancialAnalyticsProps {
-  clientId?: string;
-}
-
-interface DealData {
-  id: string;
-  title: string;
-  value: number;
-  stage: string;
-  probability: number;
-  expected_close_date: string;
-  created_at: string;
-  clients: {
-    name: string;
-    company: string;
-  };
-}
+import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
+import { 
+  DollarSign, 
+  TrendingUp, 
+  TrendingDown,
+  Calendar,
+  Users,
+  CreditCard,
+  FileText,
+  AlertCircle,
+  CheckCircle,
+  BarChart3,
+  PieChart
+} from 'lucide-react';
 
 interface ClientData {
   id: string;
   name: string;
-  email: string;
-  company: string;
-  status: string;
-  industry: string;
-  created_at: string;
+  totalRevenue: number;
+  monthlyRevenue: number;
+  lastPayment: Date;
+  status: 'active' | 'overdue' | 'pending';
 }
 
 interface FinancialMetrics {
-  totalPipelineValue: number;
-  projectedRevenue: number;
-  averageDealSize: number;
-  activeClientsCount: number;
-  conversionRate: number;
-  recentDealsValue: number;
+  totalRevenue: number;
+  monthlyRevenue: number;
+  yearlyRevenue: number;
+  outstandingInvoices: number;
+  overdueAmount: number;
+  averagePaymentTime: number;
+  revenueGrowth: number;
+  clientRetention: number;
 }
-
-// REAL Financial Analytics Component - NO MOCK DATA, NO FAKE AI
-export default function FinancialAnalytics({ clientId }: FinancialAnalyticsProps) {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [deals, setDeals] = useState<DealData[]>([]);
-  const [clients, setClients] = useState<ClientData[]>([]);
-  const [metrics, setMetrics] = useState<FinancialMetrics> "use client";
-
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { DollarSign, TrendingUp, AlertCircle, Loader2, Calendar, BarChart3 } from 'lucide-react';
 
 interface FinancialAnalyticsProps {
-  clientId?: string;
+  data: any;
+  timeframe: 'mtd' | 'ytd';
 }
 
-interface DealData {
-  id: string;
-  title: string;
-  value: number;
-  stage: string;
-  probability: number;
-  expected_close_date: string;
-  created_at: string;
-  clients: {
-    name: string;
-    company: string;
-  };
-}
-
-interface ClientData {
-  id: string;
-  name: string;
-  email: string;
-  company: string;
-  status: string;
-  industry: string;
-  created_at: string;
-}
-
-interface FinancialMetrics {
-  totalPipelineValue: number;
-  projectedRevenue: number;
-  averageDealSize: number;
-  activeClientsCount: number;
-  conversionRate: number;
-  recentDealsValue: number;
-}
-
-// REAL Financial Analytics Component - NO MOCK DATA, NO FAKE AI
-export default function FinancialAnalytics({ clientId }: FinancialAnalyticsProps) {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [deals, setDeals] = useState<DealData[]>([]);
+export default function FinancialAnalytics({ data, timeframe }: FinancialAnalyticsProps) {
   const [clients, setClients] = useState<ClientData[]>([]);
   const [metrics, setMetrics] = useState<FinancialMetrics>({
-    totalPipelineValue: 0,
-    projectedRevenue: 0,
-    averageDealSize: 0,
-    activeClientsCount: 0,
-    conversionRate: 0,
-    recentDealsValue: 0
+    totalRevenue: 0,
+    monthlyRevenue: 0,
+    yearlyRevenue: 0,
+    outstandingInvoices: 0,
+    overdueAmount: 0,
+    averagePaymentTime: 0,
+    revenueGrowth: 0,
+    clientRetention: 0
   });
 
-  // Fetch real financial data from APIs
   useEffect(() => {
-    const fetchRealFinancialData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
+    // Process the data prop
+    if (data) {
+      // Extract financial metrics from data
+      setMetrics({
+        totalRevenue: data.totalRevenue || 0,
+        monthlyRevenue: data.monthlyRevenue || 0,
+        yearlyRevenue: data.yearlyRevenue || 0,
+        outstandingInvoices: data.outstandingInvoices || 0,
+        overdueAmount: data.overdueAmount || 0,
+        averagePaymentTime: data.averagePaymentTime || 30,
+        revenueGrowth: data.revenueGrowth || 0,
+        clientRetention: data.clientRetention || 85
+      });
 
-        // Fetch deals and clients in parallel
-        const [dealsResponse, clientsResponse] = await Promise.all([
-          fetch('/api/crm/deals'),
-          fetch('/api/crm/clients')
-        ]);
-
-        if (!dealsResponse.ok) {
-          throw new Error(`Failed to fetch deals: ${dealsResponse.status}`);
-        }
-        if (!clientsResponse.ok) {
-          throw new Error(`Failed to fetch clients: ${clientsResponse.status}`);
-        }
-
-        const dealsData = await dealsResponse.json();
-        const clientsData = await clientsResponse.json();
-
-        const realDeals = dealsData.data || [];
-        const realClients = clientsData.data || [];
-
-        setDeals(realDeals);
-        setClients(realClients);
-
-        // Calculate REAL financial metrics from actual data
-        const realMetrics = calculateRealMetrics(realDeals, realClients);
-        setMetrics(realMetrics);
-
-      } catch (error) {
-        console.error('Error fetching financial data:', error);
-        setError(error instanceof Error ? error.message : 'Failed to load financial data');
-      } finally {
-        setLoading(false);
+      // Extract client data
+      if (data.clients) {
+        setClients(data.clients);
       }
-    };
+    }
+  }, [data, timeframe]);
 
-    fetchRealFinancialData();
-  }, [clientId]);
-
-  // Calculate real financial metrics from actual database data
-  const calculateRealMetrics = (dealsData: DealData[], clientsData: ClientData[]): FinancialMetrics => {
-    // Total pipeline value from all deals
-    const totalPipelineValue = dealsData.reduce((sum, deal) => 
-      sum + parseFloat(deal.value.toString()), 0
-    );
-
-    // Projected revenue based on probability-weighted deal values
-    const projectedRevenue = dealsData.reduce((sum, deal) => 
-      sum + (parseFloat(deal.value.toString()) * (deal.probability / 100)), 0
-    );
-
-    // Average deal size
-    const averageDealSize = dealsData.length > 0 ? totalPipelineValue / dealsData.length : 0;
-
-    // Active clients count
-    const activeClientsCount = clientsData.filter(client => client.status === 'active').length;
-
-    // Simple conversion rate calculation (closed won deals vs total deals)
-    const closedWonDeals = dealsData.filter(deal => 
-      deal.stage === 'closed_won' || deal.stage === 'won'
-    ).length;
-    const conversionRate = dealsData.length > 0 ? (closedWonDeals / dealsData.length) * 100 : 0;
-
-    // Recent deals value (last 30 days)
-    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    const recentDealsValue = dealsData
-      .filter(deal => new Date(deal.created_at) > thirtyDaysAgo)
-      .reduce((sum, deal) => sum + parseFloat(deal.value.toString()), 0);
-
-    return {
-      totalPipelineValue,
-      projectedRevenue,
-      averageDealSize,
-      activeClientsCount,
-      conversionRate,
-      recentDealsValue
-    };
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0
+    }).format(amount);
   };
 
-  // Get deals by stage for revenue analysis
-  const getDealsByStage = () => {
-    const stageBreakdown: Record<string, { count: number; value: number }> = {};
-    
-    deals.forEach(deal => {
-      const stage = deal.stage || 'unknown';
-      if (!stageBreakdown[stage]) {
-        stageBreakdown[stage] = { count: 0, value: 0 };
-      }
-      stageBreakdown[stage].count++;
-      stageBreakdown[stage].value += parseFloat(deal.value.toString());
-    });
-
-    return stageBreakdown;
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'active':
+        return <Badge className="bg-green-100 text-green-800">Active</Badge>;
+      case 'overdue':
+        return <Badge className="bg-red-100 text-red-800">Overdue</Badge>;
+      case 'pending':
+        return <Badge className="bg-yellow-100 text-yellow-800">Pending</Badge>;
+      default:
+        return <Badge className="bg-gray-100 text-gray-800">{status}</Badge>;
+    }
   };
 
-  // Get high-value deals
-  const getHighValueDeals = () => {
-    return deals
-      .filter(deal => parseFloat(deal.value.toString()) > metrics.averageDealSize)
-      .sort((a, b) => parseFloat(b.value.toString()) - parseFloat(a.value.toString()))
-      .slice(0, 10);
+  const getTopClients = () => {
+    return clients
+      .sort((a, b) => b.totalRevenue - a.totalRevenue)
+      .slice(0, 5);
   };
 
-  // Get recent financial activity
-  const getRecentActivity = () => {
-    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    return deals
-      .filter(deal => new Date(deal.created_at) > thirtyDaysAgo)
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-      .slice(0, 10);
+  const getOverdueClients = () => {
+    return clients.filter(client => client.status === 'overdue');
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin" />
-        <span className="ml-2">Loading real financial data...</span>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center p-8 text-red-600">
-        <AlertCircle className="h-8 w-8 mr-2" />
-        <span>Error: {error}</span>
-      </div>
-    );
-  }
+  const revenueValue = timeframe === 'mtd' ? metrics.monthlyRevenue : metrics.yearlyRevenue;
+  const revenueTarget = timeframe === 'mtd' ? 50000 : 500000;
+  const revenueProgress = Math.min((revenueValue / revenueTarget) * 100, 100);
 
   return (
     <div className="space-y-6">
-      {/* Real Financial Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Financial Metrics Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Pipeline</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Revenue ({timeframe.toUpperCase()})
+            </CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${metrics.totalPipelineValue.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">
-              {deals.length} active deals
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Projected Revenue</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">
-              ${Math.round(metrics.projectedRevenue).toLocaleString()}
+            <div className="text-2xl font-bold">{formatCurrency(revenueValue)}</div>
+            <div className="flex items-center text-xs text-muted-foreground mt-1">
+              {metrics.revenueGrowth >= 0 ? (
+                <TrendingUp className="h-3 w-3 mr-1 text-green-500" />
+              ) : (
+                <TrendingDown className="h-3 w-3 mr-1 text-red-500" />
+              )}
+              <span className={metrics.revenueGrowth >= 0 ? 'text-green-500' : 'text-red-500'}>
+                {Math.abs(metrics.revenueGrowth)}%
+              </span>
+              <span className="ml-1">from last period</span>
             </div>
-            <p className="text-xs text-muted-foreground">
-              Probability-weighted
-            </p>
+            <Progress value={revenueProgress} className="mt-2 h-2" />
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Average Deal Size</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Outstanding Invoices</CardTitle>
+            <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${Math.round(metrics.averageDealSize).toLocaleString()}</div>
+            <div className="text-2xl font-bold">{metrics.outstandingInvoices}</div>
             <p className="text-xs text-muted-foreground">
-              Per deal average
+              {formatCurrency(metrics.overdueAmount)} overdue
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Conversion Rate</CardTitle>
+            <CardTitle className="text-sm font-medium">Avg Payment Time</CardTitle>
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{metrics.conversionRate.toFixed(1)}%</div>
+            <div className="text-2xl font-bold">{metrics.averagePaymentTime} days</div>
             <p className="text-xs text-muted-foreground">
-              Close rate
+              Industry avg: 45 days
             </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Client Retention</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{metrics.clientRetention}%</div>
+            <Progress value={metrics.clientRetention} className="mt-2 h-2" />
           </CardContent>
         </Card>
       </div>
 
-      {/* Real Financial Analytics Tabs */}
-      <Tabs defaultValue="revenue" className="space-y-4">
+      {/* Financial Analysis Tabs */}
+      <Tabs defaultValue="overview" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="revenue">
-            <DollarSign className="w-4 h-4 mr-2" />
-            Revenue Analysis
-          </TabsTrigger>
-          <TabsTrigger value="pipeline">
-            <BarChart3 className="w-4 h-4 mr-2" />
-            Pipeline Breakdown
-          </TabsTrigger>
-          <TabsTrigger value="high-value">
-            <TrendingUp className="w-4 h-4 mr-2" />
-            High Value Deals
-          </TabsTrigger>
-          <TabsTrigger value="recent">
-            <Calendar className="w-4 h-4 mr-2" />
-            Recent Activity
-          </TabsTrigger>
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="clients">Top Clients</TabsTrigger>
+          <TabsTrigger value="overdue">Overdue</TabsTrigger>
+          <TabsTrigger value="trends">Trends</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="revenue" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Revenue Analysis</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Real revenue calculations from actual deal data
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Current Pipeline</h4>
-                    <div className="text-2xl font-bold text-blue-600">
-                      ${metrics.totalPipelineValue.toLocaleString()}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Total deal value</p>
-                  </div>
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Projected Revenue</h4>
-                    <div className="text-2xl font-bold text-green-600">
-                      ${Math.round(metrics.projectedRevenue).toLocaleString()}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Probability-weighted forecast</p>
-                  </div>
+        <TabsContent value="overview" className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Revenue Breakdown</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span>Monthly Recurring Revenue</span>
+                  <span className="font-medium">{formatCurrency(metrics.monthlyRevenue)}</span>
                 </div>
-                <div className="space-y-4">
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Recent Revenue</h4>
-                    <div className="text-2xl font-bold text-purple-600">
-                      ${metrics.recentDealsValue.toLocaleString()}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Last 30 days</p>
-                  </div>
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Active Clients</h4>
-                    <div className="text-2xl font-bold text-orange-600">
-                      {metrics.activeClientsCount}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Contributing to revenue</p>
-                  </div>
+                <div className="flex justify-between items-center">
+                  <span>One-time Revenue</span>
+                  <span className="font-medium">{formatCurrency(metrics.totalRevenue - metrics.monthlyRevenue)}</span>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+                <div className="flex justify-between items-center">
+                  <span>Total Revenue ({timeframe.toUpperCase()})</span>
+                  <span className="font-medium text-lg">{formatCurrency(revenueValue)}</span>
+                </div>
+                <div className="pt-2 border-t">
+                  <div className="flex justify-between items-center">
+                    <span>Target Achievement</span>
+                    <span className="font-medium">{revenueProgress.toFixed(1)}%</span>
+                  </div>
+                  <Progress value={revenueProgress} className="mt-2" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Payment Health</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span>On-time Payments</span>
+                  <span className="font-medium text-green-600">
+                    {((clients.length - getOverdueClients().length) / Math.max(clients.length, 1) * 100).toFixed(1)}%
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>Overdue Clients</span>
+                  <span className="font-medium text-red-600">{getOverdueClients().length}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>Average Payment Time</span>
+                  <span className="font-medium">{metrics.averagePaymentTime} days</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span>Outstanding Amount</span>
+                  <span className="font-medium">{formatCurrency(metrics.overdueAmount)}</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
-        <TabsContent value="pipeline" className="space-y-4">
+        <TabsContent value="clients" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Pipeline Stage Breakdown</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Real deal distribution across pipeline stages
-              </p>
+              <CardTitle className="flex items-center gap-2">
+                <BarChart3 className="h-5 w-5" />
+                Top Revenue Clients
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {Object.entries(getDealsByStage()).map(([stage, data]) => (
-                  <div key={stage} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <h4 className="font-medium capitalize">{stage.replace('_', ' ')}</h4>
-                      <p className="text-sm text-muted-foreground">{data.count} deals</p>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-lg font-bold">${data.value.toLocaleString()}</div>
-                      <div className="text-xs text-muted-foreground">Total value</div>
-                    </div>
-                  </div>
-                ))}
-                {Object.keys(getDealsByStage()).length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    No pipeline data available yet
-                  </p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="high-value" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>High Value Deals</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Deals above average size (${Math.round(metrics.averageDealSize).toLocaleString()})
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {getHighValueDeals().map((deal) => (
-                  <div key={deal.id} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <h4 className="font-medium">{deal.title}</h4>
-                      <p className="text-sm text-muted-foreground">
-                        {deal.clients.name} • {deal.clients.company}
-                      </p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <Badge variant="outline">{deal.stage.replace('_', ' ')}</Badge>
-                        <span className="text-xs text-muted-foreground">
-                          {deal.probability}% probability
-                        </span>
+                {getTopClients().map((client, index) => (
+                  <div key={client.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                        <span className="text-sm font-medium text-blue-600">#{index + 1}</span>
+                      </div>
+                      <div>
+                        <h3 className="font-medium">{client.name}</h3>
+                        <p className="text-sm text-muted-foreground">
+                          Monthly: {formatCurrency(client.monthlyRevenue)}
+                        </p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-lg font-bold">${parseFloat(deal.value.toString()).toLocaleString()}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {deal.expected_close_date ? 
-                          `Due: ${new Date(deal.expected_close_date).toLocaleDateString()}` :
-                          'No close date'
-                        }
-                      </div>
+                      <p className="font-medium">{formatCurrency(client.totalRevenue)}</p>
+                      {getStatusBadge(client.status)}
                     </div>
                   </div>
                 ))}
-                {getHighValueDeals().length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    No high value deals available yet
+                {getTopClients().length === 0 && (
+                  <p className="text-center text-muted-foreground py-8">
+                    No client data available
                   </p>
                 )}
               </div>
@@ -448,2516 +286,116 @@ export default function FinancialAnalytics({ clientId }: FinancialAnalyticsProps
           </Card>
         </TabsContent>
 
-        <TabsContent value="recent" className="space-y-4">
+        <TabsContent value="overdue" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Recent Financial Activity</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Latest deals and financial movements (last 30 days)
-              </p>
+              <CardTitle className="flex items-center gap-2">
+                <AlertCircle className="h-5 w-5 text-red-600" />
+                Overdue Payments
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {getRecentActivity().map((deal) => (
-                  <div key={deal.id} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <h4 className="font-medium">{deal.title}</h4>
-                      <p className="text-sm text-muted-foreground">
-                        {deal.clients.name} • {deal.clients.company}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        Created {new Date(deal.created_at).toLocaleDateString()}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-lg font-bold">${parseFloat(deal.value.toString()).toLocaleString()}</div>
-                      <Badge 
-                        variant={deal.probability >= 70 ? 'default' : 'secondary'}
-                      >
-                        {deal.probability}% probability
-                      </Badge>
-                    </div>
-                  </div>
-                ))}
-                {getRecentActivity().length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    No recent financial activity
-                  </p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
-}
-.Value -replace "'", "'" <string, { count: number; value: number }> "use client";
-
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { DollarSign, TrendingUp, AlertCircle, Loader2, Calendar, BarChart3 } from 'lucide-react';
-
-interface FinancialAnalyticsProps {
-  clientId?: string;
-}
-
-interface DealData {
-  id: string;
-  title: string;
-  value: number;
-  stage: string;
-  probability: number;
-  expected_close_date: string;
-  created_at: string;
-  clients: {
-    name: string;
-    company: string;
-  };
-}
-
-interface ClientData {
-  id: string;
-  name: string;
-  email: string;
-  company: string;
-  status: string;
-  industry: string;
-  created_at: string;
-}
-
-interface FinancialMetrics {
-  totalPipelineValue: number;
-  projectedRevenue: number;
-  averageDealSize: number;
-  activeClientsCount: number;
-  conversionRate: number;
-  recentDealsValue: number;
-}
-
-// REAL Financial Analytics Component - NO MOCK DATA, NO FAKE AI
-export default function FinancialAnalytics({ clientId }: FinancialAnalyticsProps) {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [deals, setDeals] = useState<DealData[]>([]);
-  const [clients, setClients] = useState<ClientData[]>([]);
-  const [metrics, setMetrics] = useState<FinancialMetrics>({
-    totalPipelineValue: 0,
-    projectedRevenue: 0,
-    averageDealSize: 0,
-    activeClientsCount: 0,
-    conversionRate: 0,
-    recentDealsValue: 0
-  });
-
-  // Fetch real financial data from APIs
-  useEffect(() => {
-    const fetchRealFinancialData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        // Fetch deals and clients in parallel
-        const [dealsResponse, clientsResponse] = await Promise.all([
-          fetch('/api/crm/deals'),
-          fetch('/api/crm/clients')
-        ]);
-
-        if (!dealsResponse.ok) {
-          throw new Error(`Failed to fetch deals: ${dealsResponse.status}`);
-        }
-        if (!clientsResponse.ok) {
-          throw new Error(`Failed to fetch clients: ${clientsResponse.status}`);
-        }
-
-        const dealsData = await dealsResponse.json();
-        const clientsData = await clientsResponse.json();
-
-        const realDeals = dealsData.data || [];
-        const realClients = clientsData.data || [];
-
-        setDeals(realDeals);
-        setClients(realClients);
-
-        // Calculate REAL financial metrics from actual data
-        const realMetrics = calculateRealMetrics(realDeals, realClients);
-        setMetrics(realMetrics);
-
-      } catch (error) {
-        console.error('Error fetching financial data:', error);
-        setError(error instanceof Error ? error.message : 'Failed to load financial data');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRealFinancialData();
-  }, [clientId]);
-
-  // Calculate real financial metrics from actual database data
-  const calculateRealMetrics = (dealsData: DealData[], clientsData: ClientData[]): FinancialMetrics => {
-    // Total pipeline value from all deals
-    const totalPipelineValue = dealsData.reduce((sum, deal) => 
-      sum + parseFloat(deal.value.toString()), 0
-    );
-
-    // Projected revenue based on probability-weighted deal values
-    const projectedRevenue = dealsData.reduce((sum, deal) => 
-      sum + (parseFloat(deal.value.toString()) * (deal.probability / 100)), 0
-    );
-
-    // Average deal size
-    const averageDealSize = dealsData.length > 0 ? totalPipelineValue / dealsData.length : 0;
-
-    // Active clients count
-    const activeClientsCount = clientsData.filter(client => client.status === 'active').length;
-
-    // Simple conversion rate calculation (closed won deals vs total deals)
-    const closedWonDeals = dealsData.filter(deal => 
-      deal.stage === 'closed_won' || deal.stage === 'won'
-    ).length;
-    const conversionRate = dealsData.length > 0 ? (closedWonDeals / dealsData.length) * 100 : 0;
-
-    // Recent deals value (last 30 days)
-    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    const recentDealsValue = dealsData
-      .filter(deal => new Date(deal.created_at) > thirtyDaysAgo)
-      .reduce((sum, deal) => sum + parseFloat(deal.value.toString()), 0);
-
-    return {
-      totalPipelineValue,
-      projectedRevenue,
-      averageDealSize,
-      activeClientsCount,
-      conversionRate,
-      recentDealsValue
-    };
-  };
-
-  // Get deals by stage for revenue analysis
-  const getDealsByStage = () => {
-    const stageBreakdown: Record<string, { count: number; value: number }> = {};
-    
-    deals.forEach(deal => {
-      const stage = deal.stage || 'unknown';
-      if (!stageBreakdown[stage]) {
-        stageBreakdown[stage] = { count: 0, value: 0 };
-      }
-      stageBreakdown[stage].count++;
-      stageBreakdown[stage].value += parseFloat(deal.value.toString());
-    });
-
-    return stageBreakdown;
-  };
-
-  // Get high-value deals
-  const getHighValueDeals = () => {
-    return deals
-      .filter(deal => parseFloat(deal.value.toString()) > metrics.averageDealSize)
-      .sort((a, b) => parseFloat(b.value.toString()) - parseFloat(a.value.toString()))
-      .slice(0, 10);
-  };
-
-  // Get recent financial activity
-  const getRecentActivity = () => {
-    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    return deals
-      .filter(deal => new Date(deal.created_at) > thirtyDaysAgo)
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-      .slice(0, 10);
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin" />
-        <span className="ml-2">Loading real financial data...</span>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center p-8 text-red-600">
-        <AlertCircle className="h-8 w-8 mr-2" />
-        <span>Error: {error}</span>
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-6">
-      {/* Real Financial Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Pipeline</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${metrics.totalPipelineValue.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">
-              {deals.length} active deals
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Projected Revenue</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">
-              ${Math.round(metrics.projectedRevenue).toLocaleString()}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Probability-weighted
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Average Deal Size</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${Math.round(metrics.averageDealSize).toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">
-              Per deal average
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Conversion Rate</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{metrics.conversionRate.toFixed(1)}%</div>
-            <p className="text-xs text-muted-foreground">
-              Close rate
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Real Financial Analytics Tabs */}
-      <Tabs defaultValue="revenue" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="revenue">
-            <DollarSign className="w-4 h-4 mr-2" />
-            Revenue Analysis
-          </TabsTrigger>
-          <TabsTrigger value="pipeline">
-            <BarChart3 className="w-4 h-4 mr-2" />
-            Pipeline Breakdown
-          </TabsTrigger>
-          <TabsTrigger value="high-value">
-            <TrendingUp className="w-4 h-4 mr-2" />
-            High Value Deals
-          </TabsTrigger>
-          <TabsTrigger value="recent">
-            <Calendar className="w-4 h-4 mr-2" />
-            Recent Activity
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="revenue" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Revenue Analysis</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Real revenue calculations from actual deal data
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Current Pipeline</h4>
-                    <div className="text-2xl font-bold text-blue-600">
-                      ${metrics.totalPipelineValue.toLocaleString()}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Total deal value</p>
-                  </div>
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Projected Revenue</h4>
-                    <div className="text-2xl font-bold text-green-600">
-                      ${Math.round(metrics.projectedRevenue).toLocaleString()}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Probability-weighted forecast</p>
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Recent Revenue</h4>
-                    <div className="text-2xl font-bold text-purple-600">
-                      ${metrics.recentDealsValue.toLocaleString()}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Last 30 days</p>
-                  </div>
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Active Clients</h4>
-                    <div className="text-2xl font-bold text-orange-600">
-                      {metrics.activeClientsCount}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Contributing to revenue</p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="pipeline" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Pipeline Stage Breakdown</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Real deal distribution across pipeline stages
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {Object.entries(getDealsByStage()).map(([stage, data]) => (
-                  <div key={stage} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <h4 className="font-medium capitalize">{stage.replace('_', ' ')}</h4>
-                      <p className="text-sm text-muted-foreground">{data.count} deals</p>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-lg font-bold">${data.value.toLocaleString()}</div>
-                      <div className="text-xs text-muted-foreground">Total value</div>
-                    </div>
-                  </div>
-                ))}
-                {Object.keys(getDealsByStage()).length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    No pipeline data available yet
-                  </p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="high-value" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>High Value Deals</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Deals above average size (${Math.round(metrics.averageDealSize).toLocaleString()})
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {getHighValueDeals().map((deal) => (
-                  <div key={deal.id} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <h4 className="font-medium">{deal.title}</h4>
-                      <p className="text-sm text-muted-foreground">
-                        {deal.clients.name} • {deal.clients.company}
-                      </p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <Badge variant="outline">{deal.stage.replace('_', ' ')}</Badge>
-                        <span className="text-xs text-muted-foreground">
-                          {deal.probability}% probability
-                        </span>
+                {getOverdueClients().map((client) => (
+                  <div key={client.id} className="flex items-center justify-between p-4 border rounded-lg bg-red-50">
+                    <div className="flex items-center space-x-4">
+                      <AlertCircle className="h-8 w-8 text-red-600" />
+                      <div>
+                        <h3 className="font-medium">{client.name}</h3>
+                        <p className="text-sm text-red-600">
+                          Last payment: {client.lastPayment.toLocaleDateString()}
+                        </p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-lg font-bold">${parseFloat(deal.value.toString()).toLocaleString()}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {deal.expected_close_date ? 
-                          `Due: ${new Date(deal.expected_close_date).toLocaleDateString()}` :
-                          'No close date'
-                        }
-                      </div>
+                      <p className="font-medium text-red-600">{formatCurrency(client.totalRevenue)}</p>
+                      <Button size="sm" variant="outline" className="mt-2">
+                        Send Reminder
+                      </Button>
                     </div>
                   </div>
                 ))}
-                {getHighValueDeals().length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    No high value deals available yet
-                  </p>
+                {getOverdueClients().length === 0 && (
+                  <div className="text-center py-8">
+                    <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
+                    <p className="text-muted-foreground">No overdue payments!</p>
+                  </div>
                 )}
               </div>
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="recent" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Financial Activity</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Latest deals and financial movements (last 30 days)
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {getRecentActivity().map((deal) => (
-                  <div key={deal.id} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <h4 className="font-medium">{deal.title}</h4>
-                      <p className="text-sm text-muted-foreground">
-                        {deal.clients.name} • {deal.clients.company}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        Created {new Date(deal.created_at).toLocaleDateString()}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-lg font-bold">${parseFloat(deal.value.toString()).toLocaleString()}</div>
-                      <Badge 
-                        variant={deal.probability >= 70 ? 'default' : 'secondary'}
-                      >
-                        {deal.probability}% probability
-                      </Badge>
-                    </div>
-                  </div>
-                ))}
-                {getRecentActivity().length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    No recent financial activity
-                  </p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
-}
-.Value -replace "'", "'" <div className="flex items-center justify-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin" />
-        <span className="ml-2">Loading real financial data...</span>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center p-8 text-red-600">
-        <AlertCircle className="h-8 w-8 mr-2" />
-        <span>Error: {error}</span>
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-6">
-      {/* Real Financial Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Pipeline</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${metrics.totalPipelineValue.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">
-              {deals.length} active deals
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Projected Revenue</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">
-              ${Math.round(metrics.projectedRevenue).toLocaleString()}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Probability-weighted
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Average Deal Size</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${Math.round(metrics.averageDealSize).toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">
-              Per deal average
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Conversion Rate</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{metrics.conversionRate.toFixed(1)}%</div>
-            <p className="text-xs text-muted-foreground">
-              Close rate
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Real Financial Analytics Tabs */}
-      <Tabs defaultValue="revenue" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="revenue">
-            <DollarSign className="w-4 h-4 mr-2" />
-            Revenue Analysis
-          </TabsTrigger>
-          <TabsTrigger value="pipeline">
-            <BarChart3 className="w-4 h-4 mr-2" />
-            Pipeline Breakdown
-          </TabsTrigger>
-          <TabsTrigger value="high-value">
-            <TrendingUp className="w-4 h-4 mr-2" />
-            High Value Deals
-          </TabsTrigger>
-          <TabsTrigger value="recent">
-            <Calendar className="w-4 h-4 mr-2" />
-            Recent Activity
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="revenue" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Revenue Analysis</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Real revenue calculations from actual deal data
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Current Pipeline</h4>
-                    <div className="text-2xl font-bold text-blue-600">
-                      ${metrics.totalPipelineValue.toLocaleString()}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Total deal value</p>
-                  </div>
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Projected Revenue</h4>
-                    <div className="text-2xl font-bold text-green-600">
-                      ${Math.round(metrics.projectedRevenue).toLocaleString()}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Probability-weighted forecast</p>
+        <TabsContent value="trends" className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Revenue Trends</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span>Revenue Growth</span>
+                  <div className="flex items-center">
+                    {metrics.revenueGrowth >= 0 ? (
+                      <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
+                    ) : (
+                      <TrendingDown className="h-4 w-4 text-red-500 mr-1" />
+                    )}
+                    <span className={`font-medium ${metrics.revenueGrowth >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                      {metrics.revenueGrowth}%
+                    </span>
                   </div>
                 </div>
-                <div className="space-y-4">
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Recent Revenue</h4>
-                    <div className="text-2xl font-bold text-purple-600">
-                      ${metrics.recentDealsValue.toLocaleString()}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Last 30 days</p>
-                  </div>
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Active Clients</h4>
-                    <div className="text-2xl font-bold text-orange-600">
-                      {metrics.activeClientsCount}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Contributing to revenue</p>
-                  </div>
+                <div className="flex items-center justify-between">
+                  <span>Client Retention</span>
+                  <span className="font-medium text-blue-600">{metrics.clientRetention}%</span>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="pipeline" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Pipeline Stage Breakdown</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Real deal distribution across pipeline stages
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {Object.entries(getDealsByStage()).map(([stage, data]) => (
-                  <div key={stage} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <h4 className="font-medium capitalize"> "use client";
-
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { DollarSign, TrendingUp, AlertCircle, Loader2, Calendar, BarChart3 } from 'lucide-react';
-
-interface FinancialAnalyticsProps {
-  clientId?: string;
-}
-
-interface DealData {
-  id: string;
-  title: string;
-  value: number;
-  stage: string;
-  probability: number;
-  expected_close_date: string;
-  created_at: string;
-  clients: {
-    name: string;
-    company: string;
-  };
-}
-
-interface ClientData {
-  id: string;
-  name: string;
-  email: string;
-  company: string;
-  status: string;
-  industry: string;
-  created_at: string;
-}
-
-interface FinancialMetrics {
-  totalPipelineValue: number;
-  projectedRevenue: number;
-  averageDealSize: number;
-  activeClientsCount: number;
-  conversionRate: number;
-  recentDealsValue: number;
-}
-
-// REAL Financial Analytics Component - NO MOCK DATA, NO FAKE AI
-export default function FinancialAnalytics({ clientId }: FinancialAnalyticsProps) {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [deals, setDeals] = useState<DealData[]>([]);
-  const [clients, setClients] = useState<ClientData[]>([]);
-  const [metrics, setMetrics] = useState<FinancialMetrics>({
-    totalPipelineValue: 0,
-    projectedRevenue: 0,
-    averageDealSize: 0,
-    activeClientsCount: 0,
-    conversionRate: 0,
-    recentDealsValue: 0
-  });
-
-  // Fetch real financial data from APIs
-  useEffect(() => {
-    const fetchRealFinancialData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        // Fetch deals and clients in parallel
-        const [dealsResponse, clientsResponse] = await Promise.all([
-          fetch('/api/crm/deals'),
-          fetch('/api/crm/clients')
-        ]);
-
-        if (!dealsResponse.ok) {
-          throw new Error(`Failed to fetch deals: ${dealsResponse.status}`);
-        }
-        if (!clientsResponse.ok) {
-          throw new Error(`Failed to fetch clients: ${clientsResponse.status}`);
-        }
-
-        const dealsData = await dealsResponse.json();
-        const clientsData = await clientsResponse.json();
-
-        const realDeals = dealsData.data || [];
-        const realClients = clientsData.data || [];
-
-        setDeals(realDeals);
-        setClients(realClients);
-
-        // Calculate REAL financial metrics from actual data
-        const realMetrics = calculateRealMetrics(realDeals, realClients);
-        setMetrics(realMetrics);
-
-      } catch (error) {
-        console.error('Error fetching financial data:', error);
-        setError(error instanceof Error ? error.message : 'Failed to load financial data');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRealFinancialData();
-  }, [clientId]);
-
-  // Calculate real financial metrics from actual database data
-  const calculateRealMetrics = (dealsData: DealData[], clientsData: ClientData[]): FinancialMetrics => {
-    // Total pipeline value from all deals
-    const totalPipelineValue = dealsData.reduce((sum, deal) => 
-      sum + parseFloat(deal.value.toString()), 0
-    );
-
-    // Projected revenue based on probability-weighted deal values
-    const projectedRevenue = dealsData.reduce((sum, deal) => 
-      sum + (parseFloat(deal.value.toString()) * (deal.probability / 100)), 0
-    );
-
-    // Average deal size
-    const averageDealSize = dealsData.length > 0 ? totalPipelineValue / dealsData.length : 0;
-
-    // Active clients count
-    const activeClientsCount = clientsData.filter(client => client.status === 'active').length;
-
-    // Simple conversion rate calculation (closed won deals vs total deals)
-    const closedWonDeals = dealsData.filter(deal => 
-      deal.stage === 'closed_won' || deal.stage === 'won'
-    ).length;
-    const conversionRate = dealsData.length > 0 ? (closedWonDeals / dealsData.length) * 100 : 0;
-
-    // Recent deals value (last 30 days)
-    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    const recentDealsValue = dealsData
-      .filter(deal => new Date(deal.created_at) > thirtyDaysAgo)
-      .reduce((sum, deal) => sum + parseFloat(deal.value.toString()), 0);
-
-    return {
-      totalPipelineValue,
-      projectedRevenue,
-      averageDealSize,
-      activeClientsCount,
-      conversionRate,
-      recentDealsValue
-    };
-  };
-
-  // Get deals by stage for revenue analysis
-  const getDealsByStage = () => {
-    const stageBreakdown: Record<string, { count: number; value: number }> = {};
-    
-    deals.forEach(deal => {
-      const stage = deal.stage || 'unknown';
-      if (!stageBreakdown[stage]) {
-        stageBreakdown[stage] = { count: 0, value: 0 };
-      }
-      stageBreakdown[stage].count++;
-      stageBreakdown[stage].value += parseFloat(deal.value.toString());
-    });
-
-    return stageBreakdown;
-  };
-
-  // Get high-value deals
-  const getHighValueDeals = () => {
-    return deals
-      .filter(deal => parseFloat(deal.value.toString()) > metrics.averageDealSize)
-      .sort((a, b) => parseFloat(b.value.toString()) - parseFloat(a.value.toString()))
-      .slice(0, 10);
-  };
-
-  // Get recent financial activity
-  const getRecentActivity = () => {
-    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    return deals
-      .filter(deal => new Date(deal.created_at) > thirtyDaysAgo)
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-      .slice(0, 10);
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin" />
-        <span className="ml-2">Loading real financial data...</span>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center p-8 text-red-600">
-        <AlertCircle className="h-8 w-8 mr-2" />
-        <span>Error: {error}</span>
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-6">
-      {/* Real Financial Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Pipeline</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${metrics.totalPipelineValue.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">
-              {deals.length} active deals
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Projected Revenue</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">
-              ${Math.round(metrics.projectedRevenue).toLocaleString()}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Probability-weighted
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Average Deal Size</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${Math.round(metrics.averageDealSize).toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">
-              Per deal average
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Conversion Rate</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{metrics.conversionRate.toFixed(1)}%</div>
-            <p className="text-xs text-muted-foreground">
-              Close rate
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Real Financial Analytics Tabs */}
-      <Tabs defaultValue="revenue" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="revenue">
-            <DollarSign className="w-4 h-4 mr-2" />
-            Revenue Analysis
-          </TabsTrigger>
-          <TabsTrigger value="pipeline">
-            <BarChart3 className="w-4 h-4 mr-2" />
-            Pipeline Breakdown
-          </TabsTrigger>
-          <TabsTrigger value="high-value">
-            <TrendingUp className="w-4 h-4 mr-2" />
-            High Value Deals
-          </TabsTrigger>
-          <TabsTrigger value="recent">
-            <Calendar className="w-4 h-4 mr-2" />
-            Recent Activity
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="revenue" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Revenue Analysis</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Real revenue calculations from actual deal data
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Current Pipeline</h4>
-                    <div className="text-2xl font-bold text-blue-600">
-                      ${metrics.totalPipelineValue.toLocaleString()}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Total deal value</p>
-                  </div>
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Projected Revenue</h4>
-                    <div className="text-2xl font-bold text-green-600">
-                      ${Math.round(metrics.projectedRevenue).toLocaleString()}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Probability-weighted forecast</p>
-                  </div>
+                <div className="flex items-center justify-between">
+                  <span>Payment Efficiency</span>
+                  <span className="font-medium">
+                    {metrics.averagePaymentTime <= 30 ? 'Excellent' : 
+                     metrics.averagePaymentTime <= 45 ? 'Good' : 'Needs Improvement'}
+                  </span>
                 </div>
-                <div className="space-y-4">
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Recent Revenue</h4>
-                    <div className="text-2xl font-bold text-purple-600">
-                      ${metrics.recentDealsValue.toLocaleString()}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Last 30 days</p>
-                  </div>
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Active Clients</h4>
-                    <div className="text-2xl font-bold text-orange-600">
-                      {metrics.activeClientsCount}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Contributing to revenue</p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+              </CardContent>
+            </Card>
 
-        <TabsContent value="pipeline" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Pipeline Stage Breakdown</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Real deal distribution across pipeline stages
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {Object.entries(getDealsByStage()).map(([stage, data]) => (
-                  <div key={stage} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <h4 className="font-medium capitalize">{stage.replace('_', ' ')}</h4>
-                      <p className="text-sm text-muted-foreground">{data.count} deals</p>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-lg font-bold">${data.value.toLocaleString()}</div>
-                      <div className="text-xs text-muted-foreground">Total value</div>
-                    </div>
+            <Card>
+              <CardHeader>
+                <CardTitle>Key Insights</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {metrics.revenueGrowth > 10 && (
+                  <div className="p-3 bg-green-50 rounded-lg">
+                    <p className="text-sm text-green-800">
+                      <strong>Strong Growth</strong> - Revenue is growing at {metrics.revenueGrowth}% rate
+                    </p>
                   </div>
-                ))}
-                {Object.keys(getDealsByStage()).length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    No pipeline data available yet
-                  </p>
                 )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="high-value" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>High Value Deals</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Deals above average size (${Math.round(metrics.averageDealSize).toLocaleString()})
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {getHighValueDeals().map((deal) => (
-                  <div key={deal.id} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <h4 className="font-medium">{deal.title}</h4>
-                      <p className="text-sm text-muted-foreground">
-                        {deal.clients.name} • {deal.clients.company}
-                      </p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <Badge variant="outline">{deal.stage.replace('_', ' ')}</Badge>
-                        <span className="text-xs text-muted-foreground">
-                          {deal.probability}% probability
-                        </span>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-lg font-bold">${parseFloat(deal.value.toString()).toLocaleString()}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {deal.expected_close_date ? 
-                          `Due: ${new Date(deal.expected_close_date).toLocaleDateString()}` :
-                          'No close date'
-                        }
-                      </div>
-                    </div>
+                {getOverdueClients().length > 0 && (
+                  <div className="p-3 bg-red-50 rounded-lg">
+                    <p className="text-sm text-red-800">
+                      <strong>Payment Issues</strong> - {getOverdueClients().length} clients have overdue payments
+                    </p>
                   </div>
-                ))}
-                {getHighValueDeals().length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    No high value deals available yet
-                  </p>
                 )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="recent" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Financial Activity</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Latest deals and financial movements (last 30 days)
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {getRecentActivity().map((deal) => (
-                  <div key={deal.id} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <h4 className="font-medium">{deal.title}</h4>
-                      <p className="text-sm text-muted-foreground">
-                        {deal.clients.name} • {deal.clients.company}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        Created {new Date(deal.created_at).toLocaleDateString()}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-lg font-bold">${parseFloat(deal.value.toString()).toLocaleString()}</div>
-                      <Badge 
-                        variant={deal.probability >= 70 ? 'default' : 'secondary'}
-                      >
-                        {deal.probability}% probability
-                      </Badge>
-                    </div>
+                {metrics.averagePaymentTime <= 30 && (
+                  <div className="p-3 bg-blue-50 rounded-lg">
+                    <p className="text-sm text-blue-800">
+                      <strong>Excellent Cash Flow</strong> - Average payment time is {metrics.averagePaymentTime} days
+                    </p>
                   </div>
-                ))}
-                {getRecentActivity().length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    No recent financial activity
-                  </p>
                 )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
-}
-.Value -replace "'", "'" </h4>
-                      <p className="text-sm text-muted-foreground">{data.count} deals</p>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-lg font-bold">${data.value.toLocaleString()}</div>
-                      <div className="text-xs text-muted-foreground">Total value</div>
-                    </div>
+                {metrics.clientRetention >= 90 && (
+                  <div className="p-3 bg-purple-50 rounded-lg">
+                    <p className="text-sm text-purple-800">
+                      <strong>High Retention</strong> - {metrics.clientRetention}% client retention rate
+                    </p>
                   </div>
-                ))}
-                {Object.keys(getDealsByStage()).length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    No pipeline data available yet
-                  </p>
                 )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="high-value" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>High Value Deals</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Deals above average size (${Math.round(metrics.averageDealSize).toLocaleString()})
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {getHighValueDeals().map((deal) => (
-                  <div key={deal.id} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <h4 className="font-medium">{deal.title}</h4>
-                      <p className="text-sm text-muted-foreground">
-                        {deal.clients.name} • {deal.clients.company}
-                      </p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <Badge variant="outline"> "use client";
-
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { DollarSign, TrendingUp, AlertCircle, Loader2, Calendar, BarChart3 } from 'lucide-react';
-
-interface FinancialAnalyticsProps {
-  clientId?: string;
-}
-
-interface DealData {
-  id: string;
-  title: string;
-  value: number;
-  stage: string;
-  probability: number;
-  expected_close_date: string;
-  created_at: string;
-  clients: {
-    name: string;
-    company: string;
-  };
-}
-
-interface ClientData {
-  id: string;
-  name: string;
-  email: string;
-  company: string;
-  status: string;
-  industry: string;
-  created_at: string;
-}
-
-interface FinancialMetrics {
-  totalPipelineValue: number;
-  projectedRevenue: number;
-  averageDealSize: number;
-  activeClientsCount: number;
-  conversionRate: number;
-  recentDealsValue: number;
-}
-
-// REAL Financial Analytics Component - NO MOCK DATA, NO FAKE AI
-export default function FinancialAnalytics({ clientId }: FinancialAnalyticsProps) {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [deals, setDeals] = useState<DealData[]>([]);
-  const [clients, setClients] = useState<ClientData[]>([]);
-  const [metrics, setMetrics] = useState<FinancialMetrics>({
-    totalPipelineValue: 0,
-    projectedRevenue: 0,
-    averageDealSize: 0,
-    activeClientsCount: 0,
-    conversionRate: 0,
-    recentDealsValue: 0
-  });
-
-  // Fetch real financial data from APIs
-  useEffect(() => {
-    const fetchRealFinancialData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        // Fetch deals and clients in parallel
-        const [dealsResponse, clientsResponse] = await Promise.all([
-          fetch('/api/crm/deals'),
-          fetch('/api/crm/clients')
-        ]);
-
-        if (!dealsResponse.ok) {
-          throw new Error(`Failed to fetch deals: ${dealsResponse.status}`);
-        }
-        if (!clientsResponse.ok) {
-          throw new Error(`Failed to fetch clients: ${clientsResponse.status}`);
-        }
-
-        const dealsData = await dealsResponse.json();
-        const clientsData = await clientsResponse.json();
-
-        const realDeals = dealsData.data || [];
-        const realClients = clientsData.data || [];
-
-        setDeals(realDeals);
-        setClients(realClients);
-
-        // Calculate REAL financial metrics from actual data
-        const realMetrics = calculateRealMetrics(realDeals, realClients);
-        setMetrics(realMetrics);
-
-      } catch (error) {
-        console.error('Error fetching financial data:', error);
-        setError(error instanceof Error ? error.message : 'Failed to load financial data');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRealFinancialData();
-  }, [clientId]);
-
-  // Calculate real financial metrics from actual database data
-  const calculateRealMetrics = (dealsData: DealData[], clientsData: ClientData[]): FinancialMetrics => {
-    // Total pipeline value from all deals
-    const totalPipelineValue = dealsData.reduce((sum, deal) => 
-      sum + parseFloat(deal.value.toString()), 0
-    );
-
-    // Projected revenue based on probability-weighted deal values
-    const projectedRevenue = dealsData.reduce((sum, deal) => 
-      sum + (parseFloat(deal.value.toString()) * (deal.probability / 100)), 0
-    );
-
-    // Average deal size
-    const averageDealSize = dealsData.length > 0 ? totalPipelineValue / dealsData.length : 0;
-
-    // Active clients count
-    const activeClientsCount = clientsData.filter(client => client.status === 'active').length;
-
-    // Simple conversion rate calculation (closed won deals vs total deals)
-    const closedWonDeals = dealsData.filter(deal => 
-      deal.stage === 'closed_won' || deal.stage === 'won'
-    ).length;
-    const conversionRate = dealsData.length > 0 ? (closedWonDeals / dealsData.length) * 100 : 0;
-
-    // Recent deals value (last 30 days)
-    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    const recentDealsValue = dealsData
-      .filter(deal => new Date(deal.created_at) > thirtyDaysAgo)
-      .reduce((sum, deal) => sum + parseFloat(deal.value.toString()), 0);
-
-    return {
-      totalPipelineValue,
-      projectedRevenue,
-      averageDealSize,
-      activeClientsCount,
-      conversionRate,
-      recentDealsValue
-    };
-  };
-
-  // Get deals by stage for revenue analysis
-  const getDealsByStage = () => {
-    const stageBreakdown: Record<string, { count: number; value: number }> = {};
-    
-    deals.forEach(deal => {
-      const stage = deal.stage || 'unknown';
-      if (!stageBreakdown[stage]) {
-        stageBreakdown[stage] = { count: 0, value: 0 };
-      }
-      stageBreakdown[stage].count++;
-      stageBreakdown[stage].value += parseFloat(deal.value.toString());
-    });
-
-    return stageBreakdown;
-  };
-
-  // Get high-value deals
-  const getHighValueDeals = () => {
-    return deals
-      .filter(deal => parseFloat(deal.value.toString()) > metrics.averageDealSize)
-      .sort((a, b) => parseFloat(b.value.toString()) - parseFloat(a.value.toString()))
-      .slice(0, 10);
-  };
-
-  // Get recent financial activity
-  const getRecentActivity = () => {
-    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    return deals
-      .filter(deal => new Date(deal.created_at) > thirtyDaysAgo)
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-      .slice(0, 10);
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin" />
-        <span className="ml-2">Loading real financial data...</span>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center p-8 text-red-600">
-        <AlertCircle className="h-8 w-8 mr-2" />
-        <span>Error: {error}</span>
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-6">
-      {/* Real Financial Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Pipeline</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${metrics.totalPipelineValue.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">
-              {deals.length} active deals
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Projected Revenue</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">
-              ${Math.round(metrics.projectedRevenue).toLocaleString()}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Probability-weighted
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Average Deal Size</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${Math.round(metrics.averageDealSize).toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">
-              Per deal average
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Conversion Rate</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{metrics.conversionRate.toFixed(1)}%</div>
-            <p className="text-xs text-muted-foreground">
-              Close rate
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Real Financial Analytics Tabs */}
-      <Tabs defaultValue="revenue" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="revenue">
-            <DollarSign className="w-4 h-4 mr-2" />
-            Revenue Analysis
-          </TabsTrigger>
-          <TabsTrigger value="pipeline">
-            <BarChart3 className="w-4 h-4 mr-2" />
-            Pipeline Breakdown
-          </TabsTrigger>
-          <TabsTrigger value="high-value">
-            <TrendingUp className="w-4 h-4 mr-2" />
-            High Value Deals
-          </TabsTrigger>
-          <TabsTrigger value="recent">
-            <Calendar className="w-4 h-4 mr-2" />
-            Recent Activity
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="revenue" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Revenue Analysis</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Real revenue calculations from actual deal data
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Current Pipeline</h4>
-                    <div className="text-2xl font-bold text-blue-600">
-                      ${metrics.totalPipelineValue.toLocaleString()}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Total deal value</p>
-                  </div>
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Projected Revenue</h4>
-                    <div className="text-2xl font-bold text-green-600">
-                      ${Math.round(metrics.projectedRevenue).toLocaleString()}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Probability-weighted forecast</p>
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Recent Revenue</h4>
-                    <div className="text-2xl font-bold text-purple-600">
-                      ${metrics.recentDealsValue.toLocaleString()}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Last 30 days</p>
-                  </div>
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Active Clients</h4>
-                    <div className="text-2xl font-bold text-orange-600">
-                      {metrics.activeClientsCount}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Contributing to revenue</p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="pipeline" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Pipeline Stage Breakdown</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Real deal distribution across pipeline stages
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {Object.entries(getDealsByStage()).map(([stage, data]) => (
-                  <div key={stage} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <h4 className="font-medium capitalize">{stage.replace('_', ' ')}</h4>
-                      <p className="text-sm text-muted-foreground">{data.count} deals</p>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-lg font-bold">${data.value.toLocaleString()}</div>
-                      <div className="text-xs text-muted-foreground">Total value</div>
-                    </div>
-                  </div>
-                ))}
-                {Object.keys(getDealsByStage()).length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    No pipeline data available yet
-                  </p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="high-value" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>High Value Deals</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Deals above average size (${Math.round(metrics.averageDealSize).toLocaleString()})
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {getHighValueDeals().map((deal) => (
-                  <div key={deal.id} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <h4 className="font-medium">{deal.title}</h4>
-                      <p className="text-sm text-muted-foreground">
-                        {deal.clients.name} • {deal.clients.company}
-                      </p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <Badge variant="outline">{deal.stage.replace('_', ' ')}</Badge>
-                        <span className="text-xs text-muted-foreground">
-                          {deal.probability}% probability
-                        </span>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-lg font-bold">${parseFloat(deal.value.toString()).toLocaleString()}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {deal.expected_close_date ? 
-                          `Due: ${new Date(deal.expected_close_date).toLocaleDateString()}` :
-                          'No close date'
-                        }
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                {getHighValueDeals().length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    No high value deals available yet
-                  </p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="recent" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Financial Activity</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Latest deals and financial movements (last 30 days)
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {getRecentActivity().map((deal) => (
-                  <div key={deal.id} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <h4 className="font-medium">{deal.title}</h4>
-                      <p className="text-sm text-muted-foreground">
-                        {deal.clients.name} • {deal.clients.company}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        Created {new Date(deal.created_at).toLocaleDateString()}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-lg font-bold">${parseFloat(deal.value.toString()).toLocaleString()}</div>
-                      <Badge 
-                        variant={deal.probability >= 70 ? 'default' : 'secondary'}
-                      >
-                        {deal.probability}% probability
-                      </Badge>
-                    </div>
-                  </div>
-                ))}
-                {getRecentActivity().length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    No recent financial activity
-                  </p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
-}
-.Value -replace "'", "'" </Badge>
-                        <span className="text-xs text-muted-foreground">
-                          {deal.probability}% probability
-                        </span>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-lg font-bold">${parseFloat(deal.value.toString()).toLocaleString()}</div>
-                      <div className="text-xs text-muted-foreground"> "use client";
-
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { DollarSign, TrendingUp, AlertCircle, Loader2, Calendar, BarChart3 } from 'lucide-react';
-
-interface FinancialAnalyticsProps {
-  clientId?: string;
-}
-
-interface DealData {
-  id: string;
-  title: string;
-  value: number;
-  stage: string;
-  probability: number;
-  expected_close_date: string;
-  created_at: string;
-  clients: {
-    name: string;
-    company: string;
-  };
-}
-
-interface ClientData {
-  id: string;
-  name: string;
-  email: string;
-  company: string;
-  status: string;
-  industry: string;
-  created_at: string;
-}
-
-interface FinancialMetrics {
-  totalPipelineValue: number;
-  projectedRevenue: number;
-  averageDealSize: number;
-  activeClientsCount: number;
-  conversionRate: number;
-  recentDealsValue: number;
-}
-
-// REAL Financial Analytics Component - NO MOCK DATA, NO FAKE AI
-export default function FinancialAnalytics({ clientId }: FinancialAnalyticsProps) {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [deals, setDeals] = useState<DealData[]>([]);
-  const [clients, setClients] = useState<ClientData[]>([]);
-  const [metrics, setMetrics] = useState<FinancialMetrics>({
-    totalPipelineValue: 0,
-    projectedRevenue: 0,
-    averageDealSize: 0,
-    activeClientsCount: 0,
-    conversionRate: 0,
-    recentDealsValue: 0
-  });
-
-  // Fetch real financial data from APIs
-  useEffect(() => {
-    const fetchRealFinancialData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        // Fetch deals and clients in parallel
-        const [dealsResponse, clientsResponse] = await Promise.all([
-          fetch('/api/crm/deals'),
-          fetch('/api/crm/clients')
-        ]);
-
-        if (!dealsResponse.ok) {
-          throw new Error(`Failed to fetch deals: ${dealsResponse.status}`);
-        }
-        if (!clientsResponse.ok) {
-          throw new Error(`Failed to fetch clients: ${clientsResponse.status}`);
-        }
-
-        const dealsData = await dealsResponse.json();
-        const clientsData = await clientsResponse.json();
-
-        const realDeals = dealsData.data || [];
-        const realClients = clientsData.data || [];
-
-        setDeals(realDeals);
-        setClients(realClients);
-
-        // Calculate REAL financial metrics from actual data
-        const realMetrics = calculateRealMetrics(realDeals, realClients);
-        setMetrics(realMetrics);
-
-      } catch (error) {
-        console.error('Error fetching financial data:', error);
-        setError(error instanceof Error ? error.message : 'Failed to load financial data');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRealFinancialData();
-  }, [clientId]);
-
-  // Calculate real financial metrics from actual database data
-  const calculateRealMetrics = (dealsData: DealData[], clientsData: ClientData[]): FinancialMetrics => {
-    // Total pipeline value from all deals
-    const totalPipelineValue = dealsData.reduce((sum, deal) => 
-      sum + parseFloat(deal.value.toString()), 0
-    );
-
-    // Projected revenue based on probability-weighted deal values
-    const projectedRevenue = dealsData.reduce((sum, deal) => 
-      sum + (parseFloat(deal.value.toString()) * (deal.probability / 100)), 0
-    );
-
-    // Average deal size
-    const averageDealSize = dealsData.length > 0 ? totalPipelineValue / dealsData.length : 0;
-
-    // Active clients count
-    const activeClientsCount = clientsData.filter(client => client.status === 'active').length;
-
-    // Simple conversion rate calculation (closed won deals vs total deals)
-    const closedWonDeals = dealsData.filter(deal => 
-      deal.stage === 'closed_won' || deal.stage === 'won'
-    ).length;
-    const conversionRate = dealsData.length > 0 ? (closedWonDeals / dealsData.length) * 100 : 0;
-
-    // Recent deals value (last 30 days)
-    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    const recentDealsValue = dealsData
-      .filter(deal => new Date(deal.created_at) > thirtyDaysAgo)
-      .reduce((sum, deal) => sum + parseFloat(deal.value.toString()), 0);
-
-    return {
-      totalPipelineValue,
-      projectedRevenue,
-      averageDealSize,
-      activeClientsCount,
-      conversionRate,
-      recentDealsValue
-    };
-  };
-
-  // Get deals by stage for revenue analysis
-  const getDealsByStage = () => {
-    const stageBreakdown: Record<string, { count: number; value: number }> = {};
-    
-    deals.forEach(deal => {
-      const stage = deal.stage || 'unknown';
-      if (!stageBreakdown[stage]) {
-        stageBreakdown[stage] = { count: 0, value: 0 };
-      }
-      stageBreakdown[stage].count++;
-      stageBreakdown[stage].value += parseFloat(deal.value.toString());
-    });
-
-    return stageBreakdown;
-  };
-
-  // Get high-value deals
-  const getHighValueDeals = () => {
-    return deals
-      .filter(deal => parseFloat(deal.value.toString()) > metrics.averageDealSize)
-      .sort((a, b) => parseFloat(b.value.toString()) - parseFloat(a.value.toString()))
-      .slice(0, 10);
-  };
-
-  // Get recent financial activity
-  const getRecentActivity = () => {
-    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    return deals
-      .filter(deal => new Date(deal.created_at) > thirtyDaysAgo)
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-      .slice(0, 10);
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin" />
-        <span className="ml-2">Loading real financial data...</span>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center p-8 text-red-600">
-        <AlertCircle className="h-8 w-8 mr-2" />
-        <span>Error: {error}</span>
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-6">
-      {/* Real Financial Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Pipeline</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${metrics.totalPipelineValue.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">
-              {deals.length} active deals
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Projected Revenue</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">
-              ${Math.round(metrics.projectedRevenue).toLocaleString()}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Probability-weighted
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Average Deal Size</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${Math.round(metrics.averageDealSize).toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">
-              Per deal average
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Conversion Rate</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{metrics.conversionRate.toFixed(1)}%</div>
-            <p className="text-xs text-muted-foreground">
-              Close rate
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Real Financial Analytics Tabs */}
-      <Tabs defaultValue="revenue" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="revenue">
-            <DollarSign className="w-4 h-4 mr-2" />
-            Revenue Analysis
-          </TabsTrigger>
-          <TabsTrigger value="pipeline">
-            <BarChart3 className="w-4 h-4 mr-2" />
-            Pipeline Breakdown
-          </TabsTrigger>
-          <TabsTrigger value="high-value">
-            <TrendingUp className="w-4 h-4 mr-2" />
-            High Value Deals
-          </TabsTrigger>
-          <TabsTrigger value="recent">
-            <Calendar className="w-4 h-4 mr-2" />
-            Recent Activity
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="revenue" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Revenue Analysis</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Real revenue calculations from actual deal data
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Current Pipeline</h4>
-                    <div className="text-2xl font-bold text-blue-600">
-                      ${metrics.totalPipelineValue.toLocaleString()}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Total deal value</p>
-                  </div>
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Projected Revenue</h4>
-                    <div className="text-2xl font-bold text-green-600">
-                      ${Math.round(metrics.projectedRevenue).toLocaleString()}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Probability-weighted forecast</p>
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Recent Revenue</h4>
-                    <div className="text-2xl font-bold text-purple-600">
-                      ${metrics.recentDealsValue.toLocaleString()}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Last 30 days</p>
-                  </div>
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Active Clients</h4>
-                    <div className="text-2xl font-bold text-orange-600">
-                      {metrics.activeClientsCount}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Contributing to revenue</p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="pipeline" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Pipeline Stage Breakdown</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Real deal distribution across pipeline stages
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {Object.entries(getDealsByStage()).map(([stage, data]) => (
-                  <div key={stage} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <h4 className="font-medium capitalize">{stage.replace('_', ' ')}</h4>
-                      <p className="text-sm text-muted-foreground">{data.count} deals</p>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-lg font-bold">${data.value.toLocaleString()}</div>
-                      <div className="text-xs text-muted-foreground">Total value</div>
-                    </div>
-                  </div>
-                ))}
-                {Object.keys(getDealsByStage()).length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    No pipeline data available yet
-                  </p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="high-value" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>High Value Deals</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Deals above average size (${Math.round(metrics.averageDealSize).toLocaleString()})
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {getHighValueDeals().map((deal) => (
-                  <div key={deal.id} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <h4 className="font-medium">{deal.title}</h4>
-                      <p className="text-sm text-muted-foreground">
-                        {deal.clients.name} • {deal.clients.company}
-                      </p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <Badge variant="outline">{deal.stage.replace('_', ' ')}</Badge>
-                        <span className="text-xs text-muted-foreground">
-                          {deal.probability}% probability
-                        </span>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-lg font-bold">${parseFloat(deal.value.toString()).toLocaleString()}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {deal.expected_close_date ? 
-                          `Due: ${new Date(deal.expected_close_date).toLocaleDateString()}` :
-                          'No close date'
-                        }
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                {getHighValueDeals().length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    No high value deals available yet
-                  </p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="recent" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Financial Activity</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Latest deals and financial movements (last 30 days)
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {getRecentActivity().map((deal) => (
-                  <div key={deal.id} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <h4 className="font-medium">{deal.title}</h4>
-                      <p className="text-sm text-muted-foreground">
-                        {deal.clients.name} • {deal.clients.company}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        Created {new Date(deal.created_at).toLocaleDateString()}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-lg font-bold">${parseFloat(deal.value.toString()).toLocaleString()}</div>
-                      <Badge 
-                        variant={deal.probability >= 70 ? 'default' : 'secondary'}
-                      >
-                        {deal.probability}% probability
-                      </Badge>
-                    </div>
-                  </div>
-                ))}
-                {getRecentActivity().length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    No recent financial activity
-                  </p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
-}
-.Value -replace "'", "'" </div>
-                    </div>
-                  </div>
-                ))}
-                {getHighValueDeals().length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    No high value deals available yet
-                  </p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="recent" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Financial Activity</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Latest deals and financial movements (last 30 days)
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {getRecentActivity().map((deal) => (
-                  <div key={deal.id} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <h4 className="font-medium">{deal.title}</h4>
-                      <p className="text-sm text-muted-foreground">
-                        {deal.clients.name} • {deal.clients.company}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        Created {new Date(deal.created_at).toLocaleDateString()}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-lg font-bold">${parseFloat(deal.value.toString()).toLocaleString()}</div>
-                      <Badge 
-                        variant={deal.probability > "use client";
-
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { DollarSign, TrendingUp, AlertCircle, Loader2, Calendar, BarChart3 } from 'lucide-react';
-
-interface FinancialAnalyticsProps {
-  clientId?: string;
-}
-
-interface DealData {
-  id: string;
-  title: string;
-  value: number;
-  stage: string;
-  probability: number;
-  expected_close_date: string;
-  created_at: string;
-  clients: {
-    name: string;
-    company: string;
-  };
-}
-
-interface ClientData {
-  id: string;
-  name: string;
-  email: string;
-  company: string;
-  status: string;
-  industry: string;
-  created_at: string;
-}
-
-interface FinancialMetrics {
-  totalPipelineValue: number;
-  projectedRevenue: number;
-  averageDealSize: number;
-  activeClientsCount: number;
-  conversionRate: number;
-  recentDealsValue: number;
-}
-
-// REAL Financial Analytics Component - NO MOCK DATA, NO FAKE AI
-export default function FinancialAnalytics({ clientId }: FinancialAnalyticsProps) {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [deals, setDeals] = useState<DealData[]>([]);
-  const [clients, setClients] = useState<ClientData[]>([]);
-  const [metrics, setMetrics] = useState<FinancialMetrics>({
-    totalPipelineValue: 0,
-    projectedRevenue: 0,
-    averageDealSize: 0,
-    activeClientsCount: 0,
-    conversionRate: 0,
-    recentDealsValue: 0
-  });
-
-  // Fetch real financial data from APIs
-  useEffect(() => {
-    const fetchRealFinancialData = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        // Fetch deals and clients in parallel
-        const [dealsResponse, clientsResponse] = await Promise.all([
-          fetch('/api/crm/deals'),
-          fetch('/api/crm/clients')
-        ]);
-
-        if (!dealsResponse.ok) {
-          throw new Error(`Failed to fetch deals: ${dealsResponse.status}`);
-        }
-        if (!clientsResponse.ok) {
-          throw new Error(`Failed to fetch clients: ${clientsResponse.status}`);
-        }
-
-        const dealsData = await dealsResponse.json();
-        const clientsData = await clientsResponse.json();
-
-        const realDeals = dealsData.data || [];
-        const realClients = clientsData.data || [];
-
-        setDeals(realDeals);
-        setClients(realClients);
-
-        // Calculate REAL financial metrics from actual data
-        const realMetrics = calculateRealMetrics(realDeals, realClients);
-        setMetrics(realMetrics);
-
-      } catch (error) {
-        console.error('Error fetching financial data:', error);
-        setError(error instanceof Error ? error.message : 'Failed to load financial data');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchRealFinancialData();
-  }, [clientId]);
-
-  // Calculate real financial metrics from actual database data
-  const calculateRealMetrics = (dealsData: DealData[], clientsData: ClientData[]): FinancialMetrics => {
-    // Total pipeline value from all deals
-    const totalPipelineValue = dealsData.reduce((sum, deal) => 
-      sum + parseFloat(deal.value.toString()), 0
-    );
-
-    // Projected revenue based on probability-weighted deal values
-    const projectedRevenue = dealsData.reduce((sum, deal) => 
-      sum + (parseFloat(deal.value.toString()) * (deal.probability / 100)), 0
-    );
-
-    // Average deal size
-    const averageDealSize = dealsData.length > 0 ? totalPipelineValue / dealsData.length : 0;
-
-    // Active clients count
-    const activeClientsCount = clientsData.filter(client => client.status === 'active').length;
-
-    // Simple conversion rate calculation (closed won deals vs total deals)
-    const closedWonDeals = dealsData.filter(deal => 
-      deal.stage === 'closed_won' || deal.stage === 'won'
-    ).length;
-    const conversionRate = dealsData.length > 0 ? (closedWonDeals / dealsData.length) * 100 : 0;
-
-    // Recent deals value (last 30 days)
-    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    const recentDealsValue = dealsData
-      .filter(deal => new Date(deal.created_at) > thirtyDaysAgo)
-      .reduce((sum, deal) => sum + parseFloat(deal.value.toString()), 0);
-
-    return {
-      totalPipelineValue,
-      projectedRevenue,
-      averageDealSize,
-      activeClientsCount,
-      conversionRate,
-      recentDealsValue
-    };
-  };
-
-  // Get deals by stage for revenue analysis
-  const getDealsByStage = () => {
-    const stageBreakdown: Record<string, { count: number; value: number }> = {};
-    
-    deals.forEach(deal => {
-      const stage = deal.stage || 'unknown';
-      if (!stageBreakdown[stage]) {
-        stageBreakdown[stage] = { count: 0, value: 0 };
-      }
-      stageBreakdown[stage].count++;
-      stageBreakdown[stage].value += parseFloat(deal.value.toString());
-    });
-
-    return stageBreakdown;
-  };
-
-  // Get high-value deals
-  const getHighValueDeals = () => {
-    return deals
-      .filter(deal => parseFloat(deal.value.toString()) > metrics.averageDealSize)
-      .sort((a, b) => parseFloat(b.value.toString()) - parseFloat(a.value.toString()))
-      .slice(0, 10);
-  };
-
-  // Get recent financial activity
-  const getRecentActivity = () => {
-    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-    return deals
-      .filter(deal => new Date(deal.created_at) > thirtyDaysAgo)
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-      .slice(0, 10);
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin" />
-        <span className="ml-2">Loading real financial data...</span>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center p-8 text-red-600">
-        <AlertCircle className="h-8 w-8 mr-2" />
-        <span>Error: {error}</span>
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-6">
-      {/* Real Financial Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Pipeline</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${metrics.totalPipelineValue.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">
-              {deals.length} active deals
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Projected Revenue</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">
-              ${Math.round(metrics.projectedRevenue).toLocaleString()}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Probability-weighted
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Average Deal Size</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">${Math.round(metrics.averageDealSize).toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">
-              Per deal average
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Conversion Rate</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{metrics.conversionRate.toFixed(1)}%</div>
-            <p className="text-xs text-muted-foreground">
-              Close rate
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Real Financial Analytics Tabs */}
-      <Tabs defaultValue="revenue" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="revenue">
-            <DollarSign className="w-4 h-4 mr-2" />
-            Revenue Analysis
-          </TabsTrigger>
-          <TabsTrigger value="pipeline">
-            <BarChart3 className="w-4 h-4 mr-2" />
-            Pipeline Breakdown
-          </TabsTrigger>
-          <TabsTrigger value="high-value">
-            <TrendingUp className="w-4 h-4 mr-2" />
-            High Value Deals
-          </TabsTrigger>
-          <TabsTrigger value="recent">
-            <Calendar className="w-4 h-4 mr-2" />
-            Recent Activity
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="revenue" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Revenue Analysis</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Real revenue calculations from actual deal data
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Current Pipeline</h4>
-                    <div className="text-2xl font-bold text-blue-600">
-                      ${metrics.totalPipelineValue.toLocaleString()}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Total deal value</p>
-                  </div>
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Projected Revenue</h4>
-                    <div className="text-2xl font-bold text-green-600">
-                      ${Math.round(metrics.projectedRevenue).toLocaleString()}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Probability-weighted forecast</p>
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Recent Revenue</h4>
-                    <div className="text-2xl font-bold text-purple-600">
-                      ${metrics.recentDealsValue.toLocaleString()}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Last 30 days</p>
-                  </div>
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Active Clients</h4>
-                    <div className="text-2xl font-bold text-orange-600">
-                      {metrics.activeClientsCount}
-                    </div>
-                    <p className="text-sm text-muted-foreground">Contributing to revenue</p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="pipeline" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Pipeline Stage Breakdown</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Real deal distribution across pipeline stages
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {Object.entries(getDealsByStage()).map(([stage, data]) => (
-                  <div key={stage} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <h4 className="font-medium capitalize">{stage.replace('_', ' ')}</h4>
-                      <p className="text-sm text-muted-foreground">{data.count} deals</p>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-lg font-bold">${data.value.toLocaleString()}</div>
-                      <div className="text-xs text-muted-foreground">Total value</div>
-                    </div>
-                  </div>
-                ))}
-                {Object.keys(getDealsByStage()).length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    No pipeline data available yet
-                  </p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="high-value" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>High Value Deals</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Deals above average size (${Math.round(metrics.averageDealSize).toLocaleString()})
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {getHighValueDeals().map((deal) => (
-                  <div key={deal.id} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <h4 className="font-medium">{deal.title}</h4>
-                      <p className="text-sm text-muted-foreground">
-                        {deal.clients.name} • {deal.clients.company}
-                      </p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <Badge variant="outline">{deal.stage.replace('_', ' ')}</Badge>
-                        <span className="text-xs text-muted-foreground">
-                          {deal.probability}% probability
-                        </span>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-lg font-bold">${parseFloat(deal.value.toString()).toLocaleString()}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {deal.expected_close_date ? 
-                          `Due: ${new Date(deal.expected_close_date).toLocaleDateString()}` :
-                          'No close date'
-                        }
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                {getHighValueDeals().length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    No high value deals available yet
-                  </p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="recent" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Financial Activity</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                Latest deals and financial movements (last 30 days)
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {getRecentActivity().map((deal) => (
-                  <div key={deal.id} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <h4 className="font-medium">{deal.title}</h4>
-                      <p className="text-sm text-muted-foreground">
-                        {deal.clients.name} • {deal.clients.company}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        Created {new Date(deal.created_at).toLocaleDateString()}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-lg font-bold">${parseFloat(deal.value.toString()).toLocaleString()}</div>
-                      <Badge 
-                        variant={deal.probability >= 70 ? 'default' : 'secondary'}
-                      >
-                        {deal.probability}% probability
-                      </Badge>
-                    </div>
-                  </div>
-                ))}
-                {getRecentActivity().length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    No recent financial activity
-                  </p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
-}
-.Value -replace "'", "'" </Badge>
-                    </div>
-                  </div>
-                ))}
-                {getRecentActivity().length === 0 && (
-                  <p className="text-sm text-muted-foreground text-center py-4">
-                    No recent financial activity
-                  </p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
       </Tabs>
     </div>

@@ -433,7 +433,7 @@ export class StripeApiClient {
 
 // Minimal Stripe types for TypeScript support
 // These are simplified compared to the full Stripe types
-declare export namespace Stripe {
+declare namespace Stripe {
   interface PaymentIntent {
     id: string;
     object: 'payment_intent';
