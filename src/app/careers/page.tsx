@@ -131,8 +131,8 @@ export default function CareersPage() {
               Join Our Mission to Transform Business
             </h1>
             <p className="text-xl opacity-90 mb-8">
-              Be part of a team that&apos;s building the future of enterprise technology. 
-              We&apos;re looking for talented individuals who are passionate about innovation and impact.
+              Be part of a team that's building the future of enterprise technology. 
+              We're looking for talented individuals who are passionate about innovation and impact.
             </p>
             <Button size="lg" variant="secondary" className="mr-4">
               View Open Positions
@@ -329,9 +329,9 @@ export default function CareersPage() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl font-bold mb-4">Don&apos;t See the Right Role?</h2>
+            <h2 className="text-3xl font-bold mb-4">Don't See the Right Role?</h2>
             <p className="text-xl text-gray-600 mb-8">
-              We&apos;re always looking for talented people. Send us your resume and we&apos;ll keep you in mind for future opportunities.
+              We're always looking for talented people. Send us your resume and we'll keep you in mind for future opportunities.
             </p>
             <Button size="lg" variant="outline">
               Send Your Resume

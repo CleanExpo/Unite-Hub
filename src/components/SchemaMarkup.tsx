@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { usePathname } from "next/navigation";
 import Script from "next/script";
@@ -196,7 +196,7 @@ export default function SchemaMarkup({
       : null;
 
   // Determine which schemas to include based on page type
-  let schemas = [];
+  const schemas = [];
 
   // Always include Organization
   schemas.push(organizationSchema);

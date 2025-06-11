@@ -407,8 +407,8 @@ import { UserProfile } from './UserProfile';
 
 const mockUser = {
   id: '1',
-  name: 'John Doe',
-  email: 'john@example.com'
+  name: 'Unite Group Team',
+  email: 'john@unite-group.in'
 };
 
 const mockOnUserUpdate = jest.fn();
@@ -423,8 +423,8 @@ describe('UserProfile', () => {
       <UserProfile user={mockUser} onUserUpdate={mockOnUserUpdate} />
     );
 
-    expect(screen.getByText('John Doe')).toBeInTheDocument();
-    expect(screen.getByText('john@example.com')).toBeInTheDocument();
+    expect(screen.getByText('Unite Group Team')).toBeInTheDocument();
+    expect(screen.getByText('john@unite-group.in')).toBeInTheDocument();
   });
 
   it('allows editing user information', async () => {
@@ -438,16 +438,16 @@ describe('UserProfile', () => {
     await user.click(screen.getByRole('button', { name: /edit/i }));
 
     // Update name field
-    const nameInput = screen.getByDisplayValue('John Doe');
+    const nameInput = screen.getByDisplayValue('Unite Group Team');
     await user.clear(nameInput);
-    await user.type(nameInput, 'Jane Doe');
+    await user.type(nameInput, 'Unite Group Representative');
 
     // Submit form
     await user.click(screen.getByRole('button', { name: /save/i }));
 
     await waitFor(() => {
       expect(mockOnUserUpdate).toHaveBeenCalledWith('1', {
-        name: 'Jane Doe'
+        name: 'Unite Group Representative'
       });
     });
   });

@@ -22,7 +22,7 @@ const features = [
   {
     icon: Gauge,
     title: 'Core Web Vitals',
-    description: 'Perfect scores on Google&apos;s Core Web Vitals for better SEO and user experience.',
+    description: 'Perfect scores on Google's Core Web Vitals for better SEO and user experience.',
   },
   {
     icon: Rocket,

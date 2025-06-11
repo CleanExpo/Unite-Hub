@@ -1,541 +1,2544 @@
-# Enhanced Software Development Services Landing Page
+'use client'
 
-Here's the enhanced version with portfolio section and tech stack showcase:
+import { useState } from 'react'
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechDev | Expert Software Development Services</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* Global Styles */
-        :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --secondary: #06b6d4;
-            --accent: #f59e0b;
-            --dark: #1e293b;
-            --light: #f8fafc;
-            --gray: #94a3b8;
-            --white: #ffffff;
-            --success: #10b981;
-            --warning: #f59e0b;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: var(--dark);
-            background-color: var(--light);
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-        
-        .btn {
-            display: inline-block;
-            padding: 12px 30px;
-            background-color: var(--primary);
-            color: var(--white);
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-        
-        .btn:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-        
-        .btn-secondary {
-            background-color: var(--secondary);
-        }
-        
-        .btn-secondary:hover {
-            background-color: #0284c7;
-        }
-        
-        .btn-outline {
-            background-color: transparent;
-            color: var(--primary);
-            border: 2px solid var(--primary);
-        }
-        
-        .btn-outline:hover {
-            background-color: var(--primary);
-            color: var(--white);
-        }
-        
-        .section {
-            padding: 80px 0;
-        }
-        
-        .section-title {
-            font-size: 2.5rem;
-            margin-bottom: 40px;
-            text-align: center;
-            color: var(--dark);
-            position: relative;
-        }
-        
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 80px;
-            height: 4px;
-            background-color: var(--secondary);
-            margin: 15px auto;
-        }
-        
-        .text-center {
-            text-align: center;
-        }
-        
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.6s ease;
-        }
-        
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        /* Header & Navigation */
-        header {
-            background-color: var(--white);
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
-        
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
-        }
-        
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--primary);
-            text-decoration: none;
-        }
-        
-        .logo span {
-            color: var(--secondary);
-        }
-        
-        .nav-links {
-            display: flex;
-            list-style: none;
-        }
-        
-        .nav-links li {
-            margin-left: 30px;
-        }
-        
-        .nav-links a {
-            text-decoration: none;
-            color: var(--dark);
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-        
-        .nav-links a:hover {
-            color: var(--primary);
-        }
-        
-        .menu-toggle {
-            display: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-        
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: var(--white);
-            padding: 160px 0 80px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -50px;
-            right: -50px;
-            width: 200px;
-            height: 200px;
-            background-color: rgba(255,255,255,0.1);
-            border-radius: 50%;
-        }
-        
-        .hero-content {
-            display: flex;
-            align-items: center;
-            gap: 50px;
-        }
-        
-        .hero-text {
-            flex: 1;
-        }
-        
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 30px;
-            line-height: 1.2;
-        }
-        
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            opacity: 0.9;
-        }
-        
-        .hero-actions {
-            display: flex;
-            gap: 20px;
-            margin-top: 30px;
-        }
-        
-        .hero-img {
-            flex: 1;
-            text-align: center;
-        }
-        
-        .hero-img img {
-            width: 100%;
-            max-width: 500px;
-            height: auto;
-            border-radius: 10px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-        }
-        
-        /* Services Section */
-        .services {
-            background-color: var(--white);
-        }
-        
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-        
-        .service-card {
-            background-color: var(--light);
-            padding: 30px;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            text-align: center;
-        }
-        
-        .service-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-        }
-        
-        .service-icon {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            color: var(--primary);
-        }
-        
-        .service-card h3 {
-            margin-bottom: 15px;
-            font-size: 1.5rem;
-        }
-        
-        .service-card p {
-            color: var(--gray);
-            margin-bottom: 20px;
-        }
-        
-        /* Tech Stack Section */
-        .tech-stack {
-            background-color: var(--light);
-        }
-        
-        .tech-categories {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 50px;
-        }
-        
-        .tech-category {
-            text-align: center;
-        }
-        
-        .tech-category h3 {
-            margin-bottom: 20px;
-            color: var(--primary);
-            font-size: 1.3rem;
-        }
-        
-        .tech-icons {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-        }
-        
-        .tech-icon {
-            width: 60px;
-            height: 60px;
-            background-color: var(--white);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            position: relative;
-            cursor: pointer;
-        }
-        
-        .tech-icon:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-        }
-        
-        .tech-icon .tooltip {
-            position: absolute;
-            bottom: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: var(--dark);
-            color: var(--white);
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 0.8rem;
-            white-space: nowrap;
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-        }
-        
-        .tech-icon:hover .tooltip {
-            opacity: 1;
-        }
-        
-        /* Portfolio Section */
-        .portfolio {
-            background-color: var(--white);
-        }
-        
-        .portfolio-filters {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 40px;
-            flex-wrap: wrap;
-        }
-        
-        .filter-btn {
-            padding: 10px 20px;
-            background-color: transparent;
-            color: var(--gray);
-            border: 2px solid var(--gray);
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-        
-        .filter-btn.active,
-        .filter-btn:hover {
-            background-color: var(--primary);
-            color: var(--white);
-            border-color: var(--primary);
-        }
-        
-        .portfolio-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
-        }
-        
-        .portfolio-item {
-            background-color: var(--light);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            opacity: 1;
-            transform: scale(1);
-        }
-        
-        .portfolio-item.hidden {
-            opacity: 0;
-            transform: scale(0.8);
-            pointer-events: none;
-        }
-        
-        .portfolio-item:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-        }
-        
-        .portfolio-img {
-            width: 100%;
-            height: 200px;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--white);
-            font-size: 3rem;
-        }
-        
-        .portfolio-content {
-            padding: 25px;
-        }
-        
-        .portfolio-item h3 {
-            margin-bottom: 10px;
-            color: var(--dark);
-        }
-        
-        .portfolio-item p {
-            color: var(--gray);
-            margin-bottom: 15px;
-        }
-        
-        .portfolio-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 20px;
-        }
-        
-        .tag {
-            background-color: var(--primary);
-            color: var(--white);
-            padding: 3px 10px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-        }
-        
-        .portfolio-links {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .portfolio-links a {
-            padding: 8px 16px;
-            font-size: 0.9rem;
-        }
-        
-        /* Process Section */
-        .process {
-            background-color: var(--light);
-        }
-        
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-        }
-        
-        .step {
-            text-align: center;
-            position: relative;
-        }
-        
-        .step-number {
-            width: 60px;
-            height: 60px;
-            background-color: var(--primary);
-            color: var(--white);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin: 0 auto 20px;
-        }
-        
-        .step h3 {
-            margin-bottom: 15px;
-            color: var(--dark);
-        }
-        
-        .step p {
-            color: var(--gray);
-        }
-        
-        /* Contact Section */
-        .contact {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: var(--white);
-        }
-        
-        .contact-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
-            align-items: center;
-        }
-        
-        .contact-info h2 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-        }
-        
-        .contact-info p {
-            font-size: 1.1rem;
-            margin-bottom: 30px;
-            opacity: 0.9;
-        }
-        
-        .contact-form {
-            background-color: var(--white);
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: var(--dark);
-            font-weight: 500;
-        }
-        
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e
+export default function SoftwareDevelopmentPage() {
+  const [activeFilter, setActiveFilter] = useState('all')
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    project: '',
+    budget: '',
+    message: ''
+  })
+
+  const services = [
+    {
+      icon: '💻',
+      title: 'Web Development',
+      description: 'Custom web applications built with modern frameworks and technologies'
+    },
+    {
+      icon: '📱',
+      title: 'Mobile Development',
+      description: 'Native and cross-platform mobile apps for iOS and Android'
+    },
+    {
+      icon: '☁️',
+      title: 'Cloud Solutions',
+      description: 'Scalable cloud infrastructure and deployment solutions'
+    },
+    {
+      icon: '🛡️',
+      title: 'Security',
+      description: 'Enterprise-grade security implementation and auditing'
+    }
+  ]
+
+  const portfolio = [
+    {
+      id: 1,
+      title: 'E-commerce Platform',
+      description: 'Full-featured online shopping platform with payment integration',
+      category: 'web',
+      tags: ['React', 'Node.js', 'PostgreSQL']
+    },
+    {
+      id: 2,
+      title: 'Mobile Banking App',
+      description: 'Secure mobile banking application with biometric authentication',
+      category: 'mobile',
+      tags: ['React Native', 'Firebase', 'Blockchain']
+    },
+    {
+      id: 3,
+      title: 'CRM System',
+      description: 'Customer relationship management system for enterprise clients',
+      category: 'web',
+      tags: ['Vue.js', 'Python', 'MySQL']
+    },
+    {
+      id: 4,
+      title: 'IoT Dashboard',
+      description: 'Real-time monitoring dashboard for IoT devices',
+      category: 'web',
+      tags: ['Angular', 'Node.js', 'MongoDB']
+    }
+  ]
+
+  const techStack = {
+    frontend: ['React', 'Vue.js', 'Angular', 'Next.js', 'TypeScript'],
+    backend: ['Node.js', 'Python', 'Java', 'PHP', '.NET'],
+    database: ['PostgreSQL', 'MongoDB', 'MySQL', 'Redis'],
+    cloud: ['AWS', 'Azure', 'Google Cloud', 'Docker', 'Kubernetes']
+  }
+
+  const filteredPortfolio = activeFilter === 'all' 
+    ? portfolio 
+    : portfolio.filter(item => item.category === activeFilter)
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> 'use client'
+
+import { useState } from 'react'
+
+export default function SoftwareDevelopmentPage() {
+  const [activeFilter, setActiveFilter] = useState('all')
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    project: '',
+    budget: '',
+    message: ''
+  })
+
+  const services = [
+    {
+      icon: '💻',
+      title: 'Web Development',
+      description: 'Custom web applications built with modern frameworks and technologies'
+    },
+    {
+      icon: '📱',
+      title: 'Mobile Development',
+      description: 'Native and cross-platform mobile apps for iOS and Android'
+    },
+    {
+      icon: '☁️',
+      title: 'Cloud Solutions',
+      description: 'Scalable cloud infrastructure and deployment solutions'
+    },
+    {
+      icon: '🛡️',
+      title: 'Security',
+      description: 'Enterprise-grade security implementation and auditing'
+    }
+  ]
+
+  const portfolio = [
+    {
+      id: 1,
+      title: 'E-commerce Platform',
+      description: 'Full-featured online shopping platform with payment integration',
+      category: 'web',
+      tags: ['React', 'Node.js', 'PostgreSQL']
+    },
+    {
+      id: 2,
+      title: 'Mobile Banking App',
+      description: 'Secure mobile banking application with biometric authentication',
+      category: 'mobile',
+      tags: ['React Native', 'Firebase', 'Blockchain']
+    },
+    {
+      id: 3,
+      title: 'CRM System',
+      description: 'Customer relationship management system for enterprise clients',
+      category: 'web',
+      tags: ['Vue.js', 'Python', 'MySQL']
+    },
+    {
+      id: 4,
+      title: 'IoT Dashboard',
+      description: 'Real-time monitoring dashboard for IoT devices',
+      category: 'web',
+      tags: ['Angular', 'Node.js', 'MongoDB']
+    }
+  ]
+
+  const techStack = {
+    frontend: ['React', 'Vue.js', 'Angular', 'Next.js', 'TypeScript'],
+    backend: ['Node.js', 'Python', 'Java', 'PHP', '.NET'],
+    database: ['PostgreSQL', 'MongoDB', 'MySQL', 'Redis'],
+    cloud: ['AWS', 'Azure', 'Google Cloud', 'Docker', 'Kubernetes']
+  }
+
+  const filteredPortfolio = activeFilter === 'all' 
+    ? portfolio 
+    : portfolio.filter(item => item.category === activeFilter)
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    console.log('Form submitted:', formData)
+    // Handle form submission logic here
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <section className="bg-gradient-to-br from-blue-600 to-blue-800 text-white py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-5xl font-bold mb-6">
+              Expert Software Development Services
+            </h1>
+            <p className="text-xl mb-8 max-w-3xl mx-auto">
+              Transform your ideas into powerful digital solutions with our experienced development team
+            </p>
+            <div className="flex justify-center space-x-4">
+              <button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-200">
+                Get Started
+              </button>
+              <button className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition duration-200">
+                View Portfolio
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Services Section */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Services</h2>
+            <p className="text-xl text-gray-600">Comprehensive software development solutions</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {services.map((service, index) => (
+              <div key={index} className="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+                <div className="text-4xl mb-4">{service.icon}</div>
+                <h3 className="text-xl font-semibold mb-4">{service.title}</h3>
+                <p className="text-gray-600">{service.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Tech Stack Section */}
+      <section className="py-20 bg-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Technology Stack</h2>
+            <p className="text-xl text-gray-600">We use cutting-edge technologies to build robust solutions</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {Object.entries(techStack).map(([category, technologies]) => (
+              <div key={category} className="bg-white p-6 rounded-lg shadow-lg">
+                <h3 className="text-lg font-semibold mb-4 capitalize text-blue-600">{category}</h3>
+                <div className="flex flex-wrap gap-2">
+                  {technologies.map((tech, index) => (
+                    <span key={index} className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Portfolio Section */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Portfolio</h2>
+            <p className="text-xl text-gray-600">Recent projects we've delivered</p>
+          </div>
+          
+          {/* Filter Buttons */}
+          <div className="flex justify-center mb-12">
+            <div className="flex space-x-4">
+              {['all', 'web', 'mobile'].map((filter) => (
+                <button
+                  key={filter}
+                  onClick={() => setActiveFilter(filter)}
+                  className={`px-6 py-2 rounded-full font-semibold transition duration-200 ${
+                    activeFilter === filter
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  {filter.charAt(0).toUpperCase() + filter.slice(1)}
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          {/* Portfolio Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredPortfolio.map((item) => (
+              <div key={item.id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
+                <div className="bg-gradient-to-br from-blue-500 to-purple-600 h-48 flex items-center justify-center">
+                  <div className="text-white text-6xl">💻</div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+                  <p className="text-gray-600 mb-4">{item.description}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {item.tags.map((tag, index) => (
+                      <span key={index} className="bg-blue-100 text-blue-600 px-2 py-1 rounded text-sm">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Development Process */}
+      <section className="py-20 bg-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Development Process</h2>
+            <p className="text-xl text-gray-600">A proven methodology for successful project delivery</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { step: 1, title: 'Discovery', description: 'Understanding your requirements and goals' },
+              { step: 2, title: 'Planning', description: 'Creating detailed project roadmap and timeline' },
+              { step: 3, title: 'Development', description: 'Building your solution with agile methodology' },
+              { step: 4, title: 'Deployment', description: 'Launching and supporting your application' }
+            ].map((process, index) => (
+              <div key={index} className="text-center">
+                <div className="bg-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
+                  {process.step}
+                </div>
+                <h3 className="text-xl font-semibold mb-2">{process.title}</h3>
+                <p className="text-gray-600">{process.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Form Section */}
+      <section className="py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Start Your Project</h2>
+            <p className="text-xl text-gray-600">Let's discuss your software development needs</p>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-lg p-8">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                    Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    required
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-2">
+                    Project Budget
+                  </label>
+                  <select
+                    id="budget"
+                    name="budget"
+                    value={formData.budget}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="">Select budget range</option>
+                    <option value="5k-10k">$5K - $10K</option>
+                    <option value="10k-25k">$10K - $25K</option>
+                    <option value="25k-50k">$25K - $50K</option>
+                    <option value="50k+">$50K+</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div>
+                <label htmlFor="project" className="block text-sm font-medium text-gray-700 mb-2">
+                  Project Type *
+                </label>
+                <select
+                  id="project"
+                  name="project"
+                  required
+                  value={formData.project}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select project type</option>
+                  <option value="web-app">Web Application</option>
+                  <option value="mobile-app">Mobile Application</option>
+                  <option value="e-commerce">E-commerce Platform</option>
+                  <option value="crm">CRM System</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                  Project Details *
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  required
+                  rows={4}
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  placeholder="Please describe your project requirements, goals, and any specific features you need..."
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              
+              <div className="text-center">
+                <button
+                  type="submit"
+                  className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 font-semibold"
+                >
+                  Send Project Inquiry
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}
+.Value -replace "'", "'" <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <section className="bg-gradient-to-br from-blue-600 to-blue-800 text-white py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-5xl font-bold mb-6">
+              Expert Software Development Services
+            </h1>
+            <p className="text-xl mb-8 max-w-3xl mx-auto">
+              Transform your ideas into powerful digital solutions with our experienced development team
+            </p>
+            <div className="flex justify-center space-x-4">
+              <button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-200">
+                Get Started
+              </button>
+              <button className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition duration-200">
+                View Portfolio
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Services Section */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Services</h2>
+            <p className="text-xl text-gray-600">Comprehensive software development solutions</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {services.map((service, index) => (
+              <div key={index} className="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+                <div className="text-4xl mb-4">{service.icon}</div>
+                <h3 className="text-xl font-semibold mb-4">{service.title}</h3>
+                <p className="text-gray-600">{service.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Tech Stack Section */}
+      <section className="py-20 bg-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Technology Stack</h2>
+            <p className="text-xl text-gray-600">We use cutting-edge technologies to build robust solutions</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {Object.entries(techStack).map(([category, technologies]) => (
+              <div key={category} className="bg-white p-6 rounded-lg shadow-lg">
+                <h3 className="text-lg font-semibold mb-4 capitalize text-blue-600">{category}</h3>
+                <div className="flex flex-wrap gap-2">
+                  {technologies.map((tech, index) => (
+                    <span key={index} className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Portfolio Section */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Portfolio</h2>
+            <p className="text-xl text-gray-600"> 'use client'
+
+import { useState } from 'react'
+
+export default function SoftwareDevelopmentPage() {
+  const [activeFilter, setActiveFilter] = useState('all')
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    project: '',
+    budget: '',
+    message: ''
+  })
+
+  const services = [
+    {
+      icon: '💻',
+      title: 'Web Development',
+      description: 'Custom web applications built with modern frameworks and technologies'
+    },
+    {
+      icon: '📱',
+      title: 'Mobile Development',
+      description: 'Native and cross-platform mobile apps for iOS and Android'
+    },
+    {
+      icon: '☁️',
+      title: 'Cloud Solutions',
+      description: 'Scalable cloud infrastructure and deployment solutions'
+    },
+    {
+      icon: '🛡️',
+      title: 'Security',
+      description: 'Enterprise-grade security implementation and auditing'
+    }
+  ]
+
+  const portfolio = [
+    {
+      id: 1,
+      title: 'E-commerce Platform',
+      description: 'Full-featured online shopping platform with payment integration',
+      category: 'web',
+      tags: ['React', 'Node.js', 'PostgreSQL']
+    },
+    {
+      id: 2,
+      title: 'Mobile Banking App',
+      description: 'Secure mobile banking application with biometric authentication',
+      category: 'mobile',
+      tags: ['React Native', 'Firebase', 'Blockchain']
+    },
+    {
+      id: 3,
+      title: 'CRM System',
+      description: 'Customer relationship management system for enterprise clients',
+      category: 'web',
+      tags: ['Vue.js', 'Python', 'MySQL']
+    },
+    {
+      id: 4,
+      title: 'IoT Dashboard',
+      description: 'Real-time monitoring dashboard for IoT devices',
+      category: 'web',
+      tags: ['Angular', 'Node.js', 'MongoDB']
+    }
+  ]
+
+  const techStack = {
+    frontend: ['React', 'Vue.js', 'Angular', 'Next.js', 'TypeScript'],
+    backend: ['Node.js', 'Python', 'Java', 'PHP', '.NET'],
+    database: ['PostgreSQL', 'MongoDB', 'MySQL', 'Redis'],
+    cloud: ['AWS', 'Azure', 'Google Cloud', 'Docker', 'Kubernetes']
+  }
+
+  const filteredPortfolio = activeFilter === 'all' 
+    ? portfolio 
+    : portfolio.filter(item => item.category === activeFilter)
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    console.log('Form submitted:', formData)
+    // Handle form submission logic here
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <section className="bg-gradient-to-br from-blue-600 to-blue-800 text-white py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-5xl font-bold mb-6">
+              Expert Software Development Services
+            </h1>
+            <p className="text-xl mb-8 max-w-3xl mx-auto">
+              Transform your ideas into powerful digital solutions with our experienced development team
+            </p>
+            <div className="flex justify-center space-x-4">
+              <button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-200">
+                Get Started
+              </button>
+              <button className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition duration-200">
+                View Portfolio
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Services Section */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Services</h2>
+            <p className="text-xl text-gray-600">Comprehensive software development solutions</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {services.map((service, index) => (
+              <div key={index} className="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+                <div className="text-4xl mb-4">{service.icon}</div>
+                <h3 className="text-xl font-semibold mb-4">{service.title}</h3>
+                <p className="text-gray-600">{service.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Tech Stack Section */}
+      <section className="py-20 bg-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Technology Stack</h2>
+            <p className="text-xl text-gray-600">We use cutting-edge technologies to build robust solutions</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {Object.entries(techStack).map(([category, technologies]) => (
+              <div key={category} className="bg-white p-6 rounded-lg shadow-lg">
+                <h3 className="text-lg font-semibold mb-4 capitalize text-blue-600">{category}</h3>
+                <div className="flex flex-wrap gap-2">
+                  {technologies.map((tech, index) => (
+                    <span key={index} className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Portfolio Section */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Portfolio</h2>
+            <p className="text-xl text-gray-600">Recent projects we've delivered</p>
+          </div>
+          
+          {/* Filter Buttons */}
+          <div className="flex justify-center mb-12">
+            <div className="flex space-x-4">
+              {['all', 'web', 'mobile'].map((filter) => (
+                <button
+                  key={filter}
+                  onClick={() => setActiveFilter(filter)}
+                  className={`px-6 py-2 rounded-full font-semibold transition duration-200 ${
+                    activeFilter === filter
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  {filter.charAt(0).toUpperCase() + filter.slice(1)}
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          {/* Portfolio Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredPortfolio.map((item) => (
+              <div key={item.id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
+                <div className="bg-gradient-to-br from-blue-500 to-purple-600 h-48 flex items-center justify-center">
+                  <div className="text-white text-6xl">💻</div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+                  <p className="text-gray-600 mb-4">{item.description}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {item.tags.map((tag, index) => (
+                      <span key={index} className="bg-blue-100 text-blue-600 px-2 py-1 rounded text-sm">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Development Process */}
+      <section className="py-20 bg-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Development Process</h2>
+            <p className="text-xl text-gray-600">A proven methodology for successful project delivery</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { step: 1, title: 'Discovery', description: 'Understanding your requirements and goals' },
+              { step: 2, title: 'Planning', description: 'Creating detailed project roadmap and timeline' },
+              { step: 3, title: 'Development', description: 'Building your solution with agile methodology' },
+              { step: 4, title: 'Deployment', description: 'Launching and supporting your application' }
+            ].map((process, index) => (
+              <div key={index} className="text-center">
+                <div className="bg-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
+                  {process.step}
+                </div>
+                <h3 className="text-xl font-semibold mb-2">{process.title}</h3>
+                <p className="text-gray-600">{process.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Form Section */}
+      <section className="py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Start Your Project</h2>
+            <p className="text-xl text-gray-600">Let's discuss your software development needs</p>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-lg p-8">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                    Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    required
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-2">
+                    Project Budget
+                  </label>
+                  <select
+                    id="budget"
+                    name="budget"
+                    value={formData.budget}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="">Select budget range</option>
+                    <option value="5k-10k">$5K - $10K</option>
+                    <option value="10k-25k">$10K - $25K</option>
+                    <option value="25k-50k">$25K - $50K</option>
+                    <option value="50k+">$50K+</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div>
+                <label htmlFor="project" className="block text-sm font-medium text-gray-700 mb-2">
+                  Project Type *
+                </label>
+                <select
+                  id="project"
+                  name="project"
+                  required
+                  value={formData.project}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select project type</option>
+                  <option value="web-app">Web Application</option>
+                  <option value="mobile-app">Mobile Application</option>
+                  <option value="e-commerce">E-commerce Platform</option>
+                  <option value="crm">CRM System</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                  Project Details *
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  required
+                  rows={4}
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  placeholder="Please describe your project requirements, goals, and any specific features you need..."
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              
+              <div className="text-center">
+                <button
+                  type="submit"
+                  className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 font-semibold"
+                >
+                  Send Project Inquiry
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}
+.Value -replace "'", "'" </p>
+          </div>
+          
+          {/* Filter Buttons */}
+          <div className="flex justify-center mb-12">
+            <div className="flex space-x-4"> 'use client'
+
+import { useState } from 'react'
+
+export default function SoftwareDevelopmentPage() {
+  const [activeFilter, setActiveFilter] = useState('all')
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    project: '',
+    budget: '',
+    message: ''
+  })
+
+  const services = [
+    {
+      icon: '💻',
+      title: 'Web Development',
+      description: 'Custom web applications built with modern frameworks and technologies'
+    },
+    {
+      icon: '📱',
+      title: 'Mobile Development',
+      description: 'Native and cross-platform mobile apps for iOS and Android'
+    },
+    {
+      icon: '☁️',
+      title: 'Cloud Solutions',
+      description: 'Scalable cloud infrastructure and deployment solutions'
+    },
+    {
+      icon: '🛡️',
+      title: 'Security',
+      description: 'Enterprise-grade security implementation and auditing'
+    }
+  ]
+
+  const portfolio = [
+    {
+      id: 1,
+      title: 'E-commerce Platform',
+      description: 'Full-featured online shopping platform with payment integration',
+      category: 'web',
+      tags: ['React', 'Node.js', 'PostgreSQL']
+    },
+    {
+      id: 2,
+      title: 'Mobile Banking App',
+      description: 'Secure mobile banking application with biometric authentication',
+      category: 'mobile',
+      tags: ['React Native', 'Firebase', 'Blockchain']
+    },
+    {
+      id: 3,
+      title: 'CRM System',
+      description: 'Customer relationship management system for enterprise clients',
+      category: 'web',
+      tags: ['Vue.js', 'Python', 'MySQL']
+    },
+    {
+      id: 4,
+      title: 'IoT Dashboard',
+      description: 'Real-time monitoring dashboard for IoT devices',
+      category: 'web',
+      tags: ['Angular', 'Node.js', 'MongoDB']
+    }
+  ]
+
+  const techStack = {
+    frontend: ['React', 'Vue.js', 'Angular', 'Next.js', 'TypeScript'],
+    backend: ['Node.js', 'Python', 'Java', 'PHP', '.NET'],
+    database: ['PostgreSQL', 'MongoDB', 'MySQL', 'Redis'],
+    cloud: ['AWS', 'Azure', 'Google Cloud', 'Docker', 'Kubernetes']
+  }
+
+  const filteredPortfolio = activeFilter === 'all' 
+    ? portfolio 
+    : portfolio.filter(item => item.category === activeFilter)
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    console.log('Form submitted:', formData)
+    // Handle form submission logic here
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <section className="bg-gradient-to-br from-blue-600 to-blue-800 text-white py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-5xl font-bold mb-6">
+              Expert Software Development Services
+            </h1>
+            <p className="text-xl mb-8 max-w-3xl mx-auto">
+              Transform your ideas into powerful digital solutions with our experienced development team
+            </p>
+            <div className="flex justify-center space-x-4">
+              <button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-200">
+                Get Started
+              </button>
+              <button className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition duration-200">
+                View Portfolio
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Services Section */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Services</h2>
+            <p className="text-xl text-gray-600">Comprehensive software development solutions</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {services.map((service, index) => (
+              <div key={index} className="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+                <div className="text-4xl mb-4">{service.icon}</div>
+                <h3 className="text-xl font-semibold mb-4">{service.title}</h3>
+                <p className="text-gray-600">{service.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Tech Stack Section */}
+      <section className="py-20 bg-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Technology Stack</h2>
+            <p className="text-xl text-gray-600">We use cutting-edge technologies to build robust solutions</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {Object.entries(techStack).map(([category, technologies]) => (
+              <div key={category} className="bg-white p-6 rounded-lg shadow-lg">
+                <h3 className="text-lg font-semibold mb-4 capitalize text-blue-600">{category}</h3>
+                <div className="flex flex-wrap gap-2">
+                  {technologies.map((tech, index) => (
+                    <span key={index} className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Portfolio Section */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Portfolio</h2>
+            <p className="text-xl text-gray-600">Recent projects we've delivered</p>
+          </div>
+          
+          {/* Filter Buttons */}
+          <div className="flex justify-center mb-12">
+            <div className="flex space-x-4">
+              {['all', 'web', 'mobile'].map((filter) => (
+                <button
+                  key={filter}
+                  onClick={() => setActiveFilter(filter)}
+                  className={`px-6 py-2 rounded-full font-semibold transition duration-200 ${
+                    activeFilter === filter
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  {filter.charAt(0).toUpperCase() + filter.slice(1)}
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          {/* Portfolio Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredPortfolio.map((item) => (
+              <div key={item.id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
+                <div className="bg-gradient-to-br from-blue-500 to-purple-600 h-48 flex items-center justify-center">
+                  <div className="text-white text-6xl">💻</div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+                  <p className="text-gray-600 mb-4">{item.description}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {item.tags.map((tag, index) => (
+                      <span key={index} className="bg-blue-100 text-blue-600 px-2 py-1 rounded text-sm">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Development Process */}
+      <section className="py-20 bg-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Development Process</h2>
+            <p className="text-xl text-gray-600">A proven methodology for successful project delivery</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { step: 1, title: 'Discovery', description: 'Understanding your requirements and goals' },
+              { step: 2, title: 'Planning', description: 'Creating detailed project roadmap and timeline' },
+              { step: 3, title: 'Development', description: 'Building your solution with agile methodology' },
+              { step: 4, title: 'Deployment', description: 'Launching and supporting your application' }
+            ].map((process, index) => (
+              <div key={index} className="text-center">
+                <div className="bg-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
+                  {process.step}
+                </div>
+                <h3 className="text-xl font-semibold mb-2">{process.title}</h3>
+                <p className="text-gray-600">{process.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Form Section */}
+      <section className="py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Start Your Project</h2>
+            <p className="text-xl text-gray-600">Let's discuss your software development needs</p>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-lg p-8">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                    Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    required
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-2">
+                    Project Budget
+                  </label>
+                  <select
+                    id="budget"
+                    name="budget"
+                    value={formData.budget}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="">Select budget range</option>
+                    <option value="5k-10k">$5K - $10K</option>
+                    <option value="10k-25k">$10K - $25K</option>
+                    <option value="25k-50k">$25K - $50K</option>
+                    <option value="50k+">$50K+</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div>
+                <label htmlFor="project" className="block text-sm font-medium text-gray-700 mb-2">
+                  Project Type *
+                </label>
+                <select
+                  id="project"
+                  name="project"
+                  required
+                  value={formData.project}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select project type</option>
+                  <option value="web-app">Web Application</option>
+                  <option value="mobile-app">Mobile Application</option>
+                  <option value="e-commerce">E-commerce Platform</option>
+                  <option value="crm">CRM System</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                  Project Details *
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  required
+                  rows={4}
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  placeholder="Please describe your project requirements, goals, and any specific features you need..."
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              
+              <div className="text-center">
+                <button
+                  type="submit"
+                  className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 font-semibold"
+                >
+                  Send Project Inquiry
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}
+.Value -replace "'", "'" <button
+                  key={filter}
+                  onClick={() => 'use client'
+
+import { useState } from 'react'
+
+export default function SoftwareDevelopmentPage() {
+  const [activeFilter, setActiveFilter] = useState('all')
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    project: '',
+    budget: '',
+    message: ''
+  })
+
+  const services = [
+    {
+      icon: '💻',
+      title: 'Web Development',
+      description: 'Custom web applications built with modern frameworks and technologies'
+    },
+    {
+      icon: '📱',
+      title: 'Mobile Development',
+      description: 'Native and cross-platform mobile apps for iOS and Android'
+    },
+    {
+      icon: '☁️',
+      title: 'Cloud Solutions',
+      description: 'Scalable cloud infrastructure and deployment solutions'
+    },
+    {
+      icon: '🛡️',
+      title: 'Security',
+      description: 'Enterprise-grade security implementation and auditing'
+    }
+  ]
+
+  const portfolio = [
+    {
+      id: 1,
+      title: 'E-commerce Platform',
+      description: 'Full-featured online shopping platform with payment integration',
+      category: 'web',
+      tags: ['React', 'Node.js', 'PostgreSQL']
+    },
+    {
+      id: 2,
+      title: 'Mobile Banking App',
+      description: 'Secure mobile banking application with biometric authentication',
+      category: 'mobile',
+      tags: ['React Native', 'Firebase', 'Blockchain']
+    },
+    {
+      id: 3,
+      title: 'CRM System',
+      description: 'Customer relationship management system for enterprise clients',
+      category: 'web',
+      tags: ['Vue.js', 'Python', 'MySQL']
+    },
+    {
+      id: 4,
+      title: 'IoT Dashboard',
+      description: 'Real-time monitoring dashboard for IoT devices',
+      category: 'web',
+      tags: ['Angular', 'Node.js', 'MongoDB']
+    }
+  ]
+
+  const techStack = {
+    frontend: ['React', 'Vue.js', 'Angular', 'Next.js', 'TypeScript'],
+    backend: ['Node.js', 'Python', 'Java', 'PHP', '.NET'],
+    database: ['PostgreSQL', 'MongoDB', 'MySQL', 'Redis'],
+    cloud: ['AWS', 'Azure', 'Google Cloud', 'Docker', 'Kubernetes']
+  }
+
+  const filteredPortfolio = activeFilter === 'all' 
+    ? portfolio 
+    : portfolio.filter(item => item.category === activeFilter)
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    console.log('Form submitted:', formData)
+    // Handle form submission logic here
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <section className="bg-gradient-to-br from-blue-600 to-blue-800 text-white py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-5xl font-bold mb-6">
+              Expert Software Development Services
+            </h1>
+            <p className="text-xl mb-8 max-w-3xl mx-auto">
+              Transform your ideas into powerful digital solutions with our experienced development team
+            </p>
+            <div className="flex justify-center space-x-4">
+              <button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-200">
+                Get Started
+              </button>
+              <button className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition duration-200">
+                View Portfolio
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Services Section */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Services</h2>
+            <p className="text-xl text-gray-600">Comprehensive software development solutions</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {services.map((service, index) => (
+              <div key={index} className="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+                <div className="text-4xl mb-4">{service.icon}</div>
+                <h3 className="text-xl font-semibold mb-4">{service.title}</h3>
+                <p className="text-gray-600">{service.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Tech Stack Section */}
+      <section className="py-20 bg-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Technology Stack</h2>
+            <p className="text-xl text-gray-600">We use cutting-edge technologies to build robust solutions</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {Object.entries(techStack).map(([category, technologies]) => (
+              <div key={category} className="bg-white p-6 rounded-lg shadow-lg">
+                <h3 className="text-lg font-semibold mb-4 capitalize text-blue-600">{category}</h3>
+                <div className="flex flex-wrap gap-2">
+                  {technologies.map((tech, index) => (
+                    <span key={index} className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Portfolio Section */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Portfolio</h2>
+            <p className="text-xl text-gray-600">Recent projects we've delivered</p>
+          </div>
+          
+          {/* Filter Buttons */}
+          <div className="flex justify-center mb-12">
+            <div className="flex space-x-4">
+              {['all', 'web', 'mobile'].map((filter) => (
+                <button
+                  key={filter}
+                  onClick={() => setActiveFilter(filter)}
+                  className={`px-6 py-2 rounded-full font-semibold transition duration-200 ${
+                    activeFilter === filter
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  {filter.charAt(0).toUpperCase() + filter.slice(1)}
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          {/* Portfolio Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredPortfolio.map((item) => (
+              <div key={item.id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
+                <div className="bg-gradient-to-br from-blue-500 to-purple-600 h-48 flex items-center justify-center">
+                  <div className="text-white text-6xl">💻</div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+                  <p className="text-gray-600 mb-4">{item.description}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {item.tags.map((tag, index) => (
+                      <span key={index} className="bg-blue-100 text-blue-600 px-2 py-1 rounded text-sm">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Development Process */}
+      <section className="py-20 bg-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Development Process</h2>
+            <p className="text-xl text-gray-600">A proven methodology for successful project delivery</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { step: 1, title: 'Discovery', description: 'Understanding your requirements and goals' },
+              { step: 2, title: 'Planning', description: 'Creating detailed project roadmap and timeline' },
+              { step: 3, title: 'Development', description: 'Building your solution with agile methodology' },
+              { step: 4, title: 'Deployment', description: 'Launching and supporting your application' }
+            ].map((process, index) => (
+              <div key={index} className="text-center">
+                <div className="bg-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
+                  {process.step}
+                </div>
+                <h3 className="text-xl font-semibold mb-2">{process.title}</h3>
+                <p className="text-gray-600">{process.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Form Section */}
+      <section className="py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Start Your Project</h2>
+            <p className="text-xl text-gray-600">Let's discuss your software development needs</p>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-lg p-8">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                    Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    required
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-2">
+                    Project Budget
+                  </label>
+                  <select
+                    id="budget"
+                    name="budget"
+                    value={formData.budget}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="">Select budget range</option>
+                    <option value="5k-10k">$5K - $10K</option>
+                    <option value="10k-25k">$10K - $25K</option>
+                    <option value="25k-50k">$25K - $50K</option>
+                    <option value="50k+">$50K+</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div>
+                <label htmlFor="project" className="block text-sm font-medium text-gray-700 mb-2">
+                  Project Type *
+                </label>
+                <select
+                  id="project"
+                  name="project"
+                  required
+                  value={formData.project}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select project type</option>
+                  <option value="web-app">Web Application</option>
+                  <option value="mobile-app">Mobile Application</option>
+                  <option value="e-commerce">E-commerce Platform</option>
+                  <option value="crm">CRM System</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                  Project Details *
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  required
+                  rows={4}
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  placeholder="Please describe your project requirements, goals, and any specific features you need..."
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              
+              <div className="text-center">
+                <button
+                  type="submit"
+                  className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 font-semibold"
+                >
+                  Send Project Inquiry
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}
+.Value -replace "'", "'" </button>
+              ))}
+            </div>
+          </div>
+          
+          {/* Portfolio Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredPortfolio.map((item) => (
+              <div key={item.id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
+                <div className="bg-gradient-to-br from-blue-500 to-purple-600 h-48 flex items-center justify-center">
+                  <div className="text-white text-6xl">💻</div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+                  <p className="text-gray-600 mb-4">{item.description}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {item.tags.map((tag, index) => (
+                      <span key={index} className="bg-blue-100 text-blue-600 px-2 py-1 rounded text-sm">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Development Process */}
+      <section className="py-20 bg-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Development Process</h2>
+            <p className="text-xl text-gray-600">A proven methodology for successful project delivery</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"> 'use client'
+
+import { useState } from 'react'
+
+export default function SoftwareDevelopmentPage() {
+  const [activeFilter, setActiveFilter] = useState('all')
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    project: '',
+    budget: '',
+    message: ''
+  })
+
+  const services = [
+    {
+      icon: '💻',
+      title: 'Web Development',
+      description: 'Custom web applications built with modern frameworks and technologies'
+    },
+    {
+      icon: '📱',
+      title: 'Mobile Development',
+      description: 'Native and cross-platform mobile apps for iOS and Android'
+    },
+    {
+      icon: '☁️',
+      title: 'Cloud Solutions',
+      description: 'Scalable cloud infrastructure and deployment solutions'
+    },
+    {
+      icon: '🛡️',
+      title: 'Security',
+      description: 'Enterprise-grade security implementation and auditing'
+    }
+  ]
+
+  const portfolio = [
+    {
+      id: 1,
+      title: 'E-commerce Platform',
+      description: 'Full-featured online shopping platform with payment integration',
+      category: 'web',
+      tags: ['React', 'Node.js', 'PostgreSQL']
+    },
+    {
+      id: 2,
+      title: 'Mobile Banking App',
+      description: 'Secure mobile banking application with biometric authentication',
+      category: 'mobile',
+      tags: ['React Native', 'Firebase', 'Blockchain']
+    },
+    {
+      id: 3,
+      title: 'CRM System',
+      description: 'Customer relationship management system for enterprise clients',
+      category: 'web',
+      tags: ['Vue.js', 'Python', 'MySQL']
+    },
+    {
+      id: 4,
+      title: 'IoT Dashboard',
+      description: 'Real-time monitoring dashboard for IoT devices',
+      category: 'web',
+      tags: ['Angular', 'Node.js', 'MongoDB']
+    }
+  ]
+
+  const techStack = {
+    frontend: ['React', 'Vue.js', 'Angular', 'Next.js', 'TypeScript'],
+    backend: ['Node.js', 'Python', 'Java', 'PHP', '.NET'],
+    database: ['PostgreSQL', 'MongoDB', 'MySQL', 'Redis'],
+    cloud: ['AWS', 'Azure', 'Google Cloud', 'Docker', 'Kubernetes']
+  }
+
+  const filteredPortfolio = activeFilter === 'all' 
+    ? portfolio 
+    : portfolio.filter(item => item.category === activeFilter)
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    console.log('Form submitted:', formData)
+    // Handle form submission logic here
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <section className="bg-gradient-to-br from-blue-600 to-blue-800 text-white py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-5xl font-bold mb-6">
+              Expert Software Development Services
+            </h1>
+            <p className="text-xl mb-8 max-w-3xl mx-auto">
+              Transform your ideas into powerful digital solutions with our experienced development team
+            </p>
+            <div className="flex justify-center space-x-4">
+              <button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-200">
+                Get Started
+              </button>
+              <button className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition duration-200">
+                View Portfolio
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Services Section */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Services</h2>
+            <p className="text-xl text-gray-600">Comprehensive software development solutions</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {services.map((service, index) => (
+              <div key={index} className="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+                <div className="text-4xl mb-4">{service.icon}</div>
+                <h3 className="text-xl font-semibold mb-4">{service.title}</h3>
+                <p className="text-gray-600">{service.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Tech Stack Section */}
+      <section className="py-20 bg-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Technology Stack</h2>
+            <p className="text-xl text-gray-600">We use cutting-edge technologies to build robust solutions</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {Object.entries(techStack).map(([category, technologies]) => (
+              <div key={category} className="bg-white p-6 rounded-lg shadow-lg">
+                <h3 className="text-lg font-semibold mb-4 capitalize text-blue-600">{category}</h3>
+                <div className="flex flex-wrap gap-2">
+                  {technologies.map((tech, index) => (
+                    <span key={index} className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Portfolio Section */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Portfolio</h2>
+            <p className="text-xl text-gray-600">Recent projects we've delivered</p>
+          </div>
+          
+          {/* Filter Buttons */}
+          <div className="flex justify-center mb-12">
+            <div className="flex space-x-4">
+              {['all', 'web', 'mobile'].map((filter) => (
+                <button
+                  key={filter}
+                  onClick={() => setActiveFilter(filter)}
+                  className={`px-6 py-2 rounded-full font-semibold transition duration-200 ${
+                    activeFilter === filter
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  {filter.charAt(0).toUpperCase() + filter.slice(1)}
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          {/* Portfolio Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredPortfolio.map((item) => (
+              <div key={item.id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
+                <div className="bg-gradient-to-br from-blue-500 to-purple-600 h-48 flex items-center justify-center">
+                  <div className="text-white text-6xl">💻</div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+                  <p className="text-gray-600 mb-4">{item.description}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {item.tags.map((tag, index) => (
+                      <span key={index} className="bg-blue-100 text-blue-600 px-2 py-1 rounded text-sm">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Development Process */}
+      <section className="py-20 bg-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Development Process</h2>
+            <p className="text-xl text-gray-600">A proven methodology for successful project delivery</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { step: 1, title: 'Discovery', description: 'Understanding your requirements and goals' },
+              { step: 2, title: 'Planning', description: 'Creating detailed project roadmap and timeline' },
+              { step: 3, title: 'Development', description: 'Building your solution with agile methodology' },
+              { step: 4, title: 'Deployment', description: 'Launching and supporting your application' }
+            ].map((process, index) => (
+              <div key={index} className="text-center">
+                <div className="bg-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
+                  {process.step}
+                </div>
+                <h3 className="text-xl font-semibold mb-2">{process.title}</h3>
+                <p className="text-gray-600">{process.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Form Section */}
+      <section className="py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Start Your Project</h2>
+            <p className="text-xl text-gray-600">Let's discuss your software development needs</p>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-lg p-8">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                    Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    required
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-2">
+                    Project Budget
+                  </label>
+                  <select
+                    id="budget"
+                    name="budget"
+                    value={formData.budget}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="">Select budget range</option>
+                    <option value="5k-10k">$5K - $10K</option>
+                    <option value="10k-25k">$10K - $25K</option>
+                    <option value="25k-50k">$25K - $50K</option>
+                    <option value="50k+">$50K+</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div>
+                <label htmlFor="project" className="block text-sm font-medium text-gray-700 mb-2">
+                  Project Type *
+                </label>
+                <select
+                  id="project"
+                  name="project"
+                  required
+                  value={formData.project}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select project type</option>
+                  <option value="web-app">Web Application</option>
+                  <option value="mobile-app">Mobile Application</option>
+                  <option value="e-commerce">E-commerce Platform</option>
+                  <option value="crm">CRM System</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                  Project Details *
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  required
+                  rows={4}
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  placeholder="Please describe your project requirements, goals, and any specific features you need..."
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              
+              <div className="text-center">
+                <button
+                  type="submit"
+                  className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 font-semibold"
+                >
+                  Send Project Inquiry
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}
+.Value -replace "'", "'" <div key={index} className="text-center">
+                <div className="bg-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
+                  {process.step}
+                </div>
+                <h3 className="text-xl font-semibold mb-2">{process.title}</h3>
+                <p className="text-gray-600">{process.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Form Section */}
+      <section className="py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Start Your Project</h2>
+            <p className="text-xl text-gray-600"> 'use client'
+
+import { useState } from 'react'
+
+export default function SoftwareDevelopmentPage() {
+  const [activeFilter, setActiveFilter] = useState('all')
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    project: '',
+    budget: '',
+    message: ''
+  })
+
+  const services = [
+    {
+      icon: '💻',
+      title: 'Web Development',
+      description: 'Custom web applications built with modern frameworks and technologies'
+    },
+    {
+      icon: '📱',
+      title: 'Mobile Development',
+      description: 'Native and cross-platform mobile apps for iOS and Android'
+    },
+    {
+      icon: '☁️',
+      title: 'Cloud Solutions',
+      description: 'Scalable cloud infrastructure and deployment solutions'
+    },
+    {
+      icon: '🛡️',
+      title: 'Security',
+      description: 'Enterprise-grade security implementation and auditing'
+    }
+  ]
+
+  const portfolio = [
+    {
+      id: 1,
+      title: 'E-commerce Platform',
+      description: 'Full-featured online shopping platform with payment integration',
+      category: 'web',
+      tags: ['React', 'Node.js', 'PostgreSQL']
+    },
+    {
+      id: 2,
+      title: 'Mobile Banking App',
+      description: 'Secure mobile banking application with biometric authentication',
+      category: 'mobile',
+      tags: ['React Native', 'Firebase', 'Blockchain']
+    },
+    {
+      id: 3,
+      title: 'CRM System',
+      description: 'Customer relationship management system for enterprise clients',
+      category: 'web',
+      tags: ['Vue.js', 'Python', 'MySQL']
+    },
+    {
+      id: 4,
+      title: 'IoT Dashboard',
+      description: 'Real-time monitoring dashboard for IoT devices',
+      category: 'web',
+      tags: ['Angular', 'Node.js', 'MongoDB']
+    }
+  ]
+
+  const techStack = {
+    frontend: ['React', 'Vue.js', 'Angular', 'Next.js', 'TypeScript'],
+    backend: ['Node.js', 'Python', 'Java', 'PHP', '.NET'],
+    database: ['PostgreSQL', 'MongoDB', 'MySQL', 'Redis'],
+    cloud: ['AWS', 'Azure', 'Google Cloud', 'Docker', 'Kubernetes']
+  }
+
+  const filteredPortfolio = activeFilter === 'all' 
+    ? portfolio 
+    : portfolio.filter(item => item.category === activeFilter)
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    console.log('Form submitted:', formData)
+    // Handle form submission logic here
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <section className="bg-gradient-to-br from-blue-600 to-blue-800 text-white py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-5xl font-bold mb-6">
+              Expert Software Development Services
+            </h1>
+            <p className="text-xl mb-8 max-w-3xl mx-auto">
+              Transform your ideas into powerful digital solutions with our experienced development team
+            </p>
+            <div className="flex justify-center space-x-4">
+              <button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-200">
+                Get Started
+              </button>
+              <button className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition duration-200">
+                View Portfolio
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Services Section */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Services</h2>
+            <p className="text-xl text-gray-600">Comprehensive software development solutions</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {services.map((service, index) => (
+              <div key={index} className="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition duration-300">
+                <div className="text-4xl mb-4">{service.icon}</div>
+                <h3 className="text-xl font-semibold mb-4">{service.title}</h3>
+                <p className="text-gray-600">{service.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Tech Stack Section */}
+      <section className="py-20 bg-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Technology Stack</h2>
+            <p className="text-xl text-gray-600">We use cutting-edge technologies to build robust solutions</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {Object.entries(techStack).map(([category, technologies]) => (
+              <div key={category} className="bg-white p-6 rounded-lg shadow-lg">
+                <h3 className="text-lg font-semibold mb-4 capitalize text-blue-600">{category}</h3>
+                <div className="flex flex-wrap gap-2">
+                  {technologies.map((tech, index) => (
+                    <span key={index} className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Portfolio Section */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Portfolio</h2>
+            <p className="text-xl text-gray-600">Recent projects we've delivered</p>
+          </div>
+          
+          {/* Filter Buttons */}
+          <div className="flex justify-center mb-12">
+            <div className="flex space-x-4">
+              {['all', 'web', 'mobile'].map((filter) => (
+                <button
+                  key={filter}
+                  onClick={() => setActiveFilter(filter)}
+                  className={`px-6 py-2 rounded-full font-semibold transition duration-200 ${
+                    activeFilter === filter
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  {filter.charAt(0).toUpperCase() + filter.slice(1)}
+                </button>
+              ))}
+            </div>
+          </div>
+          
+          {/* Portfolio Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredPortfolio.map((item) => (
+              <div key={item.id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
+                <div className="bg-gradient-to-br from-blue-500 to-purple-600 h-48 flex items-center justify-center">
+                  <div className="text-white text-6xl">💻</div>
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+                  <p className="text-gray-600 mb-4">{item.description}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {item.tags.map((tag, index) => (
+                      <span key={index} className="bg-blue-100 text-blue-600 px-2 py-1 rounded text-sm">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Development Process */}
+      <section className="py-20 bg-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Development Process</h2>
+            <p className="text-xl text-gray-600">A proven methodology for successful project delivery</p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { step: 1, title: 'Discovery', description: 'Understanding your requirements and goals' },
+              { step: 2, title: 'Planning', description: 'Creating detailed project roadmap and timeline' },
+              { step: 3, title: 'Development', description: 'Building your solution with agile methodology' },
+              { step: 4, title: 'Deployment', description: 'Launching and supporting your application' }
+            ].map((process, index) => (
+              <div key={index} className="text-center">
+                <div className="bg-blue-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
+                  {process.step}
+                </div>
+                <h3 className="text-xl font-semibold mb-2">{process.title}</h3>
+                <p className="text-gray-600">{process.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Form Section */}
+      <section className="py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Start Your Project</h2>
+            <p className="text-xl text-gray-600">Let's discuss your software development needs</p>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-lg p-8">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                    Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    required
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-2">
+                    Project Budget
+                  </label>
+                  <select
+                    id="budget"
+                    name="budget"
+                    value={formData.budget}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="">Select budget range</option>
+                    <option value="5k-10k">$5K - $10K</option>
+                    <option value="10k-25k">$10K - $25K</option>
+                    <option value="25k-50k">$25K - $50K</option>
+                    <option value="50k+">$50K+</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div>
+                <label htmlFor="project" className="block text-sm font-medium text-gray-700 mb-2">
+                  Project Type *
+                </label>
+                <select
+                  id="project"
+                  name="project"
+                  required
+                  value={formData.project}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select project type</option>
+                  <option value="web-app">Web Application</option>
+                  <option value="mobile-app">Mobile Application</option>
+                  <option value="e-commerce">E-commerce Platform</option>
+                  <option value="crm">CRM System</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                  Project Details *
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  required
+                  rows={4}
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  placeholder="Please describe your project requirements, goals, and any specific features you need..."
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              
+              <div className="text-center">
+                <button
+                  type="submit"
+                  className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 font-semibold"
+                >
+                  Send Project Inquiry
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}
+.Value -replace "'", "'" </p>
+          </div>
+          
+          <div className="bg-white rounded-lg shadow-lg p-8">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                    Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    required
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    required
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-2">
+                    Project Budget
+                  </label>
+                  <select
+                    id="budget"
+                    name="budget"
+                    value={formData.budget}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="">Select budget range</option>
+                    <option value="5k-10k">$5K - $10K</option>
+                    <option value="10k-25k">$10K - $25K</option>
+                    <option value="25k-50k">$25K - $50K</option>
+                    <option value="50k+">$50K+</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div>
+                <label htmlFor="project" className="block text-sm font-medium text-gray-700 mb-2">
+                  Project Type *
+                </label>
+                <select
+                  id="project"
+                  name="project"
+                  required
+                  value={formData.project}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                >
+                  <option value="">Select project type</option>
+                  <option value="web-app">Web Application</option>
+                  <option value="mobile-app">Mobile Application</option>
+                  <option value="e-commerce">E-commerce Platform</option>
+                  <option value="crm">CRM System</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                  Project Details *
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  required
+                  rows={4}
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  placeholder="Please describe your project requirements, goals, and any specific features you need..."
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              
+              <div className="text-center">
+                <button
+                  type="submit"
+                  className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 font-semibold"
+                >
+                  Send Project Inquiry
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}

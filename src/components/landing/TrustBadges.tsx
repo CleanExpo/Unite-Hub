@@ -114,7 +114,7 @@ export function TrustBadges() {
                 className="relative"
               >
                 <div className="w-40 h-20 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center p-4 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
-                  {/* Placeholder for partner logos */}
+                  {/* Unite Group for partner logos */}
                   <span className="text-gray-600 dark:text-gray-400 text-sm font-medium">
                     {partner.name}
                   </span>

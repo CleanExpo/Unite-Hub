@@ -1,0 +1,21 @@
+To fix the code quality issue of having `console.log` statements in production code, you should remove or replace them with appropriate logging mechanisms. Here is an example of how you can improve the code in `src\app\api\compliance\cookie-consent\route.ts`:
+
+Before:
+
+```typescript
+// Some code here
+console.log("Cookie consent received."); // console.log statement in production code
+// More code here
+```
+
+After:
+
+```typescript
+import logger from '../../../utils/logger'; // Import a custom logger or any logging library you are using
+
+// Some code here
+logger.info("Cookie consent received."); // Use the logger to log information instead of console.log
+// More code here
+```
+
+By using a logging library or a custom logger, you can have more control over logging levels, formatting, and redirection of logs, making it a better practice than using `console.log` directly in production code.

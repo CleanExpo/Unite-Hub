@@ -433,7 +433,7 @@ export class StripeApiClient {
 
 // Minimal Stripe types for TypeScript support
 // These are simplified compared to the full Stripe types
-declare namespace Stripe {
+declare export namespace Stripe {
   interface PaymentIntent {
     id: string;
     object: 'payment_intent';
@@ -582,21 +582,21 @@ declare namespace Stripe {
     phone?: string;
   }
   
-  namespace CustomerCreateParams {
+  export namespace CustomerCreateParams {
     interface InvoiceSettings {
       default_payment_method?: string;
       footer?: string;
     }
   }
   
-  namespace CustomerUpdateParams {
+  export namespace CustomerUpdateParams {
     interface InvoiceSettings {
       default_payment_method?: string;
       footer?: string;
     }
   }
   
-  namespace PaymentMethodCreateParams {
+  export namespace PaymentMethodCreateParams {
     interface Card {
       number: string;
       exp_month: number;
@@ -612,7 +612,7 @@ declare namespace Stripe {
     }
   }
   
-  namespace SubscriptionCreateParams {
+  export namespace SubscriptionCreateParams {
     interface PaymentSettings {
       payment_method_types?: string[];
       save_default_payment_method?: 'on_subscription' | 'off';
