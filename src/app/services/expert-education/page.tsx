@@ -1,4 +1,4 @@
-import { Metadata } from 'next';
+// import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,16 +13,16 @@ import {
   ArrowRight,
   Star,
   Clock,
-  Certificate,
+  Award as Certificate,
   Video,
   FileText
 } from 'lucide-react';
 
-export const metadata: Metadata = {
-  title: 'Expert Education & Training | Unite Group',
-  description: 'Elevate your team with our comprehensive education and training programs. Professional development, skill enhancement, and certification courses.',
-  keywords: 'professional training, skill development, certification programs, corporate education, team training',
-};
+// export const metadata: Metadata = {
+//   title: 'Expert Education & Training | Unite Group',
+//   description: 'Elevate your team with our comprehensive education and training programs. Professional development, skill enhancement, and certification courses.',
+//   keywords: 'professional training, skill development, certification programs, corporate education, team training',
+// };
 
 const trainingPrograms = [
   {
@@ -374,7 +374,7 @@ export default function ExpertEducationPage() {
                     ))}
                   </div>
                   <p className="text-gray-600 dark:text-gray-300 mb-4 italic">
-                    "{testimonial.content}"
+                    &ldquo;{testimonial.content}&rdquo;
                   </p>
                   <div className="mb-2">
                     <p className="font-semibold text-gray-900 dark:text-white">

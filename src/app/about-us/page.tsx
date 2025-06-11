@@ -152,7 +152,7 @@ export default function AboutUsPage() {
               </span>
             </h1>
             <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-8">
-              Australia's premier business solutions partner, transforming enterprises through 
+              Australia&apos;s premier business solutions partner, transforming enterprises through
               innovative technology, strategic consulting, and unparalleled expertise.
             </p>
           </motion.div>
@@ -207,19 +207,19 @@ export default function AboutUsPage() {
               <p className="text-slate-300 mb-6">
                 Founded in 2014 in Brisbane, Unite Group began with a simple mission: 
                 to bridge the gap between business ambition and technological capability. 
-                What started as a small team of passionate technologists has grown into 
-                Australia's most trusted business solutions partner.
+                What started as a small team of passionate technologists has grown into
+                Australia&apos;s most trusted business solutions partner.
               </p>
               <p className="text-slate-300 mb-6">
-                Over the years, we've helped hundreds of businesses transform their 
-                operations, enhance their digital presence, and achieve unprecedented growth. 
-                Our journey has been marked by continuous learning, innovation, and an 
+                Over the years, we&apos;ve helped hundreds of businesses transform their
+                operations, enhance their digital presence, and achieve unprecedented growth.
+                Our journey has been marked by continuous learning, innovation, and an
                 unwavering commitment to client success.
               </p>
               <p className="text-slate-300">
-                Today, we stand as a testament to what's possible when expertise meets 
-                dedication. With offices across Australia and a global client base, we 
-                continue to push boundaries and set new standards in business consulting 
+                Today, we stand as a testament to what&apos;s possible when expertise meets
+                dedication. With offices across Australia and a global client base, we
+                continue to push boundaries and set new standards in business consulting
                 and technology solutions.
               </p>
             </motion.div>
