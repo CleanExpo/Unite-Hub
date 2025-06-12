@@ -1,5 +1,5 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createServerClient } from '@/lib/supabase/server';
 import { cookies } from 'next/headers';
 
 export async function POST(request: NextRequest) {
@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
     const action = searchParams.get('action') || 'export';
 
     const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = createServerClient();
 
     // Get user session
     const { data: { user }, error: authError } = await supabase.auth.getUser();

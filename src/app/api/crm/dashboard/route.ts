@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic'
 // ðŸ“Š GET CRM DASHBOARD DATA
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser(request)
+    const user = await getCurrentUser()
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }

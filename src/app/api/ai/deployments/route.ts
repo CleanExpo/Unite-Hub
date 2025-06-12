@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
         metadata: deploymentData.metadata || {},
       });
 
-      const validation = validationResult as Record<string, unknown>;
+      const validation = validationResult as unknown as Record<string, unknown>;
       if (!validation.overallStatus || validation.overallStatus === 'failed') {
         return NextResponse.json(
           { 
@@ -144,7 +144,7 @@ export async function POST(request: NextRequest) {
       await supabase
         .from('ai_deployments')
         .insert({
-          deployment_id: (deployment as Record<string, unknown>).id as string,
+          deployment_id: (deployment as unknown as Record<string, unknown>).id as string,
           name: deploymentData.name,
           version: deploymentData.version,
           strategy: deploymentData.strategy || 'rolling',

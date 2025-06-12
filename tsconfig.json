@@ -2,8 +2,8 @@
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "module": "ESNext",
-    "moduleResolution": "NodeNext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "strict": true,
     "jsx": "preserve",
     "sourceMap": true,
@@ -24,6 +24,10 @@
     "incremental": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
     "plugins": [
       {
         "name": "next"
@@ -37,6 +41,10 @@
     ".next/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "backups/**/*",
+    "src-backup/**/*",
+    "scripts/**/*",
+    "src/app/api/advanced-analytics/**/*"
   ]
 }

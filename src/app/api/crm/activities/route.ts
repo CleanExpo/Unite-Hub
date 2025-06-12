@@ -1,5 +1,5 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 import { checkPermission } from '@/lib/auth/permissions';
 
 export async function POST(req: NextRequest) {
@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Check permission to create CRM activities
-  if (!await checkPermission(user, 'crm.activities.create')) {
+  if (!await checkPermission(user.id, 'crm.activities.create')) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
@@ -49,7 +49,7 @@ export async function GET(req: NextRequest) {
   }
 
   // Check permission to view CRM activities
-  if (!await checkPermission(user, 'crm.activities.view')) {
+  if (!await checkPermission(user.id, 'crm.activities.view')) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 

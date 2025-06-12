@@ -1,5 +1,5 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 import { checkPermission } from '@/lib/auth/permissions';
 import { Resend } from 'resend';
 
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Check permission to send emails
-  if (!await checkPermission(user, 'crm.comms.email')) {
+  if (!await checkPermission(user.id, 'crm.comms.email')) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 

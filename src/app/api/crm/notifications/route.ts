@@ -1,11 +1,11 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createServerClient } from '@/lib/supabase/server';
 import { cookies } from 'next/headers';
 
 export async function GET(request: NextRequest) {
   try {
     const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = createServerClient();
 
     // Get user session
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -275,7 +275,7 @@ export async function PATCH(request: NextRequest) {
     const notificationId = searchParams.get('id');
 
     const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = createServerClient();
 
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
@@ -355,7 +355,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = createServerClient();
 
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {

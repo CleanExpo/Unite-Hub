@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
+import { createServerClient } from '@/lib/supabase/server';
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const supabase = createClient();
+  const supabase = createServerClient();
   const resolvedParams = await params;
 
   const { data, error } = await supabase
@@ -19,7 +19,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 }
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const supabase = createClient();
+  const supabase = createServerClient();
   const resolvedParams = await params;
   const taskData = await req.json();
 

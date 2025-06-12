@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
     const range = searchParams.get('range') || '30d';
     
     const cookieStore = cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = createClient();
 
     // Get user session
     const { data: { user }, error: authError } = await supabase.auth.getUser();

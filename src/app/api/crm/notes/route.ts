@@ -1,10 +1,10 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
+import { createServerClient } from '@/lib/supabase/server';
 import { checkPermission } from '@/lib/auth/permissions';
 import { logActivity } from '@/lib/crm/activity';
 
 export async function POST(req: NextRequest) {
-  const supabase = createClient();
+  const supabase = createServerClient();
   
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Check permission to create notes
-  if (!await checkPermission(user, 'crm.communications.create')) {
+  if (!await checkPermission(user.id, 'crm.communications.create')) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
-  const supabase = createClient();
+  const supabase = createServerClient();
   
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
@@ -60,7 +60,7 @@ export async function GET(req: NextRequest) {
   }
 
   // Check permission to view communications
-  if (!await checkPermission(user, 'crm.communications.view')) {
+  if (!await checkPermission(user.id, 'crm.communications.view')) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
@@ -87,7 +87,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-  const supabase = createClient();
+  const supabase = createServerClient();
   
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
@@ -130,7 +130,7 @@ export async function PATCH(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  const supabase = createClient();
+  const supabase = createServerClient();
   
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {

@@ -112,7 +112,7 @@ async function handleAutoProgress(body: any) {
     // Check if deal should auto-progress
     const shouldProgress = await checkAutoProgressionRules(deal);
     
-    if (shouldProgress.canProgress) {
+    if (shouldProgress.canProgress && shouldProgress.nextStatus) {
       // Execute automatic progression
       const result = await DealPipelineWorkflows.moveDealsStatus({
         dealId,
@@ -228,7 +228,7 @@ async function handleCheckBusinessRules(body: any) {
  */
 async function checkAutoProgressionRules(deal: any): Promise<{
   canProgress: boolean;
-  nextStatus?: string;
+  nextStatus?: "lead" | "qualified" | "proposal" | "negotiation" | "closed-won" | "closed-lost";
   reason?: string;
 }> {
   // Rule 1: Leads older than 7 days with no activity should be qualified
