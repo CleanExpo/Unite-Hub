@@ -486,16 +486,7 @@ let ecosystemService: EcosystemAPIService | null = null;
 
 function getEcosystemService(): EcosystemAPIService {
   if (!ecosystemService) {
-    const aiGateway = new AIGateway({
-      providers: [{
-        provider: 'openai',
-        apiKey: process.env.OPENAI_API_KEY || '',
-        model: 'gpt-4',
-        maxTokens: 4000,
-        temperature: 0.3
-      }]
-    });
-
+    const aiGateway = new AIGateway();
     ecosystemService = new EcosystemAPIService(aiGateway);
   }
   return ecosystemService;

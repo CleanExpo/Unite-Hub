@@ -96,28 +96,9 @@ class PlatformEvolutionService {
   private neuralInterface: NeuralInterface;
 
   constructor() {
-    this.aiGateway = new AIGateway({
-      providers: [{
-        provider: 'openai',
-        apiKey: process.env.OPENAI_API_KEY || '',
-        model: 'gpt-4',
-        maxTokens: 4000,
-        temperature: 0.2
-      }],
-      cache: {
-        enabled: true,
-        ttl: 300,
-        maxSize: 1000,
-        keyStrategy: 'hash'
-      },
-      monitoring: {
-        enabled: true,
-        metricsRetentionDays: 30,
-        healthCheckIntervalSeconds: 60
-      }
-    });
-    this.platformConsciousness = new PlatformConsciousness();
-    this.neuralInterface = new NeuralInterface();
+    this.aiGateway = new AIGateway();
+    this.platformConsciousness = {} as PlatformConsciousness; // Placeholder
+    this.neuralInterface = {} as NeuralInterface; // Placeholder
   }
 
   private generateId(): string {

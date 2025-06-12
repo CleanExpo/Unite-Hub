@@ -53,7 +53,7 @@ export default function NewsletterSignup() {
         </button>
       </form>
       {message && (
-        <p className={mt-4 text-sm }>
+        <p className="mt-4 text-sm">
           {message}
         </p>
       )}

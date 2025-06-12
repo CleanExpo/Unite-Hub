@@ -177,8 +177,8 @@ async function getRevenueMetrics(supabase: any, startOfPeriod: Date, startOfPrev
     return { current: 0, previous: 0, trend: [] };
   }
 
-  const currentRevenue = currentDeals?.reduce((sum, deal) => sum + (deal.value || 0), 0) || 0;
-  const previousRevenue = previousDeals?.reduce((sum, deal) => sum + (deal.value || 0), 0) || 0;
+  const currentRevenue = currentDeals?.reduce((sum: number, deal: any) => sum + (deal.value || 0), 0) || 0;
+  const previousRevenue = previousDeals?.reduce((sum: number, deal: any) => sum + (deal.value || 0), 0) || 0;
 
   return {
     current: currentRevenue,
@@ -207,7 +207,7 @@ async function getRecentActivity(supabase: any, limit: number) {
       .order('created_at', { ascending: false })
       .limit(3);
 
-    consultations?.forEach(consultation => {
+    consultations?.forEach((consultation: any) => {
       activities.push({
         id: `consultation-${consultation.id}`,
         type: 'consultation',
@@ -226,7 +226,7 @@ async function getRecentActivity(supabase: any, limit: number) {
       .order('updated_at', { ascending: false })
       .limit(3);
 
-    projects?.forEach(project => {
+    projects?.forEach((project: any) => {
       activities.push({
         id: `project-${project.id}`,
         type: 'project',
@@ -245,7 +245,7 @@ async function getRecentActivity(supabase: any, limit: number) {
       .order('updated_at', { ascending: false })
       .limit(2);
 
-    deals?.forEach(deal => {
+    deals?.forEach((deal: any) => {
       if (deal.status === 'won') {
         activities.push({
           id: `deal-${deal.id}`,

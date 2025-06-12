@@ -24,7 +24,7 @@ export default async function ClientsPage() {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
             <input
               type="text"
-              Unite Group="Search clients..."
+              placeholder="Search clients..."
               className="pl-10 pr-4 py-2 bg-slate-800 border border-slate-700 rounded-md text-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
           </div>

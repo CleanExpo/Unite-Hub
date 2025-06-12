@@ -174,11 +174,11 @@ export default function BundlesPage() {
                     <div className="text-center">
                       <div className="flex items-center justify-center gap-2 mb-2">
                         <span className="text-3xl font-bold text-gray-900 dark:text-white">
-                          {formatCurrency(bundle.price)}
+                          {formatCurrency(bundle.totalPrice || 0)}
                         </span>
                         <div className="text-sm text-gray-500 dark:text-gray-400">
                           <div className="line-through">
-                            {formatCurrency(bundle.originalPrice)}
+                            {formatCurrency((bundle as any).originalPrice || 0)}
                           </div>
                         </div>
                       </div>
@@ -190,7 +190,7 @@ export default function BundlesPage() {
                     <div className="space-y-3">
                       <h4 className="font-semibold text-gray-900 dark:text-white">Includes:</h4>
                       <ul className="space-y-2">
-                        {bundle.services.map((service, serviceIndex) => (
+                        {((bundle as any).services || []).map((service: any, serviceIndex: number) => (
                           <li key={serviceIndex} className="flex items-start gap-2">
                             <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                             <span className="text-sm text-gray-600 dark:text-gray-300">
@@ -204,7 +204,7 @@ export default function BundlesPage() {
                     <div className="space-y-3">
                       <h4 className="font-semibold text-gray-900 dark:text-white">Key Benefits:</h4>
                       <ul className="space-y-2">
-                        {bundle.benefits.map((benefit, benefitIndex) => (
+                        {((bundle as any).benefits || []).map((benefit: any, benefitIndex: number) => (
                           <li key={benefitIndex} className="flex items-start gap-2">
                             <Award className="h-5 w-5 text-teal-500 mt-0.5 flex-shrink-0" />
                             <span className="text-sm text-gray-600 dark:text-gray-300">

@@ -11,16 +11,7 @@ let marketIntelligenceService: MarketIntelligenceService | null = null;
 
 function getMarketIntelligenceService(): MarketIntelligenceService {
   if (!marketIntelligenceService) {
-    const aiGateway = new AIGateway({
-      providers: [{
-        provider: 'openai',
-        apiKey: process.env.OPENAI_API_KEY || '',
-        model: 'gpt-4',
-        maxTokens: 4000,
-        temperature: 0.3
-      }]
-    });
-
+    const aiGateway = new AIGateway();
     marketIntelligenceService = new MarketIntelligenceService(aiGateway);
   }
   return marketIntelligenceService;

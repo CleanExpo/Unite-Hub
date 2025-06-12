@@ -121,7 +121,7 @@ export default function NewClientPage() {
               onValueChange={handleSelectChange}
             >
               <SelectTrigger>
-                <SelectValue Unite Group="Select status" />
+                <SelectValue placeholder="Select status" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="lead">Lead</SelectItem>

@@ -33,14 +33,14 @@ export default function ActivitiesPage() {
             <div className="relative max-w-sm">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input 
-                Unite Group="Search activities..." 
+                placeholder="Search activities..."
                 className="pl-10"
               />
             </div>
           </div>
           <Select defaultValue="all">
             <SelectTrigger className="w-[180px]">
-              <SelectValue Unite Group="Activity Type" />
+              <SelectValue placeholder="Activity Type" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Activities</SelectItem>
@@ -52,7 +52,7 @@ export default function ActivitiesPage() {
           </Select>
           <Select defaultValue="week">
             <SelectTrigger className="w-[180px]">
-              <SelectValue Unite Group="Time Period" />
+              <SelectValue placeholder="Time Period" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="today">Today</SelectItem>

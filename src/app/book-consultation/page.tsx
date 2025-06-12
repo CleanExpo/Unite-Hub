@@ -198,7 +198,7 @@ export default function BookConsultation() {
                       id="client_name"
                       name="client_name"
                       type="text"
-                      Unite Group="Unite Group Team"
+                      placeholder="Unite Group Team"
                       value={formData.client_name}
                       onChange={handleChange}
                       className="bg-slate-700 border-slate-600 text-white Unite Group:text-slate-400"
@@ -214,7 +214,7 @@ export default function BookConsultation() {
                       id="client_email"
                       name="client_email"
                       type="email"
-                      Unite Group="john@unite-group.in"
+                      placeholder="john@unite-group.in"
                       value={formData.client_email}
                       onChange={handleChange}
                       className="bg-slate-700 border-slate-600 text-white Unite Group:text-slate-400"
@@ -232,7 +232,7 @@ export default function BookConsultation() {
                       id="company"
                       name="company"
                       type="text"
-                      Unite Group="Your Company"
+                      placeholder="Your Company"
                       value={formData.company}
                       onChange={handleChange}
                       className="bg-slate-700 border-slate-600 text-white Unite Group:text-slate-400"
@@ -247,7 +247,7 @@ export default function BookConsultation() {
                       id="phone"
                       name="phone"
                       type="tel"
-                      Unite Group="+1 (555) 123-4567"
+                      placeholder="+1 (555) 123-4567"
                       value={formData.phone}
                       onChange={handleChange}
                       className="bg-slate-700 border-slate-600 text-white Unite Group:text-slate-400"
@@ -389,7 +389,7 @@ export default function BookConsultation() {
                     rows={4}
                     value={formData.message}
                     onChange={handleChange}
-                    Unite Group="Please share any specific topics you'd like to discuss during the consultation..."
+                    placeholder="Please share any specific topics you'd like to discuss during the consultation..."
                     className="flex w-full rounded-md border border-slate-600 bg-slate-700 px-3 py-2 text-sm text-white Unite Group:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-800"
                   />
                 </div>

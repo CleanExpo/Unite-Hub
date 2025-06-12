@@ -59,12 +59,14 @@ export async function POST(request: NextRequest) {
             type: 'software',
             status: 'active',
             startDate: new Date('2025-02-01'),
+            estimatedCompletion: new Date('2025-04-01'),
             budget: 50000,
             spent: 15000,
             milestones: [],
             teamMembers: ['Developer 1', 'Designer 1']
           }
         ],
+        projectHistory: [],
         servicePackages: [],
         billingHistory: [],
         totalSpent: 15000
@@ -77,7 +79,9 @@ export async function POST(request: NextRequest) {
           {
             courseId: 'WRT-001',
             courseName: 'Water Damage Restoration',
+            courseType: 'technical',
             enrollmentDate: new Date('2025-01-20'),
+            enrolledAt: new Date('2025-01-20'),
             progress: 75,
             status: 'active'
           }
@@ -105,19 +109,38 @@ export async function POST(request: NextRequest) {
         ],
         engagementScore: 78,
         lastActivity: new Date(),
+        lastInteraction: new Date(),
         preferredContactMethod: 'email',
         communicationPreferences: {
           marketingEmails: true,
           courseNotifications: true,
           projectUpdates: true,
           newsletter: true
-        }
+        },
+        supportTickets: []
       },
       metadata: {
         createdAt: new Date('2025-01-01'),
         updatedAt: new Date(),
         source: 'merged',
-        tags: ['vip', 'growth-potential']
+        tags: ['vip', 'growth-potential'],
+        bundlePurchases: 0
+      },
+      carsiCourses: {
+        currentEnrollments: [],
+        courseHistory: []
+      },
+      purchaseHistory: {
+        invoices: [],
+        totalSpent: 15000,
+        averageOrderValue: 0,
+        lastPurchaseDate: new Date('2025-02-01')
+      },
+      financialSummary: {
+        lifetimeValue: 65000,
+        monthlyRecurringRevenue: 0,
+        outstandingBalance: 0,
+        creditLimit: 100000
       }
     };
 
