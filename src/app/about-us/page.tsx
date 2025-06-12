@@ -19,7 +19,7 @@ export default function AboutUsPage() {
     { year: "2018", title: "Global Expansion", description: "Opened offices in Sydney and Melbourne" },
     { year: "2020", title: "AI Integration", description: "Launched AI-powered solutions" },
     { year: "2022", title: "500+ Clients", description: "Reached milestone of 500 satisfied clients" },
-    { year: "2024", title: "Industry Leader", description: "Recognized as Australia&apos;s premier business partner" }
+    { year: "2024", title: "Industry Leader", description: "Recognized as Australia's premier business partner" }
   ];
 
   const certifications = [
@@ -152,7 +152,7 @@ export default function AboutUsPage() {
               </span>
             </h1>
             <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-8">
-              Australia&apos;s premier business solutions partner, transforming enterprises through 
+              Australia&apos;s premier business solutions partner, transforming enterprises through
               innovative technology, strategic consulting, and unparalleled expertise.
             </p>
           </motion.div>
@@ -201,25 +201,25 @@ export default function AboutUsPage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
             >
-                  <h3 className="text-2xl font-bold text-white mb-4">
+              <h3 className="text-2xl font-bold text-white mb-4">
                 A Decade of Innovation
               </h3>
               <p className="text-slate-300 mb-6">
                 Founded in 2014 in Brisbane, Unite Group began with a simple mission: 
                 to bridge the gap between business ambition and technological capability. 
-                What started as a small team of passionate technologists has grown into 
+                What started as a small team of passionate technologists has grown into
                 Australia&apos;s most trusted business solutions partner.
               </p>
               <p className="text-slate-300 mb-6">
-                Over the years, we&apos;ve helped hundreds of businesses transform their 
-                operations, enhance their digital presence, and achieve unprecedented growth. 
-                Our journey has been marked by continuous learning, innovation, and an 
+                Over the years, we&apos;ve helped hundreds of businesses transform their
+                operations, enhance their digital presence, and achieve unprecedented growth.
+                Our journey has been marked by continuous learning, innovation, and an
                 unwavering commitment to client success.
               </p>
               <p className="text-slate-300">
-                Today, we stand as a testament to what&apos;s possible when expertise meets 
-                dedication. With offices across Australia and a global client base, we 
-                continue to push boundaries and set new standards in business consulting 
+                Today, we stand as a testament to what&apos;s possible when expertise meets
+                dedication. With offices across Australia and a global client base, we
+                continue to push boundaries and set new standards in business consulting
                 and technology solutions.
               </p>
             </motion.div>
@@ -390,7 +390,7 @@ export default function AboutUsPage() {
         </div>
       </section>
 
-      {/* Awards & Recognition */}
+      {/* Awards & Certifications */}
       <section className="py-20 bg-slate-800/50">
         <div className="max-w-6xl mx-auto px-4">
           <motion.div
@@ -399,9 +399,9 @@ export default function AboutUsPage() {
             transition={{ duration: 0.6 }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-white mb-4">Awards & Recognition</h2>
+            <h2 className="text-4xl font-bold text-white mb-4">Recognition & Trust</h2>
             <p className="text-xl text-slate-300 max-w-3xl mx-auto">
-              Excellence recognized by industry leaders
+              Industry awards and certifications that validate our commitment to excellence
             </p>
           </motion.div>
 
@@ -409,17 +409,17 @@ export default function AboutUsPage() {
             {awards.map((award, index) => (
               <motion.div
                 key={`${award.year}-${award.title}`}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
+                initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
               >
                 <Card className="bg-gradient-to-r from-teal-600/10 to-cyan-600/10 border-teal-600/50">
                   <CardContent className="flex items-center p-6">
-                    <Trophy className="h-12 w-12 text-yellow-400 mr-4 flex-shrink-0" />
+                    <Trophy className="h-12 w-12 text-teal-400 mr-4" />
                     <div>
-                      <Badge className="mb-2">{award.year}</Badge>
                       <h3 className="text-lg font-bold text-white">{award.title}</h3>
-                      <p className="text-slate-400">{award.org}</p>
+                      <p className="text-slate-300">{award.org}</p>
+                      <p className="text-teal-400 text-sm">{award.year}</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -427,20 +427,19 @@ export default function AboutUsPage() {
             ))}
           </div>
 
-          {/* Certifications */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-4 gap-6">
             {certifications.map((cert, index) => (
               <motion.div
                 key={cert.name}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="text-center"
               >
-                <div className="bg-slate-800 rounded-lg p-6 border border-slate-700 hover:border-teal-600 transition-colors">
-                  <cert.icon className="h-10 w-10 text-teal-400 mx-auto mb-3" />
-                  <h4 className="font-bold text-white mb-1">{cert.name}</h4>
-                  <p className="text-xs text-slate-400">{cert.description}</p>
+                <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+                  <cert.icon className="h-12 w-12 text-teal-400 mx-auto mb-4" />
+                  <h3 className="text-white font-semibold mb-2">{cert.name}</h3>
+                  <p className="text-slate-400 text-sm">{cert.description}</p>
                 </div>
               </motion.div>
             ))}
@@ -459,18 +458,20 @@ export default function AboutUsPage() {
             <h2 className="text-4xl font-bold text-white mb-6">
               Ready to Transform Your Business?
             </h2>
-            <p className="text-xl mb-8 text-teal-100">
-              Join 500+ companies that trust Unite Group for their digital transformation journey
+            <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+              Join hundreds of successful businesses that have partnered with Unite Group 
+              to achieve their digital transformation goals.
             </p>
             <div className="flex gap-4 justify-center flex-wrap">
               <Button asChild size="lg" className="bg-white text-teal-600 hover:bg-slate-100">
                 <Link href="/book-consultation">
-                  Book Your $550 Consultation
-                  <ArrowRight className="ml-2 h-5 w-5" />
+                  Book Free Consultation
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-teal-600">
-                <Link href="/contact">Contact Our Team</Link>
+                <Link href="/contact">
+                  Get In Touch
+                </Link>
               </Button>
             </div>
           </motion.div>

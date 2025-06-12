@@ -2,142 +2,285 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import { projectSchema } from './project-form';
-import * as z from 'zod';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { z } from 'zod';
+
+const projectSchema = z.object({
+  name: z.string(),
+  description: z.string(),
+  status: z.enum(['active', 'completed', 'on-hold', 'cancelled']),
+  progress: z.number().min(0).max(100),
+  startDate: z.string(),
+  endDate: z.string().optional(),
+  budget: z.number().optional(),
+});
 
 type Project = z.infer<typeof projectSchema> & { id: string, client: { company_name: string } };
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchProjects();
+    // Mock data for projects
+    const mockProjects: Project[] = [
+      {
+        id: '1',
+        name: 'Website Redesign',
+        description: 'Complete overhaul of company website',
+        status: 'active',
+        progress: 65,
+        startDate: '2024-01-15',
+        endDate: '2024-03-15',
+        budget: 25000,
+        client: { company_name: 'Tech Corp' }
+      },
+      {
+        id: '2',
+        name: 'Mobile App Development',
+        description: 'Native iOS and Android application',
+        status: 'active',
+        progress: 30,
+        startDate: '2024-02-01',
+        endDate: '2024-06-01',
+        budget: 50000,
+        client: { company_name: 'StartupXYZ' }
+      },
+      {
+        id: '3',
+        name: 'Database Migration',
+        description: 'Migrate legacy database to cloud',
+        status: 'completed',
+        progress: 100,
+        startDate: '2023-11-01',
+        endDate: '2024-01-01',
+        budget: 15000,
+        client: { company_name: 'Enterprise Ltd' }
+      }
+    ];
+
+    setProjects(mockProjects);
+    setLoading(false);
   }, []);
 
-  const fetchProjects = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch('/api/crm/projects');
-      if (!response.ok) {
-        throw new Error('Failed to fetch projects');
-      }
-      const data = await response.json();
-      setProjects(data);
-    } catch (error) {
-      console.error('Error fetching projects:', error);
-    } finally {
-      setLoading(false);
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'active':
+        return <Badge className="bg-green-100 text-green-800">Active</Badge>;
+      case 'completed':
+        return <Badge className="bg-blue-100 text-blue-800">Completed</Badge>;
+      case 'on-hold':
+        return <Badge className="bg-yellow-100 text-yellow-800">On Hold</Badge>;
+      case 'cancelled':
+        return <Badge className="bg-red-100 text-red-800">Cancelled</Badge>;
+      default:
+        return <Badge className="bg-gray-100 text-gray-800">{status}</Badge>;
     }
   };
 
-  const getStatusBadge = (status: string) => {
-    const statusMap: Record<string, string> = {
-      planning: 'bg-blue-100 text-blue-800',
-      active: 'bg-green-100 text-green-800',
-      on_hold: 'bg-yellow-100 text-yellow-800',
-      completed: 'bg-purple-100 text-purple-800',
-      cancelled: 'bg-red-100 text-red-800',
-    };
-    return statusMap[status] || 'bg-gray-100 text-gray-800';
-  };
-
-  const formatCurrency = (value: number | undefined) => {
-    if (value === undefined) return 'N/A';
+  const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'AUD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(value);
+      currency: 'USD',
+      minimumFractionDigits: 0
+    }).format(amount);
   };
 
   if (loading) {
     return (
-      <div className="flex justify-center py-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
+          <p className="mt-2">Loading projects...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="text-red-600">Error</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-600 mb-4">{error}</p>
+            <Button onClick={() => window.location.reload()} className="w-full">
+              Try Again
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Projects</h1>
-        <Link href="/dashboard/crm/projects/new">
-          <Button>Add New Project</Button>
-        </Link>
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Projects</h1>
+          <p className="text-gray-600 dark:text-gray-300">Manage and track project progress</p>
+        </div>
+        <Button>
+          Add New Project
+        </Button>
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Project
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Client
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Budget
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Progress
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {projects.map((project) => (
-                <tr key={project.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="font-medium text-gray-900">{project.project_name}</div>
-                    <div className="text-sm text-gray-500">{project.description?.substring(0, 50)}{project.description && project.description.length > 50 ? '...' : ''}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {project.client?.company_name || 'N/A'}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 py-1 rounded-full text-xs ${getStatusBadge(project.status)}`}>
-                      {project.status.charAt(0).toUpperCase() + project.status.slice(1)}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {formatCurrency(project.budget)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="w-full bg-gray-200 rounded-full h-2.5 mr-2">
-                        <div 
-                          className="bg-blue-600 h-2.5 rounded-full" 
-                          style={{ width: `${project.progress_percentage}%` }}
-                        ></div>
-                      </div>
-                      <span className="text-sm text-gray-500">{project.progress_percentage}%</span>
+      <Tabs defaultValue="all" className="w-full">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="all">All Projects</TabsTrigger>
+          <TabsTrigger value="active">Active</TabsTrigger>
+          <TabsTrigger value="completed">Completed</TabsTrigger>
+          <TabsTrigger value="on-hold">On Hold</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="all" className="space-y-4">
+          <div className="grid gap-6">
+            {projects.map((project) => (
+              <Card key={project.id}>
+                <CardHeader>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <CardTitle>{project.name}</CardTitle>
+                      <CardDescription>{project.description}</CardDescription>
                     </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <Link href={`/dashboard/crm/projects/${project.id}`} className="text-indigo-600 hover:text-indigo-900 mr-3">
-                      View
-                    </Link>
-                    <Link href={`/dashboard/crm/projects/${project.id}/edit`} className="text-indigo-600 hover:text-indigo-900">
-                      Edit
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+                    {getStatusBadge(project.status)}
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Client:</span>
+                      <span className="font-medium">{project.client.company_name}</span>
+                    </div>
+                    
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Progress:</span>
+                      <span className="font-medium">{project.progress}%</span>
+                    </div>
+                    <Progress value={project.progress} className="w-full" />
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <span className="text-sm text-gray-600">Start Date:</span>
+                        <p className="font-medium">{new Date(project.startDate).toLocaleDateString()}</p>
+                      </div>
+                      {project.endDate && (
+                        <div>
+                          <span className="text-sm text-gray-600">End Date:</span>
+                          <p className="font-medium">{new Date(project.endDate).toLocaleDateString()}</p>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {project.budget && (
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-gray-600">Budget:</span>
+                        <span className="font-medium">{formatCurrency(project.budget)}</span>
+                      </div>
+                    )}
+                    
+                    <div className="flex space-x-2 pt-4">
+                      <Button variant="outline" size="sm">
+                        View Details
+                      </Button>
+                      <Button variant="outline" size="sm">
+                        Edit
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="active" className="space-y-4">
+          <div className="grid gap-6">
+            {projects.filter(p => p.status === 'active').map((project) => (
+              <Card key={project.id}>
+                <CardHeader>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <CardTitle>{project.name}</CardTitle>
+                      <CardDescription>{project.description}</CardDescription>
+                    </div>
+                    {getStatusBadge(project.status)}
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Progress:</span>
+                      <span className="font-medium">{project.progress}%</span>
+                    </div>
+                    <Progress value={project.progress} className="w-full" />
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="completed" className="space-y-4">
+          <div className="grid gap-6">
+            {projects.filter(p => p.status === 'completed').map((project) => (
+              <Card key={project.id}>
+                <CardHeader>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <CardTitle>{project.name}</CardTitle>
+                      <CardDescription>{project.description}</CardDescription>
+                    </div>
+                    {getStatusBadge(project.status)}
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Completed:</span>
+                      <span className="font-medium text-green-600">100%</span>
+                    </div>
+                    <Progress value={100} className="w-full" />
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+
+        <TabsContent value="on-hold" className="space-y-4">
+          <div className="grid gap-6">
+            {projects.filter(p => p.status === 'on-hold').map((project) => (
+              <Card key={project.id}>
+                <CardHeader>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <CardTitle>{project.name}</CardTitle>
+                      <CardDescription>{project.description}</CardDescription>
+                    </div>
+                    {getStatusBadge(project.status)}
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Progress:</span>
+                      <span className="font-medium">{project.progress}%</span>
+                    </div>
+                    <Progress value={project.progress} className="w-full" />
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

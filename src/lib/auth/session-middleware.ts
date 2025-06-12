@@ -1,58 +1,49 @@
-// ================================================
-// Session Management for Middleware - Cookie Based
-// ================================================
+﻿import { NextRequest, NextResponse } from "next/server";
+import { createClient } from '@/lib/supabase/server';
 
-import { NextRequest } from 'next/server';
-import { UserRole } from './types';
-import { createServerClient } from '@supabase/ssr';
-
-/**
- * Get user role from session for middleware using cookies
- */
-export async function getUserRoleFromSession(request: NextRequest): Promise<UserRole | null> {
-  try {
-    // Create a Supabase client with cookie handling
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get(name: string) {
-            return request.cookies.get(name)?.value;
-          },
-          set(name: string, value: string, options: any) {
-            // Middleware can't set cookies, but we don't need to for reading
-          },
-          remove(name: string, options: any) {
-            // Middleware can't remove cookies, but we don't need to for reading
-          },
-        },
-      }
-    );
-
-    // Get the session from cookies
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+export const withSession = (handler: (req: NextRequest) => Promise<NextResponse>) =>
+  async (req: NextRequest) => {
+    const supabase = createClient();
+    const { data: { session }, error } = await supabase.auth.getSession();
     
-    if (sessionError || !session || !session.user) {
-      console.log('No session found in middleware');
+    if (error || !session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    return handler(req);
+  };
+
+export async function getUserRoleFromSession(request: NextRequest): Promise<string | null> {
+  try {
+    // Create a Supabase client for server-side operations
+    const supabase = createClient();
+
+    // Get the current session
+    const { data: { session }, error } = await supabase.auth.getSession();
+    
+    if (error || !session?.user) {
       return null;
     }
 
-    // Get user profile with role
-    const { data: userData, error: userError } = await supabase
-      .from('user_profiles')
+    // Get role from user metadata first (faster)
+    if (session.user.user_metadata?.role) {
+      return session.user.user_metadata.role;
+    }
+
+    // Fallback: Get user profile with role information from database
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
       .select('role')
       .eq('id', session.user.id)
       .single();
 
-    if (userError || !userData) {
-      console.error('Error fetching user profile:', userError);
+    if (profileError || !profile) {
+      // If no profile exists, return null
       return null;
     }
 
-    return userData.role as UserRole;
+    return profile.role;
   } catch (error) {
-    console.error('Get user role from session error:', error);
+    console.error('Error getting user role from session:', error);
     return null;
   }
 }

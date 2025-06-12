@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+﻿import { NextResponse } from 'next/server';
 import { createServiceClient } from '@/lib/supabase/unified-auth';
 import { NextRequest } from 'next/server';
 import { sendConsultationBookingNotification, sendConsultationBookingConfirmation } from '@/lib/email/sendEmail';
@@ -116,8 +116,8 @@ export async function POST(req: NextRequest) {
       message
     });
     
-    if (!adminNotification.success) {
-      console.warn('Failed to send admin notification:', adminNotification.message);
+    if (!adminNotification.sent) {
+      console.warn('Failed to send admin notification');
       // Continue with the process even if admin notification fails
     }
     
@@ -130,8 +130,8 @@ export async function POST(req: NextRequest) {
       preferred_time
     });
     
-    if (!clientConfirmation.success) {
-      console.warn('Failed to send client confirmation:', clientConfirmation.message);
+    if (!clientConfirmation.sent) {
+      console.warn('Failed to send client confirmation');
       // Continue with the process even if client confirmation fails
     }
     

@@ -187,7 +187,7 @@ export function MFASetup({ onComplete, onCancel }: MFASetupProps) {
               <div className="space-y-2">
                 <h3 className="font-semibold">2. Scan QR Code</h3>
                 <p className="text-sm text-muted-foreground">
-                  After installing the app, you&apos;ll scan a QR code to link your account.
+                  After installing the app, you'll scan a QR code to link your account.
                 </p>
               </div>
             </div>

@@ -473,46 +473,36 @@ export function UnifiedCustomerDashboard({ customerId }: UnifiedCustomerDashboar
                     <div className="flex items-start justify-between mb-3">
                       <div>
                         <h4 className="font-semibold text-lg">{bundle.name}</h4>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                           {bundle.description}
                         </p>
                       </div>
-                      <Badge className="bg-green-600 text-white">
-                        Save {formatCurrency(bundle.savings)}
-                      </Badge>
-                    </div>
-                    
-                    <div className="grid md:grid-cols-2 gap-3 mb-3">
-                      <div>
-                        <h5 className="text-sm font-medium mb-1">Unite Services</h5>
-                        <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                          {bundle.uniteServices.map((service) => (
-                            <li key={service}>• {service}</li>
-                          ))}
-                        </ul>
-                      </div>
-                      <div>
-                        <h5 className="text-sm font-medium mb-1">CARSI Courses</h5>
-                        <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                          {bundle.carsiCourses.map((course) => (
-                            <li key={course}>• {course}</li>
-                          ))}
-                        </ul>
+                      <div className="text-right">
+                        <div className="text-2xl font-bold text-teal-600">
+                          {formatCurrency(bundle.price)}
+                        </div>
+                        <div className="text-sm text-gray-500 line-through">
+                          {formatCurrency(bundle.originalPrice)}
+                        </div>
                       </div>
                     </div>
-                    
+                    <div className="space-y-2 mb-4">
+                      <h5 className="font-medium text-sm">Includes:</h5>
+                      <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                        {bundle.services.map((service, index) => (
+                          <li key={index} className="flex items-center gap-2">
+                            <div className="w-1.5 h-1.5 bg-teal-600 rounded-full"></div>
+                            {service}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                     <div className="flex items-center justify-between">
-                      <div>
-                        <span className="text-2xl font-bold">{formatCurrency(bundle.totalPrice)}</span>
-                        {bundle.duration && (
-                          <span className="text-sm text-gray-600 dark:text-gray-400 ml-2">
-                            {bundle.duration}
-                          </span>
-                        )}
-                      </div>
+                      <Badge variant="secondary">
+                        Save {Math.round(((bundle.originalPrice - bundle.price) / bundle.originalPrice) * 100)}%
+                      </Badge>
                       <Button>
-                        Learn More
-                        <ChevronRight className="h-4 w-4 ml-1" />
+                        Get Started
                       </Button>
                     </div>
                   </div>

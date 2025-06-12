@@ -3,351 +3,352 @@
 export const dynamic = 'force-dynamic'
 
 import { useState, useEffect } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Search, Plus, Calendar, Clock, User, AlertCircle } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Progress } from '@/components/ui/progress'
+import { 
+  CheckCircle, 
+  Clock, 
+  AlertTriangle,
+  Calendar,
+  Users,
+  Plus,
+  Filter,
+  Search
+} from 'lucide-react'
 
 interface Task {
   id: string
   title: string
   description: string
-  assignee: string
-  priority: 'high' | 'medium' | 'low'
   status: 'todo' | 'in-progress' | 'completed' | 'overdue'
+  priority: 'low' | 'medium' | 'high' | 'urgent'
+  assignee: string
   dueDate: string
-  category: string
-  completed: boolean
+  createdAt: string
+  completedAt?: string
+  client?: string
+  project?: string
+  tags: string[]
 }
 
 const mockTasks: Task[] = [
   {
     id: '1',
-    title: 'Follow up with TechCorp proposal',
-    description: 'Call to discuss implementation timeline and next steps',
-    assignee: 'John Smith',
+    title: 'Update website homepage',
+    description: 'Redesign the homepage layout and update content',
+    status: 'in-progress',
     priority: 'high',
-    status: 'todo',
-    dueDate: '2024-06-08',
-    category: 'Sales',
-    completed: false
+    assignee: 'John Doe',
+    dueDate: '2024-02-15',
+    createdAt: '2024-01-15',
+    client: 'Tech Corp',
+    project: 'Website Redesign',
+    tags: ['design', 'frontend']
   },
   {
     id: '2',
-    title: 'Prepare demo for DataFlow Solutions',
-    description: 'Create custom demo showcasing cloud migration features',
-    assignee: 'Sarah Johnson',
+    title: 'Database optimization',
+    description: 'Optimize database queries for better performance',
+    status: 'todo',
     priority: 'medium',
-    status: 'in-progress',
-    dueDate: '2024-06-10',
-    category: 'Demo',
-    completed: false
+    assignee: 'Jane Smith',
+    dueDate: '2024-02-20',
+    createdAt: '2024-01-20',
+    client: 'Enterprise Ltd',
+    project: 'Database Migration',
+    tags: ['backend', 'performance']
   },
   {
     id: '3',
-    title: 'Contract review for StartupXYZ',
-    description: 'Review and update contract terms based on legal feedback',
-    assignee: 'Mike Chen',
+    title: 'Client meeting preparation',
+    description: 'Prepare presentation for quarterly review',
+    status: 'completed',
     priority: 'high',
-    status: 'overdue',
-    dueDate: '2024-06-05',
-    category: 'Legal',
-    completed: false
+    assignee: 'Bob Johnson',
+    dueDate: '2024-01-30',
+    createdAt: '2024-01-25',
+    completedAt: '2024-01-29',
+    client: 'StartupXYZ',
+    tags: ['meeting', 'presentation']
   },
   {
     id: '4',
-    title: 'Quarterly report preparation',
-    description: 'Compile sales metrics and performance data',
-    assignee: 'Emma Wilson',
-    priority: 'medium',
-    status: 'completed',
-    dueDate: '2024-06-07',
-    category: 'Reporting',
-    completed: true
+    title: 'Security audit',
+    description: 'Conduct comprehensive security audit',
+    status: 'overdue',
+    priority: 'urgent',
+    assignee: 'Alice Wilson',
+    dueDate: '2024-01-25',
+    createdAt: '2024-01-10',
+    client: 'Tech Corp',
+    tags: ['security', 'audit']
   }
 ]
 
-const categories = ['All', 'Sales', 'Demo', 'Legal', 'Reporting', 'Follow-up', 'Meeting']
+const priorities = ['All', 'urgent', 'high', 'medium', 'low']
 const statuses = ['All', 'todo', 'in-progress', 'completed', 'overdue']
 
 export default function TasksPage() {
   const [tasks, setTasks] = useState<Task[]>(mockTasks)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('All')
+  const [filteredTasks, setFilteredTasks] = useState<Task[]>(mockTasks)
   const [selectedStatus, setSelectedStatus] = useState('All')
   const [selectedPriority, setSelectedPriority] = useState('All')
+  const [searchTerm, setSearchTerm] = useState('')
 
-  const filteredTasks = tasks.filter(task => {
-    const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         task.description.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesCategory = selectedCategory === 'All' || task.category === selectedCategory
-    const matchesStatus = selectedStatus === 'All' || task.status === selectedStatus
-    const matchesPriority = selectedPriority === 'All' || task.priority === selectedPriority
-    
-    return matchesSearch && matchesCategory && matchesStatus && matchesPriority
-  })
+  useEffect(() => {
+    let filtered = tasks
 
-  const taskStats = {
-    total: tasks.length,
-    completed: tasks.filter(t => t.completed).length,
-    inProgress: tasks.filter(t => t.status === 'in-progress').length,
-    overdue: tasks.filter(t => t.status === 'overdue').length
-  }
+    if (selectedStatus !== 'All') {
+      filtered = filtered.filter(task => task.status === selectedStatus)
+    }
 
-  const toggleTaskCompletion = (taskId: string) => {
-    setTasks(prevTasks => 
-      prevTasks.map(task => 
-        task.id === taskId 
-          ? { 
-              ...task, 
-              completed: !task.completed,
-              status: !task.completed ? 'completed' : 'todo'
-            }
-          : task
+    if (selectedPriority !== 'All') {
+      filtered = filtered.filter(task => task.priority === selectedPriority)
+    }
+
+    if (searchTerm) {
+      filtered = filtered.filter(task => 
+        task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        task.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        task.assignee.toLowerCase().includes(searchTerm.toLowerCase())
       )
-    )
-  }
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'high': return 'bg-red-500'
-      case 'medium': return 'bg-yellow-500'
-      case 'low': return 'bg-green-500'
-      default: return 'bg-gray-500'
     }
-  }
 
-  const getStatusColor = (status: string) => {
+    setFilteredTasks(filtered)
+  }, [tasks, selectedStatus, selectedPriority, searchTerm])
+
+  const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'todo': return 'bg-blue-500'
-      case 'in-progress': return 'bg-orange-500'
-      case 'completed': return 'bg-green-500'
-      case 'overdue': return 'bg-red-500'
-      default: return 'bg-gray-500'
+      case 'completed':
+        return <Badge className="bg-green-100 text-green-800">Completed</Badge>
+      case 'in-progress':
+        return <Badge className="bg-blue-100 text-blue-800">In Progress</Badge>
+      case 'todo':
+        return <Badge className="bg-gray-100 text-gray-800">To Do</Badge>
+      case 'overdue':
+        return <Badge className="bg-red-100 text-red-800">Overdue</Badge>
+      default:
+        return <Badge className="bg-gray-100 text-gray-800">{status}</Badge>
     }
   }
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric',
-      year: 'numeric'
-    })
+  const getPriorityBadge = (priority: string) => {
+    switch (priority) {
+      case 'urgent':
+        return <Badge className="bg-red-100 text-red-800">Urgent</Badge>
+      case 'high':
+        return <Badge className="bg-orange-100 text-orange-800">High</Badge>
+      case 'medium':
+        return <Badge className="bg-yellow-100 text-yellow-800">Medium</Badge>
+      case 'low':
+        return <Badge className="bg-green-100 text-green-800">Low</Badge>
+      default:
+        return <Badge className="bg-gray-100 text-gray-800">{priority}</Badge>
+    }
   }
 
-  const isOverdue = (dueDate: string, completed: boolean) => {
-    if (completed) return false
-    const today = new Date()
-    const due = new Date(dueDate)
-    return due < today
+  const getTaskStats = () => {
+    const total = tasks.length
+    const completed = tasks.filter(t => t.status === 'completed').length
+    const inProgress = tasks.filter(t => t.status === 'in-progress').length
+    const overdue = tasks.filter(t => t.status === 'overdue').length
+    const completionRate = total > 0 ? (completed / total) * 100 : 0
+
+    return { total, completed, inProgress, overdue, completionRate }
   }
+
+  const stats = getTaskStats()
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold">Tasks</h1>
-          <p className="text-muted-foreground">Manage your team&apos;s tasks and deadlines</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Tasks</h1>
+          <p className="text-gray-600 dark:text-gray-300">Manage and track task progress</p>
         </div>
         <Button>
-          <Plus className="mr-2 h-4 w-4" />
-          New Task
+          <Plus className="h-4 w-4 mr-2" />
+          Add New Task
         </Button>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      {/* Stats Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Total Tasks</p>
-                <p className="text-2xl font-bold">{taskStats.total}</p>
-              </div>
-              <Calendar className="h-8 w-8 text-blue-500" />
-            </div>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Tasks</CardTitle>
+            <CheckCircle className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.total}</div>
+            <p className="text-xs text-muted-foreground">All tasks</p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Completed</p>
-                <p className="text-2xl font-bold">{taskStats.completed}</p>
-              </div>
-              <Clock className="h-8 w-8 text-green-500" />
-            </div>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Completion Rate</CardTitle>
+            <CheckCircle className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.completionRate.toFixed(1)}%</div>
+            <Progress value={stats.completionRate} className="mt-2 h-2" />
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">In Progress</p>
-                <p className="text-2xl font-bold">{taskStats.inProgress}</p>
-              </div>
-              <User className="h-8 w-8 text-orange-500" />
-            </div>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">In Progress</CardTitle>
+            <Clock className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.inProgress}</div>
+            <p className="text-xs text-muted-foreground">Active tasks</p>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Overdue</p>
-                <p className="text-2xl font-bold">{taskStats.overdue}</p>
-              </div>
-              <AlertCircle className="h-8 w-8 text-red-500" />
-            </div>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Overdue</CardTitle>
+            <AlertTriangle className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-red-600">{stats.overdue}</div>
+            <p className="text-xs text-muted-foreground">Need attention</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Filters */}
-      <Card>
-        <CardContent className="p-6">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
-              <Label htmlFor="search">Search Tasks</Label>
-              <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="search"
-                  placeholder="Search by title or description..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-            </div>
-            
-            <div>
-              <Label htmlFor="category">Category</Label>
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="All Categories" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map(category => (
-                    <SelectItem key={category} value={category}>{category}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>Filters</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap gap-4">
+            <div className="flex items-center space-x-2">
+              <Filter className="h-4 w-4" />
+              <span className="text-sm font-medium">Status:</span>
+              <select 
+                value={selectedStatus} 
+                onChange={(e) => setSelectedStatus(e.target.value)}
+                className="border rounded px-2 py-1 text-sm"
+              >
+                {statuses.map(status => (
+                  <option key={status} value={status}>{status}</option>
+                ))}
+              </select>
             </div>
 
-            <div>
-              <Label htmlFor="status">Status</Label>
-              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="All Statuses" />
-                </SelectTrigger>
-                <SelectContent>
-                  {statuses.map(status => (
-                    <SelectItem key={status} value={status}>
-                      {status === 'All' ? status : status.charAt(0).toUpperCase() + status.slice(1)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <div className="flex items-center space-x-2">
+              <span className="text-sm font-medium">Priority:</span>
+              <select 
+                value={selectedPriority} 
+                onChange={(e) => setSelectedPriority(e.target.value)}
+                className="border rounded px-2 py-1 text-sm"
+              >
+                {priorities.map(priority => (
+                  <option key={priority} value={priority}>{priority}</option>
+                ))}
+              </select>
             </div>
 
-            <div>
-              <Label htmlFor="priority">Priority</Label>
-              <Select value={selectedPriority} onValueChange={setSelectedPriority}>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="All Priorities" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="All">All Priorities</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="low">Low</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="flex items-center space-x-2">
+              <Search className="h-4 w-4" />
+              <input
+                type="text"
+                placeholder="Search tasks..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="border rounded px-2 py-1 text-sm"
+              />
             </div>
           </div>
         </CardContent>
       </Card>
 
       {/* Tasks List */}
-      <div className="grid gap-4">
-        {filteredTasks.map((task, index) => (
-          <motion.div
-            key={task.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: index * 0.1 }}
-          >
-            <Card className={`hover:shadow-md transition-shadow ${task.completed ? 'opacity-75' : ''} ${isOverdue(task.dueDate, task.completed) ? 'border-red-200' : ''}`}>
-              <CardContent className="p-6">
-                <div className="flex items-start gap-4">
-                  <div className="mt-1">
-                    <Checkbox
-                      checked={task.completed}
-                      onCheckedChange={() => toggleTaskCompletion(task.id)}
-                    />
+      <div className="space-y-4">
+        {filteredTasks.map((task) => (
+          <Card key={task.id}>
+            <CardHeader>
+              <div className="flex justify-between items-start">
+                <div className="flex-1">
+                  <CardTitle className="text-lg">{task.title}</CardTitle>
+                  <CardDescription>{task.description}</CardDescription>
+                </div>
+                <div className="flex space-x-2">
+                  {getStatusBadge(task.status)}
+                  {getPriorityBadge(task.priority)}
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <span className="text-sm text-gray-600">Assignee:</span>
+                  <p className="font-medium">{task.assignee}</p>
+                </div>
+                <div>
+                  <span className="text-sm text-gray-600">Due Date:</span>
+                  <p className="font-medium">{new Date(task.dueDate).toLocaleDateString()}</p>
+                </div>
+                {task.client && (
+                  <div>
+                    <span className="text-sm text-gray-600">Client:</span>
+                    <p className="font-medium">{task.client}</p>
                   </div>
-                  
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className={`text-lg font-semibold ${task.completed ? 'line-through text-muted-foreground' : ''}`}>
-                        {task.title}
-                      </h3>
-                      <Badge className={`${getPriorityColor(task.priority)} text-white`}>
-                        {task.priority.toUpperCase()}
+                )}
+              </div>
+              
+              {task.project && (
+                <div className="mt-4">
+                  <span className="text-sm text-gray-600">Project:</span>
+                  <p className="font-medium">{task.project}</p>
+                </div>
+              )}
+
+              {task.tags.length > 0 && (
+                <div className="mt-4">
+                  <span className="text-sm text-gray-600">Tags:</span>
+                  <div className="flex flex-wrap gap-2 mt-1">
+                    {task.tags.map((tag, index) => (
+                      <Badge key={index} variant="outline" className="text-xs">
+                        {tag}
                       </Badge>
-                      <Badge className={`${getStatusColor(task.status)} text-white`}>
-                        {task.status.toUpperCase().replace('-', ' ')}
-                      </Badge>
-                      <Badge variant="outline">
-                        {task.category}
-                      </Badge>
-                      {isOverdue(task.dueDate, task.completed) && (
-                        <Badge className="bg-red-500 text-white">
-                          OVERDUE
-                        </Badge>
-                      )}
-                    </div>
-                    
-                    <p className={`text-muted-foreground mb-3 ${task.completed ? 'line-through' : ''}`}>
-                      {task.description}
-                    </p>
-                    
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-1">
-                        <User className="h-4 w-4" />
-                        <span>{task.assignee}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Calendar className="h-4 w-4" />
-                        <span>Due: {formatDate(task.dueDate)}</span>
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
+              )}
 
-      {filteredTasks.length === 0 && (
-        <Card>
-          <CardContent className="p-12 text-center">
-            <p className="text-muted-foreground text-lg">No tasks found matching your criteria</p>
-          </CardContent>
-        </Card>
-      )}
+              <div className="flex space-x-2 mt-4">
+                <Button variant="outline" size="sm">
+                  Edit
+                </Button>
+                <Button variant="outline" size="sm">
+                  View Details
+                </Button>
+                {task.status !== 'completed' && (
+                  <Button size="sm">
+                    Mark Complete
+                  </Button>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+
+        {filteredTasks.length === 0 && (
+          <Card>
+            <CardContent className="text-center py-8">
+              <p className="text-gray-500">No tasks found matching your criteria.</p>
+            </CardContent>
+          </Card>
+        )}
+      </div>
     </div>
   )
 }

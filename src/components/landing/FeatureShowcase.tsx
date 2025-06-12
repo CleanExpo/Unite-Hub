@@ -110,7 +110,7 @@ export default function FeatureShowcase() {
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Unite Group delivers cutting-edge technology solutions that empower businesses to 
-            achieve operational excellence, drive innovation, and accelerate growth in today&apos;s competitive market.
+            achieve operational excellence, drive innovation, and accelerate growth in today's competitive market.
           </p>
         </motion.div>
 

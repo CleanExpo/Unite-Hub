@@ -178,7 +178,7 @@ export function generateTOTPQRCodeURL(
  */
 function base32Encode(buffer: Buffer): string {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
-  let result = '';
+  const result = '';
   let bits = 0;
   let value = 0;
   
@@ -208,7 +208,7 @@ function base32Decode(str: string): Buffer {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
   str = str.toUpperCase().replace(/[^A-Z2-7]/g, '');
   
-  let result = Buffer.alloc(Math.ceil(str.length * 5 / 8));
+  const result = Buffer.alloc(Math.ceil(str.length * 5 / 8));
   let bits = 0;
   let value = 0;
   let index = 0;

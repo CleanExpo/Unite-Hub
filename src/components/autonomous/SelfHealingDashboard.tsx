@@ -1,11 +1,11 @@
+'use client';
+
 /**
  * Self-Healing Dashboard Component
  * Unite Group - Version 14.0 Phase 1
  * 
  * Real-time visualization and management of autonomous self-healing infrastructure
  */
-
-'use client';
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -32,12 +32,34 @@ import {
   HardDrive,
   Wifi
 } from 'lucide-react';
-import { 
-  ComponentHealth, 
-  RecoveryAction, 
-  SelfHealingEvent, 
-  PredictiveAlert 
-} from '@/lib/autonomous/self-healing/types';
+
+// Mock types for demonstration
+interface ComponentHealth {
+  id: string;
+  name: string;
+  status: 'healthy' | 'warning' | 'critical';
+  health: number;
+  trend: 'improving' | 'declining' | 'stable';
+  lastCheck: Date;
+}
+
+interface RecoveryAction {
+  id: string;
+  component: string;
+  action: string;
+  status: 'running' | 'completed' | 'failed';
+  startTime: Date;
+  automated: boolean;
+}
+
+interface SelfHealingEvent {
+  id: string;
+  timestamp: Date;
+  level: 'info' | 'warning' | 'error';
+  component: string;
+  message: string;
+  action?: string;
+}
 
 interface SystemHealthOverview {
   overallHealth: number;
@@ -66,7 +88,6 @@ export function SelfHealingDashboard({
   const [loading, setLoading] = useState(false);
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
 
-  // Simulate real-time data updates
   useEffect(() => {
     const interval = setInterval(async () => {
       await refreshSystemHealth();
@@ -78,13 +99,13 @@ export function SelfHealingDashboard({
   const refreshSystemHealth = async () => {
     setLoading(true);
     try {
-      // In a real implementation, this would call the self-healing service API
+      // Mock API call - replace with actual endpoint
       const response = await fetch('/api/self-healing/status');
       if (response.ok) {
         const data = await response.json();
         setSystemHealth(data);
+        setLastRefresh(new Date());
       }
-      setLastRefresh(new Date());
     } catch (error) {
       console.error('Failed to refresh system health:', error);
     } finally {
@@ -113,7 +134,7 @@ export function SelfHealingDashboard({
   const getTrendIcon = (trend: string) => {
     switch (trend) {
       case 'improving': return <TrendingUp className="h-4 w-4 text-green-500" />;
-      case 'degrading': return <TrendingDown className="h-4 w-4 text-red-500" />;
+      case 'declining': return <TrendingDown className="h-4 w-4 text-red-500" />;
       case 'stable': return <Minus className="h-4 w-4 text-gray-500" />;
       default: return <Minus className="h-4 w-4 text-gray-500" />;
     }
@@ -121,8 +142,8 @@ export function SelfHealingDashboard({
 
   const getComponentIcon = (componentId: string) => {
     if (componentId.includes('cpu')) return <Cpu className="h-4 w-4" />;
-    if (componentId.includes('memory')) return <Server className="h-4 w-4" />;
-    if (componentId.includes('disk')) return <HardDrive className="h-4 w-4" />;
+    if (componentId.includes('server')) return <Server className="h-4 w-4" />;
+    if (componentId.includes('storage')) return <HardDrive className="h-4 w-4" />;
     if (componentId.includes('network')) return <Wifi className="h-4 w-4" />;
     return <Activity className="h-4 w-4" />;
   };
@@ -148,12 +169,11 @@ export function SelfHealingDashboard({
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Self-Healing Infrastructure</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Self-Healing Infrastructure</h1>
           <p className="text-muted-foreground">
-            Autonomous system monitoring and recovery management
+            Monitor and manage autonomous system recovery
           </p>
         </div>
         <div className="flex items-center space-x-4">
@@ -161,9 +181,8 @@ export function SelfHealingDashboard({
             Last updated: {formatTimestamp(lastRefresh)}
           </div>
           <Button 
-            onClick={refreshSystemHealth} 
+            onClick={refreshSystemHealth}
             disabled={loading}
-            variant="outline"
             size="sm"
           >
             <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
@@ -172,75 +191,75 @@ export function SelfHealingDashboard({
         </div>
       </div>
 
-      {/* Overall Health Status */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Overall Health</p>
-                <p className={`text-2xl font-bold ${getOverallHealthColor(systemHealth.overallHealth)}`}>
-                  {systemHealth.overallHealth}%
-                </p>
-              </div>
-              <Heart className={`h-8 w-8 ${getOverallHealthColor(systemHealth.overallHealth)}`} />
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Overall Health</CardTitle>
+            <Heart className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">
+              <span className={getOverallHealthColor(systemHealth.overallHealth)}>
+                {systemHealth.overallHealth}%
+              </span>
             </div>
             <Progress value={systemHealth.overallHealth} className="mt-2" />
           </CardContent>
         </Card>
 
         <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Active Components</CardTitle>
+            <Server className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
           <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Active Components</p>
-                <p className="text-2xl font-bold">{systemHealth.componentHealth.length}</p>
-              </div>
-              <Server className="h-8 w-8 text-blue-500" />
-            </div>
+            <div className="text-2xl font-bold">{systemHealth.componentHealth.length}</div>
+            <p className="text-xs text-muted-foreground">
+              Monitored systems
+            </p>
           </CardContent>
         </Card>
 
         <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Active Recoveries</CardTitle>
+            <Zap className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
           <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Active Recoveries</p>
-                <p className="text-2xl font-bold">{systemHealth.activeRecoveries.length}</p>
-              </div>
-              <Shield className="h-8 w-8 text-orange-500" />
-            </div>
+            <div className="text-2xl font-bold">{systemHealth.activeRecoveries.length}</div>
+            <p className="text-xs text-muted-foreground">
+              Self-healing actions
+            </p>
           </CardContent>
         </Card>
 
         <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Recent Events</CardTitle>
+            <Activity className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
           <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Recent Events</p>
-                <p className="text-2xl font-bold">{systemHealth.recentEvents.length}</p>
-              </div>
-              <Activity className="h-8 w-8 text-purple-500" />
-            </div>
+            <div className="text-2xl font-bold">{systemHealth.recentEvents.length}</div>
+            <p className="text-xs text-muted-foreground">
+              Last 24 hours
+            </p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Detailed Dashboard */}
       <Tabs defaultValue="components" className="space-y-4">
         <TabsList>
           <TabsTrigger value="components">Component Health</TabsTrigger>
           <TabsTrigger value="recoveries">Active Recoveries</TabsTrigger>
           <TabsTrigger value="events">Event Log</TabsTrigger>
-          <TabsTrigger value="alerts">Predictive Alerts</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="components">
+        <TabsContent value="components" className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle>Component Health Status</CardTitle>
               <CardDescription>
-                Real-time monitoring of all system components
+                Real-time health monitoring of all system components
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -249,32 +268,31 @@ export function SelfHealingDashboard({
                   <TableRow>
                     <TableHead>Component</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead>Health Score</TableHead>
+                    <TableHead>Health</TableHead>
                     <TableHead>Trend</TableHead>
                     <TableHead>Last Check</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {systemHealth.componentHealth.map((component) => (
-                    <TableRow key={component.componentId}>
-                      <TableCell className="flex items-center space-x-2">
-                        {getComponentIcon(component.componentId)}
-                        <span className="font-medium">{component.componentId}</span>
+                    <TableRow key={component.id}>
+                      <TableCell>
+                        <div className="flex items-center space-x-2">
+                          {getComponentIcon(component.id)}
+                          <span>{component.name}</span>
+                        </div>
                       </TableCell>
                       <TableCell>
                         {getHealthStatusBadge(component.status)}
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center space-x-2">
-                          <Progress value={component.healthScore} className="w-16" />
-                          <span className="text-sm">{component.healthScore}%</span>
+                          <Progress value={component.health} className="w-16" />
+                          <span className="text-sm">{component.health}%</span>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className="flex items-center space-x-1">
-                          {getTrendIcon(component.trend)}
-                          <span className="text-sm capitalize">{component.trend}</span>
-                        </div>
+                        {getTrendIcon(component.trend)}
                       </TableCell>
                       <TableCell className="text-sm text-muted-foreground">
                         {formatTimestamp(component.lastCheck)}
@@ -287,81 +305,37 @@ export function SelfHealingDashboard({
           </Card>
         </TabsContent>
 
-        <TabsContent value="recoveries">
+        <TabsContent value="recoveries" className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle>Active Recovery Actions</CardTitle>
               <CardDescription>
-                Currently executing autonomous recovery procedures
+                Ongoing autonomous healing processes
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {systemHealth.activeRecoveries.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  <Shield className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>No active recovery actions</p>
-                  <p className="text-sm">System is operating normally</p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {systemHealth.activeRecoveries.map((recovery) => (
-                    <Alert key={recovery.id}>
-                      <Zap className="h-4 w-4" />
-                      <AlertTitle className="flex items-center justify-between">
-                        <span>{recovery.description}</span>
-                        <Badge variant={recovery.priority === 'high' ? 'destructive' : 'secondary'}>
-                          {recovery.priority} priority
-                        </Badge>
-                      </AlertTitle>
-                      <AlertDescription>
-                        <div className="grid grid-cols-2 gap-4 mt-2">
-                          <div>
-                            <p className="text-sm"><strong>Component:</strong> {recovery.component}</p>
-                            <p className="text-sm"><strong>Type:</strong> {recovery.type}</p>
-                          </div>
-                          <div>
-                            <p className="text-sm"><strong>Duration:</strong> {recovery.estimatedDuration}s</p>
-                            <p className="text-sm"><strong>Automated:</strong> {recovery.automated ? 'Yes' : 'No'}</p>
-                          </div>
-                        </div>
-                      </AlertDescription>
-                    </Alert>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="events">
-          <Card>
-            <CardHeader>
-              <CardTitle>System Event Log</CardTitle>
-              <CardDescription>
-                Recent self-healing system activities and notifications
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2 max-h-96 overflow-y-auto">
-                {systemHealth.recentEvents.map((event, index) => (
-                  <div 
-                    key={index}
-                    className="flex items-start space-x-3 p-3 rounded-lg border"
-                  >
-                    {getEventIcon(event.level)}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <p className="text-sm font-medium">{event.type}</p>
-                        <time className="text-xs text-muted-foreground">
-                          {formatTimestamp(event.timestamp)}
-                        </time>
+              <div className="space-y-4">
+                {systemHealth.activeRecoveries.map((recovery) => (
+                  <div key={recovery.id} className="border rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center space-x-2">
+                        <Shield className="h-4 w-4" />
+                        <span className="font-medium">{recovery.component}</span>
                       </div>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        {event.message}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        Component: {event.component}
-                      </p>
+                      <Badge variant={recovery.status === 'running' ? 'default' : 'secondary'}>
+                        {recovery.status}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground mb-2">
+                      {recovery.action}
+                    </p>
+                    <div className="grid grid-cols-2 gap-4 mt-2">
+                      <div>
+                        <p className="text-sm"><strong>Started:</strong> {formatTimestamp(recovery.startTime)}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm"><strong>Automated:</strong> {recovery.automated ? 'Yes' : 'No'}</p>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -370,19 +344,41 @@ export function SelfHealingDashboard({
           </Card>
         </TabsContent>
 
-        <TabsContent value="alerts">
+        <TabsContent value="events" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Predictive Alerts</CardTitle>
+              <CardTitle>System Event Log</CardTitle>
               <CardDescription>
-                AI-powered failure predictions and preventive recommendations
+                Recent system events and healing activities
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-center py-8 text-muted-foreground">
-                <AlertTriangle className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>No predictive alerts</p>
-                <p className="text-sm">All systems operating within normal parameters</p>
+              <div className="space-y-4">
+                {systemHealth.recentEvents.map((event) => (
+                  <div key={event.id} className="flex items-start space-x-3 border-b pb-3">
+                    <div className="mt-1">
+                      {getEventIcon(event.level)}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm font-medium">
+                          Component: {event.component}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {formatTimestamp(event.timestamp)}
+                        </p>
+                      </div>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {event.message}
+                      </p>
+                      {event.action && (
+                        <p className="text-xs text-blue-600 mt-1">
+                          Action: {event.action}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>

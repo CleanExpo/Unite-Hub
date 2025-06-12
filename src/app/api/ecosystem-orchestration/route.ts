@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Advanced Ecosystem Orchestration API
  * Unite Group - Version 15.0 Phase 2 Implementation
  */
@@ -299,26 +299,7 @@ class EcosystemOrchestrationService {
   private integrationRegistry: Map<string, any>;
 
   constructor() {
-    this.aiGateway = new AIGateway({
-      providers: [{
-        provider: 'openai',
-        apiKey: process.env.OPENAI_API_KEY || '',
-        model: 'gpt-4',
-        maxTokens: 4000,
-        temperature: 0.3
-      }],
-      cache: {
-        enabled: true,
-        ttl: 300,
-        maxSize: 1000,
-        keyStrategy: 'hash'
-      },
-      monitoring: {
-        enabled: true,
-        metricsRetentionDays: 30,
-        healthCheckIntervalSeconds: 60
-      }
-    });
+    this.aiGateway = new AIGateway();
     this.partnerDatabase = new Map();
     this.integrationRegistry = new Map();
   }

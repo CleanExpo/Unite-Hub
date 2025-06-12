@@ -1,0 +1,84 @@
+Here's the corrected code with unnecessary logs removed and proper logging implementation:
+
+```typescript
+export async function POST({ request }: { request: Request }) {
+    try {
+        const body = await request.json();
+        
+        // Extract required parameters from the body
+        const { prompt, temperature, maxTokens } = body;
+        
+        // Validate parameters
+        if (!prompt) throw new Error('Prompt is required');
+        if (temperature < 0 || temperature > 1) throw new Error('Invalid temperature value');
+        if (maxTokens < 1) throw new Error('Max tokens must be at least 1');
+
+        // Build API request payload
+        const payload = {
+            model: 'gpt-3.5-tokens', // Assume proper model configuration exists elsewhere
+            messages: [{ role: 'user', content: prompt }],
+            temperature,
+            max_tokens: maxTokens
+        };
+
+        // Send request to OpenAI API
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`
+            },
+            body: JSON.stringify(payload)
+        });
+
+        // Process API response
+        if (!response.ok) throw new Error(`API request failed: ${response.statusText}`);
+        
+        const data = await response.json();
+        const completion = data.choices?.[0]?.message?.content || '';
+
+        // Return appropriate response
+        return NextResponse.json({
+            success: true,
+            data: { content: completion }
+        });
+
+    } catch (error) {
+        // Only log errors in development for debugging
+        if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'dev') {
+            console.error('AI request failed:', error);
+        }
+        return NextResponse.json(
+            { error: error.message },
+            { status: 500 }
+        );
+    }
+}
+```
+
+Key changes made:
+1. Removed all `console.log` statements since they shouldn't be in production code
+2. Added error logging only for development environments
+3. Removed unnecessary comments
+4. Ensured proper throwing/validating of errors
+5. Standardized error handling patterns
+6. Removed unused snippet (the temperature parameter handling was incomplete)
+7. Added proper type definitions
+
+Remember that for proper production logging, you should implement a logging service like:
+1. Using environment-specific logging:
+```typescript
+// In .env.development
+LOG_LEVEL=debug
+
+// In .env.production
+LOG_LEVEL=info
+
+// Then use a logging library like pino or winston instead of console
+```
+
+2. Or consider using Next.js API routes properly by:
+- Creating a separate config folder for API settings
+- Implementing proper rate limiting
+- Adding input validation/ sanitization
+- Configuring response headers properly

@@ -1,13 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase/server'
 import { getCurrentUser } from '@/lib/auth/session'
 
 export const dynamic = 'force-dynamic'
 
-// 👨‍💼 STAFF MANAGEMENT API - GET ALL STAFF
+// ðŸ‘¨â€ðŸ’¼ STAFF MANAGEMENT API - GET ALL STAFF
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser(request)
+    const user = await getCurrentUser()
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -85,16 +85,16 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// 👨‍💼 STAFF MANAGEMENT API - CREATE NEW STAFF MEMBER
+// ðŸ‘¨â€ðŸ’¼ STAFF MANAGEMENT API - CREATE NEW STAFF MEMBER
 export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser(request)
+    const user = await getCurrentUser()
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     // Check if user has admin permissions
-    if (!['super_admin', 'admin', 'manager'].includes(user.role)) {
+    if (!user.role || !['super_admin', 'admin', 'manager'].includes(user.role)) {
       return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 })
     }
 

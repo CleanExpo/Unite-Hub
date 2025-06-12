@@ -24,8 +24,12 @@ import {
   Minus,
   Rocket,
   Brain,
-  Eye
+  Eye,
+  RefreshCw,
+  Settings
 } from 'lucide-react';
+import { apiClient } from '@/lib/apiClient';
+import { toast } from '@/components/ui/use-toast';
 
 interface MarketTrend {
   id: string;
@@ -86,105 +90,98 @@ interface InnovationMetrics {
 export default function InnovationFrameworkDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [configured, setConfigured] = useState(false);
   
-  // Mock data - in production, this would come from the actual services
-  const [marketTrends] = useState<MarketTrend[]>([
-    {
-      id: '1',
-      name: 'AI-Powered Autonomous Business Operations',
-      category: 'technology',
-      relevanceScore: 0.94,
-      impactPotential: 0.91,
-      timeHorizon: 'short_term'
-    },
-
-    {
-      id: '3',
-      name: 'Edge AI and Distributed Intelligence',
-      category: 'technology',
-      relevanceScore: 0.91,
-      impactPotential: 0.88,
-      timeHorizon: 'short_term'
-    }
-  ]);
-
-  const [opportunities] = useState<InnovationOpportunity[]>([
-    {
-      id: '1',
-      title: 'Leverage AI-Powered Operations for Business Advantage',
-      category: 'feature',
-      businessValue: 0.91,
-      technicalFeasibility: 0.87,
-      priority: 'critical',
-      expectedROI: 2.4,
-      timeToMarket: 6
-    },
-
-  ]);
-
-  const [productMarketFits] = useState<ProductMarketFit[]>([
-    {
-      productId: 'unite-ai-platform',
-      productName: 'Unite AI Platform',
-      fitScore: 0.82,
-      userAdoption: 0.78,
-      customerSatisfaction: 0.85,
-      marketReadiness: 0.82,
-      recommendations: ['Excellent PMF - Scale marketing and sales efforts', 'Focus on market expansion']
-    },
-    {
-      productId: 'cognitive-analytics',
-      productName: 'Cognitive Analytics Suite',
-      fitScore: 0.88,
-      userAdoption: 0.84,
-      customerSatisfaction: 0.88,
-      marketReadiness: 0.79,
-      recommendations: ['Outstanding PMF - Consider new market segments', 'Enhance competitive positioning']
-    }
-  ]);
-
-  const [abTests] = useState<ABTest[]>([
-    {
-      id: '1',
-      name: 'AI Dashboard Layout Optimization',
-      status: 'running',
-      primaryMetric: 'engagement_time',
-      variants: [
-        { name: 'Control', conversionRate: 0.597, visitors: 1420 },
-        { name: 'Simplified Layout', conversionRate: 0.669, visitors: 1380 }
-      ]
-    },
-    {
-      id: '2',
-      name: 'Onboarding Flow Enhancement',
-      status: 'completed',
-      primaryMetric: 'time_to_first_value',
-      variants: [
-        { name: 'Standard Onboarding', conversionRate: 0.513, visitors: 456 },
-        { name: 'Interactive Onboarding', conversionRate: 0.671, visitors: 444 }
-      ],
-      results: {
-        winningVariant: 'Interactive Onboarding',
-        improvementPercent: 30.8,
-        recommendation: 'implement'
-      }
-    }
-  ]);
-
-  const [metrics] = useState<InnovationMetrics>({
-    totalOpportunities: 12,
-    averageROI: 2.1,
-    trendAccuracy: 0.87,
-    validationAccuracy: 0.91,
-    activeFeatures: 8,
-    marketTimingAccuracy: 0.84
+  // Real data from API - NO MOCK DATA
+  const [marketTrends, setMarketTrends] = useState<MarketTrend[]>([]);
+  const [opportunities, setOpportunities] = useState<InnovationOpportunity[]>([]);
+  const [productMarketFits, setProductMarketFits] = useState<ProductMarketFit[]>([]);
+  const [abTests, setAbTests] = useState<ABTest[]>([]);
+  const [metrics, setMetrics] = useState<InnovationMetrics>({
+    totalOpportunities: 0,
+    averageROI: 0,
+    trendAccuracy: 0,
+    validationAccuracy: 0,
+    activeFeatures: 0,
+    marketTimingAccuracy: 0
   });
 
   useEffect(() => {
-    // Simulate loading
-    const timer = setTimeout(() => setIsLoading(false), 1000);
-    return () => clearTimeout(timer);
+    fetchInnovationData();
   }, []);
+
+  const fetchInnovationData = async () => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const response = await apiClient.get('innovation/framework');
+      
+      if (response.configured) {
+        // Innovation Framework is configured, use real data
+        setConfigured(true);
+        setMarketTrends(response.data.marketTrends || []);
+        setOpportunities(response.data.opportunities || []);
+        setProductMarketFits(response.data.productMarketFits || []);
+        setAbTests(response.data.abTests || []);
+        setMetrics(response.data.metrics);
+      } else {
+        // Innovation Framework not configured
+        setConfigured(false);
+        setMarketTrends([]);
+        setOpportunities([]);
+        setProductMarketFits([]);
+        setAbTests([]);
+        setMetrics({
+          totalOpportunities: 0,
+          averageROI: 0,
+          trendAccuracy: 0,
+          validationAccuracy: 0,
+          activeFeatures: 0,
+          marketTimingAccuracy: 0
+        });
+      }
+    } catch (err) {
+      console.error('Error fetching Innovation Framework data:', err);
+      setError('Failed to load Innovation Framework data. Please try again.');
+      toast({
+        title: 'Error',
+        description: 'Failed to load Innovation Framework data',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRefresh = () => {
+    fetchInnovationData();
+  };
+
+  const handleConfigure = async () => {
+    try {
+      await apiClient.post('innovation/framework', {
+        action: 'configure',
+        name: 'Innovation Framework',
+        settings: {}
+      });
+      
+      toast({
+        title: 'Success',
+        description: 'Innovation Framework configured successfully',
+      });
+      
+      // Refresh data
+      fetchInnovationData();
+    } catch (err) {
+      toast({
+        title: 'Error',
+        description: 'Failed to configure Innovation Framework',
+        variant: 'destructive',
+      });
+    }
+  };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -222,6 +219,85 @@ export default function InnovationFrameworkDashboard() {
           </div>
           <div className="h-96 bg-gray-200 rounded"></div>
         </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-6">
+        <Card>
+          <CardContent className="p-12">
+            <div className="text-center">
+              <AlertCircle className="h-16 w-16 mx-auto mb-4 text-red-400" />
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                Error Loading Innovation Framework
+              </h3>
+              <p className="text-red-600 mb-4">{error}</p>
+              <Button onClick={handleRefresh}>
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Try Again
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!configured) {
+    return (
+      <div className="p-6 space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Innovation Framework</h1>
+            <p className="text-muted-foreground">
+              AI-powered innovation management and market validation
+            </p>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Button variant="outline" size="sm" onClick={handleRefresh}>
+              <RefreshCw className="h-4 w-4" />
+            </Button>
+            <Button size="sm" onClick={handleConfigure}>
+              <Settings className="h-4 w-4 mr-2" />
+              Configure
+            </Button>
+          </div>
+        </div>
+
+        <Card>
+          <CardContent className="p-12">
+            <div className="text-center">
+              <Brain className="h-16 w-16 mx-auto mb-4 text-gray-400" />
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                Innovation Framework Not Configured
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
+                Set up your Innovation Framework to enable AI-powered market intelligence, 
+                opportunity identification, and autonomous feature development.
+              </p>
+              
+              <div className="space-y-4 mb-6">
+                <div className="text-left max-w-md mx-auto">
+                  <h4 className="font-semibold mb-2">Setup includes:</h4>
+                  <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                    <li>• Market intelligence API integration</li>
+                    <li>• A/B testing framework configuration</li>
+                    <li>• Product analytics setup</li>
+                    <li>• Business intelligence tools</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <Button onClick={handleConfigure}>
+                <Settings className="h-4 w-4 mr-2" />
+                Configure Innovation Framework
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -326,86 +402,59 @@ export default function InnovationFrameworkDashboard() {
 
         <TabsContent value="overview" className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Innovation Opportunities */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <Lightbulb className="h-5 w-5" />
-                  <span>Top Innovation Opportunities</span>
+                  <span>Top Opportunities</span>
                 </CardTitle>
-                <CardDescription>
-                  AI-identified opportunities ranked by business value
-                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {opportunities.map((opportunity) => (
-                  <div key={opportunity.id} className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Badge variant={getPriorityColor(opportunity.priority)}>
-                          {opportunity.priority}
-                        </Badge>
-                        <span className="font-medium text-sm">{opportunity.title}</span>
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        {opportunity.expectedROI.toFixed(1)}x ROI
+                  <div key={opportunity.id} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div className="flex-1">
+                      <h4 className="font-medium">{opportunity.title}</h4>
+                      <p className="text-sm text-muted-foreground">{opportunity.category}</p>
+                      <div className="flex items-center space-x-4 mt-2">
+                        <span className="text-xs">ROI: {opportunity.expectedROI}x</span>
+                        <span className="text-xs">Time: {opportunity.timeToMarket}mo</span>
                       </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <div className="text-muted-foreground">Business Value</div>
-                        <Progress value={opportunity.businessValue * 100} className="h-2" />
+                    <div className="flex flex-col items-end space-y-2">
+                      <Badge variant={getPriorityColor(opportunity.priority)}>
+                        {opportunity.priority}
+                      </Badge>
+                      <div className="text-sm font-medium">
+                        {opportunity.businessValue}/10
                       </div>
-                      <div>
-                        <div className="text-muted-foreground">Technical Feasibility</div>
-                        <Progress value={opportunity.technicalFeasibility * 100} className="h-2" />
-                      </div>
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      Time to Market: {opportunity.timeToMarket} months
                     </div>
                   </div>
                 ))}
               </CardContent>
             </Card>
 
-            {/* Product Market Fit */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <Target className="h-5 w-5" />
-                  <span>Product Market Fit</span>
+                  <span>Product-Market Fit</span>
                 </CardTitle>
-                <CardDescription>
-                  Real-time PMF analysis and recommendations
-                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {productMarketFits.map((pmf) => (
                   <div key={pmf.productId} className="space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="font-medium">{pmf.productName}</span>
-                      <div className="flex items-center space-x-2">
-                        <Star className="h-4 w-4 text-yellow-500" />
-                        <span className="font-bold">{(pmf.fitScore * 100).toFixed(0)}%</span>
-                      </div>
+                      <h4 className="font-medium">{pmf.productName}</h4>
+                      <Badge variant={pmf.fitScore > 0.7 ? 'default' : 'secondary'}>
+                        {(pmf.fitScore * 100).toFixed(0)}% fit
+                      </Badge>
                     </div>
-                    <div className="grid grid-cols-3 gap-2 text-xs">
-                      <div>
-                        <div className="text-muted-foreground">Adoption</div>
-                        <Progress value={pmf.userAdoption * 100} className="h-1" />
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span>User Adoption</span>
+                        <span>{(pmf.userAdoption * 100).toFixed(0)}%</span>
                       </div>
-                      <div>
-                        <div className="text-muted-foreground">Satisfaction</div>
-                        <Progress value={pmf.customerSatisfaction * 100} className="h-1" />
-                      </div>
-                      <div>
-                        <div className="text-muted-foreground">Market Ready</div>
-                        <Progress value={pmf.marketReadiness * 100} className="h-1" />
-                      </div>
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {pmf.recommendations[0]}
+                      <Progress value={pmf.userAdoption * 100} />
                     </div>
                   </div>
                 ))}
@@ -413,57 +462,39 @@ export default function InnovationFrameworkDashboard() {
             </Card>
           </div>
 
-          {/* Active A/B Tests */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Activity className="h-5 w-5" />
-                <span>Active Experiments</span>
+                <span>A/B Test Results</span>
               </CardTitle>
-              <CardDescription>
-                A/B tests and market validation experiments
-              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {abTests.map((test) => (
-                  <div key={test.id} className="border rounded-lg p-4 space-y-3">
-                    <div className="flex items-center justify-between">
+                  <div key={test.id} className="border rounded-lg p-4">
+                    <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center space-x-2">
                         {getStatusIcon(test.status)}
-                        <span className="font-medium">{test.name}</span>
-                        <Badge variant={test.status === 'completed' ? 'default' : 'secondary'}>
-                          {test.status}
-                        </Badge>
+                        <h4 className="font-medium">{test.name}</h4>
                       </div>
-                      <div className="text-sm text-muted-foreground">
-                        Primary: {test.primaryMetric}
-                      </div>
+                      <Badge variant="outline">{test.status}</Badge>
                     </div>
-                    
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-4 mb-3">
                       {test.variants.map((variant, index) => (
-                        <div key={index} className="space-y-2">
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm font-medium">{variant.name}</span>
-                            <span className="text-sm text-muted-foreground">
-                              {(variant.conversionRate * 100).toFixed(1)}%
-                            </span>
-                          </div>
-                          <Progress value={variant.conversionRate * 100} className="h-2" />
-                          <div className="text-xs text-muted-foreground">
-                            {variant.visitors} visitors
+                        <div key={index} className="text-center p-2 bg-gray-50 rounded">
+                          <div className="font-medium">{variant.name}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {(variant.conversionRate * 100).toFixed(1)}% • {variant.visitors} visitors
                           </div>
                         </div>
                       ))}
                     </div>
-                    
                     {test.results && (
                       <Alert>
                         <CheckCircle className="h-4 w-4" />
                         <AlertDescription>
-                          {test.results.winningVariant} showed {test.results.improvementPercent.toFixed(1)}% improvement. 
-                          Recommendation: {test.results.recommendation}
+                          Winner: {test.results.winningVariant} (+{test.results.improvementPercent}%)
                         </AlertDescription>
                       </Alert>
                     )}
@@ -477,41 +508,25 @@ export default function InnovationFrameworkDashboard() {
         <TabsContent value="trends" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Market Trends Analysis</CardTitle>
-              <CardDescription>
-                AI-powered market intelligence and trend monitoring
-              </CardDescription>
+              <CardTitle>Market Intelligence</CardTitle>
+              <CardDescription>AI-identified trends and opportunities</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {marketTrends.map((trend) => (
-                  <div key={trend.id} className="border rounded-lg p-4 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h3 className="font-medium">{trend.name}</h3>
-                        <div className="flex items-center space-x-2 mt-1">
-                          <Badge variant="outline">{trend.category}</Badge>
-                          <Badge variant="secondary">{trend.timeHorizon}</Badge>
-                        </div>
+                  <div key={trend.id} className="flex items-center justify-between p-4 border rounded-lg">
+                    <div className="flex-1">
+                      <h4 className="font-medium">{trend.name}</h4>
+                      <p className="text-sm text-muted-foreground">{trend.category}</p>
+                      <div className="flex items-center space-x-4 mt-2">
+                        <span className="text-xs">Relevance: {(trend.relevanceScore * 100).toFixed(0)}%</span>
+                        <span className="text-xs">Impact: {trend.impactPotential}/10</span>
+                        <span className="text-xs">{trend.timeHorizon}</span>
                       </div>
-                      {getTrendIcon(0.15)}
                     </div>
-                    
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <div className="text-sm text-muted-foreground mb-1">Relevance Score</div>
-                        <div className="flex items-center space-x-2">
-                          <Progress value={trend.relevanceScore * 100} className="flex-1 h-2" />
-                          <span className="text-sm font-medium">{(trend.relevanceScore * 100).toFixed(0)}%</span>
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-sm text-muted-foreground mb-1">Impact Potential</div>
-                        <div className="flex items-center space-x-2">
-                          <Progress value={trend.impactPotential * 100} className="flex-1 h-2" />
-                          <span className="text-sm font-medium">{(trend.impactPotential * 100).toFixed(0)}%</span>
-                        </div>
-                      </div>
+                    <div className="flex items-center space-x-2">
+                      {getTrendIcon(trend.relevanceScore)}
+                      <Star className="h-4 w-4 text-yellow-500" />
                     </div>
                   </div>
                 ))}
@@ -523,32 +538,20 @@ export default function InnovationFrameworkDashboard() {
         <TabsContent value="development" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Autonomous Feature Development</CardTitle>
-              <CardDescription>
-                AI-powered feature generation and deployment pipeline
-              </CardDescription>
+              <CardTitle>Autonomous Development</CardTitle>
+              <CardDescription>AI-driven feature development pipeline</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="text-center py-8">
-                <Brain className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                <h3 className="text-lg font-medium mb-2">Development Pipeline Active</h3>
+                <Brain className="h-16 w-16 mx-auto mb-4 text-gray-400" />
+                <h3 className="text-lg font-semibold mb-2">Development Pipeline</h3>
                 <p className="text-muted-foreground mb-4">
-                  AI agents are continuously developing and testing new features
+                  Autonomous feature development based on market intelligence
                 </p>
-                <div className="grid grid-cols-3 gap-4 text-sm">
-                  <div>
-                    <div className="font-medium">Features in Development</div>
-                    <div className="text-2xl font-bold text-blue-600">5</div>
-                  </div>
-                  <div>
-                    <div className="font-medium">Features in Testing</div>
-                    <div className="text-2xl font-bold text-yellow-600">3</div>
-                  </div>
-                  <div>
-                    <div className="font-medium">Features Deployed</div>
-                    <div className="text-2xl font-bold text-green-600">8</div>
-                  </div>
-                </div>
+                <Button>
+                  <Rocket className="h-4 w-4 mr-2" />
+                  View Development Queue
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -557,57 +560,20 @@ export default function InnovationFrameworkDashboard() {
         <TabsContent value="validation" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Market Validation Results</CardTitle>
-              <CardDescription>
-                Comprehensive validation metrics and user feedback analysis
-              </CardDescription>
+              <CardTitle>Market Validation</CardTitle>
+              <CardDescription>Real-time validation and feedback loops</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <h3 className="font-medium">Validation Metrics</h3>
-                  <div className="space-y-3">
-                    <div>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span>Validation Accuracy</span>
-                        <span>{(metrics.validationAccuracy * 100).toFixed(0)}%</span>
-                      </div>
-                      <Progress value={metrics.validationAccuracy * 100} />
-                    </div>
-                    <div>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span>Market Timing Accuracy</span>
-                        <span>{(metrics.marketTimingAccuracy * 100).toFixed(0)}%</span>
-                      </div>
-                      <Progress value={metrics.marketTimingAccuracy * 100} />
-                    </div>
-                    <div>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span>Trend Prediction Accuracy</span>
-                        <span>{(metrics.trendAccuracy * 100).toFixed(0)}%</span>
-                      </div>
-                      <Progress value={metrics.trendAccuracy * 100} />
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="space-y-4">
-                  <h3 className="font-medium">Recent Validations</h3>
-                  <div className="space-y-3">
-                    <div className="flex items-center space-x-2 text-sm">
-                      <CheckCircle className="h-4 w-4 text-green-500" />
-                      <span>AI Dashboard optimization validated</span>
-                    </div>
-                    <div className="flex items-center space-x-2 text-sm">
-                      <CheckCircle className="h-4 w-4 text-green-500" />
-                      <span>Onboarding flow improvements confirmed</span>
-                    </div>
-                    <div className="flex items-center space-x-2 text-sm">
-                      <Activity className="h-4 w-4 text-blue-500" />
-                      <span>Pricing strategy A/B test running</span>
-                    </div>
-                  </div>
-                </div>
+              <div className="text-center py-8">
+                <Users className="h-16 w-16 mx-auto mb-4 text-gray-400" />
+                <h3 className="text-lg font-semibold mb-2">Validation Engine</h3>
+                <p className="text-muted-foreground mb-4">
+                  Continuous market validation and user feedback analysis
+                </p>
+                <Button>
+                  <Eye className="h-4 w-4 mr-2" />
+                  View Validation Results
+                </Button>
               </div>
             </CardContent>
           </Card>

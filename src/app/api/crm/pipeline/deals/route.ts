@@ -1,62 +1,96 @@
-import { createApiClient } from '@/lib/supabase/api';
-import { NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server'
+import { createServerClient } from '@/lib/supabase/server'
+import { getCurrentUser } from '@/lib/auth/session'
 
-export async function GET() {
+export const dynamic = 'force-dynamic'
+
+// ðŸ“Š GET PIPELINE DEALS
+export async function GET(request: NextRequest) {
   try {
-    const supabase = createApiClient();
-    
+    const user = await getCurrentUser()
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const supabase = await createServerClient()
+
+    // Get pipeline deals with stages
     const { data: deals, error } = await supabase
       .from('pipeline_deals')
-      .select('*')
-      .order('created_at', { ascending: false });
+      .select(`
+        *,
+        client:clients(
+          id, name, company, email
+        ),
+        assigned_to_profile:user_profiles!pipeline_deals_assigned_to_fkey(
+          id, full_name, email
+        )
+      `)
+      .order('created_at', { ascending: false })
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      console.error('Error fetching pipeline deals:', error)
+      return NextResponse.json({ error: 'Failed to fetch pipeline deals' }, { status: 500 })
     }
 
-    return NextResponse.json(deals);
+    return NextResponse.json({ data: deals || [] })
+
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch deals' }, { status: 500 });
+    console.error('Pipeline Deals API Error:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
 
-export async function POST(request: Request) {
+// ðŸ“ CREATE NEW PIPELINE DEAL
+export async function POST(request: NextRequest) {
   try {
-    const supabase = createApiClient();
-    const dealData = await request.json();
-
-    const { data, error } = await supabase
-      .from('pipeline_deals')
-      .insert([dealData])
-      .select();
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    const user = await getCurrentUser()
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    return NextResponse.json(data[0], { status: 201 });
-  } catch (error) {
-    return NextResponse.json({ error: 'Failed to create deal' }, { status: 500 });
-  }
-}
+    const body = await request.json()
+    const supabase = await createServerClient()
 
-export async function PUT(request: Request) {
-  try {
-    const supabase = createApiClient();
-    const { id, ...updateData } = await request.json();
-
-    const { data, error } = await supabase
-      .from('pipeline_deals')
-      .update(updateData)
-      .eq('id', id)
-      .select();
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
+    const dealData = {
+      title: body.title,
+      description: body.description,
+      value: body.value,
+      client_id: body.client_id,
+      stage: body.stage || 'lead',
+      assigned_to: body.assigned_to || user.id,
+      expected_close_date: body.expected_close_date,
+      priority: body.priority || 'medium',
+      probability: body.probability || 50,
+      tags: body.tags || [],
+      metadata: body.metadata || {},
+      created_by: user.id,
+      created_at: new Date().toISOString()
     }
 
-    return NextResponse.json(data[0]);
+    const { data: deal, error } = await supabase
+      .from('pipeline_deals')
+      .insert(dealData)
+      .select(`
+        *,
+        client:clients(
+          id, name, company, email
+        ),
+        assigned_to_profile:user_profiles!pipeline_deals_assigned_to_fkey(
+          id, full_name, email
+        )
+      `)
+      .single()
+
+    if (error) {
+      console.error('Error creating pipeline deal:', error)
+      return NextResponse.json({ error: 'Failed to create pipeline deal' }, { status: 500 })
+    }
+
+    return NextResponse.json({ data: deal }, { status: 201 })
+
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to update deal' }, { status: 500 });
+    console.error('Pipeline Deal Creation Error:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

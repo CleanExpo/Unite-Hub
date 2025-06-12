@@ -1,15 +1,9 @@
-/**
+﻿/**
  * AI Dashboard Page
  * Route: /dashboard/ai
  */
 
-import { AIDashboard } from '@/components/ai/Dashboard';
-import { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'AI Dashboard | Unite Group',
-  description: 'Real-time monitoring and control center for AI systems',
-};
+import AIDashboard from '@/components/ai/Dashboard';
 
 export default function AIDashboardPage() {
   return (

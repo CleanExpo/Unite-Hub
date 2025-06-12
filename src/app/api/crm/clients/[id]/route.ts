@@ -7,16 +7,17 @@ export const dynamic = 'force-dynamic'
 // 👤 GET INDIVIDUAL CLIENT
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const user = await getCurrentUser(request)
+    const user = await getCurrentUser()
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const supabase = await createServerClient()
-    const clientId = params.id
+    const resolvedParams = await params
+    const clientId = resolvedParams.id
 
     // Get client with all related data
     const { data: client, error } = await supabase
@@ -67,17 +68,18 @@ export async function GET(
 // ✏️ UPDATE CLIENT
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const user = await getCurrentUser(request)
+    const user = await getCurrentUser()
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const body = await request.json()
     const supabase = await createServerClient()
-    const clientId = params.id
+    const resolvedParams = await params
+    const clientId = resolvedParams.id
 
     // Validate client exists and user has permission
     const { data: existingClient } = await supabase
@@ -143,16 +145,17 @@ export async function PUT(
 // 🗑️ DELETE CLIENT
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const user = await getCurrentUser(request)
+    const user = await getCurrentUser()
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const supabase = await createServerClient()
-    const clientId = params.id
+    const resolvedParams = await params
+    const clientId = resolvedParams.id
 
     // Check if client has active deals or invoices
     const { data: activeDependencies } = await supabase

@@ -11,19 +11,36 @@ export default function EmailTimeline({ items }: { items: CommunicationItem[] })
           <CardHeader className="pb-2">
             <div className="flex items-center gap-3">
               <Avatar>
-                <AvatarImage src="/placeholder-avatar.jpg" />
-                <AvatarFallback>{item.user[0]?.full_name?.charAt(0) || 'U'}</AvatarFallback>
+                <AvatarImage src="/Unite Group-avatar.jpg" />
+                <AvatarFallback>UG</AvatarFallback>
               </Avatar>
-              <div>
-                <CardTitle className="text-sm text-white">{item.subject}</CardTitle>
-                <div className="text-xs text-slate-400">
-                  {item.user[0]?.full_name} • {format(new Date(item.created_at), 'MMM d, yyyy h:mm a')}
+              <div className="flex-1">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-sm font-medium text-slate-200">{item.subject}</h4>
+                  <span className="text-xs text-slate-400">
+                    {format(new Date(item.timestamp), 'MMM dd, yyyy HH:mm')}
+                  </span>
                 </div>
+                <p className="text-xs text-slate-400">
+                  {item.type === 'email' ? `To: ${item.recipient}` : `From: ${item.sender}`}
+                </p>
               </div>
             </div>
           </CardHeader>
-          <CardContent className="pt-0">
-            <div className="text-slate-300 text-sm">{item.content}</div>
+          <CardContent>
+            <p className="text-sm text-slate-300">{item.content}</p>
+            {item.attachments && item.attachments.length > 0 && (
+              <div className="mt-2">
+                <p className="text-xs text-slate-400 mb-1">Attachments:</p>
+                <div className="flex flex-wrap gap-1">
+                  {item.attachments.map((attachment, index) => (
+                    <span key={index} className="text-xs bg-slate-600 px-2 py-1 rounded">
+                      {attachment}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       ))}

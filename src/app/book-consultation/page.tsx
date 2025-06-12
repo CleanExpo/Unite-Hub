@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -198,10 +198,10 @@ export default function BookConsultation() {
                       id="client_name"
                       name="client_name"
                       type="text"
-                      placeholder="John Doe"
+                      placeholder="Unite Group Team"
                       value={formData.client_name}
                       onChange={handleChange}
-                      className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
+                      className="bg-slate-700 border-slate-600 text-white Unite Group:text-slate-400"
                       required
                     />
                   </div>
@@ -214,10 +214,10 @@ export default function BookConsultation() {
                       id="client_email"
                       name="client_email"
                       type="email"
-                      placeholder="john@example.com"
+                      placeholder="john@unite-group.in"
                       value={formData.client_email}
                       onChange={handleChange}
-                      className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
+                      className="bg-slate-700 border-slate-600 text-white Unite Group:text-slate-400"
                       required
                     />
                   </div>
@@ -235,7 +235,7 @@ export default function BookConsultation() {
                       placeholder="Your Company"
                       value={formData.company}
                       onChange={handleChange}
-                      className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
+                      className="bg-slate-700 border-slate-600 text-white Unite Group:text-slate-400"
                     />
                   </div>
                   
@@ -250,7 +250,7 @@ export default function BookConsultation() {
                       placeholder="+1 (555) 123-4567"
                       value={formData.phone}
                       onChange={handleChange}
-                      className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
+                      className="bg-slate-700 border-slate-600 text-white Unite Group:text-slate-400"
                     />
                   </div>
                 </div>
@@ -264,7 +264,7 @@ export default function BookConsultation() {
                     name="service_type"
                     value={formData.service_type}
                     onChange={handleChange}
-                    className="flex h-10 w-full rounded-md border border-slate-600 bg-slate-700 px-3 py-2 text-sm text-white placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-800"
+                    className="flex h-10 w-full rounded-md border border-slate-600 bg-slate-700 px-3 py-2 text-sm text-white Unite Group:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-800"
                     aria-label="Consultation Type"
                     title="Select the type of consultation you're interested in"
                     required
@@ -390,7 +390,7 @@ export default function BookConsultation() {
                     value={formData.message}
                     onChange={handleChange}
                     placeholder="Please share any specific topics you'd like to discuss during the consultation..."
-                    className="flex w-full rounded-md border border-slate-600 bg-slate-700 px-3 py-2 text-sm text-white placeholder:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-800"
+                    className="flex w-full rounded-md border border-slate-600 bg-slate-700 px-3 py-2 text-sm text-white Unite Group:text-slate-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-800"
                   />
                 </div>
                 

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Self-Healing Infrastructure API Route
  * Unite Group - Version 14.0 Phase 1 Implementation
  */
@@ -8,20 +8,8 @@ import { AIGateway } from '@/lib/ai/gateway/ai-gateway';
 import { SelfHealingInfrastructureService } from '@/lib/autonomous/self-healing/service';
 
 // Initialize AI Gateway with simple configuration
-const aiGateway = new AIGateway({
-  providers: [
-    {
-      provider: 'openai',
-      apiKey: process.env.OPENAI_API_KEY || 'sk-test',
-      model: 'gpt-4'
-    }
-  ]
-});
-const selfHealingService = new SelfHealingInfrastructureService(aiGateway, {
-  enabled: true,
-  automationLevel: 'semi_automated',
-  learningEnabled: true
-});
+const aiGateway = new AIGateway();
+const selfHealingService = new SelfHealingInfrastructureService();
 
 async function handleGET(req: NextRequest) {
   try {

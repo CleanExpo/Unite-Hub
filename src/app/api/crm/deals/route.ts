@@ -1,173 +1,100 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { DealPipelineWorkflows } from '@/lib/crm/business-logic/DealPipelineWorkflows';
+﻿import { NextRequest, NextResponse } from 'next/server'
+import { createServerClient } from '@/lib/supabase/server'
+import { getCurrentUser } from '@/lib/auth/session'
 
-// =============================================================================
-// DEALS API - USING BUSINESS LOGIC LAYER
-// =============================================================================
-// This uses the DealPipelineWorkflows business logic for consistent operations
+export const dynamic = 'force-dynamic'
 
-// GET /api/crm/deals - Fetch deals using business logic
+// ðŸ“‹ GET ALL DEALS
 export async function GET(request: NextRequest) {
   try {
-    console.log('🎯 Deals API: Fetching deals using business logic layer...');
-    
-    // Get URL parameters for filtering
-    const { searchParams } = new URL(request.url);
-    const status = searchParams.get('status');
-    const stage = searchParams.get('stage'); // Legacy support
-    const limit = parseInt(searchParams.get('limit') || '50');
-    const offset = parseInt(searchParams.get('offset') || '0');
-
-    // Use business logic to get deals
-    const dealStatus = status || stage; // Support both 'status' and 'stage' params
-    const result = await DealPipelineWorkflows.getDealsByStage(dealStatus as any);
-
-    if (!result.success) {
-      console.error('❌ Failed to fetch deals:', result.error);
-      return NextResponse.json(
-        { error: 'Failed to fetch deals', details: result.error },
-        { status: 500 }
-      );
+    const user = await getCurrentUser()
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const deals = result.deals || [];
-    const analytics = result.analytics;
+    const supabase = await createServerClient()
 
-    // Apply pagination to results
-    const paginatedDeals = deals.slice(offset, offset + limit);
-    const totalCount = deals.length;
+    // Get deals with related data
+    const { data: deals, error } = await supabase
+      .from('deals')
+      .select(`
+        *,
+        client:clients(
+          id, name, company, email, phone
+        ),
+        assigned_to_profile:user_profiles!deals_assigned_to_fkey(
+          id, full_name, email, avatar_url
+        ),
+        pipeline_stage:pipeline_stages(
+          id, name, color, order_index
+        )
+      `)
+      .order('created_at', { ascending: false })
 
-    console.log(`✅ Fetched ${paginatedDeals.length} deals (${totalCount} total)`);
+    if (error) {
+      console.error('Error fetching deals:', error)
+      return NextResponse.json({ error: 'Failed to fetch deals' }, { status: 500 })
+    }
 
-    return NextResponse.json({
-      data: paginatedDeals,
-      pagination: {
-        total: totalCount,
-        limit,
-        offset,
-        hasMore: (offset + limit) < totalCount
-      },
-      analytics: analytics ? {
-        totalValue: analytics.totalValue,
-        weightedValue: analytics.weightedValue,
-        averageDealSize: analytics.averageValue,
-        dealCount: analytics.count
-      } : null
-    });
+    return NextResponse.json({ data: deals || [] })
 
   } catch (error) {
-    console.error('❌ Unexpected error in deals API:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    console.error('Deals API Error:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
 
-// POST /api/crm/deals - Create new deal using business logic
+// ðŸ“ CREATE NEW DEAL
 export async function POST(request: NextRequest) {
   try {
-    console.log('🎯 Deals API: Creating deal using business logic layer...');
-    
-    const body = await request.json();
-    
-    // For now, use a placeholder user ID - this will be replaced with proper auth later
-    const placeholderUserId = '00000000-0000-0000-0000-000000000000';
+    const user = await getCurrentUser()
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
 
-    // Prepare input for business logic
-    const dealInput = {
+    const body = await request.json()
+    const supabase = await createServerClient()
+
+    const dealData = {
       title: body.title,
       description: body.description,
-      value: parseFloat(body.value),
-      clientId: body.client_id,
-      status: body.status || body.stage || 'lead', // Support both field names
-      expectedCloseDate: body.expected_close_date,
-      probability: body.probability || undefined,
-      userId: body.userId || placeholderUserId // Allow override or use placeholder
-    };
-
-    // Use business logic to create deal
-    const result = await DealPipelineWorkflows.createDeal(dealInput);
-
-    if (!result.success) {
-      console.error('❌ Failed to create deal:', result.error);
-      return NextResponse.json(
-        { error: result.error },
-        { status: 400 }
-      );
+      value: body.value,
+      client_id: body.client_id,
+      stage_id: body.stage_id,
+      assigned_to: body.assigned_to || user.id,
+      expected_close_date: body.expected_close_date,
+      priority: body.priority || 'medium',
+      status: body.status || 'open',
+      probability: body.probability || 50,
+      tags: body.tags || [],
+      metadata: body.metadata || {},
+      created_by: user.id,
+      created_at: new Date().toISOString()
     }
 
-    console.log('✅ Deal created successfully:', result.deal?.id);
+    const { data: deal, error } = await supabase
+      .from('deals')
+      .insert(dealData)
+      .select(`
+        *,
+        client:clients(
+          id, name, company, email
+        ),
+        assigned_to_profile:user_profiles!deals_assigned_to_fkey(
+          id, full_name, email
+        )
+      `)
+      .single()
 
-    return NextResponse.json(
-      { 
-        data: result.deal, 
-        message: 'Deal created successfully',
-        success: true 
-      },
-      { status: 201 }
-    );
+    if (error) {
+      console.error('Error creating deal:', error)
+      return NextResponse.json({ error: 'Failed to create deal' }, { status: 500 })
+    }
+
+    return NextResponse.json({ data: deal }, { status: 201 })
 
   } catch (error) {
-    console.error('❌ Unexpected error in deal creation:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
-  }
-}
-
-// PUT /api/crm/deals - Update deal status using business logic workflows
-export async function PUT(request: NextRequest) {
-  try {
-    console.log('🎯 Deals API: Updating deal status using business logic layer...');
-    
-    const body = await request.json();
-    
-    // For now, use a placeholder user ID - this will be replaced with proper auth later
-    const placeholderUserId = '00000000-0000-0000-0000-000000000000';
-
-    // Validate required fields for status update
-    if (!body.dealId || !body.fromStatus || !body.toStatus) {
-      return NextResponse.json(
-        { error: 'dealId, fromStatus, and toStatus are required' },
-        { status: 400 }
-      );
-    }
-
-    // Prepare input for business logic
-    const statusUpdateInput = {
-      dealId: body.dealId,
-      fromStatus: body.fromStatus,
-      toStatus: body.toStatus,
-      notes: body.notes,
-      userId: body.userId || placeholderUserId // Allow override or use placeholder
-    };
-
-    // Use business logic to update deal status
-    const result = await DealPipelineWorkflows.moveDealsStatus(statusUpdateInput);
-
-    if (!result.success) {
-      console.error('❌ Failed to update deal status:', result.error);
-      return NextResponse.json(
-        { error: result.error },
-        { status: 400 }
-      );
-    }
-
-    console.log('✅ Deal status updated successfully:', result.deal?.id);
-
-    return NextResponse.json({
-      data: result.deal,
-      message: 'Deal status updated successfully',
-      success: true
-    });
-
-  } catch (error) {
-    console.error('❌ Unexpected error in deal status update:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    console.error('Deal Creation Error:', error)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

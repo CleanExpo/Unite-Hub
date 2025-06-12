@@ -1,13 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server'
+﻿import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase/server'
 import { getCurrentUser } from '@/lib/auth/session'
 
 export const dynamic = 'force-dynamic'
 
-// 📅 MEETING MANAGEMENT API - GET ALL MEETINGS
+// ðŸ“… MEETING MANAGEMENT API - GET ALL MEETINGS
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser(request)
+    const user = await getCurrentUser()
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -91,10 +91,10 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// 📅 MEETING MANAGEMENT API - CREATE NEW MEETING
+// ðŸ“… MEETING MANAGEMENT API - CREATE NEW MEETING
 export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser(request)
+    const user = await getCurrentUser()
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }

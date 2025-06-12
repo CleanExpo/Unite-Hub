@@ -1,0 +1,476 @@
+Here's an enhanced version of the CRM customers API with comprehensive error handling, validation, and security features:
+
+```typescript
+// src/app/api/crm/customers/route.ts
+
+import { NextResponse, NextRequest } from 'next/server';
+import { z } from 'zod';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
+import { sanitize } from 'isomorphic-dompurify';
+
+// Enhanced Customer type definition
+interface Customer {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  companyName?: string;
+  status: 'active' | 'inactive' | 'suspended';
+  tags: string[];
+  address?: {
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+  };
+  createdAt: Date;
+  updatedAt: Date;
+  createdBy: string;
+  lastModifiedBy: string;
+}
+
+// Enhanced validation schemas
+const customerSchema = z.object({
+  name: z.string()
+    .min(1, { message: 'Name is required' })
+    .max(100, { message: 'Name must be less than 100 characters' })
+    .regex(/^[a-zA-Z\s'-]+$/, { message: 'Name contains invalid characters' }),
+  
+  email: z.string()
+    .email({ message: 'Valid email is required' })
+    .max(255, { message: 'Email must be less than 255 characters' })
+    .toLowerCase(),
+  
+  phone: z.string()
+    .regex(/^\+?[\d\s-()]+$/, { message: 'Invalid phone number format' })
+    .optional(),
+  
+  companyName: z.string()
+    .max(200, { message: 'Company name must be less than 200 characters' })
+    .optional(),
+  
+  status: z.enum(['active', 'inactive', 'suspended'])
+    .default('active'),
+  
+  tags: z.array(z.string().max(50))
+    .max(10, { message: 'Maximum 10 tags allowed' })
+    .default([]),
+  
+  address: z.object({
+    street: z.string().max(255),
+    city: z.string().max(100),
+    state: z.string().max(100),
+    zipCode: z.string().regex(/^[\d\s-]+$/, 'Invalid zip code'),
+    country: z.string().max(100),
+  }).optional(),
+});
+
+const updateCustomerSchema = customerSchema.partial();
+
+const queryParamsSchema = z.object({
+  page: z.coerce.number().int().positive().default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(10),
+  search: z.string().max(100).optional(),
+  status: z.enum(['active', 'inactive', 'suspended']).optional(),
+  sortBy: z.enum(['name', 'email', 'createdAt', 'companyName']).default('createdAt'),
+  sortOrder: z.enum(['asc', 'desc']).default('desc'),
+});
+
+// Enhanced error classes
+class APIError extends Error {
+  constructor(
+    message: string,
+    public statusCode: number,
+    public code: string,
+    public details?: any
+  ) {
+    super(message);
+    this.name = 'APIError';
+  }
+}
+
+class ValidationError extends APIError {
+  constructor(message: string, details?: any) {
+    super(message, 400, 'VALIDATION_ERROR', details);
+  }
+}
+
+class NotFoundError extends APIError {
+  constructor(resource: string = 'Resource') {
+    super(`${resource} not found`, 404, 'NOT_FOUND');
+  }
+}
+
+class UnauthorizedError extends APIError {
+  constructor(message: string = 'Unauthorized') {
+    super(message, 401, 'UNAUTHORIZED');
+  }
+}
+
+class ForbiddenError extends APIError {
+  constructor(message: string = 'Forbidden') {
+    super(message, 403, 'FORBIDDEN');
+  }
+}
+
+class ConflictError extends APIError {
+  constructor(message: string) {
+    super(message, 409, 'CONFLICT');
+  }
+}
+
+class RateLimitError extends APIError {
+  constructor() {
+    super('Too many requests', 429, 'RATE_LIMIT_EXCEEDED');
+  }
+}
+
+// Security utilities
+class SecurityUtils {
+  static sanitizeInput(input: any): any {
+    if (typeof input === 'string') {
+      return sanitize(input.trim());
+    }
+    if (Array.isArray(input)) {
+      return input.map(item => this.sanitizeInput(item));
+    }
+    if (typeof input === 'object' && input !== null) {
+      const sanitized: any = {};
+      for (const [key, value] of Object.entries(input)) {
+        sanitized[key] = this.sanitizeInput(value);
+      }
+      return sanitized;
+    }
+    return input;
+  }
+
+  static validateContentType(request: NextRequest): void {
+    const contentType = request.headers.get('content-type');
+    if (!contentType?.includes('application/json')) {
+      throw new ValidationError('Content-Type must be application/json');
+    }
+  }
+
+  static async parseJsonSafely(request: NextRequest): Promise<any> {
+    try {
+      const body = await request.json();
+      return this.sanitizeInput(body);
+    } catch (error) {
+      throw new ValidationError('Invalid JSON payload');
+    }
+  }
+}
+
+// Authentication middleware
+async function authenticate(request: NextRequest): Promise<{ userId: string; role: string }> {
+  const authHeader = request.headers.get('authorization');
+  if (!authHeader?.startsWith('Bearer ')) {
+    throw new UnauthorizedError('Missing or invalid authorization header');
+  }
+
+  const token = authHeader.substring(7);
+  
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
+    
+    // Check token expiration
+    if (decoded.exp * 1000 < Date.now()) {
+      throw new UnauthorizedError('Token expired');
+    }
+
+    return { userId: decoded.userId, role: decoded.role };
+  } catch (error) {
+    if (error instanceof jwt.TokenExpiredError) {
+      throw new UnauthorizedError('Token expired');
+    }
+    if (error instanceof jwt.JsonWebTokenError) {
+      throw new UnauthorizedError('Invalid token');
+    }
+    throw error;
+  }
+}
+
+// Permission checking
+function checkPermission(userRole: string, action: string): void {
+  const permissions = {
+    admin: ['create', 'read', 'update', 'delete'],
+    manager: ['create', 'read', 'update'],
+    user: ['read'],
+  };
+
+  if (!permissions[userRole as keyof typeof permissions]?.includes(action)) {
+    throw new ForbiddenError(`Insufficient permissions for ${action} operation`);
+  }
+}
+
+// Rate limiting store (use Redis in production)
+const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
+
+function checkRateLimit(clientId: string, maxRequests: number = 100, windowMs: number = 900000): void {
+  const now = Date.now();
+  const windowStart = now - windowMs;
+  
+  const clientData = rateLimitStore.get(clientId);
+  
+  if (!clientData || clientData.resetTime < windowStart) {
+    rateLimitStore.set(clientId, { count: 1, resetTime: now + windowMs });
+    return;
+  }
+  
+  if (clientData.count >= maxRequests) {
+    throw new RateLimitError();
+  }
+  
+  clientData.count++;
+}
+
+// Enhanced mock data storage with indexing
+class CustomerStore {
+  private customers: Map<string, Customer> = new Map();
+  private emailIndex: Map<string, string> = new Map();
+
+  getAll(): Customer[] {
+    return Array.from(this.customers.values());
+  }
+
+  getById(id: string): Customer | undefined {
+    return this.customers.get(id);
+  }
+
+  getByEmail(email: string): Customer | undefined {
+    const id = this.emailIndex.get(email.toLowerCase());
+    return id ? this.customers.get(id) : undefined;
+  }
+
+  create(customer: Customer): Customer {
+    if (this.emailIndex.has(customer.email.toLowerCase())) {
+      throw new ConflictError('Customer with this email already exists');
+    }
+    
+    this.customers.set(customer.id, customer);
+    this.emailIndex.set(customer.email.toLowerCase(), customer.id);
+    return customer;
+  }
+
+  update(id: string, updates: Partial<Customer>): Customer {
+    const customer = this.customers.get(id);
+    if (!customer) {
+      throw new NotFoundError('Customer');
+    }
+
+    // Check for email conflicts
+    if (updates.email && updates.email !== customer.email) {
+      if (this.emailIndex.has(updates.email.toLowerCase())) {
+        throw new ConflictError('Customer with this email already exists');
+      }
+      this.emailIndex.delete(customer.email.toLowerCase());
+      this.emailIndex.set(updates.email.toLowerCase(), id);
+    }
+
+    const updatedCustomer = { ...customer, ...updates, updatedAt: new Date() };
+    this.customers.set(id, updatedCustomer);
+    return updatedCustomer;
+  }
+
+  delete(id: string): Customer {
+    const customer = this.customers.get(id);
+    if (!customer) {
+      throw new NotFoundError('Customer');
+    }
+
+    this.customers.delete(id);
+    this.emailIndex.delete(customer.email.toLowerCase());
+    return customer;
+  }
+
+  search(query: string): Customer[] {
+    const searchTerm = query.toLowerCase();
+    return this.getAll().filter(customer =>
+      customer.name.toLowerCase().includes(searchTerm) ||
+      customer.email.toLowerCase().includes(searchTerm) ||
+      customer.companyName?.toLowerCase().includes(searchTerm)
+    );
+  }
+}
+
+const customerStore = new CustomerStore();
+
+// Response formatter
+function formatResponse(data: any, meta?: any) {
+  return {
+    success: true,
+    data,
+    meta,
+    timestamp: new Date().toISOString(),
+  };
+}
+
+function formatErrorResponse(error: APIError) {
+  return {
+    success: false,
+    error: {
+      message: error.message,
+      code: error.code,
+      details: error.details,
+    },
+    timestamp: new Date().toISOString(),
+  };
+}
+
+// Enhanced API handlers
+export async function GET(request: NextRequest) {
+  try {
+    // Rate limiting
+    const clientId = request.ip || 'unknown';
+    checkRateLimit(clientId);
+
+    // Authentication
+    const auth = await authenticate(request);
+    checkPermission(auth.role, 'read');
+
+    // Validate query parameters
+    const url = new URL(request.url);
+    const queryParams = {
+      page: url.searchParams.get('page'),
+      limit: url.searchParams.get('limit'),
+      search: url.searchParams.get('search'),
+      status: url.searchParams.get('status'),
+      sortBy: url.searchParams.get('sortBy'),
+      sortOrder: url.searchParams.get('sortOrder'),
+    };
+
+    const validatedParams = queryParamsSchema.parse(queryParams);
+    const { page, limit, search, status, sortBy, sortOrder } = validatedParams;
+
+    // Get customers
+    let customers = customerStore.getAll();
+
+    // Apply search filter
+    if (search) {
+      customers = customerStore.search(search);
+    }
+
+    // Apply status filter
+    if (status) {
+      customers = customers.filter(customer => customer.status === status);
+    }
+
+    // Apply sorting
+    customers.sort((a, b) => {
+      const aVal = a[sortBy];
+      const bVal = b[sortBy];
+      const comparison = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+      return sortOrder === 'desc' ? -comparison : comparison;
+    });
+
+    // Apply pagination
+    const startIndex = (page - 1) * limit;
+    const paginatedCustomers = customers.slice(startIndex, startIndex + limit);
+
+    const response = formatResponse(paginatedCustomers, {
+      total: customers.length,
+      page,
+      limit,
+      totalPages: Math.ceil(customers.length / limit),
+      hasNextPage: startIndex + limit < customers.length,
+      hasPreviousPage: page > 1,
+    });
+
+    return NextResponse.json(response, { 
+      status: 200,
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'X-Content-Type-Options': 'nosniff',
+        'X-Frame-Options': 'DENY',
+      },
+    });
+
+  } catch (error) {
+    if (error instanceof APIError) {
+      return NextResponse.json(
+        formatErrorResponse(error),
+        { status: error.statusCode }
+      );
+    }
+
+    console.error('Unexpected error in GET /api/crm/customers:', error);
+    return NextResponse.json(
+      formatErrorResponse(new APIError('Internal Server Error', 500, 'INTERNAL_ERROR')),
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    // Rate limiting
+    const clientId = request.ip || 'unknown';
+    checkRateLimit(clientId, 50); // Lower limit for write operations
+
+    // Authentication
+    const auth = await authenticate(request);
+    checkPermission(auth.role, 'create');
+
+    // Validate content type
+    SecurityUtils.validateContentType(request);
+
+    // Parse and sanitize request body
+    const body = await SecurityUtils.parseJsonSafely(request);
+
+    // Validate request body
+    const validation = customerSchema.safeParse(body);
+    if (!validation.success) {
+      const errorDetails = validation.error.errors.map(err => ({
+        field: err.path.join('.'),
+        message: err.message,
+      }));
+      throw new ValidationError('Validation failed', errorDetails);
+    }
+
+    // Generate secure ID
+    const customerId = `cust_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+    // Create new customer
+    const newCustomer: Customer = {
+      id: customerId,
+      ...validation.data,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      createdBy: auth.userId,
+      lastModifiedBy: auth.userId,
+    };
+
+    const createdCustomer = customerStore.create(newCustomer);
+
+    return NextResponse.json(
+      formatResponse(createdCustomer),
+      { 
+        status: 201,
+        headers: {
+          'Location': `/api/crm/customers/${createdCustomer.id}`,
+          'X-Content-Type-Options': 'nosniff',
+        },
+      }
+    );
+
+  } catch (error) {
+    if (error instanceof APIError) {
+      return NextResponse.json(
+        formatErrorResponse(error),
+        { status: error.statusCode }
+      );
+    }
+
+    console.error('Unexpected error in POST /api/crm/customers:', error);
+    return NextResponse.json(
+      formatErrorResponse(new APIError('Internal Server Error', 500, 'INTERNAL_ERROR')),
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(request: NextRequest) {

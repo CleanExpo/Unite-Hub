@@ -4,321 +4,441 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CalendarDays, Clock, DollarSign, Users, BarChart3, CheckCircle, AlertCircle, XCircle } from 'lucide-react';
+import { 
+  Calendar, 
+  Clock, 
+  Users, 
+  DollarSign, 
+  CheckCircle, 
+  AlertCircle, 
+  XCircle,
+  Plus,
+  Search,
+  Filter,
+  Eye,
+  Edit,
+  Trash2
+} from 'lucide-react';
 
 interface Project {
   id: string;
   name: string;
   description: string;
-  status: 'planning' | 'in-progress' | 'review' | 'completed' | 'on-hold';
-  progress: number;
+  status: 'planning' | 'in-progress' | 'completed' | 'on-hold' | 'cancelled';
+  priority: 'low' | 'medium' | 'high' | 'urgent';
   startDate: string;
   endDate: string;
   budget: number;
   spent: number;
+  progress: number;
   client: string;
-  team: string[];
-  tasks: {
-    id: string;
-    name: string;
-    status: 'todo' | 'in-progress' | 'completed';
-    assignee: string;
-    dueDate: string;
-  }[];
-  timeline: {
-    phase: string;
-    startDate: string;
-    endDate: string;
-    status: 'completed' | 'current' | 'upcoming';
-  }[];
+  teamMembers: string[];
+  tags: string[];
 }
-
-const statusColors = {
-  planning: 'bg-blue-500',
-  'in-progress': 'bg-yellow-500',
-  review: 'bg-purple-500',
-  completed: 'bg-green-500',
-  'on-hold': 'bg-red-500'
-};
-
-const statusIcons = {
-  planning: Clock,
-  'in-progress': BarChart3,
-  review: AlertCircle,
-  completed: CheckCircle,
-  'on-hold': XCircle
-};
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [priorityFilter, setPriorityFilter] = useState('all');
 
   useEffect(() => {
-    fetchProjects();
+    // Mock data loading
+    const loadProjects = async () => {
+      try {
+        setLoading(true);
+        
+        // Mock projects data
+        const mockProjects: Project[] = [
+          {
+            id: '1',
+            name: 'E-commerce Platform Redesign',
+            description: 'Complete redesign of the e-commerce platform with modern UI/UX',
+            status: 'in-progress',
+            priority: 'high',
+            startDate: '2024-01-15',
+            endDate: '2024-04-15',
+            budget: 50000,
+            spent: 32000,
+            progress: 65,
+            client: 'TechCorp Inc.',
+            teamMembers: ['John Doe', 'Jane Smith', 'Mike Johnson'],
+            tags: ['UI/UX', 'E-commerce', 'React']
+          },
+          {
+            id: '2',
+            name: 'Mobile App Development',
+            description: 'Native mobile application for iOS and Android',
+            status: 'planning',
+            priority: 'medium',
+            startDate: '2024-03-01',
+            endDate: '2024-08-01',
+            budget: 75000,
+            spent: 5000,
+            progress: 10,
+            client: 'StartupXYZ',
+            teamMembers: ['Sarah Wilson', 'Tom Brown'],
+            tags: ['Mobile', 'iOS', 'Android', 'React Native']
+          },
+          {
+            id: '3',
+            name: 'Data Analytics Dashboard',
+            description: 'Business intelligence dashboard with real-time analytics',
+            status: 'completed',
+            priority: 'medium',
+            startDate: '2023-10-01',
+            endDate: '2024-01-01',
+            budget: 30000,
+            spent: 28500,
+            progress: 100,
+            client: 'DataCorp',
+            teamMembers: ['Alex Chen', 'Lisa Park'],
+            tags: ['Analytics', 'Dashboard', 'D3.js']
+          },
+          {
+            id: '4',
+            name: 'API Integration Project',
+            description: 'Integration with third-party APIs and microservices architecture',
+            status: 'on-hold',
+            priority: 'low',
+            startDate: '2024-02-01',
+            endDate: '2024-06-01',
+            budget: 25000,
+            spent: 8000,
+            progress: 25,
+            client: 'Enterprise Solutions',
+            teamMembers: ['David Lee', 'Emma Davis'],
+            tags: ['API', 'Microservices', 'Node.js']
+          }
+        ];
+
+        setProjects(mockProjects);
+      } catch (error) {
+        console.error('Failed to load projects:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProjects();
   }, []);
 
-  const fetchProjects = async () => {
-    try {
-      const response = await fetch('/api/projects');
-      if (response.ok) {
-        const data = await response.json();
-        setProjects(data.projects || []);
-      }
-    } catch (error) {
-      console.error('Error fetching projects:', error);
-    } finally {
-      setLoading(false);
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'planning':
+        return <Badge className="bg-blue-100 text-blue-800">Planning</Badge>;
+      case 'in-progress':
+        return <Badge className="bg-yellow-100 text-yellow-800">In Progress</Badge>;
+      case 'completed':
+        return <Badge className="bg-green-100 text-green-800">Completed</Badge>;
+      case 'on-hold':
+        return <Badge className="bg-gray-100 text-gray-800">On Hold</Badge>;
+      case 'cancelled':
+        return <Badge className="bg-red-100 text-red-800">Cancelled</Badge>;
+      default:
+        return <Badge className="bg-gray-100 text-gray-800">{status}</Badge>;
     }
   };
 
+  const getPriorityBadge = (priority: string) => {
+    switch (priority) {
+      case 'urgent':
+        return <Badge variant="destructive">Urgent</Badge>;
+      case 'high':
+        return <Badge className="bg-red-100 text-red-800">High</Badge>;
+      case 'medium':
+        return <Badge className="bg-yellow-100 text-yellow-800">Medium</Badge>;
+      case 'low':
+        return <Badge className="bg-green-100 text-green-800">Low</Badge>;
+      default:
+        return <Badge variant="outline">{priority}</Badge>;
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'completed':
+        return <CheckCircle className="h-4 w-4 text-green-500" />;
+      case 'in-progress':
+        return <Clock className="h-4 w-4 text-yellow-500" />;
+      case 'on-hold':
+        return <AlertCircle className="h-4 w-4 text-gray-500" />;
+      case 'cancelled':
+        return <XCircle className="h-4 w-4 text-red-500" />;
+      default:
+        return <Clock className="h-4 w-4 text-blue-500" />;
+    }
+  };
+
+  const filteredProjects = projects.filter(project => {
+    const matchesSearch = project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         project.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         project.client.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesStatus = statusFilter === 'all' || project.status === statusFilter;
+    const matchesPriority = priorityFilter === 'all' || project.priority === priorityFilter;
+    
+    return matchesSearch && matchesStatus && matchesPriority;
+  });
+
+  const getProjectStats = () => {
+    const total = projects.length;
+    const completed = projects.filter(p => p.status === 'completed').length;
+    const inProgress = projects.filter(p => p.status === 'in-progress').length;
+    const totalBudget = projects.reduce((sum, p) => sum + p.budget, 0);
+    const totalSpent = projects.reduce((sum, p) => sum + p.spent, 0);
+    
+    return { total, completed, inProgress, totalBudget, totalSpent };
+  };
+
+  const stats = getProjectStats();
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-900 text-white">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-400"></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (selectedProject) {
-    return (
-      <div className="min-h-screen bg-slate-900 text-white">
-        <div className="container mx-auto px-4 py-8">
-          <div className="mb-6">
-            <Button 
-              variant="outline" 
-              onClick={() => setSelectedProject(null)}
-              className="mb-4 border-teal-600 text-teal-400 hover:bg-teal-600 hover:text-white"
-            >
-              ← Back to Projects
-            </Button>
-            <h1 className="text-4xl font-bold mb-2">{selectedProject.name}</h1>
-            <p className="text-slate-300 text-lg">{selectedProject.description}</p>
-          </div>
-
-          <Tabs defaultValue="overview" className="space-y-6">
-            <TabsList className="bg-slate-800">
-              <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="timeline">Timeline</TabsTrigger>
-              <TabsTrigger value="tasks">Tasks</TabsTrigger>
-              <TabsTrigger value="team">Team</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="overview" className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Card className="bg-slate-800 border-slate-700">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium text-slate-300">Progress</CardTitle>
-                    <BarChart3 className="h-4 w-4 text-teal-400" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold text-white">{selectedProject.progress}%</div>
-                    <Progress value={selectedProject.progress} className="mt-2" />
-                  </CardContent>
-                </Card>
-
-                <Card className="bg-slate-800 border-slate-700">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium text-slate-300">Budget</CardTitle>
-                    <DollarSign className="h-4 w-4 text-teal-400" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold text-white">
-                      ${selectedProject.spent.toLocaleString()} / ${selectedProject.budget.toLocaleString()}
-                    </div>
-                    <Progress 
-                      value={(selectedProject.spent / selectedProject.budget) * 100} 
-                      className="mt-2" 
-                    />
-                  </CardContent>
-                </Card>
-
-                <Card className="bg-slate-800 border-slate-700">
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium text-slate-300">Status</CardTitle>
-                    {(() => {
-                      const StatusIcon = statusIcons[selectedProject.status];
-                      return <StatusIcon className="h-4 w-4 text-teal-400" />;
-                    })()}
-                  </CardHeader>
-                  <CardContent>
-                    <Badge className={`${statusColors[selectedProject.status]} text-white`}>
-                      {selectedProject.status.charAt(0).toUpperCase() + selectedProject.status.slice(1)}
-                    </Badge>
-                  </CardContent>
-                </Card>
-              </div>
-
-              <Card className="bg-slate-800 border-slate-700">
-                <CardHeader>
-                  <CardTitle className="text-white">Project Details</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-sm text-slate-400">Client</p>
-                      <p className="text-white">{selectedProject.client}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-slate-400">Duration</p>
-                      <p className="text-white">
-                        {new Date(selectedProject.startDate).toLocaleDateString()} - {new Date(selectedProject.endDate).toLocaleDateString()}
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="timeline" className="space-y-4">
-              {selectedProject.timeline.map((phase, index) => (
-                <Card key={index} className="bg-slate-800 border-slate-700">
-                  <CardContent className="p-4">
-                    <div className="flex items-center space-x-4">
-                      <div className={`w-4 h-4 rounded-full ${
-                        phase.status === 'completed' ? 'bg-green-500' :
-                        phase.status === 'current' ? 'bg-yellow-500' :
-                        'bg-slate-500'
-                      }`} />
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-white">{phase.phase}</h3>
-                        <p className="text-sm text-slate-400">
-                          {new Date(phase.startDate).toLocaleDateString()} - {new Date(phase.endDate).toLocaleDateString()}
-                        </p>
-                      </div>
-                      <Badge variant={phase.status === 'completed' ? 'default' : 'secondary'}>
-                        {phase.status}
-                      </Badge>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </TabsContent>
-
-            <TabsContent value="tasks" className="space-y-4">
-              {selectedProject.tasks.map((task) => (
-                <Card key={task.id} className="bg-slate-800 border-slate-700">
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h3 className="font-semibold text-white">{task.name}</h3>
-                        <p className="text-sm text-slate-400">Assigned to: {task.assignee}</p>
-                        <p className="text-sm text-slate-400">Due: {new Date(task.dueDate).toLocaleDateString()}</p>
-                      </div>
-                      <Badge className={
-                        task.status === 'completed' ? 'bg-green-500' :
-                        task.status === 'in-progress' ? 'bg-yellow-500' :
-                        'bg-slate-500'
-                      }>
-                        {task.status}
-                      </Badge>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </TabsContent>
-
-            <TabsContent value="team" className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {selectedProject.team.map((member, index) => (
-                  <Card key={index} className="bg-slate-800 border-slate-700">
-                    <CardContent className="p-4 text-center">
-                      <div className="w-12 h-12 bg-teal-600 rounded-full flex items-center justify-center mx-auto mb-2">
-                        <Users className="h-6 w-6 text-white" />
-                      </div>
-                      <h3 className="font-semibold text-white">{member}</h3>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </TabsContent>
-          </Tabs>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
+          <p className="mt-2">Loading projects...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white">
-      <div className="container mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-4">Projects</h1>
-          <p className="text-slate-300 text-lg">
-            Manage and track all your projects in one place
-          </p>
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Projects</h1>
+          <p className="text-gray-600 dark:text-gray-300">Manage and track your projects</p>
         </div>
+        <Button>
+          <Plus className="h-4 w-4 mr-2" />
+          New Project
+        </Button>
+      </div>
 
-        {projects.length === 0 ? (
-          <Card className="bg-slate-800 border-slate-700">
-            <CardContent className="p-8 text-center">
-              <BarChart3 className="h-16 w-16 text-slate-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-white mb-2">No Projects Found</h3>
-              <p className="text-slate-400 mb-4">
-                You don&apos;t have any projects yet. Contact us to get started!
-              </p>
-              <Button className="bg-teal-600 hover:bg-teal-700">
-                Get Started
-              </Button>
+      {/* Stats Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Projects</CardTitle>
+            <Calendar className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.total}</div>
+            <p className="text-xs text-muted-foreground">All projects</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">In Progress</CardTitle>
+            <Clock className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.inProgress}</div>
+            <p className="text-xs text-muted-foreground">Active projects</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Completed</CardTitle>
+            <CheckCircle className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.completed}</div>
+            <p className="text-xs text-muted-foreground">Finished projects</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Budget</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">${stats.totalBudget.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">
+              ${stats.totalSpent.toLocaleString()} spent
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Filters */}
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>Filters</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap gap-4">
+            <div className="flex items-center space-x-2">
+              <Search className="h-4 w-4" />
+              <input
+                type="text"
+                placeholder="Search projects..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="border rounded px-3 py-1 text-sm w-64"
+              />
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <Filter className="h-4 w-4" />
+              <span className="text-sm font-medium">Status:</span>
+              <select 
+                value={statusFilter} 
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="border rounded px-2 py-1 text-sm"
+              >
+                <option value="all">All Status</option>
+                <option value="planning">Planning</option>
+                <option value="in-progress">In Progress</option>
+                <option value="completed">Completed</option>
+                <option value="on-hold">On Hold</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <span className="text-sm font-medium">Priority:</span>
+              <select 
+                value={priorityFilter} 
+                onChange={(e) => setPriorityFilter(e.target.value)}
+                className="border rounded px-2 py-1 text-sm"
+              >
+                <option value="all">All Priorities</option>
+                <option value="urgent">Urgent</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+              </select>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Projects List */}
+      <div className="grid gap-6">
+        {filteredProjects.map((project) => (
+          <Card key={project.id}>
+            <CardHeader>
+              <div className="flex justify-between items-start">
+                <div className="flex-1">
+                  <div className="flex items-center space-x-2 mb-2">
+                    {getStatusIcon(project.status)}
+                    <CardTitle className="text-xl">{project.name}</CardTitle>
+                  </div>
+                  <CardDescription>{project.description}</CardDescription>
+                </div>
+                <div className="flex space-x-2">
+                  {getStatusBadge(project.status)}
+                  {getPriorityBadge(project.priority)}
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div className="flex items-center space-x-2">
+                  <Calendar className="h-4 w-4 text-gray-500" />
+                  <div>
+                    <p className="text-sm font-medium">Timeline</p>
+                    <p className="text-xs text-gray-500">
+                      {new Date(project.startDate).toLocaleDateString()} - {new Date(project.endDate).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-2">
+                  <DollarSign className="h-4 w-4 text-gray-500" />
+                  <div>
+                    <p className="text-sm font-medium">Budget</p>
+                    <p className="text-xs text-gray-500">
+                      ${project.spent.toLocaleString()} / ${project.budget.toLocaleString()}
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-2">
+                  <Users className="h-4 w-4 text-gray-500" />
+                  <div>
+                    <p className="text-sm font-medium">Team</p>
+                    <p className="text-xs text-gray-500">{project.teamMembers.length} members</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-2">
+                  <CheckCircle className="h-4 w-4 text-gray-500" />
+                  <div>
+                    <p className="text-sm font-medium">Progress</p>
+                    <p className="text-xs text-gray-500">{project.progress}% complete</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Progress Bar */}
+              <div className="mb-4">
+                <div className="flex justify-between text-sm mb-1">
+                  <span>Progress</span>
+                  <span>{project.progress}%</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div 
+                    className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${project.progress}%` }}
+                  ></div>
+                </div>
+              </div>
+
+              {/* Tags */}
+              <div className="flex flex-wrap gap-2 mb-4">
+                {project.tags.map((tag, index) => (
+                  <Badge key={index} variant="outline" className="text-xs">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+
+              {/* Client and Team */}
+              <div className="flex justify-between items-center mb-4">
+                <div>
+                  <p className="text-sm font-medium">Client: {project.client}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm font-medium">Team Members:</p>
+                  <p className="text-xs text-gray-500">{project.teamMembers.join(', ')}</p>
+                </div>
+              </div>
+              
+              <div className="flex space-x-2">
+                <Button variant="outline" size="sm">
+                  <Eye className="h-3 w-3 mr-1" />
+                  View Details
+                </Button>
+                <Button variant="outline" size="sm">
+                  <Edit className="h-3 w-3 mr-1" />
+                  Edit
+                </Button>
+                <Button variant="outline" size="sm">
+                  <Trash2 className="h-3 w-3 mr-1" />
+                  Delete
+                </Button>
+              </div>
             </CardContent>
           </Card>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects.map((project) => {
-              const StatusIcon = statusIcons[project.status];
-              return (
-                <Card 
-                  key={project.id} 
-                  className="bg-slate-800 border-slate-700 hover:border-teal-600 transition-colors cursor-pointer"
-                  onClick={() => setSelectedProject(project)}
-                >
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-white">{project.name}</CardTitle>
-                      <StatusIcon className="h-5 w-5 text-teal-400" />
-                    </div>
-                    <CardDescription className="text-slate-400">
-                      {project.description}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div>
-                        <div className="flex justify-between text-sm mb-1">
-                          <span className="text-slate-400">Progress</span>
-                          <span className="text-white">{project.progress}%</span>
-                        </div>
-                        <Progress value={project.progress} className="h-2" />
-                      </div>
-                      
-                      <div className="flex justify-between items-center">
-                        <Badge className={`${statusColors[project.status]} text-white`}>
-                          {project.status.charAt(0).toUpperCase() + project.status.slice(1)}
-                        </Badge>
-                        <span className="text-sm text-slate-400">{project.client}</span>
-                      </div>
+        ))}
 
-                      <div className="flex justify-between text-sm text-slate-400">
-                        <div className="flex items-center">
-                          <CalendarDays className="h-4 w-4 mr-1" />
-                          {new Date(project.endDate).toLocaleDateString()}
-                        </div>
-                        <div className="flex items-center">
-                          <DollarSign className="h-4 w-4 mr-1" />
-                          ${project.budget.toLocaleString()}
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
+        {filteredProjects.length === 0 && (
+          <Card>
+            <CardContent className="text-center py-8">
+              <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-500">No projects found matching your criteria.</p>
+            </CardContent>
+          </Card>
         )}
       </div>
     </div>

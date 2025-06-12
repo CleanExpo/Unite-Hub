@@ -1,0 +1,1036 @@
+{
+  "timestamp": "2025-06-10T12:40:33.979Z",
+  "summary": {
+    "errors": 10,
+    "warnings": 192,
+    "missingFiles": 0,
+    "mockData": 6,
+    "brokenConnections": 2
+  },
+  "errors": [
+    {
+      "type": "mock_data",
+      "file": "src\\lib\\utils\\site-audit.ts",
+      "message": "Mock data found: \"TODO:\""
+    },
+    {
+      "type": "mock_data",
+      "file": "src\\components\\admin\\SiteAuditDashboard.tsx",
+      "message": "Mock data found: \"TODO:\""
+    },
+    {
+      "type": "mock_data",
+      "file": "src\\components\\crm\\clients\\AddClientModal.tsx",
+      "message": "Mock data found: \"placeholder\""
+    },
+    {
+      "type": "api_connection",
+      "service": "Supabase",
+      "message": "API connection failed: supabaseUrl is required."
+    },
+    {
+      "type": "database_connection",
+      "message": "Failed to connect to database"
+    },
+    {
+      "type": "mock_data",
+      "file": "src\\lib\\utils\\site-audit.ts",
+      "message": "Mock data found: \"TODO:\""
+    },
+    {
+      "type": "mock_data",
+      "file": "src\\components\\admin\\SiteAuditDashboard.tsx",
+      "message": "Mock data found: \"placeholder\""
+    },
+    {
+      "type": "mock_data",
+      "file": "src\\components\\admin\\SiteAuditDashboard.tsx",
+      "message": "Mock data found: \"TODO:\""
+    },
+    {
+      "type": "api_connection",
+      "service": "Supabase",
+      "message": "API connection failed: supabaseUrl is required."
+    },
+    {
+      "type": "database_connection",
+      "message": "Failed to connect to database"
+    }
+  ],
+  "warnings": [
+    {
+      "type": "console_log",
+      "file": "src\\components\\NewsletterSignup.tsx",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\websocket\\MessageSocket.tsx",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "todo_found",
+      "file": "src\\lib\\utils\\site-audit.ts",
+      "message": "TODO comment found"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\utils\\repair-cli.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\socket\\server.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\services\\resources.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\pwa\\registerSW.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\pwa\\PWAInitializer.tsx",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\monitoring\\performance-monitor.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\email\\sendEmail.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ecosystem\\service.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\automation\\workflow-engine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\auth\\session.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\auth\\session-middleware.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\api\\client.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\analytics\\service.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\analytics\\index.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\recommendation-engine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\personalization-engine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\automation-engine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\components\\pwa\\InstallPrompt.tsx",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\components\\dashboard\\QuickActions.tsx",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\components\\compliance\\CookieConsentProvider.tsx",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "todo_found",
+      "file": "src\\components\\admin\\SiteAuditDashboard.tsx",
+      "message": "TODO comment found"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\services\\redis\\RedisService.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\services\\base\\RuntimeService.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\services\\ai\\AIIntegrationService.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\innovation\\validation\\market-validator.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\innovation\\autonomous-development\\qa-system.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\innovation\\autonomous-development\\feature-engine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\innovation\\autonomous-development\\development-pipeline.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\innovation\\autonomous-development\\deployment-engine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\innovation\\autonomous-development\\ai-feature-generator.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\crm\\workflow\\engine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\cognitive\\financial-intelligence\\advanced-engine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\cognitive\\customer-experience\\autonomous-engine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\cognitive\\business-intelligence\\predictive-engine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\cognitive\\analytics\\index.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\autonomous\\monitoring\\service.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\autonomous\\infrastructure\\enhanced-monitoring.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\resources\\ResourcePredictor.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\workflow\\service.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\workflow\\EfficiencyAnalyzer.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\security\\ThreatDetector.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\security\\SecurityOrchestrator.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\security\\AutoResponse.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\quantum\\QuantumProcessingInterface.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\predictive\\FailurePredictor.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\orchestration\\ProcessAutomation.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\optimization\\ResourceAllocator.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\optimization\\RealTimeOptimizer.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\optimization\\PerformanceOptimizer.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "silent_error",
+      "file": "src\\lib\\ai\\optimization\\PerformanceOptimizer.ts",
+      "message": "Catch block without proper error handling"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\optimization\\AdvancedLoadBalancer.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\monitoring\\SystemMonitor.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\monitoring\\DiagnosticsEngine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\interfaces\\NeuralInterfaceAdapter.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\interfaces\\CognitiveResponseEngine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\integration\\AutonomousIntegrationEngine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\innovation\\FeatureDeveloper.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\innovation\\AutonomousProductDeveloper.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\innovation\\AutonomousCodeGenerator.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\innovation\\AdvancedFeatureDeveloper.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\gateway\\production-ai-gateway.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\gateway\\enhanced-ai-gateway.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\gateway\\ai-gateway.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\deployment\\DeploymentValidator.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\deployment\\DeploymentOrchestrator.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\consciousness\\ConsciousnessSimulationEngine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\cognitive\\AdvancedBusinessIntelligence.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\capacity\\CapacityPlanner.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\analytics\\service.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\analytics\\RealTimeMarketIntelligence.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\analytics\\FinancialModeler.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\analytics\\CustomerJourneyAnalyzer.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\analytics\\BehaviorPredictor.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\analytics\\AdvancedAnalyticsEngine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai-agent\\hybrid\\agent-manager.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\components\\crm\\tasks\\AddTaskModal.tsx",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\components\\crm\\meetings\\ScheduleMeetingModal.tsx",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\components\\crm\\deals\\AddDealModal.tsx",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\components\\crm\\clients\\AddClientModal.tsx",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\app\\api\\threat-detection\\route.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\app\\api\\setup-database\\route.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\app\\api\\compliance-automation\\route.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\app\\api\\ai-gateway\\route.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\predictive\\models\\SystemHealthModel.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\gateway\\routing\\ai-router.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\gateway\\cache\\ai-cache.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai-agent\\hybrid\\hooks\\use-agent-state.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\app\\dashboard\\crm\\messaging\\page.tsx",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\app\\api\\monitoring\\site-crawler\\route.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\app\\api\\marketing\\leads\\route.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\app\\api\\crm\\tasks\\route.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\app\\api\\compliance\\cookie-consent\\route.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\app\\api\\ai\\revolution\\route.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\components\\NewsletterSignup.tsx",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "todo_found",
+      "file": "src\\lib\\utils\\site-audit.ts",
+      "message": "TODO comment found"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\utils\\repair-cli.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\socket\\server.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\services\\resources.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\pwa\\registerSW.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\pwa\\PWAInitializer.tsx",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\monitoring\\performance-monitor.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\email\\sendEmail.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ecosystem\\service.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\websocket\\MessageSocket.tsx",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\auth\\session.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\auth\\session-middleware.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\automation\\workflow-engine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\api\\client.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\analytics\\service.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\analytics\\index.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\recommendation-engine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\personalization-engine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\automation-engine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\components\\pwa\\InstallPrompt.tsx",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\components\\dashboard\\QuickActions.tsx",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\components\\compliance\\CookieConsentProvider.tsx",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "todo_found",
+      "file": "src\\components\\admin\\SiteAuditDashboard.tsx",
+      "message": "TODO comment found"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\services\\redis\\RedisService.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\services\\base\\RuntimeService.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\services\\ai\\AIIntegrationService.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\innovation\\validation\\market-validator.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\innovation\\autonomous-development\\qa-system.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\innovation\\autonomous-development\\feature-engine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\innovation\\autonomous-development\\development-pipeline.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\innovation\\autonomous-development\\deployment-engine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\innovation\\autonomous-development\\ai-feature-generator.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\cognitive\\business-intelligence\\predictive-engine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\cognitive\\financial-intelligence\\advanced-engine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\cognitive\\customer-experience\\autonomous-engine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\autonomous\\infrastructure\\enhanced-monitoring.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\autonomous\\monitoring\\service.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\cognitive\\analytics\\index.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\crm\\workflow\\engine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai-agent\\hybrid\\agent-manager.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\workflow\\service.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\workflow\\EfficiencyAnalyzer.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\quantum\\QuantumProcessingInterface.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\resources\\ResourcePredictor.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\security\\ThreatDetector.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\security\\SecurityOrchestrator.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\security\\AutoResponse.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\predictive\\FailurePredictor.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\optimization\\ResourceAllocator.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\optimization\\RealTimeOptimizer.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\optimization\\AdvancedLoadBalancer.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\monitoring\\SystemMonitor.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\monitoring\\DiagnosticsEngine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\orchestration\\ProcessAutomation.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\interfaces\\NeuralInterfaceAdapter.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\interfaces\\CognitiveResponseEngine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\integration\\AutonomousIntegrationEngine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\innovation\\FeatureDeveloper.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\innovation\\AutonomousProductDeveloper.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\innovation\\AutonomousCodeGenerator.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\innovation\\AdvancedFeatureDeveloper.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\gateway\\production-ai-gateway.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\gateway\\enhanced-ai-gateway.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\gateway\\ai-gateway.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\deployment\\DeploymentValidator.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "silent_error",
+      "file": "src\\lib\\ai\\deployment\\DeploymentValidator.ts",
+      "message": "Catch block without proper error handling"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\deployment\\DeploymentOrchestrator.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\consciousness\\ConsciousnessSimulationEngine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\cognitive\\AdvancedBusinessIntelligence.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\capacity\\CapacityPlanner.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\analytics\\service.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\analytics\\RealTimeMarketIntelligence.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\analytics\\FinancialModeler.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\analytics\\CustomerJourneyAnalyzer.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\analytics\\BehaviorPredictor.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\analytics\\AdvancedAnalyticsEngine.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\components\\crm\\tasks\\AddTaskModal.tsx",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\components\\crm\\deals\\AddDealModal.tsx",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\components\\crm\\meetings\\ScheduleMeetingModal.tsx",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "silent_error",
+      "file": "src\\components\\crm\\meetings\\ScheduleMeetingModal.tsx",
+      "message": "Catch block without proper error handling"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\components\\crm\\clients\\AddClientModal.tsx",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\app\\api\\threat-detection\\route.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\app\\api\\setup-database\\route.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\app\\api\\compliance-automation\\route.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\app\\api\\ai-gateway\\route.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai-agent\\hybrid\\hooks\\use-agent-state.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\predictive\\models\\SystemHealthModel.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\gateway\\cache\\ai-cache.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\lib\\ai\\gateway\\routing\\ai-router.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\app\\dashboard\\crm\\messaging\\page.tsx",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\app\\api\\monitoring\\site-crawler\\route.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\app\\api\\marketing\\leads\\route.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\app\\api\\crm\\tasks\\route.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\app\\api\\compliance\\cookie-consent\\route.ts",
+      "message": "console.log found in production code"
+    },
+    {
+      "type": "console_log",
+      "file": "src\\app\\api\\ai\\revolution\\route.ts",
+      "message": "console.log found in production code"
+    }
+  ],
+  "missingFiles": [],
+  "mockDataFound": [
+    "src\\lib\\utils\\site-audit.ts: \"TODO:\"",
+    "src\\components\\admin\\SiteAuditDashboard.tsx: \"TODO:\"",
+    "src\\components\\crm\\clients\\AddClientModal.tsx: \"placeholder\"",
+    "src\\lib\\utils\\site-audit.ts: \"TODO:\"",
+    "src\\components\\admin\\SiteAuditDashboard.tsx: \"placeholder\"",
+    "src\\components\\admin\\SiteAuditDashboard.tsx: \"TODO:\""
+  ],
+  "brokenConnections": [
+    "Supabase",
+    "Supabase"
+  ],
+  "healthScore": 0
+}

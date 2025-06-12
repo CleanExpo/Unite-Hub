@@ -33,13 +33,13 @@ export default function CaseStudiesPage() {
               Success Stories
             </h1>
             <p className="text-xl text-slate-200 max-w-3xl mx-auto mb-8">
-              Real results from real businesses. Discover how we&apos;ve helped companies transform and thrive.
+              Real results from real businesses. Discover how we've helped companies transform and thrive.
             </p>
           </div>
         </div>
       </section>
 
-      {/* Coming Soon Section */}
+      {/* Available Now Section */}
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4">
           <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-12 text-center border border-slate-700">
@@ -47,10 +47,10 @@ export default function CaseStudiesPage() {
               <Sparkles className="h-12 w-12 text-teal-400" />
             </div>
             <h2 className="text-3xl font-bold text-white mb-4">
-              Case Studies Coming Soon!
+              Case Studies Available Now!
             </h2>
             <p className="text-lg text-slate-200 mb-8 max-w-2xl mx-auto">
-              We&apos;re documenting our success stories to share how we&apos;ve helped businesses like yours achieve exceptional results.
+              We're documenting our success stories to share how we've helped businesses like yours achieve exceptional results.
             </p>
 
             {/* Success Metrics Preview */}
@@ -105,7 +105,7 @@ export default function CaseStudiesPage() {
               Ready to Be Our Next Success Story?
             </h2>
             <p className="text-xl mb-8 text-white/90">
-              Let&apos;s discuss how we can transform your business
+              Let's discuss how we can transform your business
             </p>
             <Button asChild size="lg" className="bg-white text-teal-600 hover:bg-slate-100">
               <Link href="/book-consultation">

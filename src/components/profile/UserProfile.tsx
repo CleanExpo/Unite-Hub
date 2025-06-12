@@ -1,22 +1,22 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Switch } from '@/components/ui/switch'
+import { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Switch } from '@/components/ui/switch';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from '@/components/ui/select';
 import { 
   User, 
   Mail, 
@@ -31,63 +31,124 @@ import {
   Key,
   LogOut,
   Save,
-  X
-} from 'lucide-react'
-import { motion } from 'framer-motion'
+  X,
+  Loader2
+} from 'lucide-react';
+import { motion } from 'framer-motion';
+import { apiClient } from '@/lib/apiClient';
+import { toast } from '@/components/ui/use-toast';
 
 interface UserProfileData {
-  id: string
-  name: string
-  email: string
-  phone?: string
-  avatar?: string
-  role: string
-  department?: string
-  location?: string
-  timezone?: string
-  bio?: string
-  website?: string
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  avatar?: string;
+  role: string;
+  department?: string;
+  location?: string;
+  timezone?: string;
+  bio?: string;
+  website?: string;
   notifications: {
-    email: boolean
-    push: boolean
-    sms: boolean
-  }
-  twoFactor: boolean
-}
-
-const mockUser: UserProfileData = {
-  id: '1',
-  name: 'John Doe',
-  email: 'john.doe@unitegroup.com',
-  phone: '+1 (555) 123-4567',
-  avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=John',
-  role: 'Senior Developer',
-  department: 'Engineering',
-  location: 'San Francisco, CA',
-  timezone: 'America/Los_Angeles',
-  bio: 'Passionate about building scalable SaaS solutions and leading engineering teams.',
-  website: 'https://johndoe.dev',
-  notifications: {
-    email: true,
-    push: true,
-    sms: false
-  },
-  twoFactor: true
+    email: boolean;
+    push: boolean;
+    sms: boolean;
+  };
+  twoFactor: boolean;
 }
 
 export function UserProfile() {
-  const [user, setUser] = useState<UserProfileData>(mockUser)
-  const [isEditing, setIsEditing] = useState(false)
-  const [editedUser, setEditedUser] = useState<UserProfileData>(mockUser)
+  const [user, setUser] = useState<UserProfileData | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedUser, setEditedUser] = useState<UserProfileData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSave = () => {
-    setUser(editedUser)
-    setIsEditing(false)
-  }
+  // Fetch real user profile from API
+  const fetchUserProfile = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await apiClient.get('users/profile');
+      setUser(data.data);
+      setEditedUser(data.data);
+    } catch (err) {
+      console.error('Failed to fetch user profile:', err);
+      setError('Failed to load user profile. Please try again.');
+      toast({
+        title: 'Error',
+        description: 'Failed to load user profile',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserProfile();
+  }, []);
+
+  const handleSave = async () => {
+    if (!editedUser) return;
+    
+    setSaving(true);
+    try {
+      const response = await apiClient.put('users/profile', editedUser);
+      setUser(response.data);
+      setIsEditing(false);
+      toast({
+        title: 'Success',
+        description: 'Profile updated successfully',
+      });
+    } catch (err) {
+      console.error('Failed to update profile:', err);
+      toast({
+        title: 'Error',
+        description: 'Failed to update profile. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const handleCancel = () => {
-    setEditedUser(user)
-    setIsEditing(false)
+    setEditedUser(user);
+    setIsEditing(false);
+  };
+
+  if (loading) {
+    return (
+      <div className="max-w-4xl mx-auto space-y-6">
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-center h-32">
+              <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (error || !user) {
+    return (
+      <div className="max-w-4xl mx-auto space-y-6">
+        <Card>
+          <CardContent className="p-6">
+            <div className="text-center">
+              <p className="text-red-600 mb-4">{error || 'Failed to load user profile'}</p>
+              <Button onClick={fetchUserProfile}>
+                Retry
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   const getUserInitials = (name: string) => {
@@ -95,8 +156,8 @@ export function UserProfile() {
       .split(' ')
       .map(n => n[0])
       .join('')
-      .toUpperCase()
-  }
+      .toUpperCase();
+  };
 
   return (
     <motion.div
@@ -129,8 +190,8 @@ export function UserProfile() {
               <div>
                 {isEditing ? (
                   <Input
-                    value={editedUser.name}
-                    onChange={(e) => setEditedUser({ ...editedUser, name: e.target.value })}
+                    value={editedUser?.name || ''}
+                    onChange={(e) => editedUser && setEditedUser({ ...editedUser, name: e.target.value })}
                     className="text-2xl font-bold mb-2"
                   />
                 ) : (
@@ -196,8 +257,8 @@ export function UserProfile() {
                   <Input
                     id="email"
                     type="email"
-                    value={isEditing ? editedUser.email : user.email}
-                    onChange={(e) => setEditedUser({ ...editedUser, email: e.target.value })}
+                    value={isEditing ? editedUser?.email || '' : user.email}
+                    onChange={(e) => editedUser && setEditedUser({ ...editedUser, email: e.target.value })}
                     disabled={!isEditing}
                   />
                 </div>
@@ -210,8 +271,8 @@ export function UserProfile() {
                   <Input
                     id="phone"
                     type="tel"
-                    value={isEditing ? editedUser.phone : user.phone}
-                    onChange={(e) => setEditedUser({ ...editedUser, phone: e.target.value })}
+                    value={isEditing ? editedUser?.phone || '' : user.phone || ''}
+                    onChange={(e) => editedUser && setEditedUser({ ...editedUser, phone: e.target.value })}
                     disabled={!isEditing}
                   />
                 </div>
@@ -225,8 +286,8 @@ export function UserProfile() {
                   </Label>
                   <Input
                     id="role"
-                    value={isEditing ? editedUser.role : user.role}
-                    onChange={(e) => setEditedUser({ ...editedUser, role: e.target.value })}
+                    value={isEditing ? editedUser?.role || '' : user.role}
+                    onChange={(e) => editedUser && setEditedUser({ ...editedUser, role: e.target.value })}
                     disabled={!isEditing}
                   />
                 </div>
@@ -237,8 +298,8 @@ export function UserProfile() {
                     Timezone
                   </Label>
                   <Select
-                    value={isEditing ? editedUser.timezone : user.timezone}
-                    onValueChange={(value) => setEditedUser({ ...editedUser, timezone: value })}
+                    value={isEditing ? editedUser?.timezone : user.timezone}
+                    onValueChange={(value) => editedUser && setEditedUser({ ...editedUser, timezone: value })}
                     disabled={!isEditing}
                   >
                     <SelectTrigger id="timezone">
@@ -258,8 +319,8 @@ export function UserProfile() {
                 <Label htmlFor="bio">Bio</Label>
                 <Textarea
                   id="bio"
-                  value={isEditing ? editedUser.bio : user.bio}
-                  onChange={(e) => setEditedUser({ ...editedUser, bio: e.target.value })}
+                  value={isEditing ? editedUser?.bio || '' : user.bio || ''}
+                  onChange={(e) => editedUser && setEditedUser({ ...editedUser, bio: e.target.value })}
                   disabled={!isEditing}
                   rows={3}
                 />
@@ -273,8 +334,8 @@ export function UserProfile() {
                 <Input
                   id="website"
                   type="url"
-                  value={isEditing ? editedUser.website : user.website}
-                  onChange={(e) => setEditedUser({ ...editedUser, website: e.target.value })}
+                  value={isEditing ? editedUser?.website || '' : user.website || ''}
+                  onChange={(e) => editedUser && setEditedUser({ ...editedUser, website: e.target.value })}
                   disabled={!isEditing}
                 />
               </div>
@@ -373,7 +434,7 @@ export function UserProfile() {
                 <div className="space-y-0.5">
                   <Label className="text-base">SMS Notifications</Label>
                   <p className="text-sm text-muted-foreground">
-                    Receive text messages for important updates
+                    Receive notifications via SMS
                   </p>
                 </div>
                 <Switch
@@ -395,47 +456,20 @@ export function UserProfile() {
             <CardHeader>
               <CardTitle>Billing Information</CardTitle>
               <CardDescription>
-                Manage your subscription and payment methods
+                Manage your billing details and subscription
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="rounded-lg border p-4 space-y-3">
-                <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center gap-3">
+                  <CreditCard className="h-5 w-5 text-muted-foreground" />
                   <div>
-                    <p className="font-medium">Growth Plan</p>
-                    <p className="text-sm text-muted-foreground">$299/month</p>
+                    <p className="font-medium">Current Plan</p>
+                    <p className="text-sm text-muted-foreground">Professional Plan</p>
                   </div>
-                  <Badge>Active</Badge>
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  Next billing date: April 1, 2024
                 </div>
                 <Button variant="outline" size="sm">
-                  Change Plan
-                </Button>
-              </div>
-
-              <div className="space-y-3">
-                <h3 className="text-sm font-medium">Payment Methods</h3>
-                <div className="rounded-lg border p-4 flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <CreditCard className="h-5 w-5" />
-                    <div>
-                      <p className="font-medium">•••• •••• •••• 4242</p>
-                      <p className="text-sm text-muted-foreground">Expires 12/24</p>
-                    </div>
-                  </div>
-                  <Badge variant="secondary">Default</Badge>
-                </div>
-                
-                <Button variant="outline" className="w-full">
-                  Add Payment Method
-                </Button>
-              </div>
-
-              <div className="pt-4">
-                <Button variant="outline" className="w-full">
-                  Download Invoices
+                  Upgrade
                 </Button>
               </div>
             </CardContent>
@@ -443,5 +477,5 @@ export function UserProfile() {
         </TabsContent>
       </Tabs>
     </motion.div>
-  )
+  );
 }

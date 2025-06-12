@@ -21,7 +21,7 @@ export function HeroSection() {
           <div className="animate-fade-in-up">
             <div className="inline-flex items-center gap-2 bg-teal-100 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400 px-4 py-2 rounded-full text-sm font-medium mb-6">
               <Sparkles className="w-4 h-4" />
-              Australia&apos;s Premier Business Solutions Partner
+              Australia's Premier Business Solutions Partner
             </div>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6">

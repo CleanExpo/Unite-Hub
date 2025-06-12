@@ -1,0 +1,7 @@
+try {
+    const stripeAccount = await createStripeConnection();
+    res.status(200).json(stripeAccount);
+} catch (error) {
+    console.error("Error creating Stripe connection:", error);
+    res.status(500).json({ error: "An error occurred while creating the Stripe connection" });
+}

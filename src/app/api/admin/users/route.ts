@@ -1,4 +1,4 @@
-// ================================================
+﻿// ================================================
 // Admin Users API Route
 // ================================================
 
@@ -15,7 +15,7 @@ import { createSupabaseServerClient } from '@/lib/auth/session';
 export async function GET(request: NextRequest) {
   try {
     // Get current user with error handling
-    const user = await getCurrentUser(request);
+    const user = await getCurrentUser();
     
     if (!user) {
       return NextResponse.json(
@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
     }
     
     // Check if user has admin or master role
-    if (!['Master', 'Admin'].includes(user.role)) {
+    if (!user.role || !['Master', 'Admin'].includes(user.role)) {
       return NextResponse.json(
         { error: 'Insufficient permissions' },
         { status: 403 }
@@ -93,7 +93,7 @@ export async function GET(request: NextRequest) {
       // Format response
       const formattedUsers = (users || []).map(u => ({
         ...u,
-        createdByEmail: u.created_by ? creators[u.created_by] : null,
+        createdByEmail: u.created_by ? ((creators as Record<string, string>)[u.created_by] || null) : null,
       }));
       
       // Log audit event
@@ -136,9 +136,9 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser(request);
+    const user = await getCurrentUser();
     
-    if (!user || !['Master', 'Admin'].includes(user.role)) {
+    if (!user || !user.role || !['Master', 'Admin'].includes(user.role)) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 403 }
@@ -215,9 +215,9 @@ export async function POST(request: NextRequest) {
  */
 export async function PATCH(request: NextRequest) {
   try {
-    const user = await getCurrentUser(request);
+    const user = await getCurrentUser();
     
-    if (!user || !['Master', 'Admin'].includes(user.role)) {
+    if (!user || !user.role || !['Master', 'Admin'].includes(user.role)) {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 403 }
@@ -327,7 +327,7 @@ export async function PATCH(request: NextRequest) {
  */
 export async function DELETE(request: NextRequest) {
   try {
-    const user = await getCurrentUser(request);
+    const user = await getCurrentUser();
     
     if (!user || user.role !== 'Master') {
       return NextResponse.json(

@@ -12,7 +12,7 @@ const testimonials = [
     role: 'CEO, TechStart Solutions',
     company: 'TechStart Solutions',
     image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah',
-    content: 'Unite Group transformed our digital infrastructure completely. Their AI-powered solutions increased our operational efficiency by 300%. The team&apos;s expertise and dedication are unmatched.',
+    content: 'Unite Group transformed our digital infrastructure completely. Their AI-powered solutions increased our operational efficiency by 300%. The team\'s expertise and dedication are unmatched.',
     rating: 5,
     industry: 'Technology'
   },
@@ -52,7 +52,7 @@ const testimonials = [
     role: 'Founder & CEO',
     company: 'HealthTech Innovations',
     image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Lisa',
-    content: 'Unite Group&apos;s expertise in healthcare technology is exceptional. They helped us achieve HIPAA compliance while improving our system performance by 200%.',
+    content: 'Unite Group\'s expertise in healthcare technology is exceptional. They helped us achieve HIPAA compliance while improving our system performance by 200%.',
     rating: 5,
     industry: 'Healthcare'
   },
@@ -83,7 +83,7 @@ export default function Testimonials() {
             What Our Clients Say
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Don&apos;t just take our word for it. Here&apos;s what industry leaders have to say about their experience with Unite Group.
+            Don't just take our word for it. Here's what industry leaders have to say about their experience with Unite Group.
           </p>
         </motion.div>
 

@@ -2,17 +2,44 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Session } from '@supabase/supabase-js';
 import { supabaseClient } from '@/lib/supabase/client';
-import { CookiePreferencesButton } from '@/components/compliance/CookieConsentProvider';
-import { 
-  UserPrivacySettings, 
-  DataExportRequest, 
-  DataDeletionRequest,
-  ExportFormat,
-  RequestStatus,
-  DataCategory
-} from '@/lib/compliance/types';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertCircle, Shield, Download, Trash2 } from 'lucide-react';
+
+interface UserPrivacySettings {
+  id: string;
+  communicationPreferences: {
+    email: boolean;
+    sms: boolean;
+    push: boolean;
+  };
+  dataProcessingPreferences: {
+    analytics: boolean;
+    marketing: boolean;
+    personalization: boolean;
+  };
+}
+
+interface DataExportRequest {
+  id: string;
+  status: 'pending' | 'processing' | 'completed' | 'failed';
+  requestedAt: string;
+  completedAt?: string;
+  downloadUrl?: string;
+}
+
+interface DataDeletionRequest {
+  id: string;
+  status: 'pending' | 'processing' | 'completed' | 'failed';
+  requestedAt: string;
+  completedAt?: string;
+  type: 'partial' | 'full';
+}
 
 interface PrivacyState {
   loading: boolean;
@@ -26,7 +53,7 @@ interface PrivacyState {
 
 export default function PrivacyPage() {
   const router = useRouter();
-  const [session, setSession] = useState<Session | null>(null);
+  const [session, setSession] = useState<any>(null);
   const [state, setState] = useState<PrivacyState>({
     loading: true,
     privacySettings: null,
@@ -34,63 +61,53 @@ export default function PrivacyPage() {
     deletionRequests: [],
     submitting: false,
     error: null,
-    success: null
+    success: null,
   });
 
-  // Fetch user session and privacy settings
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        // Get the current session
         const { data: { session } } = await supabaseClient.auth.getSession();
-        
+        setSession(session);
+
         if (!session) {
           router.push('/login');
           return;
         }
-        
-        setSession(session);
-        
+
         // Fetch privacy settings
-        const privacySettingsResponse = await fetch('/api/compliance/privacy-settings');
-        const exportRequestsResponse = await fetch('/api/compliance/data-export');
-        const deletionRequestsResponse = await fetch('/api/compliance/data-deletion');
-        
-        if (!privacySettingsResponse.ok || !exportRequestsResponse.ok || !deletionRequestsResponse.ok) {
+        const response = await fetch('/api/compliance/privacy-settings');
+        if (!response.ok) {
           throw new Error('Failed to fetch privacy data');
         }
-        
-        const privacySettings = await privacySettingsResponse.json();
-        const exportRequests = await exportRequestsResponse.json();
-        const deletionRequests = await deletionRequestsResponse.json();
-        
+
+        const data = await response.json();
         setState(prevState => ({
           ...prevState,
           loading: false,
-          privacySettings: privacySettings.settings,
-          exportRequests: exportRequests.requests || [],
-          deletionRequests: deletionRequests.requests || []
+          privacySettings: data.settings,
+          exportRequests: data.exportRequests || [],
+          deletionRequests: data.deletionRequests || [],
         }));
       } catch (error: any) {
         console.error('Failed to fetch user data:', error);
         setState(prevState => ({
           ...prevState,
           loading: false,
-          error: 'Failed to load privacy settings. Please try again.'
+          error: 'Failed to load privacy settings',
         }));
       }
     };
-    
+
     fetchUserData();
   }, [router]);
 
-  // Handle communication preferences update
   const handleCommunicationPreferenceChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    key: 'marketingEmails' | 'productUpdates' | 'newsletter'
+    key: keyof UserPrivacySettings['communicationPreferences'],
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
     if (!state.privacySettings) return;
-    
+
     setState(prevState => ({
       ...prevState,
       privacySettings: {
@@ -103,13 +120,12 @@ export default function PrivacyPage() {
     }));
   };
 
-  // Handle data processing preferences update
   const handleDataProcessingPreferenceChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    key: 'analytics' | 'profiling' | 'thirdPartySharing'
+    key: keyof UserPrivacySettings['dataProcessingPreferences'],
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
     if (!state.privacySettings) return;
-    
+
     setState(prevState => ({
       ...prevState,
       privacySettings: {
@@ -122,12 +138,11 @@ export default function PrivacyPage() {
     }));
   };
 
-  // Save privacy settings
   const handleSaveSettings = async () => {
     if (!state.privacySettings) return;
-    
+
     setState(prevState => ({ ...prevState, submitting: true, error: null, success: null }));
-    
+
     try {
       const response = await fetch('/api/compliance/privacy-settings', {
         method: 'PUT',
@@ -136,22 +151,22 @@ export default function PrivacyPage() {
         },
         body: JSON.stringify({
           communicationPreferences: state.privacySettings.communicationPreferences,
-          dataProcessingPreferences: state.privacySettings.dataProcessingPreferences
+          dataProcessingPreferences: state.privacySettings.dataProcessingPreferences,
         })
       });
-      
+
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || 'Failed to update privacy settings');
+        throw new Error(data.message || 'Failed to update settings');
       }
-      
+
       setState(prevState => ({
         ...prevState,
         submitting: false,
-        success: 'Privacy settings updated successfully'
+        success: 'Privacy settings updated successfully',
       }));
-      
-      // Clear success message after a few seconds
+
+      // Clear success message after 5 seconds
       setTimeout(() => {
         setState(prevState => ({ ...prevState, success: null }));
       }, 5000);
@@ -160,15 +175,14 @@ export default function PrivacyPage() {
       setState(prevState => ({
         ...prevState,
         submitting: false,
-        error: error.message || 'Failed to update privacy settings'
+        error: error.message || 'Failed to update settings',
       }));
     }
   };
 
-  // Request data export
-  const handleRequestDataExport = async (format: ExportFormat) => {
+  const handleRequestDataExport = async () => {
     setState(prevState => ({ ...prevState, submitting: true, error: null, success: null }));
-    
+
     try {
       const response = await fetch('/api/compliance/data-export', {
         method: 'POST',
@@ -176,26 +190,25 @@ export default function PrivacyPage() {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          exportFormat: format,
-          dataCategories: [DataCategory.ALL]
+          exportFormat: 'json',
+          categories: ['all'],
         })
       });
-      
+
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || 'Failed to request data export');
+        throw new Error(data.message || 'Failed to request data export');
       }
-      
-      const data = await response.json();
-      
+
+      const newRequest = await response.json();
       setState(prevState => ({
         ...prevState,
         submitting: false,
-        exportRequests: [data.request, ...prevState.exportRequests],
-        success: 'Data export request submitted successfully'
+        success: 'Data export request submitted successfully',
+        exportRequests: [newRequest, ...prevState.exportRequests],
       }));
-      
-      // Clear success message after a few seconds
+
+      // Clear success message after 5 seconds
       setTimeout(() => {
         setState(prevState => ({ ...prevState, success: null }));
       }, 5000);
@@ -204,15 +217,14 @@ export default function PrivacyPage() {
       setState(prevState => ({
         ...prevState,
         submitting: false,
-        error: error.message || 'Failed to request data export'
+        error: error.message || 'Failed to request data export',
       }));
     }
   };
 
-  // Request data deletion
-  const handleRequestDataDeletion = async (type: 'partial' | 'full', categories?: DataCategory[]) => {
+  const handleRequestDataDeletion = async (type: 'partial' | 'full') => {
     setState(prevState => ({ ...prevState, submitting: true, error: null, success: null }));
-    
+
     try {
       const response = await fetch('/api/compliance/data-deletion', {
         method: 'POST',
@@ -221,25 +233,24 @@ export default function PrivacyPage() {
         },
         body: JSON.stringify({
           requestType: type,
-          dataCategories: type === 'partial' ? categories : [DataCategory.ALL]
+          categories: type === 'partial' ? ['analytics', 'marketing'] : ['all'],
         })
       });
-      
+
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || 'Failed to request data deletion');
+        throw new Error(data.message || 'Failed to request data deletion');
       }
-      
-      const data = await response.json();
-      
+
+      const newRequest = await response.json();
       setState(prevState => ({
         ...prevState,
         submitting: false,
-        deletionRequests: [data.request, ...prevState.deletionRequests],
-        success: 'Data deletion request submitted successfully'
+        success: 'Data deletion request submitted successfully',
+        deletionRequests: [newRequest, ...prevState.deletionRequests],
       }));
-      
-      // Clear success message after a few seconds
+
+      // Clear success message after 5 seconds
       setTimeout(() => {
         setState(prevState => ({ ...prevState, success: null }));
       }, 5000);
@@ -248,7 +259,7 @@ export default function PrivacyPage() {
       setState(prevState => ({
         ...prevState,
         submitting: false,
-        error: error.message || 'Failed to request data deletion'
+        error: error.message || 'Failed to request data deletion',
       }));
     }
   };
@@ -256,11 +267,8 @@ export default function PrivacyPage() {
   if (state.loading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold mb-6">Privacy Settings</h1>
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded mb-4 w-1/4"></div>
-          <div className="h-24 bg-gray-200 dark:bg-gray-700 rounded mb-4"></div>
-          <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center">Loading privacy settings...</div>
         </div>
       </div>
     );
@@ -268,345 +276,265 @@ export default function PrivacyPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6">Privacy Settings</h1>
-      
-      {state.error && (
-        <div className="bg-red-100 dark:bg-red-900 border border-red-400 text-red-700 dark:text-red-200 px-4 py-3 rounded relative mb-6">
-          <span className="block sm:inline">{state.error}</span>
-        </div>
-      )}
-      
-      {state.success && (
-        <div className="bg-green-100 dark:bg-green-900 border border-green-400 text-green-700 dark:text-green-200 px-4 py-3 rounded relative mb-6">
-          <span className="block sm:inline">{state.success}</span>
-        </div>
-      )}
-      
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
-        <h2 className="text-xl font-semibold mb-4">Communication Preferences</h2>
-        <p className="mb-4">
-          Control what types of communications you receive from us. You can change these settings at any time.
-        </p>
-        
-        <div className="space-y-4 mb-6">
-          <div className="flex items-start">
-            <div className="flex items-center h-5">
-              <input
-                id="marketingEmails"
-                name="marketingEmails"
-                type="checkbox"
-                checked={state.privacySettings?.communicationPreferences.marketingEmails || false}
-                onChange={(e) => handleCommunicationPreferenceChange(e, 'marketingEmails')}
-                className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
-              />
+      <div className="max-w-4xl mx-auto space-y-6">
+        <h1 className="text-2xl font-bold mb-6">Privacy Settings</h1>
+
+        {state.error && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{state.error}</AlertDescription>
+          </Alert>
+        )}
+
+        {state.success && (
+          <Alert>
+            <Shield className="h-4 w-4" />
+            <AlertTitle>Success</AlertTitle>
+            <AlertDescription>{state.success}</AlertDescription>
+          </Alert>
+        )}
+
+        {/* Communication Preferences */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Communication Preferences</CardTitle>
+            <CardDescription>
+              Choose how you want to receive communications from us
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label htmlFor="email-comm">Email Communications</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Receive updates and notifications via email
+                  </p>
+                </div>
+                <Switch
+                  id="email-comm"
+                  checked={state.privacySettings?.communicationPreferences.email || false}
+                  onCheckedChange={(checked) => 
+                    handleCommunicationPreferenceChange('email', { target: { checked } } as any)
+                  }
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label htmlFor="sms-comm">SMS Communications</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Receive important updates via SMS
+                  </p>
+                </div>
+                <Switch
+                  id="sms-comm"
+                  checked={state.privacySettings?.communicationPreferences.sms || false}
+                  onCheckedChange={(checked) => 
+                    handleCommunicationPreferenceChange('sms', { target: { checked } } as any)
+                  }
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label htmlFor="push-comm">Push Notifications</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Receive push notifications on your devices
+                  </p>
+                </div>
+                <Switch
+                  id="push-comm"
+                  checked={state.privacySettings?.communicationPreferences.push || false}
+                  onCheckedChange={(checked) => 
+                    handleCommunicationPreferenceChange('push', { target: { checked } } as any)
+                  }
+                />
+              </div>
             </div>
-            <div className="ml-3 text-sm">
-              <label htmlFor="marketingEmails" className="font-medium text-gray-700 dark:text-gray-300">
-                Marketing Emails
-              </label>
-              <p className="text-gray-500 dark:text-gray-400">
-                Receive emails about promotions, new features, and special offers.
+
+            <div className="flex justify-end">
+              <Button onClick={handleSaveSettings} disabled={state.submitting}>
+                {state.submitting ? 'Saving...' : 'Save Preferences'}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Data Processing Preferences */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Data Processing Preferences</CardTitle>
+            <CardDescription>
+              Control how your data is used for various purposes
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label htmlFor="analytics-data">Analytics</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Allow us to analyze your usage to improve our services
+                  </p>
+                </div>
+                <Switch
+                  id="analytics-data"
+                  checked={state.privacySettings?.dataProcessingPreferences.analytics || false}
+                  onCheckedChange={(checked) => 
+                    handleDataProcessingPreferenceChange('analytics', { target: { checked } } as any)
+                  }
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label htmlFor="marketing-data">Marketing</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Use your data to personalize marketing content
+                  </p>
+                </div>
+                <Switch
+                  id="marketing-data"
+                  checked={state.privacySettings?.dataProcessingPreferences.marketing || false}
+                  onCheckedChange={(checked) => 
+                    handleDataProcessingPreferenceChange('marketing', { target: { checked } } as any)
+                  }
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label htmlFor="personalization-data">Personalization</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Personalize your experience based on your preferences
+                  </p>
+                </div>
+                <Switch
+                  id="personalization-data"
+                  checked={state.privacySettings?.dataProcessingPreferences.personalization || false}
+                  onCheckedChange={(checked) => 
+                    handleDataProcessingPreferenceChange('personalization', { target: { checked } } as any)
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="flex justify-end">
+              <Button onClick={handleSaveSettings} disabled={state.submitting}>
+                {state.submitting ? 'Saving...' : 'Save Preferences'}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Data Export */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Data Export</CardTitle>
+            <CardDescription>
+              Request a copy of your personal data
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                You can request a copy of all personal data we have about you. 
+                This will be provided in a machine-readable format.
               </p>
-            </div>
-          </div>
-          
-          <div className="flex items-start">
-            <div className="flex items-center h-5">
-              <input
-                id="productUpdates"
-                name="productUpdates"
-                type="checkbox"
-                checked={state.privacySettings?.communicationPreferences.productUpdates || false}
-                onChange={(e) => handleCommunicationPreferenceChange(e, 'productUpdates')}
-                className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
-              />
-            </div>
-            <div className="ml-3 text-sm">
-              <label htmlFor="productUpdates" className="font-medium text-gray-700 dark:text-gray-300">
-                Product Updates
-              </label>
-              <p className="text-gray-500 dark:text-gray-400">
-                Receive emails about product updates, new features, and improvements.
-              </p>
-            </div>
-          </div>
-          
-          <div className="flex items-start">
-            <div className="flex items-center h-5">
-              <input
-                id="newsletter"
-                name="newsletter"
-                type="checkbox"
-                checked={state.privacySettings?.communicationPreferences.newsletter || false}
-                onChange={(e) => handleCommunicationPreferenceChange(e, 'newsletter')}
-                className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
-              />
-            </div>
-            <div className="ml-3 text-sm">
-              <label htmlFor="newsletter" className="font-medium text-gray-700 dark:text-gray-300">
-                Newsletter
-              </label>
-              <p className="text-gray-500 dark:text-gray-400">
-                Receive our regular newsletter with industry insights and tips.
-              </p>
-            </div>
-          </div>
-        </div>
-        
-        <h2 className="text-xl font-semibold mb-4">Data Processing Preferences</h2>
-        <p className="mb-4">
-          Control how we process and use your data to improve our services.
-        </p>
-        
-        <div className="space-y-4 mb-6">
-          <div className="flex items-start">
-            <div className="flex items-center h-5">
-              <input
-                id="analytics"
-                name="analytics"
-                type="checkbox"
-                checked={state.privacySettings?.dataProcessingPreferences.analytics || false}
-                onChange={(e) => handleDataProcessingPreferenceChange(e, 'analytics')}
-                className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
-              />
-            </div>
-            <div className="ml-3 text-sm">
-              <label htmlFor="analytics" className="font-medium text-gray-700 dark:text-gray-300">
-                Analytics
-              </label>
-              <p className="text-gray-500 dark:text-gray-400">
-                Allow us to collect anonymous usage data to improve our services.
-              </p>
-            </div>
-          </div>
-          
-          <div className="flex items-start">
-            <div className="flex items-center h-5">
-              <input
-                id="profiling"
-                name="profiling"
-                type="checkbox"
-                checked={state.privacySettings?.dataProcessingPreferences.profiling || false}
-                onChange={(e) => handleDataProcessingPreferenceChange(e, 'profiling')}
-                className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
-              />
-            </div>
-            <div className="ml-3 text-sm">
-              <label htmlFor="profiling" className="font-medium text-gray-700 dark:text-gray-300">
-                Profiling
-              </label>
-              <p className="text-gray-500 dark:text-gray-400">
-                Allow us to analyze your usage patterns to personalize your experience.
-              </p>
-            </div>
-          </div>
-          
-          <div className="flex items-start">
-            <div className="flex items-center h-5">
-              <input
-                id="thirdPartySharing"
-                name="thirdPartySharing"
-                type="checkbox"
-                checked={state.privacySettings?.dataProcessingPreferences.thirdPartySharing || false}
-                onChange={(e) => handleDataProcessingPreferenceChange(e, 'thirdPartySharing')}
-                className="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
-              />
-            </div>
-            <div className="ml-3 text-sm">
-              <label htmlFor="thirdPartySharing" className="font-medium text-gray-700 dark:text-gray-300">
-                Third-Party Sharing
-              </label>
-              <p className="text-gray-500 dark:text-gray-400">
-                Allow us to share anonymous usage data with trusted third parties.
-              </p>
-            </div>
-          </div>
-        </div>
-        
-        <div className="flex justify-end">
-          <button
-            type="button"
-            onClick={handleSaveSettings}
-            disabled={state.submitting}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            {state.submitting ? 'Saving...' : 'Save Preferences'}
-          </button>
-        </div>
-      </div>
-      
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
-        <h2 className="text-xl font-semibold mb-4">Cookie Preferences</h2>
-        <p className="mb-4">
-          Manage your cookie preferences to control what information is collected when you visit our website.
-        </p>
-        
-        <div className="flex justify-start">
-          <CookiePreferencesButton className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" />
-        </div>
-      </div>
-      
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
-        <h2 className="text-xl font-semibold mb-4">Data Export</h2>
-        <p className="mb-4">
-          You can request a copy of your personal data at any time. We will process your request and provide a download link.
-        </p>
-        
-        <div className="flex flex-wrap gap-4 mb-6">
-          <button
-            type="button"
-            onClick={() => handleRequestDataExport(ExportFormat.JSON)}
-            disabled={state.submitting}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Export as JSON
-          </button>
-          
-          <button
-            type="button"
-            onClick={() => handleRequestDataExport(ExportFormat.CSV)}
-            disabled={state.submitting}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Export as CSV
-          </button>
-        </div>
-        
-        {state.exportRequests.length > 0 && (
-          <div>
-            <h3 className="text-lg font-medium mb-2">Recent Export Requests</h3>
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead className="bg-gray-50 dark:bg-gray-800">
-                  <tr>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Date
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Format
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Download
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                  {state.exportRequests.map((request) => (
-                    <tr key={request.id}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                        {new Date(request.createdAt).toLocaleDateString()}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                        {request.exportFormat}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          request.status === RequestStatus.COMPLETED
-                            ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100'
-                            : request.status === RequestStatus.PENDING
-                            ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100'
-                            : request.status === RequestStatus.PROCESSING
-                            ? 'bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100'
-                            : 'bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100'
-                        }`}>
-                          {request.status}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                        {request.status === RequestStatus.COMPLETED && request.downloadUrl ? (
-                          <a
-                            href={request.downloadUrl}
-                            className="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-200"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Download
-                          </a>
-                        ) : (
-                          'Not available'
+              
+              <Button 
+                onClick={handleRequestDataExport} 
+                disabled={state.submitting}
+                className="w-full"
+              >
+                <Download className="h-4 w-4 mr-2" />
+                {state.submitting ? 'Processing...' : 'Request Data Export'}
+              </Button>
+
+              {state.exportRequests.length > 0 && (
+                <div className="mt-4">
+                  <h4 className="font-medium mb-2">Export Requests</h4>
+                  <div className="space-y-2">
+                    {state.exportRequests.map((request) => (
+                      <div key={request.id} className="flex items-center justify-between p-2 border rounded">
+                        <div>
+                          <p className="text-sm">Requested: {new Date(request.requestedAt).toLocaleDateString()}</p>
+                          <p className="text-xs text-muted-foreground">Status: {request.status}</p>
+                        </div>
+                        {request.downloadUrl && (
+                          <Button size="sm" asChild>
+                            <a href={request.downloadUrl} download>Download</a>
+                          </Button>
                         )}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
-        )}
-      </div>
-      
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
-        <h2 className="text-xl font-semibold mb-4">Data Deletion</h2>
-        <p className="mb-4">
-          You can request the deletion of your personal data. This process cannot be undone.
-        </p>
-        
-        <div className="mb-6">
-          <h3 className="text-lg font-medium mb-2">Delete Account Data</h3>
-          <p className="text-gray-500 dark:text-gray-400 mb-4">
-            Request deletion of your account and personal data. This action is irreversible.
-          </p>
-          
-          <button
-            type="button"
-            onClick={() => handleRequestDataDeletion('full')}
-            disabled={state.submitting}
-            className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-          >
-            Request Account Deletion
-          </button>
-        </div>
-        
-        {state.deletionRequests.length > 0 && (
-          <div>
-            <h3 className="text-lg font-medium mb-2">Recent Deletion Requests</h3>
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead className="bg-gray-50 dark:bg-gray-800">
-                  <tr>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Date
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Type
-                    </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Status
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                  {state.deletionRequests.map((request) => (
-                    <tr key={request.id}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                        {new Date(request.createdAt).toLocaleDateString()}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                        {request.requestType === 'full' ? 'Full Account Deletion' : 'Partial Data Deletion'}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          request.status === RequestStatus.COMPLETED
-                            ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100'
-                            : request.status === RequestStatus.PENDING
-                            ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100'
-                            : request.status === RequestStatus.PROCESSING
-                            ? 'bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100'
-                            : 'bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100'
-                        }`}>
-                          {request.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          </CardContent>
+        </Card>
+
+        {/* Data Deletion */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Data Deletion</CardTitle>
+            <CardDescription>
+              Request deletion of your personal data
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <Alert>
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Warning</AlertTitle>
+                <AlertDescription>
+                  Data deletion is permanent and cannot be undone. Please consider exporting your data first.
+                </AlertDescription>
+              </Alert>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Button 
+                  variant="outline"
+                  onClick={() => handleRequestDataDeletion('partial')} 
+                  disabled={state.submitting}
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete Marketing Data
+                </Button>
+
+                <Button 
+                  variant="destructive"
+                  onClick={() => handleRequestDataDeletion('full')} 
+                  disabled={state.submitting}
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete All Data
+                </Button>
+              </div>
+
+              {state.deletionRequests.length > 0 && (
+                <div className="mt-4">
+                  <h4 className="font-medium mb-2">Deletion Requests</h4>
+                  <div className="space-y-2">
+                    {state.deletionRequests.map((request) => (
+                      <div key={request.id} className="flex items-center justify-between p-2 border rounded">
+                        <div>
+                          <p className="text-sm">Requested: {new Date(request.requestedAt).toLocaleDateString()}</p>
+                          <p className="text-xs text-muted-foreground">
+                            Type: {request.type} | Status: {request.status}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
-        )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

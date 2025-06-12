@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Advanced AI Personalization Engine Service
  * Unite Group - Version 11.0 Phase 2 Implementation
  */
@@ -348,7 +348,7 @@ export class AdvancedPersonalizationService implements PersonalizationEngine {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   async predictUserBehavior(userId: string, horizon: number): Promise<BehaviorPrediction> {
     const userPattern = this.userPatterns.get(userId);
     if (!userPattern) {

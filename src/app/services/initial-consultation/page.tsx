@@ -1,295 +1,229 @@
-import { Metadata } from 'next';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { 
-  CheckCircle, Clock, Users, TrendingUp, MessageSquare, 
-  FileText, Target, ArrowRight, Calendar, Shield
-} from 'lucide-react';
-import { generateMetadata as generateSEOMetadata } from '@/components/seo/SEOHead';
-import { JsonLd } from '@/components/seo/SEOHead';
-import { generateServiceSchema } from '@/lib/seo/schema';
+'use client'
 
-export const metadata: Metadata = generateSEOMetadata({
-  title: 'Initial Business Consultation - $550',
-  description: 'Transform your business with our comprehensive consultation service. Get expert insights, strategic recommendations, and a clear roadmap for success.',
-  keywords: ['business consultation', 'strategic planning', 'business analysis', 'expert advice', 'Brisbane consultant'],
-  url: 'https://unitegroup.com.au/services/initial-consultation',
-});
+import { useState } from 'react'
 
 export default function InitialConsultationPage() {
-  const serviceSchema = generateServiceSchema({
-    name: 'Initial Business Consultation',
-    description: 'Comprehensive business consultation service providing strategic insights and actionable recommendations',
-    price: '550',
-    serviceType: 'Business Consulting',
-  });
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    company: '',
+    projectDetails: ''
+  })
 
-  const processSteps = [
-    {
-      icon: <MessageSquare className="h-8 w-8" />,
-      title: 'Discovery Call',
-      description: '30-minute preliminary discussion to understand your business needs and objectives',
-      duration: '30 mins'
-    },
-    {
-      icon: <FileText className="h-8 w-8" />,
-      title: 'Business Analysis',
-      description: 'In-depth analysis of your current business model, challenges, and opportunities',
-      duration: '2 hours'
-    },
-    {
-      icon: <Users className="h-8 w-8" />,
-      title: 'Strategy Session',
-      description: 'Interactive workshop with key stakeholders to develop strategic recommendations',
-      duration: '3 hours'
-    },
-    {
-      icon: <Target className="h-8 w-8" />,
-      title: 'Action Plan Delivery',
-      description: 'Comprehensive report with prioritized recommendations and implementation roadmap',
-      duration: '1 week'
-    }
-  ];
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
 
-  const deliverables = [
-    'Executive Summary Report',
-    'SWOT Analysis',
-    'Market Opportunity Assessment',
-    'Technology Stack Recommendations',
-    'Growth Strategy Blueprint',
-    '90-Day Action Plan',
-    'KPI Framework',
-    'Budget Projections',
-    'Risk Assessment Matrix',
-    'Follow-up Support (30 days)'
-  ];
-
-  const industries = [
-    'Healthcare & Medical',
-    'Financial Services',
-    'E-commerce & Retail',
-    'Education & Training',
-    'Manufacturing & Logistics',
-    'Technology & SaaS',
-    'Professional Services',
-    'Real Estate'
-  ];
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    console.log('Form submitted:', formData)
+    // Handle form submission logic here
+  }
 
   return (
-    <>
-      <JsonLd data={serviceSchema} />
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-        {/* Hero Section */}
-        <section className="relative py-20 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10" />
-          <div className="relative container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <Badge className="mb-4 bg-blue-600 text-white">Most Popular Service</Badge>
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-                Initial Business Consultation
-              </h1>
-              <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
-                Transform your business vision into reality with our comprehensive consultation service. 
-                Get expert insights, strategic recommendations, and a clear roadmap for success.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Link href="/book-consultation">
-                  <Button size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-                    Book Your Consultation - $550
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
-                <Link href="/contact">
-                  <Button size="lg" variant="outline">
-                    Have Questions? Contact Us
-                  </Button>
-                </Link>
-              </div>
-            </div>
+    <div className="min-h-screen bg-gray-50 py-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            Initial Consultation
+          </h1>
+          <p className="text-xl text-gray-600 mb-8">
+            Get expert guidance for your business needs with our comprehensive consultation service
+          </p>
+          
+          {/* Price */}
+          <div className="bg-blue-600 text-white rounded-lg p-6 mb-8 inline-block">
+            <div className="text-2xl font-bold">Starting at $550</div>
+            <div className="text-sm opacity-90">One-time consultation fee</div>
           </div>
-        </section>
+        </div>
 
-        {/* Value Proposition */}
-        <section className="py-16 bg-white dark:bg-slate-800">
-          <div className="container mx-auto px-4">
-            <div className="grid md:grid-cols-3 gap-8">
+        {/* Benefits */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+          <div className="text-center">
+            <div className="bg-blue-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold mb-2">Expert Analysis</h3>
+            <p className="text-gray-600">Comprehensive business analysis by industry experts</p>
+          </div>
+          
+          <div className="text-center">
+            <div className="bg-green-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold mb-2">Growth Strategy</h3>
+            <p className="text-gray-600">Tailored strategies to accelerate your business growth</p>
+          </div>
+          
+          <div className="text-center">
+            <div className="bg-purple-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C20.832 18.477 19.246 18 17.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold mb-2">Actionable Roadmap</h3>
+            <p className="text-gray-600">Clear, step-by-step implementation plan</p>
+          </div>
+        </div>
+
+        {/* What's Included */}
+        <div className="bg-white rounded-lg shadow-lg p-8 mb-12">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">What&apos;s Included</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <ul className="space-y-4">
+              <li className="flex items-start">
+                <svg className="w-5 h-5 text-green-500 mt-1 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                <span>2-hour consultation session</span>
+              </li>
+              <li className="flex items-start">
+                <svg className="w-5 h-5 text-green-500 mt-1 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                <span>Business analysis report</span>
+              </li>
+              <li className="flex items-start">
+                <svg className="w-5 h-5 text-green-500 mt-1 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                <span>Strategic recommendations</span>
+              </li>
+            </ul>
+            <ul className="space-y-4">
+              <li className="flex items-start">
+                <svg className="w-5 h-5 text-green-500 mt-1 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                <span>Action plan document</span>
+              </li>
+              <li className="flex items-start">
+                <svg className="w-5 h-5 text-green-500 mt-1 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                <span>Follow-up support (1 week)</span>
+              </li>
+              <li className="flex items-start">
+                <svg className="w-5 h-5 text-green-500 mt-1 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                <span>Resource recommendations</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Contact Form */}
+        <div className="bg-white rounded-lg shadow-lg p-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Book Your Consultation</h2>
+          
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Card className="h-full border-t-4 border-t-blue-600">
-                  <CardHeader>
-                    <Clock className="h-10 w-10 text-blue-600 mb-4" />
-                    <CardTitle>Fast Results</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600 dark:text-gray-400">
-                      Get actionable insights and recommendations within one week of your consultation.
-                    </p>
-                  </CardContent>
-                </Card>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                  Full Name *
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  required
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
               </div>
-
+              
               <div>
-                <Card className="h-full border-t-4 border-t-green-600">
-                  <CardHeader>
-                    <TrendingUp className="h-10 w-10 text-green-600 mb-4" />
-                    <CardTitle>ROI Focused</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600 dark:text-gray-400">
-                      Average client sees 300% ROI within 6 months of implementing our recommendations.
-                    </p>
-                  </CardContent>
-                </Card>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                  Email Address *
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
               </div>
-
+              
               <div>
-                <Card className="h-full border-t-4 border-t-purple-600">
-                  <CardHeader>
-                    <Shield className="h-10 w-10 text-purple-600 mb-4" />
-                    <CardTitle>Risk-Free</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600 dark:text-gray-400">
-                      100% satisfaction guarantee. If you&apos;re not completely satisfied, we&apos;ll refund your investment.
-                    </p>
-                  </CardContent>
-                </Card>
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                  Phone Number
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
+              
+              <div>
+                <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
+                  Company Name
+                </label>
+                <input
+                  type="text"
+                  id="company"
+                  name="company"
+                  value={formData.company}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
               </div>
             </div>
-          </div>
-        </section>
-
-        {/* Process Section */}
-        <section className="py-20">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                Our Proven Process
-              </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                A structured approach to understanding your business and delivering transformative insights
-              </p>
-            </div>
-
-            <div className="max-w-4xl mx-auto">
-              {processSteps.map((step, index) => (
-                <div
-                  key={step.title}
-                  className="mb-8"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className="flex-shrink-0">
-                      <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white">
-                        {step.icon}
-                      </div>
-                    </div>
-                    <div className="flex-grow">
-                      <div className="flex items-center gap-3 mb-2">
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                          Step {index + 1}: {step.title}
-                        </h3>
-                        <Badge variant="secondary">{step.duration}</Badge>
-                      </div>
-                      <p className="text-gray-600 dark:text-gray-400">
-                        {step.description}
-                      </p>
-                    </div>
-                  </div>
-                  {index < processSteps.length - 1 && (
-                    <div className="ml-8 mt-4 mb-4 h-8 w-0.5 bg-gradient-to-b from-blue-600 to-purple-600" />
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Deliverables */}
-        <section className="py-16 bg-gray-50 dark:bg-slate-900">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                What You&apos;ll Receive
-              </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                Comprehensive deliverables designed to drive immediate action and long-term success
-              </p>
-            </div>
-
-            <div className="max-w-4xl mx-auto">
-              <div className="grid md:grid-cols-2 gap-4">
-                {deliverables.map((item, index) => (
-                  <div
-                    key={item}
-                    className="flex items-center gap-3 bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm"
-                  >
-                    <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
-                    <span className="text-gray-700 dark:text-gray-300">{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Industries */}
-        <section className="py-16">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                Industry Expertise
-              </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                Specialized knowledge across diverse industries
-              </p>
-            </div>
-
-            <div className="flex flex-wrap justify-center gap-3">
-              {industries.map((industry, index) => (
-                <div key={industry}>
-                  <Badge 
-                    variant="outline" 
-                    className="px-4 py-2 text-sm hover:bg-blue-50 dark:hover:bg-blue-900 transition-colors cursor-default"
-                  >
-                    {industry}
-                  </Badge>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600">
-          <div className="container mx-auto px-4 text-center">
+            
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-                Ready to Transform Your Business?
-              </h2>
-              <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-                Join 500+ businesses that have accelerated their growth with our strategic consultation
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Link href="/book-consultation">
-                  <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
-                    <Calendar className="mr-2 h-5 w-5" />
-                    Schedule Your Consultation
-                  </Button>
-                </Link>
-                <Link href="/case-studies">
-                  <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600">
-                    View Success Stories
-                  </Button>
-                </Link>
-              </div>
-              <p className="mt-8 text-sm text-blue-100">
-                ⚡ Limited slots available this month • 💰 100% Money-back guarantee
-              </p>
+              <label htmlFor="projectDetails" className="block text-sm font-medium text-gray-700 mb-2">
+                Project Details *
+              </label>
+              <textarea
+                id="projectDetails"
+                name="projectDetails"
+                required
+                rows={4}
+                value={formData.projectDetails}
+                onChange={handleInputChange}
+                placeholder="Please describe your business challenges and what you hope to achieve from this consultation..."
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
             </div>
+            
+            <div className="text-center">
+              <button
+                type="submit"
+                className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-200 font-semibold"
+              >
+                Schedule Consultation
+              </button>
+            </div>
+          </form>
+        </div>
+
+        {/* Guarantee */}
+        <div className="bg-green-50 border border-green-200 rounded-lg p-6 mt-8 text-center">
+          <div className="text-green-800">
+            <h3 className="text-lg font-semibold mb-2">100% Satisfaction Guarantee</h3>
+            <p className="text-sm">If you&apos;re not completely satisfied with your consultation, we&apos;ll refund your investment.</p>
           </div>
-        </section>
+        </div>
       </div>
-    </>
-  );
+    </div>
+  )
 }
