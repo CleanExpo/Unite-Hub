@@ -1,2 +1,0 @@
-export { SupabaseService } from './SupabaseService';
-
