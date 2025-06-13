@@ -13,7 +13,7 @@ import {
   ArrowRight,
   Star,
   Clock,
-  Certificate,
+  Award as Certificate,
   Video,
   FileText
 } from 'lucide-react';

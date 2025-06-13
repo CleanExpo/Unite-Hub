@@ -1,0 +1,19 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "Running pre-commit checks..."
+
+# Run lint-staged
+pnpm lint-staged
+
+# Run type checking
+pnpm type-check
+
+# Check if any of the commands failed
+if [ $? -ne 0 ]; then
+  echo "❌ Pre-commit checks failed. Please fix the errors above and try again."
+  exit 1
+fi
+
+echo "✅ Pre-commit checks passed!"
+exit 0

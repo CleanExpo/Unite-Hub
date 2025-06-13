@@ -2,12 +2,14 @@
 const nextConfig = {
   // NUCLEAR IGNORE ALL ERRORS
   typescript: {
-    ignoreBuildErrors: true,
+    // Enable TypeScript checking
+    ignoreBuildErrors: false,
   },
   eslint: {
-    ignoreDuringBuilds: true,
+    // Enable ESLint checking
+    ignoreDuringBuilds: false,
   },
-  swcMinify: false,
+  swcMinify: true,
   output: 'standalone',
   experimental: {
     esmExternals: false,
@@ -15,32 +17,35 @@ const nextConfig = {
   },
   // BYPASS ALL WEBPACK PROCESSING
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-    // Ignore all problematic modules
+    // Add proper error handling for problematic modules
     config.resolve.alias = {
       ...config.resolve.alias,
-      // Redirect all problematic imports to dummy modules
-      '@/lib/innovation/validation/market-validator': false,
-      '@/lib/pwa/PWAInitializer': false,
-      '@/lib/services/ai/AIIntegrationService': false,
-      '@/lib/supabase/apiAuth': false,
+      // Use proper error boundaries instead of ignoring modules
+      '@/lib/innovation/validation/market-validator': require.resolve('./src/lib/error-boundaries/MarketValidatorErrorBoundary'),
+      '@/lib/pwa/PWAInitializer': require.resolve('./src/lib/error-boundaries/PWAErrorBoundary'),
+      '@/lib/services/ai/AIIntegrationService': require.resolve('./src/lib/error-boundaries/AIErrorBoundary'),
+      '@/lib/supabase/apiAuth': require.resolve('./src/lib/error-boundaries/AuthErrorBoundary'),
     };
     
-    // Skip ALL module resolution for problematic files
+    // Add proper error handling for module resolution
     config.module.rules.push({
       test: /\.(ts|tsx)$/,
       include: /src\/lib\/(innovation|pwa|services\/ai|supabase\/apiAuth)/,
       use: {
-        loader: 'null-loader'
+        loader: 'error-boundary-loader',
+        options: {
+          fallback: './src/lib/error-boundaries/DefaultErrorBoundary'
+        }
       }
     });
     
-    // Ignore ALL import errors
+    // Add proper polyfills instead of ignoring
     config.resolve.fallback = {
       ...config.resolve.fallback,
-      fs: false,
-      net: false,
-      tls: false,
-      crypto: false,
+      fs: require.resolve('browserify-fs'),
+      net: require.resolve('stream-browserify'),
+      tls: require.resolve('tls-browserify'),
+      crypto: require.resolve('crypto-browserify'),
     };
     
     return config;

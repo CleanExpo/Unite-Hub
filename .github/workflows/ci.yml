@@ -1,0 +1,45 @@
+# .github/workflows/ci.yml
+# This workflow runs automated checks on every push and pull request to the main branch.
+
+name: Continuous Integration
+
+on:
+  push:
+    branches: [ "main", "develop" ] # Or whichever branches you want to protect
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  verify-and-build:
+    name: Verify, Build, and Test
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        # Use a specific LTS version of Node.js for consistency
+        node-version: [20.x]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and PNPM
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint Code
+        run: pnpm run lint
+
+      - name: Check TypeScript Types
+        run: pnpm run type-check
+
+      - name: Build Project
+        run: pnpm run build
+
+      - name: Run Tests (if they exist)
+        run: pnpm test --if-present

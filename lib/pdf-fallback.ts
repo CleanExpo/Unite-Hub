@@ -1,4 +1,4 @@
-import { logger } from "./logger"
+import { logger } from "./logger.js"
 
 interface SimplePDFOptions {
   title: string

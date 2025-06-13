@@ -15,6 +15,8 @@ const nextConfig = {
   // Memory optimization for Docker builds
   experimental: {
     webpackMemoryOptimizations: true,
+    esmExternals: true,
+    serverComponentsExternalPackages: ['@supabase/supabase-js'],
   },
   
   // For monorepos, adjust the tracing root (moved from experimental)
@@ -24,7 +26,7 @@ const nextConfig = {
   outputFileTracingExcludes: {
     '*': [
       'node_modules/@swc/core-linux-x64-gnu',
-      'node_modules/@swc/core-linux-x64-musl', 
+      'node_modules/@swc/core-linux-x64-musl',
       'node_modules/@esbuild/linux-x64',
       'node_modules/@esbuild/win32-x64',
       'node_modules/@esbuild/darwin-x64',
@@ -34,12 +36,13 @@ const nextConfig = {
       'docs/**/*',
       '*.md',
       'archived_docs/**/*',
+      'backups/**/*',
     ],
   },
   
   // Production optimizations
   compress: true,
-  productionBrowserSourceMaps: false,
+  productionBrowserSourceMaps: true,
   
   // Image optimization for Docker
   images: {
@@ -61,6 +64,7 @@ const nextConfig = {
     minimumCacheTTL: 60,
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256],
+    domains: [],
   },
   
   // Compiler optimizations
@@ -70,12 +74,12 @@ const nextConfig = {
   
   // TypeScript configuration (resilient)
   typescript: {
-    ignoreBuildErrors: process.env.DOCKER_BUILD === 'true',
+    ignoreBuildErrors: false,
   },
   
   // ESLint configuration (resilient)
   eslint: {
-    ignoreDuringBuilds: process.env.DOCKER_BUILD === 'true',
+    ignoreDuringBuilds: false,
   },
   
   // Environment variables
@@ -136,6 +140,17 @@ const nextConfig = {
       config.optimization.usedExports = true;
       config.optimization.sideEffects = false;
     }
+    
+    // Add proper module resolution
+    config.resolve.extensions = ['.ts', '.tsx', '.js', '.jsx', ...config.resolve.extensions];
+    
+    // Handle ESM modules
+    config.module.rules.push({
+      test: /\.m?js/,
+      resolve: {
+        fullySpecified: false,
+      },
+    });
     
     return config;
   },

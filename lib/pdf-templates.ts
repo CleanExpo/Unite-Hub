@@ -1,4 +1,4 @@
-import { createStyledPDFWithBranding } from "./pdf-styling"
+import { createStyledPDFWithBranding } from "./pdf-styling.js"
 
 // Create a project report PDF
 export async function createProjectReportPDF(project: any, tasks: any[], members: any[]) {
