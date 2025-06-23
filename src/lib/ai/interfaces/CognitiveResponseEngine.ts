@@ -1,1 +1,0 @@
-﻿export interface CognitiveResponse { id: string; response: string; }; export default class CognitiveResponseEngine { process() { return {}; } }

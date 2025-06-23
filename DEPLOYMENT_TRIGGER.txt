@@ -1,7 +1,0 @@
-Deployment trigger file
-Created: 6/6/2025, 11:17 PM
-Purpose: Force Vercel to recognize new changes
-
-Latest commits:
-- 287d7ef: Add Services, Pricing, Contact, and About links to main navigation
-- 1a2fce3: Update team member name from Usman to Rana
