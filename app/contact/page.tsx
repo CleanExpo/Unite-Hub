@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { useEffect } from "react"
+import { useEffect } from "react";
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import * as z from "zod"
-import { useActionState } from "react"
-import { motion } from "framer-motion"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
+import { useActionState } from "react";
+import { motion } from "framer-motion";
 import {
   PhoneIcon,
   MailIcon,
@@ -23,21 +23,39 @@ import {
   Users,
   HelpCircle,
   ChevronRight,
-} from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
+} from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { submitContactForm } from "./actions"
-import { services } from "@/lib/services-data" // Re-using services data
-import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { submitContactForm } from "./actions";
+import { services } from "@/lib/services-data"; // Re-using services data
+import { cn } from "@/lib/utils";
 
 const contactFormSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -50,10 +68,12 @@ const contactFormSchema = z.object({
   projectTimeline: z.enum(["ASAP", "1-3 months", "3-6 months", "6+ months"], {
     required_error: "Project timeline is required",
   }),
-  projectDescription: z.string().min(10, "Please provide a brief project description (min. 10 characters)"),
-})
+  projectDescription: z
+    .string()
+    .min(10, "Please provide a brief project description (min. 10 characters)"),
+});
 
-type ContactFormValues = z.infer<typeof contactFormSchema>
+type ContactFormValues = z.infer<typeof contactFormSchema>;
 
 const budgetOptions = [
   "Under A$5,000",
@@ -62,60 +82,72 @@ const budgetOptions = [
   "A$30,000 - A$50,000",
   "A$50,000+",
   "Not Sure Yet",
-]
+];
 
-const timelineOptions: { value: ContactFormValues["projectTimeline"]; label: string }[] = [
+const timelineOptions: {
+  value: ContactFormValues["projectTimeline"];
+  label: string;
+}[] = [
   { value: "ASAP", label: "ASAP" },
   { value: "1-3 months", label: "1-3 Months" },
   { value: "3-6 months", label: "3-6 Months" },
   { value: "6+ months", label: "6+ Months" },
-]
+];
 
 const contactDetails = [
   {
-    icon: PhoneIcon,
-    title: "Phone",
-    lines: ["0457 123 005", "9:00 AM - 6:00 PM AEST"],
-    href: "tel:0457123005",
-  },
-  {
     icon: MailIcon,
     title: "Email",
-    lines: ["support@unite-group.in", "24 hours Response"], // Corrected email
-    href: "mailto:support@unite-group.in",
+    lines: ["unitegroup.in@gmail.com", "24 hours Response"], // Corrected email
+    href: "mailto:unitegroup.in@gmail.com",
   },
   {
     icon: MapPinIcon,
     title: "Office",
-    lines: ["Union Place", "Ipswich CBD, QLD"],
+    lines: ["Brisbane, QLD"],
   },
   {
     icon: Clock,
     title: "Business Hours",
-    lines: ["Mon - Fri: 9:00 AM - 6:00 PM AEST", "Saturday: 10:00 AM - 2:00 PM AEST"],
+    lines: ["Mon - Fri: 8:00 AM - 5:00 PM AEST"],
   },
-]
+];
 
 const whatHappensNextSteps = [
   {
     icon: Search,
     title: "We Review",
-    description: "Our team reviews your requirements and prepares a customized approach.",
+    description:
+      "Our team reviews your requirements and prepares a customized approach.",
   },
-  { icon: PhoneCall, title: "We Connect", description: "We'll schedule a call to discuss your project in detail." },
+  {
+    icon: PhoneCall,
+    title: "We Connect",
+    description: "We'll schedule a call to discuss your project in detail.",
+  },
   {
     icon: FileTextIcon,
     title: "We Deliver",
-    description: "Get a comprehensive proposal with timeline and investment details.",
+    description:
+      "Get a comprehensive proposal with timeline and investment details.",
   },
-]
+];
 
 const whyPartnerItems = [
-  { icon: CheckCircle, text: "Proven track record of delivering transformative results." },
-  { icon: Lightbulb, text: "Innovative solutions tailored to your unique business needs." },
+  {
+    icon: CheckCircle,
+    text: "Proven track record of delivering transformative results.",
+  },
+  {
+    icon: Lightbulb,
+    text: "Innovative solutions tailored to your unique business needs.",
+  },
   { icon: Users, text: "Dedicated team of experts committed to your success." },
-  { icon: DollarSignIcon, text: "Transparent pricing and focus on maximizing your ROI." },
-]
+  {
+    icon: DollarSignIcon,
+    text: "Transparent pricing and focus on maximizing your ROI.",
+  },
+];
 
 const contactFaqs = [
   {
@@ -136,10 +168,13 @@ const contactFaqs = [
     answer:
       "Yes, while we are based in Australia, we serve clients globally. We are equipped to handle remote consultations and project delivery for international businesses. Please specify your location when you get in touch.",
   },
-]
+];
 
 export default function ContactPage() {
-  const [state, formAction, isPending] = useActionState(submitContactForm, null)
+  const [state, formAction, isPending] = useActionState(
+    submitContactForm,
+    null
+  );
 
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
@@ -154,13 +189,13 @@ export default function ContactPage() {
       projectTimeline: undefined,
       projectDescription: "",
     },
-  })
+  });
 
   useEffect(() => {
     if (state?.success) {
-      form.reset()
+      form.reset();
     }
-  }, [state, form])
+  }, [state, form]);
 
   return (
     <div className="bg-slate-950 text-slate-200">
@@ -172,9 +207,12 @@ export default function ContactPage() {
         className="py-20 md:py-32 bg-gradient-to-b from-slate-900 to-slate-950"
       >
         <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold text-white mb-6">Get in Touch</h1>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold text-white mb-6">
+            Get in Touch
+          </h1>
           <p className="max-w-2xl mx-auto text-lg md:text-xl text-slate-300">
-            Ready to transform your business? Let's discuss how Unite Group can help you achieve your goals.
+            Ready to transform your business? Let's discuss how Unite Group can
+            help you achieve your goals.
           </p>
         </div>
       </motion.section>
@@ -182,7 +220,7 @@ export default function ContactPage() {
       {/* Contact Information Section */}
       <section className="py-16 md:py-24">
         <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {contactDetails.map((item, idx) => (
               <motion.div
                 key={item.title}
@@ -196,13 +234,18 @@ export default function ContactPage() {
                     <div className="p-3 bg-cyan-500/10 rounded-full mb-3">
                       <item.icon className="w-8 h-8 text-cyan-400" />
                     </div>
-                    <CardTitle className="text-xl text-white">{item.title}</CardTitle>
+                    <CardTitle className="text-xl text-white">
+                      {item.title}
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     {item.lines.map((line) => (
                       <p key={line} className="text-slate-300 text-sm">
                         {item.href && item.lines.indexOf(line) === 0 ? (
-                          <a href={item.href} className="hover:text-cyan-400 transition-colors">
+                          <a
+                            href={item.href}
+                            className="hover:text-cyan-400 transition-colors"
+                          >
                             {line}
                           </a>
                         ) : (
@@ -222,9 +265,12 @@ export default function ContactPage() {
       <section id="contact-form" className="py-16 md:py-24 bg-slate-900">
         <div className="container mx-auto max-w-screen-lg px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Start Your Journey</h2>
+            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
+              Start Your Journey
+            </h2>
             <p className="max-w-xl mx-auto text-lg text-slate-300">
-              Fill out the form below and we'll get back to you within 24 business hours.
+              Fill out the form below and we'll get back to you within 24
+              business hours.
             </p>
           </div>
 
@@ -233,7 +279,9 @@ export default function ContactPage() {
               <Form {...form}>
                 <form
                   action={formAction}
-                  onSubmit={form.handleSubmit(() => formAction(new FormData(form.elementRef.current!)))}
+                  onSubmit={form.handleSubmit(() =>
+                    formAction(new FormData(form.elementRef.current!))
+                  )}
                   className="space-y-8"
                 >
                   <div className="grid md:grid-cols-2 gap-6">
@@ -242,7 +290,9 @@ export default function ContactPage() {
                       name="firstName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-slate-300">First Name *</FormLabel>
+                          <FormLabel className="text-slate-300">
+                            First Name *
+                          </FormLabel>
                           <FormControl>
                             <Input
                               placeholder="John"
@@ -259,7 +309,9 @@ export default function ContactPage() {
                       name="lastName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-slate-300">Last Name *</FormLabel>
+                          <FormLabel className="text-slate-300">
+                            Last Name *
+                          </FormLabel>
                           <FormControl>
                             <Input
                               placeholder="Doe"
@@ -277,7 +329,9 @@ export default function ContactPage() {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-slate-300">Email *</FormLabel>
+                        <FormLabel className="text-slate-300">
+                          Email *
+                        </FormLabel>
                         <FormControl>
                           <Input
                             type="email"
@@ -296,7 +350,9 @@ export default function ContactPage() {
                       name="phone"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-slate-300">Phone (Optional)</FormLabel>
+                          <FormLabel className="text-slate-300">
+                            Phone (Optional)
+                          </FormLabel>
                           <FormControl>
                             <Input
                               type="tel"
@@ -314,7 +370,9 @@ export default function ContactPage() {
                       name="company"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-slate-300">Company (Optional)</FormLabel>
+                          <FormLabel className="text-slate-300">
+                            Company (Optional)
+                          </FormLabel>
                           <FormControl>
                             <Input
                               placeholder="Acme Corporation"
@@ -333,8 +391,13 @@ export default function ContactPage() {
                       name="serviceInterestedIn"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-slate-300">Service Interested In *</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormLabel className="text-slate-300">
+                            Service Interested In *
+                          </FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
                             <FormControl>
                               <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white">
                                 <SelectValue placeholder="Select a service" />
@@ -342,11 +405,18 @@ export default function ContactPage() {
                             </FormControl>
                             <SelectContent className="bg-slate-800 border-slate-700 text-white">
                               {services.map((service) => (
-                                <SelectItem key={service.id} value={service.title} className="hover:bg-slate-700">
+                                <SelectItem
+                                  key={service.id}
+                                  value={service.title}
+                                  className="hover:bg-slate-700"
+                                >
                                   {service.title}
                                 </SelectItem>
                               ))}
-                              <SelectItem value="Other" className="hover:bg-slate-700">
+                              <SelectItem
+                                value="Other"
+                                className="hover:bg-slate-700"
+                              >
                                 Other / Not Sure
                               </SelectItem>
                             </SelectContent>
@@ -360,8 +430,13 @@ export default function ContactPage() {
                       name="budgetRange"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-slate-300">Budget Range *</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormLabel className="text-slate-300">
+                            Budget Range *
+                          </FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
                             <FormControl>
                               <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white">
                                 <SelectValue placeholder="Select budget range" />
@@ -369,7 +444,11 @@ export default function ContactPage() {
                             </FormControl>
                             <SelectContent className="bg-slate-800 border-slate-700 text-white">
                               {budgetOptions.map((budget) => (
-                                <SelectItem key={budget} value={budget} className="hover:bg-slate-700">
+                                <SelectItem
+                                  key={budget}
+                                  value={budget}
+                                  className="hover:bg-slate-700"
+                                >
                                   {budget}
                                 </SelectItem>
                               ))}
@@ -385,7 +464,9 @@ export default function ContactPage() {
                     name="projectTimeline"
                     render={({ field }) => (
                       <FormItem className="space-y-3">
-                        <FormLabel className="text-slate-300">Project Timeline *</FormLabel>
+                        <FormLabel className="text-slate-300">
+                          Project Timeline *
+                        </FormLabel>
                         <FormControl>
                           <RadioGroup
                             onValueChange={field.onChange}
@@ -393,14 +474,19 @@ export default function ContactPage() {
                             className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4"
                           >
                             {timelineOptions.map((option) => (
-                              <FormItem key={option.value} className="flex items-center space-x-2 space-y-0">
+                              <FormItem
+                                key={option.value}
+                                className="flex items-center space-x-2 space-y-0"
+                              >
                                 <FormControl>
                                   <RadioGroupItem
                                     value={option.value}
                                     className="border-slate-500 text-cyan-500 focus:ring-cyan-500"
                                   />
                                 </FormControl>
-                                <FormLabel className="font-normal text-slate-300">{option.label}</FormLabel>
+                                <FormLabel className="font-normal text-slate-300">
+                                  {option.label}
+                                </FormLabel>
                               </FormItem>
                             ))}
                           </RadioGroup>
@@ -414,7 +500,9 @@ export default function ContactPage() {
                     name="projectDescription"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-slate-300">Tell us about your project *</FormLabel>
+                        <FormLabel className="text-slate-300">
+                          Tell us about your project *
+                        </FormLabel>
                         <FormControl>
                           <Textarea
                             placeholder="Please describe your project goals, challenges, and how we can help..."
@@ -434,14 +522,21 @@ export default function ContactPage() {
                     disabled={isPending}
                   >
                     {isPending ? "Sending..." : "Send Message"}
-                    {!isPending && <Send size={20} className="ml-2 group-hover:translate-x-1 transition-transform" />}
+                    {!isPending && (
+                      <Send
+                        size={20}
+                        className="ml-2 group-hover:translate-x-1 transition-transform"
+                      />
+                    )}
                   </Button>
 
                   {state && (
                     <div
                       className={cn(
                         "mt-4 text-center p-3 rounded-md text-sm",
-                        state.success ? "bg-green-500/20 text-green-300" : "bg-red-500/20 text-red-300",
+                        state.success
+                          ? "bg-green-500/20 text-green-300"
+                          : "bg-red-500/20 text-red-300"
                       )}
                     >
                       {state.message}
@@ -458,9 +553,12 @@ export default function ContactPage() {
       <section className="py-16 md:py-24">
         <div className="container mx-auto max-w-screen-lg px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">What Happens Next?</h2>
+            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
+              What Happens Next?
+            </h2>
             <p className="max-w-xl mx-auto text-lg text-slate-300">
-              We're excited to learn about your project. Here's our simple process to get started.
+              We're excited to learn about your project. Here's our simple
+              process to get started.
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8 text-center">
@@ -479,7 +577,9 @@ export default function ContactPage() {
                   </div>
                   <step.icon className="w-12 h-12 text-cyan-400 mx-auto mt-8" />
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-2 mt-4">{step.title}</h3>
+                <h3 className="text-xl font-semibold text-white mb-2 mt-4">
+                  {step.title}
+                </h3>
                 <p className="text-slate-400 text-sm">{step.description}</p>
               </motion.div>
             ))}
@@ -492,7 +592,9 @@ export default function ContactPage() {
         <div className="container mx-auto max-w-screen-lg px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 md:mb-16">
             <MapPinIcon size={40} className="text-cyan-400 mx-auto mb-4" />
-            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Our Location</h2>
+            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
+              Our Location
+            </h2>
             <p className="max-w-xl mx-auto text-lg text-slate-300">
               Visit us at our office in the heart of Ipswich CBD, Queensland.
             </p>
@@ -512,7 +614,9 @@ export default function ContactPage() {
               className="w-full h-full object-cover"
             />
           </motion.div>
-          <p className="text-center mt-4 text-sm text-slate-400">Union Place, Ipswich CBD, Queensland, Australia</p>
+          <p className="text-center mt-4 text-sm text-slate-400">
+            Brisbane, QLD, Australia
+          </p>
         </div>
       </section>
 
@@ -521,9 +625,12 @@ export default function ContactPage() {
         <div className="container mx-auto max-w-screen-lg px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 md:mb-16">
             <Briefcase size={40} className="text-cyan-400 mx-auto mb-4" />
-            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Why Partner with Unite Group?</h2>
+            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
+              Why Partner with Unite Group?
+            </h2>
             <p className="max-w-xl mx-auto text-lg text-slate-300">
-              We're committed to your success, offering more than just services – we offer a partnership.
+              We're committed to your success, offering more than just services
+              – we offer a partnership.
             </p>
           </div>
           <div className="grid md:grid-cols-2 gap-6">
@@ -542,7 +649,11 @@ export default function ContactPage() {
             ))}
           </div>
           <div className="text-center mt-12">
-            <Button size="lg" asChild className="bg-cyan-500 hover:bg-cyan-600 text-white group">
+            <Button
+              size="lg"
+              asChild
+              className="bg-cyan-500 hover:bg-cyan-600 text-white group"
+            >
               <Link href="/#unite-advantage">
                 Discover The Unite Advantage{" "}
                 <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -557,7 +668,9 @@ export default function ContactPage() {
         <div className="container mx-auto max-w-screen-md px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 md:mb-16">
             <HelpCircle size={40} className="text-cyan-400 mx-auto mb-4" />
-            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Frequently Asked Questions</h2>
+            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
+              Frequently Asked Questions
+            </h2>
             <p className="max-w-xl mx-auto text-lg text-slate-300">
               Quick answers to common questions about getting started with us.
             </p>
@@ -571,7 +684,10 @@ export default function ContactPage() {
               >
                 <AccordionTrigger className="text-left hover:no-underline py-4 px-4 text-base font-medium text-slate-100">
                   <div className="flex items-center">
-                    <HelpCircle size={20} className="text-cyan-400 mr-3 flex-shrink-0" />
+                    <HelpCircle
+                      size={20}
+                      className="text-cyan-400 mr-3 flex-shrink-0"
+                    />
                     {faq.question}
                   </div>
                 </AccordionTrigger>
@@ -584,5 +700,5 @@ export default function ContactPage() {
         </div>
       </section>
     </div>
-  )
+  );
 }

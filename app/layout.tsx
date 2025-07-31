@@ -32,7 +32,7 @@ export default function RootLayout({
           titilliumWeb.className,
         )}
       >
-        <ScrollToTop /> {/* Add ScrollToTop component here */}
+        <ScrollToTop />
         <SiteHeader />
         <main className="flex-grow">{children}</main>
         <SiteFooter />

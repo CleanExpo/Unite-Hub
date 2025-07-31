@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Target, Eye, Zap, Users, Lightbulb, Heart } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Target, Eye, Zap, Users, Lightbulb, Heart } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function AboutUsPage() {
   return (
@@ -10,15 +10,20 @@ export default function AboutUsPage() {
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 bg-gradient-to-b from-slate-900 to-slate-950">
         <div className="absolute inset-0 opacity-10">
-          <Image src="/abstract-corporate-background.png" alt="Abstract Background" layout="fill" objectFit="cover" />
+          <Image
+            src="/abstract-corporate-background.png"
+            alt="Abstract Background"
+            layout="fill"
+            objectFit="cover"
+          />
         </div>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-sky-400 to-indigo-400 mb-6">
             About Unite Group
           </h1>
           <p className="text-lg sm:text-xl text-slate-300 max-w-3xl mx-auto">
-            Discover our journey, mission, and the values that drive us to deliver exceptional technology solutions and
-            foster innovation.
+            Discover our journey, mission, and the values that drive us to
+            deliver exceptional technology solutions and foster innovation.
           </p>
         </div>
       </section>
@@ -28,16 +33,22 @@ export default function AboutUsPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl font-semibold text-white mb-4">Our Journey So Far</h2>
+              <h2 className="text-3xl font-semibold text-white mb-4">
+                Our Journey So Far
+              </h2>
               <p className="text-slate-400 mb-4 leading-relaxed">
-                Founded in 2018 with a vision to bridge the gap between complex technology and business growth, Unite
-                Group has steadily grown into a trusted partner for organizations seeking transformative digital
-                solutions. Our journey began with a small, passionate team and a commitment to client success.
+                Founded in 2020 with a vision to bridge the gap between complex
+                technology and business growth, Unite Group has steadily grown
+                into a trusted partner for organizations seeking transformative
+                digital solutions. Our journey began with a small, passionate
+                team and a commitment to client success.
               </p>
               <p className="text-slate-400 mb-4 leading-relaxed">
-                Key milestones, like launching our first enterprise-level SaaS platform in 2020 and expanding our AI
-                consulting services in 2022, have defined our trajectory. We believe in the power of collaboration,
-                continuous learning, and adapting to the ever-evolving tech landscape.
+                Key milestones, like launching our first enterprise-level SaaS
+                platform and expanding our AI consulting services in 2022, have
+                defined our trajectory. We believe in the power of
+                collaboration, continuous learning, and adapting to the
+                ever-evolving tech landscape.
               </p>
             </div>
             <div>
@@ -56,7 +67,9 @@ export default function AboutUsPage() {
       {/* Mission, Vision, Values Section */}
       <section className="py-16 md:py-24 bg-slate-900">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-semibold text-white text-center mb-12">Our Guiding Principles</h2>
+          <h2 className="text-3xl font-semibold text-white text-center mb-12">
+            Our Guiding Principles
+          </h2>
           <div className="grid md:grid-cols-3 gap-8">
             <Card className="bg-slate-800 border-slate-700 text-slate-50">
               <CardHeader>
@@ -66,8 +79,9 @@ export default function AboutUsPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-slate-300">
-                  To empower businesses with innovative and tailored technology solutions, driving growth, efficiency,
-                  and a competitive edge in their respective industries.
+                  To empower businesses with innovative and tailored technology
+                  solutions, driving growth, efficiency, and a competitive edge
+                  in their respective industries.
                 </p>
               </CardContent>
             </Card>
@@ -79,8 +93,9 @@ export default function AboutUsPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-slate-300">
-                  To be a globally recognized leader in technology consulting and solution delivery, known for our
-                  commitment to excellence, integrity, and transformative impact.
+                  To be a globally recognized leader in technology consulting
+                  and solution delivery, known for our commitment to excellence,
+                  integrity, and transformative impact.
                 </p>
               </CardContent>
             </Card>
@@ -118,32 +133,44 @@ export default function AboutUsPage() {
               />
             </div>
             <div className="order-1 md:order-2">
-              <h2 className="text-3xl font-semibold text-white mb-4">Our Culture: People First</h2>
+              <h2 className="text-3xl font-semibold text-white mb-4">
+                Our Culture: People First
+              </h2>
               <p className="text-slate-400 mb-4 leading-relaxed">
-                At Unite Group, we cultivate an environment where creativity, curiosity, and collaboration thrive. We
-                invest in our team's growth through continuous training, mentorship programs, and opportunities to work
-                on cutting-edge projects.
+                At Unite Group, we cultivate an environment where creativity,
+                curiosity, and collaboration thrive. We invest in our team's
+                growth through continuous training, mentorship programs, and
+                opportunities to work on cutting-edge projects.
               </p>
               <div className="space-y-4">
                 <div className="flex items-start">
                   <Users className="h-6 w-6 mr-3 mt-1 text-cyan-400" />
                   <p className="text-slate-300">
-                    <span className="font-semibold text-white">Collaborative Spirit:</span> We believe the best ideas
-                    come from teamwork and open communication.
+                    <span className="font-semibold text-white">
+                      Collaborative Spirit:
+                    </span>{" "}
+                    We believe the best ideas come from teamwork and open
+                    communication.
                   </p>
                 </div>
                 <div className="flex items-start">
                   <Lightbulb className="h-6 w-6 mr-3 mt-1 text-cyan-400" />
                   <p className="text-slate-300">
-                    <span className="font-semibold text-white">Innovation Driven:</span> We encourage experimentation
-                    and provide the freedom to explore new technologies.
+                    <span className="font-semibold text-white">
+                      Innovation Driven:
+                    </span>{" "}
+                    We encourage experimentation and provide the freedom to
+                    explore new technologies.
                   </p>
                 </div>
                 <div className="flex items-start">
                   <Heart className="h-6 w-6 mr-3 mt-1 text-cyan-400" />
                   <p className="text-slate-300">
-                    <span className="font-semibold text-white">Work-Life Balance:</span> We support our team's
-                    well-being with flexible work arrangements and a focus on sustainable performance.
+                    <span className="font-semibold text-white">
+                      Work-Life Balance:
+                    </span>{" "}
+                    We support our team's well-being with flexible work
+                    arrangements and a focus on sustainable performance.
                   </p>
                 </div>
               </div>
@@ -155,9 +182,12 @@ export default function AboutUsPage() {
       {/* CTA Section */}
       <section className="py-16 md:py-24 bg-slate-900">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-semibold text-white mb-6">Ready to Partner with Us?</h2>
+          <h2 className="text-3xl font-semibold text-white mb-6">
+            Ready to Partner with Us?
+          </h2>
           <p className="text-slate-300 max-w-xl mx-auto mb-8">
-            Let's discuss how Unite Group can help your business achieve its technology goals.
+            Let's discuss how Unite Group can help your business achieve its
+            technology goals.
           </p>
           <Button
             size="lg"
@@ -169,5 +199,5 @@ export default function AboutUsPage() {
         </div>
       </section>
     </div>
-  )
+  );
 }

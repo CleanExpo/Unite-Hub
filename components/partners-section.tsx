@@ -70,7 +70,7 @@ export default function PartnersSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8 mb-16 items-center">
+        {/* <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-8 mb-16 items-center">
           {techPartners.map((partner, idx) => (
             <motion.div
               key={partner.name}
@@ -85,7 +85,7 @@ export default function PartnersSection() {
               </span>
             </motion.div>
           ))}
-        </div>
+        </div> */}
 
         <div className="bg-gradient-to-r from-cyan-500/20 to-purple-500/20 p-8 md:p-12 rounded-xl shadow-2xl flex flex-col md:flex-row items-center gap-8">
           <motion.div
@@ -121,7 +121,7 @@ export default function PartnersSection() {
                   size={18}
                   className="text-cyan-400 mr-2 flex-shrink-0"
                 />{" "}
-                10,000+ Trained Professionals
+                Industry Trained Professionals
               </div>
               <div className="flex items-center">
                 <CheckCircle

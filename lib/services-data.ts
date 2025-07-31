@@ -18,58 +18,76 @@ export const services = [
   {
     id: "saas-dev",
     icon: "AppWindow",
-    title: "Custom Software Development", // Title updated to match provided content
+    title: "Custom Software Development",
     description:
-      "Build next-generation SaaS platforms with modern architecture, scalable infrastructure, and comprehensive security.",
-    features: ["Modern tech stack", "Scalable architecture", "Cloud-native deployment", "Enterprise security"],
-    price: "Starts at A$15,000",
-    link: "/services/custom-software-development", // Updated link
-  },
-  {
-    id: "seo-services", // Changed ID to be more specific
-    icon: "BarChart3", // Consider changing icon to Target or Search for SEO
-    title: "Strategic SEO Services", // Title updated
-    description: "Transform your data into actionable insights with AI-powered analytics and real-time dashboards.",
-    features: ["Real-time analytics", "AI-powered insights", "Predictive analytics", "Custom reporting"],
-    price: "Consultation",
-    link: "/services/strategic-seo-services", // Updated link
-  },
-  {
-    id: "business-strategy", // Changed ID
-    icon: "Briefcase", // Consider Briefcase or Lightbulb
-    title: "Business Strategy Consulting", // Title updated
-    description:
-      "Enterprise-grade security solutions with comprehensive compliance frameworks including SOC 2, GDPR, and ISO 27001.",
+      "Turn your business ideas into powerful software solutions that streamline operations, boost productivity, and drive growth. We build exactly what your business needs.",
     features: [
-      "Zero-trust architecture",
-      "Advanced threat protection",
-      "Compliance automation",
-      "24/7 security monitoring",
+      "Tailored to your business needs",
+      "Easy-to-use interfaces",
+      "Grows with your business",
+      "Secure and reliable",
+    ],
+    price: "Starts at A$15,000",
+    link: "/services/custom-software-development",
+  },
+  {
+    id: "seo-services",
+    icon: "BarChart3",
+    title: "Strategic SEO Services",
+    description:
+      "Get found online by your ideal customers. We optimize your website to rank higher in search results, bringing more qualified leads to your business.",
+    features: [
+      "Higher search rankings",
+      "More website visitors",
+      "Qualified lead generation",
+      "Measurable results",
+    ],
+    price: "Consultation",
+    link: "/services/strategic-seo-services",
+  },
+  {
+    id: "business-strategy",
+    icon: "Briefcase",
+    title: "Business Strategy Consulting",
+    description:
+      "Develop a winning strategy to outpace your competition. We help you identify opportunities, optimize operations, and create sustainable growth plans.",
+    features: [
+      "Market opportunity analysis",
+      "Competitive advantage strategies",
+      "Growth planning and execution",
+      "Performance optimization",
     ],
     price: "Audit Required",
-    link: "/services/business-strategy-consulting", // Updated link
+    link: "/services/business-strategy-consulting",
   },
   {
-    id: "qa-testing", // Changed ID
-    icon: "ShieldCheck", // Appropriate
-    title: "Quality Assurance & Testing", // Title updated
-    description: "Achieve sub-second load times and optimal user experience with advanced performance optimization.",
+    id: "qa-testing",
+    icon: "ShieldCheck",
+    title: "Quality Assurance & Testing",
+    description:
+      "Ensure your software works flawlessly for your customers. We thoroughly test every feature to prevent issues and deliver a smooth user experience.",
     features: [
-      "Lightning-fast load times",
-      "Core Web Vitals optimization",
-      "Global CDN deployment",
-      "Server optimization",
+      "Bug-free software delivery",
+      "Smooth user experience",
+      "Comprehensive testing coverage",
+      "Quality assurance reports",
     ],
     price: "Project-based",
-    link: "/services/quality-assurance-testing", // Updated link
+    link: "/services/quality-assurance-testing",
   },
   {
-    id: "education-training", // Changed ID
-    icon: "GraduationCap", // Appropriate
-    title: "Expert Education & Training", // Title updated
-    description: "Expand worldwide with multi-language support, global payments, and regional compliance.",
-    features: ["Multi-language support", "Multi-currency platform", "Regional compliance", "Cultural localization"],
+    id: "education-training",
+    icon: "GraduationCap",
+    title: "Expert Education & Training",
+    description:
+      "Empower your team with the skills they need to succeed. We provide customized training programs that boost productivity and drive results.",
+    features: [
+      "Customized training programs",
+      "Team skill development",
+      "Practical hands-on learning",
+      "Ongoing support and guidance",
+    ],
     price: "Contact Us",
-    link: "/services/education-training", // Updated link
+    link: "/services/education-training",
   },
-]
+];
