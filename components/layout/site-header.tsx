@@ -12,8 +12,8 @@ import { services } from "@/lib/services-data"
 
 export const mainNavLinks = [
   { name: "About", href: "/about-us" },
-  { name: "Case Studies", href: "/case-studies" }, // Added Case Studies Link
-  { name: "Pricing", href: "/pricing" },
+  { name: "Case Studies", href: "/case-studies" },
+  // { name: "Pricing", href: "/pricing" },
 ]
 
 export default function SiteHeader() {
@@ -26,7 +26,7 @@ export default function SiteHeader() {
         <div className="flex items-center justify-between h-20">
           <Link href="/" className="flex items-center">
             <Image
-              src="/unite-group-logo-image.png"
+              src="/unite-group-logo-image.png"s
               alt="Unite Group Logo"
               width={200}
               height={200}
