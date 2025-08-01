@@ -7,54 +7,24 @@ export default function SiteFooter() {
   return (
     <footer className="py-20 bg-slate-950 border-t border-slate-800">
       <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-12">
-          {/* Company Info & Contact */}
-          <div className="lg:col-span-1">
-            <div className="flex justify-start mb-6">
-              <Link href="/" className="flex items-start w-full">
-                <Image
-                  src="/unite-group-logo-image.png"
-                  alt="Unite Group Logo"
-                  width={200}
-                  height={200}
-                  className="h-32 lg:h-40 w-auto"
-                  priority
-                />
-              </Link>
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+          {/* Company Info */}
+          <div>
+            <Link href="/" className="flex items-center">
+            <Image
+              src="/unite-group-logo-image.png"
+              alt="Unite Group Logo"
+              width={200}
+              height={200}
+              className="h-32 lg:h-48 w-auto"
+              priority
+            />
+          </Link>
             <p className="text-sm text-slate-400 mb-6 leading-relaxed">
               We help businesses remove roadblocks, operate better, and grow
               faster. No jargon. No fluff. Just practical outcomes that drive
               real results.
             </p>
-            <div className="space-y-3 text-sm">
-              <p className="flex items-center text-slate-400">
-                <Mail size={16} className="mr-3 text-cyan-400" />
-                unitegroup.in@gmail.com
-              </p>
-              <p className="flex items-center text-slate-400">
-                <MapPin size={16} className="mr-3 text-cyan-400" />
-                Brisbane, QLD, Australia
-              </p>
-            </div>
-            <div className="mt-6 flex space-x-4">
-              <Link
-                href="https://www.linkedin.com/company/unite-group-australia/"
-                aria-label="LinkedIn"
-                className="text-slate-400 hover:text-cyan-400 transition-colors p-2 hover:bg-slate-800 rounded-lg"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Linkedin size={20} />
-              </Link>
-              <Link
-                href="mailto:unitegroup.in@gmail.com"
-                aria-label="Email"
-                className="text-slate-400 hover:text-cyan-400 transition-colors p-2 hover:bg-slate-800 rounded-lg"
-              >
-                <Mail size={20} />
-              </Link>
-            </div>
           </div>
 
           {/* Company Links */}
@@ -101,14 +71,6 @@ export default function SiteFooter() {
                   Our Ecosystem
                 </Link>
               </li>
-              <li>
-                <Link
-                  href="/pricing"
-                  className="text-slate-400 hover:text-cyan-400 transition-colors"
-                >
-                  Pricing
-                </Link>
-              </li>
             </ul>
           </div>
 
@@ -137,6 +99,42 @@ export default function SiteFooter() {
                 </Link>
               </li>
             </ul>
+          </div>
+
+          {/* Contact & Social */}
+          <div>
+            <h5 className="text-lg font-semibold text-white mb-6">Contact & Social</h5>
+            <div className="space-y-4 text-sm">
+              <div className="flex items-center text-slate-400">
+                <Mail size={16} className="mr-3 text-cyan-400" />
+                unitegroup.in@gmail.com
+              </div>
+              <div className="flex items-center text-slate-400">
+                <MapPin size={16} className="mr-3 text-cyan-400" />
+                Brisbane, QLD, Australia
+              </div>
+              <div className="pt-2">
+                <p className="text-slate-400 mb-3">Follow us:</p>
+                <div className="flex space-x-3">
+                  <Link
+                    href="https://www.linkedin.com/company/unite-group-australia/"
+                    aria-label="LinkedIn"
+                    className="text-slate-400 hover:text-cyan-400 transition-colors p-2 hover:bg-slate-800 rounded-lg"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Linkedin size={20} />
+                  </Link>
+                  <Link
+                    href="mailto:unitegroup.in@gmail.com"
+                    aria-label="Email"
+                    className="text-slate-400 hover:text-cyan-400 transition-colors p-2 hover:bg-slate-800 rounded-lg"
+                  >
+                    <Mail size={20} />
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

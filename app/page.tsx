@@ -24,8 +24,8 @@ import {
 import UniteAdvantageSection from "@/components/unite-advantage-section";
 import PartnersSection from "@/components/partners-section";
 import CaseStudiesSection from "@/components/case-studies-section";
-import { services } from "@/lib/services-data"; // Assuming services data is still needed for a services overview
-import { iconMap } from "@/lib/icon-map"; // Assuming iconMap is still needed
+import { services } from "@/lib/services-data";
+import { iconMap } from "@/lib/icon-map";
 
 const AnimatedSection: React.FC<{
   children: React.ReactNode;
@@ -89,7 +89,7 @@ export default function UniteGroupLandingPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            Australia's Premier Business Solutions Partner
+            Simple Business Solutions
           </motion.div>
           <motion.h1
             className="text-4xl sm:text-5xl md:text-6xl font-semibold text-white mb-6 leading-tight"
@@ -97,8 +97,8 @@ export default function UniteGroupLandingPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.7 }}
           >
-            Your Business,{" "}
-            <span className="text-cyan-400">Engineered for Growth.</span>
+            We Help Your Business{" "}
+            <span className="text-cyan-400">Grow.</span>
           </motion.h1>
           <motion.p
             className="max-w-3xl mx-auto text-lg md:text-xl text-slate-300 mb-10 leading-8"
@@ -106,8 +106,7 @@ export default function UniteGroupLandingPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.7 }}
           >
-            We combine expert strategy with custom-built technology to solve
-            your biggest challenges and deliver measurable results.
+            We solve your business problems with simple, effective solutions that work.
           </motion.p>
           <motion.div
             className="flex flex-col sm:flex-row justify-center items-center gap-4"
@@ -124,19 +123,19 @@ export default function UniteGroupLandingPage() {
               }}
               whileTap={{ scale: 0.95 }}
             >
-              Get Your Growth Plan
+              Start Here
               <ArrowRight
                 size={20}
                 className="ml-2 group-hover:translate-x-1 transition-transform"
               />
             </motion.a>
             <motion.a
-              href="#services-overview" // Changed to link to services overview section
+              href="/services"
               className="bg-transparent border-2 border-slate-600 hover:bg-slate-800 hover:border-slate-500 text-slate-100 font-semibold px-10 py-4 rounded-lg text-xl transition-colors duration-300 flex items-center group"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              View Our Solutions
+              See What We Do
               <ChevronDown
                 size={20}
                 className="ml-2 group-hover:translate-y-0.5 transition-transform"
@@ -150,15 +149,15 @@ export default function UniteGroupLandingPage() {
             transition={{ delay: 1, duration: 0.7 }}
           >
             {[
-              { icon: Clock, text: "5+ Years of Experience" },
-              { icon: FolderOpen, text: "Multiple Projects" },
-              { icon: MessageSquare, text: "Fast Response" },
+              { icon: Clock, text: "Fast Results" },
+              { icon: FolderOpen, text: "Simple Process" },
+              { icon: MessageSquare, text: "Clear Communication" },
             ].map((item, idx) => (
               <div
                 key={idx}
                 className="flex flex-col items-center text-slate-300"
               >
-                <item.icon size={28} className="text-cyan-400 mb-1" />{" "}
+                <item.icon size={28} className="text-cyan-400 mb-1" />
                 <span className="text-sm">{item.text}</span>
               </div>
             ))}
@@ -166,32 +165,30 @@ export default function UniteGroupLandingPage() {
         </div>
       </AnimatedSection>
 
-      {/* Is Your Business Ready? */}
+      {/* Simple Problem Section */}
       <AnimatedSection className="py-24 md:py-36 bg-slate-900">
         <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
-            Is Your Business Ready for the Next Level?
+            Does This Sound Like You?
           </h2>
           <p className="max-w-3xl mx-auto text-lg text-slate-300 mb-10">
-            In today's fast-paced digital landscape, staying ahead means
-            embracing innovation and overcoming complex challenges. Unite Group
-            empowers businesses like yours to not just adapt, but to thrive.
+            Most businesses face these common challenges. We help you solve them.
           </p>
           <div className="grid md:grid-cols-3 gap-8 text-left">
             {[
               {
-                title: "Stuck in a Growth Plateau?",
-                desc: "We help you break through growth barriers and find new ways to reach more customers and increase your revenue.",
+                title: "Your business isn't growing",
+                desc: "You're stuck at the same level and don't know how to reach more customers or increase sales.",
                 icon: TrendingUp,
               },
               {
-                title: "Drowning in Inefficiency?",
-                desc: "We create simple tools and systems that save you time, reduce manual work, and help your team work smarter.",
+                title: "Everything takes too long",
+                desc: "Manual processes slow you down. You need better tools to work faster and smarter.",
                 icon: Settings,
               },
               {
-                title: "Worried About Digital Threats?",
-                desc: "We protect your business data and customer information with reliable security measures that build trust.",
+                title: "You worry about security",
+                desc: "Your business data and customer information need better protection to build trust.",
                 icon: ShieldCheck,
               },
             ].map((item, idx) => (
@@ -218,19 +215,54 @@ export default function UniteGroupLandingPage() {
       <AnimatedSection id="services-overview" className="py-24 md:py-36">
         <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-4xl font-semibold text-white text-center mb-4">
-            Our Expertise, Your Advantage
+            How We Help You
           </h2>
           <p className="max-w-2xl mx-auto text-lg text-slate-300 text-center mb-16">
-            Comprehensive solutions tailored to drive your digital
-            transformation and achieve sustainable growth.
+            We provide simple solutions that solve real business problems.
           </p>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {services.slice(0, 6).map((service, idx) => {
-              // Displaying first 6 services as an overview
+            {[
+              {
+                title: "Business Planning",
+                description: "We help you create a clear plan to grow your business. You'll know exactly what to do next and how to measure success.",
+                icon: "Lightbulb",
+                link: "/services/initial-consultation",
+              },
+              {
+                title: "Custom Software",
+                description: "We build software that does exactly what your business needs. It saves time, reduces errors, and helps you work better.",
+                icon: "AppWindow",
+                link: "/services/custom-software-development",
+              },
+              {
+                title: "Get Found Online",
+                description: "We help customers find your business when they search online. More visitors means more sales for your business.",
+                icon: "BarChart3",
+                link: "/services/strategic-seo-services",
+              },
+              {
+                title: "Business Strategy",
+                description: "We help you understand your market better and create a plan to beat your competition and grow faster.",
+                icon: "Briefcase",
+                link: "/services/business-strategy-consulting",
+              },
+              {
+                title: "Quality Testing",
+                description: "We make sure your software works perfectly for your customers. No bugs, no problems, just smooth operation.",
+                icon: "ShieldCheck",
+                link: "/services/quality-assurance-testing",
+              },
+              {
+                title: "Team Training",
+                description: "We teach your team the skills they need to succeed. Better skills mean better results for your business.",
+                icon: "GraduationCap",
+                link: "/services/education-training",
+              },
+            ].map((service, idx) => {
               const IconComponent = iconMap[service.icon] || TrendingUp;
               return (
                 <motion.div
-                  key={service.id}
+                  key={idx}
                   className="bg-slate-800/70 backdrop-blur-sm p-8 rounded-xl shadow-2xl border border-slate-700/50 flex flex-col hover:border-cyan-500/50 transition-all duration-300 group"
                   initial={{ opacity: 0, y: 50 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -248,25 +280,6 @@ export default function UniteGroupLandingPage() {
                   <p className="text-slate-400 mb-6 text-sm flex-grow">
                     {service.description}
                   </p>
-                  <ul className="space-y-2 mb-8">
-                    {service.features.slice(0, 3).map(
-                      (
-                        feature,
-                        fIdx // Show first 3 features for brevity
-                      ) => (
-                        <li
-                          key={fIdx}
-                          className="flex items-center text-slate-300 text-sm"
-                        >
-                          <CheckCircle
-                            size={16}
-                            className="text-cyan-400 mr-2 flex-shrink-0"
-                          />{" "}
-                          {feature}
-                        </li>
-                      )
-                    )}
-                  </ul>
                   <Link
                     href={service.link}
                     className="mt-auto inline-block text-cyan-400 font-semibold group-hover:text-cyan-300 transition-colors duration-300"
@@ -286,7 +299,7 @@ export default function UniteGroupLandingPage() {
               href="/services"
               className="text-cyan-400 hover:text-cyan-300 font-semibold text-lg group"
             >
-              Explore All Services
+              See All Services
               <ArrowRight
                 size={20}
                 className="inline-block ml-1 group-hover:translate-x-1 transition-transform"
@@ -316,12 +329,10 @@ export default function UniteGroupLandingPage() {
         </div>
         <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <h2 className="text-4xl md:text-5xl font-semibold text-white mb-6">
-            Stop Guessing. Start Growing.
+            Ready to Get Started?
           </h2>
           <p className="max-w-2xl mx-auto text-lg text-slate-300 mb-12">
-            Your competition isn't waiting. Let's build a strategic roadmap to
-            accelerate your growth, optimize your operations, and secure your
-            future.
+            Let's talk about your business and how we can help you grow.
           </p>
           <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
             <motion.a
@@ -333,7 +344,7 @@ export default function UniteGroupLandingPage() {
               }}
               whileTap={{ scale: 0.95 }}
             >
-              Schedule Free Consultation
+              Talk to Us
               <ArrowRight
                 size={22}
                 className="ml-2 group-hover:translate-x-1 transition-transform"
@@ -345,25 +356,25 @@ export default function UniteGroupLandingPage() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              Contact Our Team <Phone size={20} className="ml-2" />
+              Contact Us <Phone size={20} className="ml-2" />
             </motion.a>
           </div>
           <div className="mt-12 flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm text-slate-400">
             <span>
-              <CheckCircle size={16} className="inline mr-1 text-cyan-400" />{" "}
-              SOC2 Compliant
+              <CheckCircle size={16} className="inline mr-1 text-cyan-400" />
+              Simple Solutions
             </span>
             <span>
-              <CheckCircle size={16} className="inline mr-1 text-cyan-400" />{" "}
-              Global Infrastructure
+              <CheckCircle size={16} className="inline mr-1 text-cyan-400" />
+              Fast Results
             </span>
             <span>
-              <CheckCircle size={16} className="inline mr-1 text-cyan-400" />{" "}
-              AI-Powered
+              <CheckCircle size={16} className="inline mr-1 text-cyan-400" />
+              Clear Communication
             </span>
             <span>
-              <CheckCircle size={16} className="inline mr-1 text-cyan-400" />{" "}
-              Enterprise Performance
+              <CheckCircle size={16} className="inline mr-1 text-cyan-400" />
+              Proven Results
             </span>
           </div>
         </div>
