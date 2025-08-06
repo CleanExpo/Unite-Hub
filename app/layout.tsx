@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils"
 import SiteHeader from "@/components/layout/site-header"
 import SiteFooter from "@/components/layout/site-footer"
 import ScrollToTop from "@/components/utils/scroll-to-top" // Import ScrollToTop
+import { ChatbotProvider } from "@/components/chatbot"
 
 const titilliumWeb = Titillium_Web({
   subsets: ["latin"],
@@ -32,10 +33,12 @@ export default function RootLayout({
           titilliumWeb.className,
         )}
       >
-        <ScrollToTop />
-        <SiteHeader />
-        <main className="flex-grow">{children}</main>
-        <SiteFooter />
+        <ChatbotProvider>
+          <ScrollToTop />
+          <SiteHeader />
+          <main className="flex-grow">{children}</main>
+          <SiteFooter />
+        </ChatbotProvider>
       </body>
     </html>
   )

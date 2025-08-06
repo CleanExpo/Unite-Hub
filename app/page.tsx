@@ -26,12 +26,14 @@ import PartnersSection from "@/components/partners-section";
 import CaseStudiesSection from "@/components/case-studies-section";
 import { services } from "@/lib/services-data";
 import { iconMap } from "@/lib/icon-map";
+import { FloatingChatbotTrigger } from "@/components/chatbot";
 
 const AnimatedSection: React.FC<{
   children: React.ReactNode;
   className?: string;
   delay?: number;
-}> = ({ children, className, delay = 0 }) => {
+  id?: string;
+}> = ({ children, className, delay = 0, id }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.15 });
   const controls = useAnimation();
@@ -43,6 +45,7 @@ const AnimatedSection: React.FC<{
   return (
     <motion.section
       ref={ref}
+      id={id}
       className={className}
       initial="hidden"
       animate={controls}
@@ -62,9 +65,325 @@ export default function UniteGroupLandingPage() {
       {/* Hero Section */}
       <AnimatedSection className="relative pt-32 pb-28 md:pt-48 md:pb-40 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-950 to-cyan-900/30 opacity-30"></div>
+          {/* Enhanced Gradient Background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-950 to-cyan-900/40 opacity-50"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-teal-900/20 via-transparent to-cyan-800/30"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/20 via-transparent to-teal-900/25"></div>
+          
+          {/* Large Gradient Orbs */}
           <motion.div
-            className="absolute top-1/4 left-1/4 w-32 h-32 bg-cyan-500/10 rounded-full filter blur-2xl"
+            className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-br from-cyan-500/20 to-teal-500/15 rounded-full filter blur-3xl"
+            animate={{ x: [0, 30, 0], y: [0, -40, 0], scale: [1, 1.2, 1] }}
+            transition={{
+              duration: 25,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          <motion.div
+            className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-gradient-to-tl from-teal-500/15 to-cyan-400/20 rounded-full filter blur-3xl"
+            animate={{ x: [0, -40, 0], y: [0, 30, 0], scale: [1, 1.1, 1] }}
+            transition={{
+              duration: 30,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 5,
+            }}
+          />
+          
+          {/* Left Side Geometric Objects */}
+          <motion.div
+            className="absolute top-1/6 left-8 w-20 h-20 border-2 border-cyan-400/50 rounded-full bg-gradient-to-br from-cyan-500/20 to-transparent"
+            animate={{ 
+              x: [0, 15, 0], 
+              y: [0, -25, 0], 
+              scale: [1, 1.2, 1]
+            }}
+            transition={{
+              duration: 16,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute top-1/3 left-4 w-12 h-12 border-2 border-teal-400/60 rounded-full bg-gradient-to-br from-teal-500/25 to-transparent"
+            animate={{ 
+              x: [0, 20, 0], 
+              y: [0, 30, 0], 
+              scale: [1, 0.8, 1]
+            }}
+            transition={{
+              duration: 18,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 2,
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/3 left-12 w-16 h-16 border-2 border-cyan-300/55 rounded-full bg-gradient-to-br from-cyan-400/30 to-transparent"
+            animate={{ 
+              x: [0, 25, 0], 
+              y: [0, -20, 0], 
+              scale: [1, 1.15, 1]
+            }}
+            transition={{
+              duration: 20,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 1,
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/6 left-6 w-10 h-10 border-2 border-teal-300/50 rounded-full bg-gradient-to-br from-teal-400/20 to-transparent"
+            animate={{ 
+              x: [0, 15, 0], 
+              y: [0, 25, 0], 
+              scale: [1, 0.9, 1]
+            }}
+            transition={{
+              duration: 14,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
+          />
+          
+          {/* Right Side Geometric Objects */}
+          <motion.div
+            className="absolute top-1/4 right-8 w-24 h-24 border-2 border-teal-400/55 rounded-full bg-gradient-to-br from-teal-500/25 to-transparent"
+            animate={{ 
+              x: [0, -20, 0], 
+              y: [0, -30, 0], 
+              scale: [1, 1.25, 1]
+            }}
+            transition={{
+              duration: 22,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 0.5,
+            }}
+          />
+          
+          <motion.div
+            className="absolute top-1/2 right-4 w-14 h-14 border-2 border-cyan-400/60 rounded-full bg-gradient-to-br from-cyan-400/30 to-transparent"
+            animate={{ 
+              x: [0, -25, 0], 
+              y: [0, 20, 0], 
+              scale: [1, 0.85, 1]
+            }}
+            transition={{
+              duration: 19,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 1.5,
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 right-12 w-18 h-18 border-2 border-teal-300/50 rounded-full bg-gradient-to-br from-teal-400/20 to-transparent"
+            animate={{ 
+              x: [0, -15, 0], 
+              y: [0, -25, 0], 
+              scale: [1, 1.1, 1]
+            }}
+            transition={{
+              duration: 17,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 2.5,
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/8 right-6 w-12 h-12 border-2 border-cyan-300/55 rounded-full bg-gradient-to-br from-cyan-300/25 to-transparent"
+            animate={{ 
+              x: [0, -20, 0], 
+              y: [0, 30, 0], 
+              scale: [1, 0.95, 1]
+            }}
+            transition={{
+              duration: 15,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3.5,
+            }}
+          />
+          
+          {/* Triangle Shapes */}
+          <motion.div
+            className="absolute top-1/8 left-16 w-0 h-0 border-l-[12px] border-l-transparent border-b-[20px] border-b-cyan-400/40 border-r-[12px] border-r-transparent"
+            animate={{ 
+              x: [0, 10, 0], 
+              y: [0, -15, 0], 
+              rotate: [0, 45, 0]
+            }}
+            transition={{
+              duration: 12,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 0.8,
+            }}
+          />
+          
+          <motion.div
+            className="absolute top-2/3 right-20 w-0 h-0 border-l-[15px] border-l-transparent border-b-[25px] border-b-teal-400/45 border-r-[15px] border-r-transparent"
+            animate={{ 
+              x: [0, -12, 0], 
+              y: [0, 18, 0], 
+              rotate: [0, -30, 0]
+            }}
+            transition={{
+              duration: 14,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 2.2,
+            }}
+          />
+          
+          {/* Hexagon Shapes */}
+          <motion.div
+            className="absolute top-1/3 left-20 w-16 h-16 border-2 border-cyan-400/50 bg-gradient-to-br from-cyan-500/15 to-transparent"
+            style={{
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            }}
+            animate={{ 
+              x: [0, 18, 0], 
+              y: [0, -12, 0], 
+              rotate: [0, 60, 0],
+              scale: [1, 1.1, 1]
+            }}
+            transition={{
+              duration: 21,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 1.8,
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/3 right-16 w-12 h-12 border-2 border-teal-400/55 bg-gradient-to-br from-teal-500/20 to-transparent"
+            style={{
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            }}
+            animate={{ 
+              x: [0, -15, 0], 
+              y: [0, 20, 0], 
+              rotate: [0, -45, 0],
+              scale: [1, 0.9, 1]
+            }}
+            transition={{
+              duration: 18,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3.2,
+            }}
+          />
+          
+          {/* Diamond Shapes */}
+          <motion.div
+            className="absolute top-1/2 left-8 w-8 h-8 border-2 border-cyan-300/60 bg-gradient-to-br from-cyan-400/25 to-transparent"
+            style={{
+              transform: 'rotate(45deg)'
+            }}
+            animate={{ 
+              x: [0, 12, 0], 
+              y: [0, -18, 0], 
+              rotate: [45, 225, 45],
+              scale: [1, 1.15, 1]
+            }}
+            transition={{
+              duration: 16,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 2.8,
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 right-8 w-10 h-10 border-2 border-teal-300/50 bg-gradient-to-br from-teal-400/20 to-transparent"
+            style={{
+              transform: 'rotate(45deg)'
+            }}
+            animate={{ 
+              x: [0, -18, 0], 
+              y: [0, 15, 0], 
+              rotate: [45, -135, 45],
+              scale: [1, 0.85, 1]
+            }}
+            transition={{
+              duration: 19,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 1.2,
+            }}
+          />
+          
+          {/* Enhanced Floating Dots */}
+          <motion.div
+            className="absolute top-1/5 right-1/3 w-3 h-3 bg-gradient-to-r from-cyan-400 to-teal-400 rounded-full shadow-lg shadow-cyan-400/30"
+            animate={{ 
+              y: [0, -30, 0],
+              opacity: [0.6, 1, 0.6],
+              scale: [1, 1.2, 1]
+            }}
+            transition={{
+              duration: 10,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/3 right-1/5 w-2.5 h-2.5 bg-gradient-to-r from-teal-400 to-cyan-400 rounded-full shadow-lg shadow-teal-400/30"
+            animate={{ 
+              y: [0, 25, 0],
+              opacity: [0.7, 1, 0.7],
+              scale: [1, 1.15, 1]
+            }}
+            transition={{
+              duration: 8,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 2,
+            }}
+          />
+          
+          <motion.div
+            className="absolute top-2/3 left-1/5 w-2 h-2 bg-gradient-to-r from-cyan-300 to-teal-300 rounded-full shadow-lg shadow-cyan-300/30"
+            animate={{ 
+              y: [0, -20, 0],
+              opacity: [0.8, 1, 0.8],
+              scale: [1, 1.1, 1]
+            }}
+            transition={{
+              duration: 12,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 1,
+            }}
+          />
+          
+          <motion.div
+            className="absolute top-1/3 left-1/4 w-1.5 h-1.5 bg-gradient-to-r from-teal-300 to-cyan-300 rounded-full shadow-lg shadow-teal-300/30"
+            animate={{ 
+              y: [0, 18, 0],
+              opacity: [0.6, 0.9, 0.6],
+              scale: [1, 1.25, 1]
+            }}
+            transition={{
+              duration: 9,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 2.8,
+            }}
+          />
+          
+          {/* Additional Glow Effects */}
+          <motion.div
+            className="absolute top-1/4 left-1/4 w-32 h-32 bg-cyan-500/15 rounded-full filter blur-2xl"
             animate={{ x: [0, 20, 0], y: [0, -20, 0], rotate: [0, 10, 0] }}
             transition={{
               duration: 20,
@@ -73,7 +392,7 @@ export default function UniteGroupLandingPage() {
             }}
           />
           <motion.div
-            className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-purple-500/10 rounded-full filter blur-3xl"
+            className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-teal-500/15 rounded-full filter blur-3xl"
             animate={{ x: [0, -30, 0], y: [0, 30, 0], rotate: [0, -15, 0] }}
             transition={{
               duration: 25,
@@ -143,7 +462,7 @@ export default function UniteGroupLandingPage() {
             </motion.a>
           </motion.div>
           <motion.div
-            className="mt-12 grid grid-cols-2 sm:grid-cols-3 gap-6 max-w-3xl mx-auto"
+            className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-2 max-w-xl mx-auto"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1, duration: 0.7 }}
@@ -152,13 +471,14 @@ export default function UniteGroupLandingPage() {
               { icon: Clock, text: "Fast Results" },
               { icon: FolderOpen, text: "Simple Process" },
               { icon: MessageSquare, text: "Clear Communication" },
+              { icon: CheckCircle, text: "Proven Results" },
             ].map((item, idx) => (
               <div
                 key={idx}
                 className="flex flex-col items-center text-slate-300"
               >
-                <item.icon size={28} className="text-cyan-400 mb-1" />
-                <span className="text-sm">{item.text}</span>
+                <item.icon size={24} className="text-cyan-400 mb-1" />
+                <span className="text-xs">{item.text}</span>
               </div>
             ))}
           </motion.div>

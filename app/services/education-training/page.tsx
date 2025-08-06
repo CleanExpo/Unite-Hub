@@ -29,7 +29,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 import {
   Accordion,
   AccordionContent,
@@ -64,117 +64,91 @@ const heroStatsTraining = [
   },
 ];
 
-const trainingProgramCategories = [
-  // {
-  //   id: "iicrc",
-  //   name: "IICRC Certifications",
-  //   icon: Award,
-  //   description: "Industry-leading restoration certifications through CARSI.",
-  //   programs: [
-  //     {
-  //       name: "Water Damage Restoration (WRT)",
-  //       image: "/water-damage-restoration-certification.png",
-  //     },
-  //     {
-  //       name: "Applied Structural Drying (ASD)",
-  //       image: "/placeholder-66huc.png",
-  //     },
-  //     {
-  //       name: "Fire & Smoke Restoration (FSRT)",
-  //       image: "/placeholder-j59ba.png",
-  //     },
-  //     { name: "Mold Remediation (AMRT)", image: "/placeholder-mph0n.png" },
-  //     { name: "Carpet Cleaning (CCT)", image: "/placeholder-ky61n.png" },
-  //     { name: "Odor Control (OCT)", image: "/odor-control-training.png" },
-  //   ],
-  // },
+const courseCategories = [
   {
-    id: "technical",
-    name: "Technical Training",
-    icon: Cpu,
-    description: "Master cutting-edge technologies with hands-on workshops.",
-    programs: [
+    id: "mould-iaq",
+    name: "🧰 Mould & IAQ Courses",
+    icon: Award,
+    description: "Comprehensive mould identification, remediation, and indoor air quality courses.",
+    courses: [
       {
-        name: "Modern Web Development",
-        image: "/web-development-training.png",
+        name: "Introduction to Mould Identification and Remediation",
+        url: "https://carsi.com.au/product/mould-identification/",
+        description: "Learn the fundamentals of mould identification and basic remediation techniques.",
       },
       {
-        name: "Cloud Architecture (AWS/Azure)",
-        image: "/cloud-architecture-course.png",
-      },
-      { name: "DevOps & CI/CD", image: "/devops-training-concept.png" },
-      { name: "AI & Machine Learning", image: "/ai-ml-workshop.png" },
-      {
-        name: "Cybersecurity Fundamentals",
-        image: "/placeholder.svg?width=300&height=200",
+        name: "Level 1 – Mould Remediation Course",
+        url: "https://carsi.com.au/product/level-1-mould-remediation/",
+        description: "Comprehensive Level 1 certification for professional mould remediation.",
       },
       {
-        name: "Database Design & Optimization",
-        image: "/placeholder.svg?width=300&height=200",
+        name: "Level 1 – Mould Remediation Course (CCW x CARSI Edition)",
+        url: "https://carsi.com.au/product/level-1-mould-remediation-ccw/",
+        description: "Specialized Level 1 course in collaboration with CCW.",
+      },
+      {
+        name: "Level 2 – Mould Remediation Course",
+        url: "https://carsi.com.au/product/level-2-mould-remediation/",
+        description: "Advanced Level 2 certification for complex mould remediation projects.",
+      },
+      {
+        name: "Level 3 – Mould Remediation Course",
+        url: "https://carsi.com.au/product/level-3-mould-remediation/",
+        description: "Expert Level 3 certification for the most challenging mould remediation scenarios.",
+      },
+      {
+        name: "Intro to IAQ & Mould: Spread and Containment Basics",
+        url: "https://carsi.com.au/courses/introduction-to-iaq-and-mould-understanding-airborne-spread-and-containment/",
+        description: "Understanding airborne mould spread and containment strategies.",
       },
     ],
   },
   {
-    id: "corporate",
-    name: "Corporate Programs",
+    id: "carpet-cleaning",
+    name: "🧽 Carpet Cleaning Courses (CARSI)",
+    icon: Award,
+    description: "Professional carpet cleaning and drying techniques for industry professionals.",
+    courses: [
+      {
+        name: "Introduction to Basic Carpet Cleaning and Drying – CCW",
+        url: "https://carsi.com.au/product/carpet-cleaning-ccw/",
+        description: "Learn carpet construction, damage effects, cleaning equipment, and drying techniques.",
+      },
+      {
+        name: "Carpet Cleaning Basics Course – CARSI",
+        url: "https://carsi.com.au/product/carpet-cleaning-basics/",
+        description: "Covers safe and professional cleaning of carpets and flooring, plus chemical/environmental factors.",
+      },
+      {
+        name: "Carpet Cleaning Basics Course – CCW x CARSI",
+        url: "https://carsi.com.au/product/carpet-cleaning-basics-ccw/",
+        description: "A version of the basics course in collaboration with CCW.",
+      },
+    ],
+  },
+  {
+    id: "management",
+    name: "🧭 Management Courses (Leadership & Business)",
     icon: Briefcase,
-    description: "Custom training solutions aligned with your business goals.",
-    programs: [
+    description: "Leadership, operations, and business skills for industry professionals.",
+    courses: [
       {
-        name: "Leadership Development",
-        image: "/placeholder.svg?width=300&height=200",
-      },
-      {
-        name: "Change Management",
-        image: "/placeholder.svg?width=300&height=200",
-      },
-      {
-        name: "Digital Transformation",
-        image: "/placeholder.svg?width=300&height=200",
-      },
-      {
-        name: "Innovation Workshops",
-        image: "/placeholder.svg?width=300&height=200",
-      },
-      {
-        name: "Team Performance",
-        image: "/placeholder.svg?width=300&height=200",
-      },
-      {
-        name: "Strategic Planning",
-        image: "/placeholder.svg?width=300&height=200",
+        name: "Management & Leadership Programs",
+        url: "https://carsi.com.au/product-category/management/",
+        description: "Comprehensive management training focused on leadership, operations, and business skills for industry professionals.",
       },
     ],
   },
   {
-    id: "industry",
-    name: "Industry Training",
+    id: "restoration-water",
+    name: "💧 Restoration & Water Damage Courses",
     icon: Building,
-    description: "Specialized programs for specific industry needs.",
-    programs: [
+    description: "Specialized courses in restoration and water damage management.",
+    courses: [
       {
-        name: "Construction Safety",
-        image: "/placeholder.svg?width=300&height=200",
-      },
-      {
-        name: "Healthcare Compliance",
-        image: "/placeholder.svg?width=300&height=200",
-      },
-      {
-        name: "Financial Services",
-        image: "/placeholder.svg?width=300&height=200",
-      },
-      {
-        name: "Manufacturing Excellence",
-        image: "/placeholder.svg?width=300&height=200",
-      },
-      {
-        name: "Retail Management",
-        image: "/placeholder.svg?width=300&height=200",
-      },
-      {
-        name: "Hospitality Standards",
-        image: "/placeholder.svg?width=300&height=200",
+        name: "Drying Healthcare Facilities (Introduction to Drying in Healthcare Settings)",
+        url: "https://carsi.com.au/product/drying-healthcare/",
+        description: "Specialized training for drying techniques in healthcare environments.",
       },
     ],
   },
@@ -436,72 +410,124 @@ export default function EducationTrainingPage() {
         </div>
       </section>
 
-      {/* Training Programs Section with Tabs */}
+      {/* Course Categories Section */}
       <section className="py-16 md:py-24">
         <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12 md:mb-16">
             <BookOpen className="w-12 h-12 text-amber-400 mx-auto mb-4" />
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
-              Training Programs
+              Available Courses
             </h2>
             <p className="max-w-2xl mx-auto text-lg text-slate-300">
-              Comprehensive programs designed for immediate impact and lasting
-              transformation.
+              Professional certification courses through CARSI - IICRC Approved School.
             </p>
           </div>
-          <Tabs
-            defaultValue={trainingProgramCategories[0].id}
-            className="w-full"
-          >
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 gap-2 items-center bg-slate-800 p-1.5 rounded-lg border border-slate-700 mb-8">
-              {trainingProgramCategories.map((category) => (
-                <TabsTrigger
-                  key={category.id}
-                  value={category.id}
-                  className="flex items-center justify-center gap-2 data-[state=active]:bg-amber-500 data-[state=active]:text-white data-[state=active]:shadow-md text-slate-300 hover:bg-slate-700/50 transition-all duration-200 py-2.5 px-3 text-sm font-medium rounded-md mt-[-5px] ml-[-5px]"
-                >
-                  <category.icon className="w-5 h-5" />
+          
+          {courseCategories.map((category, categoryIdx) => (
+            <motion.div
+              key={category.id}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: categoryIdx * 0.2 }}
+              viewport={{ once: true, amount: 0.2 }}
+              className="mb-16 last:mb-0"
+            >
+              <div className="text-center mb-8">
+                <category.icon className="w-10 h-10 text-amber-400 mx-auto mb-3" />
+                <h3 className="text-2xl md:text-3xl font-semibold text-white mb-3">
                   {category.name}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-            {trainingProgramCategories.map((category) => (
-              <TabsContent key={category.id} value={category.id}>
-                <p className="text-center text-slate-400 mb-8">
+                </h3>
+                <p className="text-slate-400 max-w-2xl mx-auto">
                   {category.description}
                 </p>
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {category.programs.map((program, idx) => (
-                    <motion.div
-                      key={program.name}
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: idx * 0.05 }}
-                      viewport={{ once: true, amount: 0.1 }}
-                    >
-                      <Card className="bg-slate-800/50 border-slate-700/50 shadow-md h-full overflow-hidden group">
-                        <Image
-                          src={
-                            program.image ||
-                            "/placeholder.svg?width=300&height=200&query=training+course"
-                          }
-                          alt={program.name}
-                          width={300}
-                          height={200}
-                          className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                        <CardContent className="p-4">
-                          <h3 className="text-md font-semibold text-white group-hover:text-amber-300 transition-colors">
-                            {program.name}
-                          </h3>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-                  ))}
-                </div>
-              </TabsContent>
-            ))}
-          </Tabs>
+              </div>
+              
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {category.courses.map((course, idx) => (
+                  <motion.div
+                    key={course.name}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: idx * 0.1 }}
+                    viewport={{ once: true, amount: 0.1 }}
+                  >
+                    <Card className="bg-slate-800/50 border-slate-700/50 shadow-lg h-full hover:border-amber-500/60 transition-all duration-300 group">
+                      <CardContent className="p-6">
+                        <h4 className="text-lg font-semibold text-white mb-3 group-hover:text-amber-300 transition-colors">
+                          {course.name}
+                        </h4>
+                        <p className="text-slate-400 text-sm mb-4 leading-relaxed">
+                          {course.description}
+                        </p>
+                        <Button
+                          asChild
+                          className="w-full bg-amber-500 hover:bg-amber-600 text-white group"
+                        >
+                          <Link
+                            href={course.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            View Course Details
+                            <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                          </Link>
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* View All Courses Section */}
+      <section className="py-16 md:py-24 bg-slate-900">
+        <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12 md:mb-16">
+            <BookOpen className="w-12 h-12 text-amber-400 mx-auto mb-4" />
+            <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
+              Explore Our Full Course Catalogue
+            </h2>
+            <p className="max-w-2xl mx-auto text-lg text-slate-300 mb-8">
+              Discover 85+ professional courses covering all aspects of restoration, cleaning, and business management.
+            </p>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8 max-w-4xl mx-auto">
+              {[
+                { name: "Admin Courses", count: "Essential Skills for Restoration Managers" },
+                { name: "Technician Courses", count: "Expert Training for Restoration Techs" },
+                { name: "Face-to-Face Courses", count: "In-Person Training by CARSI" },
+                { name: "Free Courses", count: "Start Learning Restoration with CARSI" },
+              ].map((category, idx) => (
+                <motion.div
+                  key={category.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: idx * 0.1 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  className="bg-slate-800/50 p-4 rounded-lg text-center"
+                >
+                  <h4 className="text-amber-400 font-semibold mb-1">{category.name}</h4>
+                  <p className="text-slate-400 text-sm">{category.count}</p>
+                </motion.div>
+              ))}
+            </div>
+            <Button
+              size="lg"
+              asChild
+              className="bg-amber-500 hover:bg-amber-600 text-white group text-lg px-8 py-6"
+            >
+              <Link
+                href="https://carsi.com.au/product-category/view-all/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View All 85+ Courses
+                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+          </div>
         </div>
       </section>
 
@@ -742,7 +768,7 @@ export default function EducationTrainingPage() {
             training program that delivers results.
           </p>
           <Button
-            size="xl"
+            size="lg"
             asChild
             className="bg-amber-500 hover:bg-amber-600 text-white group text-lg px-10 py-7"
           >
