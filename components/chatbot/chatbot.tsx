@@ -23,6 +23,8 @@ import { Badge } from '@/components/ui/badge';
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
+  const [isCollectingInfo, setIsCollectingInfo] = useState(false);
+  const [contactInfo, setContactInfo] = useState({ name: '', email: '' });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -41,6 +43,38 @@ export default function Chatbot() {
       content: "Hi there! I'm Alex from Unite Group. 👋 I'm here to help you understand how we can solve your business challenges. What brings you here today?",
     },
   ]);
+
+  // Check if the conversation involves scheduling
+  useEffect(() => {
+    const lastMessage = messages[messages.length - 1];
+    const hasContactInfo = messages.some(msg => 
+      msg.role === 'user' && 
+      msg.content.includes('Name:') && 
+      msg.content.includes('Email:')
+    );
+    
+    // Check if we've already received a confirmation response
+    const hasConfirmation = messages.some(msg => 
+      msg.role === 'assistant' && 
+      msg.content.includes('Perfect! Thank you') &&
+      msg.content.includes('calendar invite')
+    );
+    
+    // Only show contact form if:
+    // 1. Last message is from assistant asking for contact info
+    // 2. We haven't already collected contact info
+    // 3. We haven't already received confirmation
+    // 4. We're not currently collecting info
+    if (lastMessage?.role === 'assistant' && 
+        !hasContactInfo &&
+        !hasConfirmation &&
+        !isCollectingInfo &&
+        (lastMessage.content.includes('name and email') || 
+         lastMessage.content.includes('calendar invite') ||
+         lastMessage.content.includes('schedule a consultation'))) {
+      setIsCollectingInfo(true);
+    }
+  }, [messages, isCollectingInfo]);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -286,27 +320,79 @@ export default function Chatbot() {
                     <div ref={messagesEndRef} />
                   </div>
 
-                  {/* Input Form */}
-                  <form onSubmit={onSubmit} className="p-4 border-t border-slate-200 dark:border-slate-700">
-                    <div className="flex space-x-2">
-                      <Input
-                        ref={inputRef}
-                        value={input}
-                        onChange={handleInputChange}
-                        placeholder="Type your message..."
-                        className="flex-1 border-slate-300 dark:border-slate-600 focus:border-cyan-500 dark:focus:border-cyan-400"
-                        disabled={isLoading}
-                      />
-                      <Button
-                        type="submit"
-                        disabled={isLoading || !input.trim()}
-                        className="bg-cyan-500 hover:bg-cyan-600 text-white px-4"
-                        size="sm"
-                      >
-                        <Send size={16} />
-                      </Button>
+                  {/* Contact Form or Input Form */}
+                  {isCollectingInfo ? (
+                    <div className="p-4 border-t border-slate-200 dark:border-slate-700">
+                      <div className="bg-cyan-50 dark:bg-cyan-950/30 rounded-lg p-3 mb-3">
+                        <p className="text-sm text-cyan-700 dark:text-cyan-300 font-medium">
+                          📅 Let's schedule your consultation!
+                        </p>
+                      </div>
+                      <div className="space-y-3">
+                        <Input
+                          value={contactInfo.name}
+                          onChange={(e) => setContactInfo(prev => ({ ...prev, name: e.target.value }))}
+                          placeholder="Your full name"
+                          className="border-slate-300 dark:border-slate-600 focus:border-cyan-500 dark:focus:border-cyan-400"
+                        />
+                        <Input
+                          value={contactInfo.email}
+                          onChange={(e) => setContactInfo(prev => ({ ...prev, email: e.target.value }))}
+                          placeholder="Your email address"
+                          type="email"
+                          className="border-slate-300 dark:border-slate-600 focus:border-cyan-500 dark:focus:border-cyan-400"
+                        />
+                        <div className="flex space-x-2">
+                          <Button
+                            onClick={async () => {
+                              if (contactInfo.name && contactInfo.email) {
+                                setInput(`Name: ${contactInfo.name}, Email: ${contactInfo.email}`);
+                                setIsCollectingInfo(false);
+                                setContactInfo({ name: '', email: '' });
+                                await handleSubmit();
+                              }
+                            }}
+                            disabled={!contactInfo.name || !contactInfo.email}
+                            className="flex-1 bg-cyan-500 hover:bg-cyan-600 text-white"
+                            size="sm"
+                          >
+                            Send Calendar Invite
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              setIsCollectingInfo(false);
+                              setContactInfo({ name: '', email: '' });
+                            }}
+                            variant="outline"
+                            size="sm"
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      </div>
                     </div>
-                  </form>
+                  ) : (
+                    <form onSubmit={onSubmit} className="p-4 border-t border-slate-200 dark:border-slate-700">
+                      <div className="flex space-x-2">
+                        <Input
+                          ref={inputRef}
+                          value={input}
+                          onChange={handleInputChange}
+                          placeholder="Type your message..."
+                          className="flex-1 border-slate-300 dark:border-slate-600 focus:border-cyan-500 dark:focus:border-cyan-400"
+                          disabled={isLoading}
+                        />
+                        <Button
+                          type="submit"
+                          disabled={isLoading || !input.trim()}
+                          className="bg-cyan-500 hover:bg-cyan-600 text-white px-4"
+                          size="sm"
+                        >
+                          <Send size={16} />
+                        </Button>
+                      </div>
+                    </form>
+                  )}
                 </div>
               )}
             </Card>

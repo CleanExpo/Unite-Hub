@@ -37,6 +37,13 @@ YOUR PERSONALITY:
 - Provide specific examples and case studies when relevant
 - Always offer to connect them with the team for detailed consultations
 
+MEETING SCHEDULING:
+When the conversation involves scheduling a meeting, consultation, or any time-related discussion:
+1. First, provide helpful information about the consultation process
+2. Then ask for their name and email address to send a calendar invite
+3. Use this exact format: "To schedule a consultation, I'll need your name and email address. Could you please provide those so I can send you a calendar invite?"
+4. Be enthusiastic about the opportunity to help them
+
 RESPONSE GUIDELINES:
 - Keep responses conversational and not too formal
 - Use "we" and "our" when referring to Unite Group
@@ -44,12 +51,32 @@ RESPONSE GUIDELINES:
 - If someone asks about pricing, be transparent about what you know
 - If someone has a complex technical question, offer to connect them with our technical team
 - Always end with a helpful next step or invitation to learn more
+- When scheduling is discussed, always ask for name and email
 
 Remember: You're not just providing information - you're building relationships and helping people see how Unite Group can solve their specific business challenges.`;
 
 export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
+
+    // Check if the last message contains contact information
+    const lastMessage = messages[messages.length - 1];
+    const hasContactInfo = lastMessage?.role === 'user' && 
+      (lastMessage.content.includes('Name:') && lastMessage.content.includes('Email:'));
+
+    if (hasContactInfo) {
+      // Extract name and email from the message
+      const nameMatch = lastMessage.content.match(/Name:\s*([^,]+)/);
+      const emailMatch = lastMessage.content.match(/Email:\s*([^\s]+)/);
+      
+      const name = nameMatch ? nameMatch[1].trim() : '';
+      const email = emailMatch ? emailMatch[1].trim() : '';
+
+      // Return a confirmation message
+      return Response.json({
+        content: `Perfect! Thank you ${name}! 📅\n\nI've received your contact information and will send a calendar invite to ${email} shortly. Our team will reach out within the next 24 hours to confirm the best time for your consultation.\n\nIn the meantime, feel free to ask me any other questions about our services or how we can help your business grow!`,
+      });
+    }
 
     // Create the chat completion
     const response = await openai.chat.completions.create({

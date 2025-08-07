@@ -64,95 +64,65 @@ const heroStatsTraining = [
   },
 ];
 
-const courseCategories = [
-  {
-    id: "mould-iaq",
-    name: "🧰 Mould & IAQ Courses",
-    icon: Award,
-    description: "Comprehensive mould identification, remediation, and indoor air quality courses.",
-    courses: [
-      {
-        name: "Introduction to Mould Identification and Remediation",
-        url: "https://carsi.com.au/product/mould-identification/",
-        description: "Learn the fundamentals of mould identification and basic remediation techniques.",
-      },
-      {
-        name: "Level 1 – Mould Remediation Course",
-        url: "https://carsi.com.au/product/level-1-mould-remediation/",
-        description: "Comprehensive Level 1 certification for professional mould remediation.",
-      },
-      {
-        name: "Level 1 – Mould Remediation Course (CCW x CARSI Edition)",
-        url: "https://carsi.com.au/product/level-1-mould-remediation-ccw/",
-        description: "Specialized Level 1 course in collaboration with CCW.",
-      },
-      {
-        name: "Level 2 – Mould Remediation Course",
-        url: "https://carsi.com.au/product/level-2-mould-remediation/",
-        description: "Advanced Level 2 certification for complex mould remediation projects.",
-      },
-      {
-        name: "Level 3 – Mould Remediation Course",
-        url: "https://carsi.com.au/product/level-3-mould-remediation/",
-        description: "Expert Level 3 certification for the most challenging mould remediation scenarios.",
-      },
-      {
-        name: "Intro to IAQ & Mould: Spread and Containment Basics",
-        url: "https://carsi.com.au/courses/introduction-to-iaq-and-mould-understanding-airborne-spread-and-containment/",
-        description: "Understanding airborne mould spread and containment strategies.",
-      },
-    ],
-  },
-  {
-    id: "carpet-cleaning",
-    name: "🧽 Carpet Cleaning Courses (CARSI)",
-    icon: Award,
-    description: "Professional carpet cleaning and drying techniques for industry professionals.",
-    courses: [
-      {
-        name: "Introduction to Basic Carpet Cleaning and Drying – CCW",
-        url: "https://carsi.com.au/product/carpet-cleaning-ccw/",
-        description: "Learn carpet construction, damage effects, cleaning equipment, and drying techniques.",
-      },
-      {
-        name: "Carpet Cleaning Basics Course – CARSI",
-        url: "https://carsi.com.au/product/carpet-cleaning-basics/",
-        description: "Covers safe and professional cleaning of carpets and flooring, plus chemical/environmental factors.",
-      },
-      {
-        name: "Carpet Cleaning Basics Course – CCW x CARSI",
-        url: "https://carsi.com.au/product/carpet-cleaning-basics-ccw/",
-        description: "A version of the basics course in collaboration with CCW.",
-      },
-    ],
-  },
-  {
-    id: "management",
-    name: "🧭 Management Courses (Leadership & Business)",
-    icon: Briefcase,
-    description: "Leadership, operations, and business skills for industry professionals.",
-    courses: [
-      {
-        name: "Management & Leadership Programs",
-        url: "https://carsi.com.au/product-category/management/",
-        description: "Comprehensive management training focused on leadership, operations, and business skills for industry professionals.",
-      },
-    ],
-  },
-  {
-    id: "restoration-water",
-    name: "💧 Restoration & Water Damage Courses",
-    icon: Building,
-    description: "Specialized courses in restoration and water damage management.",
-    courses: [
-      {
-        name: "Drying Healthcare Facilities (Introduction to Drying in Healthcare Settings)",
-        url: "https://carsi.com.au/product/drying-healthcare/",
-        description: "Specialized training for drying techniques in healthcare environments.",
-      },
-    ],
-  },
-];
+  const courseCategories = [
+    {
+      id: "carpet-cleaning",
+      name: "🧽 Carpet Cleaning Courses (CARSI)",
+      icon: Award,
+      description: "Professional carpet cleaning and drying techniques for industry professionals.",
+      image: "/images/1.png",
+      courses: [
+        {
+          name: "Introduction to Basic Carpet Cleaning and Drying – CCW",
+          url: "https://carsi.com.au/product/carpet-cleaning-ccw/",
+          description: "Learn carpet construction, damage effects, cleaning equipment, and drying techniques.",
+          image: "/images/1.png",
+        },
+        {
+          name: "Carpet Cleaning Basics Course – CARSI",
+          url: "https://carsi.com.au/product/carpet-cleaning-basics/",
+          description: "Covers safe and professional cleaning of carpets and flooring, plus chemical/environmental factors.",
+          image: "/images/2.png",
+        },
+        {
+          name: "Carpet Cleaning Basics Course – CCW x CARSI",
+          url: "https://carsi.com.au/product/carpet-cleaning-basics-ccw/",
+          description: "A version of the basics course in collaboration with CCW.",
+          image: "/images/3.png",
+        },
+      ],
+    },
+    {
+      id: "management",
+      name: "🧭 Management Courses (Leadership & Business)",
+      icon: Briefcase,
+      description: "Leadership, operations, and business skills for industry professionals.",
+      image: "/images/4.png",
+      courses: [
+        {
+          name: "Management & Leadership Programs",
+          url: "https://carsi.com.au/product-category/management/",
+          description: "Comprehensive management training focused on leadership, operations, and business skills for industry professionals.",
+          image: "/images/1.png",
+        },
+      ],
+    },
+    {
+      id: "restoration-water",
+      name: "💧 Restoration & Water Damage Courses",
+      icon: Building,
+      description: "Specialized courses in restoration and water damage management.",
+      image: "/images/5.png",
+      courses: [
+        {
+          name: "Drying Healthcare Facilities (Introduction to Drying in Healthcare Settings)",
+          url: "https://carsi.com.au/product/drying-healthcare/",
+          description: "Specialized training for drying techniques in healthcare environments.",
+          image: "/images/1.png",
+        },
+      ],
+    },
+  ];
 
 const deliveryOptions = [
   {
@@ -451,7 +421,17 @@ export default function EducationTrainingPage() {
                     transition={{ duration: 0.4, delay: idx * 0.1 }}
                     viewport={{ once: true, amount: 0.1 }}
                   >
-                    <Card className="bg-slate-800/50 border-slate-700/50 shadow-lg h-full hover:border-amber-500/60 transition-all duration-300 group">
+                    <Card className="bg-slate-800/50 border-slate-700/50 shadow-lg h-full hover:border-amber-500/60 transition-all duration-300 group overflow-hidden">
+                      <div className="relative">
+                        <Image
+                          src={course.image}
+                          alt={course.name}
+                          width={300}
+                          height={150}
+                          className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent"></div>
+                      </div>
                       <CardContent className="p-6">
                         <h4 className="text-lg font-semibold text-white mb-3 group-hover:text-amber-300 transition-colors">
                           {course.name}
