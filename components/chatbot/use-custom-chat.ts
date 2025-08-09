@@ -8,17 +8,7 @@ export interface Message {
   content: string;
 }
 
-export interface UseCustomChatReturn {
-  messages: Message[];
-  input: string;
-  isLoading: boolean;
-  error: string | null;
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleSubmit: (e: React.FormEvent) => Promise<void>;
-  setInput: (value: string) => void;
-}
-
-export function useCustomChat(initialMessages: Message[] = []): UseCustomChatReturn {
+export function useCustomChat(initialMessages: Message[] = []) {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -29,7 +19,7 @@ export function useCustomChat(initialMessages: Message[] = []): UseCustomChatRet
   }, []);
 
   const handleSubmit = useCallback(async (e?: React.FormEvent) => {
-    e?.preventDefault();
+    if (e) e.preventDefault();
     
     if (!input.trim() || isLoading) return;
 

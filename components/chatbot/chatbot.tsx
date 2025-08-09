@@ -1,30 +1,35 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useCustomChat } from './use-custom-chat';
-import { 
-  MessageCircle, 
-  X, 
-  Send, 
-  Bot, 
-  User,
-  ChevronUp,
-  ChevronDown,
-  Sparkles
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-
-
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { AnimatePresence, motion } from 'framer-motion';
+import {
+  Bot,
+  ChevronDown,
+  ChevronUp,
+  MessageCircle,
+  Send,
+  User,
+  X
+} from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useCustomChat } from './use-custom-chat';
 
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [isCollectingInfo, setIsCollectingInfo] = useState(false);
-  const [contactInfo, setContactInfo] = useState({ name: '', email: '' });
+  const [isSubmittingMeeting, setIsSubmittingMeeting] = useState(false);
+  const [contactInfo, setContactInfo] = useState({ 
+    name: '', 
+    email: '', 
+    date: '', 
+    time: '', 
+    timezone: '' 
+  });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -46,11 +51,19 @@ export default function Chatbot() {
 
   // Check if the conversation involves scheduling
   useEffect(() => {
+    // Don't run this effect if we're already collecting info or submitting
+    if (isCollectingInfo || isSubmittingMeeting) {
+      return;
+    }
+
     const lastMessage = messages[messages.length - 1];
-    const hasContactInfo = messages.some(msg => 
+    const hasMeetingInfo = messages.some(msg => 
       msg.role === 'user' && 
       msg.content.includes('Name:') && 
-      msg.content.includes('Email:')
+      msg.content.includes('Email:') &&
+      msg.content.includes('Date:') &&
+      msg.content.includes('Time:') &&
+      msg.content.includes('Timezone:')
     );
     
     // Check if we've already received a confirmation response
@@ -60,21 +73,34 @@ export default function Chatbot() {
       msg.content.includes('calendar invite')
     );
     
+    // Check if the user has confirmed they want a meeting
+    const userConfirmedMeeting = messages.some(msg => 
+      msg.role === 'user' && 
+      (msg.content.toLowerCase().includes('yes') || 
+       msg.content.toLowerCase().includes('sure') ||
+       msg.content.toLowerCase().includes('okay') ||
+       msg.content.toLowerCase().includes('ok') ||
+       msg.content.toLowerCase().includes('i would like') ||
+       msg.content.toLowerCase().includes('i want') ||
+       msg.content.toLowerCase().includes('please') ||
+       msg.content.toLowerCase().includes('that would be great'))
+    );
+    
     // Only show contact form if:
-    // 1. Last message is from assistant asking for contact info
-    // 2. We haven't already collected contact info
-    // 3. We haven't already received confirmation
-    // 4. We're not currently collecting info
-    if (lastMessage?.role === 'assistant' && 
-        !hasContactInfo &&
+    // 1. User has confirmed they want a meeting
+    // 2. Last message is from assistant asking for meeting details
+    // 3. We haven't already collected meeting info
+    // 4. We haven't already received confirmation
+    if (userConfirmedMeeting &&
+        lastMessage?.role === 'assistant' && 
+        !hasMeetingInfo &&
         !hasConfirmation &&
-        !isCollectingInfo &&
-        (lastMessage.content.includes('name and email') || 
+        (lastMessage.content.includes('name, email address, preferred date, time, and timezone') || 
          lastMessage.content.includes('calendar invite') ||
-         lastMessage.content.includes('schedule a consultation'))) {
+         lastMessage.content.includes('schedule your consultation'))) {
       setIsCollectingInfo(true);
     }
-  }, [messages, isCollectingInfo]);
+  }, [messages, isCollectingInfo, isSubmittingMeeting]);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -104,11 +130,50 @@ export default function Chatbot() {
     }
   };
 
+  const handleMeetingSubmit = async () => {
+    if (contactInfo.name && contactInfo.email && contactInfo.date && contactInfo.time && contactInfo.timezone) {
+      setIsSubmittingMeeting(true);
+      
+      try {
+        const meetingDetails = `Name: ${contactInfo.name}, Email: ${contactInfo.email}, Date: ${contactInfo.date}, Time: ${contactInfo.time}, Timezone: ${contactInfo.timezone}`;
+        
+        // Submit the form with meeting details
+        setInput(meetingDetails);
+        
+        // Wait for the API call to complete
+        await handleSubmit();
+        
+        // Only clear form and hide it after successful submission
+        setIsCollectingInfo(false);
+        setContactInfo({ name: '', email: '', date: '', time: '', timezone: '' });
+      } catch (error) {
+        console.error('Error submitting meeting:', error);
+        // Keep form open if there's an error
+      } finally {
+        setIsSubmittingMeeting(false);
+      }
+    }
+  };
+
   const quickQuestions = [
     "What services do you offer?",
     "How much do your services cost?",
     "Can you help with my business growth?",
     "Tell me about your case studies",
+  ];
+
+  // Common timezones
+  const timezones = [
+    { value: 'AEST', label: 'AEST (UTC+10)' },
+    { value: 'AEDT', label: 'AEDT (UTC+11)' },
+    { value: 'PST', label: 'PST (UTC-8)' },
+    { value: 'EST', label: 'EST (UTC-5)' },
+    { value: 'CST', label: 'CST (UTC-6)' },
+    { value: 'MST', label: 'MST (UTC-7)' },
+    { value: 'GMT', label: 'GMT (UTC+0)' },
+    { value: 'CET', label: 'CET (UTC+1)' },
+    { value: 'IST', label: 'IST (UTC+5:30)' },
+    { value: 'JST', label: 'JST (UTC+9)' },
   ];
 
   return (
@@ -204,7 +269,7 @@ export default function Chatbot() {
 
               {/* Chat Messages */}
               {!isMinimized && (
-                <div className="h-96 flex flex-col">
+                <div className="h-[500px] flex flex-col">
                   <div className="flex-1 overflow-y-auto p-4 space-y-4">
                     <AnimatePresence>
                       {messages.map((message) => (
@@ -254,15 +319,15 @@ export default function Chatbot() {
                         </p>
                         <div className="flex flex-wrap gap-2 justify-center">
                           {quickQuestions.map((question, index) => (
-                                                         <Badge
-                               key={index}
-                               variant="outline"
-                               className="cursor-pointer hover:bg-cyan-50 dark:hover:bg-cyan-950 hover:border-cyan-300 text-xs"
-                               onClick={async () => {
-                                 setInput(question);
-                                 await handleSubmit();
-                               }}
-                             >
+                            <Badge
+                              key={index}
+                              variant="outline"
+                              className="cursor-pointer hover:bg-cyan-50 dark:hover:bg-cyan-950 hover:border-cyan-300 text-xs"
+                              onClick={async () => {
+                                setInput(question);
+                                await handleSubmit();
+                              }}
+                            >
                               {question}
                             </Badge>
                           ))}
@@ -320,8 +385,8 @@ export default function Chatbot() {
                     <div ref={messagesEndRef} />
                   </div>
 
-                  {/* Contact Form or Input Form */}
-                  {isCollectingInfo ? (
+                  {/* Meeting Form or Input Form */}
+                  {isCollectingInfo && !isSubmittingMeeting ? (
                     <div className="p-4 border-t border-slate-200 dark:border-slate-700">
                       <div className="bg-cyan-50 dark:bg-cyan-950/30 rounded-lg p-3 mb-3">
                         <p className="text-sm text-cyan-700 dark:text-cyan-300 font-medium">
@@ -342,26 +407,46 @@ export default function Chatbot() {
                           type="email"
                           className="border-slate-300 dark:border-slate-600 focus:border-cyan-500 dark:focus:border-cyan-400"
                         />
+                        <Input
+                          value={contactInfo.date}
+                          onChange={(e) => setContactInfo(prev => ({ ...prev, date: e.target.value }))}
+                          placeholder="Preferred date (e.g., Dec 15, 2024)"
+                          className="border-slate-300 dark:border-slate-600 focus:border-cyan-500 dark:focus:border-cyan-400"
+                        />
+                        <Input
+                          value={contactInfo.time}
+                          onChange={(e) => setContactInfo(prev => ({ ...prev, time: e.target.value }))}
+                          placeholder="Preferred time (e.g., 2:00 PM)"
+                          className="border-slate-300 dark:border-slate-600 focus:border-cyan-500 dark:focus:border-cyan-400"
+                        />
+                        <Select
+                          value={contactInfo.timezone}
+                          onValueChange={(value) => setContactInfo(prev => ({ ...prev, timezone: value }))}
+                        >
+                          <SelectTrigger className="border-slate-300 dark:border-slate-600 focus:border-cyan-500 dark:focus:border-cyan-400">
+                            <SelectValue placeholder="Select your timezone" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {timezones.map((tz) => (
+                              <SelectItem key={tz.value} value={tz.value}>
+                                {tz.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <div className="flex space-x-2">
                           <Button
-                            onClick={async () => {
-                              if (contactInfo.name && contactInfo.email) {
-                                setInput(`Name: ${contactInfo.name}, Email: ${contactInfo.email}`);
-                                setIsCollectingInfo(false);
-                                setContactInfo({ name: '', email: '' });
-                                await handleSubmit();
-                              }
-                            }}
-                            disabled={!contactInfo.name || !contactInfo.email}
+                            onClick={handleMeetingSubmit}
+                            disabled={!contactInfo.name || !contactInfo.email || !contactInfo.date || !contactInfo.time || !contactInfo.timezone || isSubmittingMeeting}
                             className="flex-1 bg-cyan-500 hover:bg-cyan-600 text-white"
                             size="sm"
                           >
-                            Send Calendar Invite
+                            {isSubmittingMeeting ? 'Sending...' : 'Send Calendar Invite'}
                           </Button>
                           <Button
                             onClick={() => {
                               setIsCollectingInfo(false);
-                              setContactInfo({ name: '', email: '' });
+                              setContactInfo({ name: '', email: '', date: '', time: '', timezone: '' });
                             }}
                             variant="outline"
                             size="sm"
