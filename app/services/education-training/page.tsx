@@ -70,25 +70,25 @@ const heroStatsTraining = [
       name: "🧽 Carpet Cleaning Courses (CARSI)",
       icon: Award,
       description: "Professional carpet cleaning and drying techniques for industry professionals.",
-      image: "/images/1.png",
+      image: "/images/image1.jpg",
       courses: [
         {
           name: "Introduction to Basic Carpet Cleaning and Drying – CCW",
           url: "https://carsi.com.au/product/carpet-cleaning-ccw/",
           description: "Learn carpet construction, damage effects, cleaning equipment, and drying techniques.",
-          image: "/images/1.png",
+          image: "/images/image1.png",
         },
         {
           name: "Carpet Cleaning Basics Course – CARSI",
           url: "https://carsi.com.au/product/carpet-cleaning-basics/",
           description: "Covers safe and professional cleaning of carpets and flooring, plus chemical/environmental factors.",
-          image: "/images/2.png",
+          image: "/images/image1.jpg",
         },
         {
           name: "Carpet Cleaning Basics Course – CCW x CARSI",
           url: "https://carsi.com.au/product/carpet-cleaning-basics-ccw/",
           description: "A version of the basics course in collaboration with CCW.",
-          image: "/images/3.png",
+          image: "/images/image1.jpg",
         },
       ],
     },
@@ -97,13 +97,13 @@ const heroStatsTraining = [
       name: "🧭 Management Courses (Leadership & Business)",
       icon: Briefcase,
       description: "Leadership, operations, and business skills for industry professionals.",
-      image: "/images/4.png",
+      image: "/images/image4.png",
       courses: [
         {
           name: "Management & Leadership Programs",
           url: "https://carsi.com.au/product-category/management/",
           description: "Comprehensive management training focused on leadership, operations, and business skills for industry professionals.",
-          image: "/images/1.png",
+          image: "/images/image4.png",
         },
       ],
     },
@@ -112,13 +112,13 @@ const heroStatsTraining = [
       name: "💧 Restoration & Water Damage Courses",
       icon: Building,
       description: "Specialized courses in restoration and water damage management.",
-      image: "/images/5.png",
+      image: "/images/image5.png",
       courses: [
         {
           name: "Drying Healthcare Facilities (Introduction to Drying in Healthcare Settings)",
           url: "https://carsi.com.au/product/drying-healthcare/",
           description: "Specialized training for drying techniques in healthcare environments.",
-          image: "/images/1.png",
+          image: "/images/image5.png",
         },
       ],
     },
@@ -427,8 +427,8 @@ export default function EducationTrainingPage() {
                           src={course.image}
                           alt={course.name}
                           width={300}
-                          height={150}
-                          className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
+                          height={450}
+                          className="w-full h-96 object-cover group-hover:scale-105 transition-transform duration-300"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent"></div>
                       </div>
