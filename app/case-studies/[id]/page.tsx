@@ -16,27 +16,6 @@ function getCaseStudy(id: string): CaseStudy | undefined {
   return caseStudies.find((study) => study.id === id)
 }
 
-// Generate metadata dynamically
-export async function generateMetadata({ params }: { params: { id: string } }) {
-  const study = getCaseStudy(params.id)
-  if (!study) {
-    return {
-      title: "Case Study Not Found",
-    }
-  }
-  return {
-    title: `${study.client} Case Study | Unite Group`,
-    description: `Detailed case study of our work with ${study.client}: ${study.overview}`,
-  }
-}
-
-// Generate static paths for all case studies
-export async function generateStaticParams() {
-  return caseStudies.map((study) => ({
-    id: study.id,
-  }))
-}
-
 const ResultPill = ({ value, label, icon: Icon }: { value: string; label: string; icon?: LucideIcon }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
