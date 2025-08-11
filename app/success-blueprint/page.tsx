@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import {
@@ -18,6 +20,7 @@ import {
 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+import { motion } from "framer-motion"
 
 export default function SuccessBlueprintPage() {
   const blueprintSteps = [
@@ -119,211 +122,713 @@ export default function SuccessBlueprintPage() {
   return (
     <div className="bg-slate-950 text-slate-50">
       {/* Hero Section */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-b from-slate-900 to-slate-950">
-        <div className="absolute inset-0 opacity-10">
-          <Image
-            src="/abstract-blueprint-background.png"
-            alt="Abstract representation of a strategic success blueprint"
-            layout="fill"
-            objectFit="cover"
+      <section className="relative py-20 md:py-32 bg-gradient-to-b from-slate-900 to-slate-950 overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Bold Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-cyan-900/45 via-transparent to-teal-900/50"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/50 via-transparent to-cyan-900/45"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-teal-900/40 via-transparent to-slate-700/50"></div>
+          
+          {/* Large Animated Orbs */}
+          <motion.div
+            className="absolute top-1/4 left-1/6 w-96 h-96 bg-gradient-to-br from-cyan-500/40 to-teal-500/38 rounded-full filter blur-3xl"
+            animate={{ x: [0, 35, 0], y: [0, -30, 0], scale: [1, 1.15, 1] }}
+            transition={{
+              duration: 30,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 right-1/6 w-80 h-80 bg-gradient-to-tl from-teal-500/38 to-cyan-500/40 rounded-full filter blur-3xl"
+            animate={{ x: [0, -30, 0], y: [0, 35, 0], scale: [1, 0.9, 1] }}
+            transition={{
+              duration: 35,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 7,
+            }}
+          />
+          
+          {/* Geometric Elements */}
+          <motion.div
+            className="absolute top-1/6 right-16 w-24 h-24 border-2 border-cyan-400/65 rounded-full bg-gradient-to-br from-cyan-500/25 to-transparent"
+            animate={{ 
+              x: [0, -20, 0], 
+              y: [0, -15, 0], 
+              rotate: [0, 180, 0]
+            }}
+            transition={{
+              duration: 26,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/6 left-16 w-20 h-20 border-2 border-teal-400/60 bg-gradient-to-br from-teal-500/20 to-transparent"
+            style={{
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            }}
+            animate={{ 
+              x: [0, 18, 0], 
+              y: [0, 22, 0], 
+              rotate: [0, 120, 0]
+            }}
+            transition={{
+              duration: 28,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 4,
+            }}
+          />
+          
+          {/* Floating Elements */}
+          <motion.div
+            className="absolute top-1/3 right-1/4 w-3 h-3 bg-gradient-to-r from-cyan-400/70 to-teal-400/70 rounded-full shadow-lg shadow-cyan-400/40"
+            animate={{ 
+              y: [0, -30, 0],
+              opacity: [0.8, 1, 0.8],
+              scale: [1, 1.1, 1]
+            }}
+            transition={{
+              duration: 18,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/3 left-1/4 w-2.5 h-2.5 bg-gradient-to-r from-teal-400/70 to-cyan-400/70 rounded-full shadow-lg shadow-teal-400/40"
+            animate={{ 
+              y: [0, 25, 0],
+              opacity: [0.8, 1, 0.8],
+              scale: [1, 0.9, 1]
+            }}
+            transition={{
+              duration: 20,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
           />
         </div>
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 mb-6">
-            Our Client Success Blueprint
-          </h1>
-          <p className="text-lg sm:text-xl text-slate-300 max-w-3xl mx-auto">
-            A meticulously crafted, proven framework designed to navigate complex challenges and ensure your project's
-            triumph from conception to sustained growth.
-          </p>
+        
+        <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center">
+            <motion.h1 
+              className="text-4xl md:text-6xl font-bold text-white mb-6"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              Success Blueprint
+            </motion.h1>
+            <motion.p 
+              className="text-xl md:text-2xl text-slate-300 mb-8 max-w-4xl mx-auto"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              Our proven methodology for delivering exceptional results and driving sustainable business growth
+            </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              <Button size="lg" asChild className="bg-cyan-500 hover:bg-cyan-600 text-white text-lg px-8 py-6">
+                <Link href="/contact">Get Started</Link>
+              </Button>
+            </motion.div>
+          </div>
         </div>
       </section>
 
       {/* Blueprint Overview Section */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-semibold text-white mb-4">The Pillars of Predictable Excellence</h2>
-            <p className="text-slate-400 max-w-2xl mx-auto">
-              Our Client Success Blueprint is more than a process; it's a commitment. This comprehensive, step-by-step
-              methodology guides every engagement, built on pillars of transparency, deep collaboration, and an
-              unwavering focus on delivering tangible, measurable business results.
-            </p>
+      <section className="py-16 md:py-24 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Bold Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-cyan-900/25 via-transparent to-teal-900/30"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/35 via-transparent to-cyan-900/25"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-teal-900/20 via-transparent to-slate-700/30"></div>
+          
+          {/* Subtle Animated Orbs */}
+          <motion.div
+            className="absolute top-1/3 left-1/4 w-64 h-64 bg-gradient-to-br from-cyan-500/18 to-teal-500/15 rounded-full filter blur-3xl"
+            animate={{ x: [0, 20, 0], y: [0, -15, 0], scale: [1, 1.05, 1] }}
+            transition={{
+              duration: 25,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/3 right-1/4 w-72 h-72 bg-gradient-to-tl from-teal-500/15 to-cyan-500/18 rounded-full filter blur-3xl"
+            animate={{ x: [0, -20, 0], y: [0, 18, 0], scale: [1, 0.98, 1] }}
+            transition={{
+              duration: 30,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 4,
+            }}
+          />
+          
+          {/* Floating Elements */}
+          <motion.div
+            className="absolute top-1/4 right-1/3 w-2 h-2 bg-gradient-to-r from-cyan-400/50 to-teal-400/50 rounded-full"
+            animate={{ 
+              y: [0, -18, 0],
+              opacity: [0.6, 1, 0.6]
+            }}
+            transition={{
+              duration: 12,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-gradient-to-r from-teal-400/50 to-cyan-400/50 rounded-full"
+            animate={{ 
+              y: [0, 12, 0],
+              opacity: [0.7, 1, 0.7]
+            }}
+            transition={{
+              duration: 14,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 2,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-12 md:mb-16">
+            <motion.h2 
+              className="text-3xl md:text-4xl font-semibold text-white mb-4"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              Our Proven Success Framework
+            </motion.h2>
+            <motion.p 
+              className="max-w-2xl mx-auto text-lg text-slate-300"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              A systematic approach that has delivered exceptional results across diverse industries and project types.
+            </motion.p>
           </div>
-          <div className="space-y-20">
-            {blueprintSteps.map((step, index) => (
-              <div
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {blueprintSteps.map((step, idx) => (
+              <motion.div
                 key={step.id}
-                className={`flex flex-col md:flex-row items-center gap-8 md:gap-12 ${index % 2 !== 0 ? "md:flex-row-reverse" : ""}`}
+                className="bg-slate-800/50 backdrop-blur-sm p-6 rounded-lg shadow-xl border border-slate-700/30 hover:border-cyan-500/40 transition-colors"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                viewport={{ once: true, amount: 0.2 }}
               >
-                <div className="md:w-1/2">
-                  <Image
-                    src={step.image || "/placeholder.svg"}
-                    alt={`Visual representation of ${step.title}`}
-                    width={550}
-                    height={400}
-                    className="rounded-lg shadow-2xl object-cover aspect-[11/8]"
-                  />
-                </div>
-                <div className="md:w-1/2">
-                  <div className="flex items-center mb-4">
-                    <step.icon size={36} className="mr-3 text-emerald-400" />
-                    <h3 className="text-2xl font-semibold text-white">{step.title}</h3>
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 bg-cyan-500/20 rounded-full flex items-center justify-center border border-cyan-500/40">
+                    <step.icon className="w-6 h-6 text-cyan-400" />
                   </div>
-                  <p className="text-slate-300 leading-relaxed">{step.description}</p>
+                  <h3 className="text-xl font-semibold text-white">{step.title}</h3>
                 </div>
-              </div>
+                <p className="text-slate-300 text-sm leading-relaxed">{step.description}</p>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Our Guiding Principles Section */}
-      <section className="py-16 md:py-24 bg-slate-900">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-semibold text-white mb-4">Our Guiding Principles</h2>
-            <p className="text-slate-400 max-w-2xl mx-auto">
-              These core values are embedded in every stage of our Success Blueprint, shaping how we work and ensuring
-              we deliver on our promises.
-            </p>
+      <section className="py-16 md:py-24 bg-slate-900 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Bold Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-cyan-900/35 via-transparent to-teal-900/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/45 via-transparent to-cyan-900/35"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-teal-900/30 via-transparent to-slate-700/40"></div>
+          
+          {/* Animated Orbs */}
+          <motion.div
+            className="absolute top-1/4 left-1/6 w-80 h-80 bg-gradient-to-br from-cyan-500/25 to-teal-500/22 rounded-full filter blur-3xl"
+            animate={{ x: [0, 30, 0], y: [0, -25, 0], scale: [1, 1.1, 1] }}
+            transition={{
+              duration: 28,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 right-1/6 w-96 h-96 bg-gradient-to-tl from-teal-500/22 to-cyan-500/25 rounded-full filter blur-3xl"
+            animate={{ x: [0, -35, 0], y: [0, 30, 0], scale: [1, 0.95, 1] }}
+            transition={{
+              duration: 32,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 6,
+            }}
+          />
+          
+          {/* Geometric Elements */}
+          <motion.div
+            className="absolute top-1/6 right-12 w-20 h-20 border-2 border-cyan-400/50 rounded-full bg-gradient-to-br from-cyan-500/20 to-transparent"
+            animate={{ 
+              x: [0, -15, 0], 
+              y: [0, -12, 0], 
+              rotate: [0, 180, 0]
+            }}
+            transition={{
+              duration: 24,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/6 left-12 w-16 h-16 border-2 border-teal-400/45 bg-gradient-to-br from-teal-500/18 to-transparent"
+            style={{
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            }}
+            animate={{ 
+              x: [0, 12, 0], 
+              y: [0, 18, 0], 
+              rotate: [0, 120, 0]
+            }}
+            transition={{
+              duration: 26,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-12 md:mb-16">
+            <motion.h2 
+              className="text-3xl md:text-4xl font-semibold text-white mb-4"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              Our Guiding Principles
+            </motion.h2>
+            <motion.p 
+              className="max-w-2xl mx-auto text-lg text-slate-300"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              The core values that drive our success and ensure exceptional outcomes for every client.
+            </motion.p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {guidingPrinciples.map((principle) => (
-              <Card
+            {guidingPrinciples.map((principle, idx) => (
+              <motion.div
                 key={principle.title}
-                className="bg-slate-800 border-slate-700 text-slate-50 p-6 transform hover:scale-105 transition-transform duration-300 shadow-lg"
+                className="bg-slate-800/50 backdrop-blur-sm p-6 rounded-lg shadow-xl text-center border border-slate-700/30 hover:border-cyan-500/40 transition-colors"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                viewport={{ once: true, amount: 0.3 }}
               >
-                <div className="flex items-center mb-4">
-                  <principle.icon size={32} className="mr-3 text-emerald-400" />
-                  <h3 className="text-xl font-semibold text-white">{principle.title}</h3>
-                </div>
+                <principle.icon className="w-10 h-10 text-cyan-400 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-white mb-2">{principle.title}</h3>
                 <p className="text-slate-300 text-sm">{principle.description}</p>
-              </Card>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Tools & Methodologies Section */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-semibold text-white mb-4">Empowered by Leading Tools & Methodologies</h2>
-            <p className="text-slate-400 max-w-2xl mx-auto">
-              We leverage industry-standard tools and proven methodologies to ensure efficiency, quality, and successful
-              project delivery.
-            </p>
+      <section className="py-16 md:py-24 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Bold Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-cyan-900/25 via-transparent to-teal-900/30"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/35 via-transparent to-cyan-900/25"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-teal-900/20 via-transparent to-slate-700/30"></div>
+          
+          {/* Subtle Animated Orbs */}
+          <motion.div
+            className="absolute top-1/3 left-1/4 w-64 h-64 bg-gradient-to-br from-cyan-500/18 to-teal-500/15 rounded-full filter blur-3xl"
+            animate={{ x: [0, 20, 0], y: [0, -15, 0], scale: [1, 1.05, 1] }}
+            transition={{
+              duration: 25,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/3 right-1/4 w-72 h-72 bg-gradient-to-tl from-teal-500/15 to-cyan-500/18 rounded-full filter blur-3xl"
+            animate={{ x: [0, -20, 0], y: [0, 18, 0], scale: [1, 0.98, 1] }}
+            transition={{
+              duration: 30,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 4,
+            }}
+          />
+          
+          {/* Floating Elements */}
+          <motion.div
+            className="absolute top-1/4 right-1/3 w-2 h-2 bg-gradient-to-r from-cyan-400/50 to-teal-400/50 rounded-full"
+            animate={{ 
+              y: [0, -18, 0],
+              opacity: [0.6, 1, 0.6]
+            }}
+            transition={{
+              duration: 12,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-gradient-to-r from-teal-400/50 to-cyan-400/50 rounded-full"
+            animate={{ 
+              y: [0, 12, 0],
+              opacity: [0.7, 1, 0.7]
+            }}
+            transition={{
+              duration: 14,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 2,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-12 md:mb-16">
+            <motion.h2 
+              className="text-3xl md:text-4xl font-semibold text-white mb-4"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              Tools & Methodologies
+            </motion.h2>
+            <motion.p 
+              className="max-w-2xl mx-auto text-lg text-slate-300"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              Industry-leading tools and proven methodologies that power our success framework.
+            </motion.p>
           </div>
-          <div className="flex flex-col md:flex-row items-center gap-12">
-            <div className="md:w-1/2">
-              <Image
-                src="/tech-tools-methodologies-montage.png"
-                alt="Montage of technology tools, agile methodology symbols, and collaboration software logos"
-                width={500}
-                height={350}
-                className="rounded-lg shadow-xl object-cover"
-              />
-            </div>
-            <div className="md:w-1/2">
-              <ul className="space-y-3">
-                {toolsAndMethodologies.map((tool, index) => (
-                  <li key={index} className="flex items-center text-slate-300">
-                    <CheckCircle className="h-5 w-5 mr-3 text-emerald-400 flex-shrink-0" />
-                    {tool}
-                  </li>
-                ))}
-              </ul>
-            </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { name: "Agile/Scrum", icon: GitFork, description: "Iterative development with regular feedback cycles" },
+              { name: "JIRA", icon: ClipboardCheck, description: "Project management and issue tracking" },
+              { name: "Figma", icon: Layers, description: "Design collaboration and prototyping" },
+              { name: "Git", icon: GitFork, description: "Version control and collaboration" },
+              { name: "Docker", icon: Settings2, description: "Containerization and deployment" },
+              { name: "AWS/Azure", icon: DatabaseZap, description: "Cloud infrastructure and services" },
+              { name: "Postman", icon: ClipboardCheck, description: "API testing and documentation" },
+              { name: "Jenkins", icon: RefreshCw, description: "CI/CD automation" },
+            ].map((tool, idx) => (
+              <motion.div
+                key={tool.name}
+                className="bg-slate-800/50 backdrop-blur-sm p-4 rounded-lg text-center border border-slate-700/30 hover:border-cyan-500/40 transition-colors"
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: idx * 0.05 }}
+                viewport={{ once: true, amount: 0.2 }}
+              >
+                <tool.icon className="w-8 h-8 text-cyan-400 mx-auto mb-3" />
+                <h4 className="font-semibold text-white text-sm mb-1">{tool.name}</h4>
+                <p className="text-xs text-slate-400">{tool.description}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Case Study Spotlight Section */}
-      <section className="py-16 md:py-24 bg-slate-900">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-semibold text-white mb-4">
-              Blueprint in Action: TechStart Solutions E-commerce Revolution
-            </h2>
-            <p className="text-slate-400 max-w-2xl mx-auto">
-              Discover how our Success Blueprint transformed TechStart Solutions' outdated e-commerce platform into a
-              high-performing, revenue-generating powerhouse.
-            </p>
+      <section className="py-16 md:py-24 bg-slate-900 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Bold Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-cyan-900/35 via-transparent to-teal-900/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/45 via-transparent to-cyan-900/35"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-teal-900/30 via-transparent to-slate-700/40"></div>
+          
+          {/* Animated Orbs */}
+          <motion.div
+            className="absolute top-1/4 left-1/6 w-80 h-80 bg-gradient-to-br from-cyan-500/25 to-teal-500/22 rounded-full filter blur-3xl"
+            animate={{ x: [0, 30, 0], y: [0, -25, 0], scale: [1, 1.1, 1] }}
+            transition={{
+              duration: 28,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 right-1/6 w-96 h-96 bg-gradient-to-tl from-teal-500/22 to-cyan-500/25 rounded-full filter blur-3xl"
+            animate={{ x: [0, -35, 0], y: [0, 30, 0], scale: [1, 0.95, 1] }}
+            transition={{
+              duration: 32,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 6,
+            }}
+          />
+          
+          {/* Geometric Elements */}
+          <motion.div
+            className="absolute top-1/6 right-12 w-20 h-20 border-2 border-cyan-400/50 rounded-full bg-gradient-to-br from-cyan-500/20 to-transparent"
+            animate={{ 
+              x: [0, -15, 0], 
+              y: [0, -12, 0], 
+              rotate: [0, 180, 0]
+            }}
+            transition={{
+              duration: 24,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/6 left-12 w-16 h-16 border-2 border-teal-400/45 bg-gradient-to-br from-teal-500/18 to-transparent"
+            style={{
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            }}
+            animate={{ 
+              x: [0, 12, 0], 
+              y: [0, 18, 0], 
+              rotate: [0, 120, 0]
+            }}
+            transition={{
+              duration: 26,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-12 md:mb-16">
+            <motion.h2 
+              className="text-3xl md:text-4xl font-semibold text-white mb-4"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              Case Study Spotlight
+            </motion.h2>
+            <motion.p 
+              className="max-w-2xl mx-auto text-lg text-slate-300"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              See how our Success Blueprint delivered exceptional results for a leading healthcare provider.
+            </motion.p>
           </div>
-          <Card className="bg-slate-800 border-slate-700 p-8 md:p-12 shadow-xl">
-            <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+          <motion.div
+            className="bg-slate-800/50 backdrop-blur-sm p-8 rounded-lg shadow-xl border border-slate-700/30 hover:border-cyan-500/40 transition-colors"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true, amount: 0.2 }}
+          >
+            <div className="grid md:grid-cols-2 gap-8 items-center">
               <div>
-                <h3 className="text-2xl font-semibold text-white mb-3">
-                  The Challenge: Stagnation and User Frustration
-                </h3>
+                <h3 className="text-2xl font-semibold text-white mb-4">HealthPlus Clinics Digital Transformation</h3>
                 <p className="text-slate-300 mb-6">
-                  TechStart Solutions, a promising online retailer, was grappling with declining sales and poor user
-                  engagement. Their legacy e-commerce platform was slow, difficult to navigate, and lacked modern
-                  features, leading to high cart abandonment rates and customer dissatisfaction.
+                  A comprehensive digital transformation project that modernized patient care systems and improved operational efficiency.
                 </p>
-                <h3 className="text-2xl font-semibold text-white mb-3">Our Blueprint-Driven Solution</h3>
-                <p className="text-slate-300 mb-6">
-                  Applying our Success Blueprint, we initiated a thorough discovery (Step 1) to pinpoint core issues.
-                  This led to a complete redesign of the user experience and a robust backend architecture (Step 2).
-                  Development (Step 3) was executed in agile sprints, allowing for continuous client feedback. Rigorous
-                  QA (Step 4) ensured a flawless launch (Step 5).
-                </p>
-                <h3 className="text-2xl font-semibold text-white mb-3">Tangible Results & Ongoing Success</h3>
-                <ul className="space-y-2 text-slate-300 mb-6">
-                  <li className="flex items-start">
-                    <TrendingUp className="h-5 w-5 mr-2 mt-1 text-emerald-400 flex-shrink-0" />
-                    <span>
-                      Achieved a <strong>40% increase in conversion rates</strong> within three months post-launch.
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <Rocket className="h-5 w-5 mr-2 mt-1 text-emerald-400 flex-shrink-0" />
-                    <span>
-                      Reduced average page load times by <strong>60%</strong>, significantly enhancing user experience.
-                    </span>
-                  </li>
-                  <li className="flex items-start">
-                    <ShieldCheck className="h-5 w-5 mr-2 mt-1 text-emerald-400 flex-shrink-0" />
-                    <span>
-                      Decreased user-reported technical issues by <strong>50%</strong> due to improved stability.
-                    </span>
-                  </li>
-                </ul>
-                <p className="text-slate-300">
-                  Through ongoing optimization and support (Step 6), TechStart Solutions continues to see growth and
-                  adapt to market changes effectively.
-                </p>
+                <div className="space-y-3">
+                  <div className="flex items-center text-slate-300">
+                    <CheckCircle className="w-5 h-5 text-cyan-400 mr-3 flex-shrink-0" />
+                    <span>40% reduction in patient wait times</span>
+                  </div>
+                  <div className="flex items-center text-slate-300">
+                    <CheckCircle className="w-5 h-5 text-cyan-400 mr-3 flex-shrink-0" />
+                    <span>60% improvement in staff productivity</span>
+                  </div>
+                  <div className="flex items-center text-slate-300">
+                    <CheckCircle className="w-5 h-5 text-cyan-400 mr-3 flex-shrink-0" />
+                    <span>99.9% system uptime achieved</span>
+                  </div>
+                </div>
               </div>
-              <div className="mt-8 md:mt-0">
-                <Image
-                  src="/ecommerce-success-dashboard-analytics.png"
-                  alt="Modern dashboard interface showing positive e-commerce analytics charts and graphs for TechStart Solutions"
-                  width={600}
-                  height={450}
-                  className="rounded-lg shadow-2xl object-cover aspect-[4/3]"
-                />
+              <div className="text-center">
+                <div className="inline-flex items-center justify-center w-24 h-24 bg-cyan-500/20 rounded-full mb-4 border border-cyan-500/40">
+                  <TrendingUp className="w-12 h-12 text-cyan-400" />
+                </div>
+                <h4 className="text-xl font-semibold text-white mb-2">Project Success Metrics</h4>
+                <p className="text-slate-300 text-sm">
+                  Delivered on time and within budget, exceeding all performance expectations.
+                </p>
               </div>
             </div>
-          </Card>
+          </motion.div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-semibold text-white mb-6">Ready to Architect Your Success Story?</h2>
-          <p className="text-slate-300 max-w-xl mx-auto mb-8">
-            Let's apply our proven Client Success Blueprint to your next critical project and achieve outstanding,
-            predictable results together.
-          </p>
-          <Button
-            size="lg"
-            className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold px-8 py-3 rounded-lg shadow-lg transition duration-300 text-lg"
-            asChild
+      <section className="py-16 md:py-24 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Bold Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-cyan-900/40 via-transparent to-teal-900/45"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/50 via-transparent to-cyan-900/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-teal-900/35 via-transparent to-slate-700/45"></div>
+          
+          {/* Large Animated Orbs */}
+          <motion.div
+            className="absolute top-1/4 left-1/6 w-96 h-96 bg-gradient-to-br from-cyan-500/30 to-teal-500/25 rounded-full filter blur-3xl"
+            animate={{ x: [0, 35, 0], y: [0, -30, 0], scale: [1, 1.15, 1] }}
+            transition={{
+              duration: 30,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 right-1/6 w-80 h-80 bg-gradient-to-tl from-teal-500/25 to-cyan-500/30 rounded-full filter blur-3xl"
+            animate={{ x: [0, -30, 0], y: [0, 35, 0], scale: [1, 0.9, 1] }}
+            transition={{
+              duration: 35,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 7,
+            }}
+          />
+          
+          {/* Geometric Elements */}
+          <motion.div
+            className="absolute top-1/6 right-16 w-24 h-24 border-2 border-cyan-400/55 rounded-full bg-gradient-to-br from-cyan-500/25 to-transparent"
+            animate={{ 
+              x: [0, -20, 0], 
+              y: [0, -15, 0], 
+              rotate: [0, 180, 0]
+            }}
+            transition={{
+              duration: 26,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/6 left-16 w-20 h-20 border-2 border-teal-400/50 bg-gradient-to-br from-teal-500/20 to-transparent"
+            style={{
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            }}
+            animate={{ 
+              x: [0, 18, 0], 
+              y: [0, 22, 0], 
+              rotate: [0, 120, 0]
+            }}
+            transition={{
+              duration: 28,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 4,
+            }}
+          />
+          
+          {/* Floating Elements */}
+          <motion.div
+            className="absolute top-1/3 right-1/4 w-3 h-3 bg-gradient-to-r from-cyan-400/60 to-teal-400/60 rounded-full shadow-lg shadow-cyan-400/40"
+            animate={{ 
+              y: [0, -30, 0],
+              opacity: [0.8, 1, 0.8],
+              scale: [1, 1.1, 1]
+            }}
+            transition={{
+              duration: 18,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/3 left-1/4 w-2.5 h-2.5 bg-gradient-to-r from-teal-400/60 to-cyan-400/60 rounded-full shadow-lg shadow-teal-400/40"
+            animate={{ 
+              y: [0, 25, 0],
+              opacity: [0.8, 1, 0.8],
+              scale: [1, 0.9, 1]
+            }}
+            transition={{
+              duration: 20,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto max-w-screen-md px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <div className="inline-block bg-cyan-500/10 text-cyan-400 px-4 py-1.5 rounded-full text-sm font-semibold mb-6">
+            Ready to Succeed?
+          </div>
+          <motion.h2 
+            className="text-3xl md:text-4xl font-semibold text-white mb-6"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true, amount: 0.2 }}
           >
-            <Link href="/contact?subject=SuccessBlueprintInquiry">Partner with Us for Success</Link>
-          </Button>
+            Start Your Success Journey Today
+          </motion.h2>
+          <motion.p 
+            className="text-lg text-slate-300 mb-10"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            viewport={{ once: true, amount: 0.2 }}
+          >
+            Let our proven Success Blueprint guide your project to exceptional results and sustainable growth.
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            viewport={{ once: true, amount: 0.2 }}
+          >
+            <Button size="lg" asChild className="bg-cyan-500 hover:bg-cyan-600 text-white group text-lg px-10 py-7">
+              <Link href="/contact">
+                Get Started{" "}
+                <Rocket className="w-6 h-6 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+          </motion.div>
         </div>
       </section>
     </div>

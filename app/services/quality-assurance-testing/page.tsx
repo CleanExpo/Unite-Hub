@@ -136,55 +136,55 @@ const testingTools = [
   { name: "Burp Suite", category: "Security" },
 ]
 
-const qaPackages = [
-  {
-    name: "Essential QA",
-    price: "A$3,000/project",
-    description: "Core testing for small to medium projects.",
-    features: [
-      "Functional testing",
-      "Basic UI/UX testing",
-      "Browser compatibility",
-      "Test documentation",
-      "Bug tracking setup",
-      "30-day support",
-    ],
-    bestFor: "MVPs, small applications",
-    isPopular: false,
-  },
-  {
-    name: "Comprehensive Testing",
-    price: "A$8,000/project",
-    description: "Full testing suite for complex applications.",
-    features: [
-      "Everything in Essential",
-      "Test automation setup",
-      "Performance testing",
-      "Security assessment",
-      "API testing",
-      "Regression test suite",
-      "90-day support",
-    ],
-    bestFor: "Enterprise applications",
-    isPopular: true,
-  },
-  {
-    name: "Continuous QA",
-    price: "A$5,000/month",
-    description: "Ongoing testing partnership for continuous delivery.",
-    features: [
-      "Dedicated QA team",
-      "Full test automation",
-      "CI/CD integration",
-      "Performance monitoring",
-      "Security scanning",
-      "Weekly reporting",
-      "Unlimited testing",
-    ],
-    bestFor: "Agile teams, SaaS products",
-    isPopular: false,
-  },
-]
+// const qaPackages = [
+//   {
+//     name: "Essential QA",
+//     price: "A$3,000/project",
+//     description: "Core testing for small to medium projects.",
+//     features: [
+//       "Functional testing",
+//       "Basic UI/UX testing",
+//       "Browser compatibility",
+//       "Test documentation",
+//       "Bug tracking setup",
+//       "30-day support",
+//     ],
+//     bestFor: "MVPs, small applications",
+//     isPopular: false,
+//   },
+//   {
+//     name: "Comprehensive Testing",
+//     price: "A$8,000/project",
+//     description: "Full testing suite for complex applications.",
+//     features: [
+//       "Everything in Essential",
+//       "Test automation setup",
+//       "Performance testing",
+//       "Security assessment",
+//       "API testing",
+//       "Regression test suite",
+//       "90-day support",
+//     ],
+//     bestFor: "Enterprise applications",
+//     isPopular: true,
+//   },
+//   {
+//     name: "Continuous QA",
+//     price: "A$5,000/month",
+//     description: "Ongoing testing partnership for continuous delivery.",
+//     features: [
+//       "Dedicated QA team",
+//       "Full test automation",
+//       "CI/CD integration",
+//       "Performance monitoring",
+//       "Security scanning",
+//       "Weekly reporting",
+//       "Unlimited testing",
+//     ],
+//     bestFor: "Agile teams, SaaS products",
+//     isPopular: false,
+//   },
+// ]
 
 const whyChooseUsQA = [
   {
@@ -244,29 +244,117 @@ export default function QualityAssurancePage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="py-20 md:py-32 bg-gradient-to-br from-slate-900 via-teal-900/30 to-slate-950 relative"
+        className="py-20 md:py-32 bg-gradient-to-br from-slate-900 via-orange-900/30 to-slate-950 relative overflow-hidden"
       >
-        <div className="absolute inset-0 opacity-10">
-          <Image
-            src="/abstract-quality-assurance-shield.png"
-            alt="Abstract QA Shield"
-            layout="fill"
-            objectFit="cover"
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Bold Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-orange-900/45 via-transparent to-amber-900/50"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/55 via-transparent to-orange-900/45"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-amber-900/40 via-transparent to-slate-700/50"></div>
+          <div className="absolute inset-0 bg-gradient-to-tr from-slate-700/45 via-transparent to-orange-800/40"></div>
+          
+          {/* Large Bold Animated Orbs */}
+          <motion.div
+            className="absolute top-1/4 left-1/6 w-80 h-80 bg-gradient-to-br from-orange-500/40 to-amber-500/38 rounded-full filter blur-3xl"
+            animate={{ x: [0, 30, 0], y: [0, -25, 0], scale: [1, 1.2, 1] }}
+            transition={{
+              duration: 30,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 right-1/6 w-96 h-96 bg-gradient-to-tl from-amber-500/38 to-orange-500/40 rounded-full filter blur-3xl"
+            animate={{ x: [0, -35, 0], y: [0, 30, 0], scale: [1, 0.85, 1] }}
+            transition={{
+              duration: 35,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 8,
+            }}
+          />
+          
+          {/* Bold Geometric Elements */}
+          <motion.div
+            className="absolute top-1/6 right-16 w-24 h-24 border-2 border-orange-400/65 rounded-full bg-gradient-to-br from-orange-500/38 to-transparent"
+            animate={{ 
+              x: [0, -18, 0], 
+              y: [0, -15, 0], 
+              rotate: [0, 180, 0]
+            }}
+            transition={{
+              duration: 26,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/6 left-16 w-20 h-20 border-2 border-amber-400/60 bg-gradient-to-br from-amber-500/35 to-transparent"
+            style={{
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            }}
+            animate={{ 
+              x: [0, 15, 0], 
+              y: [0, 20, 0], 
+              rotate: [0, 120, 0]
+            }}
+            transition={{
+              duration: 28,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
+          />
+          
+          {/* Bold Floating Elements */}
+          <motion.div
+            className="absolute top-1/3 right-1/4 w-3 h-3 bg-gradient-to-r from-orange-400/70 to-amber-400/70 rounded-full shadow-lg shadow-orange-400/50"
+            animate={{ 
+              y: [0, -25, 0],
+              opacity: [0.9, 1, 0.9],
+              scale: [1, 1.1, 1]
+            }}
+            transition={{
+              duration: 16,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/3 left-1/4 w-2.5 h-2.5 bg-gradient-to-r from-amber-400/70 to-orange-400/70 rounded-full shadow-lg shadow-amber-400/50"
+            animate={{ 
+              y: [0, 20, 0],
+              opacity: [0.9, 1, 0.9],
+              scale: [1, 0.9, 1]
+            }}
+            transition={{
+              duration: 18,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 2,
+            }}
           />
         </div>
+        
         <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <ShieldCheck className="w-20 h-20 text-teal-400 mx-auto mb-8" />
+          <ShieldCheck className="w-20 h-20 text-orange-400 mx-auto mb-8" />
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold text-white mb-6">
             Quality Assurance & Testing
           </h1>
           <p className="max-w-3xl mx-auto text-lg md:text-xl text-slate-300 mb-10">
-            Ship with confidence. Our comprehensive QA services ensure your software performs flawlessly, delights
-            users, and stands up to real-world demands.
+            Ensure flawless software delivery with comprehensive testing strategies that catch bugs early,
+            improve user experience, and protect your reputation.
           </p>
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-            <Button size="lg" asChild className="bg-teal-500 hover:bg-teal-600 text-white group">
+            <Button size="lg" asChild className="bg-orange-500 hover:bg-orange-600 text-white group">
               <Link href="/contact?service=Quality%20Assurance%20Testing&action=qa_assessment">
-                Get QA Assessment <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                Get QA Assessment{" "}
+                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
             <Button
@@ -282,21 +370,87 @@ export default function QualityAssurancePage() {
       </motion.section>
 
       {/* Hero Stats Section */}
-      <section className="py-16 bg-slate-900">
-        <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+      <section className="py-16 bg-slate-900 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Bold Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-orange-900/35 via-transparent to-amber-900/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/45 via-transparent to-orange-900/35"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-amber-900/30 via-transparent to-slate-700/40"></div>
+          
+          {/* Animated Orbs */}
+          <motion.div
+            className="absolute top-1/4 right-1/6 w-72 h-72 bg-gradient-to-br from-orange-500/25 to-amber-500/22 rounded-full filter blur-3xl"
+            animate={{ x: [0, -25, 0], y: [0, 20, 0], scale: [1, 1.1, 1] }}
+            transition={{
+              duration: 28,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 left-1/6 w-80 h-80 bg-gradient-to-tl from-amber-500/22 to-orange-500/25 rounded-full filter blur-3xl"
+            animate={{ x: [0, 30, 0], y: [0, -25, 0], scale: [1, 0.95, 1] }}
+            transition={{
+              duration: 32,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 5,
+            }}
+          />
+          
+          {/* Geometric Elements */}
+          <motion.div
+            className="absolute top-1/6 left-12 w-18 h-18 border-2 border-orange-400/50 rounded-full bg-gradient-to-br from-orange-500/20 to-transparent"
+            animate={{ 
+              x: [0, 12, 0], 
+              y: [0, -10, 0], 
+              rotate: [0, 180, 0]
+            }}
+            transition={{
+              duration: 24,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/6 right-12 w-14 h-14 border-2 border-amber-400/45 bg-gradient-to-br from-amber-500/18 to-transparent"
+            style={{
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            }}
+            animate={{ 
+              x: [0, -10, 0], 
+              y: [0, 15, 0], 
+              rotate: [0, 120, 0]
+            }}
+            transition={{
+              duration: 26,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {heroStatsQA.map((stat, idx) => (
               <motion.div
                 key={stat.label}
-                className="bg-slate-800 p-6 rounded-lg shadow-xl text-center"
+                className="text-center"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
-                viewport={{ once: true, amount: 0.3 }}
+                viewport={{ once: true, amount: 0.2 }}
               >
-                <stat.icon className="w-10 h-10 text-teal-400 mx-auto mb-3" />
-                <div className="text-3xl font-bold text-white">{stat.value}</div>
-                <div className="text-slate-400 mt-1 text-sm">{stat.label}</div>
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-orange-500/10 rounded-full mb-4">
+                  <stat.icon className="w-8 h-8 text-orange-400" />
+                </div>
+                <div className="text-3xl md:text-4xl font-bold text-white mb-2">{stat.value}</div>
+                <div className="text-sm text-slate-300">{stat.label}</div>
               </motion.div>
             ))}
           </div>
@@ -304,43 +458,96 @@ export default function QualityAssurancePage() {
       </section>
 
       {/* Comprehensive Testing Services Section */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+      <section className="py-16 md:py-24 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Bold Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-orange-900/25 via-transparent to-amber-900/30"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/35 via-transparent to-orange-900/25"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-amber-900/20 via-transparent to-slate-700/30"></div>
+          
+          {/* Subtle Animated Orbs */}
+          <motion.div
+            className="absolute top-1/3 left-1/4 w-64 h-64 bg-gradient-to-br from-orange-500/18 to-amber-500/15 rounded-full filter blur-3xl"
+            animate={{ x: [0, 20, 0], y: [0, -15, 0], scale: [1, 1.05, 1] }}
+            transition={{
+              duration: 25,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/3 right-1/4 w-72 h-72 bg-gradient-to-tl from-amber-500/15 to-orange-500/18 rounded-full filter blur-3xl"
+            animate={{ x: [0, -20, 0], y: [0, 18, 0], scale: [1, 0.98, 1] }}
+            transition={{
+              duration: 30,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 4,
+            }}
+          />
+          
+          {/* Floating Elements */}
+          <motion.div
+            className="absolute top-1/4 right-1/3 w-2 h-2 bg-gradient-to-r from-orange-400/50 to-amber-400/50 rounded-full"
+            animate={{ 
+              y: [0, -18, 0],
+              opacity: [0.6, 1, 0.6]
+            }}
+            transition={{
+              duration: 12,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-gradient-to-r from-amber-400/50 to-orange-400/50 rounded-full"
+            animate={{ 
+              y: [0, 12, 0],
+              opacity: [0.7, 1, 0.7]
+            }}
+            transition={{
+              duration: 14,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 2,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12 md:mb-16">
-            <ListChecks className="w-12 h-12 text-teal-400 mx-auto mb-4" />
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Comprehensive Testing Services</h2>
             <p className="max-w-2xl mx-auto text-lg text-slate-300">
-              Multi-layered testing approach to ensure quality at every level.
+              End-to-end quality assurance solutions to ensure your software meets the highest standards.
             </p>
           </div>
           <div className="grid md:grid-cols-2 gap-8">
             {testingServices.map((service, idx) => (
               <motion.div
                 key={service.title}
+                className="bg-slate-800/50 backdrop-blur-sm p-6 rounded-lg shadow-xl border border-slate-700/30 hover:border-orange-500/40 transition-colors"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
                 viewport={{ once: true, amount: 0.2 }}
               >
-                <Card className="bg-slate-800/50 border-slate-700/50 shadow-lg h-full hover:border-teal-500/60 transition-colors">
-                  <CardHeader>
-                    <div className="flex items-center gap-4 mb-2">
-                      <service.icon className="w-10 h-10 text-teal-400" />
-                      <CardTitle className="text-2xl text-white">{service.title}</CardTitle>
-                    </div>
-                    <CardDescription className="text-slate-400">{service.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-2">
-                      {service.items.map((item) => (
-                        <li key={item} className="flex items-center text-slate-300 text-sm">
-                          <CheckCircle size={16} className="text-teal-400 mr-2 flex-shrink-0" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
+                <div className="flex items-center gap-4 mb-4">
+                  <service.icon className="w-10 h-10 text-orange-400" />
+                  <h3 className="text-xl font-semibold text-white">{service.title}</h3>
+                </div>
+                <p className="text-slate-300 mb-4">{service.description}</p>
+                <ul className="space-y-2">
+                  {service.items.map((item) => (
+                    <li key={item} className="flex items-center text-slate-300 text-sm">
+                      <CheckCircle size={16} className="text-orange-400 mr-2 flex-shrink-0" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
               </motion.div>
             ))}
           </div>
@@ -348,15 +555,78 @@ export default function QualityAssurancePage() {
       </section>
 
       {/* Why Choose Unite Group for QA Section */}
-      <section className="py-16 md:py-24 bg-slate-900">
-        <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+      <section className="py-16 md:py-24 bg-slate-900 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Bold Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-orange-900/35 via-transparent to-amber-900/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/45 via-transparent to-orange-900/35"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-amber-900/30 via-transparent to-slate-700/40"></div>
+          
+          {/* Animated Orbs */}
+          <motion.div
+            className="absolute top-1/4 left-1/6 w-80 h-80 bg-gradient-to-br from-orange-500/25 to-amber-500/22 rounded-full filter blur-3xl"
+            animate={{ x: [0, 30, 0], y: [0, -25, 0], scale: [1, 1.1, 1] }}
+            transition={{
+              duration: 28,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 right-1/6 w-96 h-96 bg-gradient-to-tl from-amber-500/22 to-orange-500/25 rounded-full filter blur-3xl"
+            animate={{ x: [0, -35, 0], y: [0, 30, 0], scale: [1, 0.95, 1] }}
+            transition={{
+              duration: 32,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 6,
+            }}
+          />
+          
+          {/* Geometric Elements */}
+          <motion.div
+            className="absolute top-1/6 right-12 w-20 h-20 border-2 border-orange-400/50 rounded-full bg-gradient-to-br from-orange-500/20 to-transparent"
+            animate={{ 
+              x: [0, -15, 0], 
+              y: [0, -12, 0], 
+              rotate: [0, 180, 0]
+            }}
+            transition={{
+              duration: 24,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/6 left-12 w-16 h-16 border-2 border-amber-400/45 bg-gradient-to-br from-amber-500/18 to-transparent"
+            style={{
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            }}
+            animate={{ 
+              x: [0, 12, 0], 
+              y: [0, 18, 0], 
+              rotate: [0, 120, 0]
+            }}
+            transition={{
+              duration: 26,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12 md:mb-16">
-            <Briefcase className="w-12 h-12 text-teal-400 mx-auto mb-4" />
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
-              Why Choose Unite Group for QA & Testing?
+              Why Choose Unite Group for QA?
             </h2>
             <p className="max-w-2xl mx-auto text-lg text-slate-300">
-              Ensure software excellence with our meticulous and expert QA services.
+              Partner with us to achieve exceptional software quality and reliability.
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -379,13 +649,72 @@ export default function QualityAssurancePage() {
       </section>
 
       {/* QA & Testing FAQs Section */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto max-w-screen-lg px-4 sm:px-6 lg:px-8">
+      <section className="py-16 md:py-24 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Bold Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-orange-900/20 via-transparent to-amber-900/25"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/30 via-transparent to-orange-900/20"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-amber-900/15 via-transparent to-slate-700/25"></div>
+          
+          {/* Subtle Animated Orbs */}
+          <motion.div
+            className="absolute top-1/3 right-1/4 w-56 h-56 bg-gradient-to-br from-orange-500/15 to-amber-500/12 rounded-full filter blur-3xl"
+            animate={{ x: [0, -20, 0], y: [0, 15, 0], scale: [1, 1.05, 1] }}
+            transition={{
+              duration: 25,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/3 left-1/4 w-64 h-64 bg-gradient-to-tl from-amber-500/12 to-orange-500/15 rounded-full filter blur-3xl"
+            animate={{ x: [0, 25, 0], y: [0, -20, 0], scale: [1, 0.98, 1] }}
+            transition={{
+              duration: 30,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
+          />
+          
+          {/* Floating Elements */}
+          <motion.div
+            className="absolute top-1/4 left-1/3 w-1.5 h-1.5 bg-gradient-to-r from-orange-400/40 to-amber-400/40 rounded-full"
+            animate={{ 
+              y: [0, -15, 0],
+              opacity: [0.5, 1, 0.5]
+            }}
+            transition={{
+              duration: 12,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 right-1/3 w-1 h-1 bg-gradient-to-r from-amber-400/40 to-orange-400/40 rounded-full"
+            animate={{ 
+              y: [0, 10, 0],
+              opacity: [0.6, 1, 0.6]
+            }}
+            transition={{
+              duration: 14,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 2,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto max-w-screen-lg px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12 md:mb-16">
-            <HelpCircle className="w-12 h-12 text-teal-400 mx-auto mb-4" />
+            <HelpCircle className="w-12 h-12 text-orange-400 mx-auto mb-4" />
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">QA & Testing FAQs</h2>
             <p className="max-w-xl mx-auto text-lg text-slate-300">
-              Your questions about our quality assurance processes answered.
+              Answers to common questions about our quality assurance and testing services.
             </p>
           </div>
           <Accordion type="single" collapsible className="w-full">
@@ -393,11 +722,11 @@ export default function QualityAssurancePage() {
               <AccordionItem
                 key={faq.id}
                 value={faq.id}
-                className="bg-slate-800/50 border-slate-700/80 rounded-lg mb-3 px-2"
+                className="bg-slate-800/50 backdrop-blur-sm border-slate-700/80 rounded-lg mb-3 px-2 hover:border-orange-500/30 transition-colors"
               >
                 <AccordionTrigger className="text-left hover:no-underline py-4 px-4 text-base font-medium text-slate-100">
                   <div className="flex items-center">
-                    <HelpCircle size={20} className="text-teal-400 mr-3 flex-shrink-0" />
+                    <HelpCircle size={20} className="text-orange-400 mr-3 flex-shrink-0" />
                     {faq.question}
                   </div>
                 </AccordionTrigger>
@@ -411,31 +740,93 @@ export default function QualityAssurancePage() {
       </section>
 
       {/* Our QA Process Section */}
-      <section id="our-process" className="py-16 md:py-24 bg-slate-900">
-        <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+      <section id="our-process" className="py-16 md:py-24 bg-slate-900 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Bold Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-orange-900/35 via-transparent to-amber-900/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/45 via-transparent to-orange-900/35"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-amber-900/30 via-transparent to-slate-700/40"></div>
+          
+          {/* Animated Orbs */}
+          <motion.div
+            className="absolute top-1/4 left-1/6 w-80 h-80 bg-gradient-to-br from-orange-500/25 to-amber-500/22 rounded-full filter blur-3xl"
+            animate={{ x: [0, 30, 0], y: [0, -25, 0], scale: [1, 1.1, 1] }}
+            transition={{
+              duration: 28,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 right-1/6 w-96 h-96 bg-gradient-to-tl from-amber-500/22 to-orange-500/25 rounded-full filter blur-3xl"
+            animate={{ x: [0, -35, 0], y: [0, 30, 0], scale: [1, 0.95, 1] }}
+            transition={{
+              duration: 32,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 6,
+            }}
+          />
+          
+          {/* Geometric Elements */}
+          <motion.div
+            className="absolute top-1/6 right-12 w-20 h-20 border-2 border-orange-400/50 rounded-full bg-gradient-to-br from-orange-500/20 to-transparent"
+            animate={{ 
+              x: [0, -15, 0], 
+              y: [0, -12, 0], 
+              rotate: [0, 180, 0]
+            }}
+            transition={{
+              duration: 24,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/6 left-12 w-16 h-16 border-2 border-amber-400/45 bg-gradient-to-br from-amber-500/18 to-transparent"
+            style={{
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            }}
+            animate={{ 
+              x: [0, 12, 0], 
+              y: [0, 18, 0], 
+              rotate: [0, 120, 0]
+            }}
+            transition={{
+              duration: 26,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12 md:mb-16">
-            <FlaskConical className="w-12 h-12 text-teal-400 mx-auto mb-4" />
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Our QA Process</h2>
             <p className="max-w-2xl mx-auto text-lg text-slate-300">
-              Systematic approach to delivering bug-free software.
+              A systematic approach to ensuring software quality and reliability.
             </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-4 gap-8">
             {qaProcessSteps.map((step, idx) => (
               <motion.div
-                key={step.title}
-                className="bg-slate-800 p-6 rounded-lg shadow-xl text-center flex flex-col items-center"
+                key={step.number}
+                className="text-center"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
                 viewport={{ once: true, amount: 0.3 }}
               >
-                <div className="relative w-16 h-16 flex items-center justify-center bg-slate-700 text-teal-400 rounded-full text-2xl font-bold mb-4 border-2 border-teal-500/50">
-                  {step.number}
+                <div className="inline-flex items-center justify-center w-20 h-20 bg-orange-500/10 rounded-full mb-4 border-2 border-orange-500/30">
+                  <span className="text-2xl font-bold text-orange-400">{step.number}</span>
                 </div>
-                <step.icon className="w-8 h-8 text-teal-400 mb-2" />
-                <h3 className="text-lg font-semibold text-white mb-1">{step.title}</h3>
-                <p className="text-sm text-slate-400 flex-grow">{step.description}</p>
+                <h3 className="text-lg font-semibold text-white mb-2">{step.title}</h3>
+                <p className="text-sm text-slate-300">{step.description}</p>
               </motion.div>
             ))}
           </div>
@@ -443,27 +834,85 @@ export default function QualityAssurancePage() {
       </section>
 
       {/* Testing Tools & Technologies Section */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto max-w-screen-lg px-4 sm:px-6 lg:px-8">
+      <section className="py-16 md:py-24 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Bold Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-orange-900/25 via-transparent to-amber-900/30"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/35 via-transparent to-orange-900/25"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-amber-900/20 via-transparent to-slate-700/30"></div>
+          
+          {/* Subtle Animated Orbs */}
+          <motion.div
+            className="absolute top-1/3 left-1/4 w-64 h-64 bg-gradient-to-br from-orange-500/18 to-amber-500/15 rounded-full filter blur-3xl"
+            animate={{ x: [0, 20, 0], y: [0, -15, 0], scale: [1, 1.05, 1] }}
+            transition={{
+              duration: 25,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/3 right-1/4 w-72 h-72 bg-gradient-to-tl from-amber-500/15 to-orange-500/18 rounded-full filter blur-3xl"
+            animate={{ x: [0, -20, 0], y: [0, 18, 0], scale: [1, 0.98, 1] }}
+            transition={{
+              duration: 30,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 4,
+            }}
+          />
+          
+          {/* Floating Elements */}
+          <motion.div
+            className="absolute top-1/4 right-1/3 w-2 h-2 bg-gradient-to-r from-orange-400/50 to-amber-400/50 rounded-full"
+            animate={{ 
+              y: [0, -18, 0],
+              opacity: [0.6, 1, 0.6]
+            }}
+            transition={{
+              duration: 12,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-gradient-to-r from-amber-400/50 to-orange-400/50 rounded-full"
+            animate={{ 
+              y: [0, 12, 0],
+              opacity: [0.7, 1, 0.7]
+            }}
+            transition={{
+              duration: 14,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 2,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12 md:mb-16">
-            <Cpu className="w-12 h-12 text-teal-400 mx-auto mb-4" />
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Testing Tools & Technologies</h2>
             <p className="max-w-2xl mx-auto text-lg text-slate-300">
-              Industry-leading tools for comprehensive quality assurance.
+              Industry-leading tools and frameworks for comprehensive testing solutions.
             </p>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {testingTools.map((tool, idx) => (
               <motion.div
                 key={tool.name}
-                className="bg-slate-800/60 p-4 rounded-lg shadow-md text-center border border-slate-700/50"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: idx * 0.05 }}
-                viewport={{ once: true, amount: 0.1 }}
+                className="bg-slate-800/50 backdrop-blur-sm p-4 rounded-lg text-center border border-slate-700/30 hover:border-orange-500/40 transition-colors"
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: idx * 0.05 }}
+                viewport={{ once: true, amount: 0.2 }}
               >
-                <h4 className="font-semibold text-white text-sm">{tool.name}</h4>
-                <p className="text-xs text-teal-300">{tool.category}</p>
+                <div className="text-sm font-medium text-white mb-1">{tool.name}</div>
+                <div className="text-xs text-orange-400">{tool.category}</div>
               </motion.div>
             ))}
           </div>
@@ -471,83 +920,219 @@ export default function QualityAssurancePage() {
       </section>
 
       {/* QA Service Packages Section */}
-      <section className="py-16 md:py-24 bg-slate-900">
-        <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+      {/*
+      <section className="py-16 md:py-24 bg-slate-900 relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-orange-900/35 via-transparent to-amber-900/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/45 via-transparent to-orange-900/35"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-amber-900/30 via-transparent to-slate-700/40"></div>
+          
+          <motion.div
+            className="absolute top-1/4 left-1/6 w-80 h-80 bg-gradient-to-br from-orange-500/25 to-amber-500/22 rounded-full filter blur-3xl"
+            animate={{ x: [0, 30, 0], y: [0, -25, 0], scale: [1, 1.1, 1] }}
+            transition={{
+              duration: 28,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 right-1/6 w-96 h-96 bg-gradient-to-tl from-amber-500/22 to-orange-500/25 rounded-full filter blur-3xl"
+            animate={{ x: [0, -35, 0], y: [0, 30, 0], scale: [1, 0.95, 1] }}
+            transition={{
+              duration: 32,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 6,
+            }}
+          />
+          
+          <motion.div
+            className="absolute top-1/6 right-12 w-20 h-20 border-2 border-orange-400/50 rounded-full bg-gradient-to-br from-orange-500/20 to-transparent"
+            animate={{ 
+              x: [0, -15, 0], 
+              y: [0, -12, 0], 
+              rotate: [0, 180, 0]
+            }}
+            transition={{
+              duration: 24,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/6 left-12 w-16 h-16 border-2 border-amber-400/45 bg-gradient-to-br from-amber-500/18 to-transparent"
+            style={{
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            }}
+            animate={{ 
+              x: [0, 12, 0], 
+              y: [0, 18, 0], 
+              rotate: [0, 120, 0]
+            }}
+            transition={{
+              duration: 26,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12 md:mb-16">
-            <DollarSignIcon className="w-12 h-12 text-teal-400 mx-auto mb-4" />
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">QA Service Packages</h2>
             <p className="max-w-2xl mx-auto text-lg text-slate-300">
-              Flexible testing solutions for every project size and budget.
+              Choose the package that best fits your quality assurance needs and budget.
             </p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8 items-stretch">
+          <div className="grid md:grid-cols-3 gap-8">
             {qaPackages.map((pkg, idx) => (
               <motion.div
                 key={pkg.name}
-                initial={{ opacity: 0, y: 50 }}
+                className="bg-slate-800/50 backdrop-blur-sm p-8 rounded-lg shadow-xl border border-slate-700/30 hover:border-orange-500/40 transition-colors"
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
                 viewport={{ once: true, amount: 0.2 }}
-                className="flex"
               >
-                <Card
-                  className={`w-full flex flex-col bg-slate-800/70 backdrop-blur-sm border-slate-700/50 shadow-xl relative overflow-hidden ${pkg.isPopular ? "border-2 border-teal-500 shadow-teal-500/30" : "border-slate-700"}`}
-                >
-                  {pkg.isPopular && (
-                    <div className="absolute top-0 right-0 bg-teal-500 text-white text-xs font-bold px-4 py-1.5 rounded-bl-lg">
-                      Recommended
-                    </div>
-                  )}
-                  <CardHeader className="pt-8">
-                    <CardTitle className="text-2xl font-semibold text-white mb-1">{pkg.name}</CardTitle>
-                    <p className="text-3xl font-bold text-teal-300 mb-2">{pkg.price}</p>
-                    <CardDescription className="text-slate-400 text-sm min-h-[40px]">{pkg.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex-grow flex flex-col">
-                    <ul className="space-y-2.5 mb-6 flex-grow">
-                      {pkg.features.map((feature, fIdx) => (
-                        <li key={fIdx} className="flex items-start text-sm text-slate-300">
-                          <CheckCircle size={18} className="text-teal-400 mr-2.5 mt-0.5 flex-shrink-0" />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                    <p className="text-xs text-slate-500 mb-4">Best for: {pkg.bestFor}</p>
-                    <Button
-                      asChild
-                      className={`w-full font-semibold text-lg py-3 mt-auto ${pkg.isPopular ? "bg-teal-500 hover:bg-teal-600 text-white" : "bg-slate-700 hover:bg-slate-600 text-slate-100"}`}
-                    >
-                      <Link href={`/contact?service=Quality%20Assurance%20Testing&package=${pkg.name}`}>
-                        Get Started
-                      </Link>
-                    </Button>
-                  </CardContent>
-                </Card>
+                <div className="text-center mb-6">
+                  <h3 className="text-2xl font-semibold text-white mb-2">{pkg.name}</h3>
+                  <div className="text-4xl font-bold text-orange-400 mb-2">{pkg.price}</div>
+                  <p className="text-slate-300 text-sm">{pkg.description}</p>
+                </div>
+                <ul className="space-y-3 mb-8">
+                  {pkg.features.map((feature) => (
+                    <li key={feature} className="flex items-center text-slate-300 text-sm">
+                      <CheckCircle size={16} className="text-orange-400 mr-3 flex-shrink-0" />
+                      {feature}
+                    </li>
+                  ))}
+                </ul>
+                <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white">
+                  Get Started
+                </Button>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
+      */}
 
       {/* Free Assessment CTA Section */}
-      <section className="py-20 md:py-32">
-        <div className="container mx-auto max-w-screen-lg px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-r from-teal-500/20 to-cyan-500/20 p-8 md:p-12 rounded-xl shadow-2xl text-center">
-            <h2 className="text-3xl font-semibold text-white mb-3">Stop Shipping Bugs. Start Shipping Excellence.</h2>
-            <p className="text-slate-300 text-lg max-w-xl mx-auto mb-8">
-              Get a free quality assessment and discover how we can improve your software quality while reducing testing
-              time and costs.
-            </p>
-            <Button size="xl" asChild className="bg-teal-500 hover:bg-teal-600 text-white group text-lg px-10 py-7">
-              <Link href="/contact?service=Quality%20Assurance%20Testing&action=qa_assessment">
-                Get Free Assessment{" "}
-                <ArrowRight className="w-6 h-6 ml-2 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </Button>
-            <p className="mt-6 text-sm text-slate-400">
-              🐛 98% bug detection rate • ⚡ 50% faster testing • 🛡️ Zero critical defects
-            </p>
+      <section className="py-20 md:py-32 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Bold Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-orange-900/40 via-transparent to-amber-900/45"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/50 via-transparent to-orange-900/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-amber-900/35 via-transparent to-slate-700/45"></div>
+          
+          {/* Large Animated Orbs */}
+          <motion.div
+            className="absolute top-1/4 left-1/6 w-96 h-96 bg-gradient-to-br from-orange-500/30 to-amber-500/25 rounded-full filter blur-3xl"
+            animate={{ x: [0, 35, 0], y: [0, -30, 0], scale: [1, 1.15, 1] }}
+            transition={{
+              duration: 30,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 right-1/6 w-80 h-80 bg-gradient-to-tl from-amber-500/25 to-orange-500/30 rounded-full filter blur-3xl"
+            animate={{ x: [0, -30, 0], y: [0, 35, 0], scale: [1, 0.9, 1] }}
+            transition={{
+              duration: 35,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 7,
+            }}
+          />
+          
+          {/* Geometric Elements */}
+          <motion.div
+            className="absolute top-1/6 right-16 w-24 h-24 border-2 border-orange-400/55 rounded-full bg-gradient-to-br from-orange-500/25 to-transparent"
+            animate={{ 
+              x: [0, -20, 0], 
+              y: [0, -15, 0], 
+              rotate: [0, 180, 0]
+            }}
+            transition={{
+              duration: 26,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/6 left-16 w-20 h-20 border-2 border-amber-400/50 bg-gradient-to-br from-amber-500/20 to-transparent"
+            style={{
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            }}
+            animate={{ 
+              x: [0, 18, 0], 
+              y: [0, 22, 0], 
+              rotate: [0, 120, 0]
+            }}
+            transition={{
+              duration: 28,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          {/* Floating Elements */}
+          <motion.div
+            className="absolute top-1/3 right-1/4 w-3 h-3 bg-gradient-to-r from-orange-400/60 to-amber-400/60 rounded-full shadow-lg shadow-orange-400/40"
+            animate={{ 
+              y: [0, -30, 0],
+              opacity: [0.8, 1, 0.8],
+              scale: [1, 1.1, 1]
+            }}
+            transition={{
+              duration: 18,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/3 left-1/4 w-2.5 h-2.5 bg-gradient-to-r from-amber-400/60 to-orange-400/60 rounded-full shadow-lg shadow-amber-400/40"
+            animate={{ 
+              y: [0, 25, 0],
+              opacity: [0.8, 1, 0.8],
+              scale: [1, 0.9, 1]
+            }}
+            transition={{
+              duration: 20,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto max-w-screen-md px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <div className="inline-block bg-orange-500/10 text-orange-400 px-4 py-1.5 rounded-full text-sm font-semibold mb-6">
+            Free Assessment
           </div>
+          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-6">
+            Get Your Free QA Assessment Today
+          </h2>
+          <p className="text-lg text-slate-300 mb-10">
+            Discover how our quality assurance services can improve your software and save you time and costs.
+          </p>
+          <Button size="lg" asChild className="bg-orange-500 hover:bg-orange-600 text-white group text-lg px-10 py-7">
+            <Link href="/contact?service=Quality%20Assurance%20%26%20Testing">
+              Get Started{" "}
+              <ArrowRight className="w-6 h-6 ml-2 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </Button>
         </div>
       </section>
     </div>

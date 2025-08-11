@@ -161,31 +161,116 @@ export default function InitialConsultationPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="py-20 md:py-32 bg-gradient-to-br from-slate-900 via-orange-900/30 to-slate-950 relative"
+        className="py-20 md:py-32 bg-gradient-to-br from-slate-900 via-amber-900/30 to-slate-950 relative overflow-hidden"
       >
-        <div className="absolute inset-0 opacity-10">
-          <Image
-            src="/abstract-consultation-background.png"
-            alt="Abstract Consultation Background"
-            layout="fill"
-            objectFit="cover"
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Bold Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-amber-900/45 via-transparent to-yellow-900/50"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/55 via-transparent to-amber-900/45"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-yellow-900/40 via-transparent to-slate-700/50"></div>
+          <div className="absolute inset-0 bg-gradient-to-tr from-slate-700/45 via-transparent to-amber-800/40"></div>
+          
+          {/* Large Bold Animated Orbs */}
+          <motion.div
+            className="absolute top-1/4 left-1/6 w-80 h-80 bg-gradient-to-br from-amber-500/40 to-yellow-500/38 rounded-full filter blur-3xl"
+            animate={{ x: [0, 30, 0], y: [0, -25, 0], scale: [1, 1.2, 1] }}
+            transition={{
+              duration: 30,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 right-1/6 w-96 h-96 bg-gradient-to-tl from-yellow-500/38 to-amber-500/40 rounded-full filter blur-3xl"
+            animate={{ x: [0, -35, 0], y: [0, 30, 0], scale: [1, 0.85, 1] }}
+            transition={{
+              duration: 35,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 8,
+            }}
+          />
+          
+          {/* Bold Geometric Elements */}
+          <motion.div
+            className="absolute top-1/6 right-16 w-24 h-24 border-2 border-amber-400/65 rounded-full bg-gradient-to-br from-amber-500/38 to-transparent"
+            animate={{ 
+              x: [0, -18, 0], 
+              y: [0, -15, 0], 
+              rotate: [0, 180, 0]
+            }}
+            transition={{
+              duration: 26,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/6 left-16 w-20 h-20 border-2 border-yellow-400/60 bg-gradient-to-br from-yellow-500/35 to-transparent"
+            style={{
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            }}
+            animate={{ 
+              x: [0, 15, 0], 
+              y: [0, 20, 0], 
+              rotate: [0, 120, 0]
+            }}
+            transition={{
+              duration: 28,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
+          />
+          
+          {/* Bold Floating Elements */}
+          <motion.div
+            className="absolute top-1/3 right-1/4 w-3 h-3 bg-gradient-to-r from-amber-400/70 to-yellow-400/70 rounded-full shadow-lg shadow-amber-400/50"
+            animate={{ 
+              y: [0, -25, 0],
+              opacity: [0.9, 1, 0.9],
+              scale: [1, 1.1, 1]
+            }}
+            transition={{
+              duration: 16,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/3 left-1/4 w-2.5 h-2.5 bg-gradient-to-r from-yellow-400/70 to-amber-400/70 rounded-full shadow-lg shadow-yellow-400/50"
+            animate={{ 
+              y: [0, 20, 0],
+              opacity: [0.9, 1, 0.9],
+              scale: [1, 0.9, 1]
+            }}
+            transition={{
+              duration: 18,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 2,
+            }}
           />
         </div>
+        
         <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <div className="inline-block bg-orange-500/10 text-orange-400 px-4 py-1.5 rounded-full text-sm font-semibold mb-6">
-            Most Popular Service
-          </div>
+          <Lightbulb className="w-20 h-20 text-amber-400 mx-auto mb-8" />
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold text-white mb-6">
             Initial Business Consultation
           </h1>
           <p className="max-w-3xl mx-auto text-lg md:text-xl text-slate-300 mb-10">
-            Transform your business vision into reality with our comprehensive consultation service. Get expert
-            insights, strategic recommendations, and a clear roadmap for success.
+            Transform your business vision into reality with our comprehensive initial consultation. Get expert insights,
+            strategic recommendations, and a clear roadmap to achieve your goals.
           </p>
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-            <Button size="lg" asChild className="bg-orange-500 hover:bg-orange-600 text-white group">
+            <Button size="lg" asChild className="bg-amber-500 hover:bg-amber-600 text-white group">
               <Link href="/contact?service=Initial%20Business%20Consultation&package=Initial%20Consultation%20A$550">
-                Book Your Consultation - A$550{" "}
+                Book Consultation{" "}
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
@@ -196,7 +281,7 @@ export default function InitialConsultationPage() {
               className="border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white"
             >
               <Link href="/contact?service=Initial%20Business%20Consultation&action=ask_question">
-                Have Questions? Contact Us
+                Ask Questions
               </Link>
             </Button>
           </div>
@@ -204,21 +289,85 @@ export default function InitialConsultationPage() {
       </motion.section>
 
       {/* Key Benefits Section */}
-      <section className="py-16 bg-slate-900">
-        <div className="container mx-auto max-w-screen-lg px-4 sm:px-6 lg:px-8">
+      <section className="py-16 bg-slate-900 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Bold Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-amber-900/35 via-transparent to-yellow-900/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/45 via-transparent to-amber-900/35"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-yellow-900/30 via-transparent to-slate-700/40"></div>
+          
+          {/* Animated Orbs */}
+          <motion.div
+            className="absolute top-1/4 right-1/6 w-72 h-72 bg-gradient-to-br from-amber-500/25 to-yellow-500/22 rounded-full filter blur-3xl"
+            animate={{ x: [0, -25, 0], y: [0, 20, 0], scale: [1, 1.1, 1] }}
+            transition={{
+              duration: 28,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 left-1/6 w-80 h-80 bg-gradient-to-tl from-yellow-500/22 to-amber-500/25 rounded-full filter blur-3xl"
+            animate={{ x: [0, 30, 0], y: [0, -25, 0], scale: [1, 0.95, 1] }}
+            transition={{
+              duration: 32,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 5,
+            }}
+          />
+          
+          {/* Geometric Elements */}
+          <motion.div
+            className="absolute top-1/6 left-12 w-18 h-18 border-2 border-amber-400/50 rounded-full bg-gradient-to-br from-amber-500/20 to-transparent"
+            animate={{ 
+              x: [0, 12, 0], 
+              y: [0, -10, 0], 
+              rotate: [0, 180, 0]
+            }}
+            transition={{
+              duration: 24,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/6 right-12 w-14 h-14 border-2 border-yellow-400/45 bg-gradient-to-br from-yellow-500/18 to-transparent"
+            style={{
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            }}
+            animate={{ 
+              x: [0, -10, 0], 
+              y: [0, 15, 0], 
+              rotate: [0, 120, 0]
+            }}
+            transition={{
+              duration: 26,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto max-w-screen-lg px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid md:grid-cols-3 gap-8">
             {keyBenefits.map((benefit, idx) => (
               <motion.div
                 key={benefit.title}
-                className="bg-slate-800 p-6 rounded-lg shadow-xl text-center"
+                className="bg-slate-800/50 backdrop-blur-sm p-6 rounded-lg shadow-xl text-center border border-slate-700/30 hover:border-amber-500/40 transition-colors"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
-                viewport={{ once: true, amount: 0.3 }}
+                viewport={{ once: true, amount: 0.2 }}
               >
-                <benefit.icon className="w-10 h-10 text-orange-400 mx-auto mb-3" />
+                <benefit.icon className="w-12 h-12 text-amber-400 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-white mb-2">{benefit.title}</h3>
-                <p className="text-slate-400 text-sm">{benefit.description}</p>
+                <p className="text-slate-300">{benefit.description}</p>
               </motion.div>
             ))}
           </div>
@@ -226,17 +375,76 @@ export default function InitialConsultationPage() {
       </section>
 
       {/* Our Proven Process Section */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+      <section className="py-16 md:py-24 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Bold Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-amber-900/25 via-transparent to-yellow-900/30"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/35 via-transparent to-amber-900/25"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-yellow-900/20 via-transparent to-slate-700/30"></div>
+          
+          {/* Subtle Animated Orbs */}
+          <motion.div
+            className="absolute top-1/3 left-1/4 w-64 h-64 bg-gradient-to-br from-amber-500/18 to-yellow-500/15 rounded-full filter blur-3xl"
+            animate={{ x: [0, 20, 0], y: [0, -15, 0], scale: [1, 1.05, 1] }}
+            transition={{
+              duration: 25,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/3 right-1/4 w-72 h-72 bg-gradient-to-tl from-yellow-500/15 to-amber-500/18 rounded-full filter blur-3xl"
+            animate={{ x: [0, -20, 0], y: [0, 18, 0], scale: [1, 0.98, 1] }}
+            transition={{
+              duration: 30,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 4,
+            }}
+          />
+          
+          {/* Floating Elements */}
+          <motion.div
+            className="absolute top-1/4 right-1/3 w-2 h-2 bg-gradient-to-r from-amber-400/50 to-yellow-400/50 rounded-full"
+            animate={{ 
+              y: [0, -18, 0],
+              opacity: [0.6, 1, 0.6]
+            }}
+            transition={{
+              duration: 12,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-gradient-to-r from-yellow-400/50 to-amber-400/50 rounded-full"
+            animate={{ 
+              y: [0, 12, 0],
+              opacity: [0.7, 1, 0.7]
+            }}
+            transition={{
+              duration: 14,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 2,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12 md:mb-16">
-            <Target className="w-12 h-12 text-orange-400 mx-auto mb-4" />
+            <Target className="w-12 h-12 text-amber-400 mx-auto mb-4" />
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Our Proven Process</h2>
             <p className="max-w-2xl mx-auto text-lg text-slate-300">
               A structured approach to understanding your business and delivering transformative insights.
             </p>
           </div>
           <div className="relative">
-            <div className="hidden md:block absolute top-1/2 left-16 right-16 h-0.5 bg-slate-700 transform -translate-y-1/2"></div>
+            <div className="hidden md:block absolute top-1/2 left-16 right-16 h-0.5 bg-gradient-to-r from-transparent via-amber-500/30 to-transparent transform -translate-y-1/2"></div>
             <div className="grid md:grid-cols-4 gap-8">
               {processSteps.map((step, idx) => (
                 <motion.div
@@ -248,16 +456,16 @@ export default function InitialConsultationPage() {
                   viewport={{ once: true, amount: 0.3 }}
                 >
                   <div className="relative inline-block mb-4">
-                    <div className="w-20 h-20 flex items-center justify-center bg-slate-800 border-2 border-orange-500/50 text-orange-400 rounded-full text-3xl font-bold">
+                    <div className="w-20 h-20 flex items-center justify-center bg-slate-800/50 backdrop-blur-sm border-2 border-amber-500/60 text-amber-400 rounded-full text-3xl font-bold shadow-lg shadow-amber-500/20">
                       {step.step}
                     </div>
-                    <div className="absolute -bottom-2 -right-2 p-2 bg-slate-700 rounded-full border-2 border-slate-950">
-                      <step.icon className="w-5 h-5 text-orange-300" />
+                    <div className="absolute -bottom-2 -right-2 p-2 bg-slate-700/80 backdrop-blur-sm rounded-full border-2 border-slate-950">
+                      <step.icon className="w-5 h-5 text-amber-300" />
                     </div>
                   </div>
                   <h3 className="text-lg font-semibold text-white mb-1">{step.title}</h3>
-                  <p className="text-sm text-orange-300 mb-2">{step.duration}</p>
-                  <p className="text-sm text-slate-400">{step.description}</p>
+                  <p className="text-sm text-amber-300 mb-2">{step.duration}</p>
+                  <p className="text-sm text-slate-300">{step.description}</p>
                 </motion.div>
               ))}
             </div>
@@ -266,10 +474,74 @@ export default function InitialConsultationPage() {
       </section>
 
       {/* Why Choose Our Consultation Section */}
-      <section className="py-16 md:py-24 bg-slate-900">
-        <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+      <section className="py-16 md:py-24 bg-slate-900 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Bold Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-amber-900/35 via-transparent to-yellow-900/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/45 via-transparent to-amber-900/35"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-yellow-900/30 via-transparent to-slate-700/40"></div>
+          
+          {/* Animated Orbs */}
+          <motion.div
+            className="absolute top-1/4 left-1/6 w-80 h-80 bg-gradient-to-br from-amber-500/25 to-yellow-500/22 rounded-full filter blur-3xl"
+            animate={{ x: [0, 30, 0], y: [0, -25, 0], scale: [1, 1.1, 1] }}
+            transition={{
+              duration: 28,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 right-1/6 w-96 h-96 bg-gradient-to-tl from-yellow-500/22 to-amber-500/25 rounded-full filter blur-3xl"
+            animate={{ x: [0, -35, 0], y: [0, 30, 0], scale: [1, 0.95, 1] }}
+            transition={{
+              duration: 32,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 6,
+            }}
+          />
+          
+          {/* Geometric Elements */}
+          <motion.div
+            className="absolute top-1/6 right-12 w-20 h-20 border-2 border-amber-400/50 rounded-full bg-gradient-to-br from-amber-500/20 to-transparent"
+            animate={{ 
+              x: [0, -15, 0], 
+              y: [0, -12, 0], 
+              rotate: [0, 180, 0]
+            }}
+            transition={{
+              duration: 24,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/6 left-12 w-16 h-16 border-2 border-yellow-400/45 bg-gradient-to-br from-yellow-500/18 to-transparent"
+            style={{
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            }}
+            animate={{ 
+              x: [0, 12, 0], 
+              y: [0, 18, 0], 
+              rotate: [0, 120, 0]
+            }}
+            transition={{
+              duration: 26,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12 md:mb-16">
-            <Lightbulb className="w-12 h-12 text-orange-400 mx-auto mb-4" />
+            <Lightbulb className="w-12 h-12 text-amber-400 mx-auto mb-4" />
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
               Why Choose Our Initial Business Consultation?
             </h2>
@@ -281,15 +553,15 @@ export default function InitialConsultationPage() {
             {whyChooseConsultation.map((item, idx) => (
               <motion.div
                 key={item.title}
-                className="bg-slate-800 p-6 rounded-lg shadow-xl text-center"
+                className="bg-slate-800/50 backdrop-blur-sm p-6 rounded-lg shadow-xl text-center border border-slate-700/30 hover:border-amber-500/40 transition-colors"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
                 viewport={{ once: true, amount: 0.3 }}
               >
-                <item.icon className="w-10 h-10 text-orange-400 mx-auto mb-4" />
+                <item.icon className="w-10 h-10 text-amber-400 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-white mb-2">{item.title}</h3>
-                <p className="text-slate-400 text-sm">{item.description}</p>
+                <p className="text-slate-300 text-sm">{item.description}</p>
               </motion.div>
             ))}
           </div>
@@ -297,10 +569,69 @@ export default function InitialConsultationPage() {
       </section>
 
       {/* Consultation FAQs Section */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto max-w-screen-lg px-4 sm:px-6 lg:px-8">
+      <section className="py-16 md:py-24 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Bold Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-amber-900/20 via-transparent to-yellow-900/25"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/30 via-transparent to-amber-900/20"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-yellow-900/15 via-transparent to-slate-700/25"></div>
+          
+          {/* Subtle Animated Orbs */}
+          <motion.div
+            className="absolute top-1/3 right-1/4 w-56 h-56 bg-gradient-to-br from-amber-500/15 to-yellow-500/12 rounded-full filter blur-3xl"
+            animate={{ x: [0, -20, 0], y: [0, 15, 0], scale: [1, 1.05, 1] }}
+            transition={{
+              duration: 25,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/3 left-1/4 w-64 h-64 bg-gradient-to-tl from-yellow-500/12 to-amber-500/15 rounded-full filter blur-3xl"
+            animate={{ x: [0, 25, 0], y: [0, -20, 0], scale: [1, 0.98, 1] }}
+            transition={{
+              duration: 30,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
+          />
+          
+          {/* Floating Elements */}
+          <motion.div
+            className="absolute top-1/4 left-1/3 w-1.5 h-1.5 bg-gradient-to-r from-amber-400/40 to-yellow-400/40 rounded-full"
+            animate={{ 
+              y: [0, -15, 0],
+              opacity: [0.5, 1, 0.5]
+            }}
+            transition={{
+              duration: 12,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 right-1/3 w-1 h-1 bg-gradient-to-r from-yellow-400/40 to-amber-400/40 rounded-full"
+            animate={{ 
+              y: [0, 10, 0],
+              opacity: [0.6, 1, 0.6]
+            }}
+            transition={{
+              duration: 14,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 2,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto max-w-screen-lg px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12 md:mb-16">
-            <HelpCircle className="w-12 h-12 text-orange-400 mx-auto mb-4" />
+            <HelpCircle className="w-12 h-12 text-amber-400 mx-auto mb-4" />
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">Consultation FAQs</h2>
             <p className="max-w-xl mx-auto text-lg text-slate-300">
               Answers to common questions about our Initial Business Consultation.
@@ -311,11 +642,11 @@ export default function InitialConsultationPage() {
               <AccordionItem
                 key={faq.id}
                 value={faq.id}
-                className="bg-slate-800/50 border-slate-700/80 rounded-lg mb-3 px-2"
+                className="bg-slate-800/50 backdrop-blur-sm border-slate-700/80 rounded-lg mb-3 px-2 hover:border-amber-500/30 transition-colors"
               >
                 <AccordionTrigger className="text-left hover:no-underline py-4 px-4 text-base font-medium text-slate-100">
                   <div className="flex items-center">
-                    <HelpCircle size={20} className="text-orange-400 mr-3 flex-shrink-0" />
+                    <HelpCircle size={20} className="text-amber-400 mr-3 flex-shrink-0" />
                     {faq.question}
                   </div>
                 </AccordionTrigger>
@@ -329,10 +660,74 @@ export default function InitialConsultationPage() {
       </section>
 
       {/* What You'll Receive Section */}
-      <section className="py-16 md:py-24 bg-slate-900">
-        <div className="container mx-auto max-w-screen-lg px-4 sm:px-6 lg:px-8">
+      <section className="py-16 md:py-24 bg-slate-900 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Bold Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-amber-900/35 via-transparent to-yellow-900/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/45 via-transparent to-amber-900/35"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-yellow-900/30 via-transparent to-slate-700/40"></div>
+          
+          {/* Animated Orbs */}
+          <motion.div
+            className="absolute top-1/4 right-1/6 w-72 h-72 bg-gradient-to-br from-amber-500/25 to-yellow-500/22 rounded-full filter blur-3xl"
+            animate={{ x: [0, -25, 0], y: [0, 20, 0], scale: [1, 1.1, 1] }}
+            transition={{
+              duration: 28,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 left-1/6 w-80 h-80 bg-gradient-to-tl from-yellow-500/22 to-amber-500/25 rounded-full filter blur-3xl"
+            animate={{ x: [0, 30, 0], y: [0, -25, 0], scale: [1, 0.95, 1] }}
+            transition={{
+              duration: 32,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 5,
+            }}
+          />
+          
+          {/* Geometric Elements */}
+          <motion.div
+            className="absolute top-1/6 left-12 w-18 h-18 border-2 border-amber-400/50 rounded-full bg-gradient-to-br from-amber-500/20 to-transparent"
+            animate={{ 
+              x: [0, 12, 0], 
+              y: [0, -10, 0], 
+              rotate: [0, 180, 0]
+            }}
+            transition={{
+              duration: 24,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/6 right-12 w-14 h-14 border-2 border-yellow-400/45 bg-gradient-to-br from-yellow-500/18 to-transparent"
+            style={{
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            }}
+            animate={{ 
+              x: [0, -10, 0], 
+              y: [0, 15, 0], 
+              rotate: [0, 120, 0]
+            }}
+            transition={{
+              duration: 26,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto max-w-screen-lg px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12 md:mb-16">
-            <FileText className="w-12 h-12 text-orange-400 mx-auto mb-4" />
+            <FileText className="w-12 h-12 text-amber-400 mx-auto mb-4" />
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">What You'll Receive</h2>
             <p className="max-w-2xl mx-auto text-lg text-slate-300">
               Comprehensive deliverables designed to drive immediate action and long-term success.
@@ -343,14 +738,21 @@ export default function InitialConsultationPage() {
             whileInView={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true, amount: 0.1 }}
-            className="bg-slate-800/50 p-8 rounded-lg shadow-xl border border-slate-700/50"
+            className="bg-slate-800/50 backdrop-blur-sm p-8 rounded-lg shadow-xl border border-slate-700/50 hover:border-amber-500/40 transition-colors"
           >
             <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-4">
-              {deliverables.map((item) => (
-                <div key={item} className="flex items-center text-slate-300">
-                  <CheckCircle size={18} className="text-orange-400 mr-3 flex-shrink-0" />
-                  <span>{item}</span>
-                </div>
+              {deliverables.map((item, idx) => (
+                <motion.div
+                  key={item}
+                  className="flex items-center space-x-3"
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: idx * 0.05 }}
+                  viewport={{ once: true, amount: 0.1 }}
+                >
+                  <CheckCircle className="w-5 h-5 text-amber-400 flex-shrink-0" />
+                  <span className="text-slate-300 text-sm">{item}</span>
+                </motion.div>
               ))}
             </div>
           </motion.div>
@@ -391,19 +793,19 @@ export default function InitialConsultationPage() {
             Join 500+ businesses that have accelerated their growth with our strategic consultation.
           </p>
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-            <Button size="xl" asChild className="bg-orange-500 hover:bg-orange-600 text-white group text-lg px-8 py-6">
+            <Button size="lg" asChild className="bg-amber-500 hover:bg-amber-600 text-white group text-lg px-8 py-6">
               <Link href="/contact?service=Initial%20Business%20Consultation&package=Initial%20Consultation%20A$550">
-                Schedule Your Consultation{" "}
+                Get Started{" "}
                 <ArrowRight className="w-6 h-6 ml-2 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
             <Button
-              size="xl"
+              size="lg"
               variant="outline"
               asChild
               className="border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white group text-lg px-8 py-6"
             >
-              <Link href="/#case-studies">View Success Stories</Link>
+              <Link href="/case-studies">View Success Stories</Link>
             </Button>
           </div>
           <p className="mt-8 text-sm text-slate-400">

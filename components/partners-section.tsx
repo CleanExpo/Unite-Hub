@@ -61,17 +61,17 @@ export default function PartnersSection() {
     <AnimatedSection className="py-16 md:py-24 bg-slate-950 relative overflow-hidden">
       {/* Background Gradients and Objects */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* Enhanced Gradient Backgrounds */}
+        {/* Enhanced Bold Gradient Backgrounds */}
         <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
-        <div className="absolute inset-0 bg-gradient-to-tl from-cyan-900/20 via-transparent to-teal-900/25"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-800/35 via-transparent to-cyan-900/20"></div>
-        <div className="absolute inset-0 bg-gradient-to-bl from-teal-900/18 via-transparent to-slate-700/25"></div>
-        <div className="absolute inset-0 bg-gradient-to-tr from-slate-700/22 via-transparent to-cyan-800/18"></div>
-        <div className="absolute inset-0 bg-gradient-to-l from-cyan-800/15 via-transparent to-teal-800/20"></div>
+        <div className="absolute inset-0 bg-gradient-to-tl from-cyan-900/40 via-transparent to-teal-900/45"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-800/55 via-transparent to-cyan-900/40"></div>
+        <div className="absolute inset-0 bg-gradient-to-bl from-teal-900/38 via-transparent to-slate-700/45"></div>
+        <div className="absolute inset-0 bg-gradient-to-tr from-slate-700/42 via-transparent to-cyan-800/38"></div>
+        <div className="absolute inset-0 bg-gradient-to-l from-cyan-800/35 via-transparent to-teal-800/40"></div>
         
-        {/* Large Animated Orbs */}
+        {/* Large Bold Animated Orbs */}
         <motion.div
-          className="absolute top-1/4 left-1/6 w-80 h-80 bg-gradient-to-br from-cyan-500/18 to-teal-500/15 rounded-full filter blur-3xl"
+          className="absolute top-1/4 left-1/6 w-80 h-80 bg-gradient-to-br from-cyan-500/38 to-teal-500/35 rounded-full filter blur-3xl"
           animate={{ x: [0, 30, 0], y: [0, -25, 0], scale: [1, 1.2, 1] }}
           transition={{
             duration: 32,
@@ -81,7 +81,7 @@ export default function PartnersSection() {
         />
         
         <motion.div
-          className="absolute bottom-1/4 right-1/6 w-96 h-96 bg-gradient-to-tl from-teal-500/15 to-cyan-500/18 rounded-full filter blur-3xl"
+          className="absolute bottom-1/4 right-1/6 w-96 h-96 bg-gradient-to-tl from-teal-500/35 to-cyan-500/38 rounded-full filter blur-3xl"
           animate={{ x: [0, -35, 0], y: [0, 30, 0], scale: [1, 0.85, 1] }}
           transition={{
             duration: 36,
@@ -91,9 +91,9 @@ export default function PartnersSection() {
           }}
         />
         
-        {/* Geometric Elements */}
+        {/* Bold Geometric Elements */}
         <motion.div
-          className="absolute top-1/6 right-12 w-28 h-28 border-2 border-cyan-400/45 rounded-full bg-gradient-to-br from-cyan-500/18 to-transparent"
+          className="absolute top-1/6 right-12 w-28 h-28 border-2 border-cyan-400/65 rounded-full bg-gradient-to-br from-cyan-500/38 to-transparent"
           animate={{ 
             x: [0, -20, 0], 
             y: [0, -18, 0], 

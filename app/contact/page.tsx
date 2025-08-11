@@ -208,16 +208,16 @@ export default function ContactPage() {
       >
         {/* Background Patterns */}
         <div className="absolute inset-0 pointer-events-none">
-          {/* Multi-layered Gradient Backgrounds */}
+          {/* Multi-layered Bold Gradient Backgrounds */}
           <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950"></div>
-          <div className="absolute inset-0 bg-gradient-to-tl from-purple-900/25 via-transparent to-violet-900/30"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/35 via-transparent to-purple-900/25"></div>
-          <div className="absolute inset-0 bg-gradient-to-bl from-violet-900/20 via-transparent to-slate-700/30"></div>
-          <div className="absolute inset-0 bg-gradient-to-tr from-slate-700/25 via-transparent to-purple-800/20"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-purple-900/45 via-transparent to-violet-900/50"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/55 via-transparent to-purple-900/45"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-violet-900/40 via-transparent to-slate-700/50"></div>
+          <div className="absolute inset-0 bg-gradient-to-tr from-slate-700/45 via-transparent to-purple-800/40"></div>
           
-          {/* Large Animated Orbs */}
+          {/* Large Bold Animated Orbs */}
           <motion.div
-            className="absolute top-1/4 left-1/6 w-80 h-80 bg-gradient-to-br from-purple-500/20 to-violet-500/18 rounded-full filter blur-3xl"
+            className="absolute top-1/4 left-1/6 w-80 h-80 bg-gradient-to-br from-purple-500/40 to-violet-500/38 rounded-full filter blur-3xl"
             animate={{ x: [0, 30, 0], y: [0, -25, 0], scale: [1, 1.2, 1] }}
             transition={{
               duration: 30,
@@ -227,7 +227,7 @@ export default function ContactPage() {
           />
           
           <motion.div
-            className="absolute bottom-1/4 right-1/6 w-96 h-96 bg-gradient-to-tl from-violet-500/18 to-purple-500/20 rounded-full filter blur-3xl"
+            className="absolute bottom-1/4 right-1/6 w-96 h-96 bg-gradient-to-tl from-violet-500/38 to-purple-500/40 rounded-full filter blur-3xl"
             animate={{ x: [0, -35, 0], y: [0, 30, 0], scale: [1, 0.85, 1] }}
             transition={{
               duration: 35,
@@ -237,9 +237,9 @@ export default function ContactPage() {
             }}
           />
           
-          {/* Geometric Elements */}
+          {/* Bold Geometric Elements */}
           <motion.div
-            className="absolute top-1/6 right-16 w-24 h-24 border-2 border-purple-400/45 rounded-full bg-gradient-to-br from-purple-500/18 to-transparent"
+            className="absolute top-1/6 right-16 w-24 h-24 border-2 border-purple-400/65 rounded-full bg-gradient-to-br from-purple-500/38 to-transparent"
             animate={{ 
               x: [0, -18, 0], 
               y: [0, -15, 0], 
@@ -253,7 +253,7 @@ export default function ContactPage() {
           />
           
           <motion.div
-            className="absolute bottom-1/6 left-16 w-20 h-20 border-2 border-violet-400/40 bg-gradient-to-br from-violet-500/15 to-transparent"
+            className="absolute bottom-1/6 left-16 w-20 h-20 border-2 border-violet-400/60 bg-gradient-to-br from-violet-500/35 to-transparent"
             style={{
               clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
             }}
@@ -1228,8 +1228,8 @@ export default function ContactPage() {
               asChild
               className="bg-cyan-500 hover:bg-cyan-600 text-white group"
             >
-              <Link href="/#unite-advantage">
-                Discover The Unite Advantage{" "}
+              <Link href="/case-studies">
+                Discover Our Success Stories{" "}
                 <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>

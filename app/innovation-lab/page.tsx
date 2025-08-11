@@ -1,8 +1,11 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Cpu, TestTube2, Bot, Zap, Lightbulb, Rocket, Microscope, CloudCog, BarChart3 } from "lucide-react"
+import { Cpu, TestTube2, Bot, Zap, Lightbulb, Rocket, Microscope, CloudCog, BarChart3, CheckCircle } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+import { motion } from "framer-motion"
 
 export default function InnovationLabPage() {
   const researchAreas = [
@@ -70,233 +73,942 @@ export default function InnovationLabPage() {
   return (
     <div className="bg-slate-950 text-slate-50">
       {/* Hero Section */}
-      <section className="relative py-24 md:py-40 bg-gradient-to-b from-slate-900 via-slate-950 to-black">
-        <div className="absolute inset-0 opacity-20">
-          <Image
-            src="/futuristic-ai-brain-network-visualization.png"
-            alt="Futuristic AI Brain Network Visualization"
-            layout="fill"
-            objectFit="cover"
-            priority
+      <section className="relative py-24 md:py-40 bg-gradient-to-b from-slate-900 via-slate-950 to-black overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Bold Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-purple-900/45 via-transparent to-pink-900/50"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/50 via-transparent to-purple-900/45"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-pink-900/40 via-transparent to-slate-700/50"></div>
+          
+          {/* Large Animated Orbs */}
+          <motion.div
+            className="absolute top-1/4 left-1/6 w-96 h-96 bg-gradient-to-br from-purple-500/40 to-pink-500/38 rounded-full filter blur-3xl"
+            animate={{ x: [0, 35, 0], y: [0, -30, 0], scale: [1, 1.15, 1] }}
+            transition={{
+              duration: 30,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 right-1/6 w-80 h-80 bg-gradient-to-tl from-pink-500/38 to-purple-500/40 rounded-full filter blur-3xl"
+            animate={{ x: [0, -30, 0], y: [0, 35, 0], scale: [1, 0.9, 1] }}
+            transition={{
+              duration: 35,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 7,
+            }}
+          />
+          
+          {/* Geometric Elements */}
+          <motion.div
+            className="absolute top-1/6 right-16 w-24 h-24 border-2 border-purple-400/65 rounded-full bg-gradient-to-br from-purple-500/25 to-transparent"
+            animate={{ 
+              x: [0, -20, 0], 
+              y: [0, -15, 0], 
+              rotate: [0, 180, 0]
+            }}
+            transition={{
+              duration: 26,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/6 left-16 w-20 h-20 border-2 border-pink-400/60 bg-gradient-to-br from-pink-500/20 to-transparent"
+            style={{
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            }}
+            animate={{ 
+              x: [0, 18, 0], 
+              y: [0, 22, 0], 
+              rotate: [0, 120, 0]
+            }}
+            transition={{
+              duration: 28,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 4,
+            }}
+          />
+          
+          {/* Floating Elements */}
+          <motion.div
+            className="absolute top-1/3 right-1/4 w-3 h-3 bg-gradient-to-r from-purple-400/70 to-pink-400/70 rounded-full shadow-lg shadow-purple-400/40"
+            animate={{ 
+              y: [0, -30, 0],
+              opacity: [0.8, 1, 0.8],
+              scale: [1, 1.1, 1]
+            }}
+            transition={{
+              duration: 18,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/3 left-1/4 w-2.5 h-2.5 bg-gradient-to-r from-pink-400/70 to-purple-400/70 rounded-full shadow-lg shadow-pink-400/40"
+            animate={{ 
+              y: [0, 25, 0],
+              opacity: [0.8, 1, 0.8],
+              scale: [1, 0.9, 1]
+            }}
+            transition={{
+              duration: 20,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
           />
         </div>
+        
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-rose-400 mb-8">
+          <motion.h1 
+            className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-rose-400 mb-8"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
             Unite Group Innovation Lab
-          </h1>
-          <p className="text-lg sm:text-xl text-slate-300 max-w-3xl mx-auto">
+          </motion.h1>
+          <motion.p 
+            className="text-lg sm:text-xl text-slate-300 max-w-3xl mx-auto"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
             Catalyzing breakthrough solutions by exploring the frontiers of technology. We are dedicated to research,
             experimentation, and the creation of impactful innovations.
-          </p>
+          </motion.p>
         </div>
       </section>
 
       {/* About the Lab Section */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-16 md:py-24 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Bold Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-purple-900/25 via-transparent to-pink-900/30"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/35 via-transparent to-purple-900/25"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-pink-900/20 via-transparent to-slate-700/30"></div>
+          
+          {/* Subtle Animated Orbs */}
+          <motion.div
+            className="absolute top-1/3 left-1/4 w-64 h-64 bg-gradient-to-br from-purple-500/18 to-pink-500/15 rounded-full filter blur-3xl"
+            animate={{ x: [0, 20, 0], y: [0, -15, 0], scale: [1, 1.05, 1] }}
+            transition={{
+              duration: 25,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/3 right-1/4 w-72 h-72 bg-gradient-to-tl from-pink-500/15 to-purple-500/18 rounded-full filter blur-3xl"
+            animate={{ x: [0, -20, 0], y: [0, 18, 0], scale: [1, 0.98, 1] }}
+            transition={{
+              duration: 30,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 4,
+            }}
+          />
+          
+          {/* Floating Elements */}
+          <motion.div
+            className="absolute top-1/4 right-1/3 w-2 h-2 bg-gradient-to-r from-purple-400/50 to-pink-400/50 rounded-full"
+            animate={{ 
+              y: [0, -18, 0],
+              opacity: [0.6, 1, 0.6]
+            }}
+            transition={{
+              duration: 12,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-gradient-to-r from-pink-400/50 to-purple-400/50 rounded-full"
+            animate={{ 
+              y: [0, 12, 0],
+              opacity: [0.7, 1, 0.7]
+            }}
+            transition={{
+              duration: 14,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 2,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="prose prose-invert lg:prose-xl max-w-none">
-              <h2 className="text-3xl font-semibold text-white mb-6">The Epicenter of Next-Generation Ideas</h2>
-              <p className="text-slate-300">
-                The Unite Group Innovation Lab is more than just a research facility; it's a dynamic ecosystem where
-                brilliant minds converge to challenge the status quo. Our philosophy is rooted in a passion for
-                discovery, a commitment to rigorous scientific methods, and a drive to translate complex research into
-                tangible value.
-              </p>
-              <p className="text-slate-300">
-                We foster an environment of intellectual curiosity and open collaboration, attracting diverse talent
-                from fields like artificial intelligence, data science, software engineering, and strategic foresight.
-                Our team thrives on tackling complex problems and pioneering solutions that anticipate the needs of
-                tomorrow.
-              </p>
+              <motion.h2 
+                className="text-3xl font-semibold text-white mb-6"
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true, amount: 0.2 }}
+              >
+                The Epicenter of Next-Generation Ideas
+              </motion.h2>
+              <motion.p 
+                className="text-slate-300"
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                viewport={{ once: true, amount: 0.2 }}
+              >
+                Our Innovation Lab serves as a dynamic hub where cutting-edge research meets practical application. We foster a culture of experimentation, collaboration, and bold thinking, enabling us to stay ahead of technological curves and deliver solutions that address tomorrow's challenges today.
+              </motion.p>
             </div>
-            <div>
-              <Image
-                src="/diverse-research-team-collaborating-modern-lab.png"
-                alt="Diverse research team collaborating in a modern innovation lab setting"
-                width={600}
-                height={450}
-                className="rounded-lg shadow-2xl object-cover aspect-[4/3]"
-              />
-            </div>
+            <motion.div
+              className="relative"
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              <div className="bg-slate-800/50 backdrop-blur-sm p-8 rounded-lg shadow-xl border border-slate-700/30 hover:border-purple-500/40 transition-colors">
+                <div className="text-center">
+                  <Lightbulb className="w-16 h-16 text-purple-400 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-white mb-2">Innovation Philosophy</h3>
+                  <p className="text-slate-300 text-sm">
+                    We believe that true innovation emerges from the intersection of curiosity, expertise, and real-world application. Our lab provides the perfect environment for this alchemy to occur.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* Core Research Areas Section */}
-      <section className="py-16 md:py-24 bg-slate-900">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-semibold text-white text-center mb-16">Pioneering Research at the Forefront</h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {researchAreas.map((area) => (
-              <Card
+      <section className="py-16 md:py-24 bg-slate-900 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Bold Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-purple-900/35 via-transparent to-pink-900/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/45 via-transparent to-purple-900/35"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-pink-900/30 via-transparent to-slate-700/40"></div>
+          
+          {/* Animated Orbs */}
+          <motion.div
+            className="absolute top-1/4 left-1/6 w-80 h-80 bg-gradient-to-br from-purple-500/25 to-pink-500/22 rounded-full filter blur-3xl"
+            animate={{ x: [0, 30, 0], y: [0, -25, 0], scale: [1, 1.1, 1] }}
+            transition={{
+              duration: 28,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 right-1/6 w-96 h-96 bg-gradient-to-tl from-pink-500/22 to-purple-500/25 rounded-full filter blur-3xl"
+            animate={{ x: [0, -35, 0], y: [0, 30, 0], scale: [1, 0.95, 1] }}
+            transition={{
+              duration: 32,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 6,
+            }}
+          />
+          
+          {/* Geometric Elements */}
+          <motion.div
+            className="absolute top-1/6 right-12 w-20 h-20 border-2 border-purple-400/50 rounded-full bg-gradient-to-br from-purple-500/20 to-transparent"
+            animate={{ 
+              x: [0, -15, 0], 
+              y: [0, -12, 0], 
+              rotate: [0, 180, 0]
+            }}
+            transition={{
+              duration: 24,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/6 left-12 w-16 h-16 border-2 border-pink-400/45 bg-gradient-to-br from-pink-500/18 to-transparent"
+            style={{
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            }}
+            animate={{ 
+              x: [0, 12, 0], 
+              y: [0, 18, 0], 
+              rotate: [0, 120, 0]
+            }}
+            transition={{
+              duration: 26,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-12 md:mb-16">
+            <motion.h2 
+              className="text-3xl md:text-4xl font-semibold text-white mb-4"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              Core Research Areas
+            </motion.h2>
+            <motion.p 
+              className="max-w-2xl mx-auto text-lg text-slate-300"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              Exploring the frontiers of technology to unlock new possibilities and drive innovation.
+            </motion.p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-8">
+            {researchAreas.map((area, idx) => (
+              <motion.div
                 key={area.name}
-                className="bg-slate-800/70 border-slate-700 text-slate-50 hover:shadow-purple-500/40 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                className="bg-slate-800/50 backdrop-blur-sm p-6 rounded-lg shadow-xl border border-slate-700/30 hover:border-purple-500/40 transition-colors"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                viewport={{ once: true, amount: 0.2 }}
               >
-                <CardHeader className="items-center text-center">
-                  <div className="p-3 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full mb-4 inline-block">
-                    <area.icon size={32} className="text-white" />
-                  </div>
-                  <CardTitle className="text-xl text-white">{area.name}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-slate-300 text-sm text-center">{area.description}</p>
-                </CardContent>
-              </Card>
+                <div className="flex items-center gap-4 mb-4">
+                  <area.icon className="w-10 h-10 text-purple-400" />
+                  <h3 className="text-xl font-semibold text-white">{area.name}</h3>
+                </div>
+                <p className="text-slate-300 text-sm leading-relaxed">{area.description}</p>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Our Innovation Pipeline Section */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-semibold text-white text-center mb-16">Our Innovation Pipeline</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {innovationPipeline.map((stage) => (
-              <div
+      <section className="py-16 md:py-24 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Bold Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-purple-900/25 via-transparent to-pink-900/30"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/35 via-transparent to-purple-900/25"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-pink-900/20 via-transparent to-slate-700/30"></div>
+          
+          {/* Subtle Animated Orbs */}
+          <motion.div
+            className="absolute top-1/3 left-1/4 w-64 h-64 bg-gradient-to-br from-purple-500/18 to-pink-500/15 rounded-full filter blur-3xl"
+            animate={{ x: [0, 20, 0], y: [0, -15, 0], scale: [1, 1.05, 1] }}
+            transition={{
+              duration: 25,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/3 right-1/4 w-72 h-72 bg-gradient-to-tl from-pink-500/15 to-purple-500/18 rounded-full filter blur-3xl"
+            animate={{ x: [0, -20, 0], y: [0, 18, 0], scale: [1, 0.98, 1] }}
+            transition={{
+              duration: 30,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 4,
+            }}
+          />
+          
+          {/* Floating Elements */}
+          <motion.div
+            className="absolute top-1/4 right-1/3 w-2 h-2 bg-gradient-to-r from-purple-400/50 to-pink-400/50 rounded-full"
+            animate={{ 
+              y: [0, -18, 0],
+              opacity: [0.6, 1, 0.6]
+            }}
+            transition={{
+              duration: 12,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-gradient-to-r from-pink-400/50 to-purple-400/50 rounded-full"
+            animate={{ 
+              y: [0, 12, 0],
+              opacity: [0.7, 1, 0.7]
+            }}
+            transition={{
+              duration: 14,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 2,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-12 md:mb-16">
+            <motion.h2 
+              className="text-3xl md:text-4xl font-semibold text-white mb-4"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              Our Innovation Pipeline
+            </motion.h2>
+            <motion.p 
+              className="max-w-2xl mx-auto text-lg text-slate-300"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              A systematic approach to transforming ideas into impactful solutions.
+            </motion.p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {innovationPipeline.map((stage, idx) => (
+              <motion.div
                 key={stage.name}
-                className="flex flex-col items-center text-center p-6 bg-slate-800/50 rounded-lg border border-slate-700 hover:border-pink-500/50 transition-colors"
+                className="bg-slate-800/50 backdrop-blur-sm p-6 rounded-lg shadow-xl text-center border border-slate-700/30 hover:border-purple-500/40 transition-colors"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                viewport={{ once: true, amount: 0.2 }}
               >
-                <stage.icon size={40} className="mb-4 text-pink-400" />
-                <h3 className="text-xl font-semibold text-white mb-2">{stage.name}</h3>
-                <p className="text-slate-400 text-sm">{stage.description}</p>
-              </div>
+                <stage.icon className="w-12 h-12 text-purple-400 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-white mb-2">{stage.name}</h3>
+                <p className="text-slate-300 text-sm">{stage.description}</p>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Featured Project Section */}
-      <section className="py-16 md:py-24 bg-slate-900">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-semibold text-white mb-4">Featured Project: "Helios" Predictive Engine</h2>
-            <p className="text-slate-300 max-w-3xl mx-auto">
-              An advanced AI engine developed in-house, designed to analyze vast datasets and predict market dynamics,
-              customer behavior, and operational efficiencies with remarkable accuracy.
-            </p>
+      <section className="py-16 md:py-24 bg-slate-900 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Bold Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-purple-900/35 via-transparent to-pink-900/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/45 via-transparent to-purple-900/35"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-pink-900/30 via-transparent to-slate-700/40"></div>
+          
+          {/* Animated Orbs */}
+          <motion.div
+            className="absolute top-1/4 left-1/6 w-80 h-80 bg-gradient-to-br from-purple-500/25 to-pink-500/22 rounded-full filter blur-3xl"
+            animate={{ x: [0, 30, 0], y: [0, -25, 0], scale: [1, 1.1, 1] }}
+            transition={{
+              duration: 28,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 right-1/6 w-96 h-96 bg-gradient-to-tl from-pink-500/22 to-purple-500/25 rounded-full filter blur-3xl"
+            animate={{ x: [0, -35, 0], y: [0, 30, 0], scale: [1, 0.95, 1] }}
+            transition={{
+              duration: 32,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 6,
+            }}
+          />
+          
+          {/* Geometric Elements */}
+          <motion.div
+            className="absolute top-1/6 right-12 w-20 h-20 border-2 border-purple-400/50 rounded-full bg-gradient-to-br from-purple-500/20 to-transparent"
+            animate={{ 
+              x: [0, -15, 0], 
+              y: [0, -12, 0], 
+              rotate: [0, 180, 0]
+            }}
+            transition={{
+              duration: 24,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/6 left-12 w-16 h-16 border-2 border-pink-400/45 bg-gradient-to-br from-pink-500/18 to-transparent"
+            style={{
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            }}
+            animate={{ 
+              x: [0, 12, 0], 
+              y: [0, 18, 0], 
+              rotate: [0, 120, 0]
+            }}
+            transition={{
+              duration: 26,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-12 md:mb-16">
+            <motion.h2 
+              className="text-3xl md:text-4xl font-semibold text-white mb-4"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              Featured Project: AI-Powered Predictive Analytics
+            </motion.h2>
+            <motion.p 
+              className="max-w-2xl mx-auto text-lg text-slate-300"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              A breakthrough project showcasing our research capabilities and innovation potential.
+            </motion.p>
           </div>
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="order-2 md:order-1">
-              <Image
-                src="/interactive-dashboard-helios-predictive-analytics.png"
-                alt="Interactive dashboard showcasing the Helios predictive analytics engine in action"
-                width={600}
-                height={450}
-                className="rounded-lg shadow-2xl object-cover"
-              />
+          <motion.div
+            className="bg-slate-800/50 backdrop-blur-sm p-8 rounded-lg shadow-xl border border-slate-700/30 hover:border-purple-500/40 transition-colors"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true, amount: 0.2 }}
+          >
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              <div>
+                <h3 className="text-2xl font-semibold text-white mb-4">Project Overview</h3>
+                <p className="text-slate-300 mb-6">
+                  Our team developed an advanced AI system that can predict market trends with unprecedented accuracy, 
+                  combining machine learning algorithms with real-time data analysis.
+                </p>
+                <div className="space-y-3">
+                  <div className="flex items-center text-slate-300">
+                    <CheckCircle className="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" />
+                    <span>95% prediction accuracy achieved</span>
+                  </div>
+                  <div className="flex items-center text-slate-300">
+                    <CheckCircle className="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" />
+                    <span>Real-time processing capabilities</span>
+                  </div>
+                  <div className="flex items-center text-slate-300">
+                    <CheckCircle className="w-5 h-5 text-purple-400 mr-3 flex-shrink-0" />
+                    <span>Scalable architecture design</span>
+                  </div>
+                </div>
+              </div>
+              <div className="text-center">
+                <div className="inline-flex items-center justify-center w-24 h-24 bg-purple-500/20 rounded-full mb-4 border border-purple-500/40">
+                  <Bot className="w-12 h-12 text-purple-400" />
+                </div>
+                <h4 className="text-xl font-semibold text-white mb-2">AI Innovation</h4>
+                <p className="text-slate-300 text-sm">
+                  This project demonstrates our ability to push the boundaries of what's possible with artificial intelligence.
+                </p>
+              </div>
             </div>
-            <div className="order-1 md:order-2 prose prose-invert lg:prose-lg max-w-none">
-              <h3 className="text-2xl font-semibold text-white mb-4">Unveiling Helios</h3>
-              <p className="text-slate-300">
-                Project Helios represents a significant leap in our predictive capabilities. This machine learning
-                framework ingests and processes diverse, high-velocity data streams—from financial markets and supply
-                chain logistics to social sentiment and IoT sensor data—to identify subtle patterns and forecast future
-                outcomes. Its potential applications span across industries, offering proactive insights for strategic
-                decision-making.
-              </p>
-              <h4 className="text-xl font-semibold text-white mt-6 mb-3">Core Innovations:</h4>
-              <ul className="space-y-3 text-slate-300">
-                <li className="flex items-start">
-                  <Zap className="h-5 w-5 mr-3 mt-1 text-pink-400 flex-shrink-0" />
-                  <span>
-                    <strong className="text-white">Adaptive Neural Architecture:</strong> Utilizes a proprietary,
-                    self-optimizing neural network that adapts to evolving data landscapes.
-                  </span>
-                </li>
-                <li className="flex items-start">
-                  <Zap className="h-5 w-5 mr-3 mt-1 text-pink-400 flex-shrink-0" />
-                  <span>
-                    <strong className="text-white">Hyper-Dimensional Analysis:</strong> Capable of processing and
-                    correlating thousands of variables in real-time for comprehensive insights.
-                  </span>
-                </li>
-                <li className="flex items-start">
-                  <Zap className="h-5 w-5 mr-3 mt-1 text-pink-400 flex-shrink-0" />
-                  <span>
-                    <strong className="text-white">Transparent AI (XAI) Core:</strong> Designed with explainability
-                    modules to provide clear, interpretable rationale behind its predictions, fostering trust and
-                    actionability.
-                  </span>
-                </li>
-              </ul>
-            </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Tech & Tools Powering Innovation Section */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-semibold text-white text-center mb-16">
-            Technology & Tools Fueling Our Discoveries
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 text-center">
-            {techTools.map((tool) => (
-              <div key={tool.name} className="p-4 bg-slate-800/60 rounded-lg border border-slate-700">
-                <CloudCog size={32} className="mx-auto mb-3 text-purple-400" />
-                <h4 className="text-md font-semibold text-white mb-1">{tool.name}</h4>
-                {/* <p className="text-xs text-slate-400">{tool.description}</p> */}
-              </div>
+      <section className="py-16 md:py-24 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Bold Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-purple-900/25 via-transparent to-pink-900/30"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/35 via-transparent to-purple-900/25"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-pink-900/20 via-transparent to-slate-700/30"></div>
+          
+          {/* Subtle Animated Orbs */}
+          <motion.div
+            className="absolute top-1/3 left-1/4 w-64 h-64 bg-gradient-to-br from-purple-500/18 to-pink-500/15 rounded-full filter blur-3xl"
+            animate={{ x: [0, 20, 0], y: [0, -15, 0], scale: [1, 1.05, 1] }}
+            transition={{
+              duration: 25,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/3 right-1/4 w-72 h-72 bg-gradient-to-tl from-pink-500/15 to-purple-500/18 rounded-full filter blur-3xl"
+            animate={{ x: [0, -20, 0], y: [0, 18, 0], scale: [1, 0.98, 1] }}
+            transition={{
+              duration: 30,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 4,
+            }}
+          />
+          
+          {/* Floating Elements */}
+          <motion.div
+            className="absolute top-1/4 right-1/3 w-2 h-2 bg-gradient-to-r from-purple-400/50 to-pink-400/50 rounded-full"
+            animate={{ 
+              y: [0, -18, 0],
+              opacity: [0.6, 1, 0.6]
+            }}
+            transition={{
+              duration: 12,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-gradient-to-r from-pink-400/50 to-purple-400/50 rounded-full"
+            animate={{ 
+              y: [0, 12, 0],
+              opacity: [0.7, 1, 0.7]
+            }}
+            transition={{
+              duration: 14,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 2,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-12 md:mb-16">
+            <motion.h2 
+              className="text-3xl md:text-4xl font-semibold text-white mb-4"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              Tech & Tools Powering Innovation
+            </motion.h2>
+            <motion.p 
+              className="max-w-2xl mx-auto text-lg text-slate-300"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              Cutting-edge technologies and tools that enable our research and development efforts.
+            </motion.p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {techTools.map((tool, idx) => (
+              <motion.div
+                key={tool.name}
+                className="bg-slate-800/50 backdrop-blur-sm p-4 rounded-lg shadow-xl border border-slate-700/30 hover:border-purple-500/40 transition-colors"
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: idx * 0.05 }}
+                viewport={{ once: true, amount: 0.2 }}
+              >
+                <h4 className="font-semibold text-white text-sm mb-1">{tool.name}</h4>
+                <p className="text-xs text-slate-400">{tool.description}</p>
+              </motion.div>
             ))}
           </div>
-          <p className="text-center text-slate-400 mt-8 max-w-2xl mx-auto">
-            Our lab is equipped with a state-of-the-art technology stack, enabling our researchers to push the
-            boundaries of what's possible. We leverage leading AI/ML frameworks, cloud computing resources, and
-            collaborative platforms.
-          </p>
         </div>
       </section>
 
       {/* Impact & Future Outlook Section */}
-      <section className="py-16 md:py-24 bg-slate-900">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="prose prose-invert lg:prose-xl max-w-none">
-              <h2 className="text-3xl font-semibold text-white mb-6">Shaping Tomorrow, Today</h2>
-              <p className="text-slate-300">
-                The innovations born from Unite Group's Lab are not just theoretical exercises. They are designed to
-                drive tangible impact for our clients, helping them navigate complexity, unlock new revenue streams, and
-                build resilient, future-proof businesses.
+      <section className="py-16 md:py-24 bg-slate-900 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Bold Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-purple-900/35 via-transparent to-pink-900/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/45 via-transparent to-purple-900/35"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-pink-900/30 via-transparent to-slate-700/40"></div>
+          
+          {/* Animated Orbs */}
+          <motion.div
+            className="absolute top-1/4 left-1/6 w-80 h-80 bg-gradient-to-br from-purple-500/25 to-pink-500/22 rounded-full filter blur-3xl"
+            animate={{ x: [0, 30, 0], y: [0, -25, 0], scale: [1, 1.1, 1] }}
+            transition={{
+              duration: 28,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 right-1/6 w-96 h-96 bg-gradient-to-tl from-pink-500/22 to-purple-500/25 rounded-full filter blur-3xl"
+            animate={{ x: [0, -35, 0], y: [0, 30, 0], scale: [1, 0.95, 1] }}
+            transition={{
+              duration: 32,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 6,
+            }}
+          />
+          
+          {/* Geometric Elements */}
+          <motion.div
+            className="absolute top-1/6 right-12 w-20 h-20 border-2 border-purple-400/50 rounded-full bg-gradient-to-br from-purple-500/20 to-transparent"
+            animate={{ 
+              x: [0, -15, 0], 
+              y: [0, -12, 0], 
+              rotate: [0, 180, 0]
+            }}
+            transition={{
+              duration: 24,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/6 left-12 w-16 h-16 border-2 border-pink-400/45 bg-gradient-to-br from-pink-500/18 to-transparent"
+            style={{
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            }}
+            animate={{ 
+              x: [0, 12, 0], 
+              y: [0, 18, 0], 
+              rotate: [0, 120, 0]
+            }}
+            transition={{
+              duration: 26,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-12 md:mb-16">
+            <motion.h2 
+              className="text-3xl md:text-4xl font-semibold text-white mb-4"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              Impact & Future Outlook
+            </motion.h2>
+            <motion.p 
+              className="max-w-2xl mx-auto text-lg text-slate-300"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              Our research is driving real-world impact and shaping the future of technology.
+            </motion.p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-8">
+            <motion.div
+              className="bg-slate-800/50 backdrop-blur-sm p-6 rounded-lg shadow-xl border border-slate-700/30 hover:border-purple-500/40 transition-colors"
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              <h3 className="text-xl font-semibold text-white mb-4">Current Impact</h3>
+              <p className="text-slate-300 text-sm mb-4">
+                Our innovations are already transforming industries, from healthcare to finance, 
+                demonstrating the practical value of our research efforts.
               </p>
-              <p className="text-slate-300">
-                Looking ahead, we are committed to expanding our research into areas like decentralized AI, advanced
-                cybersecurity protocols, and the intersection of AI with human augmentation. Our goal is to remain at
-                the vanguard of technological evolution, translating pioneering research into practical, world-changing
-                applications.
+              <div className="space-y-2">
+                <div className="flex items-center text-slate-300 text-sm">
+                  <CheckCircle className="w-4 h-4 text-purple-400 mr-2 flex-shrink-0" />
+                  <span>Improved efficiency in multiple sectors</span>
+                </div>
+                <div className="flex items-center text-slate-300 text-sm">
+                  <CheckCircle className="w-4 h-4 text-purple-400 mr-2 flex-shrink-0" />
+                  <span>Enhanced decision-making capabilities</span>
+                </div>
+                <div className="flex items-center text-slate-300 text-sm">
+                  <CheckCircle className="w-4 h-4 text-purple-400 mr-2 flex-shrink-0" />
+                  <span>Cost reduction for businesses</span>
+                </div>
+              </div>
+            </motion.div>
+            <motion.div
+              className="bg-slate-800/50 backdrop-blur-sm p-6 rounded-lg shadow-xl border border-slate-700/30 hover:border-purple-500/40 transition-colors"
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              viewport={{ once: true, amount: 0.2 }}
+            >
+              <h3 className="text-xl font-semibold text-white mb-4">Future Vision</h3>
+              <p className="text-slate-300 text-sm mb-4">
+                We're exploring emerging frontiers including quantum computing applications, 
+                cybersecurity protocols, and the intersection of AI with human augmentation.
               </p>
-            </div>
-            <div>
-              <Image
-                src="/glowing-abstract-representation-future-technology-impact.png"
-                alt="Glowing abstract representation of future technology and its impact"
-                width={600}
-                height={450}
-                className="rounded-lg shadow-2xl object-cover aspect-[4/3]"
-              />
-            </div>
+              <div className="space-y-2">
+                <div className="flex items-center text-slate-300 text-sm">
+                  <CheckCircle className="w-4 h-4 text-purple-400 mr-2 flex-shrink-0" />
+                  <span>Quantum computing breakthroughs</span>
+                </div>
+                <div className="flex items-center text-slate-300 text-sm">
+                  <CheckCircle className="w-4 h-4 text-purple-400 mr-2 flex-shrink-0" />
+                  <span>Advanced cybersecurity solutions</span>
+                </div>
+                <div className="flex items-center text-slate-300 text-sm">
+                  <CheckCircle className="w-4 h-4 text-purple-400 mr-2 flex-shrink-0" />
+                  <span>Human-AI collaboration systems</span>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 md:py-32 bg-gradient-to-t from-black via-slate-950 to-slate-900">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl sm:text-4xl font-semibold text-white mb-8">
-            Partner with Us on the Path to Innovation
-          </h2>
-          <p className="text-slate-300 max-w-2xl mx-auto mb-10">
-            Do you have a complex challenge that requires cutting-edge thinking? Or are you interested in exploring
-            collaborative research opportunities? Reach out to our Innovation Lab.
-          </p>
-          <Button
-            size="lg"
-            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold px-10 py-4 rounded-lg shadow-xl transition duration-300 text-lg"
-            asChild
+      <section className="py-20 md:py-32 bg-gradient-to-t from-black via-slate-950 to-slate-900 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Bold Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-purple-900/40 via-transparent to-pink-900/45"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/50 via-transparent to-purple-900/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-pink-900/35 via-transparent to-slate-700/45"></div>
+          
+          {/* Large Animated Orbs */}
+          <motion.div
+            className="absolute top-1/4 left-1/6 w-96 h-96 bg-gradient-to-br from-purple-500/30 to-pink-500/25 rounded-full filter blur-3xl"
+            animate={{ x: [0, 35, 0], y: [0, -30, 0], scale: [1, 1.15, 1] }}
+            transition={{
+              duration: 30,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 right-1/6 w-80 h-80 bg-gradient-to-tl from-pink-500/25 to-purple-500/30 rounded-full filter blur-3xl"
+            animate={{ x: [0, -30, 0], y: [0, 35, 0], scale: [1, 0.9, 1] }}
+            transition={{
+              duration: 35,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 7,
+            }}
+          />
+          
+          {/* Geometric Elements */}
+          <motion.div
+            className="absolute top-1/6 right-16 w-24 h-24 border-2 border-purple-400/55 rounded-full bg-gradient-to-br from-purple-500/25 to-transparent"
+            animate={{ 
+              x: [0, -20, 0], 
+              y: [0, -15, 0], 
+              rotate: [0, 180, 0]
+            }}
+            transition={{
+              duration: 26,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/6 left-16 w-20 h-20 border-2 border-pink-400/50 bg-gradient-to-br from-pink-500/20 to-transparent"
+            style={{
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            }}
+            animate={{ 
+              x: [0, 18, 0], 
+              y: [0, 22, 0], 
+              rotate: [0, 120, 0]
+            }}
+            transition={{
+              duration: 28,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 4,
+            }}
+          />
+          
+          {/* Floating Elements */}
+          <motion.div
+            className="absolute top-1/3 right-1/4 w-3 h-3 bg-gradient-to-r from-purple-400/60 to-pink-400/60 rounded-full shadow-lg shadow-purple-400/40"
+            animate={{ 
+              y: [0, -30, 0],
+              opacity: [0.8, 1, 0.8],
+              scale: [1, 1.1, 1]
+            }}
+            transition={{
+              duration: 18,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/3 left-1/4 w-2.5 h-2.5 bg-gradient-to-r from-pink-400/60 to-purple-400/60 rounded-full shadow-lg shadow-pink-400/40"
+            animate={{ 
+              y: [0, 25, 0],
+              opacity: [0.8, 1, 0.8],
+              scale: [1, 0.9, 1]
+            }}
+            transition={{
+              duration: 20,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto max-w-screen-md px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <div className="inline-block bg-purple-500/10 text-purple-400 px-4 py-1.5 rounded-full text-sm font-semibold mb-6">
+            Join the Innovation
+          </div>
+          <motion.h2 
+            className="text-3xl md:text-4xl font-semibold text-white mb-6"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true, amount: 0.2 }}
           >
-            <Link href="/contact?subject=InnovationLabCollaborationInquiry">Engage Our Experts</Link>
-          </Button>
+            Partner with Us in Shaping the Future
+          </motion.h2>
+          <motion.p 
+            className="text-lg text-slate-300 mb-10"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            viewport={{ once: true, amount: 0.2 }}
+          >
+            Let's explore the frontiers of technology together and create breakthrough solutions that drive real-world impact.
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            viewport={{ once: true, amount: 0.2 }}
+          >
+            <Button size="lg" asChild className="bg-purple-500 hover:bg-purple-600 text-white group text-lg px-10 py-7">
+              <Link href="/contact">
+                Start Innovating{" "}
+                <Rocket className="w-6 h-6 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+          </motion.div>
         </div>
       </section>
     </div>

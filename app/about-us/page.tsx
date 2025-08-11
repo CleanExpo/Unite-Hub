@@ -14,16 +14,16 @@ export default function AboutUsPage() {
       <section className="relative py-20 md:py-32 bg-gradient-to-b from-slate-900 to-slate-950 overflow-hidden">
         {/* Enhanced Background Patterns */}
         <div className="absolute inset-0 pointer-events-none">
-          {/* Multi-layered Gradient Backgrounds */}
+          {/* Multi-layered Bold Gradient Backgrounds */}
           <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950"></div>
-          <div className="absolute inset-0 bg-gradient-to-tl from-blue-900/25 via-transparent to-indigo-900/30"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/35 via-transparent to-blue-900/25"></div>
-          <div className="absolute inset-0 bg-gradient-to-bl from-indigo-900/20 via-transparent to-slate-700/30"></div>
-          <div className="absolute inset-0 bg-gradient-to-tr from-slate-700/25 via-transparent to-blue-800/20"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-blue-900/45 via-transparent to-indigo-900/50"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/55 via-transparent to-blue-900/45"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-indigo-900/40 via-transparent to-slate-700/50"></div>
+          <div className="absolute inset-0 bg-gradient-to-tr from-slate-700/45 via-transparent to-blue-800/40"></div>
           
-          {/* Large Animated Orbs */}
+          {/* Large Bold Animated Orbs */}
           <motion.div
-            className="absolute top-1/4 left-1/6 w-80 h-80 bg-gradient-to-br from-blue-500/20 to-indigo-500/18 rounded-full filter blur-3xl"
+            className="absolute top-1/4 left-1/6 w-80 h-80 bg-gradient-to-br from-blue-500/40 to-indigo-500/38 rounded-full filter blur-3xl"
             animate={{ x: [0, 30, 0], y: [0, -25, 0], scale: [1, 1.2, 1] }}
             transition={{
               duration: 30,
@@ -33,7 +33,7 @@ export default function AboutUsPage() {
           />
           
           <motion.div
-            className="absolute bottom-1/4 right-1/6 w-96 h-96 bg-gradient-to-tl from-indigo-500/18 to-blue-500/20 rounded-full filter blur-3xl"
+            className="absolute bottom-1/4 right-1/6 w-96 h-96 bg-gradient-to-tl from-indigo-500/38 to-blue-500/40 rounded-full filter blur-3xl"
             animate={{ x: [0, -35, 0], y: [0, 30, 0], scale: [1, 0.85, 1] }}
             transition={{
               duration: 35,
@@ -43,9 +43,9 @@ export default function AboutUsPage() {
             }}
           />
           
-          {/* Geometric Elements - Different from home page */}
+          {/* Bold Geometric Elements - Different from home page */}
           <motion.div
-            className="absolute top-1/6 right-16 w-24 h-24 border-2 border-blue-400/45 rounded-full bg-gradient-to-br from-blue-500/18 to-transparent"
+            className="absolute top-1/6 right-16 w-24 h-24 border-2 border-blue-400/65 rounded-full bg-gradient-to-br from-blue-500/38 to-transparent"
             animate={{ 
               x: [0, -18, 0], 
               y: [0, -15, 0], 
@@ -59,7 +59,7 @@ export default function AboutUsPage() {
           />
           
           <motion.div
-            className="absolute bottom-1/6 left-16 w-20 h-20 border-2 border-indigo-400/40 bg-gradient-to-br from-indigo-500/15 to-transparent"
+            className="absolute bottom-1/6 left-16 w-20 h-20 border-2 border-indigo-400/60 bg-gradient-to-br from-indigo-500/35 to-transparent"
             style={{
               clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
             }}
@@ -76,9 +76,9 @@ export default function AboutUsPage() {
             }}
           />
           
-          {/* Star Shapes - Unique to about page */}
+          {/* Bold Star Shapes - Unique to about page */}
           <motion.div
-            className="absolute top-1/3 left-1/4 w-16 h-16 border-2 border-blue-300/50 bg-gradient-to-br from-blue-400/20 to-transparent"
+            className="absolute top-1/3 left-1/4 w-16 h-16 border-2 border-blue-300/70 bg-gradient-to-br from-blue-400/40 to-transparent"
             style={{
               clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)'
             }}
@@ -97,7 +97,7 @@ export default function AboutUsPage() {
           />
           
           <motion.div
-            className="absolute bottom-1/3 right-1/4 w-12 h-12 border-2 border-indigo-300/50 bg-gradient-to-br from-indigo-400/18 to-transparent"
+            className="absolute bottom-1/3 right-1/4 w-12 h-12 border-2 border-indigo-300/70 bg-gradient-to-br from-indigo-400/38 to-transparent"
             style={{
               clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)'
             }}

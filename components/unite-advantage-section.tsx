@@ -6,13 +6,15 @@ import Image from "next/image"
 import { motion } from "framer-motion"
 import { Zap, DollarSign, Users, ShieldCheck } from "lucide-react"
 
-const AnimatedSection: React.FC<{ children: React.ReactNode; className?: string; delay?: number }> = ({
+const AnimatedSection: React.FC<{ children: React.ReactNode; className?: string; delay?: number; id?: string }> = ({
   children,
   className,
   delay = 0,
+  id,
 }) => {
   return (
     <motion.section
+      id={id}
       className={className}
       initial="hidden"
       whileInView="visible"
@@ -53,17 +55,17 @@ export default function UniteAdvantageSection() {
     <AnimatedSection id="unite-advantage" className="py-16 md:py-24 bg-slate-900 relative overflow-hidden">
       {/* Background Gradients and Objects */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* Enhanced Gradient Backgrounds */}
+        {/* Enhanced Bold Gradient Backgrounds */}
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
-        <div className="absolute inset-0 bg-gradient-to-tl from-cyan-900/15 via-transparent to-teal-900/20"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-800/25 via-transparent to-cyan-900/15"></div>
-        <div className="absolute inset-0 bg-gradient-to-bl from-teal-900/18 via-transparent to-slate-700/20"></div>
-        <div className="absolute inset-0 bg-gradient-to-tr from-slate-700/18 via-transparent to-cyan-800/15"></div>
-        <div className="absolute inset-0 bg-gradient-to-l from-cyan-800/12 via-transparent to-teal-800/18"></div>
+        <div className="absolute inset-0 bg-gradient-to-tl from-cyan-900/35 via-transparent to-teal-900/40"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-800/45 via-transparent to-cyan-900/35"></div>
+        <div className="absolute inset-0 bg-gradient-to-bl from-teal-900/38 via-transparent to-slate-700/40"></div>
+        <div className="absolute inset-0 bg-gradient-to-tr from-slate-700/38 via-transparent to-cyan-800/35"></div>
+        <div className="absolute inset-0 bg-gradient-to-l from-cyan-800/32 via-transparent to-teal-800/38"></div>
         
-        {/* Large Animated Orbs */}
+        {/* Large Bold Animated Orbs */}
         <motion.div
-          className="absolute top-1/4 left-1/6 w-64 h-64 bg-gradient-to-br from-cyan-500/15 to-teal-500/12 rounded-full filter blur-3xl"
+          className="absolute top-1/4 left-1/6 w-64 h-64 bg-gradient-to-br from-cyan-500/35 to-teal-500/32 rounded-full filter blur-3xl"
           animate={{ x: [0, 25, 0], y: [0, -20, 0], scale: [1, 1.15, 1] }}
           transition={{
             duration: 28,
@@ -73,7 +75,7 @@ export default function UniteAdvantageSection() {
         />
         
         <motion.div
-          className="absolute bottom-1/4 right-1/6 w-80 h-80 bg-gradient-to-tl from-teal-500/12 to-cyan-500/15 rounded-full filter blur-3xl"
+          className="absolute bottom-1/4 right-1/6 w-80 h-80 bg-gradient-to-tl from-teal-500/32 to-cyan-500/35 rounded-full filter blur-3xl"
           animate={{ x: [0, -30, 0], y: [0, 25, 0], scale: [1, 0.9, 1] }}
           transition={{
             duration: 32,
@@ -83,9 +85,9 @@ export default function UniteAdvantageSection() {
           }}
         />
         
-        {/* Geometric Elements */}
+        {/* Bold Geometric Elements */}
         <motion.div
-          className="absolute top-1/6 left-12 w-20 h-20 border-2 border-cyan-400/40 rounded-full bg-gradient-to-br from-cyan-500/15 to-transparent"
+          className="absolute top-1/6 left-12 w-20 h-20 border-2 border-cyan-400/60 rounded-full bg-gradient-to-br from-cyan-500/35 to-transparent"
           animate={{ 
             x: [0, 15, 0], 
             y: [0, -12, 0], 
@@ -99,7 +101,7 @@ export default function UniteAdvantageSection() {
         />
         
         <motion.div
-          className="absolute bottom-1/6 right-12 w-16 h-16 border-2 border-teal-400/35 bg-gradient-to-br from-teal-500/12 to-transparent"
+          className="absolute bottom-1/6 right-12 w-16 h-16 border-2 border-teal-400/55 bg-gradient-to-br from-teal-500/32 rounded-full filter blur-3xl"
           style={{
             clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
           }}
@@ -116,9 +118,9 @@ export default function UniteAdvantageSection() {
           }}
         />
         
-        {/* Triangle Shape */}
+        {/* Bold Triangle Shape */}
         <motion.div
-          className="absolute top-2/3 left-20 w-0 h-0 border-l-[10px] border-l-transparent border-b-[16px] border-b-cyan-400/35 border-r-[10px] border-r-transparent"
+          className="absolute top-2/3 left-20 w-0 h-0 border-l-[10px] border-l-transparent border-b-[16px] border-b-cyan-400/55 border-r-[10px] border-r-transparent"
           animate={{ 
             x: [0, 8, 0], 
             y: [0, -12, 0], 
@@ -132,9 +134,9 @@ export default function UniteAdvantageSection() {
           }}
         />
         
-        {/* Diamond Shape */}
+        {/* Bold Diamond Shape */}
         <motion.div
-          className="absolute bottom-1/3 right-20 w-12 h-12 border-2 border-teal-300/45 bg-gradient-to-br from-teal-400/18 to-transparent"
+          className="absolute bottom-1/3 right-20 w-12 h-12 border-2 border-teal-300/65 bg-gradient-to-br from-teal-400/38 to-transparent"
           style={{
             transform: 'rotate(45deg)'
           }}
@@ -151,12 +153,12 @@ export default function UniteAdvantageSection() {
           }}
         />
         
-        {/* Floating Elements */}
+        {/* Bold Floating Elements */}
         <motion.div
-          className="absolute top-1/3 right-1/4 w-3 h-3 bg-gradient-to-r from-cyan-400/50 to-teal-400/50 rounded-full shadow-lg shadow-cyan-400/30"
+          className="absolute top-1/3 right-1/4 w-3 h-3 bg-gradient-to-r from-cyan-400/70 to-teal-400/70 rounded-full shadow-lg shadow-cyan-400/50"
           animate={{ 
             y: [0, -25, 0],
-            opacity: [0.7, 1, 0.7],
+            opacity: [0.9, 1, 0.9],
             scale: [1, 1.1, 1]
           }}
           transition={{
@@ -167,10 +169,10 @@ export default function UniteAdvantageSection() {
         />
         
         <motion.div
-          className="absolute bottom-1/3 left-1/4 w-2.5 h-2.5 bg-gradient-to-r from-teal-400/50 to-cyan-400/50 rounded-full shadow-lg shadow-teal-400/30"
+          className="absolute bottom-1/3 left-1/4 w-2.5 h-2.5 bg-gradient-to-r from-teal-400/70 to-cyan-400/70 rounded-full shadow-lg shadow-teal-400/50"
           animate={{ 
             y: [0, 20, 0],
-            opacity: [0.8, 1, 0.8],
+            opacity: [0.9, 1, 0.9],
             scale: [1, 0.9, 1]
           }}
           transition={{
@@ -182,10 +184,10 @@ export default function UniteAdvantageSection() {
         />
         
         <motion.div
-          className="absolute top-1/2 left-1/3 w-2 h-2 bg-gradient-to-r from-cyan-300/60 to-teal-300/60 rounded-full"
+          className="absolute top-1/2 left-1/3 w-2 h-2 bg-gradient-to-r from-cyan-300/80 to-teal-300/80 rounded-full"
           animate={{ 
             y: [0, -18, 0],
-            opacity: [0.6, 1, 0.6]
+            opacity: [0.8, 1, 0.8]
           }}
           transition={{
             duration: 14,
@@ -196,7 +198,7 @@ export default function UniteAdvantageSection() {
         />
         
         <motion.div
-          className="absolute bottom-1/2 right-1/3 w-1.5 h-1.5 bg-gradient-to-r from-teal-300/60 to-cyan-300/60 rounded-full"
+          className="absolute bottom-1/2 right-1/3 w-1.5 h-1.5 bg-gradient-to-r from-teal-300/80 to-cyan-300/80 rounded-full"
           animate={{ 
             y: [0, 15, 0],
             opacity: [0.7, 1, 0.7]

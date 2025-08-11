@@ -65,14 +65,14 @@ export default function UniteGroupLandingPage() {
       {/* Hero Section */}
       <AnimatedSection className="relative pt-32 pb-28 md:pt-48 md:pb-40 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
-          {/* Enhanced Gradient Background */}
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-950 to-cyan-900/40 opacity-50"></div>
-          <div className="absolute inset-0 bg-gradient-to-tl from-teal-900/20 via-transparent to-cyan-800/30"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/20 via-transparent to-teal-900/25"></div>
+          {/* Enhanced Bold Gradient Background */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-950 to-cyan-900/70 opacity-80"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-teal-900/50 via-transparent to-cyan-800/60"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/40 via-transparent to-teal-900/50"></div>
           
-          {/* Large Gradient Orbs */}
+          {/* Large Bold Gradient Orbs */}
           <motion.div
-            className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-br from-cyan-500/20 to-teal-500/15 rounded-full filter blur-3xl"
+            className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-br from-cyan-500/40 to-teal-500/35 rounded-full filter blur-3xl"
             animate={{ x: [0, 30, 0], y: [0, -40, 0], scale: [1, 1.2, 1] }}
             transition={{
               duration: 25,
@@ -81,7 +81,7 @@ export default function UniteGroupLandingPage() {
             }}
           />
           <motion.div
-            className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-gradient-to-tl from-teal-500/15 to-cyan-400/20 rounded-full filter blur-3xl"
+            className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-gradient-to-tl from-teal-500/35 to-cyan-400/40 rounded-full filter blur-3xl"
             animate={{ x: [0, -40, 0], y: [0, 30, 0], scale: [1, 1.1, 1] }}
             transition={{
               duration: 30,
@@ -91,9 +91,9 @@ export default function UniteGroupLandingPage() {
             }}
           />
           
-          {/* Left Side Geometric Objects */}
+          {/* Left Side Bold Geometric Objects */}
           <motion.div
-            className="absolute top-1/6 left-8 w-20 h-20 border-2 border-cyan-400/50 rounded-full bg-gradient-to-br from-cyan-500/20 to-transparent"
+            className="absolute top-1/6 left-8 w-20 h-20 border-2 border-cyan-400/70 rounded-full bg-gradient-to-br from-cyan-500/40 to-transparent"
             animate={{ 
               x: [0, 15, 0], 
               y: [0, -25, 0], 
@@ -107,7 +107,7 @@ export default function UniteGroupLandingPage() {
           />
           
           <motion.div
-            className="absolute top-1/3 left-4 w-12 h-12 border-2 border-teal-400/60 rounded-full bg-gradient-to-br from-teal-500/25 to-transparent"
+            className="absolute top-1/3 left-4 w-12 h-12 border-2 border-teal-400/80 rounded-full bg-gradient-to-br from-teal-500/45 to-transparent"
             animate={{ 
               x: [0, 20, 0], 
               y: [0, 30, 0], 
@@ -122,7 +122,7 @@ export default function UniteGroupLandingPage() {
           />
           
           <motion.div
-            className="absolute bottom-1/3 left-12 w-16 h-16 border-2 border-cyan-300/55 rounded-full bg-gradient-to-br from-cyan-400/30 to-transparent"
+            className="absolute bottom-1/3 left-12 w-16 h-16 border-2 border-cyan-300/75 rounded-full bg-gradient-to-br from-cyan-400/50 to-transparent"
             animate={{ 
               x: [0, 25, 0], 
               y: [0, -20, 0], 
@@ -137,7 +137,7 @@ export default function UniteGroupLandingPage() {
           />
           
           <motion.div
-            className="absolute bottom-1/6 left-6 w-10 h-10 border-2 border-teal-300/50 rounded-full bg-gradient-to-br from-teal-400/20 to-transparent"
+            className="absolute bottom-1/6 left-6 w-10 h-10 border-2 border-teal-300/70 rounded-full bg-gradient-to-br from-teal-400/40 to-transparent"
             animate={{ 
               x: [0, 15, 0], 
               y: [0, 25, 0], 
@@ -151,9 +151,9 @@ export default function UniteGroupLandingPage() {
             }}
           />
           
-          {/* Right Side Geometric Objects */}
+          {/* Right Side Bold Geometric Objects */}
           <motion.div
-            className="absolute top-1/4 right-8 w-24 h-24 border-2 border-teal-400/55 rounded-full bg-gradient-to-br from-teal-500/25 to-transparent"
+            className="absolute top-1/4 right-8 w-24 h-24 border-2 border-teal-400/75 rounded-full bg-gradient-to-br from-teal-500/45 to-transparent"
             animate={{ 
               x: [0, -20, 0], 
               y: [0, -30, 0], 
@@ -214,7 +214,7 @@ export default function UniteGroupLandingPage() {
           
           {/* Triangle Shapes */}
           <motion.div
-            className="absolute top-1/8 left-16 w-0 h-0 border-l-[12px] border-l-transparent border-b-[20px] border-b-cyan-400/40 border-r-[12px] border-r-transparent"
+            className="absolute top-1/8 left-16 w-0 h-0 border-l-[12px] border-l-transparent border-b-[20px] border-b-cyan-400/60 border-r-[12px] border-r-transparent"
             animate={{ 
               x: [0, 10, 0], 
               y: [0, -15, 0], 
@@ -229,7 +229,7 @@ export default function UniteGroupLandingPage() {
           />
           
           <motion.div
-            className="absolute top-2/3 right-20 w-0 h-0 border-l-[15px] border-l-transparent border-b-[25px] border-b-teal-400/45 border-r-[15px] border-r-transparent"
+            className="absolute top-2/3 right-20 w-0 h-0 border-l-[15px] border-l-transparent border-b-[25px] border-b-teal-400/65 border-r-[15px] border-r-transparent"
             animate={{ 
               x: [0, -12, 0], 
               y: [0, 18, 0], 
@@ -245,7 +245,7 @@ export default function UniteGroupLandingPage() {
           
           {/* Hexagon Shapes */}
           <motion.div
-            className="absolute top-1/3 left-20 w-16 h-16 border-2 border-cyan-400/50 bg-gradient-to-br from-cyan-500/15 to-transparent"
+            className="absolute top-1/3 left-20 w-16 h-16 border-2 border-cyan-400/70 bg-gradient-to-br from-cyan-500/35 to-transparent"
             style={{
               clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
             }}
@@ -264,7 +264,7 @@ export default function UniteGroupLandingPage() {
           />
           
           <motion.div
-            className="absolute bottom-1/3 right-16 w-12 h-12 border-2 border-teal-400/55 bg-gradient-to-br from-teal-500/20 to-transparent"
+            className="absolute bottom-1/3 right-16 w-12 h-12 border-2 border-teal-400/75 bg-gradient-to-br from-teal-500/40 to-transparent"
             style={{
               clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
             }}
@@ -284,7 +284,7 @@ export default function UniteGroupLandingPage() {
           
           {/* Diamond Shapes */}
           <motion.div
-            className="absolute top-1/2 left-8 w-8 h-8 border-2 border-cyan-300/60 bg-gradient-to-br from-cyan-400/25 to-transparent"
+            className="absolute top-1/2 left-8 w-8 h-8 border-2 border-cyan-300/80 bg-gradient-to-br from-cyan-400/45 to-transparent"
             style={{
               transform: 'rotate(45deg)'
             }}
@@ -303,7 +303,7 @@ export default function UniteGroupLandingPage() {
           />
           
           <motion.div
-            className="absolute bottom-1/4 right-8 w-10 h-10 border-2 border-teal-300/50 bg-gradient-to-br from-teal-400/20 to-transparent"
+            className="absolute bottom-1/4 right-8 w-10 h-10 border-2 border-teal-300/70 bg-gradient-to-br from-teal-400/40 to-transparent"
             style={{
               transform: 'rotate(45deg)'
             }}
@@ -321,12 +321,12 @@ export default function UniteGroupLandingPage() {
             }}
           />
           
-          {/* Enhanced Floating Dots */}
+          {/* Enhanced Bold Floating Dots */}
           <motion.div
-            className="absolute top-1/5 right-1/3 w-3 h-3 bg-gradient-to-r from-cyan-400 to-teal-400 rounded-full shadow-lg shadow-cyan-400/30"
+            className="absolute top-1/5 right-1/3 w-3 h-3 bg-gradient-to-r from-cyan-400 to-teal-400 rounded-full shadow-lg shadow-cyan-400/50"
             animate={{ 
               y: [0, -30, 0],
-              opacity: [0.6, 1, 0.6],
+              opacity: [0.8, 1, 0.8],
               scale: [1, 1.2, 1]
             }}
             transition={{
@@ -337,10 +337,10 @@ export default function UniteGroupLandingPage() {
           />
           
           <motion.div
-            className="absolute bottom-1/3 right-1/5 w-2.5 h-2.5 bg-gradient-to-r from-teal-400 to-cyan-400 rounded-full shadow-lg shadow-teal-400/30"
+            className="absolute bottom-1/3 right-1/5 w-2.5 h-2.5 bg-gradient-to-r from-teal-400 to-cyan-400 rounded-full shadow-lg shadow-teal-400/50"
             animate={{ 
               y: [0, 25, 0],
-              opacity: [0.7, 1, 0.7],
+              opacity: [0.9, 1, 0.9],
               scale: [1, 1.15, 1]
             }}
             transition={{
@@ -352,10 +352,10 @@ export default function UniteGroupLandingPage() {
           />
           
           <motion.div
-            className="absolute top-2/3 left-1/5 w-2 h-2 bg-gradient-to-r from-cyan-300 to-teal-300 rounded-full shadow-lg shadow-cyan-300/30"
+            className="absolute top-2/3 left-1/5 w-2 h-2 bg-gradient-to-r from-cyan-300 to-teal-300 rounded-full shadow-lg shadow-cyan-300/50"
             animate={{ 
               y: [0, -20, 0],
-              opacity: [0.8, 1, 0.8],
+              opacity: [0.9, 1, 0.9],
               scale: [1, 1.1, 1]
             }}
             transition={{
@@ -367,10 +367,10 @@ export default function UniteGroupLandingPage() {
           />
           
           <motion.div
-            className="absolute top-1/3 left-1/4 w-1.5 h-1.5 bg-gradient-to-r from-teal-300 to-cyan-300 rounded-full shadow-lg shadow-teal-300/30"
+            className="absolute top-1/3 left-1/4 w-1.5 h-1.5 bg-gradient-to-r from-teal-300 to-cyan-300 rounded-full shadow-lg shadow-teal-300/50"
             animate={{ 
               y: [0, 18, 0],
-              opacity: [0.6, 0.9, 0.6],
+              opacity: [0.8, 1, 0.8],
               scale: [1, 1.25, 1]
             }}
             transition={{
@@ -381,9 +381,9 @@ export default function UniteGroupLandingPage() {
             }}
           />
           
-          {/* Additional Glow Effects */}
+          {/* Additional Bold Glow Effects */}
           <motion.div
-            className="absolute top-1/4 left-1/4 w-32 h-32 bg-cyan-500/15 rounded-full filter blur-2xl"
+            className="absolute top-1/4 left-1/4 w-32 h-32 bg-cyan-500/25 rounded-full filter blur-2xl"
             animate={{ x: [0, 20, 0], y: [0, -20, 0], rotate: [0, 10, 0] }}
             transition={{
               duration: 20,
@@ -392,7 +392,7 @@ export default function UniteGroupLandingPage() {
             }}
           />
           <motion.div
-            className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-teal-500/15 rounded-full filter blur-3xl"
+            className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-teal-500/25 rounded-full filter blur-3xl"
             animate={{ x: [0, -30, 0], y: [0, 30, 0], rotate: [0, -15, 0] }}
             transition={{
               duration: 25,
@@ -489,7 +489,7 @@ export default function UniteGroupLandingPage() {
       <AnimatedSection className="py-24 md:py-36 bg-slate-900 relative overflow-hidden">
         {/* Background Gradients and Objects */}
         <div className="absolute inset-0 pointer-events-none">
-          {/* Enhanced Gradient Backgrounds */}
+          {/* Enhanced Bold Gradient Backgrounds */}
           <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
           <div className="absolute inset-0 bg-gradient-to-tl from-cyan-900/20 via-transparent to-teal-900/25"></div>
           <div className="absolute inset-0 bg-gradient-to-r from-slate-800/30 via-transparent to-cyan-900/20"></div>
@@ -695,7 +695,7 @@ export default function UniteGroupLandingPage() {
       <AnimatedSection id="services-overview" className="py-24 md:py-36 relative overflow-hidden">
         {/* Background Gradients and Objects */}
         <div className="absolute inset-0 pointer-events-none">
-          {/* Enhanced Gradient Backgrounds */}
+          {/* Enhanced Bold Gradient Backgrounds */}
           <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
           <div className="absolute inset-0 bg-gradient-to-tr from-cyan-900/15 via-transparent to-teal-900/20"></div>
           <div className="absolute inset-0 bg-gradient-to-bl from-slate-800/30 via-transparent to-cyan-900/20"></div>
@@ -996,7 +996,7 @@ export default function UniteGroupLandingPage() {
       >
         {/* Background Gradients and Objects */}
         <div className="absolute inset-0 pointer-events-none">
-          {/* Enhanced Gradient Backgrounds */}
+          {/* Enhanced Bold Gradient Backgrounds */}
           <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
           <div className="absolute inset-0 bg-gradient-to-tl from-cyan-900/25 via-transparent to-teal-900/30"></div>
           <div className="absolute inset-0 bg-gradient-to-r from-slate-800/40 via-transparent to-cyan-900/25"></div>
