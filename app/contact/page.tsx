@@ -204,22 +204,253 @@ export default function ContactPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="py-20 md:py-32 bg-gradient-to-b from-slate-900 to-slate-950"
+        className="py-20 md:py-32 bg-gradient-to-b from-slate-900 to-slate-950 relative overflow-hidden"
       >
-        <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold text-white mb-6">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Multi-layered Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-purple-900/25 via-transparent to-violet-900/30"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/35 via-transparent to-purple-900/25"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-violet-900/20 via-transparent to-slate-700/30"></div>
+          <div className="absolute inset-0 bg-gradient-to-tr from-slate-700/25 via-transparent to-purple-800/20"></div>
+          
+          {/* Large Animated Orbs */}
+          <motion.div
+            className="absolute top-1/4 left-1/6 w-80 h-80 bg-gradient-to-br from-purple-500/20 to-violet-500/18 rounded-full filter blur-3xl"
+            animate={{ x: [0, 30, 0], y: [0, -25, 0], scale: [1, 1.2, 1] }}
+            transition={{
+              duration: 30,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 right-1/6 w-96 h-96 bg-gradient-to-tl from-violet-500/18 to-purple-500/20 rounded-full filter blur-3xl"
+            animate={{ x: [0, -35, 0], y: [0, 30, 0], scale: [1, 0.85, 1] }}
+            transition={{
+              duration: 35,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 8,
+            }}
+          />
+          
+          {/* Geometric Elements */}
+          <motion.div
+            className="absolute top-1/6 right-16 w-24 h-24 border-2 border-purple-400/45 rounded-full bg-gradient-to-br from-purple-500/18 to-transparent"
+            animate={{ 
+              x: [0, -18, 0], 
+              y: [0, -15, 0], 
+              rotate: [0, 180, 0]
+            }}
+            transition={{
+              duration: 26,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/6 left-16 w-20 h-20 border-2 border-violet-400/40 bg-gradient-to-br from-violet-500/15 to-transparent"
+            style={{
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            }}
+            animate={{ 
+              x: [0, 15, 0], 
+              y: [0, 20, 0], 
+              rotate: [0, 120, 0]
+            }}
+            transition={{
+              duration: 28,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
+          />
+          
+          {/* Star Shapes - Unique to contact page */}
+          <motion.div
+            className="absolute top-1/3 left-1/4 w-16 h-16 border-2 border-purple-300/50 bg-gradient-to-br from-purple-400/20 to-transparent"
+            style={{
+              clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)'
+            }}
+            animate={{ 
+              x: [0, 20, 0], 
+              y: [0, -25, 0], 
+              rotate: [0, 180, 0],
+              scale: [1, 1.15, 1]
+            }}
+            transition={{
+              duration: 24,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 1,
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/3 right-1/4 w-12 h-12 border-2 border-violet-300/50 bg-gradient-to-br from-violet-400/18 to-transparent"
+            style={{
+              clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)'
+            }}
+            animate={{ 
+              x: [0, -18, 0], 
+              y: [0, 25, 0], 
+              rotate: [0, -180, 0],
+              scale: [1, 0.9, 1]
+            }}
+            transition={{
+              duration: 22,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 4,
+            }}
+          />
+          
+          {/* Floating Elements */}
+          <motion.div
+            className="absolute top-1/3 right-1/4 w-4 h-4 bg-gradient-to-r from-purple-400/60 to-violet-400/60 rounded-full shadow-lg shadow-purple-400/30"
+            animate={{ 
+              y: [0, -30, 0],
+              opacity: [0.8, 1, 0.8],
+              scale: [1, 1.2, 1]
+            }}
+            transition={{
+              duration: 18,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/3 left-1/4 w-3 h-3 bg-gradient-to-r from-violet-400/60 to-purple-400/60 rounded-full shadow-lg shadow-violet-400/30"
+            animate={{ 
+              y: [0, 25, 0],
+              opacity: [0.7, 1, 0.7],
+              scale: [1, 0.9, 1]
+            }}
+            transition={{
+              duration: 20,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 2,
+            }}
+          />
+          
+          <motion.div
+            className="absolute top-2/3 left-1/3 w-2.5 h-2.5 bg-gradient-to-r from-purple-300/70 to-violet-300/70 rounded-full"
+            animate={{ 
+              y: [0, -20, 0],
+              opacity: [0.6, 1, 0.6]
+            }}
+            transition={{
+              duration: 16,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 5,
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-2/3 right-1/3 w-2 h-2 bg-gradient-to-r from-violet-300/70 to-purple-300/70 rounded-full"
+            animate={{ 
+              y: [0, 18, 0],
+              opacity: [0.7, 1, 0.7]
+            }}
+            transition={{
+              duration: 14,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 7,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <motion.h1 
+            className="text-4xl sm:text-5xl md:text-6xl font-semibold text-white mb-6"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
             Get in Touch
-          </h1>
-          <p className="max-w-2xl mx-auto text-lg md:text-xl text-slate-300">
+          </motion.h1>
+          <motion.p 
+            className="max-w-2xl mx-auto text-lg md:text-xl text-slate-300"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
             Ready to transform your business? Let's discuss how Unite Group can
             help you achieve your goals.
-          </p>
+          </motion.p>
         </div>
       </motion.section>
 
       {/* Contact Information Section */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+      <section className="py-16 md:py-24 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-purple-900/15 via-transparent to-violet-900/20"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/25 via-transparent to-purple-900/18"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-violet-900/12 via-transparent to-slate-700/20"></div>
+          
+          {/* Subtle Animated Elements */}
+          <motion.div
+            className="absolute top-1/4 left-1/6 w-64 h-64 bg-gradient-to-br from-purple-500/12 to-violet-500/10 rounded-full filter blur-3xl"
+            animate={{ x: [0, 25, 0], y: [0, -20, 0], scale: [1, 1.1, 1] }}
+            transition={{
+              duration: 25,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 right-1/6 w-80 h-80 bg-gradient-to-tl from-violet-500/10 to-purple-500/12 rounded-full filter blur-3xl"
+            animate={{ x: [0, -30, 0], y: [0, 25, 0], scale: [1, 0.9, 1] }}
+            transition={{
+              duration: 30,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 5,
+            }}
+          />
+          
+          {/* Floating Dots */}
+          <motion.div
+            className="absolute top-1/6 right-1/4 w-2 h-2 bg-purple-400/50 rounded-full"
+            animate={{ 
+              y: [0, -15, 0],
+              opacity: [0.6, 1, 0.6]
+            }}
+            transition={{
+              duration: 12,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/6 left-1/4 w-1.5 h-1.5 bg-violet-400/50 rounded-full"
+            animate={{ 
+              y: [0, 12, 0],
+              opacity: [0.7, 1, 0.7]
+            }}
+            transition={{
+              duration: 10,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {contactDetails.map((item, idx) => (
               <motion.div
@@ -229,10 +460,10 @@ export default function ContactPage() {
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
                 viewport={{ once: true, amount: 0.3 }}
               >
-                <Card className="bg-slate-800/70 backdrop-blur-sm border-slate-700/50 shadow-xl h-full text-center">
+                <Card className="bg-slate-800/70 backdrop-blur-sm border-slate-700/50 shadow-xl h-full text-center hover:border-purple-500/30 hover:shadow-purple-500/20 transition-all duration-300 group">
                   <CardHeader className="items-center">
-                    <div className="p-3 bg-cyan-500/10 rounded-full mb-3">
-                      <item.icon className="w-8 h-8 text-cyan-400" />
+                    <div className="p-3 bg-cyan-500/10 rounded-full mb-3 group-hover:bg-purple-500/15 transition-colors duration-300">
+                      <item.icon className="w-8 h-8 text-cyan-400 group-hover:text-purple-400 transition-colors duration-300" />
                     </div>
                     <CardTitle className="text-xl text-white">
                       {item.title}
@@ -244,7 +475,7 @@ export default function ContactPage() {
                         {item.href && item.lines.indexOf(line) === 0 ? (
                           <a
                             href={item.href}
-                            className="hover:text-cyan-400 transition-colors"
+                            className="hover:text-purple-400 transition-colors"
                           >
                             {line}
                           </a>
@@ -262,9 +493,107 @@ export default function ContactPage() {
       </section>
 
       {/* Contact Form Section */}
-      <section id="contact-form" className="py-16 md:py-24 bg-slate-900">
-        <div className="container mx-auto max-w-screen-lg px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 md:mb-16">
+      <section id="contact-form" className="py-16 md:py-24 bg-slate-900 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-purple-900/20 via-transparent to-violet-900/25"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/30 via-transparent to-purple-900/20"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-violet-900/18 via-transparent to-slate-700/25"></div>
+          
+          {/* Animated Elements */}
+          <motion.div
+            className="absolute top-1/4 left-1/6 w-72 h-72 bg-gradient-to-br from-purple-500/15 to-violet-500/12 rounded-full filter blur-3xl"
+            animate={{ x: [0, 20, 0], y: [0, -15, 0], scale: [1, 1.1, 1] }}
+            transition={{
+              duration: 28,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 right-1/6 w-80 h-80 bg-gradient-to-tl from-violet-500/12 to-purple-500/15 rounded-full filter blur-3xl"
+            animate={{ x: [0, -25, 0], y: [0, 20, 0], scale: [1, 0.9, 1] }}
+            transition={{
+              duration: 32,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 6,
+            }}
+          />
+          
+          {/* Geometric Shapes */}
+          <motion.div
+            className="absolute top-1/6 right-12 w-20 h-20 border-2 border-purple-400/35 rounded-full bg-gradient-to-br from-purple-500/15 to-transparent"
+            animate={{ 
+              x: [0, -12, 0], 
+              y: [0, -10, 0], 
+              rotate: [0, 90, 0]
+            }}
+            transition={{
+              duration: 24,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/6 left-12 w-16 h-16 border-2 border-violet-400/30 bg-gradient-to-br from-violet-500/12 to-transparent"
+            style={{
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            }}
+            animate={{ 
+              x: [0, 15, 0], 
+              y: [0, 18, 0], 
+              rotate: [0, -60, 0]
+            }}
+            transition={{
+              duration: 26,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
+          />
+          
+          {/* Floating Elements */}
+          <motion.div
+            className="absolute top-1/3 left-1/4 w-3 h-3 bg-gradient-to-r from-purple-400/50 to-violet-400/50 rounded-full"
+            animate={{ 
+              y: [0, -20, 0],
+              opacity: [0.7, 1, 0.7]
+            }}
+            transition={{
+              duration: 16,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/3 right-1/4 w-2.5 h-2.5 bg-gradient-to-r from-violet-400/50 to-purple-400/50 rounded-full"
+            animate={{ 
+              y: [0, 18, 0],
+              opacity: [0.6, 1, 0.6]
+            }}
+            transition={{
+              duration: 14,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 4,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto max-w-screen-lg px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div 
+            className="text-center mb-12 md:mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true, amount: 0.3 }}
+          >
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
               Start Your Journey
             </h2>
@@ -272,18 +601,28 @@ export default function ContactPage() {
               Fill out the form below and we'll get back to you within 24
               business hours.
             </p>
-          </div>
+          </motion.div>
 
-          <Card className="bg-slate-800/50 p-6 sm:p-8 md:p-10 border-slate-700/60 shadow-2xl">
-            <CardContent className="p-0">
-              <Form {...form}>
-                <form
-                  action={formAction}
-                  onSubmit={form.handleSubmit(() =>
-                    formAction(new FormData(form.elementRef.current!))
-                  )}
-                  className="space-y-8"
-                >
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true, amount: 0.3 }}
+          >
+            <Card className="bg-slate-800/70 backdrop-blur-sm p-6 sm:p-8 md:p-10 border-slate-700/60 shadow-2xl hover:border-purple-500/30 hover:shadow-purple-500/20 transition-all duration-300">
+              <CardContent className="p-0">
+                <Form {...form}>
+                  <form
+                    action={formAction}
+                    onSubmit={form.handleSubmit((data) => {
+                      const formData = new FormData();
+                      Object.entries(data).forEach(([key, value]) => {
+                        if (value) formData.append(key, value);
+                      });
+                      formAction(formData);
+                    })}
+                    className="space-y-8"
+                  >
                   <div className="grid md:grid-cols-2 gap-6">
                     <FormField
                       control={form.control}
@@ -542,17 +881,83 @@ export default function ContactPage() {
                       {state.message}
                     </div>
                   )}
-                </form>
-              </Form>
-            </CardContent>
-          </Card>
+                                  </form>
+                </Form>
+              </CardContent>
+            </Card>
+          </motion.div>
         </div>
       </section>
 
       {/* What Happens Next Section */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto max-w-screen-lg px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 md:mb-16">
+      <section className="py-16 md:py-24 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-violet-900/15 via-transparent to-purple-900/20"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/25 via-transparent to-violet-900/18"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-purple-900/12 via-transparent to-slate-700/20"></div>
+          
+          {/* Subtle Animated Elements */}
+          <motion.div
+            className="absolute top-1/4 left-1/6 w-64 h-64 bg-gradient-to-br from-violet-500/12 to-purple-500/10 rounded-full filter blur-3xl"
+            animate={{ x: [0, 25, 0], y: [0, -20, 0], scale: [1, 1.1, 1] }}
+            transition={{
+              duration: 25,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 right-1/6 w-80 h-80 bg-gradient-to-tl from-purple-500/10 to-violet-500/12 rounded-full filter blur-3xl"
+            animate={{ x: [0, -30, 0], y: [0, 25, 0], scale: [1, 0.9, 1] }}
+            transition={{
+              duration: 30,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 5,
+            }}
+          />
+          
+          {/* Floating Dots */}
+          <motion.div
+            className="absolute top-1/6 right-1/4 w-2 h-2 bg-violet-400/50 rounded-full"
+            animate={{ 
+              y: [0, -15, 0],
+              opacity: [0.6, 1, 0.6]
+            }}
+            transition={{
+              duration: 12,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/6 left-1/4 w-1.5 h-1.5 bg-purple-400/50 rounded-full"
+            animate={{ 
+              y: [0, 12, 0],
+              opacity: [0.7, 1, 0.7]
+            }}
+            transition={{
+              duration: 10,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto max-w-screen-lg px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div 
+            className="text-center mb-12 md:mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true, amount: 0.3 }}
+          >
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
               What Happens Next?
             </h2>
@@ -560,12 +965,12 @@ export default function ContactPage() {
               We're excited to learn about your project. Here's our simple
               process to get started.
             </p>
-          </div>
+          </motion.div>
           <div className="grid md:grid-cols-3 gap-8 text-center">
             {whatHappensNextSteps.map((step, idx) => (
               <motion.div
                 key={step.title}
-                className="bg-slate-800 p-8 rounded-xl shadow-xl border border-slate-700/50"
+                className="bg-slate-800/70 backdrop-blur-sm p-8 rounded-xl shadow-xl border border-slate-700/50 hover:border-purple-500/30 hover:shadow-purple-500/20 transition-all duration-300"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: idx * 0.15 }}
@@ -588,9 +993,107 @@ export default function ContactPage() {
       </section>
 
       {/* Our Location Section */}
-      <section className="py-16 md:py-24 bg-slate-900">
-        <div className="container mx-auto max-w-screen-lg px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 md:mb-16">
+      <section className="py-16 md:py-24 bg-slate-900 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-purple-900/20 via-transparent to-violet-900/25"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/30 via-transparent to-purple-900/20"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-violet-900/18 via-transparent to-slate-700/25"></div>
+          
+          {/* Animated Elements */}
+          <motion.div
+            className="absolute top-1/4 left-1/6 w-72 h-72 bg-gradient-to-br from-purple-500/15 to-violet-500/12 rounded-full filter blur-3xl"
+            animate={{ x: [0, 20, 0], y: [0, -15, 0], scale: [1, 1.1, 1] }}
+            transition={{
+              duration: 28,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 right-1/6 w-80 h-80 bg-gradient-to-tl from-violet-500/12 to-purple-500/15 rounded-full filter blur-3xl"
+            animate={{ x: [0, -25, 0], y: [0, 20, 0], scale: [1, 0.9, 1] }}
+            transition={{
+              duration: 32,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 6,
+            }}
+          />
+          
+          {/* Geometric Shapes */}
+          <motion.div
+            className="absolute top-1/6 right-12 w-20 h-20 border-2 border-purple-400/35 rounded-full bg-gradient-to-br from-purple-500/15 to-transparent"
+            animate={{ 
+              x: [0, -12, 0], 
+              y: [0, -10, 0], 
+              rotate: [0, 90, 0]
+            }}
+            transition={{
+              duration: 24,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/6 left-12 w-16 h-16 border-2 border-violet-400/30 bg-gradient-to-br from-violet-500/12 to-transparent"
+            style={{
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            }}
+            animate={{ 
+              x: [0, 15, 0], 
+              y: [0, 18, 0], 
+              rotate: [0, -60, 0]
+            }}
+            transition={{
+              duration: 26,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
+          />
+          
+          {/* Floating Elements */}
+          <motion.div
+            className="absolute top-1/3 left-1/4 w-3 h-3 bg-gradient-to-r from-purple-400/50 to-violet-400/50 rounded-full"
+            animate={{ 
+              y: [0, -20, 0],
+              opacity: [0.7, 1, 0.7]
+            }}
+            transition={{
+              duration: 16,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/3 right-1/4 w-2.5 h-2.5 bg-gradient-to-r from-violet-400/50 to-purple-400/50 rounded-full"
+            animate={{ 
+              y: [0, 18, 0],
+              opacity: [0.6, 1, 0.6]
+            }}
+            transition={{
+              duration: 14,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 4,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto max-w-screen-lg px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div 
+            className="text-center mb-12 md:mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true, amount: 0.3 }}
+          >
             <MapPinIcon size={40} className="text-cyan-400 mx-auto mb-4" />
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
               Our Location
@@ -598,7 +1101,7 @@ export default function ContactPage() {
             <p className="max-w-xl mx-auto text-lg text-slate-300">
               Visit us at our office in the heart of Ipswich CBD, Queensland.
             </p>
-          </div>
+          </motion.div>
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -621,9 +1124,74 @@ export default function ContactPage() {
       </section>
 
       {/* Why Partner with Unite Group Section */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto max-w-screen-lg px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 md:mb-16">
+      <section className="py-16 md:py-24 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-violet-900/15 via-transparent to-purple-900/20"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/25 via-transparent to-violet-900/18"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-purple-900/12 via-transparent to-slate-700/20"></div>
+          
+          {/* Subtle Animated Elements */}
+          <motion.div
+            className="absolute top-1/4 left-1/6 w-64 h-64 bg-gradient-to-br from-violet-500/12 to-purple-500/10 rounded-full filter blur-3xl"
+            animate={{ x: [0, 25, 0], y: [0, -20, 0], scale: [1, 1.1, 1] }}
+            transition={{
+              duration: 25,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 right-1/6 w-80 h-80 bg-gradient-to-tl from-purple-500/10 to-violet-500/12 rounded-full filter blur-3xl"
+            animate={{ x: [0, -30, 0], y: [0, 25, 0], scale: [1, 0.9, 1] }}
+            transition={{
+              duration: 30,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 5,
+            }}
+          />
+          
+          {/* Floating Dots */}
+          <motion.div
+            className="absolute top-1/6 right-1/4 w-2 h-2 bg-violet-400/50 rounded-full"
+            animate={{ 
+              y: [0, -15, 0],
+              opacity: [0.6, 1, 0.6]
+            }}
+            transition={{
+              duration: 12,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/6 left-1/4 w-1.5 h-1.5 bg-purple-400/50 rounded-full"
+            animate={{ 
+              y: [0, 12, 0],
+              opacity: [0.7, 1, 0.7]
+            }}
+            transition={{
+              duration: 10,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto max-w-screen-lg px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div 
+            className="text-center mb-12 md:mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true, amount: 0.3 }}
+          >
             <Briefcase size={40} className="text-cyan-400 mx-auto mb-4" />
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
               Why Partner with Unite Group?
@@ -632,12 +1200,12 @@ export default function ContactPage() {
               We're committed to your success, offering more than just services
               – we offer a partnership.
             </p>
-          </div>
+          </motion.div>
           <div className="grid md:grid-cols-2 gap-6">
             {whyPartnerItems.map((item, idx) => (
               <motion.div
                 key={idx}
-                className="bg-slate-800 p-6 rounded-lg shadow-lg flex items-start space-x-4"
+                className="bg-slate-800/70 backdrop-blur-sm p-6 rounded-lg shadow-lg flex items-start space-x-4 hover:border-purple-500/30 hover:shadow-purple-500/20 transition-all duration-300 border border-slate-700/50"
                 initial={{ opacity: 0, x: idx % 2 === 0 ? -20 : 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
@@ -648,7 +1216,13 @@ export default function ContactPage() {
               </motion.div>
             ))}
           </div>
-          <div className="text-center mt-12">
+          <motion.div 
+            className="text-center mt-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            viewport={{ once: true, amount: 0.3 }}
+          >
             <Button
               size="lg"
               asChild
@@ -659,14 +1233,112 @@ export default function ContactPage() {
                 <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* FAQ Snippet Section */}
-      <section className="py-16 md:py-24 bg-slate-900">
-        <div className="container mx-auto max-w-screen-md px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 md:mb-16">
+      <section className="py-16 md:py-24 bg-slate-900 relative overflow-hidden">
+        {/* Background Patterns */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Gradient Backgrounds */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
+          <div className="absolute inset-0 bg-gradient-to-tl from-purple-900/20 via-transparent to-violet-900/25"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/30 via-transparent to-purple-900/20"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-violet-900/18 via-transparent to-slate-700/25"></div>
+          
+          {/* Animated Elements */}
+          <motion.div
+            className="absolute top-1/4 left-1/6 w-72 h-72 bg-gradient-to-br from-purple-500/15 to-violet-500/12 rounded-full filter blur-3xl"
+            animate={{ x: [0, 20, 0], y: [0, -15, 0], scale: [1, 1.1, 1] }}
+            transition={{
+              duration: 28,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/4 right-1/6 w-80 h-80 bg-gradient-to-tl from-violet-500/12 to-purple-500/15 rounded-full filter blur-3xl"
+            animate={{ x: [0, -25, 0], y: [0, 20, 0], scale: [1, 0.9, 1] }}
+            transition={{
+              duration: 32,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 6,
+            }}
+          />
+          
+          {/* Geometric Shapes */}
+          <motion.div
+            className="absolute top-1/6 right-12 w-20 h-20 border-2 border-purple-400/35 rounded-full bg-gradient-to-br from-purple-500/15 to-transparent"
+            animate={{ 
+              x: [0, -12, 0], 
+              y: [0, -10, 0], 
+              rotate: [0, 90, 0]
+            }}
+            transition={{
+              duration: 24,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/6 left-12 w-16 h-16 border-2 border-violet-400/30 bg-gradient-to-br from-violet-500/12 to-transparent"
+            style={{
+              clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)'
+            }}
+            animate={{ 
+              x: [0, 15, 0], 
+              y: [0, 18, 0], 
+              rotate: [0, -60, 0]
+            }}
+            transition={{
+              duration: 26,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 3,
+            }}
+          />
+          
+          {/* Floating Elements */}
+          <motion.div
+            className="absolute top-1/3 left-1/4 w-3 h-3 bg-gradient-to-r from-purple-400/50 to-violet-400/50 rounded-full"
+            animate={{ 
+              y: [0, -20, 0],
+              opacity: [0.7, 1, 0.7]
+            }}
+            transition={{
+              duration: 16,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+          />
+          
+          <motion.div
+            className="absolute bottom-1/3 right-1/4 w-2.5 h-2.5 bg-gradient-to-r from-violet-400/50 to-purple-400/50 rounded-full"
+            animate={{ 
+              y: [0, 18, 0],
+              opacity: [0.6, 1, 0.6]
+            }}
+            transition={{
+              duration: 14,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 4,
+            }}
+          />
+        </div>
+        
+        <div className="container mx-auto max-w-screen-md px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div 
+            className="text-center mb-12 md:mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true, amount: 0.3 }}
+          >
             <HelpCircle size={40} className="text-cyan-400 mx-auto mb-4" />
             <h2 className="text-3xl md:text-4xl font-semibold text-white mb-4">
               Frequently Asked Questions
@@ -674,29 +1346,36 @@ export default function ContactPage() {
             <p className="max-w-xl mx-auto text-lg text-slate-300">
               Quick answers to common questions about getting started with us.
             </p>
-          </div>
-          <Accordion type="single" collapsible className="w-full">
-            {contactFaqs.map((faq) => (
-              <AccordionItem
-                key={faq.id}
-                value={faq.id}
-                className="bg-slate-800/50 border-slate-700/80 rounded-lg mb-3 px-2"
-              >
-                <AccordionTrigger className="text-left hover:no-underline py-4 px-4 text-base font-medium text-slate-100">
-                  <div className="flex items-center">
-                    <HelpCircle
-                      size={20}
-                      className="text-cyan-400 mr-3 flex-shrink-0"
-                    />
-                    {faq.question}
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent className="text-slate-300 text-sm leading-relaxed pb-4 px-4">
-                  {faq.answer}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true, amount: 0.3 }}
+          >
+            <Accordion type="single" collapsible className="w-full">
+              {contactFaqs.map((faq) => (
+                <AccordionItem
+                  key={faq.id}
+                  value={faq.id}
+                  className="bg-slate-800/70 backdrop-blur-sm border-slate-700/80 rounded-lg mb-3 px-2 hover:border-purple-500/30 transition-all duration-300"
+                >
+                  <AccordionTrigger className="text-left hover:no-underline py-4 px-4 text-base font-medium text-slate-100">
+                    <div className="flex items-center">
+                      <HelpCircle
+                        size={20}
+                        className="text-cyan-400 mr-3 flex-shrink-0"
+                      />
+                      {faq.question}
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="text-slate-300 text-sm leading-relaxed pb-4 px-4">
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </motion.div>
         </div>
       </section>
     </div>

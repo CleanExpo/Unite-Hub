@@ -23,6 +23,8 @@ export default function Chatbot() {
   const [isMinimized, setIsMinimized] = useState(false);
   const [isCollectingInfo, setIsCollectingInfo] = useState(false);
   const [isSubmittingMeeting, setIsSubmittingMeeting] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [meetingScheduled, setMeetingScheduled] = useState(false);
   const [contactInfo, setContactInfo] = useState({ 
     name: '', 
     email: '', 
@@ -69,9 +71,10 @@ export default function Chatbot() {
     // Check if we've already received a confirmation response
     const hasConfirmation = messages.some(msg => 
       msg.role === 'assistant' && 
-      msg.content.includes('Perfect! Thank you') &&
-      msg.content.includes('calendar invite')
+      msg.content.includes('Perfect! Thank you')
     );
+    
+
     
     // Check if the user has confirmed they want a meeting
     const userConfirmedMeeting = messages.some(msg => 
@@ -91,14 +94,38 @@ export default function Chatbot() {
     // 2. Last message is from assistant asking for meeting details
     // 3. We haven't already collected meeting info
     // 4. We haven't already received confirmation
+    // 5. We haven't already scheduled a meeting in this session
+    // 6. We're not currently showing success message
     if (userConfirmedMeeting &&
         lastMessage?.role === 'assistant' && 
         !hasMeetingInfo &&
         !hasConfirmation &&
+        !meetingScheduled &&
+        !showSuccessMessage &&
         (lastMessage.content.includes('name, email address, preferred date, time, and timezone') || 
          lastMessage.content.includes('calendar invite') ||
          lastMessage.content.includes('schedule your consultation'))) {
       setIsCollectingInfo(true);
+    }
+    
+    // Auto-hide the form when we receive confirmation
+    if (isCollectingInfo && hasConfirmation) {
+      // Mark meeting as scheduled to prevent form from showing again
+      setMeetingScheduled(true);
+      
+      // Immediately hide the form to prevent any flickering
+      setIsCollectingInfo(false);
+      
+      // Show success message first
+      setShowSuccessMessage(true);
+      
+      // Hide success message after delay and ensure form stays hidden
+      setTimeout(() => {
+        setShowSuccessMessage(false);
+        // Double-check that form is hidden
+        setIsCollectingInfo(false);
+        setContactInfo({ name: '', email: '', date: '', time: '', timezone: '' });
+      }, 1500); // 1.5 second delay to show success message
     }
   }, [messages, isCollectingInfo, isSubmittingMeeting]);
 
@@ -114,11 +141,29 @@ export default function Chatbot() {
     }
   }, [isOpen, isMinimized]);
 
+  // Cleanup effect to ensure form doesn't show after meeting is scheduled
+  useEffect(() => {
+    if (meetingScheduled) {
+      // Ensure form is hidden when meeting is scheduled
+      setIsCollectingInfo(false);
+      setShowSuccessMessage(false);
+    }
+  }, [meetingScheduled]);
+
   const handleToggle = () => {
     if (isOpen && isMinimized) {
       setIsMinimized(false);
+    } else if (!isOpen) {
+      // Opening chat - reset meeting state for new session
+      setIsOpen(true);
+      setIsMinimized(false);
+      setMeetingScheduled(false);
+      setIsCollectingInfo(false);
+      setShowSuccessMessage(false);
+      setContactInfo({ name: '', email: '', date: '', time: '', timezone: '' });
     } else {
-      setIsOpen(!isOpen);
+      // Closing chat
+      setIsOpen(false);
       setIsMinimized(false);
     }
   };
@@ -143,9 +188,11 @@ export default function Chatbot() {
         // Wait for the API call to complete
         await handleSubmit();
         
-        // Only clear form and hide it after successful submission
-        setIsCollectingInfo(false);
-        setContactInfo({ name: '', email: '', date: '', time: '', timezone: '' });
+        // Mark as scheduled immediately to prevent form from showing again
+        setMeetingScheduled(true);
+        
+        // Don't clear the form immediately - let the useEffect handle it
+        // The form will be cleared when the assistant responds
       } catch (error) {
         console.error('Error submitting meeting:', error);
         // Keep form open if there's an error
@@ -386,7 +433,7 @@ export default function Chatbot() {
                   </div>
 
                   {/* Meeting Form or Input Form */}
-                  {isCollectingInfo && !isSubmittingMeeting ? (
+                  {isCollectingInfo && !isSubmittingMeeting && !meetingScheduled && !showSuccessMessage ? (
                     <div className="p-4 border-t border-slate-200 dark:border-slate-700">
                       <div className="bg-cyan-50 dark:bg-cyan-950/30 rounded-lg p-3 mb-3">
                         <p className="text-sm text-cyan-700 dark:text-cyan-300 font-medium">
@@ -454,6 +501,22 @@ export default function Chatbot() {
                             Cancel
                           </Button>
                         </div>
+                      </div>
+                    </div>
+                  ) : showSuccessMessage ? (
+                    <div className="p-4 border-t border-slate-200 dark:border-slate-700">
+                      <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-lg p-4 text-center">
+                        <div className="text-green-600 dark:text-green-400 mb-2">
+                          <svg className="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                        <p className="text-green-700 dark:text-green-300 font-medium">
+                          Meeting Confirmed
+                        </p>
+                        <p className="text-green-600 dark:text-green-400 text-sm mt-1">
+                          Confirmation email sent. Our team will contact you within 24 hours.
+                        </p>
                       </div>
                     </div>
                   ) : (
