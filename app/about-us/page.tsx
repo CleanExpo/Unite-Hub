@@ -631,7 +631,7 @@ export default function AboutUsPage() {
               viewport={{ once: true, amount: 0.3 }}
             >
               <Image
-                src="/company-culture-collaboration.png"
+                src="/interactive-dashboard-helios-predictive-analytics.png"
                 alt="Company Culture"
                 width={600}
                 height={400}

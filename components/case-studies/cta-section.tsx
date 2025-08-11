@@ -195,15 +195,15 @@ export default function CtaSection() {
           transition={{ duration: 0.8, delay: 0.4 }}
           viewport={{ once: true, amount: 0.3 }}
         >
-          <Button
-            asChild
-            size="lg"
+        <Button
+          asChild
+          size="lg"
             className="bg-white text-sky-700 hover:bg-sky-50 font-semibold px-10 py-3 text-lg shadow-xl transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-2xl"
-          >
-            <Link href="/contact">
-              Get In Touch <ArrowRight size={20} className="ml-2" />
-            </Link>
-          </Button>
+        >
+          <Link href="/contact">
+            Get In Touch <ArrowRight size={20} className="ml-2" />
+          </Link>
+        </Button>
         </motion.div>
       </div>
     </section>

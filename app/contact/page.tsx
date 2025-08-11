@@ -610,10 +610,10 @@ export default function ContactPage() {
             viewport={{ once: true, amount: 0.3 }}
           >
             <Card className="bg-slate-800/70 backdrop-blur-sm p-6 sm:p-8 md:p-10 border-slate-700/60 shadow-2xl hover:border-purple-500/30 hover:shadow-purple-500/20 transition-all duration-300">
-              <CardContent className="p-0">
-                <Form {...form}>
-                  <form
-                    action={formAction}
+            <CardContent className="p-0">
+              <Form {...form}>
+                <form
+                  action={formAction}
                     onSubmit={form.handleSubmit((data) => {
                       const formData = new FormData();
                       Object.entries(data).forEach(([key, value]) => {
@@ -621,8 +621,8 @@ export default function ContactPage() {
                       });
                       formAction(formData);
                     })}
-                    className="space-y-8"
-                  >
+                  className="space-y-8"
+                >
                   <div className="grid md:grid-cols-2 gap-6">
                     <FormField
                       control={form.control}
@@ -881,10 +881,10 @@ export default function ContactPage() {
                       {state.message}
                     </div>
                   )}
-                                  </form>
-                </Form>
-              </CardContent>
-            </Card>
+                </form>
+              </Form>
+            </CardContent>
+          </Card>
           </motion.div>
         </div>
       </section>
@@ -1353,28 +1353,28 @@ export default function ContactPage() {
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true, amount: 0.3 }}
           >
-            <Accordion type="single" collapsible className="w-full">
-              {contactFaqs.map((faq) => (
-                <AccordionItem
-                  key={faq.id}
-                  value={faq.id}
+          <Accordion type="single" collapsible className="w-full">
+            {contactFaqs.map((faq) => (
+              <AccordionItem
+                key={faq.id}
+                value={faq.id}
                   className="bg-slate-800/70 backdrop-blur-sm border-slate-700/80 rounded-lg mb-3 px-2 hover:border-purple-500/30 transition-all duration-300"
-                >
-                  <AccordionTrigger className="text-left hover:no-underline py-4 px-4 text-base font-medium text-slate-100">
-                    <div className="flex items-center">
-                      <HelpCircle
-                        size={20}
-                        className="text-cyan-400 mr-3 flex-shrink-0"
-                      />
-                      {faq.question}
-                    </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="text-slate-300 text-sm leading-relaxed pb-4 px-4">
-                    {faq.answer}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
+              >
+                <AccordionTrigger className="text-left hover:no-underline py-4 px-4 text-base font-medium text-slate-100">
+                  <div className="flex items-center">
+                    <HelpCircle
+                      size={20}
+                      className="text-cyan-400 mr-3 flex-shrink-0"
+                    />
+                    {faq.question}
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="text-slate-300 text-sm leading-relaxed pb-4 px-4">
+                  {faq.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
           </motion.div>
         </div>
       </section>
