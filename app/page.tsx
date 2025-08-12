@@ -1246,7 +1246,7 @@ export default function UniteGroupLandingPage() {
           </p>
           <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
             <motion.a
-              href="mailto:unitegroup.in@gmail.com"
+              href="mailto:contact@unite-group.in"
               className="bg-cyan-500 hover:bg-cyan-600 text-white font-semibold px-10 py-4 rounded-lg shadow-xl text-lg transition-colors duration-300 flex items-center group"
               whileHover={{
                 scale: 1.05,

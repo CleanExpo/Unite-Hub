@@ -49,8 +49,8 @@ export default function PrivacyPolicyPage() {
               information and your right to privacy. If you have any questions
               or concerns about this privacy notice, or our practices with
               regards to your personal information, please contact us at{" "}
-              <a href="mailto:unitegroup.in@gmail.com">
-                unitegroup.in@gmail.com
+              <a href="mailto:contact@unite-group.in">
+                contact@unite-group.in
               </a>
               .
             </p>
@@ -355,8 +355,8 @@ export default function PrivacyPolicyPage() {
             <p>
               If you have questions or comments about this notice, you may email
               us at{" "}
-              <a href="mailto:unitegroup.in@gmail.com">
-                unitegroup.in@gmail.com
+              <a href="mailto:contact@unite-group.in">
+                contact@unite-group.in
               </a>{" "}
               or by post to:
             </p>

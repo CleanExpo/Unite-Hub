@@ -111,7 +111,7 @@ export default function SiteFooter() {
             <div className="space-y-4 text-sm">
               <div className="flex items-center text-slate-400">
                 <Mail size={16} className="mr-3 text-cyan-400" />
-                unitegroup.in@gmail.com
+                contact@unite-group.in
               </div>
               <div className="flex items-center text-slate-400">
                 <MapPin size={16} className="mr-3 text-cyan-400" />
@@ -130,7 +130,7 @@ export default function SiteFooter() {
                     <Linkedin size={20} />
                   </Link>
                   <Link
-                    href="mailto:unitegroup.in@gmail.com"
+                    href="mailto:contact@unite-group.in"
                     aria-label="Email"
                     className="text-slate-400 hover:text-cyan-400 transition-colors p-2 hover:bg-slate-800 rounded-lg"
                   >
