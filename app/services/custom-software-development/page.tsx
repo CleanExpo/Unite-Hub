@@ -287,16 +287,20 @@ export default function CustomSoftwareDevelopmentPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="py-20 md:py-32 bg-gradient-to-br from-slate-900 via-purple-900/30 to-slate-950 relative overflow-hidden"
+        className="py-20 md:py-32 relative overflow-hidden"
       >
-        {/* Background Patterns */}
+        {/* Background Image */}
         <div className="absolute inset-0 pointer-events-none">
-          {/* Multi-layered Bold Gradient Backgrounds */}
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950"></div>
-          <div className="absolute inset-0 bg-gradient-to-tl from-purple-900/45 via-transparent to-violet-900/50"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/55 via-transparent to-purple-900/45"></div>
-          <div className="absolute inset-0 bg-gradient-to-bl from-violet-900/40 via-transparent to-slate-700/50"></div>
-          <div className="absolute inset-0 bg-gradient-to-tr from-slate-700/45 via-transparent to-purple-800/40"></div>
+          {/* Background Image */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-95"
+            style={{
+              backgroundImage: 'url(/images/about.png)'
+            }}
+          ></div>
+          
+          {/* Minimal overlay for text readability */}
+          <div className="absolute inset-0 bg-slate-950/40"></div>
           
           {/* Large Bold Animated Orbs */}
           <motion.div

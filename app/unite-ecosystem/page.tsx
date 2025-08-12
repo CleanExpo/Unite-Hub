@@ -117,14 +117,19 @@ export default function UniteEcosystemPage() {
   return (
     <div className="bg-slate-950 text-slate-50">
       {/* Hero Section */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-b from-slate-900 to-slate-950 overflow-hidden">
-        {/* Background Patterns */}
+      <section className="relative py-20 md:py-32 overflow-hidden">
+        {/* Background Image */}
         <div className="absolute inset-0 pointer-events-none">
-          {/* Multi-layered Bold Gradient Backgrounds */}
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
-          <div className="absolute inset-0 bg-gradient-to-tl from-blue-900/45 via-transparent to-indigo-900/50"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/50 via-transparent to-blue-900/45"></div>
-          <div className="absolute inset-0 bg-gradient-to-bl from-indigo-900/40 via-transparent to-slate-700/50"></div>
+          {/* Background Image */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-95"
+            style={{
+              backgroundImage: 'url(/images/about.png)'
+            }}
+          ></div>
+          
+          {/* Minimal overlay for text readability */}
+          <div className="absolute inset-0 bg-slate-950/40"></div>
           
           {/* Large Animated Orbs */}
           <motion.div
@@ -346,14 +351,19 @@ export default function UniteEcosystemPage() {
       </section>
 
       {/* Pillars of Our Ecosystem Section */}
-      <section className="py-16 md:py-24 bg-slate-900 relative overflow-hidden">
-        {/* Background Patterns */}
+      <section className="py-16 md:py-24 relative overflow-hidden">
+        {/* Background Image */}
         <div className="absolute inset-0 pointer-events-none">
-          {/* Multi-layered Bold Gradient Backgrounds */}
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
-          <div className="absolute inset-0 bg-gradient-to-tl from-blue-900/35 via-transparent to-indigo-900/40"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/45 via-transparent to-blue-900/35"></div>
-          <div className="absolute inset-0 bg-gradient-to-bl from-indigo-900/30 via-transparent to-slate-700/40"></div>
+          {/* Background Image */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-95"
+            style={{
+              backgroundImage: 'url(/images/about.png)'
+            }}
+          ></div>
+          
+          {/* Minimal overlay for text readability */}
+          <div className="absolute inset-0 bg-slate-950/40"></div>
           
           {/* Animated Orbs */}
           <motion.div
@@ -415,19 +425,19 @@ export default function UniteEcosystemPage() {
           <div className="text-center mb-12 md:mb-16">
             <motion.h2 
               className="text-3xl md:text-4xl font-semibold text-white mb-4"
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.3 }}
+              viewport={{ once: true, amount: 0.1 }}
             >
               Pillars of Our Ecosystem
             </motion.h2>
             <motion.p 
               className="max-w-2xl mx-auto text-lg text-slate-300"
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.3, delay: 0.05 }}
+              viewport={{ once: true, amount: 0.1 }}
             >
               Three fundamental pillars that form the foundation of our collaborative network.
             </motion.p>
@@ -437,10 +447,10 @@ export default function UniteEcosystemPage() {
               <motion.div
                 key={pillar.title}
                 className={`flex flex-col md:flex-row items-center gap-8 md:gap-12 ${idx % 2 !== 0 ? "md:flex-row-reverse" : ""}`}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
-                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.3, delay: idx * 0.05 }}
+                viewport={{ once: true, amount: 0.1 }}
               >
                 <div className="md:w-1/2">
                   <motion.div

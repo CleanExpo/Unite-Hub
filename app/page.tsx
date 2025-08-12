@@ -693,15 +693,23 @@ export default function UniteGroupLandingPage() {
 
       {/* Services Overview Section */}
       <AnimatedSection id="services-overview" className="py-24 md:py-36 relative overflow-hidden">
-        {/* Background Gradients and Objects */}
+        {/* Background Image and Gradients */}
         <div className="absolute inset-0 pointer-events-none">
-          {/* Enhanced Bold Gradient Backgrounds */}
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
-          <div className="absolute inset-0 bg-gradient-to-tr from-cyan-900/15 via-transparent to-teal-900/20"></div>
-          <div className="absolute inset-0 bg-gradient-to-bl from-slate-800/30 via-transparent to-cyan-900/20"></div>
-          <div className="absolute inset-0 bg-gradient-to-l from-teal-900/18 via-transparent to-slate-700/25"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-700/20 via-transparent to-cyan-800/15"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-800/15 via-transparent to-teal-800/20"></div>
+          {/* Background Image */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-70"
+            style={{
+              backgroundImage: 'url(/images/home.png)'
+            }}
+          ></div>
+          
+          {/* Enhanced Bold Gradient Backgrounds with minimal opacity */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-950/50 via-slate-900/40 to-slate-950/50"></div>
+          <div className="absolute inset-0 bg-gradient-to-tr from-cyan-900/5 via-transparent to-teal-900/8"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-slate-800/10 via-transparent to-cyan-900/8"></div>
+          <div className="absolute inset-0 bg-gradient-to-l from-teal-900/6 via-transparent to-slate-700/10"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-700/8 via-transparent to-cyan-800/5"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-800/6 via-transparent to-teal-800/8"></div>
           
           {/* More Visible Large Orbs */}
           <motion.div

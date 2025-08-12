@@ -59,15 +59,23 @@ const techPartners = [
 export default function PartnersSection() {
   return (
     <AnimatedSection className="py-16 md:py-24 bg-slate-950 relative overflow-hidden">
-      {/* Background Gradients and Objects */}
+      {/* Background Image and Gradients */}
       <div className="absolute inset-0 pointer-events-none">
-        {/* Enhanced Bold Gradient Backgrounds */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
-        <div className="absolute inset-0 bg-gradient-to-tl from-cyan-900/40 via-transparent to-teal-900/45"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-800/55 via-transparent to-cyan-900/40"></div>
-        <div className="absolute inset-0 bg-gradient-to-bl from-teal-900/38 via-transparent to-slate-700/45"></div>
-        <div className="absolute inset-0 bg-gradient-to-tr from-slate-700/42 via-transparent to-cyan-800/38"></div>
-        <div className="absolute inset-0 bg-gradient-to-l from-cyan-800/35 via-transparent to-teal-800/40"></div>
+        {/* Background Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-70"
+          style={{
+            backgroundImage: 'url(/images/home.png)'
+          }}
+        ></div>
+        
+        {/* Enhanced Bold Gradient Backgrounds with minimal opacity */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-950/50 via-slate-900/40 to-slate-950/50"></div>
+        <div className="absolute inset-0 bg-gradient-to-tl from-cyan-900/5 via-transparent to-teal-900/8"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-800/10 via-transparent to-cyan-900/8"></div>
+        <div className="absolute inset-0 bg-gradient-to-bl from-teal-900/6 via-transparent to-slate-700/10"></div>
+        <div className="absolute inset-0 bg-gradient-to-tr from-slate-700/8 via-transparent to-cyan-800/5"></div>
+        <div className="absolute inset-0 bg-gradient-to-l from-cyan-800/6 via-transparent to-teal-800/8"></div>
         
         {/* Large Bold Animated Orbs */}
         <motion.div

@@ -303,15 +303,20 @@ export default function EducationTrainingPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="py-20 md:py-32 bg-gradient-to-br from-slate-900 via-amber-900/30 to-slate-950 relative"
+        className="py-20 md:py-32 relative overflow-hidden"
       >
-        <div className="absolute inset-0 opacity-10">
-          <Image
-            src="/placeholder.svg?width=1920&height=1080"
-            alt="Abstract Education Network"
-            fill
-            className="object-cover"
-          />
+        {/* Background Image */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Background Image */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-95"
+            style={{
+              backgroundImage: 'url(/images/training.png)'
+            }}
+          ></div>
+          
+          {/* Minimal overlay for text readability */}
+          <div className="absolute inset-0 bg-slate-950/20"></div>
         </div>
         <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <GraduationCap className="w-20 h-20 text-amber-400 mx-auto mb-8" />
@@ -538,7 +543,7 @@ export default function EducationTrainingPage() {
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
                 viewport={{ once: true, amount: 0.2 }}
               >
-                <div className="relative h-48">
+                <div className="relative h-64">
                   <Image
                     src={course.image}
                     alt={course.description}
@@ -560,14 +565,19 @@ export default function EducationTrainingPage() {
       </section>
 
       {/* View All Courses Section */}
-      <section className="py-16 md:py-24 bg-slate-900 relative overflow-hidden">
-        {/* Background Patterns */}
+      <section className="py-16 md:py-24 relative overflow-hidden">
+        {/* Background Image */}
         <div className="absolute inset-0 pointer-events-none">
-          {/* Multi-layered Bold Gradient Backgrounds */}
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
-          <div className="absolute inset-0 bg-gradient-to-tl from-emerald-900/35 via-transparent to-teal-900/40"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/45 via-transparent to-emerald-900/35"></div>
-          <div className="absolute inset-0 bg-gradient-to-bl from-teal-900/30 via-transparent to-slate-700/40"></div>
+          {/* Background Image */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-95"
+            style={{
+              backgroundImage: 'url(/images/training.png)'
+            }}
+          ></div>
+          
+          {/* Minimal overlay for text readability */}
+          <div className="absolute inset-0 bg-slate-950/20"></div>
           
           {/* Animated Orbs */}
           <motion.div

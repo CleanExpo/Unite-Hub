@@ -122,14 +122,19 @@ export default function SuccessBlueprintPage() {
   return (
     <div className="bg-slate-950 text-slate-50">
       {/* Hero Section */}
-      <section className="relative py-20 md:py-32 bg-gradient-to-b from-slate-900 to-slate-950 overflow-hidden">
-        {/* Background Patterns */}
+      <section className="relative py-20 md:py-32 overflow-hidden">
+        {/* Background Image */}
         <div className="absolute inset-0 pointer-events-none">
-          {/* Multi-layered Bold Gradient Backgrounds */}
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
-          <div className="absolute inset-0 bg-gradient-to-tl from-cyan-900/45 via-transparent to-teal-900/50"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/50 via-transparent to-cyan-900/45"></div>
-          <div className="absolute inset-0 bg-gradient-to-bl from-teal-900/40 via-transparent to-slate-700/50"></div>
+          {/* Background Image */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-95"
+            style={{
+              backgroundImage: 'url(/images/home.png)'
+            }}
+          ></div>
+          
+          {/* Minimal overlay for text readability */}
+          <div className="absolute inset-0 bg-slate-950/40"></div>
           
           {/* Large Animated Orbs */}
           <motion.div
@@ -354,14 +359,19 @@ export default function SuccessBlueprintPage() {
       </section>
 
       {/* Our Guiding Principles Section */}
-      <section className="py-16 md:py-24 bg-slate-900 relative overflow-hidden">
-        {/* Background Patterns */}
+      <section className="py-16 md:py-24 relative overflow-hidden">
+        {/* Background Image */}
         <div className="absolute inset-0 pointer-events-none">
-          {/* Multi-layered Bold Gradient Backgrounds */}
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
-          <div className="absolute inset-0 bg-gradient-to-tl from-cyan-900/35 via-transparent to-teal-900/40"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/45 via-transparent to-cyan-900/35"></div>
-          <div className="absolute inset-0 bg-gradient-to-bl from-teal-900/30 via-transparent to-slate-700/40"></div>
+          {/* Background Image */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-95"
+            style={{
+              backgroundImage: 'url(/images/home.png)'
+            }}
+          ></div>
+          
+          {/* Minimal overlay for text readability */}
+          <div className="absolute inset-0 bg-slate-950/40"></div>
           
           {/* Animated Orbs */}
           <motion.div

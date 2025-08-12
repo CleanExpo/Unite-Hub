@@ -5,8 +5,12 @@ import { services } from "@/lib/services-data";
 
 export default function SiteFooter() {
   return (
-    <footer className="py-20 bg-slate-950 border-t border-slate-800">
-      <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+    <footer className="py-20 bg-slate-950 border-t border-slate-800 relative overflow-hidden">
+      {/* Background Gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-950 via-slate-900/95 to-slate-950"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-cyan-900/5 via-transparent to-teal-900/5"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-slate-800/10 via-transparent to-slate-800/10"></div>
+      <div className="container mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Company Info */}
           <div>

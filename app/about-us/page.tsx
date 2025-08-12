@@ -12,14 +12,18 @@ export default function AboutUsPage() {
     <div className="bg-slate-950 text-slate-50">
       {/* Hero Section */}
       <section className="relative py-20 md:py-32 bg-gradient-to-b from-slate-900 to-slate-950 overflow-hidden">
-        {/* Enhanced Background Patterns */}
+        {/* Background Image */}
         <div className="absolute inset-0 pointer-events-none">
-          {/* Multi-layered Bold Gradient Backgrounds */}
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950"></div>
-          <div className="absolute inset-0 bg-gradient-to-tl from-blue-900/45 via-transparent to-indigo-900/50"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/55 via-transparent to-blue-900/45"></div>
-          <div className="absolute inset-0 bg-gradient-to-bl from-indigo-900/40 via-transparent to-slate-700/50"></div>
-          <div className="absolute inset-0 bg-gradient-to-tr from-slate-700/45 via-transparent to-blue-800/40"></div>
+          {/* Background Image */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-95"
+            style={{
+              backgroundImage: 'url(/images/about.png)'
+            }}
+          ></div>
+          
+          {/* Minimal overlay for text readability */}
+          <div className="absolute inset-0 bg-slate-950/20"></div>
           
           {/* Large Bold Animated Orbs */}
           <motion.div
@@ -442,12 +446,18 @@ export default function AboutUsPage() {
 
       {/* Mission, Vision, Values Section */}
       <section className="py-16 md:py-24 bg-slate-900 relative overflow-hidden">
-        {/* Background Patterns */}
+        {/* Background Image and Gradients */}
         <div className="absolute inset-0 pointer-events-none">
-          {/* Gradient Backgrounds */}
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
-          <div className="absolute inset-0 bg-gradient-to-tl from-blue-900/20 via-transparent to-indigo-900/25"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/30 via-transparent to-blue-900/20"></div>
+          {/* Background Image */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-95"
+            style={{
+              backgroundImage: 'url(/images/about.png)'
+            }}
+          ></div>
+          
+          {/* Minimal overlay for text readability */}
+          <div className="absolute inset-0 bg-slate-950/20"></div>
           
           {/* Animated Elements */}
           <motion.div

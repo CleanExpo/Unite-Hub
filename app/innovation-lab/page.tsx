@@ -73,14 +73,19 @@ export default function InnovationLabPage() {
   return (
     <div className="bg-slate-950 text-slate-50">
       {/* Hero Section */}
-      <section className="relative py-24 md:py-40 bg-gradient-to-b from-slate-900 via-slate-950 to-black overflow-hidden">
-        {/* Background Patterns */}
+      <section className="relative py-24 md:py-40 overflow-hidden">
+        {/* Background Image */}
         <div className="absolute inset-0 pointer-events-none">
-          {/* Multi-layered Bold Gradient Backgrounds */}
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
-          <div className="absolute inset-0 bg-gradient-to-tl from-purple-900/45 via-transparent to-pink-900/50"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/50 via-transparent to-purple-900/45"></div>
-          <div className="absolute inset-0 bg-gradient-to-bl from-pink-900/40 via-transparent to-slate-700/50"></div>
+          {/* Background Image */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-95"
+            style={{
+              backgroundImage: 'url(/images/about.png)'
+            }}
+          ></div>
+          
+          {/* Minimal overlay for text readability */}
+          <div className="absolute inset-0 bg-slate-950/40"></div>
           
           {/* Large Animated Orbs */}
           <motion.div
@@ -403,13 +408,18 @@ export default function InnovationLabPage() {
 
       {/* Our Innovation Pipeline Section */}
       <section className="py-16 md:py-24 relative overflow-hidden">
-        {/* Background Patterns */}
+        {/* Background Image */}
         <div className="absolute inset-0 pointer-events-none">
-          {/* Multi-layered Bold Gradient Backgrounds */}
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
-          <div className="absolute inset-0 bg-gradient-to-tl from-purple-900/25 via-transparent to-pink-900/30"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/35 via-transparent to-purple-900/25"></div>
-          <div className="absolute inset-0 bg-gradient-to-bl from-pink-900/20 via-transparent to-slate-700/30"></div>
+          {/* Background Image */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-95"
+            style={{
+              backgroundImage: 'url(/images/about.png)'
+            }}
+          ></div>
+          
+          {/* Minimal overlay for text readability */}
+          <div className="absolute inset-0 bg-slate-950/40"></div>
           
           {/* Subtle Animated Orbs */}
           <motion.div
@@ -466,19 +476,19 @@ export default function InnovationLabPage() {
           <div className="text-center mb-12 md:mb-16">
             <motion.h2 
               className="text-3xl md:text-4xl font-semibold text-white mb-4"
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.3 }}
+              viewport={{ once: true, amount: 0.1 }}
             >
               Our Innovation Pipeline
             </motion.h2>
             <motion.p 
               className="max-w-2xl mx-auto text-lg text-slate-300"
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.3, delay: 0.05 }}
+              viewport={{ once: true, amount: 0.1 }}
             >
               A systematic approach to transforming ideas into impactful solutions.
             </motion.p>
@@ -488,10 +498,10 @@ export default function InnovationLabPage() {
               <motion.div
                 key={stage.name}
                 className="bg-slate-800/50 backdrop-blur-sm p-6 rounded-lg shadow-xl text-center border border-slate-700/30 hover:border-purple-500/40 transition-colors"
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
-                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.3, delay: idx * 0.05 }}
+                viewport={{ once: true, amount: 0.1 }}
               >
                 <stage.icon className="w-12 h-12 text-purple-400 mx-auto mb-4" />
                 <h3 className="text-lg font-semibold text-white mb-2">{stage.name}</h3>

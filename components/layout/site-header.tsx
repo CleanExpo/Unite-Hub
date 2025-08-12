@@ -21,12 +21,16 @@ export default function SiteHeader() {
   const pathname = usePathname()
 
   return (
-    <header className="sticky top-0 z-50 bg-slate-950/80 backdrop-blur-md shadow-lg h-20">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 bg-slate-950/90 backdrop-blur-xl shadow-2xl border-b border-slate-800/50 h-20 relative overflow-hidden">
+      {/* Background Gradient */}
+      <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/95 to-slate-950"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-cyan-900/10 via-transparent to-teal-900/10"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-slate-800/20 via-transparent to-slate-800/20"></div>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="flex items-center justify-between h-20">
           <Link href="/" className="flex items-center">
             <Image
-              src="/unite-group-logo-image.png"s
+              src="/unite-group-logo-image.png"
               alt="Unite Group Logo"
               width={200}
               height={200}

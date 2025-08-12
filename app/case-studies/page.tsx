@@ -261,12 +261,18 @@ export default function CaseStudiesPage() {
 
       {/* Enhanced Main Content Section */}
       <main className="relative py-12 md:py-16 overflow-hidden">
-        {/* Background Patterns for Main Content */}
+        {/* Background Image */}
         <div className="absolute inset-0 pointer-events-none">
-          {/* Gradient Backgrounds */}
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950"></div>
-          <div className="absolute inset-0 bg-gradient-to-tl from-emerald-900/15 via-transparent to-teal-900/20"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-800/25 via-transparent to-emerald-900/18"></div>
+          {/* Background Image */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-95"
+            style={{
+              backgroundImage: 'url(/images/about.png)'
+            }}
+          ></div>
+          
+          {/* Minimal overlay for text readability */}
+          <div className="absolute inset-0 bg-slate-950/20"></div>
           
           {/* Subtle Animated Elements */}
           <motion.div
