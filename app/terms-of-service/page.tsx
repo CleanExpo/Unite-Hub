@@ -199,8 +199,8 @@ export default function TermsOfServicePage() {
             <h2>11. Contact Us</h2>
             <p>
               If you have any questions about these Terms, please contact us at{" "}
-              <a href="mailto:unitegroup.in@gmail.com">
-                unitegroup.in@gmail.com
+              <a href="mailto:contact@unite-group.in">
+                contact@unite-group.in
               </a>
               .
             </p>

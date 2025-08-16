@@ -304,8 +304,7 @@ async function sendMeetingInvite(meetingInfo: {
       `,
     });
 
-     ('📧 Customer email sent:', customerEmailResult);
-     ('📧 Admin email sent:', adminEmailResult);
+
 
     return {
       success: true,

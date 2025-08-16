@@ -147,8 +147,6 @@ export async function submitContactForm(prevState: { message: string; success?: 
         }
       }
 
-       ("Email sent successfully:", emailData)
-
       return {
         message: "Thank you! Your message has been sent successfully. We'll be in touch within 24 business hours.",
         success: true,

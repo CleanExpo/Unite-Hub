@@ -98,8 +98,8 @@ const contactDetails = [
   {
     icon: MailIcon,
     title: "Email",
-    lines: ["unitegroup.in@gmail.com", "24 hours Response"], // Corrected email
-    href: "mailto:unitegroup.in@gmail.com",
+    lines: ["contact@unite-group.in", "24 hours Response"], // Corrected email
+    href: "mailto:contact@unite-group.in",
   },
   {
     icon: MapPinIcon,
