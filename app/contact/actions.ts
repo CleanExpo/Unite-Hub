@@ -42,7 +42,7 @@ export async function submitContactForm(prevState: { message: string; success?: 
     } = validatedFields.data
 
     // Get the FROM_EMAIL from environment variable
-    const fromEmail = process.env.FROM_EMAIL
+    const fromEmail = process.env.FROM_EMAIL as string
     
     if (!fromEmail) {
       console.error("FROM_EMAIL environment variable is not set")
