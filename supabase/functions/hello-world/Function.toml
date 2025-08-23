@@ -1,8 +1,0 @@
-[context]
-runtime = "edge:ts"
-name = "hello-world"
-access = "public"
-
-[script]
-entrypoint = "handleRequest"
-src = "index.ts"

@@ -1,1 +1,0 @@
-﻿console.log('Some debug information'); // This line should be removed in production code

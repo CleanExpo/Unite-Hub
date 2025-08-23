@@ -1,1 +1,0 @@
-﻿export interface AgentType { id: string; name: string; }; export default AgentType;

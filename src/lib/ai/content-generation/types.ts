@@ -1,1 +1,0 @@
-﻿export interface ContentGeneration { id: string; content: string; }; export default ContentGeneration;
