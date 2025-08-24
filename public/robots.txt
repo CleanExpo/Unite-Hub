@@ -1,14 +1,9 @@
 # Unite Group - Robots.txt
 # https://unite-group.in
 
+# All search engines
 User-agent: *
 Allow: /
-
-# Sitemaps
-Sitemap: https://unite-group.in/sitemap.xml
-
-# Crawl-delay for responsible crawling
-Crawl-delay: 1
 
 # Disallow admin and API routes
 Disallow: /api/
@@ -26,19 +21,21 @@ Allow: /*.gif$
 Allow: /*.svg$
 Allow: /*.webp$
 
-# Specific bot rules
+# Googlebot specific (no crawl-delay as Google doesn't support it)
 User-agent: Googlebot
 Allow: /
-Crawl-delay: 0
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /dashboard/
 
+# Bingbot specific
 User-agent: Bingbot
 Allow: /
-Crawl-delay: 0
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /dashboard/
 
-User-agent: Slurp
-Allow: /
-Crawl-delay: 1
-
-User-agent: DuckDuckBot
-Allow: /
-Crawl-delay: 1
+# Sitemap location
+Sitemap: https://unite-group.in/sitemap.xml
