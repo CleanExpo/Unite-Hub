@@ -7,6 +7,8 @@ import SiteHeader from "@/components/layout/site-header"
 import SiteFooter from "@/components/layout/site-footer"
 import ScrollToTop from "@/components/utils/scroll-to-top" // Import ScrollToTop
 import { ChatbotProvider } from "@/components/chatbot"
+import GoogleAnalytics from "@/components/GoogleAnalytics"
+import { UniteGroupOrganizationSchema, UniteGroupLocalBusinessSchema } from "@/components/seo/AdvancedSchema"
 
 const titilliumWeb = Titillium_Web({
   subsets: ["latin"],
@@ -33,6 +35,9 @@ export default function RootLayout({
           titilliumWeb.className,
         )}
       >
+        <GoogleAnalytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || ''} />
+        <UniteGroupOrganizationSchema />
+        <UniteGroupLocalBusinessSchema />
         <ChatbotProvider>
           <ScrollToTop />
           <SiteHeader />
