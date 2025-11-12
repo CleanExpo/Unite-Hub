@@ -1,0 +1,18 @@
+{
+  "agent_name": "email-agent",
+  "version": "1.0.0",
+  "description": "Processes incoming emails, extracts intents, links to contacts, updates CRM",
+  "models": {
+    "default": "claude-sonnet-4-5-20250929",
+    "analysis": "claude-opus-4-1-20250805",
+    "quick": "claude-haiku-4-5-20251001"
+  },
+  "capabilities": [
+    "email_parsing",
+    "intent_extraction",
+    "sentiment_analysis",
+    "contact_linking",
+    "crm_updates",
+    "audit_logging"
+  ]
+}

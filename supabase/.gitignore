@@ -1,0 +1,7 @@
+# Supabase local development
+.branches
+.temp
+config.toml
+
+# Generated files
+**/.DS_Store
