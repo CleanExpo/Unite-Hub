@@ -4,10 +4,10 @@ import { db } from "@/lib/db";
 // GET /api/contacts/[contactId] - Get contact details
 export async function GET(
   request: NextRequest,
-  { params }: { params: { contactId: string } }
+  { params }: { params: Promise<{ contactId: string }> }
 ) {
   try {
-    const { contactId } = params;
+    const { contactId } = await params;
 
     const contact = await db.contacts.getById(contactId);
 
