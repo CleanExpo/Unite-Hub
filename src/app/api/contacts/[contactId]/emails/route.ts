@@ -4,10 +4,10 @@ import { db } from "@/lib/db";
 // GET /api/contacts/[contactId]/emails - List all emails for a contact
 export async function GET(
   request: NextRequest,
-  { params }: { params: { contactId: string } }
+  { params }: { params: Promise<{ contactId: string }> }
 ) {
   try {
-    const { contactId } = params;
+    const { contactId } = await params;
 
     const emails = await db.clientEmails.getByContact(contactId);
 
@@ -24,10 +24,10 @@ export async function GET(
 // POST /api/contacts/[contactId]/emails - Add new email to contact
 export async function POST(
   request: NextRequest,
-  { params }: { params: { contactId: string } }
+  { params }: { params: Promise<{ contactId: string }> }
 ) {
   try {
-    const { contactId } = params;
+    const { contactId } = await params;
     const body = await request.json();
 
     const { email, email_type, label, is_primary } = body;

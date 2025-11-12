@@ -4,10 +4,10 @@ import { db } from "@/lib/db";
 // PUT /api/contacts/[contactId]/emails/[emailId]/primary - Set email as primary
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { contactId: string; emailId: string } }
+  { params }: { params: Promise<{ contactId: string; emailId: string }> }
 ) {
   try {
-    const { contactId, emailId } = params;
+    const { contactId, emailId } = await params;
 
     const updatedEmail = await db.clientEmails.setPrimary(emailId, contactId);
 
