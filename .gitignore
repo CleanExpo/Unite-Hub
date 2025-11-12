@@ -52,3 +52,6 @@ _generated/
 # OS
 Thumbs.db
 nul
+ENV_AUDIT_REPORT.md
+ENV_FINAL_STATUS.md
+ENV_*.md
