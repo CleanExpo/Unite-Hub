@@ -69,8 +69,8 @@ export default function PricingPage() {
         {/* Pricing Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <PricingCard
-            name="Starter"
-            price="$99"
+            name="Unite-Hub Starter"
+            price="$249"
             description="Perfect for small agencies"
             features={[
               "1 Client Account",
@@ -82,8 +82,8 @@ export default function PricingPage() {
             isLoading={isLoading}
           />
           <PricingCard
-            name="Professional"
-            price="$299"
+            name="Unite-Hub Professional"
+            price="$549"
             description="Most popular"
             features={[
               "5 Client Accounts",
