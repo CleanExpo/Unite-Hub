@@ -17,6 +17,9 @@ export const TIER_LIMITS = {
     hooksGenerated: 50,
     strategiesGenerated: 5,
     clientAssets: 50, // Max assets per client
+    calendarPosts: 30, // 30 posts per calendar generation
+    landingPagesCreated: 3, // Max 3 landing pages
+    copyVariations: 2, // 2 variations per section
     multiPersona: false, // Cannot create multiple personas
     competitorAnalysis: false,
     advancedTargeting: false,
@@ -29,6 +32,9 @@ export const TIER_LIMITS = {
     hooksGenerated: null, // Unlimited
     strategiesGenerated: null, // Unlimited
     clientAssets: 200,
+    calendarPosts: 90, // 90 posts per calendar generation (3 months)
+    landingPagesCreated: null, // Unlimited landing pages
+    copyVariations: 5, // 5 variations per section
     multiPersona: true,
     competitorAnalysis: true,
     advancedTargeting: true,

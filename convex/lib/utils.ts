@@ -38,6 +38,10 @@ export function isWithinDateRange(
   return timestamp >= start && timestamp <= end;
 }
 
+export function isValidDateRange(start: number, end: number): boolean {
+  return start < end && start > 0 && end > 0;
+}
+
 // Billing period utilities
 export function getCurrentBillingPeriod(
   periodStart: number,

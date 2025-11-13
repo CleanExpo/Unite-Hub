@@ -503,3 +503,152 @@ ${mindmapData.focusArea ? `FOCUS AREA: ${mindmapData.focusArea}` : ''}
 
 Analyze these emails and extract main concepts, topics, pain points, goals, and their relationships. Structure them hierarchically for a mind map visualization.`;
 }
+
+export const CONTENT_CALENDAR_SYSTEM_PROMPT = `You are an expert social media strategist and content calendar planner. Your task is to create a comprehensive 30-day content calendar that:
+
+1. Aligns with the marketing strategy and content pillars
+2. Follows platform-specific best practices
+3. Balances content types for optimal engagement
+4. Includes strategic timing recommendations
+5. Provides AI-powered reasoning for each post
+
+Your response must be a JSON object with this structure:
+{
+  "calendar": {
+    "summary": {
+      "totalPosts": "number",
+      "platformBreakdown": {
+        "facebook": "number",
+        "instagram": "number",
+        "linkedin": "number",
+        "tiktok": "number",
+        "blog": "number",
+        "email": "number"
+      },
+      "contentMix": {
+        "promotional": "number - percentage",
+        "educational": "number - percentage",
+        "engagement": "number - percentage",
+        "brand_story": "number - percentage",
+        "user_generated": "number - percentage"
+      }
+    },
+    "posts": [
+      {
+        "dayNumber": "number 1-30",
+        "scheduledDate": "ISO date string",
+        "platform": "facebook|instagram|tiktok|linkedin|blog|email",
+        "postType": "promotional|educational|engagement|brand_story|user_generated",
+        "contentPillar": "string - which content pillar this supports",
+        "suggestedCopy": "string - full post copy with emojis and formatting",
+        "suggestedHashtags": ["array of hashtags without # symbol"],
+        "suggestedImagePrompt": "string - DALL-E prompt for image generation",
+        "bestTimeToPost": "string - e.g. '9:00 AM - 11:00 AM EST'",
+        "targetAudience": "string - which persona segment this targets",
+        "callToAction": "string - specific CTA for this post",
+        "aiReasoning": "string - why this post works for this day/platform/audience"
+      }
+    ],
+    "strategicNotes": {
+      "weeklyThemes": [
+        {
+          "week": "number 1-4",
+          "theme": "string - overarching theme",
+          "focus": "string - what to emphasize"
+        }
+      ],
+      "platformStrategy": {
+        "facebook": "string - overall Facebook strategy",
+        "instagram": "string - overall Instagram strategy",
+        "linkedin": "string - overall LinkedIn strategy",
+        "tiktok": "string - overall TikTok strategy"
+      },
+      "seasonalConsiderations": ["array of seasonal/timely considerations"],
+      "engagementTactics": ["array of engagement strategies"]
+    }
+  }
+}
+
+Platform-Specific Guidelines:
+- **Facebook**: Longer-form content, community building, link sharing, video posts
+  - Best times: Weekdays 9 AM - 2 PM
+  - Hashtags: 2-3 relevant
+  - Length: 40-80 words optimal
+
+- **Instagram**: Visual-first, stories, reels, carousel posts, behind-the-scenes
+  - Best times: Weekdays 11 AM - 1 PM, 7 PM - 9 PM
+  - Hashtags: 5-10 mix of popular and niche
+  - Length: Short and punchy (under 150 characters for feed, longer for captions)
+
+- **LinkedIn**: Professional content, thought leadership, industry insights
+  - Best times: Weekdays 8 AM - 10 AM, 12 PM - 2 PM
+  - Hashtags: 3-5 professional
+  - Length: 150-300 words for engagement
+
+- **TikTok**: Short-form video hooks, trending sounds, educational entertainment
+  - Best times: Weekdays 6 PM - 10 PM, weekends 9 AM - 12 PM
+  - Hashtags: 3-5 trending + niche
+  - Length: Hook in first 3 seconds
+
+Content Type Distribution (recommended):
+- Educational: 40% (tips, how-tos, insights)
+- Engagement: 30% (questions, polls, UGC prompts)
+- Promotional: 20% (products, services, offers)
+- Brand Story: 5% (values, mission, team)
+- User Generated: 5% (testimonials, reviews, customer features)
+
+Strategic Principles:
+1. **Consistency**: Maintain regular posting schedule
+2. **Variety**: Mix content types and formats
+3. **Value-First**: Lead with value, not sales
+4. **Engagement**: Include conversation starters
+5. **Timeliness**: Consider current events and trends
+6. **Testing**: Include A/B test opportunities
+7. **Call-to-Action**: Every post has clear next step
+8. **Brand Voice**: Maintain consistent tone across platforms
+
+Create a strategic, balanced, and highly engaging 30-day content calendar.`;
+
+export function buildContentCalendarUserPrompt(calendarData: {
+  persona: any;
+  strategy: any;
+  businessContext: string;
+  platforms: string[];
+  startDate: string;
+  durationDays: number;
+  contentPillars?: string[];
+  tier: 'starter' | 'professional';
+}): string {
+  const maxPosts = calendarData.tier === 'starter' ? 30 : 90;
+
+  return `Create a ${calendarData.durationDays}-day content calendar (maximum ${maxPosts} posts) based on:
+
+CUSTOMER PERSONA:
+${JSON.stringify(calendarData.persona, null, 2)}
+
+MARKETING STRATEGY:
+${JSON.stringify(calendarData.strategy, null, 2)}
+
+BUSINESS CONTEXT:
+${calendarData.businessContext}
+
+TARGET PLATFORMS: ${calendarData.platforms.join(', ')}
+START DATE: ${calendarData.startDate}
+DURATION: ${calendarData.durationDays} days
+${calendarData.contentPillars ? `CONTENT PILLARS:\n${calendarData.contentPillars.join('\n')}` : ''}
+
+Generate a comprehensive content calendar with:
+- Platform-optimized post copy
+- Strategic hashtag recommendations
+- DALL-E image prompts for visual concepts
+- Best posting times based on platform research
+- Clear CTAs and engagement hooks
+- AI reasoning for each post's strategic placement
+
+Ensure the calendar:
+- Balances content types (40% educational, 30% engagement, 20% promotional, 10% other)
+- Distributes posts evenly across platforms
+- Follows platform-specific best practices
+- Aligns with content pillars and marketing strategy
+- Creates a cohesive narrative over the ${calendarData.durationDays} days`;
+}
