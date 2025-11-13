@@ -1,13 +1,6 @@
-import { SupabaseAdapter } from "@auth/supabase-adapter";
-import { createClient } from "@supabase/supabase-js";
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import EmailProvider from "next-auth/providers/email";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder.supabase.co",
-  process.env.SUPABASE_SERVICE_ROLE_KEY || "placeholder-key"
-);
 
 const providers = [];
 
@@ -20,11 +13,11 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
     })
   );
 } else {
-  // Fallback for build time
+  // Fallback for build time - use dummy credentials
   providers.push(
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "dummy-client-id",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "dummy-secret",
+      clientId: "dummy-client-id.apps.googleusercontent.com",
+      clientSecret: "dummy-secret-key-for-build",
     })
   );
 }
@@ -51,10 +44,8 @@ if (
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: SupabaseAdapter({
-    url: process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder.supabase.co",
-    secret: process.env.SUPABASE_SERVICE_ROLE_KEY || "placeholder-key",
-  }),
+  // Remove Supabase adapter - using default in-memory sessions for now
+  // adapter: SupabaseAdapter({...}),
   providers,
   pages: {
     signIn: "/auth/signin",
@@ -62,10 +53,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
   callbacks: {
     async session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id;
+      if (session?.user && user) {
+        (session.user as any).id = user.id;
       }
       return session;
     },
   },
+  secret: process.env.NEXTAUTH_SECRET,
 });
