@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendEmail, addTrackingPixel } from "@/lib/gmail";
 import { ConvexHttpClient } from "convex/browser";
-import { api } from "../../../../../convex/_generated/api";
+import { api } from "@/convex/_generated/api";
 
 /**
  * POST /api/email/send
