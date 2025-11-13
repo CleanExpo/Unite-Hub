@@ -235,3 +235,190 @@ Provide:
 
 Return as JSON object with these sections.`;
 }
+
+// ============================================================================
+// Additional Prompts for Unite-Hub Features
+// ============================================================================
+
+export const STRATEGY_SYSTEM_PROMPT = `You are a marketing strategist specializing in comprehensive business strategy development.
+
+Your task is to create actionable marketing strategies that:
+1. Align with business goals and target audience
+2. Consider market trends and competitive landscape
+3. Define clear objectives and KPIs
+4. Outline tactical approaches across channels
+5. Provide realistic timelines and milestones`;
+
+export function buildStrategyUserPrompt(params: {
+  businessName: string;
+  businessDescription: string;
+  targetAudience: string;
+  goals?: string;
+  industry?: string;
+}): string {
+  return `Create a comprehensive marketing strategy for:
+
+BUSINESS: ${params.businessName}
+DESCRIPTION: ${params.businessDescription}
+TARGET AUDIENCE: ${params.targetAudience}
+${params.goals ? `GOALS:\n${params.goals}\n` : ''}
+${params.industry ? `INDUSTRY: ${params.industry}` : ''}
+
+Generate a complete marketing strategy including:
+1. Executive summary
+2. Target audience analysis
+3. Value proposition
+4. Marketing channels and tactics
+5. Content strategy
+6. Timeline and milestones
+7. KPIs and success metrics
+
+Return as structured JSON.`;
+}
+
+export const PERSONA_SYSTEM_PROMPT = `You are a customer research expert specializing in buyer persona development.
+
+Your task is to create detailed buyer personas that:
+1. Capture demographic and psychographic insights
+2. Identify pain points and motivations
+3. Map customer journey touchpoints
+4. Define messaging and positioning
+5. Provide actionable marketing insights`;
+
+export function buildPersonaUserPrompt(params: {
+  businessType: string;
+  targetAudience: string;
+  industry?: string;
+  goals?: string;
+}): string {
+  return `Create a detailed buyer persona for:
+
+BUSINESS TYPE: ${params.businessType}
+TARGET AUDIENCE: ${params.targetAudience}
+${params.industry ? `INDUSTRY: ${params.industry}\n` : ''}
+${params.goals ? `BUSINESS GOALS:\n${params.goals}\n` : ''}
+
+Generate a comprehensive buyer persona including:
+1. Demographics (age, location, income, education)
+2. Psychographics (values, interests, lifestyle)
+3. Pain points and challenges
+4. Goals and motivations
+5. Preferred communication channels
+6. Buying behavior and decision process
+7. Objections and concerns
+
+Return as structured JSON.`;
+}
+
+export const MINDMAP_SYSTEM_PROMPT = `You are a creative strategist helping to visualize and organize business concepts through mind mapping.
+
+Your task is to create structured mind maps that:
+1. Break down complex concepts into digestible parts
+2. Show relationships and connections
+3. Organize information hierarchically
+4. Highlight key themes and subtopics
+5. Enable strategic thinking and planning`;
+
+export function buildMindmapUserPrompt(params: {
+  topic: string;
+  businessContext?: string;
+  focus?: string;
+}): string {
+  return `Create a comprehensive mind map for:
+
+TOPIC: ${params.topic}
+${params.businessContext ? `BUSINESS CONTEXT:\n${params.businessContext}\n` : ''}
+${params.focus ? `FOCUS AREA: ${params.focus}` : ''}
+
+Generate a mind map with:
+1. Central topic/theme
+2. Main branches (3-7 key areas)
+3. Sub-branches (supporting concepts)
+4. Connections and relationships
+5. Key insights and ideas
+
+Return as structured JSON with nodes and edges for visualization.`;
+}
+
+export const HOOKS_SYSTEM_PROMPT = `You are a copywriting expert specializing in attention-grabbing hooks and opening lines.
+
+Your task is to create compelling hooks that:
+1. Capture attention in the first 3 seconds
+2. Speak to audience pain points or desires
+3. Create curiosity and intrigue
+4. Work across different platforms
+5. Drive engagement and action`;
+
+export function buildHooksUserPrompt(params: {
+  topic: string;
+  targetAudience: string;
+  platform?: string;
+  style?: string;
+}): string {
+  return `Generate compelling content hooks for:
+
+TOPIC: ${params.topic}
+TARGET AUDIENCE: ${params.targetAudience}
+${params.platform ? `PLATFORM: ${params.platform}\n` : ''}
+${params.style ? `STYLE: ${params.style}` : ''}
+
+Create 10 different hooks using various approaches:
+1. Question hooks
+2. Stat/data hooks
+3. Story hooks
+4. Controversial/hot-take hooks
+5. Problem/solution hooks
+6. "How to" hooks
+7. List hooks
+8. Personal hooks
+
+For each hook provide:
+- The hook text
+- Hook type/category
+- Why it works
+- Best platform fit
+
+Return as structured JSON array.`;
+}
+
+export const CAMPAIGN_SYSTEM_PROMPT = `You are a marketing campaign strategist specializing in integrated multi-channel campaigns.
+
+Your task is to design marketing campaigns that:
+1. Have clear objectives and target outcomes
+2. Coordinate messaging across multiple channels
+3. Follow proven campaign frameworks
+4. Include specific tactics and deliverables
+5. Provide measurement and optimization plans`;
+
+export function buildCampaignUserPrompt(params: {
+  campaignGoal: string;
+  targetAudience: string;
+  budget?: string;
+  duration?: string;
+  channels?: string[];
+}): string {
+  return `Design a comprehensive marketing campaign for:
+
+CAMPAIGN GOAL: ${params.campaignGoal}
+TARGET AUDIENCE: ${params.targetAudience}
+${params.budget ? `BUDGET: ${params.budget}\n` : ''}
+${params.duration ? `DURATION: ${params.duration}\n` : ''}
+${params.channels ? `CHANNELS: ${params.channels.join(', ')}\n` : ''}
+
+Create a complete campaign plan including:
+1. Campaign theme and messaging
+2. Channel-specific tactics
+3. Content assets needed
+4. Timeline and phases
+5. KPIs and success metrics
+6. Budget allocation
+7. Optimization strategies
+
+Return as structured JSON with all campaign details.`;
+}
+
+// Alias function for content calendar
+export const buildContentCalendarUserPrompt = buildContentCalendarPrompt;
+
+// Alias function for campaign
+export const buildCampaignPrompt = buildCampaignUserPrompt;

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createMessage, parseJSONResponse, rateLimiter } from '@/lib/claude/client';
 import { AUTO_REPLY_SYSTEM_PROMPT, buildAutoReplyUserPrompt } from '@/lib/claude/prompts';
-import { ConversationContext } from '@/lib/claude/context';
+import type { ConversationContext } from '@/lib/claude/context';
 
 export const runtime = 'edge';
 

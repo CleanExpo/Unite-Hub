@@ -19,7 +19,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/ui/alert-dialog";
 
 interface BulkActionsProps {
   selectedIds: string[];
