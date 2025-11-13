@@ -14,6 +14,7 @@ export interface TierLimits {
   hooksLimit: number;
   imagesPerConcept: number;
   exportFormats: string[];
+  competitorLimit: number;
   hasVideoSupport: boolean;
   hasWebsiteRecommendations: boolean;
   hasEmailSequences: boolean;
@@ -32,6 +33,7 @@ const TIER_LIMITS: Record<SubscriptionPlan, TierLimits> = {
     hooksLimit: 20,
     imagesPerConcept: 3,
     exportFormats: ["pdf"],
+    competitorLimit: 3,
     hasVideoSupport: false,
     hasWebsiteRecommendations: false,
     hasEmailSequences: false,
@@ -48,6 +50,7 @@ const TIER_LIMITS: Record<SubscriptionPlan, TierLimits> = {
     hooksLimit: -1, // unlimited
     imagesPerConcept: 5,
     exportFormats: ["pdf", "json", "docx"],
+    competitorLimit: 10,
     hasVideoSupport: true,
     hasWebsiteRecommendations: true,
     hasEmailSequences: true,
@@ -64,6 +67,7 @@ const TIER_LIMITS: Record<SubscriptionPlan, TierLimits> = {
     hooksLimit: -1, // unlimited
     imagesPerConcept: 10,
     exportFormats: ["pdf", "json", "docx", "html"],
+    competitorLimit: -1, // unlimited
     hasVideoSupport: true,
     hasWebsiteRecommendations: true,
     hasEmailSequences: true,
