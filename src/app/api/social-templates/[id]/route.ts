@@ -5,11 +5,12 @@ import { fetchMutation, fetchQuery } from "convex/nextjs";
 // GET single template
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const template = await fetchQuery(api.socialTemplates.getTemplate, {
-      templateId: params.id as any,
+      templateId: id as any,
     });
 
     if (!template) {
@@ -29,14 +30,15 @@ export async function GET(
 // UPDATE template
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const body = await req.json();
     const { updates } = body;
+    const { id } = await params;
 
     await fetchMutation(api.socialTemplates.updateTemplate, {
-      templateId: params.id as any,
+      templateId: id as any,
       updates,
     });
 
@@ -53,11 +55,12 @@ export async function PUT(
 // DELETE template
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     await fetchMutation(api.socialTemplates.deleteTemplate, {
-      templateId: params.id as any,
+      templateId: id as any,
     });
 
     return NextResponse.json({ success: true });

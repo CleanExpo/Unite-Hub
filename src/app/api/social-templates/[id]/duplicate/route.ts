@@ -4,11 +4,12 @@ import { fetchMutation } from "convex/nextjs";
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const newTemplateId = await fetchMutation(api.socialTemplates.duplicateTemplate, {
-      templateId: params.id as any,
+      templateId: id as any,
     });
 
     return NextResponse.json({ success: true, templateId: newTemplateId });

@@ -8,11 +8,11 @@ const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 // Update calendar post
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { postId: string } }
+  { params }: { params: Promise<{ postId: string }> }
 ) {
   try {
     const body = await req.json();
-    const { postId } = params;
+    const { postId } = await params;
 
     const result = await convex.mutation(api.contentCalendar.updatePost, {
       postId: postId as Id<"contentCalendarPosts">,
@@ -32,10 +32,10 @@ export async function PUT(
 // Delete calendar post
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { postId: string } }
+  { params }: { params: Promise<{ postId: string }> }
 ) {
   try {
-    const { postId } = params;
+    const { postId } = await params;
 
     await convex.mutation(api.contentCalendar.deletePost, {
       postId: postId as Id<"contentCalendarPosts">,

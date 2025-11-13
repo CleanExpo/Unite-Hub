@@ -9,15 +9,16 @@ const anthropic = new Anthropic({
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const body = await req.json();
     const { count = 5, tones = ["professional", "casual", "inspirational", "humorous", "urgent"] } = body;
+    const { id } = await params;
 
     // Get the original template
     const template = await fetchQuery(api.socialTemplates.getTemplate, {
-      templateId: params.id as any,
+      templateId: id as any,
     });
 
     if (!template) {
@@ -34,7 +35,7 @@ export async function POST(
 
     // Update template with variations
     await fetchMutation(api.socialTemplates.updateTemplate, {
-      templateId: params.id as any,
+      templateId: id as any,
       updates: {
         variations,
       },

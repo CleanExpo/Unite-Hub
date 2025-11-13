@@ -8,10 +8,10 @@ const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 // Approve calendar post
 export async function POST(
   req: NextRequest,
-  { params }: { params: { postId: string } }
+  { params }: { params: Promise<{ postId: string }> }
 ) {
   try {
-    const { postId } = params;
+    const { postId } = await params;
 
     const result = await convex.mutation(api.contentCalendar.approvePost, {
       postId: postId as Id<"contentCalendarPosts">,

@@ -9,10 +9,11 @@ import { Id } from "@/convex/_generated/dataModel";
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const checklistId = params.id as Id<"landingPageChecklists">;
+    const { id } = await params;
+    const checklistId = id as Id<"landingPageChecklists">;
 
     const checklist = await fetchQuery(api.landingPages.get, {
       checklistId,
@@ -41,10 +42,11 @@ export async function GET(
  */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const checklistId = params.id as Id<"landingPageChecklists">;
+    const { id } = await params;
+    const checklistId = id as Id<"landingPageChecklists">;
     const body = await request.json();
 
     await fetchMutation(api.landingPages.update, {
@@ -71,10 +73,11 @@ export async function PUT(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const checklistId = params.id as Id<"landingPageChecklists">;
+    const { id } = await params;
+    const checklistId = id as Id<"landingPageChecklists">;
 
     await fetchMutation(api.landingPages.remove, {
       checklistId,

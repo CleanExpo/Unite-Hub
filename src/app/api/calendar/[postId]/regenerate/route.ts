@@ -13,10 +13,10 @@ const anthropic = new Anthropic({
 // Regenerate calendar post with AI
 export async function POST(
   req: NextRequest,
-  { params }: { params: { postId: string } }
+  { params }: { params: Promise<{ postId: string }> }
 ) {
   try {
-    const { postId } = params;
+    const { postId } = await params;
 
     // Get existing post
     const post = await convex.query(api.contentCalendar.getPost, {

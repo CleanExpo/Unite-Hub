@@ -3,10 +3,10 @@ import { handleSeedRequest, getTemplateCounts } from "@/lib/social-templates/see
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const clientId = params.id;
+    const { id: clientId } = await params;
     const body = await req.json();
     const { platform, category, limit } = body;
 

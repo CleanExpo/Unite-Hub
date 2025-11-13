@@ -4,11 +4,12 @@ import { fetchMutation } from "convex/nextjs";
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const isFavorite = await fetchMutation(api.socialTemplates.toggleFavorite, {
-      templateId: params.id as any,
+      templateId: id as any,
     });
 
     return NextResponse.json({ success: true, isFavorite });

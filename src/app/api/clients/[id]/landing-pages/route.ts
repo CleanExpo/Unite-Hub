@@ -9,10 +9,11 @@ import { Id } from "@/convex/_generated/dataModel";
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const clientId = params.id as Id<"clients">;
+    const { id } = await params;
+    const clientId = id as Id<"clients">;
     const { searchParams } = new URL(request.url);
     const pageType = searchParams.get("pageType");
 

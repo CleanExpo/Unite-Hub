@@ -9,11 +9,12 @@ import { Id } from "@/convex/_generated/dataModel";
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const competitor = await fetchQuery(api.competitors.getCompetitor, {
-      competitorId: params.id as Id<"competitors">,
+      competitorId: id as Id<"competitors">,
     });
 
     if (!competitor) {
@@ -39,7 +40,7 @@ export async function GET(
  */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const body = await request.json();
@@ -51,9 +52,10 @@ export async function PUT(
         { status: 400 }
       );
     }
+    const { id } = await params;
 
     await fetchMutation(api.competitors.updateCompetitor, {
-      competitorId: params.id as Id<"competitors">,
+      competitorId: id as Id<"competitors">,
       updates,
     });
 
@@ -76,11 +78,12 @@ export async function PUT(
  */
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     await fetchMutation(api.competitors.deleteCompetitor, {
-      competitorId: params.id as Id<"competitors">,
+      competitorId: id as Id<"competitors">,
     });
 
     return NextResponse.json({

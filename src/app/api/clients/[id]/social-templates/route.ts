@@ -4,10 +4,10 @@ import { fetchQuery } from "convex/nextjs";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const clientId = params.id;
+    const { id: clientId } = await params;
     const searchParams = req.nextUrl.searchParams;
     const platform = searchParams.get("platform") || undefined;
     const category = searchParams.get("category") || undefined;

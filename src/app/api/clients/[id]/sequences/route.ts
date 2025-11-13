@@ -14,10 +14,11 @@ const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const clientId = params.id as Id<"clients">;
+    const { id } = await params;
+    const clientId = id as Id<"clients">;
 
     const sequences = await convex.query(api.emailSequences.getSequences, {
       clientId,

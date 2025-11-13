@@ -14,10 +14,11 @@ const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const sequenceId = params.id as Id<"emailSequences">;
+    const { id } = await params;
+    const sequenceId = id as Id<"emailSequences">;
 
     const data = await convex.query(api.emailSequences.getSequenceWithSteps, {
       sequenceId,
@@ -42,10 +43,11 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const sequenceId = params.id as Id<"emailSequences">;
+    const { id } = await params;
+    const sequenceId = id as Id<"emailSequences">;
     const body = await req.json();
     const { status } = body;
 
@@ -76,10 +78,11 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const sequenceId = params.id as Id<"emailSequences">;
+    const { id } = await params;
+    const sequenceId = id as Id<"emailSequences">;
 
     await convex.mutation(api.emailSequences.deleteSequence, {
       sequenceId,
