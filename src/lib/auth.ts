@@ -51,4 +51,8 @@ export const authOptions: NextAuthOptions = {
 };
 
 // Export the NextAuth instance for v4
-export default NextAuth(authOptions);
+const handler = NextAuth(authOptions);
+export default handler;
+
+// Export auth function for API routes (NextAuth v4 compatible)
+export { handler as auth };
