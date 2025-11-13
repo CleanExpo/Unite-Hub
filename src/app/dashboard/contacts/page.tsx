@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -22,48 +22,40 @@ import {
 import { Plus, Search, Filter, MoreHorizontal, Mail, Phone, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 
 export default function ContactsPage() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [allContacts, setAllContacts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const [contacts] = useState([
-    {
-      id: 1,
-      name: "John Smith",
-      email: "john@techstartup.com",
-      company: "TechStartup Inc",
-      phone: "(555) 123-4567",
-      aiScore: 85,
-      status: "prospect",
-      lastInteraction: "2 days ago",
-      tags: ["Decision Maker", "Tech"],
-      emailCount: 3,
-    },
-    {
-      id: 2,
-      name: "Lisa Johnson",
-      email: "lisa@ecommerce.com",
-      company: "eCommerce Solutions",
-      phone: "(555) 234-5678",
-      aiScore: 72,
-      status: "lead",
-      lastInteraction: "1 week ago",
-      tags: ["Marketing Manager"],
-      emailCount: 2,
-    },
-    {
-      id: 3,
-      name: "Carlos Rodriguez",
-      email: "carlos@fintech.io",
-      company: "FinTech Innovations",
-      phone: "(555) 345-6789",
-      aiScore: 65,
-      status: "contact",
-      lastInteraction: "3 weeks ago",
-      tags: ["CEO", "Investor"],
-      emailCount: 1,
-    },
-  ]);
+
+  useEffect(() => {
+    async function fetchContacts() {
+      try {
+        const { data, error } = await supabase
+          .from("contacts")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (error) throw error;
+        setAllContacts(data || []);
+      } catch (error) {
+        console.error("Error fetching contacts:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchContacts();
+  }, []);
+
+  // Filter by search term
+  const contacts = allContacts.filter((contact: any) =>
+    contact.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    contact.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    contact.company?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
@@ -96,35 +88,60 @@ export default function ContactsPage() {
         </Button>
       </div>
 
-      {/* Stats */}
+      {/* Stats - Real data from Supabase */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <StatBox title="Total Contacts" value="247" color="text-blue-400" />
-        <StatBox title="Prospects" value="45" color="text-green-400" />
-        <StatBox title="Hot Leads" value="12" color="text-orange-400" />
-        <StatBox title="Avg AI Score" value="73" color="text-purple-400" />
+        <StatBox
+          title="Total Contacts"
+          value={contacts.length.toString()}
+          color="text-blue-400"
+        />
+        <StatBox
+          title="Prospects"
+          value={contacts.filter((c: any) => c.status === "prospect").length.toString()}
+          color="text-green-400"
+        />
+        <StatBox
+          title="Hot Leads"
+          value={contacts.filter((c: any) => (c.ai_score || 0) >= 80).length.toString()}
+          color="text-orange-400"
+        />
+        <StatBox
+          title="Avg AI Score"
+          value={contacts.length > 0
+            ? Math.round(contacts.reduce((sum: number, c: any) => sum + (c.ai_score || 0), 0) / contacts.length).toString()
+            : "0"}
+          color="text-purple-400"
+        />
       </div>
 
       {/* Contacts Table */}
       <Card className="bg-slate-800 border-slate-700">
         <CardHeader>
           <CardTitle className="text-white">All Contacts</CardTitle>
-          <CardDescription>View and manage your contact database</CardDescription>
+          <CardDescription>View and manage your contact database from Supabase</CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow className="border-slate-700 hover:bg-slate-700/50">
-                <TableHead className="text-slate-300">Name</TableHead>
-                <TableHead className="text-slate-300">Company</TableHead>
-                <TableHead className="text-slate-300">Email</TableHead>
-                <TableHead className="text-slate-300">AI Score</TableHead>
-                <TableHead className="text-slate-300">Status</TableHead>
-                <TableHead className="text-slate-300">Last Interaction</TableHead>
-                <TableHead className="text-slate-300">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {contacts.map((contact) => (
+          {loading ? (
+            <div className="text-center py-8 text-slate-400">Loading contacts...</div>
+          ) : contacts.length === 0 ? (
+            <div className="text-center py-8 text-slate-400">
+              No contacts found. {searchTerm ? "Try a different search." : "Add your first contact to get started."}
+            </div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow className="border-slate-700 hover:bg-slate-700/50">
+                  <TableHead className="text-slate-300">Name</TableHead>
+                  <TableHead className="text-slate-300">Company</TableHead>
+                  <TableHead className="text-slate-300">Email</TableHead>
+                  <TableHead className="text-slate-300">AI Score</TableHead>
+                  <TableHead className="text-slate-300">Status</TableHead>
+                  <TableHead className="text-slate-300">Last Interaction</TableHead>
+                  <TableHead className="text-slate-300">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {contacts.map((contact) => (
                 <TableRow key={contact.id} className="border-slate-700 hover:bg-slate-700/50">
                   <TableCell>
                     <Link
@@ -154,14 +171,14 @@ export default function ContactsPage() {
                   <TableCell>
                     <Badge
                       className={
-                        contact.aiScore >= 80
+                        (contact.ai_score || 0) >= 80
                           ? "bg-green-600"
-                          : contact.aiScore >= 70
+                          : (contact.ai_score || 0) >= 70
                           ? "bg-blue-600"
                           : "bg-amber-600"
                       }
                     >
-                      {contact.aiScore}
+                      {contact.ai_score || 0}
                     </Badge>
                   </TableCell>
                   <TableCell>
@@ -178,7 +195,9 @@ export default function ContactsPage() {
                       {contact.status}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-slate-400">{contact.lastInteraction}</TableCell>
+                  <TableCell className="text-slate-400">
+                    {contact.last_interaction ? new Date(contact.last_interaction).toLocaleDateString() : 'N/A'}
+                  </TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -205,9 +224,10 @@ export default function ContactsPage() {
                     </DropdownMenu>
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
     </div>

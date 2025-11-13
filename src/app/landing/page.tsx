@@ -95,7 +95,7 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <PricingCard
               name="Starter"
-              price="$99"
+              price="$249"
               description="Perfect for small agencies"
               features={[
                 "1 Client Account",
@@ -106,7 +106,7 @@ export default function LandingPage() {
             />
             <PricingCard
               name="Professional"
-              price="$299"
+              price="$549"
               description="Most popular"
               features={[
                 "5 Client Accounts",

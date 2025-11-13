@@ -27,10 +27,21 @@ export default function PricingPage() {
         body: JSON.stringify({
           plan,
           email: session.user?.email,
+          name: session.user?.name,
+          orgId: (session.user as any)?.organizationId || "default-org", // Fallback for testing
         }),
       });
 
-      const { sessionId } = await res.json();
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.error("Checkout error:", data);
+        alert(`Error: ${data.error || "Failed to create checkout session"}`);
+        setIsLoading(false);
+        return;
+      }
+
+      const { sessionId } = data;
 
       // Redirect to Stripe Checkout
       const stripe = (window as any).Stripe?.(

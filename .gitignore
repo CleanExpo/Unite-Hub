@@ -57,3 +57,66 @@ ENV_FINAL_STATUS.md
 ENV_*.md
 
 .vercel
+.env*.local
+
+# Security: Scripts with hardcoded credentials
+insert-supabase-data.mjs
+insert-via-supabase-client.mjs
+insert-contacts-only.mjs
+insert-simple-contact.mjs
+insert-real-contacts.mjs
+check-supabase-schema.mjs
+
+# Security: Documentation with sensitive info
+SWITCHED_TO_SUPABASE.md
+SUPABASE_DATA_LOADED.md
+SECURITY_INCIDENT_REPORT.md
+add-test-data.sql
+add-test-data-simple.sql
+
+# Test scripts and screenshots
+test-*.cjs
+test-*.js
+test-*.mjs
+*-screenshot.png
+final-*.png
+test-*.png
+
+# Status and diagnostic files
+*_STATUS.md
+*_REPORT.md
+FINAL_STATUS.md
+FIXES_APPLIED.md
+VERIFICATION_COMPLETE.md
+ALL_BROKEN_SHIT.md
+BROWSER_ERRORS_RESOLVED.md
+SYSTEM_READY_STATUS.md
+SYSTEM_DIAGNOSTIC_REPORT.md
+
+# Setup guides with credentials
+GMAIL_SETUP_GUIDE.md
+ENVIRONMENT_VARIABLES_GUIDE.md
+DEPLOYMENT_GUIDE.md
+DEPLOYMENT_CHECKLIST.md
+CLAUDE_AI_IMPLEMENTATION.md
+DALLE_QUICK_START.md
+DALLE_SETUP_GUIDE.md
+DEPLOYMENT.md
+ENV_QUICKFIX.md
+SECURITY_CHECKLIST.md
+lib/claude/QUICKSTART.md
+src/lib/dalle/README.md
+
+# Playwright MCP and testing files
+PLAYWRIGHT_MCP_GUIDE.md
+PRICING_PAGE_TEST_RESULTS.md
+
+# Content dumps
+content-*.txt
+
+# Scripts
+find-all-fake-data.sh
+inspect-content.cjs
+
+# Inspect screenshots
+inspect-*.png
