@@ -25,6 +25,9 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@/convex/*": [
+        "./convex/*"
       ]
     },
     "allowJs": true
@@ -34,10 +37,10 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
+    ".next/dev/types/**/*.ts",
+    "convex/_generated/**/*.ts"
   ],
   "exclude": [
-    "node_modules",
-    "convex"
+    "node_modules"
   ]
 }
