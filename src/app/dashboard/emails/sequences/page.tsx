@@ -6,26 +6,48 @@
  */
 
 import React, { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Sparkles, Library, BarChart3 } from "lucide-react";
+import { Plus, Sparkles, Library, BarChart3, Mail } from "lucide-react";
 import { SequenceList } from "@/components/sequences/SequenceList";
 import { SequenceBuilder } from "@/components/sequences/SequenceBuilder";
 import { SequenceStats } from "@/components/sequences/SequenceStats";
 import { useToast } from "@/hooks/use-toast";
+import { FeaturePageWrapper } from "@/components/features/FeaturePageWrapper";
+import { Id } from "@/convex/_generated/dataModel";
 
 // Template data (would come from database in production)
 const TEMPLATES = [
   {
     id: "saas-cold",
     name: "SaaS Cold Outreach",
-    description: "5-step sequence for introducing your SaaS product to cold prospects",
+    description:
+      "5-step sequence for introducing your SaaS product to cold prospects",
     category: "saas",
     type: "cold_outreach",
     steps: 5,
@@ -79,6 +101,18 @@ const TEMPLATES = [
 ];
 
 export default function SequencesPage() {
+  return (
+    <FeaturePageWrapper
+      featureName="Email Sequences"
+      description="Pre-built email sequences for cold outreach, nurture, and onboarding"
+      icon={<Mail className="h-20 w-20 text-slate-600" />}
+    >
+      {(clientId) => <EmailSequenceFeature clientId={clientId} />}
+    </FeaturePageWrapper>
+  );
+}
+
+function EmailSequenceFeature({ clientId }: { clientId: Id<"clients"> }) {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("sequences");
   const [createDialogOpen, setCreateDialogOpen] = useState(false);

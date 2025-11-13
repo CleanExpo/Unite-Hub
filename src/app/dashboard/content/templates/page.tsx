@@ -1,18 +1,22 @@
 "use client";
 
-import { useParams } from "next/navigation";
 import { TemplateLibrary } from "@/components/social-templates/TemplateLibrary";
-import ClientPortalLayout from "@/components/layout/ClientPortalLayout";
+import { MessageSquare } from "lucide-react";
+import { FeaturePageWrapper } from "@/components/features/FeaturePageWrapper";
+import { Id } from "@/convex/_generated/dataModel";
 
 export default function TemplatesPage() {
-  const params = useParams();
-  const clientId = params?.clientId as string;
-
   return (
-    <ClientPortalLayout clientId={clientId}>
-      <div className="container mx-auto px-4 py-8">
-        <TemplateLibrary clientId={clientId} />
-      </div>
-    </ClientPortalLayout>
+    <FeaturePageWrapper
+      featureName="Social Copy Templates"
+      description="250+ pre-written templates across all platforms"
+      icon={<MessageSquare className="h-20 w-20 text-slate-600" />}
+    >
+      {(clientId) => (
+        <div className="container mx-auto px-4 py-8">
+          <TemplateLibrary clientId={clientId} />
+        </div>
+      )}
+    </FeaturePageWrapper>
   );
 }

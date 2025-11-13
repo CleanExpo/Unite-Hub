@@ -313,3 +313,66 @@ export const getById = query({
     return await ctx.db.get(args.id);
   },
 });
+
+// Create demo client (idempotent)
+export const createDemoClient = mutation({
+  args: { orgId: v.id("organizations") },
+  handler: async (ctx, args) => {
+    const org = await ctx.db.get(args.orgId);
+    if (!org) throw new Error("Organization not found");
+
+    // Check if demo client already exists for this org
+    const existingDemoClient = await ctx.db
+      .query("clients")
+      .withIndex("by_org", (q) => q.eq("orgId", args.orgId))
+      .filter((q) => q.eq(q.field("businessName"), "Duncan's Tea House"))
+      .first();
+
+    if (existingDemoClient) {
+      return existingDemoClient._id;
+    }
+
+    // Create Duncan's Tea House demo client
+    const now = getCurrentTimestamp();
+    const portalUrl = `duncans-tea-house-${Math.random().toString(36).substr(2, 6)}`;
+
+    const clientId = await ctx.db.insert("clients", {
+      orgId: args.orgId,
+      clientName: "Duncan MacDonald",
+      businessName: "Duncan's Tea House",
+      businessDescription: "Premium loose-leaf tea retailer specializing in organic teas from around the world. We offer curated tea selections, tasting experiences, and tea education for enthusiasts and casual drinkers alike.",
+      packageTier: "professional",
+      status: "active",
+      primaryEmail: "duncan@duncansteahouse.com",
+      phoneNumbers: ["+1-555-0123"],
+      websiteUrl: "https://duncansteahouse.com",
+      portalUrl,
+      createdAt: now,
+      updatedAt: now,
+    });
+
+    // Create email record
+    await ctx.db.insert("clientEmails", {
+      clientId,
+      emailAddress: "duncan@duncansteahouse.com",
+      isPrimary: true,
+      verified: true,
+      linkedAt: now,
+      createdAt: now,
+    });
+
+    // Create contact info
+    await ctx.db.insert("clientContactInfo", {
+      clientId,
+      phoneNumbers: ["+1-555-0123"],
+      emailAddresses: ["duncan@duncansteahouse.com"],
+      websiteUrl: "https://duncansteahouse.com",
+      businessName: "Duncan's Tea House",
+      businessDescription: "Premium loose-leaf tea retailer specializing in organic teas from around the world. We offer curated tea selections, tasting experiences, and tea education for enthusiasts and casual drinkers alike.",
+      createdAt: now,
+      updatedAt: now,
+    });
+
+    return clientId;
+  },
+});
