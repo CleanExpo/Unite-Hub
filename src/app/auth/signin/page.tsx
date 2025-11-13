@@ -7,33 +7,33 @@ import { Chrome } from "lucide-react";
 
 export default function SignInPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-900 to-slate-900 flex items-center justify-center p-4">
       <div className="w-full max-w-md space-y-8">
         {/* Logo and Branding */}
         <div className="text-center space-y-2">
-          <div className="mx-auto w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
-            <span className="text-white font-bold text-2xl">UH</span>
+          <div className="mx-auto w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center shadow-2xl">
+            <span className="text-white font-bold text-3xl">UH</span>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900">Welcome to Unite-Hub</h1>
-          <p className="text-gray-600">AI-Powered Marketing Automation</p>
+          <h1 className="text-4xl font-bold text-white">Welcome to Unite-Hub</h1>
+          <p className="text-blue-200 text-lg">AI-Powered Marketing Automation</p>
         </div>
 
         {/* Sign In Card */}
-        <Card className="border-0 shadow-xl">
-          <CardHeader className="space-y-1 pb-4">
-            <CardTitle className="text-2xl text-center">Sign in to continue</CardTitle>
-            <CardDescription className="text-center">
+        <Card className="border-0 shadow-2xl bg-white">
+          <CardHeader className="space-y-1 pb-6">
+            <CardTitle className="text-3xl text-center font-bold text-gray-900">Sign in to continue</CardTitle>
+            <CardDescription className="text-center text-gray-600 text-base">
               Access your marketing dashboard
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-6">
             {/* Google Sign-In Button */}
             <Button
               onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-              variant="outline"
+              variant="default"
               size="lg"
-              className="w-full h-14 text-base font-medium hover:bg-gray-50 border-2 border-gray-200 hover:border-gray-300 transition-all"
+              className="w-full h-16 text-lg font-semibold bg-white hover:bg-gray-50 text-gray-900 border-2 border-gray-300 hover:border-blue-500 transition-all shadow-md hover:shadow-lg"
             >
               <svg className="w-6 h-6 mr-3" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -55,8 +55,8 @@ export default function SignInPage() {
             </div>
 
             {/* Features */}
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg p-4 space-y-2">
-              <div className="flex items-start gap-2 text-sm text-gray-700">
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg p-5 space-y-3 border border-blue-100">
+              <div className="flex items-start gap-3 text-base font-medium text-gray-900">
                 <svg className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>

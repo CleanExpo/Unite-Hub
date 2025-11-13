@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build:*)",
+      "Bash(npm install:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push)",
+      "Bash(find:*)",
+      "Bash(git restore:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(git fetch:*)",
+      "Bash(npx convex:*)",
+      "Bash(git push:*)",
+      "Bash(claude mcp list:*)",
+      "Bash(npx @modelcontextprotocol/inspector:*)",
+      "Bash(gh api:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx next build:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
