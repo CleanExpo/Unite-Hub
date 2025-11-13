@@ -1,6 +1,6 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import EmailProvider from "next-auth/providers/email";
+// import EmailProvider from "next-auth/providers/email"; // Requires database adapter
 
 const providers = [];
 
@@ -12,26 +12,27 @@ providers.push(
   })
 );
 
-// Add Email provider if SMTP credentials are available
-if (
-  process.env.EMAIL_SERVER_HOST &&
-  process.env.EMAIL_SERVER_USER &&
-  process.env.EMAIL_SERVER_PASSWORD
-) {
-  providers.push(
-    EmailProvider({
-      server: {
-        host: process.env.EMAIL_SERVER_HOST,
-        port: parseInt(process.env.EMAIL_SERVER_PORT || "587"),
-        auth: {
-          user: process.env.EMAIL_SERVER_USER,
-          pass: process.env.EMAIL_SERVER_PASSWORD,
-        },
-      },
-      from: process.env.EMAIL_FROM || "noreply@unite-hub.io",
-    })
-  );
-}
+// Email provider disabled - requires database adapter (Convex/Supabase)
+// Can be re-enabled by adding an adapter to authOptions
+// if (
+//   process.env.EMAIL_SERVER_HOST &&
+//   process.env.EMAIL_SERVER_USER &&
+//   process.env.EMAIL_SERVER_PASSWORD
+// ) {
+//   providers.push(
+//     EmailProvider({
+//       server: {
+//         host: process.env.EMAIL_SERVER_HOST,
+//         port: parseInt(process.env.EMAIL_SERVER_PORT || "587"),
+//         auth: {
+//           user: process.env.EMAIL_SERVER_USER,
+//           pass: process.env.EMAIL_SERVER_PASSWORD,
+//         },
+//       },
+//       from: process.env.EMAIL_FROM || "noreply@unite-hub.io",
+//     })
+//   );
+// }
 
 export const authOptions: NextAuthOptions = {
   providers,
