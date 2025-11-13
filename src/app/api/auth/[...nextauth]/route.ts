@@ -1,5 +1,6 @@
-import { handlers } from "@/lib/auth";
+// NextAuth v4 API Route
+import NextAuth from "@/lib/auth";
 
-export const { GET, POST } = handlers;
+export { NextAuth as GET, NextAuth as POST };
 
 export const runtime = 'nodejs';

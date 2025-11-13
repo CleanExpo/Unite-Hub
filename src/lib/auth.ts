@@ -1,26 +1,16 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import EmailProvider from "next-auth/providers/email";
 
 const providers = [];
 
-// Add Google provider if credentials are available
-if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
-  providers.push(
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    })
-  );
-} else {
-  // Fallback for build time - use dummy credentials
-  providers.push(
-    GoogleProvider({
-      clientId: "dummy-client-id.apps.googleusercontent.com",
-      clientSecret: "dummy-secret-key-for-build",
-    })
-  );
-}
+// Add Google provider with build-time fallbacks
+providers.push(
+  GoogleProvider({
+    clientId: process.env.GOOGLE_CLIENT_ID || "dummy-client-id.apps.googleusercontent.com",
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET || "dummy-secret-key-for-build",
+  })
+);
 
 // Add Email provider if SMTP credentials are available
 if (
@@ -43,9 +33,7 @@ if (
   );
 }
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  // Remove Supabase adapter - using default in-memory sessions for now
-  // adapter: SupabaseAdapter({...}),
+export const authOptions: NextAuthOptions = {
   providers,
   pages: {
     signIn: "/auth/signin",
@@ -60,4 +48,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
-});
+};
+
+// Export the NextAuth instance for v4
+export default NextAuth(authOptions);
