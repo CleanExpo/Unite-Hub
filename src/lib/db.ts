@@ -61,6 +61,15 @@ export const db = {
       if (error) throw error;
       return workspace;
     },
+    getById: async (id: string) => {
+      const { data, error } = await supabase
+        .from("workspaces")
+        .select("*")
+        .eq("id", id)
+        .single();
+      if (error) throw error;
+      return data;
+    },
     listByOrg: async (orgId: string) => {
       const { data, error } = await supabase
         .from("workspaces")
@@ -81,6 +90,16 @@ export const db = {
         .single();
       if (error) throw error;
       return contact;
+    },
+    update: async (id: string, data: any) => {
+      const { data: contact, error } = await supabaseServer
+        .from("contacts")
+        .update(data)
+        .eq("id", id)
+        .select()
+        .single();
+      if (error) throw error;
+      return { data: contact, error: null };
     },
     createIfNotExists: async (data: any) => {
       // Check if contact exists by email
