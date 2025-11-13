@@ -1,14 +1,12 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import {
   Calendar as CalendarIcon,
-  Plus,
   Filter,
-  Download,
   Sparkles,
   Grid3x3,
   List,
@@ -19,10 +17,21 @@ import CalendarPost from "@/components/calendar/CalendarPost";
 import PostDetailsModal from "@/components/calendar/PostDetailsModal";
 import PlatformFilter from "@/components/calendar/PlatformFilter";
 import CalendarStats from "@/components/calendar/CalendarStats";
+import { FeaturePageWrapper } from "@/components/features/FeaturePageWrapper";
 
 export default function ContentCalendarPage() {
-  // Assume we have a selected client (in production, get from route or context)
-  const [selectedClientId, setSelectedClientId] = useState<Id<"clients"> | null>(null);
+  return (
+    <FeaturePageWrapper
+      featureName="Content Calendar"
+      description="AI-powered 30-day content calendar with strategic recommendations"
+      icon={<CalendarIcon className="h-20 w-20 text-slate-600" />}
+    >
+      {(clientId) => <ContentCalendarFeature clientId={clientId} />}
+    </FeaturePageWrapper>
+  );
+}
+
+function ContentCalendarFeature({ clientId }: { clientId: Id<"clients"> }) {
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [viewMode, setViewMode] = useState<"calendar" | "list">("calendar");
@@ -40,22 +49,19 @@ export default function ContentCalendarPage() {
   const [showFilters, setShowFilters] = useState(false);
 
   // Queries
-  const calendarPosts = useQuery(
-    api.contentCalendar.getCalendarPosts,
-    selectedClientId
-      ? { clientId: selectedClientId, month: currentMonth, year: currentYear }
-      : "skip"
-  );
+  const calendarPosts = useQuery(api.contentCalendar.getCalendarPosts, {
+    clientId,
+    month: currentMonth,
+    year: currentYear,
+  });
 
-  const calendarStats = useQuery(
-    api.contentCalendar.getCalendarStats,
-    selectedClientId ? { clientId: selectedClientId } : "skip"
-  );
+  const calendarStats = useQuery(api.contentCalendar.getCalendarStats, {
+    clientId,
+  });
 
-  const performanceStats = useQuery(
-    api.contentCalendar.analyzePerformance,
-    selectedClientId ? { clientId: selectedClientId } : "skip"
-  );
+  const performanceStats = useQuery(api.contentCalendar.analyzePerformance, {
+    clientId,
+  });
 
   // Mutations
   const approvePost = useMutation(api.contentCalendar.approvePost);
@@ -67,8 +73,6 @@ export default function ContentCalendarPage() {
   );
 
   const handleGenerateCalendar = async () => {
-    if (!selectedClientId) return;
-
     setIsGenerating(true);
     try {
       const startDate = new Date(currentYear, currentMonth - 1, 1);
@@ -78,7 +82,7 @@ export default function ContentCalendarPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          clientId: selectedClientId,
+          clientId,
           startDate: startDate.toISOString(),
           endDate: endDate.toISOString(),
           platforms: selectedPlatforms,
@@ -121,12 +125,12 @@ export default function ContentCalendarPage() {
     }
   };
 
-  const handleUpdatePost = async (
-    postId: string,
-    updates: any
-  ) => {
+  const handleUpdatePost = async (postId: string, updates: any) => {
     try {
-      await updatePost({ postId: postId as Id<"contentCalendarPosts">, ...updates });
+      await updatePost({
+        postId: postId as Id<"contentCalendarPosts">,
+        ...updates,
+      });
     } catch (error) {
       console.error("Error updating post:", error);
       alert("Failed to update post");
@@ -146,24 +150,8 @@ export default function ContentCalendarPage() {
     setIsModalOpen(true);
   };
 
-  if (!selectedClientId) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <CalendarIcon className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">
-            Select a Client
-          </h2>
-          <p className="text-gray-600">
-            Choose a client to view their content calendar
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-6">
@@ -239,9 +227,7 @@ export default function ContentCalendarPage() {
                 onTogglePlatform={handleTogglePlatform}
               />
 
-              {performanceStats && (
-                <CalendarStats stats={performanceStats} />
-              )}
+              {performanceStats && <CalendarStats stats={performanceStats} />}
             </div>
           )}
 

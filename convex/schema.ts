@@ -36,7 +36,8 @@ export default defineSchema({
     description: v.optional(v.string()),
     createdAt: v.number(),
     updatedAt: v.number(),
-  }),
+  })
+    .index("by_email", ["email"]),
 
   /**
    * SUBSCRIPTIONS

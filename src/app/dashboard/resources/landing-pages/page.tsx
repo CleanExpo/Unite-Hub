@@ -5,7 +5,13 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -27,6 +33,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ChecklistOverview } from "@/components/landing-pages/ChecklistOverview";
 import { Plus, FileText, Sparkles, TrendingUp } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { FeaturePageWrapper } from "@/components/features/FeaturePageWrapper";
 
 const PAGE_TYPES = [
   { value: "homepage", label: "Homepage" },
@@ -38,6 +45,18 @@ const PAGE_TYPES = [
 ];
 
 export default function LandingPagesPage() {
+  return (
+    <FeaturePageWrapper
+      featureName="Landing Page Checklist"
+      description="DIY landing page builder with AI-generated copy"
+      icon={<FileText className="h-20 w-20 text-slate-600" />}
+    >
+      {(clientId) => <LandingPageFeature clientId={clientId} />}
+    </FeaturePageWrapper>
+  );
+}
+
+function LandingPageFeature({ clientId }: { clientId: Id<"clients"> }) {
   const { toast } = useToast();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [newPageTitle, setNewPageTitle] = useState("");
@@ -45,12 +64,12 @@ export default function LandingPagesPage() {
   const [selectedPersona, setSelectedPersona] = useState<string>("");
   const [isGenerating, setIsGenerating] = useState(false);
 
-  // Mock client ID - replace with actual client selection
-  const clientId = "mock-client-id" as Id<"clients">;
-
   // Fetch data
   const checklists = useQuery(api.landingPages.listByClient, { clientId });
-  const personas = useQuery(api.personas.listByClient, { clientId, activeOnly: true });
+  const personas = useQuery(api.personas.listByClient, {
+    clientId,
+    activeOnly: true,
+  });
   const stats = useQuery(api.landingPages.getStats, { clientId });
 
   const deleteChecklist = useMutation(api.landingPages.remove);
@@ -71,7 +90,7 @@ export default function LandingPagesPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          clientId,
+          clientId: clientId,
           pageType: newPageType,
           title: newPageTitle,
           personaId: selectedPersona || undefined,
@@ -105,7 +124,9 @@ export default function LandingPagesPage() {
 
   const handleDeleteChecklist = async (checklistId: string) => {
     try {
-      await deleteChecklist({ checklistId: checklistId as Id<"landingPageChecklists"> });
+      await deleteChecklist({
+        checklistId: checklistId as Id<"landingPageChecklists">,
+      });
       toast({
         title: "Deleted",
         description: "Checklist deleted successfully",

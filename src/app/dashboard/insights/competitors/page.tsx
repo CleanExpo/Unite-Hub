@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -22,11 +21,22 @@ import MarketGapsPanel from "@/components/competitors/MarketGapsPanel";
 import OpportunitiesPanel from "@/components/competitors/OpportunitiesPanel";
 import ActionableInsights from "@/components/competitors/ActionableInsights";
 import ComparisonMatrix from "@/components/competitors/ComparisonMatrix";
+import { FeaturePageWrapper } from "@/components/features/FeaturePageWrapper";
+import { Id } from "@/convex/_generated/dataModel";
 
 export default function CompetitorsPage() {
-  const params = useParams();
-  const clientId = params?.clientId as string;
+  return (
+    <FeaturePageWrapper
+      featureName="Competitor Analysis"
+      description="Track competitors, identify market gaps, find opportunities"
+      icon={<Target className="h-20 w-20 text-slate-600" />}
+    >
+      {(clientId) => <CompetitorFeature clientId={clientId} />}
+    </FeaturePageWrapper>
+  );
+}
 
+function CompetitorFeature({ clientId }: { clientId: Id<"clients"> }) {
   const [loading, setLoading] = useState(true);
   const [analyzing, setAnalyzing] = useState(false);
   const [competitors, setCompetitors] = useState<any[]>([]);
@@ -68,9 +78,7 @@ export default function CompetitorsPage() {
       setLoading(false);
     };
 
-    if (clientId) {
-      loadData();
-    }
+    loadData();
   }, [clientId]);
 
   // Run AI analysis
@@ -327,9 +335,7 @@ export default function CompetitorsPage() {
 
         {/* Market Gaps Tab */}
         <TabsContent value="gaps" className="mt-6">
-          <MarketGapsPanel
-            marketGaps={latestAnalysis?.marketGaps || []}
-          />
+          <MarketGapsPanel marketGaps={latestAnalysis?.marketGaps || []} />
         </TabsContent>
 
         {/* Opportunities Tab */}

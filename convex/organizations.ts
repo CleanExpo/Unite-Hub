@@ -243,9 +243,42 @@ export const search = query({
     const filtered = orgs.filter(
       (org) =>
         org.name.toLowerCase().includes(searchQuery) ||
-        org.email.toLowerCase().includes(searchQuery)
+        (org.email && org.email.toLowerCase().includes(searchQuery))
     );
 
     return filtered.slice(0, limit);
+  },
+});
+
+// Create demo organization (idempotent)
+export const createDemoOrg = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const demoEmail = "demo@unite-hub.com";
+
+    // Check if demo org already exists
+    const existingDemo = await ctx.db
+      .query("organizations")
+      .withIndex("by_email", (q) => q.eq("email", demoEmail))
+      .first();
+
+    if (existingDemo) {
+      return existingDemo._id;
+    }
+
+    // Create demo organization
+    const now = getCurrentTimestamp();
+
+    const orgId = await ctx.db.insert("organizations", {
+      name: "Demo Organization",
+      email: demoEmail,
+      websiteUrl: "https://demo.unite-hub.com",
+      businessDescription: "Demo organization for testing Unite-Hub CRM features",
+      tier: "professional",
+      createdAt: now,
+      updatedAt: now,
+    });
+
+    return orgId;
   },
 });
