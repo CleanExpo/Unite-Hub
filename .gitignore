@@ -40,7 +40,7 @@ yarn-error.log*
 
 # Convex
 .convex/
-_generated/
+# _generated/ - Commented out to allow committing Convex generated files for Vercel builds
 
 # IDE
 .vscode/
