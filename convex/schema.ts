@@ -26,12 +26,17 @@ export default defineSchema({
    */
   organizations: defineTable({
     name: v.string(),
-    email: v.string(), // Primary contact email
+    email: v.optional(v.string()), // Primary contact email (optional for backward compatibility)
     websiteUrl: v.optional(v.string()),
     businessDescription: v.optional(v.string()),
+    // Legacy fields (for backward compatibility with old data)
+    tier: v.optional(v.union(v.literal("starter"), v.literal("pro"), v.literal("professional"))),
+    status: v.optional(v.string()),
+    slug: v.optional(v.string()),
+    description: v.optional(v.string()),
     createdAt: v.number(),
     updatedAt: v.number(),
-  }).index("by_email", ["email"]),
+  }),
 
   /**
    * SUBSCRIPTIONS

@@ -21,8 +21,11 @@ export default function LandingPage() {
             <Button variant="ghost" className="text-slate-300">
               Pricing
             </Button>
-            <Button className="bg-blue-600 hover:bg-blue-700">
-              Get Started
+            <Button variant="ghost" className="text-yellow-400 border-yellow-400/30" asChild>
+              <a href="/demo">🧪 Try Demo</a>
+            </Button>
+            <Button className="bg-blue-600 hover:bg-blue-700" asChild>
+              <a href="/signup">Get Started</a>
             </Button>
           </div>
         </div>
@@ -44,8 +47,11 @@ export default function LandingPage() {
           </p>
 
           <div className="flex gap-4 justify-center">
-            <Button size="lg" className="bg-blue-600 hover:bg-blue-700 gap-2">
-              Start Free Trial <ArrowRight className="w-4 h-4" />
+            <Button size="lg" className="bg-blue-600 hover:bg-blue-700 gap-2" asChild>
+              <a href="/signup">Start Free Trial <ArrowRight className="w-4 h-4" /></a>
+            </Button>
+            <Button size="lg" variant="outline" className="border-yellow-400/30 text-yellow-400 hover:bg-yellow-400/10" asChild>
+              <a href="/demo">🧪 Try Demo</a>
             </Button>
             <Button size="lg" variant="outline" className="border-slate-600 text-slate-300">
               Watch Demo
