@@ -14,6 +14,9 @@ import {
   Bell,
   LogOut,
   User,
+  Sparkles,
+  Code2,
+  Wand2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/branding/Logo";
@@ -41,6 +44,8 @@ const getNavigationItems = (role: string) => {
     { name: "Team", href: "/dashboard/team", icon: Users, badge: null },
     { name: "Projects", href: "/dashboard/projects", icon: FolderKanban, badge: 3 },
     { name: "Approvals", href: "/dashboard/approvals", icon: CheckSquare, badge: 5 },
+    { name: "AI Code Gen", href: "/dashboard/ai-tools/code-generator", icon: Code2, badge: null, gradient: true },
+    { name: "AI Marketing", href: "/dashboard/ai-tools/marketing-copy", icon: Wand2, badge: null, gradient: true },
     { name: "Messages", href: "/dashboard/messages", icon: MessageSquare, badge: 12 },
     { name: "Reports", href: "/dashboard/reports", icon: BarChart3, badge: null },
     { name: "Settings", href: "/dashboard/settings", icon: Settings, badge: null },
