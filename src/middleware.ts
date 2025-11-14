@@ -3,8 +3,8 @@ import type { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
   // Get the session token from cookies
-  const token = req.cookies.get("sb-access-token")?.value ||
-                req.cookies.get("sb-localhost-auth-token")?.value;
+  // Supabase stores the token with project-specific cookie name
+  const token = req.cookies.get("sb-lksfwktwtmyznckodsau-auth-token")?.value;
 
   // Protected routes that require authentication
   const protectedPaths = ["/dashboard"];
