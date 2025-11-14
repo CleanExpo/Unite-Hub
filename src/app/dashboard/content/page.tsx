@@ -7,13 +7,15 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ContentPreview } from "@/components/ContentPreview";
 import { Loader2, Plus, RefreshCw } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function ContentPage() {
+  const { currentOrganization } = useAuth();
+  const workspaceId = currentOrganization?.org_id || null;
   const [contents, setContents] = useState<any[]>([]);
   const [selectedContent, setSelectedContent] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [generating, setGenerating] = useState(false);
-  const [workspaceId] = useState("default-workspace");
 
   useEffect(() => {
     loadContent();

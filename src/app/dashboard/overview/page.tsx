@@ -4,9 +4,11 @@ import { HotLeadsPanel } from "@/components/HotLeadsPanel";
 import { Card, CardContent } from "@/components/ui/card";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function OverviewPage() {
-  const [workspaceId] = useState("default-workspace");
+  const { currentOrganization } = useAuth();
+  const workspaceId = currentOrganization?.org_id || null;
   const [stats, setStats] = useState({
     totalContacts: 0,
     hotLeads: 0,
@@ -83,7 +85,7 @@ export default function OverviewPage() {
       </div>
 
       {/* Hot Leads (NEW) */}
-      <HotLeadsPanel workspaceId={workspaceId} />
+      {workspaceId && <HotLeadsPanel workspaceId={workspaceId} />}
 
       {/* More sections below */}
     </div>

@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus, Trash2, Save, Play, Pause, Eye } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export function DripCampaignBuilder({
   campaignId,
@@ -24,6 +25,7 @@ export function DripCampaignBuilder({
   campaignId?: string;
   onSave?: (campaign: any) => void;
 }) {
+  const { currentOrganization } = useAuth();
   const [campaign, setCampaign] = useState({
     name: "",
     description: "",
@@ -69,12 +71,18 @@ export function DripCampaignBuilder({
 
   const handleSave = async () => {
     try {
+      const workspaceId = currentOrganization?.org_id;
+      if (!workspaceId) {
+        alert("No organization selected");
+        return;
+      }
+
       const res = await fetch("/api/campaigns/drip", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           action: "create",
-          workspaceId: "default-workspace",
+          workspaceId,
           ...campaign,
         }),
       });
