@@ -42,7 +42,7 @@ export function Logo({
         priority
         className="object-contain"
       />
-      {!showText && variant === 'default' && (
+      {showText && variant === 'default' && (
         <div className="flex flex-col">
           <span className="text-2xl font-bold text-[#2563ab]">
             Unite-<span className="text-[#f39c12]">Hub</span>

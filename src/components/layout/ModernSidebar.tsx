@@ -99,13 +99,7 @@ export function ModernSidebar({ className }: ModernSidebarProps) {
       {/* Logo Section */}
       <div className="flex items-center justify-between h-20 px-6 border-b border-gray-200">
         <Link href="/dashboard/overview" className="flex items-center gap-3">
-          <Logo size="sm" showText={false} />
-          <div className="flex flex-col">
-            <span className="text-xl font-bold">
-              <span className="text-unite-blue">Unite-</span>
-              <span className="text-unite-orange">Hub</span>
-            </span>
-          </div>
+          <Logo size="sm" showText={true} />
         </Link>
       </div>
 
