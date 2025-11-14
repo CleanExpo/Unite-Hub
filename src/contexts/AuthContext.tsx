@@ -87,7 +87,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const orgIds = userOrgs.map(uo => uo.org_id);
       const { data: orgsData, error: orgsError } = await supabaseBrowser
         .from("organizations")
-        .select("id, name, logo_url")
+        .select("id, name")
         .in("id", orgIds);
 
       if (orgsError) throw orgsError;
