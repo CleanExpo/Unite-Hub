@@ -46,6 +46,14 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Unite-Hub Brand Colors (from logo)
+        'unite': {
+          'teal': '#3b9ba8',      // Primary teal from logo circle
+          'blue': '#2563ab',      // Navy blue from "Unite" text
+          'orange': '#f39c12',    // Orange from "Hub" text
+          'gold': '#e67e22',      // Gold accent
+          'navy': '#1e3a5f',      // Dark navy
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

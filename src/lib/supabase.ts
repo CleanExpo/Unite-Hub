@@ -1,14 +1,70 @@
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+// Get environment variables with proper fallbacks
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
-// Client-side
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Validate required environment variables
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('Missing Supabase environment variables:', {
+    url: !!supabaseUrl,
+    key: !!supabaseAnonKey
+  });
+}
 
-// Server-side
-export const supabaseServer = createClient(supabaseUrl, supabaseServiceKey);
+// Client-side (browser) - lazy initialization
+let _supabaseBrowser: ReturnType<typeof createClient> | null = null;
+
+function getSupabaseBrowser() {
+  if (!_supabaseBrowser) {
+    if (!supabaseUrl || !supabaseAnonKey) {
+      throw new Error('Supabase environment variables are not configured. Please check NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY');
+    }
+    _supabaseBrowser = createClient(supabaseUrl, supabaseAnonKey);
+  }
+  return _supabaseBrowser;
+}
+
+// Export lazy-initialized client
+export const supabase = new Proxy({} as ReturnType<typeof createClient>, {
+  get(target, prop) {
+    return getSupabaseBrowser()[prop as keyof ReturnType<typeof createClient>];
+  }
+});
+
+export const supabaseBrowser = supabase; // Alias for clarity
+
+// Server-side (API routes) - lazy initialization to avoid client-side errors
+let _supabaseServer: ReturnType<typeof createClient> | null = null;
+
+export function getSupabaseServer() {
+  if (!_supabaseServer) {
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    const serverUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+
+    if (!supabaseServiceKey) {
+      throw new Error("SUPABASE_SERVICE_ROLE_KEY is not defined");
+    }
+    if (!serverUrl) {
+      throw new Error("NEXT_PUBLIC_SUPABASE_URL is not defined");
+    }
+
+    _supabaseServer = createClient(serverUrl, supabaseServiceKey, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false
+      }
+    });
+  }
+  return _supabaseServer;
+}
+
+// Backward compatibility - but this should only be used server-side
+export const supabaseServer = new Proxy({} as any, {
+  get(target, prop) {
+    return getSupabaseServer()[prop as keyof ReturnType<typeof createClient>];
+  }
+});
 
 // Types
 export interface Organization {

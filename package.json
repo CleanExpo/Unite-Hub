@@ -4,7 +4,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node test-api-flows.mjs",
+    "test:api": "node test-api-flows.mjs",
+    "check:db": "node create-tables.mjs",
     "agent:email": "node scripts/run-email-agent.mjs",
     "dev": "next dev -p 3008",
     "build": "next build",
@@ -81,6 +83,7 @@
     "autoprefixer": "^10.4.17",
     "playwright": "^1.57.0-alpha-2025-11-07",
     "postcss": "^8.4.35",
+    "shadcn": "^3.5.0",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.3.3"
   }

@@ -10,6 +10,7 @@ import { ClientProvider } from "@/contexts/ClientContext";
 import ClientSelector from "@/components/client/ClientSelector";
 import { Id } from "@/convex/_generated/dataModel";
 import { useEffect, useState } from "react";
+import { DEMO_ORG_ID, enableDemoMode } from "@/lib/demo-data";
 
 export default function DashboardLayout({
   children,
@@ -20,6 +21,13 @@ export default function DashboardLayout({
   const [orgId, setOrgId] = useState<Id<"organizations"> | null>(null);
 
   useEffect(() => {
+    // Enable demo mode in development
+    if (process.env.NODE_ENV === "development") {
+      enableDemoMode();
+      setOrgId(DEMO_ORG_ID as Id<"organizations">);
+      return;
+    }
+
     // Get org ID from demo mode or session
     const demoOrgId = localStorage.getItem("demo_org_id");
     if (demoOrgId) {

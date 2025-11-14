@@ -1,20 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, Loader2 } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import type { User } from "@supabase/supabase-js";
 
 export default function PricingPage() {
-  const { data: session } = useSession();
+  const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+    });
+  }, []);
+
   const handleCheckout = async (plan: string) => {
-    if (!session) {
+    if (!user) {
       router.push("/auth/signin");
       return;
     }
@@ -26,9 +33,9 @@ export default function PricingPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           plan,
-          email: session.user?.email,
-          name: session.user?.name,
-          orgId: (session.user as any)?.organizationId || "default-org", // Fallback for testing
+          email: user.email,
+          name: user.user_metadata?.name || user.email,
+          orgId: user.user_metadata?.organizationId || "default-org",
         }),
       });
 

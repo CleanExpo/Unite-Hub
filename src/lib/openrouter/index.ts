@@ -1,1 +1,10 @@
-export { openRouterClient, generateWithKatCoder, streamWithKatCoder } from './client';
+export {
+  openRouterClient,
+  generateWithKatCoder,
+  streamWithKatCoder,
+  generateWithGPTCodex,
+  streamWithGPTCodex,
+  generateWithModel,
+  streamWithModel,
+  MODELS,
+} from './client';

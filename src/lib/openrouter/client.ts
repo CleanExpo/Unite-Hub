@@ -43,4 +43,73 @@ export async function* streamWithKatCoder(prompt: string) {
   }
 }
 
+/**
+ * Generate content using OpenAI GPT-5.1 Codex via OpenRouter
+ * Note: Verify this model identifier on OpenRouter's model list
+ */
+export async function generateWithGPTCodex(prompt: string) {
+  const completion = await openRouterClient.chat.send({
+    model: 'openai/gpt-5.1-codex',
+    messages: [{ role: 'user', content: prompt }],
+    stream: false,
+  });
+
+  return completion.choices[0].message.content;
+}
+
+/**
+ * Generate streaming content using OpenAI GPT-5.1 Codex
+ */
+export async function* streamWithGPTCodex(prompt: string) {
+  const stream = await openRouterClient.chat.send({
+    model: 'openai/gpt-5.1-codex',
+    messages: [{ role: 'user', content: prompt }],
+    stream: true,
+  });
+
+  for await (const chunk of stream) {
+    if (chunk.choices[0]?.delta?.content) {
+      yield chunk.choices[0].delta.content;
+    }
+  }
+}
+
+/**
+ * Available model options
+ */
+export const MODELS = {
+  KAT_CODER: 'kwaipilot/kat-coder-pro:free',
+  GPT_CODEX: 'openai/gpt-5.1-codex',
+} as const;
+
+/**
+ * Generic function to generate content with any OpenRouter model
+ */
+export async function generateWithModel(prompt: string, model: string) {
+  const completion = await openRouterClient.chat.send({
+    model,
+    messages: [{ role: 'user', content: prompt }],
+    stream: false,
+  });
+
+  return completion.choices[0].message.content;
+}
+
+/**
+ * Generic function to stream content with any OpenRouter model
+ */
+export async function* streamWithModel(prompt: string, model: string) {
+  const stream = await openRouterClient.chat.send({
+    model,
+    messages: [{ role: 'user', content: prompt }],
+    stream: true,
+  });
+
+  for await (const chunk of stream) {
+    if (chunk.choices[0]?.delta?.content) {
+      yield chunk.choices[0].delta.content;
+    }
+  }
+}
+
 export default openRouterClient;
