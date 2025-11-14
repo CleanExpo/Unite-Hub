@@ -32,6 +32,7 @@ interface AuthContextType {
   session: Session | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
+  signInWithGoogle: () => Promise<{ error: any }>;
   signUp: (email: string, password: string, fullName: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   setCurrentOrganization: (org: UserOrganization) => void;
@@ -101,11 +102,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Sign in
+  // Sign in with email/password
   const signIn = async (email: string, password: string) => {
     const { data, error } = await supabaseBrowser.auth.signInWithPassword({
       email,
       password,
+    });
+
+    if (error) {
+      return { error };
+    }
+
+    return { error: null };
+  };
+
+  // Sign in with Google OAuth
+  const signInWithGoogle = async () => {
+    const { data, error } = await supabaseBrowser.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/dashboard/overview`,
+      },
     });
 
     if (error) {
@@ -198,6 +215,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     session,
     loading,
     signIn,
+    signInWithGoogle,
     signUp,
     signOut,
     setCurrentOrganization: handleSetCurrentOrganization,
