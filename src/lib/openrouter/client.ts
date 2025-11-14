@@ -75,11 +75,43 @@ export async function* streamWithGPTCodex(prompt: string) {
 }
 
 /**
+ * Generate content using Google Gemini 2.0 Flash via OpenRouter
+ * Free, fast model optimized for general tasks
+ */
+export async function generateWithGemini(prompt: string) {
+  const completion = await openRouterClient.chat.send({
+    model: 'google/gemini-2.0-flash-exp:free',
+    messages: [{ role: 'user', content: prompt }],
+    stream: false,
+  });
+
+  return completion.choices[0].message.content;
+}
+
+/**
+ * Generate streaming content using Google Gemini 2.0 Flash
+ */
+export async function* streamWithGemini(prompt: string) {
+  const stream = await openRouterClient.chat.send({
+    model: 'google/gemini-2.0-flash-exp:free',
+    messages: [{ role: 'user', content: prompt }],
+    stream: true,
+  });
+
+  for await (const chunk of stream) {
+    if (chunk.choices[0]?.delta?.content) {
+      yield chunk.choices[0].delta.content;
+    }
+  }
+}
+
+/**
  * Available model options
  */
 export const MODELS = {
   KAT_CODER: 'kwaipilot/kat-coder-pro:free',
   GPT_CODEX: 'openai/gpt-5.1-codex',
+  GEMINI_FLASH: 'google/gemini-2.0-flash-exp:free',
 } as const;
 
 /**

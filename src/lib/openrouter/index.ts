@@ -4,6 +4,8 @@ export {
   streamWithKatCoder,
   generateWithGPTCodex,
   streamWithGPTCodex,
+  generateWithGemini,
+  streamWithGemini,
   generateWithModel,
   streamWithModel,
   MODELS,
