@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
+// Temporarily disabled Convex
+// import { useMutation } from "convex/react";
+// import { api } from "@/convex/_generated/api";
 import { useClientContext } from "@/contexts/ClientContext";
 import {
   Dialog,
@@ -41,7 +42,8 @@ export default function CreateClientModal({ open, onClose }: CreateClientModalPr
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  const createClient = useMutation(api.clients.create);
+  // Temporarily disabled Convex mutation
+  const createClient = async () => { throw new Error("Client creation temporarily disabled - using Supabase now"); };
   const { selectClient } = useClientContext();
 
   const resetForm = () => {

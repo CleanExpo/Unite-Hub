@@ -1,9 +1,10 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
+// Temporarily disabled Convex - using Supabase now
+// import { useQuery } from "convex/react";
+// import { api } from "@/convex/_generated/api";
+type Id<T> = string; // Temporary type alias
 
 interface Client {
   _id: Id<"clients">;
@@ -59,17 +60,9 @@ export function ClientProvider({
     }
   }, [currentClientId]);
 
-  // Fetch clients list
-  const clients = useQuery(
-    api.clients.listByOrg,
-    orgId ? { orgId } : "skip"
-  ) || [];
-
-  // Fetch current client details
-  const currentClient = useQuery(
-    api.clients.getById,
-    currentClientId ? { id: currentClientId } : "skip"
-  ) || null;
+  // Temporarily return empty data - Convex disabled
+  const clients: Client[] = [];
+  const currentClient: Client | null = null;
 
   const selectClient = (clientId: Id<"clients">) => {
     setCurrentClientId(clientId);
