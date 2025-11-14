@@ -68,21 +68,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Fetch user organizations
   const fetchOrganizations = async (userId: string) => {
     try {
-      const { data, error } = await supabaseBrowser
+      // First get user_organizations
+      const { data: userOrgs, error: userOrgsError } = await supabaseBrowser
         .from("user_organizations")
-        .select(`
-          id,
-          org_id,
-          role,
-          organization:organizations(id, name, logo_url)
-        `)
+        .select("id, org_id, role, joined_at")
         .eq("user_id", userId)
         .eq("is_active", true)
         .order("joined_at", { ascending: false });
 
-      if (error) throw error;
+      if (userOrgsError) throw userOrgsError;
+      if (!userOrgs || userOrgs.length === 0) {
+        setOrganizations([]);
+        setCurrentOrganization(null);
+        return;
+      }
 
-      const orgs = data as any[];
+      // Get organization details for each org_id
+      const orgIds = userOrgs.map(uo => uo.org_id);
+      const { data: orgsData, error: orgsError } = await supabaseBrowser
+        .from("organizations")
+        .select("id, name, logo_url")
+        .in("id", orgIds);
+
+      if (orgsError) throw orgsError;
+
+      // Combine the data
+      const orgs = userOrgs.map(userOrg => ({
+        id: userOrg.id,
+        org_id: userOrg.org_id,
+        role: userOrg.role,
+        organization: orgsData?.find(o => o.id === userOrg.org_id) || {
+          id: userOrg.org_id,
+          name: "Unknown Organization",
+          logo_url: null
+        }
+      }));
+
       setOrganizations(orgs);
 
       // Set current organization (first one or from localStorage)
