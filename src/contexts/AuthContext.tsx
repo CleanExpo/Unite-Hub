@@ -214,6 +214,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(session?.user ?? null);
 
       if (session?.user) {
+        // For SIGNED_IN event (first login), initialize user profile and organization
+        if (event === 'SIGNED_IN') {
+          try {
+            const response = await fetch('/api/auth/initialize-user', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            });
+
+            if (!response.ok) {
+              console.error('Failed to initialize user:', await response.text());
+            } else {
+              console.log('User initialized successfully');
+            }
+          } catch (error) {
+            console.error('Error initializing user:', error);
+          }
+        }
+
         await fetchProfile(session.user.id);
         await fetchOrganizations(session.user.id);
       } else {
