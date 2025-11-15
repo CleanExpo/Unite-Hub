@@ -2,6 +2,8 @@ import { supabase, getSupabaseServer } from "./supabase";
 
 // Organizations
 export const db = {
+  supabase, // Export for direct access when needed
+  getSupabaseServer, // Export server client getter
   organizations: {
     create: async (data: any) => {
       const supabaseServer = getSupabaseServer();
@@ -227,6 +229,25 @@ export const db = {
       if (error) throw error;
       return data || [];
     },
+    listByContact: async (contactId: string, limit: number = 50) => {
+      const { data, error } = await supabase
+        .from("emails")
+        .select("*")
+        .eq("contact_id", contactId)
+        .order("received_at", { ascending: false })
+        .limit(limit);
+      if (error) throw error;
+      return data || [];
+    },
+    getById: async (id: string) => {
+      const { data, error } = await supabase
+        .from("emails")
+        .select("*")
+        .eq("id", id)
+        .single();
+      if (error) throw error;
+      return data;
+    },
     getUnprocessed: async (workspaceId: string) => {
       const { data, error } = await supabase
         .from("emails")
@@ -431,6 +452,15 @@ export const db = {
         .from("email_integrations")
         .select("*")
         .eq("org_id", orgId)
+        .eq("is_active", true);
+      if (error) throw error;
+      return data || [];
+    },
+    getByWorkspace: async (workspaceId: string) => {
+      const { data, error } = await supabase
+        .from("email_integrations")
+        .select("*")
+        .eq("workspace_id", workspaceId)
         .eq("is_active", true);
       if (error) throw error;
       return data || [];
@@ -773,6 +803,281 @@ export const db = {
         .update({ email_count: emails.length })
         .eq("id", contactId);
       if (error) throw error;
+    },
+  },
+
+  // WhatsApp Messages
+  whatsappMessages: {
+    create: async (data: any) => {
+      const supabaseServer = getSupabaseServer();
+      const { data: message, error } = await supabaseServer
+        .from("whatsapp_messages")
+        .insert([data])
+        .select()
+        .single();
+      if (error) throw error;
+      return message;
+    },
+
+    getById: async (id: string) => {
+      const { data, error } = await supabase
+        .from("whatsapp_messages")
+        .select("*")
+        .eq("id", id)
+        .single();
+      if (error) throw error;
+      return data;
+    },
+
+    getByConversation: async (phoneNumber: string, workspaceId: string, limit = 50) => {
+      const { data, error } = await supabase
+        .from("whatsapp_messages")
+        .select("*")
+        .eq("phone_number", phoneNumber)
+        .eq("workspace_id", workspaceId)
+        .order("created_at", { ascending: false })
+        .limit(limit);
+      if (error) throw error;
+      return data || [];
+    },
+
+    getByContact: async (contactId: string, limit = 50) => {
+      const { data, error } = await supabase
+        .from("whatsapp_messages")
+        .select("*")
+        .eq("contact_id", contactId)
+        .order("created_at", { ascending: false })
+        .limit(limit);
+      if (error) throw error;
+      return data || [];
+    },
+
+    updateStatus: async (id: string, status: string, metadata?: any) => {
+      const supabaseServer = getSupabaseServer();
+      const updateData: any = { status };
+
+      if (status === 'delivered') {
+        updateData.delivered_at = new Date();
+      } else if (status === 'read') {
+        updateData.read_at = new Date();
+      }
+
+      if (metadata) {
+        Object.assign(updateData, metadata);
+      }
+
+      const { error } = await supabaseServer
+        .from("whatsapp_messages")
+        .update(updateData)
+        .eq("id", id);
+      if (error) throw error;
+    },
+
+    getUnprocessed: async (workspaceId: string) => {
+      const { data, error } = await supabase
+        .from("whatsapp_messages")
+        .select("*")
+        .eq("workspace_id", workspaceId)
+        .eq("direction", "inbound")
+        .is("ai_summary", null)
+        .order("created_at", { ascending: true });
+      if (error) throw error;
+      return data || [];
+    },
+  },
+
+  // WhatsApp Conversations
+  whatsappConversations: {
+    create: async (data: any) => {
+      const supabaseServer = getSupabaseServer();
+      const { data: conversation, error } = await supabaseServer
+        .from("whatsapp_conversations")
+        .insert([data])
+        .select()
+        .single();
+      if (error) throw error;
+      return conversation;
+    },
+
+    getById: async (id: string) => {
+      const { data, error } = await supabase
+        .from("whatsapp_conversations")
+        .select("*")
+        .eq("id", id)
+        .single();
+      if (error) throw error;
+      return data;
+    },
+
+    getByPhone: async (phoneNumber: string, workspaceId: string) => {
+      const { data, error } = await supabase
+        .from("whatsapp_conversations")
+        .select("*")
+        .eq("phone_number", phoneNumber)
+        .eq("workspace_id", workspaceId)
+        .single();
+      if (error && error.code !== "PGRST116") throw error;
+      return data || null;
+    },
+
+    listByWorkspace: async (workspaceId: string, status?: string) => {
+      let query = supabase
+        .from("whatsapp_conversations")
+        .select("*, contacts(*)")
+        .eq("workspace_id", workspaceId);
+
+      if (status) {
+        query = query.eq("status", status);
+      }
+
+      const { data, error } = await query.order("last_message_at", { ascending: false });
+      if (error) throw error;
+      return data || [];
+    },
+
+    updateLastMessage: async (phoneNumber: string, workspaceId: string, direction: string) => {
+      const supabaseServer = getSupabaseServer();
+      const { error } = await supabaseServer
+        .from("whatsapp_conversations")
+        .update({
+          last_message_at: new Date(),
+          last_message_direction: direction,
+          unread_count: direction === 'inbound' ? supabase.raw('unread_count + 1') : 0
+        })
+        .eq("phone_number", phoneNumber)
+        .eq("workspace_id", workspaceId);
+      if (error) throw error;
+    },
+
+    markAsRead: async (id: string) => {
+      const supabaseServer = getSupabaseServer();
+      const { error } = await supabaseServer
+        .from("whatsapp_conversations")
+        .update({ unread_count: 0 })
+        .eq("id", id);
+      if (error) throw error;
+    },
+
+    archive: async (id: string) => {
+      const supabaseServer = getSupabaseServer();
+      const { error } = await supabaseServer
+        .from("whatsapp_conversations")
+        .update({ status: 'archived', archived_at: new Date() })
+        .eq("id", id);
+      if (error) throw error;
+    },
+
+    assignTo: async (id: string, userId: string) => {
+      const supabaseServer = getSupabaseServer();
+      const { error } = await supabaseServer
+        .from("whatsapp_conversations")
+        .update({ assigned_to: userId })
+        .eq("id", id);
+      if (error) throw error;
+    },
+  },
+
+  // WhatsApp Templates
+  whatsappTemplates: {
+    create: async (data: any) => {
+      const supabaseServer = getSupabaseServer();
+      const { data: template, error } = await supabaseServer
+        .from("whatsapp_templates")
+        .insert([data])
+        .select()
+        .single();
+      if (error) throw error;
+      return template;
+    },
+
+    getById: async (id: string) => {
+      const { data, error } = await supabase
+        .from("whatsapp_templates")
+        .select("*")
+        .eq("id", id)
+        .single();
+      if (error) throw error;
+      return data;
+    },
+
+    listByWorkspace: async (workspaceId: string, status?: string) => {
+      let query = supabase
+        .from("whatsapp_templates")
+        .select("*")
+        .eq("workspace_id", workspaceId);
+
+      if (status) {
+        query = query.eq("status", status);
+      }
+
+      const { data, error } = await query.order("created_at", { ascending: false });
+      if (error) throw error;
+      return data || [];
+    },
+
+    updateStatus: async (id: string, status: string) => {
+      const supabaseServer = getSupabaseServer();
+      const { error } = await supabaseServer
+        .from("whatsapp_templates")
+        .update({ status })
+        .eq("id", id);
+      if (error) throw error;
+    },
+
+    recordUse: async (id: string) => {
+      const supabaseServer = getSupabaseServer();
+      const template = await db.whatsappTemplates.getById(id);
+      const { error } = await supabaseServer
+        .from("whatsapp_templates")
+        .update({
+          use_count: (template.use_count || 0) + 1,
+          last_used_at: new Date()
+        })
+        .eq("id", id);
+      if (error) throw error;
+    },
+  },
+
+  // WhatsApp Webhooks
+  whatsappWebhooks: {
+    create: async (data: any) => {
+      const supabaseServer = getSupabaseServer();
+      const { data: webhook, error } = await supabaseServer
+        .from("whatsapp_webhooks")
+        .insert([data])
+        .select()
+        .single();
+      if (error) throw error;
+      return webhook;
+    },
+
+    markProcessed: async (id: string, error?: string) => {
+      const supabaseServer = getSupabaseServer();
+      const updateData: any = {
+        processed: true,
+        processed_at: new Date()
+      };
+
+      if (error) {
+        updateData.processing_error = error;
+      }
+
+      const { error: updateError } = await supabaseServer
+        .from("whatsapp_webhooks")
+        .update(updateData)
+        .eq("id", id);
+      if (updateError) throw updateError;
+    },
+
+    getUnprocessed: async (limit = 100) => {
+      const { data, error } = await supabase
+        .from("whatsapp_webhooks")
+        .select("*")
+        .eq("processed", false)
+        .order("received_at", { ascending: true })
+        .limit(limit);
+      if (error) throw error;
+      return data || [];
     },
   },
 };

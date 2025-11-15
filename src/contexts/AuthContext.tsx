@@ -3,12 +3,25 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { supabaseBrowser } from "@/lib/supabase";
+import { hasPermission, Permission, UserRole } from "@/lib/permissions";
 
 interface UserProfile {
   id: string;
   email: string;
   full_name: string;
   avatar_url: string | null;
+  username?: string;
+  business_name?: string;
+  phone?: string;
+  bio?: string;
+  website?: string;
+  timezone?: string;
+  notification_preferences?: {
+    email_notifications: boolean;
+    marketing_emails: boolean;
+    product_updates: boolean;
+    weekly_digest: boolean;
+  };
   created_at: string;
   updated_at: string;
 }
@@ -37,6 +50,12 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   setCurrentOrganization: (org: UserOrganization) => void;
   refreshProfile: () => Promise<void>;
+  // Role utilities
+  hasPermission: (permission: Permission) => boolean;
+  isOwner: () => boolean;
+  isAdmin: () => boolean;
+  isAdminOrOwner: () => boolean;
+  getRole: () => UserRole | undefined;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -197,23 +216,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Initialize auth state
   useEffect(() => {
-    // Get initial session
-    supabaseBrowser.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+    let mounted = true;
 
-      if (session?.user) {
-        fetchProfile(session.user.id);
-        fetchOrganizations(session.user.id);
+    // Get initial session from localStorage (persisted session)
+    supabaseBrowser.auth.getSession().then(async ({ data: { session }, error }) => {
+      if (!mounted) return;
+
+      if (error) {
+        console.error('Error getting session:', error);
+        setLoading(false);
+        return;
+      }
+
+      if (session) {
+        console.log('Restored session from storage for:', session.user.email);
+        setSession(session);
+        setUser(session.user);
+
+        // Fetch user data
+        await fetchProfile(session.user.id);
+        await fetchOrganizations(session.user.id);
       }
 
       setLoading(false);
     });
 
-    // Listen for auth changes
+    // Listen for auth changes (login, logout, token refresh)
     const {
       data: { subscription },
     } = supabaseBrowser.auth.onAuthStateChange(async (event, session) => {
+      if (!mounted) return;
+
       console.log('Auth state change:', event, session?.user?.email);
 
       setSession(session);
@@ -234,15 +267,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               console.error('Failed to initialize user:', await response.text());
             } else {
               console.log('User initialized successfully');
+
+              // Check if onboarding is needed
+              const { data: onboardingStatus } = await supabaseBrowser
+                .from('user_onboarding')
+                .select('*')
+                .eq('user_id', session.user.id)
+                .maybeSingle();
+
+              // If onboarding exists and is not complete, redirect to onboarding
+              if (onboardingStatus && !onboardingStatus.completed_at && !onboardingStatus.skipped) {
+                window.location.href = '/onboarding';
+                return;
+              }
             }
           } catch (error) {
             console.error('Error initializing user:', error);
           }
         }
 
+        // Fetch/refresh user data on any auth event
         await fetchProfile(session.user.id);
         await fetchOrganizations(session.user.id);
       } else {
+        // Clear user data on sign out
         setProfile(null);
         setOrganizations([]);
         setCurrentOrganization(null);
@@ -252,6 +300,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     return () => {
+      mounted = false;
       subscription.unsubscribe();
     };
   }, []);
@@ -269,6 +318,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signOut,
     setCurrentOrganization: handleSetCurrentOrganization,
     refreshProfile,
+    // Role utilities
+    hasPermission: (permission: Permission) => {
+      const role = currentOrganization?.role;
+      return hasPermission(role, permission);
+    },
+    isOwner: () => currentOrganization?.role === 'owner',
+    isAdmin: () => currentOrganization?.role === 'admin',
+    isAdminOrOwner: () => {
+      const role = currentOrganization?.role;
+      return role === 'owner' || role === 'admin';
+    },
+    getRole: () => currentOrganization?.role as UserRole | undefined,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

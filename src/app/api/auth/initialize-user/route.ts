@@ -123,6 +123,20 @@ export async function POST(request: NextRequest) {
         console.error('Error creating workspace:', workspaceError)
         // Don't fail the whole request if workspace creation fails
       }
+
+      // Initialize onboarding for new user
+      const { error: onboardingError } = await supabase
+        .from('user_onboarding')
+        .insert({
+          user_id: user.id,
+          current_step: 1,
+          onboarding_data: {}
+        })
+
+      if (onboardingError) {
+        console.error('Error creating onboarding record:', onboardingError)
+        // Don't fail the whole request if onboarding creation fails
+      }
     }
 
     return NextResponse.json({ success: true })

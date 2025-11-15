@@ -1,6 +1,8 @@
 "use client";
 
 import { HotLeadsPanel } from "@/components/HotLeadsPanel";
+import CalendarWidget from "@/components/CalendarWidget";
+import { OnboardingChecklist } from "@/components/OnboardingChecklist";
 import { Card, CardContent } from "@/components/ui/card";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
@@ -105,6 +107,9 @@ export default function OverviewPage() {
         <p className="text-slate-400">Welcome back!</p>
       </div>
 
+      {/* Onboarding Checklist */}
+      <OnboardingChecklist />
+
       {/* Stats - Now using real data from Supabase */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <StatCard title="Total Contacts" value={stats.totalContacts.toString()} icon="📧" />
@@ -113,10 +118,14 @@ export default function OverviewPage() {
         <StatCard title="Avg AI Score" value={stats.avgAiScore.toString()} icon="⭐" />
       </div>
 
-      {/* Hot Leads (NEW) */}
-      {workspaceId && <HotLeadsPanel workspaceId={workspaceId} />}
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Hot Leads */}
+        {workspaceId && <HotLeadsPanel workspaceId={workspaceId} />}
 
-      {/* More sections below */}
+        {/* Calendar Widget */}
+        {workspaceId && <CalendarWidget workspaceId={workspaceId} />}
+      </div>
     </div>
   );
 }

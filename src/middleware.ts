@@ -55,11 +55,11 @@ export async function middleware(req: NextRequest) {
     }
   );
 
-  // Use getClaims() instead of getSession() - this is the secure way per Supabase docs
-  // getClaims() validates the JWT locally without making API calls
-  const { data: claims } = await supabase.auth.getClaims();
+  // Try to refresh the session on every request to maintain auth state
+  // This ensures the session stays fresh across browser restarts
+  const { data: { session } } = await supabase.auth.getSession();
 
-  const isAuthenticated = !!claims?.sub; // sub is the user ID from JWT
+  const isAuthenticated = !!session?.user;
 
   // Protected routes that require authentication
   const protectedPaths = ["/dashboard"];

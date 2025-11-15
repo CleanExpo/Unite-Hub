@@ -11,10 +11,13 @@
 - **Orchestrator**: Coordinates multi-agent workflows for complex automation
 
 ### 📧 Email Integration
-- **Gmail OAuth 2.0**: Secure connection to Gmail accounts
-- **Email Sync**: Automatic import of emails with sender extraction
+- **Gmail OAuth 2.0**: Secure connection to Gmail accounts with multi-account support
+- **Outlook/Microsoft 365**: Full integration with Microsoft Graph API for email and calendar
+- **Multi-Account Support**: Connect unlimited Gmail and Outlook accounts per organization
+- **Email Sync**: Automatic import of emails with sender extraction and contact creation
 - **Open/Click Tracking**: Pixel-based tracking for email engagement
 - **Thread Management**: Organize emails by conversation threads
+- **Calendar Integration**: Read and create calendar events (Outlook only)
 
 ### 🎯 Drip Campaign Automation
 - **Visual Campaign Builder**: Drag-and-drop interface for multi-step sequences
@@ -56,11 +59,13 @@ Scores 60-79 = Warm leads | 80-100 = Hot leads
 - **Supabase PostgreSQL** - Database with Row Level Security
 - **NextAuth.js** - Authentication with SupabaseAdapter
 - **Google Gmail API** - OAuth 2.0 email integration
+- **Microsoft Graph API** - Outlook/Microsoft 365 integration for email and calendar
 
 ### AI & Integrations
 - **Anthropic Claude API** - Claude Opus 4 (`claude-opus-4-1-20250805`) with Extended Thinking (5,000-10,000 token budgets)
 - **@anthropic-ai/sdk** v0.68.0 - Official Anthropic SDK
-- **googleapis** v144.0.0 - Google API client for Gmail
+- **googleapis** v166.0.0 - Google API client for Gmail
+- **@microsoft/microsoft-graph-client** - Microsoft Graph SDK for Outlook integration
 
 ### Infrastructure
 - **Vercel** - Hosting and deployment (recommended)
@@ -101,6 +106,7 @@ Scores 60-79 = Warm leads | 80-100 = Hot leads
 │  External APIs     │
 │ • Claude Opus 4    │
 │ • Gmail API        │
+│ • Microsoft Graph  │
 └────────────────────┘
 ```
 
@@ -111,7 +117,8 @@ Scores 60-79 = Warm leads | 80-100 = Hot leads
 - **npm** or **yarn**
 - **Supabase Account** (free tier available)
 - **Anthropic API Key** (Claude AI)
-- **Google Cloud Console Project** (for Gmail OAuth)
+- **Google Cloud Console Project** (for Gmail OAuth - optional)
+- **Azure AD Application** (for Outlook/Microsoft 365 OAuth - optional)
 
 ### 1. Clone Repository
 ```bash
@@ -144,16 +151,22 @@ NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 
-# OAuth
+# OAuth - Gmail (optional)
 GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=your-client-secret
 GOOGLE_CALLBACK_URL=http://localhost:3008/api/integrations/gmail/callback
+
+# OAuth - Outlook/Microsoft 365 (optional)
+MICROSOFT_CLIENT_ID=your-azure-app-client-id
+MICROSOFT_CLIENT_SECRET=your-azure-app-client-secret
 
 # Claude AI
 ANTHROPIC_API_KEY=sk-ant-your-key-here
 ```
 
-### 5. Set Up Google OAuth
+### 5. Set Up Email Integrations (Optional)
+
+#### Gmail OAuth Setup
 
 1. Go to [Google Cloud Console](https://console.cloud.google.com)
 2. Create a new project or select existing
@@ -161,6 +174,17 @@ ANTHROPIC_API_KEY=sk-ant-your-key-here
 4. Create OAuth 2.0 credentials
 5. Add authorized redirect URI: `http://localhost:3008/api/integrations/gmail/callback`
 6. Copy Client ID and Client Secret to `.env.local`
+
+#### Outlook/Microsoft 365 OAuth Setup
+
+1. Go to [Azure Portal](https://portal.azure.com)
+2. Navigate to **Azure Active Directory** > **App registrations** > **New registration**
+3. Set redirect URI: `http://localhost:3008/api/integrations/outlook/callback`
+4. Add API permissions: `Mail.Read`, `Mail.ReadWrite`, `Mail.Send`, `Calendars.Read`, `Calendars.ReadWrite`
+5. Create client secret under **Certificates & secrets**
+6. Copy Application (client) ID and secret to `.env.local`
+
+See [docs/OUTLOOK_SETUP_GUIDE.md](docs/OUTLOOK_SETUP_GUIDE.md) for detailed setup instructions.
 
 ### 6. Run Database Migrations
 
@@ -188,9 +212,11 @@ Dashboard available at `http://localhost:3008`
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL | Yes |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anonymous key | Yes |
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (server-only) | Yes |
-| `GOOGLE_CLIENT_ID` | Google OAuth client ID | Yes |
-| `GOOGLE_CLIENT_SECRET` | Google OAuth client secret | Yes |
-| `GOOGLE_CALLBACK_URL` | OAuth callback URL | Yes |
+| `GOOGLE_CLIENT_ID` | Google OAuth client ID | No (if using Gmail) |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth client secret | No (if using Gmail) |
+| `GOOGLE_CALLBACK_URL` | OAuth callback URL | No (if using Gmail) |
+| `MICROSOFT_CLIENT_ID` | Azure AD app client ID | No (if using Outlook) |
+| `MICROSOFT_CLIENT_SECRET` | Azure AD app client secret | No (if using Outlook) |
 | `ANTHROPIC_API_KEY` | Claude AI API key | Yes |
 
 ### Port Configuration

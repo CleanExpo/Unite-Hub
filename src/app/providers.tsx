@@ -1,12 +1,15 @@
 "use client";
 
 import { AuthProvider } from "@/contexts/AuthContext";
+import { OnboardingProvider } from "@/contexts/OnboardingContext";
 import { ReactNode } from "react";
 
 export function Providers({ children }: { children: ReactNode }) {
   return (
     <AuthProvider>
-      {children}
+      <OnboardingProvider>
+        {children}
+      </OnboardingProvider>
     </AuthProvider>
   );
 }

@@ -1,31 +1,63 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabase";
 
 export default function ImplicitCallbackPage() {
+  const [status, setStatus] = useState<string>("Processing authentication...");
+
   useEffect(() => {
     const handleImplicitFlow = async () => {
-      // Supabase client automatically detects tokens in URL hash
-      // Wait a moment for Supabase to process the hash
-      await new Promise(resolve => setTimeout(resolve, 100));
+      try {
+        // The Supabase client with detectSessionInUrl: true will automatically
+        // extract tokens from the URL hash and store them in localStorage
+        setStatus("Extracting session from URL...");
 
-      // Check if we have a session after Supabase processes the hash
-      const { data: { session }, error } = await supabaseBrowser.auth.getSession();
+        // Give Supabase time to process the URL hash and store the session
+        await new Promise(resolve => setTimeout(resolve, 200));
 
-      if (error) {
-        console.error('Implicit flow error:', error);
-        window.location.href = '/login?error=implicit_flow_failed';
-        return;
-      }
+        // Verify the session was stored successfully
+        const { data: { session }, error } = await supabaseBrowser.auth.getSession();
 
-      if (session) {
-        console.log('Implicit flow session created for:', session.user.email);
-        // Session is set - redirect to dashboard using window.location for hard navigation
-        window.location.href = '/dashboard/overview';
-      } else {
-        console.error('No session after implicit flow');
-        window.location.href = '/login?error=no_session';
+        if (error) {
+          console.error('Implicit flow error:', error);
+          setStatus('Authentication failed: ' + error.message);
+          setTimeout(() => {
+            window.location.href = '/login?error=implicit_flow_failed';
+          }, 2000);
+          return;
+        }
+
+        if (session) {
+          console.log('Session successfully created and persisted for:', session.user.email);
+          console.log('Session expires at:', new Date(session.expires_at! * 1000).toLocaleString());
+
+          // Verify session is in localStorage
+          const storedSession = localStorage.getItem(`sb-${process.env.NEXT_PUBLIC_SUPABASE_URL?.split('//')[1]?.split('.')[0]}-auth-token`);
+          if (storedSession) {
+            console.log('Session confirmed in localStorage');
+          }
+
+          setStatus('Success! Redirecting to dashboard...');
+
+          // Wait a moment to show success message
+          await new Promise(resolve => setTimeout(resolve, 500));
+
+          // Hard navigation to trigger AuthContext to pick up the new session
+          window.location.href = '/dashboard/overview';
+        } else {
+          console.error('No session created after implicit flow');
+          setStatus('No session created');
+          setTimeout(() => {
+            window.location.href = '/login?error=no_session';
+          }, 2000);
+        }
+      } catch (err) {
+        console.error('Unexpected error in implicit flow:', err);
+        setStatus('Unexpected error occurred');
+        setTimeout(() => {
+          window.location.href = '/login?error=unexpected_error';
+        }, 2000);
       }
     };
 
@@ -33,10 +65,10 @@ export default function ImplicitCallbackPage() {
   }, []);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="text-center">
-        <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-        <p className="mt-4 text-gray-600">Completing authentication...</p>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+      <div className="text-center max-w-md px-6">
+        <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mb-6"></div>
+        <p className="text-lg text-gray-700 dark:text-gray-300">{status}</p>
       </div>
     </div>
   );

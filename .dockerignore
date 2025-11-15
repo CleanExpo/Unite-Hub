@@ -1,0 +1,91 @@
+# ==================================================
+# Docker ignore file for Unite-Hub
+# Excludes unnecessary files from Docker build context
+# ==================================================
+
+# Dependencies
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Next.js build output
+.next/
+out/
+build/
+dist/
+
+# Environment files (will be injected via docker-compose)
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+.env*.local
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Testing
+coverage/
+.nyc_output/
+*.test.ts
+*.spec.ts
+__tests__/
+tests/
+test-results/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+.github/
+
+# Documentation
+*.md
+docs/
+README*
+CHANGELOG*
+LICENSE
+
+# Docker files (don't include in image)
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Playwright
+playwright-report/
+playwright/.cache/
+
+# Supabase local
+supabase/.branches/
+supabase/.temp/
+
+# Miscellaneous
+*.pem
+*.key
+*.cert
+.cache/
+.parcel-cache/
+
+# Claude agent files (not needed in container)
+.claude/

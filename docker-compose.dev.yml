@@ -1,0 +1,52 @@
+# ==================================================
+# Docker Compose - Development Configuration
+# Overrides for local development with hot reload
+# ==================================================
+version: '3.9'
+
+services:
+  # ==================================================
+  # Next.js Application (Development Mode)
+  # ==================================================
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      target: development
+    container_name: unite-hub-app-dev
+    environment:
+      NODE_ENV: development
+      NEXT_PUBLIC_APP_URL: http://localhost:3008
+      WATCHPACK_POLLING: "true"
+    volumes:
+      # Mount source code for hot reload
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    ports:
+      - "3008:3008"
+      - "9229:9229"  # Node.js debugger port
+    command: npm run dev
+    stdin_open: true
+    tty: true
+
+  # ==================================================
+  # Redis (Development)
+  # ==================================================
+  redis:
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly no --maxmemory 128mb
+
+  # ==================================================
+  # PostgreSQL (Development)
+  # ==================================================
+  postgres:
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: unite_hub_dev
+      POSTGRES_USER: dev_user
+      POSTGRES_PASSWORD: dev_password
+    profiles:
+      - local-db

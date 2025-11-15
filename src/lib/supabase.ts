@@ -20,7 +20,20 @@ function getSupabaseBrowser() {
     if (!supabaseUrl || !supabaseAnonKey) {
       throw new Error('Supabase environment variables are not configured. Please check NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY');
     }
-    _supabaseBrowser = createClient(supabaseUrl, supabaseAnonKey);
+    _supabaseBrowser = createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        // Enable session persistence in localStorage
+        persistSession: true,
+        // Automatically refresh tokens before they expire
+        autoRefreshToken: true,
+        // Detect session in URL (for OAuth callbacks)
+        detectSessionInUrl: true,
+        // Use localStorage for session storage (browser only)
+        storage: typeof window !== 'undefined' ? window.localStorage : undefined,
+        // Flow type for OAuth (implicit flow as currently used)
+        flowType: 'implicit',
+      },
+    });
   }
   return _supabaseBrowser;
 }
