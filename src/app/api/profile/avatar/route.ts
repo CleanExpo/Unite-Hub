@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
+import { getSupabaseServer } from "@/lib/supabase";
 
 const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
 const ALLOWED_MIME_TYPES = [
@@ -13,18 +12,19 @@ const ALLOWED_MIME_TYPES = [
 
 export async function POST(req: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = await getSupabaseServer();
 
     // Check authentication
     const {
-      data: { session },
-    } = await supabase.auth.getSession();
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
-    if (!session) {
+    if (authError || !user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = session.user.id;
+    const userId = user.id;
 
     // Parse form data
     const formData = await req.formData();
@@ -140,18 +140,19 @@ export async function POST(req: NextRequest) {
 // DELETE endpoint to remove avatar
 export async function DELETE(req: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = await getSupabaseServer();
 
     // Check authentication
     const {
-      data: { session },
-    } = await supabase.auth.getSession();
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
-    if (!session) {
+    if (authError || !user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = session.user.id;
+    const userId = user.id;
 
     // Delete all files in user's avatar folder
     const { data: files } = await supabase.storage.from("avatars").list(userId);

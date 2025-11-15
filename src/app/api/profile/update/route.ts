@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
+import { getSupabaseServer } from "@/lib/supabase";
 
 // Schema validation helper
 function validateUsername(username: string): boolean {
@@ -21,18 +20,19 @@ function sanitizePhone(phone: string): string {
 
 export async function POST(req: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = await getSupabaseServer();
 
     // Check authentication
     const {
-      data: { session },
-    } = await supabase.auth.getSession();
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
-    if (!session) {
+    if (authError || !user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = session.user.id;
+    const userId = user.id;
 
     // Parse request body
     const body = await req.json();
@@ -148,18 +148,19 @@ export async function POST(req: NextRequest) {
 // GET endpoint to fetch current profile
 export async function GET(req: NextRequest) {
   try {
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = await getSupabaseServer();
 
     // Check authentication
     const {
-      data: { session },
-    } = await supabase.auth.getSession();
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
-    if (!session) {
+    if (authError || !user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const userId = session.user.id;
+    const userId = user.id;
 
     // Fetch profile
     const { data: profile, error } = await supabase
