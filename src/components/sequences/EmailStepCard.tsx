@@ -62,7 +62,7 @@ export function EmailStepCard({
     emailBody: step.emailBody,
     ctaText: step.cta.text,
     ctaUrl: step.cta.url || "",
-    ctaType: step.cta.type,
+    ctaType: step.cta.type || "button", // ✅ Default to "button" if undefined
   });
 
   const handleSave = () => {
@@ -90,7 +90,7 @@ export function EmailStepCard({
       emailBody: step.emailBody,
       ctaText: step.cta.text,
       ctaUrl: step.cta.url || "",
-      ctaType: step.cta.type,
+      ctaType: step.cta.type || "button", // ✅ Default to "button" if undefined
     });
     setIsEditing(false);
   };

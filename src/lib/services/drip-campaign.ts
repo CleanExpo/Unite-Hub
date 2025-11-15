@@ -30,8 +30,23 @@ export async function createDripCampaign(
 
 export async function addCampaignStep(
   campaignId: string,
-  stepData: Partial<CampaignStep>
+  stepData: Partial<CampaignStep>,
+  workspaceId?: string
 ): Promise<CampaignStep> {
+  // Validate campaign belongs to workspace (if workspaceId provided)
+  if (workspaceId) {
+    const campaign = await supabase
+      .from("drip_campaigns")
+      .select("id")
+      .eq("id", campaignId)
+      .eq("workspace_id", workspaceId)
+      .single();
+
+    if (campaign.error) {
+      throw new Error("Campaign not found or access denied");
+    }
+  }
+
   const step = await supabaseServer
     .from("campaign_steps")
     .insert([
@@ -67,8 +82,36 @@ export async function getCampaignWithSteps(
 
 export async function enrollContactInCampaign(
   campaignId: string,
-  contactId: string
+  contactId: string,
+  workspaceId?: string
 ): Promise<CampaignEnrollment> {
+  // Validate campaign and contact belong to workspace (if workspaceId provided)
+  if (workspaceId) {
+    // Validate campaign
+    const campaign = await supabase
+      .from("drip_campaigns")
+      .select("id")
+      .eq("id", campaignId)
+      .eq("workspace_id", workspaceId)
+      .single();
+
+    if (campaign.error) {
+      throw new Error("Campaign not found or access denied");
+    }
+
+    // Validate contact
+    const contact = await supabase
+      .from("contacts")
+      .select("id")
+      .eq("id", contactId)
+      .eq("workspace_id", workspaceId)
+      .single();
+
+    if (contact.error) {
+      throw new Error("Contact not found or access denied");
+    }
+  }
+
   // Check if already enrolled
   const existing = await supabase
     .from("campaign_enrollments")
