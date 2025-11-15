@@ -64,7 +64,7 @@ export default function ProfilePage() {
     phone: "",
     bio: "",
     website: "",
-    timezone: "UTC",
+    timezone: "UTC", // Always has a default value to avoid uncontrolled->controlled warning
     notification_preferences: {
       email_notifications: true,
       marketing_emails: true,
@@ -90,7 +90,7 @@ export default function ProfilePage() {
         phone: profile.phone || "",
         bio: profile.bio || "",
         website: profile.website || "",
-        timezone: profile.timezone || "UTC",
+        timezone: profile.timezone || "UTC", // Always fallback to UTC to prevent undefined
         notification_preferences: profile.notification_preferences || {
           email_notifications: true,
           marketing_emails: true,
@@ -143,10 +143,23 @@ export default function ProfilePage() {
     setErrors({});
 
     try {
+      // Get the current session token
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session) {
+        toast({
+          title: "Error",
+          description: "Please sign in again",
+          variant: "destructive",
+        });
+        return;
+      }
+
       const response = await fetch("/api/profile/update", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
         },
         body: JSON.stringify(formData),
       });
@@ -589,7 +602,7 @@ export default function ProfilePage() {
               </Label>
               {isEditing ? (
                 <Select
-                  value={formData.timezone}
+                  value={formData.timezone || "UTC"}
                   onValueChange={(value) => handleInputChange("timezone", value)}
                 >
                   <SelectTrigger className="bg-slate-900 border-slate-700 text-white mt-2">

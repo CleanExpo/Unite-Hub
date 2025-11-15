@@ -21,7 +21,7 @@ export default function ClientSelector() {
     <>
       <div className="flex items-center gap-2">
         <Select
-          value={currentClientId || undefined}
+          value={currentClientId || ""}
           onValueChange={(value) => selectClient(value as any)}
         >
           <SelectTrigger className="w-[240px] bg-slate-800 border-slate-700 text-white">

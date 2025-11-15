@@ -20,19 +20,34 @@ function sanitizePhone(phone: string): string {
 
 export async function POST(req: NextRequest) {
   try {
-    const supabase = await getSupabaseServer();
+    // Try to get token from Authorization header (client-side requests with implicit OAuth)
+    const authHeader = req.headers.get("authorization");
+    const token = authHeader?.replace("Bearer ", "");
 
-    // Check authentication
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
+    let userId: string;
 
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (token) {
+      // Use browser client with token for implicit OAuth flow
+      const { supabaseBrowser } = await import("@/lib/supabase");
+      const { data, error } = await supabaseBrowser.auth.getUser(token);
+      if (error || !data.user) {
+        console.error("Token validation error:", error);
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      userId = data.user.id;
+    } else {
+      // Try server-side cookies (PKCE flow or server-side auth)
+      const supabase = await getSupabaseServer();
+      const { data, error: authError } = await supabase.auth.getUser();
+      if (authError || !data.user) {
+        console.error("Cookie auth error:", authError);
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      userId = data.user.id;
     }
 
-    const userId = user.id;
+    // Get Supabase instance for database operations
+    const supabase = await getSupabaseServer();
 
     // Parse request body
     const body = await req.json();
