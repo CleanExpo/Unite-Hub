@@ -8,9 +8,17 @@ export async function GET(request: NextRequest) {
   const code = requestUrl.searchParams.get('code')
   const origin = requestUrl.origin
 
+  // HYBRID APPROACH: Handle both PKCE and Implicit flows
+
+  // If no code parameter, assume implicit flow (tokens in URL hash)
+  // Redirect to client-side page that can read hash fragments
   if (!code) {
-    return NextResponse.redirect(`${origin}/login?error=no_code`)
+    console.log('No code parameter - assuming implicit flow with hash tokens')
+    return NextResponse.redirect(`${origin}/auth/implicit-callback`)
   }
+
+  // PKCE Flow: Exchange code for session server-side
+  console.log('Code parameter found - using PKCE flow')
 
   const cookieStore = await cookies()
 
@@ -44,7 +52,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${origin}/login?error=no_session`)
   }
 
-  console.log('Session created for user:', data.user?.email)
+  console.log('PKCE session created for user:', data.user?.email)
 
   // Redirect to dashboard after session is set
   return NextResponse.redirect(`${origin}/dashboard/overview`)
