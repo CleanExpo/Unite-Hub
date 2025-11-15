@@ -197,13 +197,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(session?.user ?? null);
 
       if (session?.user) {
-        fetchProfile(session.user.id);
-        fetchOrganizations(session.user.id);
-
-        // If we have a session and we're on login page, redirect to dashboard
+        // Redirect FIRST before fetching data to prevent fetch errors from blocking redirect
         if (window.location.pathname === '/login') {
           window.location.href = '/dashboard/overview';
+          return; // Stop execution, let dashboard page handle data fetching
         }
+
+        fetchProfile(session.user.id);
+        fetchOrganizations(session.user.id);
       }
 
       setLoading(false);
@@ -219,13 +220,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(session?.user ?? null);
 
       if (session?.user) {
-        await fetchProfile(session.user.id);
-        await fetchOrganizations(session.user.id);
-
-        // If user just signed in and we're on login page, redirect to dashboard
+        // Redirect FIRST before fetching data to prevent fetch errors from blocking redirect
         if (event === 'SIGNED_IN' && window.location.pathname === '/login') {
           window.location.href = '/dashboard/overview';
+          return; // Stop execution, let dashboard page handle data fetching
         }
+
+        await fetchProfile(session.user.id);
+        await fetchOrganizations(session.user.id);
       } else {
         setProfile(null);
         setOrganizations([]);
