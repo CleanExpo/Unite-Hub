@@ -9,6 +9,8 @@ export async function GET(request: NextRequest) {
   const origin = requestUrl.origin
   const redirectTo = requestUrl.searchParams.get('redirectTo') || '/dashboard/overview'
 
+  console.log('OAuth callback received:', { code: !!code, origin, redirectTo })
+
   if (code) {
     const cookieStore = await cookies()
     const response = NextResponse.redirect(`${origin}${redirectTo}`)
@@ -23,34 +25,42 @@ export async function GET(request: NextRequest) {
           },
           set(name: string, value: string, options: CookieOptions) {
             try {
+              console.log('Setting cookie:', name, 'with options:', options)
               cookieStore.set({ name, value, ...options })
               response.cookies.set({ name, value, ...options })
             } catch (error) {
-              // Ignore cookie errors during static generation
+              console.error('Error setting cookie:', error)
             }
           },
           remove(name: string, options: CookieOptions) {
             try {
+              console.log('Removing cookie:', name)
               cookieStore.set({ name, value: '', ...options })
               response.cookies.set({ name, value: '', ...options })
             } catch (error) {
-              // Ignore cookie errors during static generation
+              console.error('Error removing cookie:', error)
             }
           },
         },
       }
     )
 
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code)
 
     if (error) {
       console.error('Error exchanging code for session:', error)
       return NextResponse.redirect(`${origin}/login?error=auth_error`)
     }
 
+    console.log('Session created successfully:', {
+      hasSession: !!data.session,
+      userId: data.user?.id,
+      expiresAt: data.session?.expires_at
+    })
+
     return response
   }
 
-  // No code present, redirect to login
+  console.log('No code in callback, redirecting to login')
   return NextResponse.redirect(`${origin}/login`)
 }
