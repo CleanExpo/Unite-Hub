@@ -11,7 +11,6 @@ import { ClientProvider } from "@/contexts/ClientContext";
 import ClientSelector from "@/components/client/ClientSelector";
 import { Id } from "@/convex/_generated/dataModel";
 import { useEffect, useState } from "react";
-import { DEMO_ORG_ID, enableDemoMode } from "@/lib/demo-data";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSessionRefresh } from "@/hooks/useSessionRefresh";
 import { RoleBadge } from "@/components/RoleBadge";
@@ -40,19 +39,11 @@ export default function DashboardLayout({
   };
 
   useEffect(() => {
-    // Enable demo mode in development
-    if (process.env.NODE_ENV === "development") {
-      enableDemoMode();
-      setOrgId(DEMO_ORG_ID as Id<"organizations">);
-      return;
+    // Use the actual organization from AuthContext
+    if (currentOrganization?.organizationId) {
+      setOrgId(currentOrganization.organizationId as Id<"organizations">);
     }
-
-    // Get org ID from demo mode or session
-    const demoOrgId = localStorage.getItem("demo_org_id");
-    if (demoOrgId) {
-      setOrgId(demoOrgId as Id<"organizations">);
-    }
-  }, []);
+  }, [currentOrganization]);
 
   const isActive = (href: string) => pathname.startsWith(href);
 

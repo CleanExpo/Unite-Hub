@@ -8,13 +8,34 @@ import { getSupabaseServer } from "@/lib/supabase";
 
 export async function POST(req: NextRequest) {
   try {
-    // Authentication check
-    const supabase = await getSupabaseServer();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    // Try to get token from Authorization header (client-side requests with implicit OAuth)
+    const authHeader = req.headers.get("authorization");
+    const token = authHeader?.replace("Bearer ", "");
 
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    let user: any;
+
+    if (token) {
+      // Use browser client with token for implicit OAuth flow
+      const { supabaseBrowser } = await import("@/lib/supabase");
+      const { data, error } = await supabaseBrowser.auth.getUser(token);
+      if (error || !data.user) {
+        console.error("Token validation error:", error);
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      user = data.user;
+    } else {
+      // Try server-side cookies (PKCE flow or server-side auth)
+      const supabase = await getSupabaseServer();
+      const { data, error: authError } = await supabase.auth.getUser();
+      if (authError || !data.user) {
+        console.error("Cookie auth error:", authError);
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      user = data.user;
     }
+
+    // Get Supabase instance for database operations
+    const supabase = await getSupabaseServer();
 
     // Get user's organization
     const { data: userOrg, error: orgError } = await supabase

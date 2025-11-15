@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Loader2, Zap, TrendingUp, Target, AlertCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabaseBrowser } from "@/lib/supabase";
 
 export function HotLeadsPanel({ workspaceId }: { workspaceId: string }) {
   const { session } = useAuth();
@@ -28,9 +29,19 @@ export function HotLeadsPanel({ workspaceId }: { workspaceId: string }) {
     setLoading(true);
     setError(null);
     try {
+      // Get the current session token
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+
+      if (!session) {
+        throw new Error("No session found. Please sign in again.");
+      }
+
       const res = await fetch("/api/agents/contact-intelligence", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({
           action: "get_hot_leads",
           workspaceId,
@@ -56,9 +67,19 @@ export function HotLeadsPanel({ workspaceId }: { workspaceId: string }) {
     setRefreshing(true);
     setError(null);
     try {
+      // Get the current session token
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+
+      if (!session) {
+        throw new Error("No session found. Please sign in again.");
+      }
+
       const res = await fetch("/api/agents/contact-intelligence", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({
           action: "analyze_workspace",
           workspaceId,
