@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Code2, Loader2, Copy, Check, Sparkles } from "lucide-react";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function CodeGeneratorPage() {
   const [prompt, setPrompt] = useState("");
@@ -52,6 +53,8 @@ export default function CodeGeneratorPage() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
+      <Breadcrumbs items={[{ label: "AI Tools", href: "/dashboard/ai-tools" }, { label: "Code Generator" }]} />
+
       {/* Header */}
       <div className="flex items-center gap-3">
         <div className="p-3 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg">

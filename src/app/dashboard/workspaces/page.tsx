@@ -15,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Plus, Settings, Users, BarChart3, Trash2 } from "lucide-react";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function WorkspacesPage() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -50,6 +51,8 @@ export default function WorkspacesPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+      <Breadcrumbs items={[{ label: "Workspaces" }]} />
+
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>

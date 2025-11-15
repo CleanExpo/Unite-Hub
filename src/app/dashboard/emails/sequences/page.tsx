@@ -40,6 +40,7 @@ import { SequenceStats } from "@/components/sequences/SequenceStats";
 import { useToast } from "@/hooks/use-toast";
 import { FeaturePageWrapper } from "@/components/features/FeaturePageWrapper";
 import { Id } from "@/convex/_generated/dataModel";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 // Template data (would come from database in production)
 const TEMPLATES = [

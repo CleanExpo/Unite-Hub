@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Sparkles, Loader2, Copy, Check, Wand2 } from "lucide-react";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function MarketingCopyPage() {
   const [businessName, setBusinessName] = useState("");
@@ -54,6 +55,8 @@ export default function MarketingCopyPage() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6">
+      <Breadcrumbs items={[{ label: "AI Tools", href: "/dashboard/ai-tools" }, { label: "Marketing Copy" }]} />
+
       {/* Header */}
       <div className="flex items-center gap-3">
         <div className="p-3 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg">

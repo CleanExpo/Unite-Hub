@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ContentPreview } from "@/components/ContentPreview";
 import { Loader2, Plus, RefreshCw } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function ContentPage() {
   const { currentOrganization } = useAuth();
@@ -64,6 +65,8 @@ export default function ContentPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+      <Breadcrumbs items={[{ label: "Content Hub" }]} />
+
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>

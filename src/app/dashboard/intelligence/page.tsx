@@ -2,6 +2,7 @@
 
 import { HotLeadsPanel } from "@/components/HotLeadsPanel";
 import { useAuth } from "@/contexts/AuthContext";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function IntelligencePage() {
   const { currentOrganization } = useAuth();
@@ -23,6 +24,8 @@ export default function IntelligencePage() {
   return (
     <div className="min-h-screen bg-slate-950 p-8">
       <div className="max-w-7xl mx-auto">
+        <Breadcrumbs items={[{ label: "Contact Intelligence" }]} />
+
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-white mb-2">
             Contact Intelligence Dashboard

@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Mail, RefreshCw } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function SettingsPage() {
   const { currentOrganization } = useAuth();
@@ -81,6 +82,8 @@ export default function SettingsPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-6 py-8 space-y-8">
+      <Breadcrumbs items={[{ label: "Settings" }]} />
+
       <div>
         <h1 className="text-3xl font-bold text-white mb-2">Settings</h1>
         <p className="text-slate-400">Manage integrations and account</p>
