@@ -83,12 +83,8 @@ export async function getSupabaseServer() {
   );
 }
 
-// Backward compatibility - but this should only be used server-side
-export const supabaseServer = new Proxy({} as any, {
-  get(target, prop) {
-    return getSupabaseServer()[prop as keyof ReturnType<typeof createClient>];
-  }
-});
+// Removed supabaseServer Proxy - it cannot work with async getSupabaseServer()
+// Always use: const supabase = await getSupabaseServer();
 
 // Types
 export interface Organization {

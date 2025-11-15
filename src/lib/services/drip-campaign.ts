@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { supabase, supabaseServer } from "@/lib/supabase";
+import { supabase, getSupabaseServer } from "@/lib/supabase";
 import { generatePersonalizedContent } from "@/lib/agents/content-personalization";
 import { sendEmailViaGmail } from "@/lib/integrations/gmail";
 import {
@@ -13,6 +13,7 @@ export async function createDripCampaign(
   workspaceId: string,
   data: Partial<DripCampaign>
 ): Promise<DripCampaign> {
+  const supabaseServer = await getSupabaseServer();
   const campaign = await supabaseServer
     .from("drip_campaigns")
     .insert([
@@ -47,6 +48,7 @@ export async function addCampaignStep(
     }
   }
 
+  const supabaseServer = await getSupabaseServer();
   const step = await supabaseServer
     .from("campaign_steps")
     .insert([
@@ -125,6 +127,7 @@ export async function enrollContactInCampaign(
   }
 
   // Create enrollment
+  const supabaseServer = await getSupabaseServer();
   const enrollment = await supabaseServer
     .from("campaign_enrollments")
     .insert([
@@ -166,6 +169,7 @@ export async function scheduleStepExecution(
   scheduledFor.setDate(scheduledFor.getDate() + delayDays);
   scheduledFor.setHours(scheduledFor.getHours() + delayHours);
 
+  const supabaseServer = await getSupabaseServer();
   const log = await supabaseServer
     .from("campaign_execution_logs")
     .insert([
@@ -206,6 +210,7 @@ export async function processPendingCampaignSteps() {
     let processed = 0;
     let failed = 0;
 
+    const supabaseServer = await getSupabaseServer();
     for (const log of logs.data || []) {
       try {
         await executeCampaignStep(log);
@@ -234,6 +239,7 @@ export async function processPendingCampaignSteps() {
 }
 
 async function executeCampaignStep(log: any) {
+  const supabaseServer = await getSupabaseServer();
   const enrollment = log.enrollment;
   const step = log.step;
   const contact = await db.contacts.getById(enrollment.contact_id);
@@ -495,6 +501,7 @@ export async function updateCampaignMetrics(campaignId: string) {
     .select("*", { count: "exact", head: true });
 
   // Update metrics
+  const supabaseServer = await getSupabaseServer();
   await supabaseServer
     .from("campaign_metrics")
     .update({

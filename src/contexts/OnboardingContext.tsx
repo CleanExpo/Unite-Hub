@@ -74,14 +74,17 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
         .eq("user_id", user.id)
         .maybeSingle();
 
-      if (error && error.code !== "PGRST116") {
+      if (error && error.code !== "PGRST116" && error.code !== "PGRST205") {
         // PGRST116 = no rows returned
+        // PGRST205 = table not found (migration not applied yet)
         throw error;
       }
 
       setStatus(data);
     } catch (error) {
       console.error("Error fetching onboarding status:", error);
+      // Silently fail if table doesn't exist - user needs to apply migration
+      setStatus(null);
     } finally {
       setLoading(false);
     }
