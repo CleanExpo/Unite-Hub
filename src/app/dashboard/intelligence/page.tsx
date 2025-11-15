@@ -1,10 +1,24 @@
 "use client";
 
 import { HotLeadsPanel } from "@/components/HotLeadsPanel";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function IntelligencePage() {
-  // In a real app, get workspace ID from session/context
-  const workspaceId = process.env.NEXT_PUBLIC_WORKSPACE_ID || "demo-workspace-id";
+  const { currentOrganization } = useAuth();
+  const workspaceId = currentOrganization?.org_id || null;
+
+  if (!workspaceId) {
+    return (
+      <div className="min-h-screen bg-slate-950 p-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="bg-slate-800 border border-slate-700 rounded-lg p-8 text-center">
+            <p className="text-slate-400 mb-4">No workspace selected</p>
+            <p className="text-sm text-slate-500">Please create or select a workspace to continue.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-950 p-8">

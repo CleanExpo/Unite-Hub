@@ -119,13 +119,21 @@ export default function DashboardLayout({
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="bg-slate-800 border-slate-700">
-                  <DropdownMenuItem className="text-slate-300 hover:text-white">
+                  <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
                     <Link href="/dashboard/settings" className="w-full">
                       Settings
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="text-slate-300 hover:text-white">Profile</DropdownMenuItem>
-                  <DropdownMenuItem className="text-slate-300 hover:text-white">Help</DropdownMenuItem>
+                  <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                    <Link href="/dashboard/profile" className="w-full">
+                      Profile
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                    <Link href="https://docs.unite-hub.com" target="_blank" rel="noopener noreferrer" className="w-full">
+                      Help
+                    </Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem
                     className="text-red-400 cursor-pointer"
                     onClick={async () => {

@@ -23,8 +23,12 @@ import { Plus, Search, Filter, MoreHorizontal, Mail, Phone, ExternalLink } from 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/contexts/AuthContext";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function ContactsPage() {
+  const { currentOrganization } = useAuth();
+  const workspaceId = currentOrganization?.org_id || null;
   const [searchTerm, setSearchTerm] = useState("");
   const [allContacts, setAllContacts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -33,12 +37,23 @@ export default function ContactsPage() {
   useEffect(() => {
     async function fetchContacts() {
       try {
+        // Check if workspace is available
+        if (!workspaceId) {
+          console.log("No workspace selected for contacts");
+          setLoading(false);
+          return;
+        }
+
         const { data, error } = await supabase
           .from("contacts")
           .select("*")
+          .eq("workspace_id", workspaceId)
           .order("created_at", { ascending: false });
 
-        if (error) throw error;
+        if (error) {
+          console.error("Error fetching contacts:", error);
+          throw error;
+        }
         setAllContacts(data || []);
       } catch (error) {
         console.error("Error fetching contacts:", error);
@@ -48,7 +63,7 @@ export default function ContactsPage() {
     }
 
     fetchContacts();
-  }, []);
+  }, [workspaceId]);
 
   // Filter by search term
   const contacts = allContacts.filter((contact: any) =>
@@ -59,6 +74,8 @@ export default function ContactsPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+      <Breadcrumbs items={[{ label: "Contacts" }]} />
+
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
@@ -210,12 +227,14 @@ export default function ContactsPage() {
                           <Mail className="w-4 h-4 mr-2" />
                           Send Email
                         </DropdownMenuItem>
-                        <DropdownMenuItem
-                          className="text-slate-300 hover:text-white cursor-pointer"
-                          onClick={() => router.push(`/dashboard/contacts/${contact.id}`)}
-                        >
-                          <ExternalLink className="w-4 h-4 mr-2" />
-                          View Profile
+                        <DropdownMenuItem asChild>
+                          <Link
+                            href={`/dashboard/contacts/${contact.id}`}
+                            className="text-slate-300 hover:text-white flex items-center cursor-pointer"
+                          >
+                            <ExternalLink className="w-4 h-4 mr-2" />
+                            View Profile
+                          </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem className="text-red-400 hover:text-red-300">
                           Delete

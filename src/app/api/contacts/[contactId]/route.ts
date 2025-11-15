@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getSupabaseServer } from "@/lib/supabase";
 import { db } from "@/lib/db";
 
 // GET /api/contacts/[contactId] - Get contact details
@@ -8,10 +9,40 @@ export async function GET(
 ) {
   try {
     const { contactId } = await params;
+    const supabaseServer = getSupabaseServer();
 
-    const contact = await db.contacts.getById(contactId);
+    // Get the authenticated user
+    const { data: { user }, error: authError } = await supabaseServer.auth.getUser();
+    if (authError || !user) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
 
-    if (!contact) {
+    // Get user's workspace
+    const { data: userOrg } = await supabaseServer
+      .from("user_organizations")
+      .select("org_id")
+      .eq("user_id", user.id)
+      .single();
+
+    if (!userOrg) {
+      return NextResponse.json(
+        { error: "User workspace not found" },
+        { status: 404 }
+      );
+    }
+
+    // Get the contact and verify workspace_id matches
+    const { data: contact, error: contactError } = await supabaseServer
+      .from("contacts")
+      .select("*")
+      .eq("id", contactId)
+      .eq("workspace_id", userOrg.org_id)
+      .single();
+
+    if (contactError || !contact) {
       return NextResponse.json(
         { error: "Contact not found" },
         { status: 404 }

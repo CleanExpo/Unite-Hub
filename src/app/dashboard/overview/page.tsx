@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/contexts/AuthContext";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function OverviewPage() {
   const { currentOrganization } = useAuth();
@@ -97,6 +98,8 @@ export default function OverviewPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+      <Breadcrumbs items={[{ label: "Overview" }]} />
+
       <div>
         <h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
         <p className="text-slate-400">Welcome back!</p>

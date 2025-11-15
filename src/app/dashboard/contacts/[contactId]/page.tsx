@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
+import Link from "next/link";
 import { ArrowLeft, User, Building, Mail, Phone, Calendar, TrendingUp } from "lucide-react";
 import ClientEmailsManager from "@/components/ClientEmailsManager";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 interface Contact {
   id: string;
@@ -23,7 +25,6 @@ interface Contact {
 
 export default function ContactDetailPage() {
   const params = useParams();
-  const router = useRouter();
   const contactId = params.contactId as string;
 
   const [contact, setContact] = useState<Contact | null>(null);
@@ -86,15 +87,17 @@ export default function ContactDetailPage() {
   return (
     <div className="min-h-screen bg-slate-900 p-8">
       <div className="max-w-6xl mx-auto space-y-6">
+        <Breadcrumbs items={[{ label: "Contacts", href: "/dashboard/contacts" }, { label: contact.name }]} />
+
         {/* Header */}
         <div className="flex items-center justify-between">
-          <button
-            onClick={() => router.push("/dashboard/contacts")}
+          <Link
+            href="/dashboard/contacts"
             className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Contacts
-          </button>
+          </Link>
         </div>
 
         {/* Contact Info Card */}
