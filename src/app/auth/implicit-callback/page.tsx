@@ -1,38 +1,36 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase";
 
 export default function ImplicitCallbackPage() {
-  const router = useRouter();
-
   useEffect(() => {
     const handleImplicitFlow = async () => {
       // Supabase client automatically detects tokens in URL hash
-      // and stores them in localStorage
+      // Wait a moment for Supabase to process the hash
+      await new Promise(resolve => setTimeout(resolve, 100));
 
       // Check if we have a session after Supabase processes the hash
       const { data: { session }, error } = await supabaseBrowser.auth.getSession();
 
       if (error) {
         console.error('Implicit flow error:', error);
-        router.push('/login?error=implicit_flow_failed');
+        window.location.href = '/login?error=implicit_flow_failed';
         return;
       }
 
       if (session) {
         console.log('Implicit flow session created for:', session.user.email);
-        // Session is set - redirect to dashboard
-        router.push('/dashboard/overview');
+        // Session is set - redirect to dashboard using window.location for hard navigation
+        window.location.href = '/dashboard/overview';
       } else {
         console.error('No session after implicit flow');
-        router.push('/login?error=no_session');
+        window.location.href = '/login?error=no_session';
       }
     };
 
     handleImplicitFlow();
-  }, [router]);
+  }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">

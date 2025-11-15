@@ -73,15 +73,23 @@ export async function middleware(req: NextRequest) {
     req.nextUrl.pathname.startsWith(path)
   );
 
-  // Redirect to login if accessing protected route without authentication
-  if (isProtectedPath && !isAuthenticated) {
+  // IMPORTANT: With implicit OAuth flow, sessions are stored in localStorage (client-side only)
+  // Middleware cannot see these sessions, so we CANNOT rely on server-side protection
+  // Instead, we let all requests through and rely on client-side AuthContext to handle redirects
+
+  // Only redirect to login if there's NO server-side session AND no existing redirectTo param
+  // (to avoid redirect loops)
+  const hasRedirectToParam = req.nextUrl.searchParams.has('redirectTo');
+
+  if (isProtectedPath && !isAuthenticated && !hasRedirectToParam) {
     const redirectUrl = req.nextUrl.clone();
     redirectUrl.pathname = "/login";
     redirectUrl.searchParams.set("redirectTo", req.nextUrl.pathname);
     return NextResponse.redirect(redirectUrl);
   }
 
-  // Redirect to dashboard if accessing auth pages while authenticated
+  // Redirect to dashboard if accessing auth pages while authenticated (PKCE flow only)
+  // Don't redirect for implicit flow (no server-side session)
   if (isAuthPath && isAuthenticated) {
     const redirectUrl = req.nextUrl.clone();
     redirectUrl.pathname = "/dashboard/overview";
