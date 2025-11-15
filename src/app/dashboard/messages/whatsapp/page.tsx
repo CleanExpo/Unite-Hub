@@ -11,6 +11,7 @@ import { MessageSquare, Send, Search, Archive, User, Clock, CheckCheck } from 'l
 import { useAuth } from '@/contexts/AuthContext';
 import WhatsAppChat from '@/components/WhatsAppChat';
 import { formatDistanceToNow } from 'date-fns';
+import { Breadcrumbs } from '@/components/Breadcrumbs';
 
 interface WhatsAppConversation {
   id: string;
@@ -117,6 +118,10 @@ export default function WhatsAppMessagesPage() {
       {/* Conversations Sidebar */}
       <div className="w-96 border-r flex flex-col">
         <div className="p-4 border-b space-y-4">
+          <Breadcrumbs items={[
+            { label: "Messages", href: "/dashboard/messages" },
+            { label: "WhatsApp" }
+          ]} />
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold flex items-center gap-2">
               <MessageSquare className="w-6 h-6" />

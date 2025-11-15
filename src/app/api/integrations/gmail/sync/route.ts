@@ -1,17 +1,44 @@
 import { NextRequest, NextResponse } from "next/server";
 import { syncGmailEmails } from "@/lib/integrations/gmail";
 import { analyzeWorkspaceContacts } from "@/lib/agents/contact-intelligence";
-import { auth } from "@/lib/auth";
+import { getSupabaseServer } from "@/lib/supabase";
 import { db } from "@/lib/db";
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
+    // Authentication check
+    const supabase = getSupabaseServer();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Get user's organization
+    const { data: userOrg, error: orgError } = await supabase
+      .from("user_organizations")
+      .select("org_id")
+      .eq("user_id", user.id)
+      .eq("is_active", true)
+      .single();
+
+    if (orgError || !userOrg) {
+      return NextResponse.json({ error: "No active organization found" }, { status: 403 });
+    }
+
     const { integrationId, workspaceId } = await req.json();
+
+    // Validate workspace access
+    const { data: workspace, error: workspaceError } = await supabase
+      .from("workspaces")
+      .select("id")
+      .eq("id", workspaceId)
+      .eq("org_id", userOrg.org_id)
+      .single();
+
+    if (workspaceError || !workspace) {
+      return NextResponse.json({ error: "Invalid workspace or access denied" }, { status: 403 });
+    }
 
     // Sync emails
     const syncResult = await syncGmailEmails(integrationId);

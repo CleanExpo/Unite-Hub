@@ -23,6 +23,7 @@ import ActionableInsights from "@/components/competitors/ActionableInsights";
 import ComparisonMatrix from "@/components/competitors/ComparisonMatrix";
 import { FeaturePageWrapper } from "@/components/features/FeaturePageWrapper";
 import { Id } from "@/convex/_generated/dataModel";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function CompetitorsPage() {
   return (
@@ -139,6 +140,10 @@ function CompetitorFeature({ clientId }: { clientId: Id<"clients"> }) {
 
   return (
     <div className="space-y-6 p-6">
+      <Breadcrumbs items={[
+        { label: "Insights", href: "/dashboard/insights" },
+        { label: "Competitors" }
+      ]} />
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

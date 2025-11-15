@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function LandingPageDetailPage() {
   const params = useParams();
@@ -143,6 +144,11 @@ export default function LandingPageDetailPage() {
 
   return (
     <div className="container mx-auto py-8 space-y-6">
+      <Breadcrumbs items={[
+        { label: "Resources", href: "/dashboard/resources" },
+        { label: "Landing Pages", href: "/dashboard/resources/landing-pages" },
+        { label: "Edit" }
+      ]} />
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">

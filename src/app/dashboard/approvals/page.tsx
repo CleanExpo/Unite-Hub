@@ -9,6 +9,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Plus, CheckCircle, XCircle, Clock, AlertCircle, Loader2 } from "lucide-react";
 import { useApprovals } from "@/hooks/useApprovals";
 import { useAuth } from "@/contexts/AuthContext";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 // Helper function to format submission time
 const formatSubmissionTime = (dateString: string) => {
@@ -127,6 +128,7 @@ export default function ApprovalsPage() {
       <div className="flex-1 ml-[280px]">
         {/* Header */}
         <header className="h-[70px] bg-white border-b border-gray-200 flex items-center px-8 gap-6">
+          <Breadcrumbs items={[{ label: "Approvals" }]} />
           <h1 className="text-2xl font-bold text-unite-navy">Approvals</h1>
 
           <div className="flex-1" />

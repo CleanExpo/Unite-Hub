@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { syncUnreadEmails } from "@/lib/gmail/processor";
+import { getSupabaseServer } from "@/lib/supabase";
 
 /**
  * POST /api/email/sync
@@ -8,10 +9,35 @@ import { syncUnreadEmails } from "@/lib/gmail/processor";
 
 export async function POST(req: NextRequest) {
   try {
+    // Authentication check
+    const supabase = getSupabaseServer();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Get user's organization
+    const { data: userOrg, error: orgError } = await supabase
+      .from("user_organizations")
+      .select("org_id")
+      .eq("user_id", user.id)
+      .eq("is_active", true)
+      .single();
+
+    if (orgError || !userOrg) {
+      return NextResponse.json({ error: "No active organization found" }, { status: 403 });
+    }
+
     const { orgId } = await req.json();
 
     if (!orgId) {
       return NextResponse.json({ error: "Missing orgId" }, { status: 400 });
+    }
+
+    // Verify user has access to this organization
+    if (orgId !== userOrg.org_id) {
+      return NextResponse.json({ error: "Access denied to this organization" }, { status: 403 });
     }
 
     // Get credentials from environment

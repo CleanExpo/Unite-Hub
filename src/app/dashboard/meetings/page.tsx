@@ -34,6 +34,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 interface CalendarEvent {
   id: string;
@@ -203,6 +204,7 @@ export default function MeetingsPage() {
 
   return (
     <div className="container mx-auto p-6 space-y-6">
+      <Breadcrumbs items={[{ label: "Meetings" }]} />
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold flex items-center gap-2">

@@ -1,9 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
 import { analyzeContactIntelligence } from "@/lib/agents/contact-intelligence";
 import { db } from "@/lib/db";
+import { getSupabaseServer } from "@/lib/supabase";
 
 export async function POST(request: NextRequest) {
   try {
+    // Authentication check
+    const supabase = getSupabaseServer();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Get user's organization
+    const { data: userOrg, error: orgError } = await supabase
+      .from("user_organizations")
+      .select("org_id")
+      .eq("user_id", user.id)
+      .eq("is_active", true)
+      .single();
+
+    if (orgError || !userOrg) {
+      return NextResponse.json({ error: "No active organization found" }, { status: 403 });
+    }
+
     const { contactId, workspaceId } = await request.json();
 
     if (!contactId || !workspaceId) {
@@ -11,6 +32,18 @@ export async function POST(request: NextRequest) {
         { error: "Contact ID and workspace ID are required" },
         { status: 400 }
       );
+    }
+
+    // Validate workspace access
+    const { data: workspace, error: workspaceError } = await supabase
+      .from("workspaces")
+      .select("id")
+      .eq("id", workspaceId)
+      .eq("org_id", userOrg.org_id)
+      .single();
+
+    if (workspaceError || !workspace) {
+      return NextResponse.json({ error: "Invalid workspace or access denied" }, { status: 403 });
     }
 
     // Verify contact exists
@@ -41,6 +74,26 @@ export async function POST(request: NextRequest) {
 // Batch analysis endpoint - analyze entire workspace
 export async function PUT(request: NextRequest) {
   try {
+    // Authentication check
+    const supabase = getSupabaseServer();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Get user's organization
+    const { data: userOrg, error: orgError } = await supabase
+      .from("user_organizations")
+      .select("org_id")
+      .eq("user_id", user.id)
+      .eq("is_active", true)
+      .single();
+
+    if (orgError || !userOrg) {
+      return NextResponse.json({ error: "No active organization found" }, { status: 403 });
+    }
+
     const { workspaceId } = await request.json();
 
     if (!workspaceId) {
@@ -48,6 +101,18 @@ export async function PUT(request: NextRequest) {
         { error: "Workspace ID is required" },
         { status: 400 }
       );
+    }
+
+    // Validate workspace access
+    const { data: workspace, error: workspaceError } = await supabase
+      .from("workspaces")
+      .select("id")
+      .eq("id", workspaceId)
+      .eq("org_id", userOrg.org_id)
+      .single();
+
+    if (workspaceError || !workspace) {
+      return NextResponse.json({ error: "Invalid workspace or access denied" }, { status: 403 });
     }
 
     // Use the new analyzeWorkspaceContacts function

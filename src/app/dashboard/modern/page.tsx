@@ -14,6 +14,7 @@ import { TeamCapacity } from "@/components/dashboard/TeamCapacity";
 import { Bell, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 // Mock data - replace with real data from Supabase
 const mockApprovals = [
@@ -181,6 +182,7 @@ export default function ModernDashboard() {
 
         {/* Dashboard Content */}
         <main className="p-8">
+          <Breadcrumbs items={[{ label: "Modern View" }]} />
           {/* Welcome Section */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-unite-navy mb-2">

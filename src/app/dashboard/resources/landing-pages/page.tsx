@@ -34,6 +34,7 @@ import { ChecklistOverview } from "@/components/landing-pages/ChecklistOverview"
 import { Plus, FileText, Sparkles, TrendingUp } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { FeaturePageWrapper } from "@/components/features/FeaturePageWrapper";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 const PAGE_TYPES = [
   { value: "homepage", label: "Homepage" },
@@ -142,6 +143,10 @@ function LandingPageFeature({ clientId }: { clientId: Id<"clients"> }) {
 
   return (
     <div className="container mx-auto py-8 space-y-8">
+      <Breadcrumbs items={[
+        { label: "Resources", href: "/dashboard/resources" },
+        { label: "Landing Pages" }
+      ]} />
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

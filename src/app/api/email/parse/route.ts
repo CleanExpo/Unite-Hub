@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { gmailClient, parseGmailMessage } from "@/lib/gmail";
+import { getSupabaseServer } from "@/lib/supabase";
 
 /**
  * POST /api/email/parse
@@ -8,6 +9,14 @@ import { gmailClient, parseGmailMessage } from "@/lib/gmail";
 
 export async function POST(req: NextRequest) {
   try {
+    // Authentication check
+    const supabase = getSupabaseServer();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { messageId, accessToken, refreshToken } = await req.json();
 
     if (!messageId || !accessToken || !refreshToken) {

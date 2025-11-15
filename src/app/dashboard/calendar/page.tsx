@@ -18,6 +18,7 @@ import PostDetailsModal from "@/components/calendar/PostDetailsModal";
 import PlatformFilter from "@/components/calendar/PlatformFilter";
 import CalendarStats from "@/components/calendar/CalendarStats";
 import { FeaturePageWrapper } from "@/components/features/FeaturePageWrapper";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function ContentCalendarPage() {
   return (
@@ -153,6 +154,7 @@ function ContentCalendarFeature({ clientId }: { clientId: Id<"clients"> }) {
   return (
     <div className="min-h-screen p-6">
       <div className="max-w-7xl mx-auto">
+        <Breadcrumbs items={[{ label: "Calendar" }]} />
         {/* Header */}
         <div className="mb-6">
           <div className="flex items-center justify-between">

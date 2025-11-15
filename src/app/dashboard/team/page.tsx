@@ -12,6 +12,7 @@ import { Plus, Mail, Phone, Calendar, BarChart3, Users, AlertCircle, CheckCircle
 import { cn } from "@/lib/utils";
 import { useTeamMembers } from "@/hooks/useTeamMembers";
 import { useAuth } from "@/contexts/AuthContext";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 // Helper function to format join date
 const formatJoinDate = (dateString: string) => {
@@ -62,6 +63,7 @@ export default function TeamPage() {
       <div className="flex-1 ml-[280px]">
         {/* Header */}
         <header className="h-[70px] bg-white border-b border-gray-200 flex items-center px-8 gap-6">
+          <Breadcrumbs items={[{ label: "Team" }]} />
           <h1 className="text-2xl font-bold text-unite-navy">Team Management</h1>
 
           <div className="flex-1" />
