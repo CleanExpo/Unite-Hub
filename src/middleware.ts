@@ -80,12 +80,9 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  // Redirect to dashboard if accessing auth pages with active session
-  if (isAuthPath && session) {
-    const redirectUrl = req.nextUrl.clone();
-    redirectUrl.pathname = "/dashboard/overview";
-    return NextResponse.redirect(redirectUrl);
-  }
+  // Don't redirect auth pages server-side - let client-side AuthContext handle it
+  // This is necessary because implicit OAuth flow stores tokens in localStorage,
+  // which isn't available server-side on first render
 
   return response;
 }
