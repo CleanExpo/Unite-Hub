@@ -44,8 +44,8 @@ export default function WhatsAppMessagesPage() {
   const [activeTab, setActiveTab] = useState<'all' | 'open' | 'archived'>('all');
   const [loading, setLoading] = useState(true);
 
-  // Get workspace ID
-  const workspaceId = currentOrganization?.id || 'default-org';
+  // Get workspace ID (org_id is the UUID we need)
+  const workspaceId = currentOrganization?.org_id || null;
 
   useEffect(() => {
     fetchConversations();
@@ -56,6 +56,12 @@ export default function WhatsAppMessagesPage() {
   }, [conversations, searchQuery]);
 
   const fetchConversations = async () => {
+    if (!workspaceId) {
+      setLoading(false);
+      setConversations([]);
+      return;
+    }
+
     try {
       setLoading(true);
       const status = activeTab === 'all' ? undefined : activeTab;

@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { createServerClient as createSSRServerClient, type CookieOptions } from '@supabase/ssr';
 
 // Get environment variables with proper fallbacks
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -47,29 +48,39 @@ export const supabase = new Proxy({} as ReturnType<typeof createClient>, {
 
 export const supabaseBrowser = supabase; // Alias for clarity
 
-// Server-side (API routes) - lazy initialization to avoid client-side errors
-let _supabaseServer: ReturnType<typeof createClient> | null = null;
+// Server-side (API routes) - creates a client that reads session from cookies
+// NOTE: This uses '@supabase/ssr' to properly read session from cookies
+export async function getSupabaseServer() {
+  const { cookies } = await import('next/headers');
+  const cookieStore = await cookies();
 
-export function getSupabaseServer() {
-  if (!_supabaseServer) {
-    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    const serverUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-
-    if (!supabaseServiceKey) {
-      throw new Error("SUPABASE_SERVICE_ROLE_KEY is not defined");
+  return createSSRServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value;
+        },
+        set(name: string, value: string, options: CookieOptions) {
+          try {
+            cookieStore.set({ name, value, ...options });
+          } catch (error) {
+            // Cookie setting can fail in Server Components
+            // This is expected and safe to ignore
+          }
+        },
+        remove(name: string, options: CookieOptions) {
+          try {
+            cookieStore.set({ name, value: '', ...options });
+          } catch (error) {
+            // Cookie removal can fail in Server Components
+            // This is expected and safe to ignore
+          }
+        },
+      },
     }
-    if (!serverUrl) {
-      throw new Error("NEXT_PUBLIC_SUPABASE_URL is not defined");
-    }
-
-    _supabaseServer = createClient(serverUrl, supabaseServiceKey, {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false
-      }
-    });
-  }
-  return _supabaseServer;
+  );
 }
 
 // Backward compatibility - but this should only be used server-side

@@ -5,7 +5,7 @@ import { getSupabaseServer } from "@/lib/supabase";
 export async function GET(request: NextRequest) {
   try {
     // Authentication check
-    const supabase = getSupabaseServer();
+    const supabase = await getSupabaseServer();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
 
     if (authError || !user) {

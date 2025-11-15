@@ -7,10 +7,12 @@ import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
 import type { User } from "@supabase/supabase-js";
 
 export default function PricingPage() {
   const [user, setUser] = useState<User | null>(null);
+  const { currentOrganization } = useAuth();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -26,6 +28,11 @@ export default function PricingPage() {
       return;
     }
 
+    if (!currentOrganization) {
+      alert("No organization selected. Please complete setup first.");
+      return;
+    }
+
     setIsLoading(true);
     try {
       const res = await fetch("/api/stripe/checkout", {
@@ -35,7 +42,7 @@ export default function PricingPage() {
           plan,
           email: user.email,
           name: user.user_metadata?.name || user.email,
-          orgId: user.user_metadata?.organizationId || "default-org",
+          orgId: currentOrganization.org_id,
         }),
       });
 

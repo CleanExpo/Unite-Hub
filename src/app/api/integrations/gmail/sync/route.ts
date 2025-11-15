@@ -7,7 +7,7 @@ import { db } from "@/lib/db";
 export async function POST(req: NextRequest) {
   try {
     // Authentication check
-    const supabase = getSupabaseServer();
+    const supabase = await getSupabaseServer();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
 
     if (authError || !user) {

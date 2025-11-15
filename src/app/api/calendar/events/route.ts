@@ -18,11 +18,13 @@ export async function GET(request: NextRequest) {
 
     const calendarService = await getCalendarService(workspaceId);
 
+    // Return empty array if no integration exists (graceful degradation)
     if (!calendarService) {
-      return NextResponse.json(
-        { error: "Calendar integration not found. Please connect your Google Calendar." },
-        { status: 404 }
-      );
+      return NextResponse.json({
+        events: [],
+        count: 0,
+        message: "Calendar integration not connected",
+      });
     }
 
     const defaultTimeMin = timeMin || new Date().toISOString();
@@ -39,10 +41,13 @@ export async function GET(request: NextRequest) {
     });
   } catch (error: any) {
     console.error("Error fetching calendar events:", error);
-    return NextResponse.json(
-      { error: error.message || "Failed to fetch calendar events" },
-      { status: 500 }
-    );
+
+    // Return empty array on error instead of 500 (graceful degradation)
+    return NextResponse.json({
+      events: [],
+      count: 0,
+      error: error.message || "Failed to fetch calendar events",
+    });
   }
 }
 
@@ -62,8 +67,8 @@ export async function POST(request: NextRequest) {
 
     if (!calendarService) {
       return NextResponse.json(
-        { error: "Calendar integration not found" },
-        { status: 404 }
+        { error: "Calendar integration not connected. Please connect your Google account first." },
+        { status: 403 }
       );
     }
 

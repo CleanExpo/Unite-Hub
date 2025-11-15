@@ -12,7 +12,7 @@ import { db } from '@/lib/db';
  */
 export async function GET(req: NextRequest) {
   try {
-    const supabase = getSupabaseServer();
+    const supabase = await getSupabaseServer();
 
     // Get authenticated user
     const {

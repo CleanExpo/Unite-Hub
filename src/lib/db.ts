@@ -6,7 +6,7 @@ export const db = {
   getSupabaseServer, // Export server client getter
   organizations: {
     create: async (data: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { data: org, error } = await supabaseServer
         .from("organizations")
         .insert([data])
@@ -25,7 +25,7 @@ export const db = {
       return data;
     },
     update: async (id: string, data: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { data: org, error } = await supabaseServer
         .from("organizations")
         .update(data)
@@ -57,7 +57,7 @@ export const db = {
   // Workspaces
   workspaces: {
     create: async (data: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { data: workspace, error } = await supabaseServer
         .from("workspaces")
         .insert([data])
@@ -88,7 +88,7 @@ export const db = {
   // Contacts
   contacts: {
     create: async (data: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { data: contact, error } = await supabaseServer
         .from("contacts")
         .insert([data])
@@ -98,7 +98,7 @@ export const db = {
       return contact;
     },
     update: async (id: string, data: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { data: contact, error } = await supabaseServer
         .from("contacts")
         .update(data)
@@ -122,7 +122,7 @@ export const db = {
       }
 
       // Create new contact with defaults
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { data: contact, error } = await supabaseServer
         .from("contacts")
         .insert([{
@@ -156,7 +156,7 @@ export const db = {
       return data;
     },
     updateScore: async (id: string, score: number) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { data, error } = await supabaseServer
         .from("contacts")
         .update({ ai_score: score, updated_at: new Date() })
@@ -167,7 +167,7 @@ export const db = {
       return data;
     },
     updateIntelligence: async (id: string, intelligence: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { data, error } = await supabaseServer
         .from("contacts")
         .update({
@@ -211,7 +211,7 @@ export const db = {
   // Emails
   emails: {
     create: async (data: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { data: email, error } = await supabaseServer
         .from("emails")
         .insert([data])
@@ -258,7 +258,7 @@ export const db = {
       return data;
     },
     markProcessed: async (id: string) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { error } = await supabaseServer
         .from("emails")
         .update({ is_processed: true, updated_at: new Date() })
@@ -266,7 +266,7 @@ export const db = {
       if (error) throw error;
     },
     updateSentiment: async (id: string, sentiment: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { error } = await supabaseServer
         .from("emails")
         .update(sentiment)
@@ -278,7 +278,7 @@ export const db = {
   // Generated Content
   content: {
     create: async (data: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { data: content, error } = await supabaseServer
         .from("generated_content")
         .insert([data])
@@ -306,7 +306,7 @@ export const db = {
       return data || [];
     },
     approve: async (id: string) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { error } = await supabaseServer
         .from("generated_content")
         .update({ status: "approved", updated_at: new Date() })
@@ -323,7 +323,7 @@ export const db = {
       return data;
     },
     updateStatus: async (id: string, status: string) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { error } = await supabaseServer
         .from("generated_content")
         .update({ status, updated_at: new Date() })
@@ -335,7 +335,7 @@ export const db = {
   // Email Variants (A/B Testing)
   emailVariants: {
     create: async (data: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { data: variant, error } = await supabaseServer
         .from("email_variants")
         .insert([data])
@@ -357,7 +357,7 @@ export const db = {
   // Campaigns
   campaigns: {
     create: async (data: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { data: campaign, error } = await supabaseServer
         .from("campaigns")
         .insert([data])
@@ -380,7 +380,7 @@ export const db = {
   // Contact Interactions
   interactions: {
     create: async (data: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { error } = await supabaseServer
         .from("contact_interactions")
         .insert([data]);
@@ -400,7 +400,7 @@ export const db = {
   // Audit Logs
   auditLogs: {
     create: async (data: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { error } = await supabaseServer
         .from("audit_logs")
         .insert([data]);
@@ -432,7 +432,7 @@ export const db = {
   // Email Integrations (Gmail, Outlook, etc.)
   emailIntegrations: {
     create: async (data: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { data: integration, error } = await supabaseServer
         .from("email_integrations")
         .insert([data])
@@ -469,7 +469,7 @@ export const db = {
       return data || [];
     },
     update: async (id: string, data: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { error } = await supabaseServer
         .from("email_integrations")
         .update(data)
@@ -481,7 +481,7 @@ export const db = {
   // Sent Emails (Email Tracking)
   sentEmails: {
     create: async (data: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { data: email, error } = await supabaseServer
         .from("sent_emails")
         .insert([data])
@@ -500,7 +500,7 @@ export const db = {
       return data;
     },
     recordOpen: async (sentEmailId: string, metadata: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       await supabaseServer
         .from("email_opens")
         .insert([{ sent_email_id: sentEmailId, ...metadata }]);
@@ -516,7 +516,7 @@ export const db = {
         .eq("id", sentEmailId);
     },
     recordClick: async (sentEmailId: string, linkUrl: string, metadata: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       await supabaseServer
         .from("email_clicks")
         .insert([
@@ -542,7 +542,7 @@ export const db = {
   // Drip Campaigns
   dripCampaigns: {
     create: async (data: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { data: campaign, error } = await supabaseServer
         .from("drip_campaigns")
         .insert([data])
@@ -573,7 +573,7 @@ export const db = {
     },
 
     update: async (id: string, data: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { error } = await supabaseServer
         .from("drip_campaigns")
         .update(data)
@@ -582,7 +582,7 @@ export const db = {
     },
 
     delete: async (id: string) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { error } = await supabaseServer
         .from("drip_campaigns")
         .delete()
@@ -594,7 +594,7 @@ export const db = {
   // Campaign Steps
   campaignSteps: {
     create: async (data: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { data: step, error } = await supabaseServer
         .from("campaign_steps")
         .insert([data])
@@ -615,7 +615,7 @@ export const db = {
     },
 
     update: async (id: string, data: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { error } = await supabaseServer
         .from("campaign_steps")
         .update(data)
@@ -624,7 +624,7 @@ export const db = {
     },
 
     delete: async (id: string) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { error } = await supabaseServer
         .from("campaign_steps")
         .delete()
@@ -636,7 +636,7 @@ export const db = {
   // Campaign Enrollments
   campaignEnrollments: {
     create: async (data: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { data: enrollment, error } = await supabaseServer
         .from("campaign_enrollments")
         .insert([data])
@@ -667,7 +667,7 @@ export const db = {
     },
 
     update: async (id: string, data: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { error } = await supabaseServer
         .from("campaign_enrollments")
         .update(data)
@@ -679,7 +679,7 @@ export const db = {
   // Client Emails (Multiple emails per contact)
   clientEmails: {
     create: async (data: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { data: email, error } = await supabaseServer
         .from("client_emails")
         .insert([data])
@@ -739,7 +739,7 @@ export const db = {
     },
 
     setPrimary: async (id: string, contactId: string) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       // First, unset all primary emails for this contact
       await supabaseServer
         .from("client_emails")
@@ -758,7 +758,7 @@ export const db = {
     },
 
     update: async (id: string, data: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { data: email, error } = await supabaseServer
         .from("client_emails")
         .update(data)
@@ -770,7 +770,7 @@ export const db = {
     },
 
     delete: async (id: string) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       // Soft delete - set is_active to false
       const { error } = await supabaseServer
         .from("client_emails")
@@ -786,7 +786,7 @@ export const db = {
     },
 
     recordContact: async (id: string) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { error } = await supabaseServer
         .from("client_emails")
         .update({ last_contacted: new Date() })
@@ -795,7 +795,7 @@ export const db = {
     },
 
     recordBounce: async (id: string) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const email = await db.clientEmails.getById(id);
       const newBounceCount = (email.bounce_count || 0) + 1;
 
@@ -810,7 +810,7 @@ export const db = {
     },
 
     verify: async (id: string) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { error } = await supabaseServer
         .from("client_emails")
         .update({ is_verified: true, verified_at: new Date() })
@@ -819,7 +819,7 @@ export const db = {
     },
 
     updateCount: async (contactId: string) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const emails = await db.clientEmails.getByContact(contactId);
       const { error } = await supabaseServer
         .from("contacts")
@@ -832,7 +832,7 @@ export const db = {
   // WhatsApp Messages
   whatsappMessages: {
     create: async (data: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { data: message, error } = await supabaseServer
         .from("whatsapp_messages")
         .insert([data])
@@ -876,7 +876,7 @@ export const db = {
     },
 
     updateStatus: async (id: string, status: string, metadata?: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const updateData: any = { status };
 
       if (status === 'delivered') {
@@ -912,7 +912,7 @@ export const db = {
   // WhatsApp Conversations
   whatsappConversations: {
     create: async (data: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { data: conversation, error } = await supabaseServer
         .from("whatsapp_conversations")
         .insert([data])
@@ -959,7 +959,7 @@ export const db = {
     },
 
     updateLastMessage: async (phoneNumber: string, workspaceId: string, direction: string) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { error } = await supabaseServer
         .from("whatsapp_conversations")
         .update({
@@ -973,7 +973,7 @@ export const db = {
     },
 
     markAsRead: async (id: string) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { error } = await supabaseServer
         .from("whatsapp_conversations")
         .update({ unread_count: 0 })
@@ -982,7 +982,7 @@ export const db = {
     },
 
     archive: async (id: string) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { error } = await supabaseServer
         .from("whatsapp_conversations")
         .update({ status: 'archived', archived_at: new Date() })
@@ -991,7 +991,7 @@ export const db = {
     },
 
     assignTo: async (id: string, userId: string) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { error } = await supabaseServer
         .from("whatsapp_conversations")
         .update({ assigned_to: userId })
@@ -1003,7 +1003,7 @@ export const db = {
   // WhatsApp Templates
   whatsappTemplates: {
     create: async (data: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { data: template, error } = await supabaseServer
         .from("whatsapp_templates")
         .insert([data])
@@ -1039,7 +1039,7 @@ export const db = {
     },
 
     updateStatus: async (id: string, status: string) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { error } = await supabaseServer
         .from("whatsapp_templates")
         .update({ status })
@@ -1048,7 +1048,7 @@ export const db = {
     },
 
     recordUse: async (id: string) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const template = await db.whatsappTemplates.getById(id);
       const { error } = await supabaseServer
         .from("whatsapp_templates")
@@ -1064,7 +1064,7 @@ export const db = {
   // WhatsApp Webhooks
   whatsappWebhooks: {
     create: async (data: any) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const { data: webhook, error } = await supabaseServer
         .from("whatsapp_webhooks")
         .insert([data])
@@ -1075,7 +1075,7 @@ export const db = {
     },
 
     markProcessed: async (id: string, error?: string) => {
-      const supabaseServer = getSupabaseServer();
+      const supabaseServer = await getSupabaseServer();
       const updateData: any = {
         processed: true,
         processed_at: new Date()

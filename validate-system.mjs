@@ -29,7 +29,7 @@ const tests = {
         plan: 'starter',
         email: 'test@test.com',
         name: 'Test User',
-        orgId: 'default-org',
+        orgId: '00000000-0000-0000-0000-000000000000', // Test UUID
       },
       expect: (data) => !!data.sessionId,
     },

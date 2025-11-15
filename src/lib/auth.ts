@@ -1,5 +1,6 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import { getSupabaseServer } from "./supabase";
 // import EmailProvider from "next-auth/providers/email"; // Requires database adapter
 
 const providers = [];
@@ -55,9 +56,20 @@ export const authOptions: NextAuthOptions = {
 const handler = NextAuth(authOptions);
 export default handler;
 
-// Export auth function for API routes (NextAuth v4 compatible)
+// Export auth function for API routes (Supabase auth)
 export async function auth() {
-  // This is a placeholder - in production, use getServerSession from next-auth
-  // For now, return null to allow unauthenticated access in development
-  return null;
+  const supabase = await getSupabaseServer();
+  const { data: { user }, error } = await supabase.auth.getUser();
+
+  if (error || !user) {
+    return null;
+  }
+
+  return {
+    user: {
+      id: user.id,
+      email: user.email,
+      name: user.user_metadata?.full_name || user.email,
+    }
+  };
 }

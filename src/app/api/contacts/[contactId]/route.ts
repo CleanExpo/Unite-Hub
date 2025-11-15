@@ -9,7 +9,7 @@ export async function GET(
 ) {
   try {
     const { contactId } = await params;
-    const supabaseServer = getSupabaseServer();
+    const supabaseServer = await getSupabaseServer();
 
     // Get the authenticated user
     const { data: { user }, error: authError } = await supabaseServer.auth.getUser();

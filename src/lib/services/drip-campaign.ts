@@ -400,9 +400,19 @@ async function getWorkspaceIntegration(campaignId: string) {
     .eq("id", campaignId)
     .single();
 
-  if (campaign.error) return null;
+  if (campaign.error || !campaign.data?.workspace_id) return null;
 
-  const integrations = await db.emailIntegrations.getByOrg("default-org");
+  // Get workspace to find org_id
+  const workspace = await supabase
+    .from("workspaces")
+    .select("org_id")
+    .eq("id", campaign.data.workspace_id)
+    .single();
+
+  if (workspace.error || !workspace.data?.org_id) return null;
+
+  // Get integrations for this org
+  const integrations = await db.emailIntegrations.getByOrg(workspace.data.org_id);
   return integrations[0] || null; // Return first integration
 }
 

@@ -188,10 +188,20 @@ See [docs/OUTLOOK_SETUP_GUIDE.md](docs/OUTLOOK_SETUP_GUIDE.md) for detailed setu
 
 ### 6. Run Database Migrations
 
+**Quick Method (Recommended):**
+1. Go to Supabase Dashboard: https://supabase.com/dashboard
+2. Open SQL Editor
+3. Run `scripts/apply-onboarding-migration.sql`
+
+See **[MIGRATION_QUICKSTART.md](MIGRATION_QUICKSTART.md)** for step-by-step instructions.
+
+**CLI Method (Advanced):**
 ```bash
 # Apply schema to Supabase
 npx supabase db push
 ```
+
+**Troubleshooting:** If you see "table 'user_onboarding' not found" errors, see [docs/APPLY_MIGRATIONS.md](docs/APPLY_MIGRATIONS.md)
 
 ### 7. Start Development Server
 

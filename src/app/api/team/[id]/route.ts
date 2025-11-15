@@ -10,7 +10,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   try {
     const { id } = params;
 
-    const supabase = getSupabaseServer();
+    const supabase = await getSupabaseServer();
     const { data: teamMember, error } = await supabase
       .from("team_members")
       .select("*")
@@ -52,7 +52,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     if (body.skills !== undefined) updates.skills = body.skills;
     if (body.is_active !== undefined) updates.is_active = body.is_active;
 
-    const supabase = getSupabaseServer();
+    const supabase = await getSupabaseServer();
     const { data: teamMember, error } = await supabase
       .from("team_members")
       .update(updates)
@@ -80,7 +80,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
   try {
     const { id } = params;
 
-    const supabase = getSupabaseServer();
+    const supabase = await getSupabaseServer();
     const { data: teamMember, error } = await supabase
       .from("team_members")
       .update({ is_active: false })

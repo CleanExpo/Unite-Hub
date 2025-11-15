@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Organization ID is required" }, { status: 400 });
     }
 
-    const supabase = getSupabaseServer();
+    const supabase = await getSupabaseServer();
     let query = supabase
       .from("projects")
       .select(`
@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
       budget_currency: "USD",
     };
 
-    const supabase = getSupabaseServer();
+    const supabase = await getSupabaseServer();
     const { data: project, error } = await supabase
       .from("projects")
       .insert(newProject)

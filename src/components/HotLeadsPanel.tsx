@@ -6,16 +6,23 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Loader2, Zap, TrendingUp, Target, AlertCircle } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export function HotLeadsPanel({ workspaceId }: { workspaceId: string }) {
+  const { session } = useAuth();
   const [hotLeads, setHotLeads] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Only load hot leads if we have a session and valid workspaceId
+    if (!session || !workspaceId) {
+      console.log("Skipping hot leads load - no session or workspaceId");
+      return;
+    }
     loadHotLeads();
-  }, [workspaceId]);
+  }, [workspaceId, session]);
 
   const loadHotLeads = async () => {
     setLoading(true);

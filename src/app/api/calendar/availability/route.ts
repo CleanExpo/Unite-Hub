@@ -19,10 +19,11 @@ export async function GET(request: NextRequest) {
     const calendarService = await getCalendarService(workspaceId);
 
     if (!calendarService) {
-      return NextResponse.json(
-        { error: "Calendar integration not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({
+        availableSlots: [],
+        count: 0,
+        message: "Calendar integration not connected",
+      });
     }
 
     const start = startDate ? new Date(startDate) : new Date();

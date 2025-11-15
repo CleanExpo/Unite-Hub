@@ -25,8 +25,8 @@ export async function POST(request: NextRequest) {
 
     if (!calendarService) {
       return NextResponse.json(
-        { error: "Calendar integration not found" },
-        { status: 404 }
+        { error: "Calendar integration not connected. Please connect your Google account first." },
+        { status: 403 }
       );
     }
 

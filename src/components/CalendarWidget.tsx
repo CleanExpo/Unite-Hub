@@ -61,12 +61,14 @@ export default function CalendarWidget({ workspaceId }: CalendarWidgetProps) {
         `/api/calendar/events?workspaceId=${workspaceId}&timeMin=${new Date().toISOString()}`
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch events");
-      }
-
       const data = await response.json();
-      setEvents(data.events.slice(0, 5)); // Show next 5 events
+
+      // Handle both success and graceful failure responses
+      if (data.events && Array.isArray(data.events)) {
+        setEvents(data.events.slice(0, 5)); // Show next 5 events
+      } else {
+        setEvents([]);
+      }
     } catch (error) {
       console.error("Error fetching calendar events:", error);
       setEvents([]);

@@ -10,7 +10,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   try {
     const { id } = params;
 
-    const supabase = getSupabaseServer();
+    const supabase = await getSupabaseServer();
     const { data: project, error } = await supabase
       .from("projects")
       .select(`
@@ -67,7 +67,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
       updates.progress = 100;
     }
 
-    const supabase = getSupabaseServer();
+    const supabase = await getSupabaseServer();
     const { data: project, error } = await supabase
       .from("projects")
       .update(updates)
@@ -111,7 +111,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
   try {
     const { id } = params;
 
-    const supabase = getSupabaseServer();
+    const supabase = await getSupabaseServer();
     const { error } = await supabase.from("projects").delete().eq("id", id);
 
     if (error) {

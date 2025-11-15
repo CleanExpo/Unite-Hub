@@ -9,7 +9,19 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const integrations = await db.emailIntegrations.getByOrg("default-org");
+    // Get user's organization
+    const { data: userOrg, error: orgError } = await db.supabase
+      .from("user_organizations")
+      .select("org_id")
+      .eq("user_id", session.user.id)
+      .eq("is_active", true)
+      .single();
+
+    if (orgError || !userOrg) {
+      return NextResponse.json({ error: "No active organization found" }, { status: 403 });
+    }
+
+    const integrations = await db.emailIntegrations.getByOrg(userOrg.org_id);
 
     return NextResponse.json({
       success: true,

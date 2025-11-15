@@ -3,7 +3,7 @@ import { getSupabaseServer } from "@/lib/supabase";
 
 export async function GET(request: Request) {
   try {
-    const supabase = getSupabaseServer();
+    const supabase = await getSupabaseServer();
 
     // Get authenticated user from session
     const authHeader = request.headers.get("authorization");

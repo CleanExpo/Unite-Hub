@@ -40,7 +40,7 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    const supabase = getSupabaseServer();
+    const supabase = await getSupabaseServer();
 
     // Fetch contact to verify ownership
     const { data: contact, error: fetchError } = await supabase

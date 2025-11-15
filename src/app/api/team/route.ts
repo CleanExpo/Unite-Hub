@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Organization ID is required" }, { status: 400 });
     }
 
-    const supabase = getSupabaseServer();
+    const supabase = await getSupabaseServer();
     const { data: teamMembers, error } = await supabase
       .from("team_members")
       .select("*")
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
       is_active: true,
     };
 
-    const supabase = getSupabaseServer();
+    const supabase = await getSupabaseServer();
     const { data: teamMember, error } = await supabase
       .from("team_members")
       .insert(newMember)

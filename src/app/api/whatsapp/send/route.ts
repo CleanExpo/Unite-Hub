@@ -10,7 +10,7 @@ import { whatsappService } from '@/lib/services/whatsapp';
 
 export async function POST(req: NextRequest) {
   try {
-    const supabase = getSupabaseServer();
+    const supabase = await getSupabaseServer();
 
     // Get authenticated user
     const {

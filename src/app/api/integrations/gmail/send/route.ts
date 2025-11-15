@@ -6,7 +6,7 @@ import { getSupabaseServer } from "@/lib/supabase";
 export async function POST(request: NextRequest) {
   try {
     // Authentication check
-    const supabase = getSupabaseServer();
+    const supabase = await getSupabaseServer();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
 
     if (authError || !user) {

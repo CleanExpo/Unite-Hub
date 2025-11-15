@@ -23,9 +23,10 @@ export async function POST(request: NextRequest) {
     const { data: { user }, error: userError } = await supabase.auth.getUser()
 
     if (userError || !user) {
+      // Not authenticated - this is OK, just return early (don't error)
       return NextResponse.json(
-        { error: 'Not authenticated' },
-        { status: 401 }
+        { message: 'Not authenticated, skipping initialization' },
+        { status: 200 }
       )
     }
 

@@ -105,7 +105,7 @@ const TEMPLATES = {
 
 export async function POST(request: Request) {
   try {
-    const supabase = getSupabaseServer();
+    const supabase = await getSupabaseServer();
 
     // Get authenticated user from session
     const authHeader = request.headers.get("authorization");

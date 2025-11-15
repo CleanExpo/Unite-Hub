@@ -9,7 +9,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   try {
     const { id } = params;
 
-    const supabase = getSupabaseServer();
+    const supabase = await getSupabaseServer();
     const { data: approval, error } = await supabase
       .from("approvals")
       .select("*")
@@ -36,7 +36,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
   try {
     const { id } = params;
 
-    const supabase = getSupabaseServer();
+    const supabase = await getSupabaseServer();
     const { error } = await supabase.from("approvals").delete().eq("id", id);
 
     if (error) {

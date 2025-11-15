@@ -11,7 +11,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     const body = await request.json();
     const { reviewedById } = body;
 
-    const supabase = getSupabaseServer();
+    const supabase = await getSupabaseServer();
     const { data: approval, error } = await supabase
       .from("approvals")
       .update({
