@@ -26,19 +26,24 @@
 
 ## ⚠️ **CRITICAL ISSUES** (Discovered from logs and code audit)
 
-### 4. Invalid UUID Error - "default-org" String
+### 4. Invalid UUID Error - "default-org" String ✅ CODE FIXED / ⚠️ DATA CLEANUP NEEDED
 **Affected:** Multiple API endpoints
 **Error:** `invalid input syntax for type uuid: "default-org"`
-**Source:** `src/app/dashboard/layout.tsx:46` sets orgId to DEMO_ORG_ID constant
+**Source:** Bad data in database - organization with `id = "default-org"` instead of UUID
 **Impact:** Calendar events API and other workspace-scoped endpoints fail
 **Frequency:** Recurring in logs (10+ occurrences)
-**Fix Needed:** Replace demo mode string ID with actual UUID
+**Code Fix:** ✅ Removed demo mode from `src/app/dashboard/layout.tsx` (Commit d6a71f5)
+**Data Fix Needed:** ⚠️ Database cleanup required - see `DATABASE_CLEANUP_INSTRUCTIONS.md`
 
-### 5. Contact Intelligence API 401 Errors
+### 5. Contact Intelligence API 401 Errors ✅ FIXED
 **Endpoint:** `/api/agents/contact-intelligence`
 **Frequency:** Multiple 401 errors in logs
-**Likely Cause:** Same authentication issue as profile update (fixed pattern can be applied)
-**Status:** ⚠️ NEEDS FIX
+**Root Cause:** Same authentication issue as profile update - couldn't validate implicit OAuth tokens
+**Fix Applied:** ✅ Authorization header pattern added (Commit d6a71f5)
+- API validates Bearer tokens from Authorization header
+- Falls back to server cookies for PKCE flow
+- HotLeadsPanel component sends session access tokens
+**Status:** ✅ FIXED
 
 ### 6. Missing user_onboarding Table
 **Error:** `PGRST205: Could not find the table 'public.user_onboarding' in the schema cache`
@@ -87,10 +92,23 @@
 
 ## 🚨 **ACTION ITEMS** (Priority Order)
 
-1. **HIGH:** Apply profile fields migration to Supabase database
-2. **HIGH:** Fix "default-org" UUID issue in demo mode
-3. **MEDIUM:** Fix contact intelligence API 401 errors
-4. **MEDIUM:** Test and verify avatar upload/delete endpoints
+### ✅ Completed:
+1. ~~Apply profile fields migration to Supabase database~~ - ✅ DONE
+2. ~~Fix "default-org" UUID issue in demo mode~~ - ✅ CODE FIXED (Commit d6a71f5)
+3. ~~Fix contact intelligence API 401 errors~~ - ✅ FIXED (Commit d6a71f5)
+
+### 🔴 High Priority:
+1. **CRITICAL:** Clean up database - remove/fix invalid organization UUIDs
+   - See `DATABASE_CLEANUP_INSTRUCTIONS.md` for SQL queries
+   - User must run SQL in Supabase dashboard
+   - Clear browser localStorage after cleanup
+2. **HIGH:** Wait for Supabase schema cache refresh (profile save)
+   - Schema migration applied but cache not refreshed
+   - Wait 5 minutes or run dummy query to force refresh
+
+### 🟡 Medium Priority:
+3. **MEDIUM:** Test and verify avatar upload/delete endpoints
+4. **MEDIUM:** Test all fixes end-to-end after database cleanup
 5. **LOW:** Consider adding user_onboarding table (if onboarding feature is needed)
 
 ---
