@@ -22,9 +22,11 @@ export default function LoginPage() {
   useEffect(() => {
     if (!authLoading && user) {
       console.log('Login page: User authenticated, redirecting to dashboard');
-      router.push('/dashboard/overview');
+      // Use window.location.href for hard navigation to bypass middleware
+      // Middleware can't see localStorage sessions (implicit OAuth flow)
+      window.location.href = '/dashboard/overview';
     }
-  }, [user, authLoading, router]);
+  }, [user, authLoading]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

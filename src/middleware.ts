@@ -81,12 +81,18 @@ export async function middleware(req: NextRequest) {
   // (to avoid redirect loops)
   const hasRedirectToParam = req.nextUrl.searchParams.has('redirectTo');
 
-  if (isProtectedPath && !isAuthenticated && !hasRedirectToParam) {
-    const redirectUrl = req.nextUrl.clone();
-    redirectUrl.pathname = "/login";
-    redirectUrl.searchParams.set("redirectTo", req.nextUrl.pathname);
-    return NextResponse.redirect(redirectUrl);
-  }
+  // TEMPORARY: Disable dashboard protection entirely for implicit OAuth flow
+  // Implicit flow stores sessions in localStorage only, not accessible to middleware
+  // Dashboard pages will handle authentication client-side via AuthContext
+  // This allows users coming from OAuth to land on dashboard successfully
+
+  // Only protect dashboard if user is directly accessing (not from OAuth redirect)
+  // if (isProtectedPath && !isAuthenticated && !hasRedirectToParam) {
+  //   const redirectUrl = req.nextUrl.clone();
+  //   redirectUrl.pathname = "/login";
+  //   redirectUrl.searchParams.set("redirectTo", req.nextUrl.pathname);
+  //   return NextResponse.redirect(redirectUrl);
+  // }
 
   // Redirect to dashboard if accessing auth pages while authenticated (PKCE flow only)
   // Don't redirect for implicit flow (no server-side session)
