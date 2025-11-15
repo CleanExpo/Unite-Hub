@@ -20,12 +20,23 @@ export default function OverviewPage() {
   useEffect(() => {
     async function fetchStats() {
       try {
+        // Check if workspace is available
+        if (!workspaceId) {
+          console.log("No workspace selected");
+          setLoading(false);
+          return;
+        }
+
         // Fetch contacts count and stats
         const { data: contacts, error: contactsError } = await supabase
           .from("contacts")
-          .select("ai_score, status");
+          .select("ai_score, status")
+          .eq("workspace_id", workspaceId);  // ✅ Added workspace filter
 
-        if (contactsError) throw contactsError;
+        if (contactsError) {
+          console.error("Error fetching contacts:", contactsError);
+          throw contactsError;
+        }
 
         const totalContacts = contacts?.length || 0;
         const hotLeads = contacts?.filter((c) => c.ai_score >= 80).length || 0;
@@ -39,9 +50,13 @@ export default function OverviewPage() {
         // Fetch campaigns count
         const { data: campaigns, error: campaignsError } = await supabase
           .from("campaigns")
-          .select("id");
+          .select("id")
+          .eq("workspace_id", workspaceId);  // ✅ Added workspace filter
 
-        if (campaignsError) throw campaignsError;
+        if (campaignsError) {
+          console.error("Error fetching campaigns:", campaignsError);
+          throw campaignsError;
+        }
 
         const totalCampaigns = campaigns?.length || 0;
 
@@ -65,6 +80,17 @@ export default function OverviewPage() {
     return (
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
         <div className="text-white">Loading stats...</div>
+      </div>
+    );
+  }
+
+  if (!workspaceId) {
+    return (
+      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+        <div className="bg-slate-800 border border-slate-700 rounded-lg p-8 text-center">
+          <p className="text-slate-400 mb-4">No workspace selected</p>
+          <p className="text-sm text-slate-500">Please create or select a workspace to continue.</p>
+        </div>
       </div>
     );
   }

@@ -107,9 +107,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setOrganizations(orgs);
 
       // Set current organization (first one or from localStorage)
+      if (orgs.length === 0) {
+        console.log("No organizations found for user");
+        setCurrentOrganization(null);
+        return;
+      }
+
       const savedOrgId = localStorage.getItem("currentOrganizationId");
       const savedOrg = orgs.find((org) => org.org_id === savedOrgId);
-      setCurrentOrganization(savedOrg || orgs[0] || null);
+      setCurrentOrganization(savedOrg || orgs[0]);  // ✅ Now guaranteed to be an org (not undefined)
     } catch (error) {
       console.error("Error fetching organizations:", error);
     }

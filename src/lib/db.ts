@@ -55,6 +55,7 @@ export const db = {
   // Workspaces
   workspaces: {
     create: async (data: any) => {
+      const supabaseServer = getSupabaseServer();
       const { data: workspace, error } = await supabaseServer
         .from("workspaces")
         .insert([data])
@@ -85,6 +86,7 @@ export const db = {
   // Contacts
   contacts: {
     create: async (data: any) => {
+      const supabaseServer = getSupabaseServer();
       const { data: contact, error } = await supabaseServer
         .from("contacts")
         .insert([data])
@@ -94,6 +96,7 @@ export const db = {
       return contact;
     },
     update: async (id: string, data: any) => {
+      const supabaseServer = getSupabaseServer();
       const { data: contact, error } = await supabaseServer
         .from("contacts")
         .update(data)
@@ -117,6 +120,7 @@ export const db = {
       }
 
       // Create new contact with defaults
+      const supabaseServer = getSupabaseServer();
       const { data: contact, error } = await supabaseServer
         .from("contacts")
         .insert([{
@@ -150,6 +154,7 @@ export const db = {
       return data;
     },
     updateScore: async (id: string, score: number) => {
+      const supabaseServer = getSupabaseServer();
       const { data, error } = await supabaseServer
         .from("contacts")
         .update({ ai_score: score, updated_at: new Date() })
@@ -160,6 +165,7 @@ export const db = {
       return data;
     },
     updateIntelligence: async (id: string, intelligence: any) => {
+      const supabaseServer = getSupabaseServer();
       const { data, error } = await supabaseServer
         .from("contacts")
         .update({
@@ -203,6 +209,7 @@ export const db = {
   // Emails
   emails: {
     create: async (data: any) => {
+      const supabaseServer = getSupabaseServer();
       const { data: email, error } = await supabaseServer
         .from("emails")
         .insert([data])
@@ -230,6 +237,7 @@ export const db = {
       return data;
     },
     markProcessed: async (id: string) => {
+      const supabaseServer = getSupabaseServer();
       const { error } = await supabaseServer
         .from("emails")
         .update({ is_processed: true, updated_at: new Date() })
@@ -237,6 +245,7 @@ export const db = {
       if (error) throw error;
     },
     updateSentiment: async (id: string, sentiment: any) => {
+      const supabaseServer = getSupabaseServer();
       const { error } = await supabaseServer
         .from("emails")
         .update(sentiment)
@@ -248,6 +257,7 @@ export const db = {
   // Generated Content
   content: {
     create: async (data: any) => {
+      const supabaseServer = getSupabaseServer();
       const { data: content, error } = await supabaseServer
         .from("generated_content")
         .insert([data])
@@ -275,6 +285,7 @@ export const db = {
       return data || [];
     },
     approve: async (id: string) => {
+      const supabaseServer = getSupabaseServer();
       const { error } = await supabaseServer
         .from("generated_content")
         .update({ status: "approved", updated_at: new Date() })
@@ -291,6 +302,7 @@ export const db = {
       return data;
     },
     updateStatus: async (id: string, status: string) => {
+      const supabaseServer = getSupabaseServer();
       const { error } = await supabaseServer
         .from("generated_content")
         .update({ status, updated_at: new Date() })
@@ -302,6 +314,7 @@ export const db = {
   // Email Variants (A/B Testing)
   emailVariants: {
     create: async (data: any) => {
+      const supabaseServer = getSupabaseServer();
       const { data: variant, error } = await supabaseServer
         .from("email_variants")
         .insert([data])
@@ -323,6 +336,7 @@ export const db = {
   // Campaigns
   campaigns: {
     create: async (data: any) => {
+      const supabaseServer = getSupabaseServer();
       const { data: campaign, error } = await supabaseServer
         .from("campaigns")
         .insert([data])
