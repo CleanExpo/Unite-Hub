@@ -142,7 +142,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { data, error} = await supabaseBrowser.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${window.location.origin}/login`,
       },
     });
 
@@ -199,6 +199,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (session?.user) {
         fetchProfile(session.user.id);
         fetchOrganizations(session.user.id);
+
+        // If we have a session and we're on login page, redirect to dashboard
+        if (window.location.pathname === '/login') {
+          window.location.href = '/dashboard/overview';
+        }
       }
 
       setLoading(false);
@@ -207,13 +212,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Listen for auth changes
     const {
       data: { subscription },
-    } = supabaseBrowser.auth.onAuthStateChange(async (_event, session) => {
+    } = supabaseBrowser.auth.onAuthStateChange(async (event, session) => {
+      console.log('Auth state change:', event, session?.user?.email);
+
       setSession(session);
       setUser(session?.user ?? null);
 
       if (session?.user) {
         await fetchProfile(session.user.id);
         await fetchOrganizations(session.user.id);
+
+        // If user just signed in and we're on login page, redirect to dashboard
+        if (event === 'SIGNED_IN' && window.location.pathname === '/login') {
+          window.location.href = '/dashboard/overview';
+        }
       } else {
         setProfile(null);
         setOrganizations([]);
