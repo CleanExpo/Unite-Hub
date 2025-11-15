@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronDown } from "lucide-react";
@@ -11,6 +11,7 @@ import ClientSelector from "@/components/client/ClientSelector";
 import { Id } from "@/convex/_generated/dataModel";
 import { useEffect, useState } from "react";
 import { DEMO_ORG_ID, enableDemoMode } from "@/lib/demo-data";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function DashboardLayout({
   children,
@@ -18,7 +19,18 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const { user, profile, signOut } = useAuth();
   const [orgId, setOrgId] = useState<Id<"organizations"> | null>(null);
+
+  // Generate initials from user's full name
+  const getInitials = (name: string | undefined) => {
+    if (!name) return "U";
+    const parts = name.split(" ");
+    if (parts.length >= 2) {
+      return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+    }
+    return name.substring(0, 2).toUpperCase();
+  };
 
   useEffect(() => {
     // Enable demo mode in development
@@ -98,9 +110,12 @@ export default function DashboardLayout({
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" className="gap-2 border-slate-700 bg-slate-800 hover:bg-slate-700 text-white">
                     <Avatar className="h-8 w-8">
-                      <AvatarFallback>DC</AvatarFallback>
+                      {profile?.avatar_url && (
+                        <AvatarImage src={profile.avatar_url} alt={profile.full_name} />
+                      )}
+                      <AvatarFallback>{getInitials(profile?.full_name)}</AvatarFallback>
                     </Avatar>
-                    Duncan
+                    {profile?.full_name || user?.email?.split('@')[0] || 'User'}
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="bg-slate-800 border-slate-700">
@@ -111,7 +126,15 @@ export default function DashboardLayout({
                   </DropdownMenuItem>
                   <DropdownMenuItem className="text-slate-300 hover:text-white">Profile</DropdownMenuItem>
                   <DropdownMenuItem className="text-slate-300 hover:text-white">Help</DropdownMenuItem>
-                  <DropdownMenuItem className="text-red-400">Logout</DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="text-red-400 cursor-pointer"
+                    onClick={async () => {
+                      await signOut();
+                      window.location.href = '/login';
+                    }}
+                  >
+                    Logout
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
