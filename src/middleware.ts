@@ -55,10 +55,11 @@ export async function middleware(req: NextRequest) {
     }
   );
 
-  // Get the session using Supabase SSR
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  // Use getClaims() instead of getSession() - this is the secure way per Supabase docs
+  // getClaims() validates the JWT locally without making API calls
+  const { data: claims } = await supabase.auth.getClaims();
+
+  const isAuthenticated = !!claims?.sub; // sub is the user ID from JWT
 
   // Protected routes that require authentication
   const protectedPaths = ["/dashboard"];
@@ -72,17 +73,20 @@ export async function middleware(req: NextRequest) {
     req.nextUrl.pathname.startsWith(path)
   );
 
-  // Redirect to login if accessing protected route without session
-  if (isProtectedPath && !session) {
+  // Redirect to login if accessing protected route without authentication
+  if (isProtectedPath && !isAuthenticated) {
     const redirectUrl = req.nextUrl.clone();
     redirectUrl.pathname = "/login";
     redirectUrl.searchParams.set("redirectTo", req.nextUrl.pathname);
     return NextResponse.redirect(redirectUrl);
   }
 
-  // Don't redirect auth pages server-side - let client-side AuthContext handle it
-  // This is necessary because implicit OAuth flow stores tokens in localStorage,
-  // which isn't available server-side on first render
+  // Redirect to dashboard if accessing auth pages while authenticated
+  if (isAuthPath && isAuthenticated) {
+    const redirectUrl = req.nextUrl.clone();
+    redirectUrl.pathname = "/dashboard/overview";
+    return NextResponse.redirect(redirectUrl);
+  }
 
   return response;
 }

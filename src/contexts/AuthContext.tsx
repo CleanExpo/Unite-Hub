@@ -142,7 +142,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { data, error} = await supabaseBrowser.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/login`,
+        redirectTo: `${window.location.origin}/auth/callback`,
       },
     });
 
@@ -197,12 +197,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(session?.user ?? null);
 
       if (session?.user) {
-        // Redirect FIRST before fetching data to prevent fetch errors from blocking redirect
-        if (window.location.pathname === '/login') {
-          window.location.href = '/dashboard/overview';
-          return; // Stop execution, let dashboard page handle data fetching
-        }
-
         fetchProfile(session.user.id);
         fetchOrganizations(session.user.id);
       }
@@ -220,12 +214,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(session?.user ?? null);
 
       if (session?.user) {
-        // Redirect FIRST before fetching data to prevent fetch errors from blocking redirect
-        if (event === 'SIGNED_IN' && window.location.pathname === '/login') {
-          window.location.href = '/dashboard/overview';
-          return; // Stop execution, let dashboard page handle data fetching
-        }
-
         await fetchProfile(session.user.id);
         await fetchOrganizations(session.user.id);
       } else {
