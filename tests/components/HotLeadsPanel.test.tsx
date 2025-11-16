@@ -8,14 +8,7 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { HotLeadsPanel } from '@/components/HotLeadsPanel';
 import { TEST_WORKSPACE } from '../helpers/auth';
 import { createMockContacts } from '../helpers/db';
-
-// Create a mock function that can be controlled
-const mockUseAuth = vi.fn();
-
-// Mock AuthContext with controllable return value
-vi.mock('@/contexts/AuthContext', () => ({
-  useAuth: () => mockUseAuth(),
-}));
+import { renderWithAuth, TestAuthProvider } from '../utils/test-providers';
 
 // Mock Supabase
 vi.mock('@/lib/supabase', () => ({
@@ -24,7 +17,7 @@ vi.mock('@/lib/supabase', () => ({
       getSession: vi.fn().mockResolvedValue({
         data: {
           session: {
-            access_token: 'test-token',
+            access_token: 'test-token-123',
           },
         },
       }),
@@ -45,18 +38,6 @@ describe('HotLeadsPanel Component', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    // Setup default auth mock
-    mockUseAuth.mockReturnValue({
-      session: {
-        access_token: 'test-token',
-        user: { id: 'test-user-123' },
-      },
-      user: { id: 'test-user-123', email: 'test@example.com' },
-      profile: { id: 'test-profile-123' },
-      currentOrganization: { id: 'test-org-789' },
-      loading: false,
-    });
-
     // Setup default fetch mock
     (global.fetch as any).mockResolvedValue({
       ok: true,
@@ -66,14 +47,14 @@ describe('HotLeadsPanel Component', () => {
   });
 
   it('should render loading state initially', () => {
-    render(<HotLeadsPanel workspaceId={TEST_WORKSPACE.id} />);
+    renderWithAuth(<HotLeadsPanel workspaceId={TEST_WORKSPACE.id} />);
 
     // Should render without crashing
     expect(document.body).toBeTruthy();
   });
 
-  it.skip('should load and display hot leads', async () => {
-    render(<HotLeadsPanel workspaceId={TEST_WORKSPACE.id} />);
+  it('should load and display hot leads', async () => {
+    renderWithAuth(<HotLeadsPanel workspaceId={TEST_WORKSPACE.id} />);
 
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
@@ -81,7 +62,7 @@ describe('HotLeadsPanel Component', () => {
         expect.objectContaining({
           method: 'POST',
           headers: expect.objectContaining({
-            'Authorization': 'Bearer test-token',
+            'Authorization': 'Bearer test-token-123',
           }),
           body: JSON.stringify({
             action: 'get_hot_leads',
@@ -92,8 +73,8 @@ describe('HotLeadsPanel Component', () => {
     });
   });
 
-  it.skip('should display contact names and scores', async () => {
-    render(<HotLeadsPanel workspaceId={TEST_WORKSPACE.id} />);
+  it('should display contact names and scores', async () => {
+    renderWithAuth(<HotLeadsPanel workspaceId={TEST_WORKSPACE.id} />);
 
     await waitFor(() => {
       mockHotLeads.forEach((lead) => {
@@ -106,13 +87,13 @@ describe('HotLeadsPanel Component', () => {
     });
   });
 
-  it.skip('should show error message on API failure', async () => {
+  it('should show error message on API failure', async () => {
     (global.fetch as any).mockResolvedValueOnce({
       ok: false,
       status: 401,
     });
 
-    render(<HotLeadsPanel workspaceId={TEST_WORKSPACE.id} />);
+    renderWithAuth(<HotLeadsPanel workspaceId={TEST_WORKSPACE.id} />);
 
     await waitFor(() => {
       // Should show error state
@@ -121,8 +102,8 @@ describe('HotLeadsPanel Component', () => {
     });
   });
 
-  it.skip('should handle refresh action', async () => {
-    render(<HotLeadsPanel workspaceId={TEST_WORKSPACE.id} />);
+  it('should handle refresh action', async () => {
+    renderWithAuth(<HotLeadsPanel workspaceId={TEST_WORKSPACE.id} />);
 
     // Wait for initial load
     await waitFor(() => {
@@ -164,43 +145,35 @@ describe('HotLeadsPanel Component', () => {
   });
 
   it('should not load without session', () => {
-    // Mock no session
-    vi.mock('@/contexts/AuthContext', () => ({
-      useAuth: () => ({
-        session: null,
-        user: null,
-        profile: null,
-        currentOrganization: null,
-        loading: false,
-      }),
-    }));
-
-    render(<HotLeadsPanel workspaceId={TEST_WORKSPACE.id} />);
+    // Render with null session to test the guard
+    renderWithAuth(<HotLeadsPanel workspaceId={TEST_WORKSPACE.id} />, {
+      authValue: { session: null }
+    });
 
     // Should not make API call
     expect(global.fetch).not.toHaveBeenCalled();
   });
 
   it('should not load without workspaceId', () => {
-    render(<HotLeadsPanel workspaceId="" />);
+    renderWithAuth(<HotLeadsPanel workspaceId="" />);
 
     // Should not make API call
     expect(global.fetch).not.toHaveBeenCalled();
   });
 
-  it.skip('should include Authorization header in API calls', async () => {
-    render(<HotLeadsPanel workspaceId={TEST_WORKSPACE.id} />);
+  it('should include Authorization header in API calls', async () => {
+    renderWithAuth(<HotLeadsPanel workspaceId={TEST_WORKSPACE.id} />);
 
     await waitFor(() => {
       const call = (global.fetch as any).mock.calls[0];
       const headers = call[1].headers;
 
-      expect(headers['Authorization']).toBe('Bearer test-token');
+      expect(headers['Authorization']).toBe('Bearer test-token-123');
     });
   });
 
   it('should display progress bars for AI scores', async () => {
-    render(<HotLeadsPanel workspaceId={TEST_WORKSPACE.id} />);
+    renderWithAuth(<HotLeadsPanel workspaceId={TEST_WORKSPACE.id} />);
 
     await waitFor(() => {
       // Look for progress elements (score visualizations)
@@ -211,7 +184,7 @@ describe('HotLeadsPanel Component', () => {
   });
 
   it('should show badge for hot status', async () => {
-    render(<HotLeadsPanel workspaceId={TEST_WORKSPACE.id} />);
+    renderWithAuth(<HotLeadsPanel workspaceId={TEST_WORKSPACE.id} />);
 
     await waitFor(() => {
       // Look for status badges
@@ -227,7 +200,7 @@ describe('HotLeadsPanel Component', () => {
       json: async () => ({ hotLeads: [] }),
     });
 
-    render(<HotLeadsPanel workspaceId={TEST_WORKSPACE.id} />);
+    renderWithAuth(<HotLeadsPanel workspaceId={TEST_WORKSPACE.id} />);
 
     await waitFor(() => {
       // Should show empty state message
@@ -237,8 +210,8 @@ describe('HotLeadsPanel Component', () => {
     });
   });
 
-  it.skip('should re-fetch when workspaceId changes', async () => {
-    const { rerender } = render(<HotLeadsPanel workspaceId={TEST_WORKSPACE.id} />);
+  it('should re-fetch when workspaceId changes', async () => {
+    const { rerender } = renderWithAuth(<HotLeadsPanel workspaceId={TEST_WORKSPACE.id} />);
 
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledTimes(1);
@@ -246,8 +219,12 @@ describe('HotLeadsPanel Component', () => {
 
     vi.clearAllMocks();
 
-    // Change workspaceId
-    rerender(<HotLeadsPanel workspaceId="different-workspace-id" />);
+    // Change workspaceId - need to re-wrap in provider
+    rerender(
+      <TestAuthProvider>
+        <HotLeadsPanel workspaceId="different-workspace-id" />
+      </TestAuthProvider>
+    );
 
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
