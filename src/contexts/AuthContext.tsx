@@ -68,10 +68,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Fetch user profile
+  // Fetch user profile via API (bypasses RLS issues)
   const fetchProfile = async (userId: string, providedSession?: Session | null) => {
     try {
-      console.log('[AuthContext] fetchProfile starting...');
+      console.log('[AuthContext] fetchProfile starting via API...');
 
       // Use provided session or get current session
       let currentSession = providedSession;
@@ -81,40 +81,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       if (!currentSession) {
-        console.error('[AuthContext] No session available for profile fetch - RLS will block the query');
+        console.error('[AuthContext] No session available for profile fetch');
         return;
       }
 
-      console.log('[AuthContext] Session confirmed for user:', currentSession.user.email);
+      console.log('[AuthContext] Session confirmed, fetching profile via API...');
 
-      // CRITICAL: Ensure supabaseBrowser has the session set
-      await supabaseBrowser.auth.setSession({
-        access_token: currentSession.access_token,
-        refresh_token: currentSession.refresh_token
+      // Use API route with service role to avoid RLS issues
+      const response = await fetch(`/api/profile?userId=${userId}`, {
+        headers: {
+          'Authorization': `Bearer ${currentSession.access_token}`
+        }
       });
 
-      console.log('[AuthContext] Session set on client, fetching profile...');
-
-      const { data, error } = await Promise.race([
-        supabaseBrowser.from("user_profiles").select("*").eq("id", userId).single(),
-        new Promise((_, reject) => setTimeout(() => reject(new Error('Profile fetch timeout')), 15000))
-      ]) as any;
-
-      if (error) {
-        console.error('[AuthContext] Profile fetch error:', error);
+      if (!response.ok) {
+        console.error('[AuthContext] Profile fetch failed:', response.status);
         return;
       }
-      console.log('[AuthContext] Profile fetched:', data?.email);
+
+      const data = await response.json();
+      console.log('[AuthContext] Profile fetched:', data.email);
       setProfile(data);
     } catch (error) {
       console.error("[AuthContext] Error fetching profile:", error);
     }
   };
 
-  // Fetch user organizations
+  // Fetch user organizations via API (bypasses RLS issues)
   const fetchOrganizations = async (userId: string, providedSession?: Session | null) => {
     try {
-      console.log('[AuthContext] fetchOrganizations starting...');
+      console.log('[AuthContext] fetchOrganizations starting via API...');
 
       // Use provided session or get current session
       let currentSession = providedSession;
@@ -124,74 +120,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       if (!currentSession) {
-        console.error('[AuthContext] No session available for organizations fetch - RLS will block the query');
+        console.error('[AuthContext] No session available for organizations fetch');
         setOrganizations([]);
         setCurrentOrganization(null);
         return;
       }
 
-      console.log('[AuthContext] Session confirmed for user:', currentSession.user.email);
+      console.log('[AuthContext] Session confirmed, fetching organizations via API...');
 
-      // CRITICAL: Ensure supabaseBrowser has the session set
-      await supabaseBrowser.auth.setSession({
-        access_token: currentSession.access_token,
-        refresh_token: currentSession.refresh_token
+      // Use API route with service role to avoid RLS issues
+      const response = await fetch(`/api/organizations?userId=${userId}`, {
+        headers: {
+          'Authorization': `Bearer ${currentSession.access_token}`
+        }
       });
 
-      console.log('[AuthContext] Session set on client, fetching organizations...');
-
-      // Add timeout to organizations fetch
-      const { data: userOrgs, error: userOrgsError } = await Promise.race([
-        supabaseBrowser
-          .from("user_organizations")
-          .select("id, org_id, role, joined_at")
-          .eq("user_id", userId)
-          .eq("is_active", true)
-          .order("joined_at", { ascending: false }),
-        new Promise((_, reject) => setTimeout(() => reject(new Error('Organizations fetch timeout')), 15000))
-      ]) as any;
-
-      if (userOrgsError) {
-        console.error("[AuthContext] Error fetching user organizations:", userOrgsError);
+      if (!response.ok) {
+        console.error('[AuthContext] Organizations fetch failed:', response.status);
         setOrganizations([]);
         setCurrentOrganization(null);
         return;
       }
 
-      if (!userOrgs || userOrgs.length === 0) {
-        console.log("[AuthContext] No organizations found for user");
-        setOrganizations([]);
-        setCurrentOrganization(null);
-        return;
-      }
-
-      console.log(`[AuthContext] Found ${userOrgs.length} user organizations`);
-
-      // Get organization details for each org_id
-      const orgIds = userOrgs.map((uo: any) => uo.org_id);
-      const { data: orgsData, error: orgsError } = await Promise.race([
-        supabaseBrowser.from("organizations").select("id, name").in("id", orgIds),
-        new Promise((_, reject) => setTimeout(() => reject(new Error('Org details fetch timeout')), 15000))
-      ]) as any;
-
-      if (orgsError) {
-        console.error("[AuthContext] Error fetching org details:", orgsError);
-        // Continue with limited data
-      }
-
-      // Combine the data
-      const orgs = userOrgs.map((userOrg: any) => ({
-        id: userOrg.id,
-        org_id: userOrg.org_id,
-        role: userOrg.role,
-        organization: orgsData?.find((o: any) => o.id === userOrg.org_id) || {
-          id: userOrg.org_id,
-          name: "Unknown Organization",
-          logo_url: null
-        }
-      }));
-
-      console.log('[AuthContext] Organizations processed:', orgs.length);
+      const orgs = await response.json();
+      console.log('[AuthContext] Organizations fetched:', orgs.length);
       setOrganizations(orgs);
 
       // Set current organization
