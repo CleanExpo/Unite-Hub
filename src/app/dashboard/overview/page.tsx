@@ -23,9 +23,15 @@ export default function OverviewPage() {
   useEffect(() => {
     async function fetchStats() {
       try {
+        // Wait for auth to finish loading first
+        if (authLoading) {
+          console.log("Waiting for auth to complete...");
+          return;
+        }
+
         // Check if workspace is available
         if (!workspaceId) {
-          console.log("No workspace selected");
+          console.log("No workspace selected - setting loading to false");
           setLoading(false);
           return;
         }
@@ -77,7 +83,7 @@ export default function OverviewPage() {
     }
 
     fetchStats();
-  }, [workspaceId]);
+  }, [workspaceId, authLoading]);
 
   // Show loading while auth is initializing
   if (authLoading) {
