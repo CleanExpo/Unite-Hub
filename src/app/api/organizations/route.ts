@@ -55,7 +55,7 @@ export async function GET(req: NextRequest) {
 
     const { data: orgsData, error: orgsError } = await supabase
       .from('organizations')
-      .select('id, name, logo_url')
+      .select('id, name')
       .in('id', orgIds);
 
     if (orgsError) {
