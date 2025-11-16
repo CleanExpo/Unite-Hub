@@ -32,19 +32,33 @@ export const CreateUserSchema = z.object({
 });
 
 export const UpdateProfileSchema = z.object({
-  full_name: z.string().min(1).max(200).optional(),
-  username: z.string().min(3).max(30).regex(/^[a-zA-Z0-9_-]+$/, 'Username can only contain letters, numbers, dashes, and underscores').optional(),
-  business_name: z.string().max(200).optional(),
-  phone: z.string().regex(/^\+?[1-9]\d{1,14}$/, 'Invalid phone number format').optional().or(z.literal('')),
-  bio: z.string().max(500).optional(),
-  website: z.string().url('Invalid website URL').optional().or(z.literal('')),
-  timezone: z.string().optional(),
+  full_name: z.string().min(1).max(200),
+  username: z.string().min(3).max(30).regex(/^[a-zA-Z0-9_-]+$/, 'Username can only contain letters, numbers, dashes, and underscores').or(z.literal('')).optional(),
+  business_name: z.string().max(200).or(z.literal('')).optional(),
+  phone: z.string().or(z.literal('')).or(z.null()).optional().refine(
+    (val) => !val || val === '' || /^\+?[1-9]\d{1,14}$/.test(val),
+    { message: 'Invalid phone number format' }
+  ),
+  bio: z.string().max(500).or(z.literal('')).optional(),
+  website: z.string().or(z.literal('')).or(z.null()).optional().refine(
+    (val) => {
+      if (!val || val === '') return true;
+      try {
+        new URL(val);
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    { message: 'Invalid website URL' }
+  ),
+  timezone: z.string(),
   notification_preferences: z.object({
-    email_notifications: z.boolean().optional(),
-    marketing_emails: z.boolean().optional(),
-    product_updates: z.boolean().optional(),
-    weekly_digest: z.boolean().optional(),
-  }).optional(),
+    email_notifications: z.boolean(),
+    marketing_emails: z.boolean(),
+    product_updates: z.boolean(),
+    weekly_digest: z.boolean(),
+  }),
 });
 
 // ==================================================
