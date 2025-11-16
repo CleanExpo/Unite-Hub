@@ -40,8 +40,12 @@ export default function DashboardLayout({
 
   useEffect(() => {
     // Use the actual organization from AuthContext
-    if (currentOrganization?.organizationId) {
-      setOrgId(currentOrganization.organizationId as Id<"organizations">);
+    console.log('[DashboardLayout] currentOrganization changed:', currentOrganization);
+    if (currentOrganization?.org_id) {
+      console.log('[DashboardLayout] Setting orgId to:', currentOrganization.org_id);
+      setOrgId(currentOrganization.org_id as Id<"organizations">);
+    } else {
+      console.log('[DashboardLayout] No org_id found in currentOrganization');
     }
   }, [currentOrganization]);
 
