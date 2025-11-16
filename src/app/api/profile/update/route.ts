@@ -44,8 +44,9 @@ export async function POST(req: NextRequest) {
       userId = data.user.id;
     }
 
-    // Get Supabase instance for database operations
-    const supabase = await getSupabaseServer();
+    // Get Supabase admin instance for database operations (bypasses RLS)
+    const { supabaseAdmin } = await import("@/lib/supabase");
+    const supabase = supabaseAdmin;
 
     // Parse and validate request body
     const body = await req.json();
