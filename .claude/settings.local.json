@@ -18,7 +18,11 @@
       "Bash(npx tsc:*)",
       "Bash(npx next build:*)",
       "Bash(dir:*)",
-      "Bash(pnpm test:*)"
+      "Bash(pnpm test:*)",
+      "Bash(npm run lint:*)",
+      "Bash(cat:*)",
+      "Bash(npm run dev:*)",
+      "Bash(git checkout:*)"
     ],
     "deny": [],
     "ask": []
