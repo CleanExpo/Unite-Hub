@@ -45,17 +45,8 @@ export async function POST(req: NextRequest) {
     }
 
     // Get Supabase admin instance for database operations (bypasses RLS)
-    const { supabaseAdmin } = await import("@/lib/supabase");
-
-    if (!supabaseAdmin) {
-      console.error("[profile/update] SUPABASE_SERVICE_ROLE_KEY not configured");
-      return NextResponse.json(
-        { error: "Server configuration error" },
-        { status: 500 }
-      );
-    }
-
-    const supabase = supabaseAdmin;
+    const { getSupabaseAdmin } = await import("@/lib/supabase");
+    const supabase = getSupabaseAdmin();
 
     // Parse and validate request body
     const body = await req.json();
