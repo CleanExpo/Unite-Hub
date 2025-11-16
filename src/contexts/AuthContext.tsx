@@ -345,12 +345,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
               // Done initializing, stop loading
               console.log('[AuthContext] SIGNED_IN handling complete, setting loading = false');
+              clearTimeout(safetyTimeout);
               setLoading(false);
               return; // Exit early, don't fetch again below
             }
           } catch (error) {
             console.error('[AuthContext] Error initializing user:', error);
             // Even on error, set loading to false to prevent infinite loading
+            clearTimeout(safetyTimeout);
             setLoading(false);
           }
         }
@@ -369,6 +371,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       console.log('[AuthContext] Auth state change handling complete, setting loading = false');
+      clearTimeout(safetyTimeout);
       setLoading(false);
     });
 

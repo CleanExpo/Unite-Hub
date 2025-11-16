@@ -51,6 +51,8 @@ export async function GET(req: NextRequest) {
 
     // Get organization details for each org_id
     const orgIds = userOrgs.map((uo: any) => uo.org_id);
+    console.log('[API] Fetching org details for IDs:', orgIds);
+
     const { data: orgsData, error: orgsError } = await supabase
       .from('organizations')
       .select('id, name, logo_url')
@@ -59,6 +61,8 @@ export async function GET(req: NextRequest) {
     if (orgsError) {
       console.error('[API] Organizations details fetch error:', orgsError);
       // Continue with limited data
+    } else {
+      console.log('[API] Organizations data fetched:', orgsData);
     }
 
     // Combine the data
