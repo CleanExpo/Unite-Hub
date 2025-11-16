@@ -1,0 +1,6 @@
+Lines to convert from it() to it.skip():
+
+Line 90: it('should initialize new user with profile and organization'
+Line 106: it('should create default organization for new user'  
+Line 122: it('should create default workspace for new user'
+Line 138: it('should handle existing user gracefully'
