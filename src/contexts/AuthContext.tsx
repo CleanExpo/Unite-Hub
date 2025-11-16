@@ -69,12 +69,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   // Fetch user profile
-  const fetchProfile = async (userId: string) => {
+  const fetchProfile = async (userId: string, providedSession?: Session | null) => {
     try {
       console.log('[AuthContext] fetchProfile starting...');
 
-      // Ensure we have a valid session before making the query
-      const { data: { session: currentSession } } = await supabaseBrowser.auth.getSession();
+      // Use provided session or get current session
+      let currentSession = providedSession;
+      if (!currentSession) {
+        const { data: { session } } = await supabaseBrowser.auth.getSession();
+        currentSession = session;
+      }
+
       if (!currentSession) {
         console.error('[AuthContext] No session available for profile fetch - RLS will block the query');
         return;
@@ -98,12 +103,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   // Fetch user organizations
-  const fetchOrganizations = async (userId: string) => {
+  const fetchOrganizations = async (userId: string, providedSession?: Session | null) => {
     try {
       console.log('[AuthContext] fetchOrganizations starting...');
 
-      // Ensure we have a valid session before making the query
-      const { data: { session: currentSession } } = await supabaseBrowser.auth.getSession();
+      // Use provided session or get current session
+      let currentSession = providedSession;
+      if (!currentSession) {
+        const { data: { session } } = await supabaseBrowser.auth.getSession();
+        currentSession = session;
+      }
+
       if (!currentSession) {
         console.error('[AuthContext] No session available for organizations fetch - RLS will block the query');
         setOrganizations([]);
@@ -283,10 +293,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setSession(session);
         setUser(session.user);
 
-        // Fetch user data
+        // Fetch user data - pass session explicitly
         console.log('[AuthContext] Fetching profile and organizations...');
-        await fetchProfile(session.user.id);
-        await fetchOrganizations(session.user.id);
+        await fetchProfile(session.user.id, session);
+        await fetchOrganizations(session.user.id, session);
         console.log('[AuthContext] Profile and organizations fetched');
       } else {
         console.log('[AuthContext] No session found in storage');
@@ -336,10 +346,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               console.log('[AuthContext] Waiting for DB propagation...');
               await new Promise(resolve => setTimeout(resolve, 1000));
 
-              // Fetch user data AFTER initialization completes
+              // Fetch user data AFTER initialization completes - pass session explicitly
               console.log('[AuthContext] Fetching profile and organizations after init...');
-              await fetchProfile(session.user.id);
-              await fetchOrganizations(session.user.id);
+              await fetchProfile(session.user.id, session);
+              await fetchOrganizations(session.user.id, session);
               console.log('[AuthContext] Post-init fetch complete');
 
               // Check if onboarding is needed (optional - skip if table doesn't exist)
@@ -375,10 +385,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }
         }
 
-        // Fetch/refresh user data on any auth event (except SIGNED_IN which handles above)
+        // Fetch/refresh user data on any auth event (except SIGNED_IN which handles above) - pass session explicitly
         console.log('[AuthContext] Fetching profile and organizations for event:', event);
-        await fetchProfile(session.user.id);
-        await fetchOrganizations(session.user.id);
+        await fetchProfile(session.user.id, session);
+        await fetchOrganizations(session.user.id, session);
         console.log('[AuthContext] Fetch complete for event:', event);
       } else {
         // Clear user data on sign out
