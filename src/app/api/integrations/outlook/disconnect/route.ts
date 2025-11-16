@@ -1,13 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { authenticateRequest } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { apiRateLimit } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  // Apply rate limiting
+  const rateLimitResult = await apiRateLimit(req);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
+    const authResult = await authenticateRequest(req);
+    if (!authResult) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
     }
+    const { userId } = authResult;
 
     const { integrationId } = await req.json();
 

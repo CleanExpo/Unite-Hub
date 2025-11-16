@@ -1,17 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { authenticateRequest } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { apiRateLimit } from "@/lib/rate-limit";
 
 // GET /api/hooks/search - Search hooks across all clients
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
+  // Apply rate limiting
+  const rateLimitResult = await apiRateLimit(request);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
+    const authResult = await authenticateRequest(request);
+    if (!authResult) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
       );
     }
+    const { userId } = authResult;
 
     const { searchParams } = new URL(request.url);
     const query = searchParams.get("q");

@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
+import { apiRateLimit } from "@/lib/rate-limit";
+import { authenticateRequest } from "@/lib/auth";
 
 const TEMPLATES = {
   welcome: {
@@ -105,6 +107,19 @@ const TEMPLATES = {
 
 export async function POST(request: Request) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await apiRateLimit(request);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
+    // Authenticate request
+    const authResult = await authenticateRequest(request);
+    if (!authResult) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const { userId } = authResult;
+
     const supabase = await getSupabaseServer();
 
     // Get authenticated user from session

@@ -2,14 +2,23 @@ import { NextRequest, NextResponse } from "next/server";
 import { sendEmailViaGmail } from "@/lib/integrations/gmail";
 import { db } from "@/lib/db";
 import { randomUUID } from "crypto";
-import { auth } from "@/lib/auth";
+import { authenticateRequest } from "@/lib/auth";
+import { apiRateLimit } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
+  // Apply rate limiting
+  const rateLimitResult = await apiRateLimit(req);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
+    // Authenticate request
+    const authResult = await authenticateRequest(req);
+    if (!authResult) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    const { userId } = authResult;
 
     const { contentId, contactId, integrationId } = await req.json();
 

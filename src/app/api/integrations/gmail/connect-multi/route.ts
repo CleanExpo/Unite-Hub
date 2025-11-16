@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getGmailAuthUrl } from "@/lib/integrations/gmail-multi-account";
-import { auth } from "@/lib/auth";
+import { authenticateRequest } from "@/lib/auth";
+import { strictRateLimit } from "@/lib/rate-limit";
 
 /**
  * POST /api/integrations/gmail/connect-multi
@@ -8,10 +9,20 @@ import { auth } from "@/lib/auth";
  */
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  // Apply rate limiting
+  const rateLimitResult = await strictRateLimit(req);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
+    const authResult = await authenticateRequest(req);
+    if (!authResult) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
     }
+    const { userId } = authResult;
 
     const { orgId, workspaceId } = await req.json();
 

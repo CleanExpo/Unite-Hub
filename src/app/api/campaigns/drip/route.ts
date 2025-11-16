@@ -8,9 +8,24 @@ import {
 } from "@/lib/services/drip-campaign";
 import { getSupabaseServer } from "@/lib/supabase";
 import { db } from "@/lib/db";
+import { apiRateLimit } from "@/lib/rate-limit";
+import { authenticateRequest } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await apiRateLimit(req);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
+    // Authenticate req
+    const authResult = await authenticateRequest(req);
+    if (!authResult) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const { userId } = authResult;
+
     // Authentication check
     const supabase = await getSupabaseServer();
     const { data: { user }, error: authError } = await supabase.auth.getUser();

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { authenticateRequest } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { apiRateLimit } from "@/lib/rate-limit";
 
 /**
  * GET /api/integrations/gmail/list?workspaceId=xxx
@@ -8,10 +9,20 @@ import { db } from "@/lib/db";
  */
 export async function GET(req: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  // Apply rate limiting
+  const rateLimitResult = await apiRateLimit(req);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
+    const authResult = await authenticateRequest(req);
+    if (!authResult) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
     }
+    const { userId } = authResult;
 
     const { searchParams } = new URL(req.url);
     const workspaceId = searchParams.get("workspaceId");

@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getHotLeads } from "@/lib/agents/contact-intelligence";
 import { getSupabaseServer } from "@/lib/supabase";
+import { apiRateLimit } from "@/lib/rate-limit";
 
 export async function GET(request: NextRequest) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await apiRateLimit(request);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
     // Authentication check
     const supabase = await getSupabaseServer();
     const { data: { user }, error: authError } = await supabase.auth.getUser();

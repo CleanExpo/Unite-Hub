@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { api } from "@/convex/_generated/api";
 import { fetchMutation, fetchQuery } from "convex/nextjs";
+import { apiRateLimit } from "@/lib/rate-limit";
 
 // GET single template
 export async function GET(
@@ -8,6 +9,12 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await apiRateLimit(req);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
     const { id } = await params;
     const template = await fetchQuery(api.socialTemplates.getTemplate, {
       templateId: id as any,

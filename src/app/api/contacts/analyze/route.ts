@@ -2,9 +2,24 @@ import { NextRequest, NextResponse } from "next/server";
 import { analyzeContactIntelligence } from "@/lib/agents/contact-intelligence";
 import { db } from "@/lib/db";
 import { getSupabaseServer } from "@/lib/supabase";
+import { aiAgentRateLimit } from "@/lib/rate-limit";
+import { authenticateRequest } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await aiAgentRateLimit(request);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
+    // Authenticate request
+    const authResult = await authenticateRequest(request);
+    if (!authResult) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const { userId } = authResult;
+
     // Authentication check
     const supabase = await getSupabaseServer();
     const { data: { user }, error: authError } = await supabase.auth.getUser();

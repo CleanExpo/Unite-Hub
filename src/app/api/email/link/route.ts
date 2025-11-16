@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import { apiRateLimit } from "@/lib/rate-limit";
+import { authenticateRequest } from "@/lib/auth";
 import { EmailSchema, UUIDSchema } from "@/lib/validation/schemas";
 
 /**
@@ -16,6 +17,13 @@ export async function POST(req: NextRequest) {
     if (rateLimitResult) {
       return rateLimitResult;
     }
+
+    // Authenticate req
+    const authResult = await authenticateRequest(req);
+    if (!authResult) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const { userId } = authResult;
 
     const supabase = await getSupabaseServer();
 
@@ -149,6 +157,13 @@ export async function DELETE(req: NextRequest) {
     if (rateLimitResult) {
       return rateLimitResult;
     }
+
+    // Authenticate req
+    const authResult = await authenticateRequest(req);
+    if (!authResult) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const { userId } = authResult;
 
     const supabase = await getSupabaseServer();
 

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import { aiAgentRateLimit } from "@/lib/rate-limit";
+import { authenticateRequest } from "@/lib/auth";
 import { UUIDSchema } from "@/lib/validation/schemas";
 import { generateImage, calculateImageCost, validatePrompt } from "@/lib/dalle/client";
 import {
@@ -35,6 +36,13 @@ export async function POST(request: NextRequest) {
     if (rateLimitResult) {
       return rateLimitResult;
     }
+
+    // Authenticate request
+    const authResult = await authenticateRequest(request);
+    if (!authResult) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const { userId } = authResult;
 
     const supabase = await getSupabaseServer();
     const body: GenerateImageRequest = await request.json();

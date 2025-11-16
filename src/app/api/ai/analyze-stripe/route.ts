@@ -1,8 +1,16 @@
 import { generateWithKatCoder } from '@/lib/openrouter';
 import { NextResponse } from 'next/server';
+import { aiAgentRateLimit } from "@/lib/rate-limit";
+import { authenticateRequest } from "@/lib/auth";
 
 export async function POST(req: Request) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await aiAgentRateLimit(req);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
     const { repoReadme, currentImplementation } = await req.json();
 
     const prompt = `

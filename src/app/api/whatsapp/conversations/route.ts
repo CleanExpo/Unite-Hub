@@ -6,12 +6,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabase';
 import { db } from '@/lib/db';
+import { apiRateLimit } from "@/lib/rate-limit";
 
 /**
  * GET - List WhatsApp conversations
  */
 export async function GET(req: NextRequest) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await apiRateLimit(req);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
     const supabase = await getSupabaseServer();
 
     // Get authenticated user

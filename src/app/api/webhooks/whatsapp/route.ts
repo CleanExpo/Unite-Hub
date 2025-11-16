@@ -7,6 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { WhatsAppService } from '@/lib/services/whatsapp';
 import { processIncomingWhatsAppMessage } from '@/lib/agents/whatsapp-intelligence';
+import { publicRateLimit } from "@/lib/rate-limit";
 
 const VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN || 'your-verify-token';
 
@@ -16,6 +17,12 @@ const VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN || 'your-verify-token';
  */
 export async function GET(req: NextRequest) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await publicRateLimit(req);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
     const searchParams = req.nextUrl.searchParams;
     const mode = searchParams.get('hub.mode');
     const token = searchParams.get('hub.verify_token');

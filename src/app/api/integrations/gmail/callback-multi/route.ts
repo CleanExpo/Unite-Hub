@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { handleGmailCallback } from "@/lib/integrations/gmail-multi-account";
-import { auth } from "@/lib/auth";
+import { authenticateRequest } from "@/lib/auth";
+import { strictRateLimit } from "@/lib/rate-limit";
 
 /**
  * GET /api/integrations/gmail/callback-multi
@@ -8,7 +9,13 @@ import { auth } from "@/lib/auth";
  */
 export async function GET(req: NextRequest) {
   try {
-    const session = await auth();
+  // Apply rate limiting
+  const rateLimitResult = await strictRateLimit(req);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
+    const authResult = await authenticateRequest(req);
     if (!session?.user?.id) {
       return NextResponse.redirect(
         `${process.env.NEXT_PUBLIC_URL}/auth/signin?error=unauthorized`

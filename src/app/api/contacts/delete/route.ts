@@ -10,6 +10,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requirePermission, requireSameOrganization } from '@/lib/auth-middleware';
 import { createClient } from '@supabase/supabase-js';
+import { apiRateLimit } from "@/lib/rate-limit";
+import { authenticateRequest } from "@/lib/auth";
 
 /**
  * Get Supabase server client
@@ -27,6 +29,19 @@ function getSupabaseServer() {
  */
 export async function DELETE(req: NextRequest) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await apiRateLimit(req);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
+    // Authenticate req
+    const authResult = await authenticateRequest(req);
+    if (!authResult) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const { userId } = authResult;
+
     // Require permission - throws 401/403 if not authorized
     const user = await requirePermission(req, 'contact:delete');
 

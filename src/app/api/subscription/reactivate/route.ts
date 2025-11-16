@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import { reactivateSubscription as reactivateStripeSubscription } from "@/lib/stripe/client";
 import { apiRateLimit } from "@/lib/rate-limit";
+import { authenticateRequest } from "@/lib/auth";
 import { z } from "zod";
 
 /**

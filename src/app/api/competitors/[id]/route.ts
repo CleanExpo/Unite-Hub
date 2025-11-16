@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { fetchMutation, fetchQuery } from "convex/nextjs";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
+import { apiRateLimit } from "@/lib/rate-limit";
+import { authenticateRequest } from "@/lib/auth";
 
 /**
  * GET /api/competitors/[id]
@@ -12,6 +14,19 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await apiRateLimit(request);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
+    // Authenticate request
+    const authResult = await authenticateRequest(request);
+    if (!authResult) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const { userId } = authResult;
+
     const { id } = await params;
     const competitor = await fetchQuery(api.competitors.getCompetitor, {
       competitorId: id as Id<"competitors">,

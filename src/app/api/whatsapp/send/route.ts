@@ -7,9 +7,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabase';
 import { db } from '@/lib/db';
 import { whatsappService } from '@/lib/services/whatsapp';
+import { apiRateLimit } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await apiRateLimit(req);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
     const supabase = await getSupabaseServer();
 
     // Get authenticated user

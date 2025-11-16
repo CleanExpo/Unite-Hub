@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { google } from "googleapis";
+import { strictRateLimit } from "@/lib/rate-limit";
 
 const oauth2Client = new google.auth.OAuth2(
   process.env.GMAIL_CLIENT_ID,
@@ -9,6 +10,12 @@ const oauth2Client = new google.auth.OAuth2(
 
 export async function GET(request: NextRequest) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await strictRateLimit(request);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
     // Generate the authorization URL
     const authUrl = oauth2Client.generateAuthUrl({
       access_type: "offline",

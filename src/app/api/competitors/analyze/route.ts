@@ -8,6 +8,8 @@ import {
   type CompetitorData,
   type ClientBusinessContext,
 } from "@/lib/claude/competitor-prompts";
+import { aiAgentRateLimit } from "@/lib/rate-limit";
+import { authenticateRequest } from "@/lib/auth";
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
@@ -19,6 +21,19 @@ const anthropic = new Anthropic({
  */
 export async function POST(request: NextRequest) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await aiAgentRateLimit(request);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
+    // Authenticate request
+    const authResult = await authenticateRequest(request);
+    if (!authResult) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const { userId } = authResult;
+
     const body = await request.json();
     const { clientId } = body;
 

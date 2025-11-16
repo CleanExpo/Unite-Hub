@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { api } from "@/convex/_generated/api";
 import { fetchAction } from "convex/nextjs";
 import { Id } from "@/convex/_generated/dataModel";
+import { aiAgentRateLimit } from "@/lib/rate-limit";
 
 /**
  * POST /api/landing-pages/[id]/regenerate
@@ -12,6 +13,12 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await aiAgentRateLimit(request);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
     const { id } = await params;
     const checklistId = id as Id<"landingPageChecklists">;
     const body = await request.json();

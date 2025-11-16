@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { api } from "@/convex/_generated/api";
 import { fetchQuery } from "convex/nextjs";
+import { apiRateLimit } from "@/lib/rate-limit";
 
 export async function GET(req: NextRequest) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await apiRateLimit(req);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
     const searchParams = req.nextUrl.searchParams;
     const clientId = searchParams.get("clientId");
 

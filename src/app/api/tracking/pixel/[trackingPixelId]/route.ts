@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { supabase } from "@/lib/supabase";
+import { publicRateLimit } from "@/lib/rate-limit";
 
 // 1x1 transparent pixel
 const PIXEL = Buffer.from([
@@ -15,6 +16,12 @@ export async function GET(
   { params }: { params: Promise<{ trackingPixelId: string }> }
 ) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await publicRateLimit(req);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
     const { trackingPixelId } = await params;
     const userAgent = req.headers.get("user-agent") || "";
     const ip = req.ip || req.headers.get("x-forwarded-for") || "";

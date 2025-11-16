@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import type { TeamMember, TablesInsert } from "@/types/database";
+import { apiRateLimit } from "@/lib/rate-limit";
 
 /**
  * GET /api/team
@@ -8,6 +9,12 @@ import type { TeamMember, TablesInsert } from "@/types/database";
  */
 export async function GET(request: NextRequest) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await apiRateLimit(request);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
     const { searchParams } = new URL(request.url);
     const orgId = searchParams.get("orgId");
 

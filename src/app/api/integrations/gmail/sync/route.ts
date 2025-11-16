@@ -3,9 +3,16 @@ import { syncGmailEmails } from "@/lib/integrations/gmail";
 import { analyzeWorkspaceContacts } from "@/lib/agents/contact-intelligence";
 import { getSupabaseServer } from "@/lib/supabase";
 import { db } from "@/lib/db";
+import { apiRateLimit } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await apiRateLimit(req);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
     // Authentication check
     const supabase = await getSupabaseServer();
     const { data: { user }, error: authError } = await supabase.auth.getUser();

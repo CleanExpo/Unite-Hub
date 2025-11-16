@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import { db } from "@/lib/db";
+import { apiRateLimit } from "@/lib/rate-limit";
+import { authenticateRequest } from "@/lib/auth";
 
 // GET /api/contacts/[contactId] - Get contact details
 export async function GET(
@@ -8,6 +10,19 @@ export async function GET(
   { params }: { params: Promise<{ contactId: string }> }
 ) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await apiRateLimit(request);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
+    // Authenticate request
+    const authResult = await authenticateRequest(request);
+    if (!authResult) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const { userId } = authResult;
+
     const { contactId } = await params;
     const supabaseServer = await getSupabaseServer();
 

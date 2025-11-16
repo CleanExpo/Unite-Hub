@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { api } from "@/convex/_generated/api";
 import { fetchMutation, fetchAction } from "convex/nextjs";
 import { Id } from "@/convex/_generated/dataModel";
+import { apiRateLimit } from "@/lib/rate-limit";
 
 /**
  * PUT /api/landing-pages/[id]/section
@@ -12,6 +13,12 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await apiRateLimit(request);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
     const { id } = await params;
     const checklistId = id as Id<"landingPageChecklists">;
     const body = await request.json();

@@ -6,17 +6,28 @@ import {
   setPrimaryOutlookAccount,
   labelOutlookAccount,
 } from "@/lib/services/outlook-sync";
-import { auth } from "@/lib/auth";
+import { authenticateRequest } from "@/lib/auth";
+import { apiRateLimit } from "@/lib/rate-limit";
 
 /**
  * GET - List all Outlook accounts for the organization
  */
 export async function GET(req: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  // Apply rate limiting
+  const rateLimitResult = await apiRateLimit(req);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
+    const authResult = await authenticateRequest(req);
+    if (!authResult) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
     }
+    const { userId } = authResult;
 
     const { searchParams } = new URL(req.url);
     const orgId = searchParams.get("orgId");
@@ -48,10 +59,14 @@ export async function GET(req: NextRequest) {
  */
 export async function POST(req: NextRequest) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const authResult = await authenticateRequest(req);
+    if (!authResult) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
     }
+    const { userId } = authResult;
 
     const { action, orgId, integrationId, isActive, label } = await req.json();
 

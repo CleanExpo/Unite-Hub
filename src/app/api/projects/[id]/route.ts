@@ -1,14 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import type { TablesUpdate } from "@/types/database";
+import { apiRateLimit } from "@/lib/rate-limit";
 
 /**
  * GET /api/projects/[id]
  * Get a single project by ID with full details
  */
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+  // Apply rate limiting
+  const rateLimitResult = await apiRateLimit(request);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
+    const { id } = await context.params;
 
     const supabase = await getSupabaseServer();
     const { data: project, error } = await supabase
@@ -41,9 +48,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
  * PATCH /api/projects/[id]
  * Update a project
  */
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const { id } = await context.params;
     const body = await request.json();
 
     const updates: TablesUpdate<"projects"> = {};
@@ -107,9 +114,9 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
  * DELETE /api/projects/[id]
  * Delete a project (cascade delete will remove assignees, milestones, etc.)
  */
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const { id } = await context.params;
 
     const supabase = await getSupabaseServer();
     const { error } = await supabase.from("projects").delete().eq("id", id);

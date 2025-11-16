@@ -2,9 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { sendEmailViaGmail } from "@/lib/integrations/gmail";
 import { db } from "@/lib/db";
 import { getSupabaseServer } from "@/lib/supabase";
+import { apiRateLimit } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await apiRateLimit(request);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
     // Authentication check
     const supabase = await getSupabaseServer();
     const { data: { user }, error: authError } = await supabase.auth.getUser();

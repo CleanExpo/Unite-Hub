@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { gmailClient } from "@/lib/gmail";
+import { strictRateLimit } from "@/lib/rate-limit";
+import { authenticateRequest } from "@/lib/auth";
 
 /**
  * GET /api/email/oauth/authorize
@@ -8,6 +10,12 @@ import { gmailClient } from "@/lib/gmail";
 
 export async function GET(req: NextRequest) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await strictRateLimit(req);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
     const orgId = req.nextUrl.searchParams.get("orgId");
 
     // Generate state with metadata

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { api } from "@/convex/_generated/api";
 import { fetchMutation, fetchAction } from "convex/nextjs";
 import { Id } from "@/convex/_generated/dataModel";
+import { aiAgentRateLimit } from "@/lib/rate-limit";
 
 /**
  * POST /api/landing-pages/generate
@@ -9,6 +10,12 @@ import { Id } from "@/convex/_generated/dataModel";
  */
 export async function POST(request: NextRequest) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await aiAgentRateLimit(request);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
     const body = await request.json();
     const { clientId, pageType, title, personaId } = body;
 

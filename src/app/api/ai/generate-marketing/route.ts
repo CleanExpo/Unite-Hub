@@ -1,8 +1,16 @@
 import { NextRequest } from 'next/server';
 import { generateSectionCopy } from '@/lib/ai/claude-client';
+import { aiAgentRateLimit } from "@/lib/rate-limit";
+import { authenticateRequest } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await aiAgentRateLimit(req);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
     const { businessName, description, section = 'hero' } = await req.json();
 
     if (!businessName || !description) {

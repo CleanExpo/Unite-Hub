@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { getSupabaseServer } from "@/lib/supabase";
 import { getPlanTierFromPriceId } from "@/lib/stripe/client";
+import { publicRateLimit } from "@/lib/rate-limit";
 
 /**
  * Stripe Webhook Handler for Unite-Hub CRM
@@ -30,6 +31,12 @@ export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await publicRateLimit(req);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
     if (!webhookSecret) {

@@ -6,6 +6,7 @@ import {
   buildContentCalendarUserPrompt,
 } from "@/lib/claude/prompts";
 import { aiAgentRateLimit } from "@/lib/rate-limit";
+import { authenticateRequest } from "@/lib/auth";
 import { z } from "zod";
 
 /**

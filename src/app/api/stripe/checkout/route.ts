@@ -4,6 +4,7 @@ import {
   createCheckoutSession,
   PLAN_TIERS,
 } from "@/lib/stripe/client";
+import { apiRateLimit } from "@/lib/rate-limit";
 
 /**
  * POST /api/stripe/checkout
@@ -12,6 +13,12 @@ import {
 
 export async function POST(req: NextRequest) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await apiRateLimit(req);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
     const body = await req.json();
     const { plan, email, name, orgId } = body;
 

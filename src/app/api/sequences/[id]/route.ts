@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import { apiRateLimit } from "@/lib/rate-limit";
+import { authenticateRequest } from "@/lib/auth";
 import { UUIDSchema } from "@/lib/validation/schemas";
 
 /**
@@ -18,6 +19,13 @@ export async function GET(
     if (rateLimitResult) {
       return rateLimitResult;
     }
+
+    // Authenticate req
+    const authResult = await authenticateRequest(req);
+    if (!authResult) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const { userId } = authResult;
 
     const supabase = await getSupabaseServer();
     const { id: sequenceId } = await params;
@@ -143,6 +151,13 @@ export async function PUT(
       return rateLimitResult;
     }
 
+    // Authenticate req
+    const authResult = await authenticateRequest(req);
+    if (!authResult) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const { userId } = authResult;
+
     const supabase = await getSupabaseServer();
     const { id: sequenceId } = await params;
     const body = await req.json();
@@ -259,6 +274,13 @@ export async function DELETE(
     if (rateLimitResult) {
       return rateLimitResult;
     }
+
+    // Authenticate req
+    const authResult = await authenticateRequest(req);
+    if (!authResult) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const { userId } = authResult;
 
     const supabase = await getSupabaseServer();
     const { id: sequenceId } = await params;

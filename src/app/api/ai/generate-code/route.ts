@@ -4,9 +4,17 @@ import {
   generateWithGPT4oMini,
   generateWithGPT4Turbo
 } from '@/lib/openai';
+import { aiAgentRateLimit } from "@/lib/rate-limit";
+import { authenticateRequest } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await aiAgentRateLimit(req);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
     const { prompt, model = 'gpt-4o-mini' } = await req.json();
 
     if (!prompt) {

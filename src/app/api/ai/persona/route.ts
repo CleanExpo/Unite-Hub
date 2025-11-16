@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createMessage, parseJSONResponse, rateLimiter } from '@/lib/claude/client';
 import { PERSONA_SYSTEM_PROMPT, buildPersonaUserPrompt } from '@/lib/claude/prompts';
+import { aiAgentRateLimit } from "@/lib/rate-limit";
+import { authenticateRequest } from "@/lib/auth";
 
 export const runtime = 'edge';
 
@@ -74,6 +76,20 @@ interface PersonaResponse {
 
 export async function POST(req: NextRequest) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await aiAgentRateLimit(req);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
+
+    // Authenticate request
+    const authResult = await authenticateRequest(req);
+    if (!authResult) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const { userId } = authResult;
+
     // Rate limiting
     await rateLimiter.checkLimit();
 

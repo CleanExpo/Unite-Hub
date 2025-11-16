@@ -3,10 +3,17 @@
  * Used by Docker healthcheck and monitoring systems
  */
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { publicRateLimit } from "@/lib/rate-limit";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await publicRateLimit(request);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
     // Basic health check - can be extended with database/redis checks
     const health = {
       status: "healthy",

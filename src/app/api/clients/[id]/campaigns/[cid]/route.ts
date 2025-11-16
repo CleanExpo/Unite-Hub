@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { authenticateRequest } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { apiRateLimit } from "@/lib/rate-limit";
 
 // GET /api/clients/[id]/campaigns/[cid] - Get specific campaign
 export async function GET(
@@ -8,13 +9,20 @@ export async function GET(
   { params }: { params: Promise<{ id: string; cid: string }> }
 ) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
+  // Apply rate limiting
+  const rateLimitResult = await apiRateLimit(request);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
+    const authResult = await authenticateRequest(request);
+    if (!authResult) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
       );
     }
+    const { userId } = authResult;
 
     const { id, cid } = await params;
 
@@ -52,13 +60,14 @@ export async function PUT(
   { params }: { params: Promise<{ id: string; cid: string }> }
 ) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
+    const authResult = await authenticateRequest(request);
+    if (!authResult) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
       );
     }
+    const { userId } = authResult;
 
     const { id, cid } = await params;
     const body = await request.json();
@@ -110,13 +119,14 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string; cid: string }> }
 ) {
   try {
-    const session = await auth();
-    if (!session?.user?.id) {
+    const authResult = await authenticateRequest(request);
+    if (!authResult) {
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
       );
     }
+    const { userId } = authResult;
 
     const { id, cid } = await params;
 

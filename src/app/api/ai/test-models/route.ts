@@ -1,6 +1,8 @@
 import { NextRequest } from 'next/server';
 import { generateWithGPT4oMini } from '@/lib/openai';
 import { generateSectionCopy } from '@/lib/ai/claude-client';
+import { aiAgentRateLimit } from "@/lib/rate-limit";
+import { authenticateRequest } from "@/lib/auth";
 
 /**
  * Test API route to verify all AI models are working
@@ -16,6 +18,12 @@ export async function GET(req: NextRequest) {
 
   // Test 1: OpenAI GPT-4o Mini
   try {
+  // Apply rate limiting
+  const rateLimitResult = await aiAgentRateLimit(req);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
     console.log('Testing OpenAI GPT-4o Mini...');
     const startTime = Date.now();
 

@@ -1,14 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import type { TablesUpdate } from "@/types/database";
+import { apiRateLimit } from "@/lib/rate-limit";
 
 /**
  * GET /api/team/[id]
  * Get a single team member by ID
  */
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+  // Apply rate limiting
+  const rateLimitResult = await apiRateLimit(request);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
+    const { id } = await context.params;
 
     const supabase = await getSupabaseServer();
     const { data: teamMember, error } = await supabase
@@ -33,9 +40,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
  * PATCH /api/team/[id]
  * Update a team member
  */
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const { id } = await context.params;
     const body = await request.json();
 
     const updates: TablesUpdate<"team_members"> = {};
@@ -76,9 +83,9 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
  * DELETE /api/team/[id]
  * Soft delete a team member (set is_active to false)
  */
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const { id } = await context.params;
 
     const supabase = await getSupabaseServer();
     const { data: teamMember, error } = await supabase

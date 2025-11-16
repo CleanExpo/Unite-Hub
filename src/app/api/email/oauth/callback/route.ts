@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { gmailClient } from "@/lib/gmail";
 import { getSupabaseServer } from "@/lib/supabase";
 import { strictRateLimit } from "@/lib/rate-limit";
+import { authenticateRequest } from "@/lib/auth";
 import { GmailOAuthCallbackSchema, formatZodError } from "@/lib/validation/schemas";
 
 /**

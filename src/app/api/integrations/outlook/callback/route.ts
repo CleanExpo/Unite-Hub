@@ -1,10 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { handleOutlookCallback } from "@/lib/integrations/outlook";
-import { auth } from "@/lib/auth";
+import { authenticateRequest } from "@/lib/auth";
+import { strictRateLimit } from "@/lib/rate-limit";
 
 export async function GET(req: NextRequest) {
   try {
-    const session = await auth();
+  // Apply rate limiting
+  const rateLimitResult = await strictRateLimit(req);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
+    const authResult = await authenticateRequest(req);
     if (!session?.user?.id) {
       return NextResponse.redirect(
         `${process.env.NEXT_PUBLIC_URL}/auth/signin?error=unauthorized`

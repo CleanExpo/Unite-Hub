@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { api } from "@/convex/_generated/api";
 import { fetchMutation } from "convex/nextjs";
+import { aiAgentRateLimit } from "@/lib/rate-limit";
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
@@ -27,6 +28,12 @@ const PLATFORM_TONES = {
 
 export async function POST(req: NextRequest) {
   try {
+  // Apply rate limiting
+  const rateLimitResult = await aiAgentRateLimit(req);
+  if (rateLimitResult) {
+    return rateLimitResult;
+  }
+
     const body = await req.json();
     const { clientId, platform, category, count = 10, businessContext } = body;
 
