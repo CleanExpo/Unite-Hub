@@ -15,7 +15,7 @@ import {
   getPermissionsForRole,
   ROLE_HIERARCHY,
   UserRole,
-} from '../permissions';
+} from '../../permissions';
 
 describe('Permission System', () => {
   describe('hasPermission', () => {

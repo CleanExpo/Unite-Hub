@@ -4,63 +4,45 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { analyzeContactIntelligence } from '@/lib/agents/contact-intelligence';
 import { TEST_WORKSPACE } from '../../helpers/auth';
 import { createMockContact, createMockEmail } from '../../helpers/db';
 
-// Mock Anthropic SDK
+// Mock database first (hoisted)
+vi.mock('@/lib/db');
+
+// Mock Anthropic SDK (hoisted) with factory
 vi.mock('@anthropic-ai/sdk', () => {
+  // Create the mock function inside the factory
+  const mockCreate = vi.fn();
+  const mockInstance = {
+    messages: {
+      create: mockCreate,
+    },
+  };
+  
   return {
-    default: vi.fn().mockImplementation(() => ({
-      messages: {
-        create: vi.fn().mockResolvedValue({
-          id: 'msg_test123',
-          type: 'message',
-          role: 'assistant',
-          content: [
-            {
-              type: 'text',
-              text: JSON.stringify({
-                engagement_score: 85,
-                buying_intent: 'high',
-                decision_stage: 'consideration',
-                role_type: 'decision_maker',
-                next_best_action: 'Schedule product demo',
-                risk_signals: ['Budget concerns mentioned'],
-                opportunity_signals: ['Actively comparing solutions', 'Timeline in next quarter'],
-                engagement_velocity: 1,
-                sentiment_score: 75,
-              }),
-            },
-          ],
-          model: 'claude-opus-4-1-20250805',
-          stop_reason: 'end_turn',
-          usage: {
-            input_tokens: 1000,
-            output_tokens: 200,
-          },
-        }),
-      },
-    })),
+    default: vi.fn(() => mockInstance),
   };
 });
 
-// Mock database
-vi.mock('@/lib/db', () => ({
-  db: {
-    contacts: {
-      getById: vi.fn(),
-    },
-    emails: {
-      getByContact: vi.fn(),
-    },
-    interactions: {
-      getByContact: vi.fn(),
-    },
-  },
-}));
+// Import after mocks are defined
+import { analyzeContactIntelligence } from '@/lib/agents/contact-intelligence';
+import { db } from '@/lib/db';
+import Anthropic from '@anthropic-ai/sdk';
 
 describe('Contact Intelligence Agent', () => {
+  // Get mock references
+  const mockDb = db as any;
+  
+  // Access the mock from the mocked module
+  const getMockCreate = () => {
+    const MockedAnthropic = Anthropic as any;
+    const instance = new MockedAnthropic({ apiKey: 'test' });
+    return instance.messages.create;
+  };
+  
+  const mockCreate = getMockCreate();
+
   const mockContact = createMockContact({
     id: 'contact-123',
     workspace_id: TEST_WORKSPACE.id,
@@ -89,11 +71,49 @@ describe('Contact Intelligence Agent', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    // Setup default mocks
-    const { db } = require('@/lib/db');
-    db.contacts.getById.mockResolvedValue(mockContact);
-    db.emails.getByContact.mockResolvedValue(mockEmails);
-    db.interactions.getByContact.mockResolvedValue([]);
+    // Setup db mocks
+    mockDb.contacts = {
+      getById: vi.fn().mockResolvedValue(mockContact),
+      updateIntelligence: vi.fn(),
+    };
+    mockDb.emails = {
+      getByContact: vi.fn().mockResolvedValue(mockEmails),
+    };
+    mockDb.interactions = {
+      getByContact: vi.fn().mockResolvedValue([]),
+    };
+    mockDb.auditLogs = {
+      logAgentRun: vi.fn(),
+    };
+
+    // Setup Anthropic mock response
+    mockCreate.mockResolvedValue({
+      id: 'msg_test123',
+      type: 'message',
+      role: 'assistant',
+      content: [
+        {
+          type: 'text',
+          text: JSON.stringify({
+            engagement_score: 85,
+            buying_intent: 'high',
+            decision_stage: 'consideration',
+            role_type: 'decision_maker',
+            next_best_action: 'Schedule product demo',
+            risk_signals: ['Budget concerns mentioned'],
+            opportunity_signals: ['Actively comparing solutions', 'Timeline in next quarter'],
+            engagement_velocity: 1,
+            sentiment_score: 75,
+          }),
+        },
+      ],
+      model: 'claude-opus-4-1-20250805',
+      stop_reason: 'end_turn',
+      usage: {
+        input_tokens: 1000,
+        output_tokens: 200,
+      },
+    });
   });
 
   it('should analyze contact and return intelligence data', async () => {
@@ -111,12 +131,9 @@ describe('Contact Intelligence Agent', () => {
   });
 
   it('should call Anthropic API with correct parameters', async () => {
-    const Anthropic = (await import('@anthropic-ai/sdk')).default;
-    const mockInstance = new Anthropic({ apiKey: 'test' });
-
     await analyzeContactIntelligence('contact-123', TEST_WORKSPACE.id);
 
-    expect(mockInstance.messages.create).toHaveBeenCalledWith(
+    expect(mockCreate).toHaveBeenCalledWith(
       expect.objectContaining({
         model: 'claude-opus-4-1-20250805',
         thinking: expect.objectContaining({
@@ -128,12 +145,9 @@ describe('Contact Intelligence Agent', () => {
   });
 
   it('should use prompt caching for system instructions', async () => {
-    const Anthropic = (await import('@anthropic-ai/sdk')).default;
-    const mockInstance = new Anthropic({ apiKey: 'test' });
-
     await analyzeContactIntelligence('contact-123', TEST_WORKSPACE.id);
 
-    expect(mockInstance.messages.create).toHaveBeenCalledWith(
+    expect(mockCreate).toHaveBeenCalledWith(
       expect.objectContaining({
         system: expect.arrayContaining([
           expect.objectContaining({
@@ -146,8 +160,7 @@ describe('Contact Intelligence Agent', () => {
   });
 
   it('should handle contact with no emails', async () => {
-    const { db } = require('@/lib/db');
-    db.emails.getByContact.mockResolvedValue([]);
+    mockDb.emails.getByContact.mockResolvedValue([]);
 
     const result = await analyzeContactIntelligence('contact-123', TEST_WORKSPACE.id);
 
@@ -162,8 +175,7 @@ describe('Contact Intelligence Agent', () => {
       })
     );
 
-    const { db } = require('@/lib/db');
-    db.emails.getByContact.mockResolvedValue(recentEmails);
+    mockDb.emails.getByContact.mockResolvedValue(recentEmails);
 
     const result = await analyzeContactIntelligence('contact-123', TEST_WORKSPACE.id);
 
@@ -171,8 +183,7 @@ describe('Contact Intelligence Agent', () => {
   });
 
   it('should throw error if contact not found', async () => {
-    const { db } = require('@/lib/db');
-    db.contacts.getById.mockResolvedValue(null);
+    mockDb.contacts.getById.mockResolvedValue(null);
 
     await expect(
       analyzeContactIntelligence('nonexistent-contact', TEST_WORKSPACE.id)
@@ -180,10 +191,7 @@ describe('Contact Intelligence Agent', () => {
   });
 
   it('should handle API errors gracefully', async () => {
-    const Anthropic = (await import('@anthropic-ai/sdk')).default;
-    const mockInstance = new Anthropic({ apiKey: 'test' });
-
-    mockInstance.messages.create.mockRejectedValue(new Error('API Error'));
+    mockCreate.mockRejectedValueOnce(new Error('API Error'));
 
     await expect(
       analyzeContactIntelligence('contact-123', TEST_WORKSPACE.id)
@@ -201,24 +209,20 @@ describe('Contact Intelligence Agent', () => {
   });
 
   it('should include recent email history in analysis', async () => {
-    const Anthropic = (await import('@anthropic-ai/sdk')).default;
-    const mockInstance = new Anthropic({ apiKey: 'test' });
-
     await analyzeContactIntelligence('contact-123', TEST_WORKSPACE.id);
 
-    const callArgs = mockInstance.messages.create.mock.calls[0][0];
+    const callArgs = mockCreate.mock.calls[0][0];
     const userMessage = callArgs.messages.find((m: any) => m.role === 'user');
 
+    expect(userMessage).toBeDefined();
     expect(userMessage.content).toContain('Product inquiry');
     expect(userMessage.content).toContain('Budget and timeline');
   });
 
   it('should respect workspace isolation', async () => {
-    const { db } = require('@/lib/db');
-
     await analyzeContactIntelligence('contact-123', TEST_WORKSPACE.id);
 
-    expect(db.contacts.getById).toHaveBeenCalledWith('contact-123');
-    expect(db.emails.getByContact).toHaveBeenCalledWith('contact-123');
+    expect(mockDb.contacts.getById).toHaveBeenCalledWith('contact-123');
+    expect(mockDb.emails.getByContact).toHaveBeenCalledWith('contact-123');
   });
 });
