@@ -41,10 +41,14 @@ export async function POST(req: NextRequest) {
       user = data.user;
     }
 
-    // Get Supabase instance for database operations
-    const supabase = await getSupabaseServer();
+    // Get Supabase instance for database operations (use service role to bypass RLS)
+    const { createClient } = await import('@supabase/supabase-js');
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
 
-    // Get user's organization
+    // Get user's organization using service role (bypasses RLS)
     const { data: userOrg, error: orgError } = await supabase
       .from("user_organizations")
       .select("org_id")
@@ -53,6 +57,7 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (orgError || !userOrg) {
+      console.error('[contact-intelligence] Org lookup failed:', orgError);
       return NextResponse.json({ error: "No active organization found" }, { status: 403 });
     }
 
