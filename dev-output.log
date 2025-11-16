@@ -21,3 +21,11 @@
  GET /dashboard/overview 200 in 150ms (compile: 51ms, proxy.ts: 5ms, render: 95ms)
  POST /api/auth/initialize-user 200 in 402ms (compile: 382ms, render: 20ms)
  ✓ Compiled in 22ms
+ GET /dashboard/overview 200 in 132ms (compile: 42ms, proxy.ts: 4ms, render: 86ms)
+Error creating organization: {
+  code: 'PGRST204',
+  details: null,
+  hint: null,
+  message: "Could not find the 'email' column of 'organizations' in the schema cache"
+}
+ POST /api/auth/initialize-user 500 in 701ms (compile: 73ms, render: 628ms)

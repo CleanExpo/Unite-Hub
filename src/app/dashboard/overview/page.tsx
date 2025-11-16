@@ -10,7 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function OverviewPage() {
-  const { currentOrganization, loading: authLoading } = useAuth();
+  const { user, currentOrganization, loading: authLoading } = useAuth();
   const workspaceId = currentOrganization?.org_id || null;
   const [stats, setStats] = useState({
     totalContacts: 0,
@@ -90,6 +90,18 @@ export default function OverviewPage() {
     return (
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
         <div className="text-white">Loading your dashboard...</div>
+      </div>
+    );
+  }
+
+  // Redirect to login if not authenticated
+  if (!user) {
+    if (typeof window !== 'undefined') {
+      window.location.href = '/login';
+    }
+    return (
+      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+        <div className="text-white">Redirecting to login...</div>
       </div>
     );
   }
