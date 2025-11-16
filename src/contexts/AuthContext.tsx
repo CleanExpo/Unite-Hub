@@ -322,26 +322,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               await fetchOrganizations(session.user.id, session);
               console.log('[AuthContext] Post-init fetch complete');
 
-              // Check if onboarding is needed (optional - skip if table doesn't exist)
-              try {
-                const { data: onboardingStatus, error: onboardingError } = await supabaseBrowser
-                  .from('user_onboarding')
-                  .select('*')
-                  .eq('user_id', session.user.id)
-                  .maybeSingle();
-
-                if (onboardingError) {
-                  console.log('[AuthContext] Onboarding table not found or error:', onboardingError.message);
-                  // Continue anyway - onboarding is optional
-                } else if (onboardingStatus && !onboardingStatus.completed_at && !onboardingStatus.skipped) {
-                  console.log('[AuthContext] Redirecting to onboarding...');
-                  window.location.href = '/onboarding';
-                  return;
-                }
-              } catch (onboardingErr) {
-                console.log('[AuthContext] Skipping onboarding check:', onboardingErr);
-                // Continue anyway
-              }
+              // Skip onboarding check for now (can add later if needed)
+              console.log('[AuthContext] Skipping onboarding check (disabled)');
 
               // Done initializing, stop loading
               console.log('[AuthContext] SIGNED_IN handling complete, setting loading = false');
