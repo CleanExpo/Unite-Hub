@@ -72,6 +72,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const fetchProfile = async (userId: string) => {
     try {
       console.log('[AuthContext] fetchProfile starting...');
+
+      // Ensure we have a valid session before making the query
+      const { data: { session: currentSession } } = await supabaseBrowser.auth.getSession();
+      if (!currentSession) {
+        console.error('[AuthContext] No session available for profile fetch - RLS will block the query');
+        return;
+      }
+      console.log('[AuthContext] Session confirmed, fetching profile...');
+
       const { data, error } = await Promise.race([
         supabaseBrowser.from("user_profiles").select("*").eq("id", userId).single(),
         new Promise((_, reject) => setTimeout(() => reject(new Error('Profile fetch timeout')), 15000))
@@ -92,6 +101,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const fetchOrganizations = async (userId: string) => {
     try {
       console.log('[AuthContext] fetchOrganizations starting...');
+
+      // Ensure we have a valid session before making the query
+      const { data: { session: currentSession } } = await supabaseBrowser.auth.getSession();
+      if (!currentSession) {
+        console.error('[AuthContext] No session available for organizations fetch - RLS will block the query');
+        setOrganizations([]);
+        setCurrentOrganization(null);
+        return;
+      }
+      console.log('[AuthContext] Session confirmed, fetching organizations...');
 
       // Add timeout to organizations fetch
       const { data: userOrgs, error: userOrgsError } = await Promise.race([
