@@ -223,26 +223,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let mounted = true;
 
+    console.log('[AuthContext] Initializing auth state...');
+
     // Get initial session from localStorage (persisted session)
     supabaseBrowser.auth.getSession().then(async ({ data: { session }, error }) => {
       if (!mounted) return;
 
       if (error) {
-        console.error('Error getting session:', error);
+        console.error('[AuthContext] Error getting session:', error);
         setLoading(false);
         return;
       }
 
       if (session) {
-        console.log('Restored session from storage for:', session.user.email);
+        console.log('[AuthContext] Restored session from storage for:', session.user.email);
         setSession(session);
         setUser(session.user);
 
         // Fetch user data
+        console.log('[AuthContext] Fetching profile and organizations...');
         await fetchProfile(session.user.id);
         await fetchOrganizations(session.user.id);
+        console.log('[AuthContext] Profile and organizations fetched');
+      } else {
+        console.log('[AuthContext] No session found in storage');
       }
 
+      console.log('[AuthContext] Initial load complete, setting loading = false');
       setLoading(false);
     });
 
@@ -252,7 +259,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } = supabaseBrowser.auth.onAuthStateChange(async (event, session) => {
       if (!mounted) return;
 
-      console.log('Auth state change:', event, session?.user?.email);
+      console.log('[AuthContext] Auth state change:', event, session?.user?.email);
 
       setSession(session);
       setUser(session?.user ?? null);
@@ -261,7 +268,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // For SIGNED_IN event (first login), initialize user profile and organization
         if (event === 'SIGNED_IN') {
           try {
-            console.log('SIGNED_IN event detected, initializing user...');
+            console.log('[AuthContext] SIGNED_IN event detected, initializing user...');
             const response = await fetch('/api/auth/initialize-user', {
               method: 'POST',
               headers: {
@@ -271,17 +278,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
             if (!response.ok) {
               const errorText = await response.text();
-              console.error('Failed to initialize user:', errorText);
+              console.error('[AuthContext] Failed to initialize user:', errorText);
             } else {
               const result = await response.json();
-              console.log('User initialized successfully:', result);
+              console.log('[AuthContext] User initialized successfully:', result);
 
               // Wait a moment for database to propagate changes
+              console.log('[AuthContext] Waiting for DB propagation...');
               await new Promise(resolve => setTimeout(resolve, 1000));
 
               // Fetch user data AFTER initialization completes
+              console.log('[AuthContext] Fetching profile and organizations after init...');
               await fetchProfile(session.user.id);
               await fetchOrganizations(session.user.id);
+              console.log('[AuthContext] Post-init fetch complete');
 
               // Check if onboarding is needed
               const { data: onboardingStatus } = await supabaseBrowser
@@ -292,29 +302,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
               // If onboarding exists and is not complete, redirect to onboarding
               if (onboardingStatus && !onboardingStatus.completed_at && !onboardingStatus.skipped) {
+                console.log('[AuthContext] Redirecting to onboarding...');
                 window.location.href = '/onboarding';
                 return;
               }
 
               // Done initializing, stop loading
+              console.log('[AuthContext] SIGNED_IN handling complete, setting loading = false');
               setLoading(false);
               return; // Exit early, don't fetch again below
             }
           } catch (error) {
-            console.error('Error initializing user:', error);
+            console.error('[AuthContext] Error initializing user:', error);
+            // Even on error, set loading to false to prevent infinite loading
+            setLoading(false);
           }
         }
 
         // Fetch/refresh user data on any auth event (except SIGNED_IN which handles above)
+        console.log('[AuthContext] Fetching profile and organizations for event:', event);
         await fetchProfile(session.user.id);
         await fetchOrganizations(session.user.id);
+        console.log('[AuthContext] Fetch complete for event:', event);
       } else {
         // Clear user data on sign out
+        console.log('[AuthContext] No session, clearing user data');
         setProfile(null);
         setOrganizations([]);
         setCurrentOrganization(null);
       }
 
+      console.log('[AuthContext] Auth state change handling complete, setting loading = false');
       setLoading(false);
     });
 
