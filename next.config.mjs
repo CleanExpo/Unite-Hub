@@ -7,6 +7,21 @@ const nextConfig = {
   },
   // Enable standalone output for Docker
   output: 'standalone',
+  // Configure external image domains
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'hoirqrkdgbmvpwutwuwj.supabase.co',
+        pathname: '/storage/v1/object/public/**',
+      },
+    ],
+  },
   redirects: async () => [
     {
       source: '/dashboard',
