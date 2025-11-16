@@ -9,14 +9,18 @@ function sanitizePhone(phone: string): string {
 
 export async function POST(req: NextRequest) {
   try {
+    console.log('[profile/update] POST request received');
+
     // Apply rate limiting (100 requests per 15 minutes for API endpoints)
     const rateLimitResult = await apiRateLimit(req);
     if (rateLimitResult) {
+      console.log('[profile/update] Rate limit exceeded');
       return rateLimitResult;
     }
     // Try to get token from Authorization header (client-side requests with implicit OAuth)
     const authHeader = req.headers.get("authorization");
     const token = authHeader?.replace("Bearer ", "");
+    console.log('[profile/update] Auth header present:', !!token);
 
     let userId: string;
 
@@ -45,11 +49,13 @@ export async function POST(req: NextRequest) {
 
     // Parse and validate request body
     const body = await req.json();
+    console.log('[profile/update] Request body fields:', Object.keys(body));
 
     // Validate using Zod schema
     const validationResult = UpdateProfileSchema.safeParse(body);
 
     if (!validationResult.success) {
+      console.error('[profile/update] Validation failed:', validationResult.error);
       return NextResponse.json(
         {
           error: "Invalid input",
@@ -58,6 +64,8 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+
+    console.log('[profile/update] Validation passed, updating profile for user:', userId);
 
     const {
       username,
@@ -109,12 +117,17 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (updateError) {
-      console.error("Profile update error:", updateError);
+      console.error("[profile/update] Database update error:", updateError);
+      console.error("[profile/update] Error code:", updateError.code);
+      console.error("[profile/update] Error details:", updateError.details);
+      console.error("[profile/update] Error hint:", updateError.hint);
       return NextResponse.json(
-        { error: "Failed to update profile", details: updateError.message },
+        { error: "Failed to update profile", details: updateError.message, code: updateError.code },
         { status: 500 }
       );
     }
+
+    console.log('[profile/update] Profile updated successfully');
 
     // Log audit trail
     await supabase.from("auditLogs").insert({
@@ -133,9 +146,10 @@ export async function POST(req: NextRequest) {
       profile: updatedProfile,
     });
   } catch (error) {
-    console.error("Profile update error:", error);
+    console.error("[profile/update] Unexpected error:", error);
+    console.error("[profile/update] Error stack:", error instanceof Error ? error.stack : 'No stack trace');
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: "Internal server error", details: error instanceof Error ? error.message : String(error) },
       { status: 500 }
     );
   }

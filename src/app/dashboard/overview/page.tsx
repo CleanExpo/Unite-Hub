@@ -55,11 +55,16 @@ export default function OverviewPage() {
         }
 
         // Check if workspace is available
+        // Only show message if org is loaded but workspace is still null
         if (!workspaceId) {
-          console.log("No workspace selected - setting loading to false");
+          if (currentOrganization) {
+            console.log("Workspace still loading for org:", currentOrganization.org_id);
+          }
           setLoading(false);
           return;
         }
+
+        console.log("Fetching stats for workspace:", workspaceId);
 
         // Fetch contacts count and stats
         const { data: contacts, error: contactsError } = await supabase
