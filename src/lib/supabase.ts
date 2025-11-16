@@ -4,6 +4,7 @@ import { createServerClient as createSSRServerClient, type CookieOptions } from 
 // Get environment variables with proper fallbacks
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 
 // Validate required environment variables
 if (!supabaseUrl || !supabaseAnonKey) {
@@ -85,6 +86,18 @@ export async function getSupabaseServer() {
 
 // Removed supabaseServer Proxy - it cannot work with async getSupabaseServer()
 // Always use: const supabase = await getSupabaseServer();
+
+// Admin client (service role) - bypasses RLS, use for server-side operations
+export const supabaseAdmin = createClient(
+  supabaseUrl,
+  supabaseServiceRoleKey,
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  }
+);
 
 // Types
 export interface Organization {
