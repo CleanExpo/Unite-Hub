@@ -11,7 +11,7 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function OverviewPage() {
   const { user, currentOrganization, loading: authLoading } = useAuth();
-  const workspaceId = currentOrganization?.org_id || null;
+  const [workspaceId, setWorkspaceId] = useState<string | null>(null);
   const [stats, setStats] = useState({
     totalContacts: 0,
     hotLeads: 0,
@@ -19,6 +19,31 @@ export default function OverviewPage() {
     avgAiScore: 0,
   });
   const [loading, setLoading] = useState(true);
+
+  // Fetch workspace ID for current organization
+  useEffect(() => {
+    const fetchWorkspace = async () => {
+      if (!currentOrganization?.org_id) {
+        setWorkspaceId(null);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('workspaces')
+        .select('id')
+        .eq('org_id', currentOrganization.org_id)
+        .single();
+
+      if (!error && data) {
+        setWorkspaceId(data.id);
+      } else {
+        console.error('Error fetching workspace:', error);
+        setWorkspaceId(null);
+      }
+    };
+
+    fetchWorkspace();
+  }, [currentOrganization?.org_id]);
 
   useEffect(() => {
     async function fetchStats() {

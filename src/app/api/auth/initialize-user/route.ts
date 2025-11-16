@@ -163,8 +163,7 @@ export async function POST(request: NextRequest) {
         .from('workspaces')
         .insert({
           org_id: newOrg.id,
-          name: 'Default Workspace',
-          description: 'Your main workspace'
+          name: 'Default Workspace'
         })
 
       if (workspaceError) {
