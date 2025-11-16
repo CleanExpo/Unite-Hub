@@ -96,6 +96,9 @@ export default function DashboardLayout({
                 <NavLink href="/dashboard/overview" isActive={isActive("/dashboard/overview")}>
                   Dashboard
                 </NavLink>
+                <NavLink href="/dashboard/contacts" isActive={isActive("/dashboard/contacts")}>
+                  Contacts
+                </NavLink>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className={`${
@@ -116,17 +119,29 @@ export default function DashboardLayout({
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                <NavLink href="/dashboard/contacts" isActive={isActive("/dashboard/contacts")}>
-                  Contacts
-                </NavLink>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className={`${
+                      isActive("/dashboard/content") || isActive("/dashboard/intelligence")
+                        ? "text-white"
+                        : "text-slate-400 hover:text-white"
+                    } h-auto px-2 py-1`}>
+                      AI Tools
+                      <ChevronDown className="w-4 h-4 ml-1" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="bg-slate-800 border-slate-700">
+                    <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                      <Link href="/dashboard/content" className="w-full">Content Generation</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                      <Link href="/dashboard/intelligence" className="w-full">Contact Intelligence</Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
                 <PermissionGate permission="workspace:view">
                   <NavLink href="/dashboard/workspaces" isActive={isActive("/dashboard/workspaces")}>
                     Workspaces
-                  </NavLink>
-                </PermissionGate>
-                <PermissionGate permission="billing:view">
-                  <NavLink href="/billing" isActive={isActive("/billing")}>
-                    Billing
                   </NavLink>
                 </PermissionGate>
               </div>
