@@ -2,3 +2,19 @@
 > unite-hub@1.0.0 dev
 > next dev -p 3008
 
+   ▲ Next.js 16.0.1 (Turbopack)
+   - Local:        http://localhost:3008
+   - Network:      http://192.168.50.145:3008
+   - Environments: .env.local
+
+ ✓ Starting...
+ ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+ ✓ Ready in 1009ms
+ GET /debug-auth 200 in 2.7s (compile: 2.6s, render: 136ms)
+ GET / 200 in 480ms (compile: 437ms, render: 43ms)
+ GET /login 200 in 1216ms (compile: 1125ms, proxy.ts: 68ms, render: 23ms)
+ GET / 200 in 37ms (compile: 5ms, render: 32ms)
+ GET /login 200 in 29ms (compile: 5ms, proxy.ts: 6ms, render: 18ms)
+ GET /dashboard/overview 200 in 1080ms (compile: 941ms, proxy.ts: 4ms, render: 134ms)
+ ✓ Compiled in 101ms
+ ✓ Compiled in 73ms

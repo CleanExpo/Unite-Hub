@@ -294,10 +294,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (event === 'SIGNED_IN') {
           try {
             console.log('[AuthContext] SIGNED_IN event detected, initializing user...');
+
+            // Get the access token to pass to API (needed for implicit OAuth flow)
+            const accessToken = session.access_token;
+
             const response = await fetch('/api/auth/initialize-user', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`, // Pass token for implicit flow
               },
             });
 

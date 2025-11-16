@@ -11,29 +11,70 @@ export async function POST(request: NextRequest) {
     if (rateLimitResult) {
       return rateLimitResult;
     }
-    const cookieStore = await cookies()
 
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get(name: string) {
-            return cookieStore.get(name)?.value
-          },
-        },
+    // Check for Authorization header (implicit OAuth flow)
+    const authHeader = request.headers.get('authorization');
+    const token = authHeader?.replace('Bearer ', '');
+
+    let supabase;
+    let user;
+
+    if (token) {
+      // Use browser client approach for implicit OAuth tokens
+      const { supabaseBrowser } = await import('@/lib/supabase');
+      const { data, error } = await supabaseBrowser.auth.getUser(token);
+
+      if (error || !data.user) {
+        console.error('Token auth failed:', error);
+        return NextResponse.json(
+          { message: 'Not authenticated, skipping initialization' },
+          { status: 200 }
+        );
       }
-    )
 
-    // Get current user
-    const { data: { user }, error: userError } = await supabase.auth.getUser()
+      user = data.user;
 
-    if (userError || !user) {
-      // Not authenticated - this is OK, just return early (don't error)
-      return NextResponse.json(
-        { message: 'Not authenticated, skipping initialization' },
-        { status: 200 }
-      )
+      // Create server client for database operations
+      supabase = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        {
+          cookies: {
+            get() { return undefined; },
+          },
+          global: {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        }
+      );
+    } else {
+      // Fallback to cookie-based auth (PKCE flow)
+      const cookieStore = await cookies();
+
+      supabase = createServerClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+        {
+          cookies: {
+            get(name: string) {
+              return cookieStore.get(name)?.value;
+            },
+          },
+        }
+      );
+
+      const { data: { user: cookieUser }, error: userError } = await supabase.auth.getUser();
+
+      if (userError || !cookieUser) {
+        return NextResponse.json(
+          { message: 'Not authenticated, skipping initialization' },
+          { status: 200 }
+        );
+      }
+
+      user = cookieUser;
     }
 
     // Check if user profile already exists
