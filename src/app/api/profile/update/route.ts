@@ -78,8 +78,8 @@ export async function POST(req: NextRequest) {
       notification_preferences,
     } = validationResult.data;
 
-    // Additional check: username uniqueness
-    if (username !== undefined) {
+    // Additional check: username uniqueness (only if username is not empty)
+    if (username !== undefined && username !== '' && username !== null) {
       const { data: existingUser } = await supabase
         .from("user_profiles")
         .select("id")
@@ -98,11 +98,11 @@ export async function POST(req: NextRequest) {
     // Build update object (only include fields that were provided)
     const updateData: Record<string, any> = {};
 
-    if (username !== undefined) updateData.username = username;
+    if (username !== undefined) updateData.username = username || null;
     if (full_name !== undefined) updateData.full_name = full_name;
-    if (business_name !== undefined) updateData.business_name = business_name;
+    if (business_name !== undefined) updateData.business_name = business_name || null;
     if (phone !== undefined) updateData.phone = phone ? sanitizePhone(phone) : null;
-    if (bio !== undefined) updateData.bio = bio;
+    if (bio !== undefined) updateData.bio = bio || null;
     if (website !== undefined) updateData.website = website || null;
     if (timezone !== undefined) updateData.timezone = timezone;
     if (notification_preferences !== undefined)
