@@ -15,3 +15,6 @@
  GET / 200 in 433ms (compile: 398ms, render: 36ms)
  GET /dashboard/overview 200 in 47ms (compile: 10ms, proxy.ts: 5ms, render: 32ms)
  GET /login 200 in 598ms (compile: 481ms, proxy.ts: 4ms, render: 114ms)
+ GET / 200 in 29ms (compile: 4ms, render: 24ms)
+ GET /login 200 in 78ms (compile: 3ms, proxy.ts: 5ms, render: 71ms)
+ GET /login 200 in 84ms (compile: 5ms, proxy.ts: 4ms, render: 76ms)
