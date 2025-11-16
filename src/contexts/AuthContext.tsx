@@ -74,7 +74,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log('[AuthContext] fetchProfile starting...');
       const { data, error } = await Promise.race([
         supabaseBrowser.from("user_profiles").select("*").eq("id", userId).single(),
-        new Promise((_, reject) => setTimeout(() => reject(new Error('Profile fetch timeout')), 5000))
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Profile fetch timeout')), 15000))
       ]) as any;
 
       if (error) {
@@ -101,7 +101,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           .eq("user_id", userId)
           .eq("is_active", true)
           .order("joined_at", { ascending: false }),
-        new Promise((_, reject) => setTimeout(() => reject(new Error('Organizations fetch timeout')), 5000))
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Organizations fetch timeout')), 15000))
       ]) as any;
 
       if (userOrgsError) {
@@ -124,7 +124,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const orgIds = userOrgs.map((uo: any) => uo.org_id);
       const { data: orgsData, error: orgsError } = await Promise.race([
         supabaseBrowser.from("organizations").select("id, name").in("id", orgIds),
-        new Promise((_, reject) => setTimeout(() => reject(new Error('Org details fetch timeout')), 5000))
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Org details fetch timeout')), 15000))
       ]) as any;
 
       if (orgsError) {
@@ -240,13 +240,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     console.log('[AuthContext] Initializing auth state...');
 
-    // Safety timeout: If loading doesn't complete in 5 seconds, force it to false
+    // Safety timeout: If loading doesn't complete in 20 seconds, force it to false
     const safetyTimeout = setTimeout(() => {
       if (mounted) {
         console.warn('[AuthContext] ⚠️ SAFETY TIMEOUT REACHED - FORCING LOADING = FALSE');
         setLoading(false);
       }
-    }, 5000); // 5 second timeout
+    }, 20000); // 20 second timeout (increased to allow slow DB queries)
 
     // Get initial session from localStorage (persisted session)
     supabaseBrowser.auth.getSession().then(async ({ data: { session }, error }) => {
