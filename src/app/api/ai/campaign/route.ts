@@ -4,7 +4,6 @@ import { CAMPAIGN_SYSTEM_PROMPT, buildCampaignUserPrompt } from '@/lib/claude/pr
 import { aiAgentRateLimit } from "@/lib/rate-limit";
 import { authenticateRequest } from "@/lib/auth";
 
-export const runtime = 'edge';
 
 interface CampaignRequest {
   strategy: any;

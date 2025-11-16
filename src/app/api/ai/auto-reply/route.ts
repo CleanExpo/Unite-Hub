@@ -5,7 +5,6 @@ import type { ConversationContext } from '@/lib/claude/context';
 import { aiAgentRateLimit } from "@/lib/rate-limit";
 import { authenticateRequest } from "@/lib/auth";
 
-export const runtime = 'edge';
 
 interface AutoReplyRequest {
   from: string;

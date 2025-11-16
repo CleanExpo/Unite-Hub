@@ -4,7 +4,6 @@ import { STRATEGY_SYSTEM_PROMPT, buildStrategyUserPrompt } from '@/lib/claude/pr
 import { aiAgentRateLimit } from "@/lib/rate-limit";
 import { authenticateRequest } from "@/lib/auth";
 
-export const runtime = 'edge';
 
 interface StrategyRequest {
   persona: any;

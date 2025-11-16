@@ -4,7 +4,6 @@ import { HOOKS_SYSTEM_PROMPT, buildHooksUserPrompt } from '@/lib/claude/prompts'
 import { aiAgentRateLimit } from "@/lib/rate-limit";
 import { authenticateRequest } from "@/lib/auth";
 
-export const runtime = 'edge';
 
 interface HooksRequest {
   persona: any;

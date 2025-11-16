@@ -4,7 +4,6 @@ import { PERSONA_SYSTEM_PROMPT, buildPersonaUserPrompt } from '@/lib/claude/prom
 import { aiAgentRateLimit } from "@/lib/rate-limit";
 import { authenticateRequest } from "@/lib/auth";
 
-export const runtime = 'edge';
 
 interface PersonaRequest {
   emails: Array<{

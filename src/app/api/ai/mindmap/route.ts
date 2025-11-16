@@ -4,7 +4,6 @@ import { MINDMAP_SYSTEM_PROMPT, buildMindmapUserPrompt } from '@/lib/claude/prom
 import { aiAgentRateLimit } from "@/lib/rate-limit";
 import { authenticateRequest } from "@/lib/auth";
 
-export const runtime = 'edge';
 
 interface MindmapRequest {
   emails: Array<{
