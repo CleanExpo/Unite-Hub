@@ -172,7 +172,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { data, error} = await supabaseBrowser.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${window.location.origin}/auth/implicit-callback`,
       },
     });
 
@@ -225,12 +225,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     console.log('[AuthContext] Initializing auth state...');
 
+    // Safety timeout: If loading doesn't complete in 10 seconds, force it to false
+    const safetyTimeout = setTimeout(() => {
+      if (mounted) {
+        console.warn('[AuthContext] Safety timeout reached - forcing loading = false');
+        setLoading(false);
+      }
+    }, 10000); // 10 second timeout
+
     // Get initial session from localStorage (persisted session)
     supabaseBrowser.auth.getSession().then(async ({ data: { session }, error }) => {
       if (!mounted) return;
 
       if (error) {
         console.error('[AuthContext] Error getting session:', error);
+        clearTimeout(safetyTimeout);
         setLoading(false);
         return;
       }
@@ -250,6 +259,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       console.log('[AuthContext] Initial load complete, setting loading = false');
+      clearTimeout(safetyTimeout);
       setLoading(false);
     });
 
@@ -293,18 +303,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               await fetchOrganizations(session.user.id);
               console.log('[AuthContext] Post-init fetch complete');
 
-              // Check if onboarding is needed
-              const { data: onboardingStatus } = await supabaseBrowser
-                .from('user_onboarding')
-                .select('*')
-                .eq('user_id', session.user.id)
-                .maybeSingle();
+              // Check if onboarding is needed (optional - skip if table doesn't exist)
+              try {
+                const { data: onboardingStatus, error: onboardingError } = await supabaseBrowser
+                  .from('user_onboarding')
+                  .select('*')
+                  .eq('user_id', session.user.id)
+                  .maybeSingle();
 
-              // If onboarding exists and is not complete, redirect to onboarding
-              if (onboardingStatus && !onboardingStatus.completed_at && !onboardingStatus.skipped) {
-                console.log('[AuthContext] Redirecting to onboarding...');
-                window.location.href = '/onboarding';
-                return;
+                if (onboardingError) {
+                  console.log('[AuthContext] Onboarding table not found or error:', onboardingError.message);
+                  // Continue anyway - onboarding is optional
+                } else if (onboardingStatus && !onboardingStatus.completed_at && !onboardingStatus.skipped) {
+                  console.log('[AuthContext] Redirecting to onboarding...');
+                  window.location.href = '/onboarding';
+                  return;
+                }
+              } catch (onboardingErr) {
+                console.log('[AuthContext] Skipping onboarding check:', onboardingErr);
+                // Continue anyway
               }
 
               // Done initializing, stop loading
@@ -338,6 +355,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     return () => {
       mounted = false;
+      clearTimeout(safetyTimeout);
       subscription.unsubscribe();
     };
   }, []);
