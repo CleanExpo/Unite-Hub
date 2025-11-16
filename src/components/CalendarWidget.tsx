@@ -57,8 +57,22 @@ export default function CalendarWidget({ workspaceId }: CalendarWidgetProps) {
   const fetchUpcomingEvents = async () => {
     try {
       setLoading(true);
+
+      // Get session token for authentication
+      const { supabase } = await import("@/lib/supabase");
+      const { data: { session } } = await supabase.auth.getSession();
+
+      const headers: HeadersInit = {
+        "Content-Type": "application/json",
+      };
+
+      if (session?.access_token) {
+        headers["Authorization"] = `Bearer ${session.access_token}`;
+      }
+
       const response = await fetch(
-        `/api/calendar/events?workspaceId=${workspaceId}&timeMin=${new Date().toISOString()}`
+        `/api/calendar/events?workspaceId=${workspaceId}&timeMin=${new Date().toISOString()}`,
+        { headers }
       );
 
       const data = await response.json();
