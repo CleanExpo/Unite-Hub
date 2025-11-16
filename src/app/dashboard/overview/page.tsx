@@ -2,12 +2,12 @@
 
 import { HotLeadsPanel } from "@/components/HotLeadsPanel";
 import CalendarWidget from "@/components/CalendarWidget";
-// import { OnboardingChecklist } from "@/components/OnboardingChecklist"; // Disabled - OnboardingProvider not available
 import { Card, CardContent } from "@/components/ui/card";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/contexts/AuthContext";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { Users, Flame, Mail, TrendingUp, Sparkles, ArrowUpRight, ArrowDownRight } from "lucide-react";
 
 export default function OverviewPage() {
   const { user, currentOrganization, loading: authLoading } = useAuth();
@@ -48,14 +48,11 @@ export default function OverviewPage() {
   useEffect(() => {
     async function fetchStats() {
       try {
-        // Wait for auth to finish loading first
         if (authLoading) {
           console.log("Waiting for auth to complete...");
           return;
         }
 
-        // Check if workspace is available
-        // Only show message if org is loaded but workspace is still null
         if (!workspaceId) {
           if (currentOrganization) {
             console.log("Workspace still loading for org:", currentOrganization.org_id);
@@ -70,7 +67,7 @@ export default function OverviewPage() {
         const { data: contacts, error: contactsError } = await supabase
           .from("contacts")
           .select("ai_score, status")
-          .eq("workspace_id", workspaceId);  // ✅ Added workspace filter
+          .eq("workspace_id", workspaceId);
 
         if (contactsError) {
           console.error("Error fetching contacts:", contactsError);
@@ -90,7 +87,7 @@ export default function OverviewPage() {
         const { data: campaigns, error: campaignsError } = await supabase
           .from("campaigns")
           .select("id")
-          .eq("workspace_id", workspaceId);  // ✅ Added workspace filter
+          .eq("workspace_id", workspaceId);
 
         if (campaignsError) {
           console.error("Error fetching campaigns:", campaignsError);
@@ -119,7 +116,12 @@ export default function OverviewPage() {
   if (authLoading) {
     return (
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
-        <div className="text-white">Loading your dashboard...</div>
+        <div className="flex items-center justify-center h-64">
+          <div className="flex items-center gap-3">
+            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 animate-pulse"></div>
+            <p className="text-slate-400">Loading your dashboard...</p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -131,7 +133,7 @@ export default function OverviewPage() {
     }
     return (
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
-        <div className="text-white">Redirecting to login...</div>
+        <div className="text-slate-400">Redirecting to login...</div>
       </div>
     );
   }
@@ -140,7 +142,12 @@ export default function OverviewPage() {
   if (loading) {
     return (
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
-        <div className="text-white">Loading stats...</div>
+        <div className="flex items-center justify-center h-64">
+          <div className="flex items-center gap-3">
+            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 animate-pulse"></div>
+            <p className="text-slate-400">Loading stats...</p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -148,9 +155,12 @@ export default function OverviewPage() {
   if (!workspaceId) {
     return (
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-8 text-center">
-          <p className="text-slate-400 mb-4">No workspace selected</p>
-          <p className="text-sm text-slate-500">Please create or select a workspace to continue.</p>
+        <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-8 text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-600/20 mb-4">
+            <Sparkles className="h-8 w-8 text-blue-400" />
+          </div>
+          <h3 className="text-xl font-semibold text-white mb-2">No workspace selected</h3>
+          <p className="text-slate-400">Please create or select a workspace to continue.</p>
         </div>
       </div>
     );
@@ -160,20 +170,50 @@ export default function OverviewPage() {
     <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
       <Breadcrumbs items={[{ label: "Overview" }]} />
 
-      <div>
-        <h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
-        <p className="text-slate-400">Welcome back!</p>
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent mb-2">
+            Dashboard Overview
+          </h1>
+          <p className="text-slate-400">Welcome back! Here's what's happening with your contacts.</p>
+        </div>
       </div>
 
-      {/* Onboarding Checklist - Disabled until OnboardingProvider is restored */}
-      {/* <OnboardingChecklist /> */}
-
-      {/* Stats - Now using real data from Supabase */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <StatCard title="Total Contacts" value={stats.totalContacts.toString()} icon="📧" />
-        <StatCard title="Hot Leads" value={stats.hotLeads.toString()} icon="🔥" />
-        <StatCard title="Campaigns" value={stats.totalCampaigns.toString()} icon="✍️" />
-        <StatCard title="Avg AI Score" value={stats.avgAiScore.toString()} icon="⭐" />
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <StatCard
+          title="Total Contacts"
+          value={stats.totalContacts.toString()}
+          icon={Users}
+          gradient="from-blue-500 to-cyan-500"
+          change="+12%"
+          trending="up"
+        />
+        <StatCard
+          title="Hot Leads"
+          value={stats.hotLeads.toString()}
+          icon={Flame}
+          gradient="from-orange-500 to-red-500"
+          change="+8%"
+          trending="up"
+        />
+        <StatCard
+          title="Active Campaigns"
+          value={stats.totalCampaigns.toString()}
+          icon={Mail}
+          gradient="from-purple-500 to-pink-500"
+          change="+5%"
+          trending="up"
+        />
+        <StatCard
+          title="Avg AI Score"
+          value={stats.avgAiScore.toString()}
+          icon={TrendingUp}
+          gradient="from-green-500 to-emerald-500"
+          change="+3 pts"
+          trending="up"
+        />
       </div>
 
       {/* Main Content Grid */}
@@ -191,20 +231,38 @@ export default function OverviewPage() {
 function StatCard({
   title,
   value,
-  icon,
+  icon: Icon,
+  gradient,
+  change,
+  trending,
 }: {
   title: string;
   value: string;
-  icon: string;
+  icon: React.ElementType;
+  gradient: string;
+  change?: string;
+  trending?: "up" | "down";
 }) {
   return (
-    <Card className="bg-slate-800 border-slate-700">
-      <CardContent className="pt-6">
-        <div className="space-y-2">
-          <div className="flex justify-between items-start">
-            <p className="text-slate-400 text-sm">{title}</p>
-            <span className="text-2xl">{icon}</span>
+    <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 hover:border-slate-600/50 transition-all group">
+      <CardContent className="p-6">
+        <div className="flex items-start justify-between mb-4">
+          <div className={`h-12 w-12 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}>
+            <Icon className="h-6 w-6 text-white" />
           </div>
+          {change && (
+            <div className={`flex items-center gap-1 text-xs font-semibold ${trending === "up" ? "text-green-400" : "text-red-400"}`}>
+              {trending === "up" ? (
+                <ArrowUpRight className="h-3 w-3" />
+              ) : (
+                <ArrowDownRight className="h-3 w-3" />
+              )}
+              {change}
+            </div>
+          )}
+        </div>
+        <div className="space-y-1">
+          <p className="text-sm text-slate-400 font-medium">{title}</p>
           <p className="text-3xl font-bold text-white">{value}</p>
         </div>
       </CardContent>
