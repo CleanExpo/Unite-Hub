@@ -41,8 +41,9 @@ export const UpdateProfileSchema = z.object({
   timezone: z.string().optional(),
   notification_preferences: z.object({
     email_notifications: z.boolean().optional(),
-    browser_notifications: z.boolean().optional(),
-    campaign_updates: z.boolean().optional(),
+    marketing_emails: z.boolean().optional(),
+    product_updates: z.boolean().optional(),
+    weekly_digest: z.boolean().optional(),
   }).optional(),
 });
 

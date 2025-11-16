@@ -172,19 +172,8 @@ export async function POST(request: NextRequest) {
         // Don't fail the whole request if workspace creation fails
       }
 
-      // Initialize onboarding for new user
-      const { error: onboardingError } = await supabase
-        .from('user_onboarding')
-        .insert({
-          user_id: user.id,
-          current_step: 1,
-          onboarding_data: {}
-        })
-
-      if (onboardingError) {
-        console.error('Error creating onboarding record:', onboardingError)
-        // Don't fail the whole request if onboarding creation fails
-      }
+      // Onboarding initialization disabled - user_onboarding table doesn't exist yet
+      // TODO: Re-enable when user_onboarding table is created
     }
 
     return NextResponse.json({ success: true })
