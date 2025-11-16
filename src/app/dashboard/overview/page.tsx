@@ -2,7 +2,7 @@
 
 import { HotLeadsPanel } from "@/components/HotLeadsPanel";
 import CalendarWidget from "@/components/CalendarWidget";
-import { OnboardingChecklist } from "@/components/OnboardingChecklist";
+// import { OnboardingChecklist } from "@/components/OnboardingChecklist"; // Disabled - OnboardingProvider not available
 import { Card, CardContent } from "@/components/ui/card";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
@@ -135,8 +135,8 @@ export default function OverviewPage() {
         <p className="text-slate-400">Welcome back!</p>
       </div>
 
-      {/* Onboarding Checklist */}
-      <OnboardingChecklist />
+      {/* Onboarding Checklist - Disabled until OnboardingProvider is restored */}
+      {/* <OnboardingChecklist /> */}
 
       {/* Stats - Now using real data from Supabase */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
