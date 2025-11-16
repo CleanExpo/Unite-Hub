@@ -84,7 +84,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.error('[AuthContext] No session available for profile fetch - RLS will block the query');
         return;
       }
-      console.log('[AuthContext] Session confirmed, fetching profile...');
+
+      console.log('[AuthContext] Session confirmed for user:', currentSession.user.email);
+
+      // CRITICAL: Ensure supabaseBrowser has the session set
+      await supabaseBrowser.auth.setSession({
+        access_token: currentSession.access_token,
+        refresh_token: currentSession.refresh_token
+      });
+
+      console.log('[AuthContext] Session set on client, fetching profile...');
 
       const { data, error } = await Promise.race([
         supabaseBrowser.from("user_profiles").select("*").eq("id", userId).single(),
@@ -120,7 +129,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setCurrentOrganization(null);
         return;
       }
-      console.log('[AuthContext] Session confirmed, fetching organizations...');
+
+      console.log('[AuthContext] Session confirmed for user:', currentSession.user.email);
+
+      // CRITICAL: Ensure supabaseBrowser has the session set
+      await supabaseBrowser.auth.setSession({
+        access_token: currentSession.access_token,
+        refresh_token: currentSession.refresh_token
+      });
+
+      console.log('[AuthContext] Session set on client, fetching organizations...');
 
       // Add timeout to organizations fetch
       const { data: userOrgs, error: userOrgsError } = await Promise.race([
