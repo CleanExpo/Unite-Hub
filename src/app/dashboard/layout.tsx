@@ -22,7 +22,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const { user, profile, signOut, currentOrganization } = useAuth();
+  const { user, profile, signOut, currentOrganization, loading: authLoading } = useAuth();
   const [orgId, setOrgId] = useState<Id<"organizations"> | null>(null);
 
   // Automatically refresh session to keep user logged in
@@ -47,10 +47,32 @@ export default function DashboardLayout({
 
   const isActive = (href: string) => pathname.startsWith(href);
 
+  // Show loading while auth is initializing
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 flex items-center justify-center">
+        <div className="text-white">Loading your dashboard...</div>
+      </div>
+    );
+  }
+
+  // Redirect to login if not authenticated
+  if (!user) {
+    if (typeof window !== 'undefined') {
+      window.location.href = '/login';
+    }
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 flex items-center justify-center">
+        <div className="text-white">Redirecting to login...</div>
+      </div>
+    );
+  }
+
+  // Show loading while organization is loading
   if (!orgId) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 flex items-center justify-center">
-        <div className="text-white">Loading...</div>
+        <div className="text-white">Loading organization...</div>
       </div>
     );
   }

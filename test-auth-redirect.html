@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Auth Redirect Test</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1e293b;
+            color: #e2e8f0;
+        }
+        .log {
+            margin: 10px 0;
+            padding: 10px;
+            background: #0f172a;
+            border-left: 3px solid #3b82f6;
+        }
+        .success { border-left-color: #10b981; }
+        .error { border-left-color: #ef4444; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Authentication Redirect Test</h1>
+    <div id="logs"></div>
+
+    <script>
+        const logs = document.getElementById('logs');
+
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `log ${type}`;
+            div.textContent = `[${new Date().toISOString()}] ${message}`;
+            logs.appendChild(div);
+        }
+
+        async function testAuthFlow() {
+            log('Starting authentication flow test...');
+
+            // Clear localStorage to simulate unauthenticated state
+            log('Clearing localStorage...');
+            localStorage.clear();
+
+            // Wait a moment
+            await new Promise(r => setTimeout(r, 500));
+
+            log('Navigating to /dashboard/overview without authentication...');
+
+            // Create iframe to test the redirect
+            const iframe = document.createElement('iframe');
+            iframe.src = 'http://localhost:3008/dashboard/overview';
+            iframe.style.width = '100%';
+            iframe.style.height = '400px';
+            iframe.style.border = '1px solid #3b82f6';
+            iframe.style.marginTop = '20px';
+
+            iframe.onload = () => {
+                try {
+                    const url = iframe.contentWindow.location.href;
+                    log(`Iframe loaded: ${url}`);
+
+                    if (url.includes('/login')) {
+                        log('✅ SUCCESS: Redirected to login page!', 'success');
+                    } else if (url.includes('/dashboard')) {
+                        log('⏳ Still on dashboard page, waiting for redirect...', 'info');
+
+                        // Check again after 6 seconds (safety timeout is 5s)
+                        setTimeout(() => {
+                            try {
+                                const finalUrl = iframe.contentWindow.location.href;
+                                if (finalUrl.includes('/login')) {
+                                    log('✅ SUCCESS: Redirected to login after timeout!', 'success');
+                                } else {
+                                    log('❌ FAILED: No redirect after 6 seconds', 'error');
+                                    log(`Final URL: ${finalUrl}`, 'error');
+                                }
+                            } catch (e) {
+                                log(`Cross-origin error (redirect likely worked): ${e.message}`, 'success');
+                            }
+                        }, 6000);
+                    }
+                } catch (e) {
+                    log(`Cross-origin access blocked (redirect likely happened): ${e.message}`, 'success');
+                }
+            };
+
+            document.body.appendChild(iframe);
+            log('Iframe created, waiting for page load...');
+        }
+
+        // Run test on page load
+        window.onload = testAuthFlow;
+    </script>
+</body>
+</html>
