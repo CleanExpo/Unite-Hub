@@ -71,77 +71,92 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Fetch user profile
   const fetchProfile = async (userId: string) => {
     try {
-      const { data, error } = await supabaseBrowser
-        .from("user_profiles")
-        .select("*")
-        .eq("id", userId)
-        .single();
+      console.log('[AuthContext] fetchProfile starting...');
+      const { data, error } = await Promise.race([
+        supabaseBrowser.from("user_profiles").select("*").eq("id", userId).single(),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Profile fetch timeout')), 5000))
+      ]) as any;
 
-      if (error) throw error;
+      if (error) {
+        console.error('[AuthContext] Profile fetch error:', error);
+        return;
+      }
+      console.log('[AuthContext] Profile fetched:', data?.email);
       setProfile(data);
     } catch (error) {
-      console.error("Error fetching profile:", error);
+      console.error("[AuthContext] Error fetching profile:", error);
     }
   };
 
   // Fetch user organizations
   const fetchOrganizations = async (userId: string) => {
     try {
-      // First get user_organizations
-      const { data: userOrgs, error: userOrgsError } = await supabaseBrowser
-        .from("user_organizations")
-        .select("id, org_id, role, joined_at")
-        .eq("user_id", userId)
-        .eq("is_active", true)
-        .order("joined_at", { ascending: false });
+      console.log('[AuthContext] fetchOrganizations starting...');
+
+      // Add timeout to organizations fetch
+      const { data: userOrgs, error: userOrgsError } = await Promise.race([
+        supabaseBrowser
+          .from("user_organizations")
+          .select("id, org_id, role, joined_at")
+          .eq("user_id", userId)
+          .eq("is_active", true)
+          .order("joined_at", { ascending: false }),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Organizations fetch timeout')), 5000))
+      ]) as any;
 
       if (userOrgsError) {
-        console.error("Error fetching user organizations:", userOrgsError);
-        throw userOrgsError;
-      }
-
-      if (!userOrgs || userOrgs.length === 0) {
-        console.log("No organizations found for user. This might be a new user being initialized.");
+        console.error("[AuthContext] Error fetching user organizations:", userOrgsError);
         setOrganizations([]);
         setCurrentOrganization(null);
         return;
       }
 
-      // Get organization details for each org_id
-      const orgIds = userOrgs.map(uo => uo.org_id);
-      const { data: orgsData, error: orgsError } = await supabaseBrowser
-        .from("organizations")
-        .select("id, name")
-        .in("id", orgIds);
+      if (!userOrgs || userOrgs.length === 0) {
+        console.log("[AuthContext] No organizations found for user");
+        setOrganizations([]);
+        setCurrentOrganization(null);
+        return;
+      }
 
-      if (orgsError) throw orgsError;
+      console.log(`[AuthContext] Found ${userOrgs.length} user organizations`);
+
+      // Get organization details for each org_id
+      const orgIds = userOrgs.map((uo: any) => uo.org_id);
+      const { data: orgsData, error: orgsError } = await Promise.race([
+        supabaseBrowser.from("organizations").select("id, name").in("id", orgIds),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Org details fetch timeout')), 5000))
+      ]) as any;
+
+      if (orgsError) {
+        console.error("[AuthContext] Error fetching org details:", orgsError);
+        // Continue with limited data
+      }
 
       // Combine the data
-      const orgs = userOrgs.map(userOrg => ({
+      const orgs = userOrgs.map((userOrg: any) => ({
         id: userOrg.id,
         org_id: userOrg.org_id,
         role: userOrg.role,
-        organization: orgsData?.find(o => o.id === userOrg.org_id) || {
+        organization: orgsData?.find((o: any) => o.id === userOrg.org_id) || {
           id: userOrg.org_id,
           name: "Unknown Organization",
           logo_url: null
         }
       }));
 
+      console.log('[AuthContext] Organizations processed:', orgs.length);
       setOrganizations(orgs);
 
-      // Set current organization (first one or from localStorage)
-      if (orgs.length === 0) {
-        console.log("No organizations found for user");
-        setCurrentOrganization(null);
-        return;
-      }
-
+      // Set current organization
       const savedOrgId = localStorage.getItem("currentOrganizationId");
-      const savedOrg = orgs.find((org) => org.org_id === savedOrgId);
-      setCurrentOrganization(savedOrg || orgs[0]);  // ✅ Now guaranteed to be an org (not undefined)
+      const savedOrg = orgs.find((org: any) => org.org_id === savedOrgId);
+      const currentOrg = savedOrg || orgs[0] || null;
+      console.log('[AuthContext] Current org set to:', currentOrg?.organization?.name);
+      setCurrentOrganization(currentOrg);
     } catch (error) {
-      console.error("Error fetching organizations:", error);
+      console.error("[AuthContext] Error fetching organizations:", error);
+      setOrganizations([]);
+      setCurrentOrganization(null);
     }
   };
 
@@ -225,13 +240,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     console.log('[AuthContext] Initializing auth state...');
 
-    // Safety timeout: If loading doesn't complete in 10 seconds, force it to false
+    // Safety timeout: If loading doesn't complete in 5 seconds, force it to false
     const safetyTimeout = setTimeout(() => {
       if (mounted) {
-        console.warn('[AuthContext] Safety timeout reached - forcing loading = false');
+        console.warn('[AuthContext] ⚠️ SAFETY TIMEOUT REACHED - FORCING LOADING = FALSE');
         setLoading(false);
       }
-    }, 10000); // 10 second timeout
+    }, 5000); // 5 second timeout
 
     // Get initial session from localStorage (persisted session)
     supabaseBrowser.auth.getSession().then(async ({ data: { session }, error }) => {
