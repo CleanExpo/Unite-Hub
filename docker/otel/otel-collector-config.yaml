@@ -1,0 +1,93 @@
+# ==================================================
+# OpenTelemetry Collector Configuration
+# Distributed Tracing & Metrics
+# ==================================================
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+        cors:
+          allowed_origins:
+            - "http://localhost:3008"
+            - "https://*"
+          allowed_headers:
+            - "*"
+
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: 'otel-collector'
+          scrape_interval: 10s
+          static_configs:
+            - targets: ['localhost:8888']
+
+processors:
+  batch:
+    timeout: 10s
+    send_batch_size: 1024
+
+  memory_limiter:
+    check_interval: 1s
+    limit_mib: 512
+
+  resource:
+    attributes:
+      - key: service.name
+        value: unite-hub
+        action: upsert
+      - key: deployment.environment
+        value: production
+        action: upsert
+
+  attributes:
+    actions:
+      - key: http.route
+        action: insert
+        from_attribute: http.target
+      - key: workspace_id
+        action: insert
+        from_attribute: workspace.id
+
+exporters:
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+    namespace: unite_hub
+    const_labels:
+      service: unite-hub
+
+  otlp:
+    endpoint: localhost:4317
+    tls:
+      insecure: true
+
+  logging:
+    loglevel: info
+
+  # Jaeger exporter (optional - uncomment if using Jaeger)
+  # jaeger:
+  #   endpoint: jaeger:14250
+  #   tls:
+  #     insecure: true
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [memory_limiter, resource, attributes, batch]
+      exporters: [logging, otlp]
+
+    metrics:
+      receivers: [otlp, prometheus]
+      processors: [memory_limiter, resource, batch]
+      exporters: [prometheus, logging]
+
+  telemetry:
+    logs:
+      level: info
+    metrics:
+      level: detailed
+      address: 0.0.0.0:8888

@@ -1,108 +1,154 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ConvexHttpClient } from "convex/browser";
-import { api } from "@/convex/_generated/api";
+import { getSupabaseServer } from "@/lib/supabase";
+import { apiRateLimit } from "@/lib/rate-limit";
+import { PaginationSchema, UUIDSchema } from "@/lib/validation/schemas";
 
 /**
  * GET /api/clients/[id]/emails
- * Get all emails for a specific client
+ * Get all emails for a specific contact (legacy: clientId → contactId)
  */
-
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: clientId } = await params;
-
-    if (!clientId) {
-      return NextResponse.json({ error: "Missing client ID" }, { status: 400 });
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
     }
 
-    // Verify client exists
-    const client = await convex.query(api.clients.get, { id: clientId });
-    if (!client) {
-      return NextResponse.json({ error: "Client not found" }, { status: 404 });
+    const supabase = await getSupabaseServer();
+    const { id: contactId } = await params;
+
+    // Validate contact ID
+    const idValidation = UUIDSchema.safeParse(contactId);
+    if (!idValidation.success) {
+      return NextResponse.json({ error: "Invalid contact ID format" }, { status: 400 });
     }
 
-    // Get pagination params
-    const page = parseInt(req.nextUrl.searchParams.get("page") || "1");
-    const limit = parseInt(req.nextUrl.searchParams.get("limit") || "20");
-    const sortBy = req.nextUrl.searchParams.get("sortBy") || "receivedAt";
-    const sortOrder = req.nextUrl.searchParams.get("sortOrder") || "desc";
+    // Authenticate user
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Get pagination params and validate
+    const paginationParams = {
+      page: parseInt(req.nextUrl.searchParams.get("page") || "1"),
+      limit: parseInt(req.nextUrl.searchParams.get("limit") || "20"),
+      sort_by: req.nextUrl.searchParams.get("sortBy") || "created_at",
+      sort_order: (req.nextUrl.searchParams.get("sortOrder") || "desc") as "asc" | "desc",
+    };
+
+    const paginationValidation = PaginationSchema.safeParse(paginationParams);
+    if (!paginationValidation.success) {
+      return NextResponse.json({ error: "Invalid pagination parameters" }, { status: 400 });
+    }
+
+    const { page, limit, sort_by, sort_order } = paginationValidation.data;
     const unreadOnly = req.nextUrl.searchParams.get("unreadOnly") === "true";
 
-    // Get email threads for client
-    const emailThreads = await convex.query(api.emailThreads.getByClient, {
-      clientId,
-    });
+    // Verify contact exists and get workspace
+    const { data: contact, error: contactError } = await supabase
+      .from("contacts")
+      .select("id, name, email, company, workspace_id")
+      .eq("id", contactId)
+      .single();
 
-    // Filter unread if requested
-    let filteredThreads = emailThreads;
-    if (unreadOnly) {
-      filteredThreads = emailThreads.filter((thread: any) => !thread.isRead);
+    if (contactError || !contact) {
+      return NextResponse.json({ error: "Contact not found" }, { status: 404 });
     }
 
-    // Sort threads
-    filteredThreads.sort((a: any, b: any) => {
-      if (sortOrder === "desc") {
-        return b[sortBy] - a[sortBy];
-      }
-      return a[sortBy] - b[sortBy];
-    });
+    // Verify user has access to this workspace
+    const { data: workspace, error: workspaceError } = await supabase
+      .from("workspaces")
+      .select("id, org_id")
+      .eq("id", contact.workspace_id)
+      .single();
 
-    // Paginate
+    if (workspaceError || !workspace) {
+      return NextResponse.json({ error: "Workspace not found" }, { status: 404 });
+    }
+
+    // Verify user is in the organization
+    const { data: userOrg, error: userOrgError } = await supabase
+      .from("user_organizations")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("org_id", workspace.org_id)
+      .single();
+
+    if (userOrgError || !userOrg) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+    }
+
+    // Build email query
+    let query = supabase
+      .from("emails")
+      .select("*", { count: "exact" })
+      .eq("contact_id", contactId)
+      .order(sort_by, { ascending: sort_order === "asc" });
+
+    // Filter unread if requested (note: emails table may not have isRead field)
+    // This is a limitation - consider adding is_read column to emails table
+
+    // Apply pagination
     const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const paginatedThreads = filteredThreads.slice(startIndex, endIndex);
+    query = query.range(startIndex, startIndex + limit - 1);
 
-    // Get client emails (multiple email addresses)
-    const clientEmails = await convex.query(api.clientEmails.getByClient, {
-      clientId,
-    });
+    const { data: emails, error: emailsError, count } = await query;
 
-    // Get statistics
+    if (emailsError) {
+      console.error("Failed to fetch emails:", emailsError);
+      return NextResponse.json({ error: "Failed to fetch emails" }, { status: 500 });
+    }
+
+    // Get stats
+    const { data: allEmails } = await supabase
+      .from("emails")
+      .select("id")
+      .eq("contact_id", contactId);
+
     const stats = {
-      totalEmails: filteredThreads.length,
-      unreadCount: emailThreads.filter((t: any) => !t.isRead).length,
-      repliedCount: emailThreads.filter((t: any) => t.autoReplySent).length,
-      emailAddresses: clientEmails.map((ce: any) => ({
-        email: ce.emailAddress,
-        isPrimary: ce.isPrimary,
-        label: ce.label,
-        verified: ce.verified,
-      })),
+      totalEmails: count || 0,
+      unreadCount: 0, // TODO: Add is_read column to emails table
+      repliedCount: 0, // TODO: Calculate from sent_emails table
+      contactEmails: [
+        {
+          email: contact.email,
+          isPrimary: true,
+          label: "work",
+          verified: true,
+        },
+      ],
     };
 
     return NextResponse.json({
       success: true,
-      client: {
-        id: client._id,
-        name: client.clientName,
-        businessName: client.businessName,
-        primaryEmail: client.primaryEmail,
+      contact: {
+        id: contact.id,
+        name: contact.name,
+        company: contact.company,
+        email: contact.email,
       },
-      emails: paginatedThreads.map((thread: any) => ({
-        id: thread._id,
-        senderEmail: thread.senderEmail,
-        senderName: thread.senderName,
-        subject: thread.subject,
-        messageBody: thread.messageBody,
-        messageBodyPlain: thread.messageBodyPlain,
-        receivedAt: thread.receivedAt,
-        isRead: thread.isRead,
-        autoReplySent: thread.autoReplySent,
-        autoReplySentAt: thread.autoReplySentAt,
-        attachments: thread.attachments,
-        gmailMessageId: thread.gmailMessageId,
-        gmailThreadId: thread.gmailThreadId,
+      emails: (emails || []).map((email: any) => ({
+        id: email.id,
+        from: email.from,
+        to: email.to,
+        subject: email.subject,
+        body: email.body,
+        aiSummary: email.ai_summary,
+        isProcessed: email.is_processed,
+        createdAt: email.created_at,
+        metadata: email.metadata,
       })),
       pagination: {
         page,
         limit,
-        totalPages: Math.ceil(filteredThreads.length / limit),
-        totalEmails: filteredThreads.length,
+        totalPages: Math.ceil((count || 0) / limit),
+        totalEmails: count || 0,
       },
       stats,
     });

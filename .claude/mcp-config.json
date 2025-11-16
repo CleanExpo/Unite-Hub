@@ -1,0 +1,87 @@
+{
+  "mcpServers": {
+    "postgres": {
+      "command": "docker",
+      "args": [
+        "exec",
+        "-i",
+        "unite-hub-mcp-postgres",
+        "mcp-server-postgres"
+      ],
+      "env": {
+        "DATABASE_URL": "${DATABASE_URL}"
+      },
+      "description": "Direct PostgreSQL database access for schema inspection, queries, and data analysis"
+    },
+    "google-drive": {
+      "command": "docker",
+      "args": [
+        "exec",
+        "-i",
+        "unite-hub-mcp-google-drive",
+        "mcp-server-google-drive"
+      ],
+      "env": {
+        "GOOGLE_CREDENTIALS": "${GOOGLE_DRIVE_CREDENTIALS}"
+      },
+      "description": "Google Drive integration for document management and storage"
+    },
+    "github": {
+      "command": "docker",
+      "args": [
+        "exec",
+        "-i",
+        "unite-hub-mcp-github",
+        "mcp-server-github"
+      ],
+      "env": {
+        "GITHUB_TOKEN": "${GITHUB_TOKEN}"
+      },
+      "description": "GitHub repository access for code management, issues, and PRs"
+    },
+    "stripe": {
+      "command": "docker",
+      "args": [
+        "exec",
+        "-i",
+        "unite-hub-mcp-stripe",
+        "mcp-server-stripe"
+      ],
+      "env": {
+        "STRIPE_SECRET_KEY": "${STRIPE_SECRET_KEY}"
+      },
+      "description": "Stripe payment processing and subscription management"
+    },
+    "slack": {
+      "command": "docker",
+      "args": [
+        "exec",
+        "-i",
+        "unite-hub-mcp-slack",
+        "mcp-server-slack"
+      ],
+      "env": {
+        "SLACK_BOT_TOKEN": "${SLACK_BOT_TOKEN}",
+        "SLACK_TEAM_ID": "${SLACK_TEAM_ID}"
+      },
+      "description": "Slack workspace integration for team communication and notifications"
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "D:\\Unite-Hub"
+      ],
+      "description": "Local filesystem access for reading and writing project files"
+    },
+    "fetch": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-fetch"
+      ],
+      "description": "HTTP fetch capability for external API calls and web scraping"
+    }
+  }
+}

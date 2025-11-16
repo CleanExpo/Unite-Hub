@@ -1,68 +1,145 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ConvexHttpClient } from "convex/browser";
-
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+import { getSupabaseServer } from "@/lib/supabase";
+import { apiRateLimit } from "@/lib/rate-limit";
+import { UUIDSchema, PaginationSchema } from "@/lib/validation/schemas";
 
 /**
  * GET /api/clients/[id]/images
- * Get all generated images for a client
+ * Get all generated images for a contact (client)
  */
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: clientId } = await params;
+    // Apply rate limiting (100 req/15min - API tier)
+    const rateLimitResult = await apiRateLimit(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
 
-    if (!clientId) {
+    const { id: contactIdParam } = await params;
+
+    if (!contactIdParam) {
       return NextResponse.json(
-        { error: "Client ID is required" },
+        { error: "Contact ID is required" },
         { status: 400 }
       );
     }
 
-    // Verify client exists
-    const client = await convex.query("clients:get" as any, { clientId });
+    // Support both contactId and clientId (legacy)
+    const contactId = contactIdParam;
 
-    if (!client) {
-      return NextResponse.json({ error: "Client not found" }, { status: 404 });
+    // Validate contact ID
+    const contactIdValidation = UUIDSchema.safeParse(contactId);
+    if (!contactIdValidation.success) {
+      return NextResponse.json({ error: "Invalid contact ID format" }, { status: 400 });
     }
 
-    // Get query parameters for filtering
+    const supabase = await getSupabaseServer();
+
+    // Authenticate user
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Verify contact exists and get workspace
+    const { data: contact } = await supabase
+      .from("contacts")
+      .select("id, workspace_id")
+      .eq("id", contactId)
+      .single();
+
+    if (!contact) {
+      return NextResponse.json({ error: "Contact not found" }, { status: 404 });
+    }
+
+    // Verify workspace access
+    const { data: workspace } = await supabase
+      .from("workspaces")
+      .select("org_id")
+      .eq("id", contact.workspace_id)
+      .single();
+
+    if (!workspace) {
+      return NextResponse.json({ error: "Workspace not found" }, { status: 404 });
+    }
+
+    // Verify user has access
+    const { data: userOrg } = await supabase
+      .from("user_organizations")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("org_id", workspace.org_id)
+      .single();
+
+    if (!userOrg) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+    }
+
+    // Get query parameters for filtering and pagination
     const { searchParams } = new URL(request.url);
-    const conceptType = searchParams.get("conceptType");
-    const platform = searchParams.get("platform");
-    const isUsed = searchParams.get("isUsed");
 
-    // Build query filters
-    const filters: any = { clientId };
+    // Pagination
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "20");
 
-    if (conceptType) {
-      filters.conceptType = conceptType;
+    const paginationValidation = PaginationSchema.safeParse({ page, limit });
+    if (!paginationValidation.success) {
+      return NextResponse.json({ error: "Invalid pagination parameters" }, { status: 400 });
     }
 
-    if (platform) {
-      filters.platform = platform;
+    const startIndex = (page - 1) * limit;
+
+    // Filters
+    const status = searchParams.get("status");
+    const provider = searchParams.get("provider");
+
+    // Build query
+    let query = supabase
+      .from("generated_images")
+      .select("*", { count: "exact" })
+      .eq("contact_id", contactId);
+
+    // Apply filters
+    if (status) {
+      query = query.eq("status", status);
     }
 
-    if (isUsed !== null) {
-      filters.isUsed = isUsed === "true";
+    if (provider) {
+      query = query.eq("provider", provider);
     }
 
-    // Fetch images from Convex
-    const images = await convex.query("imageConcepts:getByClient" as any, filters);
+    // Execute query with pagination
+    const { data: images, error, count } = await query
+      .order("created_at", { ascending: false })
+      .range(startIndex, startIndex + limit - 1);
 
-    // Sort by creation date (newest first)
-    const sortedImages = images.sort((a: any, b: any) => b.createdAt - a.createdAt);
+    if (error) {
+      console.error("Failed to fetch images:", error);
+      return NextResponse.json(
+        { error: "Failed to fetch images" },
+        { status: 500 }
+      );
+    }
+
+    // Calculate pagination metadata
+    const totalPages = Math.ceil((count || 0) / limit);
 
     return NextResponse.json({
       success: true,
-      images: sortedImages,
-      count: sortedImages.length,
+      images: images || [],
+      pagination: {
+        page,
+        limit,
+        total: count || 0,
+        totalPages,
+        hasMore: page < totalPages,
+      },
       filters: {
-        conceptType,
-        platform,
-        isUsed,
+        status,
+        provider,
       },
     });
   } catch (error: any) {

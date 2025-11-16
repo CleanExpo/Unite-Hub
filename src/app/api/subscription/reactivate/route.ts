@@ -1,42 +1,88 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ConvexHttpClient } from "convex/browser";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
+import { getSupabaseServer } from "@/lib/supabase";
 import { reactivateSubscription as reactivateStripeSubscription } from "@/lib/stripe/client";
+import { apiRateLimit } from "@/lib/rate-limit";
+import { z } from "zod";
 
 /**
  * POST /api/subscription/reactivate
  * Reactivate a canceled subscription (before period end)
  */
 
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+const ReactivateSubscriptionSchema = z.object({
+  orgId: z.string().min(1, "Organization ID is required"),
+});
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const { orgId } = body;
+    // Rate limiting
+    const rateLimitResult = await apiRateLimit(req);
+    if (rateLimitResult) return rateLimitResult;
 
-    if (!orgId) {
+    // Parse and validate request body
+    const body = await req.json();
+    const validation = ReactivateSubscriptionSchema.safeParse(body);
+
+    if (!validation.success) {
       return NextResponse.json(
-        { error: "Organization ID is required" },
+        { error: "Invalid request", details: validation.error.errors },
         { status: 400 }
       );
     }
 
-    // Get current subscription from Convex
-    const subscription = await convex.query(api.subscriptions.getByOrganization, {
-      orgId: orgId as Id<"organizations">,
-    });
+    const { orgId } = validation.data;
 
-    if (!subscription) {
+    // Authenticate user
+    const supabase = await getSupabaseServer();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Verify user has permission (owner or admin only)
+    const { data: userOrg, error: userOrgError } = await supabase
+      .from("user_organizations")
+      .select("id, role")
+      .eq("user_id", user.id)
+      .eq("org_id", orgId)
+      .single();
+
+    if (userOrgError || !userOrg) {
+      return NextResponse.json(
+        { error: "Organization not found or access denied" },
+        { status: 404 }
+      );
+    }
+
+    if (userOrg.role !== "owner" && userOrg.role !== "admin") {
+      return NextResponse.json(
+        { error: "Only organization owners and admins can reactivate subscriptions" },
+        { status: 403 }
+      );
+    }
+
+    // Get subscription from Supabase
+    const { data: subscription, error: subError } = await supabase
+      .from("subscriptions")
+      .select(
+        "id, stripe_subscription_id, status, cancel_at_period_end, current_period_end, plan"
+      )
+      .eq("org_id", orgId)
+      .single();
+
+    if (subError || !subscription) {
       return NextResponse.json(
         { error: "No subscription found" },
         { status: 404 }
       );
     }
 
-    // Check if subscription is set to cancel at period end
-    if (!subscription.cancelAtPeriodEnd && subscription.status !== "canceled") {
+    // Check if subscription is scheduled for cancellation
+    if (!subscription.cancel_at_period_end && subscription.status !== "canceled") {
       return NextResponse.json(
         { error: "Subscription is not scheduled for cancellation" },
         { status: 400 }
@@ -44,7 +90,11 @@ export async function POST(req: NextRequest) {
     }
 
     // Check if subscription has already ended
-    if (subscription.status === "canceled" && Date.now() > subscription.currentPeriodEnd) {
+    const currentPeriodEnd = subscription.current_period_end
+      ? new Date(subscription.current_period_end).getTime()
+      : 0;
+
+    if (subscription.status === "canceled" && Date.now() > currentPeriodEnd) {
       return NextResponse.json(
         { error: "Subscription has already ended. Please create a new subscription." },
         { status: 400 }
@@ -53,22 +103,34 @@ export async function POST(req: NextRequest) {
 
     // Reactivate subscription in Stripe
     const reactivatedStripeSubscription = await reactivateStripeSubscription(
-      subscription.stripeSubscriptionId
+      subscription.stripe_subscription_id
     );
 
-    // Update subscription in Convex
-    await convex.mutation(api.subscriptions.reactivateSubscription, {
-      subscriptionId: subscription._id,
-    });
+    // Update subscription in Supabase
+    const { error: updateError } = await supabase
+      .from("subscriptions")
+      .update({
+        status: "active",
+        cancel_at_period_end: false,
+        cancel_at: null,
+        canceled_at: null,
+      })
+      .eq("id", subscription.id);
+
+    if (updateError) {
+      console.error("Failed to update subscription in Supabase:", updateError);
+      // Continue - Stripe is source of truth, webhook will sync
+    }
 
     return NextResponse.json({
       success: true,
       message: "Subscription reactivated successfully",
       subscription: {
+        id: subscription.id,
         status: "active",
         cancelAtPeriodEnd: false,
-        currentPeriodEnd: subscription.currentPeriodEnd,
-        planTier: subscription.planTier,
+        currentPeriodEnd: reactivatedStripeSubscription.current_period_end * 1000,
+        plan: subscription.plan,
       },
     });
   } catch (error: any) {

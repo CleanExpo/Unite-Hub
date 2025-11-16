@@ -1,46 +1,83 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ConvexHttpClient } from "convex/browser";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
+import { getSupabaseServer } from "@/lib/supabase";
 import {
   updateSubscription,
   calculateProration,
   PLAN_TIERS,
 } from "@/lib/stripe/client";
+import { apiRateLimit } from "@/lib/rate-limit";
+import { z } from "zod";
 
 /**
  * POST /api/subscription/downgrade
- * Downgrade subscription to Starter tier
+ * Downgrade subscription to a lower tier
  */
 
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+const DowngradeSubscriptionSchema = z.object({
+  orgId: z.string().min(1, "Organization ID is required"),
+  targetPlan: z.enum(["starter", "professional"]), // Can't downgrade to below starter
+});
 
 export async function POST(req: NextRequest) {
   try {
+    // Rate limiting
+    const rateLimitResult = await apiRateLimit(req);
+    if (rateLimitResult) return rateLimitResult;
+
+    // Parse and validate request body
     const body = await req.json();
-    const { orgId, targetPlan = "starter" } = body;
+    const validation = DowngradeSubscriptionSchema.safeParse(body);
 
-    if (!orgId) {
+    if (!validation.success) {
       return NextResponse.json(
-        { error: "Organization ID is required" },
+        { error: "Invalid request", details: validation.error.errors },
         { status: 400 }
       );
     }
 
-    // Validate target plan
-    if (targetPlan !== "starter" && targetPlan !== "professional") {
+    const { orgId, targetPlan } = validation.data;
+
+    // Authenticate user
+    const supabase = await getSupabaseServer();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Verify user has permission (owner or admin only)
+    const { data: userOrg, error: userOrgError } = await supabase
+      .from("user_organizations")
+      .select("id, role")
+      .eq("user_id", user.id)
+      .eq("org_id", orgId)
+      .single();
+
+    if (userOrgError || !userOrg) {
       return NextResponse.json(
-        { error: "Invalid target plan. Must be 'starter' or 'professional'" },
-        { status: 400 }
+        { error: "Organization not found or access denied" },
+        { status: 404 }
       );
     }
 
-    // Get current subscription from Convex
-    const subscription = await convex.query(api.subscriptions.getByOrganization, {
-      orgId: orgId as Id<"organizations">,
-    });
+    if (userOrg.role !== "owner" && userOrg.role !== "admin") {
+      return NextResponse.json(
+        { error: "Only organization owners and admins can downgrade subscriptions" },
+        { status: 403 }
+      );
+    }
 
-    if (!subscription) {
+    // Get subscription from Supabase
+    const { data: subscription, error: subError } = await supabase
+      .from("subscriptions")
+      .select("id, stripe_subscription_id, stripe_price_id, plan, status, current_period_end")
+      .eq("org_id", orgId)
+      .single();
+
+    if (subError || !subscription) {
       return NextResponse.json(
         { error: "No active subscription found" },
         { status: 404 }
@@ -48,7 +85,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Check if already on target plan
-    if (subscription.planTier === targetPlan) {
+    if (subscription.plan === targetPlan) {
       return NextResponse.json(
         { error: `Already on ${targetPlan} plan` },
         { status: 400 }
@@ -56,7 +93,8 @@ export async function POST(req: NextRequest) {
     }
 
     // Get target price ID
-    const newPriceId = PLAN_TIERS[targetPlan].priceId;
+    const targetPlanDetails = PLAN_TIERS[targetPlan];
+    const newPriceId = targetPlanDetails.priceId;
 
     if (!newPriceId) {
       return NextResponse.json(
@@ -65,46 +103,60 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // For downgrades, we typically apply changes at the end of the billing period
-    // to avoid refunds and make it cleaner for the customer
-
-    // Calculate proration amount (will typically be negative/credit)
+    // Calculate proration (will typically be negative/credit for downgrades)
     const prorationInfo = await calculateProration({
-      subscriptionId: subscription.stripeSubscriptionId,
+      subscriptionId: subscription.stripe_subscription_id,
       newPriceId,
     });
 
-    // Update subscription in Stripe (proration_behavior: create_prorations)
-    // Stripe will handle credits automatically
+    // Update subscription in Stripe
+    // For downgrades, we create prorations (credits applied to next invoice)
     const updatedStripeSubscription = await updateSubscription({
-      subscriptionId: subscription.stripeSubscriptionId,
+      subscriptionId: subscription.stripe_subscription_id,
       newPriceId,
-      prorationBehavior: "create_prorations",
+      prorationBehavior: "create_prorations", // Credits for downgrades
     });
 
-    // Update subscription in Convex
-    await convex.mutation(api.subscriptions.updatePlanTier, {
-      subscriptionId: subscription._id,
-      planTier: targetPlan,
-      stripePriceId: newPriceId,
-    });
+    // Update subscription in Supabase
+    const { error: updateError } = await supabase
+      .from("subscriptions")
+      .update({
+        plan: targetPlan,
+        stripe_price_id: newPriceId,
+        stripe_product_id: updatedStripeSubscription.items.data[0].price.product as string,
+        status: updatedStripeSubscription.status === "active" ? "active" : subscription.status,
+        amount: (updatedStripeSubscription.items.data[0].price.unit_amount || 0) / 100,
+        currency: updatedStripeSubscription.items.data[0].price.currency || "usd",
+        interval:
+          updatedStripeSubscription.items.data[0].price.recurring?.interval || "month",
+      })
+      .eq("id", subscription.id);
+
+    if (updateError) {
+      console.error("Failed to update subscription in Supabase:", updateError);
+      // Continue - Stripe is source of truth, webhook will sync
+    }
 
     return NextResponse.json({
       success: true,
-      message: `Successfully downgraded to ${PLAN_TIERS[targetPlan].name} plan`,
+      message: `Successfully downgraded to ${targetPlanDetails.name} plan`,
       subscription: {
-        planTier: targetPlan,
+        id: subscription.id,
+        plan: targetPlan,
         status: updatedStripeSubscription.status,
         currentPeriodEnd: updatedStripeSubscription.current_period_end * 1000,
+        amount: (updatedStripeSubscription.items.data[0].price.unit_amount || 0) / 100,
+        currency: updatedStripeSubscription.items.data[0].price.currency,
       },
       proration: {
-        amount: prorationInfo.prorationAmount,
+        amount: prorationInfo.prorationAmount / 100, // Convert cents to dollars
         currency: prorationInfo.currency,
         note:
           prorationInfo.prorationAmount < 0
             ? "Credit will be applied to your next invoice"
             : "Proration charge will be applied immediately",
       },
+      features: targetPlanDetails.features,
     });
   } catch (error: any) {
     console.error("Error downgrading subscription:", error);

@@ -1,18 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
-
-// Schema validation helper
-function validateUsername(username: string): boolean {
-  return /^[a-zA-Z0-9_-]{3,30}$/.test(username);
-}
-
-function validatePhone(phone: string): boolean {
-  return /^\+?[1-9]\d{1,14}$/.test(phone);
-}
-
-function validateWebsite(website: string): boolean {
-  return /^https?:\/\/.+/.test(website);
-}
+import { apiRateLimit } from "@/lib/rate-limit";
+import { UpdateProfileSchema, formatZodError } from "@/lib/validation/schemas";
 
 function sanitizePhone(phone: string): string {
   return phone.replace(/[^\+\d]/g, "");
@@ -20,6 +9,11 @@ function sanitizePhone(phone: string): string {
 
 export async function POST(req: NextRequest) {
   try {
+    // Apply rate limiting (100 requests per 15 minutes for API endpoints)
+    const rateLimitResult = await apiRateLimit(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
     // Try to get token from Authorization header (client-side requests with implicit OAuth)
     const authHeader = req.headers.get("authorization");
     const token = authHeader?.replace("Bearer ", "");
@@ -49,8 +43,22 @@ export async function POST(req: NextRequest) {
     // Get Supabase instance for database operations
     const supabase = await getSupabaseServer();
 
-    // Parse request body
+    // Parse and validate request body
     const body = await req.json();
+
+    // Validate using Zod schema
+    const validationResult = UpdateProfileSchema.safeParse(body);
+
+    if (!validationResult.success) {
+      return NextResponse.json(
+        {
+          error: "Invalid input",
+          details: formatZodError(validationResult.error),
+        },
+        { status: 400 }
+      );
+    }
+
     const {
       username,
       full_name,
@@ -60,50 +68,23 @@ export async function POST(req: NextRequest) {
       website,
       timezone,
       notification_preferences,
-    } = body;
+    } = validationResult.data;
 
-    // Validation
-    const errors: Record<string, string> = {};
-
+    // Additional check: username uniqueness
     if (username !== undefined) {
-      if (!validateUsername(username)) {
-        errors.username =
-          "Username must be 3-30 characters and contain only letters, numbers, underscores, and hyphens";
-      } else {
-        // Check if username is already taken by another user
-        const { data: existingUser } = await supabase
-          .from("user_profiles")
-          .select("id")
-          .eq("username", username)
-          .neq("id", userId)
-          .single();
+      const { data: existingUser } = await supabase
+        .from("user_profiles")
+        .select("id")
+        .eq("username", username)
+        .neq("id", userId)
+        .single();
 
-        if (existingUser) {
-          errors.username = "Username is already taken";
-        }
+      if (existingUser) {
+        return NextResponse.json(
+          { error: "Username is already taken" },
+          { status: 400 }
+        );
       }
-    }
-
-    if (phone !== undefined && phone !== "") {
-      const sanitized = sanitizePhone(phone);
-      if (!validatePhone(sanitized)) {
-        errors.phone =
-          "Invalid phone number format. Use international format (e.g., +14155552671)";
-      }
-    }
-
-    if (website !== undefined && website !== "") {
-      if (!validateWebsite(website)) {
-        errors.website = "Website must be a valid URL starting with http:// or https://";
-      }
-    }
-
-    if (bio !== undefined && bio.length > 500) {
-      errors.bio = "Bio must be 500 characters or less";
-    }
-
-    if (Object.keys(errors).length > 0) {
-      return NextResponse.json({ errors }, { status: 400 });
     }
 
     // Build update object (only include fields that were provided)

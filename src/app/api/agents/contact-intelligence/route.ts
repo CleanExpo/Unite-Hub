@@ -5,9 +5,16 @@ import {
   getHotLeads,
 } from "@/lib/agents/contact-intelligence";
 import { getSupabaseServer } from "@/lib/supabase";
+import { aiAgentRateLimit } from "@/lib/rate-limit";
+import { ContactIntelligenceRequestSchema, formatZodError } from "@/lib/validation/schemas";
 
 export async function POST(req: NextRequest) {
   try {
+    // Apply rate limiting (20 requests per 15 minutes for AI endpoints)
+    const rateLimitResult = await aiAgentRateLimit(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
     // Try to get token from Authorization header (client-side requests with implicit OAuth)
     const authHeader = req.headers.get("authorization");
     const token = authHeader?.replace("Bearer ", "");
@@ -49,7 +56,27 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No active organization found" }, { status: 403 });
     }
 
-    const { action, contactId, workspaceId } = await req.json();
+    const body = await req.json();
+
+    // Validate request body
+    const validationResult = ContactIntelligenceRequestSchema.safeParse({
+      action: body.action,
+      contact_id: body.contactId,
+      workspace_id: body.workspaceId,
+      limit: body.limit,
+    });
+
+    if (!validationResult.success) {
+      return NextResponse.json(
+        {
+          error: "Invalid input",
+          details: formatZodError(validationResult.error),
+        },
+        { status: 400 }
+      );
+    }
+
+    const { action, contact_id: contactId, workspace_id: workspaceId } = validationResult.data;
 
     // Validate workspaceId if provided
     if (workspaceId) {

@@ -4,6 +4,7 @@ import React from "react";
 import { Bot, CheckCircle2, Edit3, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { sanitizeEmailHtml } from "@/lib/sanitize-html";
 
 interface AutoReplyPreviewProps {
   autoReply: {
@@ -69,7 +70,7 @@ export function AutoReplyPreview({
       <div className="bg-gray-50 rounded-lg p-4 mb-4">
         <div
           className="prose prose-sm max-w-none"
-          dangerouslySetInnerHTML={{ __html: autoReply.autoReplyContent }}
+          dangerouslySetInnerHTML={{ __html: sanitizeEmailHtml(autoReply.autoReplyContent) }}
         />
       </div>
 

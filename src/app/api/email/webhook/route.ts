@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ConvexHttpClient } from "convex/browser";
-import { api } from "@/convex/_generated/api";
+import { getSupabaseServer } from "@/lib/supabase";
 import { gmailClient, parseGmailMessage, parseWebhookNotification } from "@/lib/gmail";
+import { publicRateLimit } from "@/lib/rate-limit";
+import { EmailProcessingRequestSchema } from "@/lib/validation/schemas";
 
 /**
  * POST /api/email/webhook
@@ -9,10 +10,15 @@ import { gmailClient, parseGmailMessage, parseWebhookNotification } from "@/lib/
  * Receives notifications when new emails arrive
  */
 
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
-
 export async function POST(req: NextRequest) {
   try {
+    // Apply rate limiting (webhooks are external, use public limit)
+    const rateLimitResult = await publicRateLimit(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
+
+    const supabase = await getSupabaseServer();
     const notification = await req.json();
 
     // Parse webhook notification
@@ -26,6 +32,21 @@ export async function POST(req: NextRequest) {
     if (parsed.emailAddress !== expectedEmail) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    // Get default workspace (for webhook processing without user context)
+    // In production, you'd lookup workspace by email integration
+    const { data: workspace } = await supabase
+      .from("workspaces")
+      .select("id")
+      .limit(1)
+      .single();
+
+    if (!workspace) {
+      console.error("No workspace found for email processing");
+      return NextResponse.json({ error: "No workspace configured" }, { status: 500 });
+    }
+
+    const workspaceId = workspace.id;
 
     // Get OAuth credentials from environment or database
     const credentials = {
@@ -72,7 +93,7 @@ export async function POST(req: NextRequest) {
         const parsedEmail = parseGmailMessage(message.data);
 
         // Process and store email
-        const result = await processIncomingEmail(parsedEmail);
+        const result = await processIncomingEmail(supabase, parsedEmail, workspaceId);
         processedEmails.push(result);
       } catch (error) {
         console.error(`Error processing message ${messageId}:`, error);
@@ -94,84 +115,105 @@ export async function POST(req: NextRequest) {
 }
 
 /**
- * Process incoming email and store in Convex
+ * Process incoming email and store in Supabase
  */
-async function processIncomingEmail(parsedEmail: any) {
+async function processIncomingEmail(supabase: any, parsedEmail: any, workspaceId: string) {
   try {
-    // Find client by email address
-    const clientEmail = await convex.query(api.clientEmails.getByEmail, {
-      emailAddress: parsedEmail.senderEmail,
-    });
+    // Find contact by email address
+    const { data: existingContact } = await supabase
+      .from("contacts")
+      .select("id, email, name")
+      .eq("email", parsedEmail.senderEmail)
+      .eq("workspace_id", workspaceId)
+      .single();
 
-    let clientId: any;
+    let contactId: string | null = null;
+    let isNewContact = false;
 
-    if (clientEmail) {
-      // Existing client
-      clientId = clientEmail.clientId;
+    if (existingContact) {
+      // Existing contact
+      contactId = existingContact.id;
 
-      // Update last contact time
-      await convex.mutation(api.clientEmails.updateLastContact, {
-        id: clientEmail._id,
-      });
+      // Update last contacted time
+      await supabase
+        .from("contacts")
+        .update({
+          updated_at: new Date().toISOString(),
+          last_contacted_at: new Date().toISOString()
+        })
+        .eq("id", contactId);
     } else {
-      // New sender - create placeholder client and client email
-      // This requires manual verification and linking later
-      const newClient = await convex.mutation(api.clients.create, {
-        orgId: process.env.DEFAULT_ORG_ID!, // Set a default org or handle differently
-        clientName: parsedEmail.senderName,
-        businessName: parsedEmail.senderName,
-        businessDescription: "Auto-created from email",
-        packageTier: "starter",
-        status: "onboarding",
-        primaryEmail: parsedEmail.senderEmail,
-        phoneNumbers: [],
-        websiteUrl: undefined,
-      });
+      // New sender - create placeholder contact
+      const { data: newContact, error: contactError } = await supabase
+        .from("contacts")
+        .insert({
+          workspace_id: workspaceId,
+          name: parsedEmail.senderName || parsedEmail.senderEmail,
+          email: parsedEmail.senderEmail,
+          company: null,
+          job_title: null,
+          phone: null,
+          industry: null,
+          status: "new",
+          ai_score: 0,
+          source: "email_webhook",
+          tags: ["auto-created"],
+          custom_fields: {
+            autoCreatedFrom: "email",
+            autoCreatedAt: new Date().toISOString()
+          },
+          last_contacted_at: new Date().toISOString()
+        })
+        .select()
+        .single();
 
-      clientId = newClient;
-
-      // Create client email record
-      await convex.mutation(api.clientEmails.create, {
-        clientId,
-        emailAddress: parsedEmail.senderEmail,
-        isPrimary: true,
-        label: "work",
-        verified: false,
-      });
+      if (!contactError && newContact) {
+        contactId = newContact.id;
+        isNewContact = true;
+      } else {
+        console.error("Failed to create contact:", contactError);
+      }
     }
 
-    // Store email thread
-    const emailThread = await convex.mutation(api.emailThreads.create, {
-      clientId,
-      senderEmail: parsedEmail.senderEmail,
-      senderName: parsedEmail.senderName,
-      subject: parsedEmail.subject,
-      messageBody: parsedEmail.bodyHtml || parsedEmail.bodyPlain,
-      messageBodyPlain: parsedEmail.bodyPlain,
-      attachments: parsedEmail.attachments.map((att: any) => ({
-        fileName: att.filename,
-        fileUrl: "", // Will be populated after upload
-        mimeType: att.mimeType,
-        fileSize: att.size,
-      })),
-      receivedAt: parsedEmail.receivedAt,
-      autoReplySent: false,
-      gmailMessageId: parsedEmail.messageId,
-      gmailThreadId: parsedEmail.threadId,
-      isRead: false,
-    });
+    // Store incoming email
+    const { data: emailRecord, error: emailError } = await supabase
+      .from("emails")
+      .insert({
+        workspace_id: workspaceId,
+        contact_id: contactId,
+        from: parsedEmail.senderEmail,
+        to: process.env.GMAIL_INBOX_EMAIL || "contact@unite-group.in",
+        subject: parsedEmail.subject,
+        body: parsedEmail.bodyHtml || parsedEmail.bodyPlain,
+        ai_summary: null,
+        is_processed: false, // Will be processed by AI agent later
+        metadata: {
+          gmailMessageId: parsedEmail.messageId,
+          gmailThreadId: parsedEmail.threadId,
+          senderName: parsedEmail.senderName,
+          receivedAt: parsedEmail.receivedAt,
+          attachmentCount: parsedEmail.attachments?.length || 0
+        },
+        created_at: new Date(parsedEmail.receivedAt).toISOString()
+      })
+      .select()
+      .single();
+
+    if (emailError) {
+      console.error("Failed to store email:", emailError);
+    }
 
     // Handle attachments - store in cloud storage
     // This would be done asynchronously in production
-    for (const attachment of parsedEmail.attachments) {
-      // TODO: Upload to cloud storage and update attachment URLs
+    for (const attachment of (parsedEmail.attachments || [])) {
+      // TODO: Upload to cloud storage and create attachment records
       console.log(`Attachment to process: ${attachment.filename}`);
     }
 
     return {
-      emailThreadId: emailThread,
-      clientId,
-      isNewClient: !clientEmail,
+      emailId: emailRecord?.id,
+      contactId,
+      isNewContact,
     };
   } catch (error) {
     console.error("Error processing email:", error);

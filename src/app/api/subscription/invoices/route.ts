@@ -1,18 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ConvexHttpClient } from "convex/browser";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
+import { getSupabaseServer } from "@/lib/supabase";
+import { apiRateLimit } from "@/lib/rate-limit";
+import { UUIDSchema } from "@/lib/validation/schemas";
 import { getCustomerInvoices, getUpcomingInvoice } from "@/lib/stripe/client";
 
 /**
  * GET /api/subscription/invoices?orgId={orgId}
  * Get billing history and upcoming invoice for an organization
  */
-
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
-
 export async function GET(req: NextRequest) {
   try {
+    // Apply rate limiting (100 req/15min - API tier)
+    const rateLimitResult = await apiRateLimit(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
+
     const { searchParams } = new URL(req.url);
     const orgId = searchParams.get("orgId");
     const limit = parseInt(searchParams.get("limit") || "12");
@@ -24,29 +27,74 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // Get subscription from Convex
-    const subscription = await convex.query(api.subscriptions.getByOrganization, {
-      orgId: orgId as Id<"organizations">,
-    });
+    // Validate organization ID
+    const orgIdValidation = UUIDSchema.safeParse(orgId);
+    if (!orgIdValidation.success) {
+      return NextResponse.json({ error: "Invalid organization ID format" }, { status: 400 });
+    }
 
-    if (!subscription) {
+    const supabase = await getSupabaseServer();
+
+    // Authenticate user
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Verify user has access to organization
+    const { data: userOrg } = await supabase
+      .from("user_organizations")
+      .select("id, role")
+      .eq("user_id", user.id)
+      .eq("org_id", orgId)
+      .single();
+
+    if (!userOrg) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+    }
+
+    // Only allow owners and admins to view invoices
+    if (userOrg.role !== "owner" && userOrg.role !== "admin") {
+      return NextResponse.json(
+        { error: "Only organization owners and admins can view invoices" },
+        { status: 403 }
+      );
+    }
+
+    // Get subscription from Supabase
+    const { data: subscription, error: subError } = await supabase
+      .from("subscriptions")
+      .select("stripe_customer_id, stripe_subscription_id, plan, status, current_period_end")
+      .eq("org_id", orgId)
+      .single();
+
+    if (subError || !subscription) {
       return NextResponse.json(
         { error: "No subscription found" },
         { status: 404 }
       );
     }
 
+    if (!subscription.stripe_customer_id) {
+      return NextResponse.json(
+        { error: "No Stripe customer ID found" },
+        { status: 404 }
+      );
+    }
+
     // Get customer invoices from Stripe
     const invoices = await getCustomerInvoices(
-      subscription.stripeCustomerId,
+      subscription.stripe_customer_id,
       limit
     );
 
     // Get upcoming invoice
-    const upcomingInvoice = await getUpcomingInvoice(
-      subscription.stripeCustomerId,
-      subscription.stripeSubscriptionId
-    );
+    const upcomingInvoice = subscription.stripe_subscription_id
+      ? await getUpcomingInvoice(
+          subscription.stripe_customer_id,
+          subscription.stripe_subscription_id
+        )
+      : null;
 
     // Format invoice data
     const formattedInvoices = invoices.map((invoice) => ({
@@ -97,9 +145,9 @@ export async function GET(req: NextRequest) {
       invoices: formattedInvoices,
       upcomingInvoice: formattedUpcomingInvoice,
       subscription: {
-        planTier: subscription.planTier,
+        planTier: subscription.plan,
         status: subscription.status,
-        currentPeriodEnd: subscription.currentPeriodEnd,
+        currentPeriodEnd: subscription.current_period_end,
       },
     });
   } catch (error: any) {

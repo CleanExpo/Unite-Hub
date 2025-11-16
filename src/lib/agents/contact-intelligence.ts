@@ -49,9 +49,25 @@ export async function analyzeContactIntelligence(
       )
       .join("\n");
 
-    const prompt = `Analyze this contact's engagement pattern and buying intent. Return ONLY valid JSON, no other text.
+    // Static system instructions with prompt caching (90% cost savings)
+    const systemPrompt = `You are an expert B2B sales intelligence analyst specializing in contact scoring and engagement analysis.
 
-CONTACT DATA:
+Your task is to analyze contact engagement patterns, buying intent, and decision-making stage to help sales teams prioritize their outreach.
+
+Return ONLY valid JSON with these exact fields:
+{
+  "engagement_score": <number 0-100>,
+  "buying_intent": <"high" | "medium" | "low" | "unknown">,
+  "decision_stage": <"awareness" | "consideration" | "decision" | "unknown">,
+  "role_type": <"decision_maker" | "influencer" | "end_user" | "unknown">,
+  "next_best_action": "<actionable next step>",
+  "risk_signals": [<array of potential objections or risks>],
+  "opportunity_signals": [<array of positive signals and opportunities>],
+  "engagement_velocity": <-2 to 2, negative means declining, positive means increasing>,
+  "sentiment_score": <-50 to 100, sentiment of recent communications>
+}`;
+
+    const contactData = `CONTACT DATA:
 Name: ${contact.name}
 Company: ${contact.company}
 Job Title: ${contact.job_title}
@@ -73,20 +89,9 @@ ${interactions
   .map((i) => `- ${i.interaction_type}: ${JSON.stringify(i.details)}`)
   .join("\n") || "No interactions yet"}
 
-Analyze and return a JSON object with these exact fields:
-{
-  "engagement_score": <number 0-100>,
-  "buying_intent": <"high" | "medium" | "low" | "unknown">,
-  "decision_stage": <"awareness" | "consideration" | "decision" | "unknown">,
-  "role_type": <"decision_maker" | "influencer" | "end_user" | "unknown">,
-  "next_best_action": "<actionable next step>",
-  "risk_signals": [<array of potential objections or risks>],
-  "opportunity_signals": [<array of positive signals and opportunities>],
-  "engagement_velocity": <-2 to 2, negative means declining, positive means increasing>,
-  "sentiment_score": <-50 to 100, sentiment of recent communications>
-}`;
+Analyze this contact and return your assessment as JSON.`;
 
-    // Call Claude with extended thinking for deeper analysis
+    // Call Claude with extended thinking + prompt caching
     const message = await anthropic.messages.create({
       model: "claude-opus-4-1-20250805",
       max_tokens: 16000,
@@ -94,10 +99,17 @@ Analyze and return a JSON object with these exact fields:
         type: "enabled",
         budget_tokens: 10000,
       },
+      system: [
+        {
+          type: "text",
+          text: systemPrompt,
+          cache_control: { type: "ephemeral" }, // Cache static instructions
+        },
+      ],
       messages: [
         {
           role: "user",
-          content: prompt,
+          content: contactData,
         },
       ],
     });

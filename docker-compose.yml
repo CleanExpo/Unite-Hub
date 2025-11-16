@@ -136,6 +136,200 @@ services:
     profiles:
       - proxy
 
+  # ==================================================
+  # MCP Servers - Model Context Protocol Integration
+  # ==================================================
+
+  # PostgreSQL MCP - Database access for Claude
+  mcp-postgres:
+    image: ghcr.io/modelcontextprotocol/servers/postgres:latest
+    container_name: unite-hub-mcp-postgres
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql://${POSTGRES_USER:-unite_hub_user}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-unite_hub}}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - unite-hub-network
+    labels:
+      - "com.unite-hub.service=mcp-postgres"
+      - "com.unite-hub.mcp=true"
+    profiles:
+      - mcp
+
+  # Google Drive MCP - Document management
+  mcp-google-drive:
+    image: ghcr.io/modelcontextprotocol/servers/google-drive:latest
+    container_name: unite-hub-mcp-google-drive
+    restart: unless-stopped
+    environment:
+      GOOGLE_CREDENTIALS: ${GOOGLE_DRIVE_CREDENTIALS}
+    networks:
+      - unite-hub-network
+    labels:
+      - "com.unite-hub.service=mcp-google-drive"
+      - "com.unite-hub.mcp=true"
+    profiles:
+      - mcp
+
+  # GitHub MCP - Code repository access
+  mcp-github:
+    image: ghcr.io/modelcontextprotocol/servers/github:latest
+    container_name: unite-hub-mcp-github
+    restart: unless-stopped
+    environment:
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+    networks:
+      - unite-hub-network
+    labels:
+      - "com.unite-hub.service=mcp-github"
+      - "com.unite-hub.mcp=true"
+    profiles:
+      - mcp
+
+  # Stripe MCP - Payment processing
+  mcp-stripe:
+    image: ghcr.io/modelcontextprotocol/servers/stripe:latest
+    container_name: unite-hub-mcp-stripe
+    restart: unless-stopped
+    environment:
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+    networks:
+      - unite-hub-network
+    labels:
+      - "com.unite-hub.service=mcp-stripe"
+      - "com.unite-hub.mcp=true"
+    profiles:
+      - mcp
+
+  # Slack MCP - Team communication
+  mcp-slack:
+    image: ghcr.io/modelcontextprotocol/servers/slack:latest
+    container_name: unite-hub-mcp-slack
+    restart: unless-stopped
+    environment:
+      SLACK_BOT_TOKEN: ${SLACK_BOT_TOKEN}
+      SLACK_TEAM_ID: ${SLACK_TEAM_ID}
+    networks:
+      - unite-hub-network
+    labels:
+      - "com.unite-hub.service=mcp-slack"
+      - "com.unite-hub.mcp=true"
+    profiles:
+      - mcp
+
+  # ==================================================
+  # Observability Stack - Monitoring & Metrics
+  # ==================================================
+
+  # Prometheus - Metrics collection
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: unite-hub-prometheus
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    networks:
+      - unite-hub-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "com.unite-hub.service=prometheus"
+      - "com.unite-hub.observability=true"
+    profiles:
+      - observability
+
+  # Grafana - Metrics visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: unite-hub-grafana
+    restart: unless-stopped
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+      GF_SERVER_ROOT_URL: http://localhost:3000
+      GF_INSTALL_PLUGINS: grafana-clock-panel,grafana-simple-json-datasource
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./docker/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./docker/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      prometheus:
+        condition: service_healthy
+    networks:
+      - unite-hub-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "com.unite-hub.service=grafana"
+      - "com.unite-hub.observability=true"
+    profiles:
+      - observability
+
+  # OpenTelemetry Collector - Distributed tracing
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    container_name: unite-hub-otel-collector
+    restart: unless-stopped
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    ports:
+      - "4317:4317"   # OTLP gRPC receiver
+      - "4318:4318"   # OTLP HTTP receiver
+      - "8888:8888"   # Prometheus metrics
+      - "8889:8889"   # Prometheus exporter
+    volumes:
+      - ./docker/otel/otel-collector-config.yaml:/etc/otel-collector-config.yaml:ro
+    networks:
+      - unite-hub-network
+    labels:
+      - "com.unite-hub.service=otel-collector"
+      - "com.unite-hub.observability=true"
+    profiles:
+      - observability
+
+  # ==================================================
+  # Documentation Cache - Anthropic Docs Caching
+  # ==================================================
+  docs-cache:
+    image: nginx:alpine
+    container_name: unite-hub-docs-cache
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ./docker/docs-cache/nginx.conf:/etc/nginx/nginx.conf:ro
+      - docs-cache-data:/usr/share/nginx/html
+    networks:
+      - unite-hub-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "com.unite-hub.service=docs-cache"
+      - "com.unite-hub.cache=true"
+    profiles:
+      - observability
+
 # ==================================================
 # Networks
 # ==================================================
@@ -152,3 +346,9 @@ volumes:
     name: unite-hub-redis-data
   postgres-data:
     name: unite-hub-postgres-data
+  prometheus-data:
+    name: unite-hub-prometheus-data
+  grafana-data:
+    name: unite-hub-grafana-data
+  docs-cache-data:
+    name: unite-hub-docs-cache-data

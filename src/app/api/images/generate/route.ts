@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getSupabaseServer } from "@/lib/supabase";
+import { aiAgentRateLimit } from "@/lib/rate-limit";
+import { UUIDSchema } from "@/lib/validation/schemas";
 import { generateImage, calculateImageCost, validatePrompt } from "@/lib/dalle/client";
 import {
   engineerPrompt,
@@ -8,12 +11,10 @@ import {
   extractKeywords,
 } from "@/lib/dalle/prompts";
 import { recommendStyleForIndustry } from "@/lib/dalle/styles";
-import { ConvexHttpClient } from "convex/browser";
-
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
 export interface GenerateImageRequest {
-  clientId: string;
+  contactId?: string;
+  clientId?: string; // Legacy support
   conceptType: ConceptType;
   platform?: "facebook" | "instagram" | "tiktok" | "linkedin" | "general";
   customPrompt?: string;
@@ -25,13 +26,22 @@ export interface GenerateImageRequest {
 
 /**
  * POST /api/images/generate
- * Generate DALL-E image concepts for a client
+ * Generate DALL-E image concepts for a contact
  */
 export async function POST(request: NextRequest) {
   try {
+    // Apply AI-specific rate limiting (20 req/15min - expensive AI operation)
+    const rateLimitResult = await aiAgentRateLimit(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
+
+    const supabase = await getSupabaseServer();
     const body: GenerateImageRequest = await request.json();
+
     const {
-      clientId,
+      contactId,
+      clientId, // Legacy support
       conceptType,
       platform = "general",
       customPrompt,
@@ -41,39 +51,99 @@ export async function POST(request: NextRequest) {
       variationCount = 1,
     } = body;
 
+    const finalContactId = contactId || clientId;
+
     // Validate required fields
-    if (!clientId || !conceptType) {
+    if (!finalContactId || !conceptType) {
       return NextResponse.json(
-        { error: "clientId and conceptType are required" },
+        { error: "contactId and conceptType are required" },
         { status: 400 }
       );
     }
 
-    // Fetch client data from Convex
-    const client = await convex.query("clients:get" as any, { clientId });
+    // Validate contact ID
+    const contactIdValidation = UUIDSchema.safeParse(finalContactId);
+    if (!contactIdValidation.success) {
+      return NextResponse.json({ error: "Invalid contact ID format" }, { status: 400 });
+    }
 
-    if (!client) {
-      return NextResponse.json({ error: "Client not found" }, { status: 404 });
+    // Authenticate user
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Get contact and verify workspace access
+    const { data: contact } = await supabase
+      .from("contacts")
+      .select("id, name, email, company, notes, workspace_id, custom_fields")
+      .eq("id", finalContactId)
+      .single();
+
+    if (!contact) {
+      return NextResponse.json({ error: "Contact not found" }, { status: 404 });
+    }
+
+    // Get workspace and org
+    const { data: workspace } = await supabase
+      .from("workspaces")
+      .select("id, name, org_id")
+      .eq("id", contact.workspace_id)
+      .single();
+
+    if (!workspace) {
+      return NextResponse.json({ error: "Workspace not found" }, { status: 404 });
+    }
+
+    // Get organization for plan check
+    const { data: organization } = await supabase
+      .from("organizations")
+      .select("id, name, plan, status")
+      .eq("id", workspace.org_id)
+      .single();
+
+    if (!organization) {
+      return NextResponse.json({ error: "Organization not found" }, { status: 404 });
+    }
+
+    // Verify user has access to organization
+    const { data: userOrg } = await supabase
+      .from("user_organizations")
+      .select("id, role")
+      .eq("user_id", user.id)
+      .eq("org_id", workspace.org_id)
+      .single();
+
+    if (!userOrg) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
 
     // Check tier-based variation limits
-    const maxVariations = client.packageTier === "professional" ? 5 : 3;
+    const maxVariations = organization.plan === "professional" || organization.plan === "enterprise" ? 5 : 3;
     const actualVariations = Math.min(variationCount, maxVariations);
 
-    // Fetch client assets to extract brand colors
-    const assets = await convex.query("clientAssets:getByClient" as any, { clientId }) || [];
-    const brandColors = extractBrandColorsFromAssets(assets);
+    // Check usage limits
+    const usageCheck = await checkUsageLimits(supabase, organization.id, organization.plan, actualVariations);
+    if (!usageCheck.allowed) {
+      return NextResponse.json(
+        { error: usageCheck.reason, limitReached: true },
+        { status: 429 }
+      );
+    }
+
+    // Extract brand colors from contact custom fields (if available)
+    const brandColors = extractBrandColors(contact.custom_fields);
 
     // Build prompt context
     const promptContext: PromptContext = {
-      businessName: client.businessName,
-      businessDescription: client.businessDescription,
+      businessName: contact.company || contact.name,
+      businessDescription: contact.notes || `Business contact: ${contact.name}`,
       brandColors,
-      keywords: customPrompt ? [] : extractKeywords(client.businessDescription),
+      keywords: customPrompt ? [] : extractKeywords(contact.notes || ""),
     };
 
     // Determine style
-    const recommendedStyle = style || recommendStyleForIndustry(client.businessDescription).name;
+    const recommendedStyle = style || recommendStyleForIndustry(contact.notes || "general").name;
 
     // Build platform specs
     const platformSpecs: PlatformSpecs = {
@@ -98,15 +168,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check usage limits
-    const usageCheck = await checkUsageLimits(client.orgId, actualVariations);
-    if (!usageCheck.allowed) {
-      return NextResponse.json(
-        { error: usageCheck.reason, limitReached: true },
-        { status: 429 }
-      );
-    }
-
     // Generate images
     const generatedImages = [];
     const errors = [];
@@ -120,28 +181,44 @@ export async function POST(request: NextRequest) {
           size,
           quality,
           style: "vivid",
+          model: "dall-e-3",
         });
 
-        // Store image in Convex
-        const savedImage = await convex.mutation("imageConcepts:create" as any, {
-          clientId,
-          conceptType,
-          platform,
-          prompt: engineeredPrompt,
-          imageUrl: result.url,
-          dalleImageId: `dalle-${Date.now()}-${i}`,
-          style: recommendedStyle,
-          colorPalette: brandColors,
-          dimensions: {
-            width: parseInt(size.split("x")[0]),
-            height: parseInt(size.split("x")[1]),
-          },
-          usageRecommendations: `Optimized for ${platform} - ${conceptType}`,
-          isUsed: false,
-        });
+        // Store image in Supabase
+        const { data: savedImage, error: saveError } = await supabase
+          .from("generated_images")
+          .insert({
+            workspace_id: workspace.id,
+            contact_id: finalContactId,
+            prompt: engineeredPrompt,
+            image_url: result.url,
+            provider: "dall-e",
+            model: "dall-e-3",
+            size,
+            quality,
+            style: "vivid",
+            brand_colors: brandColors,
+            additional_params: {
+              conceptType,
+              platform,
+              revisedPrompt: result.revisedPrompt,
+              variationNumber: i + 1,
+            },
+            generation_cost: calculateImageCost(1, size, quality),
+            revision_number: 1,
+            status: "completed",
+          })
+          .select()
+          .single();
+
+        if (saveError) {
+          console.error("Failed to save image:", saveError);
+          errors.push({ variation: i + 1, error: "Failed to save image to database" });
+          continue;
+        }
 
         generatedImages.push({
-          id: savedImage,
+          id: savedImage.id,
           url: result.url,
           revisedPrompt: result.revisedPrompt,
         });
@@ -151,16 +228,11 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Track usage
-    const cost = calculateImageCost(generatedImages.length, size, quality);
-    await trackImageGeneration(client.orgId, generatedImages.length, cost);
+    // Calculate total cost
+    const totalCost = calculateImageCost(generatedImages.length, size, quality);
 
-    // Track usage metric
-    await convex.mutation("usageTracking:increment" as any, {
-      orgId: client.orgId,
-      metricType: "images_generated",
-      count: generatedImages.length,
-    });
+    // Track usage in organization metadata
+    await trackImageGeneration(supabase, organization.id, generatedImages.length, totalCost);
 
     return NextResponse.json({
       success: true,
@@ -168,7 +240,7 @@ export async function POST(request: NextRequest) {
       generated: generatedImages.length,
       requested: actualVariations,
       errors: errors.length > 0 ? errors : undefined,
-      cost,
+      cost: totalCost,
       prompt: engineeredPrompt,
       style: recommendedStyle,
     });
@@ -182,17 +254,16 @@ export async function POST(request: NextRequest) {
 }
 
 /**
- * Extract brand colors from client assets
+ * Extract brand colors from contact custom fields
  */
-function extractBrandColorsFromAssets(assets: any[]): string[] {
-  // In production, this would analyze uploaded logos/images
-  // For now, return default colors
-  const defaultColors = ["#2563EB", "#3B82F6", "#60A5FA"];
+function extractBrandColors(customFields: any): string[] {
+  // Check if custom fields contain brand colors
+  if (customFields && customFields.brandColors && Array.isArray(customFields.brandColors)) {
+    return customFields.brandColors;
+  }
 
-  // TODO: Implement image analysis to extract dominant colors
-  // Could use a service like Cloudinary or a color extraction library
-
-  return defaultColors;
+  // Default brand colors
+  return ["#2563EB", "#3B82F6", "#60A5FA"];
 }
 
 /**
@@ -209,35 +280,56 @@ function getAspectRatioFromSize(size: string): "1:1" | "4:5" | "9:16" | "16:9" {
  * Check usage limits for organization
  */
 async function checkUsageLimits(
+  supabase: any,
   orgId: string,
+  plan: string,
   requestedCount: number
 ): Promise<{ allowed: boolean; reason?: string }> {
   try {
-    // Fetch organization subscription
-    const subscription = await convex.query("subscriptions:getByOrg" as any, { orgId });
+    // Check organization status
+    const { data: org } = await supabase
+      .from("organizations")
+      .select("status, trial_ends_at")
+      .eq("id", orgId)
+      .single();
 
-    if (!subscription) {
-      return { allowed: false, reason: "No active subscription found" };
+    if (!org) {
+      return { allowed: false, reason: "Organization not found" };
     }
 
-    if (subscription.status !== "active" && subscription.status !== "trialing") {
-      return { allowed: false, reason: "Subscription is not active" };
+    // Check if trial expired
+    if (org.status === "trial" && org.trial_ends_at) {
+      const trialEnd = new Date(org.trial_ends_at);
+      if (trialEnd < new Date()) {
+        return { allowed: false, reason: "Trial period has ended. Please upgrade to continue." };
+      }
     }
 
-    // Check usage tracking
-    const usage = await convex.query("usageTracking:getByOrgAndMetric" as any, {
-      orgId,
-      metricType: "images_generated",
-    });
+    if (org.status === "cancelled") {
+      return { allowed: false, reason: "Subscription is cancelled" };
+    }
+
+    // Get usage this month
+    const startOfMonth = new Date();
+    startOfMonth.setDate(1);
+    startOfMonth.setHours(0, 0, 0, 0);
+
+    const { count } = await supabase
+      .from("generated_images")
+      .select("*", { count: "exact", head: true })
+      .eq("workspace_id", orgId)
+      .gte("created_at", startOfMonth.toISOString());
+
+    const currentUsage = count || 0;
 
     // Define limits based on tier
-    const limits = {
+    const limits: Record<string, number> = {
       starter: 50, // 50 images per month
       professional: 200, // 200 images per month
+      enterprise: 1000, // 1000 images per month
     };
 
-    const limit = limits[subscription.planTier];
-    const currentUsage = usage?.count || 0;
+    const limit = limits[plan] || limits.starter;
 
     if (currentUsage + requestedCount > limit) {
       return {
@@ -249,7 +341,7 @@ async function checkUsageLimits(
     return { allowed: true };
   } catch (error) {
     console.error("Error checking usage limits:", error);
-    // Allow on error to prevent blocking
+    // Allow on error to prevent blocking (fail open)
     return { allowed: true };
   }
 }
@@ -258,22 +350,39 @@ async function checkUsageLimits(
  * Track image generation for cost analytics
  */
 async function trackImageGeneration(
+  supabase: any,
   orgId: string,
   count: number,
   cost: number
 ): Promise<void> {
   try {
-    // In production, store this in a cost tracking table
     console.log(`Image generation tracked: ${count} images, cost: $${cost.toFixed(4)} for org: ${orgId}`);
 
-    // TODO: Implement cost tracking in Convex
-    // await convex.mutation("costTracking:create", {
-    //   orgId,
-    //   service: "dalle",
-    //   count,
-    //   cost,
-    //   timestamp: Date.now(),
-    // });
+    // Update organization metadata with usage tracking
+    const { data: org } = await supabase
+      .from("organizations")
+      .select("custom_fields")
+      .eq("id", orgId)
+      .single();
+
+    if (org) {
+      const customFields = org.custom_fields || {};
+      const usageTracking = customFields.usageTracking || {};
+
+      // Track monthly usage
+      const monthKey = new Date().toISOString().slice(0, 7); // YYYY-MM
+      usageTracking[monthKey] = {
+        imagesGenerated: (usageTracking[monthKey]?.imagesGenerated || 0) + count,
+        imageCost: (usageTracking[monthKey]?.imageCost || 0) + cost,
+      };
+
+      customFields.usageTracking = usageTracking;
+
+      await supabase
+        .from("organizations")
+        .update({ custom_fields: customFields })
+        .eq("id", orgId);
+    }
   } catch (error) {
     console.error("Error tracking image generation:", error);
   }

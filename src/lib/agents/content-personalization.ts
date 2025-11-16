@@ -46,9 +46,30 @@ export async function generatePersonalizedContent(
     const industryGuidance = getIndustryGuidance(contact.industry || "general");
     const stageGuidance = getStageGuidance(contact.decision_stage);
 
-    const prompt = `Generate hyper-personalized ${contentType} email for this prospect. Return ONLY valid JSON, no other text.
+    // Static system instructions with caching
+    const systemPrompt = `You are an expert B2B sales copywriter specializing in hyper-personalized email outreach.
 
-PROSPECT PROFILE:
+Your task is to generate compelling, personalized sales content that resonates with specific buyer personas, industries, and decision stages.
+
+Always return ONLY valid JSON with this exact structure:
+{
+  "subject_lines": ["subject_option_A", "subject_option_B", "subject_option_C"],
+  "body": "<email body - 150-200 words, highly personalized>",
+  "cta": "<specific, action-oriented call to action>",
+  "tone": "professional|consultative|friendly",
+  "personalization_score": <0-100>,
+  "key_talking_points": ["point1", "point2", "point3"],
+  "social_proof": ["proof1", "proof2"]
+}
+
+Guidelines:
+- Use the prospect's specific context (signals, risks, stage)
+- Reference relevant case studies when available
+- Match tone to role type (formal for C-level, consultative for technical)
+- Include measurable outcomes when possible
+- Keep body concise but impactful (150-200 words)`;
+
+    const prospectData = `PROSPECT PROFILE:
 - Name: ${contact.name}
 - Company: ${contact.company}
 - Job Title: ${contact.job_title}
@@ -91,16 +112,7 @@ ${
     : "- Include specific results and metrics"
 }
 
-Generate response with this exact JSON structure:
-{
-  "subject_lines": ["subject_option_A", "subject_option_B", "subject_option_C"],
-  "body": "<email body - 150-200 words, highly personalized>",
-  "cta": "<specific, action-oriented call to action>",
-  "tone": "professional|consultative|friendly",
-  "personalization_score": <0-100>,
-  "key_talking_points": ["point1", "point2", "point3"],
-  "social_proof": ["proof1", "proof2"]
-}`;
+Generate hyper-personalized ${contentType} email for this prospect.`;
 
     const message = await anthropic.messages.create({
       model: "claude-opus-4-1-20250805",
@@ -109,10 +121,17 @@ Generate response with this exact JSON structure:
         type: "enabled",
         budget_tokens: 5000,
       },
+      system: [
+        {
+          type: "text",
+          text: systemPrompt,
+          cache_control: { type: "ephemeral" }, // Cache static instructions
+        },
+      ],
       messages: [
         {
           role: "user",
-          content: prompt,
+          content: prospectData,
         },
       ],
     });

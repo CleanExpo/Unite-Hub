@@ -1,0 +1,72 @@
+# ==================================================
+# Prometheus Configuration
+# Unite-Hub Metrics Collection
+# ==================================================
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'unite-hub'
+    environment: 'production'
+
+# Alertmanager configuration (optional)
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+# Load rules once and periodically evaluate them
+rule_files:
+  # - "alerts/*.yml"
+
+# Scrape configurations
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          service: 'prometheus'
+
+  # Unite-Hub Next.js application
+  - job_name: 'unite-hub-app'
+    metrics_path: '/api/metrics'
+    static_configs:
+      - targets: ['app:3008']
+        labels:
+          service: 'app'
+          component: 'nextjs'
+
+  # Redis metrics
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis:6379']
+        labels:
+          service: 'redis'
+
+  # PostgreSQL metrics (if using local DB)
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres:5432']
+        labels:
+          service: 'postgres'
+
+  # OpenTelemetry Collector metrics
+  - job_name: 'otel-collector'
+    static_configs:
+      - targets: ['otel-collector:8888']
+        labels:
+          service: 'otel-collector'
+
+  # MCP Servers health checks
+  - job_name: 'mcp-servers'
+    static_configs:
+      - targets:
+          - 'mcp-postgres:8080'
+          - 'mcp-google-drive:8080'
+          - 'mcp-github:8080'
+          - 'mcp-stripe:8080'
+          - 'mcp-slack:8080'
+        labels:
+          component: 'mcp'

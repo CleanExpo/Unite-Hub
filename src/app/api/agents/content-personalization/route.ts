@@ -6,9 +6,17 @@ import {
 } from "@/lib/agents/content-personalization";
 import { getHotLeads } from "@/lib/agents/contact-intelligence";
 import { getSupabaseServer } from "@/lib/supabase";
+import { aiAgentRateLimit } from "@/lib/rate-limit";
+import { ContentGenerationRequestSchema, formatZodError } from "@/lib/validation/schemas";
 
 export async function POST(req: NextRequest) {
   try {
+    // Apply rate limiting (20 requests per 15 minutes for AI endpoints)
+    const rateLimitResult = await aiAgentRateLimit(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
+
     // Authentication check
     const supabase = await getSupabaseServer();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -29,7 +37,28 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No active organization found" }, { status: 403 });
     }
 
-    const { action, contactId, contentType, workspaceId } = await req.json();
+    const body = await req.json();
+
+    // Validate request body (only for generate action)
+    if (body.action === "generate") {
+      const validationResult = ContentGenerationRequestSchema.safeParse({
+        contact_id: body.contactId,
+        content_type: body.contentType,
+        workspace_id: body.workspaceId,
+      });
+
+      if (!validationResult.success) {
+        return NextResponse.json(
+          {
+            error: "Invalid input",
+            details: formatZodError(validationResult.error),
+          },
+          { status: 400 }
+        );
+      }
+    }
+
+    const { action, contactId, contentType, workspaceId } = body;
 
     // Validate workspaceId if provided
     if (workspaceId) {

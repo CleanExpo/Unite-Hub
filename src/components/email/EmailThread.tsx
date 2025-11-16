@@ -5,6 +5,7 @@ import { Mail, User, Calendar, Bot, CheckCircle2, ExternalLink } from "lucide-re
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
+import { sanitizeEmailHtml } from "@/lib/sanitize-html";
 
 interface EmailThreadProps {
   email: {
@@ -95,7 +96,7 @@ export function EmailThread({ email }: EmailThreadProps) {
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-4">
           <div
             className="prose prose-sm max-w-none"
-            dangerouslySetInnerHTML={{ __html: email.messageBody }}
+            dangerouslySetInnerHTML={{ __html: sanitizeEmailHtml(email.messageBody) }}
           />
         </div>
 
@@ -116,7 +117,7 @@ export function EmailThread({ email }: EmailThreadProps) {
             <div className="bg-white rounded-lg p-4 border border-green-200">
               <div
                 className="prose prose-sm max-w-none"
-                dangerouslySetInnerHTML={{ __html: email.autoReplyContent }}
+                dangerouslySetInnerHTML={{ __html: sanitizeEmailHtml(email.autoReplyContent) }}
               />
             </div>
           </div>

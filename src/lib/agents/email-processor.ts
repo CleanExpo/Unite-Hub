@@ -112,14 +112,15 @@ async function extractEmailIntent(
   body: string
 ): Promise<EmailIntent> {
   try {
-    const prompt = `Analyze this email and extract intent and key information. Return ONLY valid JSON.
+    // Static system instructions with prompt caching
+    const systemPrompt = `You are an expert email analysis system specializing in B2B communication intent detection.
 
-Subject: ${subject}
+Your task is to analyze incoming emails and extract:
+- Primary intent (meeting, question, complaint, feature request, pricing, etc.)
+- Sentiment and urgency
+- Action items and key topics
 
-Body:
-${body.substring(0, 2000)}
-
-Return JSON with these exact fields:
+Always return ONLY valid JSON with this exact structure:
 {
   "primary_intent": "meeting_request" | "question" | "complaint" | "feature_request" | "pricing_inquiry" | "general" | "follow_up",
   "sentiment": "positive" | "neutral" | "negative",
@@ -130,13 +131,27 @@ Return JSON with these exact fields:
   "action_items": [array of actionable items]
 }`;
 
+    const emailContent = `Subject: ${subject}
+
+Body:
+${body.substring(0, 2000)}
+
+Analyze this email and extract intent and key information.`;
+
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-5-20250929",
       max_tokens: 1000,
+      system: [
+        {
+          type: "text",
+          text: systemPrompt,
+          cache_control: { type: "ephemeral" }, // Cache static instructions
+        },
+      ],
       messages: [
         {
           role: "user",
-          content: prompt,
+          content: emailContent,
         },
       ],
     });

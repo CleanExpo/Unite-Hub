@@ -1,0 +1,18 @@
+# ==================================================
+# Grafana Dashboard Provisioning
+# Auto-load dashboards from /var/lib/grafana/dashboards
+# ==================================================
+
+apiVersion: 1
+
+providers:
+  - name: 'Unite-Hub Dashboards'
+    orgId: 1
+    folder: ''
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 10
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards
+      foldersFromFilesStructure: true

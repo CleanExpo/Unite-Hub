@@ -1,18 +1,21 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ConvexHttpClient } from "convex/browser";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
+import { getSupabaseServer } from "@/lib/supabase";
+import { apiRateLimit } from "@/lib/rate-limit";
+import { UUIDSchema } from "@/lib/validation/schemas";
 import { createBillingPortalSession } from "@/lib/stripe/client";
 
 /**
  * POST /api/subscription/portal
  * Create a Stripe billing portal session for customer self-service
  */
-
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
-
 export async function POST(req: NextRequest) {
   try {
+    // Apply rate limiting (100 req/15min - API tier)
+    const rateLimitResult = await apiRateLimit(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
+
     const body = await req.json();
     const { orgId, returnUrl } = body;
 
@@ -30,21 +33,64 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Get subscription from Convex
-    const subscription = await convex.query(api.subscriptions.getByOrganization, {
-      orgId: orgId as Id<"organizations">,
-    });
+    // Validate organization ID
+    const orgIdValidation = UUIDSchema.safeParse(orgId);
+    if (!orgIdValidation.success) {
+      return NextResponse.json({ error: "Invalid organization ID format" }, { status: 400 });
+    }
 
-    if (!subscription) {
+    const supabase = await getSupabaseServer();
+
+    // Authenticate user
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Verify user has access to organization
+    const { data: userOrg } = await supabase
+      .from("user_organizations")
+      .select("id, role")
+      .eq("user_id", user.id)
+      .eq("org_id", orgId)
+      .single();
+
+    if (!userOrg) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+    }
+
+    // Only allow owners and admins to access billing portal
+    if (userOrg.role !== "owner" && userOrg.role !== "admin") {
+      return NextResponse.json(
+        { error: "Only organization owners and admins can access billing" },
+        { status: 403 }
+      );
+    }
+
+    // Get subscription from Supabase
+    const { data: subscription, error: subError } = await supabase
+      .from("subscriptions")
+      .select("stripe_customer_id")
+      .eq("org_id", orgId)
+      .single();
+
+    if (subError || !subscription) {
       return NextResponse.json(
         { error: "No subscription found" },
         { status: 404 }
       );
     }
 
+    if (!subscription.stripe_customer_id) {
+      return NextResponse.json(
+        { error: "No Stripe customer ID found" },
+        { status: 404 }
+      );
+    }
+
     // Create billing portal session
     const portalSession = await createBillingPortalSession({
-      customerId: subscription.stripeCustomerId,
+      customerId: subscription.stripe_customer_id,
       returnUrl,
     });
 

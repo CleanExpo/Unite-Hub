@@ -1,40 +1,91 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendEmail, addTrackingPixel } from "@/lib/gmail";
-import { ConvexHttpClient } from "convex/browser";
-import { api } from "@/convex/_generated/api";
+import { getSupabaseServer } from "@/lib/supabase";
+import { apiRateLimit } from "@/lib/rate-limit";
+import { GmailSendEmailSchema, formatZodError } from "@/lib/validation/schemas";
 
 /**
  * POST /api/email/send
  * Send email via Gmail API
  */
 
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
-
 export async function POST(req: NextRequest) {
   try {
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
+
+    // Get Supabase instance
+    const supabase = await getSupabaseServer();
+
+    // Authenticate user
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const body = await req.json();
+
+    // Validate request body
+    const validationResult = GmailSendEmailSchema.safeParse({
+      to: body.to,
+      subject: body.subject,
+      body: body.bodyHtml || body.bodyPlain,
+      workspace_id: body.workspaceId,
+      contact_id: body.contactId || body.clientId, // Support legacy clientId
+    });
+
+    if (!validationResult.success) {
+      return NextResponse.json(
+        {
+          error: "Invalid input",
+          details: formatZodError(validationResult.error),
+        },
+        { status: 400 }
+      );
+    }
+
     const {
-      clientId,
       to,
       subject,
+      workspace_id: workspaceId,
+      contact_id: contactId,
+    } = validationResult.data;
+
+    const {
       bodyHtml,
       bodyPlain,
       cc,
       bcc,
       replyTo,
       enableTracking,
-    } = await req.json();
+    } = body;
 
-    if (!clientId || !to || !subject || (!bodyHtml && !bodyPlain)) {
-      return NextResponse.json(
-        { error: "Missing required fields: clientId, to, subject, body" },
-        { status: 400 }
-      );
+    // Verify workspace access
+    const { data: workspace, error: workspaceError } = await supabase
+      .from("workspaces")
+      .select("id")
+      .eq("id", workspaceId)
+      .single();
+
+    if (workspaceError || !workspace) {
+      return NextResponse.json({ error: "Workspace not found or access denied" }, { status: 403 });
     }
 
-    // Verify client exists
-    const client = await convex.query(api.clients.get, { id: clientId });
-    if (!client) {
-      return NextResponse.json({ error: "Client not found" }, { status: 404 });
+    // Verify contact exists if provided
+    if (contactId) {
+      const { data: contact, error: contactError } = await supabase
+        .from("contacts")
+        .select("id")
+        .eq("id", contactId)
+        .eq("workspace_id", workspaceId)
+        .single();
+
+      if (contactError || !contact) {
+        return NextResponse.json({ error: "Contact not found" }, { status: 404 });
+      }
     }
 
     // Get OAuth credentials
@@ -53,7 +104,7 @@ export async function POST(req: NextRequest) {
       finalBodyHtml = addTrackingPixel(bodyHtml, trackingUrl);
     }
 
-    // Send email
+    // Send email via Gmail
     const result = await sendEmail(credentials.accessToken, credentials.refreshToken, {
       to,
       cc,
@@ -64,43 +115,61 @@ export async function POST(req: NextRequest) {
       replyTo,
     });
 
-    // Store email in database
-    const emailThread = await convex.mutation(api.emailThreads.create, {
-      clientId,
-      senderEmail: process.env.GMAIL_INBOX_EMAIL || "contact@unite-group.in",
-      senderName: "Unite Group",
-      subject,
-      messageBody: finalBodyHtml || bodyPlain,
-      messageBodyPlain: bodyPlain || stripHtml(finalBodyHtml || ""),
-      attachments: [],
-      receivedAt: Date.now(),
-      autoReplySent: true,
-      autoReplyContent: finalBodyHtml || bodyPlain,
-      autoReplySentAt: Date.now(),
-      gmailMessageId: result.messageId,
-      gmailThreadId: result.threadId,
-      isRead: true,
-    });
+    // Store sent email in database
+    const { data: sentEmail, error: emailError } = await supabase
+      .from("sent_emails")
+      .insert({
+        workspace_id: workspaceId,
+        contact_id: contactId,
+        to_email: to,
+        from_email: process.env.GMAIL_INBOX_EMAIL || "contact@unite-group.in",
+        subject,
+        body: finalBodyHtml || bodyPlain,
+        body_plain: bodyPlain || stripHtml(finalBodyHtml || ""),
+        cc: cc ? [cc] : null,
+        bcc: bcc ? [bcc] : null,
+        reply_to: replyTo,
+        external_id: result.messageId,
+        thread_id: result.threadId,
+        status: "sent",
+        sent_at: new Date().toISOString(),
+        tracking_enabled: enableTracking || false,
+        tracking_pixel_id: trackingPixelId,
+        metadata: {
+          sentVia: "gmail-api",
+          trackingPixelId,
+        },
+      })
+      .select()
+      .single();
 
-    // Store auto-reply record
-    await convex.mutation(api.autoReplies.create, {
-      emailThreadId: emailThread,
-      clientId,
-      questionsGenerated: [],
-      autoReplyContent: finalBodyHtml || bodyPlain,
-      sentAt: Date.now(),
-      responseReceived: false,
-      metadata: {
-        trackingPixelId,
-        sentVia: "gmail-api",
-      },
-    });
+    if (emailError) {
+      console.error("Failed to store email:", emailError);
+      // Don't fail the request if storage fails - email was sent successfully
+    }
+
+    // Also store in emails table for unified inbox
+    if (sentEmail) {
+      await supabase
+        .from("emails")
+        .insert({
+          workspace_id: workspaceId,
+          contact_id: contactId,
+          from: process.env.GMAIL_INBOX_EMAIL || "contact@unite-group.in",
+          to,
+          subject,
+          body: finalBodyHtml || bodyPlain,
+          ai_summary: null,
+          is_processed: true,
+          created_at: new Date().toISOString(),
+        });
+    }
 
     return NextResponse.json({
       success: true,
       messageId: result.messageId,
       threadId: result.threadId,
-      emailThreadId: emailThread,
+      emailId: sentEmail?.id,
       trackingPixelId,
     });
   } catch (error) {

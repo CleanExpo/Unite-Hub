@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
-import { ConvexHttpClient } from "convex/browser";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
+import { getSupabaseServer } from "@/lib/supabase";
+import { getPlanTierFromPriceId } from "@/lib/stripe/client";
 
 /**
  * Stripe Webhook Handler for Unite-Hub CRM
  *
- * Processes all Stripe webhook events and syncs with Convex database
+ * Processes all Stripe webhook events and syncs with Supabase database
  *
  * Handled Events:
  * - customer.subscription.created
@@ -15,6 +14,7 @@ import { Id } from "@/convex/_generated/dataModel";
  * - customer.subscription.deleted
  * - invoice.paid
  * - invoice.payment_failed
+ * - invoice.payment_action_required
  * - customer.created
  * - customer.updated
  * - payment_intent.succeeded
@@ -24,8 +24,6 @@ import { Id } from "@/convex/_generated/dataModel";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2024-11-20.acacia",
 });
-
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
 // Disable body parsing, need raw body for signature verification
 export const runtime = "nodejs";
@@ -148,9 +146,10 @@ export async function POST(req: NextRequest) {
 async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
   console.log("Processing subscription.created:", subscription.id);
 
+  const supabase = await getSupabaseServer();
   const customerId = subscription.customer as string;
   const metadata = subscription.metadata;
-  const orgId = metadata.organizationId as Id<"organizations">;
+  const orgId = metadata.organizationId;
 
   if (!orgId) {
     console.error("No organizationId in subscription metadata");
@@ -164,18 +163,38 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
     return;
   }
 
-  // Create subscription in Convex
-  await convex.mutation(api.subscriptions.upsertSubscription, {
-    orgId,
-    planTier,
-    status: mapStripeStatus(subscription.status),
-    stripeCustomerId: customerId,
-    stripeSubscriptionId: subscription.id,
-    stripePriceId: subscription.items.data[0].price.id,
-    currentPeriodStart: subscription.current_period_start * 1000,
-    currentPeriodEnd: subscription.current_period_end * 1000,
-    cancelAtPeriodEnd: subscription.cancel_at_period_end || false,
-  });
+  // Upsert subscription in Supabase
+  const { error } = await supabase
+    .from("subscriptions")
+    .upsert({
+      org_id: orgId,
+      stripe_customer_id: customerId,
+      stripe_subscription_id: subscription.id,
+      stripe_price_id: subscription.items.data[0].price.id,
+      stripe_product_id: subscription.items.data[0].price.product as string,
+      plan: planTier,
+      status: mapStripeStatus(subscription.status),
+      current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
+      current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+      trial_start: subscription.trial_start
+        ? new Date(subscription.trial_start * 1000).toISOString()
+        : null,
+      trial_end: subscription.trial_end
+        ? new Date(subscription.trial_end * 1000).toISOString()
+        : null,
+      cancel_at_period_end: subscription.cancel_at_period_end || false,
+      amount: subscription.items.data[0].price.unit_amount || 0,
+      currency: subscription.items.data[0].price.currency || "aud",
+      interval: subscription.items.data[0].price.recurring?.interval || "month",
+      metadata: metadata || {},
+    }, {
+      onConflict: "stripe_subscription_id"
+    });
+
+  if (error) {
+    console.error("Failed to create subscription:", error);
+    throw error;
+  }
 
   console.log("Subscription created successfully:", subscription.id);
 }
@@ -186,9 +205,10 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
 async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
   console.log("Processing subscription.updated:", subscription.id);
 
+  const supabase = await getSupabaseServer();
   const customerId = subscription.customer as string;
   const metadata = subscription.metadata;
-  const orgId = metadata.organizationId as Id<"organizations">;
+  const orgId = metadata.organizationId;
 
   if (!orgId) {
     console.error("No organizationId in subscription metadata");
@@ -202,18 +222,31 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
     return;
   }
 
-  // Update subscription in Convex
-  await convex.mutation(api.subscriptions.upsertSubscription, {
-    orgId,
-    planTier,
-    status: mapStripeStatus(subscription.status),
-    stripeCustomerId: customerId,
-    stripeSubscriptionId: subscription.id,
-    stripePriceId: subscription.items.data[0].price.id,
-    currentPeriodStart: subscription.current_period_start * 1000,
-    currentPeriodEnd: subscription.current_period_end * 1000,
-    cancelAtPeriodEnd: subscription.cancel_at_period_end || false,
-  });
+  // Update subscription in Supabase
+  const { error } = await supabase
+    .from("subscriptions")
+    .update({
+      plan: planTier,
+      status: mapStripeStatus(subscription.status),
+      stripe_price_id: subscription.items.data[0].price.id,
+      current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
+      current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+      cancel_at: subscription.cancel_at
+        ? new Date(subscription.cancel_at * 1000).toISOString()
+        : null,
+      canceled_at: subscription.canceled_at
+        ? new Date(subscription.canceled_at * 1000).toISOString()
+        : null,
+      cancel_at_period_end: subscription.cancel_at_period_end || false,
+      amount: subscription.items.data[0].price.unit_amount || 0,
+      metadata: metadata || {},
+    })
+    .eq("stripe_subscription_id", subscription.id);
+
+  if (error) {
+    console.error("Failed to update subscription:", error);
+    throw error;
+  }
 
   console.log("Subscription updated successfully:", subscription.id);
 }
@@ -224,24 +257,22 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
 async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   console.log("Processing subscription.deleted:", subscription.id);
 
-  const existingSubscription = await convex.query(
-    api.subscriptions.getByStripeSubscriptionId,
-    {
-      stripeSubscriptionId: subscription.id,
-    }
-  );
-
-  if (!existingSubscription) {
-    console.warn("Subscription not found in database:", subscription.id);
-    return;
-  }
+  const supabase = await getSupabaseServer();
 
   // Update subscription status to canceled
-  await convex.mutation(api.subscriptions.updateStatus, {
-    subscriptionId: existingSubscription._id,
-    status: "canceled",
-    cancelAtPeriodEnd: false,
-  });
+  const { error } = await supabase
+    .from("subscriptions")
+    .update({
+      status: "canceled",
+      cancel_at_period_end: false,
+      canceled_at: new Date().toISOString(),
+    })
+    .eq("stripe_subscription_id", subscription.id);
+
+  if (error) {
+    console.error("Failed to mark subscription as canceled:", error);
+    throw error;
+  }
 
   console.log("Subscription canceled successfully:", subscription.id);
 }
@@ -252,6 +283,7 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
 async function handleInvoicePaid(invoice: Stripe.Invoice) {
   console.log("Processing invoice.paid:", invoice.id);
 
+  const supabase = await getSupabaseServer();
   const subscriptionId = invoice.subscription as string;
 
   if (!subscriptionId) {
@@ -260,12 +292,11 @@ async function handleInvoicePaid(invoice: Stripe.Invoice) {
   }
 
   // Get subscription from database
-  const subscription = await convex.query(
-    api.subscriptions.getByStripeSubscriptionId,
-    {
-      stripeSubscriptionId: subscriptionId,
-    }
-  );
+  const { data: subscription } = await supabase
+    .from("subscriptions")
+    .select("id, status, org_id")
+    .eq("stripe_subscription_id", subscriptionId)
+    .single();
 
   if (!subscription) {
     console.warn("Subscription not found for invoice:", invoice.id);
@@ -274,20 +305,56 @@ async function handleInvoicePaid(invoice: Stripe.Invoice) {
 
   // Update subscription to active if it was past_due
   if (subscription.status === "past_due") {
-    await convex.mutation(api.subscriptions.updateStatus, {
-      subscriptionId: subscription._id,
-      status: "active",
-    });
+    await supabase
+      .from("subscriptions")
+      .update({ status: "active" })
+      .eq("id", subscription.id);
   }
 
   // Update period if invoice has period information
   if (invoice.period_start && invoice.period_end) {
-    await convex.mutation(api.subscriptions.updatePeriod, {
-      subscriptionId: subscription._id,
-      currentPeriodStart: invoice.period_start * 1000,
-      currentPeriodEnd: invoice.period_end * 1000,
-    });
+    await supabase
+      .from("subscriptions")
+      .update({
+        current_period_start: new Date(invoice.period_start * 1000).toISOString(),
+        current_period_end: new Date(invoice.period_end * 1000).toISOString(),
+      })
+      .eq("id", subscription.id);
   }
+
+  // Store invoice record
+  await supabase
+    .from("invoices")
+    .upsert({
+      subscription_id: subscription.id,
+      org_id: subscription.org_id,
+      stripe_invoice_id: invoice.id,
+      stripe_customer_id: invoice.customer as string,
+      number: invoice.number,
+      status: invoice.status as any,
+      amount_due: (invoice.amount_due || 0) / 100,
+      amount_paid: (invoice.amount_paid || 0) / 100,
+      amount_remaining: (invoice.amount_remaining || 0) / 100,
+      subtotal: (invoice.subtotal || 0) / 100,
+      total: (invoice.total || 0) / 100,
+      tax: (invoice.tax || 0) / 100,
+      currency: invoice.currency,
+      invoice_date: invoice.created
+        ? new Date(invoice.created * 1000).toISOString()
+        : null,
+      due_date: invoice.due_date
+        ? new Date(invoice.due_date * 1000).toISOString()
+        : null,
+      paid_at: invoice.status_transitions?.paid_at
+        ? new Date(invoice.status_transitions.paid_at * 1000).toISOString()
+        : new Date().toISOString(),
+      invoice_pdf: invoice.invoice_pdf,
+      hosted_invoice_url: invoice.hosted_invoice_url,
+      description: invoice.description,
+      metadata: invoice.metadata || {},
+    }, {
+      onConflict: "stripe_invoice_id"
+    });
 
   console.log("Invoice payment processed successfully:", invoice.id);
 }
@@ -298,6 +365,7 @@ async function handleInvoicePaid(invoice: Stripe.Invoice) {
 async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
   console.log("Processing invoice.payment_failed:", invoice.id);
 
+  const supabase = await getSupabaseServer();
   const subscriptionId = invoice.subscription as string;
 
   if (!subscriptionId) {
@@ -306,12 +374,11 @@ async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
   }
 
   // Get subscription from database
-  const subscription = await convex.query(
-    api.subscriptions.getByStripeSubscriptionId,
-    {
-      stripeSubscriptionId: subscriptionId,
-    }
-  );
+  const { data: subscription } = await supabase
+    .from("subscriptions")
+    .select("id")
+    .eq("stripe_subscription_id", subscriptionId)
+    .single();
 
   if (!subscription) {
     console.warn("Subscription not found for invoice:", invoice.id);
@@ -319,10 +386,10 @@ async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
   }
 
   // Update subscription to past_due
-  await convex.mutation(api.subscriptions.updateStatus, {
-    subscriptionId: subscription._id,
-    status: "past_due",
-  });
+  await supabase
+    .from("subscriptions")
+    .update({ status: "past_due" })
+    .eq("id", subscription.id);
 
   console.error("Invoice payment failed:", invoice.id, {
     amount: invoice.amount_due,
@@ -349,8 +416,9 @@ async function handleInvoicePaymentActionRequired(invoice: Stripe.Invoice) {
 async function handleCustomerCreated(customer: Stripe.Customer) {
   console.log("Processing customer.created:", customer.id);
 
+  const supabase = await getSupabaseServer();
   const metadata = customer.metadata;
-  const orgId = metadata.organizationId as Id<"organizations">;
+  const orgId = metadata.organizationId;
 
   if (!orgId) {
     console.log("No organizationId in customer metadata:", customer.id);
@@ -358,10 +426,10 @@ async function handleCustomerCreated(customer: Stripe.Customer) {
   }
 
   // Update organization with Stripe customer ID
-  await convex.mutation(api.subscriptions.updateOrganizationStripeCustomer, {
-    orgId,
-    stripeCustomerId: customer.id,
-  });
+  await supabase
+    .from("organizations")
+    .update({ stripe_customer_id: customer.id })
+    .eq("id", orgId);
 
   console.log("Customer created and linked:", customer.id);
 }
@@ -372,13 +440,14 @@ async function handleCustomerCreated(customer: Stripe.Customer) {
 async function handleCustomerUpdated(customer: Stripe.Customer) {
   console.log("Processing customer.updated:", customer.id);
 
+  const supabase = await getSupabaseServer();
+
   // Get subscription by customer ID
-  const subscription = await convex.query(
-    api.subscriptions.getByStripeCustomerId,
-    {
-      stripeCustomerId: customer.id,
-    }
-  );
+  const { data: subscription } = await supabase
+    .from("subscriptions")
+    .select("id")
+    .eq("stripe_customer_id", customer.id)
+    .single();
 
   if (!subscription) {
     console.log("No subscription found for customer:", customer.id);
@@ -432,36 +501,29 @@ async function handlePaymentIntentFailed(paymentIntent: Stripe.PaymentIntent) {
 }
 
 /**
- * Map Stripe subscription status to Convex status
+ * Map Stripe subscription status to Supabase status
  */
 function mapStripeStatus(
   status: Stripe.Subscription.Status
-): "active" | "canceled" | "past_due" | "trialing" {
+): "active" | "trialing" | "past_due" | "canceled" | "unpaid" | "incomplete" | "incomplete_expired" | "paused" {
   switch (status) {
     case "active":
       return "active";
-    case "canceled":
-    case "incomplete_expired":
-    case "unpaid":
-      return "canceled";
-    case "past_due":
-      return "past_due";
     case "trialing":
       return "trialing";
+    case "past_due":
+      return "past_due";
+    case "canceled":
+      return "canceled";
+    case "unpaid":
+      return "unpaid";
     case "incomplete":
-      return "trialing"; // Treat incomplete as trialing
+      return "incomplete";
+    case "incomplete_expired":
+      return "incomplete_expired";
+    case "paused":
+      return "paused";
     default:
       return "active";
   }
-}
-
-/**
- * Get plan tier from Stripe price ID
- */
-function getPlanTierFromPriceId(
-  priceId: string
-): "starter" | "professional" | null {
-  if (priceId === process.env.STRIPE_PRICE_ID_STARTER) return "starter";
-  if (priceId === process.env.STRIPE_PRICE_ID_PROFESSIONAL) return "professional";
-  return null;
 }

@@ -1,14 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
-import { ConvexHttpClient } from "convex/browser";
-import { api } from "@/convex/_generated/api";
+import { getSupabaseServer } from "@/lib/supabase";
 import {
   CONTENT_CALENDAR_SYSTEM_PROMPT,
   buildContentCalendarUserPrompt,
 } from "@/lib/claude/prompts";
-import { Id } from "@/convex/_generated/dataModel";
+import { aiAgentRateLimit } from "@/lib/rate-limit";
+import { z } from "zod";
 
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+/**
+ * POST /api/calendar/generate
+ * Generate AI-powered content calendar for a contact
+ */
+
+const GenerateCalendarSchema = z.object({
+  contactId: z.string().uuid("Invalid contact ID"),
+  strategyId: z.string().uuid().optional(),
+  startDate: z.string(), // ISO date string
+  endDate: z.string(), // ISO date string
+  platforms: z.array(z.string()).optional().default(["facebook", "instagram", "linkedin"]),
+});
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
@@ -16,68 +27,118 @@ const anthropic = new Anthropic({
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const { clientId, strategyId, startDate, endDate, platforms } = body;
+    // AI-specific rate limiting
+    const rateLimitResult = await aiAgentRateLimit(req);
+    if (rateLimitResult) return rateLimitResult;
 
-    if (!clientId) {
+    // Parse and validate request body
+    const body = await req.json();
+    const validation = GenerateCalendarSchema.safeParse(body);
+
+    if (!validation.success) {
       return NextResponse.json(
-        { error: "clientId is required" },
+        { error: "Invalid request", details: validation.error.errors },
         { status: 400 }
       );
     }
 
-    // Prepare calendar generation
-    const prepResult = await convex.mutation(api.contentCalendar.generateCalendar, {
-      clientId: clientId as Id<"clients">,
-      strategyId: strategyId as Id<"marketingStrategies"> | undefined,
-      startDate: new Date(startDate).getTime(),
-      endDate: new Date(endDate).getTime(),
-      platforms: platforms || ["facebook", "instagram", "linkedin"],
-    });
+    const { contactId, strategyId, startDate, endDate, platforms } = validation.data;
 
-    // Get client data
-    const client = await convex.query(api.clients.get, {
-      clientId: clientId as Id<"clients">,
-    });
+    // Authenticate user
+    const supabase = await getSupabaseServer();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
-    // Get persona
-    const persona = await convex.query(api.personas.getActive, {
-      clientId: clientId as Id<"clients">,
-    });
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
-    // Get strategy
-    const strategy = strategyId
-      ? await convex.query(api.strategies.get, {
-          strategyId: strategyId as Id<"marketingStrategies">,
-        })
-      : await convex.query(api.strategies.getActive, {
-          clientId: clientId as Id<"clients">,
-        });
+    // Get contact data
+    const { data: contact, error: contactError } = await supabase
+      .from("contacts")
+      .select("*")
+      .eq("id", contactId)
+      .single();
+
+    if (contactError || !contact) {
+      return NextResponse.json(
+        { error: "Contact not found" },
+        { status: 404 }
+      );
+    }
+
+    // Verify user has access to this workspace
+    const { data: userOrg, error: userOrgError } = await supabase
+      .from("user_organizations")
+      .select("id")
+      .eq("user_id", user.id)
+      .single();
+
+    if (userOrgError || !userOrg) {
+      return NextResponse.json(
+        { error: "Access denied" },
+        { status: 403 }
+      );
+    }
+
+    // Get active persona for contact
+    const { data: persona, error: personaError } = await supabase
+      .from("marketing_personas")
+      .select("*")
+      .eq("contact_id", contactId)
+      .eq("is_active", true)
+      .single();
+
+    // Get strategy (specific or active)
+    const { data: strategy, error: strategyError } = strategyId
+      ? await supabase
+          .from("marketing_strategies")
+          .select("*")
+          .eq("id", strategyId)
+          .single()
+      : await supabase
+          .from("marketing_strategies")
+          .select("*")
+          .eq("contact_id", contactId)
+          .eq("is_active", true)
+          .single();
 
     if (!persona || !strategy) {
       return NextResponse.json(
         {
-          error: "Client must have an active persona and marketing strategy to generate calendar",
+          error: "Contact must have an active persona and marketing strategy to generate calendar",
         },
         { status: 400 }
       );
     }
 
+    // Calculate duration
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const durationDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+
     // Build AI prompt
+    const businessContext =
+      contact.custom_fields?.businessDescription || contact.company || "Unknown business";
+    const packageTier =
+      contact.custom_fields?.packageTier || contact.custom_fields?.tier || "professional";
+
     const userPrompt = buildContentCalendarUserPrompt({
       persona,
       strategy,
-      businessContext: client.businessDescription,
-      platforms: platforms || ["facebook", "instagram", "linkedin"],
-      startDate: new Date(startDate).toISOString(),
-      durationDays: prepResult.durationDays,
-      contentPillars: strategy.contentPillars,
-      tier: client.packageTier,
+      businessContext,
+      platforms,
+      startDate,
+      durationDays,
+      contentPillars: strategy.content_pillars,
+      tier: packageTier,
     });
 
     // Call Claude AI to generate calendar
     const message = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
+      model: "claude-sonnet-4-20250514",
       max_tokens: 8000,
       system: CONTENT_CALENDAR_SYSTEM_PROMPT,
       messages: [
@@ -110,31 +171,43 @@ export async function POST(req: NextRequest) {
 
     // Transform AI response to database format
     const posts = calendarData.calendar.posts.map((post: any) => ({
-      clientId: clientId as Id<"clients">,
-      strategyId: strategyId as Id<"marketingStrategies"> | undefined,
-      scheduledDate: new Date(post.scheduledDate).getTime(),
+      contact_id: contactId,
+      workspace_id: contact.workspace_id,
+      strategy_id: strategyId || strategy.id,
+      scheduled_date: new Date(post.scheduledDate).toISOString(),
       platform: post.platform,
-      postType: post.postType,
-      contentPillar: post.contentPillar,
-      suggestedCopy: post.suggestedCopy,
-      suggestedHashtags: post.suggestedHashtags,
-      suggestedImagePrompt: post.suggestedImagePrompt,
-      aiReasoning: post.aiReasoning,
-      bestTimeToPost: post.bestTimeToPost,
-      targetAudience: post.targetAudience,
-      callToAction: post.callToAction,
+      post_type: post.postType,
+      content_pillar: post.contentPillar,
+      suggested_copy: post.suggestedCopy,
+      suggested_hashtags: post.suggestedHashtags,
+      suggested_image_prompt: post.suggestedImagePrompt,
+      ai_reasoning: post.aiReasoning,
+      best_time_to_post: post.bestTimeToPost,
+      target_audience: post.targetAudience,
+      call_to_action: post.callToAction,
+      status: "draft",
     }));
 
     // Batch create posts in database
-    const result = await convex.mutation(api.contentCalendar.batchCreatePosts, {
-      posts,
-    });
+    const { data: createdPosts, error: insertError } = await supabase
+      .from("calendar_posts")
+      .insert(posts)
+      .select();
+
+    if (insertError) {
+      console.error("Failed to create calendar posts:", insertError);
+      return NextResponse.json(
+        { error: "Failed to create calendar posts", details: insertError.message },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({
       success: true,
-      postsCreated: result.count,
+      postsCreated: createdPosts?.length || 0,
       summary: calendarData.calendar.summary,
       strategicNotes: calendarData.calendar.strategicNotes,
+      posts: createdPosts,
     });
   } catch (error: any) {
     console.error("Error generating content calendar:", error);

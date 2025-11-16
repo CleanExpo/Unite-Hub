@@ -1,27 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ConvexHttpClient } from "convex/browser";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
-import {
-  getSubscription,
-  getCustomerInvoices,
-  PLAN_TIERS,
-} from "@/lib/stripe/client";
+import { getSupabaseServer } from "@/lib/supabase";
+import { apiRateLimit } from "@/lib/rate-limit";
+import { UUIDSchema } from "@/lib/validation/schemas";
+import { getSubscription, PLAN_TIERS, PlanTier } from "@/lib/stripe/client";
 
 /**
  * GET /api/subscription/[orgId]
  * Get subscription details for an organization
  */
-
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
-
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ orgId: string }> }
 ) {
   try {
-    const { orgId: orgIdString } = await params;
-    const orgId = orgIdString as Id<"organizations">;
+    // Apply rate limiting (100 req/15min - API tier)
+    const rateLimitResult = await apiRateLimit(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
+
+    const { orgId } = await params;
 
     if (!orgId) {
       return NextResponse.json(
@@ -30,12 +28,40 @@ export async function GET(
       );
     }
 
-    // Get subscription from Convex
-    const subscription = await convex.query(api.subscriptions.getByOrganization, {
-      orgId,
-    });
+    // Validate organization ID
+    const orgIdValidation = UUIDSchema.safeParse(orgId);
+    if (!orgIdValidation.success) {
+      return NextResponse.json({ error: "Invalid organization ID format" }, { status: 400 });
+    }
 
-    if (!subscription) {
+    const supabase = await getSupabaseServer();
+
+    // Authenticate user
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Verify user has access to organization
+    const { data: userOrg } = await supabase
+      .from("user_organizations")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("org_id", orgId)
+      .single();
+
+    if (!userOrg) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+    }
+
+    // Get subscription from Supabase
+    const { data: subscription, error: subError } = await supabase
+      .from("subscriptions")
+      .select("*")
+      .eq("org_id", orgId)
+      .single();
+
+    if (subError || !subscription) {
       return NextResponse.json(
         { error: "No subscription found", hasSubscription: false },
         { status: 404 }
@@ -43,9 +69,9 @@ export async function GET(
     }
 
     // Get full Stripe subscription details
-    const stripeSubscription = await getSubscription(
-      subscription.stripeSubscriptionId
-    );
+    const stripeSubscription = subscription.stripe_subscription_id
+      ? await getSubscription(subscription.stripe_subscription_id)
+      : null;
 
     if (!stripeSubscription) {
       return NextResponse.json(
@@ -55,41 +81,55 @@ export async function GET(
     }
 
     // Get plan details
-    const planDetails = PLAN_TIERS[subscription.planTier];
+    const planTier = subscription.plan as PlanTier;
+    const planDetails = PLAN_TIERS[planTier];
 
     // Calculate days until renewal
-    const now = Date.now();
-    const daysUntilRenewal = Math.ceil(
-      (subscription.currentPeriodEnd - now) / (1000 * 60 * 60 * 24)
-    );
+    const now = new Date();
+    const periodEnd = subscription.current_period_end
+      ? new Date(subscription.current_period_end)
+      : null;
+
+    const daysUntilRenewal = periodEnd
+      ? Math.ceil((periodEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+      : null;
 
     // Response data
     const response = {
       subscription: {
-        id: subscription._id,
-        orgId: subscription.orgId,
-        planTier: subscription.planTier,
+        id: subscription.id,
+        orgId: subscription.org_id,
+        planTier: subscription.plan,
         status: subscription.status,
-        cancelAtPeriodEnd: subscription.cancelAtPeriodEnd,
-        currentPeriodStart: subscription.currentPeriodStart,
-        currentPeriodEnd: subscription.currentPeriodEnd,
+        cancelAtPeriodEnd: subscription.cancel_at_period_end,
+        currentPeriodStart: subscription.current_period_start,
+        currentPeriodEnd: subscription.current_period_end,
         daysUntilRenewal,
-        stripeSubscriptionId: subscription.stripeSubscriptionId,
-        stripeCustomerId: subscription.stripeCustomerId,
+        trialStart: subscription.trial_start,
+        trialEnd: subscription.trial_end,
+        stripeSubscriptionId: subscription.stripe_subscription_id,
+        stripeCustomerId: subscription.stripe_customer_id,
+        amount: subscription.amount,
+        currency: subscription.currency,
+        interval: subscription.interval,
+        seats: subscription.seats,
+        usageLimits: subscription.usage_limits,
       },
-      plan: {
+      plan: planDetails ? {
         name: planDetails.name,
         price: planDetails.price,
         currency: planDetails.currency,
         interval: planDetails.interval,
         features: planDetails.features,
-      },
+      } : null,
       stripe: {
         status: stripeSubscription.status,
         cancelAtPeriodEnd: stripeSubscription.cancel_at_period_end,
         canceledAt: stripeSubscription.canceled_at,
         trialEnd: stripeSubscription.trial_end,
         defaultPaymentMethod: stripeSubscription.default_payment_method,
+        currentPeriodStart: stripeSubscription.current_period_start,
+        currentPeriodEnd: stripeSubscription.current_period_end,
       },
     };
 

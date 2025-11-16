@@ -1,17 +1,23 @@
 import { NextRequest, NextResponse } from "next/server";
 import { gmailClient } from "@/lib/gmail";
-import { ConvexHttpClient } from "convex/browser";
-import { api } from "@/convex/_generated/api";
+import { getSupabaseServer } from "@/lib/supabase";
+import { strictRateLimit } from "@/lib/rate-limit";
+import { GmailOAuthCallbackSchema, formatZodError } from "@/lib/validation/schemas";
 
 /**
  * GET /api/email/oauth/callback
  * Gmail OAuth callback handler
  */
 
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
-
 export async function GET(req: NextRequest) {
   try {
+    // Apply rate limiting (OAuth callbacks should be limited)
+    const rateLimitResult = await strictRateLimit(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
+
+    const supabase = await getSupabaseServer();
     const code = req.nextUrl.searchParams.get("code");
     const state = req.nextUrl.searchParams.get("state");
     const error = req.nextUrl.searchParams.get("error");
@@ -23,33 +29,95 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    if (!code) {
-      return NextResponse.json({ error: "Missing authorization code" }, { status: 400 });
+    // Validate callback parameters
+    const validationResult = GmailOAuthCallbackSchema.safeParse({ code, state });
+    if (!validationResult.success) {
+      console.error("Invalid OAuth callback params:", formatZodError(validationResult.error));
+      return NextResponse.redirect(
+        `${process.env.NEXT_PUBLIC_URL}/settings/integrations?error=invalid_callback`
+      );
     }
 
     // Exchange code for tokens
-    const credentials = await gmailClient.getTokensFromCode(code);
+    const credentials = await gmailClient.getTokensFromCode(code!);
 
     // Get user's Gmail profile
     const profile = await gmailClient.getUserProfile(credentials);
 
-    // Parse state (contains orgId or other metadata)
-    const stateData = state ? JSON.parse(decodeURIComponent(state)) : {};
-    const orgId = stateData.orgId || process.env.DEFAULT_ORG_ID;
+    // Get authenticated user
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return NextResponse.redirect(
+        `${process.env.NEXT_PUBLIC_URL}/login?error=unauthorized&redirectTo=/settings/integrations`
+      );
+    }
 
-    // Store credentials in environment or secure storage
-    // For production, store in database or secure vault
+    // Parse state (contains workspace_id or other metadata)
+    const stateData = state ? JSON.parse(decodeURIComponent(state)) : {};
+    const workspaceId = stateData.workspaceId || stateData.workspace_id;
+
+    // Get user's workspace if not in state
+    let targetWorkspaceId = workspaceId;
+    if (!targetWorkspaceId) {
+      const { data: userOrg } = await supabase
+        .from("user_organizations")
+        .select("org_id")
+        .eq("user_id", user.id)
+        .eq("is_active", true)
+        .single();
+
+      if (userOrg) {
+        const { data: workspace } = await supabase
+          .from("workspaces")
+          .select("id")
+          .eq("org_id", userOrg.org_id)
+          .limit(1)
+          .single();
+
+        targetWorkspaceId = workspace?.id;
+      }
+    }
+
+    if (!targetWorkspaceId) {
+      return NextResponse.redirect(
+        `${process.env.NEXT_PUBLIC_URL}/settings/integrations?error=no_workspace`
+      );
+    }
+
+    // Store integration in email_integrations table
+    const { data: integration, error: integrationError } = await supabase
+      .from("email_integrations")
+      .upsert({
+        workspace_id: targetWorkspaceId,
+        provider: "gmail",
+        email_address: profile.emailAddress,
+        access_token: credentials.accessToken,
+        refresh_token: credentials.refreshToken,
+        token_expiry: credentials.expiryDate ? new Date(credentials.expiryDate).toISOString() : null,
+        is_active: true,
+        metadata: {
+          messagesTotal: profile.messagesTotal,
+          threadsTotal: profile.threadsTotal,
+          connectedAt: new Date().toISOString()
+        }
+      }, {
+        onConflict: "workspace_id,email_address"
+      })
+      .select()
+      .single();
+
+    if (integrationError) {
+      console.error("Failed to store integration:", integrationError);
+      return NextResponse.redirect(
+        `${process.env.NEXT_PUBLIC_URL}/settings/integrations?error=storage_failed`
+      );
+    }
+
     console.log("Gmail OAuth successful:", {
       email: profile.emailAddress,
-      messagesTotal: profile.messagesTotal,
-      threadsTotal: profile.threadsTotal,
+      workspaceId: targetWorkspaceId,
+      integrationId: integration.id
     });
-
-    // TODO: Store credentials securely
-    // For now, log them for manual setup
-    console.log("Access Token:", credentials.accessToken);
-    console.log("Refresh Token:", credentials.refreshToken);
-    console.log("Expiry Date:", credentials.expiryDate);
 
     // Redirect to success page
     return NextResponse.redirect(
