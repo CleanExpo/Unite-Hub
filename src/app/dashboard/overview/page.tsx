@@ -10,7 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function OverviewPage() {
-  const { currentOrganization } = useAuth();
+  const { currentOrganization, loading: authLoading } = useAuth();
   const workspaceId = currentOrganization?.org_id || null;
   const [stats, setStats] = useState({
     totalContacts: 0,
@@ -79,6 +79,16 @@ export default function OverviewPage() {
     fetchStats();
   }, [workspaceId]);
 
+  // Show loading while auth is initializing
+  if (authLoading) {
+    return (
+      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+        <div className="text-white">Loading your dashboard...</div>
+      </div>
+    );
+  }
+
+  // Show loading while fetching stats
   if (loading) {
     return (
       <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">

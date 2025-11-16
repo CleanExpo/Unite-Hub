@@ -95,8 +95,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .eq("is_active", true)
         .order("joined_at", { ascending: false });
 
-      if (userOrgsError) throw userOrgsError;
+      if (userOrgsError) {
+        console.error("Error fetching user organizations:", userOrgsError);
+        throw userOrgsError;
+      }
+
       if (!userOrgs || userOrgs.length === 0) {
+        console.log("No organizations found for user. This might be a new user being initialized.");
         setOrganizations([]);
         setCurrentOrganization(null);
         return;
@@ -256,6 +261,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // For SIGNED_IN event (first login), initialize user profile and organization
         if (event === 'SIGNED_IN') {
           try {
+            console.log('SIGNED_IN event detected, initializing user...');
             const response = await fetch('/api/auth/initialize-user', {
               method: 'POST',
               headers: {
@@ -264,9 +270,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             });
 
             if (!response.ok) {
-              console.error('Failed to initialize user:', await response.text());
+              const errorText = await response.text();
+              console.error('Failed to initialize user:', errorText);
             } else {
-              console.log('User initialized successfully');
+              const result = await response.json();
+              console.log('User initialized successfully:', result);
+
+              // Wait a moment for database to propagate changes
+              await new Promise(resolve => setTimeout(resolve, 1000));
+
+              // Fetch user data AFTER initialization completes
+              await fetchProfile(session.user.id);
+              await fetchOrganizations(session.user.id);
 
               // Check if onboarding is needed
               const { data: onboardingStatus } = await supabaseBrowser
@@ -280,13 +295,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 window.location.href = '/onboarding';
                 return;
               }
+
+              // Done initializing, stop loading
+              setLoading(false);
+              return; // Exit early, don't fetch again below
             }
           } catch (error) {
             console.error('Error initializing user:', error);
           }
         }
 
-        // Fetch/refresh user data on any auth event
+        // Fetch/refresh user data on any auth event (except SIGNED_IN which handles above)
         await fetchProfile(session.user.id);
         await fetchOrganizations(session.user.id);
       } else {
