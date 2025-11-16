@@ -18,3 +18,6 @@
  GET /dashboard/overview 200 in 1080ms (compile: 941ms, proxy.ts: 4ms, render: 134ms)
  ✓ Compiled in 101ms
  ✓ Compiled in 73ms
+ GET /dashboard/overview 200 in 150ms (compile: 51ms, proxy.ts: 5ms, render: 95ms)
+ POST /api/auth/initialize-user 200 in 402ms (compile: 382ms, render: 20ms)
+ ✓ Compiled in 22ms
