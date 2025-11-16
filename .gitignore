@@ -5,6 +5,11 @@ node_modules/
 
 # Testing
 /coverage
+/test-results
+/playwright-report
+/.playwright
+*.lcov
+.vitest-cache
 
 # Next.js
 /.next/
