@@ -13,53 +13,17 @@ import { apiRateLimit } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(req);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
-
-    // Authenticate req
-    const authResult = await authenticateRequest(req);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const { userId } = authResult;
-
-    // Authentication check
-    const supabase = await getSupabaseServer();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Get user's organization
-    const { data: userOrg, error: orgError } = await supabase
-      .from("user_organizations")
-      .select("org_id")
-      .eq("user_id", user.id)
-      .eq("is_active", true)
-      .single();
-
-    if (orgError || !userOrg) {
-      return NextResponse.json({ error: "No active organization found" }, { status: 403 });
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
     }
 
     const { action, ...data } = await req.json();
 
-    // Validate workspaceId if provided
+    // Validate workspaceId if provided in request
     if (data.workspaceId) {
-      const { data: workspace, error: workspaceError } = await supabase
-        .from("workspaces")
-        .select("id")
-        .eq("id", data.workspaceId)
-        .eq("org_id", userOrg.org_id)
-        .single();
-
-      if (workspaceError || !workspace) {
-        return NextResponse.json({ error: "Invalid workspace or access denied" }, { status: 403 });
-      }
+      await validateUserAndWorkspace(req, data.workspaceId);
     }
 
     switch (action) {
@@ -113,6 +77,14 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "Invalid action" }, { status: 400 });
     }
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed" },
