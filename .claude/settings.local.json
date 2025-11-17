@@ -23,7 +23,9 @@
       "Bash(cat:*)",
       "Bash(npm run dev:*)",
       "Bash(git checkout:*)",
-      "Bash(git merge:*)"
+      "Bash(git merge:*)",
+      "Bash(nul)",
+      "Bash(node:*)"
     ],
     "deny": [],
     "ask": []

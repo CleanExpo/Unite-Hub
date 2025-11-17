@@ -230,6 +230,56 @@ BEGIN
 END $$;
 ```
 
+### ⚠️ CRITICAL: RLS Migration Workflow (MANDATORY)
+
+**Before ANY RLS-related work**, you MUST follow this process to prevent multi-hour debugging sessions:
+
+**Step 1: ALWAYS Run Diagnostics First** (30 seconds, saves 2 hours):
+```bash
+# In Supabase SQL Editor
+\i scripts/rls-diagnostics.sql
+```
+
+**Step 2: Follow the 3-Step Process**:
+- **See `.claude/RLS_WORKFLOW.md` for complete mandatory workflow**
+- Create helper functions FIRST (migration 023)
+- Test on ONE table (migration 024)
+- Apply to all tables (migration 025)
+
+**Step 3: Common Error Prevention**:
+```
+Error: "operator does not exist: uuid = text"
+│
+├─→ Root Cause: Helper functions don't exist in database
+├─→ Solution: Run diagnostics, create functions (023), THEN policies
+└─→ DO NOT create policies before functions exist
+```
+
+**Decision Tree**:
+```
+Got "uuid = text" error?
+│
+├─→ Did you run diagnostics first?
+│   ├─→ NO → ❌ STOP. Run scripts/rls-diagnostics.sql
+│   └─→ YES → Continue
+│
+├─→ Do helper functions exist?
+│   ├─→ NO → ❌ Run migration 023_CREATE_FUNCTIONS_ONLY.sql
+│   └─→ YES → Continue
+│
+└─→ Did you test on ONE table first?
+    ├─→ NO → ❌ STOP. Test on organizations table only
+    └─→ YES → Check column types in diagnostic output
+```
+
+**Historical Context**:
+- Previous debugging session: 10+ failed migrations, 2 hours wasted
+- Following this workflow: 5 minutes, zero errors
+- **Time saved**: 115 minutes per RLS migration
+- **See**: `docs/RLS_MIGRATION_POSTMORTEM.md` for detailed analysis
+
+**DO NOT skip diagnostics. DO NOT create policies before functions exist. DO NOT apply to all tables at once.**
+
 ---
 
 ### 5. React Component Patterns
@@ -972,7 +1022,34 @@ docker-compose exec grafana ls /etc/grafana/provisioning
 
 ---
 
+## Important Files
+
+### RLS & Database Security
+- **`.claude/RLS_WORKFLOW.md`** - MANDATORY 3-step process for all RLS migrations
+- **`scripts/rls-diagnostics.sql`** - Pre-flight diagnostic script (run BEFORE any RLS work)
+- **`docs/RLS_MIGRATION_POSTMORTEM.md`** - Detailed analysis of common RLS errors and prevention
+- **`supabase/migrations/023_CREATE_FUNCTIONS_ONLY.sql`** - Helper functions (must exist before policies)
+- **`supabase/migrations/024_TEST_ONE_POLICY.sql`** - Single-table policy test
+- **`supabase/migrations/025_COMPLETE_RLS.sql`** - Complete RLS for all 9 core tables
+
+### Core Documentation
+- **`CLAUDE.md`** - This file (system overview and patterns)
+- **`.claude/agent.md`** - Agent definitions (CANONICAL)
+- **`README.md`** - Project README
+- **`COMPLETE_DATABASE_SCHEMA.sql`** - Full database schema
+- **`OAUTH_SUCCESS.md`** - OAuth implementation guide
+
+---
+
 ## Version History
+
+### v2.1 (2025-01-17) - RLS MIGRATION WORKFLOW
+- ✅ **CRITICAL**: Added mandatory RLS migration workflow (prevents 2-hour debugging sessions)
+- ✅ RLS diagnostic script (`scripts/rls-diagnostics.sql`)
+- ✅ RLS migration postmortem documentation
+- ✅ 3-step migration process (functions → test → deploy)
+- ✅ Error decision tree for "uuid = text" errors
+- ✅ Important Files section for easy reference
 
 ### v2.0 (2025-11-16) - AUTONOMOUS PROTOCOL UPGRADE
 - ✅ Docker-first architecture with MCP integration
@@ -997,4 +1074,4 @@ docker-compose exec grafana ls /etc/grafana/provisioning
 
 **This file is the single source of truth for Unite-Hub architecture. Auto-updated by self-improvement loop.**
 
-**Last v2.0 Update**: 2025-11-16 (Protocol upgrade complete)
+**Last Update**: 2025-01-17 v2.1 (RLS Migration Workflow added - CRITICAL for preventing debugging sessions)
