@@ -152,72 +152,69 @@ function ContentCalendarFeature({ clientId }: { clientId: Id<"clients"> }) {
   };
 
   return (
-    <div className="min-h-screen p-6">
-      <div className="max-w-7xl mx-auto">
-        <Breadcrumbs items={[{ label: "Calendar" }]} />
-        {/* Header */}
-        <div className="mb-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-                <CalendarIcon className="h-8 w-8 text-blue-600" />
-                Content Calendar
-              </h1>
-              <p className="text-gray-600 mt-1">
-                AI-powered 30-day content calendar with strategic recommendations
-              </p>
-            </div>
+    <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+      <Breadcrumbs items={[{ label: "Calendar" }]} />
 
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => setShowFilters(!showFilters)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                  showFilters
-                    ? "bg-blue-600 text-white"
-                    : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
-                }`}
-              >
-                <Filter className="h-4 w-4" />
-                Filters
-              </button>
-
-              <button
-                onClick={handleGenerateCalendar}
-                disabled={isGenerating}
-                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-colors disabled:opacity-50"
-              >
-                <Sparkles className="h-4 w-4" />
-                {isGenerating ? "Generating..." : "Generate Calendar"}
-              </button>
-            </div>
-          </div>
-
-          {/* View Mode Toggle */}
-          <div className="flex items-center gap-2 mt-4">
-            <button
-              onClick={() => setViewMode("calendar")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                viewMode === "calendar"
-                  ? "bg-blue-100 text-blue-700"
-                  : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
-              }`}
-            >
-              <Grid3x3 className="h-4 w-4" />
-              Calendar View
-            </button>
-            <button
-              onClick={() => setViewMode("list")}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                viewMode === "list"
-                  ? "bg-blue-100 text-blue-700"
-                  : "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50"
-              }`}
-            >
-              <List className="h-4 w-4" />
-              List View
-            </button>
-          </div>
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent mb-2">
+            Content Calendar
+          </h1>
+          <p className="text-slate-400">
+            AI-powered 30-day content calendar with strategic recommendations
+          </p>
         </div>
+
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setShowFilters(!showFilters)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all ${
+              showFilters
+                ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/50"
+                : "bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 text-slate-300 hover:bg-slate-700/50 hover:border-slate-600/50"
+            }`}
+          >
+            <Filter className="h-4 w-4" />
+            Filters
+          </button>
+
+          <button
+            onClick={handleGenerateCalendar}
+            disabled={isGenerating}
+            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 shadow-lg shadow-blue-500/50 transition-all disabled:opacity-50"
+          >
+            <Sparkles className="h-4 w-4" />
+            {isGenerating ? "Generating..." : "Generate Calendar"}
+          </button>
+        </div>
+      </div>
+
+      {/* View Mode Toggle */}
+      <div className="flex items-center gap-2">
+        <button
+          onClick={() => setViewMode("calendar")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all ${
+            viewMode === "calendar"
+              ? "bg-blue-500/20 text-blue-400 border border-blue-500/30"
+              : "bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 text-slate-300 hover:bg-slate-700/50 hover:border-slate-600/50"
+          }`}
+        >
+          <Grid3x3 className="h-4 w-4" />
+          Calendar View
+        </button>
+        <button
+          onClick={() => setViewMode("list")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all ${
+            viewMode === "list"
+              ? "bg-blue-500/20 text-blue-400 border border-blue-500/30"
+              : "bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 text-slate-300 hover:bg-slate-700/50 hover:border-slate-600/50"
+          }`}
+        >
+          <List className="h-4 w-4" />
+          List View
+        </button>
+      </div>
 
         {/* Main Content */}
         <div className="grid grid-cols-12 gap-6">
@@ -264,18 +261,18 @@ function ContentCalendarFeature({ clientId }: { clientId: Id<"clients"> }) {
 
             {/* Empty State */}
             {(!filteredPosts || filteredPosts.length === 0) && (
-              <div className="bg-white rounded-lg border-2 border-dashed border-gray-300 p-12 text-center">
-                <CalendarIcon className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg border-2 border-dashed border-slate-700/50 p-12 text-center">
+                <CalendarIcon className="h-16 w-16 text-slate-500 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-white mb-2">
                   No Posts Scheduled
                 </h3>
-                <p className="text-gray-600 mb-6">
+                <p className="text-slate-400 mb-6">
                   Generate your first AI-powered content calendar to get started
                 </p>
                 <button
                   onClick={handleGenerateCalendar}
                   disabled={isGenerating}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg shadow-lg shadow-blue-500/50 transition-all disabled:opacity-50"
                 >
                   <Sparkles className="h-5 w-5" />
                   {isGenerating ? "Generating..." : "Generate Calendar"}
@@ -285,59 +282,58 @@ function ContentCalendarFeature({ clientId }: { clientId: Id<"clients"> }) {
           </div>
         </div>
 
-        {/* Calendar Stats Summary (when filters hidden) */}
-        {!showFilters && calendarStats && (
-          <div className="mt-6 grid grid-cols-4 gap-4">
-            <div className="bg-white rounded-lg border p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Total Posts</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {calendarStats.totalPosts}
-                  </p>
-                </div>
-                <CalendarIcon className="h-8 w-8 text-blue-600" />
+      {/* Calendar Stats Summary (when filters hidden) */}
+      {!showFilters && calendarStats && (
+        <div className="grid grid-cols-4 gap-4">
+          <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg border border-slate-700/50 p-4 hover:border-slate-600/50 transition-all group">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-400">Total Posts</p>
+                <p className="text-2xl font-bold text-white">
+                  {calendarStats.totalPosts}
+                </p>
               </div>
-            </div>
-
-            <div className="bg-white rounded-lg border p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Upcoming</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {calendarStats.upcomingPosts}
-                  </p>
-                </div>
-                <TrendingUp className="h-8 w-8 text-purple-600" />
-              </div>
-            </div>
-
-            <div className="bg-white rounded-lg border p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Approved</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {calendarStats.byStatus.approved}
-                  </p>
-                </div>
-                <div className="text-3xl">✓</div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-lg border p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Platforms</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {calendarStats.platforms.length}
-                  </p>
-                </div>
-                <div className="text-3xl">📱</div>
-              </div>
+              <CalendarIcon className="h-8 w-8 text-blue-400 group-hover:scale-110 transition-transform" />
             </div>
           </div>
-        )}
-      </div>
+
+          <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg border border-slate-700/50 p-4 hover:border-slate-600/50 transition-all group">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-400">Upcoming</p>
+                <p className="text-2xl font-bold text-white">
+                  {calendarStats.upcomingPosts}
+                </p>
+              </div>
+              <TrendingUp className="h-8 w-8 text-purple-400 group-hover:scale-110 transition-transform" />
+            </div>
+          </div>
+
+          <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg border border-slate-700/50 p-4 hover:border-slate-600/50 transition-all group">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-400">Approved</p>
+                <p className="text-2xl font-bold text-white">
+                  {calendarStats.byStatus.approved}
+                </p>
+              </div>
+              <div className="text-3xl group-hover:scale-110 transition-transform">✓</div>
+            </div>
+          </div>
+
+          <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg border border-slate-700/50 p-4 hover:border-slate-600/50 transition-all group">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-slate-400">Platforms</p>
+                <p className="text-2xl font-bold text-white">
+                  {calendarStats.platforms.length}
+                </p>
+              </div>
+              <div className="text-3xl group-hover:scale-110 transition-transform">📱</div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Post Details Modal */}
       {selectedPost && (
