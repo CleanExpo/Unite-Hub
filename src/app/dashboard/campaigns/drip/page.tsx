@@ -22,10 +22,28 @@ export default function DripCampaignsPage() {
   const fetchDripCampaigns = async () => {
     try {
       setLoading(true);
-      // TODO: Implement API call when drip campaigns API is ready
-      setCampaigns([]);
+
+      // Fetch drip campaigns from API
+      const response = await fetch("/api/campaigns/drip", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          action: "list",
+          workspaceId: workspaceId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch drip campaigns");
+      }
+
+      const data = await response.json();
+      setCampaigns(data.campaigns || []);
     } catch (error) {
       console.error("Error fetching drip campaigns:", error);
+      setCampaigns([]);
     } finally {
       setLoading(false);
     }
