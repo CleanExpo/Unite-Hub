@@ -6,19 +6,32 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   transpilePackages: ['reactflow', '@reactflow/core', '@reactflow/background', '@reactflow/controls', '@reactflow/minimap'],
+
+  // Next.js 16: Move serverComponentsExternalPackages to top level
+  serverExternalPackages: ['zustand'],
+
   experimental: {
-    serverComponentsExternalPackages: ['zustand'],
     // Enable optimized compilation
     optimizeCss: true,
     optimizePackageImports: ['lucide-react', '@anthropic-ai/sdk', 'recharts'],
   },
+
+  // Turbopack configuration (required for Next.js 16)
+  turbopack: {
+    // Empty config to silence the warning - Turbopack works fine with default settings
+  },
+
   // Enable standalone output for Docker
   output: 'standalone',
+
   // Compression
   compress: true,
-  // Production optimizations
-  swcMinify: true,
-  // Webpack optimizations
+
+  // Note: swcMinify is deprecated in Next.js 16 (always enabled by default)
+  // Removed: swcMinify: true
+
+  // Note: webpack config may not work with Turbopack
+  // Keeping for backwards compatibility but may be ignored
   webpack: (config, { isServer }) => {
     // Optimize bundle size
     config.optimization = {
@@ -42,6 +55,7 @@ const nextConfig = {
     };
     return config;
   },
+
   // Configure external image domains
   images: {
     remotePatterns: [
@@ -55,8 +69,14 @@ const nextConfig = {
         hostname: 'hoirqrkdgbmvpwutwuwj.supabase.co',
         pathname: '/storage/v1/object/public/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'lksfwktwtmyznckodsau.supabase.co',
+        pathname: '/storage/v1/object/**',
+      },
     ],
   },
+
   redirects: async () => [
     {
       source: '/dashboard',
@@ -64,6 +84,7 @@ const nextConfig = {
       permanent: false,
     },
   ],
+
   // Security headers
   headers: async () => [
     {
