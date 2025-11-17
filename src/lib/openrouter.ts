@@ -231,3 +231,28 @@ export function getOpenRouterClient(): OpenRouterClient {
   }
   return openRouterClient;
 }
+
+/**
+ * Generate text with KatCoder (Sherlock Think Alpha)
+ * Backwards compatibility function for legacy code
+ */
+export async function generateWithKatCoder(
+  prompt: string,
+  options?: {
+    maxTokens?: number;
+    temperature?: number;
+    systemPrompt?: string;
+  }
+): Promise<string> {
+  const client = getOpenRouterClient();
+
+  if (!client.isAvailable()) {
+    throw new Error("OpenRouter API key not configured. Please set OPENROUTER_API_KEY or OPENROUTER_API_KEY_2 in environment variables.");
+  }
+
+  return client.thinkDeep(prompt, "", {
+    maxTokens: options?.maxTokens,
+    temperature: options?.temperature,
+    systemPrompt: options?.systemPrompt,
+  });
+}
