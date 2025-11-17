@@ -84,9 +84,36 @@ Either:
 
 ---
 
-### Step 3: Fix Critical Issues (15 min) 🔧
+### Step 3: Fix Critical Issues (5 min) 🔧
 
-#### 3a. Fix Routing Error (5 min)
+#### 3a. ✅ Contact Form Backend (ALREADY IMPLEMENTED)
+
+**Status:** Complete - fully functional contact form with email delivery
+
+**What's Included:**
+- API endpoint: `/api/contact/submit`
+- Email service: Resend integration
+- Rate limiting: 5 submissions per 15 minutes per IP
+- Client-side validation and error handling
+- Success/error notifications with auto-dismiss
+- Professional HTML email template
+
+**Setup (1 minute):**
+```env
+# Add to .env.local
+RESEND_API_KEY=re_your_api_key_here
+CONTACT_EMAIL=hello@yourdomain.com
+```
+
+**Get Resend API Key:**
+1. Go to https://resend.com
+2. Sign up (free tier: 100 emails/day)
+3. Create API key
+4. Add to `.env.local`
+
+**See:** [CONTACT_FORM_IMPLEMENTATION.md](CONTACT_FORM_IMPLEMENTATION.md) for complete documentation
+
+#### 3b. Fix Routing Error (5 min)
 **Error:** `'contactId' !== 'id'` slug mismatch
 
 **Find files with `[contactId]` parameter:**
@@ -96,89 +123,6 @@ grep -r "\[contactId\]" src/app/dashboard
 ```
 
 **Standardize to either `[id]` or `[contactId]` consistently.**
-
-#### 3b. Implement Contact Form Backend (10 min)
-
-**Create:** `src/app/api/contact/submit/route.ts`
-
-```typescript
-import { NextRequest, NextResponse } from 'next/server';
-import { Resend } from 'resend'; // or SendGrid, Postmark, etc.
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-export async function POST(req: NextRequest) {
-  try {
-    const { firstName, lastName, email, company, subject, message } = await req.json();
-
-    // Send email via Resend
-    await resend.emails.send({
-      from: 'Unite-Hub Contact Form <noreply@yourdomain.com>',
-      to: ['hello@yourdomain.com'],
-      subject: `Contact Form: ${subject}`,
-      html: `
-        <h2>New Contact Form Submission</h2>
-        <p><strong>Name:</strong> ${firstName} ${lastName}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Company:</strong> ${company || 'N/A'}</p>
-        <p><strong>Subject:</strong> ${subject}</p>
-        <p><strong>Message:</strong></p>
-        <p>${message}</p>
-      `,
-    });
-
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error('Contact form error:', error);
-    return NextResponse.json(
-      { error: 'Failed to send message' },
-      { status: 500 }
-    );
-  }
-}
-```
-
-**Update Contact Form:**
-```typescript
-// In src/app/(marketing)/contact/page.tsx
-
-'use client';
-
-const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  const formData = new FormData(e.currentTarget);
-
-  const response = await fetch('/api/contact/submit', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      firstName: formData.get('firstName'),
-      lastName: formData.get('lastName'),
-      email: formData.get('email'),
-      company: formData.get('company'),
-      subject: formData.get('subject'),
-      message: formData.get('message'),
-    }),
-  });
-
-  if (response.ok) {
-    alert('Message sent successfully!');
-    e.currentTarget.reset();
-  } else {
-    alert('Failed to send message. Please try again.');
-  }
-};
-
-<form onSubmit={handleSubmit} className="space-y-6">
-  {/* ... existing form fields ... */}
-</form>
-```
-
-**Add environment variable:**
-```env
-# .env.local
-RESEND_API_KEY=re_your_api_key_here
-```
 
 ---
 
