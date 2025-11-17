@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, Mail, Phone, Calendar, BarChart3, Users, AlertCircle, CheckCircle, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTeamMembers } from "@/hooks/useTeamMembers";
-import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/hooks/useWorkspace";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 // Helper function to format join date
@@ -42,9 +42,8 @@ const transformTeamMember = (member: any) => {
 };
 
 export default function TeamPage() {
-  const { currentOrganization } = useAuth();
-  const orgId = currentOrganization?.org_id || null;
-  const { teamMembers: dbTeamMembers, loading, error } = useTeamMembers(orgId);
+  const { workspaceId, loading: workspaceLoading } = useWorkspace();
+  const { teamMembers: dbTeamMembers, loading, error } = useTeamMembers(workspaceId);
 
   // Transform database team members to UI format
   const teamMembers = dbTeamMembers.map(transformTeamMember);

@@ -9,6 +9,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Plus, CheckCircle, XCircle, Clock, AlertCircle, Loader2 } from "lucide-react";
 import { useApprovals } from "@/hooks/useApprovals";
 import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/hooks/useWorkspace";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 // Helper function to format submission time
@@ -64,12 +65,12 @@ export default function ApprovalsPage() {
   const [activeTab, setActiveTab] = useState("pending");
   const [priorityFilter, setPriorityFilter] = useState<"all" | "high" | "medium" | "low">("all");
 
-  const { user, currentOrganization } = useAuth();
-  const orgId = currentOrganization?.org_id || null;
+  const { user } = useAuth();
+  const { workspaceId, loading: workspaceLoading } = useWorkspace();
   const userId = user?.id || null;
 
   // Fetch all approvals
-  const { approvals: allApprovals, loading, error, approve, decline, refresh } = useApprovals({ orgId });
+  const { approvals: allApprovals, loading, error, approve, decline, refresh } = useApprovals({ orgId: workspaceId });
 
   // Transform and categorize approvals
   const transformedApprovals = useMemo(() => allApprovals.map(transformApproval), [allApprovals]);

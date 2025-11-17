@@ -1,12 +1,21 @@
 "use client";
 
 import { HotLeadsPanel } from "@/components/HotLeadsPanel";
-import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/hooks/useWorkspace";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function IntelligencePage() {
-  const { currentOrganization } = useAuth();
-  const workspaceId = currentOrganization?.org_id || null;
+  const { workspaceId, loading: workspaceLoading } = useWorkspace();
+
+  if (workspaceLoading) {
+    return (
+      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+        <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-lg p-8 text-center">
+          <p className="text-slate-400">Loading workspace...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!workspaceId) {
     return (

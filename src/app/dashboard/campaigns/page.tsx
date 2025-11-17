@@ -14,19 +14,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Plus, Mail, TrendingUp, Pause, Play, Trash2, Send, Eye, MousePointerClick, Sparkles } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/hooks/useWorkspace";
 import { supabase } from "@/lib/supabase";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function CampaignsPage() {
-  const { currentOrganization } = useAuth();
-  const workspaceId = currentOrganization?.org_id || null;
+  const { workspaceId, loading: workspaceLoading } = useWorkspace();
   const [campaigns, setCampaigns] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchCampaigns() {
       try {
+        if (workspaceLoading) {
+          return;
+        }
+
         if (!workspaceId) {
           console.log("No workspace selected for campaigns");
           setLoading(false);
@@ -52,7 +55,7 @@ export default function CampaignsPage() {
     }
 
     fetchCampaigns();
-  }, [workspaceId]);
+  }, [workspaceId, workspaceLoading]);
 
   // Calculate stats from campaigns
   const activeCampaigns = campaigns.filter((c) => c.status === "active").length;

@@ -6,12 +6,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/hooks/useWorkspace";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Users, Flame, Mail, TrendingUp, Sparkles, ArrowUpRight, ArrowDownRight } from "lucide-react";
 
 export default function OverviewPage() {
-  const { user, currentOrganization, loading: authLoading } = useAuth();
-  const [workspaceId, setWorkspaceId] = useState<string | null>(null);
+  const { user, loading: authLoading } = useAuth();
+  const { workspaceId, loading: workspaceLoading } = useWorkspace();
   const [stats, setStats] = useState({
     totalContacts: 0,
     hotLeads: 0,
@@ -20,43 +21,16 @@ export default function OverviewPage() {
   });
   const [loading, setLoading] = useState(true);
 
-  // Fetch workspace ID for current organization
-  useEffect(() => {
-    const fetchWorkspace = async () => {
-      if (!currentOrganization?.org_id) {
-        setWorkspaceId(null);
-        return;
-      }
-
-      const { data, error } = await supabase
-        .from('workspaces')
-        .select('id')
-        .eq('org_id', currentOrganization.org_id)
-        .single();
-
-      if (!error && data) {
-        setWorkspaceId(data.id);
-      } else {
-        console.error('Error fetching workspace:', error);
-        setWorkspaceId(null);
-      }
-    };
-
-    fetchWorkspace();
-  }, [currentOrganization?.org_id]);
-
   useEffect(() => {
     async function fetchStats() {
       try {
-        if (authLoading) {
-          console.log("Waiting for auth to complete...");
+        if (authLoading || workspaceLoading) {
+          console.log("Waiting for auth/workspace to complete...");
           return;
         }
 
         if (!workspaceId) {
-          if (currentOrganization) {
-            console.log("Workspace still loading for org:", currentOrganization.org_id);
-          }
+          console.log("No workspace available");
           setLoading(false);
           return;
         }
@@ -110,7 +84,7 @@ export default function OverviewPage() {
     }
 
     fetchStats();
-  }, [workspaceId, authLoading]);
+  }, [workspaceId, authLoading, workspaceLoading]);
 
   // Show loading while auth is initializing
   if (authLoading) {

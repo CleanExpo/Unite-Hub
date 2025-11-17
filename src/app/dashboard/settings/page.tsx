@@ -5,18 +5,19 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Mail, RefreshCw } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/hooks/useWorkspace";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function SettingsPage() {
-  const { currentOrganization } = useAuth();
+  const { workspaceId, loading: workspaceLoading } = useWorkspace();
   const [integrations, setIntegrations] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [syncing, setSyncing] = useState(false);
 
   useEffect(() => {
+    if (workspaceLoading) return;
     loadIntegrations();
-  }, []);
+  }, [workspaceLoading]);
 
   const loadIntegrations = async () => {
     setLoading(true);
@@ -33,8 +34,7 @@ export default function SettingsPage() {
 
   const connectGmail = async () => {
     try {
-      const orgId = currentOrganization?.org_id;
-      if (!orgId) {
+      if (!workspaceId) {
         alert("No organization selected");
         return;
       }
@@ -42,7 +42,7 @@ export default function SettingsPage() {
       const res = await fetch("/api/integrations/gmail/connect", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orgId }),
+        body: JSON.stringify({ orgId: workspaceId }),
       });
 
       const { authUrl } = await res.json();
@@ -55,7 +55,6 @@ export default function SettingsPage() {
   const syncEmails = async (integrationId: string) => {
     setSyncing(true);
     try {
-      const workspaceId = currentOrganization?.org_id;
       if (!workspaceId) {
         alert("No organization selected");
         return;

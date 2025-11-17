@@ -33,7 +33,7 @@ import {
   CheckCircle,
   XCircle,
 } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/hooks/useWorkspace";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { useToast } from "@/hooks/use-toast";
 
@@ -51,7 +51,7 @@ interface GmailIntegration {
 }
 
 export default function IntegrationsPage() {
-  const { currentOrganization } = useAuth();
+  const { workspaceId, loading: workspaceLoading } = useWorkspace();
   const { toast } = useToast();
   const [integrations, setIntegrations] = useState<GmailIntegration[]>([]);
   const [loading, setLoading] = useState(false);
@@ -62,16 +62,17 @@ export default function IntegrationsPage() {
   } | null>(null);
 
   useEffect(() => {
+    if (workspaceLoading) return;
     loadIntegrations();
-  }, [currentOrganization]);
+  }, [workspaceId, workspaceLoading]);
 
   const loadIntegrations = async () => {
-    if (!currentOrganization?.org_id) return;
+    if (!workspaceId) return;
 
     setLoading(true);
     try {
       const res = await fetch(
-        `/api/integrations/gmail/list?workspaceId=${currentOrganization.org_id}`
+        `/api/integrations/gmail/list?workspaceId=${workspaceId}`
       );
       const { integrations: data } = await res.json();
       setIntegrations(data || []);
@@ -89,10 +90,7 @@ export default function IntegrationsPage() {
 
   const connectGmail = async () => {
     try {
-      const orgId = currentOrganization?.org_id;
-      const workspaceId = currentOrganization?.org_id;
-
-      if (!orgId || !workspaceId) {
+      if (!workspaceId) {
         toast({
           title: "Error",
           description: "No organization selected",
@@ -104,7 +102,7 @@ export default function IntegrationsPage() {
       const res = await fetch("/api/integrations/gmail/connect-multi", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orgId, workspaceId }),
+        body: JSON.stringify({ orgId: workspaceId, workspaceId }),
       });
 
       const { authUrl } = await res.json();
@@ -122,7 +120,6 @@ export default function IntegrationsPage() {
   const syncAllAccounts = async () => {
     setSyncing(true);
     try {
-      const workspaceId = currentOrganization?.org_id;
       if (!workspaceId) {
         toast({
           title: "Error",
@@ -193,7 +190,6 @@ export default function IntegrationsPage() {
 
   const setPrimary = async (integrationId: string) => {
     try {
-      const workspaceId = currentOrganization?.org_id;
       if (!workspaceId) return;
 
       await fetch("/api/integrations/gmail/set-primary", {

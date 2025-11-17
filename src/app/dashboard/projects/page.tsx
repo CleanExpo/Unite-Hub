@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Plus, Search, FolderOpen, TrendingUp, AlertCircle, CheckCircle, Loader2 } from "lucide-react";
 import { useProjects } from "@/hooks/useProjects";
-import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/hooks/useWorkspace";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 // Helper function to format due date
@@ -43,9 +43,8 @@ export default function ProjectsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
 
-  const { currentOrganization } = useAuth();
-  const orgId = currentOrganization?.org_id || null;
-  const { projects: dbProjects, loading, error } = useProjects({ orgId });
+  const { workspaceId, loading: workspaceLoading } = useWorkspace();
+  const { projects: dbProjects, loading, error } = useProjects({ orgId: workspaceId });
 
   // Transform database projects to UI format
   const allProjects = useMemo(() => dbProjects.map(transformProject), [dbProjects]);

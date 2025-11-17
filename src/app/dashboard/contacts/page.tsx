@@ -24,19 +24,26 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/hooks/useWorkspace";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { AddContactModal } from "@/components/modals/AddContactModal";
 
 export default function ContactsPage() {
-  const { currentOrganization } = useAuth();
-  const workspaceId = currentOrganization?.org_id || null;
+  const { workspaceId, loading: workspaceLoading } = useWorkspace();
   const [searchTerm, setSearchTerm] = useState("");
   const [allContacts, setAllContacts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     async function fetchContacts() {
       try {
+        if (workspaceLoading) {
+          // Wait for workspace to load
+          return;
+        }
+
         if (!workspaceId) {
           console.log("No workspace selected for contacts");
           setLoading(false);
@@ -62,7 +69,7 @@ export default function ContactsPage() {
     }
 
     fetchContacts();
-  }, [workspaceId]);
+  }, [workspaceId, workspaceLoading]);
 
   // Filter by search term
   const contacts = allContacts.filter((contact: any) =>
@@ -70,6 +77,22 @@ export default function ContactsPage() {
     contact.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     contact.company?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleContactAdded = () => {
+    // Refresh contacts list
+    setLoading(true);
+    const fetchContacts = async () => {
+      if (!workspaceId) return;
+      const { data } = await supabase
+        .from("contacts")
+        .select("*")
+        .eq("workspace_id", workspaceId)
+        .order("created_at", { ascending: false });
+      setAllContacts(data || []);
+      setLoading(false);
+    };
+    fetchContacts();
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
@@ -83,7 +106,10 @@ export default function ContactsPage() {
           </h1>
           <p className="text-slate-400">Manage all your contacts and leads in one place</p>
         </div>
-        <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50 transition-all gap-2">
+        <Button
+          onClick={() => setIsAddModalOpen(true)}
+          className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50 transition-all gap-2"
+        >
           <Plus className="w-4 h-4" />
           Add Contact
         </Button>
@@ -274,6 +300,16 @@ export default function ContactsPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Add Contact Modal */}
+      {workspaceId && (
+        <AddContactModal
+          isOpen={isAddModalOpen}
+          onClose={() => setIsAddModalOpen(false)}
+          workspaceId={workspaceId}
+          onContactAdded={handleContactAdded}
+        />
+      )}
     </div>
   );
 }

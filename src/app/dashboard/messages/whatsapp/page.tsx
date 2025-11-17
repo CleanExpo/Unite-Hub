@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MessageSquare, Send, Search, Archive, User, Clock, CheckCheck } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useWorkspace } from '@/hooks/useWorkspace';
 import WhatsAppChat from '@/components/WhatsAppChat';
 import { formatDistanceToNow } from 'date-fns';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
@@ -36,7 +36,7 @@ interface WhatsAppConversation {
 }
 
 export default function WhatsAppMessagesPage() {
-  const { currentOrganization } = useAuth();
+  const { workspaceId, loading: workspaceLoading } = useWorkspace();
   const [conversations, setConversations] = useState<WhatsAppConversation[]>([]);
   const [filteredConversations, setFilteredConversations] = useState<WhatsAppConversation[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<WhatsAppConversation | null>(null);
@@ -44,12 +44,10 @@ export default function WhatsAppMessagesPage() {
   const [activeTab, setActiveTab] = useState<'all' | 'open' | 'archived'>('all');
   const [loading, setLoading] = useState(true);
 
-  // Get workspace ID (org_id is the UUID we need)
-  const workspaceId = currentOrganization?.org_id || null;
-
   useEffect(() => {
+    if (workspaceLoading) return;
     fetchConversations();
-  }, [workspaceId, activeTab]);
+  }, [workspaceId, activeTab, workspaceLoading]);
 
   useEffect(() => {
     filterConversations();

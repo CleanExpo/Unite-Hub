@@ -1,22 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useAuth } from "@/contexts/AuthContext";
+import { useWorkspace } from "@/hooks/useWorkspace";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus, Mail, Clock, Users, TrendingUp, Sparkles } from "lucide-react";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function DripCampaignsPage() {
-  const { currentOrganization } = useAuth();
+  const { workspaceId, loading: workspaceLoading } = useWorkspace();
   const [campaigns, setCampaigns] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (currentOrganization?.org_id) {
+    if (workspaceLoading) return;
+    if (workspaceId) {
       fetchDripCampaigns();
     }
-  }, [currentOrganization]);
+  }, [workspaceId, workspaceLoading]);
 
   const fetchDripCampaigns = async () => {
     try {
