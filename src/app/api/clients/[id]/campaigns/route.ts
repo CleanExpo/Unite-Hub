@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth } from "@/lib/workspace-validation";
 import { db } from "@/lib/db";
 import { apiRateLimit } from "@/lib/rate-limit";
 
@@ -9,32 +9,34 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(request);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
-
-    const authResult = await authenticateRequest(request);
-    if (!authResult) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
     }
-    const { userId } = authResult;
 
     const { id } = await params;
     const { searchParams } = new URL(request.url);
     const platform = searchParams.get("platform");
     const status = searchParams.get("status");
 
-    // Check if client exists
+    // Validate user authentication
+    const user = await validateUserAuth(request);
+
+    // Check if client exists and verify workspace access
     const client = await db.contacts.getById(id);
     if (!client) {
       return NextResponse.json(
         { error: "Client not found" },
         { status: 404 }
+      );
+    }
+
+    // Verify workspace access
+    if (client.workspace_id !== user.orgId) {
+      return NextResponse.json(
+        { error: "Access denied" },
+        { status: 403 }
       );
     }
 
@@ -86,6 +88,14 @@ export async function GET(
       total: campaigns.length,
     });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error fetching campaigns:", error);
     return NextResponse.json(
       { error: "Failed to fetch campaigns" },
@@ -100,24 +110,26 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const authResult = await authenticateRequest(request);
-    if (!authResult) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-    const { userId } = authResult;
-
     const { id } = await params;
     const body = await request.json();
 
-    // Check if client exists
+    // Validate user authentication
+    const user = await validateUserAuth(request);
+
+    // Check if client exists and verify workspace access
     const client = await db.contacts.getById(id);
     if (!client) {
       return NextResponse.json(
         { error: "Client not found" },
         { status: 404 }
+      );
+    }
+
+    // Verify workspace access
+    if (client.workspace_id !== user.orgId) {
+      return NextResponse.json(
+        { error: "Access denied" },
+        { status: 403 }
       );
     }
 
@@ -194,11 +206,19 @@ export async function POST(
       resource_id: campaign.id,
       agent: "user",
       status: "success",
-      details: { campaign_name: name, platform },
+      details: { campaign_name: name, platform, user_id: user.userId },
     });
 
     return NextResponse.json({ campaign }, { status: 201 });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error creating campaign:", error);
     return NextResponse.json(
       { error: "Failed to create campaign" },
