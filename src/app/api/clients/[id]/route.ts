@@ -139,24 +139,25 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // Authenticate request
-    const authResult = await authenticateRequest(request);
-    if (!authResult) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-    const { userId } = authResult;
-
     const { id } = await params;
 
-    // Check if client exists
+    // Validate user authentication
+    const user = await validateUserAuth(request);
+
+    // Check if client exists and verify workspace access
     const existingClient = await db.contacts.getById(id);
     if (!existingClient) {
       return NextResponse.json(
         { error: "Client not found" },
         { status: 404 }
+      );
+    }
+
+    // Verify workspace access
+    if (existingClient.workspace_id !== user.orgId) {
+      return NextResponse.json(
+        { error: "Access denied" },
+        { status: 403 }
       );
     }
 
@@ -174,11 +175,19 @@ export async function DELETE(
       resource_id: id,
       agent: "user",
       status: "success",
-      details: { client_name: existingClient.name },
+      details: { client_name: existingClient.name, user_id: user.userId },
     });
 
     return NextResponse.json({ success: true });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error deleting client:", error);
     return NextResponse.json(
       { error: "Failed to delete client" },
