@@ -46,7 +46,8 @@
       "Bash(netstat:*)",
       "Bash(taskkill:*)",
       "Bash(timeout:*)",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(xargs taskkill //F //PID)"
     ],
     "deny": [],
     "ask": []
