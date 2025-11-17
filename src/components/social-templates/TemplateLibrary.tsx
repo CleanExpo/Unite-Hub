@@ -285,17 +285,26 @@ export function TemplateLibrary({ clientId }: TemplateLibraryProps) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Social Copy Templates</h2>
-          <p className="text-gray-600">
+          <h2 className="text-3xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent">
+            Social Copy Templates
+          </h2>
+          <p className="text-slate-400 mt-1">
             Browse, search, and manage your social media copy templates
           </p>
         </div>
         <div className="flex gap-2">
-          <Button onClick={() => setShowEditor(true)}>
+          <Button
+            onClick={() => setShowEditor(true)}
+            className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-semibold shadow-lg shadow-blue-500/50"
+          >
             <Plus className="h-4 w-4 mr-2" />
             Create Template
           </Button>
-          <Button onClick={handleGenerateTemplates} disabled={generating}>
+          <Button
+            onClick={handleGenerateTemplates}
+            disabled={generating}
+            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold shadow-lg shadow-purple-500/50"
+          >
             {generating ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -349,12 +358,15 @@ export function TemplateLibrary({ clientId }: TemplateLibraryProps) {
           {/* Templates Grid */}
           {loading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+              <Loader2 className="h-8 w-8 animate-spin text-blue-400" />
             </div>
           ) : templates.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-gray-500 mb-4">No templates found</p>
-              <Button onClick={handleGenerateTemplates}>
+              <p className="text-slate-400 mb-4">No templates found</p>
+              <Button
+                onClick={handleGenerateTemplates}
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold shadow-lg shadow-purple-500/50"
+              >
                 <Wand2 className="h-4 w-4 mr-2" />
                 Generate Your First Templates
               </Button>
@@ -367,7 +379,7 @@ export function TemplateLibrary({ clientId }: TemplateLibraryProps) {
                     checked={selectedIds.length === templates.length}
                     onCheckedChange={toggleSelectAll}
                   />
-                  <span className="text-sm text-gray-600">Select All</span>
+                  <span className="text-sm text-slate-400">Select All</span>
                 </div>
               )}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
