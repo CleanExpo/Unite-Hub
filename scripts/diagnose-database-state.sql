@@ -23,14 +23,18 @@ ORDER BY table_name, column_name;
 
 -- Check existing functions
 SELECT
-  routine_name,
-  routine_type,
-  data_type as return_type,
-  volatility
-FROM information_schema.routines
-WHERE routine_schema = 'public'
-  AND routine_name IN ('get_user_workspaces', 'user_has_role_in_org', 'user_has_role_in_org_text', 'user_has_role_in_org_simple')
-ORDER BY routine_name;
+  p.proname as function_name,
+  pg_get_function_result(p.oid) as return_type,
+  CASE p.provolatile
+    WHEN 'i' THEN 'IMMUTABLE'
+    WHEN 's' THEN 'STABLE'
+    WHEN 'v' THEN 'VOLATILE'
+  END as volatility
+FROM pg_proc p
+JOIN pg_namespace n ON p.pronamespace = n.oid
+WHERE n.nspname = 'public'
+  AND p.proname IN ('get_user_workspaces', 'user_has_role_in_org', 'user_has_role_in_org_text', 'user_has_role_in_org_simple')
+ORDER BY p.proname;
 
 -- Check existing policies
 SELECT
