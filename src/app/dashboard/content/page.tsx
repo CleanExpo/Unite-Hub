@@ -70,14 +70,16 @@ export default function ContentPage() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Content Hub</h1>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent mb-2">
+            Content Hub
+          </h1>
           <p className="text-slate-400">AI-generated personalized content</p>
         </div>
         <div className="flex gap-2">
           <Button
             onClick={() => generateBulkContent("followup")}
             disabled={generating}
-            className="bg-blue-600 hover:bg-blue-700 gap-2"
+            className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-semibold shadow-lg shadow-blue-500/50 gap-2"
           >
             {generating ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -89,8 +91,13 @@ export default function ContentPage() {
           <Button
             onClick={() => generateBulkContent("proposal")}
             disabled={generating}
-            className="bg-purple-600 hover:bg-purple-700 gap-2"
+            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold shadow-lg shadow-purple-500/50 gap-2"
           >
+            {generating ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Plus className="w-4 h-4" />
+            )}
             Generate Proposals
           </Button>
         </div>
@@ -111,12 +118,12 @@ export default function ContentPage() {
               <Loader2 className="w-6 h-6 animate-spin text-blue-400" />
             </div>
           ) : contents.filter((c) => c.status === "draft").length === 0 ? (
-            <Card className="bg-slate-800 border-slate-700">
+            <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
               <CardContent className="pt-6 text-center py-12">
                 <p className="text-slate-400 mb-4">No drafts yet</p>
                 <Button
                   onClick={() => generateBulkContent("followup")}
-                  className="bg-blue-600 hover:bg-blue-700"
+                  className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-semibold shadow-lg shadow-blue-500/50"
                 >
                   Generate Content
                 </Button>
@@ -129,14 +136,14 @@ export default function ContentPage() {
                 .map((content) => (
                   <Card
                     key={content.id}
-                    className="bg-slate-800 border-slate-700 cursor-pointer hover:border-blue-600/50 transition"
+                    className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 cursor-pointer hover:border-blue-600/50 transition-all group"
                     onClick={() => setSelectedContent(content)}
                   >
                     <CardHeader>
-                      <CardTitle className="text-white text-lg">
+                      <CardTitle className="text-white text-lg group-hover:text-blue-400 transition-colors">
                         {content.title}
                       </CardTitle>
-                      <CardDescription>
+                      <CardDescription className="text-slate-400">
                         Score: {content.personalization_score}/100
                       </CardDescription>
                     </CardHeader>
@@ -145,10 +152,10 @@ export default function ContentPage() {
                         {content.generated_text}
                       </p>
                       <div className="flex gap-2">
-                        <Badge className="bg-purple-600">
+                        <Badge className="bg-purple-500/20 text-purple-400 border border-purple-500/30">
                           {content.content_type}
                         </Badge>
-                        <Badge className="bg-amber-600">Draft</Badge>
+                        <Badge className="bg-amber-500/20 text-amber-400 border border-amber-500/30">Draft</Badge>
                       </div>
                     </CardContent>
                   </Card>
@@ -159,7 +166,7 @@ export default function ContentPage() {
 
         {/* Approved */}
         <TabsContent value="approved">
-          <Card className="bg-slate-800 border-slate-700">
+          <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
             <CardContent className="pt-6 text-center py-12">
               <p className="text-slate-400">
                 {contents.filter((c) => c.status === "approved").length} approved
@@ -171,7 +178,7 @@ export default function ContentPage() {
 
         {/* Sent */}
         <TabsContent value="sent">
-          <Card className="bg-slate-800 border-slate-700">
+          <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
             <CardContent className="pt-6 text-center py-12">
               <p className="text-slate-400">
                 {contents.filter((c) => c.status === "sent").length} emails sent
@@ -184,7 +191,9 @@ export default function ContentPage() {
       {/* Content Preview */}
       {selectedContent && (
         <div className="space-y-4">
-          <h2 className="text-2xl font-bold text-white">Preview</h2>
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent">
+            Preview
+          </h2>
           <ContentPreview
             content={selectedContent}
             onApprove={() => console.log("Approve")}
