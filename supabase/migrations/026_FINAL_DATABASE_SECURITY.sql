@@ -35,6 +35,8 @@ BEGIN
       AND column_name = 'org_id'
       AND data_type != 'uuid'
   ) THEN
+    -- Drop default value first
+    EXECUTE 'ALTER TABLE subscriptions ALTER COLUMN org_id DROP DEFAULT';
     -- Drop FK constraint
     EXECUTE 'ALTER TABLE subscriptions DROP CONSTRAINT IF EXISTS subscriptions_org_id_fkey';
     -- Change type
@@ -55,8 +57,13 @@ BEGIN
         AND column_name = 'org_id'
         AND data_type != 'uuid'
     ) THEN
+      -- Drop default value first
+      EXECUTE 'ALTER TABLE invoices ALTER COLUMN org_id DROP DEFAULT';
+      -- Drop FK constraint
       EXECUTE 'ALTER TABLE invoices DROP CONSTRAINT IF EXISTS invoices_org_id_fkey';
+      -- Change type
       EXECUTE 'ALTER TABLE invoices ALTER COLUMN org_id TYPE UUID USING org_id::uuid';
+      -- Re-add FK constraint
       EXECUTE 'ALTER TABLE invoices ADD CONSTRAINT invoices_org_id_fkey
                FOREIGN KEY (org_id) REFERENCES organizations(id) ON DELETE CASCADE';
     END IF;
@@ -73,8 +80,13 @@ BEGIN
         AND column_name = 'org_id'
         AND data_type != 'uuid'
     ) THEN
+      -- Drop default value first
+      EXECUTE 'ALTER TABLE payment_methods ALTER COLUMN org_id DROP DEFAULT';
+      -- Drop FK constraint
       EXECUTE 'ALTER TABLE payment_methods DROP CONSTRAINT IF EXISTS payment_methods_org_id_fkey';
+      -- Change type
       EXECUTE 'ALTER TABLE payment_methods ALTER COLUMN org_id TYPE UUID USING org_id::uuid';
+      -- Re-add FK constraint
       EXECUTE 'ALTER TABLE payment_methods ADD CONSTRAINT payment_methods_org_id_fkey
                FOREIGN KEY (org_id) REFERENCES organizations(id) ON DELETE CASCADE';
     END IF;
@@ -91,8 +103,13 @@ BEGIN
         AND column_name = 'org_id'
         AND data_type != 'uuid'
     ) THEN
+      -- Drop default value first
+      EXECUTE 'ALTER TABLE audit_logs ALTER COLUMN org_id DROP DEFAULT';
+      -- Drop FK constraint
       EXECUTE 'ALTER TABLE audit_logs DROP CONSTRAINT IF EXISTS audit_logs_org_id_fkey';
+      -- Change type
       EXECUTE 'ALTER TABLE audit_logs ALTER COLUMN org_id TYPE UUID USING org_id::uuid';
+      -- Re-add FK constraint
       EXECUTE 'ALTER TABLE audit_logs ADD CONSTRAINT audit_logs_org_id_fkey
                FOREIGN KEY (org_id) REFERENCES organizations(id) ON DELETE CASCADE';
     END IF;
