@@ -12,7 +12,8 @@
       "Bash(curl:*)",
       "Bash(ls:*)",
       "Bash(netstat:*)",
-      "Bash(taskkill:*)"
+      "Bash(taskkill:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []

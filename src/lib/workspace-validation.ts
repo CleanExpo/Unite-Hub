@@ -64,9 +64,14 @@ export async function validateUserAuth(req: NextRequest): Promise<AuthenticatedU
     .select("org_id")
     .eq("user_id", userId)
     .eq("is_active", true)
-    .single();
+    .maybeSingle(); // ← Changed from .single() to .maybeSingle() for graceful handling
 
-  if (orgError || !userOrg) {
+  if (orgError) {
+    console.error("[workspace-validation] Error fetching user organization:", orgError);
+    throw new Error("Forbidden: Error accessing organization");
+  }
+
+  if (!userOrg) {
     throw new Error("Forbidden: No active organization found");
   }
 
@@ -97,9 +102,14 @@ export async function validateWorkspaceAccess(
     .select("id")
     .eq("id", workspaceId)
     .eq("org_id", orgId)
-    .single();
+    .maybeSingle(); // ← Changed from .single() to .maybeSingle() for graceful handling
 
-  if (workspaceError || !workspace) {
+  if (workspaceError) {
+    console.error("[workspace-validation] Error validating workspace access:", workspaceError);
+    throw new Error("Forbidden: Error accessing workspace");
+  }
+
+  if (!workspace) {
     throw new Error("Forbidden: Invalid workspace or access denied");
   }
 
