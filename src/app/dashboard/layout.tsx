@@ -99,6 +99,9 @@ export default function DashboardLayout({
                 <NavLink href="/dashboard/contacts" isActive={isActive("/dashboard/contacts")}>
                   Contacts
                 </NavLink>
+                <NavLink href="/dashboard/media" isActive={isActive("/dashboard/media")}>
+                  Media
+                </NavLink>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className={`${
