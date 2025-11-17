@@ -243,7 +243,7 @@ export async function POST(req: NextRequest) {
     const adminSupabase = getSupabaseAdmin();
 
     try {
-      await adminSupabase.from("audit_logs").insert({
+      await adminSupabase.from("auditLogs").insert({
         org_id,
         action: "media_uploaded",
         resource: "media_file",
