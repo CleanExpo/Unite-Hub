@@ -17,11 +17,13 @@ import { Plus, Mail, TrendingUp, Pause, Play, Trash2, Send, Eye, MousePointerCli
 import { useWorkspace } from "@/hooks/useWorkspace";
 import { supabase } from "@/lib/supabase";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { CreateCampaignModal } from "@/components/modals/CreateCampaignModal";
 
 export default function CampaignsPage() {
   const { workspaceId, loading: workspaceLoading } = useWorkspace();
   const [campaigns, setCampaigns] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   useEffect(() => {
     async function fetchCampaigns() {
@@ -67,6 +69,22 @@ export default function CampaignsPage() {
       : "0";
   const conversions = campaigns.reduce((sum, c) => sum + (c.replied || 0), 0);
 
+  const handleCampaignCreated = () => {
+    // Refresh campaigns list
+    setLoading(true);
+    const fetchCampaigns = async () => {
+      if (!workspaceId) return;
+      const { data } = await supabase
+        .from("campaigns")
+        .select("*")
+        .eq("workspace_id", workspaceId)
+        .order("created_at", { ascending: false });
+      setCampaigns(data || []);
+      setLoading(false);
+    };
+    fetchCampaigns();
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
       <Breadcrumbs items={[{ label: "Campaigns" }]} />
@@ -79,7 +97,10 @@ export default function CampaignsPage() {
           </h1>
           <p className="text-slate-400">Create, manage, and track your marketing campaigns</p>
         </div>
-        <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50 transition-all gap-2">
+        <Button
+          onClick={() => setIsCreateModalOpen(true)}
+          className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50 transition-all gap-2"
+        >
           <Plus className="w-4 h-4" />
           New Campaign
         </Button>
@@ -220,6 +241,16 @@ export default function CampaignsPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Create Campaign Modal */}
+      {workspaceId && (
+        <CreateCampaignModal
+          isOpen={isCreateModalOpen}
+          onClose={() => setIsCreateModalOpen(false)}
+          workspaceId={workspaceId}
+          onCampaignCreated={handleCampaignCreated}
+        />
+      )}
     </div>
   );
 }
