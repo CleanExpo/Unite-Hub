@@ -1,49 +1,26 @@
 /**
  * DELETE /api/contacts/delete
  *
- * Protected API route demonstrating RBAC implementation.
- * Deletes a contact - requires 'contact:delete' permission (owner or admin only).
- *
- * This is an example of how to protect API routes with permission checks.
+ * Protected API route for deleting contacts.
+ * Validates user authentication and workspace access before deletion.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { requirePermission, requireSameOrganization } from '@/lib/auth-middleware';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseServer } from "@/lib/supabase";
+import { validateUserAuth } from "@/lib/workspace-validation";
 import { apiRateLimit } from "@/lib/rate-limit";
-import { authenticateRequest } from "@/lib/auth";
-
-/**
- * Get Supabase server client
- */
-function getSupabaseServer() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-
-  return createClient(supabaseUrl, supabaseServiceKey);
-}
 
 /**
  * DELETE contact endpoint
- * Requires 'contact:delete' permission (owner or admin only)
+ * Validates user authentication and workspace ownership before deletion
  */
 export async function DELETE(req: NextRequest) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(req);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
-
-    // Authenticate req
-    const authResult = await authenticateRequest(req);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
     }
-    const { userId } = authResult;
-
-    // Require permission - throws 401/403 if not authorized
-    const user = await requirePermission(req, 'contact:delete');
 
     // Get contact ID from request body
     const { contactId } = await req.json();
@@ -55,31 +32,33 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
+    // Validate user authentication
+    const user = await validateUserAuth(req);
+
+    // Get authenticated supabase client
     const supabase = await getSupabaseServer();
 
-    // Fetch contact to verify ownership
+    // Fetch contact to verify workspace ownership
     const { data: contact, error: fetchError } = await supabase
       .from('contacts')
-      .select('id, workspace_id, workspaces!inner(org_id)')
+      .select('id, workspace_id')
       .eq('id', contactId)
+      .eq('workspace_id', user.orgId)
       .single();
 
     if (fetchError || !contact) {
       return NextResponse.json(
-        { error: 'Contact not found' },
+        { error: 'Contact not found or access denied' },
         { status: 404 }
       );
     }
 
-    // Verify contact belongs to user's organization
-    const contactOrgId = (contact.workspaces as any).org_id;
-    requireSameOrganization(user, contactOrgId);
-
-    // Delete contact
+    // Delete contact (workspace ownership already verified)
     const { error: deleteError } = await supabase
       .from('contacts')
       .delete()
-      .eq('id', contactId);
+      .eq('id', contactId)
+      .eq('workspace_id', user.orgId);
 
     if (deleteError) {
       console.error('Delete error:', deleteError);
@@ -90,7 +69,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     // Log to audit trail
-    await supabase.from('audit_logs').insert({
+    await supabase.from('auditLogs').insert({
       org_id: user.orgId,
       action: 'contact_deleted',
       resource: 'contact',
@@ -98,9 +77,7 @@ export async function DELETE(req: NextRequest) {
       agent: 'api',
       status: 'success',
       details: {
-        user_id: user.id,
-        user_email: user.email,
-        user_role: user.role,
+        user_id: user.userId,
       },
     });
 
@@ -109,11 +86,14 @@ export async function DELETE(req: NextRequest) {
       message: 'Contact deleted successfully',
     });
   } catch (error) {
-    // If error is already a Response (from middleware), return it
-    if (error instanceof Response) {
-      return error;
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
     }
-
     console.error('Unexpected error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },

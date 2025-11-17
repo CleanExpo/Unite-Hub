@@ -1,43 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { analyzeContactIntelligence } from "@/lib/agents/contact-intelligence";
-import { db } from "@/lib/db";
 import { getSupabaseServer } from "@/lib/supabase";
+import { validateUserAndWorkspace } from "@/lib/workspace-validation";
 import { aiAgentRateLimit } from "@/lib/rate-limit";
-import { authenticateRequest } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await aiAgentRateLimit(request);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
-
-    // Authenticate request
-    const authResult = await authenticateRequest(request);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const { userId } = authResult;
-
-    // Authentication check
-    const supabase = await getSupabaseServer();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Get user's organization
-    const { data: userOrg, error: orgError } = await supabase
-      .from("user_organizations")
-      .select("org_id")
-      .eq("user_id", user.id)
-      .eq("is_active", true)
-      .single();
-
-    if (orgError || !userOrg) {
-      return NextResponse.json({ error: "No active organization found" }, { status: 403 });
+    // Apply rate limiting
+    const rateLimitResult = await aiAgentRateLimit(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
     }
 
     const { contactId, workspaceId } = await request.json();
@@ -49,23 +21,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate workspace access
-    const { data: workspace, error: workspaceError } = await supabase
-      .from("workspaces")
+    // Validate user authentication and workspace access
+    await validateUserAndWorkspace(request, workspaceId);
+
+    // Get authenticated supabase client
+    const supabase = await getSupabaseServer();
+
+    // Verify contact exists and belongs to workspace
+    const { data: contact, error: contactError } = await supabase
+      .from("contacts")
       .select("id")
-      .eq("id", workspaceId)
-      .eq("org_id", userOrg.org_id)
+      .eq("id", contactId)
+      .eq("workspace_id", workspaceId)
       .single();
 
-    if (workspaceError || !workspace) {
-      return NextResponse.json({ error: "Invalid workspace or access denied" }, { status: 403 });
-    }
-
-    // Verify contact exists
-    const contact = await db.contacts.getById(contactId);
-    if (!contact) {
+    if (contactError || !contact) {
       return NextResponse.json(
-        { error: "Contact not found" },
+        { error: "Contact not found or access denied" },
         { status: 404 }
       );
     }
@@ -78,6 +50,14 @@ export async function POST(request: NextRequest) {
       analysis,
     });
   } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Contact intelligence analysis error:", error);
     return NextResponse.json(
       { error: error.message || "Failed to analyze contact intelligence" },
@@ -89,26 +69,6 @@ export async function POST(request: NextRequest) {
 // Batch analysis endpoint - analyze entire workspace
 export async function PUT(request: NextRequest) {
   try {
-    // Authentication check
-    const supabase = await getSupabaseServer();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Get user's organization
-    const { data: userOrg, error: orgError } = await supabase
-      .from("user_organizations")
-      .select("org_id")
-      .eq("user_id", user.id)
-      .eq("is_active", true)
-      .single();
-
-    if (orgError || !userOrg) {
-      return NextResponse.json({ error: "No active organization found" }, { status: 403 });
-    }
-
     const { workspaceId } = await request.json();
 
     if (!workspaceId) {
@@ -118,17 +78,8 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    // Validate workspace access
-    const { data: workspace, error: workspaceError } = await supabase
-      .from("workspaces")
-      .select("id")
-      .eq("id", workspaceId)
-      .eq("org_id", userOrg.org_id)
-      .single();
-
-    if (workspaceError || !workspace) {
-      return NextResponse.json({ error: "Invalid workspace or access denied" }, { status: 403 });
-    }
+    // Validate user authentication and workspace access
+    await validateUserAndWorkspace(request, workspaceId);
 
     // Use the new analyzeWorkspaceContacts function
     const { analyzeWorkspaceContacts } = await import("@/lib/agents/contact-intelligence");
@@ -141,6 +92,14 @@ export async function PUT(request: NextRequest) {
       message: `Successfully analyzed ${results.analyzed} contacts (${results.errors} errors)`,
     });
   } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Batch contact intelligence analysis error:", error);
     return NextResponse.json(
       { error: error.message || "Failed to batch analyze contacts" },

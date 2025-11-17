@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
+import { validateUserAndWorkspace } from "@/lib/workspace-validation";
 
 /**
  * GET /api/contacts
@@ -7,8 +8,6 @@ import { getSupabaseServer } from "@/lib/supabase";
  */
 export async function GET(req: NextRequest) {
   try {
-    const supabase = await getSupabaseServer();
-
     // Get workspace ID from query params
     const workspaceId = req.nextUrl.searchParams.get("workspaceId");
 
@@ -18,6 +17,12 @@ export async function GET(req: NextRequest) {
         { status: 400 }
       );
     }
+
+    // Validate user authentication and workspace access
+    await validateUserAndWorkspace(req, workspaceId);
+
+    // Get authenticated supabase client
+    const supabase = await getSupabaseServer();
 
     // Fetch contacts from database
     const { data: contacts, error } = await supabase
@@ -39,6 +44,14 @@ export async function GET(req: NextRequest) {
       count: contacts?.length || 0,
     });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Unexpected error in /api/contacts:", error);
     return NextResponse.json(
       { error: "Internal server error" },
@@ -53,7 +66,6 @@ export async function GET(req: NextRequest) {
  */
 export async function POST(req: NextRequest) {
   try {
-    const supabase = await getSupabaseServer();
     const body = await req.json();
 
     const {
@@ -74,6 +86,12 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+
+    // Validate user authentication and workspace access
+    const user = await validateUserAndWorkspace(req, workspaceId);
+
+    // Get authenticated supabase client
+    const supabase = await getSupabaseServer();
 
     // Check if contact with this email already exists in this workspace
     const { data: existing } = await supabase
@@ -103,6 +121,7 @@ export async function POST(req: NextRequest) {
         status,
         tags,
         ai_score: 0, // Initial score
+        created_by: user.userId, // Track creator
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })
@@ -119,6 +138,14 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ contact }, { status: 201 });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Unexpected error in POST /api/contacts:", error);
     return NextResponse.json(
       { error: "Internal server error" },

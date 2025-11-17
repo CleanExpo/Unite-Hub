@@ -22,7 +22,8 @@
       "Bash(npm run lint:*)",
       "Bash(cat:*)",
       "Bash(npm run dev:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(git merge:*)"
     ],
     "deny": [],
     "ask": []

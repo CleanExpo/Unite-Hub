@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
-import { db } from "@/lib/db";
+import { validateUserAuth } from "@/lib/workspace-validation";
 import { apiRateLimit } from "@/lib/rate-limit";
-import { authenticateRequest } from "@/lib/auth";
 
 // GET /api/contacts/[contactId] - Get contact details
 export async function GET(
@@ -10,51 +9,26 @@ export async function GET(
   { params }: { params: Promise<{ contactId: string }> }
 ) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(request);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
-
-    // Authenticate request
-    const authResult = await authenticateRequest(request);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
     }
-    const { userId } = authResult;
 
     const { contactId } = await params;
-    const supabaseServer = await getSupabaseServer();
 
-    // Get the authenticated user
-    const { data: { user }, error: authError } = await supabaseServer.auth.getUser();
-    if (authError || !user) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
+    // Validate user authentication
+    const user = await validateUserAuth(request);
 
-    // Get user's workspace
-    const { data: userOrg } = await supabaseServer
-      .from("user_organizations")
-      .select("org_id")
-      .eq("user_id", user.id)
-      .single();
+    // Get authenticated supabase client
+    const supabase = await getSupabaseServer();
 
-    if (!userOrg) {
-      return NextResponse.json(
-        { error: "User workspace not found" },
-        { status: 404 }
-      );
-    }
-
-    // Get the contact and verify workspace_id matches
-    const { data: contact, error: contactError } = await supabaseServer
+    // Get the contact and verify workspace_id matches user's org
+    const { data: contact, error: contactError } = await supabase
       .from("contacts")
       .select("*")
       .eq("id", contactId)
-      .eq("workspace_id", userOrg.org_id)
+      .eq("workspace_id", user.orgId)
       .single();
 
     if (contactError || !contact) {
@@ -66,6 +40,14 @@ export async function GET(
 
     return NextResponse.json({ contact });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error fetching contact:", error);
     return NextResponse.json(
       { error: "Failed to fetch contact" },
