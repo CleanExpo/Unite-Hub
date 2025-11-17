@@ -143,29 +143,49 @@ export default function PricingPage() {
         </div>
 
         {/* Pricing Cards */}
-        <div className="max-w-2xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           <PricingCard
-            name="Unite-Hub"
-            price={billingCycle === "monthly" ? "$99" : "$990"}
+            name="Starter"
+            price={billingCycle === "monthly" ? "$249" : "$2,490"}
             billingCycle={billingCycle}
-            description="Everything you need to grow your business"
+            description="Perfect for small teams getting started"
             features={[
-              "Unlimited Client Accounts",
-              "Unlimited contacts",
-              "Email processing & tracking",
-              "AI-powered lead scoring",
-              "AI content generation",
-              "Drip campaign automation",
-              "Advanced analytics & reporting",
-              "Priority support",
-              "Gmail integration",
-              "Custom branding",
+              "1 Client Account",
+              "Basic email processing",
+              "Single persona generation",
+              "Basic mind mapping",
+              "Standard marketing strategy",
+              "Single platform campaigns",
+              "Email support",
             ]}
-            onSelect={() => handleCheckout("standard")}
+            onSelect={() => handleCheckout("starter")}
+            isLoading={isLoading}
+            popular={false}
+            icon={Sparkles}
+            gradient="from-blue-500 to-cyan-500"
+          />
+
+          <PricingCard
+            name="Professional"
+            price={billingCycle === "monthly" ? "$549" : "$5,490"}
+            billingCycle={billingCycle}
+            description="For growing agencies and businesses"
+            features={[
+              "5 Client Accounts",
+              "Advanced email processing",
+              "Multi-persona generation",
+              "Advanced mind mapping with auto-expansion",
+              "Comprehensive marketing strategies",
+              "Multi-platform campaigns",
+              "Hooks & scripts library",
+              "DALL-E image generation",
+              "Priority support",
+            ]}
+            onSelect={() => handleCheckout("professional")}
             isLoading={isLoading}
             popular={true}
             icon={Zap}
-            gradient="from-blue-500 to-purple-500"
+            gradient="from-purple-500 to-pink-500"
           />
         </div>
 
