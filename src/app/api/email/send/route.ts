@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendEmail, addTrackingPixel } from "@/lib/gmail";
 import { getSupabaseServer } from "@/lib/supabase";
+import { validateUserAndWorkspace } from "@/lib/workspace-validation";
 import { apiRateLimit } from "@/lib/rate-limit";
-import { authenticateRequest } from "@/lib/auth";
 import { GmailSendEmailSchema, formatZodError } from "@/lib/validation/schemas";
 
 /**
@@ -16,22 +16,6 @@ export async function POST(req: NextRequest) {
     const rateLimitResult = await apiRateLimit(req);
     if (rateLimitResult) {
       return rateLimitResult;
-    }
-
-    // Authenticate req
-    const authResult = await authenticateRequest(req);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const { userId } = authResult;
-
-    // Get Supabase instance
-    const supabase = await getSupabaseServer();
-
-    // Authenticate user
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const body = await req.json();
@@ -71,16 +55,11 @@ export async function POST(req: NextRequest) {
       enableTracking,
     } = body;
 
-    // Verify workspace access
-    const { data: workspace, error: workspaceError } = await supabase
-      .from("workspaces")
-      .select("id")
-      .eq("id", workspaceId)
-      .single();
+    // Validate user authentication and workspace access
+    await validateUserAndWorkspace(req, workspaceId);
 
-    if (workspaceError || !workspace) {
-      return NextResponse.json({ error: "Workspace not found or access denied" }, { status: 403 });
-    }
+    // Get authenticated supabase client
+    const supabase = await getSupabaseServer();
 
     // Verify contact exists if provided
     if (contactId) {
@@ -181,6 +160,14 @@ export async function POST(req: NextRequest) {
       trackingPixelId,
     });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Send error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to send email" },

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
+import { validateUserAuth } from "@/lib/workspace-validation";
 import { apiRateLimit } from "@/lib/rate-limit";
-import { authenticateRequest } from "@/lib/auth";
 import { EmailSchema, UUIDSchema } from "@/lib/validation/schemas";
 
 /**
@@ -16,21 +16,6 @@ export async function POST(req: NextRequest) {
     const rateLimitResult = await apiRateLimit(req);
     if (rateLimitResult) {
       return rateLimitResult;
-    }
-
-    // Authenticate req
-    const authResult = await authenticateRequest(req);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const { userId } = authResult;
-
-    const supabase = await getSupabaseServer();
-
-    // Authenticate user
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const body = await req.json();
@@ -49,38 +34,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid email format" }, { status: 400 });
     }
 
-    // Get contact and verify access
+    // Validate user authentication
+    const user = await validateUserAuth(req);
+
+    // Get authenticated supabase client
+    const supabase = await getSupabaseServer();
+
+    // Get contact and verify workspace access
     const { data: contact, error: contactError } = await supabase
       .from("contacts")
       .select("id, email, workspace_id")
       .eq("id", contactId)
+      .eq("workspace_id", user.orgId)
       .single();
 
     if (contactError || !contact) {
-      return NextResponse.json({ error: "Contact not found" }, { status: 404 });
-    }
-
-    // Verify workspace access
-    const { data: workspace } = await supabase
-      .from("workspaces")
-      .select("org_id")
-      .eq("id", contact.workspace_id)
-      .single();
-
-    if (!workspace) {
-      return NextResponse.json({ error: "Workspace not found" }, { status: 404 });
-    }
-
-    // Verify user has access
-    const { data: userOrg } = await supabase
-      .from("user_organizations")
-      .select("id")
-      .eq("user_id", user.id)
-      .eq("org_id", workspace.org_id)
-      .single();
-
-    if (!userOrg) {
-      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      return NextResponse.json({ error: "Contact not found or access denied" }, { status: 404 });
     }
 
     // Check if email is already used by another contact in this workspace
@@ -138,6 +107,14 @@ export async function POST(req: NextRequest) {
       linkedEmails: 0, // TODO: Count updated emails
     });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Link error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to link email" },
@@ -158,21 +135,6 @@ export async function DELETE(req: NextRequest) {
       return rateLimitResult;
     }
 
-    // Authenticate req
-    const authResult = await authenticateRequest(req);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const { userId } = authResult;
-
-    const supabase = await getSupabaseServer();
-
-    // Authenticate user
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
     const body = await req.json();
     const contactId = body.contactId || body.clientId;
 
@@ -182,38 +144,22 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: "Invalid contact ID format" }, { status: 400 });
     }
 
-    // Get contact and verify access
+    // Validate user authentication
+    const user = await validateUserAuth(req);
+
+    // Get authenticated supabase client
+    const supabase = await getSupabaseServer();
+
+    // Get contact and verify workspace access
     const { data: contact } = await supabase
       .from("contacts")
       .select("id, workspace_id")
       .eq("id", contactId)
+      .eq("workspace_id", user.orgId)
       .single();
 
     if (!contact) {
-      return NextResponse.json({ error: "Contact not found" }, { status: 404 });
-    }
-
-    // Verify workspace access
-    const { data: workspace } = await supabase
-      .from("workspaces")
-      .select("org_id")
-      .eq("id", contact.workspace_id)
-      .single();
-
-    if (!workspace) {
-      return NextResponse.json({ error: "Workspace not found" }, { status: 404 });
-    }
-
-    // Verify user has access
-    const { data: userOrg } = await supabase
-      .from("user_organizations")
-      .select("id")
-      .eq("user_id", user.id)
-      .eq("org_id", workspace.org_id)
-      .single();
-
-    if (!userOrg) {
-      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      return NextResponse.json({ error: "Contact not found or access denied" }, { status: 404 });
     }
 
     // Clear email but keep contact (set to null)
@@ -235,6 +181,14 @@ export async function DELETE(req: NextRequest) {
       message: "Email unlinked successfully. Contact remains active.",
     });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Unlink error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to unlink email" },
