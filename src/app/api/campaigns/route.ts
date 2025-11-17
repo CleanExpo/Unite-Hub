@@ -66,7 +66,6 @@ export async function GET(req: NextRequest) {
  */
 export async function POST(req: NextRequest) {
   try {
-    const supabase = await getSupabaseServer();
     const body = await req.json();
 
     const {
@@ -86,6 +85,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Validate user authentication and workspace access
+    const user = await validateUserAndWorkspace(req, workspaceId);
+
+    // Get authenticated supabase client
+    const supabase = await getSupabaseServer();
+
     // Create campaign
     const { data: campaign, error } = await supabase
       .from("campaigns")
@@ -96,6 +101,7 @@ export async function POST(req: NextRequest) {
         content: content || "",
         status,
         scheduled_at,
+        created_by: user.userId, // Track creator
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })
@@ -112,6 +118,14 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ campaign }, { status: 201 });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Unexpected error in POST /api/campaigns:", error);
     return NextResponse.json(
       { error: "Internal server error" },
