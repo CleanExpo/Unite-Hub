@@ -15,6 +15,7 @@ export default function PricingPage() {
   const { currentOrganization } = useAuth();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -40,6 +41,7 @@ export default function PricingPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           plan,
+          billingCycle,
           email: user.email,
           name: user.user_metadata?.name || user.email,
           orgId: currentOrganization.org_id,
@@ -93,58 +95,73 @@ export default function PricingPage() {
           <p className="text-xl text-slate-400">Scale as you grow. Only pay for what you use.</p>
         </div>
 
+        {/* Billing Cycle Toggle */}
+        <div className="flex justify-center items-center gap-4">
+          <span className={`text-lg ${billingCycle === "monthly" ? "text-white font-semibold" : "text-slate-400"}`}>
+            Monthly
+          </span>
+          <button
+            onClick={() => setBillingCycle(billingCycle === "monthly" ? "yearly" : "monthly")}
+            className={`relative w-16 h-8 rounded-full transition-colors ${
+              billingCycle === "yearly" ? "bg-gradient-to-r from-blue-600 to-purple-600" : "bg-slate-700"
+            }`}
+          >
+            <div
+              className={`absolute top-1 left-1 w-6 h-6 rounded-full bg-white transition-transform ${
+                billingCycle === "yearly" ? "translate-x-8" : "translate-x-0"
+              }`}
+            />
+          </button>
+          <span className={`text-lg ${billingCycle === "yearly" ? "text-white font-semibold" : "text-slate-400"}`}>
+            Yearly
+          </span>
+          {billingCycle === "yearly" && (
+            <Badge className="bg-green-500/20 text-green-400 border border-green-500/30">
+              Save 2 months!
+            </Badge>
+          )}
+        </div>
+
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="max-w-2xl mx-auto">
           <PricingCard
-            name="Unite-Hub Starter"
-            price="$249"
-            description="Perfect for small agencies"
+            name="Unite-Hub"
+            price={billingCycle === "monthly" ? "$99" : "$990"}
+            billingCycle={billingCycle}
+            description="Everything you need to grow your business"
             features={[
-              "1 Client Account",
-              "Up to 5,000 contacts",
-              "Email processing",
-              "Basic reporting",
-            ]}
-            onSelect={() => handleCheckout("starter")}
-            isLoading={isLoading}
-            icon={Sparkles}
-            gradient="from-blue-500 to-cyan-500"
-          />
-          <PricingCard
-            name="Unite-Hub Professional"
-            price="$549"
-            description="Most popular"
-            features={[
-              "5 Client Accounts",
-              "Up to 50,000 contacts",
-              "Email + content generation",
-              "Advanced analytics",
+              "Unlimited Client Accounts",
+              "Unlimited contacts",
+              "Email processing & tracking",
+              "AI-powered lead scoring",
+              "AI content generation",
+              "Drip campaign automation",
+              "Advanced analytics & reporting",
               "Priority support",
+              "Gmail integration",
+              "Custom branding",
             ]}
-            onSelect={() => handleCheckout("professional")}
+            onSelect={() => handleCheckout("standard")}
             isLoading={isLoading}
             popular={true}
             icon={Zap}
-            gradient="from-purple-500 to-pink-500"
+            gradient="from-blue-500 to-purple-500"
           />
-          <PricingCard
-            name="Enterprise"
-            price="Custom"
-            description="For agencies doing 7+ brands"
-            features={[
-              "Unlimited accounts",
-              "Unlimited contacts",
-              "All features included",
-              "Dedicated manager",
-              "Custom integrations",
-            ]}
-            onSelect={() => {
-              window.location.href = "mailto:sales@unite-hub.io";
-            }}
-            isLoading={isLoading}
-            icon={Building2}
-            gradient="from-orange-500 to-red-500"
-          />
+        </div>
+
+        {/* Enterprise Option */}
+        <div className="text-center space-y-4 pt-8">
+          <h3 className="text-2xl font-bold text-white">Need a custom solution?</h3>
+          <p className="text-slate-400">
+            Contact us for enterprise pricing with dedicated support, custom integrations, and SLA guarantees.
+          </p>
+          <Button
+            onClick={() => window.location.href = "mailto:sales@unite-hub.io"}
+            variant="outline"
+            className="border-slate-700/50 bg-slate-800/50 backdrop-blur-sm text-slate-300 hover:bg-slate-700/50 hover:border-slate-600/50"
+          >
+            Contact Sales
+          </Button>
         </div>
 
         {/* FAQ */}
@@ -159,7 +176,7 @@ export default function PricingPage() {
             />
             <FAQItem
               q="Do you offer annual billing?"
-              a="Yes! Get 15% off with annual billing. Contact sales for details."
+              a="Yes! Save 2 months with annual billing at $990/year (normally $1,188). That's $99/month when billed annually."
             />
             <FAQItem
               q="What payment methods do you accept?"
@@ -186,6 +203,7 @@ function PricingCard({
   popular = false,
   icon: Icon,
   gradient,
+  billingCycle,
 }: {
   name: string;
   price: string;
@@ -196,6 +214,7 @@ function PricingCard({
   popular?: boolean;
   icon: React.ElementType;
   gradient: string;
+  billingCycle?: "monthly" | "yearly";
 }) {
   return (
     <Card
@@ -224,7 +243,17 @@ function PricingCard({
           <span className={`text-5xl font-bold ${price !== "Custom" ? "bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent" : "text-white"}`}>
             {price}
           </span>
-          {price !== "Custom" && <span className="text-slate-400 text-lg">/month</span>}
+          {price !== "Custom" && (
+            <span className="text-slate-400 text-lg">
+              {billingCycle === "yearly" ? "/year" : "/month"}
+            </span>
+          )}
+          {billingCycle === "yearly" && price !== "Custom" && (
+            <div className="mt-2 text-sm text-slate-400">
+              <span className="line-through">$1,188</span>
+              <span className="ml-2 text-green-400 font-semibold">Save $198/year</span>
+            </div>
+          )}
         </div>
 
         <div className="space-y-3">
