@@ -5,7 +5,7 @@ import {
   PLAN_TIERS,
 } from "@/lib/stripe/client";
 import { apiRateLimit } from "@/lib/rate-limit";
-import { validateUserAuth } from "@/lib/auth";
+import { authenticateRequest } from "@/lib/auth";
 import { getSupabaseServer } from "@/lib/supabase";
 
 /**
@@ -24,13 +24,14 @@ export async function POST(req: NextRequest) {
     }
 
     // ✅ SECURITY FIX: Authenticate user
-    const user = await validateUserAuth(req);
-    if (!user) {
+    const authResult = await authenticateRequest(req);
+    if (!authResult) {
       return NextResponse.json(
         { error: "Unauthorized. Please log in." },
         { status: 401 }
       );
     }
+    const { userId, user } = authResult;
 
     const body = await req.json();
     const { plan, orgId } = body;

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { google } from "googleapis";
 import { strictRateLimit } from "@/lib/rate-limit";
-import { validateUserAuth } from "@/lib/auth";
+import { authenticateRequest } from "@/lib/auth";
 import { getSupabaseServer } from "@/lib/supabase";
 import crypto from "crypto";
 
@@ -26,13 +26,14 @@ export async function GET(request: NextRequest) {
     }
 
     // ✅ SECURITY FIX: Authenticate user
-    const user = await validateUserAuth(request);
-    if (!user) {
+    const authResult = await authenticateRequest(request);
+    if (!authResult) {
       return NextResponse.json(
         { error: "Unauthorized. Please log in." },
         { status: 401 }
       );
     }
+    const { userId, user } = authResult;
 
     // Get organization ID from query params
     const { searchParams } = new URL(request.url);

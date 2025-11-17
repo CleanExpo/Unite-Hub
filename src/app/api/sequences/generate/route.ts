@@ -22,9 +22,6 @@ export async function POST(req: NextRequest) {
       return rateLimitResult;
     }
 
-    // Authenticate req
-    const user = await validateUserAuth(request);
-
     const supabase = await getSupabaseServer();
     const body = await req.json();
 

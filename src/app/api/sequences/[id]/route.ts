@@ -20,9 +20,6 @@ export async function GET(
       return rateLimitResult;
     }
 
-    // Authenticate req
-    const user = await validateUserAuth(request);
-
     const supabase = await getSupabaseServer();
     const { id: sequenceId } = await params;
 
@@ -155,9 +152,6 @@ export async function PUT(
       return rateLimitResult;
     }
 
-    // Authenticate req
-    const user = await validateUserAuth(request);
-
     const supabase = await getSupabaseServer();
     const { id: sequenceId } = await params;
     const body = await req.json();
@@ -282,9 +276,6 @@ export async function DELETE(
     if (rateLimitResult) {
       return rateLimitResult;
     }
-
-    // Authenticate req
-    const user = await validateUserAuth(request);
 
     const supabase = await getSupabaseServer();
     const { id: sequenceId } = await params;

@@ -24,9 +24,6 @@ export async function POST(request: NextRequest) {
       return rateLimitResult;
     }
 
-    // Validate user authentication
-    const user = await validateUserAuth(request);
-
     const supabase = await getSupabaseServer();
     const body: RegenerateImageRequest = await request.json();
 
