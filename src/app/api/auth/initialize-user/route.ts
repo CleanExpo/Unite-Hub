@@ -4,7 +4,34 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { strictRateLimit } from '@/lib/rate-limit'
 
-export async function POST(request: NextRequest) {
+/**
+ * User Initialization API - Evaluator-Optimizer Pattern
+ *
+ * This endpoint follows the "Building Effective Agents" principles:
+ * 1. Simple, composable functions (not complex frameworks)
+ * 2. Ground truth verification at each step
+ * 3. Idempotent (can be called multiple times safely)
+ * 4. Returns detailed status of what was created/verified
+ */
+
+interface InitializationResult {
+  success: boolean;
+  created: {
+    profile: boolean;
+    organization: boolean;
+    userOrganization: boolean;
+    workspace: boolean;
+  };
+  data?: {
+    userId: string;
+    orgId?: string;
+    workspaceId?: string;
+  };
+  error?: string;
+  details?: any;
+}
+
+export async function POST(request: NextRequest): Promise<NextResponse<InitializationResult>> {
   try {
     // Apply strict rate limiting (10 requests per 15 minutes for auth endpoints)
     const rateLimitResult = await strictRateLimit(request);
@@ -27,8 +54,17 @@ export async function POST(request: NextRequest) {
       if (error || !data.user) {
         console.error('Token auth failed:', error);
         return NextResponse.json(
-          { message: 'Not authenticated, skipping initialization' },
-          { status: 200 }
+          {
+            success: false,
+            created: {
+              profile: false,
+              organization: false,
+              userOrganization: false,
+              workspace: false,
+            },
+            error: 'Not authenticated',
+          },
+          { status: 401 }
         );
       }
 
@@ -69,57 +105,89 @@ export async function POST(request: NextRequest) {
 
       if (userError || !cookieUser) {
         return NextResponse.json(
-          { message: 'Not authenticated, skipping initialization' },
-          { status: 200 }
+          {
+            success: false,
+            created: {
+              profile: false,
+              organization: false,
+              userOrganization: false,
+              workspace: false,
+            },
+            error: 'Not authenticated',
+          },
+          { status: 401 }
         );
       }
 
       user = cookieUser;
     }
 
-    // Check if user profile already exists
+    // Track what we create for ground truth verification
+    const result: InitializationResult = {
+      success: false,
+      created: {
+        profile: false,
+        organization: false,
+        userOrganization: false,
+        workspace: false,
+      },
+      data: {
+        userId: user.id,
+      },
+    };
+
+    // STEP 1: Verify/Create Profile (idempotent)
     const { data: existingProfile } = await supabase
       .from('user_profiles')
       .select('id')
       .eq('id', user.id)
-      .single()
+      .maybeSingle();
 
     if (!existingProfile) {
-      // Extract name from user metadata (Google OAuth provides this)
       const fullName =
         user.user_metadata?.full_name ||
         user.user_metadata?.name ||
         user.email?.split('@')[0] ||
-        'User'
+        'User';
 
-      // Create user profile
       const { error: profileError } = await supabase
         .from('user_profiles')
         .insert({
           id: user.id,
           email: user.email!,
           full_name: fullName,
-          avatar_url: user.user_metadata?.avatar_url || user.user_metadata?.picture || null
-        })
+          avatar_url: user.user_metadata?.avatar_url || user.user_metadata?.picture || null,
+        });
 
       if (profileError) {
-        console.error('Error creating profile:', profileError)
+        console.error('[initialize-user] Profile creation failed:', profileError);
         return NextResponse.json(
-          { error: 'Failed to create profile', details: profileError },
+          {
+            ...result,
+            error: 'Failed to create profile',
+            details: profileError,
+          },
           { status: 500 }
-        )
+        );
       }
+
+      result.created.profile = true;
+      console.log('[initialize-user] ✅ Profile created:', user.id);
+    } else {
+      console.log('[initialize-user] ✅ Profile already exists:', user.id);
     }
 
-    // Check if user has any organizations
+    // STEP 2: Verify/Create Organization (idempotent)
     const { data: existingOrgs } = await supabase
       .from('user_organizations')
-      .select('id')
+      .select('org_id, organizations(id, name)')
       .eq('user_id', user.id)
-      .limit(1)
+      .limit(1);
+
+    let orgId: string;
 
     if (!existingOrgs || existingOrgs.length === 0) {
-      // Create a default organization for the user
+      // Create organization
       const { data: newOrg, error: orgError } = await supabase
         .from('organizations')
         .insert({
@@ -127,60 +195,150 @@ export async function POST(request: NextRequest) {
           email: user.email!,
           plan: 'starter',
           status: 'trial',
-          trial_ends_at: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(), // 14 days from now
+          trial_ends_at: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
         })
         .select('id')
-        .single()
+        .single();
 
       if (orgError || !newOrg) {
-        console.error('Error creating organization:', orgError)
+        console.error('[initialize-user] Organization creation failed:', orgError);
         return NextResponse.json(
-          { error: 'Failed to create organization', details: orgError },
+          {
+            ...result,
+            error: 'Failed to create organization',
+            details: orgError,
+          },
           { status: 500 }
-        )
+        );
       }
 
-      // Link user to the new organization as owner
+      orgId = newOrg.id;
+      result.created.organization = true;
+      console.log('[initialize-user] ✅ Organization created:', orgId);
+
+      // Link user to organization
       const { error: userOrgError } = await supabase
         .from('user_organizations')
         .insert({
           user_id: user.id,
-          org_id: newOrg.id,
+          org_id: orgId,
           role: 'owner',
-          is_active: true
-        })
+          is_active: true,
+        });
 
       if (userOrgError) {
-        console.error('Error linking user to organization:', userOrgError)
+        console.error('[initialize-user] User-org link failed:', userOrgError);
         return NextResponse.json(
-          { error: 'Failed to link user to organization', details: userOrgError },
+          {
+            ...result,
+            data: { ...result.data, orgId },
+            error: 'Failed to link user to organization',
+            details: userOrgError,
+          },
           { status: 500 }
-        )
+        );
       }
 
-      // Create a default workspace for the organization
-      const { error: workspaceError } = await supabase
-        .from('workspaces')
-        .insert({
-          org_id: newOrg.id,
-          name: 'Default Workspace'
-        })
-
-      if (workspaceError) {
-        console.error('Error creating workspace:', workspaceError)
-        // Don't fail the whole request if workspace creation fails
-      }
-
-      // Onboarding initialization disabled - user_onboarding table doesn't exist yet
-      // TODO: Re-enable when user_onboarding table is created
+      result.created.userOrganization = true;
+      console.log('[initialize-user] ✅ User-org link created');
+    } else {
+      orgId = existingOrgs[0].org_id;
+      console.log('[initialize-user] ✅ Organization already exists:', orgId);
     }
 
-    return NextResponse.json({ success: true })
+    result.data!.orgId = orgId;
+
+    // STEP 3: Verify/Create Workspace (idempotent) - CRITICAL FIX
+    const { data: existingWorkspaces } = await supabase
+      .from('workspaces')
+      .select('id, name')
+      .eq('org_id', orgId)
+      .limit(1);
+
+    let workspaceId: string;
+
+    if (!existingWorkspaces || existingWorkspaces.length === 0) {
+      // Create workspace
+      const { data: newWorkspace, error: workspaceError } = await supabase
+        .from('workspaces')
+        .insert({
+          org_id: orgId,
+          name: 'Default Workspace',
+        })
+        .select('id')
+        .single();
+
+      if (workspaceError || !newWorkspace) {
+        console.error('[initialize-user] Workspace creation failed:', workspaceError);
+        // CRITICAL: Don't silently fail - return error
+        return NextResponse.json(
+          {
+            ...result,
+            error: 'Failed to create workspace',
+            details: workspaceError,
+          },
+          { status: 500 }
+        );
+      }
+
+      workspaceId = newWorkspace.id;
+      result.created.workspace = true;
+      console.log('[initialize-user] ✅ Workspace created:', workspaceId);
+    } else {
+      workspaceId = existingWorkspaces[0].id;
+      console.log('[initialize-user] ✅ Workspace already exists:', workspaceId);
+    }
+
+    result.data!.workspaceId = workspaceId;
+
+    // GROUND TRUTH VERIFICATION: Verify all entities exist
+    const verification = await Promise.all([
+      supabase.from('user_profiles').select('id').eq('id', user.id).single(),
+      supabase.from('user_organizations').select('org_id').eq('user_id', user.id).eq('org_id', orgId).single(),
+      supabase.from('workspaces').select('id').eq('id', workspaceId).eq('org_id', orgId).single(),
+    ]);
+
+    const [profileCheck, userOrgCheck, workspaceCheck] = verification;
+
+    if (profileCheck.error || userOrgCheck.error || workspaceCheck.error) {
+      console.error('[initialize-user] Verification failed:', {
+        profile: profileCheck.error,
+        userOrg: userOrgCheck.error,
+        workspace: workspaceCheck.error,
+      });
+      return NextResponse.json(
+        {
+          ...result,
+          error: 'Initialization completed but verification failed',
+          details: {
+            profileExists: !profileCheck.error,
+            userOrgExists: !userOrgCheck.error,
+            workspaceExists: !workspaceCheck.error,
+          },
+        },
+        { status: 500 }
+      );
+    }
+
+    result.success = true;
+    console.log('[initialize-user] ✅ All entities verified:', result.data);
+
+    return NextResponse.json(result);
   } catch (error) {
-    console.error('Unexpected error in initialize-user:', error)
+    console.error('[initialize-user] Unexpected error:', error);
     return NextResponse.json(
-      { error: 'Internal server error', details: error },
+      {
+        success: false,
+        created: {
+          profile: false,
+          organization: false,
+          userOrganization: false,
+          workspace: false,
+        },
+        error: 'Internal server error',
+        details: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
-    )
+    );
   }
 }

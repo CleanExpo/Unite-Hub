@@ -11,7 +11,8 @@
       "Bash(node scripts/fix-auth.js:*)",
       "Bash(curl:*)",
       "Bash(ls:*)",
-      "Bash(netstat:*)"
+      "Bash(netstat:*)",
+      "Bash(taskkill:*)"
     ],
     "deny": [],
     "ask": []
