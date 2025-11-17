@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { TeamCapacity } from "@/components/dashboard/TeamCapacity";
 import { StatsCard } from "@/components/dashboard/StatsCard";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,9 @@ import { Plus, Mail, Phone, Calendar, BarChart3, Users, AlertCircle, CheckCircle
 import { cn } from "@/lib/utils";
 import { useTeamMembers } from "@/hooks/useTeamMembers";
 import { useWorkspace } from "@/hooks/useWorkspace";
+import { useAuth } from "@/contexts/AuthContext";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { AddTeamMemberModal } from "@/components/modals/AddTeamMemberModal";
 
 // Helper function to format join date
 const formatJoinDate = (dateString: string) => {
@@ -43,7 +45,9 @@ const transformTeamMember = (member: any) => {
 
 export default function TeamPage() {
   const { workspaceId, loading: workspaceLoading } = useWorkspace();
-  const { teamMembers: dbTeamMembers, loading, error } = useTeamMembers(workspaceId);
+  const { currentOrganization } = useAuth();
+  const { teamMembers: dbTeamMembers, loading, error, refetch } = useTeamMembers(workspaceId);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   // Transform database team members to UI format
   const teamMembers = dbTeamMembers.map(transformTeamMember);
@@ -66,7 +70,10 @@ export default function TeamPage() {
           </h1>
           <p className="text-slate-400">Manage your team members and their capacity</p>
         </div>
-        <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50 gap-2">
+        <Button
+          onClick={() => setIsAddModalOpen(true)}
+          className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50 gap-2"
+        >
           <Plus className="h-4 w-4" />
           Add Team Member
         </Button>
@@ -250,6 +257,20 @@ export default function TeamPage() {
             </div>
           </div>
         </>
+      )}
+
+      {/* Add Team Member Modal */}
+      {workspaceId && currentOrganization && (
+        <AddTeamMemberModal
+          isOpen={isAddModalOpen}
+          onClose={() => setIsAddModalOpen(false)}
+          workspaceId={workspaceId}
+          organizationId={currentOrganization.org_id}
+          onMemberAdded={() => {
+            refetch?.();
+            setIsAddModalOpen(false);
+          }}
+        />
       )}
     </div>
   );
