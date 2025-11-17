@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createMessage, parseJSONResponse, rateLimiter } from '@/lib/claude/client';
 import { HOOKS_SYSTEM_PROMPT, buildHooksUserPrompt } from '@/lib/claude/prompts';
 import { aiAgentRateLimit } from "@/lib/rate-limit";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth } from "@/lib/workspace-validation";
 
 
 interface HooksRequest {
@@ -32,19 +32,14 @@ interface HooksResponse {
 
 export async function POST(req: NextRequest) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await aiAgentRateLimit(req);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
-
-
-    // Authenticate request
-    const authResult = await authenticateRequest(req);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // Apply rate limiting
+    const rateLimitResult = await aiAgentRateLimit(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
     }
-    const { userId } = authResult;
+
+    // Validate user authentication
+    const user = await validateUserAuth(req);
 
     // Rate limiting
     await rateLimiter.checkLimit();
@@ -100,6 +95,14 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error('Hooks generation error:', error);
 
     return NextResponse.json(

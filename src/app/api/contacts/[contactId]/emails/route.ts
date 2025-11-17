@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { apiRateLimit } from "@/lib/rate-limit";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
 
 // GET /api/contacts/[contactId]/emails - List all emails for a contact
 export async function GET(
@@ -15,19 +15,23 @@ export async function GET(
     return rateLimitResult;
   }
 
-    // Authenticate request
-    const authResult = await authenticateRequest(request);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const { userId } = authResult;
+    // Validate user authentication
+    const user = await validateUserAuth(request);
 
     const { contactId } = await params;
 
     const emails = await db.clientEmails.getByContact(contactId);
 
     return NextResponse.json({ emails });
-  } catch (error) {
+  } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error fetching emails:", error);
     return NextResponse.json(
       { error: "Failed to fetch emails" },
@@ -77,7 +81,15 @@ export async function POST(
     });
 
     return NextResponse.json({ email: newEmail }, { status: 201 });
-  } catch (error) {
+  } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error creating email:", error);
     return NextResponse.json(
       { error: "Failed to create email" },

@@ -3,7 +3,7 @@ import { fetchQuery } from "convex/nextjs";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { apiRateLimit } from "@/lib/rate-limit";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
 
 /**
  * GET /api/competitors/analysis/latest?clientId=xxx
@@ -17,12 +17,8 @@ export async function GET(request: NextRequest) {
     return rateLimitResult;
   }
 
-    // Authenticate request
-    const authResult = await authenticateRequest(request);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const { userId } = authResult;
+    // Validate user authentication
+    const user = await validateUserAuth(request);
 
     const { searchParams } = new URL(request.url);
     const clientId = searchParams.get("clientId");
@@ -58,6 +54,14 @@ export async function GET(request: NextRequest) {
       competitors: competitors.filter((c) => c !== null),
     });
   } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error fetching latest analysis:", error);
     return NextResponse.json(
       { error: error.message || "Failed to fetch analysis" },

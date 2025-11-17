@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { detectMeetingIntent, autoRespondToMeetingRequest } from "@/lib/agents/calendar-intelligence";
 import { apiRateLimit } from "@/lib/rate-limit";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,12 +11,8 @@ export async function POST(request: NextRequest) {
     return rateLimitResult;
   }
 
-    // Authenticate request
-    const authResult = await authenticateRequest(request);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const { userId } = authResult;
+    // Validate user authentication
+    const user = await validateUserAuth(request);
 
     const body = await request.json();
     const { emailBody, subject, emailId, workspaceId, autoRespond } = body;
@@ -39,8 +35,16 @@ export async function POST(request: NextRequest) {
           emailId,
           meetingIntent
         );
-      } catch (error) {
-        console.error("Error auto-responding:", error);
+      } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
+    console.error("Error auto-responding:", error);
       }
     }
 
@@ -50,6 +54,14 @@ export async function POST(request: NextRequest) {
       responseEmail,
     });
   } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error detecting meeting intent:", error);
     return NextResponse.json(
       { error: error.message || "Failed to detect meeting intent" },

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import { aiAgentRateLimit } from "@/lib/rate-limit";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
 import { UUIDSchema } from "@/lib/validation/schemas";
 import { generateImage, calculateImageCost, validatePrompt } from "@/lib/dalle/client";
 import {
@@ -37,12 +37,8 @@ export async function POST(request: NextRequest) {
       return rateLimitResult;
     }
 
-    // Authenticate request
-    const authResult = await authenticateRequest(request);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const { userId } = authResult;
+    // Validate user authentication
+    const user = await validateUserAuth(request);
 
     const supabase = await getSupabaseServer();
     const body: GenerateImageRequest = await request.json();
@@ -231,7 +227,15 @@ export async function POST(request: NextRequest) {
           revisedPrompt: result.revisedPrompt,
         });
       } catch (error: any) {
-        console.error(`Failed to generate variation ${i + 1}:`, error);
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
+    console.error(`Failed to generate variation ${i + 1}:`, error);
         errors.push({ variation: i + 1, error: error.message });
       }
     }
@@ -253,6 +257,14 @@ export async function POST(request: NextRequest) {
       style: recommendedStyle,
     });
   } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Image generation error:", error);
     return NextResponse.json(
       { error: error.message || "Failed to generate images" },
@@ -347,7 +359,15 @@ async function checkUsageLimits(
     }
 
     return { allowed: true };
-  } catch (error) {
+  } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error checking usage limits:", error);
     // Allow on error to prevent blocking (fail open)
     return { allowed: true };
@@ -391,7 +411,15 @@ async function trackImageGeneration(
         .update({ custom_fields: customFields })
         .eq("id", orgId);
     }
-  } catch (error) {
+  } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error tracking image generation:", error);
   }
 }

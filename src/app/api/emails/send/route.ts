@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { sendEmailViaGmail } from "@/lib/integrations/gmail";
 import { db } from "@/lib/db";
 import { randomUUID } from "crypto";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
 import { apiRateLimit } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
@@ -13,12 +13,8 @@ export async function POST(req: NextRequest) {
     return rateLimitResult;
   }
 
-    // Authenticate request
-    const authResult = await authenticateRequest(req);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const { userId } = authResult;
+    // Validate user authentication
+    const user = await validateUserAuth(request);
 
     const { contentId, contactId, integrationId } = await req.json();
 
@@ -58,7 +54,15 @@ export async function POST(req: NextRequest) {
       sentEmailId: sentEmail.id,
       messageId: result.messageId,
     });
-  } catch (error) {
+  } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Send error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to send" },

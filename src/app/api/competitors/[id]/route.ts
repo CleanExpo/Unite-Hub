@@ -3,7 +3,7 @@ import { fetchMutation, fetchQuery } from "convex/nextjs";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { apiRateLimit } from "@/lib/rate-limit";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
 
 /**
  * GET /api/competitors/[id]
@@ -20,12 +20,8 @@ export async function GET(
     return rateLimitResult;
   }
 
-    // Authenticate request
-    const authResult = await authenticateRequest(request);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const { userId } = authResult;
+    // Validate user authentication
+    const user = await validateUserAuth(request);
 
     const { id } = await params;
     const competitor = await fetchQuery(api.competitors.getCompetitor, {
@@ -41,6 +37,14 @@ export async function GET(
 
     return NextResponse.json({ success: true, competitor });
   } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error fetching competitor:", error);
     return NextResponse.json(
       { error: error.message || "Failed to fetch competitor" },
@@ -79,6 +83,14 @@ export async function PUT(
       message: "Competitor updated successfully",
     });
   } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error updating competitor:", error);
     return NextResponse.json(
       { error: error.message || "Failed to update competitor" },
@@ -106,6 +118,14 @@ export async function DELETE(
       message: "Competitor deleted successfully",
     });
   } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error deleting competitor:", error);
     return NextResponse.json(
       { error: error.message || "Failed to delete competitor" },

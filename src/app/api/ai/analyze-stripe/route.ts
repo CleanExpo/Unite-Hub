@@ -1,15 +1,18 @@
 import { generateWithKatCoder } from '@/lib/openrouter';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { aiAgentRateLimit } from "@/lib/rate-limit";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth } from "@/lib/workspace-validation";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await aiAgentRateLimit(req);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
+    // Apply rate limiting
+    const rateLimitResult = await aiAgentRateLimit(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
+
+    // Validate user authentication
+    const user = await validateUserAuth(req);
 
     const { repoReadme, currentImplementation } = await req.json();
 
@@ -47,6 +50,14 @@ Format as JSON with structure:
 
     return NextResponse.json({ analysis });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error('Analysis error:', error);
     return NextResponse.json(
       { error: 'Failed to analyze Stripe implementation' },

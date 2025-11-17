@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { apiRateLimit } from "@/lib/rate-limit";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
 
 // GET /api/contacts/[contactId]/emails/[emailId] - Get specific email
 export async function GET(
@@ -15,12 +15,8 @@ export async function GET(
     return rateLimitResult;
   }
 
-    // Authenticate request
-    const authResult = await authenticateRequest(request);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const { userId } = authResult;
+    // Validate user authentication
+    const user = await validateUserAuth(request);
 
     const { emailId } = await params;
 
@@ -31,7 +27,15 @@ export async function GET(
     }
 
     return NextResponse.json({ email });
-  } catch (error) {
+  } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error fetching email:", error);
     return NextResponse.json(
       { error: "Failed to fetch email" },
@@ -52,7 +56,15 @@ export async function PUT(
     const updatedEmail = await db.clientEmails.update(emailId, body);
 
     return NextResponse.json({ email: updatedEmail });
-  } catch (error) {
+  } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error updating email:", error);
     return NextResponse.json(
       { error: "Failed to update email" },
@@ -81,7 +93,15 @@ export async function DELETE(
     await db.clientEmails.delete(emailId);
 
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error deleting email:", error);
     return NextResponse.json(
       { error: "Failed to delete email" },

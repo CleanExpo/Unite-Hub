@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import { apiRateLimit } from "@/lib/rate-limit";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
 import { UUIDSchema } from "@/lib/validation/schemas";
 import { getSubscription, PLAN_TIERS, PlanTier } from "@/lib/stripe/client";
 
@@ -20,13 +20,6 @@ export async function GET(
       return rateLimitResult;
     }
 
-    // Authenticate req
-    const authResult = await authenticateRequest(req);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const { userId } = authResult;
-
     const { orgId } = await params;
 
     if (!orgId) {
@@ -42,25 +35,15 @@ export async function GET(
       return NextResponse.json({ error: "Invalid organization ID format" }, { status: 400 });
     }
 
-    const supabase = await getSupabaseServer();
-
-    // Authenticate user
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    // Validate user authentication
+    const user = await validateUserAuth(req);
 
     // Verify user has access to organization
-    const { data: userOrg } = await supabase
-      .from("user_organizations")
-      .select("id")
-      .eq("user_id", user.id)
-      .eq("org_id", orgId)
-      .single();
-
-    if (!userOrg) {
+    if (orgId !== user.orgId) {
       return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
+
+    const supabase = await getSupabaseServer();
 
     // Get subscription from Supabase
     const { data: subscription, error: subError } = await supabase
@@ -143,6 +126,14 @@ export async function GET(
 
     return NextResponse.json(response);
   } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error fetching subscription:", error);
     return NextResponse.json(
       { error: "Failed to fetch subscription", message: error.message },

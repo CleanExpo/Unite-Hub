@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import { apiRateLimit } from "@/lib/rate-limit";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
 import { UUIDSchema } from "@/lib/validation/schemas";
 
 /**
@@ -21,11 +21,7 @@ export async function GET(
     }
 
     // Authenticate req
-    const authResult = await authenticateRequest(req);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const { userId } = authResult;
+    const user = await validateUserAuth(request);
 
     const supabase = await getSupabaseServer();
     const { id: sequenceId } = await params;
@@ -126,7 +122,15 @@ export async function GET(
         updatedAt: step.updated_at,
       })),
     });
-  } catch (error) {
+  } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Get sequence error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to get sequence" },
@@ -152,11 +156,7 @@ export async function PUT(
     }
 
     // Authenticate req
-    const authResult = await authenticateRequest(req);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const { userId } = authResult;
+    const user = await validateUserAuth(request);
 
     const supabase = await getSupabaseServer();
     const { id: sequenceId } = await params;
@@ -250,7 +250,15 @@ export async function PUT(
         updatedAt: updated.updated_at,
       },
     });
-  } catch (error) {
+  } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Update sequence error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to update sequence" },
@@ -276,11 +284,7 @@ export async function DELETE(
     }
 
     // Authenticate req
-    const authResult = await authenticateRequest(req);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const { userId } = authResult;
+    const user = await validateUserAuth(request);
 
     const supabase = await getSupabaseServer();
     const { id: sequenceId } = await params;
@@ -346,7 +350,15 @@ export async function DELETE(
       success: true,
       message: `Sequence "${sequence.name}" deleted successfully`,
     });
-  } catch (error) {
+  } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Delete sequence error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to delete sequence" },

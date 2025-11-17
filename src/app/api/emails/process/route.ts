@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { batchProcessEmails, processEmail } from "@/lib/agents/email-processor";
 import { apiRateLimit } from "@/lib/rate-limit";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,12 +11,8 @@ export async function POST(request: NextRequest) {
     return rateLimitResult;
   }
 
-    // Authenticate request
-    const authResult = await authenticateRequest(request);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const { userId } = authResult;
+    // Validate user authentication
+    const user = await validateUserAuth(request);
 
     const body = await request.json();
     const { workspaceId, emailId, batch, limit } = body;
@@ -53,6 +49,14 @@ export async function POST(request: NextRequest) {
       { status: 400 }
     );
   } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error processing emails:", error);
     return NextResponse.json(
       { error: error.message || "Failed to process emails" },

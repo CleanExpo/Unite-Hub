@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { syncUnreadEmails } from "@/lib/gmail/processor";
 import { getSupabaseServer } from "@/lib/supabase";
 import { apiRateLimit } from "@/lib/rate-limit";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
 
 /**
  * POST /api/email/sync
@@ -18,11 +18,7 @@ export async function POST(req: NextRequest) {
   }
 
     // Authenticate req
-    const authResult = await authenticateRequest(req);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const { userId } = authResult;
+    const user = await validateUserAuth(request);
 
     // Authentication check
     const supabase = await getSupabaseServer();
@@ -74,7 +70,15 @@ export async function POST(req: NextRequest) {
       processed: result.processed,
       errors: result.errors,
     });
-  } catch (error) {
+  } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Sync error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Sync failed" },

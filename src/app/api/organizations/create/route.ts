@@ -1,30 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
 import { apiRateLimit } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(req);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
-
-    const authResult = await authenticateRequest(req);
-    if (!session?.user?.email) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
     }
+
+    // Validate user authentication
+    const user = await validateUserAuth(req);
 
     const { name, email, phone, website, teamSize, industry } = await req.json();
 
     // Create organization
     const org = await db.organizations.create({
       name,
-      email: email || session.user.email,
+      email: email,
       phone,
       website,
       team_size: teamSize,
@@ -42,7 +37,15 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({ org, workspace });
-  } catch (error) {
+  } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error creating organization:", error);
     return NextResponse.json(
       { error: "Failed to create organization" },

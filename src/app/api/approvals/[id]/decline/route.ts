@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import { apiRateLimit } from "@/lib/rate-limit";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth } from "@/lib/workspace-validation";
 
 /**
  * POST /api/approvals/[id]/decline
@@ -9,29 +9,41 @@ import { authenticateRequest } from "@/lib/auth";
  */
 export async function POST(request: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(request);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
-
-    // Authenticate request
-    const authResult = await authenticateRequest(request);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
     }
-    const { userId } = authResult;
+
+    // Validate user authentication
+    const user = await validateUserAuth(request);
 
     const { id } = await context.params;
     const body = await request.json();
     const { reviewedById, reason } = body;
 
+    // Get approval to verify org ownership
     const supabase = await getSupabaseServer();
+    const { data: existingApproval, error: fetchError } = await supabase
+      .from("approvals")
+      .select("org_id")
+      .eq("id", id)
+      .single();
+
+    if (fetchError || !existingApproval) {
+      return NextResponse.json({ error: "Approval not found" }, { status: 404 });
+    }
+
+    // Verify org ownership
+    if (existingApproval.org_id !== user.orgId) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+    }
+
     const { data: approval, error } = await supabase
       .from("approvals")
       .update({
         status: "declined",
-        reviewed_by_id: reviewedById || null,
+        reviewed_by_id: reviewedById || user.userId,
         reviewed_at: new Date().toISOString(),
         decline_reason: reason || "No reason provided",
       })
@@ -46,6 +58,14 @@ export async function POST(request: NextRequest, context: { params: Promise<{ id
 
     return NextResponse.json({ approval });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Unexpected error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }

@@ -1,25 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
 import { db } from "@/lib/db";
 import { apiRateLimit } from "@/lib/rate-limit";
 
 // GET /api/hooks/search - Search hooks across all clients
 export async function GET(request: NextRequest) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(request);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
-
-    const authResult = await authenticateRequest(request);
-    if (!authResult) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
     }
-    const { userId } = authResult;
+
+    // Validate user authentication
+    const user = await validateUserAuth(request);
 
     const { searchParams } = new URL(request.url);
     const query = searchParams.get("q");
@@ -83,7 +77,15 @@ export async function GET(request: NextRequest) {
       total: filteredResults.length,
       query,
     });
-  } catch (error) {
+  } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error searching hooks:", error);
     return NextResponse.json(
       { error: "Failed to search hooks" },

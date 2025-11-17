@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import { aiAgentRateLimit } from "@/lib/rate-limit";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
 import { UUIDSchema } from "@/lib/validation/schemas";
 import { generateImage, validatePrompt, calculateImageCost } from "@/lib/dalle/client";
 
@@ -24,12 +24,8 @@ export async function POST(request: NextRequest) {
       return rateLimitResult;
     }
 
-    // Authenticate request
-    const authResult = await authenticateRequest(request);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const { userId } = authResult;
+    // Validate user authentication
+    const user = await validateUserAuth(request);
 
     const supabase = await getSupabaseServer();
     const body: RegenerateImageRequest = await request.json();
@@ -202,6 +198,14 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Image regeneration error:", error);
     return NextResponse.json(
       { error: error.message || "Failed to regenerate image" },
@@ -247,7 +251,15 @@ async function trackImageGeneration(
         .update({ custom_fields: customFields })
         .eq("id", orgId);
     }
-  } catch (error) {
+  } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error tracking image generation:", error);
   }
 }

@@ -9,7 +9,7 @@ import {
   type ClientBusinessContext,
 } from "@/lib/claude/competitor-prompts";
 import { aiAgentRateLimit } from "@/lib/rate-limit";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
@@ -27,12 +27,8 @@ export async function POST(request: NextRequest) {
     return rateLimitResult;
   }
 
-    // Authenticate request
-    const authResult = await authenticateRequest(request);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const { userId } = authResult;
+    // Validate user authentication
+    const user = await validateUserAuth(request);
 
     const body = await request.json();
     const { clientId } = body;
@@ -156,6 +152,14 @@ export async function POST(request: NextRequest) {
       message: "Competitor analysis completed successfully",
     });
   } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error analyzing competitors:", error);
     return NextResponse.json(
       { error: error.message || "Failed to analyze competitors" },

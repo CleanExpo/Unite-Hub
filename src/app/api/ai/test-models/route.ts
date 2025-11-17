@@ -2,29 +2,33 @@ import { NextRequest } from 'next/server';
 import { generateWithGPT4oMini } from '@/lib/openai';
 import { generateSectionCopy } from '@/lib/ai/claude-client';
 import { aiAgentRateLimit } from "@/lib/rate-limit";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth } from "@/lib/workspace-validation";
 
 /**
  * Test API route to verify all AI models are working
  * Visit: http://localhost:3008/api/ai/test-models
  */
 export async function GET(req: NextRequest) {
-  const results: any = {
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV,
-    tests: {},
-    summary: {},
-  };
-
-  // Test 1: OpenAI GPT-4o Mini
   try {
-  // Apply rate limiting
-  const rateLimitResult = await aiAgentRateLimit(req);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
+    // Apply rate limiting
+    const rateLimitResult = await aiAgentRateLimit(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
 
-    console.log('Testing OpenAI GPT-4o Mini...');
+    // Validate user authentication
+    const user = await validateUserAuth(req);
+
+    const results: any = {
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV,
+      tests: {},
+      summary: {},
+    };
+
+    // Test 1: OpenAI GPT-4o Mini
+    try {
+      console.log('Testing OpenAI GPT-4o Mini...');
     const startTime = Date.now();
 
     const openaiResult = await generateWithGPT4oMini(
@@ -121,13 +125,32 @@ export async function GET(req: NextRequest) {
     ready_for_production: successCount >= 2,
   };
 
-  // Return formatted response
-  return Response.json(results, {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+    // Return formatted response
+    return Response.json(results, {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return Response.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return Response.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
+    console.error('Model test error:', error);
+    return Response.json(
+      {
+        success: false,
+        error: error.message,
+        timestamp: new Date().toISOString(),
+      },
+      { status: 500 }
+    );
+  }
 }
 
 /**
@@ -136,6 +159,15 @@ export async function GET(req: NextRequest) {
  */
 export async function POST(req: NextRequest) {
   try {
+    // Apply rate limiting
+    const rateLimitResult = await aiAgentRateLimit(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
+
+    // Validate user authentication
+    const user = await validateUserAuth(req);
+
     const body = await req.json();
     const { model, prompt } = body;
 
@@ -188,6 +220,14 @@ export async function POST(req: NextRequest) {
     });
 
   } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return Response.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return Response.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error('Model test error:', error);
     return Response.json(
       {

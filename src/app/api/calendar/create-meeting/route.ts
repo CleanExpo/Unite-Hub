@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCalendarService } from "@/lib/services/google-calendar";
 import { apiRateLimit } from "@/lib/rate-limit";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,12 +11,8 @@ export async function POST(request: NextRequest) {
     return rateLimitResult;
   }
 
-    // Authenticate request
-    const authResult = await authenticateRequest(request);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const { userId } = authResult;
+    // Validate user authentication
+    const user = await validateUserAuth(request);
 
     const body = await request.json();
     const {
@@ -79,6 +75,14 @@ export async function POST(request: NextRequest) {
       meetLink: event.hangoutLink || event.conferenceData?.entryPoints?.[0]?.uri,
     });
   } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error creating meeting:", error);
     return NextResponse.json(
       { error: error.message || "Failed to create meeting" },

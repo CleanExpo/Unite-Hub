@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import type { Approval, TablesInsert } from "@/types/database";
 import { apiRateLimit } from "@/lib/rate-limit";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth } from "@/lib/workspace-validation";
 
 /**
  * GET /api/approvals
@@ -10,18 +10,14 @@ import { authenticateRequest } from "@/lib/auth";
  */
 export async function GET(request: NextRequest) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(request);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
-
-    // Authenticate request
-    const authResult = await authenticateRequest(request);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
     }
-    const { userId } = authResult;
+
+    // Validate user authentication
+    const user = await validateUserAuth(request);
 
     const { searchParams } = new URL(request.url);
     const orgId = searchParams.get("orgId");
@@ -31,6 +27,11 @@ export async function GET(request: NextRequest) {
 
     if (!orgId) {
       return NextResponse.json({ error: "Organization ID is required" }, { status: 400 });
+    }
+
+    // Verify org access
+    if (orgId !== user.orgId) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
 
     const supabase = await getSupabaseServer();
@@ -61,6 +62,14 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ approvals });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Unexpected error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
@@ -72,6 +81,15 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
+
+    // Validate user authentication
+    const user = await validateUserAuth(request);
+
     const body = await request.json();
     const {
       orgId,
@@ -91,6 +109,11 @@ export async function POST(request: NextRequest) {
         { error: "Missing required fields: orgId, title, submittedByName" },
         { status: 400 }
       );
+    }
+
+    // Verify org access
+    if (orgId !== user.orgId) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
 
     const newApproval: TablesInsert<"approvals"> = {
@@ -124,6 +147,14 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ approval }, { status: 201 });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Unexpected error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }

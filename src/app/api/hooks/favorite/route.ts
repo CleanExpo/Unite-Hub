@@ -1,25 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
 import { db } from "@/lib/db";
 import { apiRateLimit } from "@/lib/rate-limit";
 
 // POST /api/hooks/favorite - Toggle hook favorite status
 export async function POST(request: NextRequest) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(request);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
-
-    const authResult = await authenticateRequest(request);
-    if (!authResult) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
     }
-    const { userId } = authResult;
+
+    // Validate user authentication
+    const user = await validateUserAuth(request);
 
     const body = await request.json();
     const { hook_id, is_favorite } = body;
@@ -42,7 +36,15 @@ export async function POST(request: NextRequest) {
       hook: updatedHook,
       message: is_favorite ? "Added to favorites" : "Removed from favorites",
     });
-  } catch (error) {
+  } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error toggling favorite:", error);
     return NextResponse.json(
       { error: "Failed to toggle favorite" },
@@ -54,14 +56,14 @@ export async function POST(request: NextRequest) {
 // GET /api/hooks/favorite - Get all favorite hooks
 export async function GET(request: NextRequest) {
   try {
-    const authResult = await authenticateRequest(request);
-    if (!authResult) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
     }
-    const { userId } = authResult;
+
+    // Validate user authentication
+    const user = await validateUserAuth(request);
 
     const { searchParams } = new URL(request.url);
     const clientId = searchParams.get("client_id");
@@ -82,7 +84,15 @@ export async function GET(request: NextRequest) {
       hooks: favoriteHooks,
       total: favoriteHooks.length,
     });
-  } catch (error) {
+  } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error fetching favorite hooks:", error);
     return NextResponse.json(
       { error: "Failed to fetch favorite hooks" },

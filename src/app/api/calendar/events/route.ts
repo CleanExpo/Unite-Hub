@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getCalendarService } from "@/lib/services/google-calendar";
 import { supabase } from "@/lib/supabase";
 import { apiRateLimit } from "@/lib/rate-limit";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
 
 export async function GET(request: NextRequest) {
   try {
@@ -12,12 +12,8 @@ export async function GET(request: NextRequest) {
     return rateLimitResult;
   }
 
-    // Authenticate request
-    const authResult = await authenticateRequest(request);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const { userId } = authResult;
+    // Validate user authentication
+    const user = await validateUserAuth(request);
 
     const { searchParams } = new URL(request.url);
     const workspaceId = searchParams.get("workspaceId");
@@ -55,6 +51,14 @@ export async function GET(request: NextRequest) {
       count: events.length,
     });
   } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error fetching calendar events:", error);
 
     // Return empty array on error instead of 500 (graceful degradation)
@@ -94,6 +98,14 @@ export async function POST(request: NextRequest) {
       event: createdEvent,
     });
   } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error creating calendar event:", error);
     return NextResponse.json(
       { error: error.message || "Failed to create calendar event" },

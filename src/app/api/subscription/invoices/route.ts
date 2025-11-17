@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import { apiRateLimit } from "@/lib/rate-limit";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
 import { UUIDSchema } from "@/lib/validation/schemas";
 import { getCustomerInvoices, getUpcomingInvoice } from "@/lib/stripe/client";
 
@@ -17,43 +17,20 @@ export async function GET(req: NextRequest) {
       return rateLimitResult;
     }
 
-    // Authenticate req
-    const authResult = await authenticateRequest(req);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const { userId } = authResult;
-
-    const { searchParams } = new URL(req.url);
-    const orgId = searchParams.get("orgId");
-    const limit = parseInt(searchParams.get("limit") || "12");
-
-    if (!orgId) {
-      return NextResponse.json(
-        { error: "Organization ID is required" },
-        { status: 400 }
-      );
-    }
-
-    // Validate organization ID
-    const orgIdValidation = UUIDSchema.safeParse(orgId);
-    if (!orgIdValidation.success) {
-      return NextResponse.json({ error: "Invalid organization ID format" }, { status: 400 });
-    }
-
-    const supabase = await getSupabaseServer();
-
-    // Authenticate user
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    // Validate user authentication
+    const user = await validateUserAuth(req);
 
     // Verify user has access to organization
+    if (orgId !== user.orgId) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+    }
+
+    // Get user role for additional checks
+    const supabase = await getSupabaseServer();
     const { data: userOrg } = await supabase
       .from("user_organizations")
       .select("id, role")
-      .eq("user_id", user.id)
+      .eq("user_id", user.userId)
       .eq("org_id", orgId)
       .single();
 
@@ -159,6 +136,14 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error fetching invoices:", error);
     return NextResponse.json(
       {

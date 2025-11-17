@@ -6,7 +6,7 @@ import {
   PLAN_TIERS,
 } from "@/lib/stripe/client";
 import { apiRateLimit } from "@/lib/rate-limit";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
 import { z } from "zod";
 
 /**
@@ -160,6 +160,14 @@ export async function POST(req: NextRequest) {
       features: targetPlanDetails.features,
     });
   } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error downgrading subscription:", error);
     return NextResponse.json(
       {
