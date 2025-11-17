@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import MindmapCanvas from "@/components/mindmap/MindmapCanvas";
 import AISuggestionPanel from "@/components/mindmap/panels/AISuggestionPanel";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Loader2, RefreshCw } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/contexts/AuthContext";

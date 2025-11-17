@@ -17,7 +17,7 @@ import 'reactflow/dist/style.css';
 import dagre from 'dagre';
 import { Button } from '@/components/ui/button';
 import { Maximize2, Save, Loader2 } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 
 // Node type imports (will be created next)
 import ProjectRootNode from './nodes/ProjectRootNode';

@@ -44,7 +44,9 @@
       "Bash(yarn add:*)",
       "Bash(lsof:*)",
       "Bash(netstat:*)",
-      "Bash(taskkill:*)"
+      "Bash(taskkill:*)",
+      "Bash(timeout:*)",
+      "Bash(cd:*)"
     ],
     "deny": [],
     "ask": []
