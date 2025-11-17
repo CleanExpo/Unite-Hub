@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { ModernSidebar } from "@/components/layout/ModernSidebar";
 import { TeamCapacity } from "@/components/dashboard/TeamCapacity";
 import { StatsCard } from "@/components/dashboard/StatsCard";
 import { Button } from "@/components/ui/button";
@@ -57,51 +56,49 @@ export default function TeamPage() {
   const availableHours = teamMembers.reduce((sum, m) => sum + (m.hoursAvailable - m.hoursAllocated), 0);
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <ModernSidebar userRole="owner" />
+    <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+      <Breadcrumbs items={[{ label: "Team" }]} />
 
-      <div className="flex-1 ml-[280px]">
-        {/* Header */}
-        <header className="h-[70px] bg-white border-b border-gray-200 flex items-center px-8 gap-6">
-          <Breadcrumbs items={[{ label: "Team" }]} />
-          <h1 className="text-2xl font-bold text-unite-navy">Team Management</h1>
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent mb-2">
+            Team Management
+          </h1>
+          <p className="text-slate-400">Manage your team members and their capacity</p>
+        </div>
+        <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50 gap-2">
+          <Plus className="h-4 w-4" />
+          Add Team Member
+        </Button>
+      </div>
 
-          <div className="flex-1" />
+      {/* Loading State */}
+      {loading && (
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <Loader2 className="h-8 w-8 animate-spin text-blue-400 mx-auto mb-4" />
+            <p className="text-slate-400">Loading team members...</p>
+          </div>
+        </div>
+      )}
 
-          <Button className="bg-gradient-to-r from-unite-teal to-unite-blue text-white gap-2 hover:opacity-90">
-            <Plus className="h-4 w-4" />
-            Add Team Member
-          </Button>
-        </header>
-
-        {/* Content */}
-        <main className="p-8">
-          {/* Loading State */}
-          {loading && (
-            <div className="flex items-center justify-center h-64">
-              <div className="text-center">
-                <Loader2 className="h-8 w-8 animate-spin text-unite-teal mx-auto mb-4" />
-                <p className="text-gray-600">Loading team members...</p>
-              </div>
+      {/* Error State */}
+      {error && !loading && (
+        <div className="bg-red-500/20 border border-red-500/30 rounded-lg p-6">
+          <div className="flex items-center gap-3">
+            <AlertCircle className="h-5 w-5 text-red-400" />
+            <div>
+              <h3 className="font-semibold text-white">Error Loading Team Members</h3>
+              <p className="text-sm text-red-200 mt-1">{error}</p>
             </div>
-          )}
+          </div>
+        </div>
+      )}
 
-          {/* Error State */}
-          {error && !loading && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-8">
-              <div className="flex items-center gap-3">
-                <AlertCircle className="h-5 w-5 text-red-600" />
-                <div>
-                  <h3 className="font-semibold text-red-900">Error Loading Team Members</h3>
-                  <p className="text-sm text-red-700 mt-1">{error}</p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Content - Only show when not loading */}
-          {!loading && !error && (
-            <>
+      {/* Content - Only show when not loading */}
+      {!loading && !error && (
+        <>
               {/* Stats Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <StatsCard
@@ -141,15 +138,17 @@ export default function TeamPage() {
 
           {/* Team Members Grid */}
           <div>
-            <h2 className="text-xl font-bold text-unite-navy mb-6">Team Directory</h2>
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent mb-6">
+              Team Directory
+            </h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {teamMembers.map((member) => (
-                <Card key={member.id} className="hover:shadow-lg transition-shadow">
-                  <CardHeader className="border-b">
+                <Card key={member.id} className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 hover:border-slate-600/50 transition-all group">
+                  <CardHeader className="border-b border-slate-700/50">
                     <div className="flex items-start gap-4">
                       <Avatar className="h-16 w-16">
                         {member.avatar && <AvatarImage src={member.avatar} alt={member.name} />}
-                        <AvatarFallback className="bg-gradient-to-br from-unite-teal to-unite-blue text-white text-lg font-bold">
+                        <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white text-lg font-bold">
                           {member.initials}
                         </AvatarFallback>
                       </Avatar>
@@ -157,8 +156,10 @@ export default function TeamPage() {
                       <div className="flex-1">
                         <div className="flex items-start justify-between">
                           <div>
-                            <CardTitle className="text-lg mb-1">{member.name}</CardTitle>
-                            <p className="text-sm text-gray-600">{member.role}</p>
+                            <CardTitle className="text-lg mb-1 text-white group-hover:text-blue-400 transition-colors">
+                              {member.name}
+                            </CardTitle>
+                            <p className="text-sm text-slate-400">{member.role}</p>
                           </div>
                           <Badge
                             variant="outline"
@@ -182,25 +183,25 @@ export default function TeamPage() {
                     {/* Contact Info */}
                     <div className="space-y-3 mb-6">
                       <div className="flex items-center gap-3 text-sm">
-                        <Mail className="h-4 w-4 text-gray-400" />
-                        <span className="text-gray-700">{member.email}</span>
+                        <Mail className="h-4 w-4 text-blue-400" />
+                        <span className="text-slate-300">{member.email}</span>
                       </div>
                       <div className="flex items-center gap-3 text-sm">
-                        <Phone className="h-4 w-4 text-gray-400" />
-                        <span className="text-gray-700">{member.phone}</span>
+                        <Phone className="h-4 w-4 text-purple-400" />
+                        <span className="text-slate-300">{member.phone}</span>
                       </div>
                       <div className="flex items-center gap-3 text-sm">
-                        <Calendar className="h-4 w-4 text-gray-400" />
-                        <span className="text-gray-700">Joined {member.joinDate}</span>
+                        <Calendar className="h-4 w-4 text-cyan-400" />
+                        <span className="text-slate-300">Joined {member.joinDate}</span>
                       </div>
                     </div>
 
                     {/* Skills */}
                     <div className="mb-6">
-                      <p className="text-xs font-semibold text-gray-500 uppercase mb-2">Skills</p>
+                      <p className="text-xs font-semibold text-slate-400 uppercase mb-2">Skills</p>
                       <div className="flex flex-wrap gap-2">
                         {member.skills.map((skill, i) => (
-                          <Badge key={i} variant="secondary" className="bg-unite-blue/10 text-unite-blue border-unite-blue/20 text-xs">
+                          <Badge key={i} variant="secondary" className="bg-blue-500/20 text-blue-400 border border-blue-500/30 text-xs">
                             {skill}
                           </Badge>
                         ))}
@@ -210,12 +211,12 @@ export default function TeamPage() {
                     {/* Capacity */}
                     <div className="mb-4">
                       <div className="flex items-center justify-between text-sm mb-2">
-                        <span className="text-gray-600">Weekly Capacity</span>
-                        <span className="font-semibold text-unite-navy">
+                        <span className="text-slate-400">Weekly Capacity</span>
+                        <span className="font-semibold text-white">
                           {member.hoursAllocated}h / {member.hoursAvailable}h
                         </span>
                       </div>
-                      <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <div className="h-2 bg-slate-900/50 rounded-full overflow-hidden">
                         <div
                           className={cn(
                             "h-full rounded-full transition-all",
@@ -229,18 +230,18 @@ export default function TeamPage() {
                     </div>
 
                     {/* Projects */}
-                    <div className="pt-4 border-t border-gray-200">
-                      <p className="text-sm text-gray-600">
-                        Currently assigned to <span className="font-semibold text-unite-navy">{member.currentProjects}</span> {member.currentProjects === 1 ? "project" : "projects"}
+                    <div className="pt-4 border-t border-slate-700/50">
+                      <p className="text-sm text-slate-400">
+                        Currently assigned to <span className="font-semibold text-white">{member.currentProjects}</span> {member.currentProjects === 1 ? "project" : "projects"}
                       </p>
                     </div>
 
                     {/* Actions */}
                     <div className="flex gap-2 mt-4">
-                      <Button size="sm" variant="outline" className="flex-1">
+                      <Button size="sm" variant="outline" className="flex-1 border-slate-700/50 bg-slate-800/50 backdrop-blur-sm text-slate-300 hover:bg-slate-700/50 hover:border-slate-600/50">
                         View Projects
                       </Button>
-                      <Button size="sm" className="bg-unite-teal hover:bg-unite-teal/90 text-white flex-1">
+                      <Button size="sm" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50 flex-1">
                         Assign Work
                       </Button>
                     </div>
@@ -249,10 +250,8 @@ export default function TeamPage() {
               ))}
             </div>
           </div>
-            </>
-          )}
-        </main>
-      </div>
+        </>
+      )}
     </div>
   );
 }
