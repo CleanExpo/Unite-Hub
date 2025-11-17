@@ -43,10 +43,13 @@ export async function GET(
 
       // Auto-update contact engagement
       if (sentEmail.contact_id) {
+        // SECURITY FIX: Must include workspace_id for RLS policies
         await db.interactions.create({
+          workspace_id: sentEmail.workspace_id,
           contact_id: sentEmail.contact_id,
           interaction_type: "email_opened",
           details: { email_id: sentEmail.id },
+          interaction_date: new Date(),
         });
       }
     }
