@@ -38,10 +38,19 @@ export default function NewProjectPage() {
         throw new Error("Workspace or organization not found");
       }
 
+      // Get session token for authentication
+      const { supabase } = await import("@/lib/supabase");
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session) {
+        throw new Error("Not authenticated");
+      }
+
       const response = await fetch("/api/projects/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
         },
         body: JSON.stringify({
           ...formData,

@@ -3,17 +3,36 @@ import { getSupabaseServer } from "@/lib/supabase";
 
 export async function POST(req: NextRequest) {
   try {
-    const supabase = await getSupabaseServer();
+    // Extract token from Authorization header
+    const authHeader = req.headers.get("authorization");
+    const token = authHeader?.replace("Bearer ", "");
 
-    // Get authenticated user
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
+    let userId: string;
 
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (token) {
+      // Use browser client for implicit OAuth tokens
+      const { supabaseBrowser } = await import("@/lib/supabase");
+      const { data, error } = await supabaseBrowser.auth.getUser(token);
+
+      if (error || !data.user) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+
+      userId = data.user.id;
+    } else {
+      // Fallback to server-side cookies (PKCE flow)
+      const supabase = await getSupabaseServer();
+      const { data, error } = await supabase.auth.getUser();
+
+      if (error || !data.user) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+
+      userId = data.user.id;
     }
+
+    // Get Supabase instance for database operations
+    const supabase = await getSupabaseServer();
 
     // Parse request body
     const body = await req.json();
@@ -48,7 +67,7 @@ export async function POST(req: NextRequest) {
         progress: progress || 0,
         workspace_id,
         org_id,
-        created_by: user.id,
+        created_by: userId,
       })
       .select()
       .single();
