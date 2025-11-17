@@ -91,9 +91,9 @@ export default function SignupPage() {
         <div className="relative z-10 flex items-center justify-between text-sm text-slate-400">
           <span>© 2025 Unite-Hub</span>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-white transition-colors">Privacy</a>
-            <a href="#" className="hover:text-white transition-colors">Terms</a>
-            <a href="#" className="hover:text-white transition-colors">Help</a>
+            <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
+            <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
+            <a href="https://help.unite-hub.com" className="hover:text-white transition-colors" target="_blank" rel="noopener noreferrer">Help</a>
           </div>
         </div>
       </div>
