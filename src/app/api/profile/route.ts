@@ -1,49 +1,59 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { getSupabaseServer } from '@/lib/supabase';
 import { apiRateLimit } from "@/lib/rate-limit";
 
 export async function GET(req: NextRequest) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(req);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
-
-    // Get userId from query params
-    const userId = req.nextUrl.searchParams.get('userId');
-
-    if (!userId) {
-      return NextResponse.json({ error: 'userId required' }, { status: 400 });
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
     }
 
-    // Verify auth token
+    // Extract token from Authorization header
     const authHeader = req.headers.get('authorization');
     const token = authHeader?.replace('Bearer ', '');
 
-    if (!token) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    let authenticatedUserId: string;
+
+    if (token) {
+      // Use browser client for implicit OAuth tokens
+      const { supabaseBrowser } = await import('@/lib/supabase');
+      const { data, error } = await supabaseBrowser.auth.getUser(token);
+
+      if (error || !data.user) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      }
+
+      authenticatedUserId = data.user.id;
+    } else {
+      // Fallback to server-side cookies (PKCE flow)
+      const supabase = await getSupabaseServer();
+      const { data, error } = await supabase.auth.getUser();
+
+      if (error || !data.user) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      }
+
+      authenticatedUserId = data.user.id;
     }
 
-    // Create admin client to bypass RLS
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
+    // SECURITY FIX: Validate requested userId matches authenticated user
+    const requestedUserId = req.nextUrl.searchParams.get('userId');
 
-    // Verify the token is valid (optional security check)
-    const { supabaseBrowser } = await import('@/lib/supabase');
-    const { data: userData, error: userError } = await supabaseBrowser.auth.getUser(token);
-
-    if (userError || !userData.user) {
-      return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+    if (requestedUserId && requestedUserId !== authenticatedUserId) {
+      console.warn(`[API Security] User ${authenticatedUserId} attempted to access profile ${requestedUserId}`);
+      return NextResponse.json({ error: 'Forbidden - cannot access other users\' profiles' }, { status: 403 });
     }
 
-    // Fetch profile using service role
+    // Get Supabase instance for database operations
+    const supabase = await getSupabaseServer();
+
+    // Fetch profile for authenticated user ONLY
     const { data: profile, error } = await supabase
       .from('user_profiles')
       .select('*')
-      .eq('id', userId)
+      .eq('id', authenticatedUserId)
       .single();
 
     if (error) {

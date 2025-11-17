@@ -8,7 +8,68 @@ import { db } from '../db';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY || '',
+  defaultHeaders: {
+    "anthropic-beta": "prompt-caching-2024-07-31", // Required for prompt caching
+  },
 });
+
+// Static system prompts for caching (90% cost savings)
+const WHATSAPP_ANALYSIS_SYSTEM_PROMPT = `You are an AI assistant analyzing customer messages from WhatsApp Business.
+
+Analyze incoming messages and provide:
+1. A brief summary (1-2 sentences)
+2. Sentiment (positive, neutral, negative, or urgent)
+3. Primary intent (e.g., question, complaint, request, feedback, info, booking, cancellation, etc.)
+4. Confidence score (0.0 to 1.0)
+5. Whether it requires a response
+6. A suggested response (if it requires one)
+7. Any action items
+8. Priority level (low, medium, high, urgent)
+
+Respond in JSON format with these exact fields:
+{
+  "summary": "string",
+  "sentiment": "positive|neutral|negative|urgent",
+  "intent": "string",
+  "confidence_score": 0.95,
+  "requires_response": true|false,
+  "suggested_response": "string or null",
+  "action_items": ["string"] or null,
+  "priority": "low|medium|high|urgent"
+}`;
+
+const WHATSAPP_RESPONSE_SYSTEM_PROMPT = `You are a customer service assistant responding to WhatsApp messages.
+
+Generate professional, helpful, and concise WhatsApp responses. Guidelines:
+- Keep it short (2-3 sentences max)
+- Be friendly and professional
+- Address their specific need
+- Use appropriate tone for the sentiment
+- Include next steps if applicable
+- Do NOT use emojis unless the customer used them first`;
+
+const WHATSAPP_CONTACT_UPDATE_SYSTEM_PROMPT = `You are analyzing a WhatsApp conversation to update contact intelligence.
+
+Determine:
+1. Should we update the contact's AI score? (0.0 to 1.0)
+2. Reason for score change
+3. Should we add any tags?
+4. Should we update their status? (contact, lead, warm, hot, customer, inactive)
+5. Should we create a task/follow-up?
+
+Respond in JSON:
+{
+  "update_score": true|false,
+  "new_score": 0.75,
+  "score_change_reason": "string",
+  "update_tags": ["tag1", "tag2"],
+  "update_status": "lead|warm|hot|customer|null",
+  "create_task": {
+    "title": "string",
+    "description": "string",
+    "priority": "low|medium|high"
+  } or null
+}`;
 
 export interface WhatsAppMessageAnalysis {
   summary: string;
@@ -57,41 +118,31 @@ export async function analyzeWhatsAppMessage(
 
     context += `\nNew Message from Customer:\n${message}`;
 
-    const prompt = `You are an AI assistant analyzing customer messages from WhatsApp Business.
-
-${context}
-
-Analyze this message and provide:
-1. A brief summary (1-2 sentences)
-2. Sentiment (positive, neutral, negative, or urgent)
-3. Primary intent (e.g., question, complaint, request, feedback, info, booking, cancellation, etc.)
-4. Confidence score (0.0 to 1.0)
-5. Whether it requires a response
-6. A suggested response (if it requires one)
-7. Any action items
-8. Priority level (low, medium, high, urgent)
-
-Respond in JSON format with these exact fields:
-{
-  "summary": "string",
-  "sentiment": "positive|neutral|negative|urgent",
-  "intent": "string",
-  "confidence_score": 0.95,
-  "requires_response": true|false,
-  "suggested_response": "string or null",
-  "action_items": ["string"] or null,
-  "priority": "low|medium|high|urgent"
-}`;
-
     const response = await anthropic.messages.create({
       model: 'claude-sonnet-4-5-20250929',
       max_tokens: 1000,
+      system: [
+        {
+          type: "text",
+          text: WHATSAPP_ANALYSIS_SYSTEM_PROMPT,
+          cache_control: { type: "ephemeral" }, // Cache static instructions
+        },
+      ],
       messages: [
         {
           role: 'user',
-          content: prompt
+          content: context
         }
       ]
+    });
+
+    // Log cache performance
+    console.log("WhatsApp Analysis - Cache Stats:", {
+      input_tokens: response.usage.input_tokens,
+      cache_creation_tokens: response.usage.cache_creation_input_tokens || 0,
+      cache_read_tokens: response.usage.cache_read_input_tokens || 0,
+      output_tokens: response.usage.output_tokens,
+      cache_hit: (response.usage.cache_read_input_tokens || 0) > 0,
     });
 
     const content = response.content[0];
@@ -148,9 +199,7 @@ export async function generateWhatsAppResponse(
       });
     }
 
-    const prompt = `You are a customer service assistant responding to WhatsApp messages.
-
-${context}
+    const userContext = `${context}
 
 Customer's Message: ${incomingMessage}
 
@@ -159,25 +208,33 @@ Analysis:
 - Sentiment: ${analysis.sentiment}
 - Priority: ${analysis.priority}
 
-Generate a professional, helpful, and concise WhatsApp response. Guidelines:
-- Keep it short (2-3 sentences max)
-- Be friendly and professional
-- Address their specific need
-- Use appropriate tone for the sentiment
-- Include next steps if applicable
-- Do NOT use emojis unless the customer used them first
-
-Response:`;
+Generate a professional response.`;
 
     const response = await anthropic.messages.create({
       model: 'claude-sonnet-4-5-20250929',
       max_tokens: 300,
+      system: [
+        {
+          type: "text",
+          text: WHATSAPP_RESPONSE_SYSTEM_PROMPT,
+          cache_control: { type: "ephemeral" }, // Cache static instructions
+        },
+      ],
       messages: [
         {
           role: 'user',
-          content: prompt
+          content: userContext
         }
       ]
+    });
+
+    // Log cache performance
+    console.log("WhatsApp Response - Cache Stats:", {
+      input_tokens: response.usage.input_tokens,
+      cache_creation_tokens: response.usage.cache_creation_input_tokens || 0,
+      cache_read_tokens: response.usage.cache_read_input_tokens || 0,
+      output_tokens: response.usage.output_tokens,
+      cache_hit: (response.usage.cache_read_input_tokens || 0) > 0,
     });
 
     const content = response.content[0];
@@ -208,45 +265,40 @@ export async function analyzeConversationForContactUpdate(
       `[${msg.direction}] ${msg.content} (${msg.intent}, ${msg.sentiment})`
     ).join('\n');
 
-    const prompt = `You are analyzing a WhatsApp conversation to update contact intelligence.
-
-Current Contact Score: ${contact.ai_score || 0.5}
+    const userContext = `Current Contact Score: ${contact.ai_score || 0.5}
 Current Status: ${contact.status || 'contact'}
 Current Tags: ${contact.tags?.join(', ') || 'none'}
 
 Recent WhatsApp Conversation:
 ${conversationSummary}
 
-Based on this conversation, determine:
-1. Should we update the contact's AI score? (0.0 to 1.0)
-2. Reason for score change
-3. Should we add any tags?
-4. Should we update their status? (contact, lead, warm, hot, customer, inactive)
-5. Should we create a task/follow-up?
-
-Respond in JSON:
-{
-  "update_score": true|false,
-  "new_score": 0.75,
-  "score_change_reason": "string",
-  "update_tags": ["tag1", "tag2"],
-  "update_status": "lead|warm|hot|customer|null",
-  "create_task": {
-    "title": "string",
-    "description": "string",
-    "priority": "low|medium|high"
-  } or null
-}`;
+Analyze and provide update recommendations.`;
 
     const response = await anthropic.messages.create({
       model: 'claude-sonnet-4-5-20250929',
       max_tokens: 500,
+      system: [
+        {
+          type: "text",
+          text: WHATSAPP_CONTACT_UPDATE_SYSTEM_PROMPT,
+          cache_control: { type: "ephemeral" }, // Cache static instructions
+        },
+      ],
       messages: [
         {
           role: 'user',
-          content: prompt
+          content: userContext
         }
       ]
+    });
+
+    // Log cache performance
+    console.log("WhatsApp Contact Update - Cache Stats:", {
+      input_tokens: response.usage.input_tokens,
+      cache_creation_tokens: response.usage.cache_creation_input_tokens || 0,
+      cache_read_tokens: response.usage.cache_read_input_tokens || 0,
+      output_tokens: response.usage.output_tokens,
+      cache_hit: (response.usage.cache_read_input_tokens || 0) > 0,
     });
 
     const content = response.content[0];

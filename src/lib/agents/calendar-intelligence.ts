@@ -4,7 +4,65 @@ import { db } from "@/lib/db";
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
+  defaultHeaders: {
+    "anthropic-beta": "prompt-caching-2024-07-31", // Required for prompt caching
+  },
 });
+
+// Static system prompts for caching (90% cost savings)
+const MEETING_SUGGESTION_SYSTEM_PROMPT = `You are an AI scheduling assistant analyzing meeting requests and suggesting optimal times.
+
+Consider:
+1. Time of day preferences (avoid early morning/late evening)
+2. Meeting type (sales calls better 10am-4pm, quick syncs anytime)
+3. Urgency level
+4. Avoid back-to-back meetings (prefer slots with buffer time)
+5. Day of week patterns (avoid Monday mornings, Friday afternoons)
+
+Respond in JSON format:
+{
+  "suggestedTimes": [
+    {
+      "start": "ISO datetime",
+      "end": "ISO datetime",
+      "reason": "why this time is optimal",
+      "confidence": 0-100
+    }
+  ],
+  "reasoning": "overall scheduling strategy explanation"
+}`;
+
+const MEETING_DETECTION_SYSTEM_PROMPT = `Analyze email content to determine if it's a meeting request and extract meeting details.
+
+Respond in JSON format:
+{
+  "isMeetingRequest": true/false,
+  "proposedTimes": ["ISO datetime strings if any times mentioned"],
+  "duration": estimated_minutes,
+  "purpose": "brief meeting purpose",
+  "urgency": "low/medium/high",
+  "attendees": ["email addresses if mentioned"]
+}`;
+
+const MEETING_EMAIL_SYSTEM_PROMPT = `Generate a professional email proposing meeting times.
+
+Write a brief, friendly email (3-4 sentences) suggesting these times. Don't include subject line.`;
+
+const MEETING_PATTERNS_SYSTEM_PROMPT = `Analyze calendar events to identify meeting patterns.
+
+Identify:
+1. Most common meeting days (e.g., "Tuesday", "Wednesday")
+2. Most common meeting hours (e.g., [10, 14, 15])
+3. Average meeting duration in minutes
+4. Busy patterns (e.g., "mornings are busy", "Friday afternoons free")
+
+Respond in JSON:
+{
+  "preferredDays": ["day names"],
+  "preferredHours": [hour numbers],
+  "averageMeetingDuration": minutes,
+  "busyPatterns": "description"
+}`;
 
 export interface MeetingSuggestion {
   timeSlots: Array<{
@@ -74,9 +132,7 @@ export async function suggestMeetingTimes(
     }
 
     // Use Claude to analyze and suggest best times
-    const prompt = `You are an AI scheduling assistant. Analyze the following information and suggest the 3-5 best meeting times.
-
-Meeting Request:
+    const userContext = `Meeting Request:
 - Contact: ${request.contactName} (${request.contactEmail})
 - Purpose: ${request.purpose}
 - Duration: ${request.duration} minutes
@@ -90,35 +146,33 @@ ${availableSlots.slice(0, 20).map((slot, i) =>
 
 ${previousMeetingPatterns}
 
-Consider:
-1. Time of day preferences (avoid early morning/late evening)
-2. Meeting type (sales calls better 10am-4pm, quick syncs anytime)
-3. Urgency level
-4. Avoid back-to-back meetings (prefer slots with buffer time)
-5. Day of week patterns (avoid Monday mornings, Friday afternoons)
-
-Respond in JSON format:
-{
-  "suggestedTimes": [
-    {
-      "start": "ISO datetime",
-      "end": "ISO datetime",
-      "reason": "why this time is optimal",
-      "confidence": 0-100
-    }
-  ],
-  "reasoning": "overall scheduling strategy explanation"
-}`;
+Suggest the 3-5 best meeting times.`;
 
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-5-20250929",
       max_tokens: 2000,
+      system: [
+        {
+          type: "text",
+          text: MEETING_SUGGESTION_SYSTEM_PROMPT,
+          cache_control: { type: "ephemeral" }, // Cache static instructions
+        },
+      ],
       messages: [
         {
           role: "user",
-          content: prompt,
+          content: userContext,
         },
       ],
+    });
+
+    // Log cache performance
+    console.log("Calendar Meeting Suggestion - Cache Stats:", {
+      input_tokens: message.usage.input_tokens,
+      cache_creation_tokens: message.usage.cache_creation_input_tokens || 0,
+      cache_read_tokens: message.usage.cache_read_input_tokens || 0,
+      output_tokens: message.usage.output_tokens,
+      cache_hit: (message.usage.cache_read_input_tokens || 0) > 0,
     });
 
     const responseText =
@@ -159,32 +213,38 @@ export async function detectMeetingIntent(
   subject: string
 ): Promise<EmailMeetingIntent> {
   try {
-    const prompt = `Analyze this email to determine if it's a meeting request and extract meeting details.
-
-Subject: ${subject}
+    const userContext = `Subject: ${subject}
 
 Body:
 ${emailBody}
 
-Respond in JSON format:
-{
-  "isMeetingRequest": true/false,
-  "proposedTimes": ["ISO datetime strings if any times mentioned"],
-  "duration": estimated_minutes,
-  "purpose": "brief meeting purpose",
-  "urgency": "low/medium/high",
-  "attendees": ["email addresses if mentioned"]
-}`;
+Analyze this email.`;
 
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-5-20250929",
       max_tokens: 1000,
+      system: [
+        {
+          type: "text",
+          text: MEETING_DETECTION_SYSTEM_PROMPT,
+          cache_control: { type: "ephemeral" }, // Cache static instructions
+        },
+      ],
       messages: [
         {
           role: "user",
-          content: prompt,
+          content: userContext,
         },
       ],
+    });
+
+    // Log cache performance
+    console.log("Calendar Meeting Detection - Cache Stats:", {
+      input_tokens: message.usage.input_tokens,
+      cache_creation_tokens: message.usage.cache_creation_input_tokens || 0,
+      cache_read_tokens: message.usage.cache_read_input_tokens || 0,
+      output_tokens: message.usage.output_tokens,
+      cache_hit: (message.usage.cache_read_input_tokens || 0) > 0,
     });
 
     const responseText =
@@ -212,9 +272,7 @@ async function generateMeetingRequestEmail(
   duration: number
 ): Promise<string> {
   try {
-    const prompt = `Generate a professional email proposing meeting times.
-
-Recipient: ${recipientName}
+    const userContext = `Recipient: ${recipientName}
 Purpose: ${purpose}
 Duration: ${duration} minutes
 
@@ -223,17 +281,33 @@ ${suggestedTimes.map((slot, i) =>
   `${i + 1}. ${new Date(slot.start).toLocaleString()}`
 ).join("\n")}
 
-Write a brief, friendly email (3-4 sentences) suggesting these times. Don't include subject line.`;
+Generate the email.`;
 
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-5-20250929",
       max_tokens: 500,
+      system: [
+        {
+          type: "text",
+          text: MEETING_EMAIL_SYSTEM_PROMPT,
+          cache_control: { type: "ephemeral" }, // Cache static instructions
+        },
+      ],
       messages: [
         {
           role: "user",
-          content: prompt,
+          content: userContext,
         },
       ],
+    });
+
+    // Log cache performance
+    console.log("Calendar Email Generation - Cache Stats:", {
+      input_tokens: message.usage.input_tokens,
+      cache_creation_tokens: message.usage.cache_creation_input_tokens || 0,
+      cache_read_tokens: message.usage.cache_read_input_tokens || 0,
+      output_tokens: message.usage.output_tokens,
+      cache_hit: (message.usage.cache_read_input_tokens || 0) > 0,
     });
 
     return message.content[0].type === "text" ? message.content[0].text : "";
@@ -275,33 +349,37 @@ export async function analyzeMeetingPatterns(
       attendees: e.attendees?.length || 0,
     }));
 
-    const prompt = `Analyze these calendar events to identify meeting patterns:
+    const userContext = `Calendar events to analyze:
 
 ${JSON.stringify(eventsData.slice(0, 100), null, 2)}
 
-Identify:
-1. Most common meeting days (e.g., "Tuesday", "Wednesday")
-2. Most common meeting hours (e.g., [10, 14, 15])
-3. Average meeting duration in minutes
-4. Busy patterns (e.g., "mornings are busy", "Friday afternoons free")
-
-Respond in JSON:
-{
-  "preferredDays": ["day names"],
-  "preferredHours": [hour numbers],
-  "averageMeetingDuration": minutes,
-  "busyPatterns": "description"
-}`;
+Identify meeting patterns.`;
 
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-5-20250929",
       max_tokens: 1000,
+      system: [
+        {
+          type: "text",
+          text: MEETING_PATTERNS_SYSTEM_PROMPT,
+          cache_control: { type: "ephemeral" }, // Cache static instructions
+        },
+      ],
       messages: [
         {
           role: "user",
-          content: prompt,
+          content: userContext,
         },
       ],
+    });
+
+    // Log cache performance
+    console.log("Calendar Pattern Analysis - Cache Stats:", {
+      input_tokens: message.usage.input_tokens,
+      cache_creation_tokens: message.usage.cache_creation_input_tokens || 0,
+      cache_read_tokens: message.usage.cache_read_input_tokens || 0,
+      output_tokens: message.usage.output_tokens,
+      cache_hit: (message.usage.cache_read_input_tokens || 0) > 0,
     });
 
     const responseText =

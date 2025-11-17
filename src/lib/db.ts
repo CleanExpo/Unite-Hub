@@ -378,24 +378,24 @@ export const db = {
   },
 
   // Contact Interactions
-  // Note: contact_interactions table has NO workspace_id column
-  // Workspace isolation is enforced via contact_id (which MUST come from workspace-filtered contacts)
+  // Note: interactions table HAS workspace_id column for proper RLS
+  // Workspace isolation is enforced via workspace_id AND contact_id
   interactions: {
     create: async (data: any) => {
       const supabaseServer = await getSupabaseServer();
       const { error } = await supabaseServer
-        .from("contact_interactions")
+        .from("interactions")
         .insert([data]);
       if (error) throw error;
     },
     /**
      * Get interactions for a contact
-     * SECURITY: contactId MUST be from a workspace-filtered contact query to ensure isolation
+     * SECURITY: Workspace isolation enforced via RLS policies
      * @param contactId - Contact UUID (validated via workspace-filtered contacts.getById or contacts.listByWorkspace)
      */
     getByContact: async (contactId: string) => {
       const { data, error } = await supabase
-        .from("contact_interactions")
+        .from("interactions")
         .select("*")
         .eq("contact_id", contactId)
         .order("interaction_date", { ascending: false });

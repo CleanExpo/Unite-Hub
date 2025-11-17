@@ -3,6 +3,9 @@ import { db } from "@/lib/db";
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
+  defaultHeaders: {
+    "anthropic-beta": "prompt-caching-2024-07-31", // Required for prompt caching
+  },
 });
 
 export interface PersonalizedContent {
@@ -134,6 +137,15 @@ Generate hyper-personalized ${contentType} email for this prospect.`;
           content: prospectData,
         },
       ],
+    });
+
+    // Log cache performance for cost monitoring
+    console.log("Content Personalization - Cache Stats:", {
+      input_tokens: message.usage.input_tokens,
+      cache_creation_tokens: message.usage.cache_creation_input_tokens || 0,
+      cache_read_tokens: message.usage.cache_read_input_tokens || 0,
+      output_tokens: message.usage.output_tokens,
+      cache_hit: (message.usage.cache_read_input_tokens || 0) > 0,
     });
 
     // Extract and parse response
