@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import Image from "next/image";
 import {
   ArrowRight,
   Sparkles,
@@ -54,17 +55,22 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/50">
-                <Sparkles className="h-6 w-6 text-white" />
-              </div>
+            <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
+              <Image
+                src="/logos/unite-hub-logo.png"
+                alt="Unite-Hub Logo"
+                width={40}
+                height={40}
+                className="h-10 w-10 object-contain"
+                priority
+              />
               <div className="flex flex-col">
                 <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                   Unite-Hub
                 </span>
                 <span className="text-xs text-slate-400 hidden sm:block">AI-Powered CRM</span>
               </div>
-            </div>
+            </Link>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-8">
@@ -397,9 +403,13 @@ export default function Home() {
           </div>
           <div className="border-t border-white/10 pt-6 sm:pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-2 sm:gap-3 order-2 sm:order-1">
-              <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
-              </div>
+              <Image
+                src="/logos/unite-hub-logo.png"
+                alt="Unite-Hub Logo"
+                width={32}
+                height={32}
+                className="h-7 w-7 sm:h-8 sm:w-8 object-contain"
+              />
               <span className="text-slate-400 text-xs sm:text-sm">© 2025 Unite-Hub. All rights reserved.</span>
             </div>
             <div className="flex gap-4 sm:gap-6 order-1 sm:order-2">
