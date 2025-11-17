@@ -74,9 +74,9 @@ export default function Home() {
               <a href="#how-it-works" className="text-sm text-slate-300 hover:text-white transition-colors">
                 How it Works
               </a>
-              <a href="#pricing" className="text-sm text-slate-300 hover:text-white transition-colors">
+              <Link href="/pricing" className="text-sm text-slate-300 hover:text-white transition-colors">
                 Pricing
-              </a>
+              </Link>
               <Link href="/login">
                 <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg shadow-blue-500/50">
                   Get Started
@@ -105,9 +105,9 @@ export default function Home() {
               <a href="#how-it-works" className="block text-slate-300 hover:text-white transition-colors">
                 How it Works
               </a>
-              <a href="#pricing" className="block text-slate-300 hover:text-white transition-colors">
+              <Link href="/pricing" className="block text-slate-300 hover:text-white transition-colors">
                 Pricing
-              </a>
+              </Link>
               <Link href="/login" className="block">
                 <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white">
                   Get Started
