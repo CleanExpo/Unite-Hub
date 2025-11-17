@@ -40,7 +40,11 @@
       "Bash(node scripts/check-mindmap-tables.mjs:*)",
       "Bash(npm cache clean:*)",
       "Bash(psql:*)",
-      "Bash(pnpm build:*)"
+      "Bash(pnpm build:*)",
+      "Bash(yarn add:*)",
+      "Bash(lsof:*)",
+      "Bash(netstat:*)",
+      "Bash(taskkill:*)"
     ],
     "deny": [],
     "ask": []

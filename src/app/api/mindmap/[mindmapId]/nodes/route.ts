@@ -9,10 +9,10 @@ import { enrichNode } from "@/lib/agents/mindmap-analysis";
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { mindmapId: string } }
+  { params }: { params: Promise<{ mindmapId: string }> }
 ) {
   try {
-    const { mindmapId } = params;
+    const { mindmapId } = await params;
     const body = await req.json();
 
     // Get authenticated user

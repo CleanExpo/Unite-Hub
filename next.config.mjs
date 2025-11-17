@@ -5,6 +5,10 @@ const nextConfig = {
     // Temporarily ignore TypeScript errors during build (legacy Convex code)
     ignoreBuildErrors: true,
   },
+  transpilePackages: ['reactflow', '@reactflow/core', '@reactflow/background', '@reactflow/controls', '@reactflow/minimap'],
+  experimental: {
+    serverComponentsExternalPackages: ['zustand'],
+  },
   // Enable standalone output for Docker
   output: 'standalone',
   // Configure external image domains

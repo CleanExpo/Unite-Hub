@@ -9,10 +9,10 @@ import { analyzeMindmap } from "@/lib/agents/mindmap-analysis";
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { mindmapId: string } }
+  { params }: { params: Promise<{ mindmapId: string }> }
 ) {
   try {
-    const { mindmapId } = params;
+    const { mindmapId } = await params;
     const body = await req.json();
 
     const supabase = await getSupabaseServer();
@@ -127,10 +127,10 @@ export async function POST(
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { mindmapId: string } }
+  { params }: { params: Promise<{ mindmapId: string }> }
 ) {
   try {
-    const { mindmapId } = params;
+    const { mindmapId } = await params;
     const { searchParams } = new URL(req.url);
     const status = searchParams.get("status") || "pending";
 

@@ -8,10 +8,10 @@ import { getSupabaseServer } from "@/lib/supabase";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { mindmapId: string } }
+  { params }: { params: Promise<{ mindmapId: string }> }
 ) {
   try {
-    const { mindmapId } = params;
+    const { mindmapId } = await params;
 
     // Get authenticated user
     const supabase = await getSupabaseServer();
@@ -94,10 +94,10 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { mindmapId: string } }
+  { params }: { params: Promise<{ mindmapId: string }> }
 ) {
   try {
-    const { mindmapId } = params;
+    const { mindmapId } = await params;
     const body = await req.json();
 
     // Get authenticated user
@@ -145,10 +145,10 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { mindmapId: string } }
+  { params }: { params: Promise<{ mindmapId: string }> }
 ) {
   try {
-    const { mindmapId } = params;
+    const { mindmapId } = await params;
 
     // Get authenticated user
     const supabase = await getSupabaseServer();

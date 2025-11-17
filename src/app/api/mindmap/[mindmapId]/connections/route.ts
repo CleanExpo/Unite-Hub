@@ -8,10 +8,10 @@ import { getSupabaseServer } from "@/lib/supabase";
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { mindmapId: string } }
+  { params }: { params: Promise<{ mindmapId: string }> }
 ) {
   try {
-    const { mindmapId } = params;
+    const { mindmapId } = await params;
     const body = await req.json();
 
     const supabase = await getSupabaseServer();
@@ -110,10 +110,10 @@ export async function POST(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { mindmapId: string } }
+  { params }: { params: Promise<{ mindmapId: string }> }
 ) {
   try {
-    const { mindmapId } = params;
+    const { mindmapId } = await params;
     const { searchParams } = new URL(req.url);
     const connectionId = searchParams.get("connectionId");
 

@@ -10,10 +10,10 @@ import { getSupabaseServer } from "@/lib/supabase";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { projectId: string } }
+  { params }: { params: Promise<{ projectId: string }> }
 ) {
   try {
-    const { projectId } = params;
+    const { projectId } = await params;
 
     // Get authenticated user
     const supabase = await getSupabaseServer();
@@ -128,10 +128,10 @@ export async function GET(
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { projectId: string } }
+  { params }: { params: Promise<{ projectId: string }> }
 ) {
   try {
-    const { projectId } = params;
+    const { projectId } = await params;
 
     // Get authenticated user
     const supabase = await getSupabaseServer();

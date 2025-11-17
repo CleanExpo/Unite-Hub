@@ -8,10 +8,10 @@ import { getSupabaseServer } from "@/lib/supabase";
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { nodeId: string } }
+  { params }: { params: Promise<{ nodeId: string }> }
 ) {
   try {
-    const { nodeId } = params;
+    const { nodeId } = await params;
     const body = await req.json();
 
     const supabase = await getSupabaseServer();
@@ -85,10 +85,10 @@ export async function PUT(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { nodeId: string } }
+  { params }: { params: Promise<{ nodeId: string }> }
 ) {
   try {
-    const { nodeId } = params;
+    const { nodeId } = await params;
 
     const supabase = await getSupabaseServer();
     const {
