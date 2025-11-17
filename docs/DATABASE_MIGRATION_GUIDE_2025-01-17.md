@@ -76,22 +76,35 @@ organizations.id   | uuid
 
 ## ✅ STEP 2: APPLY THE FIX
 
-### Use Migration 019 V2 (Recommended)
+### Use Migration 019 V3 (REQUIRED - Handles RLS Policies)
+
+**CRITICAL**: If you get an error about "policy definition", you MUST use V3 instead of V2.
+
+**Error You're Seeing**:
+```
+ERROR: cannot alter type of a column used in a policy definition
+```
 
 This migration:
-1. Checks current types
-2. Converts `organizations.id` from TEXT to UUID (if needed)
-3. Converts ALL foreign keys to UUID
-4. Re-creates foreign key constraints
-5. Verifies everything is UUID
+1. **Drops ALL RLS policies** (temporarily - they'll be restored in migration 020)
+2. Drops all foreign key constraints
+3. Converts `organizations.id` from TEXT to UUID
+4. Converts ALL foreign keys to UUID
+5. Re-creates foreign key constraints
+6. Verifies everything is UUID
+7. **⚠️ LEAVES DATABASE WITHOUT RLS** - You MUST run migration 020 immediately after
 
-**File**: `supabase/migrations/019_fix_organization_id_type_v2.sql`
+**File**: `supabase/migrations/019_fix_organization_id_type_v3.sql`
+
+**SECURITY WARNING**: This migration temporarily removes ALL RLS policies to allow type conversion. Your database will have NO row-level security until you apply migration 020. **Run migrations 019 and 020 back-to-back without delay.**
 
 ### How to Apply
 
+**⚠️ CRITICAL SECURITY NOTE**: Migration 019 V3 will temporarily remove ALL RLS policies. You MUST apply migration 020 immediately after (within 1 minute) to restore security.
+
 1. **Go to**: Supabase Dashboard → SQL Editor
 
-2. **Copy the entire file**: `019_fix_organization_id_type_v2.sql`
+2. **Copy the entire file**: `019_fix_organization_id_type_v3.sql`
 
 3. **Paste** into SQL Editor
 
@@ -99,29 +112,53 @@ This migration:
 
 5. **Watch the output** - you'll see:
 ```
-NOTICE: Current state:
-NOTICE:   organizations.id = character varying
-NOTICE:   subscriptions.org_id = character varying
-NOTICE: Converting organizations.id from TEXT to UUID...
-NOTICE:   Dropped user_organizations FK
-NOTICE:   Dropped workspaces FK
-NOTICE:   Converted organizations.id to UUID
-NOTICE:   Converted user_organizations.org_id to UUID
-NOTICE:   Converted workspaces.org_id to UUID
-NOTICE:   Converted subscriptions.org_id to UUID
-NOTICE:   Re-created user_organizations FK
-NOTICE:   Re-created workspaces FK
-NOTICE:   Re-created subscriptions FK
-NOTICE: Migration complete: All org_id columns are now UUID
-NOTICE: === VERIFICATION RESULTS ===
+NOTICE: === CURRENT STATE ===
+NOTICE: organizations.id: character varying
+NOTICE: subscriptions.org_id: character varying
+NOTICE: === DROPPING RLS POLICIES ===
+NOTICE: Dropped policy: organizations.org_policy (public)
+NOTICE: Dropped policy: contacts.contacts_workspace_isolation (public)
+...
+NOTICE: All RLS policies dropped
+NOTICE: === DROPPING FOREIGN KEY CONSTRAINTS ===
+NOTICE: Dropped FK: user_organizations.user_organizations_org_id_fkey
+NOTICE: Dropped FK: workspaces.workspaces_org_id_fkey
+...
+NOTICE: All foreign key constraints dropped
+NOTICE: === CONVERTING TYPES TO UUID ===
+NOTICE: Converted organizations.id to UUID
+NOTICE: Converted user_organizations.org_id to UUID
+NOTICE: Converted workspaces.org_id to UUID
+NOTICE: Converted subscriptions.org_id to UUID
+...
+NOTICE: === RE-CREATING FOREIGN KEY CONSTRAINTS ===
+NOTICE: Created user_organizations FK
+NOTICE: Created workspaces FK
+NOTICE: Created subscriptions FK
+...
+NOTICE: All foreign key constraints re-created
+NOTICE: === IMPORTANT ===
+NOTICE: RLS policies have been DROPPED to allow type conversion
+NOTICE: You MUST apply migration 020 to restore RLS policies
+NOTICE: Until then, your database has NO row-level security!
+NOTICE: === NEXT STEP: Run migration 020 immediately ===
+NOTICE: === VERIFICATION ===
 NOTICE: organizations.id: uuid
-NOTICE: subscriptions.org_id: uuid
 NOTICE: user_organizations.org_id: uuid
 NOTICE: workspaces.org_id: uuid
+NOTICE: subscriptions.org_id: uuid
+...
 NOTICE: ✅ SUCCESS: All org_id columns are UUID
 ```
 
 6. **If successful**, you'll see `✅ SUCCESS` at the end
+
+7. **🚨 IMMEDIATELY Apply Migration 020** (DO NOT DELAY):
+   ```
+   File: supabase/migrations/020_implement_real_rls_policies.sql
+   Action: Copy entire file → Paste in SQL Editor → Run
+   ```
+   This restores ALL RLS policies. Until you do this, **your database has ZERO security!**
 
 ---
 
