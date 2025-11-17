@@ -2,12 +2,13 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { InteractiveMindmap } from "@/components/mindmap/InteractiveMindmap";
-import { AISuggestionsPanel } from "@/components/mindmap/AISuggestionsPanel";
+import MindmapCanvas from "@/components/mindmap/MindmapCanvas";
+import AISuggestionPanel from "@/components/mindmap/panels/AISuggestionPanel";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { ArrowLeft, Loader2, RefreshCw } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/contexts/AuthContext";
 
 // =====================================================
 // TYPES
@@ -32,8 +33,10 @@ export default function MindmapPage() {
   const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
+  const { currentOrganization } = useAuth();
 
   const projectId = params.projectId as string;
+  const workspaceId = currentOrganization?.org_id || '';
 
   const [mindmapData, setMindmapData] = useState<MindmapData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -114,298 +117,7 @@ export default function MindmapPage() {
     fetchMindmap();
   }, [fetchMindmap]);
 
-  // =====================================================
-  // NODE CRUD OPERATIONS
-  // =====================================================
-
-  const handleNodeUpdate = async (nodeId: string, updates: any) => {
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
-
-      const response = await fetch(`/api/mindmap/nodes/${nodeId}`, {
-        method: "PUT",
-        headers: {
-          "Authorization": `Bearer ${session.access_token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updates),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update node");
-      }
-
-      // Refresh mindmap data
-      await fetchMindmap();
-    } catch (error) {
-      console.error("Failed to update node:", error);
-      toast({
-        title: "Error",
-        description: "Failed to update node",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleNodeDelete = async (nodeId: string) => {
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
-
-      const response = await fetch(`/api/mindmap/nodes/${nodeId}`, {
-        method: "DELETE",
-        headers: {
-          "Authorization": `Bearer ${session.access_token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to delete node");
-      }
-
-      toast({
-        title: "Success",
-        description: "Node deleted successfully",
-      });
-
-      await fetchMindmap();
-    } catch (error) {
-      console.error("Failed to delete node:", error);
-      toast({
-        title: "Error",
-        description: "Failed to delete node",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleNodeCreate = async (node: any) => {
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session || !mindmapData) return;
-
-      const response = await fetch(
-        `/api/mindmap/${mindmapData.mindmap.id}/nodes`,
-        {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${session.access_token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(node),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to create node");
-      }
-
-      toast({
-        title: "Success",
-        description: "Node created successfully",
-      });
-
-      await fetchMindmap();
-    } catch (error) {
-      console.error("Failed to create node:", error);
-      toast({
-        title: "Error",
-        description: "Failed to create node",
-        variant: "destructive",
-      });
-    }
-  };
-
-  // =====================================================
-  // CONNECTION OPERATIONS
-  // =====================================================
-
-  const handleConnectionCreate = async (connection: any) => {
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session || !mindmapData) return;
-
-      const response = await fetch(
-        `/api/mindmap/${mindmapData.mindmap.id}/connections`,
-        {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${session.access_token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(connection),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to create connection");
-      }
-
-      toast({
-        title: "Success",
-        description: "Connection created successfully",
-      });
-
-      await fetchMindmap();
-    } catch (error) {
-      console.error("Failed to create connection:", error);
-      toast({
-        title: "Error",
-        description: "Failed to create connection",
-        variant: "destructive",
-      });
-    }
-  };
-
-  // =====================================================
-  // AI OPERATIONS
-  // =====================================================
-
-  const handleTriggerAI = async () => {
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session || !mindmapData) return;
-
-      toast({
-        title: "Analyzing...",
-        description: "AI is analyzing your mindmap. This may take a few seconds.",
-      });
-
-      const response = await fetch(
-        `/api/mindmap/${mindmapData.mindmap.id}/ai-analyze`,
-        {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${session.access_token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            analysis_type: "full",
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to analyze mindmap");
-      }
-
-      const result = await response.json();
-
-      toast({
-        title: "Analysis Complete",
-        description: `Generated ${result.suggestions.length} suggestions`,
-      });
-
-      await fetchMindmap();
-    } catch (error) {
-      console.error("Failed to analyze mindmap:", error);
-      toast({
-        title: "Error",
-        description: "AI analysis failed. Please try again.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleAcceptSuggestion = async (suggestionId: string) => {
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
-
-      const response = await fetch(`/api/mindmap/suggestions/${suggestionId}`, {
-        method: "PUT",
-        headers: {
-          "Authorization": `Bearer ${session.access_token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: "accepted" }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to accept suggestion");
-      }
-
-      toast({
-        title: "Success",
-        description: "Suggestion accepted",
-      });
-
-      await fetchMindmap();
-    } catch (error) {
-      console.error("Failed to accept suggestion:", error);
-      toast({
-        title: "Error",
-        description: "Failed to accept suggestion",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleDismissSuggestion = async (suggestionId: string) => {
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
-
-      const response = await fetch(`/api/mindmap/suggestions/${suggestionId}`, {
-        method: "DELETE",
-        headers: {
-          "Authorization": `Bearer ${session.access_token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to dismiss suggestion");
-      }
-
-      toast({
-        title: "Success",
-        description: "Suggestion dismissed",
-      });
-
-      await fetchMindmap();
-    } catch (error) {
-      console.error("Failed to dismiss suggestion:", error);
-      toast({
-        title: "Error",
-        description: "Failed to dismiss suggestion",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleApplySuggestion = async (suggestionId: string) => {
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
-
-      const response = await fetch(`/api/mindmap/suggestions/${suggestionId}`, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${session.access_token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to apply suggestion");
-      }
-
-      toast({
-        title: "Success",
-        description: "Suggestion applied to mindmap",
-      });
-
-      await fetchMindmap();
-    } catch (error) {
-      console.error("Failed to apply suggestion:", error);
-      toast({
-        title: "Error",
-        description: "Failed to apply suggestion",
-        variant: "destructive",
-      });
-    }
-  };
+  // Event handlers are now managed by individual components (MindmapCanvas and AISuggestionPanel)
 
   // =====================================================
   // RENDER
@@ -435,9 +147,9 @@ export default function MindmapPage() {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="flex flex-col h-screen">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800">
         <div className="flex items-center gap-3">
           <Button
             variant="ghost"
@@ -448,7 +160,7 @@ export default function MindmapPage() {
           </Button>
           <div>
             <h1 className="text-2xl font-bold">Project Mindmap</h1>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
               Version {mindmapData.mindmap.version} • {mindmapData.nodes.length}{" "}
               nodes
             </p>
@@ -471,31 +183,21 @@ export default function MindmapPage() {
       </div>
 
       {/* Main Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Mindmap (2/3 width on large screens) */}
-        <div className="lg:col-span-2">
-          <InteractiveMindmap
+      <div className="flex flex-1 overflow-hidden">
+        {/* Mindmap Canvas */}
+        <div className="flex-1">
+          <MindmapCanvas
+            projectId={projectId}
+            workspaceId={workspaceId}
             mindmapId={mindmapData.mindmap.id}
-            initialNodes={mindmapData.nodes}
-            initialConnections={mindmapData.connections}
-            onNodeUpdate={handleNodeUpdate}
-            onNodeDelete={handleNodeDelete}
-            onConnectionCreate={handleConnectionCreate}
-            onNodeCreate={handleNodeCreate}
-            onTriggerAI={handleTriggerAI}
           />
         </div>
 
-        {/* Suggestions Panel (1/3 width on large screens) */}
-        <div className="lg:col-span-1">
-          <AISuggestionsPanel
-            suggestions={mindmapData.suggestions}
-            onAccept={handleAcceptSuggestion}
-            onDismiss={handleDismissSuggestion}
-            onApply={handleApplySuggestion}
-            isLoading={refreshing}
-          />
-        </div>
+        {/* AI Suggestions Panel */}
+        <AISuggestionPanel
+          mindmapId={mindmapData.mindmap.id}
+          workspaceId={workspaceId}
+        />
       </div>
     </div>
   );
