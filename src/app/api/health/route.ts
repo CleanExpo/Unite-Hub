@@ -1,11 +1,89 @@
 /**
  * Health Check API Endpoint
  * Used by Docker healthcheck and monitoring systems
+ * Checks: Redis, Database, overall system health
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import { rateLimit } from "@/middleware/rateLimiter";
 import { createApiLogger } from "@/lib/logger";
+import { getRedisClient } from "@/lib/redis";
+import { getSupabaseServer } from "@/lib/supabase";
+
+type HealthStatus = "healthy" | "degraded" | "unhealthy";
+
+interface HealthCheck {
+  status: HealthStatus;
+  latency?: number;
+  error?: string;
+}
+
+interface HealthResponse {
+  status: HealthStatus;
+  timestamp: string;
+  uptime: number;
+  environment: string | undefined;
+  version: string;
+  checks: {
+    redis: HealthCheck;
+    database: HealthCheck;
+  };
+}
+
+async function checkRedis(): Promise<HealthCheck> {
+  const start = Date.now();
+  try {
+    const redis = getRedisClient();
+    await redis.ping();
+    return {
+      status: "healthy",
+      latency: Date.now() - start,
+    };
+  } catch (error) {
+    return {
+      status: "unhealthy",
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
+  }
+}
+
+async function checkDatabase(): Promise<HealthCheck> {
+  const start = Date.now();
+  try {
+    const supabase = await getSupabaseServer();
+    const { error } = await supabase.from("organizations").select("id").limit(1);
+
+    if (error) {
+      return {
+        status: "unhealthy",
+        error: error.message,
+      };
+    }
+
+    return {
+      status: "healthy",
+      latency: Date.now() - start,
+    };
+  } catch (error) {
+    return {
+      status: "unhealthy",
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
+  }
+}
+
+function determineOverallStatus(
+  redisCheck: HealthCheck,
+  dbCheck: HealthCheck
+): HealthStatus {
+  const unhealthyCount = [redisCheck, dbCheck].filter(
+    (check) => check.status === "unhealthy"
+  ).length;
+
+  if (unhealthyCount === 0) return "healthy";
+  if (unhealthyCount === 1) return "degraded";
+  return "unhealthy";
+}
 
 export async function GET(request: NextRequest) {
   const logger = createApiLogger({ route: '/api/health' });
@@ -20,17 +98,39 @@ export async function GET(request: NextRequest) {
       return rateLimitResult.response;
     }
 
-    // Basic health check - can be extended with database/redis checks
-    const health = {
-      status: "healthy",
+    // Run health checks in parallel
+    const [redisCheck, dbCheck] = await Promise.all([
+      checkRedis(),
+      checkDatabase(),
+    ]);
+
+    const overallStatus = determineOverallStatus(redisCheck, dbCheck);
+
+    const health: HealthResponse = {
+      status: overallStatus,
       timestamp: new Date().toISOString(),
       uptime: process.uptime(),
       environment: process.env.NODE_ENV,
       version: "1.0.0",
+      checks: {
+        redis: redisCheck,
+        database: dbCheck,
+      },
     };
 
-    logger.http('Health check successful');
-    return NextResponse.json(health, { status: 200 });
+    // Log with appropriate level based on status
+    if (overallStatus === "healthy") {
+      logger.http('Health check successful', { checks: health.checks });
+    } else if (overallStatus === "degraded") {
+      logger.warn('Health check degraded', { checks: health.checks });
+    } else {
+      logger.error('Health check unhealthy', { checks: health.checks });
+    }
+
+    // Return appropriate HTTP status
+    const httpStatus = overallStatus === "healthy" ? 200 : overallStatus === "degraded" ? 200 : 503;
+
+    return NextResponse.json(health, { status: httpStatus });
   } catch (error) {
     logger.error('Health check failed', {
       error: error instanceof Error ? error.message : 'Unknown error'

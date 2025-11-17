@@ -42,10 +42,10 @@ export class OpenRouterClient {
   private baseUrl = "https://openrouter.ai/api/v1";
 
   constructor(apiKey?: string) {
-    this.apiKey = apiKey || process.env.OPENROUTER_API_KEY || "";
+    this.apiKey = apiKey || process.env.OPENROUTER_API_KEY_2 || process.env.OPENROUTER_API_KEY || "";
 
     if (!this.apiKey) {
-      console.warn("⚠️  OPENROUTER_API_KEY not set. Sherlock Think Alpha will not be available.");
+      console.warn("⚠️  OPENROUTER_API_KEY_2 not set. Sherlock Think Alpha will not be available.");
     }
   }
 

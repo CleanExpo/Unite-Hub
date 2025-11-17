@@ -51,30 +51,21 @@ async function assessErrorHandling() {
     const hasErrorClass = libFiles.some(f => f.includes('error') || f.includes('Error'));
     checks.customErrorClasses = hasErrorClass;
 
-    // Check for RFC 7807 compliance (problem details)
-    const apiFiles = await readdir(join(PROJECT_ROOT, 'src/app/api'), { recursive: true });
-    for (const file of apiFiles.filter(f => f.endsWith('.ts'))) {
-      const content = await readFile(join(PROJECT_ROOT, 'src/app/api', file), 'utf-8');
-      if (content.includes('problem+json') || content.includes('RFC 7807')) {
-        checks.rfc7807Compliance = true;
-        break;
-      }
-    }
+    // Check for RFC 7807 compliance (problem details) in src/lib/errors.ts
+    const errorsFile = await readFile(join(PROJECT_ROOT, 'src/lib/errors.ts'), 'utf-8').catch(() => '');
+    checks.rfc7807Compliance = errorsFile.includes('ProblemDetail') || errorsFile.includes('RFC 7807');
 
     // Check for logging (Winston, Bunyan, or console with levels)
     const pkgJson = await readFile(join(PROJECT_ROOT, 'package.json'), 'utf-8');
     const pkg = JSON.parse(pkgJson);
-    checks.centralizedLogging = !!(pkg.dependencies?.winston || pkg.dependencies?.bunyan || pkg.dependencies?.pino);
+    const allDeps = { ...pkg.dependencies, ...pkg.devDependencies };
+    checks.centralizedLogging = !!(allDeps['winston'] || allDeps['bunyan'] || allDeps['pino']);
 
     // Check for error prioritization
-    const hasErrorLevels = apiFiles.some(async (file) => {
-      const content = await readFile(join(PROJECT_ROOT, 'src/app/api', file), 'utf-8').catch(() => '');
-      return content.includes('P0') || content.includes('severity') || content.includes('priority');
-    });
-    checks.errorPrioritization = hasErrorLevels;
+    checks.errorPrioritization = errorsFile.includes('priority') || errorsFile.includes('severity') || errorsFile.includes('P0');
 
     // Security: check errors don't leak sensitive data
-    checks.secureErrors = true; // Assume true, would need deeper analysis
+    checks.secureErrors = !errorsFile.includes('stack') || errorsFile.includes('sanitize');
 
   } catch (error) {
     console.log(`   ⚠️  Could not fully assess: ${error.message}`);
@@ -136,10 +127,11 @@ async function assessObservability() {
   try {
     const pkgJson = await readFile(join(PROJECT_ROOT, 'package.json'), 'utf-8');
     const pkg = JSON.parse(pkgJson);
+    const allDeps = { ...pkg.dependencies, ...pkg.devDependencies };
 
-    checks.structuredLogs = !!(pkg.dependencies?.winston || pkg.dependencies?.pino);
-    checks.metricsInstrumentation = !!(pkg.dependencies?.prom-client || pkg.dependencies?.['@opentelemetry/api']);
-    checks.distributedTracing = !!(pkg.dependencies?.['@opentelemetry/sdk-trace-node']);
+    checks.structuredLogs = !!(allDeps['winston'] || allDeps['pino']);
+    checks.metricsInstrumentation = !!(allDeps['prom-client'] || allDeps['@opentelemetry/api']);
+    checks.distributedTracing = !!(allDeps['@opentelemetry/sdk-node'] || allDeps['@opentelemetry/sdk-trace-node']);
 
     // Check for monitoring setup
     try {
@@ -157,7 +149,7 @@ async function assessObservability() {
 
   console.log(`   ${checks.structuredLogs ? '✅' : '❌'} Structured logging`);
   console.log(`   ${checks.metricsInstrumentation ? '✅' : '❌'} Metrics instrumentation`);
-  console.log(`   ${checks.distributedTracing ? '❌' : '❌'} Distributed tracing`);
+  console.log(`   ${checks.distributedTracing ? '✅' : '❌'} Distributed tracing`);
   console.log(`   ${checks.logCentralization ? '✅' : '❌'} Log centralization (ELK/similar)`);
   console.log(`   ${checks.dashboards ? '✅' : '❌'} Monitoring dashboards\n`);
   console.log(`   📊 Score: ${score}/100 ${getScoreEmoji(score)}\n`);
@@ -398,16 +390,28 @@ async function assessTesting() {
   try {
     const pkgJson = await readFile(join(PROJECT_ROOT, 'package.json'), 'utf-8');
     const pkg = JSON.parse(pkgJson);
+    const allDeps = { ...pkg.dependencies, ...pkg.devDependencies };
 
-    checks.unitTests = !!(pkg.devDependencies?.jest || pkg.devDependencies?.vitest);
-    checks.e2eTests = !!(pkg.devDependencies?.['@playwright/test'] || pkg.devDependencies?.cypress);
+    checks.unitTests = !!(allDeps['jest'] || allDeps['vitest']);
+    checks.e2eTests = !!(allDeps['@playwright/test'] || allDeps['playwright'] || allDeps['cypress']);
 
-    // Check for test scripts
-    checks.integrationTests = !!(pkg.scripts?.['test:integration']);
-    checks.ciIntegration = !!(pkg.scripts?.['test:ci']);
+    // Check for integration test files
+    try {
+      const integrationPath = join(PROJECT_ROOT, 'src', 'lib', '__tests__', 'integration');
+      const integrationFiles = await readdir(integrationPath).catch(() => []);
+      checks.integrationTests = integrationFiles.filter(f => f.endsWith('.test.ts') || f.endsWith('.test.tsx')).length > 0;
+    } catch {}
 
-    // Check for coverage
-    checks.codeCoverage = !!(pkg.scripts?.coverage || pkg.scripts?.['test:coverage']);
+    // Check for CI/CD workflow files
+    try {
+      const workflowPath = join(PROJECT_ROOT, '.github', 'workflows');
+      const workflows = await readdir(workflowPath).catch(() => []);
+      checks.ciIntegration = workflows.some(f => f.endsWith('.yml') || f.endsWith('.yaml'));
+    } catch {}
+
+    // Check for coverage config in vitest.config.ts
+    const vitestConfig = await readFile(join(PROJECT_ROOT, 'vitest.config.ts'), 'utf-8').catch(() => '');
+    checks.codeCoverage = vitestConfig.includes('coverage') && (vitestConfig.includes('lines:') || vitestConfig.includes('all: true'));
 
   } catch (error) {
     console.log(`   ⚠️  Could not fully assess: ${error.message}`);
@@ -417,10 +421,10 @@ async function assessTesting() {
   assessment.testing.score = score;
 
   console.log(`   ${checks.unitTests ? '✅' : '❌'} Unit tests (Jest/Vitest)`);
-  console.log(`   ${checks.integrationTests ? '❌' : '❌'} Integration tests`);
+  console.log(`   ${checks.integrationTests ? '✅' : '❌'} Integration tests`);
   console.log(`   ${checks.e2eTests ? '✅' : '❌'} E2E tests (Playwright)`);
-  console.log(`   ${checks.ciIntegration ? '❌' : '❌'} CI/CD integration`);
-  console.log(`   ${checks.codeCoverage ? '❌' : '❌'} Code coverage tracking\n`);
+  console.log(`   ${checks.ciIntegration ? '✅' : '❌'} CI/CD integration`);
+  console.log(`   ${checks.codeCoverage ? '✅' : '❌'} Code coverage tracking\n`);
   console.log(`   📊 Score: ${score}/100 ${getScoreEmoji(score)}\n`);
 
   if (!checks.unitTests) {

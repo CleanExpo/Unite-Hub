@@ -9,10 +9,10 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 
-const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY_2 || process.env.OPENROUTER_API_KEY;
 
 if (!OPENROUTER_API_KEY) {
-  console.error("❌ OPENROUTER_API_KEY not set");
+  console.error("❌ OPENROUTER_API_KEY_2 or OPENROUTER_API_KEY not set");
   process.exit(1);
 }
 
