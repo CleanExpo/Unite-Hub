@@ -1,7 +1,35 @@
 /**
  * RFC 7807 Problem Details for HTTP APIs
  * https://datatracker.ietf.org/doc/html/rfc7807
+ *
+ * Enhanced with error prioritization (P0-P4) and severity levels
  */
+
+/**
+ * Error Priority Levels
+ * P0 = Critical - System down, data loss, security breach
+ * P1 = High - Major feature broken, significant user impact
+ * P2 = Medium - Feature degraded, workaround available
+ * P3 = Low - Minor issue, cosmetic problem
+ * P4 = Trivial - Enhancement, nice-to-have
+ */
+export enum ErrorPriority {
+  P0_CRITICAL = 'P0',
+  P1_HIGH = 'P1',
+  P2_MEDIUM = 'P2',
+  P3_LOW = 'P3',
+  P4_TRIVIAL = 'P4',
+}
+
+/**
+ * Error Severity Levels
+ */
+export enum ErrorSeverity {
+  FATAL = 'fatal',      // System cannot continue
+  ERROR = 'error',      // Operation failed but system continues
+  WARNING = 'warning',  // Potential issue, degraded functionality
+  INFO = 'info',        // Informational, no action needed
+}
 
 export interface ProblemDetail {
   type: string; // URI reference identifying the problem type
@@ -9,6 +37,9 @@ export interface ProblemDetail {
   status: number; // HTTP status code
   detail?: string; // Human-readable explanation specific to this occurrence
   instance?: string; // URI reference identifying this specific occurrence
+  priority?: ErrorPriority; // Error priority (P0-P4)
+  severity?: ErrorSeverity; // Error severity
+  timestamp?: string; // ISO 8601 timestamp
   [key: string]: any; // Additional problem-specific fields
 }
 
@@ -18,11 +49,36 @@ export class ApiError extends Error {
   constructor(problemDetail: ProblemDetail) {
     super(problemDetail.title);
     this.name = 'ApiError';
-    this.problemDetail = problemDetail;
+    this.problemDetail = {
+      ...problemDetail,
+      timestamp: problemDetail.timestamp || new Date().toISOString(),
+    };
   }
 
   toJSON(): ProblemDetail {
     return this.problemDetail;
+  }
+
+  /**
+   * Check if error requires immediate attention (P0 or P1)
+   */
+  isUrgent(): boolean {
+    return this.problemDetail.priority === ErrorPriority.P0_CRITICAL ||
+           this.problemDetail.priority === ErrorPriority.P1_HIGH;
+  }
+
+  /**
+   * Check if error is critical (P0)
+   */
+  isCritical(): boolean {
+    return this.problemDetail.priority === ErrorPriority.P0_CRITICAL;
+  }
+
+  /**
+   * Check if error severity is fatal
+   */
+  isFatal(): boolean {
+    return this.problemDetail.severity === ErrorSeverity.FATAL;
   }
 }
 
@@ -44,7 +100,7 @@ export const ErrorTypes = {
   EXTERNAL_API_ERROR: 'https://unite-hub.com/errors/external-api',
 };
 
-// Error factory functions
+// Error factory functions with priority and severity
 export function badRequest(detail: string, instance?: string): ApiError {
   return new ApiError({
     type: ErrorTypes.BAD_REQUEST,
@@ -52,6 +108,8 @@ export function badRequest(detail: string, instance?: string): ApiError {
     status: 400,
     detail,
     instance,
+    priority: ErrorPriority.P3_LOW,
+    severity: ErrorSeverity.WARNING,
   });
 }
 
@@ -62,6 +120,8 @@ export function unauthorized(detail: string = 'Authentication required', instanc
     status: 401,
     detail,
     instance,
+    priority: ErrorPriority.P2_MEDIUM,
+    severity: ErrorSeverity.ERROR,
   });
 }
 
@@ -124,6 +184,8 @@ export function internalError(detail: string = 'Internal server error', instance
     status: 500,
     detail,
     instance,
+    priority: ErrorPriority.P1_HIGH,
+    severity: ErrorSeverity.ERROR,
   });
 }
 
@@ -134,6 +196,8 @@ export function serviceUnavailable(detail: string, instance?: string): ApiError 
     status: 503,
     detail,
     instance,
+    priority: ErrorPriority.P0_CRITICAL,
+    severity: ErrorSeverity.FATAL,
   });
 }
 
@@ -144,6 +208,8 @@ export function databaseError(operation: string, instance?: string): ApiError {
     status: 500,
     detail: `Database operation failed: ${operation}`,
     instance,
+    priority: ErrorPriority.P0_CRITICAL,
+    severity: ErrorSeverity.FATAL,
   });
 }
 
