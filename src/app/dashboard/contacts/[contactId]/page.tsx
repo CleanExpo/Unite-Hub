@@ -66,9 +66,12 @@ export default function ContactDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-900 p-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-white">Loading...</div>
+      <div className="max-w-6xl mx-auto px-6 py-8">
+        <div className="flex items-center justify-center h-64">
+          <div className="flex items-center gap-3">
+            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 animate-pulse"></div>
+            <p className="text-slate-400">Loading contact...</p>
+          </div>
         </div>
       </div>
     );
@@ -76,8 +79,8 @@ export default function ContactDetailPage() {
 
   if (!contact) {
     return (
-      <div className="min-h-screen bg-slate-900 p-8">
-        <div className="max-w-6xl mx-auto">
+      <div className="max-w-6xl mx-auto px-6 py-8">
+        <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-8 text-center">
           <div className="text-white">Contact not found</div>
         </div>
       </div>
@@ -85,57 +88,58 @@ export default function ContactDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 p-8">
-      <div className="max-w-6xl mx-auto space-y-6">
-        <Breadcrumbs items={[{ label: "Contacts", href: "/dashboard/contacts" }, { label: contact.name }]} />
+    <div className="max-w-6xl mx-auto px-6 py-8 space-y-8">
+      <Breadcrumbs items={[{ label: "Contacts", href: "/dashboard/contacts" }, { label: contact.name }]} />
 
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <Link
-            href="/dashboard/contacts"
-            className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Contacts
-          </Link>
-        </div>
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <Link
+          href="/dashboard/contacts"
+          className="flex items-center gap-2 text-slate-400 hover:text-blue-400 transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Contacts
+        </Link>
+      </div>
 
-        {/* Contact Info Card */}
-        <div className="bg-slate-800/50 rounded-lg p-6 border border-slate-700">
-          <div className="flex items-start justify-between mb-6">
-            <div className="flex items-start gap-4">
-              <div className="w-16 h-16 bg-slate-700 rounded-full flex items-center justify-center">
-                <User className="w-8 h-8 text-slate-400" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-white mb-1">{contact.name}</h1>
-                {contact.job_title && contact.company && (
-                  <p className="text-slate-400">
-                    {contact.job_title} at {contact.company}
-                  </p>
-                )}
-              </div>
+      {/* Contact Info Card */}
+      <div className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 border border-slate-700/50">
+        <div className="flex items-start justify-between mb-6">
+          <div className="flex items-start gap-4">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
+              <User className="w-8 h-8 text-white" />
             </div>
+            <div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent mb-1">
+                {contact.name}
+              </h1>
+              {contact.job_title && contact.company && (
+                <p className="text-slate-400">
+                  {contact.job_title} at {contact.company}
+                </p>
+              )}
+            </div>
+          </div>
 
-            {/* AI Score */}
-            <div className={`px-4 py-2 rounded-lg border ${getScoreBgColor(contact.ai_score)}`}>
-              <div className="flex items-center gap-2">
-                <TrendingUp className={`w-5 h-5 ${getScoreColor(contact.ai_score)}`} />
-                <div>
-                  <div className="text-xs text-slate-400">AI Score</div>
-                  <div className={`text-xl font-bold ${getScoreColor(contact.ai_score)}`}>
-                    {Math.round(contact.ai_score)}
-                  </div>
+          {/* AI Score */}
+          <div className={`px-4 py-2 rounded-lg border ${getScoreBgColor(contact.ai_score)} backdrop-blur-sm`}>
+            <div className="flex items-center gap-2">
+              <TrendingUp className={`w-5 h-5 ${getScoreColor(contact.ai_score)}`} />
+              <div>
+                <div className="text-xs text-slate-400">AI Score</div>
+                <div className={`text-xl font-bold ${getScoreColor(contact.ai_score)}`}>
+                  {Math.round(contact.ai_score)}
                 </div>
               </div>
             </div>
           </div>
+        </div>
 
           {/* Contact Details Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {contact.email && (
-              <div className="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg">
-                <Mail className="w-5 h-5 text-slate-400" />
+              <div className="flex items-center gap-3 p-3 bg-slate-900/50 backdrop-blur-sm border border-slate-700/30 rounded-lg hover:border-slate-600/50 transition-all">
+                <Mail className="w-5 h-5 text-blue-400" />
                 <div>
                   <div className="text-xs text-slate-400">Primary Email</div>
                   <div className="text-white font-mono text-sm">{contact.email}</div>
@@ -144,8 +148,8 @@ export default function ContactDetailPage() {
             )}
 
             {contact.phone && (
-              <div className="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg">
-                <Phone className="w-5 h-5 text-slate-400" />
+              <div className="flex items-center gap-3 p-3 bg-slate-900/50 backdrop-blur-sm border border-slate-700/30 rounded-lg hover:border-slate-600/50 transition-all">
+                <Phone className="w-5 h-5 text-purple-400" />
                 <div>
                   <div className="text-xs text-slate-400">Phone</div>
                   <div className="text-white">{contact.phone}</div>
@@ -154,8 +158,8 @@ export default function ContactDetailPage() {
             )}
 
             {contact.company && (
-              <div className="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg">
-                <Building className="w-5 h-5 text-slate-400" />
+              <div className="flex items-center gap-3 p-3 bg-slate-900/50 backdrop-blur-sm border border-slate-700/30 rounded-lg hover:border-slate-600/50 transition-all">
+                <Building className="w-5 h-5 text-cyan-400" />
                 <div>
                   <div className="text-xs text-slate-400">Company</div>
                   <div className="text-white">{contact.company}</div>
@@ -163,8 +167,8 @@ export default function ContactDetailPage() {
               </div>
             )}
 
-            <div className="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg">
-              <Calendar className="w-5 h-5 text-slate-400" />
+            <div className="flex items-center gap-3 p-3 bg-slate-900/50 backdrop-blur-sm border border-slate-700/30 rounded-lg hover:border-slate-600/50 transition-all">
+              <Calendar className="w-5 h-5 text-green-400" />
               <div>
                 <div className="text-xs text-slate-400">Added</div>
                 <div className="text-white">
@@ -174,8 +178,8 @@ export default function ContactDetailPage() {
             </div>
 
             {contact.last_contact_date && (
-              <div className="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg">
-                <Calendar className="w-5 h-5 text-slate-400" />
+              <div className="flex items-center gap-3 p-3 bg-slate-900/50 backdrop-blur-sm border border-slate-700/30 rounded-lg hover:border-slate-600/50 transition-all">
+                <Calendar className="w-5 h-5 text-orange-400" />
                 <div>
                   <div className="text-xs text-slate-400">Last Contact</div>
                   <div className="text-white">
@@ -186,8 +190,8 @@ export default function ContactDetailPage() {
             )}
 
             {contact.email_count !== undefined && (
-              <div className="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg">
-                <Mail className="w-5 h-5 text-slate-400" />
+              <div className="flex items-center gap-3 p-3 bg-slate-900/50 backdrop-blur-sm border border-slate-700/30 rounded-lg hover:border-slate-600/50 transition-all">
+                <Mail className="w-5 h-5 text-pink-400" />
                 <div>
                   <div className="text-xs text-slate-400">Email Addresses</div>
                   <div className="text-white font-bold">{contact.email_count}</div>
