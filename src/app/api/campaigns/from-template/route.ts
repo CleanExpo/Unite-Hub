@@ -105,40 +105,12 @@ const TEMPLATES = {
   },
 };
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(request);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
-
-    // Authenticate request
-    const authResult = await authenticateRequest(request);
-    if (!authResult) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-    const { userId } = authResult;
-
-    const supabase = await getSupabaseServer();
-
-    // Get authenticated user from session
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader) {
-      return NextResponse.json(
-        { error: "Missing authorization header" },
-        { status: 401 }
-      );
-    }
-
-    const token = authHeader.replace("Bearer ", "");
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser(token);
-
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
     }
 
     // Parse request body
@@ -154,26 +126,17 @@ export async function POST(request: Request) {
 
     const templateData = TEMPLATES[template as keyof typeof TEMPLATES];
 
+    // Validate user authentication
+    const user = await validateUserAuth(request);
+
+    // Get authenticated supabase client
+    const supabase = await getSupabaseServer();
+
     // Get user's workspace
-    const { data: userOrgs, error: orgError } = await supabase
-      .from("user_organizations")
-      .select("org_id")
-      .eq("user_id", user.id)
-      .eq("is_active", true)
-      .limit(1)
-      .single();
-
-    if (orgError || !userOrgs) {
-      return NextResponse.json(
-        { error: "No active organization found" },
-        { status: 404 }
-      );
-    }
-
     const { data: workspaces, error: workspaceError } = await supabase
       .from("workspaces")
       .select("id")
-      .eq("org_id", userOrgs.org_id)
+      .eq("org_id", user.orgId)
       .limit(1)
       .single();
 
@@ -239,6 +202,14 @@ export async function POST(request: Request) {
       data: campaign,
     });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Unexpected error creating campaign:", error);
     return NextResponse.json(
       { error: "Internal server error" },
