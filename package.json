@@ -31,6 +31,7 @@
     "analyze-contacts": "node scripts/analyze-contacts.mjs",
     "generate-content": "node scripts/generate-content.mjs",
     "process-campaigns": "node scripts/process-campaigns.mjs",
+    "test:caching": "node scripts/test-prompt-caching.mjs",
     "docker:start": "docker-compose up -d",
     "docker:start:dev": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d",
     "docker:stop": "docker-compose down",
