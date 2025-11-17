@@ -1,0 +1,129 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "_comment": "1. ORGANIZATION: Defines the business entity (E-E-A-T)",
+      "@type": "Organization",
+      "@id": "https://www.unite-group.in/#organization",
+      "name": "Unite-Group Agency",
+      "url": "https://www.unite-group.in/",
+      "logo": "https://www.unite-group.in/images/logo.png",
+      "description": "The Autonomous AI-Driven Marketing Agency. We provide self-service software and augmented automation tools for clients to take control of their business growth and reduce agency costs.",
+      "sameAs": [
+        "https://www.linkedin.com/company/unite-group-agency",
+        "[Insert X/Twitter URL]",
+        "[Insert Facebook URL]"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "email": "contact@unite-group.in",
+        "contactType": "Customer Support"
+      }
+    },
+    {
+      "_comment": "2. WEBSITE: Defines the web property",
+      "@type": "WebSite",
+      "@id": "https://www.unite-group.in/#website",
+      "url": "https://www.unite-group.in/",
+      "name": "Unite-Group Agency",
+      "inLanguage": "en",
+      "publisher": {
+        "@id": "https://www.unite-group.in/#organization"
+      }
+    },
+    {
+      "_comment": "3. SERVICE (Pillar Page): Defines the core offering",
+      "@type": "Service",
+      "@id": "https://www.unite-group.in/[pillar-page-url]/#service",
+      "serviceType": "Autonomous AI-Driven Marketing Platform",
+      "name": "[Your Pillar Page Title, e.g., AI-Powered Website Building]",
+      "description": "Self-service platform and software for building and managing [Your Service Category, e.g., High-Converting Websites] with full client control over cost and time.",
+      "provider": {
+        "@id": "https://www.unite-group.in/#organization"
+      },
+      "areaServed": {
+        "@type": "Place",
+        "name": "Online"
+      },
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Unite-Group Self-Service Products",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "LLM-Augmented SEO Strategy Builder"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Client-Controlled Website Local Categorization Tool"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "_comment": "4. HOWTO (Sub-Pillar Page): Critical for self-service/GEO",
+      "@type": "HowTo",
+      "@id": "https://www.unite-group.in/[sub-pillar-page-url]/#howto",
+      "name": "[Sub-Pillar Title, e.g., How to Implement Local Categorization]",
+      "description": "Step-by-step guide using Unite-Group's platform to achieve [specific benefit, e.g., dominate local search rankings].",
+      "estimatedCost": {
+        "@type": "MonetaryAmount",
+        "currency": "INR",
+        "value": "0"
+      },
+      "_estimatedCostComment": "Or the monthly subscription cost",
+      "tool": [
+        {
+          "_comment": "List platform features used in the guide (GEO focus)",
+          "@type": "HowToTool",
+          "name": "Unite-Group Categorization Builder"
+        },
+        {
+          "@type": "HowToTool",
+          "name": "LLM Geo-Niche Generator"
+        }
+      ],
+      "supply": [
+        {
+          "_comment": "List what the user needs (GEO focus)",
+          "@type": "HowToSupply",
+          "name": "Business Domain and Login"
+        },
+        {
+          "@type": "HowToSupply",
+          "name": "5 minutes of client's time"
+        }
+      ],
+      "step": [
+        {
+          "_comment": "Structure the steps for quick answer extraction (Answer-First)",
+          "@type": "HowToStep",
+          "name": "Step 1: Define Target Area",
+          "text": "Navigate to the Local Categorization module and enter your 5 most important service suburbs."
+        },
+        {
+          "@type": "HowToStep",
+          "name": "Step 2: Augment with LLM",
+          "text": "Click 'Augment' to use our integrated LLM (GPT-4o/Claude) to identify the highest-intent keywords for those areas."
+        }
+      ],
+      "_stepComment": "Add all sequential steps here"
+    },
+    {
+      "_comment": "5. AUTHOR: Defines content expertise (E-E-A-T)",
+      "@type": "Person",
+      "@id": "https://www.unite-group.in/authors/[author-name]/#person",
+      "name": "[Insert Author Name]",
+      "jobTitle": "LLM Workflow Architect, Unite-Group Agency",
+      "url": "https://www.unite-group.in/authors/[author-name]",
+      "image": "https://www.unite-group.in/images/authors/[author-name].jpg",
+      "sameAs": ["[Insert Author LinkedIn URL]"]
+    }
+  ]
+}
