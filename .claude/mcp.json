@@ -9,6 +9,13 @@
         "PLAYWRIGHT_BROWSER": "chromium",
         "PLAYWRIGHT_HEADLESS": "true"
       }
+    },
+    "sherlock-think-alpha": {
+      "command": "node",
+      "args": [
+        ".claude/mcp_servers/sherlock-think/index.js"
+      ],
+      "description": "Sherlock Think Alpha - 1.84M context thinking model via OpenRouter"
     }
   }
 }

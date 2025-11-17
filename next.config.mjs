@@ -8,9 +8,40 @@ const nextConfig = {
   transpilePackages: ['reactflow', '@reactflow/core', '@reactflow/background', '@reactflow/controls', '@reactflow/minimap'],
   experimental: {
     serverComponentsExternalPackages: ['zustand'],
+    // Enable optimized compilation
+    optimizeCss: true,
+    optimizePackageImports: ['lucide-react', '@anthropic-ai/sdk', 'recharts'],
   },
   // Enable standalone output for Docker
   output: 'standalone',
+  // Compression
+  compress: true,
+  // Production optimizations
+  swcMinify: true,
+  // Webpack optimizations
+  webpack: (config, { isServer }) => {
+    // Optimize bundle size
+    config.optimization = {
+      ...config.optimization,
+      moduleIds: 'deterministic',
+      runtimeChunk: 'single',
+      splitChunks: {
+        chunks: 'all',
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name(module) {
+              const packageName = module.context.match(
+                /[\\/]node_modules[\\/](.*?)([\\/]|$)/
+              )?.[1];
+              return `vendor.${packageName?.replace('@', '')}`;
+            },
+          },
+        },
+      },
+    };
+    return config;
+  },
   // Configure external image domains
   images: {
     remotePatterns: [
@@ -31,6 +62,59 @@ const nextConfig = {
       source: '/dashboard',
       destination: '/dashboard/overview',
       permanent: false,
+    },
+  ],
+  // Security headers
+  headers: async () => [
+    {
+      source: '/:path*',
+      headers: [
+        {
+          key: 'X-DNS-Prefetch-Control',
+          value: 'on',
+        },
+        {
+          key: 'Strict-Transport-Security',
+          value: 'max-age=63072000; includeSubDomains; preload',
+        },
+        {
+          key: 'X-Frame-Options',
+          value: 'DENY',
+        },
+        {
+          key: 'X-Content-Type-Options',
+          value: 'nosniff',
+        },
+        {
+          key: 'X-XSS-Protection',
+          value: '1; mode=block',
+        },
+        {
+          key: 'Referrer-Policy',
+          value: 'origin-when-cross-origin',
+        },
+        {
+          key: 'Permissions-Policy',
+          value: 'camera=(), microphone=(), geolocation=()',
+        },
+        {
+          key: 'Content-Security-Policy',
+          value: [
+            "default-src 'self'",
+            "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://accounts.google.com https://unpkg.com",
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+            "img-src 'self' data: blob: https: http:",
+            "font-src 'self' data: https://fonts.gstatic.com",
+            "connect-src 'self' https://*.supabase.co https://api.anthropic.com https://accounts.google.com",
+            "frame-src 'self' https://accounts.google.com",
+            "object-src 'none'",
+            "base-uri 'self'",
+            "form-action 'self'",
+            "frame-ancestors 'none'",
+            "upgrade-insecure-requests",
+          ].join('; '),
+        },
+      ],
     },
   ],
 };

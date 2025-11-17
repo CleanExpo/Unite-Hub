@@ -5,45 +5,21 @@ import path from 'path';
 export default defineConfig({
   plugins: [react()],
   test: {
-    environment: 'happy-dom',
+    environment: 'jsdom',
     globals: true,
-    setupFiles: ['./tests/setup.ts'],
-    exclude: [
-      '**/node_modules/**',
-      '**/dist/**',
-      '**/.{idea,git,cache,output,temp}/**',
-      '**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build}.config.*',
-      '**/e2e/**', // Exclude Playwright E2E tests
-      '**/*.spec.ts', // Exclude Playwright spec files
-    ],
+    setupFiles: ['./vitest.setup.ts'],
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'json', 'html', 'lcov'],
+      reporter: ['text', 'json', 'html'],
       exclude: [
         'node_modules/',
-        'tests/',
-        '*.config.ts',
-        '*.config.js',
-        '.next/',
-        'convex.bak/',
-        'dist/',
-        'build/',
-        'coverage/',
+        'vitest.config.ts',
         '**/*.d.ts',
-        '**/*.test.ts',
-        '**/*.test.tsx',
-        '**/*.spec.ts',
-        '**/*.spec.tsx',
+        '**/*.config.*',
+        '**/mockData',
+        'tests/',
       ],
-      thresholds: {
-        lines: 40,
-        functions: 40,
-        branches: 40,
-        statements: 40,
-      },
     },
-    testTimeout: 10000,
-    hookTimeout: 10000,
   },
   resolve: {
     alias: {

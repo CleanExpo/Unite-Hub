@@ -4,15 +4,21 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { publicRateLimit } from "@/lib/rate-limit";
+import { rateLimit } from "@/middleware/rateLimiter";
+import { createApiLogger } from "@/lib/logger";
 
 export async function GET(request: NextRequest) {
+  const logger = createApiLogger({ route: '/api/health' });
+
   try {
-  // Apply rate limiting
-  const rateLimitResult = await publicRateLimit(request);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
+    // Apply rate limiting (public tier - 20 requests per minute)
+    const rateLimitResult = await rateLimit(request, { tier: 'public' });
+    if (!rateLimitResult.success) {
+      logger.warn('Health check rate limited', {
+        ip: request.headers.get('x-forwarded-for')
+      });
+      return rateLimitResult.response;
+    }
 
     // Basic health check - can be extended with database/redis checks
     const health = {
@@ -23,8 +29,13 @@ export async function GET(request: NextRequest) {
       version: "1.0.0",
     };
 
+    logger.http('Health check successful');
     return NextResponse.json(health, { status: 200 });
   } catch (error) {
+    logger.error('Health check failed', {
+      error: error instanceof Error ? error.message : 'Unknown error'
+    });
+
     return NextResponse.json(
       {
         status: "unhealthy",
