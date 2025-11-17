@@ -195,7 +195,7 @@ Generate hyper-personalized ${contentType} email for this prospect.`;
       });
     }
 
-    // Log to audit
+    // Log to audit with cache stats
     await db.auditLogs.logAgentRun(
       contact.workspace_id,
       "content_personalization",
@@ -204,6 +204,13 @@ Generate hyper-personalized ${contentType} email for this prospect.`;
         content_type: contentType,
         personalization_score: content.personalization_score,
         status: "success",
+        cacheStats: {
+          input_tokens: message.usage.input_tokens,
+          cache_creation_tokens: message.usage.cache_creation_input_tokens || 0,
+          cache_read_tokens: message.usage.cache_read_input_tokens || 0,
+          output_tokens: message.usage.output_tokens,
+          cache_hit: (message.usage.cache_read_input_tokens || 0) > 0,
+        },
       }
     );
 

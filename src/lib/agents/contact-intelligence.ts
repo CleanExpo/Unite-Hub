@@ -166,7 +166,7 @@ Analyze this contact and return your assessment as JSON.`;
       },
     });
 
-    // Log the analysis
+    // Log the analysis with cache stats
     await db.auditLogs.logAgentRun(
       "system", // org_id - will need to update this
       "contact_intelligence",
@@ -174,6 +174,13 @@ Analyze this contact and return your assessment as JSON.`;
         contact_id: contactId,
         analysis_result: analysis,
         status: "success",
+        cacheStats: {
+          input_tokens: message.usage.input_tokens,
+          cache_creation_tokens: message.usage.cache_creation_input_tokens || 0,
+          cache_read_tokens: message.usage.cache_read_input_tokens || 0,
+          output_tokens: message.usage.output_tokens,
+          cache_hit: (message.usage.cache_read_input_tokens || 0) > 0,
+        },
       }
     );
 

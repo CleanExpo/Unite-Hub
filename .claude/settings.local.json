@@ -25,7 +25,9 @@
       "Bash(git checkout:*)",
       "Bash(git merge:*)",
       "Bash(nul)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(echo:*)",
+      "Bash(TEAM2_QUICK_SUMMARY.md)"
     ],
     "deny": [],
     "ask": []

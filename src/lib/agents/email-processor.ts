@@ -45,7 +45,7 @@ export async function processEmail(
     }
 
     // Run intent extraction in parallel with meeting detection
-    const [intentResult, meetingResult] = await Promise.all([
+    const [{ intent: intentResult, cacheStats }, meetingResult] = await Promise.all([
       extractEmailIntent(email.subject, email.body),
       detectMeetingIntent(email.body, email.subject),
     ]);
@@ -60,6 +60,18 @@ export async function processEmail(
       is_meeting_request: meetingResult.isMeetingRequest,
       meeting_intent: meetingResult.isMeetingRequest ? meetingResult : null,
       is_processed: true,
+    });
+
+    // Log to audit with cache stats
+    await db.auditLogs.create({
+      workspace_id: workspaceId,
+      action: "email_intent_extraction",
+      details: {
+        email_id: emailId,
+        intent: intentResult.primary_intent,
+        sentiment: intentResult.sentiment,
+        cacheStats,
+      },
     });
 
     // If it's a meeting request, update contact with meeting metadata
@@ -113,7 +125,7 @@ export async function processEmail(
 async function extractEmailIntent(
   subject: string,
   body: string
-): Promise<EmailIntent> {
+): Promise<{ intent: EmailIntent; cacheStats: any }> {
   try {
     // Static system instructions with prompt caching
     const systemPrompt = `You are an expert email analysis system specializing in B2B communication intent detection.
@@ -177,18 +189,36 @@ Analyze this email and extract intent and key information.`;
       responseText.match(/({[\s\S]*})/);
     const cleanJson = jsonMatch ? jsonMatch[1] : responseText;
 
-    return JSON.parse(cleanJson);
+    return {
+      intent: JSON.parse(cleanJson),
+      cacheStats: {
+        input_tokens: message.usage.input_tokens,
+        cache_creation_tokens: message.usage.cache_creation_input_tokens || 0,
+        cache_read_tokens: message.usage.cache_read_input_tokens || 0,
+        output_tokens: message.usage.output_tokens,
+        cache_hit: (message.usage.cache_read_input_tokens || 0) > 0,
+      },
+    };
   } catch (error) {
     console.error("Error extracting email intent:", error);
     // Return default values on error
     return {
-      primary_intent: "general",
-      sentiment: "neutral",
-      urgency: "medium",
-      requires_response: false,
-      suggested_response_time: "within_week",
-      key_topics: [],
-      action_items: [],
+      intent: {
+        primary_intent: "general",
+        sentiment: "neutral",
+        urgency: "medium",
+        requires_response: false,
+        suggested_response_time: "within_week",
+        key_topics: [],
+        action_items: [],
+      },
+      cacheStats: {
+        input_tokens: 0,
+        cache_creation_tokens: 0,
+        cache_read_tokens: 0,
+        output_tokens: 0,
+        cache_hit: false,
+      },
     };
   }
 }
@@ -228,7 +258,7 @@ export async function batchProcessEmails(
       }
     }
 
-    // Log batch processing
+    // Log batch processing (cache stats logged per email in processEmail)
     await db.auditLogs.create({
       workspace_id: workspaceId,
       action: "email_batch_processing",
