@@ -18,7 +18,8 @@ const nextConfig = {
 
   // Turbopack configuration (required for Next.js 16)
   turbopack: {
-    // Empty config to silence the warning - Turbopack works fine with default settings
+    // Specify the correct root directory to avoid workspace detection errors
+    root: process.cwd(),
   },
 
   // Enable standalone output for Docker
