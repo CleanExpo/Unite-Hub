@@ -4,7 +4,10 @@
       "Bash(test:*)",
       "Bash(git ls-tree:*)",
       "Bash(npx vitest:*)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(if [ -f .env.local ])",
+      "Bash(then echo \"✅ .env.local exists\")",
+      "Bash(else echo \"❌ .env.local not found\")"
     ],
     "deny": [],
     "ask": []
