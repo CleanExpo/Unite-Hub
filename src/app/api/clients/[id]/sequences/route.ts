@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
+import { validateUserAuth } from "@/lib/workspace-validation";
 import { apiRateLimit } from "@/lib/rate-limit";
 import { UUIDSchema, PaginationSchema } from "@/lib/validation/schemas";
 
@@ -19,7 +20,6 @@ export async function GET(
       return rateLimitResult;
     }
 
-    const supabase = await getSupabaseServer();
     const { id: contactId } = await params;
 
     // Validate contact ID
@@ -28,11 +28,8 @@ export async function GET(
       return NextResponse.json({ error: "Invalid contact ID format" }, { status: 400 });
     }
 
-    // Authenticate user
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    // Validate user authentication
+    const user = await validateUserAuth(req);
 
     // Get pagination params
     const paginationParams = {
@@ -49,38 +46,18 @@ export async function GET(
 
     const { page, limit, sort_by, sort_order } = paginationValidation.data;
 
-    // Verify contact exists and get workspace
+    const supabase = await getSupabaseServer();
+
+    // Verify contact exists and belongs to user's workspace
     const { data: contact, error: contactError } = await supabase
       .from("contacts")
       .select("id, name, email, workspace_id")
       .eq("id", contactId)
+      .eq("workspace_id", user.orgId)
       .single();
 
     if (contactError || !contact) {
-      return NextResponse.json({ error: "Contact not found" }, { status: 404 });
-    }
-
-    // Verify user has access to this workspace
-    const { data: workspace, error: workspaceError } = await supabase
-      .from("workspaces")
-      .select("id, org_id")
-      .eq("id", contact.workspace_id)
-      .single();
-
-    if (workspaceError || !workspace) {
-      return NextResponse.json({ error: "Workspace not found" }, { status: 404 });
-    }
-
-    // Verify user is in the organization
-    const { data: userOrg, error: userOrgError } = await supabase
-      .from("user_organizations")
-      .select("id")
-      .eq("user_id", user.id)
-      .eq("org_id", workspace.org_id)
-      .single();
-
-    if (userOrgError || !userOrg) {
-      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      return NextResponse.json({ error: "Contact not found or access denied" }, { status: 404 });
     }
 
     // Get drip campaigns for this contact
@@ -195,6 +172,14 @@ export async function GET(
       },
     });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Get sequences error:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to get sequences" },
