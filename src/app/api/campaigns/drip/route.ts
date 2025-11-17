@@ -8,8 +8,8 @@ import {
 } from "@/lib/services/drip-campaign";
 import { getSupabaseServer } from "@/lib/supabase";
 import { db } from "@/lib/db";
+import { validateUserAndWorkspace } from "@/lib/workspace-validation";
 import { apiRateLimit } from "@/lib/rate-limit";
-import { authenticateRequest } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   try {
