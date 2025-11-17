@@ -54,11 +54,17 @@ export async function GET(req: NextRequest) {
       .from('user_profiles')
       .select('*')
       .eq('id', authenticatedUserId)
-      .single();
+      .maybeSingle();
 
     if (error) {
       console.error('[API] Profile fetch error:', error);
       return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    // If no profile exists, return null (not an error)
+    if (!profile) {
+      console.warn('[API] No profile found for user:', authenticatedUserId);
+      return NextResponse.json(null, { status: 200 });
     }
 
     return NextResponse.json(profile);
