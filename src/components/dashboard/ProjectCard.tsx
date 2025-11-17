@@ -4,10 +4,13 @@ import React from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Clock, Calendar } from "lucide-react";
+import { Clock, Calendar, Network } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface ProjectCardProps {
+  id?: string;
   title: string;
   client: string;
   status: "on-track" | "at-risk" | "delayed" | "completed";
@@ -52,6 +55,7 @@ const priorityConfig = {
 };
 
 export function ProjectCard({
+  id,
   title,
   client,
   status,
@@ -61,6 +65,7 @@ export function ProjectCard({
   priority,
   className,
 }: ProjectCardProps) {
+  const router = useRouter();
   const statusInfo = statusConfig[status];
 
   return (
@@ -132,6 +137,24 @@ export function ProjectCard({
             </div>
           )}
         </div>
+
+        {/* Mindmap Button */}
+        {id && (
+          <div className="pt-2 border-t">
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full"
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push(`/dashboard/projects/${id}/mindmap`);
+              }}
+            >
+              <Network className="h-4 w-4 mr-2" />
+              View Mindmap
+            </Button>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

@@ -200,6 +200,7 @@ export default function ProjectsPage() {
                   {filteredProjects.map((project) => (
                     <ProjectCard
                       key={project.id}
+                      id={project.id}
                       title={project.title}
                       client={project.client}
                       status={project.status}

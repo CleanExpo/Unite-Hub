@@ -27,7 +27,20 @@
       "Bash(nul)",
       "Bash(node:*)",
       "Bash(echo:*)",
-      "Bash(TEAM2_QUICK_SUMMARY.md)"
+      "Bash(TEAM2_QUICK_SUMMARY.md)",
+      "Bash(curl:*)",
+      "Bash(docker-compose ps:*)",
+      "Bash(npx dotenv-cli:*)",
+      "Bash(findstr:*)",
+      "Bash(pnpm add:*)",
+      "Bash(if [ -d \"src/app/api/projects\" ])",
+      "Bash(then echo \"exists\")",
+      "Bash(else echo \"not exists\")",
+      "Bash(fi)",
+      "Bash(node scripts/check-mindmap-tables.mjs:*)",
+      "Bash(npm cache clean:*)",
+      "Bash(psql:*)",
+      "Bash(pnpm build:*)"
     ],
     "deny": [],
     "ask": []
