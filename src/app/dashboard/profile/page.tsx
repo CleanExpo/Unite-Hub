@@ -361,11 +361,16 @@ export default function ProfilePage() {
       {/* Page Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Profile</h1>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent mb-2">
+            Profile
+          </h1>
           <p className="text-slate-400">Manage your account settings and preferences</p>
         </div>
         {!isEditing ? (
-          <Button onClick={() => setIsEditing(true)} className="gap-2">
+          <Button
+            onClick={() => setIsEditing(true)}
+            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50 gap-2"
+          >
             <Edit2 className="h-4 w-4" />
             Edit Profile
           </Button>
@@ -375,12 +380,16 @@ export default function ProfilePage() {
               onClick={handleCancel}
               variant="outline"
               disabled={isSaving}
-              className="gap-2"
+              className="border-slate-700/50 bg-slate-800/50 backdrop-blur-sm text-slate-300 hover:bg-slate-700/50 hover:border-slate-600/50 gap-2"
             >
               <X className="h-4 w-4" />
               Cancel
             </Button>
-            <Button onClick={handleSave} disabled={isSaving} className="gap-2">
+            <Button
+              onClick={handleSave}
+              disabled={isSaving}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50 gap-2"
+            >
               {isSaving ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -398,9 +407,9 @@ export default function ProfilePage() {
       </div>
 
       {/* Profile Card */}
-      <Card className="bg-slate-800 border-slate-700">
+      <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
         <CardHeader>
-          <CardTitle className="text-white">Account Information</CardTitle>
+          <CardTitle className="text-white text-xl font-semibold">Account Information</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Avatar Section */}
@@ -655,9 +664,9 @@ export default function ProfilePage() {
       </Card>
 
       {/* Notification Preferences */}
-      <Card className="bg-slate-800 border-slate-700">
+      <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
         <CardHeader>
-          <CardTitle className="text-white">Notification Preferences</CardTitle>
+          <CardTitle className="text-white text-xl font-semibold">Notification Preferences</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
@@ -739,17 +748,17 @@ export default function ProfilePage() {
       </Card>
 
       {/* Account Stats */}
-      <Card className="bg-slate-800 border-slate-700">
+      <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
         <CardHeader>
-          <CardTitle className="text-white">Account Activity</CardTitle>
+          <CardTitle className="text-white text-xl font-semibold">Account Activity</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="text-center p-4 bg-slate-900 rounded-lg">
-              <div className="text-2xl font-bold text-white">Active</div>
+            <div className="text-center p-4 bg-slate-900/50 backdrop-blur-sm border border-slate-700/30 rounded-lg">
+              <div className="text-2xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">Active</div>
               <div className="text-sm text-slate-400">Account Status</div>
             </div>
-            <div className="text-center p-4 bg-slate-900 rounded-lg">
+            <div className="text-center p-4 bg-slate-900/50 backdrop-blur-sm border border-slate-700/30 rounded-lg">
               <div className="text-2xl font-bold text-white">
                 {Math.floor(
                   (Date.now() - new Date(user.created_at).getTime()) /
@@ -758,7 +767,7 @@ export default function ProfilePage() {
               </div>
               <div className="text-sm text-slate-400">Days Since Join</div>
             </div>
-            <div className="text-center p-4 bg-slate-900 rounded-lg">
+            <div className="text-center p-4 bg-slate-900/50 backdrop-blur-sm border border-slate-700/30 rounded-lg">
               <div className="text-2xl font-bold text-white">
                 {new Date(
                   user.last_sign_in_at || user.created_at
