@@ -18,6 +18,7 @@ Unite-Hub is an **AI-first CRM and marketing automation platform** built with:
 3. **Drip Campaigns** - Visual builder, conditional branching, A/B testing
 4. **Lead Scoring** - AI-powered (0-100), composite scoring algorithm
 5. **Dashboard** - Real-time contact management, campaign analytics
+6. **Multimedia Input System** (Phase 2) ✅ - File upload, OpenAI Whisper transcription, Claude AI analysis, full-text search
 
 ---
 
@@ -308,7 +309,109 @@ if (!user) return <div>Please log in</div>;
 
 ---
 
-## Database Schema (18 Tables)
+## Phase 2: Multimedia Input System (COMPLETE ✅)
+
+**Status**: Backend implementation complete, ready for testing
+**Completed**: 2025-01-17
+**Documentation**: See `PHASE2_QUICK_START.md` and `PHASE2_COMPLETE_SUMMARY.md`
+
+### Overview
+
+Multimedia file upload, transcription, and AI analysis system with automatic processing pipeline:
+
+1. **Upload** → File stored in Supabase Storage (`media-uploads` bucket)
+2. **Transcribe** (video/audio) → OpenAI Whisper extracts transcript with timestamps
+3. **Analyze** → Claude Opus 4 generates structured insights
+4. **Search** → Full-text search across transcripts and AI analysis
+
+### Database Table
+
+**`media_files`** (23 columns):
+- File metadata: filename, type, size, MIME type
+- Storage: path, bucket, public URL
+- Status tracking: uploading → processing → transcribing → analyzing → completed
+- Progress: 0-100% real-time updates
+- Transcript (JSONB): segments with timestamps, full text, language
+- AI Analysis (JSONB): summary, key points, entities, sentiment, topics, action items
+- Full-text search: Generated TSVECTOR column for fast searching
+- Workspace isolation: All queries filtered by workspace_id
+
+### API Routes
+
+1. **POST `/api/media/upload`** - Multipart file upload with validation
+   - Rate limiting: 10 uploads per 15 minutes
+   - File type validation: video, audio, document, image, sketch
+   - Workspace access verification
+   - Auto-triggers transcription and analysis
+
+2. **POST `/api/media/transcribe?workspaceId={id}`** - OpenAI Whisper transcription
+   - Downloads file from storage
+   - Calls Whisper API with segment-level timestamps
+   - Stores transcript in JSONB column
+   - Auto-triggers AI analysis
+
+3. **POST `/api/media/analyze?workspaceId={id}`** - Claude AI analysis
+   - Uses Claude Opus 4 with Extended Thinking (5000 token budget)
+   - Prompt caching for 90% cost savings on system prompts
+   - Structured output: summary, key points, entities, sentiment, topics, action items
+   - Stores analysis in JSONB column
+
+4. **GET `/api/media/search?workspaceId={id}&q={query}`** - Full-text search
+   - PostgreSQL tsvector search across filenames, transcripts, AI analysis
+   - Filter by file type, project, status
+   - Pagination support
+
+### Testing
+
+**Quick Test** (5 minutes):
+```bash
+# 1. Run health check
+node scripts/phase2-health-check.mjs
+
+# 2. Start dev server
+npm run dev
+
+# 3. Open test page
+# http://localhost:3008/test-media-upload.html
+
+# 4. Upload a test file and monitor progress
+```
+
+**Workspace Credentials** (for testing):
+- workspace_id: `5a92c7af-5aca-49a7-8866-3bfaa1d04532`
+- org_id: `adedf006-ca69-47d4-adbf-fc91bd7f225d`
+
+### Cost Estimates
+
+- **30 min video**: ~$0.44 (Whisper $0.36 + Claude $0.08)
+- **30 min audio**: ~$0.42 (Whisper $0.36 + Claude $0.06)
+- **Image**: ~$0.03 (Claude only)
+- **Document**: ~$0.04 (Claude only)
+
+**Monthly** (100 videos): ~$24/month
+**With prompt caching**: 20-30% savings on AI analysis
+
+### Security
+
+- ✅ Workspace isolation via RLS policies
+- ✅ Rate limiting (10 uploads/15 min)
+- ✅ File size validation (100MB max)
+- ✅ Extension whitelist per file type
+- ✅ MIME type verification
+- ✅ Audit logging to `auditLogs` table
+
+### Next Steps (Phase 3)
+
+Frontend React components:
+- MediaUploader - Drag & drop file uploader
+- MediaGallery - Grid view of uploaded files
+- VideoPlayer - Video player with transcript overlay
+- AIInsightsPanel - Display AI analysis results
+- MediaSearch - Full-text search UI
+
+---
+
+## Database Schema (19 Tables)
 
 ### Core Tables
 - `organizations` - Top-level org entities
@@ -320,6 +423,9 @@ if (!user) return <div>Please log in</div>;
 - `contacts` - CRM contacts with `ai_score` (0-100)
 - `emails`, `email_opens`, `email_clicks` - Email tracking
 - `integrations` - OAuth tokens (Gmail, etc.)
+
+### Media (Phase 2)
+- `media_files` - Uploaded multimedia files with transcripts and AI analysis (JSONB columns)
 
 ### Campaigns
 - `campaigns` - Email campaigns

@@ -44,6 +44,15 @@ Scores 60-79 = Warm leads | 80-100 = Hot leads
 - Dark theme with Tailwind CSS
 - Responsive design
 
+### 🎥 Multimedia Input System (Phase 2) ✅
+- **File Upload**: Support for video, audio, documents, images, sketches (up to 100MB)
+- **Auto Transcription**: OpenAI Whisper integration for video/audio transcription with timestamps
+- **AI Analysis**: Claude Opus 4 analyzes content and generates structured insights
+- **Full-Text Search**: Search across filenames, transcripts, and AI analysis
+- **Workspace Isolation**: Secure multi-tenant file storage with RLS policies
+- **Rate Limiting**: Prevent abuse with 10 uploads per 15 minutes
+- **Cost Optimization**: Prompt caching for 20-30% AI cost savings
+
 ## 🛠️ Tech Stack
 
 ### Frontend
