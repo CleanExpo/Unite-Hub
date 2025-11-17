@@ -1,16 +1,13 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { ModernSidebar } from "@/components/layout/ModernSidebar";
 import { ApprovalCard } from "@/components/dashboard/ApprovalCard";
-import { StatsCard } from "@/components/dashboard/StatsCard";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Plus, CheckCircle, XCircle, Clock, AlertCircle, Loader2 } from "lucide-react";
+import { CheckCircle, XCircle, Clock, AlertCircle, Loader2 } from "lucide-react";
 import { useApprovals } from "@/hooks/useApprovals";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/hooks/useWorkspace";
-import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 // Helper function to format submission time
 const formatSubmissionTime = (dateString: string) => {
@@ -123,10 +120,9 @@ export default function ApprovalsPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
-      <Breadcrumbs items={[{ label: "Approvals" }]} />
-
-      {/* Header */}
+    <div className="min-h-screen">
+      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+        {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent mb-2">
@@ -363,6 +359,7 @@ export default function ApprovalsPage() {
           </Tabs>
         </>
       )}
+      </div>
     </div>
   );
 }
