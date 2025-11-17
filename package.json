@@ -41,7 +41,10 @@
     "docker:logs": "docker-compose logs -f",
     "docker:logs:app": "docker-compose logs -f app",
     "docker:shell": "docker-compose exec app sh",
-    "docker:health": "docker-compose ps && curl http://localhost:3008/api/health"
+    "docker:health": "docker-compose ps && curl http://localhost:3008/api/health",
+    "quality:assess": "node scripts/quality-assessment.mjs",
+    "quality:report": "node scripts/quality-assessment.mjs > quality-report.txt",
+    "test:phase": "npm run test && npm run quality:assess"
   },
   "keywords": [],
   "author": "",
