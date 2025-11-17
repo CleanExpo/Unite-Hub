@@ -52,41 +52,43 @@ export default function CodeGeneratorPage() {
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-6">
+    <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
       <Breadcrumbs items={[{ label: "AI Tools", href: "/dashboard/ai-tools" }, { label: "Code Generator" }]} />
 
       {/* Header */}
-      <div className="flex items-center gap-3">
-        <div className="p-3 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg">
-          <Code2 className="h-6 w-6 text-white" />
+      <div className="flex items-center gap-4">
+        <div className="p-3 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl shadow-lg">
+          <Code2 className="h-8 w-8 text-white" />
         </div>
         <div>
-          <h1 className="text-3xl font-bold">AI Code Generator</h1>
-          <p className="text-gray-600">Generate production-ready code with AI</p>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent">
+            AI Code Generator
+          </h1>
+          <p className="text-slate-400 mt-1">Generate production-ready code with AI</p>
         </div>
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Input Section */}
-        <Card className="p-6 space-y-4">
+        <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-2">
-              What do you want to build?
+            <label className="block text-sm font-medium text-slate-300 mb-2">
+              What do you want to build? *
             </label>
             <Textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="Example: Create a TypeScript function to validate email addresses with regex"
-              className="min-h-[200px] resize-none"
+              className="min-h-[200px] resize-none bg-slate-900/50 border-slate-700/50 text-white placeholder:text-slate-500"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2">AI Model</label>
+            <label className="block text-sm font-medium text-slate-300 mb-2">AI Model</label>
             <select
               value={model}
               onChange={(e) => setModel(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-slate-900/50 border border-slate-700/50 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
             >
               <option value="gpt-4o-mini">GPT-4o Mini (Fast & Cheap)</option>
               <option value="gpt-4o">GPT-4o (Best Quality)</option>
@@ -97,7 +99,7 @@ export default function CodeGeneratorPage() {
           <Button
             onClick={handleGenerate}
             disabled={loading || !prompt.trim()}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50"
           >
             {loading ? (
               <>
@@ -113,26 +115,26 @@ export default function CodeGeneratorPage() {
           </Button>
 
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+            <div className="p-3 bg-red-500/20 border border-red-500/30 rounded-lg text-red-400 text-sm">
               {error}
             </div>
           )}
         </Card>
 
         {/* Output Section */}
-        <Card className="p-6 space-y-4">
+        <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 p-6 space-y-4">
           <div className="flex items-center justify-between">
-            <label className="block text-sm font-medium">Generated Code</label>
+            <label className="block text-sm font-medium text-slate-300">Generated Code</label>
             {generatedCode && (
               <Button
                 onClick={handleCopy}
-                variant="outline"
+                variant="ghost"
                 size="sm"
-                className="gap-2"
+                className="gap-2 text-slate-400 hover:text-white"
               >
                 {copied ? (
                   <>
-                    <Check className="h-4 w-4" />
+                    <Check className="h-4 w-4 text-green-400" />
                     Copied!
                   </>
                 ) : (
@@ -146,13 +148,13 @@ export default function CodeGeneratorPage() {
           </div>
 
           <div className="relative">
-            <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto min-h-[200px] max-h-[500px] overflow-y-auto">
+            <pre className="bg-slate-900 text-slate-100 p-4 rounded-lg overflow-x-auto min-h-[200px] max-h-[500px] overflow-y-auto border border-slate-700/50">
               <code>{generatedCode || "Your generated code will appear here..."}</code>
             </pre>
           </div>
 
           {generatedCode && (
-            <div className="text-xs text-gray-500">
+            <div className="text-xs text-slate-500">
               Generated with {model} • {generatedCode.length} characters
             </div>
           )}
@@ -160,8 +162,8 @@ export default function CodeGeneratorPage() {
       </div>
 
       {/* Examples */}
-      <Card className="p-6">
-        <h3 className="font-semibold mb-3">Try these examples:</h3>
+      <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 p-6">
+        <h3 className="font-semibold text-white mb-3">Try these examples:</h3>
         <div className="grid md:grid-cols-3 gap-3">
           {[
             "Create a React component for a login form with validation",
@@ -171,7 +173,7 @@ export default function CodeGeneratorPage() {
             <button
               key={i}
               onClick={() => setPrompt(example)}
-              className="p-3 text-left text-sm bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-3 text-left text-sm bg-slate-900/50 backdrop-blur-sm border border-slate-700/30 rounded-lg hover:border-slate-600/50 transition-all text-slate-300 hover:text-white"
             >
               {example}
             </button>
