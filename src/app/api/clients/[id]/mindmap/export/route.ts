@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth } from "@/lib/workspace-validation";
 import { db } from "@/lib/db";
 import { apiRateLimit } from "@/lib/rate-limit";
 
@@ -9,31 +9,33 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(request);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
-
-    const authResult = await authenticateRequest(request);
-    if (!authResult) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
     }
-    const { userId } = authResult;
 
     const { id } = await params;
     const body = await request.json();
     const format = body.format || "png"; // png, svg, pdf, json
 
-    // Check if client exists
+    // Validate user authentication
+    const user = await validateUserAuth(request);
+
+    // Check if client exists and verify workspace access
     const client = await db.contacts.getById(id);
     if (!client) {
       return NextResponse.json(
         { error: "Client not found" },
         { status: 404 }
+      );
+    }
+
+    // Verify workspace access
+    if (client.workspace_id !== user.orgId) {
+      return NextResponse.json(
+        { error: "Access denied" },
+        { status: 403 }
       );
     }
 
@@ -51,7 +53,7 @@ export async function POST(
         resource_id: id,
         agent: "user",
         status: "success",
-        details: { format },
+        details: { format, user_id: user.userId },
       });
     }
 
@@ -61,6 +63,14 @@ export async function POST(
       expires_at: new Date(Date.now() + 3600000), // 1 hour
     });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error exporting mind map:", error);
     return NextResponse.json(
       { error: "Failed to export mind map" },

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth } from "@/lib/workspace-validation";
 import { db } from "@/lib/db";
 import { apiRateLimit } from "@/lib/rate-limit";
 
@@ -15,24 +15,23 @@ export async function POST(
     return rateLimitResult;
   }
 
-    const authResult = await authenticateRequest(request);
-    if (!authResult) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-    const { userId } = authResult;
-
     const { id } = await params;
 
-    // Check if client exists
+    // Validate user authentication
+    const user = await validateUserAuth(request);
+
+    // Check if client exists and verify workspace access
     const client = await db.contacts.getById(id);
     if (!client) {
       return NextResponse.json(
         { error: "Client not found" },
         { status: 404 }
       );
+    }
+
+    // Verify workspace access
+    if (client.workspace_id !== user.orgId) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
 
     // Get organization to check tier limits
@@ -124,11 +123,20 @@ export async function POST(
         file_name: file.name,
         file_type: file.type,
         file_size: file.size,
+        user_id: user.userId,
       },
     });
 
     return NextResponse.json({ asset }, { status: 201 });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error uploading asset:", error);
     return NextResponse.json(
       { error: "Failed to upload asset" },

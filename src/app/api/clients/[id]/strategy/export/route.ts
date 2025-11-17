@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth } from "@/lib/workspace-validation";
 import { db } from "@/lib/db";
 import { apiRateLimit } from "@/lib/rate-limit";
 
@@ -15,20 +15,12 @@ export async function POST(
     return rateLimitResult;
   }
 
-    const authResult = await authenticateRequest(request);
-    if (!authResult) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-    const { userId } = authResult;
-
     const { id } = await params;
-    const body = await request.json();
-    const format = body.format || "pdf"; // pdf, docx, json
 
-    // Check if client exists
+    // Validate user authentication
+    const user = await validateUserAuth(request);
+
+    // Check if client exists and verify workspace access
     const client = await db.contacts.getById(id);
     if (!client) {
       return NextResponse.json(
@@ -36,6 +28,14 @@ export async function POST(
         { status: 404 }
       );
     }
+
+    // Verify workspace access
+    if (client.workspace_id !== user.orgId) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+    }
+
+    const body = await request.json();
+    const format = body.format || "pdf"; // pdf, docx, json
 
     // Get organization to check tier
     const workspace = await db.workspaces.getById(client.workspace_id);
@@ -78,7 +78,7 @@ export async function POST(
       resource_id: id,
       agent: "user",
       status: "success",
-      details: { format },
+      details: { format, user_id: user.userId },
     });
 
     return NextResponse.json({
@@ -87,6 +87,14 @@ export async function POST(
       expires_at: new Date(Date.now() + 3600000), // 1 hour
     });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error exporting strategy:", error);
     return NextResponse.json(
       { error: "Failed to export strategy" },

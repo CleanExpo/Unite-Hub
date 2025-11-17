@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth } from "@/lib/workspace-validation";
 import { db } from "@/lib/db";
 import { apiRateLimit } from "@/lib/rate-limit";
 
@@ -15,25 +15,25 @@ export async function PUT(
     return rateLimitResult;
   }
 
-    const authResult = await authenticateRequest(request);
-    if (!authResult) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-    const { userId } = authResult;
-
     const { id, assetId } = await params;
+
+    // Validate user authentication
+    const user = await validateUserAuth(request);
+
     const body = await request.json();
 
-    // Check if client exists
+    // Check if client exists and verify workspace access
     const client = await db.contacts.getById(id);
     if (!client) {
       return NextResponse.json(
         { error: "Client not found" },
         { status: 404 }
       );
+    }
+
+    // Verify workspace access
+    if (client.workspace_id !== user.orgId) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
 
     // In production, update asset in database
@@ -53,12 +53,20 @@ export async function PUT(
         resource_id: assetId,
         agent: "user",
         status: "success",
-        details: { updated_fields: Object.keys(body) },
+        details: { updated_fields: Object.keys(body), user_id: user.userId },
       });
     }
 
     return NextResponse.json({ asset: updatedAsset });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error updating asset:", error);
     return NextResponse.json(
       { error: "Failed to update asset" },
@@ -73,24 +81,23 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string; assetId: string }> }
 ) {
   try {
-    const authResult = await authenticateRequest(request);
-    if (!authResult) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-    const { userId } = authResult;
-
     const { id, assetId } = await params;
 
-    // Check if client exists
+    // Validate user authentication
+    const user = await validateUserAuth(request);
+
+    // Check if client exists and verify workspace access
     const client = await db.contacts.getById(id);
     if (!client) {
       return NextResponse.json(
         { error: "Client not found" },
         { status: 404 }
       );
+    }
+
+    // Verify workspace access
+    if (client.workspace_id !== user.orgId) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
 
     // In production, delete from cloud storage and database
@@ -106,12 +113,20 @@ export async function DELETE(
         resource_id: assetId,
         agent: "user",
         status: "success",
-        details: { client_id: id },
+        details: { client_id: id, user_id: user.userId },
       });
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error deleting asset:", error);
     return NextResponse.json(
       { error: "Failed to delete asset" },
