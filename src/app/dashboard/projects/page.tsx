@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { ModernSidebar } from "@/components/layout/ModernSidebar";
 import { ProjectCard, ProjectCardGrid } from "@/components/dashboard/ProjectCard";
 import { StatsCard } from "@/components/dashboard/StatsCard";
@@ -40,6 +41,7 @@ const transformProject = (project: any) => {
 };
 
 export default function ProjectsPage() {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
 
@@ -98,7 +100,10 @@ export default function ProjectsPage() {
             />
           </div>
 
-          <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50 gap-2">
+          <Button
+            onClick={() => router.push("/dashboard/projects/new")}
+            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50 gap-2"
+          >
             <Plus className="h-4 w-4" />
             New Project
           </Button>
