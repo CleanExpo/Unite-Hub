@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { CheckCircle2, Loader2, Sparkles, Zap, Building2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
@@ -87,7 +87,9 @@ export default function PricingPage() {
       {/* Pricing Content */}
       <div className="max-w-7xl mx-auto px-6 py-24 space-y-12">
         <div className="text-center space-y-4">
-          <h1 className="text-5xl font-bold text-white">Simple, Transparent Pricing</h1>
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent">
+            Simple, Transparent Pricing
+          </h1>
           <p className="text-xl text-slate-400">Scale as you grow. Only pay for what you use.</p>
         </div>
 
@@ -105,6 +107,8 @@ export default function PricingPage() {
             ]}
             onSelect={() => handleCheckout("starter")}
             isLoading={isLoading}
+            icon={Sparkles}
+            gradient="from-blue-500 to-cyan-500"
           />
           <PricingCard
             name="Unite-Hub Professional"
@@ -120,6 +124,8 @@ export default function PricingPage() {
             onSelect={() => handleCheckout("professional")}
             isLoading={isLoading}
             popular={true}
+            icon={Zap}
+            gradient="from-purple-500 to-pink-500"
           />
           <PricingCard
             name="Enterprise"
@@ -136,12 +142,16 @@ export default function PricingPage() {
               window.location.href = "mailto:sales@unite-hub.io";
             }}
             isLoading={isLoading}
+            icon={Building2}
+            gradient="from-orange-500 to-red-500"
           />
         </div>
 
         {/* FAQ */}
         <div className="space-y-8 py-12">
-          <h2 className="text-3xl font-bold text-white text-center">Frequently Asked Questions</h2>
+          <h2 className="text-3xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent text-center">
+            Frequently Asked Questions
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <FAQItem
               q="Can I change my plan?"
@@ -174,6 +184,8 @@ function PricingCard({
   onSelect,
   isLoading,
   popular = false,
+  icon: Icon,
+  gradient,
 }: {
   name: string;
   price: string;
@@ -182,30 +194,43 @@ function PricingCard({
   onSelect: () => void;
   isLoading: boolean;
   popular?: boolean;
+  icon: React.ElementType;
+  gradient: string;
 }) {
   return (
     <Card
       className={`${
         popular
-          ? "border-blue-600 bg-slate-800 ring-2 ring-blue-600/20 transform scale-105"
-          : "bg-slate-800 border-slate-700"
-      } transition hover:border-blue-600/50`}
+          ? "border-blue-500/50 bg-slate-800/50 backdrop-blur-sm ring-2 ring-blue-500/20 transform scale-105 shadow-xl shadow-blue-500/20"
+          : "bg-slate-800/50 backdrop-blur-sm border-slate-700/50"
+      } transition-all hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-500/10 group`}
     >
       <CardHeader>
-        {popular && <Badge className="w-fit mb-2 bg-blue-600">Most Popular</Badge>}
-        <CardTitle className="text-white">{name}</CardTitle>
-        <CardDescription>{description}</CardDescription>
+        <div className="flex items-start justify-between mb-4">
+          <div className={`h-14 w-14 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}>
+            <Icon className="h-7 w-7 text-white" />
+          </div>
+          {popular && (
+            <Badge className="bg-gradient-to-r from-blue-600 to-purple-600 text-white border-0 shadow-lg shadow-blue-500/50">
+              Most Popular
+            </Badge>
+          )}
+        </div>
+        <CardTitle className="text-white text-2xl font-bold">{name}</CardTitle>
+        <CardDescription className="text-slate-400">{description}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div>
-          <span className="text-4xl font-bold text-white">{price}</span>
-          {price !== "Custom" && <span className="text-slate-400">/month</span>}
+          <span className={`text-5xl font-bold ${price !== "Custom" ? "bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent" : "text-white"}`}>
+            {price}
+          </span>
+          {price !== "Custom" && <span className="text-slate-400 text-lg">/month</span>}
         </div>
 
         <div className="space-y-3">
           {features.map((feature, i) => (
-            <div key={i} className="flex gap-3">
-              <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" />
+            <div key={i} className="flex gap-3 items-start">
+              <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" />
               <span className="text-slate-300">{feature}</span>
             </div>
           ))}
@@ -215,8 +240,10 @@ function PricingCard({
           onClick={onSelect}
           disabled={isLoading}
           className={`w-full ${
-            popular ? "bg-blue-600 hover:bg-blue-700" : "bg-slate-700 hover:bg-slate-600"
-          }`}
+            popular
+              ? "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50"
+              : "bg-slate-700/50 hover:bg-slate-600/50 text-white border border-slate-600/50"
+          } transition-all`}
         >
           {isLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
           Get Started
@@ -228,9 +255,9 @@ function PricingCard({
 
 function FAQItem({ q, a }: { q: string; a: string }) {
   return (
-    <div className="bg-slate-800 border border-slate-700 rounded p-4">
-      <p className="font-semibold text-white mb-2">{q}</p>
-      <p className="text-slate-400">{a}</p>
+    <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6 hover:border-slate-600/50 transition-all group">
+      <p className="font-semibold text-white mb-2 text-lg">{q}</p>
+      <p className="text-slate-400 leading-relaxed">{a}</p>
     </div>
   );
 }
