@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseServer } from '@/lib/supabase';
+import { validateUserAndWorkspace } from '@/lib/workspace-validation';
 import { db } from '@/lib/db';
 import { apiRateLimit } from "@/lib/rate-limit";
 
@@ -13,21 +13,10 @@ import { apiRateLimit } from "@/lib/rate-limit";
  */
 export async function GET(req: NextRequest) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(req);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
-
-    const supabase = await getSupabaseServer();
-
-    // Get authenticated user
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -38,6 +27,9 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Workspace ID required' }, { status: 400 });
     }
 
+    // Validate user authentication and workspace access
+    await validateUserAndWorkspace(req, workspaceId);
+
     const templates = await db.whatsappTemplates.listByWorkspace(workspaceId, status);
 
     return NextResponse.json({
@@ -45,6 +37,14 @@ export async function GET(req: NextRequest) {
       templates
     });
   } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error('Error fetching templates:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to fetch templates' },
@@ -58,17 +58,6 @@ export async function GET(req: NextRequest) {
  */
 export async function POST(req: NextRequest) {
   try {
-    const supabase = await getSupabaseServer();
-
-    // Get authenticated user
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
     const body = await req.json();
     const {
       workspaceId,
@@ -90,6 +79,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Validate user authentication and workspace access
+    await validateUserAndWorkspace(req, workspaceId);
+
     // Create template
     const template = await db.whatsappTemplates.create({
       workspace_id: workspaceId,
@@ -109,6 +101,14 @@ export async function POST(req: NextRequest) {
       template
     });
   } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error('Error creating template:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to create template' },

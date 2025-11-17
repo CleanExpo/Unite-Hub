@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabase';
+import { validateUserAndWorkspace } from '@/lib/workspace-validation';
 import { db } from '@/lib/db';
 import { whatsappService } from '@/lib/services/whatsapp';
 import { apiRateLimit } from "@/lib/rate-limit";
@@ -16,17 +17,6 @@ export async function POST(req: NextRequest) {
   if (rateLimitResult) {
     return rateLimitResult;
   }
-
-    const supabase = await getSupabaseServer();
-
-    // Get authenticated user
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
 
     const body = await req.json();
     const {
@@ -51,6 +41,11 @@ export async function POST(req: NextRequest) {
     if (!phoneNumber) {
       return NextResponse.json({ error: 'Phone number required' }, { status: 400 });
     }
+
+    // Validate user authentication and workspace access
+    await validateUserAndWorkspace(req, workspaceId);
+
+    const supabase = await getSupabaseServer();
 
     // Format phone number (remove + if present, WhatsApp API expects just digits)
     const formattedPhone = phoneNumber.replace(/\+/g, '');
@@ -194,6 +189,14 @@ export async function POST(req: NextRequest) {
       whatsappMessageId
     });
   } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error('Error sending WhatsApp message:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to send message' },

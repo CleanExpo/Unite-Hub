@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseServer } from '@/lib/supabase';
+import { validateUserAndWorkspace } from '@/lib/workspace-validation';
 import { db } from '@/lib/db';
 import { apiRateLimit } from "@/lib/rate-limit";
 
@@ -13,21 +13,10 @@ import { apiRateLimit } from "@/lib/rate-limit";
  */
 export async function GET(req: NextRequest) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(req);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
-
-    const supabase = await getSupabaseServer();
-
-    // Get authenticated user
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -37,6 +26,9 @@ export async function GET(req: NextRequest) {
     if (!workspaceId) {
       return NextResponse.json({ error: 'Workspace ID required' }, { status: 400 });
     }
+
+    // Validate user authentication and workspace access
+    await validateUserAndWorkspace(req, workspaceId);
 
     // Get conversations
     const conversations = await db.whatsappConversations.listByWorkspace(workspaceId, status);
@@ -62,6 +54,14 @@ export async function GET(req: NextRequest) {
       conversations: conversationsWithCounts
     });
   } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error('Error fetching conversations:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to fetch conversations' },

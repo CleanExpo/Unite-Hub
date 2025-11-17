@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseServer } from '@/lib/supabase';
+import { validateUserAndWorkspace } from '@/lib/workspace-validation';
 import { db } from '@/lib/db';
 import { apiRateLimit } from "@/lib/rate-limit";
 
@@ -19,21 +19,10 @@ interface RouteParams {
  */
 export async function GET(req: NextRequest, context: RouteParams) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(req);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
-
-    const supabase = await getSupabaseServer();
-
-    // Get authenticated user
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
     }
 
     const params = await context.params;
@@ -47,6 +36,9 @@ export async function GET(req: NextRequest, context: RouteParams) {
     if (!conversation) {
       return NextResponse.json({ error: 'Conversation not found' }, { status: 404 });
     }
+
+    // Validate user authentication and workspace access
+    await validateUserAndWorkspace(req, conversation.workspace_id);
 
     // Get messages
     const messages = await db.whatsappMessages.getByConversation(
@@ -64,6 +56,14 @@ export async function GET(req: NextRequest, context: RouteParams) {
       conversation
     });
   } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error('Error fetching messages:', error);
     return NextResponse.json(
       { error: error.message || 'Failed to fetch messages' },
