@@ -30,19 +30,21 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
+  const supabase = await getSupabaseServer();
+
   try {
-  // Apply rate limiting
-  const rateLimitResult = await publicRateLimit(req);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
+    // Apply rate limiting
+    const rateLimitResult = await publicRateLimit(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
 
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
     if (!webhookSecret) {
       console.error("STRIPE_WEBHOOK_SECRET not configured");
       return NextResponse.json(
-        { error: "Webhook secret not configured" },
+        { error: "Webhook configuration error" },
         { status: 500 }
       );
     }
@@ -53,7 +55,7 @@ export async function POST(req: NextRequest) {
     if (!signature) {
       console.error("No Stripe signature header found");
       return NextResponse.json(
-        { error: "No signature provided" },
+        { error: "Invalid request" },
         { status: 400 }
       );
     }
@@ -65,7 +67,7 @@ export async function POST(req: NextRequest) {
     } catch (err: any) {
       console.error("Webhook signature verification failed:", err.message);
       return NextResponse.json(
-        { error: `Webhook Error: ${err.message}` },
+        { error: "Signature verification failed" },
         { status: 400 }
       );
     }
@@ -73,6 +75,39 @@ export async function POST(req: NextRequest) {
     console.log(`Received webhook event: ${event.type}`, {
       eventId: event.id,
       created: new Date(event.created * 1000).toISOString(),
+    });
+
+    // ✅ SECURITY FIX: Check if event already processed (idempotency)
+    const { data: existingEvent } = await supabase
+      .from("webhook_events")
+      .select("id, status")
+      .eq("stripe_event_id", event.id)
+      .single();
+
+    if (existingEvent) {
+      if (existingEvent.status === "processed") {
+        console.log(`Event ${event.id} already processed, skipping`);
+        return NextResponse.json({
+          received: true,
+          eventType: event.type,
+          status: "already_processed"
+        });
+      } else if (existingEvent.status === "pending") {
+        console.log(`Event ${event.id} currently being processed, skipping duplicate`);
+        return NextResponse.json({
+          received: true,
+          eventType: event.type,
+          status: "processing"
+        });
+      }
+    }
+
+    // ✅ SECURITY FIX: Record event as pending
+    await supabase.from("webhook_events").insert({
+      stripe_event_id: event.id,
+      event_type: event.type,
+      status: "pending",
+      raw_event: event as any,
     });
 
     // Handle the event
@@ -126,22 +161,44 @@ export async function POST(req: NextRequest) {
           console.log(`Unhandled event type: ${event.type}`);
       }
 
+      // ✅ SECURITY FIX: Mark event as processed
+      await supabase
+        .from("webhook_events")
+        .update({
+          status: "processed",
+          processed_at: new Date().toISOString(),
+        })
+        .eq("stripe_event_id", event.id);
+
       return NextResponse.json({ received: true, eventType: event.type });
     } catch (handlerError: any) {
       console.error(`Error handling ${event.type}:`, handlerError);
+
+      // ✅ SECURITY FIX: Mark event as failed and store error
+      await supabase
+        .from("webhook_events")
+        .update({
+          status: "failed",
+          error_message: handlerError.message,
+          processed_at: new Date().toISOString(),
+        })
+        .eq("stripe_event_id", event.id);
+
+      // ✅ SECURITY FIX: Don't expose error details
       return NextResponse.json(
         {
-          error: "Event handler failed",
+          error: "Event processing failed",
           eventType: event.type,
-          message: handlerError.message,
         },
         { status: 500 }
       );
     }
   } catch (error: any) {
     console.error("Webhook error:", error);
+
+    // ✅ SECURITY FIX: Don't expose error details
     return NextResponse.json(
-      { error: "Webhook handler failed", message: error.message },
+      { error: "Webhook processing failed" },
       { status: 500 }
     );
   }

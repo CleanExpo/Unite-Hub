@@ -5,27 +5,40 @@ import {
   PLAN_TIERS,
 } from "@/lib/stripe/client";
 import { apiRateLimit } from "@/lib/rate-limit";
+import { validateUserAuth } from "@/lib/auth";
+import { getSupabaseServer } from "@/lib/supabase";
 
 /**
  * POST /api/stripe/checkout
  * Create a Stripe Checkout session for subscription purchase
+ *
+ * SECURITY: Requires authentication and owner/admin role
  */
 
 export async function POST(req: NextRequest) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(req);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
+
+    // ✅ SECURITY FIX: Authenticate user
+    const user = await validateUserAuth(req);
+    if (!user) {
+      return NextResponse.json(
+        { error: "Unauthorized. Please log in." },
+        { status: 401 }
+      );
+    }
 
     const body = await req.json();
-    const { plan, email, name, orgId } = body;
+    const { plan, orgId } = body;
 
     // Validation
-    if (!plan || !email || !orgId) {
+    if (!plan || !orgId) {
       return NextResponse.json(
-        { error: "Plan, email, and orgId are required" },
+        { error: "Plan and orgId are required" },
         { status: 400 }
       );
     }
@@ -38,6 +51,45 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const supabase = await getSupabaseServer();
+
+    // ✅ SECURITY FIX: Verify user is owner or admin of this organization
+    const { data: userOrg, error: orgError } = await supabase
+      .from("user_organizations")
+      .select("role")
+      .eq("user_id", user.userId)
+      .eq("org_id", orgId)
+      .eq("is_active", true)
+      .single();
+
+    if (orgError || !userOrg) {
+      return NextResponse.json(
+        { error: "Organization not found or access denied" },
+        { status: 403 }
+      );
+    }
+
+    if (!["owner", "admin"].includes(userOrg.role)) {
+      return NextResponse.json(
+        { error: "Only organization owners and admins can create subscriptions" },
+        { status: 403 }
+      );
+    }
+
+    // ✅ SECURITY FIX: Get authenticated user's email (don't trust client)
+    const { data: profile, error: profileError } = await supabase
+      .from("user_profiles")
+      .select("email, full_name")
+      .eq("id", user.userId)
+      .single();
+
+    if (profileError || !profile) {
+      return NextResponse.json(
+        { error: "User profile not found" },
+        { status: 404 }
+      );
+    }
+
     // Get plan details
     const planDetails = PLAN_TIERS[plan];
     if (!planDetails.priceId) {
@@ -47,13 +99,15 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Get or create Stripe customer
+    // ✅ SECURITY FIX: Use authenticated data only (not client-provided)
     const customer = await getOrCreateCustomer({
-      email,
-      name,
+      email: profile.email,
+      name: profile.full_name || profile.email.split('@')[0],
       organizationId: orgId,
       metadata: {
         plan,
+        created_by: user.userId,
+        created_at: new Date().toISOString(),
       },
     });
 
@@ -70,17 +124,30 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    // ✅ SECURITY FIX: Audit log the subscription creation attempt
+    const supabase2 = await getSupabaseServer();
+    await supabase2.from("auditLogs").insert({
+      org_id: orgId,
+      user_id: user.userId,
+      action: "subscription_checkout_initiated",
+      entity_type: "subscription",
+      metadata: {
+        plan,
+        stripe_session_id: session.id,
+        stripe_customer_id: customer.id,
+      },
+    });
+
     return NextResponse.json({
       sessionId: session.id,
       url: session.url,
       customerId: customer.id,
     });
   } catch (error: any) {
-    console.error("Checkout error:", error);
+    console.error("[Stripe Checkout] Error:", error);
     return NextResponse.json(
       {
         error: "Failed to create checkout session",
-        message: error.message,
       },
       { status: 500 }
     );
