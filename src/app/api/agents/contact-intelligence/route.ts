@@ -15,51 +15,6 @@ export async function POST(req: NextRequest) {
     if (rateLimitResult) {
       return rateLimitResult;
     }
-    // Try to get token from Authorization header (client-side requests with implicit OAuth)
-    const authHeader = req.headers.get("authorization");
-    const token = authHeader?.replace("Bearer ", "");
-
-    let user: any;
-
-    if (token) {
-      // Use browser client with token for implicit OAuth flow
-      const { supabaseBrowser } = await import("@/lib/supabase");
-      const { data, error } = await supabaseBrowser.auth.getUser(token);
-      if (error || !data.user) {
-        console.error("Token validation error:", error);
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-      user = data.user;
-    } else {
-      // Try server-side cookies (PKCE flow or server-side auth)
-      const supabase = await getSupabaseServer();
-      const { data, error: authError } = await supabase.auth.getUser();
-      if (authError || !data.user) {
-        console.error("Cookie auth error:", authError);
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-      user = data.user;
-    }
-
-    // Get Supabase instance for database operations (use service role to bypass RLS)
-    const { createClient } = await import('@supabase/supabase-js');
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
-
-    // Get user's organization using service role (bypasses RLS)
-    const { data: userOrg, error: orgError } = await supabase
-      .from("user_organizations")
-      .select("org_id")
-      .eq("user_id", user.id)
-      .eq("is_active", true)
-      .single();
-
-    if (orgError || !userOrg) {
-      console.error('[contact-intelligence] Org lookup failed:', orgError);
-      return NextResponse.json({ error: "No active organization found" }, { status: 403 });
-    }
 
     const body = await req.json();
 
@@ -83,18 +38,14 @@ export async function POST(req: NextRequest) {
 
     const { action, contact_id: contactId, workspace_id: workspaceId } = validationResult.data;
 
+    // Validate authentication and workspace access (SECURE - no service role bypass)
+    const { validateUserAuth, validateWorkspaceAccess } = await import("@/lib/workspace-validation");
+
+    const user = await validateUserAuth(req);
+
     // Validate workspaceId if provided
     if (workspaceId) {
-      const { data: workspace, error: workspaceError } = await supabase
-        .from("workspaces")
-        .select("id")
-        .eq("id", workspaceId)
-        .eq("org_id", userOrg.org_id)
-        .single();
-
-      if (workspaceError || !workspace) {
-        return NextResponse.json({ error: "Invalid workspace or access denied" }, { status: 403 });
-      }
+      await validateWorkspaceAccess(workspaceId, user.orgId);
     }
 
     if (action === "analyze_contact" && contactId) {
@@ -120,10 +71,19 @@ export async function POST(req: NextRequest) {
       { status: 400 }
     );
   } catch (error) {
-    console.error("Agent error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Agent failed" },
-      { status: 500 }
-    );
+    console.error("[contact-intelligence] Error:", error);
+
+    // Handle workspace validation errors with appropriate status codes
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ error: "Agent failed" }, { status: 500 });
   }
 }
