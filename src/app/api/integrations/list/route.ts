@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth } from "@/lib/workspace-validation";
 import { db } from "@/lib/db";
 import { apiRateLimit } from "@/lib/rate-limit";
 
@@ -11,28 +11,10 @@ export async function GET(req: NextRequest) {
     return rateLimitResult;
   }
 
-    const authResult = await authenticateRequest(req);
-    if (!authResult) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-    const { userId } = authResult;
+    // Validate user authentication
+    const user = await validateUserAuth(req);
 
-    // Get user's organization
-    const { data: userOrg, error: orgError } = await db.supabase
-      .from("user_organizations")
-      .select("org_id")
-      .eq("user_id", session.user.id)
-      .eq("is_active", true)
-      .single();
-
-    if (orgError || !userOrg) {
-      return NextResponse.json({ error: "No active organization found" }, { status: 403 });
-    }
-
-    const integrations = await db.emailIntegrations.getByOrg(userOrg.org_id);
+    const integrations = await db.emailIntegrations.getByOrg(user.orgId);
 
     return NextResponse.json({
       success: true,
@@ -45,6 +27,14 @@ export async function GET(req: NextRequest) {
       })),
     });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Error:", error);
     return NextResponse.json(
       { error: "Failed to list integrations" },

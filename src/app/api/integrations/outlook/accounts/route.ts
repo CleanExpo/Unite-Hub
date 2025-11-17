@@ -6,7 +6,7 @@ import {
   setPrimaryOutlookAccount,
   labelOutlookAccount,
 } from "@/lib/services/outlook-sync";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth } from "@/lib/workspace-validation";
 import { apiRateLimit } from "@/lib/rate-limit";
 
 /**
@@ -20,14 +20,8 @@ export async function GET(req: NextRequest) {
     return rateLimitResult;
   }
 
-    const authResult = await authenticateRequest(req);
-    if (!authResult) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-    const { userId } = authResult;
+    // Validate user authentication
+    const user = await validateUserAuth(req);
 
     const { searchParams } = new URL(req.url);
     const orgId = searchParams.get("orgId");
@@ -39,6 +33,14 @@ export async function GET(req: NextRequest) {
       );
     }
 
+    // Verify orgId matches user's organization
+    if (orgId !== user.orgId) {
+      return NextResponse.json(
+        { error: "Access denied" },
+        { status: 403 }
+      );
+    }
+
     const accounts = await getOutlookAccounts(orgId);
 
     return NextResponse.json({
@@ -46,6 +48,14 @@ export async function GET(req: NextRequest) {
       accounts,
     });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Get Outlook accounts error:", error);
     return NextResponse.json(
       { error: "Failed to get Outlook accounts" },
@@ -59,14 +69,8 @@ export async function GET(req: NextRequest) {
  */
 export async function POST(req: NextRequest) {
   try {
-    const authResult = await authenticateRequest(req);
-    if (!authResult) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-    const { userId } = authResult;
+    // Validate user authentication
+    const user = await validateUserAuth(req);
 
     const { action, orgId, integrationId, isActive, label } = await req.json();
 
@@ -74,6 +78,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         { error: "Action and orgId required" },
         { status: 400 }
+      );
+    }
+
+    // Verify orgId matches user's organization
+    if (orgId !== user.orgId) {
+      return NextResponse.json(
+        { error: "Access denied" },
+        { status: 403 }
       );
     }
 
@@ -123,6 +135,14 @@ export async function POST(req: NextRequest) {
         );
     }
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Manage Outlook accounts error:", error);
     return NextResponse.json(
       { error: "Failed to manage Outlook accounts" },

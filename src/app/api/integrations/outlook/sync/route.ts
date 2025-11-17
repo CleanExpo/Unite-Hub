@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { syncOutlookEmailsWithMultiple } from "@/lib/integrations/outlook";
-import { authenticateRequest } from "@/lib/auth";
+import { validateUserAuth } from "@/lib/workspace-validation";
 import { db } from "@/lib/db";
 import { apiRateLimit } from "@/lib/rate-limit";
 
@@ -12,14 +12,8 @@ export async function POST(req: NextRequest) {
     return rateLimitResult;
   }
 
-    const authResult = await authenticateRequest(req);
-    if (!authResult) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-    const { userId } = authResult;
+    // Validate user authentication
+    const user = await validateUserAuth(req);
 
     const { integrationId } = await req.json();
 
@@ -48,6 +42,14 @@ export async function POST(req: NextRequest) {
       total: result.total,
     });
   } catch (error) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
     console.error("Outlook sync error:", error);
     return NextResponse.json(
       { error: "Failed to sync emails" },

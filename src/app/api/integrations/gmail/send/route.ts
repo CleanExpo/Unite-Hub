@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendEmailViaGmail } from "@/lib/integrations/gmail";
 import { db } from "@/lib/db";
-import { getSupabaseServer } from "@/lib/supabase";
+import { validateUserAuth, validateWorkspaceAccess } from "@/lib/workspace-validation";
 import { apiRateLimit } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
@@ -12,25 +12,8 @@ export async function POST(request: NextRequest) {
     return rateLimitResult;
   }
 
-    // Authentication check
-    const supabase = await getSupabaseServer();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Get user's organization
-    const { data: userOrg, error: orgError } = await supabase
-      .from("user_organizations")
-      .select("org_id")
-      .eq("user_id", user.id)
-      .eq("is_active", true)
-      .single();
-
-    if (orgError || !userOrg) {
-      return NextResponse.json({ error: "No active organization found" }, { status: 403 });
-    }
+    // Validate user authentication
+    const user = await validateUserAuth(request);
 
     const { accessToken, to, subject, body, workspaceId } = await request.json();
 
@@ -43,16 +26,7 @@ export async function POST(request: NextRequest) {
 
     // Validate workspace access if provided
     if (workspaceId) {
-      const { data: workspace, error: workspaceError } = await supabase
-        .from("workspaces")
-        .select("id")
-        .eq("id", workspaceId)
-        .eq("org_id", userOrg.org_id)
-        .single();
-
-      if (workspaceError || !workspace) {
-        return NextResponse.json({ error: "Invalid workspace or access denied" }, { status: 403 });
-      }
+      await validateWorkspaceAccess(workspaceId, user.orgId);
     }
 
     // Send email via Gmail
@@ -81,6 +55,15 @@ export async function POST(request: NextRequest) {
       message: "Email sent successfully",
     });
   } catch (error: any) {
+    if (error instanceof Error) {
+      if (error.message.includes("Unauthorized")) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+      if (error.message.includes("Forbidden")) {
+        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      }
+    }
+
     console.error("Gmail send error:", error);
 
     // Log the failure
