@@ -135,98 +135,97 @@ export default function ContactDetailPage() {
           </div>
         </div>
 
-          {/* Contact Details Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {contact.email && (
-              <div className="flex items-center gap-3 p-3 bg-slate-900/50 backdrop-blur-sm border border-slate-700/30 rounded-lg hover:border-slate-600/50 transition-all">
-                <Mail className="w-5 h-5 text-blue-400" />
-                <div>
-                  <div className="text-xs text-slate-400">Primary Email</div>
-                  <div className="text-white font-mono text-sm">{contact.email}</div>
-                </div>
-              </div>
-            )}
-
-            {contact.phone && (
-              <div className="flex items-center gap-3 p-3 bg-slate-900/50 backdrop-blur-sm border border-slate-700/30 rounded-lg hover:border-slate-600/50 transition-all">
-                <Phone className="w-5 h-5 text-purple-400" />
-                <div>
-                  <div className="text-xs text-slate-400">Phone</div>
-                  <div className="text-white">{contact.phone}</div>
-                </div>
-              </div>
-            )}
-
-            {contact.company && (
-              <div className="flex items-center gap-3 p-3 bg-slate-900/50 backdrop-blur-sm border border-slate-700/30 rounded-lg hover:border-slate-600/50 transition-all">
-                <Building className="w-5 h-5 text-cyan-400" />
-                <div>
-                  <div className="text-xs text-slate-400">Company</div>
-                  <div className="text-white">{contact.company}</div>
-                </div>
-              </div>
-            )}
-
+        {/* Contact Details Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {contact.email && (
             <div className="flex items-center gap-3 p-3 bg-slate-900/50 backdrop-blur-sm border border-slate-700/30 rounded-lg hover:border-slate-600/50 transition-all">
-              <Calendar className="w-5 h-5 text-green-400" />
+              <Mail className="w-5 h-5 text-blue-400" />
               <div>
-                <div className="text-xs text-slate-400">Added</div>
+                <div className="text-xs text-slate-400">Primary Email</div>
+                <div className="text-white font-mono text-sm">{contact.email}</div>
+              </div>
+            </div>
+          )}
+
+          {contact.phone && (
+            <div className="flex items-center gap-3 p-3 bg-slate-900/50 backdrop-blur-sm border border-slate-700/30 rounded-lg hover:border-slate-600/50 transition-all">
+              <Phone className="w-5 h-5 text-purple-400" />
+              <div>
+                <div className="text-xs text-slate-400">Phone</div>
+                <div className="text-white">{contact.phone}</div>
+              </div>
+            </div>
+          )}
+
+          {contact.company && (
+            <div className="flex items-center gap-3 p-3 bg-slate-900/50 backdrop-blur-sm border border-slate-700/30 rounded-lg hover:border-slate-600/50 transition-all">
+              <Building className="w-5 h-5 text-cyan-400" />
+              <div>
+                <div className="text-xs text-slate-400">Company</div>
+                <div className="text-white">{contact.company}</div>
+              </div>
+            </div>
+          )}
+
+          <div className="flex items-center gap-3 p-3 bg-slate-900/50 backdrop-blur-sm border border-slate-700/30 rounded-lg hover:border-slate-600/50 transition-all">
+            <Calendar className="w-5 h-5 text-green-400" />
+            <div>
+              <div className="text-xs text-slate-400">Added</div>
+              <div className="text-white">
+                {new Date(contact.created_at).toLocaleDateString()}
+              </div>
+            </div>
+          </div>
+
+          {contact.last_contact_date && (
+            <div className="flex items-center gap-3 p-3 bg-slate-900/50 backdrop-blur-sm border border-slate-700/30 rounded-lg hover:border-slate-600/50 transition-all">
+              <Calendar className="w-5 h-5 text-orange-400" />
+              <div>
+                <div className="text-xs text-slate-400">Last Contact</div>
                 <div className="text-white">
-                  {new Date(contact.created_at).toLocaleDateString()}
+                  {new Date(contact.last_contact_date).toLocaleDateString()}
                 </div>
               </div>
             </div>
+          )}
 
-            {contact.last_contact_date && (
-              <div className="flex items-center gap-3 p-3 bg-slate-900/50 backdrop-blur-sm border border-slate-700/30 rounded-lg hover:border-slate-600/50 transition-all">
-                <Calendar className="w-5 h-5 text-orange-400" />
-                <div>
-                  <div className="text-xs text-slate-400">Last Contact</div>
-                  <div className="text-white">
-                    {new Date(contact.last_contact_date).toLocaleDateString()}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {contact.email_count !== undefined && (
-              <div className="flex items-center gap-3 p-3 bg-slate-900/50 backdrop-blur-sm border border-slate-700/30 rounded-lg hover:border-slate-600/50 transition-all">
-                <Mail className="w-5 h-5 text-pink-400" />
-                <div>
-                  <div className="text-xs text-slate-400">Email Addresses</div>
-                  <div className="text-white font-bold">{contact.email_count}</div>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Tags */}
-          {contact.tags && contact.tags.length > 0 && (
-            <div className="mt-4 pt-4 border-t border-slate-700">
-              <div className="text-sm text-slate-400 mb-2">Tags</div>
-              <div className="flex flex-wrap gap-2">
-                {contact.tags.map((tag, index) => (
-                  <span
-                    key={index}
-                    className="px-3 py-1 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-full text-sm"
-                  >
-                    {tag}
-                  </span>
-                ))}
+          {contact.email_count !== undefined && (
+            <div className="flex items-center gap-3 p-3 bg-slate-900/50 backdrop-blur-sm border border-slate-700/30 rounded-lg hover:border-slate-600/50 transition-all">
+              <Mail className="w-5 h-5 text-pink-400" />
+              <div>
+                <div className="text-xs text-slate-400">Email Addresses</div>
+                <div className="text-white font-bold">{contact.email_count}</div>
               </div>
             </div>
           )}
         </div>
 
-        {/* Email Manager */}
-        <ClientEmailsManager contactId={contactId} />
-
-        {/* Additional sections can be added here */}
-        {/* - Email history */}
-        {/* - Campaign enrollments */}
-        {/* - Interaction timeline */}
-        {/* - Notes */}
+        {/* Tags */}
+        {contact.tags && contact.tags.length > 0 && (
+          <div className="mt-4 pt-4 border-t border-slate-700">
+            <div className="text-sm text-slate-400 mb-2">Tags</div>
+            <div className="flex flex-wrap gap-2">
+              {contact.tags.map((tag, index) => (
+                <span
+                  key={index}
+                  className="px-3 py-1 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-full text-sm"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
+
+      {/* Email Manager */}
+      <ClientEmailsManager contactId={contactId} />
+
+      {/* Additional sections can be added here */}
+      {/* - Email history */}
+      {/* - Campaign enrollments */}
+      {/* - Interaction timeline */}
+      {/* - Notes */}
     </div>
   );
 }
