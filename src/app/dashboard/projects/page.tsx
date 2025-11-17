@@ -75,92 +75,107 @@ export default function ProjectsPage() {
   const completedProjects = allProjects.filter((p) => p.category === "completed").length;
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <ModernSidebar userRole="owner" />
+    <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+      <Breadcrumbs items={[{ label: "Projects" }]} />
 
-      <div className="flex-1 ml-[280px]">
-        {/* Header */}
-        <header className="h-[70px] bg-white border-b border-gray-200 flex items-center px-8 gap-6">
-          <Breadcrumbs items={[{ label: "Projects" }]} />
-          <h1 className="text-2xl font-bold text-unite-navy">Projects</h1>
+      {/* Header */}
+      <div className="flex items-center justify-between gap-6">
+        <div>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent mb-2">
+            Projects
+          </h1>
+          <p className="text-slate-400">Manage and track your client projects</p>
+        </div>
 
-          <div className="flex-1" />
-
+        <div className="flex items-center gap-4">
           <div className="relative w-80">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
             <Input
               type="text"
               placeholder="Search projects..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
+              className="pl-10 bg-slate-900/50 border-slate-700/50 text-white placeholder:text-slate-500"
             />
           </div>
 
-          <Button className="bg-gradient-to-r from-unite-teal to-unite-blue text-white gap-2 hover:opacity-90">
+          <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold shadow-lg shadow-blue-500/50 gap-2">
             <Plus className="h-4 w-4" />
             New Project
           </Button>
-        </header>
+        </div>
+      </div>
+      {/* Loading State */}
+      {loading && (
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <Loader2 className="h-8 w-8 animate-spin text-blue-400 mx-auto mb-4" />
+            <p className="text-slate-400">Loading projects...</p>
+          </div>
+        </div>
+      )}
 
-        {/* Content */}
-        <main className="p-8">
-          {/* Loading State */}
-          {loading && (
-            <div className="flex items-center justify-center h-64">
-              <div className="text-center">
-                <Loader2 className="h-8 w-8 animate-spin text-unite-teal mx-auto mb-4" />
-                <p className="text-gray-600">Loading projects...</p>
-              </div>
+      {/* Error State */}
+      {error && !loading && (
+        <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-6">
+          <div className="flex items-center gap-3">
+            <AlertCircle className="h-5 w-5 text-red-400" />
+            <div>
+              <h3 className="font-semibold text-red-300">Error Loading Projects</h3>
+              <p className="text-sm text-red-400 mt-1">{error}</p>
             </div>
-          )}
+          </div>
+        </div>
+      )}
 
-          {/* Error State */}
-          {error && !loading && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-8">
-              <div className="flex items-center gap-3">
-                <AlertCircle className="h-5 w-5 text-red-600" />
-                <div>
-                  <h3 className="font-semibold text-red-900">Error Loading Projects</h3>
-                  <p className="text-sm text-red-700 mt-1">{error}</p>
-                </div>
+      {/* Content - Only show when not loading */}
+      {!loading && !error && (
+        <>
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all group">
+              <div className="flex items-center gap-3 mb-3">
+                <FolderOpen className="h-8 w-8 text-blue-400 group-hover:scale-110 transition-transform" />
+                <h3 className="text-slate-400 text-sm font-medium">Total Projects</h3>
               </div>
+              <p className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                {totalProjects}
+              </p>
+              <p className="text-slate-500 text-xs mt-2">+3 this month</p>
             </div>
-          )}
 
-          {/* Content - Only show when not loading */}
-          {!loading && !error && (
-            <>
-              {/* Stats Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <StatsCard
-              title="Total Projects"
-              value={totalProjects.toString()}
-              trend={{ value: "+3", label: "this month" }}
-              icon={FolderOpen}
-              variant="teal"
-            />
-            <StatsCard
-              title="Active Projects"
-              value={activeProjects.toString()}
-              trend={{ value: `${Math.round((activeProjects / totalProjects) * 100)}%`, label: "of total" }}
-              icon={TrendingUp}
-              variant="blue"
-            />
-            <StatsCard
-              title="At Risk"
-              value={atRiskProjects.toString()}
-              trend={{ value: "Need attention", label: "review status" }}
-              icon={AlertCircle}
-              variant="orange"
-            />
-            <StatsCard
-              title="Completed"
-              value={completedProjects.toString()}
-              trend={{ value: "+2", label: "this week" }}
-              icon={CheckCircle}
-              variant="gold"
-            />
+            <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all group">
+              <div className="flex items-center gap-3 mb-3">
+                <TrendingUp className="h-8 w-8 text-green-400 group-hover:scale-110 transition-transform" />
+                <h3 className="text-slate-400 text-sm font-medium">Active Projects</h3>
+              </div>
+              <p className="text-3xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
+                {activeProjects}
+              </p>
+              <p className="text-slate-500 text-xs mt-2">{totalProjects > 0 ? Math.round((activeProjects / totalProjects) * 100) : 0}% of total</p>
+            </div>
+
+            <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all group">
+              <div className="flex items-center gap-3 mb-3">
+                <AlertCircle className="h-8 w-8 text-orange-400 group-hover:scale-110 transition-transform" />
+                <h3 className="text-slate-400 text-sm font-medium">At Risk</h3>
+              </div>
+              <p className="text-3xl font-bold bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent">
+                {atRiskProjects}
+              </p>
+              <p className="text-slate-500 text-xs mt-2">Need attention</p>
+            </div>
+
+            <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg border border-slate-700/50 p-6 hover:border-slate-600/50 transition-all group">
+              <div className="flex items-center gap-3 mb-3">
+                <CheckCircle className="h-8 w-8 text-purple-400 group-hover:scale-110 transition-transform" />
+                <h3 className="text-slate-400 text-sm font-medium">Completed</h3>
+              </div>
+              <p className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                {completedProjects}
+              </p>
+              <p className="text-slate-500 text-xs mt-2">+2 this week</p>
+            </div>
           </div>
 
           {/* Tabs and Projects Grid */}
@@ -197,10 +212,10 @@ export default function ProjectsPage() {
                   ))}
                 </ProjectCardGrid>
               ) : (
-                <div className="text-center py-12">
-                  <FolderOpen className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-gray-600 mb-2">No projects found</h3>
-                  <p className="text-sm text-gray-500">
+                <div className="text-center py-12 bg-slate-800/50 backdrop-blur-sm rounded-lg border-2 border-dashed border-slate-700/50">
+                  <FolderOpen className="h-16 w-16 text-slate-500 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-white mb-2">No projects found</h3>
+                  <p className="text-sm text-slate-400">
                     {searchQuery
                       ? `No projects match "${searchQuery}"`
                       : "No projects in this category"}
@@ -209,10 +224,8 @@ export default function ProjectsPage() {
               )}
             </TabsContent>
           </Tabs>
-            </>
-          )}
-        </main>
-      </div>
+        </>
+      )}
     </div>
   );
 }
