@@ -88,5 +88,4 @@ SELECT 'Testing JOIN...' as test;
 SELECT w.id
 FROM workspaces w
 INNER JOIN user_organizations uo ON uo.org_id::text = w.org_id::text
-WHERE uo.user_id = 'test-user-id'::uuid
 LIMIT 1;
