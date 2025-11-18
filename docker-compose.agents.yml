@@ -22,6 +22,8 @@ services:
       RABBITMQ_VM_MEMORY_HIGH_WATERMARK: 512MB
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
+      - ./docker/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - ./docker/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
     networks:
       - unite-hub-network
     healthcheck:

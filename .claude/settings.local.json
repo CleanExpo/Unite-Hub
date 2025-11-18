@@ -51,7 +51,17 @@
       "Bash(source:*)",
       "Bash(psql:*)",
       "Bash([ -f scripts/execute-migrations.mjs ])",
-      "Bash(dir /s /b *AUTONOMOUS*.md *MIGRATIONS_READY*.md 2)"
+      "Bash(dir /s /b *AUTONOMOUS*.md *MIGRATIONS_READY*.md 2)",
+      "Bash(node scripts/execute-migrations.mjs:*)",
+      "Bash(docker network create:*)",
+      "Bash(nul)",
+      "Bash(docker-compose:*)",
+      "Bash(docker run:*)",
+      "Bash(timeout /t 10 /nobreak)",
+      "Bash(findstr:*)",
+      "Bash(node scripts/execute-migrations-now.mjs:*)",
+      "Bash(node scripts/verify-migrations.mjs:*)",
+      "Bash(clip:*)"
     ],
     "deny": [],
     "ask": []

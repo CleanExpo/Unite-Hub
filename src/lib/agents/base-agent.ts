@@ -3,8 +3,8 @@
  * Provides common functionality for all specialized agents
  */
 
-import amqp from 'amqplib';
-import { createClient } from '@supabase/supabase-js';
+import * as amqp from 'amqplib';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 export interface AgentTask {
   id: string;
@@ -33,7 +33,7 @@ export abstract class BaseAgent {
   protected retryDelay: number;
   protected connection: amqp.Connection | null = null;
   protected channel: amqp.Channel | null = null;
-  protected supabase: any;
+  protected supabase: SupabaseClient;
   protected isRunning: boolean = false;
 
   constructor(config: AgentConfig) {
