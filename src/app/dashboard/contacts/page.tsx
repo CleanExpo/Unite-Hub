@@ -19,7 +19,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Plus, Search, Filter, MoreHorizontal, Mail, ExternalLink, Users, TrendingUp, Target, Sparkles } from "lucide-react";
+import { Plus, Search, Filter, MoreHorizontal, Mail, ExternalLink, Users, TrendingUp, Target, Sparkles, Edit } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
@@ -29,6 +29,7 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { AddContactModal } from "@/components/modals/AddContactModal";
 import { SendEmailModal } from "@/components/modals/SendEmailModal";
 import { DeleteContactModal } from "@/components/modals/DeleteContactModal";
+import { EditContactModal } from "@/components/modals/EditContactModal";
 
 export default function ContactsPage() {
   const { workspaceId, loading: workspaceLoading } = useWorkspace();
@@ -38,6 +39,7 @@ export default function ContactsPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isSendEmailModalOpen, setIsSendEmailModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedContact, setSelectedContact] = useState<any | null>(null);
   const router = useRouter();
 
@@ -116,6 +118,27 @@ export default function ContactsPage() {
   };
 
   const handleContactDeleted = () => {
+    // Refresh contacts list
+    setLoading(true);
+    const fetchContacts = async () => {
+      if (!workspaceId) return;
+      const { data } = await supabase
+        .from("contacts")
+        .select("*")
+        .eq("workspace_id", workspaceId)
+        .order("created_at", { ascending: false });
+      setAllContacts(data || []);
+      setLoading(false);
+    };
+    fetchContacts();
+  };
+
+  const handleEditClick = (contact: any) => {
+    setSelectedContact(contact);
+    setIsEditModalOpen(true);
+  };
+
+  const handleContactUpdated = () => {
     // Refresh contacts list
     setLoading(true);
     const fetchContacts = async () => {
@@ -317,6 +340,13 @@ export default function ContactsPage() {
                             <Mail className="w-4 h-4 mr-2" />
                             Send Email
                           </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => handleEditClick(contact)}
+                            className="text-slate-300 hover:text-white hover:bg-slate-700 cursor-pointer"
+                          >
+                            <Edit className="w-4 h-4 mr-2" />
+                            Edit Contact
+                          </DropdownMenuItem>
                           <DropdownMenuItem asChild>
                             <Link
                               href={`/dashboard/contacts/${contact.id}`}
@@ -382,6 +412,29 @@ export default function ContactsPage() {
           contactName={selectedContact.name}
           workspaceId={workspaceId}
           onContactDeleted={handleContactDeleted}
+        />
+      )}
+
+      {/* Edit Contact Modal */}
+      {workspaceId && selectedContact && (
+        <EditContactModal
+          isOpen={isEditModalOpen}
+          onClose={() => {
+            setIsEditModalOpen(false);
+            setSelectedContact(null);
+          }}
+          contactId={selectedContact.id}
+          workspaceId={workspaceId}
+          initialData={{
+            name: selectedContact.name,
+            email: selectedContact.email,
+            company: selectedContact.company,
+            job_title: selectedContact.job_title,
+            phone: selectedContact.phone,
+            status: selectedContact.status,
+            tags: selectedContact.tags,
+          }}
+          onContactUpdated={handleContactUpdated}
         />
       )}
     </div>
