@@ -25,16 +25,16 @@ interface SidebarNavigationProps {
 }
 
 const navigationItems = [
-  { name: "Dashboard", href: "/portal/dashboard", icon: LayoutDashboard },
-  { name: "Emails", href: "/portal/emails", icon: Mail },
-  { name: "Assets", href: "/portal/assets", icon: FileText },
-  { name: "Persona", href: "/portal/persona", icon: Users },
-  { name: "Mind Map", href: "/portal/mindmap", icon: Lightbulb },
-  { name: "Strategy", href: "/portal/strategy", icon: Target },
-  { name: "Campaigns", href: "/portal/campaigns", icon: Megaphone },
-  { name: "Hooks Library", href: "/portal/hooks", icon: Sparkles },
-  { name: "AI Images", href: "/portal/images", icon: ImageIcon },
-  { name: "Settings", href: "/portal/settings", icon: Settings },
+  { name: "Dashboard", href: "/portal/dashboard", icon: LayoutDashboard, enabled: true },
+  { name: "Emails", href: "/portal/emails", icon: Mail, enabled: true },
+  { name: "Assets", href: "/portal/assets", icon: FileText, enabled: true },
+  { name: "Persona", href: "/portal/persona", icon: Users, enabled: true },
+  { name: "Mind Map", href: "/portal/mindmap", icon: Lightbulb, enabled: true },
+  { name: "Strategy", href: "/portal/strategy", icon: Target, enabled: true },
+  { name: "Campaigns", href: "#", icon: Megaphone, enabled: false, badge: "Soon" },
+  { name: "Hooks Library", href: "/portal/hooks", icon: Sparkles, enabled: true },
+  { name: "AI Images", href: "/portal/images", icon: ImageIcon, enabled: true },
+  { name: "Settings", href: "/portal/settings", icon: Settings, enabled: true },
 ];
 
 export function SidebarNavigation({ isOpen, onToggle }: SidebarNavigationProps) {
@@ -81,23 +81,48 @@ export function SidebarNavigation({ isOpen, onToggle }: SidebarNavigationProps) 
           <ul className="space-y-1">
             {navigationItems.map((item) => {
               const isActive = pathname === item.href;
+              const isDisabled = item.enabled === false;
+
+              const content = (
+                <>
+                  <item.icon className={cn("h-5 w-5 flex-shrink-0", isOpen && "mr-3")} />
+                  {isOpen && (
+                    <span className="text-sm font-medium flex-1">{item.name}</span>
+                  )}
+                  {isOpen && item.badge && (
+                    <span className="px-2 py-0.5 text-xs font-medium bg-purple-100 text-purple-600 rounded-full">
+                      {item.badge}
+                    </span>
+                  )}
+                </>
+              );
+
               return (
                 <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    className={cn(
-                      "flex items-center px-3 py-2.5 rounded-lg transition-all duration-200",
-                      isActive
-                        ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/30"
-                        : "text-gray-700 hover:bg-gray-100"
-                    )}
-                    title={!isOpen ? item.name : undefined}
-                  >
-                    <item.icon className={cn("h-5 w-5 flex-shrink-0", isOpen && "mr-3")} />
-                    {isOpen && (
-                      <span className="text-sm font-medium">{item.name}</span>
-                    )}
-                  </Link>
+                  {isDisabled ? (
+                    <div
+                      className={cn(
+                        "flex items-center px-3 py-2.5 rounded-lg cursor-not-allowed",
+                        "text-gray-400 opacity-60"
+                      )}
+                      title={!isOpen ? `${item.name} (Coming Soon)` : undefined}
+                    >
+                      {content}
+                    </div>
+                  ) : (
+                    <Link
+                      href={item.href}
+                      className={cn(
+                        "flex items-center px-3 py-2.5 rounded-lg transition-all duration-200",
+                        isActive
+                          ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/30"
+                          : "text-gray-700 hover:bg-gray-100"
+                      )}
+                      title={!isOpen ? item.name : undefined}
+                    >
+                      {content}
+                    </Link>
+                  )}
                 </li>
               );
             })}
