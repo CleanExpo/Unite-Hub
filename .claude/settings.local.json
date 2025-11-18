@@ -26,7 +26,13 @@
       "Bash(bash:*)",
       "Bash(dir /s /b *CLIENT-AGENT*.md *PROJECT-AGENT*.md *ORCHESTRATOR-AGENT*.md 2)",
       "Bash(npm run build:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(node scripts/fix-user-initialization.mjs:*)",
+      "Bash(node:*)",
+      "Bash(echo:*)",
+      "Bash(dir /s /b d:Unite-Hub.claudeagents*.md 2)",
+      "Bash(where supabase:*)",
+      "Bash(supabase status:*)"
     ],
     "deny": [],
     "ask": []
