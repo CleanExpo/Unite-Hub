@@ -244,6 +244,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("currentOrganizationId", org.org_id);
   };
 
+  // Session refresh handler (prevents session expiry)
+  useEffect(() => {
+    const checkAndRefreshSession = async () => {
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+
+      if (session) {
+        const expiresAt = session.expires_at;
+        const now = Math.floor(Date.now() / 1000);
+        const timeUntilExpiry = (expiresAt || 0) - now;
+
+        // If session expires in less than 5 minutes, refresh it
+        if (timeUntilExpiry < 300) {
+          console.log('[AuthContext] Session expiring soon, refreshing...');
+          const { data, error } = await supabaseBrowser.auth.refreshSession();
+
+          if (error) {
+            console.error('[AuthContext] Session refresh failed:', error);
+            // Redirect to login on failed refresh
+            await signOut();
+            window.location.href = '/login';
+          } else {
+            console.log('[AuthContext] Session refreshed successfully');
+            setSession(data.session);
+          }
+        }
+      }
+    };
+
+    // Check session every 4 minutes
+    const intervalId = setInterval(checkAndRefreshSession, 4 * 60 * 1000);
+
+    // Check immediately on mount
+    checkAndRefreshSession();
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   // Initialize auth state
   useEffect(() => {
     let mounted = true;

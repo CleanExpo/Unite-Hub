@@ -16,6 +16,7 @@ import { useSessionRefresh } from "@/hooks/useSessionRefresh";
 import { RoleBadge } from "@/components/RoleBadge";
 import { PermissionGate } from "@/components/PermissionGate";
 import { PageErrorBoundary } from "@/components/ErrorBoundary";
+import { SessionExpiryWarning } from "@/components/SessionExpiryWarning";
 
 export default function DashboardLayout({
   children,
@@ -87,6 +88,7 @@ export default function DashboardLayout({
       <ClientProvider orgId={orgId}>
         <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800">
           <Toaster />
+          <SessionExpiryWarning />
           {/* Top Navigation */}
           <nav className="border-b border-slate-700 bg-slate-900/50 backdrop-blur-sm sticky top-0 z-50">
             <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">

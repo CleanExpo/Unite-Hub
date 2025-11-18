@@ -32,7 +32,8 @@
       "Bash(echo:*)",
       "Bash(dir /s /b d:Unite-Hub.claudeagents*.md 2)",
       "Bash(where supabase:*)",
-      "Bash(supabase status:*)"
+      "Bash(supabase status:*)",
+      "Bash(git remote:*)"
     ],
     "deny": [],
     "ask": []
