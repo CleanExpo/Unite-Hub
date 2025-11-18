@@ -24,6 +24,7 @@ import ComparisonMatrix from "@/components/competitors/ComparisonMatrix";
 import { FeaturePageWrapper } from "@/components/features/FeaturePageWrapper";
 import { Id } from "@/convex/_generated/dataModel";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { supabaseBrowser } from "@/lib/supabase";
 
 export default function CompetitorsPage() {
   return (
@@ -47,7 +48,19 @@ function CompetitorFeature({ clientId }: { clientId: Id<"clients"> }) {
   // Fetch competitors
   const fetchCompetitors = async () => {
     try {
-      const response = await fetch(`/api/competitors?clientId=${clientId}`);
+      // Get session for auth
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+
+      if (!session) {
+        console.error("Not authenticated");
+        return;
+      }
+
+      const response = await fetch(`/api/competitors?clientId=${clientId}`, {
+        headers: {
+          "Authorization": `Bearer ${session.access_token}`,
+        },
+      });
       if (!response.ok) throw new Error("Failed to fetch competitors");
       const data = await response.json();
       setCompetitors(data.competitors || []);
@@ -91,9 +104,21 @@ function CompetitorFeature({ clientId }: { clientId: Id<"clients"> }) {
 
     setAnalyzing(true);
     try {
+      // Get session for auth
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+
+      if (!session) {
+        alert("Not authenticated");
+        setAnalyzing(false);
+        return;
+      }
+
       const response = await fetch("/api/competitors/analyze", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({ clientId }),
       });
 

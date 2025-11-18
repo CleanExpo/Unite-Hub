@@ -1,0 +1,143 @@
+# API Endpoint Audit - Frontend Calls Extracted
+
+## From AuthContext.tsx
+GET /api/profile?userId={userId}
+GET /api/organizations?userId={userId}
+POST /api/auth/initialize-user
+
+## From signup page
+POST /api/auth/signup
+
+## From demo page
+POST /api/demo/initialize
+
+## From calendar page
+POST /api/calendar/generate
+POST /api/calendar/{postId}/regenerate
+
+## From billing page
+POST /api/stripe/create-checkout
+POST /api/stripe/create-portal-session
+
+## From AI tools
+POST /api/ai/generate-code
+POST /api/ai/generate-marketing
+
+## From competitors
+GET /api/competitors?clientId={clientId}
+GET /api/competitors/analysis/latest?clientId={clientId}
+POST /api/competitors/analyze
+
+## From content/meetings
+GET /api/landing-pages/{id}
+POST /api/calendar/create-meeting
+
+## From profile
+POST /api/profile/update
+POST /api/profile/avatar
+DELETE /api/profile/avatar
+
+## From WhatsApp
+GET /api/whatsapp/conversations/{id}/messages
+POST /api/whatsapp/send
+
+## From competitors list
+DELETE /api/competitors/{competitorId}
+
+## From projects
+POST /api/projects/create
+
+## From landing pages
+POST /api/landing-pages/generate
+GET /api/landing-pages/{id}
+
+## From mindmap
+GET /api/projects/{projectId}/mindmap
+POST /api/projects/{projectId}/mindmap
+GET /api/mindmap/{mindmapId}?workspaceId={workspaceId}
+POST /api/mindmap/{mindmapId}/connections?workspaceId={workspaceId}
+PATCH /api/mindmap/nodes/{nodeId}?workspaceId={workspaceId}
+DELETE /api/mindmap/nodes/{nodeId}?workspaceId={workspaceId}
+GET /api/mindmap/{mindmapId}/suggestions?workspaceId={workspaceId}
+POST /api/mindmap/{mindmapId}/ai-analyze?workspaceId={workspaceId}
+
+## From settings
+GET /api/integrations/list
+POST /api/integrations/gmail/connect
+POST /api/integrations/gmail/sync
+POST /api/integrations/gmail/connect-multi
+POST /api/integrations/gmail/sync-all
+POST /api/integrations/gmail/update-label
+POST /api/integrations/gmail/set-primary
+POST /api/integrations/gmail/toggle-sync
+POST /api/integrations/gmail/disconnect
+
+## From competitors modal
+POST /api/competitors
+PATCH /api/competitors/{id}
+
+## From client emails
+GET /api/contacts/{contactId}/emails
+POST /api/contacts/{contactId}/emails
+POST /api/contacts/{contactId}/emails/{emailId}/primary
+DELETE /api/contacts/{contactId}/emails/{emailId}
+
+## From calendar widget
+GET /api/calendar/events?workspaceId={workspaceId}
+POST /api/calendar/create-meeting
+
+## From onboarding
+POST /api/integrations/gmail/sync
+POST /api/campaigns/from-template
+
+## From WhatsApp messages page
+GET /api/whatsapp/conversations?workspaceId={workspaceId}&status={status}
+
+## From drip campaign builder
+POST /api/campaigns/drip
+PATCH /api/campaigns/drip
+
+## From hot leads panel
+POST /api/agents/contact-intelligence (method: getHotLeads)
+POST /api/agents/contact-intelligence (method: scoreContact)
+
+## From send email modal
+POST /api/emails/send
+
+## From media gallery
+GET /api/media/search?workspaceId={workspaceId}&query={query}
+
+## From media uploader
+POST /api/media/upload
+POST /api/media/transcribe
+
+## From contact form (marketing site)
+POST /api/contact/submit
+
+## From subscription card
+POST /api/subscription/portal
+
+## From checkout button
+POST /api/stripe/checkout
+
+## From social templates
+POST /api/clients/{clientId}/social-templates/seed
+POST /api/social-templates/generate
+GET /api/social-templates/stats?clientId={clientId}
+GET /api/clients/{clientId}/social-templates
+GET /api/social-templates/search?clientId={clientId}&query={query}
+POST /api/social-templates/{templateId}/favorite
+DELETE /api/social-templates/{templateId}
+POST /api/social-templates/{templateId}/track-usage
+POST /api/social-templates/{templateId}/variations
+PATCH /api/social-templates/{templateId}
+POST /api/social-templates/bulk
+DELETE /api/social-templates/bulk
+POST /api/social-templates/export
+
+## From hooks
+GET /api/approvals?{params}
+POST /api/approvals/{id}/approve
+POST /api/approvals/{id}/decline
+GET /api/projects?{params}
+GET /api/team?orgId={orgId}

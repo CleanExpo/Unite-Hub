@@ -11,6 +11,11 @@ node_modules/
 *.lcov
 .vitest-cache
 
+# VPN Configuration (contains credentials - DO NOT COMMIT)
+vpn-config.json
+**/vpn-config*.json
+screenshot_*.png
+
 # Next.js
 /.next/
 /out/

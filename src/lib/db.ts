@@ -127,7 +127,7 @@ export const db = {
         .from("contacts")
         .insert([{
           ...data,
-          ai_score: 0.5,
+          ai_score: 50,
           status: "contact",
           tags: [],
         }])

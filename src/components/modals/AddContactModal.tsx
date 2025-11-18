@@ -67,7 +67,7 @@ export function AddContactModal({
         .select("id")
         .eq("workspace_id", workspaceId)
         .eq("email", formData.email)
-        .single();
+        .maybeSingle();
 
       if (existing) {
         setError("A contact with this email already exists");
@@ -91,13 +91,13 @@ export function AddContactModal({
           job_title: formData.job_title || null,
           phone: formData.phone || null,
           tags: tagsArray,
-          status: "new",
+          status: "prospect",
           ai_score: 0,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         })
         .select()
-        .single();
+        .maybeSingle();
 
       if (insertError) {
         console.error("Error creating contact:", insertError);

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
+import { supabaseBrowser } from "@/lib/supabase";
 import {
   Calendar as CalendarIcon,
   Filter,
@@ -81,12 +82,24 @@ function ContentCalendarFeature({ clientId }: { clientId: Id<"clients"> }) {
     setIsGenerating(true);
     setError(null);
     try {
+      // Get session for auth
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+
+      if (!session) {
+        setError("Not authenticated");
+        setIsGenerating(false);
+        return;
+      }
+
       const startDate = new Date(currentYear, currentMonth - 1, 1);
       const endDate = new Date(currentYear, currentMonth, 0);
 
       const response = await fetch("/api/calendar/generate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({
           clientId,
           startDate: startDate.toISOString(),
@@ -118,8 +131,19 @@ function ContentCalendarFeature({ clientId }: { clientId: Id<"clients"> }) {
 
   const handleRegeneratePost = async (postId: string) => {
     try {
+      // Get session for auth
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+
+      if (!session) {
+        alert("Not authenticated");
+        return;
+      }
+
       const response = await fetch(`/api/calendar/${postId}/regenerate`, {
         method: "POST",
+        headers: {
+          "Authorization": `Bearer ${session.access_token}`,
+        },
       });
 
       if (!response.ok) throw new Error("Failed to regenerate post");

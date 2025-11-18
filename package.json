@@ -45,7 +45,16 @@
     "docker:health": "docker-compose ps && curl http://localhost:3008/api/health",
     "quality:assess": "node scripts/quality-assessment.mjs",
     "quality:report": "node scripts/quality-assessment.mjs > quality-report.txt",
-    "test:phase": "npm run test && npm run quality:assess"
+    "test:phase": "npm run test && npm run quality:assess",
+    "test:openrouter": "node scripts/test-openrouter-system.mjs",
+    "test:ai": "node scripts/test-openrouter-system.mjs",
+    "test:gemini": "node scripts/test-gemini-setup.mjs",
+    "test:gmail-intelligence": "node scripts/test-gmail-intelligence.mjs",
+    "benchmark:email-intelligence": "node scripts/benchmark-email-intelligence.mjs",
+    "scrape": "node scripts/scraping/scrape-competitor.mjs",
+    "scrape:save": "node scripts/scraping/scrape-competitor.mjs --save",
+    "scrape:help": "node scripts/scraping/scrape-competitor.mjs --help",
+    "test:vpn": "node scripts/scraping/test-avg-vpn.mjs"
   },
   "keywords": [],
   "author": "",
@@ -54,6 +63,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.68.0",
     "@auth/supabase-adapter": "^1.11.1",
+    "@google/genai": "^1.30.0",
     "@hookform/resolvers": "^5.2.2",
     "@microsoft/microsoft-graph-client": "^3.0.7",
     "@microsoft/microsoft-graph-types": "^2.43.1",

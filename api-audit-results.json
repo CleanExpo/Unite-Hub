@@ -1,0 +1,223 @@
+{
+  "audit_date": "2025-11-19",
+  "total_routes": 150,
+  "total_frontend_calls": 87,
+  "health_score": 0.95,
+  "summary": {
+    "working": 143,
+    "missing": 4,
+    "path_mismatches": 3,
+    "incomplete": 2
+  },
+  "critical_issues": [
+    {
+      "type": "path_mismatch",
+      "frontend_call": "/api/stripe/create-checkout",
+      "backend_route": "/api/stripe/checkout",
+      "file": "src/app/dashboard/billing/page.tsx",
+      "line": 79,
+      "http_method": "POST",
+      "fix": "Update frontend to use /api/stripe/checkout",
+      "priority": "P0",
+      "estimated_time": "5 minutes"
+    },
+    {
+      "type": "path_mismatch",
+      "frontend_call": "/api/stripe/create-portal-session",
+      "backend_route": "/api/subscription/portal",
+      "file": "src/app/dashboard/billing/page.tsx",
+      "line": 109,
+      "http_method": "POST",
+      "fix": "Update frontend to use /api/subscription/portal",
+      "priority": "P0",
+      "estimated_time": "5 minutes"
+    },
+    {
+      "type": "missing_route",
+      "endpoint": "/api/auth/signup",
+      "http_method": "POST",
+      "called_by": "src/app/auth/signup/page.tsx:27",
+      "impact": "User signup will fail with 404",
+      "fix": "Create route file with POST handler",
+      "priority": "P0",
+      "estimated_time": "1-2 hours"
+    },
+    {
+      "type": "incomplete_implementation",
+      "endpoint": "/api/emails/send",
+      "http_method": "POST",
+      "file": "src/app/api/emails/send/route.ts",
+      "lines": "74-83",
+      "issue": "Email not actually sent, only logged to console",
+      "impact": "Returns 200 success but email is not delivered",
+      "fix": "Integrate with SendGrid/Resend/Gmail SMTP",
+      "priority": "P0",
+      "estimated_time": "2-4 hours"
+    }
+  ],
+  "missing_endpoints": [
+    {
+      "endpoint": "/api/auth/signup",
+      "http_method": "POST",
+      "expected_location": "src/app/api/auth/signup/route.ts",
+      "called_by": "src/app/auth/signup/page.tsx:27",
+      "priority": "P0"
+    },
+    {
+      "endpoint": "/api/mindmap/{mindmapId}/suggestions",
+      "http_method": "GET",
+      "expected_location": "src/app/api/mindmap/[mindmapId]/suggestions/route.ts",
+      "called_by": "src/components/mindmap/panels/AISuggestionPanel.tsx:72",
+      "priority": "P1",
+      "note": "Route exists at wrong location: /api/mindmap/suggestions/[suggestionId]"
+    },
+    {
+      "endpoint": "/api/clients/{clientId}/social-templates",
+      "http_method": "GET",
+      "expected_location": "src/app/api/clients/[clientId]/social-templates/route.ts",
+      "called_by": "src/components/social-templates/TemplateLibrary.tsx:47",
+      "priority": "P1"
+    },
+    {
+      "endpoint": "/api/clients/{clientId}/social-templates/seed",
+      "http_method": "POST",
+      "expected_location": "src/app/api/clients/[clientId]/social-templates/seed/route.ts",
+      "called_by": "src/components/social-templates/QuickActions.tsx:22",
+      "priority": "P1"
+    }
+  ],
+  "path_mismatches": [
+    {
+      "frontend_path": "/api/stripe/create-checkout",
+      "backend_path": "/api/stripe/checkout",
+      "resolution": "update_frontend"
+    },
+    {
+      "frontend_path": "/api/stripe/create-portal-session",
+      "backend_path": "/api/subscription/portal",
+      "resolution": "update_frontend"
+    }
+  ],
+  "incomplete_implementations": [
+    {
+      "endpoint": "/api/emails/send",
+      "file": "src/app/api/emails/send/route.ts",
+      "lines": "74-83",
+      "todo": "Send email using email service",
+      "current_behavior": "Logs email details but doesn't send",
+      "required_action": "Integrate SendGrid/Resend/Gmail SMTP"
+    },
+    {
+      "endpoint": "/api/emails/send",
+      "file": "src/app/api/emails/send/route.ts",
+      "lines": "10-11",
+      "todo": "Integrate with Gmail OAuth integration",
+      "current_behavior": "Uses fallback noreply@ address",
+      "required_action": "Use user's connected Gmail account"
+    }
+  ],
+  "working_endpoints": [
+    {
+      "endpoint": "/api/profile",
+      "http_methods": ["GET"],
+      "file": "src/app/api/profile/route.ts"
+    },
+    {
+      "endpoint": "/api/organizations",
+      "http_methods": ["GET"],
+      "file": "src/app/api/organizations/route.ts"
+    },
+    {
+      "endpoint": "/api/auth/initialize-user",
+      "http_methods": ["POST"],
+      "file": "src/app/api/auth/initialize-user/route.ts"
+    },
+    {
+      "endpoint": "/api/demo/initialize",
+      "http_methods": ["POST"],
+      "file": "src/app/api/demo/initialize/route.ts"
+    },
+    {
+      "endpoint": "/api/calendar/generate",
+      "http_methods": ["POST"],
+      "file": "src/app/api/calendar/generate/route.ts"
+    },
+    {
+      "endpoint": "/api/stripe/checkout",
+      "http_methods": ["POST"],
+      "file": "src/app/api/stripe/checkout/route.ts"
+    },
+    {
+      "endpoint": "/api/subscription/portal",
+      "http_methods": ["POST"],
+      "file": "src/app/api/subscription/portal/route.ts"
+    },
+    {
+      "endpoint": "/api/competitors",
+      "http_methods": ["GET", "POST"],
+      "file": "src/app/api/competitors/route.ts"
+    },
+    {
+      "endpoint": "/api/mindmap/{mindmapId}",
+      "http_methods": ["GET", "PUT", "DELETE"],
+      "file": "src/app/api/mindmap/[mindmapId]/route.ts"
+    },
+    {
+      "endpoint": "/api/team",
+      "http_methods": ["GET", "POST"],
+      "file": "src/app/api/team/route.ts"
+    },
+    {
+      "endpoint": "/api/approvals",
+      "http_methods": ["GET", "POST"],
+      "file": "src/app/api/approvals/route.ts"
+    },
+    {
+      "endpoint": "/api/projects",
+      "http_methods": ["GET", "POST"],
+      "file": "src/app/api/projects/route.ts"
+    },
+    {
+      "endpoint": "/api/social-templates/generate",
+      "http_methods": ["POST"],
+      "file": "src/app/api/social-templates/generate/route.ts"
+    },
+    {
+      "endpoint": "/api/media/upload",
+      "http_methods": ["POST"],
+      "file": "src/app/api/media/upload/route.ts"
+    },
+    {
+      "endpoint": "/api/integrations/gmail/connect",
+      "http_methods": ["POST"],
+      "file": "src/app/api/integrations/gmail/connect/route.ts"
+    }
+  ],
+  "recommendations": {
+    "immediate": [
+      "Fix path mismatches in billing page (5 minutes)",
+      "Create /api/auth/signup route (1-2 hours)",
+      "Implement actual email sending (2-4 hours)"
+    ],
+    "short_term": [
+      "Create client social templates routes (2-3 hours)",
+      "Create mindmap suggestions route (1-2 hours)",
+      "Integrate Gmail OAuth for email sending (4-6 hours)"
+    ],
+    "long_term": [
+      "Add API versioning (/api/v1/...)",
+      "Implement endpoint monitoring (track 404s)",
+      "Add automated endpoint availability tests",
+      "Create OpenAPI/Swagger documentation"
+    ]
+  },
+  "testing_checklist": [
+    "Test signup flow end-to-end",
+    "Test billing checkout flow",
+    "Test manage subscription flow",
+    "Test email sending (verify email actually received)",
+    "Test social templates loading",
+    "Test seed templates button",
+    "Test AI suggestions panel in mindmap"
+  ]
+}

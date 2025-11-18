@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Badge } from "@/components/ui/badge";
 import { X, Plus, Loader2 } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 interface AddCompetitorModalProps {
   clientId: string;
@@ -79,6 +80,15 @@ export default function AddCompetitorModal({
     setLoading(true);
 
     try {
+      // Get session token for authentication
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session) {
+        alert("Not authenticated");
+        setLoading(false);
+        return;
+      }
+
       const url = competitor
         ? `/api/competitors/${competitor._id}`
         : "/api/competitors";
@@ -91,7 +101,10 @@ export default function AddCompetitorModal({
 
       const response = await fetch(url, {
         method,
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify(payload),
       });
 

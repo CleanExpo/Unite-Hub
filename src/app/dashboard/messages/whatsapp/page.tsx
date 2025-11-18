@@ -12,6 +12,7 @@ import { useWorkspace } from '@/hooks/useWorkspace';
 import WhatsAppChat from '@/components/WhatsAppChat';
 import { formatDistanceToNow } from 'date-fns';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
+import { supabaseBrowser } from '@/lib/supabase';
 
 interface WhatsAppConversation {
   id: string;
@@ -62,8 +63,22 @@ export default function WhatsAppMessagesPage() {
 
     try {
       setLoading(true);
+
+      // Get session for auth
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+
+      if (!session) {
+        console.error('Not authenticated');
+        setLoading(false);
+        return;
+      }
+
       const status = activeTab === 'all' ? undefined : activeTab;
-      const response = await fetch(`/api/whatsapp/conversations?workspaceId=${workspaceId}${status ? `&status=${status}` : ''}`);
+      const response = await fetch(`/api/whatsapp/conversations?workspaceId=${workspaceId}${status ? `&status=${status}` : ''}`, {
+        headers: {
+          "Authorization": `Bearer ${session.access_token}`,
+        },
+      });
 
       if (!response.ok) {
         throw new Error('Failed to fetch conversations');

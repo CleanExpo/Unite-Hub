@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import { apiRateLimit } from "@/lib/rate-limit";
+import { sendEmail } from "@/lib/email/email-service";
 
 /**
  * Send Email API Route
@@ -71,16 +72,30 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // TODO: Send email using email service
-    // For now, we'll log it and return success
-    // In production, integrate with SendGrid/Resend/Gmail API
-    console.log("[send-email] Email would be sent:", {
-      from: "noreply@unite-hub.com", // TODO: Get from user's email integration
+    // Send email using email service with automatic provider fallback
+    console.log("[send-email] Sending email to:", {
       to,
       subject,
       bodyLength: body.length,
       contact: contact.name,
     });
+
+    const result = await sendEmail({
+      to: to,
+      subject: subject,
+      html: body,
+      text: body.replace(/<[^>]*>/g, ''), // Strip HTML tags for plain text version
+      provider: 'auto', // Automatic failover: SendGrid → Resend → Gmail SMTP
+    });
+
+    if (!result.success) {
+      console.error('[send-email] Email failed:', result.error);
+      return NextResponse.json({
+        error: result.error || 'Failed to send email'
+      }, { status: 500 });
+    }
+
+    console.log('[send-email] Email sent successfully via:', result.provider);
 
     // Record email in database (optional - for tracking)
     const { data: sentEmail, error: insertError } = await supabase
@@ -113,7 +128,9 @@ export async function POST(req: NextRequest) {
       success: true,
       message: "Email sent successfully",
       emailId: sentEmail?.id,
-      // TODO: Add messageId from email service when integrated
+      provider: result.provider,
+      messageId: result.messageId,
+      fallbackUsed: result.fallbackUsed,
     });
   } catch (error: any) {
     console.error("[send-email] Error:", error);

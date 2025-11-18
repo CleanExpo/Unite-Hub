@@ -73,7 +73,13 @@
       "Bash(find:*)",
       "Bash(vercel --prod --yes:*)",
       "Bash(vercel inspect:*)",
-      "Bash(d:Unite-Hubsetup-docker-network.sh)"
+      "Bash(d:Unite-Hubsetup-docker-network.sh)",
+      "Bash(d:Unite-HubSYSTEM_COMPLETE.md)",
+      "Bash(sed:*)",
+      "Bash(grep:*)",
+      "Bash(done)",
+      "Bash(pip install:*)",
+      "Bash(npm run test:openrouter:*)"
     ],
     "deny": [],
     "ask": []

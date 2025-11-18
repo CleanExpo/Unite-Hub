@@ -24,8 +24,9 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const { user, profile, signOut, currentOrganization, loading: authLoading } = useAuth();
+  const { user, profile, signOut, currentOrganization, organizations, loading: authLoading } = useAuth();
   const [orgId, setOrgId] = useState<Id<"organizations"> | null>(null);
+  const [loadingTimeout, setLoadingTimeout] = useState(false);
 
   // Automatically refresh session to keep user logged in
   useSessionRefresh();
@@ -50,6 +51,22 @@ export default function DashboardLayout({
       console.log('[DashboardLayout] No org_id found in currentOrganization');
     }
   }, [currentOrganization]);
+
+  // Set timeout for organization loading
+  useEffect(() => {
+    if (!orgId && !authLoading) {
+      // Set timeout for 10 seconds
+      const timer = setTimeout(() => {
+        console.warn('[DashboardLayout] Organization loading timeout reached');
+        setLoadingTimeout(true);
+      }, 10000);
+
+      return () => clearTimeout(timer);
+    } else {
+      // Reset timeout if org is loaded
+      setLoadingTimeout(false);
+    }
+  }, [orgId, authLoading]);
 
   const isActive = (href: string) => pathname.startsWith(href);
 
@@ -76,9 +93,59 @@ export default function DashboardLayout({
 
   // Show loading while organization is loading
   if (!orgId) {
+    // If auth is still loading, show loading message
+    if (authLoading) {
+      return (
+        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 flex items-center justify-center">
+          <div className="text-center">
+            <div className="text-white text-lg">Loading authentication...</div>
+          </div>
+        </div>
+      );
+    }
+
+    // If timeout reached or explicitly no organizations found
+    if (loadingTimeout || (organizations && organizations.length === 0)) {
+      return (
+        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 flex items-center justify-center">
+          <div className="text-center max-w-md p-8 bg-slate-800/50 backdrop-blur-sm rounded-lg border border-slate-700">
+            <h2 className="text-2xl font-bold text-white mb-4">No Organization Found</h2>
+            <p className="text-slate-300 mb-6">
+              You need to be part of an organization to access the dashboard.
+              {organizations && organizations.length === 0
+                ? " It looks like you haven't been added to any organizations yet."
+                : " There was an issue loading your organization."}
+            </p>
+            <div className="flex flex-col gap-3">
+              <Button
+                onClick={() => window.location.href = '/onboarding'}
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                Create Organization
+              </Button>
+              <Button
+                variant="outline"
+                onClick={async () => {
+                  await signOut();
+                  window.location.href = '/login';
+                }}
+                className="border-slate-600 text-slate-300 hover:bg-slate-700"
+              >
+                Sign Out
+              </Button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Still loading (under 10 seconds)
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 flex items-center justify-center">
-        <div className="text-white">Loading organization...</div>
+        <div className="text-center">
+          <div className="text-white text-lg">Loading organization...</div>
+          <div className="text-slate-400 text-sm mt-2">This should only take a moment</div>
+        </div>
       </div>
     );
   }

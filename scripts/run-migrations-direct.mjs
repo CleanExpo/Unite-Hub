@@ -1,16 +1,17 @@
 #!/usr/bin/env node
 
 /**
- * Direct SQL Migration Executor
- *
- * Executes SQL migrations by making direct HTTP requests to Supabase PostgREST API
- * This bypasses the JavaScript client limitations for DDL statements.
+ * Direct PostgreSQL Migration Executor
+ * Uses pg package to execute migrations autonomously via DIRECT_CONNECT
  */
 
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import dotenv from 'dotenv';
+import pg from 'pg';
+
+const { Client } = pg;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -18,66 +19,127 @@ const rootDir = join(__dirname, '..');
 
 dotenv.config({ path: join(rootDir, '.env.local') });
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+// Extract password from DIRECT_CONNECT
+// Format: postgresql://postgres:PASSWORD@db.lksfwktwtmyznckodsau.supabase.co:5432/postgres
+const directConnect = process.env.DIRECT_CONNECT || '';
+const passwordMatch = directConnect.match(/:([^@]+)@/);
+const password = passwordMatch ? passwordMatch[1] : '';
 
-if (!supabaseUrl || !serviceRoleKey) {
-  console.error('❌ Missing Supabase credentials');
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const projectRef = supabaseUrl.match(/https:\/\/([^.]+)\.supabase\.co/)?.[1];
+
+let connectionString;
+
+if (projectRef && password) {
+  // Use pooler URL (better for serverless/reliability)
+  connectionString = `postgresql://postgres.${projectRef}:${password}@aws-1-ap-southeast-2.pooler.supabase.com:5432/postgres`;
+} else {
+  connectionString = directConnect;
+}
+
+if (!connectionString) {
+  console.error('❌ Missing connection credentials in .env.local');
   process.exit(1);
 }
 
-console.log('🚀 Direct SQL Migration Executor\n');
-console.log('📍 Target:', supabaseUrl);
-console.log('🔑 Using service role key\n');
+console.log('\n🚀 Autonomous PostgreSQL Migration Executor\n');
+console.log('━'.repeat(60));
+console.log('\n📍 Project Reference:', projectRef || 'Unknown');
+console.log('🔗 Using Supabase Pooler connection');
+console.log('🎯 Target: Migration 046 (AI Usage Tracking - CLEANED)\n');
 
-// Read migration files
-const migration040 = readFileSync(
-  join(rootDir, 'supabase/migrations/040_fix_ai_score_type.sql'),
-  'utf-8'
-);
+// Read migration file
+const migrationPath = join(rootDir, 'supabase/migrations/046_ai_usage_tracking_CLEANED.sql');
+const migrationSQL = readFileSync(migrationPath, 'utf-8');
 
-const migration041 = readFileSync(
-  join(rootDir, 'supabase/migrations/041_create_client_emails_table.sql'),
-  'utf-8'
-);
+console.log(`✅ Loaded migration: 046_ai_usage_tracking_CLEANED.sql`);
+console.log(`📊 Size: ${(migrationSQL.length / 1024).toFixed(2)} KB`);
+console.log(`📝 Lines: ${migrationSQL.split('\n').length}\n`);
 
-console.log('📋 Migration 040: Fix ai_score type (DECIMAL → INTEGER)\n');
-console.log('SQL Preview:');
-console.log('─'.repeat(60));
-console.log(migration040.split('\n').filter(l => l.trim() && !l.startsWith('--')).slice(0, 10).join('\n'));
-console.log('─'.repeat(60));
-console.log('\n⚠️  IMPORTANT: This migration will modify the contacts table');
-console.log('⚠️  Existing ai_score values will be converted from 0.0-1.0 to 0-100\n');
+async function executeMigration() {
+  const client = new Client({
+    connectionString: connectionString,
+  });
 
-console.log('📋 Migration 041: Create client_emails table\n');
-console.log('SQL Preview:');
-console.log('─'.repeat(60));
-console.log(migration041.split('\n').filter(l => l.trim() && !l.startsWith('--')).slice(0, 15).join('\n'));
-console.log('─'.repeat(60));
-console.log('\n✅ This will create a new table for email sync\n');
+  try {
+    console.log('🔌 Connecting to PostgreSQL...\n');
+    await client.connect();
+    console.log('✅ Connected successfully!\n');
 
-console.log('🎯 Recommended Approach:');
-console.log('\n1. Manual Execution (Safest):');
-console.log('   a) Go to Supabase Dashboard → SQL Editor');
-console.log('   b) Copy supabase/migrations/040_fix_ai_score_type.sql');
-console.log('   c) Paste and execute');
-console.log('   d) Copy supabase/migrations/041_create_client_emails_table.sql');
-console.log('   e) Paste and execute');
-console.log('   f) Run verification queries\n');
+    console.log('⏳ Executing migration...\n');
+    console.log('─'.repeat(60));
 
-console.log('2. CLI Execution (Alternative):');
-console.log('   supabase db push --linked\n');
+    // Execute the entire migration as a single query
+    // PostgreSQL will handle all the statements in sequence
+    await client.query(migrationSQL);
 
-console.log('3. Automated Script Execution:');
-console.log('   node scripts/fix-auth.js (creates HTTP endpoint for SQL execution)\n');
+    console.log('─'.repeat(60));
+    console.log('\n✅ Migration executed successfully!\n');
 
-console.log('📊 Migration Files Ready:');
-console.log('   ✅ supabase/migrations/040_fix_ai_score_type.sql (25 lines)');
-console.log('   ✅ supabase/migrations/041_create_client_emails_table.sql (81 lines)\n');
+    // Verify migration
+    console.log('🔍 Verifying migration...\n');
 
-console.log('🔍 Verification Queries:');
-console.log('\nAfter Migration 040:');
-console.log('   SELECT id, name, ai_score FROM contacts LIMIT 10;');
-console.log('\nAfter Migration 041:');
-console.log('   SELECT COUNT(*) FROM client_emails;');
-console.log('   \\d client_emails;\n');
+    const tableCheck = await client.query(`
+      SELECT table_name
+      FROM information_schema.tables
+      WHERE table_schema = 'public'
+        AND table_name IN ('ai_usage_logs', 'ai_budget_limits')
+      ORDER BY table_name;
+    `);
+
+    if (tableCheck.rows.length === 2) {
+      console.log('✅ Tables verified:');
+      tableCheck.rows.forEach(row => {
+        console.log(`   - ${row.table_name}`);
+      });
+    }
+
+    const functionCheck = await client.query(`
+      SELECT proname
+      FROM pg_proc
+      WHERE proname IN ('log_ai_usage', 'check_ai_budget', 'get_ai_cost_breakdown', 'refresh_ai_daily_summary')
+      ORDER BY proname;
+    `);
+
+    console.log(`\n✅ Functions: ${functionCheck.rows.length} created`);
+    functionCheck.rows.forEach(row => {
+      console.log(`   - ${row.proname}()`);
+    });
+
+    const policyCheck = await client.query(`
+      SELECT COUNT(*) as count
+      FROM pg_policies
+      WHERE tablename IN ('ai_usage_logs', 'ai_budget_limits');
+    `);
+
+    console.log(`\n✅ RLS Policies: ${policyCheck.rows[0].count} created\n`);
+
+    await client.end();
+
+    console.log('━'.repeat(60));
+    console.log('✨ Migration 046 complete and verified!\n');
+
+    process.exit(0);
+  } catch (error) {
+    console.log('─'.repeat(60));
+    console.error('\n❌ Migration failed!');
+    console.error(`\nError: ${error.message}\n`);
+
+    if (error.position) {
+      console.error(`Position: ${error.position}`);
+    }
+
+    if (error.detail) {
+      console.error(`Detail: ${error.detail}\n`);
+    }
+
+    await client.end().catch(() => {});
+
+    console.log('⚠️  Migration did not complete successfully.');
+    console.log('💡 Check error output above for details.\n');
+
+    process.exit(1);
+  }
+}
+
+executeMigration();

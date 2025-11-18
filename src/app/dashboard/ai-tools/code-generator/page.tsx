@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Code2, Loader2, Copy, Check, Sparkles } from "lucide-react";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { supabaseBrowser } from "@/lib/supabase";
 
 export default function CodeGeneratorPage() {
   const [prompt, setPrompt] = useState("");
@@ -26,9 +27,21 @@ export default function CodeGeneratorPage() {
     setGeneratedCode("");
 
     try {
+      // Get session for auth
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+
+      if (!session) {
+        setError("Not authenticated");
+        setLoading(false);
+        return;
+      }
+
       const response = await fetch("/api/ai/generate-code", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({ prompt, model }),
       });
 

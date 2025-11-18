@@ -14,22 +14,27 @@ import { getOpenRouterClient } from "../openrouter";
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 const openRouter = getOpenRouterClient();
 
-// Model pricing (per 1M tokens)
+// Model pricing (per 1M tokens) - Updated 2025-11-19
 const MODEL_COSTS = {
-  // Anthropic
+  // Anthropic Claude (Direct API)
   "claude-opus-4": { input: 15, output: 75 },
   "claude-sonnet-4.5": { input: 3, output: 15 },
   "claude-haiku-4.5": { input: 0.8, output: 4 },
 
-  // OpenRouter (via OPENROUTER_API_KEY)
-  "gemini-flash-lite": { input: 0.05, output: 0.2 },
-  "gemini-flash": { input: 0.1, output: 0.4 },
+  // Google Gemini 2.0 (OpenRouter)
+  "gemini-2.0-flash-lite": { input: 0.075, output: 0.3 },  // BEST: Ultra-cheap, 25% cheaper than 1.5
+  "gemini-2.0-flash": { input: 0.1, output: 0.4 },          // BEST: Balanced, 1M context
+
+  // Google Gemini 3.0 (OpenRouter)
+  "gemini-3.0-pro": { input: 2, output: 12 },               // BEST: Advanced reasoning, beats GPT-4
+
+  // Legacy Gemini 1.5 (deprecated - use 2.0 instead)
+  "gemini-flash-lite": { input: 0.05, output: 0.2 },        // DEPRECATED: Use gemini-2.0-flash-lite
+  "gemini-flash": { input: 0.1, output: 0.4 },              // DEPRECATED: Use gemini-2.0-flash
+
+  // Other OpenRouter models
   "sherlock-think-alpha": { input: 1, output: 5 },
   "llama-3.3-70b": { input: 0.35, output: 0.4 },
-
-  // Google Direct API (future - not implemented yet)
-  "gemini-2.0-flash": { input: 0.1, output: 0.4 },
-  "gemini-2.0-pro": { input: 1.25, output: 5 },
 };
 
 export type TaskType =
@@ -48,12 +53,13 @@ export type ModelName =
   | "claude-opus-4"
   | "claude-sonnet-4.5"
   | "claude-haiku-4.5"
-  | "gemini-flash-lite"
-  | "gemini-flash"
+  | "gemini-2.0-flash-lite"       // BEST: Ultra-cheap ($0.075/$0.30)
+  | "gemini-2.0-flash"            // BEST: Balanced ($0.10/$0.40)
+  | "gemini-3.0-pro"              // BEST: Advanced reasoning ($2/$12)
+  | "gemini-flash-lite"           // DEPRECATED
+  | "gemini-flash"                // DEPRECATED
   | "sherlock-think-alpha"
-  | "llama-3.3-70b"
-  | "gemini-2.0-flash"
-  | "gemini-2.0-pro";
+  | "llama-3.3-70b";
 
 export interface RouteOptions {
   task: TaskType;
@@ -128,30 +134,30 @@ export class ModelRouter {
       return options.preferredModel;
     }
 
-    // Auto-select based on task type (cheapest that works)
+    // Auto-select BEST model for each task (optimized for cost + performance)
     const taskToModelMap: Record<TaskType, ModelName> = {
-      // Ultra-cheap tasks → Gemini Flash Lite (OpenRouter)
-      extract_intent: "gemini-flash-lite",
-      tag_generation: "gemini-flash-lite",
-      sentiment_analysis: "gemini-flash-lite",
+      // Ultra-cheap tasks → Gemini 2.0 Flash-Lite (BEST: 50% cheaper than Haiku)
+      extract_intent: "gemini-2.0-flash-lite",
+      tag_generation: "gemini-2.0-flash-lite",
+      sentiment_analysis: "gemini-2.0-flash-lite",
 
-      // Budget tasks → Claude Haiku
-      email_intelligence: "claude-haiku-4.5",
-      contact_scoring: "claude-haiku-4.5",
+      // Budget tasks → Gemini 2.0 Flash (BEST: 7x cheaper than Haiku, better multimodal)
+      email_intelligence: "gemini-2.0-flash",
+      contact_scoring: "gemini-2.0-flash",
 
-      // Standard tasks → Claude Sonnet
-      generate_persona: "claude-sonnet-4.5",
-      generate_strategy: "claude-sonnet-4.5",
+      // Standard tasks → Gemini 3.0 Pro (BEST: Advanced reasoning, beats GPT-4)
+      generate_persona: "gemini-3.0-pro",
+      generate_strategy: "gemini-3.0-pro",
 
-      // Premium tasks → Claude Opus (with Extended Thinking)
+      // Premium tasks → Claude Opus (BEST: Extended Thinking for complex content)
       generate_content: "claude-opus-4",
 
-      // Ultra-premium tasks → Sherlock Think Alpha (1.84M context)
-      security_audit: "sherlock-think-alpha",
-      codebase_analysis: "sherlock-think-alpha",
+      // Ultra-premium tasks → Gemini 3.0 Pro (BEST: 1M context + reasoning mode)
+      security_audit: "gemini-3.0-pro",
+      codebase_analysis: "gemini-3.0-pro",
     };
 
-    return taskToModelMap[task] || "claude-sonnet-4.5";
+    return taskToModelMap[task] || "gemini-2.0-flash";
   }
 
   /**
@@ -171,18 +177,19 @@ export class ModelRouter {
       return await this.callAnthropic(model, fullPrompt, options, startTime);
     }
 
-    // OpenRouter models
+    // OpenRouter models (Gemini 2.0, Gemini 3.0, etc.)
     if (
-      ["gemini-flash-lite", "gemini-flash", "sherlock-think-alpha", "llama-3.3-70b"].includes(
-        model
-      )
+      [
+        "gemini-2.0-flash-lite",
+        "gemini-2.0-flash",
+        "gemini-3.0-pro",
+        "gemini-flash-lite",      // Legacy
+        "gemini-flash",           // Legacy
+        "sherlock-think-alpha",
+        "llama-3.3-70b",
+      ].includes(model)
     ) {
       return await this.callOpenRouter(model, fullPrompt, options, startTime);
-    }
-
-    // Google Direct API models (not implemented yet - future enhancement)
-    if (model.startsWith("gemini-2.0-")) {
-      throw new Error(`Google Direct API not implemented yet. Use OpenRouter variant instead.`);
     }
 
     throw new Error(`Unknown model: ${model}`);
@@ -259,8 +266,18 @@ export class ModelRouter {
     }
 
     const openRouterModelMap: Record<string, string> = {
-      "gemini-flash-lite": "google/gemini-2.0-flash-lite",
-      "gemini-flash": "google/gemini-2.0-flash",
+      // Gemini 2.0 (BEST: Latest, optimized pricing)
+      "gemini-2.0-flash-lite": "google/gemini-2.0-flash-lite",
+      "gemini-2.0-flash": "google/gemini-2.0-flash",
+
+      // Gemini 3.0 (BEST: Advanced reasoning)
+      "gemini-3.0-pro": "google/gemini-3-pro-preview",
+
+      // Legacy Gemini 1.5 (deprecated)
+      "gemini-flash-lite": "google/gemini-flash-1.5",
+      "gemini-flash": "google/gemini-flash-1.5",
+
+      // Other models
       "sherlock-think-alpha": "openrouter/sherlock-think-alpha",
       "llama-3.3-70b": "meta-llama/llama-3.3-70b-instruct",
     };

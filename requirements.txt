@@ -1,0 +1,45 @@
+# Web Scraping Dependencies for Unite-Hub
+# Install with: pip install -r requirements.txt
+
+# Core Scraping Libraries
+beautifulsoup4==4.12.3          # HTML/XML parsing
+lxml==5.1.0                      # Fast XML/HTML parser
+html5lib==1.1                    # HTML5 parser
+requests==2.31.0                 # HTTP library
+httpx==0.27.0                    # Async HTTP client
+
+# Advanced Scraping
+scrapy==2.11.1                   # Web scraping framework
+playwright==1.42.0               # Browser automation
+selenium==4.18.1                 # Browser automation (legacy support)
+
+# Data Extraction & Processing
+pandas==2.2.1                    # Data manipulation
+openpyxl==3.1.2                  # Excel file handling
+python-dotenv==1.0.1             # Environment variables
+
+# Content Analysis
+nltk==3.8.1                      # Natural language processing
+textblob==0.18.0                 # Sentiment analysis
+langdetect==1.0.9                # Language detection
+
+# SEO & Marketing Tools
+advertools==0.14.2               # SEO crawling and analysis
+requests-html==0.10.0            # JavaScript rendering
+
+# Rate Limiting & Retries
+tenacity==8.2.3                  # Retry logic
+ratelimit==2.2.1                 # Rate limiting
+
+# Proxy Support
+requests[socks]==2.31.0          # SOCKS proxy support
+python-socks==2.4.3              # SOCKS client
+
+# Data Storage
+pymongo==4.6.2                   # MongoDB support (if needed)
+redis==5.0.3                     # Redis caching
+
+# Utilities
+fake-useragent==1.5.1            # Random user agents
+tldextract==5.1.1                # Domain extraction
+validators==0.22.0               # URL validation

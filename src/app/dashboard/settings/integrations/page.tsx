@@ -36,6 +36,7 @@ import {
 import { useWorkspace } from "@/hooks/useWorkspace";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { useToast } from "@/hooks/use-toast";
+import { supabaseBrowser } from "@/lib/supabase";
 
 interface GmailIntegration {
   id: string;
@@ -71,8 +72,25 @@ export default function IntegrationsPage() {
 
     setLoading(true);
     try {
+      // Get session for auth
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+
+      if (!session) {
+        toast({
+          title: "Error",
+          description: "Not authenticated",
+          variant: "destructive",
+        });
+        return;
+      }
+
       const res = await fetch(
-        `/api/integrations/gmail/list?workspaceId=${workspaceId}`
+        `/api/integrations/gmail/list?workspaceId=${workspaceId}`,
+        {
+          headers: {
+            "Authorization": `Bearer ${session.access_token}`,
+          },
+        }
       );
       const { integrations: data } = await res.json();
       setIntegrations(data || []);
@@ -99,9 +117,24 @@ export default function IntegrationsPage() {
         return;
       }
 
+      // Get session for auth
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+
+      if (!session) {
+        toast({
+          title: "Error",
+          description: "Not authenticated",
+          variant: "destructive",
+        });
+        return;
+      }
+
       const res = await fetch("/api/integrations/gmail/connect-multi", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({ orgId: workspaceId, workspaceId }),
       });
 
@@ -129,9 +162,25 @@ export default function IntegrationsPage() {
         return;
       }
 
+      // Get session for auth
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+
+      if (!session) {
+        toast({
+          title: "Error",
+          description: "Not authenticated",
+          variant: "destructive",
+        });
+        setSyncing(false);
+        return;
+      }
+
       const res = await fetch("/api/integrations/gmail/sync-all", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({ workspaceId }),
       });
 
@@ -165,9 +214,24 @@ export default function IntegrationsPage() {
 
   const updateLabel = async (integrationId: string, label: string) => {
     try {
+      // Get session for auth
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+
+      if (!session) {
+        toast({
+          title: "Error",
+          description: "Not authenticated",
+          variant: "destructive",
+        });
+        return;
+      }
+
       await fetch("/api/integrations/gmail/update-label", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({ integrationId, label }),
       });
 
@@ -192,9 +256,24 @@ export default function IntegrationsPage() {
     try {
       if (!workspaceId) return;
 
+      // Get session for auth
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+
+      if (!session) {
+        toast({
+          title: "Error",
+          description: "Not authenticated",
+          variant: "destructive",
+        });
+        return;
+      }
+
       await fetch("/api/integrations/gmail/set-primary", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({ workspaceId, integrationId }),
       });
 
@@ -216,9 +295,24 @@ export default function IntegrationsPage() {
 
   const toggleSync = async (integrationId: string, enabled: boolean) => {
     try {
+      // Get session for auth
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+
+      if (!session) {
+        toast({
+          title: "Error",
+          description: "Not authenticated",
+          variant: "destructive",
+        });
+        return;
+      }
+
       await fetch("/api/integrations/gmail/toggle-sync", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({ integrationId, enabled }),
       });
 
@@ -242,9 +336,24 @@ export default function IntegrationsPage() {
     if (!confirm("Are you sure you want to disconnect this account?")) return;
 
     try {
+      // Get session for auth
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+
+      if (!session) {
+        toast({
+          title: "Error",
+          description: "Not authenticated",
+          variant: "destructive",
+        });
+        return;
+      }
+
       await fetch("/api/integrations/gmail/disconnect", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({ integrationId }),
       });
 

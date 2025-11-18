@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import { Plus, Trash2, Save, Play, Pause, Eye } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/lib/supabase";
 
 export function DripCampaignBuilder({
   campaignId,
@@ -77,9 +78,20 @@ export function DripCampaignBuilder({
         return;
       }
 
+      // Get session token for authentication
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session) {
+        alert("Not authenticated");
+        return;
+      }
+
       const res = await fetch("/api/campaigns/drip", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({
           action: "create",
           workspaceId,
@@ -93,7 +105,10 @@ export function DripCampaignBuilder({
       for (const step of steps) {
         await fetch("/api/campaigns/drip", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.access_token}`,
+          },
           body: JSON.stringify({
             action: "add_step",
             campaign_id: newCampaign.id,

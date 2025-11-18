@@ -9,9 +9,29 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Unite-Hub is an **AI-first CRM and marketing automation platform** built with:
 - **Frontend**: Next.js 16 (App Router, Turbopack) + React 19 + shadcn/ui + Tailwind CSS
 - **Backend**: Next.js API Routes (104 endpoints) + Supabase PostgreSQL
-- **AI Layer**: Anthropic Claude API (Opus 4, Sonnet 4.5, Haiku 4.5)
+- **AI Layer**: **Multi-provider intelligent routing** - Gemini 3 (20%) + OpenRouter (70%) + Anthropic Direct (10%)
 - **Auth**: Supabase Auth with Google OAuth 2.0 (implicit flow)
 - **Email**: Multi-provider system (SendGrid → Resend → Gmail SMTP with automatic failover)
+
+### ⚡ AI Cost Optimization Strategy (3-Provider System)
+**Intelligent routing** for optimal cost/quality balance:
+- 🥇 **Gemini 3 Pro** (20% of traffic) - Gmail/Google Workspace tasks, PDF analysis, multimodal
+- 🥈 **OpenRouter** (70% of traffic) - Standard AI operations (70-80% cost savings)
+- 🥉 **Anthropic Direct** (10% of traffic) - Extended Thinking, Prompt Caching, latest models
+
+**Decision Tree**:
+```
+Request → Enhanced Router
+    ↓
+    ├─→ [Gmail/Calendar/Drive] → Gemini 3 (native Google integration)
+    ├─→ [Standard operations] → OpenRouter (cost optimization)
+    └─→ [Complex reasoning] → Anthropic Direct (Extended Thinking)
+```
+
+**See**:
+- [`docs/GEMINI_3_INTEGRATION_STRATEGY.md`](docs/GEMINI_3_INTEGRATION_STRATEGY.md) - **NEW**: Gemini 3 Pro integration guide
+- [`docs/GEMINI_3_MIGRATION_GUIDE.md`](docs/GEMINI_3_MIGRATION_GUIDE.md) - **NEW**: 4-week migration plan
+- [`docs/OPENROUTER_FIRST_STRATEGY.md`](docs/OPENROUTER_FIRST_STRATEGY.md) - OpenRouter routing logic
 
 ### Core Features
 1. **AI Agents** - Email processing, content generation, contact intelligence, orchestrator coordination
@@ -41,6 +61,9 @@ npm run test:integration # Integration tests
 npm run test:e2e         # Playwright end-to-end tests
 npm run test:coverage    # Generate coverage report
 npm run test:api         # Legacy API flow tests
+npm run test:gemini      # Test Gemini 3 setup (NEW)
+npm run test:gmail-intelligence # Test Gmail intelligence extraction (NEW)
+npm run benchmark:email-intelligence # Benchmark Gemini vs Claude (NEW)
 ```
 
 ### Database

@@ -37,6 +37,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { ErrorState } from "@/components/ErrorState";
 import { MeetingSkeleton } from "@/components/skeletons/MeetingSkeleton";
+import { supabaseBrowser } from "@/lib/supabase";
 
 interface CalendarEvent {
   id: string;
@@ -112,6 +113,15 @@ export default function MeetingsPage() {
     try {
       setCreating(true);
 
+      // Get session for auth
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+
+      if (!session) {
+        alert("Not authenticated");
+        setCreating(false);
+        return;
+      }
+
       const attendeesList = newMeeting.attendees
         .split(",")
         .map((email) => email.trim())
@@ -119,7 +129,10 @@ export default function MeetingsPage() {
 
       const response = await fetch("/api/calendar/create-meeting", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({
           workspaceId,
           summary: newMeeting.summary,

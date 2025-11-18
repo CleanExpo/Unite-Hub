@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Mail, Send, Loader2 } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 interface SendEmailModalProps {
   isOpen: boolean;
@@ -57,11 +58,21 @@ export function SendEmailModal({
     }
 
     try {
+      // Get session token for authentication
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session) {
+        setError("Not authenticated");
+        setLoading(false);
+        return;
+      }
+
       // Call API to send email
       const response = await fetch("/api/emails/send", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
         },
         body: JSON.stringify({
           workspaceId,

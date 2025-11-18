@@ -35,6 +35,7 @@ import { Plus, FileText, Sparkles, TrendingUp } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { FeaturePageWrapper } from "@/components/features/FeaturePageWrapper";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { supabaseBrowser } from "@/lib/supabase";
 
 const PAGE_TYPES = [
   { value: "homepage", label: "Homepage" },
@@ -87,9 +88,25 @@ function LandingPageFeature({ clientId }: { clientId: Id<"clients"> }) {
 
     setIsGenerating(true);
     try {
+      // Get session for auth
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+
+      if (!session) {
+        toast({
+          title: "Error",
+          description: "Not authenticated",
+          variant: "destructive",
+        });
+        setIsGenerating(false);
+        return;
+      }
+
       const response = await fetch("/api/landing-pages/generate", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({
           clientId: clientId,
           pageType: newPageType,

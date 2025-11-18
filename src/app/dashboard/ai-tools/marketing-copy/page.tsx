@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Sparkles, Loader2, Copy, Check, Wand2 } from "lucide-react";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { supabaseBrowser } from "@/lib/supabase";
 
 export default function MarketingCopyPage() {
   const [businessName, setBusinessName] = useState("");
@@ -28,9 +29,21 @@ export default function MarketingCopyPage() {
     setGeneratedCopy(null);
 
     try {
+      // Get session for auth
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+
+      if (!session) {
+        setError("Not authenticated");
+        setLoading(false);
+        return;
+      }
+
       const response = await fetch("/api/ai/generate-marketing", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({ businessName, description, section }),
       });
 

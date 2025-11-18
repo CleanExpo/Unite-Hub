@@ -157,6 +157,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log('[AuthContext] Organizations fetched:', orgs.length);
       setOrganizations(orgs);
 
+      // Handle empty organizations array explicitly
+      if (orgs.length === 0) {
+        console.warn('[AuthContext] No organizations found for user');
+        setCurrentOrganization(null);
+        // Don't set loading to false yet - let the layout handle it
+        return;
+      }
+
       // Set current organization
       const savedOrgId = localStorage.getItem("currentOrganizationId");
       const savedOrg = orgs.find((org: any) => org.org_id === savedOrgId);
@@ -287,13 +295,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     console.log('[AuthContext] Initializing auth state...');
 
-    // Safety timeout: If loading doesn't complete in 20 seconds, force it to false
+    // Safety timeout: If loading doesn't complete in 8 seconds, force it to false
     const safetyTimeout = setTimeout(() => {
       if (mounted) {
         console.warn('[AuthContext] ⚠️ SAFETY TIMEOUT REACHED - FORCING LOADING = FALSE');
         setLoading(false);
       }
-    }, 20000); // 20 second timeout (increased to allow slow DB queries)
+    }, 8000); // 8 second timeout - more reasonable for better UX
 
     // Get initial session from localStorage (persisted session)
     supabaseBrowser.auth.getSession().then(async ({ data: { session }, error }) => {
@@ -332,6 +340,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (!mounted) return;
 
       console.log('[AuthContext] Auth state change:', event, session?.user?.email);
+
+      // Handle explicit SIGNED_OUT event (session expiry or manual logout)
+      if (event === 'SIGNED_OUT') {
+        console.log('[AuthContext] User signed out, redirecting to login');
+        setSession(null);
+        setUser(null);
+        setProfile(null);
+        setOrganizations([]);
+        setCurrentOrganization(null);
+        localStorage.removeItem("currentOrganizationId");
+
+        // Redirect to login page to prevent broken state
+        window.location.href = '/login';
+        return; // Early return to prevent further processing
+      }
+
+      // Handle token refresh event
+      if (event === 'TOKEN_REFRESHED') {
+        console.log('[AuthContext] Token refreshed, updating session');
+        setSession(session);
+        setUser(session?.user ?? null);
+        // Don't need to re-fetch profile/orgs on refresh
+        return;
+      }
 
       setSession(session);
       setUser(session?.user ?? null);

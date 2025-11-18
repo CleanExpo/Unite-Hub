@@ -9,6 +9,7 @@ import { useWorkspace } from "@/hooks/useWorkspace";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { ErrorState } from "@/components/ErrorState";
 import { Skeleton } from "@/components/ui/skeleton";
+import { supabase } from "@/lib/supabase";
 
 export default function SettingsPage() {
   const { workspaceId, loading: workspaceLoading } = useWorkspace();
@@ -26,7 +27,18 @@ export default function SettingsPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/integrations/list");
+      // Get session token for authentication
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session) {
+        throw new Error("Not authenticated");
+      }
+
+      const res = await fetch("/api/integrations/list", {
+        headers: {
+          "Authorization": `Bearer ${session.access_token}`,
+        },
+      });
       if (!res.ok) {
         throw new Error("Failed to load integrations");
       }
@@ -47,9 +59,20 @@ export default function SettingsPage() {
         return;
       }
 
+      // Get session token for authentication
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session) {
+        alert("Not authenticated");
+        return;
+      }
+
       const res = await fetch("/api/integrations/gmail/connect", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({ orgId: workspaceId }),
       });
 
@@ -68,9 +91,21 @@ export default function SettingsPage() {
         return;
       }
 
+      // Get session token for authentication
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session) {
+        alert("Not authenticated");
+        setSyncing(false);
+        return;
+      }
+
       const res = await fetch("/api/integrations/gmail/sync", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
         body: JSON.stringify({
           integrationId,
           workspaceId,

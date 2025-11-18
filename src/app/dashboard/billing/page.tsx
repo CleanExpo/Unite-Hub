@@ -75,11 +75,21 @@ export default function BillingPage() {
   const handleUpgrade = async (planName: string) => {
     setChangingPlan(true);
     try {
+      // Get session for auth
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+
+      if (!session) {
+        setError("Not authenticated");
+        setChangingPlan(false);
+        return;
+      }
+
       // Call Stripe checkout API
-      const response = await fetch("/api/stripe/create-checkout", {
+      const response = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
         },
         body: JSON.stringify({
           workspaceId,
@@ -105,11 +115,20 @@ export default function BillingPage() {
 
   const handleManageSubscription = async () => {
     try {
+      // Get session for auth
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+
+      if (!session) {
+        setError("Not authenticated");
+        return;
+      }
+
       // Call Stripe customer portal API
-      const response = await fetch("/api/stripe/create-portal-session", {
+      const response = await fetch("/api/subscription/portal", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
         },
         body: JSON.stringify({
           workspaceId,
