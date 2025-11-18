@@ -85,6 +85,56 @@
         "x-message-ttl": 3600000,
         "x-max-priority": 10
       }
+    },
+    {
+      "name": "contact_intelligence_queue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-message-ttl": 3600000,
+        "x-max-priority": 10
+      }
+    },
+    {
+      "name": "media_transcription_queue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-message-ttl": 7200000,
+        "x-max-priority": 5
+      }
+    },
+    {
+      "name": "email_integration_queue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-message-ttl": 3600000,
+        "x-max-priority": 8
+      }
+    },
+    {
+      "name": "analytics_queue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-message-ttl": 3600000,
+        "x-max-priority": 5
+      }
+    },
+    {
+      "name": "content_calendar_queue",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-message-ttl": 3600000,
+        "x-max-priority": 6
+      }
     }
   ],
   "exchanges": [],

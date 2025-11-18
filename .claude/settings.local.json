@@ -72,7 +72,8 @@
       "Bash(dir /s /b *TODO*.md *ROADMAP*.md *NEXT*.md 2)",
       "Bash(find:*)",
       "Bash(vercel --prod --yes:*)",
-      "Bash(vercel inspect:*)"
+      "Bash(vercel inspect:*)",
+      "Bash(d:Unite-Hubsetup-docker-network.sh)"
     ],
     "deny": [],
     "ask": []

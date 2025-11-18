@@ -7,7 +7,11 @@
 -- =====================================================
 -- 1. AUTONOMOUS TASKS TABLE
 -- =====================================================
-CREATE TABLE IF NOT EXISTS autonomous_tasks (
+
+-- Drop table if exists (clean slate)
+DROP TABLE IF EXISTS autonomous_tasks CASCADE;
+
+CREATE TABLE autonomous_tasks (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   workspace_id UUID REFERENCES workspaces(id) ON DELETE CASCADE,
 
