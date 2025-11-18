@@ -19,6 +19,9 @@ import PlatformFilter from "@/components/calendar/PlatformFilter";
 import CalendarStats from "@/components/calendar/CalendarStats";
 import { FeaturePageWrapper } from "@/components/features/FeaturePageWrapper";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { ErrorState } from "@/components/ErrorState";
+import { EmptyState } from "@/components/EmptyState";
+import { CalendarSkeleton, CalendarPostListSkeleton } from "@/components/skeletons/CalendarSkeleton";
 
 export default function ContentCalendarPage() {
   return (
@@ -48,6 +51,7 @@ function ContentCalendarFeature({ clientId }: { clientId: Id<"clients"> }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Queries
   const calendarPosts = useQuery(api.contentCalendar.getCalendarPosts, {
@@ -75,6 +79,7 @@ function ContentCalendarFeature({ clientId }: { clientId: Id<"clients"> }) {
 
   const handleGenerateCalendar = async () => {
     setIsGenerating(true);
+    setError(null);
     try {
       const startDate = new Date(currentYear, currentMonth - 1, 1);
       const endDate = new Date(currentYear, currentMonth, 0);
@@ -94,9 +99,9 @@ function ContentCalendarFeature({ clientId }: { clientId: Id<"clients"> }) {
 
       const data = await response.json();
       alert(`Successfully generated ${data.postsCreated} posts!`);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error generating calendar:", error);
-      alert("Failed to generate calendar. Please try again.");
+      setError(error.message || "Failed to generate calendar. Please try again.");
     } finally {
       setIsGenerating(false);
     }
@@ -151,6 +156,10 @@ function ContentCalendarFeature({ clientId }: { clientId: Id<"clients"> }) {
     setIsModalOpen(true);
   };
 
+  // Loading state
+  const isLoading = calendarPosts === undefined;
+  const hasError = error !== null;
+
   return (
     <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
       <Breadcrumbs items={[{ label: "Calendar" }]} />
@@ -190,7 +199,20 @@ function ContentCalendarFeature({ clientId }: { clientId: Id<"clients"> }) {
         </div>
       </div>
 
+      {/* Error State */}
+      {hasError && (
+        <ErrorState
+          title="Failed to load calendar"
+          message={error || "An unexpected error occurred"}
+          onRetry={() => {
+            setError(null);
+            window.location.reload();
+          }}
+        />
+      )}
+
       {/* View Mode Toggle */}
+      {!hasError && (
       <div className="flex items-center gap-2">
         <button
           onClick={() => setViewMode("calendar")}
@@ -215,8 +237,20 @@ function ContentCalendarFeature({ clientId }: { clientId: Id<"clients"> }) {
           List View
         </button>
       </div>
+      )}
 
-        {/* Main Content */}
+      {/* Main Content */}
+      {!hasError && (
+        <>
+        {isLoading ? (
+          <>
+            {viewMode === "calendar" ? (
+              <CalendarSkeleton />
+            ) : (
+              <CalendarPostListSkeleton count={5} />
+            )}
+          </>
+        ) : (
         <div className="grid grid-cols-12 gap-6">
           {/* Filters Sidebar */}
           {showFilters && (
@@ -261,29 +295,22 @@ function ContentCalendarFeature({ clientId }: { clientId: Id<"clients"> }) {
 
             {/* Empty State */}
             {(!filteredPosts || filteredPosts.length === 0) && (
-              <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg border-2 border-dashed border-slate-700/50 p-12 text-center">
-                <CalendarIcon className="h-16 w-16 text-slate-500 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-white mb-2">
-                  No Posts Scheduled
-                </h3>
-                <p className="text-slate-400 mb-6">
-                  Generate your first AI-powered content calendar to get started
-                </p>
-                <button
-                  onClick={handleGenerateCalendar}
-                  disabled={isGenerating}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg shadow-lg shadow-blue-500/50 transition-all disabled:opacity-50"
-                >
-                  <Sparkles className="h-5 w-5" />
-                  {isGenerating ? "Generating..." : "Generate Calendar"}
-                </button>
-              </div>
+              <EmptyState
+                icon={CalendarIcon}
+                title="No Posts Scheduled"
+                description="Generate your first AI-powered content calendar to get started"
+                actionLabel={isGenerating ? "Generating..." : "Generate Calendar"}
+                onAction={handleGenerateCalendar}
+              />
             )}
           </div>
         </div>
+        )}
+        </>
+      )}
 
       {/* Calendar Stats Summary (when filters hidden) */}
-      {!showFilters && calendarStats && (
+      {!hasError && !isLoading && !showFilters && calendarStats && (
         <div className="grid grid-cols-4 gap-4">
           <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg border border-slate-700/50 p-4 hover:border-slate-600/50 transition-all group">
             <div className="flex items-center justify-between">

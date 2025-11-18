@@ -12,6 +12,10 @@ import { Plus, Search, FolderOpen, TrendingUp, AlertCircle, CheckCircle, Loader2
 import { useProjects } from "@/hooks/useProjects";
 import { useWorkspace } from "@/hooks/useWorkspace";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { ErrorState } from "@/components/ErrorState";
+import { EmptyState } from "@/components/EmptyState";
+import { ProjectCardGridSkeleton } from "@/components/skeletons/ProjectCardSkeleton";
+import { StatsGridSkeleton } from "@/components/skeletons/StatsCardSkeleton";
 
 // Helper function to format due date
 const formatDueDate = (dateString: string | null) => {
@@ -46,7 +50,7 @@ export default function ProjectsPage() {
   const [activeTab, setActiveTab] = useState("all");
 
   const { workspaceId, loading: workspaceLoading } = useWorkspace();
-  const { projects: dbProjects, loading, error } = useProjects({ orgId: workspaceId });
+  const { projects: dbProjects, loading, error, refetch } = useProjects({ orgId: workspaceId });
 
   // Transform database projects to UI format
   const allProjects = useMemo(() => dbProjects.map(transformProject), [dbProjects]);
@@ -111,25 +115,19 @@ export default function ProjectsPage() {
       </div>
       {/* Loading State */}
       {loading && (
-        <div className="flex items-center justify-center h-64">
-          <div className="text-center">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-400 mx-auto mb-4" />
-            <p className="text-slate-400">Loading projects...</p>
-          </div>
-        </div>
+        <>
+          <StatsGridSkeleton count={4} />
+          <ProjectCardGridSkeleton count={6} />
+        </>
       )}
 
       {/* Error State */}
       {error && !loading && (
-        <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-6">
-          <div className="flex items-center gap-3">
-            <AlertCircle className="h-5 w-5 text-red-400" />
-            <div>
-              <h3 className="font-semibold text-red-300">Error Loading Projects</h3>
-              <p className="text-sm text-red-400 mt-1">{error}</p>
-            </div>
-          </div>
-        </div>
+        <ErrorState
+          title="Failed to load projects"
+          message={error}
+          onRetry={refetch}
+        />
       )}
 
       {/* Content - Only show when not loading */}
@@ -217,15 +215,17 @@ export default function ProjectsPage() {
                   ))}
                 </ProjectCardGrid>
               ) : (
-                <div className="text-center py-12 bg-slate-800/50 backdrop-blur-sm rounded-lg border-2 border-dashed border-slate-700/50">
-                  <FolderOpen className="h-16 w-16 text-slate-500 mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold text-white mb-2">No projects found</h3>
-                  <p className="text-sm text-slate-400">
-                    {searchQuery
+                <EmptyState
+                  icon={FolderOpen}
+                  title="No projects found"
+                  description={
+                    searchQuery
                       ? `No projects match "${searchQuery}"`
-                      : "No projects in this category"}
-                  </p>
-                </div>
+                      : "No projects in this category. Create your first project to get started."
+                  }
+                  actionLabel={!searchQuery ? "New Project" : undefined}
+                  onAction={!searchQuery ? () => router.push("/dashboard/projects/new") : undefined}
+                />
               )}
             </TabsContent>
           </Tabs>

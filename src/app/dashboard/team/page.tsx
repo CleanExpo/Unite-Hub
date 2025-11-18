@@ -14,6 +14,10 @@ import { useWorkspace } from "@/hooks/useWorkspace";
 import { useAuth } from "@/contexts/AuthContext";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { AddTeamMemberModal } from "@/components/modals/AddTeamMemberModal";
+import { ErrorState } from "@/components/ErrorState";
+import { EmptyState } from "@/components/EmptyState";
+import { TeamMemberGridSkeleton } from "@/components/skeletons/TeamMemberSkeleton";
+import { StatsGridSkeleton } from "@/components/skeletons/StatsCardSkeleton";
 
 // Helper function to format join date
 const formatJoinDate = (dateString: string) => {
@@ -81,25 +85,19 @@ export default function TeamPage() {
 
       {/* Loading State */}
       {loading && (
-        <div className="flex items-center justify-center h-64">
-          <div className="text-center">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-400 mx-auto mb-4" />
-            <p className="text-slate-400">Loading team members...</p>
-          </div>
-        </div>
+        <>
+          <StatsGridSkeleton count={4} />
+          <TeamMemberGridSkeleton count={4} />
+        </>
       )}
 
       {/* Error State */}
       {error && !loading && (
-        <div className="bg-red-500/20 border border-red-500/30 rounded-lg p-6">
-          <div className="flex items-center gap-3">
-            <AlertCircle className="h-5 w-5 text-red-400" />
-            <div>
-              <h3 className="font-semibold text-white">Error Loading Team Members</h3>
-              <p className="text-sm text-red-200 mt-1">{error}</p>
-            </div>
-          </div>
-        </div>
+        <ErrorState
+          title="Failed to load team members"
+          message={error}
+          onRetry={refetch}
+        />
       )}
 
       {/* Content - Only show when not loading */}
@@ -147,8 +145,9 @@ export default function TeamPage() {
             <h2 className="text-2xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent mb-6">
               Team Directory
             </h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {teamMembers.map((member) => (
+            {teamMembers.length > 0 ? (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {teamMembers.map((member) => (
                 <Card key={member.id} className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 hover:border-slate-600/50 transition-all group">
                   <CardHeader className="border-b border-slate-700/50">
                     <div className="flex items-start gap-4">
@@ -254,7 +253,16 @@ export default function TeamPage() {
                   </CardContent>
                 </Card>
               ))}
-            </div>
+              </div>
+            ) : (
+              <EmptyState
+                icon={Users}
+                title="No team members yet"
+                description="Start building your team by adding your first team member. Invite colleagues and assign them to projects."
+                actionLabel="Add Team Member"
+                onAction={() => setIsAddModalOpen(true)}
+              />
+            )}
           </div>
         </>
       )}

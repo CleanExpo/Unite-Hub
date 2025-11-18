@@ -1,43 +1,36 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import { apiRateLimit } from "@/lib/rate-limit";
+import { validateUserAndWorkspace } from "@/lib/workspace-validation";
+import {
+  successResponse,
+  errorResponse,
+  validateUUID,
+  validateEnum,
+  parsePagination,
+  createPaginationMeta,
+  parseSorting
+} from "@/lib/api-helpers";
 
 /**
  * GET /api/content
  *
- * Fetch generated content for a workspace
+ * Fetch generated content for a workspace with pagination, filtering, and sorting
  *
  * Query parameters:
  * - workspace: UUID (required) - Workspace ID to filter by
  * - status: string (optional) - Filter by status (draft, approved, sent)
  * - type: string (optional) - Filter by content_type (followup, proposal, case_study)
  * - contactId: UUID (optional) - Filter by contact ID
+ * - page: number (optional) - Page number (default: 1)
+ * - pageSize: number (optional) - Items per page (default: 20, max: 100)
+ * - sortBy: string (optional) - Sort field (default: created_at)
+ * - sortOrder: asc|desc (optional) - Sort direction (default: desc)
  */
 export async function GET(req: NextRequest) {
   try {
     const rateLimitResult = await apiRateLimit(req);
     if (rateLimitResult) return rateLimitResult;
-
-    // Get authenticated user (supports both bearer token and session)
-    const authHeader = req.headers.get("authorization");
-    const token = authHeader?.replace("Bearer ", "");
-    let userId: string;
-
-    if (token) {
-      const { supabaseBrowser } = await import("@/lib/supabase");
-      const { data, error } = await supabaseBrowser.auth.getUser(token);
-      if (error || !data.user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-      userId = data.user.id;
-    } else {
-      const supabase = await getSupabaseServer();
-      const { data, error } = await supabase.auth.getUser();
-      if (error || !data.user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-      userId = data.user.id;
-    }
 
     // Get query parameters
     const workspaceId = req.nextUrl.searchParams.get("workspace");
@@ -47,19 +40,55 @@ export async function GET(req: NextRequest) {
 
     // Validate required parameters
     if (!workspaceId) {
-      return NextResponse.json(
-        { error: "Missing required parameter: workspace" },
-        { status: 400 }
-      );
+      return errorResponse("Missing required parameter: workspace", 400);
     }
 
-    // Build query
+    if (!validateUUID(workspaceId)) {
+      return errorResponse("Invalid workspace ID format", 400);
+    }
+
+    // Validate optional UUID parameters
+    if (contactId && !validateUUID(contactId)) {
+      return errorResponse("Invalid contactId format", 400);
+    }
+
+    // Validate enum values
+    if (status) {
+      const statusError = validateEnum({ status }, { status: ["draft", "approved", "sent"] });
+      if (statusError) {
+        return errorResponse(statusError.status, 400);
+      }
+    }
+
+    if (contentType) {
+      const typeError = validateEnum({ contentType }, { contentType: ["followup", "proposal", "case_study"] });
+      if (typeError) {
+        return errorResponse(typeError.contentType, 400);
+      }
+    }
+
+    // Validate user authentication and workspace access
+    await validateUserAndWorkspace(req, workspaceId);
+
+    // Parse pagination parameters
+    const { limit, offset, page, pageSize } = parsePagination(req.nextUrl.searchParams, {
+      pageSize: 20,
+      maxPageSize: 100,
+    });
+
+    // Parse sorting parameters
+    const { sortBy, sortOrder } = parseSorting(req.nextUrl.searchParams, {
+      allowedFields: ["created_at", "updated_at", "title", "status"],
+      defaultField: "created_at",
+      defaultOrder: "desc",
+    });
+
+    // Build query with optimized select
     const supabase = await getSupabaseServer();
     let query = supabase
       .from("generated_content")
       .select(`
         id,
-        workspace_id,
         contact_id,
         title,
         content_type,
@@ -68,15 +97,16 @@ export async function GET(req: NextRequest) {
         status,
         created_at,
         updated_at,
-        contacts (
+        contacts!inner (
           id,
           name,
           email,
           company
         )
-      `)
+      `, { count: "exact" })
       .eq("workspace_id", workspaceId)
-      .order("created_at", { ascending: false });
+      .order(sortBy, { ascending: sortOrder === "asc" })
+      .range(offset, offset + limit - 1);
 
     // Apply optional filters
     if (status) {
@@ -89,25 +119,30 @@ export async function GET(req: NextRequest) {
       query = query.eq("contact_id", contactId);
     }
 
-    const { data: content, error } = await query;
+    const { data: content, error, count } = await query;
 
     if (error) {
       console.error("[api/content] Error fetching content:", error);
-      return NextResponse.json(
-        { error: "Failed to fetch content" },
-        { status: 500 }
-      );
+      return errorResponse("Failed to fetch content", 500, error.message);
     }
 
-    return NextResponse.json({
-      content: content || [],
-      count: content?.length || 0,
-    });
+    // Create pagination metadata
+    const meta = createPaginationMeta(content?.length || 0, count || 0, page, pageSize);
+
+    return successResponse(content || [], meta);
   } catch (error: any) {
     console.error("[api/content] Error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to fetch content" },
-      { status: 500 }
+
+    if (error.message?.includes("Unauthorized")) {
+      return errorResponse("Unauthorized", 401);
+    }
+    if (error.message?.includes("Forbidden")) {
+      return errorResponse("Access denied", 403);
+    }
+
+    return errorResponse(
+      error instanceof Error ? error.message : "Failed to fetch content",
+      500
     );
   }
 }
@@ -120,7 +155,7 @@ export async function GET(req: NextRequest) {
  * Body:
  * - workspaceId: UUID (required)
  * - contactId: UUID (required)
- * - title: string (required)
+ * - title: string (required, 1-500 chars)
  * - contentType: "followup" | "proposal" | "case_study" (required)
  * - generatedText: string (required)
  * - aiModel: string (required) - e.g., "claude-opus-4"
@@ -130,27 +165,6 @@ export async function POST(req: NextRequest) {
   try {
     const rateLimitResult = await apiRateLimit(req);
     if (rateLimitResult) return rateLimitResult;
-
-    // Get authenticated user
-    const authHeader = req.headers.get("authorization");
-    const token = authHeader?.replace("Bearer ", "");
-    let userId: string;
-
-    if (token) {
-      const { supabaseBrowser } = await import("@/lib/supabase");
-      const { data, error } = await supabaseBrowser.auth.getUser(token);
-      if (error || !data.user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-      userId = data.user.id;
-    } else {
-      const supabase = await getSupabaseServer();
-      const { data, error } = await supabase.auth.getUser();
-      if (error || !data.user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-      userId = data.user.id;
-    }
 
     const body = await req.json();
     const {
@@ -164,33 +178,49 @@ export async function POST(req: NextRequest) {
     } = body;
 
     // Validate required fields
-    if (!workspaceId || !contactId || !title || !contentType || !generatedText || !aiModel) {
-      return NextResponse.json(
-        {
-          error:
-            "Missing required fields: workspaceId, contactId, title, contentType, generatedText, aiModel",
-        },
-        { status: 400 }
-      );
+    const requiredErrors = validateRequired(body, [
+      "workspaceId",
+      "contactId",
+      "title",
+      "contentType",
+      "generatedText",
+      "aiModel",
+    ]);
+
+    if (requiredErrors) {
+      return validationError(requiredErrors);
     }
 
-    // Validate content type
-    const validTypes = ["followup", "proposal", "case_study"];
-    if (!validTypes.includes(contentType)) {
-      return NextResponse.json(
-        { error: `Invalid contentType. Must be one of: ${validTypes.join(", ")}` },
-        { status: 400 }
-      );
+    // Validate UUID formats
+    if (!validateUUID(workspaceId)) {
+      return validationError({ workspaceId: "Invalid workspace ID format" });
+    }
+    if (!validateUUID(contactId)) {
+      return validationError({ contactId: "Invalid contact ID format" });
     }
 
-    // Validate status
-    const validStatuses = ["draft", "approved", "sent"];
-    if (!validStatuses.includes(status)) {
-      return NextResponse.json(
-        { error: `Invalid status. Must be one of: ${validStatuses.join(", ")}` },
-        { status: 400 }
-      );
+    // Validate enum values
+    const enumErrors = combineValidationErrors(
+      validateEnum({ contentType }, { contentType: ["followup", "proposal", "case_study"] }),
+      validateEnum({ status }, { status: ["draft", "approved", "sent"] })
+    );
+
+    if (enumErrors) {
+      return validationError(enumErrors);
     }
+
+    // Validate length constraints
+    const lengthErrors = validateLength(body, {
+      title: { min: 1, max: 500 },
+      generatedText: { min: 10, max: 50000 },
+    });
+
+    if (lengthErrors) {
+      return validationError(lengthErrors);
+    }
+
+    // Validate user authentication and workspace access
+    await validateUserAndWorkspace(req, workspaceId);
 
     // Verify contact exists and belongs to workspace
     const supabase = await getSupabaseServer();
@@ -202,10 +232,7 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (contactError || !contact) {
-      return NextResponse.json(
-        { error: "Contact not found or access denied" },
-        { status: 404 }
-      );
+      return notFoundError("Contact");
     }
 
     // Insert content
@@ -225,21 +252,23 @@ export async function POST(req: NextRequest) {
 
     if (insertError) {
       console.error("[api/content] Error creating content:", insertError);
-      return NextResponse.json(
-        { error: "Failed to create content" },
-        { status: 500 }
-      );
+      return errorResponse("Failed to create content", 500, insertError.message);
     }
 
-    return NextResponse.json({
-      content: newContent,
-      message: "Content created successfully",
-    }, { status: 201 });
+    return successResponse(newContent, undefined, "Content created successfully", 201);
   } catch (error: any) {
     console.error("[api/content] Error:", error);
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to create content" },
-      { status: 500 }
+
+    if (error.message?.includes("Unauthorized")) {
+      return errorResponse("Unauthorized", 401);
+    }
+    if (error.message?.includes("Forbidden")) {
+      return errorResponse("Access denied", 403);
+    }
+
+    return errorResponse(
+      error instanceof Error ? error.message : "Failed to create content",
+      500
     );
   }
 }
