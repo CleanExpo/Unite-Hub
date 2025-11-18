@@ -17,6 +17,7 @@
     "test:all": "npm run test && npm run test:e2e",
     "test:api": "node test-api-flows.mjs",
     "check:db": "node create-tables.mjs",
+    "validate:env": "node scripts/validate-env.mjs",
     "agent:email": "node scripts/run-email-agent.mjs",
     "dev": "next dev -p 3008",
     "build": "next build",
