@@ -9,6 +9,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/hooks/useWorkspace";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Users, Flame, Mail, TrendingUp, Sparkles, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { StatsGridSkeleton } from "@/components/skeletons/StatsCardSkeleton";
+import { ErrorState } from "@/components/ErrorState";
 
 export default function OverviewPage() {
   const { user, loading: authLoading } = useAuth();
@@ -20,70 +22,74 @@ export default function OverviewPage() {
     avgAiScore: 0,
   });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchStats = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      if (!workspaceId) {
+        console.log("No workspace available");
+        setLoading(false);
+        return;
+      }
+
+      console.log("Fetching stats for workspace:", workspaceId);
+
+      // Fetch contacts count and stats
+      const { data: contacts, error: contactsError } = await supabase
+        .from("contacts")
+        .select("ai_score, status")
+        .eq("workspace_id", workspaceId);
+
+      if (contactsError) {
+        console.error("Error fetching contacts:", contactsError);
+        setError(contactsError.message || "Failed to load dashboard stats");
+        return;
+      }
+
+      const totalContacts = contacts?.length || 0;
+      const hotLeads = contacts?.filter((c) => c.ai_score >= 80).length || 0;
+      const avgAiScore = contacts?.length
+        ? Math.round(
+            contacts.reduce((sum, c) => sum + (c.ai_score || 0), 0) /
+              contacts.length
+          )
+        : 0;
+
+      // Fetch campaigns count
+      const { data: campaigns, error: campaignsError } = await supabase
+        .from("campaigns")
+        .select("id")
+        .eq("workspace_id", workspaceId);
+
+      if (campaignsError) {
+        console.error("Error fetching campaigns:", campaignsError);
+        setError(campaignsError.message || "Failed to load campaigns");
+        return;
+      }
+
+      const totalCampaigns = campaigns?.length || 0;
+
+      setStats({
+        totalContacts,
+        hotLeads,
+        totalCampaigns,
+        avgAiScore,
+      });
+    } catch (err: any) {
+      console.error("Error fetching stats:", err);
+      setError(err.message || "An unexpected error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    async function fetchStats() {
-      try {
-        if (authLoading || workspaceLoading) {
-          console.log("Waiting for auth/workspace to complete...");
-          return;
-        }
-
-        if (!workspaceId) {
-          console.log("No workspace available");
-          setLoading(false);
-          return;
-        }
-
-        console.log("Fetching stats for workspace:", workspaceId);
-
-        // Fetch contacts count and stats
-        const { data: contacts, error: contactsError } = await supabase
-          .from("contacts")
-          .select("ai_score, status")
-          .eq("workspace_id", workspaceId);
-
-        if (contactsError) {
-          console.error("Error fetching contacts:", contactsError);
-          throw contactsError;
-        }
-
-        const totalContacts = contacts?.length || 0;
-        const hotLeads = contacts?.filter((c) => c.ai_score >= 80).length || 0;
-        const avgAiScore = contacts?.length
-          ? Math.round(
-              contacts.reduce((sum, c) => sum + (c.ai_score || 0), 0) /
-                contacts.length
-            )
-          : 0;
-
-        // Fetch campaigns count
-        const { data: campaigns, error: campaignsError } = await supabase
-          .from("campaigns")
-          .select("id")
-          .eq("workspace_id", workspaceId);
-
-        if (campaignsError) {
-          console.error("Error fetching campaigns:", campaignsError);
-          throw campaignsError;
-        }
-
-        const totalCampaigns = campaigns?.length || 0;
-
-        setStats({
-          totalContacts,
-          hotLeads,
-          totalCampaigns,
-          avgAiScore,
-        });
-      } catch (error) {
-        console.error("Error fetching stats:", error);
-      } finally {
-        setLoading(false);
-      }
+    if (!authLoading && !workspaceLoading && workspaceId) {
+      fetchStats();
     }
-
-    fetchStats();
   }, [workspaceId, authLoading, workspaceLoading]);
 
   // Show loading while auth is initializing
@@ -155,40 +161,50 @@ export default function OverviewPage() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard
-          title="Total Contacts"
-          value={stats.totalContacts.toString()}
-          icon={Users}
-          gradient="from-blue-500 to-cyan-500"
-          change="+12%"
-          trending="up"
+      {error ? (
+        <ErrorState
+          title="Failed to load dashboard"
+          message={error}
+          onRetry={fetchStats}
         />
-        <StatCard
-          title="Hot Leads"
-          value={stats.hotLeads.toString()}
-          icon={Flame}
-          gradient="from-orange-500 to-red-500"
-          change="+8%"
-          trending="up"
-        />
-        <StatCard
-          title="Active Campaigns"
-          value={stats.totalCampaigns.toString()}
-          icon={Mail}
-          gradient="from-purple-500 to-pink-500"
-          change="+5%"
-          trending="up"
-        />
-        <StatCard
-          title="Avg AI Score"
-          value={stats.avgAiScore.toString()}
-          icon={TrendingUp}
-          gradient="from-green-500 to-emerald-500"
-          change="+3 pts"
-          trending="up"
-        />
-      </div>
+      ) : loading ? (
+        <StatsGridSkeleton count={4} />
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <StatCard
+            title="Total Contacts"
+            value={stats.totalContacts.toString()}
+            icon={Users}
+            gradient="from-blue-500 to-cyan-500"
+            change="+12%"
+            trending="up"
+          />
+          <StatCard
+            title="Hot Leads"
+            value={stats.hotLeads.toString()}
+            icon={Flame}
+            gradient="from-orange-500 to-red-500"
+            change="+8%"
+            trending="up"
+          />
+          <StatCard
+            title="Active Campaigns"
+            value={stats.totalCampaigns.toString()}
+            icon={Mail}
+            gradient="from-purple-500 to-pink-500"
+            change="+5%"
+            trending="up"
+          />
+          <StatCard
+            title="Avg AI Score"
+            value={stats.avgAiScore.toString()}
+            icon={TrendingUp}
+            gradient="from-green-500 to-emerald-500"
+            change="+3 pts"
+            trending="up"
+          />
+        </div>
+      )}
 
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

@@ -6,15 +6,19 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ContentPreview } from "@/components/ContentPreview";
-import { Loader2, Plus, RefreshCw } from "lucide-react";
+import { Loader2, Plus, RefreshCw, FileText } from "lucide-react";
 import { useWorkspace } from "@/hooks/useWorkspace";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { ContentListSkeleton } from "@/components/skeletons/ContentListSkeleton";
+import { ErrorState } from "@/components/ErrorState";
+import { EmptyState } from "@/components/EmptyState";
 
 export default function ContentPage() {
   const { workspaceId, loading: workspaceLoading } = useWorkspace();
   const [contents, setContents] = useState<any[]>([]);
   const [selectedContent, setSelectedContent] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
 
   useEffect(() => {
@@ -24,15 +28,22 @@ export default function ContentPage() {
 
   const loadContent = async () => {
     setLoading(true);
+    setError(null);
     try {
       // Fetch from database
       const response = await fetch(
         `/api/content?workspace=${workspaceId}`
       );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch content: ${response.statusText}`);
+      }
+
       const { content } = await response.json();
       setContents(content || []);
-    } catch (error) {
-      console.error("Failed to load content:", error);
+    } catch (err: any) {
+      console.error("Failed to load content:", err);
+      setError(err.message || "Failed to load content");
     } finally {
       setLoading(false);
     }
@@ -113,22 +124,22 @@ export default function ContentPage() {
 
         {/* Drafts */}
         <TabsContent value="drafts" className="space-y-4">
-          {loading ? (
-            <div className="flex justify-center py-8">
-              <Loader2 className="w-6 h-6 animate-spin text-blue-400" />
-            </div>
+          {error ? (
+            <ErrorState
+              title="Failed to load content"
+              message={error}
+              onRetry={loadContent}
+            />
+          ) : loading ? (
+            <ContentListSkeleton count={6} />
           ) : contents.filter((c) => c.status === "draft").length === 0 ? (
-            <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
-              <CardContent className="pt-6 text-center py-12">
-                <p className="text-slate-400 mb-4">No drafts yet</p>
-                <Button
-                  onClick={() => generateBulkContent("followup")}
-                  className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-semibold shadow-lg shadow-blue-500/50"
-                >
-                  Generate Content
-                </Button>
-              </CardContent>
-            </Card>
+            <EmptyState
+              icon={FileText}
+              title="No drafts yet"
+              description="Generate AI-powered content for your contacts"
+              actionLabel="Generate Content"
+              onAction={() => generateBulkContent("followup")}
+            />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {contents
