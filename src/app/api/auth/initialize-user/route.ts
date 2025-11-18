@@ -70,26 +70,15 @@ export async function POST(request: NextRequest): Promise<NextResponse<Initializ
 
       user = data.user;
 
-      // Create server client for database operations
-      supabase = createServerClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-        {
-          cookies: {
-            get() { return undefined; },
-          },
-          global: {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        }
-      );
+      // CRITICAL FIX: Use service role to bypass RLS for initialization
+      // User-authenticated clients are blocked by RLS policies during INSERT
+      const { getSupabaseAdmin } = await import('@/lib/supabase');
+      supabase = getSupabaseAdmin();
     } else {
       // Fallback to cookie-based auth (PKCE flow)
       const cookieStore = await cookies();
 
-      supabase = createServerClient(
+      const cookieClient = createServerClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,
         process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
         {
@@ -101,7 +90,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<Initializ
         }
       );
 
-      const { data: { user: cookieUser }, error: userError } = await supabase.auth.getUser();
+      const { data: { user: cookieUser }, error: userError } = await cookieClient.auth.getUser();
 
       if (userError || !cookieUser) {
         return NextResponse.json(
@@ -120,6 +109,10 @@ export async function POST(request: NextRequest): Promise<NextResponse<Initializ
       }
 
       user = cookieUser;
+
+      // CRITICAL FIX: Use service role to bypass RLS for initialization
+      const { getSupabaseAdmin } = await import('@/lib/supabase');
+      supabase = getSupabaseAdmin();
     }
 
     // Track what we create for ground truth verification
