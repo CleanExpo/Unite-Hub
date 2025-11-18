@@ -76,7 +76,9 @@ Request → Cost/Feature Analyzer
     └─→ [10%] Direct Anthropic (Extended Thinking, caching)
 ```
 
-### Decision Tree
+### Use Case Routing Matrix
+
+(Also known as: Decision Tree)
 
 ```typescript
 function routeAIRequest(task: AITask) {
@@ -382,7 +384,9 @@ const batchResults = await Promise.all(
 
 ---
 
-## Monitoring & Alerts
+## Cost Monitoring
+
+(Includes: Monitoring & Alerts)
 
 ### Daily Budget Tracking
 
