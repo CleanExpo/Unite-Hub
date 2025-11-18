@@ -104,6 +104,7 @@ export default function DashboardLayout({
                   <NavLink href="/dashboard/media" isActive={isActive("/dashboard/media")}>
                     Media
                   </NavLink>
+                  {/* TODO: Uncomment when campaigns feature is fully implemented
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className={`${
@@ -124,6 +125,7 @@ export default function DashboardLayout({
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
+                  */}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className={`${
