@@ -218,6 +218,30 @@ npx supabase db push
 npm run dev
 ```
 
+### 8. Set Up Database Monitoring (Optional but Recommended)
+
+Set up automated health monitoring for production-grade observability:
+
+```bash
+# Quick validation test (30 seconds)
+./scripts/test-monitoring-setup.sh
+
+# Configure Google integrations (5-10 minutes)
+cp .env.monitoring.example ~/.unite-hub-monitoring.env
+nano ~/.unite-hub-monitoring.env
+```
+
+**What you get:**
+- ✅ Real-time database health monitoring
+- ✅ Google Chat alerts for critical issues
+- ✅ Gmail email notifications
+- ✅ Google Cloud Monitoring metrics and dashboards
+- ✅ Automated checks every 6 hours
+
+**Quick Start**: See **[QUICK_START_MONITORING.md](QUICK_START_MONITORING.md)** for 10-minute setup guide
+
+**Full Documentation**: See **[GOOGLE_INTEGRATIONS_SETUP.md](GOOGLE_INTEGRATIONS_SETUP.md)** for complete configuration
+
 Dashboard available at `http://localhost:3008`
 
 ## ⚙️ Configuration
