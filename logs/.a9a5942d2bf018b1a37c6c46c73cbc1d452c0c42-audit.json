@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "d:\\Unite-Hub\\logs\\.a9a5942d2bf018b1a37c6c46c73cbc1d452c0c42-audit.json",
+    "files": [
+        {
+            "date": 1763444783396,
+            "name": "d:\\Unite-Hub\\logs\\combined-2025-11-18.log",
+            "hash": "426c056e59bae0841c933dec46bd70821699f02b61baa9b1ff797407a0988df9"
+        }
+    ],
+    "hashType": "sha256"
+}

@@ -103,6 +103,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       const data = await response.json();
+
+      // Handle null response (no profile exists yet)
+      if (!data) {
+        console.warn('[AuthContext] No profile found for user:', userId);
+        setProfile(null);
+        return;
+      }
+
       console.log('[AuthContext] Profile fetched:', data.email);
       setProfile(data);
     } catch (error) {

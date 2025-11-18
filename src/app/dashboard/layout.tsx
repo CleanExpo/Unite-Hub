@@ -157,19 +157,22 @@ export default function DashboardLayout({
 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="gap-2 border-slate-700 bg-slate-800 hover:bg-slate-700 text-white">
-                      <Avatar className="h-8 w-8">
+                    <Button variant="outline" className="flex items-center gap-2 h-auto py-2 px-3 border-slate-700 bg-slate-800 hover:bg-slate-700 text-white">
+                      <Avatar className="h-8 w-8 flex-shrink-0">
                         {profile?.avatar_url && (
                           <AvatarImage src={profile.avatar_url} alt={profile.full_name} />
                         )}
                         <AvatarFallback>{getInitials(profile?.full_name)}</AvatarFallback>
                       </Avatar>
-                      <div className="flex flex-col items-start gap-0.5">
-                        <span className="text-sm">{profile?.full_name || user?.email?.split('@')[0] || 'User'}</span>
+                      <div className="flex flex-col items-start gap-0.5 min-w-0">
+                        <span className="text-sm font-medium truncate max-w-[150px]">{profile?.full_name || user?.email?.split('@')[0] || 'User'}</span>
                         {currentOrganization && (
-                          <RoleBadge role={currentOrganization.role} size="sm" showIcon />
+                          <div className="flex items-center">
+                            <RoleBadge role={currentOrganization.role} size="sm" showIcon />
+                          </div>
                         )}
                       </div>
+                      <ChevronDown className="h-4 w-4 flex-shrink-0 text-slate-400" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="bg-slate-800 border-slate-700 w-64">

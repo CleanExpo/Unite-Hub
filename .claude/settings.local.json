@@ -24,7 +24,9 @@
       "Bash(npm test:*)",
       "Bash(git fetch:*)",
       "Bash(bash:*)",
-      "Bash(dir /s /b *CLIENT-AGENT*.md *PROJECT-AGENT*.md *ORCHESTRATOR-AGENT*.md 2)"
+      "Bash(dir /s /b *CLIENT-AGENT*.md *PROJECT-AGENT*.md *ORCHESTRATOR-AGENT*.md 2)",
+      "Bash(npm run build:*)",
+      "Bash(npx tsc:*)"
     ],
     "deny": [],
     "ask": []

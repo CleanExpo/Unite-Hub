@@ -57,14 +57,15 @@ export async function validateUserAuth(req: NextRequest): Promise<AuthenticatedU
     userId = data.user.id;
   }
 
-  // Get user's active organization (using authenticated user's supabase client)
+  // Get user's organization (using authenticated user's supabase client)
+  // Note: We don't filter by is_active since all org memberships should be accessible
   const supabase = await getSupabaseServer();
   const { data: userOrg, error: orgError } = await supabase
     .from("user_organizations")
     .select("org_id")
     .eq("user_id", userId)
-    .eq("is_active", true)
-    .maybeSingle(); // ← Changed from .single() to .maybeSingle() for graceful handling
+    .limit(1)
+    .maybeSingle(); // Get first org if multiple exist
 
   if (orgError) {
     console.error("[workspace-validation] Error fetching user organization:", orgError);
@@ -72,8 +73,15 @@ export async function validateUserAuth(req: NextRequest): Promise<AuthenticatedU
   }
 
   if (!userOrg) {
-    throw new Error("Forbidden: No active organization found");
+    console.error("[workspace-validation] No organization found for userId:", userId);
+    console.error("[workspace-validation] This usually means the user hasn't been properly initialized");
+    throw new Error("Forbidden: No organization found for user");
   }
+
+  console.log("[workspace-validation] User authenticated successfully:", {
+    userId,
+    orgId: userOrg.org_id
+  });
 
   return {
     userId,
