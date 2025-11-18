@@ -30,12 +30,16 @@ import { AddContactModal } from "@/components/modals/AddContactModal";
 import { SendEmailModal } from "@/components/modals/SendEmailModal";
 import { DeleteContactModal } from "@/components/modals/DeleteContactModal";
 import { EditContactModal } from "@/components/modals/EditContactModal";
+import { ContactsListSkeleton } from "@/components/skeletons/ContactsListSkeleton";
+import { StatsGridSkeleton } from "@/components/skeletons/StatsCardSkeleton";
+import { ErrorState } from "@/components/ErrorState";
 
 export default function ContactsPage() {
   const { workspaceId, loading: workspaceLoading } = useWorkspace();
   const [searchTerm, setSearchTerm] = useState("");
   const [allContacts, setAllContacts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isSendEmailModalOpen, setIsSendEmailModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -43,39 +47,42 @@ export default function ContactsPage() {
   const [selectedContact, setSelectedContact] = useState<any | null>(null);
   const router = useRouter();
 
-  useEffect(() => {
-    async function fetchContacts() {
-      try {
-        if (workspaceLoading) {
-          // Wait for workspace to load
-          return;
-        }
+  const fetchContacts = async () => {
+    try {
+      setLoading(true);
+      setError(null);
 
-        if (!workspaceId) {
-          console.log("No workspace selected for contacts");
-          setLoading(false);
-          return;
-        }
-
-        const { data, error } = await supabase
-          .from("contacts")
-          .select("*")
-          .eq("workspace_id", workspaceId)
-          .order("created_at", { ascending: false });
-
-        if (error) {
-          console.error("Error fetching contacts:", error);
-          throw error;
-        }
-        setAllContacts(data || []);
-      } catch (error) {
-        console.error("Error fetching contacts:", error);
-      } finally {
+      if (!workspaceId) {
+        console.log("No workspace selected for contacts");
         setLoading(false);
+        return;
       }
-    }
 
-    fetchContacts();
+      const { data, error: fetchError } = await supabase
+        .from("contacts")
+        .select("*")
+        .eq("workspace_id", workspaceId)
+        .order("created_at", { ascending: false });
+
+      if (fetchError) {
+        console.error("Error fetching contacts:", fetchError);
+        setError(fetchError.message || "Failed to load contacts");
+        return;
+      }
+
+      setAllContacts(data || []);
+    } catch (err: any) {
+      console.error("Error fetching contacts:", err);
+      setError(err.message || "An unexpected error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!workspaceLoading && workspaceId) {
+      fetchContacts();
+    }
   }, [workspaceId, workspaceLoading]);
 
   // Filter by search term
@@ -87,17 +94,6 @@ export default function ContactsPage() {
 
   const handleContactAdded = () => {
     // Refresh contacts list
-    setLoading(true);
-    const fetchContacts = async () => {
-      if (!workspaceId) return;
-      const { data } = await supabase
-        .from("contacts")
-        .select("*")
-        .eq("workspace_id", workspaceId)
-        .order("created_at", { ascending: false });
-      setAllContacts(data || []);
-      setLoading(false);
-    };
     fetchContacts();
   };
 
@@ -119,17 +115,6 @@ export default function ContactsPage() {
 
   const handleContactDeleted = () => {
     // Refresh contacts list
-    setLoading(true);
-    const fetchContacts = async () => {
-      if (!workspaceId) return;
-      const { data } = await supabase
-        .from("contacts")
-        .select("*")
-        .eq("workspace_id", workspaceId)
-        .order("created_at", { ascending: false });
-      setAllContacts(data || []);
-      setLoading(false);
-    };
     fetchContacts();
   };
 
@@ -140,17 +125,6 @@ export default function ContactsPage() {
 
   const handleContactUpdated = () => {
     // Refresh contacts list
-    setLoading(true);
-    const fetchContacts = async () => {
-      if (!workspaceId) return;
-      const { data } = await supabase
-        .from("contacts")
-        .select("*")
-        .eq("workspace_id", workspaceId)
-        .order("created_at", { ascending: false });
-      setAllContacts(data || []);
-      setLoading(false);
-    };
     fetchContacts();
   };
 
@@ -193,34 +167,38 @@ export default function ContactsPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard
-          title="Total Contacts"
-          value={contacts.length.toString()}
-          icon={Users}
-          gradient="from-blue-500 to-cyan-500"
-        />
-        <StatCard
-          title="Prospects"
-          value={contacts.filter((c: any) => c.status === "prospect").length.toString()}
-          icon={Target}
-          gradient="from-green-500 to-emerald-500"
-        />
-        <StatCard
-          title="Hot Leads"
-          value={contacts.filter((c: any) => (c.ai_score || 0) >= 80).length.toString()}
-          icon={Sparkles}
-          gradient="from-orange-500 to-red-500"
-        />
-        <StatCard
-          title="Avg AI Score"
-          value={contacts.length > 0
-            ? Math.round(contacts.reduce((sum: number, c: any) => sum + (c.ai_score || 0), 0) / contacts.length).toString()
-            : "0"}
-          icon={TrendingUp}
-          gradient="from-purple-500 to-pink-500"
-        />
-      </div>
+      {loading ? (
+        <StatsGridSkeleton count={4} />
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <StatCard
+            title="Total Contacts"
+            value={contacts.length.toString()}
+            icon={Users}
+            gradient="from-blue-500 to-cyan-500"
+          />
+          <StatCard
+            title="Prospects"
+            value={contacts.filter((c: any) => c.status === "prospect").length.toString()}
+            icon={Target}
+            gradient="from-green-500 to-emerald-500"
+          />
+          <StatCard
+            title="Hot Leads"
+            value={contacts.filter((c: any) => (c.ai_score || 0) >= 80).length.toString()}
+            icon={Sparkles}
+            gradient="from-orange-500 to-red-500"
+          />
+          <StatCard
+            title="Avg AI Score"
+            value={contacts.length > 0
+              ? Math.round(contacts.reduce((sum: number, c: any) => sum + (c.ai_score || 0), 0) / contacts.length).toString()
+              : "0"}
+            icon={TrendingUp}
+            gradient="from-purple-500 to-pink-500"
+          />
+        </div>
+      )}
 
       {/* Contacts Table */}
       <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
@@ -229,12 +207,15 @@ export default function ContactsPage() {
           <CardDescription className="text-slate-400">View and manage your contact database</CardDescription>
         </CardHeader>
         <CardContent>
-          {loading ? (
-            <div className="flex items-center justify-center h-64">
-              <div className="flex items-center gap-3">
-                <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 animate-pulse"></div>
-                <p className="text-slate-400">Loading contacts...</p>
-              </div>
+          {error ? (
+            <ErrorState
+              title="Failed to load contacts"
+              message={error}
+              onRetry={fetchContacts}
+            />
+          ) : loading ? (
+            <div className="overflow-x-auto">
+              <ContactsListSkeleton rows={5} />
             </div>
           ) : contacts.length === 0 ? (
             <div className="text-center py-12">

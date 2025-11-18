@@ -192,6 +192,73 @@ Provide a comprehensive analysis in this format:
   }
 
   /**
+   * General chat completion (for model router)
+   */
+  async chat(
+    prompt: string,
+    options?: {
+      model?: string;
+      maxTokens?: number;
+      temperature?: number;
+      systemPrompt?: string;
+    }
+  ): Promise<string> {
+    if (!this.apiKey) {
+      throw new Error("OpenRouter API key required");
+    }
+
+    const messages: OpenRouterMessage[] = [];
+
+    if (options?.systemPrompt) {
+      messages.push({
+        role: "system",
+        content: options.systemPrompt,
+      });
+    }
+
+    messages.push({
+      role: "user",
+      content: prompt,
+    });
+
+    const request: OpenRouterRequest = {
+      model: options?.model || "google/gemini-2.0-flash",
+      messages,
+      max_tokens: options?.maxTokens || 4096,
+      temperature: options?.temperature !== undefined ? options.temperature : 0.7,
+      top_p: 1,
+      provider: {
+        allow_fallbacks: true,
+      },
+    };
+
+    try {
+      const response = await fetch(`${this.baseUrl}/chat/completions`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${this.apiKey}`,
+          "Content-Type": "application/json",
+          "HTTP-Referer": "https://unite-hub.vercel.app",
+          "X-Title": "Unite-Hub",
+        },
+        body: JSON.stringify(request),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`OpenRouter API error: ${response.status} ${errorText}`);
+      }
+
+      const data: OpenRouterResponse = await response.json();
+
+      return data.choices[0].message.content;
+    } catch (error) {
+      console.error("Error calling OpenRouter:", error);
+      throw error;
+    }
+  }
+
+  /**
    * Check if OpenRouter is available
    */
   isAvailable(): boolean {

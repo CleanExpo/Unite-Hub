@@ -30,12 +30,12 @@ console.log(`Workspace: ${WORKSPACE_ID}\n`);
 async function extractEmailIntelligence(email) {
   const prompt = `Analyze this email conversation and extract business intelligence:
 
-FROM: ${email.sender_email}
+FROM: ${email.from_email}
 SUBJECT: ${email.subject}
 DATE: ${email.received_at}
 
 CONTENT:
-${email.body_text || email.body_html?.replace(/<[^>]*>/g, '')}
+${email.snippet}
 
 Extract the following in JSON format:
 {
@@ -71,7 +71,7 @@ async function testEmailIntelligence() {
       .from("client_emails")
       .select("*")
       .eq("workspace_id", WORKSPACE_ID)
-      .not("body_text", "is", null)
+      .not("snippet", "is", null)
       .order("received_at", { ascending: false })
       .limit(5);
 
@@ -99,7 +99,7 @@ async function testEmailIntelligence() {
     for (let i = 0; i < emails.length; i++) {
       const email = emails[i];
       console.log(`\n📧 Email ${i + 1}/${emails.length}`);
-      console.log(`   From: ${email.sender_email}`);
+      console.log(`   From: ${email.from_email}`);
       console.log(`   Subject: ${email.subject}`);
       console.log(`   Date: ${new Date(email.received_at).toLocaleDateString()}`);
 
