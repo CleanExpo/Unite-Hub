@@ -21,9 +21,9 @@ export default function LoginPage() {
   useEffect(() => {
     if (!authLoading && user) {
       console.log('Login page: User authenticated, redirecting to dashboard');
-      window.location.href = '/dashboard/overview';
+      router.push('/dashboard/overview');
     }
-  }, [user, authLoading]);
+  }, [user, authLoading, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -28,25 +28,10 @@ import { Button } from "@/components/ui/button";
 
 export default function Home() {
   const router = useRouter();
-  const { user, loading } = useAuth();
+  const { user, loading, signOut } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  useEffect(() => {
-    if (!loading && user) {
-      router.push("/dashboard/overview");
-    }
-  }, [user, loading, router]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="h-12 w-12 rounded-full border-4 border-blue-500/30 border-t-blue-500 animate-spin"></div>
-          <p className="text-slate-400 text-sm">Loading...</p>
-        </div>
-      </div>
-    );
-  }
+  // Don't auto-redirect - let logged-in users see the homepage too
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900">
@@ -83,12 +68,40 @@ export default function Home() {
               <Link href="/pricing" className="text-sm text-slate-300 hover:text-white transition-colors">
                 Pricing
               </Link>
-              <Link href="/login">
-                <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg shadow-blue-500/50">
-                  Get Started
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
+
+              {loading ? (
+                <div className="h-10 w-28 bg-slate-800/50 rounded-lg animate-pulse"></div>
+              ) : user ? (
+                <>
+                  <Link href="/dashboard/overview">
+                    <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg shadow-blue-500/50">
+                      Dashboard
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
+                  <Button
+                    onClick={() => signOut()}
+                    variant="ghost"
+                    className="text-slate-300 hover:text-white hover:bg-slate-800/50"
+                  >
+                    Sign Out
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Link href="/login">
+                    <Button variant="ghost" className="text-slate-300 hover:text-white hover:bg-slate-800/50">
+                      Sign In
+                    </Button>
+                  </Link>
+                  <Link href="/login">
+                    <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg shadow-blue-500/50">
+                      Get Started
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
 
             {/* Mobile Menu Button */}
@@ -114,12 +127,40 @@ export default function Home() {
               <Link href="/pricing" className="block text-slate-300 hover:text-white transition-colors">
                 Pricing
               </Link>
-              <Link href="/login" className="block">
-                <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white">
-                  Get Started
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </Link>
+
+              {loading ? (
+                <div className="h-10 bg-slate-800/50 rounded-lg animate-pulse"></div>
+              ) : user ? (
+                <>
+                  <Link href="/dashboard/overview" className="block">
+                    <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white">
+                      Dashboard
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
+                  <Button
+                    onClick={() => signOut()}
+                    variant="ghost"
+                    className="w-full text-slate-300 hover:text-white hover:bg-slate-800/50"
+                  >
+                    Sign Out
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Link href="/login" className="block">
+                    <Button variant="ghost" className="w-full text-slate-300 hover:text-white hover:bg-slate-800/50">
+                      Sign In
+                    </Button>
+                  </Link>
+                  <Link href="/login" className="block">
+                    <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white">
+                      Get Started
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         )}
