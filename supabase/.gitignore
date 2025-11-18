@@ -5,3 +5,8 @@ config.toml
 
 # Generated files
 **/.DS_Store
+
+# Supabase
+.branches
+.temp
+.env

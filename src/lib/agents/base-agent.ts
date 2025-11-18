@@ -1,0 +1,312 @@
+/**
+ * Base Agent Class
+ * Provides common functionality for all specialized agents
+ */
+
+import amqp from 'amqplib';
+import { createClient } from '@supabase/supabase-js';
+
+export interface AgentTask {
+  id: string;
+  task_type: string;
+  payload: Record<string, any>;
+  context?: Record<string, any>;
+  workspace_id: string;
+  priority: number;
+  retry_count: number;
+  max_retries: number;
+}
+
+export interface AgentConfig {
+  name: string;
+  queueName: string;
+  concurrency?: number;
+  prefetchCount?: number;
+  retryDelay?: number; // milliseconds
+}
+
+export abstract class BaseAgent {
+  protected name: string;
+  protected queueName: string;
+  protected concurrency: number;
+  protected prefetchCount: number;
+  protected retryDelay: number;
+  protected connection: amqp.Connection | null = null;
+  protected channel: amqp.Channel | null = null;
+  protected supabase: any;
+  protected isRunning: boolean = false;
+
+  constructor(config: AgentConfig) {
+    this.name = config.name;
+    this.queueName = config.queueName;
+    this.concurrency = config.concurrency || 1;
+    this.prefetchCount = config.prefetchCount || this.concurrency;
+    this.retryDelay = config.retryDelay || 5000;
+
+    // Initialize Supabase client
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (!supabaseUrl || !supabaseKey) {
+      throw new Error('Missing Supabase credentials');
+    }
+
+    this.supabase = createClient(supabaseUrl, supabaseKey, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false
+      }
+    });
+  }
+
+  /**
+   * Connect to RabbitMQ and start consuming tasks
+   */
+  async start(): Promise<void> {
+    try {
+      console.log(`🚀 Starting ${this.name}...`);
+
+      // Connect to RabbitMQ
+      const rabbitmqUrl = process.env.RABBITMQ_URL || 'amqp://localhost';
+      this.connection = await amqp.connect(rabbitmqUrl);
+      this.channel = await this.connection.createChannel();
+
+      // Assert queue exists
+      await this.channel.assertQueue(this.queueName, {
+        durable: true,
+        arguments: {
+          'x-message-ttl': 3600000, // 1 hour
+          'x-max-priority': 10
+        }
+      });
+
+      // Set prefetch count for load balancing
+      await this.channel.prefetch(this.prefetchCount);
+
+      console.log(`✅ ${this.name} connected to RabbitMQ`);
+      console.log(`📥 Listening on queue: ${this.queueName}`);
+      console.log(`⚙️  Concurrency: ${this.concurrency}`);
+
+      // Start consuming messages
+      this.isRunning = true;
+      await this.channel.consume(this.queueName, async (msg) => {
+        if (!msg) return;
+
+        try {
+          const task: AgentTask = JSON.parse(msg.content.toString());
+          console.log(`📨 Received task: ${task.id} (${task.task_type})`);
+
+          // Record execution start
+          const executionId = await this.recordExecutionStart(task);
+
+          // Process task
+          const startTime = Date.now();
+          const result = await this.processTask(task);
+          const duration = Date.now() - startTime;
+
+          // Record success
+          await this.recordExecutionSuccess(executionId, result, duration);
+
+          // Update task status in database
+          await this.updateTaskStatus(task.id, 'completed', result);
+
+          // Acknowledge message
+          this.channel!.ack(msg);
+
+          console.log(`✅ Task ${task.id} completed in ${duration}ms`);
+
+          // Record heartbeat
+          await this.recordHeartbeat();
+
+        } catch (error: any) {
+          console.error(`❌ Task processing failed:`, error);
+
+          const task: AgentTask = JSON.parse(msg.content.toString());
+
+          // Record failure
+          await this.recordExecutionFailure(task.id, error.message);
+
+          // Retry logic
+          if (task.retry_count < task.max_retries) {
+            console.log(`🔄 Retrying task ${task.id} (attempt ${task.retry_count + 1}/${task.max_retries})`);
+
+            // Requeue with delay
+            setTimeout(async () => {
+              task.retry_count++;
+              await this.requeueTask(task);
+            }, this.retryDelay);
+
+            this.channel!.ack(msg);
+          } else {
+            console.log(`💀 Task ${task.id} failed permanently after ${task.max_retries} retries`);
+            await this.updateTaskStatus(task.id, 'failed', null, error.message);
+            this.channel!.ack(msg);
+          }
+        }
+      }, { noAck: false });
+
+      // Start heartbeat interval (every 30 seconds)
+      setInterval(() => this.recordHeartbeat(), 30000);
+
+      console.log(`✅ ${this.name} is running`);
+
+    } catch (error) {
+      console.error(`❌ Failed to start ${this.name}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Stop the agent gracefully
+   */
+  async stop(): Promise<void> {
+    console.log(`🛑 Stopping ${this.name}...`);
+    this.isRunning = false;
+
+    if (this.channel) {
+      await this.channel.close();
+    }
+
+    if (this.connection) {
+      await this.connection.close();
+    }
+
+    console.log(`✅ ${this.name} stopped`);
+  }
+
+  /**
+   * Abstract method: Process individual task
+   * Must be implemented by each specialized agent
+   */
+  protected abstract processTask(task: AgentTask): Promise<any>;
+
+  /**
+   * Requeue a failed task
+   */
+  protected async requeueTask(task: AgentTask): Promise<void> {
+    if (!this.channel) return;
+
+    await this.channel.sendToQueue(
+      this.queueName,
+      Buffer.from(JSON.stringify(task)),
+      {
+        persistent: true,
+        priority: task.priority
+      }
+    );
+  }
+
+  /**
+   * Update task status in database
+   */
+  protected async updateTaskStatus(
+    taskId: string,
+    status: string,
+    result: any = null,
+    error: string | null = null
+  ): Promise<void> {
+    try {
+      await this.supabase
+        .from('agent_tasks')
+        .update({
+          status,
+          result,
+          last_error: error,
+          completed_at: status === 'completed' || status === 'failed' ? new Date().toISOString() : null
+        })
+        .eq('id', taskId);
+    } catch (err) {
+      console.error('Failed to update task status:', err);
+    }
+  }
+
+  /**
+   * Record execution start
+   */
+  protected async recordExecutionStart(task: AgentTask): Promise<string> {
+    try {
+      const { data, error } = await this.supabase
+        .from('agent_executions')
+        .insert({
+          task_id: task.id,
+          workspace_id: task.workspace_id,
+          agent_name: this.name,
+          status: 'running',
+          started_at: new Date().toISOString()
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data.id;
+    } catch (err) {
+      console.error('Failed to record execution start:', err);
+      return 'unknown';
+    }
+  }
+
+  /**
+   * Record execution success
+   */
+  protected async recordExecutionSuccess(
+    executionId: string,
+    result: any,
+    durationMs: number
+  ): Promise<void> {
+    try {
+      await this.supabase
+        .from('agent_executions')
+        .update({
+          status: 'success',
+          output: result,
+          duration_ms: durationMs,
+          completed_at: new Date().toISOString()
+        })
+        .eq('id', executionId);
+    } catch (err) {
+      console.error('Failed to record execution success:', err);
+    }
+  }
+
+  /**
+   * Record execution failure
+   */
+  protected async recordExecutionFailure(
+    taskId: string,
+    errorMessage: string
+  ): Promise<void> {
+    try {
+      await this.supabase
+        .from('agent_executions')
+        .update({
+          status: 'error',
+          error_message: errorMessage,
+          completed_at: new Date().toISOString()
+        })
+        .eq('task_id', taskId)
+        .eq('status', 'running');
+    } catch (err) {
+      console.error('Failed to record execution failure:', err);
+    }
+  }
+
+  /**
+   * Record agent heartbeat
+   */
+  protected async recordHeartbeat(): Promise<void> {
+    try {
+      await this.supabase.rpc('record_agent_heartbeat', {
+        p_agent_name: this.name,
+        p_status: this.isRunning ? 'healthy' : 'offline',
+        p_metrics: {
+          queue_name: this.queueName,
+          concurrency: this.concurrency,
+          timestamp: new Date().toISOString()
+        }
+      });
+    } catch (err) {
+      // Heartbeat failures are non-critical
+      console.warn('Heartbeat failed:', err);
+    }
+  }
+}

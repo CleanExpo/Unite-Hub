@@ -1,0 +1,18 @@
+# Email Intelligence Agent
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install dependencies
+COPY package*.json ./
+RUN npm ci --only=production
+
+# Copy agent code
+COPY src/lib/agents ./src/lib/agents
+COPY src/lib/supabase.ts ./src/lib/supabase.ts
+COPY src/lib/openrouter.ts ./src/lib/openrouter.ts
+
+# Copy entrypoint
+COPY docker/agents/entrypoints/email-agent.mjs ./entrypoint.mjs
+
+CMD ["node", "entrypoint.mjs"]

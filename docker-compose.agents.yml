@@ -1,0 +1,203 @@
+# ==================================================
+# Docker Compose - Multi-Agent Architecture
+# Unite-Hub Specialized AI Agents
+# ==================================================
+version: '3.9'
+
+services:
+  # ==================================================
+  # MESSAGE BROKER - RabbitMQ
+  # ==================================================
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: unite-hub-rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"   # AMQP protocol
+      - "15672:15672" # Management UI (http://localhost:15672)
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-unite_hub}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-unite_hub_pass}
+      RABBITMQ_DEFAULT_VHOST: /
+      RABBITMQ_VM_MEMORY_HIGH_WATERMARK: 512MB
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - unite-hub-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    labels:
+      - "com.unite-hub.service=rabbitmq"
+      - "com.unite-hub.component=message-broker"
+
+  # ==================================================
+  # ORCHESTRATOR AGENT - Master Coordinator
+  # ==================================================
+  orchestrator-agent:
+    build:
+      context: .
+      dockerfile: docker/agents/Dockerfile.orchestrator
+    container_name: unite-hub-orchestrator
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-unite_hub}:${RABBITMQ_PASSWORD:-unite_hub_pass}@rabbitmq:5672
+      NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      OPENROUTER_API_KEY_2: ${OPENROUTER_API_KEY_2}
+      REDIS_URL: redis://redis:6379
+      ORCHESTRATOR_CONCURRENCY: 5
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - unite-hub-network
+    labels:
+      - "com.unite-hub.agent=orchestrator"
+
+  # ==================================================
+  # EMAIL INTELLIGENCE AGENT (x2 replicas)
+  # ==================================================
+  email-agent:
+    build:
+      context: .
+      dockerfile: docker/agents/Dockerfile.email-agent
+    restart: unless-stopped
+    environment:
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-unite_hub}:${RABBITMQ_PASSWORD:-unite_hub_pass}@rabbitmq:5672
+      QUEUE_NAME: email_intelligence_queue
+      NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      OPENROUTER_API_KEY_2: ${OPENROUTER_API_KEY_2}
+      AGENT_CONCURRENCY: 3
+    deploy:
+      replicas: 2
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - unite-hub-network
+    labels:
+      - "com.unite-hub.agent=email-intelligence"
+
+  # ==================================================
+  # CONTENT GENERATION AGENT (Extended Thinking)
+  # ==================================================
+  content-agent:
+    build:
+      context: .
+      dockerfile: docker/agents/Dockerfile.content-agent
+    container_name: unite-hub-content-agent
+    restart: unless-stopped
+    environment:
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-unite_hub}:${RABBITMQ_PASSWORD:-unite_hub_pass}@rabbitmq:5672
+      QUEUE_NAME: content_generation_queue
+      NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      ENABLE_EXTENDED_THINKING: "true"
+      THINKING_BUDGET_TOKENS: 7500
+      AGENT_CONCURRENCY: 2
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - unite-hub-network
+    labels:
+      - "com.unite-hub.agent=content-generation"
+
+  # ==================================================
+  # CAMPAIGN OPTIMIZATION AGENT (x2 replicas)
+  # ==================================================
+  campaign-agent:
+    build:
+      context: .
+      dockerfile: docker/agents/Dockerfile.campaign-agent
+    restart: unless-stopped
+    environment:
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-unite_hub}:${RABBITMQ_PASSWORD:-unite_hub_pass}@rabbitmq:5672
+      QUEUE_NAME: campaign_optimization_queue
+      NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      OPENROUTER_API_KEY_2: ${OPENROUTER_API_KEY_2}
+      AGENT_CONCURRENCY: 3
+    deploy:
+      replicas: 2
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - unite-hub-network
+    labels:
+      - "com.unite-hub.agent=campaign-optimization"
+
+  # ==================================================
+  # STRATEGY GENERATION AGENT (Extended Thinking)
+  # ==================================================
+  strategy-agent:
+    build:
+      context: .
+      dockerfile: docker/agents/Dockerfile.strategy-agent
+    container_name: unite-hub-strategy-agent
+    restart: unless-stopped
+    environment:
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-unite_hub}:${RABBITMQ_PASSWORD:-unite_hub_pass}@rabbitmq:5672
+      QUEUE_NAME: strategy_generation_queue
+      NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      ENABLE_EXTENDED_THINKING: "true"
+      THINKING_BUDGET_TOKENS: 10000
+      AGENT_CONCURRENCY: 1
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - unite-hub-network
+    labels:
+      - "com.unite-hub.agent=strategy-generation"
+
+  # ==================================================
+  # CONTINUOUS INTELLIGENCE AGENT (Background Monitor)
+  # ==================================================
+  continuous-intelligence-agent:
+    build:
+      context: .
+      dockerfile: docker/agents/Dockerfile.continuous-intelligence
+    container_name: unite-hub-continuous-intelligence
+    restart: unless-stopped
+    environment:
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-unite_hub}:${RABBITMQ_PASSWORD:-unite_hub_pass}@rabbitmq:5672
+      NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      OPENROUTER_API_KEY_2: ${OPENROUTER_API_KEY_2}
+      MONITOR_INTERVAL_SECONDS: 300
+      LOOKBACK_MINUTES: 5
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      orchestrator-agent:
+        condition: service_started
+    networks:
+      - unite-hub-network
+    labels:
+      - "com.unite-hub.agent=continuous-intelligence"
+
+volumes:
+  rabbitmq-data:
+    name: unite-hub-rabbitmq-data
+
+networks:
+  unite-hub-network:
+    external: true
+    name: unite-hub-network

@@ -38,7 +38,20 @@
       "Bash(dir /s /b *.tsx 2)",
       "Bash(if [ -f PRODUCTION_READINESS_AUDIT_2025-01-18.md ])",
       "Bash(else echo \"❌ File not found\")",
-      "Bash(fi)"
+      "Bash(fi)",
+      "Bash(npm run test:coverage:*)",
+      "Bash(supabase --version:*)",
+      "Bash(supabase db remote:*)",
+      "Bash(supabase db push:*)",
+      "Bash(supabase link:*)",
+      "Bash(supabase init:*)",
+      "Bash(node scripts/run-migrations-direct.mjs:*)",
+      "Bash(supabase migration list:*)",
+      "Bash(node scripts/execute-sql-autonomous.mjs:*)",
+      "Bash(source:*)",
+      "Bash(psql:*)",
+      "Bash([ -f scripts/execute-migrations.mjs ])",
+      "Bash(dir /s /b *AUTONOMOUS*.md *MIGRATIONS_READY*.md 2)"
     ],
     "deny": [],
     "ask": []

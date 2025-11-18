@@ -1,0 +1,15 @@
+# Continuous Intelligence Update Agent (Background Monitor)
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci --only=production
+
+COPY src/lib/agents ./src/lib/agents
+COPY src/lib/supabase.ts ./src/lib/supabase.ts
+COPY src/lib/openrouter.ts ./src/lib/openrouter.ts
+
+COPY docker/agents/entrypoints/continuous-intelligence.mjs ./entrypoint.mjs
+
+CMD ["node", "entrypoint.mjs"]
