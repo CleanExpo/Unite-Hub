@@ -28,6 +28,7 @@ import { useWorkspace } from "@/hooks/useWorkspace";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { AddContactModal } from "@/components/modals/AddContactModal";
 import { SendEmailModal } from "@/components/modals/SendEmailModal";
+import { DeleteContactModal } from "@/components/modals/DeleteContactModal";
 
 export default function ContactsPage() {
   const { workspaceId, loading: workspaceLoading } = useWorkspace();
@@ -36,6 +37,7 @@ export default function ContactsPage() {
   const [loading, setLoading] = useState(true);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isSendEmailModalOpen, setIsSendEmailModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedContact, setSelectedContact] = useState<any | null>(null);
   const router = useRouter();
 
@@ -106,6 +108,27 @@ export default function ContactsPage() {
     // Optionally update last_interaction timestamp
     // Could refresh contacts or update locally
     console.log("Email sent successfully");
+  };
+
+  const handleDeleteClick = (contact: any) => {
+    setSelectedContact(contact);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleContactDeleted = () => {
+    // Refresh contacts list
+    setLoading(true);
+    const fetchContacts = async () => {
+      if (!workspaceId) return;
+      const { data } = await supabase
+        .from("contacts")
+        .select("*")
+        .eq("workspace_id", workspaceId)
+        .order("created_at", { ascending: false });
+      setAllContacts(data || []);
+      setLoading(false);
+    };
+    fetchContacts();
   };
 
   return (
@@ -303,7 +326,10 @@ export default function ContactsPage() {
                               View Profile
                             </Link>
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="text-red-400 hover:text-red-300 hover:bg-red-400/10">
+                          <DropdownMenuItem
+                            onClick={() => handleDeleteClick(contact)}
+                            className="text-red-400 hover:text-red-300 hover:bg-red-400/10 cursor-pointer"
+                          >
                             Delete
                           </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -341,6 +367,21 @@ export default function ContactsPage() {
           contactEmail={selectedContact.email}
           workspaceId={workspaceId}
           onEmailSent={handleEmailSent}
+        />
+      )}
+
+      {/* Delete Contact Modal */}
+      {workspaceId && selectedContact && (
+        <DeleteContactModal
+          isOpen={isDeleteModalOpen}
+          onClose={() => {
+            setIsDeleteModalOpen(false);
+            setSelectedContact(null);
+          }}
+          contactId={selectedContact.id}
+          contactName={selectedContact.name}
+          workspaceId={workspaceId}
+          onContactDeleted={handleContactDeleted}
         />
       )}
     </div>
