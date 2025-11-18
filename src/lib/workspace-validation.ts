@@ -108,8 +108,13 @@ export async function validateUserAuth(req: NextRequest): Promise<AuthenticatedU
  *
  * CRITICAL: Always call this before allowing access to workspace data
  *
+ * IMPORTANT: This function uses service role to bypass RLS because:
+ * 1. We already validated user auth (they're authenticated)
+ * 2. We're just checking workspace ownership (org_id match)
+ * 3. The workspace query doesn't need user context
+ *
  * @param workspaceId - Workspace ID to validate
- * @param orgId - User's organization ID
+ * @param orgId - User's organization ID (already validated in validateUserAuth)
  * @returns True if workspace is valid and accessible
  * @throws Error if workspace validation fails
  */
@@ -117,14 +122,18 @@ export async function validateWorkspaceAccess(
   workspaceId: string,
   orgId: string
 ): Promise<boolean> {
-  const supabase = await getSupabaseServer();
+  // Use service role for workspace lookup (user already authenticated)
+  // This is safe because we're only checking if workspace.org_id == user.orgId
+  const { getSupabaseAdmin } = await import("@/lib/supabase");
+  const supabase = getSupabaseAdmin();
+
+  console.log("[workspace-validation] Validating workspace access:", { workspaceId, orgId });
 
   const { data: workspace, error: workspaceError } = await supabase
     .from("workspaces")
-    .select("id")
+    .select("id, org_id")
     .eq("id", workspaceId)
-    .eq("org_id", orgId)
-    .maybeSingle(); // ← Changed from .single() to .maybeSingle() for graceful handling
+    .maybeSingle();
 
   if (workspaceError) {
     console.error("[workspace-validation] Error validating workspace access:", workspaceError);
@@ -132,9 +141,20 @@ export async function validateWorkspaceAccess(
   }
 
   if (!workspace) {
-    throw new Error("Forbidden: Invalid workspace or access denied");
+    console.error("[workspace-validation] Workspace not found:", workspaceId);
+    throw new Error("Forbidden: Workspace not found");
   }
 
+  // Verify workspace belongs to user's organization
+  if (workspace.org_id !== orgId) {
+    console.error("[workspace-validation] Workspace org mismatch:", {
+      workspaceOrgId: workspace.org_id,
+      userOrgId: orgId
+    });
+    throw new Error("Forbidden: Workspace does not belong to your organization");
+  }
+
+  console.log("[workspace-validation] Workspace access validated successfully");
   return true;
 }
 
