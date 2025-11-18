@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy initialization to avoid build-time errors when RESEND_API_KEY is not set
+let resend: Resend | null = null;
+function getResendClient() {
+  if (!resend && process.env.RESEND_API_KEY) {
+    resend = new Resend(process.env.RESEND_API_KEY);
+  }
+  return resend;
+}
 
 // Rate limiting store (in-memory for MVP, use Redis in production)
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
@@ -65,8 +72,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Check if Resend is configured
-    if (!process.env.RESEND_API_KEY) {
+    // Send email via Resend
+    const resendClient = getResendClient();
+    if (!resendClient) {
       console.error('RESEND_API_KEY not configured. Email not sent.');
       return NextResponse.json(
         {
@@ -77,8 +85,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Send email via Resend
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await resendClient.emails.send({
       from: 'Unite-Hub Contact Form <noreply@unite-hub.com>',
       to: [process.env.CONTACT_EMAIL || 'hello@unite-hub.com'],
       replyTo: email,

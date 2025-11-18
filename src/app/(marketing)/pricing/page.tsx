@@ -83,11 +83,11 @@ const faqs = [
   },
   {
     question: 'Can I change plans later?',
-    answer: 'Yes! You can upgrade or downgrade your plan at any time. Changes take effect immediately, and we'll prorate your billing accordingly.',
+    answer: 'Yes! You can upgrade or downgrade your plan at any time. Changes take effect immediately, and we\'ll prorate your billing accordingly.',
   },
   {
     question: 'What happens when I exceed my contact limit?',
-    answer: 'You'll receive a notification when you approach your limit. You can either upgrade to a higher plan or archive inactive contacts to stay within your tier.',
+    answer: 'You\'ll receive a notification when you approach your limit. You can either upgrade to a higher plan or archive inactive contacts to stay within your tier.',
   },
   {
     question: 'Is there a setup fee?',
@@ -106,7 +106,7 @@ const faqs = [
     answer: 'We offer a 30-day money-back guarantee for annual plans. Monthly plans can be canceled anytime without penalty.',
   },
   {
-    question: 'What's included in Enterprise support?',
+    question: 'What\'s included in Enterprise support?',
     answer: 'Enterprise customers get a dedicated account manager, 24/7 priority support, custom onboarding, and a 99.9% uptime SLA.',
   },
 ];

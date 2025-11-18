@@ -17,7 +17,14 @@
       "Bash(git commit -m \"$(cat <<''EOF''\nfeat: Complete Phase 1 & 2 - Production-ready marketing site and critical migrations\n\nThis comprehensive update brings Unite-Hub from MVP (Health Score: 65) to production-ready (Health Score: 95) through two major implementation phases.\n\n## Phase 1: Security & Legal Compliance ✅\n- Add Privacy Policy page (GDPR/CCPA compliant)\n- Add Terms of Service page (comprehensive legal terms)\n- Add Security page (transparent security disclosure)\n- Create shared Footer component with all legal links\n- Add marketing layout wrapper\n- Verify authentication across 143 API routes\n- Create RLS test suite for workspace isolation\n\n## Phase 2: Marketing Pages ✅\n- Add About page (mission, values, tech stack showcase)\n- Add Contact page (form, team contacts, business hours)\n- Add Careers page (5 job listings, benefits, hiring process)\n- Add Features page (AI capabilities, integrations, comparison table)\n- Add Pricing page (3 tiers, billing toggle, FAQs, add-ons)\n\n## Critical Database Migrations 🚨\n- Migration 037: RLS policy cleanup (remove duplicates)\n- Migration 038: Core SaaS tables (subscriptions, email_integrations, sent_emails, user_onboarding, client_emails, projects)\n\n## Documentation 📚\n- Complete implementation guides for Phases 1 & 2\n- Migration instructions (037 & 038)\n- Project status report\n- Quick start production guide\n- Platform audit and cleanup plan\n\n## Impact 📊\n- Health Score: 65 → 95 (+30 points, +46%)\n- Broken links: 35+ → 0 (-100%)\n- Files created: 21 files (~4,000 lines)\n- Marketing pages: 8/8 complete (100%)\n- Legal compliance: GDPR/CCPA ready\n- Security: 143 API routes verified, RLS enabled\n\n## Files Added\n### Marketing Pages (8)\n- src/app/(marketing)/about/page.tsx\n- src/app/(marketing)/contact/page.tsx\n- src/app/(marketing)/careers/page.tsx\n- src/app/(marketing)/features/page.tsx\n- src/app/(marketing)/pricing/page.tsx\n- src/app/(marketing)/privacy/page.tsx\n- src/app/(marketing)/terms/page.tsx\n- src/app/(marketing)/security/page.tsx\n\n### Components\n- src/components/marketing/Footer.tsx\n- src/app/(marketing)/layout.tsx\n\n### Scripts & Migrations\n- scripts/fix-auth.js (auth verification)\n- scripts/test-workspace-isolation.sql (RLS testing)\n- supabase/migrations/038_core_saas_tables.sql (6 new tables)\n\n### Documentation\n- PHASE1_IMPLEMENTATION_COMPLETE.md\n- PHASE2_COMPLETE.md\n- RUN_MIGRATION_037.md\n- RUN_MIGRATION_038_CRITICAL.md\n- PROJECT_STATUS_COMPLETE.md\n- QUICK_START_PRODUCTION.md\n\n🤖 Generated with Claude Code (https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(git push:*)",
       "Bash(npm install:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(cat:*)",
+      "Bash(python:*)",
+      "Bash(NUL)",
+      "Bash(npm test:*)",
+      "Bash(git fetch:*)",
+      "Bash(bash:*)",
+      "Bash(dir /s /b *CLIENT-AGENT*.md *PROJECT-AGENT*.md *ORCHESTRATOR-AGENT*.md 2)"
     ],
     "deny": [],
     "ask": []
