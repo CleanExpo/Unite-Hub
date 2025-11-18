@@ -9,6 +9,7 @@ import { rateLimit } from "@/middleware/rateLimiter";
 import { createApiLogger } from "@/lib/logger";
 import { getRedisClient } from "@/lib/redis";
 import { getSupabaseServer } from "@/lib/supabase";
+import { getPoolStats } from "@/lib/db/connection-pool";
 
 type HealthStatus = "healthy" | "degraded" | "unhealthy";
 
@@ -27,6 +28,12 @@ interface HealthResponse {
   checks: {
     redis: HealthCheck;
     database: HealthCheck;
+  };
+  pool?: {
+    totalRequests: number;
+    successRate: string;
+    averageResponseTime: number;
+    circuitState: string;
   };
 }
 
@@ -106,6 +113,12 @@ export async function GET(request: NextRequest) {
 
     const overallStatus = determineOverallStatus(redisCheck, dbCheck);
 
+    // Get connection pool stats
+    const poolStats = getPoolStats();
+    const successRate = poolStats.totalRequests > 0
+      ? ((poolStats.successfulRequests / poolStats.totalRequests) * 100).toFixed(2)
+      : '100.00';
+
     const health: HealthResponse = {
       status: overallStatus,
       timestamp: new Date().toISOString(),
@@ -115,6 +128,12 @@ export async function GET(request: NextRequest) {
       checks: {
         redis: redisCheck,
         database: dbCheck,
+      },
+      pool: {
+        totalRequests: poolStats.totalRequests,
+        successRate,
+        averageResponseTime: Math.round(poolStats.averageResponseTime),
+        circuitState: poolStats.circuitState,
       },
     };
 
