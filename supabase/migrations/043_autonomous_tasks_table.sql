@@ -45,9 +45,7 @@ CREATE TABLE IF NOT EXISTS autonomous_tasks (
   -- Timing
   executed_at TIMESTAMPTZ NOT NULL,
   completed_at TIMESTAMPTZ,
-  duration_ms INTEGER GENERATED ALWAYS AS (
-    EXTRACT(EPOCH FROM (completed_at - executed_at)) * 1000
-  ) STORED,
+  duration_ms INTEGER,
 
   -- Metadata
   triggered_by TEXT, -- 'cron', 'user', 'api', 'system'
@@ -153,16 +151,17 @@ BEGIN
   WHERE
     t.workspace_id = p_workspace_id
     AND (p_task_type IS NULL OR t.task_type = p_task_type)
-    AND t.executed_at > NOW() - INTERVAL '1 hour' * p_hours_back
+    AND t.executed_at > NOW() - (p_hours_back || ' hours')::INTERVAL
   GROUP BY t.task_type
   ORDER BY last_execution DESC;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- =====================================================
--- 5. TRIGGER FOR UPDATED_AT
+-- 5. TRIGGERS
 -- =====================================================
 
+-- Trigger to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_autonomous_tasks_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -176,6 +175,23 @@ CREATE TRIGGER trigger_autonomous_tasks_updated_at
   BEFORE UPDATE ON autonomous_tasks
   FOR EACH ROW
   EXECUTE FUNCTION update_autonomous_tasks_updated_at();
+
+-- Trigger to auto-calculate duration_ms
+CREATE OR REPLACE FUNCTION calculate_autonomous_task_duration()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.completed_at IS NOT NULL AND NEW.executed_at IS NOT NULL THEN
+    NEW.duration_ms = EXTRACT(EPOCH FROM (NEW.completed_at - NEW.executed_at)) * 1000;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER IF EXISTS trigger_calculate_duration ON autonomous_tasks;
+CREATE TRIGGER trigger_calculate_duration
+  BEFORE INSERT OR UPDATE ON autonomous_tasks
+  FOR EACH ROW
+  EXECUTE FUNCTION calculate_autonomous_task_duration();
 
 -- =====================================================
 -- 6. VERIFICATION
@@ -234,7 +250,7 @@ COMMENT ON COLUMN autonomous_tasks.task_type IS 'Type of autonomous task (contin
 COMMENT ON COLUMN autonomous_tasks.status IS 'Task execution status (pending, running, completed, failed, partial_failure, cancelled)';
 COMMENT ON COLUMN autonomous_tasks.input_data IS 'Task input parameters as JSON';
 COMMENT ON COLUMN autonomous_tasks.output_data IS 'Task execution results as JSON';
-COMMENT ON COLUMN autonomous_tasks.duration_ms IS 'Task execution duration in milliseconds (auto-calculated)';
+COMMENT ON COLUMN autonomous_tasks.duration_ms IS 'Task execution duration in milliseconds (auto-calculated via trigger)';
 COMMENT ON COLUMN autonomous_tasks.triggered_by IS 'What triggered the task (cron, user, api, system)';
 COMMENT ON COLUMN autonomous_tasks.agent_name IS 'Name of agent that executed the task (if applicable)';
 COMMENT ON COLUMN autonomous_tasks.cost_estimate_usd IS 'Estimated cost of task execution (AI model costs)';

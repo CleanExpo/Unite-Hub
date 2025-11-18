@@ -87,6 +87,43 @@ export async function getSupabaseServer() {
 // Removed supabaseServer Proxy - it cannot work with async getSupabaseServer()
 // Always use: const supabase = await getSupabaseServer();
 
+/**
+ * Creates an authenticated Supabase server client with JWT context
+ *
+ * This is CRITICAL for server-side API routes that need to respect RLS policies.
+ * Without JWT context, auth.uid() returns NULL and RLS queries fail.
+ *
+ * @param token - JWT access token from Authorization header
+ * @returns Supabase client with user authentication context
+ *
+ * @example
+ * // In API route:
+ * const authHeader = req.headers.get("authorization");
+ * const token = authHeader?.replace("Bearer ", "");
+ * if (!token) throw new Error("Unauthorized");
+ *
+ * const supabase = getSupabaseServerWithAuth(token);
+ * // Now auth.uid() works in RLS policies!
+ * const { data } = await supabase.from("user_organizations").select("*");
+ */
+export function getSupabaseServerWithAuth(token: string) {
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error('Supabase environment variables not configured');
+  }
+
+  return createClient(supabaseUrl, supabaseAnonKey, {
+    global: {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+    },
+  });
+}
+
 // Admin client (service role) - bypasses RLS, use for server-side operations
 // Lazy initialization to ensure environment variables are available
 let _supabaseAdmin: ReturnType<typeof createClient> | null = null;

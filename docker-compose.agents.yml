@@ -221,6 +221,105 @@ services:
     labels:
       - "com.unite-hub.agent=continuous-intelligence"
 
+  # ==================================================
+  # CONTACT INTELLIGENCE AGENT (Lead Scoring & Deduplication)
+  # ==================================================
+  contact-intelligence-agent:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.contact-intelligence-agent
+    container_name: unite-hub-contact-intelligence
+    restart: unless-stopped
+    environment:
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-unite_hub}:${RABBITMQ_PASSWORD:-unite_hub_pass}@rabbitmq:5672
+      QUEUE_NAME: contact_intelligence_queue
+      NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      AGENT_CONCURRENCY: 3
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - unite-hub-network
+    labels:
+      - "com.unite-hub.agent=contact-intelligence"
+
+  # ==================================================
+  # MEDIA TRANSCRIPTION AGENT (Whisper Transcription)
+  # ==================================================
+  media-transcription-agent:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.media-transcription-agent
+    container_name: unite-hub-media-transcription
+    restart: unless-stopped
+    environment:
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-unite_hub}:${RABBITMQ_PASSWORD:-unite_hub_pass}@rabbitmq:5672
+      QUEUE_NAME: media_transcription_queue
+      NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      AGENT_CONCURRENCY: 5
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - unite-hub-network
+    labels:
+      - "com.unite-hub.agent=media-transcription"
+    volumes:
+      - /tmp/media-processing:/tmp/media-processing
+
+  # ==================================================
+  # EMAIL INTEGRATION AGENT (Gmail/Outlook Sync)
+  # ==================================================
+  email-integration-agent:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.email-integration-agent
+    container_name: unite-hub-email-integration
+    restart: unless-stopped
+    environment:
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-unite_hub}:${RABBITMQ_PASSWORD:-unite_hub_pass}@rabbitmq:5672
+      QUEUE_NAME: email_integration_queue
+      NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      AGENT_CONCURRENCY: 3
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - unite-hub-network
+    labels:
+      - "com.unite-hub.agent=email-integration"
+
+  # ==================================================
+  # ANALYTICS AGENT (Dashboard Metrics & Insights)
+  # ==================================================
+  analytics-agent:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.analytics-agent
+    container_name: unite-hub-analytics
+    restart: unless-stopped
+    environment:
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-unite_hub}:${RABBITMQ_PASSWORD:-unite_hub_pass}@rabbitmq:5672
+      QUEUE_NAME: analytics_queue
+      NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      AGENT_CONCURRENCY: 2
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - unite-hub-network
+    labels:
+      - "com.unite-hub.agent=analytics"
+
 volumes:
   rabbitmq-data:
     name: unite-hub-rabbitmq-data

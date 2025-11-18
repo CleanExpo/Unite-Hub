@@ -20,8 +20,11 @@ export interface AuthenticatedUser {
 /**
  * Validates user authentication and returns user context
  *
+ * CRITICAL FIX: Now uses JWT-authenticated Supabase client to ensure auth.uid()
+ * is set correctly for RLS policies. This prevents 403 errors on protected queries.
+ *
  * Supports both:
- * - Implicit OAuth flow (Bearer token in Authorization header)
+ * - Implicit OAuth flow (Bearer token in Authorization header) - PREFERRED
  * - PKCE flow (session cookies)
  *
  * @param req - Next.js request object
@@ -34,47 +37,58 @@ export async function validateUserAuth(req: NextRequest): Promise<AuthenticatedU
   const token = authHeader?.replace("Bearer ", "");
 
   let userId: string;
+  let authenticatedSupabase;
 
   if (token) {
-    // Use browser client with token for implicit OAuth flow
-    const { supabaseBrowser } = await import("@/lib/supabase");
-    const { data, error } = await supabaseBrowser.auth.getUser(token);
+    // CRITICAL: Use authenticated client with JWT context
+    // This ensures auth.uid() is set for RLS policies
+    const { getSupabaseServerWithAuth } = await import("@/lib/supabase");
+    authenticatedSupabase = getSupabaseServerWithAuth(token);
+
+    // Verify token is valid
+    const { data, error } = await authenticatedSupabase.auth.getUser();
 
     if (error || !data.user) {
+      console.error("[workspace-validation] Invalid token:", error?.message);
       throw new Error("Unauthorized: Invalid token");
     }
 
     userId = data.user.id;
+    console.log("[workspace-validation] Token auth successful for user:", userId);
   } else {
-    // Try server-side cookies (PKCE flow or server-side auth)
-    const supabase = await getSupabaseServer();
-    const { data, error: authError } = await supabase.auth.getUser();
+    // Fallback to server-side cookies (PKCE flow)
+    console.log("[workspace-validation] No token, trying cookie-based auth...");
+    authenticatedSupabase = await getSupabaseServer();
+    const { data, error: authError } = await authenticatedSupabase.auth.getUser();
 
     if (authError || !data.user) {
+      console.error("[workspace-validation] No valid session:", authError?.message);
       throw new Error("Unauthorized: No valid session");
     }
 
     userId = data.user.id;
+    console.log("[workspace-validation] Cookie auth successful for user:", userId);
   }
 
-  // Get user's organization (using authenticated user's supabase client)
-  // Note: We don't filter by is_active since all org memberships should be accessible
-  const supabase = await getSupabaseServer();
-  const { data: userOrg, error: orgError } = await supabase
+  // Get user's organization using the AUTHENTICATED client
+  // CRITICAL: This client has JWT context, so auth.uid() works in RLS policies
+  // RLS Policy: "Users can view their org memberships" USING (user_id = auth.uid())
+  const { data: userOrg, error: orgError } = await authenticatedSupabase
     .from("user_organizations")
     .select("org_id")
     .eq("user_id", userId)
     .limit(1)
-    .maybeSingle(); // Get first org if multiple exist
+    .maybeSingle();
 
   if (orgError) {
     console.error("[workspace-validation] Error fetching user organization:", orgError);
+    console.error("[workspace-validation] This may indicate RLS policy issues or missing data");
     throw new Error("Forbidden: Error accessing organization");
   }
 
   if (!userOrg) {
     console.error("[workspace-validation] No organization found for userId:", userId);
-    console.error("[workspace-validation] This usually means the user hasn't been properly initialized");
+    console.error("[workspace-validation] User may not be properly initialized");
     throw new Error("Forbidden: No organization found for user");
   }
 
