@@ -27,6 +27,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useWorkspace } from "@/hooks/useWorkspace";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { AddContactModal } from "@/components/modals/AddContactModal";
+import { SendEmailModal } from "@/components/modals/SendEmailModal";
 
 export default function ContactsPage() {
   const { workspaceId, loading: workspaceLoading } = useWorkspace();
@@ -34,6 +35,8 @@ export default function ContactsPage() {
   const [allContacts, setAllContacts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isSendEmailModalOpen, setIsSendEmailModalOpen] = useState(false);
+  const [selectedContact, setSelectedContact] = useState<any | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -92,6 +95,17 @@ export default function ContactsPage() {
       setLoading(false);
     };
     fetchContacts();
+  };
+
+  const handleSendEmail = (contact: any) => {
+    setSelectedContact(contact);
+    setIsSendEmailModalOpen(true);
+  };
+
+  const handleEmailSent = () => {
+    // Optionally update last_interaction timestamp
+    // Could refresh contacts or update locally
+    console.log("Email sent successfully");
   };
 
   return (
@@ -273,7 +287,10 @@ export default function ContactsPage() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="bg-slate-800 border-slate-700">
-                          <DropdownMenuItem className="text-slate-300 hover:text-white hover:bg-slate-700">
+                          <DropdownMenuItem
+                            onClick={() => handleSendEmail(contact)}
+                            className="text-slate-300 hover:text-white hover:bg-slate-700 cursor-pointer"
+                          >
                             <Mail className="w-4 h-4 mr-2" />
                             Send Email
                           </DropdownMenuItem>
@@ -308,6 +325,22 @@ export default function ContactsPage() {
           onClose={() => setIsAddModalOpen(false)}
           workspaceId={workspaceId}
           onContactAdded={handleContactAdded}
+        />
+      )}
+
+      {/* Send Email Modal */}
+      {workspaceId && selectedContact && (
+        <SendEmailModal
+          isOpen={isSendEmailModalOpen}
+          onClose={() => {
+            setIsSendEmailModalOpen(false);
+            setSelectedContact(null);
+          }}
+          contactId={selectedContact.id}
+          contactName={selectedContact.name}
+          contactEmail={selectedContact.email}
+          workspaceId={workspaceId}
+          onEmailSent={handleEmailSent}
         />
       )}
     </div>
