@@ -9,18 +9,14 @@
 -- Time: ~2 minutes
 -- =====================================================
 
-\echo ''
-\echo '╔════════════════════════════════════════════════════════╗'
-\echo '║  INTELLIGENCE SYSTEM DEPLOYMENT - STARTING             ║'
-\echo '╚════════════════════════════════════════════════════════╝'
-\echo ''
+-- ╔════════════════════════════════════════════════════════╗
+-- ║  INTELLIGENCE SYSTEM DEPLOYMENT - STARTING             ║
+-- ╚════════════════════════════════════════════════════════╝
 
 -- =====================================================
 -- MIGRATION 040: Add Intelligence Tracking Columns
 -- =====================================================
-
-\echo '📦 MIGRATION 040: Intelligence Tracking Columns'
-\echo '────────────────────────────────────────────────────────'
+-- 📦 MIGRATION 040: Intelligence Tracking Columns
 
 -- 1. ADD COLUMNS TO CLIENT_EMAILS
 ALTER TABLE client_emails
@@ -99,16 +95,12 @@ BEGIN
   END IF;
 END $$;
 
-\echo ''
-\echo '────────────────────────────────────────────────────────'
-\echo ''
+-- ────────────────────────────────────────────────────────
 
 -- =====================================================
 -- MIGRATION 041: Extend Content Types & Strategies
 -- =====================================================
-
-\echo '📦 MIGRATION 041: Content Type Extensions'
-\echo '────────────────────────────────────────────────────────'
+-- 📦 MIGRATION 041: Content Type Extensions
 
 -- 1. EXTEND GENERATED_CONTENT TABLE
 -- Drop old constraint
@@ -207,19 +199,14 @@ BEGIN
   END IF;
 END $$;
 
-\echo ''
-\echo '────────────────────────────────────────────────────────'
-\echo ''
+-- ────────────────────────────────────────────────────────
 
 -- =====================================================
 -- COMPREHENSIVE VERIFICATION
 -- =====================================================
+-- 🔍 COMPREHENSIVE SCHEMA VERIFICATION
 
-\echo '🔍 COMPREHENSIVE SCHEMA VERIFICATION'
-\echo '────────────────────────────────────────────────────────'
-
-\echo ''
-\echo '📊 Check 1: Intelligence Tracking Columns'
+-- 📊 Check 1: Intelligence Tracking Columns
 SELECT
   'client_emails.intelligence_analyzed' as column_name,
   CASE WHEN EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'client_emails' AND column_name = 'intelligence_analyzed') THEN '✅' ELSE '❌' END as exists
@@ -230,8 +217,7 @@ SELECT 'media_files.intelligence_analyzed', CASE WHEN EXISTS (SELECT 1 FROM info
 UNION ALL
 SELECT 'media_files.analyzed_at', CASE WHEN EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'media_files' AND column_name = 'analyzed_at') THEN '✅' ELSE '❌' END;
 
-\echo ''
-\echo '📊 Check 2: Marketing Strategy Extensions'
+-- 📊 Check 2: Marketing Strategy Extensions
 SELECT
   'full_strategy' as column_name,
   CASE WHEN EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'marketing_strategies' AND column_name = 'full_strategy') THEN '✅' ELSE '❌' END as exists
@@ -244,8 +230,7 @@ SELECT 'kpis', CASE WHEN EXISTS (SELECT 1 FROM information_schema.columns WHERE 
 UNION ALL
 SELECT 'risks', CASE WHEN EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'marketing_strategies' AND column_name = 'risks') THEN '✅' ELSE '❌' END;
 
-\echo ''
-\echo '📊 Check 3: Calendar Posts Extensions'
+-- 📊 Check 3: Calendar Posts Extensions
 SELECT
   'engagement_metrics' as column_name,
   CASE WHEN EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'calendar_posts' AND column_name = 'engagement_metrics') THEN '✅' ELSE '❌' END as exists
@@ -254,8 +239,7 @@ SELECT 'platform_post_id', CASE WHEN EXISTS (SELECT 1 FROM information_schema.co
 UNION ALL
 SELECT 'platform_url', CASE WHEN EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'calendar_posts' AND column_name = 'platform_url') THEN '✅' ELSE '❌' END;
 
-\echo ''
-\echo '📊 Check 4: Performance Indexes'
+-- 📊 Check 4: Performance Indexes
 SELECT
   COUNT(*) as total_indexes,
   CASE
@@ -270,19 +254,19 @@ AND (
   OR indexname LIKE 'idx_%calendar%platform%'
 );
 
-\echo ''
-\echo '╔════════════════════════════════════════════════════════╗'
-\echo '║  DEPLOYMENT COMPLETE! ✅                               ║'
-\echo '╚════════════════════════════════════════════════════════╝'
-\echo ''
-\echo '📝 Summary:'
-\echo '  • Migration 040: Intelligence tracking columns added'
-\echo '  • Migration 041: Content types and strategies extended'
-\echo '  • All indexes created for performance'
-\echo '  • Schema verified successfully'
-\echo ''
-\echo '🎯 Next Steps:'
-\echo '  1. Review: .claude/agents/CLIENT-INTELLIGENCE-SYSTEM-IMPLEMENTATION-GUIDE.md'
-\echo '  2. Implement: Email Integration Agent API (Week 2-3)'
-\echo '  3. Deploy: Docker agents (docker-compose.agents.yml)'
-\echo ''
+-- ╔════════════════════════════════════════════════════════╗
+-- ║  DEPLOYMENT COMPLETE! ✅                               ║
+-- ╚════════════════════════════════════════════════════════╝
+--
+-- 📝 Summary:
+--   • Migration 040: Intelligence tracking columns added
+--   • Migration 041: Content types and strategies extended
+--   • All indexes created for performance
+--   • Schema verified successfully
+--
+-- 🎯 Next Steps:
+--   1. Check the verification queries output above
+--   2. All columns should show ✅
+--   3. Review: EMAIL_INTELLIGENCE_SYSTEM_COMPLETE.md
+--   4. Deploy to production (git push)
+--   5. Set CRON_SECRET in Vercel Dashboard

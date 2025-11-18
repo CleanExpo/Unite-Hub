@@ -2,65 +2,118 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import type { Project, TablesInsert } from "@/types/database";
 import { apiRateLimit } from "@/lib/rate-limit";
+import {
+  parsePagination,
+  createPaginationMeta,
+  successResponse,
+  errorResponse,
+  validationError,
+  parseQueryFilters,
+  applyQueryFilters,
+  parseSorting,
+} from "@/lib/api-helpers";
 
 /**
  * GET /api/projects
- * Get all projects for an organization with optional filters
+ * Get all projects for an organization with pagination, filtering, and sorting
+ *
+ * Query Parameters:
+ * - orgId (required): Organization ID
+ * - page: Page number (default: 1)
+ * - pageSize: Items per page (default: 20, max: 100)
+ * - status: Filter by status (eq)
+ * - category: Filter by category (eq)
+ * - priority: Filter by priority (eq)
+ * - sortBy: Sort field (created_at|due_date|priority, default: created_at)
+ * - sortOrder: Sort direction (asc|desc, default: desc)
+ *
+ * Performance: Uses indexed queries, selective field loading, pagination
  */
 export async function GET(request: NextRequest) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(request);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
 
     const { searchParams } = new URL(request.url);
     const orgId = searchParams.get("orgId");
-    const status = searchParams.get("status");
-    const category = searchParams.get("category");
-    const priority = searchParams.get("priority");
 
     if (!orgId) {
-      return NextResponse.json({ error: "Organization ID is required" }, { status: 400 });
+      return validationError({ orgId: "Organization ID is required" });
     }
 
+    // Parse pagination parameters
+    const { limit, offset, page, pageSize } = parsePagination(searchParams, {
+      pageSize: 20,
+      maxPageSize: 100,
+    });
+
+    // Parse sorting parameters
+    const { sortBy, sortOrder } = parseSorting(searchParams, {
+      allowedFields: ["created_at", "due_date", "priority", "status", "title"],
+      defaultField: "created_at",
+      defaultOrder: "desc",
+    });
+
+    // Parse filter parameters
+    const filterConfig = {
+      status: "eq" as const,
+      category: "eq" as const,
+      priority: "eq" as const,
+      title: "ilike" as const,
+    };
+    const filters = parseQueryFilters(searchParams, filterConfig);
+
     const supabase = await getSupabaseServer();
+
+    // Build query with selective field loading and pagination
     let query = supabase
       .from("projects")
       .select(`
-        *,
+        id,
+        org_id,
+        workspace_id,
+        title,
+        client_name,
+        status,
+        priority,
+        progress,
+        due_date,
+        start_date,
+        created_at,
         assignees:project_assignees(
-          team_member:team_members(*)
-        ),
-        milestones:project_milestones(*)
-      `)
+          team_member:team_members(id, name, avatar_url, role)
+        )
+      `, { count: "exact" })
       .eq("org_id", orgId);
 
     // Apply filters
-    if (status) {
-      query = query.eq("status", status);
-    }
-    if (category) {
-      query = query.eq("category", category);
-    }
-    if (priority) {
-      query = query.eq("priority", priority);
-    }
+    query = applyQueryFilters(query, filters);
 
-    query = query.order("created_at", { ascending: false });
-
-    const { data: projects, error } = await query;
+    // Apply sorting and pagination
+    const { data: projects, count, error } = await query
+      .order(sortBy, { ascending: sortOrder === "asc" })
+      .range(offset, offset + limit - 1);
 
     if (error) {
       console.error("Error fetching projects:", error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return errorResponse("Failed to fetch projects", 500, error.message);
     }
 
-    return NextResponse.json({ projects });
+    // Create pagination metadata
+    const meta = createPaginationMeta(
+      projects?.length || 0,
+      count || 0,
+      page,
+      pageSize
+    );
+
+    return successResponse({ projects: projects || [] }, meta);
   } catch (error) {
     console.error("Unexpected error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return errorResponse("Internal server error", 500);
   }
 }
 

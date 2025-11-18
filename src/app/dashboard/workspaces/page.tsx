@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,11 +14,16 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Settings, Users, BarChart3, Trash2 } from "lucide-react";
+import { Plus, Settings, Users, BarChart3, Trash2, Briefcase } from "lucide-react";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { ErrorState } from "@/components/ErrorState";
+import { EmptyState } from "@/components/EmptyState";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function WorkspacesPage() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [workspaces] = useState([
     {
       id: 1,
@@ -48,6 +53,91 @@ export default function WorkspacesPage() {
       status: "active",
     },
   ]);
+
+  useEffect(() => {
+    // Simulate loading
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (error) {
+    return (
+      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+        <Breadcrumbs items={[{ label: "Workspaces" }]} />
+        <ErrorState
+          title="Failed to Load Workspaces"
+          message={error}
+          onRetry={() => setError(null)}
+        />
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+        <Breadcrumbs items={[{ label: "Workspaces" }]} />
+
+        <div className="flex justify-between items-center">
+          <div className="space-y-2">
+            <Skeleton className="h-10 w-48" />
+            <Skeleton className="h-5 w-64" />
+          </div>
+          <Skeleton className="h-10 w-40" />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1, 2, 3].map((i) => (
+            <Card key={i} className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
+              <CardHeader>
+                <div className="flex justify-between items-start">
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-6 w-40" />
+                    <Skeleton className="h-4 w-48" />
+                  </div>
+                  <Skeleton className="h-6 w-16" />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  <div className="grid grid-cols-3 gap-4">
+                    {[1, 2, 3].map((j) => (
+                      <div key={j} className="space-y-2">
+                        <Skeleton className="h-3 w-16" />
+                        <Skeleton className="h-8 w-12" />
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex gap-2">
+                    <Skeleton className="h-9 flex-1" />
+                    <Skeleton className="h-9 w-12" />
+                    <Skeleton className="h-9 w-12" />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (workspaces.length === 0) {
+    return (
+      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+        <Breadcrumbs items={[{ label: "Workspaces" }]} />
+        <EmptyState
+          icon={Briefcase}
+          title="No Workspaces Yet"
+          description="Create your first workspace to organize your clients and projects."
+          actionLabel="Create Workspace"
+          onAction={() => setIsCreateOpen(true)}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">

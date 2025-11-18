@@ -143,6 +143,32 @@ services:
       - "com.unite-hub.agent=campaign-optimization"
 
   # ==================================================
+  # CONTENT CALENDAR AGENT (Extended Thinking)
+  # ==================================================
+  content-calendar-agent:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.content-calendar-agent
+    container_name: unite-hub-content-calendar-agent
+    restart: unless-stopped
+    environment:
+      RABBITMQ_URL: amqp://${RABBITMQ_USER:-unite_hub}:${RABBITMQ_PASSWORD:-unite_hub_pass}@rabbitmq:5672
+      QUEUE_NAME: content_calendar_queue
+      NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      ENABLE_EXTENDED_THINKING: "true"
+      THINKING_BUDGET_TOKENS: 10000
+      AGENT_CONCURRENCY: 1
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - unite-hub-network
+    labels:
+      - "com.unite-hub.agent=content-calendar"
+
+  # ==================================================
   # STRATEGY GENERATION AGENT (Extended Thinking)
   # ==================================================
   strategy-agent:

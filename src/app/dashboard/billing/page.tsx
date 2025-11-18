@@ -19,6 +19,8 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { supabaseBrowser } from "@/lib/supabase";
+import { ErrorState } from "@/components/ErrorState";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface Subscription {
   id: string;
@@ -35,6 +37,7 @@ export default function BillingPage() {
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [loading, setLoading] = useState(true);
   const [changingPlan, setChangingPlan] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (workspaceLoading) return;
@@ -46,6 +49,7 @@ export default function BillingPage() {
   const fetchSubscription = async () => {
     try {
       setLoading(true);
+      setError(null);
 
       const { data, error } = await supabaseBrowser
         .from("subscriptions")
@@ -56,11 +60,13 @@ export default function BillingPage() {
       if (error && error.code !== "PGRST116") {
         // PGRST116 is "no rows returned" - not an error
         console.error("Error fetching subscription:", error);
+        throw new Error("Failed to fetch subscription details");
       }
 
       setSubscription(data || null);
     } catch (err) {
       console.error("Error fetching subscription:", err);
+      setError(err instanceof Error ? err.message : "Failed to load billing information");
     } finally {
       setLoading(false);
     }
@@ -178,6 +184,75 @@ export default function BillingPage() {
   ];
 
   const currentPlan = subscription?.plan_name || "Free";
+
+  if (error) {
+    return (
+      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+        <Breadcrumbs items={[{ label: "Billing & Subscription" }]} />
+        <ErrorState
+          title="Failed to Load Billing Information"
+          message={error}
+          onRetry={fetchSubscription}
+        />
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+        <Breadcrumbs items={[{ label: "Billing & Subscription" }]} />
+
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <Skeleton className="h-10 w-64" />
+            <Skeleton className="h-5 w-96" />
+          </div>
+          <Skeleton className="h-10 w-40" />
+        </div>
+
+        <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
+          <CardHeader>
+            <Skeleton className="h-6 w-48" />
+            <Skeleton className="h-4 w-64 mt-2" />
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="bg-slate-900/50 rounded-lg p-4 border border-slate-700/30">
+                  <Skeleton className="h-5 w-24 mb-2" />
+                  <Skeleton className="h-8 w-32" />
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
+        <div className="space-y-4">
+          <Skeleton className="h-8 w-48" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[1, 2, 3].map((i) => (
+              <Card key={i} className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
+                <CardHeader>
+                  <Skeleton className="h-6 w-32" />
+                  <Skeleton className="h-4 w-48 mt-2" />
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <Skeleton className="h-12 w-full" />
+                  <div className="space-y-3">
+                    {[1, 2, 3, 4].map((j) => (
+                      <Skeleton key={j} className="h-4 w-full" />
+                    ))}
+                  </div>
+                  <Skeleton className="h-10 w-full" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">

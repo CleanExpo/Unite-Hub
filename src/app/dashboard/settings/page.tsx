@@ -7,12 +7,15 @@ import { Badge } from "@/components/ui/badge";
 import { Loader2, Mail, RefreshCw } from "lucide-react";
 import { useWorkspace } from "@/hooks/useWorkspace";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { ErrorState } from "@/components/ErrorState";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function SettingsPage() {
   const { workspaceId, loading: workspaceLoading } = useWorkspace();
   const [integrations, setIntegrations] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [syncing, setSyncing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (workspaceLoading) return;
@@ -21,12 +24,17 @@ export default function SettingsPage() {
 
   const loadIntegrations = async () => {
     setLoading(true);
+    setError(null);
     try {
       const res = await fetch("/api/integrations/list");
+      if (!res.ok) {
+        throw new Error("Failed to load integrations");
+      }
       const { integrations } = await res.json();
       setIntegrations(integrations || []);
     } catch (error) {
       console.error("Failed to load integrations:", error);
+      setError(error instanceof Error ? error.message : "Failed to load integrations");
     } finally {
       setLoading(false);
     }
@@ -78,6 +86,50 @@ export default function SettingsPage() {
       setSyncing(false);
     }
   };
+
+  if (error) {
+    return (
+      <div className="max-w-4xl mx-auto px-6 py-8 space-y-8">
+        <Breadcrumbs items={[{ label: "Settings" }]} />
+        <ErrorState
+          title="Failed to Load Settings"
+          message={error}
+          onRetry={loadIntegrations}
+        />
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="max-w-4xl mx-auto px-6 py-8 space-y-8">
+        <Breadcrumbs items={[{ label: "Settings" }]} />
+
+        <div className="space-y-2">
+          <Skeleton className="h-10 w-48" />
+          <Skeleton className="h-5 w-64" />
+        </div>
+
+        <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
+          <CardHeader>
+            <Skeleton className="h-6 w-48" />
+            <Skeleton className="h-4 w-64 mt-2" />
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-lg p-4 flex justify-between items-center">
+                <div className="space-y-2">
+                  <Skeleton className="h-5 w-24" />
+                  <Skeleton className="h-4 w-32" />
+                </div>
+                <Skeleton className="h-9 w-24" />
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto px-6 py-8 space-y-8">

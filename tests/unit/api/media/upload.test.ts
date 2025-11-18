@@ -6,6 +6,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { NextRequest } from 'next/server';
 import { POST, GET } from '@/app/api/media/upload/route';
+import * as supabaseModule from '@/lib/supabase';
+import * as rateLimitModule from '@/lib/rate-limit';
 
 // Mock dependencies
 vi.mock('@/lib/supabase', () => ({
@@ -76,12 +78,9 @@ describe('POST /api/media/upload', () => {
     // Mock environment
     process.env.MAX_FILE_SIZE_MB = '100';
 
-    const { getSupabaseServer, getSupabaseAdmin } = require('@/lib/supabase');
-    getSupabaseServer.mockResolvedValue(mockSupabase);
-    getSupabaseAdmin.mockReturnValue(mockSupabaseAdmin);
-
-    const { rateLimit } = require('@/lib/rate-limit');
-    rateLimit.mockResolvedValue(null);
+    vi.mocked(supabaseModule.getSupabaseServer).mockResolvedValue(mockSupabase);
+    vi.mocked(supabaseModule.getSupabaseAdmin).mockReturnValue(mockSupabaseAdmin);
+    vi.mocked(rateLimitModule.rateLimit).mockResolvedValue(null);
   });
 
   it('should successfully upload a video file', async () => {
@@ -137,15 +136,14 @@ describe('POST /api/media/upload', () => {
   });
 
   it('should reject unauthorized requests', async () => {
-    const { getSupabaseServer } = require('@/lib/supabase');
-    getSupabaseServer.mockResolvedValue({
+    vi.mocked(supabaseModule.getSupabaseServer).mockResolvedValue({
       auth: {
         getUser: vi.fn().mockResolvedValue({
           data: { user: null },
           error: new Error('Unauthorized'),
         }),
       },
-    });
+    } as any);
 
     mockRequest = {
       headers: new Headers(),
@@ -323,8 +321,7 @@ describe('GET /api/media/upload', () => {
       }),
     };
 
-    const { getSupabaseServer } = require('@/lib/supabase');
-    getSupabaseServer.mockResolvedValue(mockSupabase);
+    vi.mocked(supabaseModule.getSupabaseServer).mockResolvedValue(mockSupabase);
   });
 
   it('should list all media files for workspace', async () => {

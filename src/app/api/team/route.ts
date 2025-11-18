@@ -2,43 +2,87 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import type { TeamMember, TablesInsert } from "@/types/database";
 import { apiRateLimit } from "@/lib/rate-limit";
+import {
+  parsePagination,
+  createPaginationMeta,
+  successResponse,
+  errorResponse,
+  validationError,
+  parseSorting,
+} from "@/lib/api-helpers";
 
 /**
  * GET /api/team
- * Get all team members for an organization
+ * Get all team members for an organization with pagination and sorting
+ *
+ * Query Parameters:
+ * - orgId (required): Organization ID
+ * - page: Page number (default: 1)
+ * - pageSize: Items per page (default: 50, max: 100)
+ * - sortBy: Sort field (name|role|join_date, default: name)
+ * - sortOrder: Sort direction (asc|desc, default: asc)
+ *
+ * Performance: Uses indexed queries, selective field loading
  */
 export async function GET(request: NextRequest) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(request);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
 
     const { searchParams } = new URL(request.url);
     const orgId = searchParams.get("orgId");
 
     if (!orgId) {
-      return NextResponse.json({ error: "Organization ID is required" }, { status: 400 });
+      return validationError({ orgId: "Organization ID is required" });
     }
 
+    // Parse pagination parameters (higher default for team members)
+    const { limit, offset, page, pageSize } = parsePagination(searchParams, {
+      pageSize: 50,
+      maxPageSize: 100,
+    });
+
+    // Parse sorting parameters
+    const { sortBy, sortOrder } = parseSorting(searchParams, {
+      allowedFields: ["name", "role", "join_date", "email"],
+      defaultField: "name",
+      defaultOrder: "asc",
+    });
+
     const supabase = await getSupabaseServer();
-    const { data: teamMembers, error } = await supabase
+
+    // Build query with selective field loading
+    const { data: teamMembers, count, error } = await supabase
       .from("team_members")
-      .select("*")
+      .select(
+        "id, name, role, email, phone, avatar_url, initials, capacity_hours, hours_allocated, current_projects, skills, join_date, is_active",
+        { count: "exact" }
+      )
       .eq("org_id", orgId)
       .eq("is_active", true)
-      .order("name");
+      .order(sortBy, { ascending: sortOrder === "asc" })
+      .range(offset, offset + limit - 1);
 
     if (error) {
       console.error("Error fetching team members:", error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return errorResponse("Failed to fetch team members", 500, error.message);
     }
 
-    return NextResponse.json({ teamMembers });
+    // Create pagination metadata
+    const meta = createPaginationMeta(
+      teamMembers?.length || 0,
+      count || 0,
+      page,
+      pageSize
+    );
+
+    return successResponse({ teamMembers: teamMembers || [] }, meta);
   } catch (error) {
     console.error("Unexpected error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return errorResponse("Internal server error", 500);
   }
 }
 

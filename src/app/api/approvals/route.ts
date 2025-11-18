@@ -3,10 +3,32 @@ import { getSupabaseServer } from "@/lib/supabase";
 import type { Approval, TablesInsert } from "@/types/database";
 import { apiRateLimit } from "@/lib/rate-limit";
 import { validateUserAuth } from "@/lib/workspace-validation";
+import {
+  parsePagination,
+  createPaginationMeta,
+  successResponse,
+  errorResponse,
+  validationError,
+  parseQueryFilters,
+  applyQueryFilters,
+  parseSorting,
+} from "@/lib/api-helpers";
 
 /**
  * GET /api/approvals
- * Get all approvals for an organization with optional filters
+ * Get all approvals for an organization with pagination, filtering, and sorting
+ *
+ * Query Parameters:
+ * - orgId (required): Organization ID
+ * - page: Page number (default: 1)
+ * - pageSize: Items per page (default: 20, max: 100)
+ * - status: Filter by status (eq) - pending, approved, declined
+ * - priority: Filter by priority (eq) - low, medium, high
+ * - type: Filter by type (eq) - document, video, image, etc.
+ * - sortBy: Sort field (created_at|priority|status, default: created_at)
+ * - sortOrder: Sort direction (asc|desc, default: desc)
+ *
+ * Performance: Uses indexed queries, selective field loading, pagination
  */
 export async function GET(request: NextRequest) {
   try {
@@ -21,57 +43,79 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
     const orgId = searchParams.get("orgId");
-    const status = searchParams.get("status");
-    const priority = searchParams.get("priority");
-    const type = searchParams.get("type");
 
     if (!orgId) {
-      return NextResponse.json({ error: "Organization ID is required" }, { status: 400 });
+      return validationError({ orgId: "Organization ID is required" });
     }
 
     // Verify org access
     if (orgId !== user.orgId) {
-      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+      return errorResponse("Access denied", 403);
     }
 
+    // Parse pagination parameters
+    const { limit, offset, page, pageSize } = parsePagination(searchParams, {
+      pageSize: 20,
+      maxPageSize: 100,
+    });
+
+    // Parse sorting parameters
+    const { sortBy, sortOrder } = parseSorting(searchParams, {
+      allowedFields: ["created_at", "priority", "status", "type", "title"],
+      defaultField: "created_at",
+      defaultOrder: "desc",
+    });
+
+    // Parse filter parameters
+    const filterConfig = {
+      status: "eq" as const,
+      priority: "eq" as const,
+      type: "eq" as const,
+      title: "ilike" as const,
+    };
+    const filters = parseQueryFilters(searchParams, filterConfig);
+
     const supabase = await getSupabaseServer();
+
+    // Build query with selective field loading
     let query = supabase
       .from("approvals")
-      .select("*")
+      .select("*", { count: "exact" })
       .eq("org_id", orgId);
 
     // Apply filters
-    if (status) {
-      query = query.eq("status", status);
-    }
-    if (priority) {
-      query = query.eq("priority", priority);
-    }
-    if (type) {
-      query = query.eq("type", type);
-    }
+    query = applyQueryFilters(query, filters);
 
-    query = query.order("created_at", { ascending: false });
-
-    const { data: approvals, error } = await query;
+    // Apply sorting and pagination
+    const { data: approvals, count, error } = await query
+      .order(sortBy, { ascending: sortOrder === "asc" })
+      .range(offset, offset + limit - 1);
 
     if (error) {
       console.error("Error fetching approvals:", error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      return errorResponse("Failed to fetch approvals", 500, error.message);
     }
 
-    return NextResponse.json({ approvals });
+    // Create pagination metadata
+    const meta = createPaginationMeta(
+      approvals?.length || 0,
+      count || 0,
+      page,
+      pageSize
+    );
+
+    return successResponse({ approvals: approvals || [] }, meta);
   } catch (error) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        return errorResponse("Unauthorized", 401);
       }
       if (error.message.includes("Forbidden")) {
-        return NextResponse.json({ error: "Access denied" }, { status: 403 });
+        return errorResponse("Access denied", 403);
       }
     }
     console.error("Unexpected error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return errorResponse("Internal server error", 500);
   }
 }
 

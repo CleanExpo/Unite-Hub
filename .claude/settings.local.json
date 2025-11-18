@@ -61,7 +61,16 @@
       "Bash(findstr:*)",
       "Bash(node scripts/execute-migrations-now.mjs:*)",
       "Bash(node scripts/verify-migrations.mjs:*)",
-      "Bash(clip:*)"
+      "Bash(clip:*)",
+      "Bash(Get-Content \"supabase\\migrations\\100_multi_agent_system.sql\")",
+      "Bash(Set-Clipboard)",
+      "Bash(Write-Host \"✅ Migration SQL copied to clipboard!\")",
+      "Bash(clip.exe:*)",
+      "Bash(docker ps:*)",
+      "Bash(dir:*)",
+      "Bash(git mv:*)",
+      "Bash(dir /s /b *TODO*.md *ROADMAP*.md *NEXT*.md 2)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

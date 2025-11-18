@@ -6,6 +6,19 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { NextRequest } from 'next/server';
 import { POST, GET } from '@/app/api/media/transcribe/route';
+import * as supabaseModule from '@/lib/supabase';
+
+// Mock OpenAI - set dangerouslyAllowBrowser to prevent browser environment error
+const mockCreate = vi.fn();
+vi.mock('openai', () => ({
+  default: vi.fn().mockImplementation(() => ({
+    audio: {
+      transcriptions: {
+        create: mockCreate,
+      },
+    },
+  })),
+}));
 
 // Mock dependencies
 vi.mock('@/lib/supabase', () => ({
@@ -18,21 +31,10 @@ vi.mock('@/lib/supabase', () => ({
   },
 }));
 
-vi.mock('openai', () => ({
-  default: class OpenAI {
-    audio = {
-      transcriptions: {
-        create: vi.fn(),
-      },
-    };
-  },
-}));
-
 describe('POST /api/media/transcribe', () => {
   let mockRequest: Partial<NextRequest>;
   let mockSupabase: any;
   let mockSupabaseAdmin: any;
-  let mockOpenAI: any;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -90,9 +92,7 @@ describe('POST /api/media/transcribe', () => {
     };
 
     // Mock OpenAI Whisper
-    const OpenAI = require('openai').default;
-    mockOpenAI = new OpenAI();
-    mockOpenAI.audio.transcriptions.create.mockResolvedValue({
+    mockCreate.mockResolvedValue({
       text: 'This is a test transcription.',
       language: 'en',
       segments: [
@@ -105,9 +105,8 @@ describe('POST /api/media/transcribe', () => {
       ],
     });
 
-    const { getSupabaseServer, getSupabaseAdmin } = require('@/lib/supabase');
-    getSupabaseServer.mockResolvedValue(mockSupabase);
-    getSupabaseAdmin.mockReturnValue(mockSupabaseAdmin);
+    vi.mocked(supabaseModule.getSupabaseServer).mockResolvedValue(mockSupabase);
+    vi.mocked(supabaseModule.getSupabaseAdmin).mockReturnValue(mockSupabaseAdmin);
 
     // Mock environment
     process.env.OPENAI_API_KEY = 'sk-test-key';
@@ -204,11 +203,11 @@ describe('POST /api/media/transcribe', () => {
 
     expect(response.status).toBe(200);
     expect(data.message).toContain('Already transcribed');
-    expect(mockOpenAI.audio.transcriptions.create).not.toHaveBeenCalled();
+    expect(mockCreate).not.toHaveBeenCalled();
   });
 
   it('should handle OpenAI API errors gracefully', async () => {
-    mockOpenAI.audio.transcriptions.create.mockRejectedValue(
+    mockCreate.mockRejectedValue(
       new Error('OpenAI API error')
     );
 
@@ -338,8 +337,7 @@ describe('GET /api/media/transcribe', () => {
       }),
     };
 
-    const { getSupabaseServer } = require('@/lib/supabase');
-    getSupabaseServer.mockResolvedValue(mockSupabase);
+    vi.mocked(supabaseModule.getSupabaseServer).mockResolvedValue(mockSupabase);
   });
 
   it('should retrieve existing transcription', async () => {

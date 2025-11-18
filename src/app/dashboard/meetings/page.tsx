@@ -35,6 +35,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { ErrorState } from "@/components/ErrorState";
+import { MeetingSkeleton } from "@/components/skeletons/MeetingSkeleton";
 
 interface CalendarEvent {
   id: string;
@@ -55,6 +57,7 @@ export default function MeetingsPage() {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState<"upcoming" | "all">("upcoming");
+  const [error, setError] = useState<string | null>(null);
 
   const workspaceId = currentOrganization?.id || "";
 
@@ -76,6 +79,7 @@ export default function MeetingsPage() {
   const fetchEvents = async () => {
     try {
       setLoading(true);
+      setError(null);
       const now = new Date();
       const timeMin =
         viewMode === "upcoming" ? now.toISOString() : new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString();
@@ -90,13 +94,14 @@ export default function MeetingsPage() {
           setEvents([]);
           return;
         }
-        throw new Error("Failed to fetch events");
+        throw new Error("Failed to fetch calendar events");
       }
 
       const data = await response.json();
       setEvents(data.events || []);
     } catch (error) {
       console.error("Error fetching calendar events:", error);
+      setError(error instanceof Error ? error.message : "Failed to load meetings");
       setEvents([]);
     } finally {
       setLoading(false);
@@ -175,10 +180,35 @@ export default function MeetingsPage() {
 
   const groupedEvents = groupEventsByDate(filteredEvents);
 
+  if (error) {
+    return (
+      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+        <Breadcrumbs items={[{ label: "Meetings" }]} />
+        <ErrorState
+          title="Failed to Load Meetings"
+          message={error}
+          onRetry={fetchEvents}
+        />
+      </div>
+    );
+  }
+
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-blue-400" />
+      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+        <Breadcrumbs items={[{ label: "Meetings" }]} />
+
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <div className="flex items-center gap-3">
+              <Calendar className="h-10 w-10 text-blue-400" />
+              <div className="text-4xl font-bold text-white">Meetings Calendar</div>
+            </div>
+            <div className="text-slate-400">AI-powered meeting management and scheduling</div>
+          </div>
+        </div>
+
+        <MeetingSkeleton count={2} />
       </div>
     );
   }

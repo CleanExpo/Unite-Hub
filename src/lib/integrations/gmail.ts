@@ -140,15 +140,21 @@ export async function syncGmailEmails(integrationId: string) {
           });
         }
 
-        // Create email record
-        await db.emails.create({
+        // Create email record in client_emails table
+        await db.clientEmails.create({
           workspace_id: integration.workspace_id,
+          org_id: integration.org_id,
           contact_id: contact.id,
+          integration_id: integrationId,
+          provider_message_id: message.id,
           from_email: senderEmail,
-          to_email: to,
+          to_emails: [to],
           subject,
-          body,
-          is_processed: false,
+          body_text: body,
+          snippet: body.substring(0, 200),
+          direction: "inbound",
+          is_read: false,
+          intelligence_analyzed: false, // Mark for AI analysis
           received_at: new Date(date),
         });
 
