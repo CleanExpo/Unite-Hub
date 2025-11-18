@@ -1,24 +1,33 @@
 /**
- * Database Connection Pool for Supabase
+ * Supabase Client Manager with Resilience Patterns
  *
- * IMPORTANT: Supabase JS client uses HTTP/2 and automatically reuses connections.
- * This file provides:
- * 1. Singleton pattern for client reuse
- * 2. Health monitoring
- * 3. Retry logic with exponential backoff
- * 4. Circuit breaker pattern
- * 5. Performance metrics
+ * This module provides production-grade resilience for Supabase HTTP clients:
  *
- * For true database connection pooling, use Supabase Pooler (PgBouncer):
- * https://supabase.com/docs/guides/database/connecting-to-postgres#connection-pooler
+ * 1. **Singleton Pattern** - Reuses HTTP clients across requests (reduces overhead)
+ * 2. **Retry Logic** - Exponential backoff for transient failures (network issues, rate limits)
+ * 3. **Circuit Breaker** - Prevents cascading failures (CLOSED → HALF_OPEN → OPEN states)
+ * 4. **Health Monitoring** - Periodic database availability checks (30s intervals)
+ * 5. **Performance Metrics** - Request tracking, success rates, latency monitoring
  *
+ * ARCHITECTURE NOTES:
+ * - Supabase uses HTTP/REST APIs via @supabase/supabase-js (NOT direct PostgreSQL connections)
+ * - HTTP/2 connection reuse is handled automatically by the underlying HTTP client
+ * - True PostgreSQL connection pooling happens server-side via Supabase's PgBouncer
+ * - This file manages HTTP client lifecycle and resilience patterns, NOT database connections
+ *
+ * WHEN TO USE DIRECT POSTGRESQL ACCESS:
+ * For migrations, long-running transactions (>5s), or admin operations, use direct connection:
+ * postgresql://postgres:[password]@[project].supabase.co:6543/postgres (pooled)
+ * postgresql://postgres:[password]@[project].supabase.co:5432/postgres (direct)
+ *
+ * @see https://supabase.com/docs/guides/database/connecting-to-postgres
  * @module lib/db/connection-pool
  * @version 1.0.0
  */
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { Database } from '@/types/supabase';
-import { logger } from '@/lib/logger';
+import { Database } from '@/types/database';
+import logger from '@/lib/logger';
 
 // Environment variables with validation
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
