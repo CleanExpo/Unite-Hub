@@ -33,7 +33,12 @@
       "Bash(dir /s /b d:Unite-Hub.claudeagents*.md 2)",
       "Bash(where supabase:*)",
       "Bash(supabase status:*)",
-      "Bash(git remote:*)"
+      "Bash(git remote:*)",
+      "Bash(git check-ignore:*)",
+      "Bash(dir /s /b *.tsx 2)",
+      "Bash(if [ -f PRODUCTION_READINESS_AUDIT_2025-01-18.md ])",
+      "Bash(else echo \"❌ File not found\")",
+      "Bash(fi)"
     ],
     "deny": [],
     "ask": []
