@@ -70,7 +70,9 @@
       "Bash(dir:*)",
       "Bash(git mv:*)",
       "Bash(dir /s /b *TODO*.md *ROADMAP*.md *NEXT*.md 2)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(vercel --prod --yes:*)",
+      "Bash(vercel inspect:*)"
     ],
     "deny": [],
     "ask": []
