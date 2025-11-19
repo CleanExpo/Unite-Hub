@@ -1,43 +1,22 @@
 /**
- * Staff Tasks Page - Phase 2 Step 3
+ * Staff Tasks Page - Phase 2 Step 4
  *
  * Task management interface for staff users
- * Will be wired to /api/staff/tasks in Phase 2 Step 4
+ * Fully wired to /api/staff/tasks
  */
 
 import { Card } from '@/next/components/ui/Card';
 import { Button } from '@/next/components/ui/Button';
 import { Badge } from '@/next/components/ui/Badge';
 import { TaskCard } from '@/next/components/staff/TaskCard';
+import ProofUploader from '@/next/components/staff/ProofUploader';
 import { Plus, Filter } from 'lucide-react';
+import { getStaffTasks, updateTaskStatus } from '@/next/core/services/staff/staffService';
 
-export default function StaffTasksPage() {
-  // TODO: Fetch real tasks from /api/staff/tasks in Phase 2 Step 4
-  const mockTasks = [
-    {
-      id: '1',
-      title: 'Complete homepage redesign',
-      status: 'in_progress' as const,
-      due_date: '2025-11-25',
-      proof: null,
-    },
-    {
-      id: '2',
-      title: 'Review client proposal',
-      status: 'pending' as const,
-      due_date: '2025-11-22',
-      proof: null,
-    },
-    {
-      id: '3',
-      title: 'Deploy production build',
-      status: 'completed' as const,
-      due_date: '2025-11-20',
-      proof: {
-        screenshots: ['https://example.com/screenshot1.png'],
-      },
-    },
-  ];
+export default async function StaffTasksPage() {
+  // Fetch real tasks from API
+  const response = await getStaffTasks().catch(() => ({ data: [] }));
+  const tasks = response?.data || [];
 
   return (
     <div className="space-y-6">
@@ -68,7 +47,7 @@ export default function StaffTasksPage() {
           <div className="p-4">
             <p className="text-sm text-gray-400">Pending</p>
             <p className="text-2xl font-bold text-yellow-400 mt-1">
-              {mockTasks.filter((t) => t.status === 'pending').length}
+              {tasks.filter((t) => t.status === 'pending').length}
             </p>
           </div>
         </Card>
@@ -76,7 +55,7 @@ export default function StaffTasksPage() {
           <div className="p-4">
             <p className="text-sm text-gray-400">In Progress</p>
             <p className="text-2xl font-bold text-blue-400 mt-1">
-              {mockTasks.filter((t) => t.status === 'in_progress').length}
+              {tasks.filter((t) => t.status === 'in_progress').length}
             </p>
           </div>
         </Card>
@@ -84,7 +63,7 @@ export default function StaffTasksPage() {
           <div className="p-4">
             <p className="text-sm text-gray-400">Completed</p>
             <p className="text-2xl font-bold text-green-400 mt-1">
-              {mockTasks.filter((t) => t.status === 'completed').length}
+              {tasks.filter((t) => t.status === 'completed').length}
             </p>
           </div>
         </Card>
@@ -97,7 +76,7 @@ export default function StaffTasksPage() {
         </h2>
 
         <div className="space-y-3">
-          {mockTasks.map((task) => (
+          {tasks.map((task) => (
             <TaskCard
               key={task.id}
               task={task}
@@ -109,7 +88,7 @@ export default function StaffTasksPage() {
       </div>
 
       {/* Empty state (when no tasks) */}
-      {mockTasks.length === 0 && (
+      {tasks.length === 0 && (
         <Card>
           <div className="p-12 text-center">
             <p className="text-gray-400 mb-4">

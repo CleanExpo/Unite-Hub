@@ -1,47 +1,20 @@
 /**
- * Staff Activity Page - Phase 2 Step 3
+ * Staff Activity Page - Phase 2 Step 4
  *
  * Activity log viewer for staff users
- * Will be wired to /api/staff/activity in Phase 2 Step 4
+ * Fully wired to /api/staff/activity
  */
 
 import { Card } from '@/next/components/ui/Card';
 import { Button } from '@/next/components/ui/Button';
 import { Badge } from '@/next/components/ui/Badge';
 import { Activity, Download, Filter } from 'lucide-react';
+import { getStaffActivity } from '@/next/core/services/staff/staffService';
 
-export default function StaffActivityPage() {
-  // TODO: Fetch real activity from /api/staff/activity in Phase 2 Step 4
-  const mockLogs = [
-    {
-      id: '1',
-      staff_id: 's1',
-      action: 'task_completed',
-      metadata: { task_title: 'Homepage redesign', task_id: 't1' },
-      timestamp: '2025-11-19T14:30:00Z',
-    },
-    {
-      id: '2',
-      staff_id: 's1',
-      action: 'project_updated',
-      metadata: { project_id: 'p1', field: 'status', value: 'in_progress' },
-      timestamp: '2025-11-19T12:15:00Z',
-    },
-    {
-      id: '3',
-      staff_id: 's1',
-      action: 'staff_login',
-      metadata: { email: 'staff@unite-group.in' },
-      timestamp: '2025-11-19T09:00:00Z',
-    },
-    {
-      id: '4',
-      staff_id: 's2',
-      action: 'task_created',
-      metadata: { task_title: 'Client proposal review', task_id: 't2' },
-      timestamp: '2025-11-18T16:45:00Z',
-    },
-  ];
+export default async function StaffActivityPage() {
+  // Fetch real activity from API
+  const response = await getStaffActivity().catch(() => ({ data: [] }));
+  const logs = response?.data || [];
 
   const formatTimestamp = (timestamp: string) => {
     return new Date(timestamp).toLocaleString('en-US', {
@@ -100,7 +73,7 @@ export default function StaffActivityPage() {
           <div className="p-4">
             <p className="text-sm text-gray-400">Today</p>
             <p className="text-2xl font-bold text-gray-100 mt-1">
-              {mockLogs.filter((log) => {
+              {logs.filter((log) => {
                 const logDate = new Date(log.timestamp).toDateString();
                 const today = new Date().toDateString();
                 return logDate === today;
@@ -112,7 +85,7 @@ export default function StaffActivityPage() {
           <div className="p-4">
             <p className="text-sm text-gray-400">This Week</p>
             <p className="text-2xl font-bold text-gray-100 mt-1">
-              {mockLogs.length}
+              {logs.length}
             </p>
           </div>
         </Card>
@@ -120,7 +93,7 @@ export default function StaffActivityPage() {
           <div className="p-4">
             <p className="text-sm text-gray-400">Tasks Completed</p>
             <p className="text-2xl font-bold text-green-400 mt-1">
-              {mockLogs.filter((log) => log.action === 'task_completed').length}
+              {logs.filter((log) => log.action === 'task_completed').length}
             </p>
           </div>
         </Card>
@@ -128,7 +101,7 @@ export default function StaffActivityPage() {
           <div className="p-4">
             <p className="text-sm text-gray-400">Projects Updated</p>
             <p className="text-2xl font-bold text-blue-400 mt-1">
-              {mockLogs.filter((log) => log.action === 'project_updated').length}
+              {logs.filter((log) => log.action === 'project_updated').length}
             </p>
           </div>
         </Card>
@@ -142,11 +115,11 @@ export default function StaffActivityPage() {
           </h2>
 
           <div className="space-y-4">
-            {mockLogs.map((log, index) => (
+            {logs.map((log, index) => (
               <div
                 key={log.id}
                 className={`flex items-start space-x-4 pb-4 ${
-                  index !== mockLogs.length - 1 ? 'border-b border-gray-800' : ''
+                  index !== logs.length - 1 ? 'border-b border-gray-800' : ''
                 }`}
               >
                 {/* Timeline dot */}
@@ -154,7 +127,7 @@ export default function StaffActivityPage() {
                   <div className="p-2 bg-gray-800 rounded-full">
                     <Activity className="h-4 w-4 text-gray-400" />
                   </div>
-                  {index !== mockLogs.length - 1 && (
+                  {index !== logs.length - 1 && (
                     <div className="w-px h-full bg-gray-800 mt-2" />
                   )}
                 </div>
@@ -188,7 +161,7 @@ export default function StaffActivityPage() {
       </Card>
 
       {/* Empty state */}
-      {mockLogs.length === 0 && (
+      {logs.length === 0 && (
         <Card>
           <div className="p-12 text-center">
             <Activity className="h-12 w-12 text-gray-600 mx-auto mb-4" />

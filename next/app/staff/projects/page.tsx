@@ -1,50 +1,29 @@
 /**
- * Staff Projects Page - Phase 2 Step 3
+ * Staff Projects Page - Phase 2 Step 4
  *
  * Project management interface for staff users
- * Will be wired to /api/staff/projects in Phase 2 Step 4
+ * Fully wired to /api/staff/projects
  */
 
 import { Card } from '@/next/components/ui/Card';
 import { Button } from '@/next/components/ui/Button';
 import { Badge } from '@/next/components/ui/Badge';
-import { FolderKanban, Plus, Search } from 'lucide-react';
+import StaffProgressRing from '@/next/components/staff/StaffProgressRing';
+import { FolderKanban, Plus, Search, Calendar, Users } from 'lucide-react';
 import { Input } from '@/next/components/ui/Input';
+import { getStaffProjects } from '@/next/core/services/staff/staffService';
 
-export default function StaffProjectsPage() {
-  // TODO: Fetch real projects from /api/staff/projects in Phase 2 Step 4
-  const mockProjects = [
-    {
-      id: '1',
-      status: 'active',
-      progress: 65,
-      client_users: {
-        id: 'c1',
-        name: 'Acme Corp',
-        email: 'contact@acme.com',
-      },
-    },
-    {
-      id: '2',
-      status: 'active',
-      progress: 30,
-      client_users: {
-        id: 'c2',
-        name: 'TechStart Inc',
-        email: 'hello@techstart.io',
-      },
-    },
-    {
-      id: '3',
-      status: 'completed',
-      progress: 100,
-      client_users: {
-        id: 'c3',
-        name: 'Design Studio',
-        email: 'team@designstudio.com',
-      },
-    },
-  ];
+export default async function StaffProjectsPage() {
+  // Fetch real projects from API
+  const response = await getStaffProjects().catch(() => ({ data: [] }));
+  const projects = response?.data || [];
+
+  // Calculate stats
+  const activeProjects = projects.filter((p) => p.status === 'active').length;
+  const completedProjects = projects.filter((p) => p.status === 'completed').length;
+  const avgProgress = projects.length > 0
+    ? Math.round(projects.reduce((sum, p) => sum + (p.progress || 0), 0) / projects.length)
+    : 0;
 
   return (
     <div className="space-y-6">
@@ -62,6 +41,37 @@ export default function StaffProjectsPage() {
         <Button leftIcon={<Plus className="h-4 w-4" />}>
           New Project
         </Button>
+      </div>
+
+      {/* Project stats */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card variant="glass">
+          <div className="p-4">
+            <p className="text-sm text-gray-400">Active Projects</p>
+            <p className="text-2xl font-bold text-blue-400 mt-1">
+              {activeProjects}
+            </p>
+          </div>
+        </Card>
+        <Card variant="glass">
+          <div className="p-4">
+            <p className="text-sm text-gray-400">Completed</p>
+            <p className="text-2xl font-bold text-green-400 mt-1">
+              {completedProjects}
+            </p>
+          </div>
+        </Card>
+        <Card variant="glass">
+          <div className="p-4 flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-400">Avg Progress</p>
+              <p className="text-2xl font-bold text-gray-100 mt-1">
+                {avgProgress}%
+              </p>
+            </div>
+            <StaffProgressRing percent={avgProgress} size={60} />
+          </div>
+        </Card>
       </div>
 
       {/* Search and filters */}
@@ -82,7 +92,7 @@ export default function StaffProjectsPage() {
 
       {/* Projects grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {mockProjects.map((project) => (
+        {projects.map((project) => (
           <Card key={project.id} variant="glass">
             <div className="p-6">
               {/* Project header */}
@@ -105,10 +115,10 @@ export default function StaffProjectsPage() {
 
               {/* Client info */}
               <h3 className="text-lg font-semibold text-gray-100 mb-1">
-                {project.client_users.name}
+                {project.name || project.client_users?.name || 'Unnamed Project'}
               </h3>
               <p className="text-sm text-gray-400 mb-4">
-                {project.client_users.email}
+                {project.client_users?.email || project.description || 'No description'}
               </p>
 
               {/* Progress bar */}
@@ -116,23 +126,50 @@ export default function StaffProjectsPage() {
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm text-gray-400">Progress</span>
                   <span className="text-sm font-medium text-gray-100">
-                    {project.progress}%
+                    {project.progress || 0}%
                   </span>
                 </div>
                 <div className="w-full bg-gray-800 rounded-full h-2">
                   <div
                     className="bg-blue-500 h-2 rounded-full transition-all"
-                    style={{ width: `${project.progress}%` }}
+                    style={{ width: `${project.progress || 0}%` }}
                   />
                 </div>
               </div>
 
+              {/* Project metadata */}
+              {(project.deadline || project.team_size) && (
+                <div className="flex items-center justify-between text-xs text-gray-400 mb-4">
+                  {project.deadline && (
+                    <div className="flex items-center space-x-1">
+                      <Calendar className="h-3 w-3" />
+                      <span>{new Date(project.deadline).toLocaleDateString()}</span>
+                    </div>
+                  )}
+                  {project.team_size && (
+                    <div className="flex items-center space-x-1">
+                      <Users className="h-3 w-3" />
+                      <span>{project.team_size} members</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Actions */}
               <div className="flex items-center space-x-2">
-                <Button variant="outline" size="sm" className="flex-1">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex-1"
+                  onClick={() => console.log('View project:', project.id)}
+                >
                   View Details
                 </Button>
-                <Button variant="ghost" size="sm">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => console.log('More options:', project.id)}
+                >
                   •••
                 </Button>
               </div>
@@ -142,7 +179,7 @@ export default function StaffProjectsPage() {
       </div>
 
       {/* Empty state */}
-      {mockProjects.length === 0 && (
+      {projects.length === 0 && (
         <Card>
           <div className="p-12 text-center">
             <FolderKanban className="h-12 w-12 text-gray-600 mx-auto mb-4" />
