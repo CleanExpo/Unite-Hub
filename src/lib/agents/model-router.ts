@@ -16,39 +16,58 @@ const openRouter = getOpenRouterClient();
 
 // Model pricing (per 1M tokens) - Updated 2025-11-19
 const MODEL_COSTS = {
-  // FREE OpenRouter Models (BEST: $0 cost!) - Updated 2025-11-19
-  "sherlock-think-alpha": { input: 0, output: 0 },          // FREE: Reasoning, 1.8M context, multimodal
-  "sherlock-dash-alpha": { input: 0, output: 0 },           // FREE: Non-reasoning, 1.8M context, multimodal
-  "kat-coder-pro-free": { input: 0, output: 0 },            // FREE: Coding specialist, 256K context
-  "gemma-3n-e2b-it-free": { input: 0, output: 0 },          // FREE: Google DeepMind, 8K context, multimodal
-  "mai-ds-r1-free": { input: 0, output: 0 },                // FREE: Microsoft reasoning, 163K context
+  // ============================================
+  // BIG 4 GATEKEEPERS (Latest Flagship Models ONLY)
+  // ============================================
 
-  // Anthropic Claude (Direct API)
-  "claude-opus-4": { input: 15, output: 75 },
-  "claude-sonnet-4.5": { input: 3, output: 15 },
-  "claude-haiku-4.5": { input: 0.8, output: 4 },
+  // Anthropic Claude (Direct API) - Big 4 Gatekeeper #1
+  "claude-opus-4.1": { input: 15, output: 75 },             // Flagship: Extended Thinking
+  "claude-sonnet-4.5": { input: 3, output: 15 },            // Flagship: Balanced
+  "claude-haiku-4.5": { input: 0.8, output: 4 },            // Flagship: Fast
 
-  // Google Gemini 2.0 (OpenRouter)
-  "gemini-2.0-flash-lite": { input: 0.075, output: 0.3 },   // Ultra-cheap, 25% cheaper than 1.5
-  "gemini-2.0-flash": { input: 0.1, output: 0.4 },          // Balanced, 1M context
+  // OpenAI ChatGPT (via OpenRouter) - Big 4 Gatekeeper #2
+  "gpt-5.1": { input: 1.25, output: 10 },                   // Flagship: GPT-5 full
+  "gpt-5-mini": { input: 0.15, output: 0.6 },               // Flagship: GPT-5 mini
 
-  // Google Gemini 2.5 (OpenRouter)
-  "gemini-2.5-flash-image": { input: 0.3, output: 2.5, inputImages: 1.238, outputImages: 0.03 }, // Image generation, 33K context
+  // Google Gemini (via OpenRouter) - Big 4 Gatekeeper #3
+  "gemini-3.0-pro": { input: 2, output: 12 },               // Flagship: Advanced reasoning
+  "gemini-2.5-flash-image": { input: 0.3, output: 2.5, inputImages: 1.238, outputImages: 0.03 }, // Flagship: Nano Banana
 
-  // Google Gemini 3.0 (OpenRouter)
-  "gemini-3.0-pro": { input: 2, output: 12 },               // Advanced reasoning, beats GPT-4
+  // Perplexity (via OpenRouter) - Big 4 Gatekeeper #4
+  "perplexity-sonar": { input: 1, output: 5 },              // Flagship: Sonar
 
-  // Budget OpenRouter Models
-  "qwen3-vl-8b-thinking": { input: 0.035, output: 0.138 },  // Qwen VL reasoning, 8B params
-  "llama-3.3-nemotron-super-49b": { input: 0.1, output: 0.4 }, // NVIDIA, 130K context, balanced
-  "deepseek-v3.2-exp": { input: 0.27, output: 0.4 },        // DeepSeek, 163K context, sparse attention
-  "grok-4-fast": { input: 0.2, output: 0.5 },               // xAI, 2M context, multimodal reasoning
-  "kimi-k2-thinking": { input: 0.5, output: 2.5 },          // Reasoning, 262K context, MoE architecture
-  "llama-3.3-70b": { input: 0.35, output: 0.4 },
+  // ============================================
+  // SUB-AGENTS (Earlier/Lower Models)
+  // ============================================
 
-  // Legacy Gemini 1.5 (deprecated - use 2.0 instead)
-  "gemini-flash-lite": { input: 0.05, output: 0.2 },        // DEPRECATED: Use gemini-2.0-flash-lite
-  "gemini-flash": { input: 0.1, output: 0.4 },              // DEPRECATED: Use gemini-2.0-flash
+  // Google Gemini Sub-Agents
+  "gemini-2.0-flash-lite": { input: 0.075, output: 0.3 },   // Sub-agent: Ultra-cheap
+  "gemini-2.0-flash": { input: 0.1, output: 0.4 },          // Sub-agent: Balanced
+
+  // ============================================
+  // FREE MODELS (Preprocessing/Heavy Lifting)
+  // ============================================
+
+  "sherlock-think-alpha": { input: 0, output: 0 },          // FREE: Reasoning, 1.8M context
+  "sherlock-dash-alpha": { input: 0, output: 0 },           // FREE: Fast, 1.8M context
+  "kat-coder-pro-free": { input: 0, output: 0 },            // FREE: Coding specialist
+  "gemma-3n-e2b-it-free": { input: 0, output: 0 },          // FREE: Google DeepMind
+  "mai-ds-r1-free": { input: 0, output: 0 },                // FREE: Microsoft reasoning
+
+  // ============================================
+  // BUDGET MODELS (Preprocessing/Sub-Agents)
+  // ============================================
+
+  "qwen3-vl-8b-thinking": { input: 0.035, output: 0.138 },  // Budget: Qwen VL
+  "llama-3.3-nemotron-super-49b": { input: 0.1, output: 0.4 }, // Budget: NVIDIA
+  "deepseek-v3.2-exp": { input: 0.27, output: 0.4 },        // Budget: DeepSeek
+  "grok-4-fast": { input: 0.2, output: 0.5 },               // Budget: xAI Grok
+  "kimi-k2-thinking": { input: 0.5, output: 2.5 },          // Budget: Kimi
+  "llama-3.3-70b": { input: 0.35, output: 0.4 },            // Budget: Meta
+
+  // Deprecated
+  "gemini-flash-lite": { input: 0.05, output: 0.2 },        // DEPRECATED
+  "gemini-flash": { input: 0.1, output: 0.4 },              // DEPRECATED
 };
 
 export type TaskType =
@@ -71,6 +90,38 @@ export type TaskType =
   | "filter_candidates";      // Initial filtering before final selection (FREE models OK)
 
 export type ModelName =
+  // ============================================
+  // BIG 4 GATEKEEPERS (Latest Flagship Models ONLY)
+  // ============================================
+
+  // Anthropic Claude (Direct API) - Big 4 Gatekeeper #1
+  | "claude-opus-4.1"             // Flagship: Extended Thinking, best reasoning
+  | "claude-sonnet-4.5"           // Flagship: Balanced performance
+  | "claude-haiku-4.5"            // Flagship: Fast responses
+
+  // OpenAI ChatGPT (via OpenRouter) - Big 4 Gatekeeper #2
+  | "gpt-5.1"                     // Flagship: Latest GPT-5 full model
+  | "gpt-5-mini"                  // Flagship: GPT-5 mini variant
+
+  // Google Gemini (via OpenRouter) - Big 4 Gatekeeper #3
+  | "gemini-3.0-pro"              // Flagship: Advanced reasoning ($2/$12)
+  | "gemini-2.5-flash-image"      // Flagship: "Nano Banana" image generation
+
+  // Perplexity (via OpenRouter) - Big 4 Gatekeeper #4
+  | "perplexity-sonar"            // Flagship: Sonar model
+
+  // ============================================
+  // SUB-AGENTS (Earlier/Lower Models - Preprocessing Only)
+  // ============================================
+
+  // Google Gemini Sub-Agents (Preprocessing/Low-tier tasks)
+  | "gemini-2.0-flash-lite"       // Sub-agent: Ultra-cheap ($0.075/$0.30)
+  | "gemini-2.0-flash"            // Sub-agent: Balanced ($0.10/$0.40)
+
+  // ============================================
+  // FREE MODELS (Preprocessing/Heavy Lifting ONLY)
+  // ============================================
+
   // FREE Models (OpenRouter)
   | "sherlock-think-alpha"        // FREE: Reasoning, 1.8M context
   | "sherlock-dash-alpha"         // FREE: Fast, 1.8M context
@@ -78,24 +129,17 @@ export type ModelName =
   | "gemma-3n-e2b-it-free"        // FREE: Google DeepMind, 8K context
   | "mai-ds-r1-free"              // FREE: Microsoft reasoning, 163K context
 
-  // Anthropic Claude (Direct)
-  | "claude-opus-4"
-  | "claude-sonnet-4.5"
-  | "claude-haiku-4.5"
-
-  // Google Gemini (OpenRouter)
-  | "gemini-2.0-flash-lite"       // Ultra-cheap ($0.075/$0.30)
-  | "gemini-2.0-flash"            // Balanced ($0.10/$0.40)
-  | "gemini-2.5-flash-image"      // Image generation ($0.30/$2.50)
-  | "gemini-3.0-pro"              // Advanced reasoning ($2/$12)
+  // ============================================
+  // BUDGET MODELS (Preprocessing/Sub-Agent Tasks)
+  // ============================================
 
   // Budget OpenRouter Models
-  | "qwen3-vl-8b-thinking"        // Qwen VL reasoning ($0.035/$0.138)
-  | "llama-3.3-nemotron-super-49b" // NVIDIA balanced ($0.10/$0.40)
-  | "deepseek-v3.2-exp"           // DeepSeek sparse ($0.27/$0.40)
-  | "grok-4-fast"                 // xAI multimodal ($0.20/$0.50)
-  | "kimi-k2-thinking"            // Reasoning ($0.50/$2.50)
-  | "llama-3.3-70b"
+  | "qwen3-vl-8b-thinking"        // Budget: Qwen VL reasoning ($0.035/$0.138)
+  | "llama-3.3-nemotron-super-49b" // Budget: NVIDIA balanced ($0.10/$0.40)
+  | "deepseek-v3.2-exp"           // Budget: DeepSeek sparse ($0.27/$0.40)
+  | "grok-4-fast"                 // Budget: xAI multimodal ($0.20/$0.50)
+  | "kimi-k2-thinking"            // Budget: Reasoning ($0.50/$2.50)
+  | "llama-3.3-70b"               // Budget: Meta instruct ($0.35/$0.40)
 
   // Deprecated
   | "gemini-flash-lite"           // DEPRECATED
@@ -182,9 +226,15 @@ export class ModelRouter {
     ];
 
     const premiumModels: ModelName[] = [
-      "claude-opus-4",
+      // Big 4 Flagship Models
+      "claude-opus-4.1",
       "claude-sonnet-4.5",
+      "claude-haiku-4.5",
+      "gpt-5.1",
+      "gpt-5-mini",
       "gemini-3.0-pro",
+      "gemini-2.5-flash-image",
+      "perplexity-sonar",
     ];
 
     if (freeModels.includes(model)) return "free";
@@ -228,10 +278,10 @@ export class ModelRouter {
       generate_persona: "gemini-3.0-pro",
       generate_strategy: "gemini-3.0-pro",
 
-      // Premium tasks → Claude Opus (Big 4 gatekeeper)
-      generate_content: "claude-opus-4",
+      // Premium tasks → Claude Opus 4.1 (Big 4 flagship gatekeeper)
+      generate_content: "claude-opus-4.1",
 
-      // Ultra-premium tasks → Claude Sonnet (Big 4 gatekeeper)
+      // Ultra-premium tasks → Claude Sonnet 4.5 (Big 4 flagship gatekeeper)
       security_audit: "claude-sonnet-4.5",
       codebase_analysis: "gemini-3.0-pro",
 
@@ -269,10 +319,10 @@ export class ModelRouter {
         default: "gemini-2.0-flash",
       },
       premium: {
-        reasoning: "claude-opus-4",
+        reasoning: "claude-opus-4.1",
         fast: "claude-sonnet-4.5",
         coding: "gemini-3.0-pro",
-        multimodal: "gemini-3.0-pro",
+        multimodal: "gemini-2.5-flash-image",
         default: "claude-sonnet-4.5",
       },
     };
@@ -319,22 +369,24 @@ export class ModelRouter {
       return await this.callAnthropic(model, fullPrompt, options, startTime);
     }
 
-    // OpenRouter models (FREE models, Gemini, Kimi, etc.)
+    // OpenRouter models (Big 4 Gatekeepers, FREE models, Gemini, etc.)
     if (
       [
+        // Big 4 Flagship Models (via OpenRouter)
+        "gpt-5.1",
+        "gpt-5-mini",
+        "gemini-3.0-pro",
+        "gemini-2.5-flash-image",
+        "perplexity-sonar",
+        // Sub-Agents (Gemini 2.0)
+        "gemini-2.0-flash-lite",
+        "gemini-2.0-flash",
         // FREE Models
         "sherlock-think-alpha",
         "sherlock-dash-alpha",
         "kat-coder-pro-free",
         "gemma-3n-e2b-it-free",
         "mai-ds-r1-free",
-        // Gemini Models
-        "gemini-2.0-flash-lite",
-        "gemini-2.0-flash",
-        "gemini-2.5-flash-image",
-        "gemini-3.0-pro",
-        "gemini-flash-lite",      // Legacy
-        "gemini-flash",           // Legacy
         // Budget Models
         "qwen3-vl-8b-thinking",
         "llama-3.3-nemotron-super-49b",
@@ -342,6 +394,9 @@ export class ModelRouter {
         "grok-4-fast",
         "kimi-k2-thinking",
         "llama-3.3-70b",
+        // Legacy
+        "gemini-flash-lite",
+        "gemini-flash",
       ].includes(model)
     ) {
       return await this.callOpenRouter(model, fullPrompt, options, startTime);
@@ -360,7 +415,7 @@ export class ModelRouter {
     startTime: number
   ): Promise<ModelResponse> {
     const anthropicModel = {
-      "claude-opus-4": "claude-opus-4-1-20250805",
+      "claude-opus-4.1": "claude-opus-4-1-20250805",
       "claude-sonnet-4.5": "claude-sonnet-4-5-20250929",
       "claude-haiku-4.5": "claude-haiku-4-5-20251001",
     }[model];
@@ -377,7 +432,7 @@ export class ModelRouter {
     };
 
     // Enable Extended Thinking for Opus if requested
-    if (model === "claude-opus-4" && options.thinkingBudget) {
+    if (model === "claude-opus-4.1" && options.thinkingBudget) {
       messageOptions.thinking = {
         type: "enabled",
         budget_tokens: options.thinkingBudget,
@@ -432,24 +487,42 @@ export class ModelRouter {
     }
 
     const openRouterModelMap: Record<string, string> = {
-      // FREE Models (Priority 1)
+      // ============================================
+      // BIG 4 FLAGSHIP MODELS (via OpenRouter)
+      // ============================================
+
+      // OpenAI ChatGPT (Big 4 Gatekeeper #2)
+      "gpt-5.1": "openai/gpt-5",
+      "gpt-5-mini": "openai/gpt-5-mini",
+
+      // Google Gemini (Big 4 Gatekeeper #3)
+      "gemini-3.0-pro": "google/gemini-3-pro-preview",
+      "gemini-2.5-flash-image": "google/gemini-2.5-flash-image-preview",
+
+      // Perplexity (Big 4 Gatekeeper #4)
+      "perplexity-sonar": "perplexity/sonar",
+
+      // ============================================
+      // SUB-AGENTS (Gemini 2.0)
+      // ============================================
+
+      "gemini-2.0-flash-lite": "google/gemini-2.0-flash-lite",
+      "gemini-2.0-flash": "google/gemini-2.0-flash",
+
+      // ============================================
+      // FREE MODELS (Preprocessing)
+      // ============================================
+
       "sherlock-think-alpha": "openrouter/sherlock-think-alpha",
       "sherlock-dash-alpha": "openrouter/sherlock-dash-alpha",
       "kat-coder-pro-free": "kwaipilot/kat-coder-pro:free",
       "gemma-3n-e2b-it-free": "google/gemma-3n-e2b-it:free",
       "mai-ds-r1-free": "microsoft/mai-ds-r1:free",
 
-      // Gemini 2.0 (Ultra-cheap)
-      "gemini-2.0-flash-lite": "google/gemini-2.0-flash-lite",
-      "gemini-2.0-flash": "google/gemini-2.0-flash",
+      // ============================================
+      // BUDGET MODELS (Preprocessing/Sub-Agents)
+      // ============================================
 
-      // Gemini 2.5 (Image generation)
-      "gemini-2.5-flash-image": "google/gemini-2.5-flash-image-preview",
-
-      // Gemini 3.0 (Advanced reasoning)
-      "gemini-3.0-pro": "google/gemini-3-pro-preview",
-
-      // Budget Models
       "qwen3-vl-8b-thinking": "qwen/qwen3-vl-8b-thinking",
       "llama-3.3-nemotron-super-49b": "nvidia/llama-3.3-nemotron-super-49b-v1.5",
       "deepseek-v3.2-exp": "deepseek/deepseek-v3.2-exp",
@@ -543,7 +616,7 @@ export function getModelRouter(): ModelRouter {
  * const content = await routeToModel({
  *   task: "generate_content",
  *   prompt: "Write a blog post about AI marketing",
- *   assignedModel: "claude-opus-4",
+ *   assignedModel: "claude-opus-4.1",
  *   thinkingBudget: 5000,
  * });
  */

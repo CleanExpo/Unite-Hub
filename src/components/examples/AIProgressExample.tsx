@@ -17,7 +17,7 @@ import { routeToModel } from "@/lib/agents/model-router";
  * 1. FREE model: Preprocess/summarize raw data (context reduction, $0 cost)
  * 2. FREE model: Extract raw insights (heavy lifting, $0 cost)
  * 3. BIG 4 (Gemini): Validate & refine insights (gatekeeper)
- * 4. BIG 4 (Claude): Final execution with Extended Thinking (premium quality)
+ * 4. BIG 4 (Claude Opus 4.1): Final execution with Extended Thinking (premium quality)
  */
 
 interface ContactAnalysisProps {
@@ -47,7 +47,7 @@ export default function ContactAnalysisExample({
     },
     {
       id: "execute",
-      label: "Final execution (BIG 4 - Claude Opus)",
+      label: "Final execution (BIG 4 - Claude Opus 4.1)",
       tier: "premium",
     },
   ]);
@@ -84,8 +84,8 @@ export default function ContactAnalysisExample({
       progress.complete();
       progress.next();
 
-      // Stage 4: Final execution (BIG 4 - Claude Opus with Extended Thinking)
-      progress.start("execute", "claude-opus-4");
+      // Stage 4: Final execution (BIG 4 - Claude Opus 4.1 with Extended Thinking)
+      progress.start("execute", "claude-opus-4.1");
       const finalResult = await routeToModel({
         task: "generate_content", // FINAL EXECUTION - Big 4 required
         prompt: `Generate final personalized content: ${validatedInsights.response}`,

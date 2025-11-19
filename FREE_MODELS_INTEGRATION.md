@@ -479,16 +479,25 @@ We've built **AIProgressTracker** - a visual progress system that shows:
 
 **CRITICAL ARCHITECTURE RULE**:
 - ❌ **FREE/Budget models NEVER execute final functions**
-- ✅ **ALL final execution → Big 4 ONLY (Anthropic/ChatGPT/Perplexity/Gemini)**
+- ✅ **ALL final execution → Big 4 FLAGSHIP MODELS ONLY**
 - ✅ **FREE models → Preprocessing/heavy lifting ONLY**
 
-**Philosophy**: Use FREE models to reduce context window, Big 4 to execute
+**The Big 4 Flagship Gatekeepers**:
+1. **Anthropic Claude** - Opus 4.1, Sonnet 4.5, Haiku 4.5
+2. **OpenAI ChatGPT** - GPT-5.1, GPT-5 Mini
+3. **Google Gemini** - 3.0 Pro, 2.5 Flash Image (Nano Banana)
+4. **Perplexity** - Sonar
+
+**Sub-Agents** (Earlier models - preprocessing only):
+- Gemini 2.0 Flash-Lite, 2.0 Flash
+
+**Philosophy**: Use FREE models to reduce context window, Big 4 flagship models to execute
 
 ```
 Step 1: FREE model → Preprocess/summarize raw data (context reduction, $0 cost)
 Step 2: FREE model → Extract raw insights (heavy lifting, $0 cost)
-Step 3: BIG 4 (Gemini) → Validate & refine insights (gatekeeper, $0.10 per 1M)
-Step 4: BIG 4 (Claude) → Final execution with Extended Thinking (premium quality, $15 per 1M)
+Step 3: BIG 4 SUB-AGENT (Gemini 2.0 Flash) → Validate insights (preprocessing, $0.10 per 1M)
+Step 4: BIG 4 FLAGSHIP (Claude Opus 4.1) → Final execution with Extended Thinking (premium quality, $15 per 1M)
 ```
 
 **The Ecosystem**:

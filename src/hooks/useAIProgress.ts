@@ -168,9 +168,14 @@ export function getModelTier(modelName: string): ModelTier {
   ];
 
   const premiumModels = [
-    "claude-opus-4",
+    "claude-opus-4.1",
     "claude-sonnet-4.5",
+    "claude-haiku-4.5",
+    "gpt-5.1",
+    "gpt-5-mini",
     "gemini-3.0-pro",
+    "gemini-2.5-flash-image",
+    "perplexity-sonar",
   ];
 
   if (freeModels.some((m) => modelName.includes(m))) {

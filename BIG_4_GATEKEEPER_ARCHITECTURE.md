@@ -22,14 +22,29 @@ FREE model → Preprocessing → Big 4 → Final function execution → User rec
 
 ---
 
-## The Big 4 Gatekeepers
+## The Big 4 Gatekeepers (Latest Flagship Models ONLY)
 
-1. **Anthropic Claude** (Opus 4, Sonnet 4.5, Haiku 4.5)
+1. **Anthropic Claude** (Direct API)
+   - Claude Opus 4.1 - Premium reasoning with Extended Thinking
+   - Claude Sonnet 4.5 - Balanced performance
+   - Claude Haiku 4.5 - Fast responses
+
 2. **OpenAI ChatGPT** (via OpenRouter)
-3. **Perplexity** (via OpenRouter)
-4. **Google Gemini** (2.0 Flash-Lite, 2.0 Flash, 2.5 Flash Image, 3.0 Pro)
+   - GPT-5.1 - Latest flagship model
+   - GPT-5 Mini - Lightweight variant
 
-These are the **ONLY** models allowed to execute final functions in the SaaS ecosystem.
+3. **Google Gemini** (via OpenRouter)
+   - Gemini 3.0 Pro (Preview) - Advanced reasoning
+   - Gemini 2.5 Flash Image (Nano Banana) - Multimodal generation
+
+4. **Perplexity** (via OpenRouter)
+   - Sonar - Flagship model
+
+**Sub-Agents** (Earlier models - preprocessing only):
+- Gemini 2.0 Flash-Lite - Ultra-cheap preprocessing
+- Gemini 2.0 Flash - Balanced preprocessing
+
+These flagship models are the **ONLY** models allowed to execute final functions in the SaaS ecosystem.
 
 ---
 
@@ -69,7 +84,7 @@ FREE and budget OpenRouter models serve **ONLY** one purpose:
 | contact_scoring       | Gemini 2.0 Flash        | $0.10/$0.40 |
 | generate_persona      | Gemini 3.0 Pro          | $2.00/$12.00|
 | generate_strategy     | Gemini 3.0 Pro          | $2.00/$12.00|
-| generate_content      | Claude Opus 4           | $15/$75     |
+| generate_content      | Claude Opus 4.1         | $15/$75     |
 | security_audit        | Claude Sonnet 4.5       | $3.00/$15.00|
 | codebase_analysis     | Gemini 3.0 Pro          | $2.00/$12.00|
 ```
@@ -175,7 +190,7 @@ Users see:
   ↓
 [BLUE] Validating insights (BIG 4 - Gemini gatekeeper)
   ↓
-[PURPLE] Final execution (BIG 4 - Claude Opus)
+[PURPLE] Final execution (BIG 4 - Claude Opus 4.1)
 ```
 
 This shows:
