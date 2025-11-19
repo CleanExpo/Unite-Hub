@@ -1,0 +1,162 @@
+# Docker Compose Template for Tenant Containers
+# Phase 3 Step 8 - Priority 3
+#
+# This template is used by tenantProvisioner.ts to generate
+# tenant-specific docker-compose files with injected variables:
+# - ${TENANT_ID}: Unique tenant identifier (UUID)
+# - ${TENANT_NAME}: Human-readable tenant name
+# - ${TENANT_URL}: Tenant-specific URL
+# - ${CPU_LIMIT}: CPU quota (e.g., '0.50' for 50%)
+# - ${MEMORY_LIMIT}: Memory limit (e.g., '512M')
+# - ${PORT}: External port mapping (e.g., 3001, 3002, etc.)
+#
+# Generated files: docker/tenants/tenant_${TENANT_ID}/docker-compose.yml
+
+version: '3.8'
+
+services:
+  # Tenant application container
+  tenant_${TENANT_ID}:
+    build:
+      context: ../../..
+      dockerfile: docker/tenant/Dockerfile
+
+    container_name: tenant_${TENANT_ID}
+
+    # Restart policy
+    restart: unless-stopped
+
+    # Environment variables
+    environment:
+      # Tenant identification
+      TENANT_ID: ${TENANT_ID}
+      TENANT_NAME: ${TENANT_NAME}
+      NEXT_PUBLIC_TENANT_URL: ${TENANT_URL}
+
+      # Node environment
+      NODE_ENV: production
+
+      # Database connection (tenant-scoped)
+      DATABASE_URL: ${DATABASE_URL}
+      TENANT_SCHEMA: tenant_${TENANT_ID}
+
+      # Supabase configuration (shared or tenant-specific)
+      NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+
+      # API keys (tenant-specific or shared)
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+
+      # Email configuration
+      EMAIL_FROM: ${EMAIL_FROM}
+      EMAIL_SERVER_HOST: ${EMAIL_SERVER_HOST}
+      EMAIL_SERVER_PORT: ${EMAIL_SERVER_PORT}
+      EMAIL_SERVER_USER: ${EMAIL_SERVER_USER}
+      EMAIL_SERVER_PASSWORD: ${EMAIL_SERVER_PASSWORD}
+
+    # Port mapping (external:internal)
+    ports:
+      - "${PORT}:3000"
+
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '${CPU_LIMIT}'
+          memory: ${MEMORY_LIMIT}
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+    # Health check
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health', (res) => process.exit(res.statusCode === 200 ? 0 : 1))"]
+      interval: 30s
+      timeout: 10s
+      start_period: 40s
+      retries: 3
+
+    # Networks
+    networks:
+      - tenant_network
+      - shared_network
+
+    # Volumes (if needed for persistent data)
+    volumes:
+      # Tenant-specific uploads
+      - tenant_${TENANT_ID}_uploads:/app/public/uploads
+      # Tenant-specific logs
+      - tenant_${TENANT_ID}_logs:/app/logs
+
+    # Labels for identification and monitoring
+    labels:
+      com.unite-hub.tenant.id: ${TENANT_ID}
+      com.unite-hub.tenant.name: ${TENANT_NAME}
+      com.unite-hub.tenant.type: application
+      com.unite-hub.version: "1.0.0"
+      traefik.enable: "true"
+      traefik.http.routers.tenant_${TENANT_ID}.rule: Host(`${TENANT_URL}`)
+      traefik.http.services.tenant_${TENANT_ID}.loadbalancer.server.port: 3000
+
+  # Optional: Tenant-specific Redis cache
+  tenant_${TENANT_ID}_redis:
+    image: redis:7-alpine
+    container_name: tenant_${TENANT_ID}_redis
+    restart: unless-stopped
+
+    command: redis-server --maxmemory 128mb --maxmemory-policy allkeys-lru
+
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 128M
+        reservations:
+          cpus: '0.10'
+          memory: 64M
+
+    networks:
+      - tenant_network
+
+    volumes:
+      - tenant_${TENANT_ID}_redis:/data
+
+    labels:
+      com.unite-hub.tenant.id: ${TENANT_ID}
+      com.unite-hub.tenant.type: cache
+
+# Networks
+networks:
+  # Tenant-specific isolated network
+  tenant_network:
+    driver: bridge
+    internal: true
+    labels:
+      com.unite-hub.tenant.id: ${TENANT_ID}
+
+  # Shared network for external access
+  shared_network:
+    external: true
+    name: unite-hub-shared
+
+# Volumes
+volumes:
+  tenant_${TENANT_ID}_uploads:
+    driver: local
+    labels:
+      com.unite-hub.tenant.id: ${TENANT_ID}
+      com.unite-hub.volume.type: uploads
+
+  tenant_${TENANT_ID}_logs:
+    driver: local
+    labels:
+      com.unite-hub.tenant.id: ${TENANT_ID}
+      com.unite-hub.volume.type: logs
+
+  tenant_${TENANT_ID}_redis:
+    driver: local
+    labels:
+      com.unite-hub.tenant.id: ${TENANT_ID}
+      com.unite-hub.volume.type: cache

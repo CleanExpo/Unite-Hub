@@ -1,218 +1,347 @@
 /**
- * Client Projects Page - Phase 2 Step 3
+ * Client Projects List Page
+ * Phase 3 Step 7 - Automatic Project Creation
  *
- * Project tracking interface for clients
- * Will be wired to APIs in Phase 2 Step 4
+ * Displays all projects for the authenticated client.
+ * Shows project status, progress, timeline, and action buttons.
+ *
+ * Features:
+ * - Project cards with tier badges
+ * - Progress indicators
+ * - Timeline information
+ * - Status badges
+ * - Click-through to project details
+ * - Empty state for no projects
  */
 
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import { FolderKanban, Calendar, TrendingUp } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
+import { Loader2, Sparkles, Calendar, Clock, CheckCircle2, XCircle, Pause, ArrowRight, Package, FolderKanban } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
+
+interface Project {
+  id: string;
+  name: string;
+  description: string;
+  status: 'active' | 'on_hold' | 'completed' | 'cancelled';
+  tier: 'good' | 'better' | 'best';
+  clientId: string;
+  startDate: string;
+  estimatedEndDate?: string;
+  totalEstimatedHours?: number;
+  taskCount: number;
+  completedTaskCount: number;
+  progress: number;
+  createdAt: string;
+}
+
+const tierConfig = {
+  good: {
+    badge: 'bg-green-600 text-white',
+    color: 'text-green-600',
+    label: 'Good',
+  },
+  better: {
+    badge: 'bg-blue-600 text-white',
+    color: 'text-blue-600',
+    label: 'Better',
+  },
+  best: {
+    badge: 'bg-purple-600 text-white',
+    color: 'text-purple-600',
+    label: 'Best',
+  },
+};
+
+const statusConfig = {
+  active: {
+    icon: CheckCircle2,
+    color: 'text-green-600',
+    bgColor: 'bg-green-500/10',
+    label: 'Active',
+  },
+  on_hold: {
+    icon: Pause,
+    color: 'text-yellow-600',
+    bgColor: 'bg-yellow-500/10',
+    label: 'On Hold',
+  },
+  completed: {
+    icon: CheckCircle2,
+    color: 'text-blue-600',
+    bgColor: 'bg-blue-500/10',
+    label: 'Completed',
+  },
+  cancelled: {
+    icon: XCircle,
+    color: 'text-red-600',
+    bgColor: 'bg-red-500/10',
+    label: 'Cancelled',
+  },
+};
 
 export default function ClientProjectsPage() {
-  // TODO: Fetch real projects from API in Phase 2 Step 4
-  const mockProjects = [
-    {
-      id: '1',
-      title: 'Restaurant Management App',
-      status: 'in_progress',
-      progress: 45,
-      start_date: '2025-11-01',
-      estimated_completion: '2025-12-15',
-      milestones: [
-        { title: 'Design Phase', completed: true },
-        { title: 'Backend Development', completed: false },
-        { title: 'Frontend Development', completed: false },
-        { title: 'Testing', completed: false },
-      ],
-    },
-    {
-      id: '2',
-      title: 'E-commerce Platform',
-      status: 'planning',
-      progress: 10,
-      start_date: '2025-11-15',
-      estimated_completion: '2026-02-01',
-      milestones: [
-        { title: 'Requirements Gathering', completed: true },
-        { title: 'Architecture Design', completed: false },
-        { title: 'Development', completed: false },
-        { title: 'Launch', completed: false },
-      ],
-    },
-  ];
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const isNew = searchParams.get('new') === 'true';
+  const tierParam = searchParams.get('tier');
 
-  const getStatusVariant = (status: string) => {
-    const variants: Record<string, any> = {
-      planning: 'warning',
-      in_progress: 'info',
-      completed: 'success',
-      on_hold: 'default',
-    };
-    return variants[status] || 'default';
-  };
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    });
-  };
+  useEffect(() => {
+    loadProjects();
+
+    // Show notification for newly created projects
+    if (isNew && tierParam) {
+      const config = tierConfig[tierParam as keyof typeof tierConfig];
+      console.log(`Project created! Your ${config?.label || tierParam} package project has been created.`);
+    }
+  }, []);
+
+  async function loadProjects() {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Get authenticated user
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
+      if (sessionError || !session) {
+        setError('Please log in to view your projects');
+        return;
+      }
+
+      // Fetch projects from API
+      const response = await fetch('/api/client/projects/list', {
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to load projects');
+      }
+
+      const data = await response.json();
+
+      if (data.success) {
+        setProjects(data.projects || []);
+      } else {
+        setError(data.error || 'Failed to load projects');
+      }
+    } catch (err) {
+      console.error('Error loading projects:', err);
+      setError(err instanceof Error ? err.message : 'Failed to load projects');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function formatDate(dateString: string) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  }
+
+  function getTimeRemaining(estimatedEndDate?: string) {
+    if (!estimatedEndDate) return null;
+
+    const now = new Date();
+    const end = new Date(estimatedEndDate);
+    const diffTime = end.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays < 0) {
+      return { text: 'Overdue', color: 'text-red-600' };
+    } else if (diffDays === 0) {
+      return { text: 'Due today', color: 'text-yellow-600' };
+    } else if (diffDays <= 7) {
+      return { text: `${diffDays} days left`, color: 'text-yellow-600' };
+    } else {
+      return { text: `${diffDays} days left`, color: 'text-gray-400' };
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-400" />
+          <p className="text-gray-400">Loading your projects...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container max-w-4xl mx-auto py-8 px-4">
+        <Card variant="glass">
+          <div className="p-6 bg-red-500/10 border border-red-500/20 rounded">
+            <p className="text-red-400">{error}</p>
+          </div>
+        </Card>
+        <Button onClick={loadProjects} className="mt-4" variant="outline">
+          Try Again
+        </Button>
+      </div>
+    );
+  }
+
+  if (projects.length === 0) {
+    return (
+      <div className="container max-w-4xl mx-auto py-16 px-4">
+        <Card>
+          <div className="p-12 text-center">
+            <Package className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-gray-100 mb-2">No Projects Yet</h2>
+            <p className="text-gray-400 text-lg mb-6">
+              You don't have any projects yet. Submit an idea and choose a proposal package to get started!
+            </p>
+            <Button onClick={() => router.push('/client/ideas/submit')} size="lg">
+              <Sparkles className="w-4 h-4 mr-2" />
+              Submit an Idea
+            </Button>
+          </div>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
-      {/* Page header */}
+      {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-100">
-          My Projects
-        </h1>
+        <h1 className="text-3xl font-bold text-gray-100">My Projects</h1>
         <p className="text-gray-400 mt-2">
-          Track your project progress and milestones
+          Manage and track your project progress
         </p>
       </div>
 
-      {/* Project stats */}
+      {/* Project Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card variant="glass">
           <div className="p-4">
             <p className="text-sm text-gray-400">Active Projects</p>
-            <p className="text-2xl font-bold text-blue-400 mt-1">
-              {mockProjects.filter((p) => p.status === 'in_progress').length}
+            <p className="text-2xl font-bold text-green-400 mt-1">
+              {projects.filter((p) => p.status === 'active').length}
             </p>
           </div>
         </Card>
         <Card variant="glass">
           <div className="p-4">
-            <p className="text-sm text-gray-400">Planning</p>
+            <p className="text-sm text-gray-400">On Hold</p>
             <p className="text-2xl font-bold text-yellow-400 mt-1">
-              {mockProjects.filter((p) => p.status === 'planning').length}
+              {projects.filter((p) => p.status === 'on_hold').length}
             </p>
           </div>
         </Card>
         <Card variant="glass">
           <div className="p-4">
             <p className="text-sm text-gray-400">Avg. Progress</p>
-            <p className="text-2xl font-bold text-green-400 mt-1">
+            <p className="text-2xl font-bold text-blue-400 mt-1">
               {Math.round(
-                mockProjects.reduce((sum, p) => sum + p.progress, 0) /
-                  mockProjects.length
-              )}
-              %
+                projects.reduce((sum, p) => sum + p.progress, 0) / projects.length
+              )}%
             </p>
           </div>
         </Card>
       </div>
 
-      {/* Projects list */}
+      {/* Projects List */}
       <div className="space-y-6">
-        {mockProjects.map((project) => (
-          <Card key={project.id}>
-            <div className="p-6">
-              {/* Project header */}
-              <div className="flex items-start justify-between mb-6">
-                <div className="flex items-center space-x-3">
-                  <div className="p-3 bg-blue-500/10 rounded-lg">
-                    <FolderKanban className="h-6 w-6 text-blue-400" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-100">
-                      {project.title}
-                    </h3>
-                    <Badge
-                      variant={getStatusVariant(project.status)}
-                      className="mt-2"
-                    >
-                      {project.status.replace('_', ' ')}
-                    </Badge>
-                  </div>
-                </div>
-                <Button variant="outline" size="sm">
-                  View Details
-                </Button>
-              </div>
+        {projects.map((project) => {
+          const tier = tierConfig[project.tier];
+          const status = statusConfig[project.status];
+          const StatusIcon = status.icon;
+          const timeRemaining = getTimeRemaining(project.estimatedEndDate);
 
-              {/* Progress bar */}
-              <div className="mb-6">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-gray-400">Overall Progress</span>
-                  <span className="text-sm font-medium text-gray-100">
-                    {project.progress}%
-                  </span>
-                </div>
-                <div className="w-full bg-gray-800 rounded-full h-2">
-                  <div
-                    className="bg-blue-500 h-2 rounded-full transition-all"
-                    style={{ width: `${project.progress}%` }}
-                  />
-                </div>
-              </div>
-
-              {/* Timeline */}
-              <div className="flex items-center space-x-6 mb-6 text-sm">
-                <div className="flex items-center space-x-2 text-gray-400">
-                  <Calendar className="h-4 w-4" />
-                  <span>Started: {formatDate(project.start_date)}</span>
-                </div>
-                <div className="flex items-center space-x-2 text-gray-400">
-                  <TrendingUp className="h-4 w-4" />
-                  <span>Est. Completion: {formatDate(project.estimated_completion)}</span>
-                </div>
-              </div>
-
-              {/* Milestones */}
-              <div>
-                <p className="text-sm font-medium text-gray-300 mb-3">
-                  Milestones
-                </p>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-                  {project.milestones.map((milestone, index) => (
-                    <div
-                      key={index}
-                      className={`p-3 rounded-lg border ${
-                        milestone.completed
-                          ? 'bg-green-500/10 border-green-500/20'
-                          : 'bg-gray-800/50 border-gray-700'
-                      }`}
-                    >
-                      <div className="flex items-center space-x-2">
-                        <div
-                          className={`h-2 w-2 rounded-full ${
-                            milestone.completed ? 'bg-green-400' : 'bg-gray-600'
-                          }`}
-                        />
-                        <span
-                          className={`text-sm ${
-                            milestone.completed ? 'text-gray-100' : 'text-gray-400'
-                          }`}
-                        >
-                          {milestone.title}
-                        </span>
+          return (
+            <Card key={project.id}>
+              <div className="p-6">
+                {/* Project Header */}
+                <div className="flex items-start justify-between mb-6">
+                  <div className="flex items-center space-x-3">
+                    <div className="p-3 bg-blue-500/10 rounded-lg">
+                      <FolderKanban className="h-6 w-6 text-blue-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-100 mb-2">
+                        {project.name}
+                      </h3>
+                      <div className="flex items-center gap-2">
+                        <Badge className={tier.badge}>
+                          {tier.label}
+                        </Badge>
+                        <div className={`flex items-center gap-1 px-2 py-1 rounded text-xs ${status.bgColor} ${status.color}`}>
+                          <StatusIcon className="w-3 h-3" />
+                          {status.label}
+                        </div>
                       </div>
                     </div>
-                  ))}
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => router.push(`/client/projects/${project.id}`)}
+                  >
+                    View Details
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </div>
+
+                {/* Description */}
+                <p className="text-gray-400 mb-6">{project.description}</p>
+
+                {/* Progress Bar */}
+                <div className="mb-6">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-gray-400">Overall Progress</span>
+                    <span className="text-sm font-medium text-gray-100">
+                      {project.progress}%
+                    </span>
+                  </div>
+                  <div className="w-full bg-gray-800 rounded-full h-2">
+                    <div
+                      className="bg-blue-500 h-2 rounded-full transition-all"
+                      style={{ width: `${project.progress}%` }}
+                    />
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {project.completedTaskCount} of {project.taskCount} tasks completed
+                  </p>
+                </div>
+
+                {/* Timeline Info */}
+                <div className="flex flex-wrap items-center gap-6 text-sm">
+                  <div className="flex items-center gap-2 text-gray-400">
+                    <Calendar className="w-4 h-4" />
+                    <span>Started {formatDate(project.startDate)}</span>
+                  </div>
+                  {project.estimatedEndDate && timeRemaining && (
+                    <div className={`flex items-center gap-2 ${timeRemaining.color}`}>
+                      <Clock className="w-4 h-4" />
+                      <span>{timeRemaining.text}</span>
+                    </div>
+                  )}
+                  {project.totalEstimatedHours && (
+                    <div className="flex items-center gap-2 text-gray-400">
+                      <Clock className="w-4 h-4" />
+                      <span>{project.totalEstimatedHours} hours estimated</span>
+                    </div>
+                  )}
                 </div>
               </div>
-            </div>
-          </Card>
-        ))}
+            </Card>
+          );
+        })}
       </div>
-
-      {/* Empty state */}
-      {mockProjects.length === 0 && (
-        <Card>
-          <div className="p-12 text-center">
-            <FolderKanban className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400 mb-4">
-              No active projects yet. Submit an idea to start your first project.
-            </p>
-            <Button>
-              Submit an Idea
-            </Button>
-          </div>
-        </Card>
-      )}
     </div>
   );
 }

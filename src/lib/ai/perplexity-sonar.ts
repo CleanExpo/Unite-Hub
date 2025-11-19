@@ -45,10 +45,19 @@ export class PerplexitySonar {
 
   /**
    * Perform real-time search with citations
+   *
+   * Optional cost tracking parameters:
+   * @param organizationId - Organization ID for cost tracking
+   * @param workspaceId - Workspace ID for cost tracking
+   * @param clientId - Client ID for cost tracking (optional)
    */
   async search(
     query: string,
-    options: SonarSearchOptions = {}
+    options: SonarSearchOptions & {
+      organizationId?: string;
+      workspaceId?: string;
+      clientId?: string;
+    } = {}
   ): Promise<SonarResponse> {
     const {
       model = 'sonar',
@@ -57,9 +66,14 @@ export class PerplexitySonar {
       maxTokens = 2048,
       includeImages = false,
       includeRawContent = false,
+      organizationId,
+      workspaceId,
+      clientId,
     } = options;
 
     try {
+      const startTime = Date.now();
+
       // Build request payload for Perplexity API
       const payload: any = {
         model: model === 'sonar-pro' ? 'sonar-pro' : 'sonar',
@@ -100,6 +114,7 @@ export class PerplexitySonar {
       }
 
       const data = await response.json();
+      const responseTime = Date.now() - startTime;
 
       // Extract answer from response
       const answer = data.choices?.[0]?.message?.content || '';
@@ -115,6 +130,43 @@ export class PerplexitySonar {
             snippet: citation.snippet || '',
           });
         });
+      }
+
+      // Track costs if tracking params provided
+      if (organizationId && workspaceId) {
+        try {
+          const { CostTracker } = await import('@/lib/accounting/cost-tracker');
+
+          const usage = data.usage || {};
+          const totalTokens = usage.total_tokens || 0;
+
+          // Calculate cost based on model
+          // Sonar: $1/750K tokens (~$0.00133 per 1K tokens)
+          // Sonar Pro: $3/750K input, $15/750K output (~$0.004-0.02 per 1K tokens)
+          const baseCost = model === 'sonar-pro' ? 0.015 : 0.00133;
+          const cost = (totalTokens / 1000) * baseCost;
+
+          // Track expense
+          await CostTracker.trackExpense({
+            organizationId,
+            workspaceId,
+            clientId,
+            expenseType: 'perplexity',
+            description: `${model} - ${totalTokens} tokens - ${citations.length} citations`,
+            amount: cost,
+            tokensUsed: totalTokens,
+            apiEndpoint: '/chat/completions',
+            metadata: {
+              model,
+              query: query.substring(0, 100), // First 100 chars
+              citationCount: citations.length,
+              responseTime,
+            }
+          });
+        } catch (trackingError) {
+          // Log but don't throw - cost tracking should never break the app
+          console.error('❌ Cost tracking failed (non-critical):', trackingError);
+        }
       }
 
       return {

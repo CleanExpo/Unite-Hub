@@ -95,7 +95,8 @@
       "Bash(npm run seo:help:*)",
       "Bash(del d:Unite-Hubadd-perplexity-to-vercel.txt)",
       "Bash(npm run seo:eeat:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(timeout 60 npm run build:*)"
     ],
     "deny": [],
     "ask": []

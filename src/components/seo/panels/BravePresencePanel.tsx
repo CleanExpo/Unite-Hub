@@ -1,11 +1,14 @@
 /**
  * Brave Presence Panel
- * Phase 4 Step 4: Dual-Mode SEO UI Shell
+ * Phase 4 Step 5: Design Glow-Up (Iteration 3)
  *
- * Displays Brave Creator Console visibility metrics:
- * - Channel status
- * - BAT contributions
- * - Creator stats
+ * Displays Brave Creator Console visibility metrics with:
+ * - Premium animations (fadeScale, slideUp, stagger)
+ * - Brave platform-specific orange-red accent
+ * - Glass overlay and backdrop blur
+ * - Premium skeleton loaders
+ * - Elevated shadows with hover micro-interactions
+ * - Status badges with color-coded styling
  *
  * Gracefully handles missing credentials with CTA.
  */
@@ -13,8 +16,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { Shield, TrendingUp, Users } from "lucide-react";
 import type { UserRole } from "../SeoDashboardShell";
+import { seoTheme } from "@/lib/seo/seo-theme";
+import { animationPresets, springs } from "@/lib/seo/seo-motion";
 
 interface BravePresencePanelProps {
   seoProfileId: string;
@@ -103,116 +109,222 @@ export default function BravePresencePanel({
   // Show CTA if no credential
   if (!hasCredential) {
     return (
-      <div className="bg-card border rounded-lg p-6">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 rounded-md bg-orange-500/10">
-            <Shield className="h-5 w-5 text-orange-500" />
+      <motion.div
+        className={seoTheme.panel.elevated}
+        variants={animationPresets.panel}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+      >
+        <div className={seoTheme.panel.header}>
+          <div className={`${seoTheme.panel.icon} ${seoTheme.utils.getPlatformIconBg("brave")}`}>
+            <Shield className={`h-5 w-5 ${seoTheme.utils.getPlatformIconColor("brave")}`} />
           </div>
-          <h3 className="text-lg font-semibold">Brave Presence</h3>
+          <h3 className={seoTheme.panel.title}>Brave Presence</h3>
         </div>
-        <div className="text-center py-8">
+        <motion.div
+          className="text-center py-8"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ ...springs.smooth, delay: 0.1 }}
+        >
           <p className="text-sm text-muted-foreground mb-4">
             Connect Brave Creator Console to track your channel visibility.
           </p>
           {userRole === "staff" && (
-            <button className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm hover:bg-primary/90">
+            <motion.button
+              className={seoTheme.button.primary}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
               Connect Brave
-            </button>
+            </motion.button>
           )}
           {userRole === "client" && (
             <p className="text-xs text-muted-foreground">
               Contact your account manager to enable this feature.
             </p>
           )}
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     );
   }
 
-  // Show loading state
+  // Show loading state with premium skeleton
   if (loading) {
     return (
-      <div className="bg-card border rounded-lg p-6">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 rounded-md bg-orange-500/10">
-            <Shield className="h-5 w-5 text-orange-500" />
+      <motion.div
+        className={seoTheme.panel.elevated}
+        variants={animationPresets.panel}
+        initial="hidden"
+        animate="visible"
+      >
+        <div className={seoTheme.panel.header}>
+          <div className={`${seoTheme.panel.icon} ${seoTheme.utils.getPlatformIconBg("brave")}`}>
+            <Shield className={`h-5 w-5 ${seoTheme.utils.getPlatformIconColor("brave")}`} />
           </div>
-          <h3 className="text-lg font-semibold">Brave Presence</h3>
+          <h3 className={seoTheme.panel.title}>Brave Presence</h3>
         </div>
-        <div className="flex items-center justify-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+
+        {/* Premium Skeleton Loader */}
+        <div className="space-y-4">
+          <motion.div
+            className="space-y-4"
+            variants={animationPresets.stagger.container}
+            initial="hidden"
+            animate="visible"
+          >
+            {/* Status skeleton */}
+            <motion.div variants={animationPresets.stagger.item} className="space-y-2">
+              <div className="h-4 bg-muted/50 rounded animate-pulse w-1/3" />
+              <div className="h-6 bg-muted/30 rounded animate-pulse w-1/2" />
+            </motion.div>
+            {/* Metrics skeletons */}
+            {[...Array(2)].map((_, i) => (
+              <motion.div key={i} variants={animationPresets.stagger.item} className="space-y-2">
+                <div className="h-4 bg-muted/50 rounded animate-pulse" />
+                <div className="h-8 bg-muted/30 rounded animate-pulse" />
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
     );
   }
 
   // Show error state
   if (error) {
     return (
-      <div className="bg-card border rounded-lg p-6">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 rounded-md bg-orange-500/10">
-            <Shield className="h-5 w-5 text-orange-500" />
+      <motion.div
+        className={seoTheme.panel.elevated}
+        variants={animationPresets.panel}
+        initial="hidden"
+        animate="visible"
+      >
+        <div className={seoTheme.panel.header}>
+          <div className={`${seoTheme.panel.icon} ${seoTheme.utils.getPlatformIconBg("brave")}`}>
+            <Shield className={`h-5 w-5 ${seoTheme.utils.getPlatformIconColor("brave")}`} />
           </div>
-          <h3 className="text-lg font-semibold">Brave Presence</h3>
+          <h3 className={seoTheme.panel.title}>Brave Presence</h3>
         </div>
-        <div className="text-center py-8">
-          <p className="text-sm text-destructive">{error}</p>
-        </div>
-      </div>
+        <motion.div
+          className="text-center py-8"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={springs.smooth}
+        >
+          <div className="p-4 rounded-lg bg-destructive/10 border border-destructive/20">
+            <p className="text-sm text-destructive">{error}</p>
+          </div>
+        </motion.div>
+      </motion.div>
     );
   }
 
-  // Show stats
+  // Show stats with premium animations
   return (
-    <div className="bg-card border rounded-lg p-6">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="p-2 rounded-md bg-orange-500/10">
-          <Shield className="h-5 w-5 text-orange-500" />
+    <motion.div
+      className={seoTheme.panel.elevated}
+      variants={animationPresets.panel}
+      initial="hidden"
+      animate="visible"
+      whileHover={{
+        boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+        transition: { duration: 0.2 }
+      }}
+    >
+      {/* Gradient Panel Header with Glass Overlay */}
+      <div className={`${seoTheme.panel.header} relative`}>
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-orange-600/10 via-red-500/5 to-transparent rounded-t-xl opacity-50"
+          style={{ backdropFilter: "blur(8px)" }}
+        />
+        <div className="relative z-10 flex items-center gap-3">
+          <motion.div
+            className={`${seoTheme.panel.icon} ${seoTheme.utils.getPlatformIconBg("brave")} ring-2 ring-orange-600/20`}
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            transition={springs.snappy}
+          >
+            <Shield className={`h-5 w-5 ${seoTheme.utils.getPlatformIconColor("brave")}`} />
+          </motion.div>
+          <h3 className={seoTheme.panel.title}>Brave Presence</h3>
         </div>
-        <h3 className="text-lg font-semibold">Brave Presence</h3>
       </div>
 
-      {/* Channel Status */}
-      <div className="mb-6">
+      {/* Animated Channel Status */}
+      <motion.div
+        className="mb-6"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ ...springs.smooth, delay: 0.1 }}
+      >
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm text-muted-foreground">Channel Status</span>
-          <span
-            className={`px-2 py-1 rounded-full text-xs font-medium ${
+          <motion.span
+            className={`px-3 py-1 rounded-full text-xs font-semibold ${
               stats?.channelStatus === "active"
-                ? "bg-green-500/10 text-green-700 dark:text-green-400"
+                ? "bg-green-500/10 text-green-700 dark:text-green-400 border border-green-500/20"
                 : stats?.channelStatus === "pending"
-                  ? "bg-yellow-500/10 text-yellow-700 dark:text-yellow-400"
-                  : "bg-gray-500/10 text-gray-700 dark:text-gray-400"
+                  ? "bg-yellow-500/10 text-yellow-700 dark:text-yellow-400 border border-yellow-500/20"
+                  : "bg-gray-500/10 text-gray-700 dark:text-gray-400 border border-gray-500/20"
             }`}
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={springs.bouncy}
+            whileHover={{ scale: 1.05 }}
           >
             {stats?.channelStatus.toUpperCase()}
-          </span>
+          </motion.span>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Metrics */}
-      <div className="space-y-4">
-        <div>
+      {/* Staggered Metrics */}
+      <motion.div
+        className="space-y-4"
+        variants={animationPresets.stagger.container}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.div variants={animationPresets.stagger.item}>
           <div className="flex items-center gap-2 mb-1">
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
-            <p className="text-xs text-muted-foreground">Total Contributions (BAT)</p>
+            <p className={seoTheme.metric.label}>Total Contributions (BAT)</p>
           </div>
-          <p className="text-2xl font-bold">{stats?.totalContributions.toFixed(2) || "0.00"}</p>
-        </div>
+          <motion.p
+            className={seoTheme.metric.value}
+            variants={animationPresets.metric}
+            initial="hidden"
+            animate="visible"
+          >
+            {stats?.totalContributions.toFixed(2) || "0.00"}
+          </motion.p>
+        </motion.div>
 
-        <div>
+        <motion.div variants={animationPresets.stagger.item}>
           <div className="flex items-center gap-2 mb-1">
             <Users className="h-4 w-4 text-muted-foreground" />
-            <p className="text-xs text-muted-foreground">Active Subscribers</p>
+            <p className={seoTheme.metric.label}>Active Subscribers</p>
           </div>
-          <p className="text-2xl font-bold">{stats?.activeSubscribers.toLocaleString() || 0}</p>
-        </div>
-      </div>
+          <motion.p
+            className={seoTheme.metric.value}
+            variants={animationPresets.metric}
+            initial="hidden"
+            animate="visible"
+          >
+            {stats?.activeSubscribers.toLocaleString() || 0}
+          </motion.p>
+        </motion.div>
+      </motion.div>
 
-      <div className="mt-4 pt-4 border-t">
+      {/* Footer with Backdrop Blur */}
+      <motion.div
+        className="mt-4 pt-4 border-t border-border/50 backdrop-blur-sm"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.4 }}
+      >
         <p className="text-xs text-muted-foreground">Last 30 days</p>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

@@ -32,6 +32,7 @@ import {
   AlertCircle,
   CheckCircle,
   XCircle,
+  DollarSign,
 } from "lucide-react";
 import { useWorkspace } from "@/hooks/useWorkspace";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
@@ -51,6 +52,17 @@ interface GmailIntegration {
   created_at: string;
 }
 
+interface XeroStatus {
+  connected: boolean;
+  organization?: string;
+  tenantId?: string;
+  connectedAt?: string;
+  lastUpdated?: string;
+  tokenExpiresIn?: string;
+  message?: string;
+  error?: string;
+}
+
 export default function IntegrationsPage() {
   const { workspaceId, loading: workspaceLoading } = useWorkspace();
   const { toast } = useToast();
@@ -62,9 +74,15 @@ export default function IntegrationsPage() {
     label: string;
   } | null>(null);
 
+  // Xero integration state
+  const [xeroStatus, setXeroStatus] = useState<XeroStatus | null>(null);
+  const [xeroLoading, setXeroLoading] = useState(false);
+  const [xeroConnecting, setXeroConnecting] = useState(false);
+
   useEffect(() => {
     if (workspaceLoading) return;
     loadIntegrations();
+    loadXeroStatus();
   }, [workspaceId, workspaceLoading]);
 
   const loadIntegrations = async () => {
@@ -373,6 +391,143 @@ export default function IntegrationsPage() {
     }
   };
 
+  // Xero integration functions
+  const loadXeroStatus = async () => {
+    setXeroLoading(true);
+    try {
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+
+      if (!session) {
+        setXeroStatus({ connected: false });
+        return;
+      }
+
+      const res = await fetch("/api/integrations/xero/status", {
+        headers: {
+          "Authorization": `Bearer ${session.access_token}`,
+        },
+      });
+
+      const status = await res.json();
+      setXeroStatus(status);
+    } catch (error) {
+      console.error("Failed to load Xero status:", error);
+      setXeroStatus({ connected: false, error: "Failed to load status" });
+    } finally {
+      setXeroLoading(false);
+    }
+  };
+
+  const connectXero = async () => {
+    setXeroConnecting(true);
+    try {
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+
+      if (!session) {
+        toast({
+          title: "Error",
+          description: "Not authenticated",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const res = await fetch("/api/integrations/xero/connect", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${session.access_token}`,
+        },
+      });
+
+      const { authUrl, error } = await res.json();
+
+      if (error) {
+        toast({
+          title: "Error",
+          description: error,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Redirect to Xero authorization
+      window.location.href = authUrl;
+    } catch (error) {
+      console.error("Failed to connect Xero:", error);
+      toast({
+        title: "Error",
+        description: "Failed to start Xero connection",
+        variant: "destructive",
+      });
+    } finally {
+      setXeroConnecting(false);
+    }
+  };
+
+  const disconnectXero = async () => {
+    if (!confirm("Are you sure you want to disconnect Xero? This will stop cost tracking to your accounting system.")) return;
+
+    try {
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+
+      if (!session) {
+        toast({
+          title: "Error",
+          description: "Not authenticated",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      await fetch("/api/integrations/xero/disconnect", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${session.access_token}`,
+        },
+      });
+
+      toast({
+        title: "Success",
+        description: "Xero integration disconnected",
+      });
+
+      await loadXeroStatus();
+    } catch (error) {
+      console.error("Disconnect Xero failed:", error);
+      toast({
+        title: "Error",
+        description: "Failed to disconnect Xero",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Check for OAuth callback success/error
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const success = params.get("success");
+    const org = params.get("org");
+    const error = params.get("error");
+
+    if (success === "true" && org) {
+      toast({
+        title: "Success",
+        description: `Connected to ${org}`,
+      });
+      // Clean up URL
+      window.history.replaceState({}, "", window.location.pathname);
+      loadXeroStatus();
+    } else if (error) {
+      toast({
+        title: "Error",
+        description: `Xero connection failed: ${error}`,
+        variant: "destructive",
+      });
+      // Clean up URL
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  }, []);
+
   return (
     <div className="max-w-6xl mx-auto px-6 py-8 space-y-8">
       <Breadcrumbs
@@ -382,10 +537,10 @@ export default function IntegrationsPage() {
       <div className="flex justify-between items-start">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">
-            Email Integrations
+            Integrations
           </h1>
           <p className="text-slate-400">
-            Connect and manage multiple Gmail accounts
+            Connect Gmail, Xero, and other third-party services
           </p>
         </div>
         <Button
@@ -533,6 +688,108 @@ export default function IntegrationsPage() {
                 Add Another Gmail Account
               </Button>
             </>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Xero Accounting Integration */}
+      <Card className="bg-slate-800 border-slate-700">
+        <CardHeader>
+          <CardTitle className="text-white flex items-center gap-2">
+            <DollarSign className="w-5 h-5" />
+            Xero Accounting
+          </CardTitle>
+          <CardDescription>
+            Track real-time AI costs and client profitability
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {xeroLoading ? (
+            <div className="text-center py-8">
+              <Loader2 className="w-6 h-6 animate-spin mx-auto text-slate-400" />
+            </div>
+          ) : xeroStatus?.connected ? (
+            <div className="bg-slate-700 border border-slate-600 rounded-lg p-4">
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <h4 className="font-semibold text-white">
+                      {xeroStatus.organization || "Xero Organization"}
+                    </h4>
+                    <Badge variant="default" className="bg-green-600">
+                      <CheckCircle className="w-3 h-3 mr-1" />
+                      Connected
+                    </Badge>
+                  </div>
+                  {xeroStatus.connectedAt && (
+                    <p className="text-sm text-slate-400">
+                      Connected: {new Date(xeroStatus.connectedAt).toLocaleString()}
+                    </p>
+                  )}
+                  {xeroStatus.tokenExpiresIn && (
+                    <p className="text-xs text-slate-500 mt-1">
+                      Token expires: {xeroStatus.tokenExpiresIn}
+                    </p>
+                  )}
+                  {xeroStatus.lastUpdated && (
+                    <p className="text-xs text-slate-500 mt-1">
+                      Last updated: {new Date(xeroStatus.lastUpdated).toLocaleString()}
+                    </p>
+                  )}
+                </div>
+
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={disconnectXero}
+                  className="text-red-400 hover:text-red-300"
+                >
+                  <XCircle className="w-4 h-4 mr-2" />
+                  Disconnect
+                </Button>
+              </div>
+
+              <div className="mt-4 pt-4 border-t border-slate-600">
+                <p className="text-sm text-slate-400 mb-2">
+                  ✅ Real-time cost tracking enabled
+                </p>
+                <p className="text-xs text-slate-500">
+                  All OpenRouter and Perplexity API costs are automatically tracked to your Xero organization.
+                  View profitability reports in the Financial Operations dashboard (coming soon).
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center py-8 text-slate-400">
+              <DollarSign className="w-12 h-12 mx-auto mb-4 opacity-50" />
+              <p className="mb-2">Xero not connected</p>
+              <p className="text-sm text-slate-500 mb-4 max-w-md mx-auto">
+                Connect your Xero account to automatically track AI API costs, monitor client profitability,
+                and sync expenses to your accounting system.
+              </p>
+              {xeroStatus?.error && (
+                <p className="text-xs text-red-400 mb-4">
+                  Error: {xeroStatus.error}
+                </p>
+              )}
+              <Button
+                onClick={connectXero}
+                disabled={xeroConnecting}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                {xeroConnecting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Connecting...
+                  </>
+                ) : (
+                  <>
+                    <Plus className="w-4 h-4 mr-2" />
+                    Connect Xero
+                  </>
+                )}
+              </Button>
+            </div>
           )}
         </CardContent>
       </Card>

@@ -162,6 +162,10 @@ export class OpenRouterIntelligence {
     brandVoice?: string;
     targetAudience?: string;
     keywords?: string[];
+    // Cost tracking (optional)
+    organizationId?: string;
+    workspaceId?: string;
+    clientId?: string;
   }): Promise<string> {
     const model = this.selectModel({ task: 'content', priority: 'quality' });
 
@@ -188,7 +192,15 @@ Requirements:
 
 Generate compelling content:`;
 
-    return this.callOpenRouter(model, prompt);
+    const trackingParams = params.organizationId && params.workspaceId
+      ? {
+          organizationId: params.organizationId,
+          workspaceId: params.workspaceId,
+          clientId: params.clientId
+        }
+      : undefined;
+
+    return this.callOpenRouter(model, prompt, undefined, trackingParams);
   }
 
   /**
@@ -363,11 +375,21 @@ ${this.getPlatformGuidelines(params.platform, 'image')}`;
 
   /**
    * Call OpenRouter API
+   *
+   * Optional cost tracking parameters:
+   * @param organizationId - Organization ID for cost tracking
+   * @param workspaceId - Workspace ID for cost tracking
+   * @param clientId - Client ID for cost tracking (optional)
    */
   private async callOpenRouter(
     model: string,
     prompt: string,
-    additionalContent?: any[]
+    additionalContent?: any[],
+    trackingParams?: {
+      organizationId: string;
+      workspaceId: string;
+      clientId?: string;
+    }
   ): Promise<string> {
     const messages = [
       {
@@ -377,6 +399,8 @@ ${this.getPlatformGuidelines(params.platform, 'image')}`;
           : prompt
       }
     ];
+
+    const startTime = Date.now();
 
     const response = await fetch(`${this.config.baseURL}/chat/completions`, {
       method: 'POST',
@@ -400,6 +424,44 @@ ${this.getPlatformGuidelines(params.platform, 'image')}`;
     }
 
     const data = await response.json();
+    const responseTime = Date.now() - startTime;
+
+    // Track costs if tracking params provided
+    if (trackingParams) {
+      try {
+        const { CostTracker } = await import('@/lib/accounting/cost-tracker');
+
+        const usage = data.usage || {};
+        const promptTokens = usage.prompt_tokens || 0;
+        const completionTokens = usage.completion_tokens || 0;
+        const totalTokens = usage.total_tokens || promptTokens + completionTokens;
+
+        // Calculate cost
+        const cost = this.calculateCost(model, promptTokens, completionTokens);
+
+        // Track expense
+        await CostTracker.trackExpense({
+          organizationId: trackingParams.organizationId,
+          workspaceId: trackingParams.workspaceId,
+          clientId: trackingParams.clientId,
+          expenseType: 'openrouter',
+          description: `${model} - ${totalTokens} tokens`,
+          amount: cost,
+          tokensUsed: totalTokens,
+          apiEndpoint: '/chat/completions',
+          metadata: {
+            model,
+            promptTokens,
+            completionTokens,
+            responseTime,
+          }
+        });
+      } catch (trackingError) {
+        // Log but don't throw - cost tracking should never break the app
+        console.error('❌ Cost tracking failed (non-critical):', trackingError);
+      }
+    }
+
     return data.choices[0].message.content;
   }
 

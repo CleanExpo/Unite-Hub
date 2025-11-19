@@ -1,12 +1,13 @@
 /**
  * GSC Overview Panel
- * Phase 4 Step 4: Dual-Mode SEO UI Shell
+ * Phase 4 Step 5: Design Glow-Up (Iteration 3)
  *
- * Displays Google Search Console metrics:
- * - Total impressions
- * - Total clicks
- * - Average CTR
- * - Average position
+ * Displays Google Search Console metrics with:
+ * - Premium animations (fadeScale, slideUp, stagger)
+ * - GSC platform-specific blue accent
+ * - Glass overlay and backdrop blur
+ * - Premium skeleton loaders
+ * - Elevated shadows with hover micro-interactions
  *
  * Gracefully handles missing credentials with CTA.
  */
@@ -14,8 +15,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { TrendingUp, MousePointer, Eye, Target } from "lucide-react";
 import type { UserRole } from "../SeoDashboardShell";
+import { seoTheme } from "@/lib/seo/seo-theme";
+import { animationPresets, springs } from "@/lib/seo/seo-motion";
 
 interface GscOverviewPanelProps {
   seoProfileId: string;
@@ -107,119 +111,227 @@ export default function GscOverviewPanel({
   // Show CTA if no credential
   if (!hasCredential) {
     return (
-      <div className="bg-card border rounded-lg p-6">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 rounded-md bg-primary/10">
-            <Eye className="h-5 w-5 text-primary" />
+      <motion.div
+        className={seoTheme.panel.elevated}
+        variants={animationPresets.panel}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+      >
+        <div className={seoTheme.panel.header}>
+          <div className={`${seoTheme.panel.icon} ${seoTheme.utils.getPlatformIconBg("gsc")}`}>
+            <Eye className={`h-5 w-5 ${seoTheme.utils.getPlatformIconColor("gsc")}`} />
           </div>
-          <h3 className="text-lg font-semibold">Google Search Console</h3>
+          <h3 className={seoTheme.panel.title}>Google Search Console</h3>
         </div>
-        <div className="text-center py-8">
+        <motion.div
+          className="text-center py-8"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ ...springs.smooth, delay: 0.1 }}
+        >
           <p className="text-sm text-muted-foreground mb-4">
             Connect Google Search Console to view search performance metrics.
           </p>
           {userRole === "staff" && (
-            <button className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm hover:bg-primary/90">
+            <motion.button
+              className={seoTheme.button.primary}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
               Connect GSC
-            </button>
+            </motion.button>
           )}
           {userRole === "client" && (
             <p className="text-xs text-muted-foreground">
               Contact your account manager to enable this feature.
             </p>
           )}
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     );
   }
 
-  // Show loading state
+  // Show loading state with premium skeleton
   if (loading) {
     return (
-      <div className="bg-card border rounded-lg p-6">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 rounded-md bg-primary/10">
-            <Eye className="h-5 w-5 text-primary" />
+      <motion.div
+        className={seoTheme.panel.elevated}
+        variants={animationPresets.panel}
+        initial="hidden"
+        animate="visible"
+      >
+        <div className={seoTheme.panel.header}>
+          <div className={`${seoTheme.panel.icon} ${seoTheme.utils.getPlatformIconBg("gsc")}`}>
+            <Eye className={`h-5 w-5 ${seoTheme.utils.getPlatformIconColor("gsc")}`} />
           </div>
-          <h3 className="text-lg font-semibold">Google Search Console</h3>
+          <h3 className={seoTheme.panel.title}>Google Search Console</h3>
         </div>
-        <div className="flex items-center justify-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+
+        {/* Premium Skeleton Loader */}
+        <div className="space-y-4">
+          <motion.div
+            className="grid grid-cols-2 gap-4"
+            variants={animationPresets.stagger.container}
+            initial="hidden"
+            animate="visible"
+          >
+            {[...Array(4)].map((_, i) => (
+              <motion.div
+                key={i}
+                variants={animationPresets.stagger.item}
+                className="space-y-2"
+              >
+                <div className="h-4 bg-muted/50 rounded animate-pulse" />
+                <div className="h-8 bg-muted/30 rounded animate-pulse" />
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
     );
   }
 
   // Show error state
   if (error) {
     return (
-      <div className="bg-card border rounded-lg p-6">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 rounded-md bg-primary/10">
-            <Eye className="h-5 w-5 text-primary" />
+      <motion.div
+        className={seoTheme.panel.elevated}
+        variants={animationPresets.panel}
+        initial="hidden"
+        animate="visible"
+      >
+        <div className={seoTheme.panel.header}>
+          <div className={`${seoTheme.panel.icon} ${seoTheme.utils.getPlatformIconBg("gsc")}`}>
+            <Eye className={`h-5 w-5 ${seoTheme.utils.getPlatformIconColor("gsc")}`} />
           </div>
-          <h3 className="text-lg font-semibold">Google Search Console</h3>
+          <h3 className={seoTheme.panel.title}>Google Search Console</h3>
         </div>
-        <div className="text-center py-8">
-          <p className="text-sm text-destructive">{error}</p>
-        </div>
-      </div>
+        <motion.div
+          className="text-center py-8"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={springs.smooth}
+        >
+          <div className="p-4 rounded-lg bg-destructive/10 border border-destructive/20">
+            <p className="text-sm text-destructive">{error}</p>
+          </div>
+        </motion.div>
+      </motion.div>
     );
   }
 
-  // Show metrics
+  // Show metrics with premium animations
   return (
-    <div className="bg-card border rounded-lg p-6">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="p-2 rounded-md bg-primary/10">
-          <Eye className="h-5 w-5 text-primary" />
+    <motion.div
+      className={seoTheme.panel.elevated}
+      variants={animationPresets.panel}
+      initial="hidden"
+      animate="visible"
+      whileHover={{
+        boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+        transition: { duration: 0.2 }
+      }}
+    >
+      {/* Gradient Panel Header with Glass Overlay */}
+      <div className={`${seoTheme.panel.header} relative`}>
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-blue-400/5 to-transparent rounded-t-xl opacity-50"
+          style={{ backdropFilter: "blur(8px)" }}
+        />
+        <div className="relative z-10 flex items-center gap-3">
+          <motion.div
+            className={`${seoTheme.panel.icon} ${seoTheme.utils.getPlatformIconBg("gsc")} ring-2 ring-blue-500/20`}
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            transition={springs.snappy}
+          >
+            <Eye className={`h-5 w-5 ${seoTheme.utils.getPlatformIconColor("gsc")}`} />
+          </motion.div>
+          <h3 className={seoTheme.panel.title}>Google Search Console</h3>
         </div>
-        <h3 className="text-lg font-semibold">Google Search Console</h3>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      {/* Staggered Metrics Grid */}
+      <motion.div
+        className="grid grid-cols-2 gap-4"
+        variants={animationPresets.stagger.container}
+        initial="hidden"
+        animate="visible"
+      >
         {/* Impressions */}
-        <div>
+        <motion.div variants={animationPresets.stagger.item}>
           <div className="flex items-center gap-2 mb-1">
             <Eye className="h-4 w-4 text-muted-foreground" />
-            <p className="text-xs text-muted-foreground">Impressions</p>
+            <p className={seoTheme.metric.label}>Impressions</p>
           </div>
-          <p className="text-2xl font-bold">{metrics?.impressions.toLocaleString() || 0}</p>
-        </div>
+          <motion.p
+            className={seoTheme.metric.value}
+            variants={animationPresets.metric}
+            initial="hidden"
+            animate="visible"
+          >
+            {metrics?.impressions.toLocaleString() || 0}
+          </motion.p>
+        </motion.div>
 
         {/* Clicks */}
-        <div>
+        <motion.div variants={animationPresets.stagger.item}>
           <div className="flex items-center gap-2 mb-1">
             <MousePointer className="h-4 w-4 text-muted-foreground" />
-            <p className="text-xs text-muted-foreground">Clicks</p>
+            <p className={seoTheme.metric.label}>Clicks</p>
           </div>
-          <p className="text-2xl font-bold">{metrics?.clicks.toLocaleString() || 0}</p>
-        </div>
+          <motion.p
+            className={seoTheme.metric.value}
+            variants={animationPresets.metric}
+            initial="hidden"
+            animate="visible"
+          >
+            {metrics?.clicks.toLocaleString() || 0}
+          </motion.p>
+        </motion.div>
 
         {/* CTR */}
-        <div>
+        <motion.div variants={animationPresets.stagger.item}>
           <div className="flex items-center gap-2 mb-1">
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
-            <p className="text-xs text-muted-foreground">CTR</p>
+            <p className={seoTheme.metric.label}>CTR</p>
           </div>
-          <p className="text-2xl font-bold">
+          <motion.p
+            className={seoTheme.metric.value}
+            variants={animationPresets.metric}
+            initial="hidden"
+            animate="visible"
+          >
             {metrics?.ctr ? `${(metrics.ctr * 100).toFixed(1)}%` : "0%"}
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
         {/* Position */}
-        <div>
+        <motion.div variants={animationPresets.stagger.item}>
           <div className="flex items-center gap-2 mb-1">
             <Target className="h-4 w-4 text-muted-foreground" />
-            <p className="text-xs text-muted-foreground">Avg Position</p>
+            <p className={seoTheme.metric.label}>Avg Position</p>
           </div>
-          <p className="text-2xl font-bold">{metrics?.position.toFixed(1) || "0.0"}</p>
-        </div>
-      </div>
+          <motion.p
+            className={seoTheme.metric.value}
+            variants={animationPresets.metric}
+            initial="hidden"
+            animate="visible"
+          >
+            {metrics?.position.toFixed(1) || "0.0"}
+          </motion.p>
+        </motion.div>
+      </motion.div>
 
-      <div className="mt-4 pt-4 border-t">
+      {/* Footer with Backdrop Blur */}
+      <motion.div
+        className="mt-4 pt-4 border-t border-border/50 backdrop-blur-sm"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.4 }}
+      >
         <p className="text-xs text-muted-foreground">Last 28 days</p>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

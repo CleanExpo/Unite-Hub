@@ -1,42 +1,44 @@
+'use client';
+
 /**
- * Client Ideas Page - Phase 2 Step 3
+ * Client Ideas Page - Phase 2 Step 6
  *
  * Idea submission and management interface
- * Will be wired to /api/client/ideas in Phase 2 Step 4
+ * Wired to /api/client/ideas
  */
 
+import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { IdeaRecorder } from '@/components/client/IdeaRecorder';
 import { Lightbulb, Plus, Clock } from 'lucide-react';
+import { getClientIdeas, type ClientIdea } from '@/lib/services/client/clientService';
+import { useToast } from '@/contexts/ToastContext';
 
 export default function ClientIdeasPage() {
-  // TODO: Fetch real ideas from /api/client/ideas in Phase 2 Step 4
-  const mockIdeas = [
-    {
-      id: '1',
-      content: 'Build a mobile app for restaurant management with real-time inventory tracking',
-      type: 'text' as const,
-      status: 'pending' as const,
-      ai_interpretation: {
-        core_objective: 'Restaurant management mobile application',
-        suggested_approach: 'React Native cross-platform app',
-        complexity: 'medium',
-      },
-      created_at: '2025-11-19T10:00:00Z',
-    },
-    {
-      id: '2',
-      content: 'E-commerce platform with AI-powered product recommendations',
-      type: 'voice' as const,
-      status: 'approved' as const,
-      ai_interpretation: null,
-      created_at: '2025-11-18T15:30:00Z',
-    },
-  ];
-
+  const toast = useToast();
+  const [ideas, setIdeas] = useState<ClientIdea[]>([]);
+  const [loading, setLoading] = useState(true);
   const [showRecorder, setShowRecorder] = useState(false);
+
+  // Fetch ideas on mount
+  useEffect(() => {
+    loadIdeas();
+  }, []);
+
+  async function loadIdeas() {
+    setLoading(true);
+    try {
+      const response = await getClientIdeas();
+      setIdeas(response.data || []);
+    } catch (error) {
+      console.error('Failed to load ideas:', error);
+      toast.error('Failed to load ideas. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -48,12 +50,21 @@ export default function ClientIdeasPage() {
 
   const getStatusVariant = (status: string) => {
     const variants: Record<string, any> = {
-      pending: 'warning',
+      submitted: 'warning',
+      under_review: 'info',
       approved: 'success',
       rejected: 'error',
     };
     return variants[status] || 'default';
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-gray-400">Loading ideas...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -86,7 +97,9 @@ export default function ClientIdeasPage() {
             <IdeaRecorder
               onSubmit={(data) => {
                 console.log('Idea submitted:', data);
+                toast.success('Idea submitted successfully!');
                 setShowRecorder(false);
+                loadIdeas(); // Reload ideas after submission
               }}
             />
           </div>
@@ -95,7 +108,7 @@ export default function ClientIdeasPage() {
 
       {/* Ideas list */}
       <div className="space-y-4">
-        {mockIdeas.map((idea) => (
+        {ideas.map((idea) => (
           <Card key={idea.id} variant="glass">
             <div className="p-6">
               {/* Header */}
@@ -109,50 +122,32 @@ export default function ClientIdeasPage() {
                       <Badge variant={getStatusVariant(idea.status)}>
                         {idea.status}
                       </Badge>
-                      <Badge variant="default">{idea.type}</Badge>
+                      {idea.category && (
+                        <Badge variant="default">{idea.category}</Badge>
+                      )}
                     </div>
-                    <div className="flex items-center text-xs text-gray-400">
-                      <Clock className="h-3 w-3 mr-1" />
-                      {formatDate(idea.created_at)}
-                    </div>
+                    {idea.created_at && (
+                      <div className="flex items-center text-xs text-gray-400">
+                        <Clock className="h-3 w-3 mr-1" />
+                        {formatDate(idea.created_at)}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
 
               {/* Content */}
+              <h3 className="text-lg font-semibold text-gray-100 mb-2">
+                {idea.title}
+              </h3>
               <p className="text-gray-300 mb-4">
-                {idea.content}
+                {idea.description}
               </p>
-
-              {/* AI Interpretation */}
-              {idea.ai_interpretation && (
-                <div className="p-4 bg-gray-800/50 rounded-lg mb-4">
-                  <p className="text-sm font-medium text-gray-300 mb-2">
-                    AI Analysis
-                  </p>
-                  <div className="space-y-1 text-sm text-gray-400">
-                    <p>
-                      <span className="font-medium">Objective:</span>{' '}
-                      {idea.ai_interpretation.core_objective}
-                    </p>
-                    <p>
-                      <span className="font-medium">Approach:</span>{' '}
-                      {idea.ai_interpretation.suggested_approach}
-                    </p>
-                    <p>
-                      <span className="font-medium">Complexity:</span>{' '}
-                      <Badge variant="info" className="ml-1">
-                        {idea.ai_interpretation.complexity}
-                      </Badge>
-                    </p>
-                  </div>
-                </div>
-              )}
 
               {/* Actions */}
               <div className="flex items-center space-x-3">
                 <Button variant="outline" size="sm">
-                  View Proposal
+                  View Details
                 </Button>
                 <Button variant="ghost" size="sm">
                   Edit
@@ -164,7 +159,7 @@ export default function ClientIdeasPage() {
       </div>
 
       {/* Empty state */}
-      {mockIdeas.length === 0 && (
+      {ideas.length === 0 && !loading && (
         <Card>
           <div className="p-12 text-center">
             <Lightbulb className="h-12 w-12 text-gray-600 mx-auto mb-4" />
@@ -183,8 +178,3 @@ export default function ClientIdeasPage() {
     </div>
   );
 }
-
-// Client component wrapper for state management
-'use client';
-
-import { useState } from 'react';

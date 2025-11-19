@@ -1,48 +1,54 @@
 /**
- * Client Digital Vault Page - Phase 2 Step 3
+ * Client Digital Vault Page - Phase 2 Step 6
  *
  * Secure storage for credentials and sensitive data
- * Will be wired to /api/client/vault in Phase 2 Step 4
+ * Wired to /api/client/vault
  */
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Badge } from '@/components/ui/Badge';
 import { Modal } from '@/components/ui/Modal';
 import { Lock, Plus, Eye, EyeOff, Copy, Trash2 } from 'lucide-react';
+import { getVaultEntries, createVaultEntry, deleteVaultEntry, type VaultEntry } from '@/lib/services/client/clientService';
+import { useToast } from '@/contexts/ToastContext';
+import { vaultEntrySchema } from '@/lib/validation/schemas';
+import { z } from 'zod';
 
 export default function ClientVaultPage() {
+  const toast = useToast();
   const [showAddModal, setShowAddModal] = useState(false);
   const [visibleValues, setVisibleValues] = useState<Record<string, boolean>>({});
+  const [entries, setEntries] = useState<VaultEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
-  // TODO: Fetch real vault entries from /api/client/vault in Phase 2 Step 4
-  const mockEntries = [
-    {
-      id: '1',
-      key_name: 'AWS Access Key',
-      category: 'api_keys',
-      created_at: '2025-11-19T10:00:00Z',
-      value: 'AKIAIOSFODNN7EXAMPLE', // Hidden in production
-    },
-    {
-      id: '2',
-      key_name: 'Stripe Secret Key',
-      category: 'api_keys',
-      created_at: '2025-11-18T15:30:00Z',
-      value: 'sk_test_4eC39HqLyjWDarjtT1zdp7dc',
-    },
-    {
-      id: '3',
-      key_name: 'Database Password',
-      category: 'credentials',
-      created_at: '2025-11-17T12:00:00Z',
-      value: 'super_secret_password_123',
-    },
-  ];
+  // Form state for new entry
+  const [newEntryName, setNewEntryName] = useState('');
+  const [newEntryCategory, setNewEntryCategory] = useState('api_keys');
+  const [newEntryValue, setNewEntryValue] = useState('');
+
+  // Fetch vault entries on mount
+  useEffect(() => {
+    loadVaultEntries();
+  }, []);
+
+  async function loadVaultEntries() {
+    setLoading(true);
+    try {
+      const response = await getVaultEntries();
+      setEntries(response.data || []);
+    } catch (error) {
+      console.error('Failed to load vault entries:', error);
+      toast.error('Failed to load vault entries. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
 
   const toggleValueVisibility = (id: string) => {
     setVisibleValues((prev) => ({
@@ -53,9 +59,64 @@ export default function ClientVaultPage() {
 
   const copyToClipboard = (value: string) => {
     navigator.clipboard.writeText(value);
-    // TODO: Show toast notification in Phase 2 Step 4
-    console.log('Copied to clipboard');
+    toast.success('Copied to clipboard');
   };
+
+  async function handleDeleteEntry(id: string) {
+    if (!confirm('Are you sure you want to delete this vault entry?')) {
+      return;
+    }
+
+    try {
+      await deleteVaultEntry(id);
+      toast.success('Vault entry deleted successfully');
+      // Reload vault entries after deletion
+      loadVaultEntries();
+    } catch (error) {
+      console.error('Failed to delete vault entry:', error);
+      toast.error('Failed to delete vault entry. Please try again.');
+    }
+  }
+
+  async function handleAddEntry() {
+    // Validate form data with Zod
+    const formData = {
+      service_name: newEntryName,
+      encrypted_password: newEntryValue,
+      notes: newEntryCategory,
+    };
+
+    try {
+      // Validate with Zod schema
+      const validated = vaultEntrySchema.parse(formData);
+
+      setSubmitting(true);
+
+      await createVaultEntry(validated);
+
+      toast.success('Vault entry added successfully');
+
+      // Reset form and close modal
+      setNewEntryName('');
+      setNewEntryCategory('api_keys');
+      setNewEntryValue('');
+      setShowAddModal(false);
+
+      // Reload vault entries
+      loadVaultEntries();
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        // Show first validation error
+        const firstError = error.errors[0];
+        toast.error(firstError.message);
+      } else {
+        console.error('Failed to create vault entry:', error);
+        toast.error('Failed to create vault entry. Please try again.');
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   const getCategoryBadge = (category: string) => {
     const variants: Record<string, any> = {
@@ -74,6 +135,14 @@ export default function ClientVaultPage() {
       year: 'numeric',
     });
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-gray-400">Loading vault entries...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -119,23 +188,23 @@ export default function ClientVaultPage() {
           <div className="p-4">
             <p className="text-sm text-gray-400">Total Entries</p>
             <p className="text-2xl font-bold text-gray-100 mt-1">
-              {mockEntries.length}
+              {entries.length}
             </p>
           </div>
         </Card>
         <Card variant="glass">
           <div className="p-4">
-            <p className="text-sm text-gray-400">API Keys</p>
+            <p className="text-sm text-gray-400">Services</p>
             <p className="text-2xl font-bold text-blue-400 mt-1">
-              {mockEntries.filter((e) => e.category === 'api_keys').length}
+              {new Set(entries.map((e) => e.service_name)).size}
             </p>
           </div>
         </Card>
         <Card variant="glass">
           <div className="p-4">
-            <p className="text-sm text-gray-400">Credentials</p>
-            <p className="text-2xl font-bold text-yellow-400 mt-1">
-              {mockEntries.filter((e) => e.category === 'credentials').length}
+            <p className="text-sm text-gray-400">Encrypted</p>
+            <p className="text-2xl font-bold text-green-400 mt-1">
+              {entries.length}
             </p>
           </div>
         </Card>
@@ -143,7 +212,7 @@ export default function ClientVaultPage() {
 
       {/* Vault entries */}
       <div className="space-y-3">
-        {mockEntries.map((entry) => (
+        {entries.map((entry) => (
           <Card key={entry.id} variant="glass">
             <div className="p-6">
               <div className="flex items-start justify-between">
@@ -155,26 +224,37 @@ export default function ClientVaultPage() {
                     </div>
                     <div className="flex-1">
                       <h3 className="text-lg font-semibold text-gray-100">
-                        {entry.key_name}
+                        {entry.service_name}
                       </h3>
                       <div className="flex items-center space-x-2 mt-1">
-                        <Badge variant={getCategoryBadge(entry.category)}>
-                          {entry.category.replace('_', ' ')}
-                        </Badge>
-                        <span className="text-xs text-gray-400">
-                          Added {formatDate(entry.created_at)}
-                        </span>
+                        {entry.username && (
+                          <Badge variant="info">
+                            {entry.username}
+                          </Badge>
+                        )}
+                        {entry.created_at && (
+                          <span className="text-xs text-gray-400">
+                            Added {formatDate(entry.created_at)}
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
+
+                  {/* Notes */}
+                  {entry.notes && (
+                    <p className="text-sm text-gray-400 mb-3">
+                      {entry.notes}
+                    </p>
+                  )}
 
                   {/* Value display */}
                   <div className="p-3 bg-gray-800/50 rounded-lg">
                     <div className="flex items-center justify-between">
                       <code className="text-sm text-gray-300 font-mono">
                         {visibleValues[entry.id]
-                          ? entry.value
-                          : '•'.repeat(entry.value.length)}
+                          ? entry.encrypted_password
+                          : '•'.repeat(entry.encrypted_password.length)}
                       </code>
                       <div className="flex items-center space-x-2">
                         <button
@@ -189,7 +269,7 @@ export default function ClientVaultPage() {
                           )}
                         </button>
                         <button
-                          onClick={() => copyToClipboard(entry.value)}
+                          onClick={() => copyToClipboard(entry.encrypted_password)}
                           className="text-gray-400 hover:text-gray-100 transition-colors"
                           aria-label="Copy to clipboard"
                         >
@@ -202,6 +282,7 @@ export default function ClientVaultPage() {
 
                 {/* Delete button */}
                 <button
+                  onClick={() => handleDeleteEntry(entry.id)}
                   className="ml-4 text-gray-400 hover:text-red-400 transition-colors"
                   aria-label="Delete entry"
                 >
@@ -214,7 +295,7 @@ export default function ClientVaultPage() {
       </div>
 
       {/* Empty state */}
-      {mockEntries.length === 0 && (
+      {entries.length === 0 && !loading && (
         <Card>
           <div className="p-12 text-center">
             <Lock className="h-12 w-12 text-gray-600 mx-auto mb-4" />
@@ -239,16 +320,22 @@ export default function ClientVaultPage() {
       >
         <div className="space-y-4">
           <Input
-            label="Entry Name"
+            label="Service Name"
             placeholder="e.g., AWS Access Key"
+            value={newEntryName}
+            onChange={(e) => setNewEntryName(e.target.value)}
             helpText="A descriptive name for this entry"
           />
 
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              Category
+              Category/Notes
             </label>
-            <select className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <select
+              value={newEntryCategory}
+              onChange={(e) => setNewEntryCategory(e.target.value)}
+              className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
               <option value="api_keys">API Keys</option>
               <option value="credentials">Credentials</option>
               <option value="tokens">Tokens</option>
@@ -257,18 +344,32 @@ export default function ClientVaultPage() {
           </div>
 
           <Input
-            label="Value"
+            label="Password/Value"
             type="password"
+            value={newEntryValue}
+            onChange={(e) => setNewEntryValue(e.target.value)}
             placeholder="Enter the sensitive value"
             helpText="This will be encrypted and securely stored"
           />
 
           <div className="flex items-center justify-end space-x-3 pt-4">
-            <Button variant="outline" onClick={() => setShowAddModal(false)}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowAddModal(false);
+                setNewEntryName('');
+                setNewEntryCategory('api_keys');
+                setNewEntryValue('');
+              }}
+              disabled={submitting}
+            >
               Cancel
             </Button>
-            <Button onClick={() => setShowAddModal(false)}>
-              Add Entry
+            <Button
+              onClick={handleAddEntry}
+              disabled={submitting}
+            >
+              {submitting ? 'Adding...' : 'Add Entry'}
             </Button>
           </div>
         </div>

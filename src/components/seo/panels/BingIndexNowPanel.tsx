@@ -1,21 +1,26 @@
 /**
  * Bing IndexNow Panel
- * Phase 4 Step 4: Dual-Mode SEO UI Shell
+ * Phase 4 Step 5: Design Glow-Up (Iteration 3)
  *
- * Displays Bing IndexNow status and allows URL submission for instant indexing.
- * Shows:
- * - Recent submissions
- * - Pending URLs
- * - Submit new URLs (staff only)
+ * Displays Bing IndexNow status with:
+ * - Premium animations (fadeScale, slideUp)
+ * - Bing platform-specific orange accent
+ * - Glass overlay and backdrop blur
+ * - Premium form styling
+ * - Elevated shadows with hover micro-interactions
  *
+ * Allows URL submission for instant indexing (staff only).
  * Gracefully handles missing credentials with CTA.
  */
 
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { Zap, Check, Clock, AlertCircle } from "lucide-react";
 import type { UserRole } from "../SeoDashboardShell";
+import { seoTheme } from "@/lib/seo/seo-theme";
+import { animationPresets, springs } from "@/lib/seo/seo-motion";
 
 interface BingIndexNowPanelProps {
   seoProfileId: string;
@@ -88,75 +93,123 @@ export default function BingIndexNowPanel({
   // Show CTA if no credential
   if (!hasCredential) {
     return (
-      <div className="bg-card border rounded-lg p-6">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 rounded-md bg-blue-500/10">
-            <Zap className="h-5 w-5 text-blue-500" />
+      <motion.div
+        className={seoTheme.panel.elevated}
+        variants={animationPresets.panel}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+      >
+        <div className={seoTheme.panel.header}>
+          <div className={`${seoTheme.panel.icon} ${seoTheme.utils.getPlatformIconBg("bing")}`}>
+            <Zap className={`h-5 w-5 ${seoTheme.utils.getPlatformIconColor("bing")}`} />
           </div>
-          <h3 className="text-lg font-semibold">Bing IndexNow</h3>
+          <h3 className={seoTheme.panel.title}>Bing IndexNow</h3>
         </div>
-        <div className="text-center py-8">
+        <motion.div
+          className="text-center py-8"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ ...springs.smooth, delay: 0.1 }}
+        >
           <p className="text-sm text-muted-foreground mb-4">
             Connect Bing Webmaster to submit URLs for instant indexing.
           </p>
           {userRole === "staff" && (
-            <button className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm hover:bg-primary/90">
+            <motion.button
+              className={seoTheme.button.primary}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
               Connect Bing
-            </button>
+            </motion.button>
           )}
           {userRole === "client" && (
             <p className="text-xs text-muted-foreground">
               Contact your account manager to enable this feature.
             </p>
           )}
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     );
   }
 
   // Show panel with submission form (staff only) or status view (client)
   return (
-    <div className="bg-card border rounded-lg p-6">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="p-2 rounded-md bg-blue-500/10">
-          <Zap className="h-5 w-5 text-blue-500" />
+    <motion.div
+      className={seoTheme.panel.elevated}
+      variants={animationPresets.panel}
+      initial="hidden"
+      animate="visible"
+      whileHover={{
+        boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+        transition: { duration: 0.2 }
+      }}
+    >
+      {/* Gradient Panel Header with Glass Overlay */}
+      <div className={`${seoTheme.panel.header} relative`}>
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-orange-500/10 via-orange-400/5 to-transparent rounded-t-xl opacity-50"
+          style={{ backdropFilter: "blur(8px)" }}
+        />
+        <div className="relative z-10 flex items-center gap-3">
+          <motion.div
+            className={`${seoTheme.panel.icon} ${seoTheme.utils.getPlatformIconBg("bing")} ring-2 ring-orange-500/20`}
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            transition={springs.snappy}
+          >
+            <Zap className={`h-5 w-5 ${seoTheme.utils.getPlatformIconColor("bing")}`} />
+          </motion.div>
+          <h3 className={seoTheme.panel.title}>Bing IndexNow</h3>
         </div>
-        <h3 className="text-lg font-semibold">Bing IndexNow</h3>
       </div>
 
       {userRole === "staff" ? (
         <>
-          {/* URL Submission Form */}
-          <div className="mb-4">
+          {/* Premium URL Submission Form */}
+          <motion.div
+            className="mb-4"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ ...springs.smooth, delay: 0.1 }}
+          >
             <label htmlFor="url-input" className="block text-sm font-medium mb-2">
               Submit URLs for Instant Indexing
             </label>
-            <textarea
+            <motion.textarea
               id="url-input"
               value={urlInput}
               onChange={(e) => setUrlInput(e.target.value)}
               placeholder="https://example.com/page1&#10;https://example.com/page2&#10;(one URL per line)"
-              className="w-full h-24 px-3 py-2 bg-background border rounded-md text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full h-24 px-3 py-2 bg-background/50 backdrop-blur-sm border border-border/50 rounded-lg text-sm resize-none focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500/50 transition-all"
               disabled={submitting}
+              whileFocus={{ scale: 1.01 }}
+              transition={springs.snappy}
             />
-          </div>
+          </motion.div>
 
-          <button
+          <motion.button
             onClick={handleSubmitUrls}
             disabled={submitting || !urlInput.trim()}
-            className="w-full px-4 py-2 bg-blue-500 text-white rounded-md text-sm hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg text-sm font-medium shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+            whileHover={{ scale: 1.02, boxShadow: "0 4px 12px rgba(255, 127, 0, 0.3)" }}
+            whileTap={{ scale: 0.98 }}
+            transition={springs.snappy}
           >
             {submitting ? "Submitting..." : "Submit to Bing"}
-          </button>
+          </motion.button>
 
-          {/* Submit Result */}
+          {/* Animated Submit Result */}
           {submitResult && (
-            <div
-              className={`mt-4 p-3 rounded-md text-sm ${
+            <motion.div
+              className={`mt-4 p-3 rounded-lg text-sm border ${
                 submitResult.success
-                  ? "bg-green-500/10 text-green-700 dark:text-green-400"
-                  : "bg-red-500/10 text-red-700 dark:text-red-400"
+                  ? "bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20"
+                  : "bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20"
               }`}
+              initial={{ opacity: 0, scale: 0.95, y: -10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={springs.bouncy}
             >
               <div className="flex items-start gap-2">
                 {submitResult.success ? (
@@ -166,11 +219,16 @@ export default function BingIndexNowPanel({
                 )}
                 <p>{submitResult.message}</p>
               </div>
-            </div>
+            </motion.div>
           )}
 
-          {/* Status Summary */}
-          <div className="mt-6 pt-4 border-t">
+          {/* Animated Status Summary */}
+          <motion.div
+            className="mt-6 pt-4 border-t border-border/50 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
             <p className="text-xs text-muted-foreground mb-3">Recent Activity</p>
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
@@ -182,35 +240,52 @@ export default function BingIndexNowPanel({
                 <span className="font-medium">-</span>
               </div>
             </div>
-          </div>
+          </motion.div>
         </>
       ) : (
         <>
-          {/* Client View: Status Only */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-3 p-3 bg-blue-500/10 rounded-md">
-              <Check className="h-5 w-5 text-blue-500" />
+          {/* Client View: Animated Status Only */}
+          <motion.div
+            className="space-y-4"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ ...springs.smooth, delay: 0.1 }}
+          >
+            <motion.div
+              className="flex items-center gap-3 p-3 bg-orange-500/10 rounded-lg border border-orange-500/20"
+              whileHover={{ scale: 1.02 }}
+              transition={springs.snappy}
+            >
+              <Check className="h-5 w-5 text-orange-500" />
               <div>
                 <p className="text-sm font-medium">IndexNow Active</p>
                 <p className="text-xs text-muted-foreground">
                   Your pages are being submitted for instant indexing
                 </p>
               </div>
-            </div>
+            </motion.div>
 
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-xs text-muted-foreground mb-1">This Week</p>
-                <p className="text-2xl font-bold">-</p>
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground mb-1">This Month</p>
-                <p className="text-2xl font-bold">-</p>
-              </div>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ ...springs.smooth, delay: 0.2 }}
+              >
+                <p className={seoTheme.metric.label}>This Week</p>
+                <p className={seoTheme.metric.value}>-</p>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ ...springs.smooth, delay: 0.25 }}
+              >
+                <p className={seoTheme.metric.label}>This Month</p>
+                <p className={seoTheme.metric.value}>-</p>
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
         </>
       )}
-    </div>
+    </motion.div>
   );
 }
