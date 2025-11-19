@@ -1,18 +1,22 @@
 /**
  * SEO Dashboard Shell - Dual-Mode Layout
- * Phase 4 Step 4: Dual-Mode SEO UI Shell
+ * Phase 4 Step 5: Design Glow-Up (Iteration 2)
  *
- * Shared layout component that manages:
- * - Mode state ('standard' or 'hypnotic')
- * - Panel rendering based on mode and user role
- * - Credential state management
- * - Error boundaries
+ * Premium Hybrid Bento + Command Center layout with:
+ * - Framer Motion animations (staggered panel entrance)
+ * - Mode-specific styling (standard blue, hypnotic purple)
+ * - Backdrop blur glass effects
+ * - 60fps spring physics transitions
  */
 
 "use client";
 
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import type { SeoProfile } from "@/lib/seo/seoTypes";
+import { seoTheme } from "@/lib/seo/seo-theme";
+import { animationPresets, springs } from "@/lib/seo/seo-motion";
+import { bentoLayout } from "@/lib/seo/seo-bento-layout";
 import SeoModeToggle from "./SeoModeToggle";
 import GscOverviewPanel from "./panels/GscOverviewPanel";
 import BingIndexNowPanel from "./panels/BingIndexNowPanel";
@@ -42,6 +46,9 @@ export default function SeoDashboardShell({
   const [hasBraveCredential, setHasBraveCredential] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  // Get mode-specific styles
+  const modeStyles = seoTheme.utils.getModeStyles(mode);
+
   useEffect(() => {
     async function checkCredentials() {
       setLoading(true);
@@ -67,120 +74,217 @@ export default function SeoDashboardShell({
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header with Mode Toggle */}
-      <header className="border-b bg-card">
-        <div className="container mx-auto px-4 py-4">
+      {/* Premium Header with Glass Effect */}
+      <motion.header
+        className={`sticky top-0 z-20 border-b ${seoTheme.glass} ${modeStyles.borderColor}`}
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={springs.smooth}
+      >
+        <div className="container mx-auto px-6 py-5 max-w-[1600px]">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-semibold">
+            <div className="flex-1">
+              <motion.h1
+                className={`text-3xl font-bold tracking-tight bg-gradient-to-r ${modeStyles.headerGradient} bg-clip-text text-transparent`}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ ...springs.smooth, delay: 0.1 }}
+              >
                 {mode === "standard" ? "SEO Console" : "Hypnotic Velocity"}
-              </h1>
-              <p className="text-sm text-muted-foreground mt-1">
+              </motion.h1>
+              <motion.p
+                className="text-sm text-muted-foreground mt-1.5 font-medium"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ ...springs.smooth, delay: 0.2 }}
+              >
                 {seoProfile.domain}
-              </p>
+              </motion.p>
             </div>
             <SeoModeToggle mode={mode} onModeChange={setMode} />
           </div>
         </div>
-      </header>
+      </motion.header>
 
-      {/* Main Dashboard Grid */}
-      <main className="container mx-auto px-4 py-6">
-        {loading ? (
-          <div className="flex items-center justify-center min-h-[400px]">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-              <p className="text-muted-foreground">Loading dashboard...</p>
-            </div>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {/* Standard Mode Panels */}
-            {mode === "standard" && (
-              <>
-                {panelConfig.showGscOverview && (
-                  <GscOverviewPanel
-                    seoProfileId={seoProfile.id}
-                    organizationId={organizationId}
-                    hasCredential={hasGscCredential}
-                    userRole={userRole}
-                  />
-                )}
-                {panelConfig.showBingIndexNow && (
-                  <BingIndexNowPanel
-                    seoProfileId={seoProfile.id}
-                    organizationId={organizationId}
-                    hasCredential={hasBingCredential}
-                    userRole={userRole}
-                  />
-                )}
-                {panelConfig.showBravePresence && (
-                  <BravePresencePanel
-                    seoProfileId={seoProfile.id}
-                    organizationId={organizationId}
-                    hasCredential={hasBraveCredential}
-                    userRole={userRole}
-                  />
-                )}
-                {panelConfig.showKeywordOpportunities && (
-                  <KeywordOpportunitiesPanel
-                    seoProfileId={seoProfile.id}
-                    organizationId={organizationId}
-                    userRole={userRole}
-                  />
-                )}
-                {panelConfig.showTechHealth && (
-                  <TechHealthPanel
-                    seoProfileId={seoProfile.id}
-                    organizationId={organizationId}
-                    userRole={userRole}
-                  />
-                )}
-              </>
-            )}
-
-            {/* Hypnotic Mode Panels */}
-            {mode === "hypnotic" && (
-              <>
-                {panelConfig.showVelocityQueue && (
-                  <VelocityQueuePanel
-                    seoProfileId={seoProfile.id}
-                    organizationId={organizationId}
-                    userRole={userRole}
-                  />
-                )}
-                {panelConfig.showHookLab && (
-                  <HookLabPanel
-                    seoProfileId={seoProfile.id}
-                    organizationId={organizationId}
-                    userRole={userRole}
-                  />
-                )}
-                {/* Show GSC/Bing/Brave in Hypnotic mode for staff only */}
-                {userRole === "staff" && (
-                  <>
-                    {panelConfig.showGscOverview && (
+      {/* Main Dashboard with Bento Grid */}
+      <main className="container mx-auto px-6 py-8 max-w-[1600px]">
+        <AnimatePresence mode="wait">
+          {loading ? (
+            <motion.div
+              key="loading"
+              className="flex items-center justify-center min-h-[500px]"
+              variants={animationPresets.fade}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+            >
+              <div className="text-center">
+                <motion.div
+                  className={`rounded-full h-16 w-16 border-4 ${modeStyles.borderColor} border-t-transparent mx-auto mb-6`}
+                  animate={{
+                    rotate: 360,
+                  }}
+                  transition={{
+                    duration: 1,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                />
+                <motion.p
+                  className="text-muted-foreground text-lg"
+                  animate={{
+                    opacity: [0.5, 1, 0.5],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
+                  Loading dashboard...
+                </motion.p>
+              </div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key={`dashboard-${mode}`}
+              className={bentoLayout.getBentoGridClasses({ mode, role: userRole })}
+              variants={animationPresets.stagger.container}
+              initial="hidden"
+              animate="visible"
+            >
+              {/* Standard Mode Panels */}
+              {mode === "standard" && (
+                <>
+                  {panelConfig.showGscOverview && (
+                    <motion.div
+                      variants={animationPresets.stagger.item}
+                      className={bentoLayout.getColSpanClass(1)}
+                    >
                       <GscOverviewPanel
                         seoProfileId={seoProfile.id}
                         organizationId={organizationId}
                         hasCredential={hasGscCredential}
                         userRole={userRole}
                       />
-                    )}
-                    {panelConfig.showBingIndexNow && (
+                    </motion.div>
+                  )}
+                  {panelConfig.showBingIndexNow && (
+                    <motion.div
+                      variants={animationPresets.stagger.item}
+                      className={bentoLayout.getColSpanClass(1)}
+                    >
                       <BingIndexNowPanel
                         seoProfileId={seoProfile.id}
                         organizationId={organizationId}
                         hasCredential={hasBingCredential}
                         userRole={userRole}
                       />
-                    )}
-                  </>
-                )}
-              </>
-            )}
-          </div>
-        )}
+                    </motion.div>
+                  )}
+                  {panelConfig.showBravePresence && (
+                    <motion.div
+                      variants={animationPresets.stagger.item}
+                      className={bentoLayout.getColSpanClass(1)}
+                    >
+                      <BravePresencePanel
+                        seoProfileId={seoProfile.id}
+                        organizationId={organizationId}
+                        hasCredential={hasBraveCredential}
+                        userRole={userRole}
+                      />
+                    </motion.div>
+                  )}
+                  {panelConfig.showKeywordOpportunities && (
+                    <motion.div
+                      variants={animationPresets.stagger.item}
+                      className={bentoLayout.getColSpanClass(2)}
+                    >
+                      <KeywordOpportunitiesPanel
+                        seoProfileId={seoProfile.id}
+                        organizationId={organizationId}
+                        userRole={userRole}
+                      />
+                    </motion.div>
+                  )}
+                  {panelConfig.showTechHealth && (
+                    <motion.div
+                      variants={animationPresets.stagger.item}
+                      className={bentoLayout.getColSpanClass(1)}
+                    >
+                      <TechHealthPanel
+                        seoProfileId={seoProfile.id}
+                        organizationId={organizationId}
+                        userRole={userRole}
+                      />
+                    </motion.div>
+                  )}
+                </>
+              )}
+
+              {/* Hypnotic Mode Panels */}
+              {mode === "hypnotic" && (
+                <>
+                  {panelConfig.showVelocityQueue && (
+                    <motion.div
+                      variants={animationPresets.stagger.item}
+                      className={bentoLayout.getColSpanClass(2)}
+                    >
+                      <VelocityQueuePanel
+                        seoProfileId={seoProfile.id}
+                        organizationId={organizationId}
+                        userRole={userRole}
+                      />
+                    </motion.div>
+                  )}
+                  {panelConfig.showHookLab && (
+                    <motion.div
+                      variants={animationPresets.stagger.item}
+                      className={bentoLayout.getColSpanClass(2)}
+                    >
+                      <HookLabPanel
+                        seoProfileId={seoProfile.id}
+                        organizationId={organizationId}
+                        userRole={userRole}
+                      />
+                    </motion.div>
+                  )}
+                  {/* Show GSC/Bing in Hypnotic mode for staff only */}
+                  {userRole === "staff" && (
+                    <>
+                      {panelConfig.showGscOverview && (
+                        <motion.div
+                          variants={animationPresets.stagger.item}
+                          className={bentoLayout.getColSpanClass(1)}
+                        >
+                          <GscOverviewPanel
+                            seoProfileId={seoProfile.id}
+                            organizationId={organizationId}
+                            hasCredential={hasGscCredential}
+                            userRole={userRole}
+                          />
+                        </motion.div>
+                      )}
+                      {panelConfig.showBingIndexNow && (
+                        <motion.div
+                          variants={animationPresets.stagger.item}
+                          className={bentoLayout.getColSpanClass(1)}
+                        >
+                          <BingIndexNowPanel
+                            seoProfileId={seoProfile.id}
+                            organizationId={organizationId}
+                            hasCredential={hasBingCredential}
+                            userRole={userRole}
+                          />
+                        </motion.div>
+                      )}
+                    </>
+                  )}
+                </>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </main>
     </div>
   );
