@@ -16,25 +16,30 @@ const openRouter = getOpenRouterClient();
 
 // Model pricing (per 1M tokens) - Updated 2025-11-19
 const MODEL_COSTS = {
+  // FREE OpenRouter Models (BEST: $0 cost!) - Updated 2025-11-19
+  "sherlock-think-alpha": { input: 0, output: 0 },          // FREE: Reasoning, 1.8M context, multimodal
+  "sherlock-dash-alpha": { input: 0, output: 0 },           // FREE: Non-reasoning, 1.8M context, multimodal
+  "kat-coder-pro-free": { input: 0, output: 0 },            // FREE: Coding specialist, 256K context
+
   // Anthropic Claude (Direct API)
   "claude-opus-4": { input: 15, output: 75 },
   "claude-sonnet-4.5": { input: 3, output: 15 },
   "claude-haiku-4.5": { input: 0.8, output: 4 },
 
   // Google Gemini 2.0 (OpenRouter)
-  "gemini-2.0-flash-lite": { input: 0.075, output: 0.3 },  // BEST: Ultra-cheap, 25% cheaper than 1.5
-  "gemini-2.0-flash": { input: 0.1, output: 0.4 },          // BEST: Balanced, 1M context
+  "gemini-2.0-flash-lite": { input: 0.075, output: 0.3 },   // Ultra-cheap, 25% cheaper than 1.5
+  "gemini-2.0-flash": { input: 0.1, output: 0.4 },          // Balanced, 1M context
 
   // Google Gemini 3.0 (OpenRouter)
-  "gemini-3.0-pro": { input: 2, output: 12 },               // BEST: Advanced reasoning, beats GPT-4
+  "gemini-3.0-pro": { input: 2, output: 12 },               // Advanced reasoning, beats GPT-4
+
+  // Other OpenRouter Models
+  "kimi-k2-thinking": { input: 0.5, output: 2.5 },          // Reasoning, 262K context, MoE architecture
+  "llama-3.3-70b": { input: 0.35, output: 0.4 },
 
   // Legacy Gemini 1.5 (deprecated - use 2.0 instead)
   "gemini-flash-lite": { input: 0.05, output: 0.2 },        // DEPRECATED: Use gemini-2.0-flash-lite
   "gemini-flash": { input: 0.1, output: 0.4 },              // DEPRECATED: Use gemini-2.0-flash
-
-  // Other OpenRouter models
-  "sherlock-think-alpha": { input: 1, output: 5 },
-  "llama-3.3-70b": { input: 0.35, output: 0.4 },
 };
 
 export type TaskType =
@@ -50,16 +55,28 @@ export type TaskType =
   | "codebase_analysis";      // Ultra-premium
 
 export type ModelName =
+  // FREE Models (OpenRouter)
+  | "sherlock-think-alpha"        // FREE: Reasoning, 1.8M context
+  | "sherlock-dash-alpha"         // FREE: Fast, 1.8M context
+  | "kat-coder-pro-free"          // FREE: Coding specialist, 256K context
+
+  // Anthropic Claude (Direct)
   | "claude-opus-4"
   | "claude-sonnet-4.5"
   | "claude-haiku-4.5"
-  | "gemini-2.0-flash-lite"       // BEST: Ultra-cheap ($0.075/$0.30)
-  | "gemini-2.0-flash"            // BEST: Balanced ($0.10/$0.40)
-  | "gemini-3.0-pro"              // BEST: Advanced reasoning ($2/$12)
+
+  // Google Gemini (OpenRouter)
+  | "gemini-2.0-flash-lite"       // Ultra-cheap ($0.075/$0.30)
+  | "gemini-2.0-flash"            // Balanced ($0.10/$0.40)
+  | "gemini-3.0-pro"              // Advanced reasoning ($2/$12)
+
+  // Other OpenRouter Models
+  | "kimi-k2-thinking"            // Reasoning ($0.50/$2.50)
+  | "llama-3.3-70b"
+
+  // Deprecated
   | "gemini-flash-lite"           // DEPRECATED
-  | "gemini-flash"                // DEPRECATED
-  | "sherlock-think-alpha"
-  | "llama-3.3-70b";
+  | "gemini-flash";               // DEPRECATED
 
 export interface RouteOptions {
   task: TaskType;
@@ -134,27 +151,27 @@ export class ModelRouter {
       return options.preferredModel;
     }
 
-    // Auto-select BEST model for each task (optimized for cost + performance)
+    // Auto-select BEST model for each task (FREE FIRST, then optimized for cost + performance)
     const taskToModelMap: Record<TaskType, ModelName> = {
-      // Ultra-cheap tasks → Gemini 2.0 Flash-Lite (BEST: 50% cheaper than Haiku)
-      extract_intent: "gemini-2.0-flash-lite",
-      tag_generation: "gemini-2.0-flash-lite",
-      sentiment_analysis: "gemini-2.0-flash-lite",
+      // Ultra-cheap tasks → FREE Sherlock Dash (BEST: $0 cost, 1.8M context)
+      extract_intent: "sherlock-dash-alpha",
+      tag_generation: "sherlock-dash-alpha",
+      sentiment_analysis: "sherlock-dash-alpha",
 
-      // Budget tasks → Gemini 2.0 Flash (BEST: 7x cheaper than Haiku, better multimodal)
-      email_intelligence: "gemini-2.0-flash",
-      contact_scoring: "gemini-2.0-flash",
+      // Budget tasks → FREE Sherlock Dash (BEST: $0 cost, multimodal)
+      email_intelligence: "sherlock-dash-alpha",
+      contact_scoring: "sherlock-dash-alpha",
 
-      // Standard tasks → Gemini 3.0 Pro (BEST: Advanced reasoning, beats GPT-4)
-      generate_persona: "gemini-3.0-pro",
-      generate_strategy: "gemini-3.0-pro",
+      // Standard tasks → FREE Sherlock Think (BEST: $0 cost, reasoning, 1.8M context)
+      generate_persona: "sherlock-think-alpha",
+      generate_strategy: "sherlock-think-alpha",
 
       // Premium tasks → Claude Opus (BEST: Extended Thinking for complex content)
       generate_content: "claude-opus-4",
 
-      // Ultra-premium tasks → Gemini 3.0 Pro (BEST: 1M context + reasoning mode)
-      security_audit: "gemini-3.0-pro",
-      codebase_analysis: "gemini-3.0-pro",
+      // Ultra-premium tasks → FREE Sherlock Think (BEST: $0 cost, reasoning mode)
+      security_audit: "sherlock-think-alpha",
+      codebase_analysis: "kat-coder-pro-free",  // FREE coding specialist
     };
 
     return taskToModelMap[task] || "gemini-2.0-flash";
@@ -177,15 +194,21 @@ export class ModelRouter {
       return await this.callAnthropic(model, fullPrompt, options, startTime);
     }
 
-    // OpenRouter models (Gemini 2.0, Gemini 3.0, etc.)
+    // OpenRouter models (FREE models, Gemini, Kimi, etc.)
     if (
       [
+        // FREE Models
+        "sherlock-think-alpha",
+        "sherlock-dash-alpha",
+        "kat-coder-pro-free",
+        // Gemini Models
         "gemini-2.0-flash-lite",
         "gemini-2.0-flash",
         "gemini-3.0-pro",
         "gemini-flash-lite",      // Legacy
         "gemini-flash",           // Legacy
-        "sherlock-think-alpha",
+        // Other Models
+        "kimi-k2-thinking",
         "llama-3.3-70b",
       ].includes(model)
     ) {
@@ -266,20 +289,25 @@ export class ModelRouter {
     }
 
     const openRouterModelMap: Record<string, string> = {
-      // Gemini 2.0 (BEST: Latest, optimized pricing)
+      // FREE Models (Priority 1)
+      "sherlock-think-alpha": "openrouter/sherlock-think-alpha",
+      "sherlock-dash-alpha": "openrouter/sherlock-dash-alpha",
+      "kat-coder-pro-free": "kwaipilot/kat-coder-pro:free",
+
+      // Gemini 2.0 (Ultra-cheap)
       "gemini-2.0-flash-lite": "google/gemini-2.0-flash-lite",
       "gemini-2.0-flash": "google/gemini-2.0-flash",
 
-      // Gemini 3.0 (BEST: Advanced reasoning)
+      // Gemini 3.0 (Advanced reasoning)
       "gemini-3.0-pro": "google/gemini-3-pro-preview",
+
+      // Other OpenRouter Models
+      "kimi-k2-thinking": "moonshotai/kimi-k2-thinking",
+      "llama-3.3-70b": "meta-llama/llama-3.3-70b-instruct",
 
       // Legacy Gemini 1.5 (deprecated)
       "gemini-flash-lite": "google/gemini-flash-1.5",
       "gemini-flash": "google/gemini-flash-1.5",
-
-      // Other models
-      "sherlock-think-alpha": "openrouter/sherlock-think-alpha",
-      "llama-3.3-70b": "meta-llama/llama-3.3-70b-instruct",
     };
 
     const openRouterModel = openRouterModelMap[model];
