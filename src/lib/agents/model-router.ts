@@ -52,16 +52,23 @@ const MODEL_COSTS = {
 };
 
 export type TaskType =
-  | "extract_intent"          // Ultra-cheap
-  | "tag_generation"          // Ultra-cheap
-  | "sentiment_analysis"      // Ultra-cheap
-  | "email_intelligence"      // Budget
-  | "contact_scoring"         // Budget
-  | "generate_persona"        // Standard
-  | "generate_strategy"       // Standard
-  | "generate_content"        // Premium (Extended Thinking)
-  | "security_audit"          // Ultra-premium
-  | "codebase_analysis";      // Ultra-premium
+  // FINAL EXECUTION TASKS (Big 4 Only - Anthropic/ChatGPT/Perplexity/Gemini)
+  | "extract_intent"          // Ultra-cheap (Gemini 2.0 Flash-Lite)
+  | "tag_generation"          // Ultra-cheap (Gemini 2.0 Flash-Lite)
+  | "sentiment_analysis"      // Ultra-cheap (Gemini 2.0 Flash-Lite)
+  | "email_intelligence"      // Budget (Gemini 2.0 Flash)
+  | "contact_scoring"         // Budget (Gemini 2.0 Flash)
+  | "generate_persona"        // Standard (Gemini 3.0 Pro)
+  | "generate_strategy"       // Standard (Gemini 3.0 Pro)
+  | "generate_content"        // Premium (Claude Opus 4)
+  | "security_audit"          // Ultra-premium (Claude Sonnet 4.5)
+  | "codebase_analysis"       // Ultra-premium (Gemini 3.0 Pro)
+
+  // PREPROCESSING TASKS (FREE/Budget models for heavy lifting)
+  | "preprocess_data"         // Data cleaning, normalization (FREE models OK)
+  | "extract_raw_data"        // Raw extraction before validation (FREE models OK)
+  | "summarize_context"       // Context summarization to reduce tokens (FREE models OK)
+  | "filter_candidates";      // Initial filtering before final selection (FREE models OK)
 
 export type ModelName =
   // FREE Models (OpenRouter)
@@ -200,27 +207,43 @@ export class ModelRouter {
       return this.selectModelByTier(task, options.preferredTier);
     }
 
-    // Auto-select BEST model for each task (FREE FIRST, then optimized for cost + performance)
+    // CRITICAL ARCHITECTURE RULE:
+    // ALL FINAL EXECUTION TASKS → Big 4 ONLY (Anthropic/ChatGPT/Perplexity/Gemini)
+    // FREE/Budget models → Preprocessing/heavy lifting ONLY, NEVER final execution
     const taskToModelMap: Record<TaskType, ModelName> = {
-      // Ultra-cheap tasks → FREE Sherlock Dash (BEST: $0 cost, 1.8M context)
-      extract_intent: "sherlock-dash-alpha",
-      tag_generation: "sherlock-dash-alpha",
-      sentiment_analysis: "sherlock-dash-alpha",
+      // ============================================
+      // FINAL EXECUTION - BIG 4 GATEKEEPERS
+      // ============================================
 
-      // Budget tasks → FREE Sherlock Dash (BEST: $0 cost, multimodal)
-      email_intelligence: "sherlock-dash-alpha",
-      contact_scoring: "sherlock-dash-alpha",
+      // Ultra-cheap tasks → Gemini 2.0 (Big 4 gatekeeper)
+      extract_intent: "gemini-2.0-flash-lite",
+      tag_generation: "gemini-2.0-flash-lite",
+      sentiment_analysis: "gemini-2.0-flash-lite",
 
-      // Standard tasks → FREE Sherlock Think (BEST: $0 cost, reasoning, 1.8M context)
-      generate_persona: "sherlock-think-alpha",
-      generate_strategy: "sherlock-think-alpha",
+      // Budget tasks → Gemini 2.0 Flash (Big 4 gatekeeper)
+      email_intelligence: "gemini-2.0-flash",
+      contact_scoring: "gemini-2.0-flash",
 
-      // Premium tasks → Claude Opus (BEST: Extended Thinking for complex content)
+      // Standard tasks → Gemini 3.0 Pro (Big 4 gatekeeper)
+      generate_persona: "gemini-3.0-pro",
+      generate_strategy: "gemini-3.0-pro",
+
+      // Premium tasks → Claude Opus (Big 4 gatekeeper)
       generate_content: "claude-opus-4",
 
-      // Ultra-premium tasks → FREE Sherlock Think (BEST: $0 cost, reasoning mode)
-      security_audit: "sherlock-think-alpha",
-      codebase_analysis: "kat-coder-pro-free",  // FREE coding specialist
+      // Ultra-premium tasks → Claude Sonnet (Big 4 gatekeeper)
+      security_audit: "claude-sonnet-4.5",
+      codebase_analysis: "gemini-3.0-pro",
+
+      // ============================================
+      // PREPROCESSING - FREE/BUDGET MODELS ALLOWED
+      // ============================================
+
+      // Data preprocessing → FREE Sherlock Dash (context reduction)
+      preprocess_data: "sherlock-dash-alpha",
+      extract_raw_data: "sherlock-dash-alpha",
+      summarize_context: "sherlock-think-alpha",
+      filter_candidates: "sherlock-dash-alpha",
     };
 
     return taskToModelMap[task] || "gemini-2.0-flash";
@@ -256,6 +279,7 @@ export class ModelRouter {
 
     // Select sub-tier based on task type
     const taskRequirements: Record<TaskType, keyof typeof tierModels.free> = {
+      // Final execution tasks (Big 4 only)
       extract_intent: "fast",
       tag_generation: "fast",
       sentiment_analysis: "fast",
@@ -266,6 +290,12 @@ export class ModelRouter {
       generate_content: "reasoning",
       security_audit: "reasoning",
       codebase_analysis: "coding",
+
+      // Preprocessing tasks (FREE models allowed)
+      preprocess_data: "fast",
+      extract_raw_data: "fast",
+      summarize_context: "reasoning",
+      filter_candidates: "fast",
     };
 
     const requirement = taskRequirements[task] || "default";

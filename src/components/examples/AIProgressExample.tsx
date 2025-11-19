@@ -8,14 +8,16 @@ import { routeToModel } from "@/lib/agents/model-router";
 /**
  * Example: Multi-tier AI processing with visual progress
  *
- * This demonstrates the user's requirement:
- * "Use lower cost for heavy lifting, bring in dynamic models for deep reasoning"
+ * CRITICAL ARCHITECTURE RULE:
+ * - FREE/Budget models = Preprocessing/heavy lifting ONLY
+ * - Big 4 (Anthropic/ChatGPT/Perplexity/Gemini) = Final validation & execution
+ * - NO function should be completed by FREE models without Big 4 validation
  *
- * Flow:
- * 1. FREE model: Analyze contact data (fast, $0 cost)
- * 2. FREE model: Extract key insights (fast, $0 cost)
- * 3. Budget model: Generate initial content (balanced)
- * 4. Premium model: Refine & validate content (high quality)
+ * Correct Flow:
+ * 1. FREE model: Preprocess/summarize raw data (context reduction, $0 cost)
+ * 2. FREE model: Extract raw insights (heavy lifting, $0 cost)
+ * 3. BIG 4 (Gemini): Validate & refine insights (gatekeeper)
+ * 4. BIG 4 (Claude): Final execution with Extended Thinking (premium quality)
  */
 
 interface ContactAnalysisProps {
@@ -29,71 +31,71 @@ export default function ContactAnalysisExample({
 }: ContactAnalysisProps) {
   const progress = useAIProgress([
     {
-      id: "analyze",
-      label: "Analyzing contact data",
+      id: "preprocess",
+      label: "Preprocessing contact data (FREE - context reduction)",
       tier: "free",
     },
     {
       id: "extract",
-      label: "Extracting key insights",
+      label: "Extracting raw insights (FREE - heavy lifting)",
       tier: "free",
     },
     {
-      id: "generate",
-      label: "Generating personalized content",
+      id: "validate",
+      label: "Validating insights (BIG 4 - Gemini gatekeeper)",
       tier: "budget",
     },
     {
-      id: "refine",
-      label: "Refining with advanced reasoning",
+      id: "execute",
+      label: "Final execution (BIG 4 - Claude Opus)",
       tier: "premium",
     },
   ]);
 
   const runAnalysis = async () => {
     try {
-      // Stage 1: Analyze contact (FREE - Sherlock Dash)
-      progress.start("analyze", "sherlock-dash-alpha");
-      const analysisResult = await routeToModel({
-        task: "contact_scoring",
-        prompt: `Analyze this contact: ${contactId}`,
+      // Stage 1: Preprocess data (FREE - Sherlock Dash for context reduction)
+      progress.start("preprocess", "sherlock-dash-alpha");
+      const preprocessResult = await routeToModel({
+        task: "preprocess_data", // Preprocessing task - FREE models allowed
+        prompt: `Summarize and clean this contact data: ${contactId}`,
       });
       progress.updateProgress(100);
       progress.complete();
       progress.next();
 
-      // Stage 2: Extract insights (FREE - Sherlock Dash)
-      progress.start("extract", "sherlock-dash-alpha");
-      const insightsResult = await routeToModel({
-        task: "extract_intent",
-        prompt: `Extract key insights from: ${analysisResult.response}`,
+      // Stage 2: Extract raw insights (FREE - Sherlock Think for heavy lifting)
+      progress.start("extract", "sherlock-think-alpha");
+      const rawInsights = await routeToModel({
+        task: "extract_raw_data", // Preprocessing task - FREE models allowed
+        prompt: `Extract all raw insights from: ${preprocessResult.response}`,
       });
       progress.updateProgress(100);
       progress.complete();
       progress.next();
 
-      // Stage 3: Generate content (Budget - Gemini 2.0 or DeepSeek)
-      progress.start("generate", "gemini-2.0-flash");
-      const contentResult = await routeToModel({
-        task: "generate_persona",
-        prompt: `Generate personalized content based on: ${insightsResult.response}`,
+      // Stage 3: Validate insights (BIG 4 - Gemini 2.0 Flash gatekeeper)
+      progress.start("validate", "gemini-2.0-flash");
+      const validatedInsights = await routeToModel({
+        task: "contact_scoring", // FINAL EXECUTION - Big 4 required
+        prompt: `Validate and score these insights: ${rawInsights.response}`,
       });
       progress.updateProgress(100);
       progress.complete();
       progress.next();
 
-      // Stage 4: Refine content (Premium - Claude Opus with Extended Thinking)
-      progress.start("refine", "claude-opus-4");
-      const refinedResult = await routeToModel({
-        task: "generate_content",
-        prompt: `Refine and validate this content: ${contentResult.response}`,
-        thinkingBudget: 5000, // Enable Extended Thinking for final validation
+      // Stage 4: Final execution (BIG 4 - Claude Opus with Extended Thinking)
+      progress.start("execute", "claude-opus-4");
+      const finalResult = await routeToModel({
+        task: "generate_content", // FINAL EXECUTION - Big 4 required
+        prompt: `Generate final personalized content: ${validatedInsights.response}`,
+        thinkingBudget: 5000, // Extended Thinking for premium quality
       });
       progress.updateProgress(100);
       progress.complete();
 
       if (onComplete) {
-        onComplete(refinedResult);
+        onComplete(finalResult);
       }
     } catch (error) {
       progress.error(error instanceof Error ? error.message : "Analysis failed");

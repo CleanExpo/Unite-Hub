@@ -477,28 +477,74 @@ We've built **AIProgressTracker** - a visual progress system that shows:
 
 ### Multi-Tier Strategy
 
-**Philosophy**: Use cheap models for heavy lifting, premium models for final validation
+**CRITICAL ARCHITECTURE RULE**:
+- ❌ **FREE/Budget models NEVER execute final functions**
+- ✅ **ALL final execution → Big 4 ONLY (Anthropic/ChatGPT/Perplexity/Gemini)**
+- ✅ **FREE models → Preprocessing/heavy lifting ONLY**
+
+**Philosophy**: Use FREE models to reduce context window, Big 4 to execute
 
 ```
-Step 1: FREE model → Analyze data (fast, $0 cost)
-Step 2: FREE model → Extract insights (fast, $0 cost)
-Step 3: Budget model → Generate content (balanced quality/cost)
-Step 4: Premium model → Validate & refine (high quality check)
+Step 1: FREE model → Preprocess/summarize raw data (context reduction, $0 cost)
+Step 2: FREE model → Extract raw insights (heavy lifting, $0 cost)
+Step 3: BIG 4 (Gemini) → Validate & refine insights (gatekeeper, $0.10 per 1M)
+Step 4: BIG 4 (Claude) → Final execution with Extended Thinking (premium quality, $15 per 1M)
 ```
+
+**The Ecosystem**:
+- FREE models clean/summarize to save Big 4 context tokens
+- Big 4 models are the ONLY gatekeepers for final decisions
+- No function completes without Big 4 validation
 
 ### Usage Example
 
 ```typescript
 import { useAIProgress } from "@/hooks/useAIProgress";
 import AIProgressTracker from "@/components/AIProgressTracker";
+import { routeToModel } from "@/lib/agents/model-router";
 
 function ContactAnalysis() {
   const progress = useAIProgress([
-    { id: "analyze", label: "Analyzing contact", tier: "free" },
-    { id: "extract", label: "Extracting insights", tier: "free" },
-    { id: "generate", label: "Generating content", tier: "budget" },
-    { id: "refine", label: "Validating content", tier: "premium" },
+    { id: "preprocess", label: "Preprocessing (FREE - context reduction)", tier: "free" },
+    { id: "extract", label: "Extracting raw data (FREE - heavy lifting)", tier: "free" },
+    { id: "validate", label: "Validating (BIG 4 - Gemini gatekeeper)", tier: "budget" },
+    { id: "execute", label: "Final execution (BIG 4 - Claude Opus)", tier: "premium" },
   ]);
+
+  const runAnalysis = async () => {
+    // Step 1: FREE model for preprocessing
+    progress.start("preprocess", "sherlock-dash-alpha");
+    const preprocessed = await routeToModel({
+      task: "preprocess_data", // Preprocessing - FREE models OK
+      prompt: "Clean and summarize contact data...",
+    });
+    progress.complete(); progress.next();
+
+    // Step 2: FREE model for raw extraction
+    progress.start("extract", "sherlock-think-alpha");
+    const rawData = await routeToModel({
+      task: "extract_raw_data", // Preprocessing - FREE models OK
+      prompt: `Extract insights from: ${preprocessed.response}`,
+    });
+    progress.complete(); progress.next();
+
+    // Step 3: BIG 4 (Gemini) for validation
+    progress.start("validate", "gemini-2.0-flash");
+    const validated = await routeToModel({
+      task: "contact_scoring", // FINAL EXECUTION - Big 4 required
+      prompt: `Validate insights: ${rawData.response}`,
+    });
+    progress.complete(); progress.next();
+
+    // Step 4: BIG 4 (Claude) for final execution
+    progress.start("execute", "claude-opus-4");
+    const final = await routeToModel({
+      task: "generate_content", // FINAL EXECUTION - Big 4 required
+      prompt: `Generate final output: ${validated.response}`,
+      thinkingBudget: 5000,
+    });
+    progress.complete();
+  };
 
   return (
     <AIProgressTracker
