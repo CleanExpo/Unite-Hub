@@ -84,7 +84,18 @@
       "Bash(npm run test:gemini:*)",
       "Bash(vercel env:*)",
       "Bash(git revert:*)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(npm run scrape:*)",
+      "Bash(playwright install:*)",
+      "Bash(git checkout:*)",
+      "Bash(wait)",
+      "Bash(mkdir:*)",
+      "Bash(where:*)",
+      "Bash(vercel ls:*)",
+      "Bash(npm run seo:help:*)",
+      "Bash(del d:Unite-Hubadd-perplexity-to-vercel.txt)",
+      "Bash(npm run seo:eeat:*)",
+      "Bash(tree:*)"
     ],
     "deny": [],
     "ask": []

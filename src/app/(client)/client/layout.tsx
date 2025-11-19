@@ -11,6 +11,7 @@
 import { redirect } from 'next/navigation';
 import { getClientSession } from '@/lib/auth/supabase';
 import { ClientBreadcrumbs } from '@/components/ui/Breadcrumbs';
+import { ClientLogoutButton } from '@/components/client/ClientLogoutButton';
 import {
   Home,
   Lightbulb,
@@ -19,7 +20,6 @@ import {
   Bot,
   Menu,
   User,
-  LogOut,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -55,25 +55,14 @@ const navigationItems = [
   },
 ];
 
-/**
- * Get client session
- * For Phase 2 Step 3, we create a placeholder function
- * In production, this would verify client_users table
- */
-async function getClientSession() {
-  // TODO: Implement proper client session check
-  // For now, return null to allow development
-  return null;
-}
-
 export default async function ClientLayout({ children }: ClientLayoutProps) {
   // Session guard: redirect to login if not authenticated
+  // Phase 2 Step 5 - Real client authentication enabled
   const session = await getClientSession();
 
-  // Temporarily disabled for development - will enable in Phase 2 Step 4
-  // if (!session) {
-  //   redirect('/auth/login');
-  // }
+  if (!session) {
+    redirect('/client/login');
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-950">
@@ -107,27 +96,19 @@ export default async function ClientLayout({ children }: ClientLayoutProps) {
 
             {/* User menu */}
             <div className="flex items-center space-x-4">
-              {session ? (
-                <div className="flex items-center space-x-3">
-                  <div className="hidden md:block text-right">
-                    <p className="text-sm font-medium text-gray-100">
-                      {session.user?.email || 'Client User'}
+              <div className="flex items-center space-x-3">
+                <div className="hidden md:block text-right">
+                  <p className="text-sm font-medium text-gray-100">
+                    {session.client?.name || session.user?.email || 'Client User'}
+                  </p>
+                  {session.client?.subscription_tier && (
+                    <p className="text-xs text-gray-400">
+                      {session.client.subscription_tier}
                     </p>
-                  </div>
-                  <button
-                    className="text-gray-400 hover:text-gray-100 transition-colors"
-                    aria-label="Logout"
-                    title="Logout"
-                  >
-                    <LogOut className="h-5 w-5" />
-                  </button>
+                  )}
                 </div>
-              ) : (
-                <div className="flex items-center space-x-2 text-gray-400">
-                  <User className="h-5 w-5" />
-                  <span className="text-sm">Guest</span>
-                </div>
-              )}
+                <ClientLogoutButton />
+              </div>
 
               {/* Mobile menu button */}
               <button

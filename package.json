@@ -54,8 +54,17 @@
     "benchmark:email-intelligence": "node scripts/benchmark-email-intelligence.mjs",
     "scrape": "node scripts/scraping/scrape-competitor.mjs",
     "scrape:save": "node scripts/scraping/scrape-competitor.mjs --save",
+    "scrape:safe": "node scripts/scraping/scrape-competitor.mjs --safe",
     "scrape:help": "node scripts/scraping/scrape-competitor.mjs --help",
-    "test:vpn": "node scripts/scraping/test-avg-vpn.mjs"
+    "test:vpn": "node scripts/scraping/test-avg-vpn.mjs",
+    "seo:research": "node scripts/seo-intelligence.mjs research",
+    "seo:eeat": "node scripts/seo-intelligence.mjs eeat",
+    "seo:gmb": "node scripts/seo-intelligence.mjs gmb",
+    "seo:geo": "node scripts/seo-intelligence.mjs geo-search",
+    "seo:bing": "node scripts/seo-intelligence.mjs bing",
+    "seo:backlinks": "node scripts/seo-intelligence.mjs backlinks",
+    "seo:full": "node scripts/seo-intelligence.mjs comprehensive",
+    "seo:help": "node scripts/seo-intelligence.mjs --help"
   },
   "keywords": [],
   "author": "",

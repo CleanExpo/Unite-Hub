@@ -26,6 +26,7 @@ Arguments:
 
 Options:
   --type <type>      Analysis type: basic, seo, full, competitor (default: competitor)
+  --safe             Use safe mode (extended delays, caching, request limits - NO VPN REQUIRED)
   --save             Save results to file
   --output <path>    Output file path (default: ./competitor-analysis.json)
   --help, -h         Show this help message
@@ -40,11 +41,15 @@ Examples:
   # Save results to file
   node scripts/scraping/scrape-competitor.mjs https://competitor.com --save --output results.json
 
+  # Safe mode (no VPN required - extended delays, caching, request limits)
+  node scripts/scraping/scrape-competitor.mjs https://competitor.com --safe --type competitor
+
 Features:
   - Basic website scraping (metadata, links, images, content)
   - SEO analysis (title, description, headings, structured data)
   - Competitor intelligence (pricing, features, technologies)
   - Change monitoring (compare with previous analysis)
+  - Safe mode (5-10s delays, 24h caching, request limits - no VPN needed)
   `);
   process.exit(0);
 }
@@ -52,6 +57,7 @@ Features:
 const url = args[0];
 const typeIndex = args.indexOf('--type');
 const analysisType = typeIndex !== -1 ? args[typeIndex + 1] : 'competitor';
+const safeMode = args.includes('--safe');
 const saveResults = args.includes('--save');
 const outputIndex = args.indexOf('--output');
 const outputPath = outputIndex !== -1 ? args[outputIndex + 1] : './competitor-analysis.json';
@@ -66,29 +72,45 @@ try {
 
 // Determine which Python script to run
 let scriptPath;
+let scriptArgs = [url];
 
-switch (analysisType) {
-  case 'basic':
-    scriptPath = path.join(__dirname, '..', '..', 'src', 'lib', 'scraping', 'web-scraper.py');
-    break;
-  case 'seo':
-    scriptPath = path.join(__dirname, '..', '..', 'src', 'lib', 'scraping', 'advanced-scraper.py');
-    break;
-  case 'full':
-  case 'competitor':
-    scriptPath = path.join(__dirname, '..', '..', 'src', 'lib', 'scraping', 'competitor-intelligence.py');
-    break;
-  default:
-    console.error(`Error: Invalid analysis type: ${analysisType}`);
-    console.error('Valid types: basic, seo, full, competitor');
-    process.exit(1);
+if (safeMode) {
+  // Use safe-scraper.py for all types when --safe is enabled
+  scriptPath = path.join(__dirname, '..', '..', 'src', 'lib', 'scraping', 'safe-scraper.py');
+
+  if (analysisType === 'competitor' || analysisType === 'full') {
+    scriptArgs.push('--competitor');
+  }
+
+  console.log(`\n🛡️ SAFE MODE ENABLED - No VPN required`);
+  console.log(`   ✅ Extended delays (5-10 seconds)`);
+  console.log(`   ✅ Request caching (24 hours)`);
+  console.log(`   ✅ Request limits (${analysisType === 'competitor' ? '10 max' : '50 max'})`);
+  console.log(`   ✅ Realistic user agents\n`);
+} else {
+  switch (analysisType) {
+    case 'basic':
+      scriptPath = path.join(__dirname, '..', '..', 'src', 'lib', 'scraping', 'web-scraper.py');
+      break;
+    case 'seo':
+      scriptPath = path.join(__dirname, '..', '..', 'src', 'lib', 'scraping', 'advanced-scraper.py');
+      break;
+    case 'full':
+    case 'competitor':
+      scriptPath = path.join(__dirname, '..', '..', 'src', 'lib', 'scraping', 'competitor-intelligence.py');
+      break;
+    default:
+      console.error(`Error: Invalid analysis type: ${analysisType}`);
+      console.error('Valid types: basic, seo, full, competitor');
+      process.exit(1);
+  }
 }
 
-console.log(`\n🔍 Analyzing: ${url}`);
+console.log(`🔍 Analyzing: ${url}`);
 console.log(`📊 Analysis type: ${analysisType}\n`);
 
 // Run Python scraper
-const pythonProcess = spawn('python', [scriptPath, url]);
+const pythonProcess = spawn('python', [scriptPath, ...scriptArgs]);
 
 let stdout = '';
 let stderr = '';

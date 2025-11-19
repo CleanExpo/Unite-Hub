@@ -84,6 +84,36 @@ npm run generate-content # Content generation
 npm run test:caching     # Verify prompt caching
 ```
 
+### SEO & Marketing Intelligence Platform ✨ NEW
+```bash
+# Perplexity Sonar SEO Intelligence
+npm run seo:research "topic"        # Latest SEO trends with citations
+npm run seo:eeat                    # E-E-A-T guidelines (Google quality)
+npm run seo:gmb                     # Google Business Profile strategies
+npm run seo:geo-search              # Local SEO research
+npm run seo:bing                    # Bing SEO optimization
+npm run seo:backlinks               # Backlink strategy research
+npm run seo:comprehensive "topic"   # Full SEO report (6 research areas)
+npm run seo:usage                   # View usage stats and costs
+npm run seo:help                    # Show all available commands
+
+# Social Media Content Generation (OpenRouter)
+# Commands to be implemented in Phase 1 (Weeks 1-3)
+```
+
+**Cost Structure**:
+- **Perplexity Sonar**: $0.005-0.01 per search vs $119-449/mo (Semrush) = **99% cheaper**
+- **OpenRouter**: 70-80% cost savings vs direct APIs
+- **Total Platform Cost**: $65-165/mo vs $1,066-6,986/mo (traditional stack) = **94-98% savings**
+
+**Features**:
+- Real-time SEO research with verified citations
+- Multi-model AI routing (Claude 3.5 Sonnet, GPT-4 Turbo, Gemini Pro 1.5, Llama 3 70B)
+- 8 social media platforms (YouTube, LinkedIn, Facebook, Instagram, TikTok, X, Reddit, Pinterest)
+- 3 search engines (Google, Bing, Brave)
+- Competitor analysis and keyword research
+- Platform-specific content optimization
+
 ### Docker
 ```bash
 npm run docker:start     # Start core services
@@ -390,6 +420,189 @@ Solution: Run diagnostics, create functions (023), THEN policies
 
 ---
 
+### 7. Marketing Intelligence Platform Architecture ✨ NEW
+
+**Multi-Platform Strategy** for service-based businesses:
+
+#### OpenRouter Multi-Model Routing
+
+```typescript
+import OpenRouterIntelligence from '@/lib/ai/openrouter-intelligence';
+
+const router = new OpenRouterIntelligence(process.env.OPENROUTER_API_KEY);
+
+// Generate social media content
+const content = await router.generateSocialContent({
+  platform: 'linkedin',
+  contentType: 'post',
+  topic: 'stainless steel balustrades',
+  brandVoice: 'Professional yet approachable',
+  targetAudience: 'Commercial architects and builders',
+  keywords: ['stainless steel', 'modern design', 'AS1170']
+});
+
+// Analyze keywords
+const keywords = await router.analyzeKeywords({
+  seedKeywords: ['stainless steel balustrades', 'glass railings'],
+  industry: 'construction',
+  location: 'Brisbane, Australia',
+  competitorDomains: ['competitor1.com.au', 'competitor2.com.au']
+});
+
+// Competitor analysis
+const analysis = await router.analyzeCompetitor({
+  competitorDomain: 'competitor.com.au',
+  yourDomain: 'your-client.com.au',
+  industry: 'construction',
+  analysisType: 'full' // 'seo' | 'content' | 'social' | 'full'
+});
+```
+
+#### Perplexity Sonar SEO Intelligence
+
+```typescript
+import { PerplexitySonar } from '@/lib/ai/perplexity-sonar';
+
+const sonar = new PerplexitySonar(process.env.PERPLEXITY_API_KEY);
+
+// Real-time SEO research with citations
+const research = await sonar.getLatestSEOTrends('E-E-A-T guidelines');
+// Returns: { answer: string, citations: Citation[], usage: TokenUsage }
+
+// Domain-filtered research (high-authority sources only)
+const eeat = await sonar.search('Google E-E-A-T updates 2024', {
+  domains: [
+    'searchengineland.com',
+    'searchenginejournal.com',
+    'moz.com'
+  ]
+});
+```
+
+#### Model Selection Strategy
+
+**Task-Based Routing** (automatic cost optimization):
+
+| Task Type | Model | Cost | Use Case |
+|-----------|-------|------|----------|
+| Creative content | Claude 3.5 Sonnet | $3/$15 per MTok | Social media posts, brand voice |
+| SEO research | GPT-4 Turbo | $10/$30 per MTok | Keyword analysis, competitor research |
+| Large context | Gemini Pro 1.5 | $1.25/$5 per MTok | 1M token context, comprehensive analysis |
+| Bulk generation | Llama 3 70B | $0.50/$0.50 per MTok | High-volume content generation |
+| Visual analysis | GPT-4 Vision | $10/$30 per MTok | Pinterest, Instagram optimization |
+
+**Decision Tree**:
+```
+Content Request
+    ↓
+    ├─→ [Creative/Brand Voice] → Claude 3.5 Sonnet (quality priority)
+    ├─→ [SEO/Keywords] → GPT-4 Turbo (pattern recognition)
+    ├─→ [Large Context] → Gemini Pro 1.5 (1M tokens)
+    ├─→ [Bulk/Volume] → Llama 3 70B (cost priority)
+    └─→ [Visual] → GPT-4 Vision (image analysis)
+```
+
+#### Platform-Specific Best Practices
+
+**Built-in guidelines** for each platform:
+
+```typescript
+// YouTube
+- Description: 5000 char max, first 150 critical
+- Script: 8-12 min ideal, hook in 15 sec
+- Hashtags: 3-5 max
+
+// LinkedIn
+- Post: 1300 char sweet spot
+- Hashtags: 3-5 professional hashtags
+- Best time: Tue-Thu, 8-10am
+
+// Instagram
+- Caption: 2200 char max, first 125 critical
+- Hashtags: 20-30 mix (popular + niche)
+- Image: 1080x1080 feed, 1080x1920 stories
+
+// Facebook
+- Post: 40-80 chars optimal
+- Questions drive 100% more engagement
+- Hashtags: 1-2 max (overstuffing kills reach)
+
+// TikTok
+- Script: 21-34 sec ideal
+- Hook: 1-3 sec critical
+- Trending audio: 30% reach boost
+
+// X (Twitter)
+- Post: 71-100 chars get 17% more engagement
+- Hashtags: 1-2 max (overuse kills engagement)
+
+// Reddit
+- Title: 60-80 chars
+- NO direct promotion (provide value first)
+- Disclose affiliation, provide sources
+
+// Pinterest
+- Description: 500 chars, keyword-rich
+- Image: 1000x1500 vertical
+- Hashtags: 5-10 descriptive
+```
+
+#### Cost Optimization Patterns
+
+**Caching Strategy** (80-90% savings):
+
+```typescript
+import { SEOCache } from '@/lib/ai/seo-cache';
+
+const cache = new SEOCache();
+
+// Check cache first (24-hour TTL for SEO data)
+const cached = cache.get(query, options);
+if (cached) return cached;
+
+// Call API and cache result
+const result = await sonar.search(query, options);
+cache.set(query, options, result);
+```
+
+**Usage Tracking**:
+
+```typescript
+import { SEOUsageTracker } from '@/lib/ai/seo-usage-tracker';
+
+const tracker = new SEOUsageTracker();
+
+// Track each API call
+tracker.track({
+  timestamp: Date.now(),
+  command: 'research',
+  query: topic,
+  model: 'sonar-pro',
+  tokensUsed: result.usage?.total_tokens || 0,
+  cost: 0.01
+});
+
+// Get monthly stats
+const stats = tracker.getStats(new Date(new Date().setDate(1)));
+// Returns: { totalSearches, totalCost, totalTokens, byCommand, byModel }
+```
+
+**Budget Alerts**:
+
+```typescript
+const MONTHLY_BUDGET = 50; // $50/month
+
+function checkBudget() {
+  const stats = tracker.getStats(thisMonth);
+  if (stats.totalCost >= MONTHLY_BUDGET) {
+    console.error('⚠️ BUDGET EXCEEDED!');
+    process.exit(1);
+  }
+}
+```
+
+---
+
 ## Production-Grade Enhancements
 
 **See `PRODUCTION_GRADE_ASSESSMENT.md` for complete analysis.**
@@ -469,6 +682,10 @@ EMAIL_SERVER_PORT=587
 EMAIL_SERVER_USER=contact@unite-group.in
 EMAIL_SERVER_PASSWORD=your-app-password
 EMAIL_FROM=contact@unite-group.in
+
+# Marketing Intelligence Platform ✨ NEW
+PERPLEXITY_API_KEY=pplx-your-key          # SEO intelligence (99% cheaper than Semrush)
+OPENROUTER_API_KEY=sk-or-your-key         # Multi-model routing (70-80% cost savings)
 ```
 
 ---
@@ -484,6 +701,15 @@ EMAIL_FROM=contact@unite-group.in
 - **`EMAIL_SERVICE_COMPLETE.md`** - Email implementation summary
 - **`GMAIL_APP_PASSWORD_SETUP.md`** - Gmail SMTP setup guide
 - **`scripts/test-email-config.mjs`** - Email configuration test
+
+### Marketing Intelligence Platform ✨ NEW
+- **`src/lib/ai/openrouter-intelligence.ts`** - Multi-model AI routing system (473 lines)
+- **`src/lib/ai/perplexity-sonar.ts`** - SEO intelligence engine (operational)
+- **`docs/MULTI_PLATFORM_MARKETING_INTELLIGENCE.md`** - Complete 8-platform strategy
+- **`docs/MARKETING_INTELLIGENCE_ROADMAP.md`** - 12-week implementation plan
+- **`docs/SEO_COST_OPTIMIZATION_GUIDE.md`** - Cost tracking and optimization
+- **`docs/CLIENT_MEETING_BALUSTRADE_COMPANY.md`** - Client meeting preparation
+- **`scripts/seo-intelligence.mjs`** - CLI for SEO research (operational)
 
 ### RLS & Database Security
 - **`.claude/RLS_WORKFLOW.md`** - MANDATORY 3-step RLS migration process
@@ -603,6 +829,43 @@ const result = await callAnthropicWithRetry(async () => {
 # 4. Wait 1-5 min OR run: SELECT * FROM table_name LIMIT 1;
 ```
 
+**5. Generate Social Media Content** (OpenRouter):
+```typescript
+import OpenRouterIntelligence from '@/lib/ai/openrouter-intelligence';
+
+const router = new OpenRouterIntelligence();
+
+const content = await router.generateSocialContent({
+  platform: 'linkedin',
+  contentType: 'post',
+  topic: 'your topic',
+  brandVoice: 'Professional yet approachable',
+});
+```
+
+**6. SEO Keyword Research** (Perplexity Sonar):
+```bash
+# CLI commands (operational)
+npm run seo:research "local SEO strategies"
+npm run seo:eeat
+npm run seo:comprehensive "construction industry SEO"
+
+# In code
+import { PerplexitySonar } from '@/lib/ai/perplexity-sonar';
+const sonar = new PerplexitySonar();
+const trends = await sonar.getLatestSEOTrends('E-E-A-T guidelines');
+```
+
+**7. Competitor Analysis** (OpenRouter):
+```typescript
+const analysis = await router.analyzeCompetitor({
+  competitorDomain: 'competitor.com',
+  yourDomain: 'your-client.com',
+  industry: 'construction',
+  analysisType: 'full' // 'seo' | 'content' | 'social' | 'full'
+});
+```
+
 ---
 
-**Last Update**: 2025-01-18 - Added email service, production assessment, Anthropic patterns
+**Last Update**: 2025-11-19 - Added Marketing Intelligence Platform (OpenRouter + Perplexity)

@@ -185,3 +185,114 @@ export async function requireStaffAuth() {
 
   return { user, role: staffData.role };
 }
+
+/**
+ * Client Authentication Functions
+ * Phase 2 Step 5 - Client portal authentication
+ */
+
+/**
+ * Client login with email/password
+ * @param email - Client email address
+ * @param password - Client password
+ */
+export async function clientLogin(email: string, password: string) {
+  const { data, error } = await supabaseStaff.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (error) {
+    console.error('Client login failed:', error.message);
+    return { success: false, error: error.message };
+  }
+
+  if (!data.user) {
+    return { success: false, error: 'No user data returned' };
+  }
+
+  // Verify user is actually a client
+  const { data: clientData, error: clientError } = await supabaseStaff
+    .from('client_users')
+    .select('id, name, email, subscription_tier, active')
+    .eq('id', data.user.id)
+    .single();
+
+  if (clientError || !clientData) {
+    await supabaseStaff.auth.signOut();
+    return { success: false, error: 'User does not have client portal access' };
+  }
+
+  if (!clientData.active) {
+    await supabaseStaff.auth.signOut();
+    return { success: false, error: 'Your account has been deactivated. Contact support.' };
+  }
+
+  return {
+    success: true,
+    user: data.user,
+    session: data.session,
+    client: clientData,
+  };
+}
+
+/**
+ * Client logout
+ */
+export async function clientLogout() {
+  const { error } = await supabaseStaff.auth.signOut();
+
+  if (error) {
+    console.error('Client logout failed:', error.message);
+    return { success: false, error: error.message };
+  }
+
+  return { success: true };
+}
+
+/**
+ * Get current client session (with client_users table verification)
+ */
+export async function getClientSession() {
+  const { data, error } = await supabaseStaff.auth.getSession();
+
+  if (error || !data.session) {
+    return null;
+  }
+
+  // Verify user exists in client_users table
+  const { data: clientData, error: clientError } = await supabaseStaff
+    .from('client_users')
+    .select('id, name, email, subscription_tier, active')
+    .eq('id', data.session.user.id)
+    .single();
+
+  if (clientError || !clientData) {
+    console.error('Client not found in client_users table:', clientError);
+    return null;
+  }
+
+  // Check if client is active
+  if (!clientData.active) {
+    console.warn('Inactive client attempted access:', clientData.email);
+    return null;
+  }
+
+  return {
+    ...data.session,
+    client: clientData,
+  };
+}
+
+/**
+ * Require client authentication (for API routes)
+ */
+export async function requireClientAuth() {
+  const session = await getClientSession();
+
+  if (!session) {
+    throw new Error('Unauthorized: Client session required');
+  }
+
+  return session;
+}
