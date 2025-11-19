@@ -6,7 +6,7 @@ import { OpenRouter } from '@openrouter/sdk';
  * Free model optimized for code generation and technical tasks
  */
 export const openRouterClient = new OpenRouter({
-  apiKey: process.env.OPENROUTER_API_KEY || process.env.OPEN_API_KEY || '',
+  apiKey: process.env.OPENROUTER_API_KEY || '',
   defaultHeaders: {
     'HTTP-Referer': process.env.NEXT_PUBLIC_URL || 'https://unite-hub-git-main-unite-group.vercel.app',
     'X-Title': 'Unite-Hub CRM',

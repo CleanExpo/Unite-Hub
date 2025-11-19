@@ -81,8 +81,7 @@
       "Bash(pip install:*)",
       "Bash(npm run test:openrouter:*)",
       "Bash(powershell -Command:*)",
-      "Bash(npm run test:gemini:*)",
-      "Bash(vercel env:*)"
+      "Bash(npm run test:gemini:*)"
     ],
     "deny": [],
     "ask": []
