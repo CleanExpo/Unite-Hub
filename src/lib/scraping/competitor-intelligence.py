@@ -11,11 +11,29 @@ from datetime import datetime
 from pathlib import Path
 import sys
 
-# Add parent directory to path for imports
-sys.path.append(str(Path(__file__).parent.parent.parent))
+# Add current directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent))
 
-from lib.scraping.web_scraper import CompetitorAnalyzer
-from lib.scraping.advanced_scraper import SEOAnalyzer, JavaScriptScraper
+# Import using importlib to handle hyphenated module names
+import importlib.util
+
+# Load web-scraper module
+spec = importlib.util.spec_from_file_location("web_scraper", Path(__file__).parent / "web-scraper.py")
+web_scraper_module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(web_scraper_module)
+CompetitorAnalyzer = web_scraper_module.CompetitorAnalyzer
+
+# Try to load advanced-scraper module
+try:
+    spec = importlib.util.spec_from_file_location("advanced_scraper", Path(__file__).parent / "advanced-scraper.py")
+    advanced_scraper_module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(advanced_scraper_module)
+    SEOAnalyzer = advanced_scraper_module.SEOAnalyzer
+    JavaScriptScraper = advanced_scraper_module.JavaScriptScraper
+except Exception as e:
+    logger.warning(f"Could not load advanced scraper: {e}")
+    SEOAnalyzer = None
+    JavaScriptScraper = None
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -28,7 +46,7 @@ class CompetitorIntelligence:
 
     def __init__(self):
         self.basic_analyzer = CompetitorAnalyzer()
-        self.seo_analyzer = SEOAnalyzer()
+        self.seo_analyzer = SEOAnalyzer() if SEOAnalyzer else None
 
     async def full_analysis(self, url: str) -> Dict[str, Any]:
         """
