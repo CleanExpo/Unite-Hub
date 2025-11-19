@@ -1,21 +1,27 @@
 /**
  * Technical Health Panel
- * Phase 4 Step 4: Dual-Mode SEO UI Shell
+ * Phase 4 Step 5: Design Glow-Up (Iteration 4)
  *
- * Displays technical SEO health metrics (staff only):
- * - Core Web Vitals
- * - Indexing status
- * - Crawl errors
- * - Mobile usability
+ * Displays technical SEO health metrics with:
+ * - Premium animations (staggered health checks, 50ms delay)
+ * - Animated health score badge (color-coded: good/warning/critical)
+ * - Progress bar with spring physics animation
+ * - Health check cards with status icons
+ * - Staff-only visibility enforcement
+ * - Glass overlay header with backdrop blur
+ * - Premium skeleton loaders
  *
- * Note: This is a summary panel. Staff can drill down to detailed reports.
+ * Staff-only summary panel with drill-down capability.
  */
 
 "use client";
 
 import { useState, useEffect } from "react";
-import { Activity, CheckCircle, AlertTriangle, XCircle } from "lucide-react";
+import { motion } from "framer-motion";
+import { Activity, CheckCircle, AlertTriangle, XCircle, Shield } from "lucide-react";
 import type { UserRole } from "../SeoDashboardShell";
+import { seoTheme } from "@/lib/seo/seo-theme";
+import { animationPresets, springs } from "@/lib/seo/seo-motion";
 
 interface TechHealthPanelProps {
   seoProfileId: string;
@@ -76,98 +82,207 @@ export default function TechHealthPanel({
     return null;
   }
 
-  // Show loading state
+  // Show loading state with premium skeleton
   if (loading) {
     return (
-      <div className="bg-card border rounded-lg p-6">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 rounded-md bg-green-500/10">
+      <motion.div
+        className={seoTheme.panel.elevated}
+        variants={animationPresets.panel}
+        initial="hidden"
+        animate="visible"
+      >
+        <div className={seoTheme.panel.header}>
+          <div className="p-2.5 rounded-lg bg-green-500/10">
             <Activity className="h-5 w-5 text-green-500" />
           </div>
-          <h3 className="text-lg font-semibold">Technical Health</h3>
+          <div className="flex-1">
+            <h3 className={seoTheme.panel.title}>Technical Health</h3>
+            <div className="h-3 bg-muted/30 rounded animate-pulse w-16 mt-1" />
+          </div>
         </div>
-        <div className="flex items-center justify-center py-8">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+
+        {/* Premium Skeleton Loader */}
+        <div className="space-y-3">
+          <motion.div
+            className="space-y-3"
+            variants={animationPresets.stagger.container}
+            initial="hidden"
+            animate="visible"
+          >
+            {[...Array(4)].map((_, i) => (
+              <motion.div
+                key={i}
+                variants={animationPresets.stagger.item}
+                className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
+              >
+                <div className="flex items-center gap-3 flex-1">
+                  <div className="h-5 w-5 bg-muted/50 rounded-full animate-pulse" />
+                  <div className="space-y-1 flex-1">
+                    <div className="h-4 bg-muted/40 rounded animate-pulse w-1/3" />
+                    <div className="h-3 bg-muted/30 rounded animate-pulse w-1/2" />
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
     );
   }
 
   // Show error state
   if (error) {
     return (
-      <div className="bg-card border rounded-lg p-6">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 rounded-md bg-green-500/10">
+      <motion.div
+        className={seoTheme.panel.elevated}
+        variants={animationPresets.panel}
+        initial="hidden"
+        animate="visible"
+      >
+        <div className={seoTheme.panel.header}>
+          <div className="p-2.5 rounded-lg bg-green-500/10">
             <Activity className="h-5 w-5 text-green-500" />
           </div>
-          <h3 className="text-lg font-semibold">Technical Health</h3>
+          <h3 className={seoTheme.panel.title}>Technical Health</h3>
         </div>
-        <div className="text-center py-8">
-          <p className="text-sm text-destructive">{error}</p>
-        </div>
-      </div>
+        <motion.div
+          className="text-center py-8"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={springs.smooth}
+        >
+          <div className="p-4 rounded-lg bg-destructive/10 border border-destructive/20">
+            <p className="text-sm text-destructive">{error}</p>
+          </div>
+        </motion.div>
+      </motion.div>
     );
   }
 
-  // Determine overall health color
-  const healthColor =
+  // Get health status utilities
+  const healthStyles = seoTheme.utils.getHealthStatusClasses(
     metrics?.overallHealth === "good"
-      ? "text-green-700 dark:text-green-400"
+      ? "good"
       : metrics?.overallHealth === "warning"
-        ? "text-yellow-700 dark:text-yellow-400"
-        : "text-red-700 dark:text-red-400";
+        ? "warning"
+        : "critical"
+  );
 
-  const healthBg =
-    metrics?.overallHealth === "good"
-      ? "bg-green-500/10"
-      : metrics?.overallHealth === "warning"
-        ? "bg-yellow-500/10"
-        : "bg-red-500/10";
-
-  // Show metrics
+  // Show metrics with premium animations
   return (
-    <div className="bg-card border rounded-lg p-6">
-      <div className="flex items-center gap-3 mb-6">
-        <div className={`p-2 rounded-md ${healthBg}`}>
-          <Activity className={`h-5 w-5 ${healthColor}`} />
-        </div>
-        <div className="flex-1">
-          <h3 className="text-lg font-semibold">Technical Health</h3>
-          <p className={`text-sm ${healthColor} font-medium capitalize`}>
-            {metrics?.overallHealth}
-          </p>
+    <motion.div
+      className={seoTheme.panel.elevated}
+      variants={animationPresets.panel}
+      initial="hidden"
+      animate="visible"
+      whileHover={{
+        boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+        transition: { duration: 0.2 }
+      }}
+    >
+      {/* Gradient Panel Header with Glass Overlay */}
+      <div className={`${seoTheme.panel.header} relative`}>
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-green-500/10 via-emerald-400/5 to-transparent rounded-t-xl opacity-50"
+          style={{ backdropFilter: "blur(8px)" }}
+        />
+        <div className="relative z-10 flex items-center gap-3">
+          <motion.div
+            className={`p-2.5 rounded-lg ${healthStyles.bg} ring-2 ${healthStyles.ring || 'ring-green-500/20'}`}
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            transition={springs.snappy}
+          >
+            <Activity className={`h-5 w-5 ${healthStyles.text}`} />
+          </motion.div>
+          <div className="flex-1">
+            <h3 className={seoTheme.panel.title}>Technical Health</h3>
+            <motion.p
+              className={`text-sm ${healthStyles.text} font-semibold capitalize`}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={springs.bouncy}
+            >
+              {metrics?.overallHealth}
+            </motion.p>
+          </div>
         </div>
       </div>
 
-      {/* Health Checks */}
-      <div className="space-y-3">
-        {/* Indexing Status */}
-        <div className="flex items-center justify-between p-3 bg-muted/50 rounded-md">
-          <div className="flex items-center gap-3">
-            <CheckCircle className="h-5 w-5 text-green-500" />
-            <div>
-              <p className="text-sm font-medium">Indexing</p>
-              <p className="text-xs text-muted-foreground">
-                {metrics?.indexedPages}/{metrics?.totalPages} pages
-              </p>
+      {/* Staggered Health Checks */}
+      <motion.div
+        className="space-y-3"
+        variants={animationPresets.stagger.container}
+        initial="hidden"
+        animate="visible"
+      >
+        {/* Indexing Status with Progress Bar */}
+        <motion.div
+          variants={animationPresets.stagger.item}
+          className="p-3 bg-muted/50 rounded-lg hover:bg-muted/70 transition-colors"
+          whileHover={{ scale: 1.01 }}
+          transition={springs.snappy}
+        >
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-3 flex-1">
+              <motion.div
+                initial={{ scale: 0.8, rotate: -10 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={springs.bouncy}
+              >
+                <CheckCircle className="h-5 w-5 text-green-500" />
+              </motion.div>
+              <div className="flex-1">
+                <p className="text-sm font-medium">Indexing</p>
+                <p className="text-xs text-muted-foreground">
+                  {metrics?.indexedPages}/{metrics?.totalPages} pages
+                </p>
+              </div>
             </div>
+            <motion.span
+              className="text-xs font-semibold text-green-700 dark:text-green-400"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ ...springs.bouncy, delay: 0.1 }}
+            >
+              {metrics?.indexedPages && metrics?.totalPages
+                ? `${((metrics.indexedPages / metrics.totalPages) * 100).toFixed(0)}%`
+                : "0%"}
+            </motion.span>
           </div>
-          <span className="text-xs font-medium text-green-700 dark:text-green-400">
-            {metrics?.indexedPages && metrics?.totalPages
-              ? `${((metrics.indexedPages / metrics.totalPages) * 100).toFixed(0)}%`
-              : "0%"}
-          </span>
-        </div>
+          {/* Animated Progress Bar */}
+          <div className="h-2 bg-muted rounded-full overflow-hidden">
+            <motion.div
+              className="h-full bg-gradient-to-r from-green-500 to-emerald-500"
+              initial={{ width: 0 }}
+              animate={{
+                width: metrics?.indexedPages && metrics?.totalPages
+                  ? `${(metrics.indexedPages / metrics.totalPages) * 100}%`
+                  : "0%"
+              }}
+              transition={{ ...springs.smooth, delay: 0.2, duration: 0.8 }}
+            />
+          </div>
+        </motion.div>
 
         {/* Crawl Errors */}
-        <div className="flex items-center justify-between p-3 bg-muted/50 rounded-md">
-          <div className="flex items-center gap-3">
-            {(metrics?.crawlErrors || 0) > 0 ? (
-              <AlertTriangle className="h-5 w-5 text-yellow-500" />
-            ) : (
-              <CheckCircle className="h-5 w-5 text-green-500" />
-            )}
+        <motion.div
+          variants={animationPresets.stagger.item}
+          className="flex items-center justify-between p-3 bg-muted/50 rounded-lg hover:bg-muted/70 transition-colors"
+          whileHover={{ scale: 1.01 }}
+          transition={springs.snappy}
+        >
+          <div className="flex items-center gap-3 flex-1">
+            <motion.div
+              initial={{ scale: 0.8, rotate: -10 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={springs.bouncy}
+            >
+              {(metrics?.crawlErrors || 0) > 0 ? (
+                <AlertTriangle className="h-5 w-5 text-yellow-500" />
+              ) : (
+                <CheckCircle className="h-5 w-5 text-green-500" />
+              )}
+            </motion.div>
             <div>
               <p className="text-sm font-medium">Crawl Errors</p>
               <p className="text-xs text-muted-foreground">
@@ -176,18 +291,35 @@ export default function TechHealthPanel({
             </div>
           </div>
           {(metrics?.crawlErrors || 0) > 0 && (
-            <button className="text-xs text-primary hover:underline">Fix</button>
+            <motion.button
+              className="text-xs text-primary hover:underline font-medium"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Fix
+            </motion.button>
           )}
-        </div>
+        </motion.div>
 
         {/* Mobile Usability */}
-        <div className="flex items-center justify-between p-3 bg-muted/50 rounded-md">
+        <motion.div
+          variants={animationPresets.stagger.item}
+          className="flex items-center justify-between p-3 bg-muted/50 rounded-lg hover:bg-muted/70 transition-colors"
+          whileHover={{ scale: 1.01 }}
+          transition={springs.snappy}
+        >
           <div className="flex items-center gap-3">
-            {metrics?.mobileUsability === "pass" ? (
-              <CheckCircle className="h-5 w-5 text-green-500" />
-            ) : (
-              <XCircle className="h-5 w-5 text-red-500" />
-            )}
+            <motion.div
+              initial={{ scale: 0.8, rotate: -10 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={springs.bouncy}
+            >
+              {metrics?.mobileUsability === "pass" ? (
+                <CheckCircle className="h-5 w-5 text-green-500" />
+              ) : (
+                <XCircle className="h-5 w-5 text-red-500" />
+              )}
+            </motion.div>
             <div>
               <p className="text-sm font-medium">Mobile Usability</p>
               <p className="text-xs text-muted-foreground">
@@ -195,16 +327,27 @@ export default function TechHealthPanel({
               </p>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Core Web Vitals */}
-        <div className="flex items-center justify-between p-3 bg-muted/50 rounded-md">
+        <motion.div
+          variants={animationPresets.stagger.item}
+          className="flex items-center justify-between p-3 bg-muted/50 rounded-lg hover:bg-muted/70 transition-colors"
+          whileHover={{ scale: 1.01 }}
+          transition={springs.snappy}
+        >
           <div className="flex items-center gap-3">
-            {metrics?.coreWebVitals === "pass" ? (
-              <CheckCircle className="h-5 w-5 text-green-500" />
-            ) : (
-              <XCircle className="h-5 w-5 text-red-500" />
-            )}
+            <motion.div
+              initial={{ scale: 0.8, rotate: -10 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={springs.bouncy}
+            >
+              {metrics?.coreWebVitals === "pass" ? (
+                <CheckCircle className="h-5 w-5 text-green-500" />
+              ) : (
+                <XCircle className="h-5 w-5 text-red-500" />
+              )}
+            </motion.div>
             <div>
               <p className="text-sm font-medium">Core Web Vitals</p>
               <p className="text-xs text-muted-foreground">
@@ -212,12 +355,24 @@ export default function TechHealthPanel({
               </p>
             </div>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
-      <div className="mt-4 pt-4 border-t">
-        <button className="text-sm text-primary hover:underline">View Full Report →</button>
-      </div>
-    </div>
+      {/* Footer with Backdrop Blur */}
+      <motion.div
+        className="mt-4 pt-4 border-t border-border/50 backdrop-blur-sm"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+      >
+        <motion.button
+          className="text-sm text-primary hover:underline font-medium"
+          whileHover={{ x: 5 }}
+          transition={springs.snappy}
+        >
+          View Full Report →
+        </motion.button>
+      </motion.div>
+    </motion.div>
   );
 }
