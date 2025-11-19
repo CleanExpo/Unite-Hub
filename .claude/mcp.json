@@ -16,6 +16,17 @@
         ".claude/mcp_servers/sherlock-think/index.js"
       ],
       "description": "Sherlock Think Alpha - 1.84M context thinking model via OpenRouter"
+    },
+    "dataforseo": {
+      "command": "npx",
+      "args": [
+        "dataforseo-mcp-server"
+      ],
+      "env": {
+        "DATAFORSEO_API_LOGIN": "${DATAFORSEO_API_LOGIN}",
+        "DATAFORSEO_API_PASSWORD": "${DATAFORSEO_API_PASSWORD}"
+      },
+      "description": "DataForSEO API - SEO intelligence (SERP, competitors, keywords, backlinks, local GEO)"
     }
   }
 }
