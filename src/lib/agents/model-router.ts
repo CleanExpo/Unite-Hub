@@ -20,6 +20,8 @@ const MODEL_COSTS = {
   "sherlock-think-alpha": { input: 0, output: 0 },          // FREE: Reasoning, 1.8M context, multimodal
   "sherlock-dash-alpha": { input: 0, output: 0 },           // FREE: Non-reasoning, 1.8M context, multimodal
   "kat-coder-pro-free": { input: 0, output: 0 },            // FREE: Coding specialist, 256K context
+  "gemma-3n-e2b-it-free": { input: 0, output: 0 },          // FREE: Google DeepMind, 8K context, multimodal
+  "mai-ds-r1-free": { input: 0, output: 0 },                // FREE: Microsoft reasoning, 163K context
 
   // Anthropic Claude (Direct API)
   "claude-opus-4": { input: 15, output: 75 },
@@ -30,10 +32,17 @@ const MODEL_COSTS = {
   "gemini-2.0-flash-lite": { input: 0.075, output: 0.3 },   // Ultra-cheap, 25% cheaper than 1.5
   "gemini-2.0-flash": { input: 0.1, output: 0.4 },          // Balanced, 1M context
 
+  // Google Gemini 2.5 (OpenRouter)
+  "gemini-2.5-flash-image": { input: 0.3, output: 2.5, inputImages: 1.238, outputImages: 0.03 }, // Image generation, 33K context
+
   // Google Gemini 3.0 (OpenRouter)
   "gemini-3.0-pro": { input: 2, output: 12 },               // Advanced reasoning, beats GPT-4
 
-  // Other OpenRouter Models
+  // Budget OpenRouter Models
+  "qwen3-vl-8b-thinking": { input: 0.035, output: 0.138 },  // Qwen VL reasoning, 8B params
+  "llama-3.3-nemotron-super-49b": { input: 0.1, output: 0.4 }, // NVIDIA, 130K context, balanced
+  "deepseek-v3.2-exp": { input: 0.27, output: 0.4 },        // DeepSeek, 163K context, sparse attention
+  "grok-4-fast": { input: 0.2, output: 0.5 },               // xAI, 2M context, multimodal reasoning
   "kimi-k2-thinking": { input: 0.5, output: 2.5 },          // Reasoning, 262K context, MoE architecture
   "llama-3.3-70b": { input: 0.35, output: 0.4 },
 
@@ -59,6 +68,8 @@ export type ModelName =
   | "sherlock-think-alpha"        // FREE: Reasoning, 1.8M context
   | "sherlock-dash-alpha"         // FREE: Fast, 1.8M context
   | "kat-coder-pro-free"          // FREE: Coding specialist, 256K context
+  | "gemma-3n-e2b-it-free"        // FREE: Google DeepMind, 8K context
+  | "mai-ds-r1-free"              // FREE: Microsoft reasoning, 163K context
 
   // Anthropic Claude (Direct)
   | "claude-opus-4"
@@ -68,9 +79,14 @@ export type ModelName =
   // Google Gemini (OpenRouter)
   | "gemini-2.0-flash-lite"       // Ultra-cheap ($0.075/$0.30)
   | "gemini-2.0-flash"            // Balanced ($0.10/$0.40)
+  | "gemini-2.5-flash-image"      // Image generation ($0.30/$2.50)
   | "gemini-3.0-pro"              // Advanced reasoning ($2/$12)
 
-  // Other OpenRouter Models
+  // Budget OpenRouter Models
+  | "qwen3-vl-8b-thinking"        // Qwen VL reasoning ($0.035/$0.138)
+  | "llama-3.3-nemotron-super-49b" // NVIDIA balanced ($0.10/$0.40)
+  | "deepseek-v3.2-exp"           // DeepSeek sparse ($0.27/$0.40)
+  | "grok-4-fast"                 // xAI multimodal ($0.20/$0.50)
   | "kimi-k2-thinking"            // Reasoning ($0.50/$2.50)
   | "llama-3.3-70b"
 
@@ -78,16 +94,20 @@ export type ModelName =
   | "gemini-flash-lite"           // DEPRECATED
   | "gemini-flash";               // DEPRECATED
 
+export type CostTier = "free" | "budget" | "premium";
+
 export interface RouteOptions {
   task: TaskType;
   prompt: string;
   context?: string;
   assignedModel?: ModelName;        // Force specific model (highest priority)
   preferredModel?: ModelName;       // Preferred but not forced
+  preferredTier?: CostTier;         // Prefer models in this cost tier
   fallback?: ModelName;             // Fallback if preferred fails
   thinkingBudget?: number;          // Enable Extended Thinking (Opus only)
   maxTokens?: number;
   temperature?: number;
+  onProgress?: (progress: { stage: string; progress: number; model?: string }) => void; // Progress callback
 }
 
 export interface ModelResponse {
@@ -97,6 +117,7 @@ export interface ModelResponse {
   tokensUsed: { input: number; output: number };
   costEstimate: number;
   latencyMs: number;
+  tier: CostTier;                   // Cost tier used
 }
 
 export class ModelRouter {
@@ -142,6 +163,29 @@ export class ModelRouter {
   }
 
   /**
+   * Get cost tier for a model
+   */
+  private getModelTier(model: ModelName): CostTier {
+    const freeModels: ModelName[] = [
+      "sherlock-think-alpha",
+      "sherlock-dash-alpha",
+      "kat-coder-pro-free",
+      "gemma-3n-e2b-it-free",
+      "mai-ds-r1-free",
+    ];
+
+    const premiumModels: ModelName[] = [
+      "claude-opus-4",
+      "claude-sonnet-4.5",
+      "gemini-3.0-pro",
+    ];
+
+    if (freeModels.includes(model)) return "free";
+    if (premiumModels.includes(model)) return "premium";
+    return "budget";
+  }
+
+  /**
    * Select optimal model based on task type
    * Default to cheapest model that can successfully complete the task
    */
@@ -149,6 +193,11 @@ export class ModelRouter {
     // Prefer user's preferred model if specified
     if (options.preferredModel) {
       return options.preferredModel;
+    }
+
+    // If preferred tier specified, select best model in that tier
+    if (options.preferredTier) {
+      return this.selectModelByTier(task, options.preferredTier);
     }
 
     // Auto-select BEST model for each task (FREE FIRST, then optimized for cost + performance)
@@ -178,6 +227,52 @@ export class ModelRouter {
   }
 
   /**
+   * Select best model in a specific cost tier for a task
+   */
+  private selectModelByTier(task: TaskType, tier: CostTier): ModelName {
+    const tierModels: Record<CostTier, Record<string, ModelName>> = {
+      free: {
+        reasoning: "sherlock-think-alpha",
+        fast: "sherlock-dash-alpha",
+        coding: "kat-coder-pro-free",
+        multimodal: "gemma-3n-e2b-it-free",
+        default: "sherlock-dash-alpha",
+      },
+      budget: {
+        reasoning: "kimi-k2-thinking",
+        fast: "gemini-2.0-flash",
+        coding: "qwen3-vl-8b-thinking",
+        multimodal: "grok-4-fast",
+        default: "gemini-2.0-flash",
+      },
+      premium: {
+        reasoning: "claude-opus-4",
+        fast: "claude-sonnet-4.5",
+        coding: "gemini-3.0-pro",
+        multimodal: "gemini-3.0-pro",
+        default: "claude-sonnet-4.5",
+      },
+    };
+
+    // Select sub-tier based on task type
+    const taskRequirements: Record<TaskType, keyof typeof tierModels.free> = {
+      extract_intent: "fast",
+      tag_generation: "fast",
+      sentiment_analysis: "fast",
+      email_intelligence: "fast",
+      contact_scoring: "fast",
+      generate_persona: "reasoning",
+      generate_strategy: "reasoning",
+      generate_content: "reasoning",
+      security_audit: "reasoning",
+      codebase_analysis: "coding",
+    };
+
+    const requirement = taskRequirements[task] || "default";
+    return tierModels[tier][requirement];
+  }
+
+  /**
    * Call specific model
    */
   private async callModel(
@@ -201,13 +296,20 @@ export class ModelRouter {
         "sherlock-think-alpha",
         "sherlock-dash-alpha",
         "kat-coder-pro-free",
+        "gemma-3n-e2b-it-free",
+        "mai-ds-r1-free",
         // Gemini Models
         "gemini-2.0-flash-lite",
         "gemini-2.0-flash",
+        "gemini-2.5-flash-image",
         "gemini-3.0-pro",
         "gemini-flash-lite",      // Legacy
         "gemini-flash",           // Legacy
-        // Other Models
+        // Budget Models
+        "qwen3-vl-8b-thinking",
+        "llama-3.3-nemotron-super-49b",
+        "deepseek-v3.2-exp",
+        "grok-4-fast",
         "kimi-k2-thinking",
         "llama-3.3-70b",
       ].includes(model)
@@ -264,6 +366,16 @@ export class ModelRouter {
     };
 
     const costEstimate = this.calculateCost(model, tokensUsed);
+    const tier = this.getModelTier(model);
+
+    // Report progress if callback provided
+    if (options.onProgress) {
+      options.onProgress({
+        stage: "completed",
+        progress: 100,
+        model,
+      });
+    }
 
     return {
       model,
@@ -272,6 +384,7 @@ export class ModelRouter {
       tokensUsed,
       costEstimate,
       latencyMs: Date.now() - startTime,
+      tier,
     };
   }
 
@@ -293,15 +406,24 @@ export class ModelRouter {
       "sherlock-think-alpha": "openrouter/sherlock-think-alpha",
       "sherlock-dash-alpha": "openrouter/sherlock-dash-alpha",
       "kat-coder-pro-free": "kwaipilot/kat-coder-pro:free",
+      "gemma-3n-e2b-it-free": "google/gemma-3n-e2b-it:free",
+      "mai-ds-r1-free": "microsoft/mai-ds-r1:free",
 
       // Gemini 2.0 (Ultra-cheap)
       "gemini-2.0-flash-lite": "google/gemini-2.0-flash-lite",
       "gemini-2.0-flash": "google/gemini-2.0-flash",
 
+      // Gemini 2.5 (Image generation)
+      "gemini-2.5-flash-image": "google/gemini-2.5-flash-image-preview",
+
       // Gemini 3.0 (Advanced reasoning)
       "gemini-3.0-pro": "google/gemini-3-pro-preview",
 
-      // Other OpenRouter Models
+      // Budget Models
+      "qwen3-vl-8b-thinking": "qwen/qwen3-vl-8b-thinking",
+      "llama-3.3-nemotron-super-49b": "nvidia/llama-3.3-nemotron-super-49b-v1.5",
+      "deepseek-v3.2-exp": "deepseek/deepseek-v3.2-exp",
+      "grok-4-fast": "x-ai/grok-4-fast",
       "kimi-k2-thinking": "moonshotai/kimi-k2-thinking",
       "llama-3.3-70b": "meta-llama/llama-3.3-70b-instruct",
 
@@ -328,6 +450,16 @@ export class ModelRouter {
     };
 
     const costEstimate = this.calculateCost(model, tokensUsed);
+    const tier = this.getModelTier(model);
+
+    // Report progress if callback provided
+    if (options.onProgress) {
+      options.onProgress({
+        stage: "completed",
+        progress: 100,
+        model,
+      });
+    }
 
     return {
       model,
@@ -335,6 +467,7 @@ export class ModelRouter {
       tokensUsed,
       costEstimate,
       latencyMs: Date.now() - startTime,
+      tier,
     };
   }
 
