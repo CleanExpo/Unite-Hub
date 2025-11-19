@@ -23,6 +23,8 @@ import { Redis } from "ioredis";
 import { supabaseAdmin } from "@/lib/supabase";
 import AuditEngine from "./auditEngine";
 import TierLogic from "./tierLogic";
+import ClientDataManager from "./clientDataManager";
+import GeoTargeting from "@/lib/seo/geoTargeting";
 import type { AuditTier, AuditConfig } from "@/lib/seo/auditTypes";
 
 // Redis connection
