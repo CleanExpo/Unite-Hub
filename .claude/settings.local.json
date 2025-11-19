@@ -79,7 +79,9 @@
       "Bash(grep:*)",
       "Bash(done)",
       "Bash(pip install:*)",
-      "Bash(npm run test:openrouter:*)"
+      "Bash(npm run test:openrouter:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(npm run test:gemini:*)"
     ],
     "deny": [],
     "ask": []
