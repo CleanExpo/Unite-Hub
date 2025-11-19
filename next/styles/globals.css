@@ -1,0 +1,18 @@
+/**
+ * Global Styles - Phase 2
+ * Tailwind CSS base styles
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-gray-800;
+  }
+
+  body {
+    @apply bg-gray-950 text-gray-100;
+  }
+}
