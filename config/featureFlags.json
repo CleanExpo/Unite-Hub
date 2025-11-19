@@ -1,0 +1,23 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "description": "Feature flags for safe Phase 1 UI/UX overhaul deployment",
+    "updated": "2025-11-19"
+  },
+  "flags": {
+    "newUIEnabled": false,
+    "newStaffPortalEnabled": false,
+    "newClientPortalEnabled": false,
+    "newAIEngineEnabled": false,
+    "newAuthEnabled": false,
+    "parallelTestingMode": true
+  },
+  "notes": {
+    "parallelTestingMode": "When true, both old and new systems run side-by-side for comparison",
+    "newUIEnabled": "Master switch for all new UI components",
+    "newStaffPortalEnabled": "Enable new staff dashboard (admin/founder/developer)",
+    "newClientPortalEnabled": "Enable new client portal UI",
+    "newAIEngineEnabled": "Enable new AI orchestrator architecture",
+    "newAuthEnabled": "Enable new Supabase staff authentication flow"
+  }
+}
