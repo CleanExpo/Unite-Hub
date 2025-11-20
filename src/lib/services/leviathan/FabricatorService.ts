@@ -41,3 +41,6 @@ export class FabricatorService {
 }
 
 export default FabricatorService;
+
+// Singleton instance for convenience
+export const fabricatorService = new FabricatorService();
