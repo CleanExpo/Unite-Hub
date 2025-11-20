@@ -224,7 +224,7 @@ USING (
     EXISTS (
         SELECT 1 FROM teams t
         JOIN user_organizations uo ON uo.org_id = t.org_id
-        WHERE t.id = team_members.team_id
+        WHERE t.id = team_id
           AND uo.user_id = auth.uid()
     )
 );
@@ -234,12 +234,12 @@ ON team_members FOR ALL
 USING (
     EXISTS (
         SELECT 1 FROM teams t
-        WHERE t.id = team_members.team_id
+        WHERE t.id = team_id
           AND t.lead_user_id = auth.uid()
     ) OR
     EXISTS (
         SELECT 1 FROM team_members tm2
-        WHERE tm2.team_id = team_members.team_id
+        WHERE tm2.team_id = team_id
           AND tm2.user_id = auth.uid()
           AND tm2.role_name IN ('team_lead', 'team_admin')
     )
@@ -309,11 +309,11 @@ DECLARE
 BEGIN
     -- Get user's org roles
     FOR v_role_id IN
-        SELECT role_id FROM user_org_roles
-        WHERE user_id = p_user_id
-          AND org_id = p_org_id
-          AND is_active = TRUE
-          AND (expires_at IS NULL OR expires_at > NOW())
+        SELECT uor.role_id FROM user_org_roles uor
+        WHERE uor.user_id = p_user_id
+          AND uor.org_id = p_org_id
+          AND uor.is_active = TRUE
+          AND (uor.expires_at IS NULL OR uor.expires_at > NOW())
     LOOP
         -- Get role permissions with inheritance
         WITH RECURSIVE role_chain AS (
