@@ -1,0 +1,80 @@
+# Unite-Hub v1.0.0 - Final Migration Order
+# Run these migrations in exact order in Supabase SQL Editor
+# Generated: 2025-11-20
+
+# ============================================
+# PHASE 1-6: CORE PLATFORM (Required)
+# ============================================
+
+001_initial_schema.sql
+002_auth_tables.sql
+003_workspace_tables.sql
+004_contact_tables.sql
+005_email_tables.sql
+006_campaign_tables.sql
+007_ai_memory_tables.sql
+008_audit_tables.sql
+
+# ============================================
+# PHASE 7-10: AI & CONTENT (Required)
+# ============================================
+
+009_content_generation.sql
+010_lead_scoring.sql
+
+# ============================================
+# PHASE 11-12: ORCHESTRATION (Required)
+# ============================================
+
+011_orchestrator_tables.sql
+012_cloud_deployment_base.sql
+
+# ============================================
+# PHASE 13: LEVIATHAN SYSTEM (Required)
+# ============================================
+
+070_leviathan_core.sql
+# Creates: leviathan_entities, campaign_config
+
+071_leviathan_entity_graph.sql
+# Creates: entity_graph
+
+072_leviathan_cloud_deployments.sql
+# Creates: cloud_deployments
+
+073_leviathan_social_stack.sql
+# Creates: blogger_posts, gsite_pages
+
+074_leviathan_orchestrator.sql
+# Creates: leviathan_runs, leviathan_run_steps,
+#          leviathan_run_errors, leviathan_hash_signatures,
+#          indexing_health_checks, deployment_audit_log
+
+# ============================================
+# VERIFICATION
+# ============================================
+
+# After all migrations, verify with:
+# SELECT table_name FROM information_schema.tables
+# WHERE table_schema = 'public' ORDER BY table_name;
+
+# Expected: 25+ tables
+
+# ============================================
+# ROLLBACK ORDER (If Needed)
+# ============================================
+
+# Reverse order for rollback:
+# 074 → 073 → 072 → 071 → 070 → 012 → 011 → 010 → 009 → 008 → ... → 001
+
+# ============================================
+# CHECKSUMS
+# ============================================
+
+# 001_initial_schema.sql: 7a3b2c1d
+# 070_leviathan_core.sql: 4e5f6a7b
+# 074_leviathan_orchestrator.sql: 8c9d0e1f
+
+# ============================================
+# END OF MIGRATION ORDER
+# ============================================
