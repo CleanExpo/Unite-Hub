@@ -92,3 +92,6 @@ export default function Button({
     </button>
   );
 }
+
+// Named export for compatibility
+export { Button };

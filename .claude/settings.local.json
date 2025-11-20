@@ -87,7 +87,13 @@
       "Bash(git stash:*)",
       "Bash(npx tsx:*)",
       "Bash(DEBUG=vitest:*)",
-      "Bash(d:/Unite-Hub/src/lib/services/leviathan/__tests__/simple.test.ts)"
+      "Bash(d:/Unite-Hub/src/lib/services/leviathan/__tests__/simple.test.ts)",
+      "Bash(build_errors.txt)",
+      "Bash(src/components/ui/button.tsx)",
+      "Bash(src/components/ui/input.tsx)",
+      "Bash(src/components/ui/skeleton.tsx)",
+      "Bash(src/components/ui/card.tsx)",
+      "Bash(src/components/staff/StaffProgressRing.tsx)"
     ],
     "deny": [],
     "ask": []

@@ -75,3 +75,6 @@ export function SkeletonText({ lines = 3 }: { lines?: number }) {
     </div>
   );
 }
+
+// Named export for compatibility
+export { Skeleton };

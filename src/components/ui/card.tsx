@@ -91,3 +91,6 @@ export function CardDescription({ children, className = '' }: { children: React.
     </p>
   );
 }
+
+// Named export for Card compatibility
+export { Card };

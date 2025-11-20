@@ -45,3 +45,6 @@ export default function StaffProgressRing({ percent, size = 80 }: StaffProgressR
     </div>
   );
 }
+
+// Named export for compatibility
+export { StaffProgressRing };
