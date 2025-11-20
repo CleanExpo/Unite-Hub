@@ -84,7 +84,9 @@
       "Bash(npm run test:gemini:*)",
       "Bash(vercel env:*)",
       "Bash(git revert:*)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(DEBUG=vitest:*)",
+      "Bash(src/lib/__tests__/simple.test.ts)"
     ],
     "deny": [],
     "ask": []
