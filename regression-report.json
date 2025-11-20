@@ -1,0 +1,49 @@
+{
+  "timestamp": "2025-11-20T23:02:59.230Z",
+  "version": "1.1.1",
+  "overall": "warn",
+  "results": [
+    {
+      "suite": "Global Regression",
+      "passed": true,
+      "duration": 1,
+      "errors": [],
+      "warnings": []
+    },
+    {
+      "suite": "Performance Audit",
+      "passed": true,
+      "duration": 256,
+      "errors": [],
+      "warnings": [
+        "High console.log count: 414 (consider removing for production)"
+      ]
+    },
+    {
+      "suite": "Reliability Matrix",
+      "passed": true,
+      "duration": 1,
+      "errors": [],
+      "warnings": [
+        "No error boundary found in app directory"
+      ]
+    },
+    {
+      "suite": "Error Surface Scan",
+      "passed": true,
+      "duration": 75,
+      "errors": [],
+      "warnings": [
+        "API route without try-catch: \\src\\app\\api\\auth\\[...nextauth]\\route.ts",
+        "API route without try-catch: \\src\\app\\api\\deployment-check\\route.ts",
+        "API route without try-catch: \\src\\app\\api\\docs\\route.ts"
+      ]
+    }
+  ],
+  "summary": {
+    "total": 4,
+    "passed": 4,
+    "failed": 0,
+    "warnings": 5
+  }
+}
