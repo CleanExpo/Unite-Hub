@@ -224,7 +224,7 @@ USING (
     EXISTS (
         SELECT 1 FROM teams t
         JOIN user_organizations uo ON uo.org_id = t.org_id
-        WHERE t.id = team_id
+        WHERE t.id = team_members.team_id
           AND uo.user_id = auth.uid()
     )
 );
@@ -234,12 +234,12 @@ ON team_members FOR ALL
 USING (
     EXISTS (
         SELECT 1 FROM teams t
-        WHERE t.id = team_id
+        WHERE t.id = team_members.team_id
           AND t.lead_user_id = auth.uid()
     ) OR
     EXISTS (
         SELECT 1 FROM team_members tm2
-        WHERE tm2.team_id = team_id
+        WHERE tm2.team_id = team_members.team_id
           AND tm2.user_id = auth.uid()
           AND tm2.role_name IN ('team_lead', 'team_admin')
     )
