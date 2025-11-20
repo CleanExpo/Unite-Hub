@@ -3,9 +3,11 @@
  * Fully functional dashboard with real API integration
  */
 
-import StaffProgressRing from '../../../components/staff/StaffProgressRing'
-import AIInsightBubble from '../../../components/ai/AIInsightBubble'
-import Skeleton from '../../../components/ui/Skeleton'
+import StaffProgressRing from '@/components/staff/StaffProgressRing'
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+import AIInsightBubble from '@/components/ai/AIInsightBubble'
+import Skeleton from '@/components/ui/skeleton'
 import { getStaffProjects, getStaffTasks, getAIDailyBriefing } from '@/lib/services/staff/staffService'
 
 export default async function StaffDashboardPage() {

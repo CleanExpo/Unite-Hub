@@ -79,3 +79,5 @@ export default function TaskCard({ task, onStatusChange, onViewProof }: TaskCard
     </div>
   );
 }
+
+export { TaskCard };

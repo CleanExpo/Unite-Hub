@@ -1,3 +1,5 @@
+// Force dynamic
+export const dynamic = 'force-dynamic';
 /**
  * Staff Tasks Page - Phase 2 Step 4
  *

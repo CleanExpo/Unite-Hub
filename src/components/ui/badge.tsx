@@ -42,3 +42,6 @@ export default function Badge({
     </span>
   );
 }
+
+// Named export for compatibility
+export { Badge };

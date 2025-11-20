@@ -1,3 +1,6 @@
+// Force dynamic rendering for auth-dependent layout
+export const dynamic = 'force-dynamic';
+
 /**
  * Staff Layout - Phase 2 Step 3
  *

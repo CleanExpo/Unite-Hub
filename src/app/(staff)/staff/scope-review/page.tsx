@@ -1,5 +1,8 @@
 'use client';
 
+// Force dynamic
+export const dynamic = 'force-dynamic';
+
 /**
  * Staff Scope Review Page
  * Phase 3 Step 2 - Staff Tools

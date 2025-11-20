@@ -147,6 +147,9 @@ export function getSupabaseAdmin() {
   return _supabaseAdmin;
 }
 
+// Alias for compatibility with named imports
+export const supabaseAdmin = getSupabaseAdmin;
+
 // Types
 export interface Organization {
   id: string;

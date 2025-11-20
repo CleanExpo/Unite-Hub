@@ -49,3 +49,6 @@ export default function AIInsightBubble({
     </div>
   );
 }
+
+// Named export for compatibility
+export { AIInsightBubble };

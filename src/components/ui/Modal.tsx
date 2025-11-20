@@ -133,3 +133,5 @@ export function ModalFooter({ children, className = '' }: { children: React.Reac
     </div>
   );
 }
+
+export { Modal };

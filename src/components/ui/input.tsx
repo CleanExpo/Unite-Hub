@@ -96,3 +96,6 @@ export default function Input({
     </div>
   );
 }
+
+// Named export for compatibility
+export { Input };

@@ -5,6 +5,9 @@
  * Fully wired to /api/staff/activity
  */
 
+// Force dynamic rendering to avoid build-time data fetching
+export const dynamic = 'force-dynamic';
+
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';

@@ -19,3 +19,6 @@ export default function AILoader({ message = 'AI is thinking...' }: { message?: 
     </div>
   );
 }
+
+// Named export for compatibility
+export { AILoader };

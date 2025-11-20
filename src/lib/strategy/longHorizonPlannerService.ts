@@ -656,3 +656,6 @@ export class LongHorizonPlannerService {
 }
 
 export default LongHorizonPlannerService;
+
+// Singleton instance for convenience
+export const longHorizonPlannerService = new LongHorizonPlannerService();

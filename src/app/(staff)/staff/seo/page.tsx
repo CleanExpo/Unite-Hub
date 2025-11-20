@@ -1,3 +1,8 @@
+"use client";
+
+// Force dynamic
+export const dynamic = 'force-dynamic';
+
 /**
  * Staff SEO Dashboard Page
  * Phase 4 Step 4: Dual-Mode SEO UI Shell
@@ -6,8 +11,6 @@
  * - Standard Mode: Rational analysis (GSC/Bing/Brave metrics)
  * - Hypnotic Mode: Content velocity and retention engineering
  */
-
-"use client";
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
