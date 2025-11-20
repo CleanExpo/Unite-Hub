@@ -92,5 +92,27 @@ export function CardDescription({ children, className = '' }: { children: React.
   );
 }
 
+/**
+ * CardContent - Main content area
+ */
+export function CardContent({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div className={`p-6 pt-0 ${className}`}>
+      {children}
+    </div>
+  );
+}
+
+/**
+ * CardFooter - Footer area for actions
+ */
+export function CardFooter({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div className={`flex items-center p-6 pt-0 ${className}`}>
+      {children}
+    </div>
+  );
+}
+
 // Named export for Card compatibility
 export { Card };
