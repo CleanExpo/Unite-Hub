@@ -1,6 +1,7 @@
+'use client';
+
 // Force dynamic
 export const dynamic = 'force-dynamic';
-'use client';
 
 /**
  * Staff Time Tracker Page - Phase 3 Step 8
