@@ -1,4 +1,6 @@
 /**
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
  * Staff Dashboard Page - Phase 2 Step 6
  *
  * Main dashboard for staff users with overview stats

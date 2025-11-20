@@ -4,6 +4,8 @@
  */
 
 import StaffProgressRing from '@/components/staff/StaffProgressRing'
+n// Force dynamic rendering
+export const dynamic = 'force-dynamic';
 import AIInsightBubble from '@/components/ai/AIInsightBubble'
 import Skeleton from '@/components/ui/skeleton'
 import { getStaffProjects, getStaffTasks, getAIDailyBriefing } from '@/lib/services/staff/staffService'
