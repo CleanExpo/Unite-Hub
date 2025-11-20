@@ -8,12 +8,12 @@
  * - Anthropic Direct: Complex reasoning, Extended Thinking
  */
 
-import { GoogleGenerativeAI } from '@google/genai';
+import { GoogleGenAI } from '@google/genai';
 import Anthropic from '@anthropic-ai/sdk';
 import { supabaseStaff } from '../auth/supabase';
 
 // Initialize AI clients
-const gemini = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY || '');
+const gemini = new GoogleGenAI(process.env.GOOGLE_AI_API_KEY || '');
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY || '',
 });
