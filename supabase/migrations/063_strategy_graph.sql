@@ -257,7 +257,7 @@ ALTER TABLE strategy_proposals ENABLE ROW LEVEL SECURITY;
 CREATE POLICY nodes_select ON strategy_nodes
   FOR SELECT USING (
     organization_id IN (
-      SELECT organization_id FROM operator_profiles
+      SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
     )
   );
@@ -265,24 +265,24 @@ CREATE POLICY nodes_select ON strategy_nodes
 CREATE POLICY nodes_insert ON strategy_nodes
   FOR INSERT WITH CHECK (
     organization_id IN (
-      SELECT organization_id FROM operator_profiles
-      WHERE user_id = auth.uid() AND role IN ('OWNER', 'MANAGER')
+      SELECT org_id FROM user_organizations
+      WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
     )
   );
 
 CREATE POLICY nodes_update ON strategy_nodes
   FOR UPDATE USING (
     organization_id IN (
-      SELECT organization_id FROM operator_profiles
-      WHERE user_id = auth.uid() AND role IN ('OWNER', 'MANAGER')
+      SELECT org_id FROM user_organizations
+      WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
     )
   );
 
 CREATE POLICY nodes_delete ON strategy_nodes
   FOR DELETE USING (
     organization_id IN (
-      SELECT organization_id FROM operator_profiles
-      WHERE user_id = auth.uid() AND role = 'OWNER'
+      SELECT org_id FROM user_organizations
+      WHERE user_id = auth.uid() AND role = 'owner'
     )
   );
 
@@ -290,7 +290,7 @@ CREATE POLICY nodes_delete ON strategy_nodes
 CREATE POLICY edges_select ON strategy_edges
   FOR SELECT USING (
     organization_id IN (
-      SELECT organization_id FROM operator_profiles
+      SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
     )
   );
@@ -298,24 +298,24 @@ CREATE POLICY edges_select ON strategy_edges
 CREATE POLICY edges_insert ON strategy_edges
   FOR INSERT WITH CHECK (
     organization_id IN (
-      SELECT organization_id FROM operator_profiles
-      WHERE user_id = auth.uid() AND role IN ('OWNER', 'MANAGER')
+      SELECT org_id FROM user_organizations
+      WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
     )
   );
 
 CREATE POLICY edges_update ON strategy_edges
   FOR UPDATE USING (
     organization_id IN (
-      SELECT organization_id FROM operator_profiles
-      WHERE user_id = auth.uid() AND role IN ('OWNER', 'MANAGER')
+      SELECT org_id FROM user_organizations
+      WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
     )
   );
 
 CREATE POLICY edges_delete ON strategy_edges
   FOR DELETE USING (
     organization_id IN (
-      SELECT organization_id FROM operator_profiles
-      WHERE user_id = auth.uid() AND role IN ('OWNER', 'MANAGER')
+      SELECT org_id FROM user_organizations
+      WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
     )
   );
 
@@ -323,7 +323,7 @@ CREATE POLICY edges_delete ON strategy_edges
 CREATE POLICY objectives_select ON strategy_objectives
   FOR SELECT USING (
     organization_id IN (
-      SELECT organization_id FROM operator_profiles
+      SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
     )
   );
@@ -331,16 +331,16 @@ CREATE POLICY objectives_select ON strategy_objectives
 CREATE POLICY objectives_insert ON strategy_objectives
   FOR INSERT WITH CHECK (
     organization_id IN (
-      SELECT organization_id FROM operator_profiles
-      WHERE user_id = auth.uid() AND role IN ('OWNER', 'MANAGER')
+      SELECT org_id FROM user_organizations
+      WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
     )
   );
 
 CREATE POLICY objectives_update ON strategy_objectives
   FOR UPDATE USING (
     organization_id IN (
-      SELECT organization_id FROM operator_profiles
-      WHERE user_id = auth.uid() AND role IN ('OWNER', 'MANAGER')
+      SELECT org_id FROM user_organizations
+      WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
     )
   );
 
@@ -348,7 +348,7 @@ CREATE POLICY objectives_update ON strategy_objectives
 CREATE POLICY evaluations_select ON strategy_evaluations
   FOR SELECT USING (
     organization_id IN (
-      SELECT organization_id FROM operator_profiles
+      SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
     )
   );
@@ -356,7 +356,7 @@ CREATE POLICY evaluations_select ON strategy_evaluations
 CREATE POLICY evaluations_insert ON strategy_evaluations
   FOR INSERT WITH CHECK (
     organization_id IN (
-      SELECT organization_id FROM operator_profiles
+      SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
     )
   );
@@ -365,7 +365,7 @@ CREATE POLICY evaluations_insert ON strategy_evaluations
 CREATE POLICY proposals_select ON strategy_proposals
   FOR SELECT USING (
     organization_id IN (
-      SELECT organization_id FROM operator_profiles
+      SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
     )
   );
@@ -373,7 +373,7 @@ CREATE POLICY proposals_select ON strategy_proposals
 CREATE POLICY proposals_insert ON strategy_proposals
   FOR INSERT WITH CHECK (
     organization_id IN (
-      SELECT organization_id FROM operator_profiles
+      SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
     )
   );
@@ -381,7 +381,7 @@ CREATE POLICY proposals_insert ON strategy_proposals
 CREATE POLICY proposals_update ON strategy_proposals
   FOR UPDATE USING (
     organization_id IN (
-      SELECT organization_id FROM operator_profiles
-      WHERE user_id = auth.uid() AND role IN ('OWNER', 'MANAGER')
+      SELECT org_id FROM user_organizations
+      WHERE user_id = auth.uid() AND role IN ('owner', 'admin')
     )
   );
