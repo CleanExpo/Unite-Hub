@@ -119,3 +119,5 @@ export default function IdeaRecorder({ onSubmit }: IdeaRecorderProps) {
     </div>
   );
 }
+
+export { IdeaRecorder };

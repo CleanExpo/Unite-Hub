@@ -93,7 +93,10 @@
       "Bash(src/components/ui/input.tsx)",
       "Bash(src/components/ui/skeleton.tsx)",
       "Bash(src/components/ui/card.tsx)",
-      "Bash(src/components/staff/StaffProgressRing.tsx)"
+      "Bash(src/components/staff/StaffProgressRing.tsx)",
+      "Bash(src/components/ui/Modal.tsx)",
+      "Bash(src/components/client/IdeaRecorder.tsx)",
+      "Bash(src/components/staff/TaskCard.tsx)"
     ],
     "deny": [],
     "ask": []
