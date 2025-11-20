@@ -4817,7 +4817,7 @@ autoprefixer@^10.4.17:
     picocolors "^1.1.1"
     postcss-value-parser "^4.2.0"
 
-axios@^1.12.0:
+axios@^1.12.0, axios@^1.7.7:
   version "1.13.2"
   resolved "https://registry.npmjs.org/axios/-/axios-1.13.2.tgz"
   integrity sha512-VPk9ebNqPcy5lRGuSlKx752IlDatOjT9paPlm8A7yOuW2Fbvp4X3JznJtT4f0GzGLLiWE9W8onz51SqLYwzGaA==
@@ -7562,7 +7562,7 @@ openai@^6.8.1:
   resolved "https://registry.npmjs.org/openai/-/openai-6.9.0.tgz"
   integrity sha512-n2sJRYmM+xfJ0l3OfH8eNnIyv3nQY7L08gZQu3dw6wSdfPtKAk92L83M2NIP5SS8Cl/bsBBG3yKzEOjkx0O+7A==
 
-openid-client@^5.4.0:
+openid-client@^5.4.0, openid-client@^5.7.0:
   version "5.7.1"
   resolved "https://registry.npmjs.org/openid-client/-/openid-client-5.7.1.tgz"
   integrity sha512-jDBPgSVfTnkIh71Hg9pRvtJc6wTwqjRkN88+gCFtYWrlP4Yx2Dsrow8uPi3qLr/aeymPF3o2+dS+wOpglK04ew==
@@ -9520,6 +9520,14 @@ ws@^8.18.0, ws@^8.18.2, ws@^8.18.3:
   version "8.18.3"
   resolved "https://registry.npmjs.org/ws/-/ws-8.18.3.tgz"
   integrity sha512-PEIGCY5tSlUt50cqyMXfCzX+oOPqN0vuGqWzbcJ2xvnkzkq46oOpz7dQaTDBdfICb4N14+GARUDw2XV2N4tvzg==
+
+xero-node@^13.3.0:
+  version "13.3.0"
+  resolved "https://registry.npmjs.org/xero-node/-/xero-node-13.3.0.tgz"
+  integrity sha512-D7qZrOPkN1crFx8VRnoe7UI403t/uhYugggF1jQHlUTYBNiEeVYJVPCQkYdYcy0yD8sxTEsdOCfw9CSZsd2Tvw==
+  dependencies:
+    axios "^1.7.7"
+    openid-client "^5.7.0"
 
 xml-name-validator@^5.0.0:
   version "5.0.0"
