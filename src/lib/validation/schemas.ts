@@ -7,6 +7,47 @@
 
 import { z } from 'zod';
 
+// Utility schemas
+export const UUIDSchema = z.string().uuid();
+export const EmailSchema = z.string().email();
+
+// Helper function to format Zod errors
+export function formatZodError(error: z.ZodError): string {
+  return error.errors.map(e => e.message).join(', ');
+}
+
+// Agent request schemas
+export const ContactIntelligenceRequestSchema = z.object({
+  contactId: z.string().uuid().optional(),
+  workspaceId: z.string().uuid(),
+});
+
+export const ContentGenerationRequestSchema = z.object({
+  contactId: z.string().uuid().optional(),
+  workspaceId: z.string().uuid(),
+  type: z.string().optional(),
+});
+
+// Gmail schemas
+export const GmailOAuthCallbackSchema = z.object({
+  code: z.string(),
+  state: z.string().optional(),
+});
+
+export const GmailSendEmailSchema = z.object({
+  to: z.string().email(),
+  subject: z.string(),
+  body: z.string(),
+  threadId: z.string().optional(),
+});
+
+// Profile schemas
+export const UpdateProfileSchema = z.object({
+  name: z.string().min(1).optional(),
+  email: z.string().email().optional(),
+  avatar_url: z.string().url().optional(),
+});
+
 // Client Idea Validation
 export const clientIdeaSchema = z.object({
   title: z
