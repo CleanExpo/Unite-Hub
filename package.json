@@ -64,6 +64,10 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.68.0",
     "@auth/supabase-adapter": "^1.11.1",
+    "@aws-sdk/client-cloudfront": "^3.936.0",
+    "@aws-sdk/client-s3": "^3.936.0",
+    "@azure/storage-blob": "^12.29.1",
+    "@google-cloud/storage": "^7.17.3",
     "@google/genai": "^1.30.0",
     "@hookform/resolvers": "^5.2.2",
     "@microsoft/microsoft-graph-client": "^3.0.7",

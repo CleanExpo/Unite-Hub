@@ -84,7 +84,10 @@
       "Bash(npm run test:gemini:*)",
       "Bash(vercel env:*)",
       "Bash(git revert:*)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(npx tsx:*)",
+      "Bash(DEBUG=vitest:*)",
+      "Bash(d:/Unite-Hub/src/lib/services/leviathan/__tests__/simple.test.ts)"
     ],
     "deny": [],
     "ask": []
