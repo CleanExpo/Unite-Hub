@@ -98,7 +98,8 @@
       "Bash(src/components/client/IdeaRecorder.tsx)",
       "Bash(src/components/staff/TaskCard.tsx)",
       "Bash(src/lib/services/leviathan/FabricatorService.ts)",
-      "Bash(src/lib/strategy/longHorizonPlannerService.ts)"
+      "Bash(src/lib/strategy/longHorizonPlannerService.ts)",
+      "Bash(head:*)"
     ],
     "deny": [],
     "ask": []
