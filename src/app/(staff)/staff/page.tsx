@@ -1,11 +1,13 @@
-/**
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
+
+/**
  * Staff Dashboard Page - Phase 2 Step 6
  *
  * Main dashboard for staff users with overview stats
  * Wired to real API endpoints
  */
+
 
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
