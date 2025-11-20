@@ -1,3 +1,5 @@
+// Force dynamic
+export const dynamic = 'force-dynamic';
 /**
  * Staff Reports Page - Phase 3 Step 9
  * UI for staff to view org-wide and per-project financial performance

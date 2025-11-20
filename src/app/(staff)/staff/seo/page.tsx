@@ -1,3 +1,5 @@
+// Force dynamic
+export const dynamic = 'force-dynamic';
 /**
  * Staff SEO Dashboard Page
  * Phase 4 Step 4: Dual-Mode SEO UI Shell
