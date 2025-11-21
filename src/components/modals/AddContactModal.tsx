@@ -61,16 +61,11 @@ export function AddContactModal({
         return;
       }
 
-      // Check if contact already exists
-      const { data: existing } = await supabaseBrowser
-        .from("contacts")
-        .select("id")
-        .eq("workspace_id", workspaceId)
-        .eq("email", formData.email)
-        .maybeSingle();
+      // Get session token for API call
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
 
-      if (existing) {
-        setError("A contact with this email already exists");
+      if (!session) {
+        setError("Not authenticated. Please sign in again.");
         setLoading(false);
         return;
       }
@@ -80,11 +75,15 @@ export function AddContactModal({
         ? formData.tags.split(",").map((tag) => tag.trim()).filter(Boolean)
         : [];
 
-      // Create contact
-      const { data: contact, error: insertError } = await supabaseBrowser
-        .from("contacts")
-        .insert({
-          workspace_id: workspaceId,
+      // Create contact via API (handles RLS properly)
+      const response = await fetch("/api/contacts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          workspaceId,
           name: formData.name,
           email: formData.email,
           company: formData.company || null,
@@ -92,16 +91,18 @@ export function AddContactModal({
           phone: formData.phone || null,
           tags: tagsArray,
           status: "prospect",
-          ai_score: 0,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        })
-        .select()
-        .maybeSingle();
+        }),
+      });
 
-      if (insertError) {
-        console.error("Error creating contact:", insertError);
-        setError(insertError.message);
+      const result = await response.json();
+
+      if (!response.ok) {
+        console.error("Error creating contact:", result);
+        if (response.status === 409) {
+          setError("A contact with this email already exists");
+        } else {
+          setError(result.error || result.errors?.email || "Failed to create contact");
+        }
         setLoading(false);
         return;
       }

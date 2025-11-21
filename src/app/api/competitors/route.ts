@@ -95,6 +95,15 @@ export async function POST(request: NextRequest) {
  */
 export async function GET(request: NextRequest) {
   try {
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
+
+    // Validate user authentication
+    await validateUserAuth(request);
+
     const { searchParams } = new URL(request.url);
     const clientId = searchParams.get("clientId");
     const category = searchParams.get("category") as

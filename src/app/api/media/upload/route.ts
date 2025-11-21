@@ -347,12 +347,32 @@ export async function POST(req: NextRequest) {
  */
 export async function GET(req: NextRequest) {
   try {
-    // Authentication
-    const supabase = await getSupabaseServer();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    // Authentication - support both token and cookie auth
+    const authHeader = req.headers.get("authorization");
+    const token = authHeader?.replace("Bearer ", "");
 
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    let userId: string;
+
+    if (token) {
+      // Implicit OAuth token from browser
+      const { supabaseBrowser } = await import("@/lib/supabase");
+      const { data, error } = await supabaseBrowser.auth.getUser(token);
+
+      if (error || !data.user) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+
+      userId = data.user.id;
+    } else {
+      // Server-side cookies (PKCE flow)
+      const supabase = await getSupabaseServer();
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+      if (authError || !user) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+
+      userId = user.id;
     }
 
     // Get workspace_id from query params

@@ -172,6 +172,9 @@ export default function DashboardLayout({
                   </NavLink>
                   <NavLink href="/dashboard/media" isActive={isActive("/dashboard/media")}>
                     Media
+                  <NavLink href="/dashboard/sites" isActive={isActive("/dashboard/sites")}>
+                    Sites
+                  </NavLink>
                   </NavLink>
                   {/* TODO: Uncomment when campaigns feature is fully implemented
                   <DropdownMenu>

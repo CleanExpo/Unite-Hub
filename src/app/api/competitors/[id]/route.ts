@@ -62,6 +62,15 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
+
+    // Validate user authentication
+    await validateUserAuth(request);
+
     const body = await request.json();
     const { updates } = body;
 
@@ -108,6 +117,15 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
+
+    // Validate user authentication
+    await validateUserAuth(request);
+
     const { id } = await params;
     await fetchMutation(api.competitors.deleteCompetitor, {
       competitorId: id as Id<"competitors">,

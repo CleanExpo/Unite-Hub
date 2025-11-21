@@ -145,7 +145,6 @@ export default function LandingPageDetailPage() {
   return (
     <div className="container mx-auto py-8 space-y-6">
       <Breadcrumbs items={[
-        { label: "Resources", href: "/dashboard/resources" },
         { label: "Landing Pages", href: "/dashboard/resources/landing-pages" },
         { label: "Edit" }
       ]} />

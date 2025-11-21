@@ -72,6 +72,13 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
+
+    // Validate user authentication and workspace access
     const body = await request.json();
     const { workspaceId, event } = body;
 
@@ -81,6 +88,8 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    await validateUserAndWorkspace(request, workspaceId);
 
     const calendarService = await getCalendarService(workspaceId);
 

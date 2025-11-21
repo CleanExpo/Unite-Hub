@@ -46,6 +46,15 @@ export async function POST(
   { params }: { params: Promise<{ contactId: string }> }
 ) {
   try {
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
+
+    // Validate user authentication
+    await validateUserAuth(request);
+
     const { contactId } = await params;
     const body = await request.json();
 
