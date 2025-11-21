@@ -18,6 +18,12 @@ export function formatZodError(error: z.ZodError): string {
 
 // Agent request schemas
 export const ContactIntelligenceRequestSchema = z.object({
+  action: z.enum(['analyze_contact', 'analyze_workspace', 'get_hot_leads']),
+  contact_id: z.string().uuid().optional(),
+  workspace_id: z.string().uuid(),
+  limit: z.number().int().positive().optional(),
+});// Agent request schemas (legacy)
+export const LegacyContactIntelligenceRequestSchema = z.object({
   contactId: z.string().uuid().optional(),
   workspaceId: z.string().uuid(),
 });
