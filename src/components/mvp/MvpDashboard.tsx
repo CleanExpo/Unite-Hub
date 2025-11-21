@@ -2,18 +2,23 @@
 
 /**
  * MvpDashboard Component
- * MVP Dashboard & UX Integration Layer - Phase 15 Week 3-4
+ * MVP Dashboard & UX Integration Layer - Phase 15 Week 5-6
  *
- * Contains 6 core widgets: SystemHealth, StrategyStatus, OperatorQueue,
- * IndexingHealth, BillingStatus, QuickActions
+ * Production-polished dashboard with:
+ * - 8px baseline grid spacing
+ * - WCAG AA accessibility
+ * - Consistent animations
+ * - Skeleton loading states
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, Suspense } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
+import { DashboardSkeleton } from '@/components/ui/skeleton-card';
 import {
   Activity,
   Brain,
@@ -29,7 +34,12 @@ import {
   UserPlus,
   Mail,
   Megaphone,
+  ArrowRight,
 } from 'lucide-react';
+
+// Animation classes for consistent motion
+const fadeSlideUp = 'animate-in fade-in slide-in-from-bottom-2 duration-300';
+const cardHover = 'transition-all duration-200 hover:shadow-md hover:border-primary/20';
 
 import type {
   DashboardData,
@@ -49,33 +59,47 @@ interface WidgetProps {
 }
 
 // System Health Widget
-function SystemHealthCard({ data }: WidgetProps & { data: SystemHealthData }) {
-  const statusColors = {
-    healthy: 'text-green-500',
-    degraded: 'text-yellow-500',
-    unhealthy: 'text-red-500',
+function SystemHealthCard({ data, className }: WidgetProps & { data: SystemHealthData }) {
+  const statusConfig = {
+    healthy: { color: 'text-green-500', bg: 'bg-green-500/10', label: 'Healthy' },
+    degraded: { color: 'text-yellow-500', bg: 'bg-yellow-500/10', label: 'Degraded' },
+    unhealthy: { color: 'text-red-500', bg: 'bg-red-500/10', label: 'Unhealthy' },
   };
 
+  const config = statusConfig[data.status];
   const StatusIcon = data.status === 'healthy' ? CheckCircle2 : data.status === 'degraded' ? AlertTriangle : XCircle;
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">System Health</CardTitle>
-        <Activity className="h-4 w-4 text-muted-foreground" />
-      </CardHeader>
-      <CardContent>
-        <div className="flex items-center gap-2 mb-2">
-          <StatusIcon className={`h-5 w-5 ${statusColors[data.status]}`} />
-          <span className="text-2xl font-bold">{data.score}%</span>
+    <Card className={cn(cardHover, fadeSlideUp, className)} role="region" aria-label="System Health">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+        <CardTitle className="text-sm font-medium tracking-tight">System Health</CardTitle>
+        <div className={cn('p-1.5 rounded-md', config.bg)}>
+          <Activity className={cn('h-4 w-4', config.color)} aria-hidden="true" />
         </div>
-        <Progress value={data.score} className="h-2 mb-3" />
-        <div className="space-y-1 text-xs text-muted-foreground">
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="flex items-center gap-3">
+          <StatusIcon className={cn('h-5 w-5', config.color)} aria-hidden="true" />
+          <span className="text-2xl font-bold tabular-nums">{data.score}%</span>
+          <Badge variant="outline" className={cn('ml-auto text-xs', config.color)}>
+            {config.label}
+          </Badge>
+        </div>
+        <Progress
+          value={data.score}
+          className="h-2"
+          aria-label={`Health score: ${data.score}%`}
+        />
+        <div className="space-y-2 pt-1">
           {Object.entries(data.checks).map(([key, check]) => (
-            <div key={key} className="flex justify-between">
-              <span className="capitalize">{key}</span>
-              <Badge variant={check.status === 'healthy' ? 'default' : 'destructive'} className="text-xs">
+            <div key={key} className="flex items-center justify-between text-sm">
+              <span className="capitalize text-muted-foreground">{key}</span>
+              <Badge
+                variant={check.status === 'healthy' ? 'secondary' : 'destructive'}
+                className="text-xs font-medium"
+              >
                 {check.status}
+                {check.latency && ` • ${check.latency}ms`}
               </Badge>
             </div>
           ))}
@@ -308,8 +332,8 @@ export function MvpDashboard({ className }: MvpDashboardProps) {
 
   if (loading) {
     return (
-      <div className={`flex items-center justify-center py-12 ${className}`}>
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      <div className={className}>
+        <DashboardSkeleton />
       </div>
     );
   }
