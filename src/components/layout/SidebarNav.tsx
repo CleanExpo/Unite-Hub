@@ -35,6 +35,11 @@ import {
   ChevronRight,
 } from 'lucide-react';
 
+// Animation utilities
+const navItemTransition = 'transition-all duration-150 ease-out';
+const activeGlow = 'shadow-[0_0_12px_rgba(var(--primary)/0.3)]';
+const focusRing = 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background';
+
 interface NavItem {
   title: string;
   href: string;
@@ -63,15 +68,16 @@ export function SidebarNav({ collapsed = false, onToggleCollapse, className }: S
   const pathname = usePathname();
 
   return (
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delayDuration={300}>
       <aside
         className={cn(
-          'flex flex-col h-full bg-card border-r transition-all duration-200 ease-out',
+          'flex flex-col h-full bg-card border-r transition-all duration-300 ease-out',
           collapsed ? 'w-16' : 'w-64',
           className
         )}
         role="navigation"
         aria-label="Main sidebar"
+        aria-expanded={!collapsed}
       >
         {/* Logo */}
         <div className="flex items-center h-16 px-4 border-b">
@@ -115,20 +121,24 @@ export function SidebarNav({ collapsed = false, onToggleCollapse, className }: S
                 <Link
                   href={item.href}
                   className={cn(
-                    'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-all duration-150',
-                    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50',
+                    'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium',
+                    navItemTransition,
+                    focusRing,
                     isActive
-                      ? 'bg-primary text-primary-foreground shadow-sm'
-                      : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                      ? `bg-primary text-primary-foreground ${activeGlow} scale-[1.02]`
+                      : 'text-muted-foreground hover:bg-muted hover:text-foreground hover:scale-[1.01]'
                   )}
                   aria-current={isActive ? 'page' : undefined}
                 >
-                  <item.icon className="h-4 w-4 flex-shrink-0" aria-hidden="true" />
+                  <item.icon className={cn(
+                    'h-4 w-4 flex-shrink-0',
+                    isActive && 'drop-shadow-sm'
+                  )} aria-hidden="true" />
                   {!collapsed && (
                     <>
-                      <span className="flex-1">{item.title}</span>
+                      <span className="flex-1 truncate">{item.title}</span>
                       {item.badge && (
-                        <span className="text-xs bg-primary/20 text-primary px-1.5 py-0.5 rounded font-medium">
+                        <span className="text-xs bg-primary/20 text-primary px-1.5 py-0.5 rounded-full font-medium tabular-nums">
                           {item.badge}
                         </span>
                       )}
@@ -144,8 +154,11 @@ export function SidebarNav({ collapsed = false, onToggleCollapse, className }: S
                       <TooltipTrigger asChild>
                         {linkContent}
                       </TooltipTrigger>
-                      <TooltipContent side="right">
-                        <p>{item.title}</p>
+                      <TooltipContent
+                        side="right"
+                        className="animate-in fade-in-0 zoom-in-95 duration-200"
+                      >
+                        <p className="font-medium">{item.title}</p>
                       </TooltipContent>
                     </Tooltip>
                   ) : (
@@ -160,25 +173,37 @@ export function SidebarNav({ collapsed = false, onToggleCollapse, className }: S
         {/* Collapse Toggle */}
         {onToggleCollapse && (
           <div className="p-2 border-t">
-            <Button
-              variant="ghost"
-              size="sm"
-              className={cn(
-                'w-full justify-center transition-all duration-150',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50'
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className={cn(
+                    'w-full justify-center',
+                    navItemTransition,
+                    focusRing,
+                    'hover:bg-muted'
+                  )}
+                  onClick={onToggleCollapse}
+                  aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+                  aria-expanded={!collapsed}
+                >
+                  {collapsed ? (
+                    <ChevronRight className="h-4 w-4 transition-transform duration-200" aria-hidden="true" />
+                  ) : (
+                    <>
+                      <ChevronLeft className="h-4 w-4 mr-2 transition-transform duration-200" aria-hidden="true" />
+                      <span className="text-sm">Collapse</span>
+                    </>
+                  )}
+                </Button>
+              </TooltipTrigger>
+              {collapsed && (
+                <TooltipContent side="right" className="animate-in fade-in-0 zoom-in-95 duration-200">
+                  <p>Expand sidebar</p>
+                </TooltipContent>
               )}
-              onClick={onToggleCollapse}
-              aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-            >
-              {collapsed ? (
-                <ChevronRight className="h-4 w-4" aria-hidden="true" />
-              ) : (
-                <>
-                  <ChevronLeft className="h-4 w-4 mr-2" aria-hidden="true" />
-                  <span>Collapse</span>
-                </>
-              )}
-            </Button>
+            </Tooltip>
           </div>
         )}
       </aside>

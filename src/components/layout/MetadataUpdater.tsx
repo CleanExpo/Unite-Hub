@@ -10,7 +10,7 @@
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
-// Route to title mapping
+// Route to title mapping - comprehensive coverage
 const routeTitles: Record<string, string> = {
   '/dashboard': 'Dashboard',
   '/dashboard/overview': 'Overview',
@@ -21,9 +21,23 @@ const routeTitles: Record<string, string> = {
   '/dashboard/settings': 'Settings',
   '/dashboard/profile': 'Profile',
   '/dashboard/billing': 'Billing',
+  '/dashboard/ai-tools': 'AI Tools',
+  '/dashboard/emails': 'Emails',
   '/staff': 'Staff Portal',
+  '/staff/projects': 'Projects',
+  '/staff/tasks': 'Tasks',
+  '/staff/reports': 'Reports',
+  '/staff/scope-review': 'Scope Review',
+  '/staff/time-tracker': 'Time Tracker',
   '/client': 'Client Portal',
+  '/client/projects': 'My Projects',
+  '/client/proposals': 'Proposals',
+  '/client/vault': 'Document Vault',
+  '/client/ideas': 'Ideas',
 };
+
+// Default meta description
+const defaultDescription = 'AI-powered CRM and marketing automation platform';
 
 interface MetadataUpdaterProps {
   baseTitle?: string;
@@ -73,8 +87,10 @@ export function MetadataUpdater({
     // Update document title
     document.title = pageTitle ? `${pageTitle}${separator}${baseTitle}` : baseTitle;
 
-    // Update meta description
-    const description = `${pageTitle || 'Dashboard'} - AI-powered CRM and marketing automation platform`;
+    // Update meta description with fallback
+    const description = pageTitle
+      ? `${pageTitle} - ${defaultDescription}`
+      : defaultDescription;
     let metaDesc = document.querySelector('meta[name="description"]');
     if (!metaDesc) {
       metaDesc = document.createElement('meta');
@@ -82,6 +98,11 @@ export function MetadataUpdater({
       document.head.appendChild(metaDesc);
     }
     metaDesc.setAttribute('content', description);
+
+    // Debug logging in development
+    if (process.env.NODE_ENV === 'development') {
+      console.debug('[MetadataUpdater]', { pathname, pageTitle, description });
+    }
 
     // Update OG tags
     updateMetaTag('og:title', pageTitle ? `${pageTitle}${separator}${baseTitle}` : baseTitle);

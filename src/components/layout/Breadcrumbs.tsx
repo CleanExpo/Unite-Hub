@@ -79,8 +79,17 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
 
   if (breadcrumbs.length === 0) return null;
 
+  // Truncate middle items if more than 3 segments
+  const shouldTruncate = breadcrumbs.length > 3;
+  const displayBreadcrumbs = shouldTruncate
+    ? [breadcrumbs[0], { label: '...', href: undefined }, ...breadcrumbs.slice(-2)]
+    : breadcrumbs;
+
   return (
-    <nav aria-label="Breadcrumb" className={cn('animate-in fade-in duration-200', className)}>
+    <nav
+      aria-label="Breadcrumb"
+      className={cn('animate-in fade-in slide-in-from-left-2 duration-200', className)}
+    >
       <ol className="flex items-center gap-1.5 text-sm text-muted-foreground">
         <li>
           <Link
@@ -92,13 +101,21 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
           </Link>
         </li>
 
-        {breadcrumbs.map((item, index) => (
-          <li key={index} className="flex items-center gap-1.5">
+        {displayBreadcrumbs.map((item, index) => (
+          <li key={index} className="flex items-center gap-1.5 animate-in fade-in duration-150" style={{ animationDelay: `${index * 50}ms` }}>
             <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/50" aria-hidden="true" />
-            {item.href && index < breadcrumbs.length - 1 ? (
+            {item.label === '...' ? (
+              <span
+                className="px-1.5 py-0.5 text-muted-foreground cursor-default"
+                title={`${breadcrumbs.length - 3} more items`}
+              >
+                ...
+              </span>
+            ) : item.href && index < displayBreadcrumbs.length - 1 ? (
               <Link
                 href={item.href}
                 className="px-1.5 py-0.5 -mx-1.5 rounded hover:text-foreground hover:bg-muted transition-all duration-150 truncate max-w-[150px]"
+                title={item.label}
               >
                 {item.label}
               </Link>
@@ -106,6 +123,7 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
               <span
                 className="text-foreground font-medium truncate max-w-[200px]"
                 aria-current="page"
+                title={item.label}
               >
                 {item.label}
               </span>

@@ -107,8 +107,11 @@ export function TopNavBar({ onMenuClick, className }: TopNavBarProps) {
           aria-label="View notifications"
         >
           <Bell className="h-4 w-4" aria-hidden="true" />
-          {/* Notification dot - uncomment when needed */}
-          {/* <span className="absolute top-1.5 right-1.5 h-2 w-2 bg-destructive rounded-full" /> */}
+          {/* Notification indicator with pulse animation */}
+          <span className="absolute top-1 right-1 flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-destructive" />
+          </span>
         </Button>
 
         {/* User Menu */}

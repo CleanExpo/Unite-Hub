@@ -108,6 +108,15 @@ export const prefersReducedMotion = (): boolean => {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 };
 
+// Helper to get motion-safe classes
+export const motionSafe = (animationClass: string, fallbackClass = ''): string => {
+  if (typeof window === 'undefined') return animationClass;
+  return prefersReducedMotion() ? fallbackClass : animationClass;
+};
+
+// CSS class for reduced motion fallback
+export const reducedMotionClass = 'motion-reduce:transition-none motion-reduce:animate-none';
+
 // ============================================================================
 // CSS KEYFRAME DEFINITIONS (for tailwind.config.js)
 // ============================================================================
