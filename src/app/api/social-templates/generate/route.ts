@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
-import { api } from "@/convex/_generated/api";
-import { fetchMutation } from "convex/nextjs";
+import { getSupabaseServer } from "@/lib/supabase";
 import { aiAgentRateLimit } from "@/lib/rate-limit";
 
 const anthropic = new Anthropic({
@@ -28,11 +27,11 @@ const PLATFORM_TONES = {
 
 export async function POST(req: NextRequest) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await aiAgentRateLimit(req);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
+    // Apply rate limiting
+    const rateLimitResult = await aiAgentRateLimit(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
 
     const body = await req.json();
     const { clientId, platform, category, count = 10, businessContext } = body;
@@ -52,17 +51,38 @@ export async function POST(req: NextRequest) {
       businessContext
     );
 
+    const supabase = await getSupabaseServer();
+
     // Save templates to database
     const savedTemplates = [];
     for (const template of templates) {
-      const templateId = await fetchMutation(api.socialTemplates.createTemplate, {
-        clientId,
-        platform,
-        category,
-        ...template,
-        aiGenerated: true,
-      });
-      savedTemplates.push({ id: templateId, ...template });
+      const { data, error } = await supabase
+        .from("social_templates")
+        .insert({
+          client_id: clientId,
+          platform,
+          category,
+          template_name: template.templateName,
+          copy_text: template.copyText,
+          hashtags: template.hashtags,
+          emoji_suggestions: template.emojiSuggestions,
+          call_to_action: template.callToAction,
+          variations: template.variations,
+          performance_prediction: template.performancePrediction,
+          tags: template.tags,
+          ai_generated: true,
+          is_favorite: false,
+          usage_count: 0,
+          character_count: template.copyText.length,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })
+        .select("id")
+        .single();
+
+      if (!error && data) {
+        savedTemplates.push({ id: data.id, ...template });
+      }
     }
 
     return NextResponse.json({

@@ -14,15 +14,36 @@ import {
   Copy,
   Wand2,
 } from "lucide-react";
-import { Doc } from "@/convex/_generated/dataModel";
+
+// Content calendar post type (migrated from Convex)
+interface ContentCalendarPost {
+  _id: string;
+  platform: string;
+  postType: string;
+  contentPillar: string;
+  scheduledDate: string;
+  bestTimeToPost?: string;
+  suggestedCopy: string;
+  suggestedHashtags: string[];
+  suggestedImagePrompt?: string;
+  callToAction?: string;
+  targetAudience?: string;
+  aiReasoning?: string;
+  status: "suggested" | "approved" | "scheduled" | "published";
+  engagement?: {
+    likes: number;
+    comments: number;
+    shares: number;
+  };
+}
 
 interface PostDetailsModalProps {
-  post: Doc<"contentCalendarPosts">;
+  post: ContentCalendarPost;
   isOpen: boolean;
   onClose: () => void;
   onApprove: () => void;
   onRegenerate: () => void;
-  onUpdate: (updates: Partial<Doc<"contentCalendarPosts">>) => void;
+  onUpdate: (updates: Partial<ContentCalendarPost>) => void;
 }
 
 export default function PostDetailsModal({

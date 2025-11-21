@@ -12,10 +12,31 @@ import {
   RefreshCw,
   Edit,
 } from "lucide-react";
-import { Doc } from "@/convex/_generated/dataModel";
+
+// Content calendar post type (migrated from Convex)
+interface ContentCalendarPost {
+  _id: string;
+  platform: string;
+  postType: string;
+  contentPillar: string;
+  scheduledDate: string;
+  bestTimeToPost?: string;
+  suggestedCopy: string;
+  suggestedHashtags: string[];
+  suggestedImagePrompt?: string;
+  callToAction?: string;
+  targetAudience?: string;
+  aiReasoning?: string;
+  status: "suggested" | "approved" | "scheduled" | "published";
+  engagement?: {
+    likes: number;
+    comments: number;
+    shares: number;
+  };
+}
 
 interface CalendarPostProps {
-  post: Doc<"contentCalendarPosts">;
+  post: ContentCalendarPost;
   onApprove?: () => void;
   onRegenerate?: () => void;
   onEdit?: () => void;

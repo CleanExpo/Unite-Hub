@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { api } from "@/convex/_generated/api";
-import { fetchQuery, fetchMutation } from "convex/nextjs";
-import { Id } from "@/convex/_generated/dataModel";
+import { getSupabaseServer } from "@/lib/supabase";
 import { apiRateLimit } from "@/lib/rate-limit";
 
 /**
@@ -13,27 +11,41 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(request);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
 
     const { id } = await params;
-    const checklistId = id as Id<"landingPageChecklists">;
+    const supabase = await getSupabaseServer();
 
-    const checklist = await fetchQuery(api.landingPages.get, {
-      checklistId,
-    });
+    const { data: checklist, error } = await supabase
+      .from("landing_page_checklists")
+      .select("*")
+      .eq("id", id)
+      .single();
 
-    if (!checklist) {
+    if (error || !checklist) {
       return NextResponse.json(
         { error: "Checklist not found" },
         { status: 404 }
       );
     }
 
-    return NextResponse.json(checklist);
+    // Transform to camelCase
+    const transformedChecklist = {
+      id: checklist.id,
+      clientId: checklist.client_id,
+      pageType: checklist.page_type,
+      title: checklist.title,
+      personaId: checklist.persona_id,
+      sections: checklist.sections,
+      createdAt: checklist.created_at,
+      updatedAt: checklist.updated_at,
+    };
+
+    return NextResponse.json(transformedChecklist);
   } catch (error: any) {
     console.error("Error fetching checklist:", error);
     return NextResponse.json(
@@ -53,13 +65,32 @@ export async function PUT(
 ) {
   try {
     const { id } = await params;
-    const checklistId = id as Id<"landingPageChecklists">;
     const body = await request.json();
 
-    await fetchMutation(api.landingPages.update, {
-      checklistId,
-      ...body,
-    });
+    const supabase = await getSupabaseServer();
+
+    // Transform camelCase to snake_case
+    const dbUpdates: Record<string, any> = {
+      updated_at: new Date().toISOString(),
+    };
+
+    if (body.title) dbUpdates.title = body.title;
+    if (body.pageType) dbUpdates.page_type = body.pageType;
+    if (body.sections) dbUpdates.sections = body.sections;
+    if (body.personaId) dbUpdates.persona_id = body.personaId;
+
+    const { error } = await supabase
+      .from("landing_page_checklists")
+      .update(dbUpdates)
+      .eq("id", id);
+
+    if (error) {
+      console.error("Error updating checklist:", error);
+      return NextResponse.json(
+        { error: "Failed to update checklist" },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({
       success: true,
@@ -84,11 +115,20 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
-    const checklistId = id as Id<"landingPageChecklists">;
+    const supabase = await getSupabaseServer();
 
-    await fetchMutation(api.landingPages.remove, {
-      checklistId,
-    });
+    const { error } = await supabase
+      .from("landing_page_checklists")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      console.error("Error deleting checklist:", error);
+      return NextResponse.json(
+        { error: "Failed to delete checklist" },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({
       success: true,

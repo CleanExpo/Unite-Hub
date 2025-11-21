@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { fetchMutation, fetchQuery } from "convex/nextjs";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
+import { getSupabaseServer } from "@/lib/supabase";
 import { apiRateLimit } from "@/lib/rate-limit";
-import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
+import { validateUserAuth } from "@/lib/workspace-validation";
 
 /**
  * POST /api/competitors
@@ -11,11 +9,11 @@ import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-vali
  */
 export async function POST(request: NextRequest) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(request);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
 
     // Validate user authentication
     const user = await validateUserAuth(request);
@@ -49,27 +47,43 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const supabase = await getSupabaseServer();
+
     // Create competitor
-    const competitorId = await fetchMutation(api.competitors.addCompetitor, {
-      clientId: clientId as Id<"clients">,
-      competitorName,
-      website,
-      description,
-      category,
-      strengths,
-      weaknesses,
-      pricing,
-      targetAudience,
-      marketingChannels,
-      contentStrategy,
-      socialPresence,
-      logoUrl,
-      screenshots,
-    });
+    const { data: competitor, error } = await supabase
+      .from("competitors")
+      .insert({
+        client_id: clientId,
+        competitor_name: competitorName,
+        website,
+        description,
+        category,
+        strengths: strengths || [],
+        weaknesses: weaknesses || [],
+        pricing,
+        target_audience: targetAudience || [],
+        marketing_channels: marketingChannels || [],
+        content_strategy: contentStrategy,
+        social_presence: socialPresence || {},
+        logo_url: logoUrl,
+        screenshots: screenshots || [],
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .select("id")
+      .single();
+
+    if (error) {
+      console.error("Error creating competitor:", error);
+      return NextResponse.json(
+        { error: error.message || "Failed to create competitor" },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({
       success: true,
-      competitorId,
+      competitorId: competitor.id,
       message: "Competitor added successfully",
     });
   } catch (error: any) {
@@ -119,12 +133,50 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const competitors = await fetchQuery(api.competitors.getCompetitors, {
-      clientId: clientId as Id<"clients">,
-      category: category || undefined,
-    });
+    const supabase = await getSupabaseServer();
 
-    return NextResponse.json({ success: true, competitors });
+    let query = supabase
+      .from("competitors")
+      .select("*")
+      .eq("client_id", clientId)
+      .order("created_at", { ascending: false });
+
+    if (category) {
+      query = query.eq("category", category);
+    }
+
+    const { data: competitors, error } = await query;
+
+    if (error) {
+      console.error("Error fetching competitors:", error);
+      return NextResponse.json(
+        { error: error.message || "Failed to fetch competitors" },
+        { status: 500 }
+      );
+    }
+
+    // Transform to camelCase for API consistency
+    const transformedCompetitors = competitors.map((comp) => ({
+      id: comp.id,
+      clientId: comp.client_id,
+      competitorName: comp.competitor_name,
+      website: comp.website,
+      description: comp.description,
+      category: comp.category,
+      strengths: comp.strengths,
+      weaknesses: comp.weaknesses,
+      pricing: comp.pricing,
+      targetAudience: comp.target_audience,
+      marketingChannels: comp.marketing_channels,
+      contentStrategy: comp.content_strategy,
+      socialPresence: comp.social_presence,
+      logoUrl: comp.logo_url,
+      screenshots: comp.screenshots,
+      createdAt: comp.created_at,
+      updatedAt: comp.updated_at,
+    }));
+
+    return NextResponse.json({ success: true, competitors: transformedCompetitors });
   } catch (error: any) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {

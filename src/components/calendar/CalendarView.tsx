@@ -3,11 +3,20 @@
 import React, { useState, useMemo } from "react";
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from "lucide-react";
 import CalendarPost from "./CalendarPost";
-import { Doc } from "@/convex/_generated/dataModel";
+
+// Content calendar post type (migrated from Convex)
+interface ContentCalendarPost {
+  _id: string;
+  platform: string;
+  postType: string;
+  scheduledDate: string;
+  content?: string;
+  status?: string;
+}
 
 interface CalendarViewProps {
-  posts: Doc<"contentCalendarPosts">[];
-  onPostClick: (post: Doc<"contentCalendarPosts">) => void;
+  posts: ContentCalendarPost[];
+  onPostClick: (post: ContentCalendarPost) => void;
   onApprove: (postId: string) => void;
   onRegenerate: (postId: string) => void;
   currentMonth: number;
@@ -33,7 +42,7 @@ export default function CalendarView({
 
     const days: Array<{
       date: Date | null;
-      posts: Doc<"contentCalendarPosts">[];
+      posts: ContentCalendarPost[];
     }> = [];
 
     // Add empty cells for days before month starts

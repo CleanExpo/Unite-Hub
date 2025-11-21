@@ -3,8 +3,7 @@
  * Populates template library with pre-built templates
  */
 
-import { api } from "@/convex/_generated/api";
-import { fetchMutation } from "convex/nextjs";
+import { getSupabaseServer } from "@/lib/supabase";
 import { ALL_MASTER_TEMPLATES, MasterTemplate } from "./masterTemplates";
 
 export async function seedTemplatesForClient(clientId: string): Promise<number> {
@@ -13,28 +12,39 @@ export async function seedTemplatesForClient(clientId: string): Promise<number> 
   try {
     console.log(`Seeding templates for client ${clientId}...`);
 
+    const supabase = await getSupabaseServer();
+
     for (const template of ALL_MASTER_TEMPLATES) {
       try {
-        await fetchMutation(api.socialTemplates.createTemplate, {
-          clientId: clientId as any,
-          platform: template.platform as any,
-          category: template.category as any,
-          templateName: template.templateName,
-          copyText: template.copyText,
-          hashtags: template.hashtags,
-          emojiSuggestions: template.emojiSuggestions,
-          callToAction: template.callToAction,
-          variations: template.variations as any,
-          performancePrediction: template.performancePrediction,
-          aiGenerated: false,
-          tags: template.tags,
-        });
+        const { error } = await supabase
+          .from("social_templates")
+          .insert({
+            client_id: clientId,
+            platform: template.platform,
+            category: template.category,
+            template_name: template.templateName,
+            copy_text: template.copyText,
+            hashtags: template.hashtags,
+            emoji_suggestions: template.emojiSuggestions,
+            call_to_action: template.callToAction,
+            variations: template.variations,
+            performance_prediction: template.performancePrediction,
+            ai_generated: false,
+            tags: template.tags,
+            is_favorite: false,
+            usage_count: 0,
+            character_count: template.copyText.length,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          });
 
-        count++;
+        if (!error) {
+          count++;
 
-        // Log progress every 10 templates
-        if (count % 10 === 0) {
-          console.log(`Seeded ${count} templates...`);
+          // Log progress every 10 templates
+          if (count % 10 === 0) {
+            console.log(`Seeded ${count} templates...`);
+          }
         }
       } catch (error) {
         console.error(`Error seeding template ${template.templateName}:`, error);
@@ -59,25 +69,35 @@ export async function seedTemplatesByPlatform(
     console.log(`Seeding ${platform} templates for client ${clientId}...`);
 
     const templates = ALL_MASTER_TEMPLATES.filter((t) => t.platform === platform);
+    const supabase = await getSupabaseServer();
 
     for (const template of templates) {
       try {
-        await fetchMutation(api.socialTemplates.createTemplate, {
-          clientId: clientId as any,
-          platform: template.platform as any,
-          category: template.category as any,
-          templateName: template.templateName,
-          copyText: template.copyText,
-          hashtags: template.hashtags,
-          emojiSuggestions: template.emojiSuggestions,
-          callToAction: template.callToAction,
-          variations: template.variations as any,
-          performancePrediction: template.performancePrediction,
-          aiGenerated: false,
-          tags: template.tags,
-        });
+        const { error } = await supabase
+          .from("social_templates")
+          .insert({
+            client_id: clientId,
+            platform: template.platform,
+            category: template.category,
+            template_name: template.templateName,
+            copy_text: template.copyText,
+            hashtags: template.hashtags,
+            emoji_suggestions: template.emojiSuggestions,
+            call_to_action: template.callToAction,
+            variations: template.variations,
+            performance_prediction: template.performancePrediction,
+            ai_generated: false,
+            tags: template.tags,
+            is_favorite: false,
+            usage_count: 0,
+            character_count: template.copyText.length,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          });
 
-        count++;
+        if (!error) {
+          count++;
+        }
       } catch (error) {
         console.error(`Error seeding template ${template.templateName}:`, error);
       }
@@ -111,24 +131,35 @@ export async function seedTemplatesByCategory(
       templates = templates.filter((t) => t.platform === platform);
     }
 
+    const supabase = await getSupabaseServer();
+
     for (const template of templates) {
       try {
-        await fetchMutation(api.socialTemplates.createTemplate, {
-          clientId: clientId as any,
-          platform: template.platform as any,
-          category: template.category as any,
-          templateName: template.templateName,
-          copyText: template.copyText,
-          hashtags: template.hashtags,
-          emojiSuggestions: template.emojiSuggestions,
-          callToAction: template.callToAction,
-          variations: template.variations as any,
-          performancePrediction: template.performancePrediction,
-          aiGenerated: false,
-          tags: template.tags,
-        });
+        const { error } = await supabase
+          .from("social_templates")
+          .insert({
+            client_id: clientId,
+            platform: template.platform,
+            category: template.category,
+            template_name: template.templateName,
+            copy_text: template.copyText,
+            hashtags: template.hashtags,
+            emoji_suggestions: template.emojiSuggestions,
+            call_to_action: template.callToAction,
+            variations: template.variations,
+            performance_prediction: template.performancePrediction,
+            ai_generated: false,
+            tags: template.tags,
+            is_favorite: false,
+            usage_count: 0,
+            character_count: template.copyText.length,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+          });
 
-        count++;
+        if (!error) {
+          count++;
+        }
       } catch (error) {
         console.error(`Error seeding template ${template.templateName}:`, error);
       }

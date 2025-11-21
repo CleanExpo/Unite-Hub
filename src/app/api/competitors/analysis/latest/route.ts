@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { fetchQuery } from "convex/nextjs";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
+import { getSupabaseServer } from "@/lib/supabase";
 import { apiRateLimit } from "@/lib/rate-limit";
-import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
+import { validateUserAuth } from "@/lib/workspace-validation";
 
 /**
  * GET /api/competitors/analysis/latest?clientId=xxx
@@ -11,14 +9,14 @@ import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-vali
  */
 export async function GET(request: NextRequest) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(request);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
 
     // Validate user authentication
-    const user = await validateUserAuth(request);
+    await validateUserAuth(request);
 
     const { searchParams } = new URL(request.url);
     const clientId = searchParams.get("clientId");
@@ -30,11 +28,18 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const analysis = await fetchQuery(api.competitors.getLatestAnalysis, {
-      clientId: clientId as Id<"clients">,
-    });
+    const supabase = await getSupabaseServer();
 
-    if (!analysis) {
+    // Get the latest analysis
+    const { data: analysis, error: analysisError } = await supabase
+      .from("competitor_analyses")
+      .select("*")
+      .eq("client_id", clientId)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .single();
+
+    if (analysisError || !analysis) {
       return NextResponse.json(
         { error: "No analysis found for this client" },
         { status: 404 }
@@ -42,16 +47,52 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch the competitors that were analyzed
-    const competitors = await Promise.all(
-      analysis.competitorsAnalyzed.map((id) =>
-        fetchQuery(api.competitors.getCompetitor, { competitorId: id })
-      )
-    );
+    const competitorIds = analysis.competitors_analyzed || [];
+
+    let competitors: any[] = [];
+    if (competitorIds.length > 0) {
+      const { data: competitorData, error: competitorError } = await supabase
+        .from("competitors")
+        .select("*")
+        .in("id", competitorIds);
+
+      if (!competitorError && competitorData) {
+        competitors = competitorData.map((comp) => ({
+          id: comp.id,
+          competitorName: comp.competitor_name,
+          website: comp.website,
+          description: comp.description,
+          category: comp.category,
+          strengths: comp.strengths,
+          weaknesses: comp.weaknesses,
+          pricing: comp.pricing,
+          targetAudience: comp.target_audience,
+          marketingChannels: comp.marketing_channels,
+          contentStrategy: comp.content_strategy,
+          socialPresence: comp.social_presence,
+        }));
+      }
+    }
+
+    // Transform analysis to camelCase
+    const transformedAnalysis = {
+      id: analysis.id,
+      clientId: analysis.client_id,
+      competitorsAnalyzed: analysis.competitors_analyzed,
+      marketGaps: analysis.market_gaps,
+      differentiationOpportunities: analysis.differentiation_opportunities,
+      pricingAnalysis: analysis.pricing_analysis,
+      swotAnalysis: analysis.swot_analysis,
+      contentGaps: analysis.content_gaps,
+      actionableInsights: analysis.actionable_insights,
+      aiSummary: analysis.ai_summary,
+      createdAt: analysis.created_at,
+    };
 
     return NextResponse.json({
       success: true,
-      analysis,
-      competitors: competitors.filter((c) => c !== null),
+      analysis: transformedAnalysis,
+      competitors,
     });
   } catch (error: any) {
     if (error instanceof Error) {

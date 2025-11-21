@@ -2,7 +2,6 @@
 
 import { useClientContext } from "@/contexts/ClientContext";
 import { useCallback, useState, useEffect } from "react";
-import { Id } from "@/convex/_generated/dataModel";
 
 /**
  * Return type for the useFeatureClient hook
@@ -16,7 +15,7 @@ import { Id } from "@/convex/_generated/dataModel";
  * @property {() => void} handleMissingClient - Sets error message when client is missing
  */
 export interface UseFeatureClientReturn {
-  currentClientId: Id<"clients"> | null;
+  currentClientId: string | null;
   isLoading: boolean;
   error: string | null;
   isEmpty: boolean;

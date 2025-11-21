@@ -1,14 +1,11 @@
 import { gmailClient, parseGmailMessage, downloadAttachment } from "./index";
 import { uploadAttachments } from "./storage";
-import { ConvexHttpClient } from "convex/browser";
-import { api } from "@/convex/_generated/api";
+import { getSupabaseServer } from "@/lib/supabase";
 
 /**
  * Email Processing Pipeline
  * Complete workflow for ingesting and processing emails
  */
-
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
 export interface EmailProcessingResult {
   emailThreadId: string;
@@ -69,6 +66,8 @@ export async function processEmail(
   orgId: string
 ): Promise<EmailProcessingResult> {
   try {
+    const supabase = await getSupabaseServer();
+
     // Find or create client
     const { clientId, isNewClient } = await findOrCreateClient(
       parsedEmail.senderEmail,
@@ -90,23 +89,31 @@ export async function processEmail(
     }
 
     // Store email thread
-    const emailThreadId = await convex.mutation(api.emailThreads.create, {
-      clientId,
-      senderEmail: parsedEmail.senderEmail,
-      senderName: parsedEmail.senderName,
-      subject: parsedEmail.subject,
-      messageBody: parsedEmail.bodyHtml || parsedEmail.bodyPlain,
-      messageBodyPlain: parsedEmail.bodyPlain,
-      attachments: uploadedAttachments,
-      receivedAt: parsedEmail.receivedAt,
-      autoReplySent: false,
-      gmailMessageId: parsedEmail.messageId,
-      gmailThreadId: parsedEmail.threadId,
-      isRead: false,
-    });
+    const { data: emailThread, error } = await supabase
+      .from("email_threads")
+      .insert({
+        client_id: clientId,
+        sender_email: parsedEmail.senderEmail,
+        sender_name: parsedEmail.senderName,
+        subject: parsedEmail.subject,
+        message_body: parsedEmail.bodyHtml || parsedEmail.bodyPlain,
+        message_body_plain: parsedEmail.bodyPlain,
+        attachments: uploadedAttachments,
+        received_at: parsedEmail.receivedAt,
+        auto_reply_sent: false,
+        gmail_message_id: parsedEmail.messageId,
+        gmail_thread_id: parsedEmail.threadId,
+        is_read: false,
+      })
+      .select("id")
+      .single();
+
+    if (error) {
+      throw error;
+    }
 
     return {
-      emailThreadId,
+      emailThreadId: emailThread.id,
       clientId,
       isNewClient,
       attachmentsProcessed: uploadedAttachments.length,
@@ -126,46 +133,64 @@ async function findOrCreateClient(
   orgId: string
 ): Promise<{ clientId: string; isNewClient: boolean }> {
   try {
-    // Check if email exists in clientEmails
-    const clientEmail = await convex.query(api.clientEmails.getByEmail, {
-      emailAddress: email,
-    });
+    const supabase = await getSupabaseServer();
+
+    // Check if email exists in client_emails
+    const { data: clientEmail } = await supabase
+      .from("client_emails")
+      .select("client_id")
+      .eq("email_address", email)
+      .single();
 
     if (clientEmail) {
       // Update last contact time
-      await convex.mutation(api.clientEmails.updateLastContact, {
-        id: clientEmail._id,
-      });
+      await supabase
+        .from("client_emails")
+        .update({ last_contact_at: new Date().toISOString() })
+        .eq("email_address", email);
 
       return {
-        clientId: clientEmail.clientId,
+        clientId: clientEmail.client_id,
         isNewClient: false,
       };
     }
 
     // Create new client
-    const clientId = await convex.mutation(api.clients.create, {
-      orgId,
-      clientName: name,
-      businessName: name,
-      businessDescription: "Auto-created from email",
-      packageTier: "starter",
-      status: "onboarding",
-      primaryEmail: email,
-      phoneNumbers: [],
-    });
+    const { data: newClient, error: clientError } = await supabase
+      .from("clients")
+      .insert({
+        org_id: orgId,
+        client_name: name,
+        business_name: name,
+        business_description: "Auto-created from email",
+        package_tier: "starter",
+        status: "onboarding",
+        primary_email: email,
+        phone_numbers: [],
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .select("id")
+      .single();
+
+    if (clientError) {
+      throw clientError;
+    }
 
     // Create client email record
-    await convex.mutation(api.clientEmails.create, {
-      clientId,
-      emailAddress: email,
-      isPrimary: true,
-      label: "work",
-      verified: false,
-    });
+    await supabase
+      .from("client_emails")
+      .insert({
+        client_id: newClient.id,
+        email_address: email,
+        is_primary: true,
+        label: "work",
+        verified: false,
+        created_at: new Date().toISOString(),
+      });
 
     return {
-      clientId,
+      clientId: newClient.id,
       isNewClient: true,
     };
   } catch (error) {

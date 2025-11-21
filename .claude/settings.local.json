@@ -109,7 +109,8 @@
       "Bash(scripts/combined_migrations_135_152.sql)",
       "Bash(xargs:*)",
       "Bash(src/lib/services/engines/index.ts)",
-      "Bash(npm run seo:comprehensive:*)"
+      "Bash(npm run seo:comprehensive:*)",
+      "Bash(del \"d:\\Unite-Hub\\src\\app\\ConvexClientProvider.tsx\")"
     ],
     "deny": [],
     "ask": []

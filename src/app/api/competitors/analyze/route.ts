@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { fetchMutation, fetchQuery } from "convex/nextjs";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
+import { getSupabaseServer } from "@/lib/supabase";
 import Anthropic from "@anthropic-ai/sdk";
 import {
   generateCompetitorAnalysisPrompt,
@@ -9,7 +7,7 @@ import {
   type ClientBusinessContext,
 } from "@/lib/claude/competitor-prompts";
 import { aiAgentRateLimit } from "@/lib/rate-limit";
-import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
+import { validateUserAuth } from "@/lib/workspace-validation";
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
@@ -21,14 +19,14 @@ const anthropic = new Anthropic({
  */
 export async function POST(request: NextRequest) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await aiAgentRateLimit(request);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
+    // Apply rate limiting
+    const rateLimitResult = await aiAgentRateLimit(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
 
     // Validate user authentication
-    const user = await validateUserAuth(request);
+    await validateUserAuth(request);
 
     const body = await request.json();
     const { clientId } = body;
@@ -40,21 +38,34 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Fetch client details
-    const client = await fetchQuery(api.clients.getClient, {
-      clientId: clientId as Id<"clients">,
-    });
+    const supabase = await getSupabaseServer();
 
-    if (!client) {
+    // Fetch client details
+    const { data: client, error: clientError } = await supabase
+      .from("clients")
+      .select("*")
+      .eq("id", clientId)
+      .single();
+
+    if (clientError || !client) {
       return NextResponse.json({ error: "Client not found" }, { status: 404 });
     }
 
     // Fetch all competitors
-    const competitors = await fetchQuery(api.competitors.getCompetitors, {
-      clientId: clientId as Id<"clients">,
-    });
+    const { data: competitors, error: competitorsError } = await supabase
+      .from("competitors")
+      .select("*")
+      .eq("client_id", clientId);
 
-    if (competitors.length === 0) {
+    if (competitorsError) {
+      console.error("Error fetching competitors:", competitorsError);
+      return NextResponse.json(
+        { error: "Failed to fetch competitors" },
+        { status: 500 }
+      );
+    }
+
+    if (!competitors || competitors.length === 0) {
       return NextResponse.json(
         {
           error:
@@ -65,38 +76,39 @@ export async function POST(request: NextRequest) {
     }
 
     // Fetch client's marketing strategy (if exists) for context
-    const strategies = await fetchQuery(api.strategies.getStrategies, {
-      clientId: clientId as Id<"clients">,
-      activeOnly: true,
-    });
+    const { data: strategies } = await supabase
+      .from("strategies")
+      .select("*")
+      .eq("client_id", clientId)
+      .eq("is_active", true);
 
-    const activeStrategy = strategies.find((s: any) => s.isActive);
+    const activeStrategy = strategies?.find((s: any) => s.is_active);
 
     // Build client context
     const clientContext: ClientBusinessContext = {
-      businessName: client.businessName,
-      businessDescription: client.businessDescription,
-      targetAudience: activeStrategy?.targetAudience
-        ? [activeStrategy.targetAudience]
+      businessName: client.business_name,
+      businessDescription: client.business_description,
+      targetAudience: activeStrategy?.target_audience
+        ? [activeStrategy.target_audience]
         : undefined,
-      marketingChannels: activeStrategy?.marketingChannels?.map(
+      marketingChannels: activeStrategy?.marketing_channels?.map(
         (c: any) => c.channel
       ),
     };
 
     // Build competitor data
     const competitorData: CompetitorData[] = competitors.map((comp: any) => ({
-      competitorName: comp.competitorName,
+      competitorName: comp.competitor_name,
       website: comp.website,
       description: comp.description,
       category: comp.category,
       strengths: comp.strengths || [],
       weaknesses: comp.weaknesses || [],
       pricing: comp.pricing,
-      targetAudience: comp.targetAudience || [],
-      marketingChannels: comp.marketingChannels || [],
-      contentStrategy: comp.contentStrategy,
-      socialPresence: comp.socialPresence || {},
+      targetAudience: comp.target_audience || [],
+      marketingChannels: comp.marketing_channels || [],
+      contentStrategy: comp.content_strategy,
+      socialPresence: comp.social_presence || {},
     }));
 
     // Generate AI analysis prompt
@@ -133,21 +145,31 @@ export async function POST(request: NextRequest) {
     const analysisResult = JSON.parse(jsonMatch[0]);
 
     // Save analysis to database
-    const analysisId = await fetchMutation(api.competitors.createAnalysis, {
-      clientId: clientId as Id<"clients">,
-      competitorsAnalyzed: competitors.map((c: any) => c._id),
-      marketGaps: analysisResult.marketGaps,
-      differentiationOpportunities: analysisResult.differentiationOpportunities,
-      pricingAnalysis: analysisResult.pricingAnalysis,
-      swotAnalysis: analysisResult.swotAnalysis,
-      contentGaps: analysisResult.contentGaps,
-      actionableInsights: analysisResult.actionableInsights,
-      aiSummary: analysisResult.aiSummary,
-    });
+    const { data: analysis, error: analysisError } = await supabase
+      .from("competitor_analyses")
+      .insert({
+        client_id: clientId,
+        competitors_analyzed: competitors.map((c: any) => c.id),
+        market_gaps: analysisResult.marketGaps,
+        differentiation_opportunities: analysisResult.differentiationOpportunities,
+        pricing_analysis: analysisResult.pricingAnalysis,
+        swot_analysis: analysisResult.swotAnalysis,
+        content_gaps: analysisResult.contentGaps,
+        actionable_insights: analysisResult.actionableInsights,
+        ai_summary: analysisResult.aiSummary,
+        created_at: new Date().toISOString(),
+      })
+      .select("id")
+      .single();
+
+    if (analysisError) {
+      console.error("Error saving analysis:", analysisError);
+      // Still return the analysis even if save fails
+    }
 
     return NextResponse.json({
       success: true,
-      analysisId,
+      analysisId: analysis?.id,
       analysis: analysisResult,
       message: "Competitor analysis completed successfully",
     });

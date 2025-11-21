@@ -3,7 +3,6 @@
 import { TemplateLibrary } from "@/components/social-templates/TemplateLibrary";
 import { MessageSquare } from "lucide-react";
 import { FeaturePageWrapper } from "@/components/features/FeaturePageWrapper";
-import { Id } from "@/convex/_generated/dataModel";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 export default function TemplatesPage() {

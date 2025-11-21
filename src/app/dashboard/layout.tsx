@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import { ClientProvider } from "@/contexts/ClientContext";
 import ClientSelector from "@/components/client/ClientSelector";
-import { Id } from "@/convex/_generated/dataModel";
+// Use string type instead of Convex Id
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSessionRefresh } from "@/hooks/useSessionRefresh";
@@ -25,7 +25,7 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname();
   const { user, profile, signOut, currentOrganization, organizations, loading: authLoading } = useAuth();
-  const [orgId, setOrgId] = useState<Id<"organizations"> | null>(null);
+  const [orgId, setOrgId] = useState<string | null>(null);
   const [loadingTimeout, setLoadingTimeout] = useState(false);
 
   // Automatically refresh session to keep user logged in
@@ -46,7 +46,7 @@ export default function DashboardLayout({
     console.log('[DashboardLayout] currentOrganization changed:', currentOrganization);
     if (currentOrganization?.org_id) {
       console.log('[DashboardLayout] Setting orgId to:', currentOrganization.org_id);
-      setOrgId(currentOrganization.org_id as Id<"organizations">);
+      setOrgId(currentOrganization.org_id);
     } else {
       console.log('[DashboardLayout] No org_id found in currentOrganization');
     }

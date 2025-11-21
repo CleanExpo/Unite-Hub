@@ -1,15 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { api } from "@/convex/_generated/api";
-import { fetchMutation } from "convex/nextjs";
+import { getSupabaseServer } from "@/lib/supabase";
 import { apiRateLimit } from "@/lib/rate-limit";
 
 export async function POST(req: NextRequest) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(req);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
 
     const body = await req.json();
     const { action, templateIds } = body;
@@ -21,27 +20,45 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const supabase = await getSupabaseServer();
+
     let result;
 
     switch (action) {
       case "delete":
-        result = await fetchMutation(api.socialTemplates.bulkDelete, {
-          templateIds: templateIds as any,
-        });
+        const { error: deleteError, count: deleteCount } = await supabase
+          .from("social_templates")
+          .delete()
+          .in("id", templateIds);
+
+        if (deleteError) {
+          throw deleteError;
+        }
+        result = { deleted: deleteCount || templateIds.length };
         break;
 
       case "favorite":
-        result = await fetchMutation(api.socialTemplates.bulkFavorite, {
-          templateIds: templateIds as any,
-          favorite: true,
-        });
+        const { error: favError } = await supabase
+          .from("social_templates")
+          .update({ is_favorite: true, updated_at: new Date().toISOString() })
+          .in("id", templateIds);
+
+        if (favError) {
+          throw favError;
+        }
+        result = { updated: templateIds.length, favorite: true };
         break;
 
       case "unfavorite":
-        result = await fetchMutation(api.socialTemplates.bulkFavorite, {
-          templateIds: templateIds as any,
-          favorite: false,
-        });
+        const { error: unfavError } = await supabase
+          .from("social_templates")
+          .update({ is_favorite: false, updated_at: new Date().toISOString() })
+          .in("id", templateIds);
+
+        if (unfavError) {
+          throw unfavError;
+        }
+        result = { updated: templateIds.length, favorite: false };
         break;
 
       default:

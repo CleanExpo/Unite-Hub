@@ -1,5 +1,3 @@
-import { Id } from "@/convex/_generated/dataModel";
-
 /**
  * Stripe Integration Types for Unite-Hub CRM
  */
@@ -22,8 +20,8 @@ export interface PlanConfig {
 
 // Subscription Data
 export interface Subscription {
-  id: Id<"subscriptions">;
-  orgId: Id<"organizations">;
+  id: string;
+  orgId: string;
   planTier: PlanTier;
   status: SubscriptionStatus;
   stripeCustomerId: string;

@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { api } from "@/convex/_generated/api";
-import { fetchMutation, fetchAction } from "convex/nextjs";
-import { Id } from "@/convex/_generated/dataModel";
+import { getSupabaseServer } from "@/lib/supabase";
 import { apiRateLimit } from "@/lib/rate-limit";
 
 /**
@@ -13,14 +11,13 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(request);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
 
     const { id } = await params;
-    const checklistId = id as Id<"landingPageChecklists">;
     const body = await request.json();
     const { sectionName, ...updates } = body;
 
@@ -31,11 +28,49 @@ export async function PUT(
       );
     }
 
-    await fetchMutation(api.landingPages.updateSection, {
-      checklistId,
-      sectionName,
-      ...updates,
+    const supabase = await getSupabaseServer();
+
+    // Get the current checklist
+    const { data: checklist, error: fetchError } = await supabase
+      .from("landing_page_checklists")
+      .select("sections")
+      .eq("id", id)
+      .single();
+
+    if (fetchError || !checklist) {
+      return NextResponse.json(
+        { error: "Checklist not found" },
+        { status: 404 }
+      );
+    }
+
+    // Update the specific section
+    const updatedSections = checklist.sections.map((section: any) => {
+      if (section.name === sectionName) {
+        return {
+          ...section,
+          ...updates,
+        };
+      }
+      return section;
     });
+
+    // Save the updated sections
+    const { error: updateError } = await supabase
+      .from("landing_page_checklists")
+      .update({
+        sections: updatedSections,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", id);
+
+    if (updateError) {
+      console.error("Error updating section:", updateError);
+      return NextResponse.json(
+        { error: "Failed to update section" },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({
       success: true,

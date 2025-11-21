@@ -74,18 +74,20 @@ export interface ApiErrorResponse {
  *
  * @example
  * ```typescript
- * // With Convex integration
- * import { api } from "@/convex/_generated/api";
- * import { fetchQuery } from "convex/nextjs";
+ * // With Supabase integration
+ * import { getSupabaseServer } from "@/lib/supabase";
  *
  * export async function POST(req: NextRequest) {
  *   return withClientValidation(req, async ({ clientId, body }) => {
- *     const result = await fetchMutation(api.myFeature.create, {
- *       clientId: clientId as Id<"clients">,
- *       ...body,
- *     });
+ *     const supabase = await getSupabaseServer();
+ *     const { data, error } = await supabase
+ *       .from("my_table")
+ *       .insert({ client_id: clientId, ...body })
+ *       .select()
+ *       .single();
  *
- *     return NextResponse.json({ success: true, data: result });
+ *     if (error) throw error;
+ *     return NextResponse.json({ success: true, data });
  *   });
  * }
  * ```
@@ -271,31 +273,31 @@ export function extractClientIds(value: unknown): string[] {
 }
 
 /**
- * Type guard to check if error is a Convex error
+ * Type guard to check if error is a database error
  *
  * @param {unknown} error - Error to check
- * @returns {boolean} True if error is from Convex
+ * @returns {boolean} True if error is from database
  */
-export function isConvexError(error: unknown): error is { data: any; message: string } {
+export function isDatabaseError(error: unknown): error is { code: string; message: string; details?: string } {
   return (
     typeof error === "object" &&
     error !== null &&
-    "data" in error &&
+    "code" in error &&
     "message" in error
   );
 }
 
 /**
- * Formats Convex errors for API responses
+ * Formats database errors for API responses
  *
- * @param {unknown} error - Error from Convex
+ * @param {unknown} error - Error from database
  * @returns {ApiErrorResponse} Formatted error response
  */
-export function formatConvexError(error: unknown): ApiErrorResponse {
-  if (isConvexError(error)) {
+export function formatDatabaseError(error: unknown): ApiErrorResponse {
+  if (isDatabaseError(error)) {
     return {
       error: error.message,
-      details: JSON.stringify(error.data),
+      details: error.details || error.code,
     };
   }
 

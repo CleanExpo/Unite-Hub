@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { fetchMutation, fetchQuery } from "convex/nextjs";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
+import { getSupabaseServer } from "@/lib/supabase";
 import { apiRateLimit } from "@/lib/rate-limit";
-import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
+import { validateUserAuth } from "@/lib/workspace-validation";
 
 /**
  * GET /api/competitors/[id]
@@ -14,28 +12,53 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(request);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(request);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
 
     // Validate user authentication
-    const user = await validateUserAuth(request);
+    await validateUserAuth(request);
 
     const { id } = await params;
-    const competitor = await fetchQuery(api.competitors.getCompetitor, {
-      competitorId: id as Id<"competitors">,
-    });
+    const supabase = await getSupabaseServer();
 
-    if (!competitor) {
+    const { data: competitor, error } = await supabase
+      .from("competitors")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (error || !competitor) {
       return NextResponse.json(
         { error: "Competitor not found" },
         { status: 404 }
       );
     }
 
-    return NextResponse.json({ success: true, competitor });
+    // Transform to camelCase
+    const transformedCompetitor = {
+      id: competitor.id,
+      clientId: competitor.client_id,
+      competitorName: competitor.competitor_name,
+      website: competitor.website,
+      description: competitor.description,
+      category: competitor.category,
+      strengths: competitor.strengths,
+      weaknesses: competitor.weaknesses,
+      pricing: competitor.pricing,
+      targetAudience: competitor.target_audience,
+      marketingChannels: competitor.marketing_channels,
+      contentStrategy: competitor.content_strategy,
+      socialPresence: competitor.social_presence,
+      logoUrl: competitor.logo_url,
+      screenshots: competitor.screenshots,
+      createdAt: competitor.created_at,
+      updatedAt: competitor.updated_at,
+    };
+
+    return NextResponse.json({ success: true, competitor: transformedCompetitor });
   } catch (error: any) {
     if (error instanceof Error) {
       if (error.message.includes("Unauthorized")) {
@@ -80,12 +103,41 @@ export async function PUT(
         { status: 400 }
       );
     }
-    const { id } = await params;
 
-    await fetchMutation(api.competitors.updateCompetitor, {
-      competitorId: id as Id<"competitors">,
-      updates,
-    });
+    const { id } = await params;
+    const supabase = await getSupabaseServer();
+
+    // Transform camelCase to snake_case for database
+    const dbUpdates: Record<string, any> = {
+      updated_at: new Date().toISOString(),
+    };
+
+    if (updates.competitorName) dbUpdates.competitor_name = updates.competitorName;
+    if (updates.website) dbUpdates.website = updates.website;
+    if (updates.description) dbUpdates.description = updates.description;
+    if (updates.category) dbUpdates.category = updates.category;
+    if (updates.strengths) dbUpdates.strengths = updates.strengths;
+    if (updates.weaknesses) dbUpdates.weaknesses = updates.weaknesses;
+    if (updates.pricing) dbUpdates.pricing = updates.pricing;
+    if (updates.targetAudience) dbUpdates.target_audience = updates.targetAudience;
+    if (updates.marketingChannels) dbUpdates.marketing_channels = updates.marketingChannels;
+    if (updates.contentStrategy) dbUpdates.content_strategy = updates.contentStrategy;
+    if (updates.socialPresence) dbUpdates.social_presence = updates.socialPresence;
+    if (updates.logoUrl) dbUpdates.logo_url = updates.logoUrl;
+    if (updates.screenshots) dbUpdates.screenshots = updates.screenshots;
+
+    const { error } = await supabase
+      .from("competitors")
+      .update(dbUpdates)
+      .eq("id", id);
+
+    if (error) {
+      console.error("Error updating competitor:", error);
+      return NextResponse.json(
+        { error: error.message || "Failed to update competitor" },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({
       success: true,
@@ -127,9 +179,20 @@ export async function DELETE(
     await validateUserAuth(request);
 
     const { id } = await params;
-    await fetchMutation(api.competitors.deleteCompetitor, {
-      competitorId: id as Id<"competitors">,
-    });
+    const supabase = await getSupabaseServer();
+
+    const { error } = await supabase
+      .from("competitors")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      console.error("Error deleting competitor:", error);
+      return NextResponse.json(
+        { error: error.message || "Failed to delete competitor" },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({
       success: true,

@@ -22,7 +22,6 @@ import OpportunitiesPanel from "@/components/competitors/OpportunitiesPanel";
 import ActionableInsights from "@/components/competitors/ActionableInsights";
 import ComparisonMatrix from "@/components/competitors/ComparisonMatrix";
 import { FeaturePageWrapper } from "@/components/features/FeaturePageWrapper";
-import { Id } from "@/convex/_generated/dataModel";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { supabaseBrowser } from "@/lib/supabase";
 
@@ -38,7 +37,7 @@ export default function CompetitorsPage() {
   );
 }
 
-function CompetitorFeature({ clientId }: { clientId: Id<"clients"> }) {
+function CompetitorFeature({ clientId }: { clientId: string }) {
   const [loading, setLoading] = useState(true);
   const [analyzing, setAnalyzing] = useState(false);
   const [competitors, setCompetitors] = useState<any[]>([]);

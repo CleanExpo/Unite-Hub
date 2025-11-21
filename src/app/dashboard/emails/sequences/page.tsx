@@ -39,7 +39,6 @@ import { SequenceBuilder } from "@/components/sequences/SequenceBuilder";
 import { SequenceStats } from "@/components/sequences/SequenceStats";
 import { useToast } from "@/hooks/use-toast";
 import { FeaturePageWrapper } from "@/components/features/FeaturePageWrapper";
-import { Id } from "@/convex/_generated/dataModel";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 
 // Template data (would come from database in production)
@@ -113,7 +112,7 @@ export default function SequencesPage() {
   );
 }
 
-function EmailSequenceFeature({ clientId }: { clientId: Id<"clients"> }) {
+function EmailSequenceFeature({ clientId }: { clientId: string }) {
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("sequences");
   const [createDialogOpen, setCreateDialogOpen] = useState(false);

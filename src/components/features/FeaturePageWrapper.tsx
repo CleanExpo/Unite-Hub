@@ -4,7 +4,6 @@ import React, { ReactNode } from "react";
 import { useFeatureClient } from "@/hooks/useFeatureClient";
 import EmptyClientState from "@/components/client/EmptyClientState";
 import { Loader2 } from "lucide-react";
-import { Id } from "@/convex/_generated/dataModel";
 
 /**
  * Props for the FeaturePageWrapper component
@@ -16,7 +15,7 @@ import { Id } from "@/convex/_generated/dataModel";
  * @property {React.ReactNode} [icon] - Optional icon shown in empty state
  */
 interface FeaturePageWrapperProps {
-  children: (clientId: Id<"clients">) => ReactNode;
+  children: (clientId: string) => ReactNode;
   featureName: string;
   description?: string;
   icon?: React.ReactNode;

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
-import { api } from "@/convex/_generated/api";
-import { fetchMutation, fetchQuery } from "convex/nextjs";
+import { getSupabaseServer } from "@/lib/supabase";
 import { apiRateLimit } from "@/lib/rate-limit";
 
 const anthropic = new Anthropic({
@@ -13,40 +12,53 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(req);
-  if (rateLimitResult) {
-    return rateLimitResult;
-  }
+    // Apply rate limiting
+    const rateLimitResult = await apiRateLimit(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
 
     const body = await req.json();
     const { count = 5, tones = ["professional", "casual", "inspirational", "humorous", "urgent"] } = body;
     const { id } = await params;
 
-    // Get the original template
-    const template = await fetchQuery(api.socialTemplates.getTemplate, {
-      templateId: id as any,
-    });
+    const supabase = await getSupabaseServer();
 
-    if (!template) {
+    // Get the original template
+    const { data: template, error: fetchError } = await supabase
+      .from("social_templates")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (fetchError || !template) {
       return NextResponse.json({ error: "Template not found" }, { status: 404 });
     }
 
     // Generate variations using Claude
     const variations = await generateVariations(
-      template.copyText,
+      template.copy_text,
       template.platform,
       tones,
       count
     );
 
     // Update template with variations
-    await fetchMutation(api.socialTemplates.updateTemplate, {
-      templateId: id as any,
-      updates: {
+    const { error: updateError } = await supabase
+      .from("social_templates")
+      .update({
         variations,
-      },
-    });
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", id);
+
+    if (updateError) {
+      console.error("Error updating template with variations:", updateError);
+      return NextResponse.json(
+        { error: "Failed to save variations" },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({ success: true, variations });
   } catch (error) {
