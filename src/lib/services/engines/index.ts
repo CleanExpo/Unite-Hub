@@ -11,3 +11,5 @@ export { GSLPIEEngine, gslpieEngine } from './GSLPIEEngine';
 export { AGLBASEngine, aglbasEngine } from './AGLBASEngine';
 export { TCPQELEngine, tcpqelEngine } from './TCPQELEngine';
 export { UCSCELEngine, ucscelEngine } from './UCSCELEngine';
+export { EGCBIEngine, egcbiEngine } from './EGCBIEngine';
+export { GRHEngine, grhEngine } from './GRHEngine';

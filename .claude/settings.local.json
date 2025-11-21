@@ -105,7 +105,10 @@
       "Bash(then sed -i '1i// Force dynamic\\nexport const dynamic = ''''force-dynamic'''';' \"$f\")",
       "Bash(for f in src/app/(staff)/staff/projects/page.tsx src/app/(staff)/staff/reports/page.tsx src/app/(staff)/staff/scope-review/page.tsx src/app/(staff)/staff/seo/page.tsx src/app/(staff)/staff/settings/page.tsx src/app/(staff)/staff/tasks/page.tsx src/app/(staff)/staff/time-tracker/page.tsx)",
       "Bash(do sed -i '1i// Force dynamic\\nexport const dynamic = '\"''\"'force-dynamic'\"''\"';' \"$f\")",
-      "Bash(for f in supabase/migrations/*.sql)"
+      "Bash(for f in supabase/migrations/*.sql)",
+      "Bash(scripts/combined_migrations_135_152.sql)",
+      "Bash(xargs:*)",
+      "Bash(src/lib/services/engines/index.ts)"
     ],
     "deny": [],
     "ask": []
