@@ -20,6 +20,7 @@ import {
   Bot,
   Menu,
   User,
+  Sparkles,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -32,6 +33,11 @@ const navigationItems = [
     label: 'Home',
     href: '/client',
     icon: Home,
+  },
+  {
+    label: 'Workspace',
+    href: '/client/workspace',
+    icon: Sparkles,
   },
   {
     label: 'My Ideas',
