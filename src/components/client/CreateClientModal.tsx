@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-// Temporarily disabled Convex
-// import { useMutation } from "convex/react";
-// import { api } from "@/convex/_generated/api";
+import { supabase } from "@/lib/supabase";
 import { useClientContext } from "@/contexts/ClientContext";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Dialog,
   DialogContent,
@@ -42,8 +41,7 @@ export default function CreateClientModal({ open, onClose }: CreateClientModalPr
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
 
-  // Temporarily disabled Convex mutation
-  const createClient = async () => { throw new Error("Client creation temporarily disabled - using Supabase now"); };
+  const { currentOrganization } = useAuth();
   const { selectClient } = useClientContext();
 
   const resetForm = () => {
@@ -82,27 +80,53 @@ export default function CreateClientModal({ open, onClose }: CreateClientModalPr
     setIsSubmitting(true);
 
     try {
-      // Get org ID from demo or session
-      const demoOrgId = localStorage.getItem("demo_org_id");
-      if (!demoOrgId) {
+      // Get workspace ID from current organization
+      const workspaceId = currentOrganization?.org_id;
+      if (!workspaceId) {
         setError("Organization not found. Please refresh and try again.");
         setIsSubmitting(false);
         return;
       }
 
-      const clientId = await createClient({
-        orgId: demoOrgId as any,
-        clientName: clientName.trim(),
-        businessName: businessName.trim(),
-        businessDescription: businessDescription.trim(),
-        packageTier,
-        primaryEmail: primaryEmail.trim(),
-        phoneNumbers: phone ? [phone.trim()] : [],
-        websiteUrl: websiteUrl.trim() || undefined,
+      // Get session for auth
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        setError("Not authenticated. Please sign in again.");
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Create client via API
+      const response = await fetch("/api/contacts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          workspaceId,
+          name: clientName.trim(),
+          email: primaryEmail.trim(),
+          company: businessName.trim(),
+          notes: businessDescription.trim(),
+          phone: phone.trim() || undefined,
+          website: websiteUrl.trim() || undefined,
+          tags: [packageTier],
+          status: "active",
+        }),
       });
 
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to create client");
+      }
+
+      const { contact } = await response.json();
+
       // Auto-select the newly created client
-      selectClient(clientId);
+      if (contact?.id) {
+        selectClient(contact.id);
+      }
 
       handleClose();
     } catch (err: any) {
