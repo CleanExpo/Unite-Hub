@@ -13,3 +13,4 @@ export { TCPQELEngine, tcpqelEngine } from './TCPQELEngine';
 export { UCSCELEngine, ucscelEngine } from './UCSCELEngine';
 export { EGCBIEngine, egcbiEngine } from './EGCBIEngine';
 export { GRHEngine, grhEngine } from './GRHEngine';
+export { MAOSOrchestrator, maosOrchestrator, ENGINE_MANIFEST, ROUTING_TABLE, REGION_PROFILES } from './MAOSOrchestrator';
