@@ -108,7 +108,8 @@
       "Bash(for f in supabase/migrations/*.sql)",
       "Bash(scripts/combined_migrations_135_152.sql)",
       "Bash(xargs:*)",
-      "Bash(src/lib/services/engines/index.ts)"
+      "Bash(src/lib/services/engines/index.ts)",
+      "Bash(npm run seo:comprehensive:*)"
     ],
     "deny": [],
     "ask": []

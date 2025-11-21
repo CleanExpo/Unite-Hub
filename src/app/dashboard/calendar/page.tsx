@@ -1,9 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
-import { useQuery, useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
+import React, { useState, useEffect } from "react";
 import { supabaseBrowser } from "@/lib/supabase";
 import {
   Calendar as CalendarIcon,
@@ -24,6 +21,32 @@ import { ErrorState } from "@/components/ErrorState";
 import { EmptyState } from "@/components/EmptyState";
 import { CalendarSkeleton, CalendarPostListSkeleton } from "@/components/skeletons/CalendarSkeleton";
 
+interface CalendarPost {
+  id: string;
+  platform: string;
+  content: string;
+  scheduledDate: string;
+  status: string;
+  approved: boolean;
+}
+
+interface CalendarStatsData {
+  totalPosts: number;
+  upcomingPosts: number;
+  byStatus: {
+    approved: number;
+    pending: number;
+    draft: number;
+  };
+  platforms: string[];
+}
+
+interface PerformanceStats {
+  engagement: number;
+  reach: number;
+  clicks: number;
+}
+
 export default function ContentCalendarPage() {
   return (
     <FeaturePageWrapper
@@ -36,7 +59,7 @@ export default function ContentCalendarPage() {
   );
 }
 
-function ContentCalendarFeature({ clientId }: { clientId: Id<"clients"> }) {
+function ContentCalendarFeature({ clientId }: { clientId: string }) {
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const [viewMode, setViewMode] = useState<"calendar" | "list">("calendar");
@@ -54,24 +77,83 @@ function ContentCalendarFeature({ clientId }: { clientId: Id<"clients"> }) {
   const [showFilters, setShowFilters] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Queries
-  const calendarPosts = useQuery(api.contentCalendar.getCalendarPosts, {
-    clientId,
-    month: currentMonth,
-    year: currentYear,
-  });
+  // State for data fetching
+  const [calendarPosts, setCalendarPosts] = useState<CalendarPost[] | undefined>(undefined);
+  const [calendarStats, setCalendarStats] = useState<CalendarStatsData | null>(null);
+  const [performanceStats, setPerformanceStats] = useState<PerformanceStats | null>(null);
 
-  const calendarStats = useQuery(api.contentCalendar.getCalendarStats, {
-    clientId,
-  });
+  // Fetch calendar posts
+  useEffect(() => {
+    const fetchCalendarPosts = async () => {
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+      if (!session) return;
 
-  const performanceStats = useQuery(api.contentCalendar.analyzePerformance, {
-    clientId,
-  });
+      try {
+        const response = await fetch(
+          `/api/calendar/posts?clientId=${clientId}&month=${currentMonth}&year=${currentYear}`,
+          {
+            headers: { "Authorization": `Bearer ${session.access_token}` }
+          }
+        );
 
-  // Mutations
-  const approvePost = useMutation(api.contentCalendar.approvePost);
-  const updatePost = useMutation(api.contentCalendar.updatePost);
+        if (response.ok) {
+          const result = await response.json();
+          setCalendarPosts(result.data || []);
+        }
+      } catch (error) {
+        console.error("Error fetching calendar posts:", error);
+        setError("Failed to load calendar posts");
+      }
+    };
+
+    fetchCalendarPosts();
+  }, [clientId, currentMonth, currentYear]);
+
+  // Fetch calendar stats
+  useEffect(() => {
+    const fetchCalendarStats = async () => {
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+      if (!session) return;
+
+      try {
+        const response = await fetch(`/api/calendar/stats?clientId=${clientId}`, {
+          headers: { "Authorization": `Bearer ${session.access_token}` }
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          setCalendarStats(result.data);
+        }
+      } catch (error) {
+        console.error("Error fetching calendar stats:", error);
+      }
+    };
+
+    fetchCalendarStats();
+  }, [clientId]);
+
+  // Fetch performance stats
+  useEffect(() => {
+    const fetchPerformanceStats = async () => {
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+      if (!session) return;
+
+      try {
+        const response = await fetch(`/api/calendar/performance?clientId=${clientId}`, {
+          headers: { "Authorization": `Bearer ${session.access_token}` }
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          setPerformanceStats(result.data);
+        }
+      } catch (error) {
+        console.error("Error fetching performance stats:", error);
+      }
+    };
+
+    fetchPerformanceStats();
+  }, [clientId]);
 
   // Filter posts by selected platforms
   const filteredPosts = calendarPosts?.filter((post) =>
@@ -112,6 +194,18 @@ function ContentCalendarFeature({ clientId }: { clientId: Id<"clients"> }) {
 
       const data = await response.json();
       alert(`Successfully generated ${data.postsCreated} posts!`);
+
+      // Refresh posts
+      const refreshResponse = await fetch(
+        `/api/calendar/posts?clientId=${clientId}&month=${currentMonth}&year=${currentYear}`,
+        {
+          headers: { "Authorization": `Bearer ${session.access_token}` }
+        }
+      );
+      if (refreshResponse.ok) {
+        const result = await refreshResponse.json();
+        setCalendarPosts(result.data || []);
+      }
     } catch (error: any) {
       console.error("Error generating calendar:", error);
       setError(error.message || "Failed to generate calendar. Please try again.");
@@ -122,7 +216,28 @@ function ContentCalendarFeature({ clientId }: { clientId: Id<"clients"> }) {
 
   const handleApprovePost = async (postId: string) => {
     try {
-      await approvePost({ postId: postId as Id<"contentCalendarPosts"> });
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+      if (!session) {
+        alert("Not authenticated");
+        return;
+      }
+
+      const response = await fetch(`/api/calendar/posts/${postId}/approve`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${session.access_token}` }
+      });
+
+      if (response.ok) {
+        // Update local state
+        setCalendarPosts(prev =>
+          prev?.map(post =>
+            post.id === postId ? { ...post, approved: true, status: "approved" } : post
+          )
+        );
+      } else {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to approve");
+      }
     } catch (error) {
       console.error("Error approving post:", error);
       alert("Failed to approve post");
@@ -139,7 +254,7 @@ function ContentCalendarFeature({ clientId }: { clientId: Id<"clients"> }) {
         return;
       }
 
-      const response = await fetch(`/api/calendar/${postId}/regenerate`, {
+      const response = await fetch(`/api/calendar/posts/${postId}/regenerate`, {
         method: "POST",
         headers: {
           "Authorization": `Bearer ${session.access_token}`,
@@ -149,6 +264,18 @@ function ContentCalendarFeature({ clientId }: { clientId: Id<"clients"> }) {
       if (!response.ok) throw new Error("Failed to regenerate post");
 
       alert("Post regenerated successfully!");
+
+      // Refresh posts
+      const refreshResponse = await fetch(
+        `/api/calendar/posts?clientId=${clientId}&month=${currentMonth}&year=${currentYear}`,
+        {
+          headers: { "Authorization": `Bearer ${session.access_token}` }
+        }
+      );
+      if (refreshResponse.ok) {
+        const result = await refreshResponse.json();
+        setCalendarPosts(result.data || []);
+      }
     } catch (error) {
       console.error("Error regenerating post:", error);
       alert("Failed to regenerate post");
@@ -157,10 +284,32 @@ function ContentCalendarFeature({ clientId }: { clientId: Id<"clients"> }) {
 
   const handleUpdatePost = async (postId: string, updates: any) => {
     try {
-      await updatePost({
-        postId: postId as Id<"contentCalendarPosts">,
-        ...updates,
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+      if (!session) {
+        alert("Not authenticated");
+        return;
+      }
+
+      const response = await fetch(`/api/calendar/posts/${postId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify(updates),
       });
+
+      if (response.ok) {
+        // Update local state
+        setCalendarPosts(prev =>
+          prev?.map(post =>
+            post.id === postId ? { ...post, ...updates } : post
+          )
+        );
+      } else {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to update");
+      }
     } catch (error) {
       console.error("Error updating post:", error);
       alert("Failed to update post");
@@ -307,10 +456,10 @@ function ContentCalendarFeature({ clientId }: { clientId: Id<"clients"> }) {
               <div className="space-y-4">
                 {filteredPosts?.map((post) => (
                   <CalendarPost
-                    key={post._id}
+                    key={post.id}
                     post={post}
-                    onApprove={() => handleApprovePost(post._id)}
-                    onRegenerate={() => handleRegeneratePost(post._id)}
+                    onApprove={() => handleApprovePost(post.id)}
+                    onRegenerate={() => handleRegeneratePost(post.id)}
                     onEdit={() => handlePostClick(post)}
                   />
                 ))}
@@ -368,7 +517,7 @@ function ContentCalendarFeature({ clientId }: { clientId: Id<"clients"> }) {
                   {calendarStats.byStatus.approved}
                 </p>
               </div>
-              <div className="text-3xl group-hover:scale-110 transition-transform">✓</div>
+              <div className="text-3xl group-hover:scale-110 transition-transform">&#10003;</div>
             </div>
           </div>
 
@@ -380,7 +529,7 @@ function ContentCalendarFeature({ clientId }: { clientId: Id<"clients"> }) {
                   {calendarStats.platforms.length}
                 </p>
               </div>
-              <div className="text-3xl group-hover:scale-110 transition-transform">📱</div>
+              <div className="text-3xl group-hover:scale-110 transition-transform">&#128241;</div>
             </div>
           </div>
         </div>
@@ -395,9 +544,9 @@ function ContentCalendarFeature({ clientId }: { clientId: Id<"clients"> }) {
             setIsModalOpen(false);
             setSelectedPost(null);
           }}
-          onApprove={() => handleApprovePost(selectedPost._id)}
-          onRegenerate={() => handleRegeneratePost(selectedPost._id)}
-          onUpdate={(updates) => handleUpdatePost(selectedPost._id, updates)}
+          onApprove={() => handleApprovePost(selectedPost.id)}
+          onRegenerate={() => handleRegeneratePost(selectedPost.id)}
+          onUpdate={(updates) => handleUpdatePost(selectedPost.id, updates)}
         />
       )}
     </div>

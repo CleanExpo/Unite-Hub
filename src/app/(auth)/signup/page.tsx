@@ -2,12 +2,15 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Mail, Lock, Building, User, ArrowRight, Sparkles, Shield, Zap, Users, Check, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { supabase } from "@/lib/supabase";
 
 export default function SignupPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     businessName: "",
@@ -15,12 +18,70 @@ export default function SignupPage() {
     password: "",
   });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSignup = (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // TODO: Implement registration and redirect to onboarding
-    console.log("Signup:", formData);
+    setError("");
+
+    try {
+      // Validate password length
+      if (formData.password.length < 8) {
+        setError("Password must be at least 8 characters");
+        setLoading(false);
+        return;
+      }
+
+      // Sign up with Supabase
+      const { data, error: signUpError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          data: {
+            full_name: formData.name,
+            business_name: formData.businessName,
+          },
+        },
+      });
+
+      if (signUpError) {
+        throw new Error(signUpError.message);
+      }
+
+      if (!data.user) {
+        throw new Error("Failed to create account");
+      }
+
+      // Get the session to call initialize-user
+      const { data: sessionData } = await supabase.auth.getSession();
+
+      if (sessionData.session) {
+        // Initialize user profile and organization
+        const initResponse = await fetch("/api/auth/initialize-user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${sessionData.session.access_token}`,
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            businessName: formData.businessName,
+          }),
+        });
+
+        if (!initResponse.ok) {
+          console.error("Failed to initialize user, but account created");
+        }
+      }
+
+      // Redirect to onboarding
+      router.push("/onboarding/step-1-info");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -116,6 +177,13 @@ export default function SignupPage() {
             <h2 className="text-3xl font-bold text-slate-900">Start Your Free Trial</h2>
             <p className="text-slate-600 mt-2">Get started in less than 2 minutes</p>
           </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
 
           {/* Signup Form */}
           <form onSubmit={handleSignup} className="space-y-5">

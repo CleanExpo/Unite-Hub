@@ -1,10 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { useQuery, useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -23,35 +20,143 @@ import {
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { supabaseBrowser } from "@/lib/supabase";
+
+interface Section {
+  sectionName: string;
+  order: number;
+  completed: boolean;
+  content?: string;
+  variations?: string[];
+}
+
+interface SEOData {
+  metaTitle?: string;
+  metaDescription?: string;
+  keywords?: string[];
+  ogTitle?: string;
+  ogDescription?: string;
+}
+
+interface Checklist {
+  id: string;
+  title: string;
+  pageType: string;
+  status: string;
+  sections: Section[];
+  seoChecklist: SEOData;
+  colorScheme?: any;
+  copyTips: string[];
+  designTips: string[];
+}
+
+interface Completion {
+  completed: number;
+  total: number;
+  percentage: number;
+}
 
 export default function LandingPageDetailPage() {
   const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
-  const checklistId = params.id as Id<"landingPageChecklists">;
+  const checklistId = params.id as string;
 
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  const [checklist, setChecklist] = useState<Checklist | null>(null);
+  const [completion, setCompletion] = useState<Completion | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch checklist
-  const checklist = useQuery(api.landingPages.get, { checklistId });
-  const completion = useQuery(api.landingPages.calculateCompletion, {
-    checklistId,
-  });
+  // Fetch checklist data
+  useEffect(() => {
+    const fetchChecklist = async () => {
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+      if (!session) return;
 
-  const updateSection = useMutation(api.landingPages.updateSection);
-  const updateSEO = useMutation(api.landingPages.updateSEO);
+      try {
+        const response = await fetch(`/api/landing-pages/${checklistId}`, {
+          headers: { "Authorization": `Bearer ${session.access_token}` }
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          setChecklist(result.data);
+        }
+      } catch (error) {
+        console.error("Error fetching checklist:", error);
+      }
+    };
+
+    fetchChecklist();
+  }, [checklistId]);
+
+  // Fetch completion data
+  useEffect(() => {
+    const fetchCompletion = async () => {
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+      if (!session) return;
+
+      try {
+        const response = await fetch(`/api/landing-pages/${checklistId}/completion`, {
+          headers: { "Authorization": `Bearer ${session.access_token}` }
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          setCompletion(result.data);
+        }
+      } catch (error) {
+        console.error("Error fetching completion:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCompletion();
+  }, [checklistId]);
 
   const handleUpdateSection = async (sectionName: string, updates: any) => {
     try {
-      await updateSection({
-        checklistId,
-        sectionName,
-        ...updates,
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+      if (!session) {
+        toast({
+          title: "Error",
+          description: "Not authenticated",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const response = await fetch(`/api/landing-pages/${checklistId}/sections`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          sectionName,
+          ...updates,
+        }),
       });
-      toast({
-        title: "Updated",
-        description: "Section updated successfully",
-      });
+
+      if (response.ok) {
+        toast({
+          title: "Updated",
+          description: "Section updated successfully",
+        });
+
+        // Refresh checklist data
+        const refreshResponse = await fetch(`/api/landing-pages/${checklistId}`, {
+          headers: { "Authorization": `Bearer ${session.access_token}` }
+        });
+        if (refreshResponse.ok) {
+          const result = await refreshResponse.json();
+          setChecklist(result.data);
+        }
+      } else {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to update");
+      }
     } catch (error: any) {
       toast({
         title: "Error",
@@ -63,11 +168,24 @@ export default function LandingPageDetailPage() {
 
   const handleRegenerateSection = async (sectionName: string) => {
     try {
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+      if (!session) {
+        toast({
+          title: "Error",
+          description: "Not authenticated",
+          variant: "destructive",
+        });
+        return;
+      }
+
       const response = await fetch(
         `/api/landing-pages/${checklistId}/regenerate`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.access_token}`,
+          },
           body: JSON.stringify({ sectionName }),
         }
       );
@@ -79,6 +197,15 @@ export default function LandingPageDetailPage() {
           title: "Regenerated",
           description: "Section copy regenerated successfully",
         });
+
+        // Refresh checklist data
+        const refreshResponse = await fetch(`/api/landing-pages/${checklistId}`, {
+          headers: { "Authorization": `Bearer ${session.access_token}` }
+        });
+        if (refreshResponse.ok) {
+          const result = await refreshResponse.json();
+          setChecklist(result.data);
+        }
       } else {
         throw new Error(data.error);
       }
@@ -93,11 +220,51 @@ export default function LandingPageDetailPage() {
 
   const handleToggleComplete = async (sectionName: string, completed: boolean) => {
     try {
-      await updateSection({
-        checklistId,
-        sectionName,
-        completed,
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+      if (!session) {
+        toast({
+          title: "Error",
+          description: "Not authenticated",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const response = await fetch(`/api/landing-pages/${checklistId}/sections`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          sectionName,
+          completed,
+        }),
       });
+
+      if (response.ok) {
+        // Refresh checklist and completion data
+        const [checklistRes, completionRes] = await Promise.all([
+          fetch(`/api/landing-pages/${checklistId}`, {
+            headers: { "Authorization": `Bearer ${session.access_token}` }
+          }),
+          fetch(`/api/landing-pages/${checklistId}/completion`, {
+            headers: { "Authorization": `Bearer ${session.access_token}` }
+          })
+        ]);
+
+        if (checklistRes.ok) {
+          const result = await checklistRes.json();
+          setChecklist(result.data);
+        }
+        if (completionRes.ok) {
+          const result = await completionRes.json();
+          setCompletion(result.data);
+        }
+      } else {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to update");
+      }
     } catch (error: any) {
       toast({
         title: "Error",
@@ -109,14 +276,43 @@ export default function LandingPageDetailPage() {
 
   const handleUpdateSEO = async (updates: any) => {
     try {
-      await updateSEO({
-        checklistId,
-        ...updates,
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+      if (!session) {
+        toast({
+          title: "Error",
+          description: "Not authenticated",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const response = await fetch(`/api/landing-pages/${checklistId}/seo`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify(updates),
       });
-      toast({
-        title: "Updated",
-        description: "SEO settings updated successfully",
-      });
+
+      if (response.ok) {
+        toast({
+          title: "Updated",
+          description: "SEO settings updated successfully",
+        });
+
+        // Refresh checklist data
+        const refreshResponse = await fetch(`/api/landing-pages/${checklistId}`, {
+          headers: { "Authorization": `Bearer ${session.access_token}` }
+        });
+        if (refreshResponse.ok) {
+          const result = await refreshResponse.json();
+          setChecklist(result.data);
+        }
+      } else {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to update");
+      }
     } catch (error: any) {
       toast({
         title: "Error",

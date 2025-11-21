@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Check, Crown } from "lucide-react";
+import { ArrowRight, Check, Crown, SkipForward } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
@@ -11,7 +11,13 @@ export default function OnboardingStep2Page() {
   const [selectedPlan, setSelectedPlan] = useState<"starter" | "professional">("professional");
 
   const handleNext = () => {
-    // TODO: Implement Stripe payment
+    // For now, skip payment and continue with free trial
+    // Stripe payment can be implemented later in settings
+    router.push("/onboarding/step-3-assets");
+  };
+
+  const handleSkip = () => {
+    // Skip payment step entirely
     router.push("/onboarding/step-3-assets");
   };
 
@@ -30,6 +36,11 @@ export default function OnboardingStep2Page() {
             </div>
             <h1 className="text-3xl font-bold text-gray-900">Choose Your Plan</h1>
             <p className="text-gray-600 mt-2">Select the perfect plan for your business</p>
+          </div>
+
+          {/* Free Trial Notice */}
+          <div className="mb-6 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm">
+            You're starting with a free 14-day trial. No credit card required. You can upgrade anytime from settings.
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -64,10 +75,20 @@ export default function OnboardingStep2Page() {
             />
           </div>
 
-          <Button onClick={handleNext} className="w-full gap-2">
-            Continue with {selectedPlan === "starter" ? "Starter" : "Professional"} Plan
-            <ArrowRight className="h-4 w-4" />
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Button onClick={handleNext} className="flex-1 gap-2">
+              Continue with {selectedPlan === "starter" ? "Starter" : "Professional"} Plan
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+            <Button onClick={handleSkip} variant="outline" className="gap-2">
+              <SkipForward className="h-4 w-4" />
+              Skip for now
+            </Button>
+          </div>
+
+          <p className="mt-4 text-center text-sm text-gray-500">
+            You can change your plan anytime from the settings page
+          </p>
         </div>
       </div>
     </div>

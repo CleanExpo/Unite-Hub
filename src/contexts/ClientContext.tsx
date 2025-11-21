@@ -1,35 +1,33 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
-// Temporarily disabled Convex - using Supabase now
-// import { useQuery } from "convex/react";
-// import { api } from "@/convex/_generated/api";
-type Id<T> = string; // Temporary type alias
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { supabase } from "@/lib/supabase";
 
 interface Client {
-  _id: Id<"clients">;
-  orgId: Id<"organizations">;
-  clientName: string;
-  businessName: string;
-  businessDescription: string;
-  packageTier: "starter" | "professional";
-  status: "active" | "onboarding" | "inactive";
-  primaryEmail: string;
-  websiteUrl?: string;
-  portalUrl: string;
-  phoneNumbers: string[];
-  createdAt: number;
-  updatedAt: number;
+  id: string;
+  workspace_id: string;
+  name: string;
+  email: string;
+  company?: string;
+  phone?: string;
+  website?: string;
+  status: string;
+  tags?: string[];
+  notes?: string;
+  ai_score?: number;
+  created_at: string;
+  updated_at: string;
 }
 
 interface ClientContextValue {
   currentClient: Client | null;
-  currentClientId: Id<"clients"> | null;
+  currentClientId: string | null;
   clients: Client[];
   isLoading: boolean;
   error: Error | null;
-  selectClient: (clientId: Id<"clients">) => void;
+  selectClient: (clientId: string) => void;
   clearClient: () => void;
+  refreshClients: () => Promise<void>;
 }
 
 const ClientContext = createContext<ClientContextValue | undefined>(undefined);
@@ -39,15 +37,59 @@ export function ClientProvider({
   orgId
 }: {
   children: React.ReactNode;
-  orgId?: Id<"organizations">;
+  orgId?: string;
 }) {
-  const [currentClientId, setCurrentClientId] = useState<Id<"clients"> | null>(null);
+  const [currentClientId, setCurrentClientId] = useState<string | null>(null);
+  const [clients, setClients] = useState<Client[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  // Fetch clients from Supabase
+  const fetchClients = useCallback(async () => {
+    if (!orgId) {
+      setClients([]);
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        setClients([]);
+        setIsLoading(false);
+        return;
+      }
+
+      // Fetch contacts for this workspace
+      const response = await fetch(`/api/contacts?workspaceId=${orgId}`, {
+        headers: {
+          "Authorization": `Bearer ${session.access_token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch clients");
+      }
+
+      const data = await response.json();
+      setClients(data.contacts || []);
+    } catch (err) {
+      console.error("Error fetching clients:", err);
+      setError(err instanceof Error ? err : new Error("Failed to fetch clients"));
+      setClients([]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [orgId]);
 
   // Load saved client from localStorage on mount
   useEffect(() => {
     const saved = localStorage.getItem("unite_hub_current_client_id");
     if (saved) {
-      setCurrentClientId(saved as Id<"clients">);
+      setCurrentClientId(saved);
     }
   }, []);
 
@@ -60,11 +102,15 @@ export function ClientProvider({
     }
   }, [currentClientId]);
 
-  // Temporarily return empty data - Convex disabled
-  const clients: Client[] = [];
-  const currentClient: Client | null = null;
+  // Fetch clients when orgId changes
+  useEffect(() => {
+    fetchClients();
+  }, [fetchClients]);
 
-  const selectClient = (clientId: Id<"clients">) => {
+  // Find current client from clients list
+  const currentClient = clients.find(c => c.id === currentClientId) || null;
+
+  const selectClient = (clientId: string) => {
     setCurrentClientId(clientId);
   };
 
@@ -72,7 +118,9 @@ export function ClientProvider({
     setCurrentClientId(null);
   };
 
-  const isLoading = !currentClient && !!currentClientId;
+  const refreshClients = async () => {
+    await fetchClients();
+  };
 
   return (
     <ClientContext.Provider value={{
@@ -80,9 +128,10 @@ export function ClientProvider({
       currentClientId,
       clients,
       isLoading,
-      error: null,
+      error,
       selectClient,
-      clearClient
+      clearClient,
+      refreshClients
     }}>
       {children}
     </ClientContext.Provider>

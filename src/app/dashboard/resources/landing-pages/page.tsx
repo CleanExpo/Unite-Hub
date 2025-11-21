@@ -1,9 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
-import { useQuery, useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -46,6 +43,31 @@ const PAGE_TYPES = [
   { value: "event", label: "Event Page" },
 ];
 
+interface Checklist {
+  id: string;
+  title: string;
+  pageType: string;
+  status: string;
+  completionPercentage: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface Persona {
+  id: string;
+  personaName: string;
+}
+
+interface Stats {
+  total: number;
+  byStatus: {
+    completed: number;
+    in_progress: number;
+    draft: number;
+  };
+  avgCompletion: number;
+}
+
 export default function LandingPagesPage() {
   return (
     <FeaturePageWrapper
@@ -58,7 +80,7 @@ export default function LandingPagesPage() {
   );
 }
 
-function LandingPageFeature({ clientId }: { clientId: Id<"clients"> }) {
+function LandingPageFeature({ clientId }: { clientId: string }) {
   const { toast } = useToast();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [newPageTitle, setNewPageTitle] = useState("");
@@ -66,15 +88,82 @@ function LandingPageFeature({ clientId }: { clientId: Id<"clients"> }) {
   const [selectedPersona, setSelectedPersona] = useState<string>("");
   const [isGenerating, setIsGenerating] = useState(false);
 
-  // Fetch data
-  const checklists = useQuery(api.landingPages.listByClient, { clientId });
-  const personas = useQuery(api.personas.listByClient, {
-    clientId,
-    activeOnly: true,
-  });
-  const stats = useQuery(api.landingPages.getStats, { clientId });
+  // State for data fetching
+  const [checklists, setChecklists] = useState<Checklist[] | null>(null);
+  const [personas, setPersonas] = useState<Persona[] | null>(null);
+  const [stats, setStats] = useState<Stats | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const deleteChecklist = useMutation(api.landingPages.remove);
+  // Fetch checklists
+  useEffect(() => {
+    const fetchChecklists = async () => {
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+      if (!session) return;
+
+      try {
+        const response = await fetch(`/api/landing-pages?clientId=${clientId}`, {
+          headers: { "Authorization": `Bearer ${session.access_token}` }
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          setChecklists(result.data || []);
+        }
+      } catch (error) {
+        console.error("Error fetching checklists:", error);
+      }
+    };
+
+    fetchChecklists();
+  }, [clientId]);
+
+  // Fetch personas
+  useEffect(() => {
+    const fetchPersonas = async () => {
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+      if (!session) return;
+
+      try {
+        const response = await fetch(`/api/personas?clientId=${clientId}&activeOnly=true`, {
+          headers: { "Authorization": `Bearer ${session.access_token}` }
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          setPersonas(result.data || []);
+        }
+      } catch (error) {
+        console.error("Error fetching personas:", error);
+      }
+    };
+
+    fetchPersonas();
+  }, [clientId]);
+
+  // Fetch stats
+  useEffect(() => {
+    const fetchStats = async () => {
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+      if (!session) return;
+
+      try {
+        const response = await fetch(`/api/landing-pages/stats?clientId=${clientId}`, {
+          headers: { "Authorization": `Bearer ${session.access_token}` }
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          setStats(result.data);
+        }
+      } catch (error) {
+        console.error("Error fetching stats:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, [clientId]);
 
   const handleCreateChecklist = async () => {
     if (!newPageTitle || !newPageType) {
@@ -126,6 +215,15 @@ function LandingPageFeature({ clientId }: { clientId: Id<"clients"> }) {
         setNewPageTitle("");
         setNewPageType("");
         setSelectedPersona("");
+
+        // Refresh checklists
+        const refreshResponse = await fetch(`/api/landing-pages?clientId=${clientId}`, {
+          headers: { "Authorization": `Bearer ${session.access_token}` }
+        });
+        if (refreshResponse.ok) {
+          const result = await refreshResponse.json();
+          setChecklists(result.data || []);
+        }
       } else {
         throw new Error(data.error);
       }
@@ -142,13 +240,33 @@ function LandingPageFeature({ clientId }: { clientId: Id<"clients"> }) {
 
   const handleDeleteChecklist = async (checklistId: string) => {
     try {
-      await deleteChecklist({
-        checklistId: checklistId as Id<"landingPageChecklists">,
+      const { data: { session } } = await supabaseBrowser.auth.getSession();
+      if (!session) {
+        toast({
+          title: "Error",
+          description: "Not authenticated",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const response = await fetch(`/api/landing-pages/${checklistId}`, {
+        method: "DELETE",
+        headers: { "Authorization": `Bearer ${session.access_token}` }
       });
-      toast({
-        title: "Deleted",
-        description: "Checklist deleted successfully",
-      });
+
+      if (response.ok) {
+        toast({
+          title: "Deleted",
+          description: "Checklist deleted successfully",
+        });
+
+        // Update local state
+        setChecklists(prev => prev?.filter(c => c.id !== checklistId) || null);
+      } else {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to delete");
+      }
     } catch (error: any) {
       toast({
         title: "Error",
@@ -335,7 +453,7 @@ function LandingPageFeature({ clientId }: { clientId: Id<"clients"> }) {
                 </SelectTrigger>
                 <SelectContent>
                   {personas?.map((persona) => (
-                    <SelectItem key={persona._id} value={persona._id}>
+                    <SelectItem key={persona.id} value={persona.id}>
                       {persona.personaName}
                     </SelectItem>
                   ))}

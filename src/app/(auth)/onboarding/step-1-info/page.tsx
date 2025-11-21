@@ -2,11 +2,12 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Building, Globe, Phone } from "lucide-react";
+import { ArrowRight, Building, Globe, Phone, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { supabase } from "@/lib/supabase";
 
 export default function OnboardingStep1Page() {
   const router = useRouter();
@@ -16,11 +17,50 @@ export default function OnboardingStep1Page() {
     websiteUrl: "",
     phoneNumber: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleNext = (e: React.FormEvent) => {
+  const handleNext = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Save to Convex
-    router.push("/onboarding/step-2-payment");
+    setLoading(true);
+    setError("");
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session) {
+        setError("Not authenticated. Please sign in again.");
+        router.push("/login");
+        return;
+      }
+
+      // Save business info to user_profiles via API
+      const response = await fetch("/api/profile/update", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          business_name: formData.businessName,
+          business_description: formData.businessDescription,
+          website_url: formData.websiteUrl,
+          phone_number: formData.phoneNumber,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to save business information");
+      }
+
+      // Navigate to next step
+      router.push("/onboarding/step-2-payment");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -40,6 +80,13 @@ export default function OnboardingStep1Page() {
             <p className="text-gray-600 mt-2">Tell us about your business</p>
           </div>
 
+          {/* Error Message */}
+          {error && (
+            <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
+
           <form onSubmit={handleNext} className="space-y-6">
             <div>
               <Label htmlFor="businessName">Business Name *</Label>
@@ -53,6 +100,7 @@ export default function OnboardingStep1Page() {
                   }
                   className="pl-10"
                   required
+                  disabled={loading}
                 />
               </div>
             </div>
@@ -68,6 +116,7 @@ export default function OnboardingStep1Page() {
                 rows={4}
                 placeholder="Describe what your business does..."
                 required
+                disabled={loading}
               />
             </div>
 
@@ -84,6 +133,7 @@ export default function OnboardingStep1Page() {
                   }
                   className="pl-10"
                   placeholder="https://yourbusiness.com"
+                  disabled={loading}
                 />
               </div>
             </div>
@@ -101,13 +151,23 @@ export default function OnboardingStep1Page() {
                   }
                   className="pl-10"
                   placeholder="+1 (555) 000-0000"
+                  disabled={loading}
                 />
               </div>
             </div>
 
-            <Button type="submit" className="w-full gap-2">
-              Continue to Payment
-              <ArrowRight className="h-4 w-4" />
+            <Button type="submit" className="w-full gap-2" disabled={loading}>
+              {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  Continue to Payment
+                  <ArrowRight className="h-4 w-4" />
+                </>
+              )}
             </Button>
           </form>
         </div>

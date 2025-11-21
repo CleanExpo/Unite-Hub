@@ -2,21 +2,30 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Mail, Plus, X } from "lucide-react";
+import { ArrowRight, Mail, Plus, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
+import { supabase } from "@/lib/supabase";
 
 export default function OnboardingStep4Page() {
   const router = useRouter();
   const [emails, setEmails] = useState<string[]>([]);
   const [newEmail, setNewEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const addEmail = () => {
     if (newEmail && !emails.includes(newEmail)) {
-      setEmails([...emails, newEmail]);
-      setNewEmail("");
+      // Basic email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (emailRegex.test(newEmail)) {
+        setEmails([...emails, newEmail]);
+        setNewEmail("");
+        setError("");
+      } else {
+        setError("Please enter a valid email address");
+      }
     }
   };
 
@@ -24,9 +33,89 @@ export default function OnboardingStep4Page() {
     setEmails(emails.filter((e) => e !== email));
   };
 
-  const handleComplete = () => {
-    // TODO: Save to Convex and complete onboarding
-    router.push("/portal/dashboard");
+  const handleComplete = async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session) {
+        setError("Not authenticated. Please sign in again.");
+        router.push("/login");
+        return;
+      }
+
+      // Get user's workspace
+      const { data: userOrgs } = await supabase
+        .from("user_organizations")
+        .select("org_id")
+        .eq("user_id", session.user.id)
+        .single();
+
+      if (!userOrgs) {
+        throw new Error("No organization found. Please contact support.");
+      }
+
+      // Get workspace for the organization
+      const { data: workspace } = await supabase
+        .from("workspaces")
+        .select("id")
+        .eq("organization_id", userOrgs.org_id)
+        .single();
+
+      if (!workspace) {
+        throw new Error("No workspace found. Please contact support.");
+      }
+
+      // Save contacts if any emails were added
+      if (emails.length > 0) {
+        const contactsToCreate = emails.map(email => ({
+          email,
+          workspace_id: workspace.id,
+          status: "lead",
+          source: "onboarding_import",
+        }));
+
+        const response = await fetch("/api/contacts", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({
+            contacts: contactsToCreate,
+            workspaceId: workspace.id
+          }),
+        });
+
+        if (!response.ok) {
+          const data = await response.json();
+          // Don't block completion if contacts fail to save
+          console.error("Failed to save contacts:", data.error);
+        }
+      }
+
+      // Mark onboarding as complete by updating user profile
+      await fetch("/api/profile/update", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          onboarding_completed: true,
+          onboarding_completed_at: new Date().toISOString(),
+        }),
+      });
+
+      // Redirect to dashboard
+      router.push("/dashboard/overview");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -48,6 +137,13 @@ export default function OnboardingStep4Page() {
             </p>
           </div>
 
+          {/* Error Message */}
+          {error && (
+            <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
+
           <div className="space-y-6">
             <div>
               <Label htmlFor="email">Add Email Address</Label>
@@ -60,11 +156,12 @@ export default function OnboardingStep4Page() {
                     placeholder="additional@email.com"
                     value={newEmail}
                     onChange={(e) => setNewEmail(e.target.value)}
-                    onKeyPress={(e) => e.key === "Enter" && addEmail()}
+                    onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addEmail())}
                     className="pl-10"
+                    disabled={loading}
                   />
                 </div>
-                <Button onClick={addEmail} size="icon">
+                <Button onClick={addEmail} size="icon" disabled={loading}>
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
@@ -83,6 +180,7 @@ export default function OnboardingStep4Page() {
                       <button
                         onClick={() => removeEmail(email)}
                         className="text-red-600 hover:text-red-700"
+                        disabled={loading}
                       >
                         <X className="h-4 w-4" />
                       </button>
@@ -101,12 +199,21 @@ export default function OnboardingStep4Page() {
           </div>
 
           <div className="mt-8 flex items-center justify-between">
-            <Button variant="outline" onClick={() => router.back()}>
+            <Button variant="outline" onClick={() => router.back()} disabled={loading}>
               Back
             </Button>
-            <Button onClick={handleComplete} className="gap-2">
-              Complete Setup
-              <ArrowRight className="h-4 w-4" />
+            <Button onClick={handleComplete} className="gap-2" disabled={loading}>
+              {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Completing...
+                </>
+              ) : (
+                <>
+                  Complete Setup
+                  <ArrowRight className="h-4 w-4" />
+                </>
+              )}
             </Button>
           </div>
         </div>

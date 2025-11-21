@@ -11,17 +11,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface AssetUploadProps {
   onUploadComplete?: (assetId: string) => void;
+  workspaceId?: string;
 }
 
-export function AssetUpload({ onUploadComplete }: AssetUploadProps) {
+export function AssetUpload({ onUploadComplete, workspaceId }: AssetUploadProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
   const [fileType, setFileType] = useState<string>("other");
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [error, setError] = useState<string | null>(null);
+  const { currentOrganization } = useAuth();
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -56,26 +61,66 @@ export function AssetUpload({ onUploadComplete }: AssetUploadProps) {
 
     setUploading(true);
     setUploadProgress(0);
+    setError(null);
 
-    // TODO: Implement actual upload to Convex storage
-    // Simulate upload progress
-    const interval = setInterval(() => {
-      setUploadProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          return 100;
+    try {
+      // Get auth session
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        setError("Not authenticated. Please sign in again.");
+        setUploading(false);
+        return;
+      }
+
+      const wsId = workspaceId || currentOrganization?.org_id;
+      if (!wsId) {
+        setError("No workspace selected.");
+        setUploading(false);
+        return;
+      }
+
+      // Upload each file
+      const totalFiles = files.length;
+      let completedFiles = 0;
+
+      for (const file of files) {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("workspaceId", wsId);
+        formData.append("type", fileType);
+
+        const response = await fetch("/api/media/upload", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${session.access_token}`,
+          },
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const data = await response.json();
+          throw new Error(data.error || `Failed to upload ${file.name}`);
         }
-        return prev + 10;
-      });
-    }, 200);
 
-    // Wait for completion
-    setTimeout(() => {
-      setUploading(false);
+        const result = await response.json();
+        completedFiles++;
+        setUploadProgress(Math.round((completedFiles / totalFiles) * 100));
+
+        // Call callback for each completed upload
+        if (result.media?.id) {
+          onUploadComplete?.(result.media.id);
+        }
+      }
+
+      // Reset state after all uploads complete
       setFiles([]);
       setUploadProgress(0);
-      onUploadComplete?.("asset-id");
-    }, 2500);
+    } catch (err) {
+      console.error("Upload error:", err);
+      setError(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
