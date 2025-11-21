@@ -868,4 +868,51 @@ const analysis = await router.analyzeCompetitor({
 
 ---
 
-**Last Update**: 2025-11-19 - Added Marketing Intelligence Platform (OpenRouter + Perplexity)
+## Database Schema References (Critical for Migrations)
+
+**Always verify table names before creating migrations. Common errors:**
+
+| Wrong Reference | Correct Reference |
+|-----------------|-------------------|
+| `users(id)` | `auth.users(id)` |
+| `clients(id)` | `contacts(id)` |
+
+**Existing tables**: `organizations`, `user_profiles`, `user_organizations`, `contacts`, `workspaces`
+
+```bash
+# Verify tables before migration
+grep -r "CREATE TABLE" supabase/migrations/ --include="*.sql"
+```
+
+---
+
+## Gemini Image Engine (Phase 20+)
+
+**Single allowed model**: `gemini-3-pro-image-preview`
+
+**Package**: `@google/genai` (installed)
+
+**Environment variable**: `GEMINI_API_KEY`
+
+**Privacy requirement**: Never expose vendor names in public output:
+- Banned: "Gemini", "Google", "AI-generated", "Claude", "OpenAI"
+- Use: "custom illustration", "platform-generated visual"
+
+**Approval workflow states**: `pending` → `revised` → `approved` / `rejected`
+
+**Migration**: `079_image_approvals_multistep_workflow.sql`
+
+---
+
+## Phase Documentation
+
+All phase reports in `docs/PHASE{N}_*.md`:
+- Phase 17: Production Deployment
+- Phase 18: Post-Deployment Activation
+- Phase 19: Soft Launch + Gemini Image Engine
+- Phase 20: Directed Propagation & Multi-Step Approval
+- Phase 21: Image Approval Dashboard
+
+---
+
+**Last Update**: 2025-11-21 - Added Database Schema References, Gemini Image Engine, Phase Documentation
