@@ -61,9 +61,12 @@ export default async function StaffLayout({ children }: StaffLayoutProps) {
   // Session guard: redirect to login if not authenticated
   const session = await getStaffSession();
 
-  if (!session) {
+  if (!session || !session.user) {
     redirect('/auth/login');
   }
+
+  const userEmail = session.user.email || 'User';
+  const userRole = session.user.user_metadata?.role || 'Staff';
 
   return (
     <div className="min-h-screen flex bg-gray-950">
@@ -101,10 +104,10 @@ export default async function StaffLayout({ children }: StaffLayoutProps) {
           <div className="flex items-center justify-between px-4 py-3">
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium text-gray-100 truncate">
-                {session.user.email}
+                {userEmail}
               </p>
               <p className="text-xs text-gray-400 truncate">
-                {session.user.user_metadata?.role || 'Staff'}
+                {userRole}
               </p>
             </div>
             <button
