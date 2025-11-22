@@ -690,6 +690,51 @@ OPENROUTER_API_KEY=sk-or-your-key         # Multi-model routing (70-80% cost sav
 
 ---
 
+## MCP Code Execution Architecture
+
+**NEW**: Enhanced MCP approach using code execution for 80-95% context token savings.
+
+Instead of loading all tool definitions upfront, agents write code against TypeScript API wrappers.
+
+**See**: [`docs/MCP_CODE_EXECUTION_GUIDE.md`](docs/MCP_CODE_EXECUTION_GUIDE.md)
+
+### Quick Usage
+
+```typescript
+// Import specific server wrapper
+import * as playwright from '@/lib/mcp/servers/playwright';
+import * as seo from '@/lib/mcp/servers/dataforseo';
+import { thinkDeep } from '@/lib/mcp/servers/sherlock-think';
+
+// Use code instead of direct tool calls
+await playwright.navigate({ url: 'https://example.com' });
+const hasLogin = await playwright.hasText('Login');
+
+// Filter data in code before returning to model
+const rank = await seo.checkPosition('keyword', 'example.com');
+// Returns just the number instead of full SERP results
+
+// Use skills for complex workflows
+import { fullSEOAudit } from '@/lib/mcp/skills/seo-audit';
+const audit = await fullSEOAudit('example.com', ['competitor.com']);
+```
+
+### Available Servers
+
+- **`playwright`** - Browser automation (22 tools)
+- **`sherlock-think-alpha`** - Deep analysis with 1.84M context
+- **`dataforseo`** - SEO intelligence (SERP, keywords, backlinks)
+
+### Key Files
+
+- **`src/lib/mcp/index.ts`** - Main exports
+- **`src/lib/mcp/client/index.ts`** - MCP client for code execution
+- **`src/lib/mcp/servers/`** - TypeScript API wrappers
+- **`src/lib/mcp/skills/`** - Reusable workflow patterns
+- **`src/lib/mcp/discovery.ts`** - Tool search system
+
+---
+
 ## Important Files
 
 ### Production Enhancements

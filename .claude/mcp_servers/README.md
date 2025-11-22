@@ -2,6 +2,16 @@
 
 This directory contains Model Context Protocol (MCP) server configurations for Unite-Hub.
 
+## Enhanced MCP Approach: Code Execution
+
+**NEW**: We now use the enhanced MCP approach with code execution for 80-95% context token savings.
+
+Instead of direct tool calls that load all definitions upfront, agents write code against TypeScript API wrappers.
+
+**Full Guide**: [`docs/MCP_CODE_EXECUTION_GUIDE.md`](../../docs/MCP_CODE_EXECUTION_GUIDE.md)
+
+**Code Wrappers**: [`src/lib/mcp/`](../../src/lib/mcp/)
+
 ## What is MCP?
 
 MCP (Model Context Protocol) is an open standard for providing context to AI applications. It standardizes how AI agents access:
