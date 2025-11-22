@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Bell } from "lucide-react";
 import { WorkspaceSidebar } from "@/components/workspace/WorkspaceSidebar";
 import { ApprovalCard, ContentType } from "@/components/workspace/ApprovalCard";
@@ -19,70 +19,13 @@ interface GeneratedContent {
 }
 
 export default function DemoWorkspacePage() {
-  const [generatingImages, setGeneratingImages] = useState(false);
-  const [demoImages, setDemoImages] = useState<Record<string, string>>({});
-
-  // Generate real images when component mounts
-  useEffect(() => {
-    const generateDemoImages = async () => {
-      if (generatingImages || Object.keys(demoImages).length > 0) return;
-
-      setGeneratingImages(true);
-      try {
-        // Generate images for each demo content type
-        const prompts = [
-          { id: "demo-1", prompt: "Fashion model wearing sunglasses in summer, vibrant colors, TikTok style vertical video thumbnail, influencer aesthetic" },
-          { id: "demo-2", prompt: "Fresh yellow bananas product photography, clean white background, professional e-commerce style, high quality studio lighting" },
-          { id: "demo-3", prompt: "Modern blog header image, digital marketing concept, SEO analytics dashboard, professional business graphic" },
-        ];
-
-        const imagePromises = prompts.map(async ({ id, prompt }) => {
-          try {
-            const response = await fetch("/api/ai/generate-image", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                prompt,
-                size: "1024x1024",
-                workspaceId: "demo",
-              }),
-            });
-
-            if (response.ok) {
-              const data = await response.json();
-              return { id, url: data.imageUrl };
-            }
-          } catch (error) {
-            console.error(`Failed to generate image for ${id}:`, error);
-          }
-          return { id, url: null };
-        });
-
-        const results = await Promise.all(imagePromises);
-        const imageMap: Record<string, string> = {};
-        results.forEach(({ id, url }) => {
-          if (url) imageMap[id] = url;
-        });
-        setDemoImages(imageMap);
-      } catch (error) {
-        console.error("Error generating demo images:", error);
-      } finally {
-        setGeneratingImages(false);
-      }
-    };
-
-    generateDemoImages();
-  }, [generatingImages, demoImages]);
-
+  // Demo content with built-in fallback designs (no image generation needed)
   const content: GeneratedContent[] = [
     {
       id: "demo-1",
       title: "VEO3 Video - Summer Campaign (TikTok)",
       type: "video",
       platform: "tiktok",
-      thumbnailUrl: demoImages["demo-1"],
       previewText: "Check out our summer collection! Fresh styles, bold looks. Shop now and get 20% off!",
       status: "pending",
       createdAt: new Date().toISOString(),
@@ -92,7 +35,6 @@ export default function DemoWorkspacePage() {
       title: "Banana Creative - Omni-channel Banner Set",
       type: "banner",
       platform: "meta",
-      thumbnailUrl: demoImages["demo-2"],
       status: "pending",
       createdAt: new Date().toISOString(),
     },
@@ -100,7 +42,6 @@ export default function DemoWorkspacePage() {
       id: "demo-3",
       title: "Generative Blog Post - SEO & Images",
       type: "blog",
-      thumbnailUrl: demoImages["demo-3"],
       previewText: "10 Tips for Summer Marketing Success",
       status: "pending",
       createdAt: new Date().toISOString(),
@@ -202,36 +143,24 @@ export default function DemoWorkspacePage() {
                 </div>
               </div>
 
-              {generatingImages ? (
-                <div className="flex flex-col justify-center items-center h-64 gap-4">
-                  <div className="relative">
-                    <div className="w-12 h-12 rounded-full border-2 border-cyan-900/30 border-t-cyan-400 animate-spin" />
-                    <div className="absolute inset-0 w-12 h-12 rounded-full border-2 border-transparent border-b-teal-400 animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }} />
-                  </div>
-                  <span className="text-sm text-gray-400">
-                    Generating AI content previews...
-                  </span>
-                </div>
-              ) : (
-                <div className="flex gap-5 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-cyan-900/50 scrollbar-track-transparent">
-                  {content
-                    .filter((item) => item.status === "pending")
-                    .map((item, index) => (
-                      <ApprovalCard
-                        key={item.id}
-                        id={item.id}
-                        title={item.title}
-                        type={item.type}
-                        platform={item.platform}
-                        thumbnailUrl={item.thumbnailUrl}
-                        previewText={item.previewText}
-                        isHighlighted={index === 0}
-                        onApprove={handleApprove}
-                        onIterate={handleIterate}
-                      />
-                    ))}
-                </div>
-              )}
+              <div className="flex gap-5 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-cyan-900/50 scrollbar-track-transparent">
+                {content
+                  .filter((item) => item.status === "pending")
+                  .map((item, index) => (
+                    <ApprovalCard
+                      key={item.id}
+                      id={item.id}
+                      title={item.title}
+                      type={item.type}
+                      platform={item.platform}
+                      thumbnailUrl={item.thumbnailUrl}
+                      previewText={item.previewText}
+                      isHighlighted={index === 0}
+                      onApprove={handleApprove}
+                      onIterate={handleIterate}
+                    />
+                  ))}
+              </div>
             </section>
           </main>
 
