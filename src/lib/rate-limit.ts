@@ -194,14 +194,14 @@ export async function publicRateLimit(
 
 /**
  * AI agent rate limiter (higher cost operations)
- * 20 requests per 15 minutes
+ * 100 requests per 15 minutes
  */
 export async function aiAgentRateLimit(
   req: NextRequest
 ): Promise<NextResponse | null> {
   return rateLimit(req, {
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 20,
+    max: 100,
     message: 'Too many AI requests, please wait before trying again',
   });
 }
