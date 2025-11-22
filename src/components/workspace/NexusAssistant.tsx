@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { MoreHorizontal, Send, Bot } from "lucide-react";
+import { MoreHorizontal, Send, Bot, Sparkles } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 interface Message {
@@ -20,7 +20,19 @@ export function NexusAssistant({ workspaceId }: NexusAssistantProps) {
     {
       id: "1",
       role: "assistant",
-      content: "Hello! I'm NEXUS, your AI marketing assistant. I can help you review content, suggest improvements, and answer questions about your campaigns. How can I help you today?",
+      content: "Hello! I'm NEXUS, your AI marketing assistant. I've analyzed your pending content and everything looks great. The TikTok video has strong engagement potential. Would you like me to suggest any optimizations?",
+      timestamp: new Date(),
+    },
+    {
+      id: "2",
+      role: "user",
+      content: "What about the banana banner set?",
+      timestamp: new Date(),
+    },
+    {
+      id: "3",
+      role: "assistant",
+      content: "The Banana Creative banner set is optimized for all channels - I've generated 12 size variations including Instagram Stories (1080x1920), Facebook Feed (1200x628), and Google Display (300x250). Color contrast scores are excellent at 7.2:1 for accessibility.",
       timestamp: new Date(),
     },
   ]);
@@ -102,44 +114,54 @@ export function NexusAssistant({ workspaceId }: NexusAssistantProps) {
   };
 
   return (
-    <section className="flex-[2] flex flex-col border-b border-gray-200">
+    <section className="flex-[2] flex flex-col border-b border-cyan-900/30">
       {/* Header */}
-      <div className="px-4 py-3 flex justify-between items-center border-b border-gray-200 bg-white">
-        <div className="flex items-center font-semibold gap-2 text-gray-900">
-          <div className="w-6 h-6 bg-blue-50 text-blue-600 rounded-md flex justify-center items-center">
-            <Bot className="w-4 h-4" />
+      <div className="px-4 py-3 flex justify-between items-center border-b border-cyan-900/30 bg-[#0d2137]/50">
+        <div className="flex items-center font-semibold gap-2 text-white text-sm">
+          <div className="w-6 h-6 bg-gradient-to-br from-cyan-400 to-teal-500 rounded-md flex justify-center items-center shadow-lg shadow-cyan-500/20">
+            <Sparkles className="w-3.5 h-3.5 text-white" />
           </div>
           NEXUS Assistant
         </div>
-        <button className="text-gray-400 hover:text-gray-600">
-          <MoreHorizontal className="w-5 h-5" />
+        <button className="text-gray-500 hover:text-cyan-400 transition-colors">
+          <MoreHorizontal className="w-4 h-4" />
         </button>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-4 bg-gray-50">
+      <div className="flex-1 p-3 overflow-y-auto flex flex-col gap-3 bg-[#081624]/50">
         {messages.map((message) => (
           <div
             key={message.id}
-            className={`max-w-[85%] p-3 px-4 rounded-xl text-sm leading-relaxed ${
+            className={`max-w-[90%] p-3 rounded-xl text-xs leading-relaxed ${
               message.role === "user"
-                ? "self-end bg-blue-100 text-gray-900 rounded-br-sm"
-                : "self-start bg-white border border-gray-200 text-gray-600 rounded-tl-sm flex gap-2.5"
+                ? "self-end bg-cyan-500/20 text-cyan-100 rounded-br-sm border border-cyan-500/30"
+                : "self-start bg-[#0d2137]/80 border border-cyan-900/30 text-gray-300 rounded-tl-sm"
             }`}
           >
             {message.role === "assistant" && (
-              <div className="w-6 h-6 bg-blue-50 rounded-full flex-shrink-0" />
+              <div className="flex items-center gap-2 mb-2 pb-2 border-b border-cyan-900/30">
+                <div className="w-4 h-4 bg-gradient-to-br from-cyan-400 to-teal-500 rounded flex items-center justify-center">
+                  <Bot className="w-2.5 h-2.5 text-white" />
+                </div>
+                <span className="text-[10px] text-cyan-400 font-medium">NEXUS</span>
+              </div>
             )}
             <div className="whitespace-pre-wrap">{message.content}</div>
           </div>
         ))}
         {isLoading && (
-          <div className="self-start bg-white border border-gray-200 text-gray-600 rounded-xl rounded-tl-sm p-3 px-4 flex gap-2.5">
-            <div className="w-6 h-6 bg-blue-50 rounded-full flex-shrink-0" />
-            <div className="flex gap-1">
-              <span className="w-2 h-2 bg-gray-300 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-              <span className="w-2 h-2 bg-gray-300 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-              <span className="w-2 h-2 bg-gray-300 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+          <div className="self-start bg-[#0d2137]/80 border border-cyan-900/30 text-gray-300 rounded-xl rounded-tl-sm p-3">
+            <div className="flex items-center gap-2 mb-2 pb-2 border-b border-cyan-900/30">
+              <div className="w-4 h-4 bg-gradient-to-br from-cyan-400 to-teal-500 rounded flex items-center justify-center">
+                <Bot className="w-2.5 h-2.5 text-white" />
+              </div>
+              <span className="text-[10px] text-cyan-400 font-medium">NEXUS</span>
+            </div>
+            <div className="flex gap-1 items-center">
+              <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+              <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+              <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
             </div>
           </div>
         )}
@@ -147,21 +169,21 @@ export function NexusAssistant({ workspaceId }: NexusAssistantProps) {
       </div>
 
       {/* Input */}
-      <div className="p-4 bg-white border-t border-gray-200 relative">
+      <div className="p-3 bg-[#0d2137]/50 border-t border-cyan-900/30 relative">
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyPress={handleKeyPress}
           placeholder="Type a message..."
-          className="w-full border border-gray-200 bg-gray-100 py-3 px-4 pr-10 rounded-full outline-none text-sm focus:border-blue-300 focus:ring-1 focus:ring-blue-300"
+          className="w-full bg-[#081624] border border-cyan-900/30 py-2.5 px-4 pr-10 rounded-lg outline-none text-xs text-white placeholder-gray-500 focus:border-cyan-600/50 focus:ring-1 focus:ring-cyan-600/30 transition-all"
         />
         <button
           onClick={sendMessage}
           disabled={!input.trim() || isLoading}
-          className="absolute right-7 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-500 disabled:opacity-50"
+          className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-500 hover:text-cyan-400 disabled:opacity-30 transition-colors"
         >
-          <Send className="w-4 h-4" />
+          <Send className="w-3.5 h-3.5" />
         </button>
       </div>
     </section>

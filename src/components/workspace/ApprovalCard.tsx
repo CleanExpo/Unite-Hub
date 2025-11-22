@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { MoreHorizontal, Play, Loader2 } from "lucide-react";
+import { MoreHorizontal, Play, Loader2, Image as ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export type ContentType = "video" | "banner" | "blog";
@@ -42,87 +42,139 @@ export function ApprovalCard({
 
   return (
     <article
-      className={`min-w-[320px] bg-[#0f1f35] border rounded-2xl p-5 flex flex-col ${
+      className={`min-w-[300px] max-w-[300px] bg-[#0d2137]/60 backdrop-blur-md border rounded-2xl p-4 flex flex-col transition-all duration-300 hover:bg-[#0d2137]/80 ${
         isHighlighted
-          ? "border-2 border-[#B6F232] shadow-[0_4px_20px_rgba(182,242,50,0.2)]"
-          : "border-[#1e3a5f]/50"
+          ? "border-cyan-400/50 shadow-[0_0_30px_rgba(34,211,238,0.15)]"
+          : "border-cyan-900/30 hover:border-cyan-700/50"
       }`}
     >
       {/* Header */}
-      <div className="flex justify-between mb-4 text-white font-semibold text-sm">
-        <span className="truncate pr-2">{title}</span>
-        <button className="text-gray-500 hover:text-[#B6F232] transition-colors">
-          <MoreHorizontal className="w-5 h-5" />
+      <div className="flex justify-between items-start mb-3">
+        <span className="text-white font-medium text-sm leading-tight pr-2 flex-1">
+          {title}
+        </span>
+        <button className="text-gray-500 hover:text-cyan-400 transition-colors flex-shrink-0">
+          <MoreHorizontal className="w-4 h-4" />
         </button>
       </div>
 
       {/* Content Preview */}
-      <div className="h-[350px] rounded-xl mb-5 overflow-hidden relative flex justify-center items-center">
+      <div className="h-[280px] rounded-xl mb-4 overflow-hidden relative">
         {type === "video" && (
           <div
-            className="w-full h-full bg-gradient-to-br from-gray-800 to-gray-900 flex flex-col items-center justify-center text-white"
+            className="w-full h-full bg-gradient-to-br from-[#1a3a5c] to-[#0d2137] flex flex-col items-center justify-center relative"
             style={
               thumbnailUrl
-                ? { backgroundImage: `url(${thumbnailUrl})`, backgroundSize: "cover" }
+                ? { backgroundImage: `url(${thumbnailUrl})`, backgroundSize: "cover", backgroundPosition: "center" }
                 : {}
             }
           >
+            {/* Video overlay content */}
             {previewText && (
-              <div className="absolute top-4 left-4 right-4 bg-white/90 text-black p-3 rounded-lg text-xs font-semibold shadow-lg">
+              <div className="absolute top-3 left-3 right-3 bg-white/95 text-gray-900 p-2.5 rounded-lg text-[11px] font-medium shadow-lg">
+                <div className="text-[10px] text-gray-500 mb-1">Generated ad text:</div>
                 {previewText}
               </div>
             )}
-            <div className="w-12 h-12 bg-white/30 rounded-full flex justify-center items-center mb-5 backdrop-blur-sm">
-              <Play className="w-6 h-6 text-white fill-white" />
+
+            {/* Play button */}
+            <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full flex justify-center items-center border border-white/30 hover:bg-white/30 transition-colors cursor-pointer">
+              <Play className="w-6 h-6 text-white fill-white ml-1" />
             </div>
-            <span className="text-sm opacity-80">Video Preview</span>
+
+            {/* Platform badge */}
+            {platform && (
+              <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur-sm px-2 py-1 rounded text-[10px] text-white font-medium uppercase">
+                {platform}
+              </div>
+            )}
           </div>
         )}
 
         {type === "banner" && (
           <div
-            className="w-full h-full bg-gradient-to-br from-yellow-100 via-pink-100 to-purple-100 flex items-center justify-center text-gray-900 text-center p-5"
+            className="w-full h-full bg-gradient-to-br from-yellow-400 via-yellow-300 to-yellow-500 flex flex-col items-center justify-center p-4 relative"
             style={
               thumbnailUrl
-                ? { backgroundImage: `url(${thumbnailUrl})`, backgroundSize: "cover" }
+                ? { backgroundImage: `url(${thumbnailUrl})`, backgroundSize: "cover", backgroundPosition: "center" }
                 : {}
             }
           >
             {!thumbnailUrl && (
-              <div>
-                <div className="font-semibold mb-2">Creative Assets Preview</div>
-                <div className="text-sm text-gray-600">(Banner Variations Layout)</div>
+              <>
+                {/* Banana illustration placeholder */}
+                <div className="flex flex-col items-center gap-3">
+                  <div className="w-32 h-20 bg-yellow-500/50 rounded-full transform -rotate-12 relative">
+                    <div className="absolute inset-2 bg-yellow-400 rounded-full"></div>
+                  </div>
+                  <div className="w-28 h-16 bg-yellow-500/50 rounded-full transform rotate-6 relative -mt-4">
+                    <div className="absolute inset-2 bg-yellow-400 rounded-full"></div>
+                  </div>
+                </div>
+                <div className="absolute bottom-4 text-yellow-800/80 text-xs font-semibold">
+                  Omni-channel Banner Set
+                </div>
+              </>
+            )}
+
+            {/* Platform badge */}
+            {platform && (
+              <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur-sm px-2 py-1 rounded text-[10px] text-white font-medium uppercase">
+                {platform}
               </div>
             )}
           </div>
         )}
 
         {type === "blog" && (
-          <div className="w-full h-full bg-[#1a2d47] border border-[#1e3a5f]/30 p-5 flex flex-col gap-3 rounded-lg">
+          <div className="w-full h-full bg-[#0f2847] border border-cyan-900/30 p-4 flex flex-col gap-3 rounded-xl">
+            {/* Blog header image */}
             <div
-              className="w-full h-28 bg-[#0f1f35] rounded-lg"
+              className="w-full h-24 bg-gradient-to-br from-cyan-900/50 to-[#0d2137] rounded-lg flex items-center justify-center"
               style={
                 thumbnailUrl
                   ? { backgroundImage: `url(${thumbnailUrl})`, backgroundSize: "cover", backgroundPosition: "center" }
                   : {}
               }
-            />
-            <div className="font-semibold text-white text-sm">
-              {previewText || "Generative Blog Post Title"}
+            >
+              {!thumbnailUrl && (
+                <ImageIcon className="w-8 h-8 text-cyan-700/50" />
+              )}
             </div>
-            <div className="h-2.5 bg-[#0f1f35] rounded w-full" />
-            <div className="h-2.5 bg-[#0f1f35] rounded w-full" />
-            <div className="h-2.5 bg-[#0f1f35] rounded w-3/5" />
+
+            {/* Blog title */}
+            <div className="font-semibold text-white text-sm leading-tight">
+              {previewText || "10 Tips for Summer Marketing Success"}
+            </div>
+
+            {/* Content lines placeholder */}
+            <div className="flex flex-col gap-2 flex-1">
+              <div className="h-2 bg-cyan-900/30 rounded w-full" />
+              <div className="h-2 bg-cyan-900/30 rounded w-full" />
+              <div className="h-2 bg-cyan-900/30 rounded w-4/5" />
+              <div className="h-2 bg-cyan-900/30 rounded w-full mt-2" />
+              <div className="h-2 bg-cyan-900/30 rounded w-3/4" />
+            </div>
+
+            {/* SEO tag */}
+            <div className="flex gap-2">
+              <span className="bg-cyan-500/20 text-cyan-400 text-[10px] px-2 py-1 rounded font-medium">
+                SEO Optimized
+              </span>
+              <span className="bg-emerald-500/20 text-emerald-400 text-[10px] px-2 py-1 rounded font-medium">
+                AI Images
+              </span>
+            </div>
           </div>
         )}
       </div>
 
       {/* Actions */}
-      <div className="mt-auto flex flex-col gap-2.5">
+      <div className="mt-auto flex flex-col gap-2">
         <Button
           onClick={handleApprove}
           disabled={isApproving}
-          className="w-full bg-[#B6F232] hover:bg-[#A3D92D] text-[#0a1628] font-semibold py-3"
+          className="w-full bg-emerald-500 hover:bg-emerald-400 text-white font-semibold py-2.5 text-sm rounded-lg transition-all duration-200 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40"
         >
           {isApproving ? (
             <>
@@ -136,7 +188,7 @@ export function ApprovalCard({
         <Button
           onClick={() => onIterate(id)}
           variant="outline"
-          className="w-full py-3 font-semibold border-[#1e3a5f] text-gray-300 hover:bg-[#1e3a5f]/30 hover:text-white"
+          className="w-full py-2.5 text-sm font-medium border-cyan-800/50 text-gray-300 hover:bg-cyan-900/30 hover:text-white hover:border-cyan-700/50 bg-transparent rounded-lg transition-all duration-200"
         >
           REQUEST ITERATION
         </Button>
