@@ -1,261 +1,182 @@
 "use client";
 
-import { HotLeadsPanel } from "@/components/HotLeadsPanel";
-import CalendarWidget from "@/components/CalendarWidget";
-import { Card, CardContent } from "@/components/ui/card";
-import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
-import { useAuth } from "@/contexts/AuthContext";
-import { useWorkspace } from "@/hooks/useWorkspace";
-import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { Users, Flame, Mail, TrendingUp, Sparkles, ArrowUpRight, ArrowDownRight } from "lucide-react";
-import { StatsGridSkeleton } from "@/components/skeletons/StatsCardSkeleton";
-import { ErrorState } from "@/components/ErrorState";
+import React from "react";
+import { Bell } from "lucide-react";
+import { WorkspaceSidebar } from "@/components/workspace/WorkspaceSidebar";
+import { ApprovalCard, ContentType } from "@/components/workspace/ApprovalCard";
+import { NexusAssistant } from "@/components/workspace/NexusAssistant";
+import { ExecutionTicker } from "@/components/workspace/ExecutionTicker";
 
-export default function OverviewPage() {
-  const { user, loading: authLoading } = useAuth();
-  const { workspaceId, loading: workspaceLoading } = useWorkspace();
-  const [stats, setStats] = useState({
-    totalContacts: 0,
-    hotLeads: 0,
-    totalCampaigns: 0,
-    avgAiScore: 0,
-  });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchStats = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      if (!workspaceId) {
-        console.log("No workspace available");
-        setLoading(false);
-        return;
-      }
-
-      console.log("Fetching stats for workspace:", workspaceId);
-
-      // Fetch contacts count and stats
-      const { data: contacts, error: contactsError } = await supabase
-        .from("contacts")
-        .select("ai_score, status")
-        .eq("workspace_id", workspaceId);
-
-      if (contactsError) {
-        console.error("Error fetching contacts:", contactsError);
-        setError(contactsError.message || "Failed to load dashboard stats");
-        return;
-      }
-
-      const totalContacts = contacts?.length || 0;
-      const hotLeads = contacts?.filter((c) => c.ai_score >= 80).length || 0;
-      const avgAiScore = contacts?.length
-        ? Math.round(
-            contacts.reduce((sum, c) => sum + (c.ai_score || 0), 0) /
-              contacts.length
-          )
-        : 0;
-
-      // Fetch campaigns count
-      const { data: campaigns, error: campaignsError } = await supabase
-        .from("campaigns")
-        .select("id")
-        .eq("workspace_id", workspaceId);
-
-      if (campaignsError) {
-        console.error("Error fetching campaigns:", campaignsError);
-        setError(campaignsError.message || "Failed to load campaigns");
-        return;
-      }
-
-      const totalCampaigns = campaigns?.length || 0;
-
-      setStats({
-        totalContacts,
-        hotLeads,
-        totalCampaigns,
-        avgAiScore,
-      });
-    } catch (err: any) {
-      console.error("Error fetching stats:", err);
-      setError(err.message || "An unexpected error occurred");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (!authLoading && !workspaceLoading && workspaceId) {
-      fetchStats();
-    }
-  }, [workspaceId, authLoading, workspaceLoading]);
-
-  // Show loading while auth is initializing
-  if (authLoading) {
-    return (
-      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
-        <div className="flex items-center justify-center h-64">
-          <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 animate-pulse"></div>
-            <p className="text-slate-400">Loading your dashboard...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Redirect to login if not authenticated
-  if (!user) {
-    if (typeof window !== 'undefined') {
-      window.location.href = '/login';
-    }
-    return (
-      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
-        <div className="text-slate-400">Redirecting to login...</div>
-      </div>
-    );
-  }
-
-  // Show loading while fetching stats
-  if (loading) {
-    return (
-      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
-        <div className="flex items-center justify-center h-64">
-          <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 animate-pulse"></div>
-            <p className="text-slate-400">Loading stats...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (!workspaceId) {
-    return (
-      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
-        <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-8 text-center">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-600/20 mb-4">
-            <Sparkles className="h-8 w-8 text-blue-400" />
-          </div>
-          <h3 className="text-xl font-semibold text-white mb-2">No workspace selected</h3>
-          <p className="text-slate-400">Please create or select a workspace to continue.</p>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
-      <Breadcrumbs items={[{ label: "Overview" }]} />
-
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent mb-2">
-            Dashboard Overview
-          </h1>
-          <p className="text-slate-400">Welcome back! Here's what's happening with your contacts.</p>
-        </div>
-      </div>
-
-      {/* Stats Grid */}
-      {error ? (
-        <ErrorState
-          title="Failed to load dashboard"
-          message={error}
-          onRetry={fetchStats}
-        />
-      ) : loading ? (
-        <StatsGridSkeleton count={4} />
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <StatCard
-            title="Total Contacts"
-            value={stats.totalContacts.toString()}
-            icon={Users}
-            gradient="from-blue-500 to-cyan-500"
-            change="+12%"
-            trending="up"
-          />
-          <StatCard
-            title="Hot Leads"
-            value={stats.hotLeads.toString()}
-            icon={Flame}
-            gradient="from-orange-500 to-red-500"
-            change="+8%"
-            trending="up"
-          />
-          <StatCard
-            title="Active Campaigns"
-            value={stats.totalCampaigns.toString()}
-            icon={Mail}
-            gradient="from-purple-500 to-pink-500"
-            change="+5%"
-            trending="up"
-          />
-          <StatCard
-            title="Avg AI Score"
-            value={stats.avgAiScore.toString()}
-            icon={TrendingUp}
-            gradient="from-green-500 to-emerald-500"
-            change="+3 pts"
-            trending="up"
-          />
-        </div>
-      )}
-
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Hot Leads */}
-        {workspaceId && <HotLeadsPanel workspaceId={workspaceId} />}
-
-        {/* Calendar Widget */}
-        {workspaceId && <CalendarWidget workspaceId={workspaceId} />}
-      </div>
-    </div>
-  );
+interface GeneratedContent {
+  id: string;
+  title: string;
+  type: ContentType;
+  platform?: string;
+  thumbnailUrl?: string;
+  previewText?: string;
+  status: "pending" | "approved" | "deployed";
+  createdAt: string;
 }
 
-function StatCard({
-  title,
-  value,
-  icon: Icon,
-  gradient,
-  change,
-  trending,
-}: {
-  title: string;
-  value: string;
-  icon: React.ElementType;
-  gradient: string;
-  change?: string;
-  trending?: "up" | "down";
-}) {
+export default function DemoWorkspacePage() {
+  // Demo content with static images (no API calls needed)
+  const content: GeneratedContent[] = [
+    {
+      id: "demo-1",
+      title: "VEO3 Video - Summer Campaign (TikTok)",
+      type: "video",
+      platform: "tiktok",
+      // Fashion model with sunglasses
+      thumbnailUrl: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=600&fit=crop",
+      previewText: "Check out our summer collection! Fresh styles, bold looks. Shop now and get 20% off!",
+      status: "pending",
+      createdAt: new Date().toISOString(),
+    },
+    {
+      id: "demo-2",
+      title: "Banana Creative - Omni-channel Banner Set",
+      type: "banner",
+      platform: "meta",
+      // Yellow bananas product photo
+      thumbnailUrl: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=400&h=400&fit=crop",
+      status: "pending",
+      createdAt: new Date().toISOString(),
+    },
+    {
+      id: "demo-3",
+      title: "Generative Blog Post - SEO & Images",
+      type: "blog",
+      // Business/tech image
+      thumbnailUrl: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=300&fit=crop",
+      previewText: "10 Tips for Summer Marketing Success",
+      status: "pending",
+      createdAt: new Date().toISOString(),
+    },
+  ];
+
+  const handleApprove = async (id: string) => {
+    // Demo - just log
+    console.log("Approved:", id);
+    alert(`Content ${id} approved and deployed! (Demo mode)`);
+  };
+
+  const handleIterate = (id: string) => {
+    console.log("Iterate:", id);
+    alert(`Requested iteration for ${id} (Demo mode)`);
+  };
+
   return (
-    <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50 hover:border-slate-600/50 transition-all group">
-      <CardContent className="p-6">
-        <div className="flex items-start justify-between mb-4">
-          <div className={`h-12 w-12 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}>
-            <Icon className="h-6 w-6 text-white" />
-          </div>
-          {change && (
-            <div className={`flex items-center gap-1 text-xs font-semibold ${trending === "up" ? "text-green-400" : "text-red-400"}`}>
-              {trending === "up" ? (
-                <ArrowUpRight className="h-3 w-3" />
-              ) : (
-                <ArrowDownRight className="h-3 w-3" />
-              )}
-              {change}
-            </div>
-          )}
+    <div className="min-h-screen bg-[#071318] relative overflow-hidden">
+      {/* Background gradient */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background: `
+            radial-gradient(ellipse at 20% 20%, rgba(6, 182, 212, 0.15) 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 80%, rgba(20, 184, 166, 0.1) 0%, transparent 50%),
+            radial-gradient(ellipse at 50% 50%, rgba(8, 145, 178, 0.08) 0%, transparent 60%),
+            linear-gradient(180deg, #0a1f2e 0%, #071318 100%)
+          `,
+        }}
+      />
+
+      {/* Grid pattern overlay */}
+      <div
+        className="absolute inset-0 opacity-[0.03]"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(6, 182, 212, 0.5) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(6, 182, 212, 0.5) 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px',
+        }}
+      />
+
+      {/* Main container */}
+      <div className="relative z-10 h-screen p-4 flex justify-center items-center">
+        <div className="w-full max-w-[1600px] h-[calc(100vh-32px)] bg-[#0a1f2e]/40 backdrop-blur-xl rounded-2xl shadow-2xl flex overflow-hidden border border-cyan-800/20">
+          {/* Left Sidebar */}
+          <WorkspaceSidebar />
+
+          {/* Main Content */}
+          <main className="flex-1 p-6 overflow-y-auto">
+            {/* Header */}
+            <header className="flex justify-between items-center mb-8">
+              <div>
+                <h1 className="text-xl font-bold text-white mb-1">
+                  Generative Workspace
+                </h1>
+                <p className="text-sm text-gray-400">
+                  3 items ready for approval
+                </p>
+              </div>
+              <div className="flex items-center gap-4">
+                <button
+                  type="button"
+                  aria-label="Notifications"
+                  className="relative text-gray-400 hover:text-cyan-400 transition-colors p-2 rounded-lg hover:bg-cyan-900/20"
+                >
+                  <Bell className="w-5 h-5" />
+                  <span className="absolute top-1 right-1 w-2 h-2 bg-orange-500 rounded-full" />
+                </button>
+                <div className="flex items-center gap-3 bg-[#0d2137]/60 backdrop-blur-sm rounded-lg px-3 py-2 border border-cyan-900/30">
+                  <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-teal-500 rounded-lg shadow-lg shadow-cyan-500/20" />
+                  <div>
+                    <span className="text-sm font-medium text-white block">
+                      Demo User
+                    </span>
+                    <span className="text-[10px] text-gray-400">
+                      Pro Plan
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </header>
+
+            {/* Content Section */}
+            <section>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-lg font-semibold text-white">
+                  Ready for Approval
+                </h2>
+                <div className="flex gap-2">
+                  <span className="bg-cyan-500/20 text-cyan-400 text-xs px-3 py-1.5 rounded-full font-medium border border-cyan-500/30">
+                    3 Pending
+                  </span>
+                  <span className="bg-emerald-500/20 text-emerald-400 text-xs px-3 py-1.5 rounded-full font-medium border border-emerald-500/30">
+                    12 Deployed Today
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex gap-5 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-cyan-900/50 scrollbar-track-transparent">
+                {content
+                  .filter((item) => item.status === "pending")
+                  .map((item, index) => (
+                    <ApprovalCard
+                      key={item.id}
+                      id={item.id}
+                      title={item.title}
+                      type={item.type}
+                      platform={item.platform}
+                      thumbnailUrl={item.thumbnailUrl}
+                      previewText={item.previewText}
+                      isHighlighted={index === 0}
+                      onApprove={handleApprove}
+                      onIterate={handleIterate}
+                    />
+                  ))}
+              </div>
+            </section>
+          </main>
+
+          {/* Right Sidebar */}
+          <aside className="w-[320px] bg-[#0a1f2e]/60 backdrop-blur-sm border-l border-cyan-900/30 flex flex-col">
+            <NexusAssistant workspaceId="demo" />
+            <ExecutionTicker workspaceId="demo" />
+          </aside>
         </div>
-        <div className="space-y-1">
-          <p className="text-sm text-slate-400 font-medium">{title}</p>
-          <p className="text-3xl font-bold text-white">{value}</p>
-        </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
