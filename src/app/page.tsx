@@ -225,18 +225,28 @@ export default function Home() {
           >
             {/* Card 1 - Website Transformation */}
             <div className={`min-w-[600px] mx-4 rounded-2xl overflow-hidden relative transition-all duration-500 shadow-[0_15px_40px_rgba(0,0,0,0.2)] ${currentSlide === 0 ? 'opacity-100 scale-100 h-[420px] z-10' : 'opacity-50 scale-[0.85] h-[380px]'}`}>
-              <div className="w-full h-full bg-[#e0e0e0] flex items-center justify-center p-8">
-                <div className="text-center">
-                  <h3 className="text-2xl font-bold text-[#1a1a1a] mb-2">Before & After</h3>
-                  <p className="text-[#666]">Website Transformation</p>
+              <img
+                src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=840&fit=crop"
+                alt="Website transformation showing modern design"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-8">
+                <div>
+                  <h3 className="text-2xl font-bold text-white mb-2">Before & After</h3>
+                  <p className="text-white/80">Website Transformation</p>
                 </div>
               </div>
             </div>
 
             {/* Card 2 - Analytics Dashboard */}
-            <div className={`min-w-[600px] mx-4 rounded-2xl overflow-hidden relative transition-all duration-500 shadow-[0_15px_40px_rgba(0,0,0,0.2)] bg-[#0a1e3b] ${currentSlide === 1 ? 'opacity-100 scale-100 h-[420px] z-10' : 'opacity-50 scale-[0.85] h-[380px]'}`}>
-              <div className="w-full h-full flex items-center justify-center p-8">
-                <div className="text-center">
+            <div className={`min-w-[600px] mx-4 rounded-2xl overflow-hidden relative transition-all duration-500 shadow-[0_15px_40px_rgba(0,0,0,0.2)] ${currentSlide === 1 ? 'opacity-100 scale-100 h-[420px] z-10' : 'opacity-50 scale-[0.85] h-[380px]'}`}>
+              <img
+                src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=840&fit=crop"
+                alt="Analytics dashboard with charts and metrics"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0a1e3b]/90 to-[#0a1e3b]/40 flex items-end p-8">
+                <div>
                   <div className="inline-block bg-[#00d4aa] text-white text-sm font-semibold px-3 py-1 rounded mb-4">
                     Live Growth Tracking
                   </div>
@@ -248,12 +258,17 @@ export default function Home() {
 
             {/* Card 3 - Video Testimonials */}
             <div className={`min-w-[600px] mx-4 rounded-2xl overflow-hidden relative transition-all duration-500 shadow-[0_15px_40px_rgba(0,0,0,0.2)] ${currentSlide === 2 ? 'opacity-100 scale-100 h-[420px] z-10' : 'opacity-50 scale-[0.85] h-[380px]'}`}>
-              <div className="w-full h-full bg-[#e0e0e0] flex items-center justify-center p-8">
-                <div className="text-center">
-                  <h3 className="text-2xl font-bold text-[#1a1a1a] mb-2">Client Success Stories</h3>
-                  <p className="text-[#666]">(Video Testimonials)</p>
-                  <div className="mt-4 w-16 h-16 mx-auto rounded-full bg-white/80 flex items-center justify-center">
-                    <span className="text-[#1a1a1a] text-2xl">▶</span>
+              <img
+                src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&h=840&fit=crop"
+                alt="Happy business team celebrating success"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-8">
+                <div>
+                  <h3 className="text-2xl font-bold text-white mb-2">Client Success Stories</h3>
+                  <p className="text-white/80">Video Testimonials</p>
+                  <div className="mt-4 w-12 h-12 rounded-full bg-white/90 flex items-center justify-center">
+                    <span className="text-[#1a1a1a] text-xl ml-1">▶</span>
                   </div>
                 </div>
               </div>
