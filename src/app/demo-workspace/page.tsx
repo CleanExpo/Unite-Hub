@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Bell } from "lucide-react";
 import { WorkspaceSidebar } from "@/components/workspace/WorkspaceSidebar";
 import { ApprovalCard, ContentType } from "@/components/workspace/ApprovalCard";
@@ -19,13 +19,71 @@ interface GeneratedContent {
 }
 
 export default function DemoWorkspacePage() {
-  const [content] = useState<GeneratedContent[]>([
+  const [generatingImages, setGeneratingImages] = useState(false);
+  const [demoImages, setDemoImages] = useState<Record<string, string>>({});
+
+  // Generate real images when component mounts
+  useEffect(() => {
+    const generateDemoImages = async () => {
+      if (generatingImages || Object.keys(demoImages).length > 0) return;
+
+      setGeneratingImages(true);
+      try {
+        // Generate images for each demo content type
+        const prompts = [
+          { id: "demo-1", prompt: "Fashion model wearing sunglasses in summer, vibrant colors, TikTok style vertical video thumbnail, influencer aesthetic" },
+          { id: "demo-2", prompt: "Fresh yellow bananas product photography, clean white background, professional e-commerce style, high quality studio lighting" },
+          { id: "demo-3", prompt: "Modern blog header image, digital marketing concept, SEO analytics dashboard, professional business graphic" },
+        ];
+
+        const imagePromises = prompts.map(async ({ id, prompt }) => {
+          try {
+            const response = await fetch("/api/ai/generate-image", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                prompt,
+                size: "1024x1024",
+                workspaceId: "demo",
+              }),
+            });
+
+            if (response.ok) {
+              const data = await response.json();
+              return { id, url: data.imageUrl };
+            }
+          } catch (error) {
+            console.error(`Failed to generate image for ${id}:`, error);
+          }
+          return { id, url: null };
+        });
+
+        const results = await Promise.all(imagePromises);
+        const imageMap: Record<string, string> = {};
+        results.forEach(({ id, url }) => {
+          if (url) imageMap[id] = url;
+        });
+        setDemoImages(imageMap);
+      } catch (error) {
+        console.error("Error generating demo images:", error);
+      } finally {
+        setGeneratingImages(false);
+      }
+    };
+
+    generateDemoImages();
+  }, [generatingImages, demoImages]);
+
+  const content: GeneratedContent[] = [
     {
       id: "demo-1",
       title: "VEO3 Video - Summer Campaign (TikTok)",
       type: "video",
       platform: "tiktok",
-      previewText: "Summer vibes only! Check out our latest collection...",
+      thumbnailUrl: demoImages["demo-1"],
+      previewText: "Generated ad text: Esenpered and noter nescoed 0heck our oonmor and pros prxa seon!",
       status: "pending",
       createdAt: new Date().toISOString(),
     },
@@ -34,6 +92,7 @@ export default function DemoWorkspacePage() {
       title: "Banana Creative - Omni-channel Banner Set",
       type: "banner",
       platform: "meta",
+      thumbnailUrl: demoImages["demo-2"],
       status: "pending",
       createdAt: new Date().toISOString(),
     },
@@ -41,11 +100,12 @@ export default function DemoWorkspacePage() {
       id: "demo-3",
       title: "Generative Blog Post - SEO & Images",
       type: "blog",
-      previewText: "10 Ways to Boost Your Summer Marketing Strategy",
+      thumbnailUrl: demoImages["demo-3"],
+      previewText: "10 Tips for Summer Marketing Success",
       status: "pending",
       createdAt: new Date().toISOString(),
     },
-  ]);
+  ];
 
   const handleApprove = async (id: string) => {
     // Demo - just log
@@ -59,72 +119,80 @@ export default function DemoWorkspacePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-5 flex justify-center items-center">
-      <div className="w-full max-w-[1400px] h-[95vh] bg-white rounded-2xl shadow-xl flex overflow-hidden">
+    <div
+      className="min-h-screen bg-[#0a1628] p-5 flex justify-center items-center"
+      style={{
+        backgroundImage: `
+          radial-gradient(circle at 10% 20%, rgba(182, 242, 50, 0.05) 0%, transparent 30%),
+          radial-gradient(circle at 90% 80%, rgba(182, 242, 50, 0.05) 0%, transparent 30%),
+          radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.03) 0%, transparent 50%)
+        `,
+      }}
+    >
+      <div className="w-full max-w-[1400px] h-[95vh] bg-[#0f1f35]/90 rounded-2xl shadow-2xl flex overflow-hidden border border-[#1e3a5f]/50 backdrop-blur-sm">
         {/* Left Sidebar */}
         <WorkspaceSidebar />
 
         {/* Main Content */}
-        <main className="flex-1 p-6 px-8 overflow-y-auto">
+        <main className="flex-1 p-6 px-8 overflow-y-auto bg-transparent">
           {/* Header */}
-          <header className="flex justify-between items-center mb-6">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                Generative Workspace
-              </h1>
-              <p className="text-gray-500 text-sm">
-                Review and approve AI-generated content
-              </p>
-            </div>
-            <div className="flex items-center gap-4">
-              <button className="relative text-gray-500 hover:text-gray-700">
+          <header className="flex justify-between items-center mb-8">
+            <h1 className="text-lg font-semibold text-white">
+              Client Dashboard
+            </h1>
+            <div className="flex items-center gap-5">
+              <button className="text-gray-400 hover:text-[#B6F232] transition-colors">
                 <Bell className="w-5 h-5" />
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
-                  3
-                </span>
               </button>
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-semibold text-sm">
-                  D
-                </div>
-                <div className="text-right">
-                  <div className="font-semibold text-gray-900 text-sm">
-                    Demo User
-                  </div>
-                  <div className="text-gray-500 text-xs">demo@example.com</div>
-                </div>
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 bg-gradient-to-br from-[#B6F232] to-[#3b9ba8] rounded-full" />
+                <span className="text-sm font-medium text-gray-300">
+                  Demo User
+                </span>
               </div>
             </div>
           </header>
 
-          {/* Approval Cards */}
+          {/* Content Section */}
           <section>
-            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
-              Pending Approval
+            <h2 className="text-xl font-bold text-white mb-6">
+              Generative Workspace: Ready for Approval
             </h2>
-            <div className="flex gap-5 overflow-x-auto pb-4">
-              {content.map((item, index) => (
-                <ApprovalCard
-                  key={item.id}
-                  id={item.id}
-                  title={item.title}
-                  type={item.type}
-                  platform={item.platform}
-                  thumbnailUrl={item.thumbnailUrl}
-                  previewText={item.previewText}
-                  isHighlighted={index === 0}
-                  onApprove={handleApprove}
-                  onIterate={handleIterate}
-                />
-              ))}
-            </div>
+
+            {generatingImages ? (
+              <div className="flex flex-col justify-center items-center h-64 gap-3">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#B6F232]" />
+                <span className="text-sm text-gray-400">
+                  Generating AI images...
+                </span>
+              </div>
+            ) : (
+              <div className="flex gap-6 overflow-x-auto pb-5">
+                {content
+                  .filter((item) => item.status === "pending")
+                  .map((item, index) => (
+                    <ApprovalCard
+                      key={item.id}
+                      id={item.id}
+                      title={item.title}
+                      type={item.type}
+                      platform={item.platform}
+                      thumbnailUrl={item.thumbnailUrl}
+                      previewText={item.previewText}
+                      isHighlighted={index === 0}
+                      onApprove={handleApprove}
+                      onIterate={handleIterate}
+                    />
+                  ))}
+              </div>
+            )}
           </section>
         </main>
 
         {/* Right Sidebar */}
-        <aside className="w-[300px] bg-gray-50 border-l border-gray-200 flex flex-col">
-          <NexusAssistant />
-          <ExecutionTicker />
+        <aside className="w-[300px] bg-[#0a1628]/80 border-l border-[#1e3a5f]/50 flex flex-col">
+          <NexusAssistant workspaceId="demo" />
+          <ExecutionTicker workspaceId="demo" />
         </aside>
       </div>
     </div>
