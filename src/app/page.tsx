@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,6 +9,7 @@ import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 export default function Home() {
   const { user, loading } = useAuth();
   const [currentSlide, setCurrentSlide] = useState(1);
+  const [servicesOpen, setServicesOpen] = useState(false);
 
   const nextSlide = () => {
     if (currentSlide < 2) setCurrentSlide(currentSlide + 1);
@@ -34,9 +35,28 @@ export default function Home() {
           </Link>
 
           <nav className="hidden md:flex gap-8 items-center">
-            <a href="#" className="text-white text-sm font-medium opacity-90 hover:opacity-100 transition-opacity flex items-center gap-1">
-              Services <ChevronDown className="w-3 h-3" />
-            </a>
+            <div className="relative" onMouseEnter={() => setServicesOpen(true)} onMouseLeave={() => setServicesOpen(false)}>
+              <button className="text-white text-sm font-medium opacity-90 hover:opacity-100 transition-opacity flex items-center gap-1">
+                Services <ChevronDown className={"w-3 h-3 transition-transform " + (servicesOpen ? "rotate-180" : "")} />
+              </button>
+              {servicesOpen && (
+                <div className="absolute top-full left-0 mt-2 w-72 bg-[#0a1e3b]/95 backdrop-blur-md rounded-lg border border-white/10 shadow-xl p-4 z-50">
+                  <div className="grid gap-1">
+                    <div className="text-xs font-semibold text-blue-400 uppercase tracking-wider mb-2">Marketing & SEO</div>
+                    <Link href="/dashboard/sites" className="text-white/80 hover:text-white text-sm py-1.5 px-2 rounded hover:bg-white/10 transition-colors">SEO & Site Management</Link>
+                    <Link href="/dashboard/content" className="text-white/80 hover:text-white text-sm py-1.5 px-2 rounded hover:bg-white/10 transition-colors">AI Content Generation</Link>
+                    <Link href="/dashboard/campaigns" className="text-white/80 hover:text-white text-sm py-1.5 px-2 rounded hover:bg-white/10 transition-colors">Email Campaigns</Link>
+                    <div className="text-xs font-semibold text-blue-400 uppercase tracking-wider mb-2 mt-3">Client Management</div>
+                    <Link href="/dashboard/contacts" className="text-white/80 hover:text-white text-sm py-1.5 px-2 rounded hover:bg-white/10 transition-colors">CRM & Contacts</Link>
+                    <Link href="/dashboard/intelligence" className="text-white/80 hover:text-white text-sm py-1.5 px-2 rounded hover:bg-white/10 transition-colors">AI Contact Intelligence</Link>
+                    <Link href="/dashboard/projects" className="text-white/80 hover:text-white text-sm py-1.5 px-2 rounded hover:bg-white/10 transition-colors">Project Management</Link>
+                    <div className="text-xs font-semibold text-blue-400 uppercase tracking-wider mb-2 mt-3">Business Operations</div>
+                    <Link href="/dashboard/billing" className="text-white/80 hover:text-white text-sm py-1.5 px-2 rounded hover:bg-white/10 transition-colors">Billing & Payments</Link>
+                    <Link href="/dashboard/insights" className="text-white/80 hover:text-white text-sm py-1.5 px-2 rounded hover:bg-white/10 transition-colors">Analytics & Insights</Link>
+                  </div>
+                </div>
+              )}
+            </div>
             <a href="#how-it-works" className="text-white text-sm font-medium opacity-90 hover:opacity-100 transition-opacity">
               How it Works
             </a>

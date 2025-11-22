@@ -327,9 +327,7 @@ async function handlePaymentIntentFailed(paymentIntent: Stripe.PaymentIntent) {
   }
 }
 
-// Configure Next.js to not parse body (needed for signature verification)
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+// Note: In App Router, the request body is automatically handled as raw
+// This is needed for Stripe signature verification
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';

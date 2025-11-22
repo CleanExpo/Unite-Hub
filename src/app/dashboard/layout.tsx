@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Toaster } from "@/components/ui/toaster";
 import Link from "next/link";
@@ -9,7 +9,6 @@ import { usePathname } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import { ClientProvider } from "@/contexts/ClientContext";
 import ClientSelector from "@/components/client/ClientSelector";
-// Use string type instead of Convex Id
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSessionRefresh } from "@/hooks/useSessionRefresh";
@@ -42,28 +41,19 @@ export default function DashboardLayout({
   };
 
   useEffect(() => {
-    // Use the actual organization from AuthContext
-    console.log('[DashboardLayout] currentOrganization changed:', currentOrganization);
     if (currentOrganization?.org_id) {
-      console.log('[DashboardLayout] Setting orgId to:', currentOrganization.org_id);
       setOrgId(currentOrganization.org_id);
-    } else {
-      console.log('[DashboardLayout] No org_id found in currentOrganization');
     }
   }, [currentOrganization]);
 
   // Set timeout for organization loading
   useEffect(() => {
     if (!orgId && !authLoading) {
-      // Set timeout for 10 seconds
       const timer = setTimeout(() => {
-        console.warn('[DashboardLayout] Organization loading timeout reached');
         setLoadingTimeout(true);
       }, 10000);
-
       return () => clearTimeout(timer);
     } else {
-      // Reset timeout if org is loaded
       setLoadingTimeout(false);
     }
   }, [orgId, authLoading]);
@@ -93,7 +83,6 @@ export default function DashboardLayout({
 
   // Show loading while organization is loading
   if (!orgId) {
-    // If auth is still loading, show loading message
     if (authLoading) {
       return (
         <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 flex items-center justify-center">
@@ -104,7 +93,6 @@ export default function DashboardLayout({
       );
     }
 
-    // If timeout reached or explicitly no organizations found
     if (loadingTimeout || (organizations && organizations.length === 0)) {
       return (
         <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 flex items-center justify-center">
@@ -139,7 +127,6 @@ export default function DashboardLayout({
       );
     }
 
-    // Still loading (under 10 seconds)
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 flex items-center justify-center">
         <div className="text-center">
@@ -163,45 +150,90 @@ export default function DashboardLayout({
                 <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
                   Unite-Hub
                 </Link>
-                <div className="hidden lg:flex gap-6">
+                <div className="hidden lg:flex gap-4">
                   <NavLink href="/dashboard/overview" isActive={isActive("/dashboard/overview")}>
                     Dashboard
                   </NavLink>
-                  <NavLink href="/dashboard/contacts" isActive={isActive("/dashboard/contacts")}>
-                    Contacts
-                  </NavLink>
-                  <NavLink href="/dashboard/media" isActive={isActive("/dashboard/media")}>
-                    Media
-                  <NavLink href="/dashboard/sites" isActive={isActive("/dashboard/sites")}>
-                    Sites
-                  </NavLink>
-                  </NavLink>
-                  {/* TODO: Uncomment when campaigns feature is fully implemented
+
+                  {/* CRM & Clients */}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className={`${
-                        isActive("/dashboard/campaigns")
+                        isActive("/dashboard/contacts") || isActive("/dashboard/projects") || isActive("/dashboard/brief")
                           ? "text-white"
                           : "text-slate-400 hover:text-white"
                       } h-auto px-2 py-1`}>
-                        Campaigns
+                        CRM
                         <ChevronDown className="w-4 h-4 ml-1" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="bg-slate-800 border-slate-700">
+                    <DropdownMenuContent className="bg-slate-800 border-slate-700 w-56">
+                      <DropdownMenuLabel className="text-slate-400">Client Management</DropdownMenuLabel>
                       <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
-                        <Link href="/dashboard/campaigns" className="w-full">Email Campaigns</Link>
+                        <Link href="/dashboard/contacts" className="w-full">Contacts</Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
-                        <Link href="/dashboard/campaigns/drip" className="w-full">Drip Sequences</Link>
+                        <Link href="/dashboard/projects" className="w-full">Projects</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                        <Link href="/dashboard/brief" className="w-full">Client Briefs</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator className="bg-slate-700" />
+                      <DropdownMenuLabel className="text-slate-400">Communication</DropdownMenuLabel>
+                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                        <Link href="/dashboard/emails" className="w-full">Emails</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                        <Link href="/dashboard/messages" className="w-full">Messages</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                        <Link href="/dashboard/meetings" className="w-full">Meetings</Link>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
-                  */}
+
+                  {/* Content & Media */}
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className={`${
-                        isActive("/dashboard/content") || isActive("/dashboard/intelligence")
+                        isActive("/dashboard/content") || isActive("/dashboard/media") || isActive("/dashboard/calendar")
+                          ? "text-white"
+                          : "text-slate-400 hover:text-white"
+                      } h-auto px-2 py-1`}>
+                        Content
+                        <ChevronDown className="w-4 h-4 ml-1" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="bg-slate-800 border-slate-700 w-56">
+                      <DropdownMenuLabel className="text-slate-400">Content Tools</DropdownMenuLabel>
+                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                        <Link href="/dashboard/content" className="w-full">Content Generation</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                        <Link href="/dashboard/media" className="w-full">Media Library</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                        <Link href="/dashboard/calendar" className="w-full">Content Calendar</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                        <Link href="/dashboard/vault" className="w-full">Asset Vault</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator className="bg-slate-700" />
+                      <DropdownMenuLabel className="text-slate-400">Publishing</DropdownMenuLabel>
+                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                        <Link href="/dashboard/sites" className="w-full">Sites</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                        <Link href="/dashboard/campaigns" className="w-full">Campaigns</Link>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
+                  {/* AI & Intelligence */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className={`${
+                        isActive("/dashboard/intelligence") || isActive("/dashboard/ai-tools") || isActive("/dashboard/insights")
                           ? "text-white"
                           : "text-slate-400 hover:text-white"
                       } h-auto px-2 py-1`}>
@@ -209,20 +241,62 @@ export default function DashboardLayout({
                         <ChevronDown className="w-4 h-4 ml-1" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="bg-slate-800 border-slate-700">
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
-                        <Link href="/dashboard/content" className="w-full">Content Generation</Link>
-                      </DropdownMenuItem>
+                    <DropdownMenuContent className="bg-slate-800 border-slate-700 w-56">
+                      <DropdownMenuLabel className="text-slate-400">Intelligence</DropdownMenuLabel>
                       <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
                         <Link href="/dashboard/intelligence" className="w-full">Contact Intelligence</Link>
                       </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                        <Link href="/dashboard/ai-tools" className="w-full">AI Assistants</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                        <Link href="/dashboard/insights" className="w-full">Analytics Insights</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator className="bg-slate-700" />
+                      <DropdownMenuLabel className="text-slate-400">Automation</DropdownMenuLabel>
+                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                        <Link href="/dashboard/queue" className="w-full">Task Queue</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                        <Link href="/dashboard/approvals" className="w-full">Approvals</Link>
+                      </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
-                  <PermissionGate permission="workspace:view">
-                    <NavLink href="/dashboard/workspaces" isActive={isActive("/dashboard/workspaces")}>
-                      Workspaces
-                    </NavLink>
-                  </PermissionGate>
+
+                  {/* Operations */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className={`${
+                        isActive("/dashboard/billing") || isActive("/dashboard/team") || isActive("/dashboard/workspaces")
+                          ? "text-white"
+                          : "text-slate-400 hover:text-white"
+                      } h-auto px-2 py-1`}>
+                        Operations
+                        <ChevronDown className="w-4 h-4 ml-1" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="bg-slate-800 border-slate-700 w-56">
+                      <DropdownMenuLabel className="text-slate-400">Business</DropdownMenuLabel>
+                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                        <Link href="/dashboard/billing" className="w-full">Billing & Payments</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                        <Link href="/dashboard/resources" className="w-full">Resources</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator className="bg-slate-700" />
+                      <DropdownMenuLabel className="text-slate-400">Organization</DropdownMenuLabel>
+                      <PermissionGate permission="org:view_members">
+                        <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                          <Link href="/dashboard/team" className="w-full">Team Members</Link>
+                        </DropdownMenuItem>
+                      </PermissionGate>
+                      <PermissionGate permission="workspace:view">
+                        <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                          <Link href="/dashboard/workspaces" className="w-full">Workspaces</Link>
+                        </DropdownMenuItem>
+                      </PermissionGate>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </div>
 
@@ -268,13 +342,6 @@ export default function DashboardLayout({
                       <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
                         <Link href="/dashboard/settings" className="w-full">
                           Settings
-                        </Link>
-                      </DropdownMenuItem>
-                    </PermissionGate>
-                    <PermissionGate permission="org:view_members">
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
-                        <Link href="/dashboard/team" className="w-full">
-                          Team Members
                         </Link>
                       </DropdownMenuItem>
                     </PermissionGate>
