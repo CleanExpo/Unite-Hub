@@ -1,5 +1,9 @@
 "use client";
 
+// Force dynamic rendering - no caching
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 import React, { useState, useEffect } from "react";
 import { Bell } from "lucide-react";
 import { WorkspaceSidebar } from "@/components/workspace/WorkspaceSidebar";
