@@ -112,7 +112,8 @@
       "Bash(npm run seo:comprehensive:*)",
       "Bash(del \"d:\\Unite-Hub\\src\\app\\ConvexClientProvider.tsx\")",
       "Bash(mkdir:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(timeout /t 5 /nobreak)"
     ],
     "deny": [],
     "ask": []
