@@ -1,8 +1,14 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { UniteHubStructuredData } from "@/components/StructuredData";
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+};
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,11 +31,6 @@ export const metadata: Metadata = {
   creator: "Unite-Hub",
   publisher: "Unite-Hub",
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://unite-hub.com'),
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-  },
   openGraph: {
     title: "Unite-Hub - AI-Powered CRM & Marketing Automation",
     description: "Transform your customer relationships with AI-powered automation, intelligent lead scoring, and personalized campaigns.",
@@ -79,7 +80,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <UniteHubStructuredData />
       </head>
