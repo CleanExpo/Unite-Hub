@@ -1,0 +1,351 @@
+{
+  "pipeline_execution": {
+    "initiated_at": "2025-11-22T00:00:00Z",
+    "status": "ready_for_execution",
+    "engine": "Nano Banana 2 (DALL-E 3)",
+    "vendor_disclosure": "PROHIBITED - All outputs must use generic terms only"
+  },
+  "placeholder_manifest": {
+    "scanned_at": "2025-11-22T00:00:00Z",
+    "total_placeholders": 8,
+    "by_type": {
+      "logo": 2,
+      "avatar": 1,
+      "screenshot": 1,
+      "icon": 1,
+      "illustration": 3
+    },
+    "by_status": {
+      "placeholder": 8,
+      "generating": 0,
+      "generated": 0,
+      "approved": 0
+    },
+    "assets": [
+      {
+        "id": "logo-main",
+        "type": "logo",
+        "name": "Unite-Hub Main Logo",
+        "description": "Primary brand logo for header and marketing",
+        "current_url": "https://unite-hub.com/logos/unite-hub-logo.png",
+        "status": "placeholder",
+        "prompt": "Modern SaaS company logo, 'Unite-Hub' text, neon green (#B6F232) accent, clean minimalist design, professional tech aesthetic",
+        "style": "minimalist-tech",
+        "dimensions": { "width": 512, "height": 128 },
+        "priority": "high",
+        "target_components": [
+          "src/components/StructuredData.tsx",
+          "src/app/layout.tsx",
+          "src/components/layout/HeaderBar.tsx"
+        ]
+      },
+      {
+        "id": "screenshot-dashboard",
+        "type": "illustration",
+        "name": "Dashboard Screenshot",
+        "description": "Marketing screenshot of main dashboard",
+        "current_url": "https://unite-hub.com/images/dashboard-screenshot.png",
+        "status": "placeholder",
+        "prompt": "Modern SaaS dashboard UI screenshot, dark theme, analytics charts, sidebar navigation, neon green accents, professional business software",
+        "style": "ui-screenshot",
+        "dimensions": { "width": 1200, "height": 800 },
+        "priority": "high",
+        "target_components": [
+          "src/components/StructuredData.tsx",
+          "src/app/(marketing)/page.tsx"
+        ]
+      },
+      {
+        "id": "avatar-placeholder",
+        "type": "avatar",
+        "name": "Default User Avatar",
+        "description": "Placeholder avatar for users without profile picture",
+        "current_url": "/placeholder-avatar.jpg",
+        "status": "placeholder",
+        "prompt": "Abstract user avatar, geometric shapes, professional, neutral colors with neon green accent",
+        "style": "abstract-avatar",
+        "dimensions": { "width": 128, "height": 128 },
+        "priority": "medium",
+        "target_components": [
+          "src/components/layout/HeaderBar.tsx",
+          "src/components/layout/TopNavBar.tsx"
+        ]
+      },
+      {
+        "id": "favicon",
+        "type": "icon",
+        "name": "Favicon",
+        "description": "Browser tab icon",
+        "current_url": "/favicon.ico",
+        "status": "placeholder",
+        "prompt": "Simple 'U' or 'UH' monogram icon, neon green (#B6F232) on dark background, modern tech aesthetic",
+        "style": "icon-monogram",
+        "dimensions": { "width": 32, "height": 32 },
+        "priority": "high",
+        "target_components": [
+          "src/app/layout.tsx"
+        ]
+      },
+      {
+        "id": "og-image",
+        "type": "banner",
+        "name": "Open Graph Image",
+        "description": "Social sharing preview image",
+        "current_url": "/og-image.png",
+        "status": "placeholder",
+        "prompt": "Unite-Hub brand banner, 'AI-Powered CRM & Marketing' tagline, neon green accent, professional dark theme, suitable for social media preview",
+        "style": "social-banner",
+        "dimensions": { "width": 1200, "height": 630 },
+        "priority": "high",
+        "target_components": [
+          "src/app/layout.tsx"
+        ]
+      },
+      {
+        "id": "onboarding-illustration",
+        "type": "illustration",
+        "name": "Onboarding Welcome",
+        "description": "Illustration for onboarding wizard",
+        "current_url": "",
+        "status": "placeholder",
+        "prompt": "Friendly onboarding illustration, person using laptop with floating UI elements, neon green highlights, modern flat design",
+        "style": "flat-illustration",
+        "dimensions": { "width": 600, "height": 400 },
+        "priority": "medium",
+        "target_components": [
+          "src/components/OnboardingWizard.tsx"
+        ]
+      },
+      {
+        "id": "empty-state-contacts",
+        "type": "illustration",
+        "name": "Empty Contacts State",
+        "description": "Illustration when no contacts exist",
+        "current_url": "",
+        "status": "placeholder",
+        "prompt": "Empty state illustration, person adding contacts, address book icon, neon green accent, friendly minimalist style",
+        "style": "flat-illustration",
+        "dimensions": { "width": 300, "height": 300 },
+        "priority": "low",
+        "target_components": [
+          "src/app/dashboard/contacts/page.tsx"
+        ]
+      },
+      {
+        "id": "empty-state-campaigns",
+        "type": "illustration",
+        "name": "Empty Campaigns State",
+        "description": "Illustration when no campaigns exist",
+        "current_url": "",
+        "status": "placeholder",
+        "prompt": "Empty state illustration, email campaign creation, rocket launch metaphor, neon green accent, encouraging design",
+        "style": "flat-illustration",
+        "dimensions": { "width": 300, "height": 300 },
+        "priority": "low",
+        "target_components": [
+          "src/app/dashboard/campaigns/page.tsx"
+        ]
+      }
+    ]
+  },
+  "visual_generation_plan": {
+    "created_at": "2025-11-22T00:00:00Z",
+    "total_assets": 8,
+    "estimated_cost_usd": 0.32,
+    "generation_order": [
+      {
+        "phase": 1,
+        "priority": "high",
+        "assets": ["logo-main", "favicon", "og-image", "screenshot-dashboard"],
+        "estimated_time_seconds": 60
+      },
+      {
+        "phase": 2,
+        "priority": "medium",
+        "assets": ["avatar-placeholder", "onboarding-illustration"],
+        "estimated_time_seconds": 30
+      },
+      {
+        "phase": 3,
+        "priority": "low",
+        "assets": ["empty-state-contacts", "empty-state-campaigns"],
+        "estimated_time_seconds": 30
+      }
+    ],
+    "model_config": {
+      "primary": "dall-e-3",
+      "quality": "standard",
+      "response_format": "url",
+      "fallback": "placeholder_url"
+    }
+  },
+  "component_update_plan": {
+    "created_at": "2025-11-22T00:00:00Z",
+    "total_components": 8,
+    "components": [
+      {
+        "file_path": "src/components/StructuredData.tsx",
+        "asset_ids": ["logo-main", "screenshot-dashboard"],
+        "update_type": "replace",
+        "description": "Update schema.org structured data with real asset URLs"
+      },
+      {
+        "file_path": "src/components/layout/HeaderBar.tsx",
+        "asset_ids": ["avatar-placeholder", "logo-main"],
+        "update_type": "replace",
+        "description": "Update header logo and default avatar"
+      },
+      {
+        "file_path": "src/app/layout.tsx",
+        "asset_ids": ["favicon", "og-image", "logo-main"],
+        "update_type": "replace",
+        "description": "Update metadata images for SEO"
+      },
+      {
+        "file_path": "src/components/OnboardingWizard.tsx",
+        "asset_ids": ["onboarding-illustration"],
+        "update_type": "add",
+        "description": "Add onboarding welcome illustration"
+      },
+      {
+        "file_path": "src/app/dashboard/contacts/page.tsx",
+        "asset_ids": ["empty-state-contacts"],
+        "update_type": "add",
+        "description": "Add empty state illustration for contacts"
+      },
+      {
+        "file_path": "src/app/dashboard/campaigns/page.tsx",
+        "asset_ids": ["empty-state-campaigns"],
+        "update_type": "add",
+        "description": "Add empty state illustration for campaigns"
+      },
+      {
+        "file_path": "src/components/layout/TopNavBar.tsx",
+        "asset_ids": ["avatar-placeholder"],
+        "update_type": "replace",
+        "description": "Update default avatar in top navigation"
+      },
+      {
+        "file_path": "src/app/(marketing)/page.tsx",
+        "asset_ids": ["screenshot-dashboard"],
+        "update_type": "add",
+        "description": "Add dashboard screenshot to marketing page"
+      }
+    ]
+  },
+  "theme_update_plan": {
+    "created_at": "2025-11-22T00:00:00Z",
+    "colors": {
+      "primary": "#B6F232",
+      "secondary": "#1a1a1a",
+      "accent": "#A3D92D",
+      "background": {
+        "light": "#ffffff",
+        "dark": "#0a1628"
+      },
+      "foreground": {
+        "light": "#111827",
+        "dark": "#f8fafc"
+      },
+      "card": {
+        "light": "#ffffff",
+        "dark": "#0f1f35"
+      },
+      "border": {
+        "light": "#e5e7eb",
+        "dark": "#1e3a5f"
+      }
+    },
+    "typography": {
+      "font_family": "Inter, system-ui, sans-serif",
+      "heading_font": "Inter, system-ui, sans-serif"
+    },
+    "assets": {
+      "logo_url": "/assets/brand/unite-hub-logo.png",
+      "favicon_url": "/favicon.ico",
+      "og_image_url": "/og-image.png"
+    },
+    "css_variables_updated": true,
+    "tailwind_config_synced": true
+  },
+  "aagp_asset_manifest": {
+    "version": "1.0.0",
+    "generated_at": "2025-11-22T00:00:00Z",
+    "total_assets": 8,
+    "storage_location": "/public/assets/generated/",
+    "approval_workflow": {
+      "states": ["pending", "revised", "approved", "rejected"],
+      "requires_human_approval": true,
+      "auto_approve_threshold": null
+    },
+    "assets_by_id": {
+      "logo-main": {
+        "approval_status": "pending",
+        "generated_url": null,
+        "revision_count": 0,
+        "last_generated": null
+      },
+      "screenshot-dashboard": {
+        "approval_status": "pending",
+        "generated_url": null,
+        "revision_count": 0,
+        "last_generated": null
+      },
+      "avatar-placeholder": {
+        "approval_status": "pending",
+        "generated_url": null,
+        "revision_count": 0,
+        "last_generated": null
+      },
+      "favicon": {
+        "approval_status": "pending",
+        "generated_url": null,
+        "revision_count": 0,
+        "last_generated": null
+      },
+      "og-image": {
+        "approval_status": "pending",
+        "generated_url": null,
+        "revision_count": 0,
+        "last_generated": null
+      },
+      "onboarding-illustration": {
+        "approval_status": "pending",
+        "generated_url": null,
+        "revision_count": 0,
+        "last_generated": null
+      },
+      "empty-state-contacts": {
+        "approval_status": "pending",
+        "generated_url": null,
+        "revision_count": 0,
+        "last_generated": null
+      },
+      "empty-state-campaigns": {
+        "approval_status": "pending",
+        "generated_url": null,
+        "revision_count": 0,
+        "last_generated": null
+      }
+    },
+    "integration_endpoints": {
+      "get_manifest": "/api/visual/transformation",
+      "generate_single": "/api/visual/transformation (POST with action: generate)",
+      "generate_all": "/api/visual/transformation (POST with action: generate-all)",
+      "approve_asset": "/api/visual/approve/:assetId"
+    }
+  },
+  "execution_notes": {
+    "vendor_secrecy": "All generated assets must NOT mention AI providers (no 'Gemini', 'DALL-E', 'OpenAI', etc.)",
+    "approval_required": "All visuals require human approval before propagation to production components",
+    "storage_strategy": "Generated images stored as base64 initially, then uploaded to CDN after approval",
+    "rollback_plan": "Original placeholder URLs preserved for instant rollback if needed"
+  },
+  "next_steps": [
+    "1. Call POST /api/visual/transformation with action: 'generate-all' to generate all assets",
+    "2. Review generated assets in AAGP approval dashboard",
+    "3. Approve or request iteration for each asset",
+    "4. Once approved, assets will be propagated to target components",
+    "5. Run build to verify no broken image references"
+  ]
+}
