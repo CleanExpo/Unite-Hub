@@ -30,68 +30,77 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Use OpenRouter to route to appropriate image model
-    const openrouterApiKey = process.env.OPENROUTER_API_KEY;
+    // Use OpenAI DALL-E 3 for image generation
+    const openaiApiKey = process.env.OPENAI_API_KEY;
 
-    if (!openrouterApiKey) {
+    if (!openaiApiKey) {
       // Return a placeholder response for development
       return NextResponse.json({
         success: true,
         imageUrl: `https://placehold.co/${size.replace("x", "x")}/B6F232/1a1a1a?text=AI+Generated`,
         prompt,
         model: "placeholder",
-        message: "Image generation API not configured. Using placeholder.",
+        message: "OpenAI API key not configured. Using placeholder.",
       });
     }
 
-    // Call OpenRouter for image generation
-    // Using a text model to generate a description that could be used with DALL-E
-    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${openrouterApiKey}`,
-        "Content-Type": "application/json",
-        "HTTP-Referer": process.env.NEXTAUTH_URL || "http://localhost:3008",
-        "X-Title": "Unite-Hub",
-      },
-      body: JSON.stringify({
-        model: "anthropic/claude-3-haiku",
-        messages: [
-          {
-            role: "system",
-            content: "You are a creative image prompt enhancer. Take the user's basic prompt and enhance it with specific visual details, art style, lighting, and composition details suitable for AI image generation. Return only the enhanced prompt, no explanations.",
-          },
-          {
-            role: "user",
-            content: `Enhance this image prompt for ${style || "marketing"} content: ${prompt}`,
-          },
-        ],
-        max_tokens: 300,
-      }),
-    });
+    try {
+      // Call DALL-E 3 API
+      const response = await fetch("https://api.openai.com/v1/images/generations", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${openaiApiKey}`,
+        },
+        body: JSON.stringify({
+          model: "dall-e-3",
+          prompt: `${prompt}. Style: ${style || "professional marketing"}. High quality, detailed.`,
+          n: 1,
+          size: size,
+          quality: "standard",
+          response_format: "url",
+        }),
+      });
 
-    if (!response.ok) {
-      const error = await response.text();
-      console.error("OpenRouter error:", error);
-      return NextResponse.json(
-        { error: "Failed to enhance image prompt" },
-        { status: 500 }
-      );
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("DALL-E 3 API error:", errorText);
+
+        // Return placeholder on error
+        return NextResponse.json({
+          success: true,
+          imageUrl: `https://placehold.co/${size.replace("x", "x")}/B6F232/1a1a1a?text=Generation+Failed`,
+          prompt,
+          model: "placeholder",
+          message: "Image generation failed. Using placeholder.",
+        });
+      }
+
+      const data = await response.json();
+      const imageUrl = data.data?.[0]?.url;
+
+      if (!imageUrl) {
+        throw new Error("No image URL in response");
+      }
+
+      return NextResponse.json({
+        success: true,
+        imageUrl,
+        prompt,
+        model: "dall-e-3",
+      });
+    } catch (dalleError: any) {
+      console.error("DALL-E generation error:", dalleError);
+
+      // Return placeholder on any error
+      return NextResponse.json({
+        success: true,
+        imageUrl: `https://placehold.co/${size.replace("x", "x")}/B6F232/1a1a1a?text=AI+Generated`,
+        prompt,
+        model: "placeholder",
+        message: dalleError.message || "Image generation failed",
+      });
     }
-
-    const data = await response.json();
-    const enhancedPrompt = data.choices?.[0]?.message?.content || prompt;
-
-    // For now, return the enhanced prompt with a placeholder
-    // In production, this would call DALL-E, Stability AI, or similar
-    return NextResponse.json({
-      success: true,
-      imageUrl: `https://placehold.co/${size.replace("x", "x")}/B6F232/1a1a1a?text=Generated`,
-      prompt: enhancedPrompt,
-      originalPrompt: prompt,
-      model: "openrouter/claude-3-haiku",
-      message: "Prompt enhanced. Connect DALL-E or Stability AI for actual image generation.",
-    });
   } catch (error: any) {
     if (error.message?.includes("Unauthorized")) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

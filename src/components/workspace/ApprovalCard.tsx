@@ -42,16 +42,16 @@ export function ApprovalCard({
 
   return (
     <article
-      className={`min-w-[320px] bg-white border rounded-2xl p-5 flex flex-col ${
+      className={`min-w-[320px] bg-[#0f1f35] border rounded-2xl p-5 flex flex-col ${
         isHighlighted
-          ? "border-2 border-[#B6F232] shadow-[0_4px_20px_rgba(182,242,50,0.15)]"
-          : "border-gray-200"
+          ? "border-2 border-[#B6F232] shadow-[0_4px_20px_rgba(182,242,50,0.2)]"
+          : "border-[#1e3a5f]/50"
       }`}
     >
       {/* Header */}
-      <div className="flex justify-between mb-4 text-gray-900 font-semibold text-sm">
+      <div className="flex justify-between mb-4 text-white font-semibold text-sm">
         <span className="truncate pr-2">{title}</span>
-        <button className="text-gray-400 hover:text-gray-600">
+        <button className="text-gray-500 hover:text-[#B6F232] transition-colors">
           <MoreHorizontal className="w-5 h-5" />
         </button>
       </div>
@@ -98,21 +98,21 @@ export function ApprovalCard({
         )}
 
         {type === "blog" && (
-          <div className="w-full h-full bg-white border border-gray-100 p-5 flex flex-col gap-3">
+          <div className="w-full h-full bg-[#1a2d47] border border-[#1e3a5f]/30 p-5 flex flex-col gap-3 rounded-lg">
             <div
-              className="w-full h-28 bg-gray-200 rounded-lg"
+              className="w-full h-28 bg-[#0f1f35] rounded-lg"
               style={
                 thumbnailUrl
-                  ? { backgroundImage: `url(${thumbnailUrl})`, backgroundSize: "cover" }
+                  ? { backgroundImage: `url(${thumbnailUrl})`, backgroundSize: "cover", backgroundPosition: "center" }
                   : {}
               }
             />
-            <div className="font-semibold text-gray-900 text-sm">
+            <div className="font-semibold text-white text-sm">
               {previewText || "Generative Blog Post Title"}
             </div>
-            <div className="h-2.5 bg-gray-100 rounded w-full" />
-            <div className="h-2.5 bg-gray-100 rounded w-full" />
-            <div className="h-2.5 bg-gray-100 rounded w-3/5" />
+            <div className="h-2.5 bg-[#0f1f35] rounded w-full" />
+            <div className="h-2.5 bg-[#0f1f35] rounded w-full" />
+            <div className="h-2.5 bg-[#0f1f35] rounded w-3/5" />
           </div>
         )}
       </div>
@@ -122,7 +122,7 @@ export function ApprovalCard({
         <Button
           onClick={handleApprove}
           disabled={isApproving}
-          className="w-full bg-[#B6F232] hover:bg-[#A3D92D] text-gray-900 font-semibold py-3"
+          className="w-full bg-[#B6F232] hover:bg-[#A3D92D] text-[#0a1628] font-semibold py-3"
         >
           {isApproving ? (
             <>
@@ -136,7 +136,7 @@ export function ApprovalCard({
         <Button
           onClick={() => onIterate(id)}
           variant="outline"
-          className="w-full py-3 font-semibold"
+          className="w-full py-3 font-semibold border-[#1e3a5f] text-gray-300 hover:bg-[#1e3a5f]/30 hover:text-white"
         >
           REQUEST ITERATION
         </Button>

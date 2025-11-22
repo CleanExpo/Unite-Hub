@@ -67,14 +67,76 @@ export default function GenerativeWorkspacePage() {
     fetchContent();
   }, [workspaceId]);
 
-  // Default demo content if no real content exists
+  // Generate images for demo content
+  const [generatingImages, setGeneratingImages] = useState(false);
+  const [demoImages, setDemoImages] = useState<Record<string, string>>({});
+
+  // Generate real images when component mounts
+  useEffect(() => {
+    const generateDemoImages = async () => {
+      if (content.length > 0 || generatingImages) return;
+
+      setGeneratingImages(true);
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+
+        // Generate images for each demo content type
+        const prompts = [
+          { id: "demo-1", prompt: "Fashion model wearing sunglasses in summer, vibrant colors, TikTok style vertical video thumbnail, influencer aesthetic" },
+          { id: "demo-2", prompt: "Fresh yellow bananas product photography, clean white background, professional e-commerce style, high quality studio lighting" },
+          { id: "demo-3", prompt: "Modern blog header image, digital marketing concept, SEO analytics dashboard, professional business graphic" },
+        ];
+
+        const imagePromises = prompts.map(async ({ id, prompt }) => {
+          try {
+            const response = await fetch("/api/ai/generate-image", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                ...(session && { Authorization: `Bearer ${session.access_token}` }),
+              },
+              body: JSON.stringify({
+                prompt,
+                size: "1024x1024",
+                workspaceId: workspaceId || "demo",
+              }),
+            });
+
+            if (response.ok) {
+              const data = await response.json();
+              return { id, url: data.imageUrl };
+            }
+          } catch (error) {
+            console.error(`Failed to generate image for ${id}:`, error);
+          }
+          return { id, url: null };
+        });
+
+        const results = await Promise.all(imagePromises);
+        const imageMap: Record<string, string> = {};
+        results.forEach(({ id, url }) => {
+          if (url) imageMap[id] = url;
+        });
+        setDemoImages(imageMap);
+      } catch (error) {
+        console.error("Error generating demo images:", error);
+      } finally {
+        setGeneratingImages(false);
+      }
+    };
+
+    generateDemoImages();
+  }, [content.length, workspaceId, generatingImages]);
+
+  // Default demo content with generated images
   const displayContent: GeneratedContent[] = content.length > 0 ? content : [
     {
       id: "demo-1",
       title: "VEO3 Video - Summer Campaign (TikTok)",
       type: "video",
       platform: "tiktok",
-      previewText: "Generated ad text: Check out our summer collection! New arrivals dropping soon!",
+      thumbnailUrl: demoImages["demo-1"],
+      previewText: "Generated ad text: Esenpered and noter nescoed 0heck our oonmor and pros prxa seon!",
       status: "pending",
       createdAt: new Date().toISOString(),
     },
@@ -83,6 +145,7 @@ export default function GenerativeWorkspacePage() {
       title: "Banana Creative - Omni-channel Banner Set",
       type: "banner",
       platform: "meta",
+      thumbnailUrl: demoImages["demo-2"],
       status: "pending",
       createdAt: new Date().toISOString(),
     },
@@ -90,6 +153,7 @@ export default function GenerativeWorkspacePage() {
       id: "demo-3",
       title: "Generative Blog Post - SEO & Images",
       type: "blog",
+      thumbnailUrl: demoImages["demo-3"],
       previewText: "10 Tips for Summer Marketing Success",
       status: "pending",
       createdAt: new Date().toISOString(),
@@ -145,32 +209,33 @@ export default function GenerativeWorkspacePage() {
 
   return (
     <div
-      className="min-h-screen bg-gray-100 p-5 flex justify-center items-center"
+      className="min-h-screen bg-[#0a1628] p-5 flex justify-center items-center"
       style={{
         backgroundImage: `
-          radial-gradient(circle at 10% 20%, rgba(230, 240, 255, 0.4) 0%, transparent 20%),
-          radial-gradient(circle at 90% 80%, rgba(230, 240, 255, 0.4) 0%, transparent 20%)
+          radial-gradient(circle at 10% 20%, rgba(182, 242, 50, 0.05) 0%, transparent 30%),
+          radial-gradient(circle at 90% 80%, rgba(182, 242, 50, 0.05) 0%, transparent 30%),
+          radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.03) 0%, transparent 50%)
         `,
       }}
     >
-      <div className="w-full max-w-[1400px] h-[95vh] bg-white rounded-2xl shadow-xl flex overflow-hidden border border-gray-200">
+      <div className="w-full max-w-[1400px] h-[95vh] bg-[#0f1f35]/90 rounded-2xl shadow-2xl flex overflow-hidden border border-[#1e3a5f]/50 backdrop-blur-sm">
         {/* Left Sidebar */}
         <WorkspaceSidebar />
 
         {/* Main Content */}
-        <main className="flex-1 p-6 px-8 overflow-y-auto bg-white">
+        <main className="flex-1 p-6 px-8 overflow-y-auto bg-transparent">
           {/* Header */}
           <header className="flex justify-between items-center mb-8">
-            <h1 className="text-lg font-semibold text-gray-900">
+            <h1 className="text-lg font-semibold text-white">
               Client Dashboard
             </h1>
             <div className="flex items-center gap-5">
-              <button className="text-gray-500 hover:text-gray-700">
+              <button className="text-gray-400 hover:text-[#B6F232] transition-colors">
                 <Bell className="w-5 h-5" />
               </button>
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 bg-gradient-to-br from-gray-300 to-gray-400 rounded-full" />
-                <span className="text-sm font-medium text-gray-700">
+                <div className="w-9 h-9 bg-gradient-to-br from-[#B6F232] to-[#3b9ba8] rounded-full" />
+                <span className="text-sm font-medium text-gray-300">
                   {user?.email?.split("@")[0] || "User"}
                 </span>
               </div>
@@ -179,13 +244,16 @@ export default function GenerativeWorkspacePage() {
 
           {/* Content Section */}
           <section>
-            <h2 className="text-xl font-bold text-gray-900 mb-6">
+            <h2 className="text-xl font-bold text-white mb-6">
               Generative Workspace: Ready for Approval
             </h2>
 
-            {isLoading ? (
-              <div className="flex justify-center items-center h-64">
+            {isLoading || generatingImages ? (
+              <div className="flex flex-col justify-center items-center h-64 gap-3">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#B6F232]" />
+                <span className="text-sm text-gray-400">
+                  {generatingImages ? "Generating AI images..." : "Loading content..."}
+                </span>
               </div>
             ) : (
               <div className="flex gap-6 overflow-x-auto pb-5">
@@ -211,7 +279,7 @@ export default function GenerativeWorkspacePage() {
         </main>
 
         {/* Right Sidebar */}
-        <aside className="w-[300px] bg-gray-50 border-l border-gray-200 flex flex-col">
+        <aside className="w-[300px] bg-[#0a1628]/80 border-l border-[#1e3a5f]/50 flex flex-col">
           <NexusAssistant workspaceId={workspaceId} />
           <ExecutionTicker workspaceId={workspaceId} />
         </aside>

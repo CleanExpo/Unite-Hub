@@ -8,7 +8,7 @@
  * Fallback: OpenRouter routing
  */
 
-import { GoogleGenerativeAI } from "@google/generative-ai";
+// Using REST API directly for Imagen 3 image generation
 
 export interface VisualAsset {
   id: string;
@@ -265,17 +265,11 @@ export const THEME_UPDATE_PLAN: ThemeUpdatePlan = {
 
 /**
  * Visual Transformation Service (Nano Banana 2)
- * Uses Gemini 3 Pro as the primary image generator
+ * Uses Gemini Imagen 3 as the primary image generator
  */
 export class VisualTransformationService {
-  private gemini: GoogleGenerativeAI | null = null;
-
   constructor() {
-    if (process.env.GOOGLE_AI_API_KEY || process.env.GEMINI_API_KEY) {
-      this.gemini = new GoogleGenerativeAI(
-        process.env.GOOGLE_AI_API_KEY || process.env.GEMINI_API_KEY || ""
-      );
-    }
+    // API key is read from env at runtime
   }
 
   /**
@@ -307,42 +301,75 @@ export class VisualTransformationService {
   }
 
   /**
-   * Generate a single visual using Gemini 3 Pro (Nano Banana 2)
+   * Generate a single visual using OpenAI DALL-E 3
    */
   async generateVisual(asset: VisualAsset): Promise<string> {
-    if (!this.gemini) {
-      throw new Error("Gemini API key not configured. Set GOOGLE_AI_API_KEY or GEMINI_API_KEY");
+    const apiKey = process.env.OPENAI_API_KEY;
+
+    if (!apiKey) {
+      throw new Error("OpenAI API key not configured. Set OPENAI_API_KEY");
     }
 
-    // Use Gemini's image generation model (Imagen 3)
-    const model = this.gemini.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
+    try {
+      // Build the prompt with brand guidelines
+      const fullPrompt = `${asset.prompt || asset.description}. Style: ${asset.style || 'modern tech'}. Brand colors: neon green (#B6F232) accent on dark background. Professional, clean, high-quality.`;
 
-    // For now, Gemini text models can describe images but actual generation
-    // requires Imagen API. We'll use Gemini to enhance the prompt and return
-    // a placeholder URL that can be replaced with actual Imagen output.
-    const enhancedPromptResult = await model.generateContent([
-      `You are an expert image prompt engineer. Enhance this image generation prompt for maximum quality and brand consistency. The brand uses neon green (#B6F232) as primary accent color.
+      // Map dimensions to DALL-E 3 sizes
+      const size = this.getDalleSize(asset.dimensions);
 
-Original prompt: ${asset.prompt || asset.description}
+      // Call DALL-E 3 API
+      const response = await fetch("https://api.openai.com/v1/images/generations", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model: "dall-e-3",
+          prompt: fullPrompt,
+          n: 1,
+          size: size,
+          quality: "standard",
+          response_format: "b64_json",
+        }),
+      });
 
-Dimensions: ${asset.dimensions?.width}x${asset.dimensions?.height}
-Style: ${asset.style}
-Type: ${asset.type}
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`[DALL-E 3] API error:`, errorText);
+        throw new Error(`DALL-E API error: ${response.status}`);
+      }
 
-Return ONLY the enhanced prompt, no explanations.`
-    ]);
+      const data = await response.json();
+      const imageData = data.data?.[0]?.b64_json;
 
-    const enhancedPrompt = enhancedPromptResult.response.text();
+      if (imageData) {
+        console.log(`[DALL-E 3] Generated image for ${asset.id}`);
+        return `data:image/png;base64,${imageData}`;
+      }
 
-    // Store the enhanced prompt for Imagen API call
-    // For production, integrate with Google Cloud Imagen API
-    // For now, return a branded placeholder with the asset ID
-    const placeholderUrl = `https://placehold.co/${asset.dimensions?.width || 512}x${asset.dimensions?.height || 512}/1a1a1a/B6F232?text=${encodeURIComponent(asset.name.substring(0, 20))}`;
+      throw new Error("No image data in response");
+    } catch (error: any) {
+      console.error(`[DALL-E 3] Error generating ${asset.id}:`, error.message);
 
-    // Log for debugging
-    console.log(`[Nano Banana 2] Enhanced prompt for ${asset.id}:`, enhancedPrompt);
+      // Fallback to placeholder if DALL-E fails
+      const placeholderUrl = `https://placehold.co/${asset.dimensions?.width || 512}x${asset.dimensions?.height || 512}/1a1a1a/B6F232?text=${encodeURIComponent(asset.name.substring(0, 20))}`;
 
-    return placeholderUrl;
+      return placeholderUrl;
+    }
+  }
+
+  /**
+   * Map dimensions to DALL-E 3 supported sizes
+   */
+  private getDalleSize(dimensions?: { width: number; height: number }): string {
+    if (!dimensions) return "1024x1024";
+
+    const ratio = dimensions.width / dimensions.height;
+
+    if (ratio > 1.5) return "1792x1024"; // Wide/landscape
+    if (ratio < 0.67) return "1024x1792"; // Tall/portrait
+    return "1024x1024"; // Square
   }
 
   /**
@@ -365,18 +392,6 @@ Return ONLY the enhanced prompt, no explanations.`
     return results;
   }
 
-  /**
-   * Get aspect ratio string for Gemini Imagen
-   */
-  private getAspectRatio(dimensions?: { width: number; height: number }): string {
-    if (!dimensions) return "1:1";
-
-    const ratio = dimensions.width / dimensions.height;
-
-    if (ratio > 1.5) return "16:9"; // Wide
-    if (ratio < 0.67) return "9:16"; // Tall
-    return "1:1"; // Square
-  }
 
   /**
    * Export full transformation pipeline output
