@@ -174,7 +174,7 @@ export function ApprovalCard({
         <Button
           onClick={handleApprove}
           disabled={isApproving}
-          className="w-full bg-emerald-500 hover:bg-emerald-400 text-white font-semibold py-2.5 text-sm rounded-lg transition-all duration-200 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40"
+          className="w-full bg-lime-400 hover:bg-lime-300 text-gray-900 font-semibold py-2.5 text-sm rounded-lg transition-all duration-200 shadow-lg shadow-lime-400/20 hover:shadow-lime-400/40"
         >
           {isApproving ? (
             <>

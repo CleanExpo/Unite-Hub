@@ -19,13 +19,15 @@ interface GeneratedContent {
 }
 
 export default function DemoWorkspacePage() {
-  // Demo content with built-in fallback designs (no image generation needed)
+  // Demo content with static images (no API calls needed)
   const content: GeneratedContent[] = [
     {
       id: "demo-1",
       title: "VEO3 Video - Summer Campaign (TikTok)",
       type: "video",
       platform: "tiktok",
+      // Fashion model with sunglasses
+      thumbnailUrl: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=600&fit=crop",
       previewText: "Check out our summer collection! Fresh styles, bold looks. Shop now and get 20% off!",
       status: "pending",
       createdAt: new Date().toISOString(),
@@ -35,6 +37,8 @@ export default function DemoWorkspacePage() {
       title: "Banana Creative - Omni-channel Banner Set",
       type: "banner",
       platform: "meta",
+      // Yellow bananas product photo
+      thumbnailUrl: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=400&h=400&fit=crop",
       status: "pending",
       createdAt: new Date().toISOString(),
     },
@@ -42,6 +46,8 @@ export default function DemoWorkspacePage() {
       id: "demo-3",
       title: "Generative Blog Post - SEO & Images",
       type: "blog",
+      // Business/tech image
+      thumbnailUrl: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=300&fit=crop",
       previewText: "10 Tips for Summer Marketing Success",
       status: "pending",
       createdAt: new Date().toISOString(),
