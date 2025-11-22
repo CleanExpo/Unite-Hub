@@ -1,11 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Bell } from "lucide-react";
 import { WorkspaceSidebar } from "@/components/workspace/WorkspaceSidebar";
 import { ApprovalCard, ContentType } from "@/components/workspace/ApprovalCard";
 import { NexusAssistant } from "@/components/workspace/NexusAssistant";
 import { ExecutionTicker } from "@/components/workspace/ExecutionTicker";
+import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface GeneratedContent {
   id: string;
@@ -18,52 +20,151 @@ interface GeneratedContent {
   createdAt: string;
 }
 
-export default function DemoWorkspacePage() {
-  // Demo content with static images (no API calls needed)
-  const content: GeneratedContent[] = [
-    {
-      id: "demo-1",
-      title: "VEO3 Video - Summer Campaign (TikTok)",
-      type: "video",
-      platform: "tiktok",
-      // Fashion model with sunglasses
-      thumbnailUrl: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=600&fit=crop",
-      previewText: "Check out our summer collection! Fresh styles, bold looks. Shop now and get 20% off!",
-      status: "pending",
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: "demo-2",
-      title: "Banana Creative - Omni-channel Banner Set",
-      type: "banner",
-      platform: "meta",
-      // Yellow bananas product photo
-      thumbnailUrl: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=400&h=400&fit=crop",
-      status: "pending",
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: "demo-3",
-      title: "Generative Blog Post - SEO & Images",
-      type: "blog",
-      // Business/tech image
-      thumbnailUrl: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=300&fit=crop",
-      previewText: "10 Tips for Summer Marketing Success",
-      status: "pending",
-      createdAt: new Date().toISOString(),
-    },
-  ];
+// Demo content fallback
+const demoContent: GeneratedContent[] = [
+  {
+    id: "demo-1",
+    title: "VEO3 Video - Summer Campaign (TikTok)",
+    type: "video",
+    platform: "tiktok",
+    thumbnailUrl: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=600&fit=crop",
+    previewText: "Check out our summer collection! Fresh styles, bold looks. Shop now and get 20% off!",
+    status: "pending",
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "demo-2",
+    title: "Banana Creative - Omni-channel Banner Set",
+    type: "banner",
+    platform: "meta",
+    thumbnailUrl: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=400&h=400&fit=crop",
+    status: "pending",
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "demo-3",
+    title: "Generative Blog Post - SEO & Images",
+    type: "blog",
+    thumbnailUrl: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=300&fit=crop",
+    previewText: "10 Tips for Summer Marketing Success",
+    status: "pending",
+    createdAt: new Date().toISOString(),
+  },
+];
+
+export default function DashboardOverviewPage() {
+  const { user, currentOrganization } = useAuth();
+  const [content, setContent] = useState<GeneratedContent[]>(demoContent);
+  const [loading, setLoading] = useState(true);
+  const [deployedCount, setDeployedCount] = useState(12);
+
+  const workspaceId = currentOrganization?.org_id || "demo";
+
+  // Fetch pending content on mount
+  useEffect(() => {
+    const fetchContent = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+
+        const response = await fetch(`/api/content/pending?workspaceId=${workspaceId}`, {
+          headers: {
+            ...(session && { Authorization: `Bearer ${session.access_token}` }),
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (data.content && data.content.length > 0) {
+            setContent(data.content);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching content:", error);
+        // Keep demo content on error
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchContent();
+  }, [workspaceId]);
 
   const handleApprove = async (id: string) => {
-    // Demo - just log
-    console.log("Approved:", id);
-    alert(`Content ${id} approved and deployed! (Demo mode)`);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session) {
+        // Demo mode - just show alert
+        alert(`Content approved and deployed! (Demo mode)`);
+        setContent(prev => prev.filter(item => item.id !== id));
+        setDeployedCount(prev => prev + 1);
+        return;
+      }
+
+      const response = await fetch("/api/content/approve", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({ contentId: id }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        alert(data.message);
+        // Remove from pending list
+        setContent(prev => prev.filter(item => item.id !== id));
+        setDeployedCount(prev => prev + 1);
+      } else {
+        const error = await response.json();
+        alert(`Error: ${error.error}`);
+      }
+    } catch (error) {
+      console.error("Approve error:", error);
+      alert("Failed to approve content");
+    }
   };
 
-  const handleIterate = (id: string) => {
-    console.log("Iterate:", id);
-    alert(`Requested iteration for ${id} (Demo mode)`);
+  const handleIterate = async (id: string) => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session) {
+        // Demo mode
+        const feedback = prompt("Enter feedback for iteration:");
+        if (feedback) {
+          alert(`Iteration requested with feedback: "${feedback}" (Demo mode)`);
+        }
+        return;
+      }
+
+      const feedback = prompt("Enter feedback for iteration:");
+      if (!feedback) return;
+
+      const response = await fetch("/api/content/iterate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({ contentId: id, feedback }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        alert(data.message);
+      } else {
+        const error = await response.json();
+        alert(`Error: ${error.error}`);
+      }
+    } catch (error) {
+      console.error("Iterate error:", error);
+      alert("Failed to request iteration");
+    }
   };
+
+  const pendingCount = content.filter(item => item.status === "pending").length;
 
   return (
     <div className="min-h-screen bg-[#071318] relative overflow-hidden">
@@ -107,7 +208,7 @@ export default function DemoWorkspacePage() {
                   Generative Workspace
                 </h1>
                 <p className="text-sm text-gray-400">
-                  3 items ready for approval
+                  {pendingCount} items ready for approval
                 </p>
               </div>
               <div className="flex items-center gap-4">
@@ -123,7 +224,7 @@ export default function DemoWorkspacePage() {
                   <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-teal-500 rounded-lg shadow-lg shadow-cyan-500/20" />
                   <div>
                     <span className="text-sm font-medium text-white block">
-                      Demo User
+                      {user?.email?.split("@")[0] || "Demo User"}
                     </span>
                     <span className="text-[10px] text-gray-400">
                       Pro Plan
@@ -141,39 +242,50 @@ export default function DemoWorkspacePage() {
                 </h2>
                 <div className="flex gap-2">
                   <span className="bg-cyan-500/20 text-cyan-400 text-xs px-3 py-1.5 rounded-full font-medium border border-cyan-500/30">
-                    3 Pending
+                    {pendingCount} Pending
                   </span>
                   <span className="bg-emerald-500/20 text-emerald-400 text-xs px-3 py-1.5 rounded-full font-medium border border-emerald-500/30">
-                    12 Deployed Today
+                    {deployedCount} Deployed Today
                   </span>
                 </div>
               </div>
 
-              <div className="flex gap-5 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-cyan-900/50 scrollbar-track-transparent">
-                {content
-                  .filter((item) => item.status === "pending")
-                  .map((item, index) => (
-                    <ApprovalCard
-                      key={item.id}
-                      id={item.id}
-                      title={item.title}
-                      type={item.type}
-                      platform={item.platform}
-                      thumbnailUrl={item.thumbnailUrl}
-                      previewText={item.previewText}
-                      isHighlighted={index === 0}
-                      onApprove={handleApprove}
-                      onIterate={handleIterate}
-                    />
-                  ))}
-              </div>
+              {loading ? (
+                <div className="flex justify-center items-center h-64">
+                  <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+                </div>
+              ) : pendingCount === 0 ? (
+                <div className="flex flex-col items-center justify-center h-64 text-gray-400">
+                  <p className="text-lg">No pending content</p>
+                  <p className="text-sm">All content has been reviewed</p>
+                </div>
+              ) : (
+                <div className="flex gap-5 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-cyan-900/50 scrollbar-track-transparent">
+                  {content
+                    .filter((item) => item.status === "pending")
+                    .map((item, index) => (
+                      <ApprovalCard
+                        key={item.id}
+                        id={item.id}
+                        title={item.title}
+                        type={item.type}
+                        platform={item.platform}
+                        thumbnailUrl={item.thumbnailUrl}
+                        previewText={item.previewText}
+                        isHighlighted={index === 0}
+                        onApprove={handleApprove}
+                        onIterate={handleIterate}
+                      />
+                    ))}
+                </div>
+              )}
             </section>
           </main>
 
           {/* Right Sidebar */}
           <aside className="w-[320px] bg-[#0a1f2e]/60 backdrop-blur-sm border-l border-cyan-900/30 flex flex-col">
-            <NexusAssistant workspaceId="demo" />
-            <ExecutionTicker workspaceId="demo" />
+            <NexusAssistant workspaceId={workspaceId} />
+            <ExecutionTicker workspaceId={workspaceId} />
           </aside>
         </div>
       </div>
