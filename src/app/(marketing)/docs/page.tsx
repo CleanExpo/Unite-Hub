@@ -99,15 +99,23 @@ export default function DocsPage() {
         </div>
       </section>
 
-      {/* Coming Soon Notice */}
+      {/* Support Section */}
       <section className="py-16 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center">
-            <p className="text-muted-foreground">
-              📚 Full documentation is currently being prepared. In the meantime,
-              check out our <Link href="/dashboard/overview" className="text-primary hover:underline">dashboard</Link> or{' '}
-              <Link href="/contact" className="text-primary hover:underline">contact support</Link> for help.
+            <h3 className="text-xl font-semibold mb-4">Need Help Getting Started?</h3>
+            <p className="text-muted-foreground mb-6">
+              Our team is here to help you get the most out of Unite-Hub.
+              Whether you need technical support or strategic guidance, we&apos;re ready to assist.
             </p>
+            <div className="flex gap-4 justify-center">
+              <Button asChild>
+                <Link href="/contact">Contact Support</Link>
+              </Button>
+              <Button variant="outline" asChild>
+                <Link href="/pricing">View Pricing</Link>
+              </Button>
+            </div>
           </div>
         </div>
       </section>

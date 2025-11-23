@@ -129,14 +129,28 @@ export default function BlogPage() {
         </div>
       </section>
 
-      {/* Coming Soon Notice */}
+      {/* Newsletter Signup */}
       <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center">
-            <p className="text-muted-foreground">
-              📝 More articles coming soon! Subscribe to our newsletter to stay updated.{' '}
-              <Link href="/contact" className="text-primary hover:underline">Contact us</Link> for content suggestions.
-            </p>
+            <Card className="p-8">
+              <CardHeader>
+                <CardTitle className="text-2xl">Stay Updated</CardTitle>
+                <CardDescription>
+                  Get the latest insights on AI-powered marketing automation delivered to your inbox.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex gap-4 justify-center">
+                  <Button asChild>
+                    <Link href="/contact">Subscribe to Newsletter</Link>
+                  </Button>
+                  <Button variant="outline" asChild>
+                    <Link href="/docs">View Documentation</Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
