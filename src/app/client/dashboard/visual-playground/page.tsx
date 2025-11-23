@@ -3,13 +3,18 @@
 /**
  * Visual Playground Main Page
  * Phase 33: Honest Visual Playground
+ * Phase 34: Client Honest Experience Integration
  *
  * Shows all content pillars for concept generation
  */
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { getAllPillars, DISCLAIMERS } from "@/lib/content/pillars-config";
 import { Search, Share2, Layout, Palette, AlertTriangle, Sparkles } from "lucide-react";
+import CreativeLabIntroModal from "@/components/ui/onboarding/CreativeLabIntroModal";
+import CreativeLabInfoDrawer, { CreativeLabInfoTrigger } from "@/components/ui/about-page/CreativeLabInfoDrawer";
+import TransparencyFooter from "@/components/ui/footer/TransparencyFooter";
 
 const ICON_MAP: Record<string, React.ReactNode> = {
   Search: <Search className="w-6 h-6" />,
@@ -21,19 +26,36 @@ const ICON_MAP: Record<string, React.ReactNode> = {
 export default function VisualPlaygroundPage() {
   const router = useRouter();
   const pillars = getAllPillars();
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
+      {/* Onboarding Modal */}
+      <CreativeLabIntroModal userId="current-user" />
+
+      {/* Info Drawer */}
+      <CreativeLabInfoDrawer
+        isOpen={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+      />
+
+      <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        {/* Header with Slogan */}
         <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <Sparkles className="w-8 h-8 text-teal-600" />
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Visual Playground
-            </h1>
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-3">
+              <Sparkles className="w-8 h-8 text-teal-600" />
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+                Your Creative Lab
+              </h1>
+            </div>
+            <CreativeLabInfoTrigger onClick={() => setDrawerOpen(true)} />
           </div>
-          <p className="text-gray-500 dark:text-gray-400">
+          {/* Official Slogan */}
+          <p className="text-teal-600 dark:text-teal-400 font-medium mb-2">
+            This is your Creative Lab — everything you see is generated in real time based on your inputs.
+          </p>
+          <p className="text-gray-500 dark:text-gray-400 text-sm">
             Explore AI-generated concept previews across different content areas
           </p>
         </div>
@@ -127,6 +149,9 @@ export default function VisualPlaygroundPage() {
           </div>
         </div>
       </div>
+
+      {/* Transparency Footer */}
+      <TransparencyFooter />
     </div>
   );
 }
