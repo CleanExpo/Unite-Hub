@@ -22,6 +22,7 @@ import {
   Target,
   Zap,
   BarChart3,
+  BookOpen,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { JourneyTimeline, JourneyIndicator } from '@/ui/components/JourneyTimeline';
@@ -193,6 +194,10 @@ export default function FounderFirstClientJourneyPage() {
           </p>
         </div>
         <div className="flex gap-2">
+          <Button variant="outline" onClick={() => router.push('/founder/dashboard/client-stories')}>
+            <BookOpen className="h-4 w-4 mr-2" />
+            Client Stories
+          </Button>
           <Button variant="outline" onClick={() => router.push('/founder/dashboard/alignment')}>
             <BarChart3 className="h-4 w-4 mr-2" />
             Alignment

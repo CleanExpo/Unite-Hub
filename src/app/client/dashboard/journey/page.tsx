@@ -124,6 +124,10 @@ export default function ClientJourneyPage() {
           </p>
         </div>
         <div className="flex gap-2">
+          <Button variant="outline" onClick={() => router.push('/client/dashboard/stories')}>
+            <BookOpen className="h-4 w-4 mr-2" />
+            Your Story
+          </Button>
           <Button variant="outline" onClick={() => router.push('/client/dashboard/alignment')}>
             <BarChart3 className="h-4 w-4 mr-2" />
             Alignment

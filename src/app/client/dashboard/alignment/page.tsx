@@ -15,6 +15,7 @@ import {
   Info,
   Compass,
   Target,
+  BookOpen,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { AlignmentScoreCard } from '@/ui/components/AlignmentScoreCard';
@@ -116,10 +117,16 @@ export default function ClientAlignmentPage() {
             How your journey is progressing across all dimensions
           </p>
         </div>
-        <Button variant="outline" onClick={() => router.push('/client/dashboard/journey')}>
-          <Compass className="h-4 w-4 mr-2" />
-          View Journey
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => router.push('/client/dashboard/stories')}>
+            <BookOpen className="h-4 w-4 mr-2" />
+            Your Story
+          </Button>
+          <Button variant="outline" onClick={() => router.push('/client/dashboard/journey')}>
+            <Compass className="h-4 w-4 mr-2" />
+            View Journey
+          </Button>
+        </div>
       </div>
 
       {/* Narrative summary */}
