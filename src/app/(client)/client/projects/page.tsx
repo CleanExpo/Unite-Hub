@@ -18,6 +18,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { PageContainer, Section } from '@/ui/layout/AppGrid';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
@@ -215,14 +216,18 @@ export default function ClientProjectsPage() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-100">My Projects</h1>
-        <p className="text-gray-400 mt-2">
-          Manage and track your project progress
-        </p>
-      </div>
+    <PageContainer>
+      <Section>
+        {/* Header */}
+        <div>
+          <h1 className="text-3xl font-bold text-gray-100">My Projects</h1>
+          <p className="text-gray-400 mt-2">
+            Manage and track your project progress
+          </p>
+        </div>
+      </Section>
+
+      <Section>
 
       {/* Project Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -342,6 +347,7 @@ export default function ClientProjectsPage() {
           );
         })}
       </div>
-    </div>
+      </Section>
+    </PageContainer>
   );
 }

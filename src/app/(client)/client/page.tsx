@@ -5,6 +5,7 @@
  * Will be enhanced in Phase 2 Step 4
  */
 
+import { PageContainer, Section } from '@/ui/layout/AppGrid';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Lightbulb, FolderKanban, Lock, Bot, ArrowRight } from 'lucide-react';
@@ -50,16 +51,20 @@ export default function ClientHomePage() {
   };
 
   return (
-    <div className="space-y-8">
-      {/* Hero section */}
-      <div className="text-center py-12">
-        <h1 className="text-4xl font-bold text-gray-100 mb-4">
-          Welcome to Unite-Hub
-        </h1>
-        <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-          Transform your ideas into reality with AI-powered project management and intelligent assistance.
-        </p>
-      </div>
+    <PageContainer>
+      <Section>
+        {/* Hero section */}
+        <div className="text-center py-12">
+          <h1 className="text-4xl font-bold text-gray-100 mb-4">
+            Welcome to Unite-Hub
+          </h1>
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+            Transform your ideas into reality with AI-powered project management and intelligent assistance.
+          </p>
+        </div>
+      </Section>
+
+      <Section>
 
       {/* Feature cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -136,6 +141,7 @@ export default function ClientHomePage() {
           </Link>
         </div>
       </Card>
-    </div>
+      </Section>
+    </PageContainer>
   );
 }

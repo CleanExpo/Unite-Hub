@@ -8,6 +8,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { PageContainer, Section } from '@/ui/layout/AppGrid';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -67,25 +68,29 @@ export default function ClientIdeasPage() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Page header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-100">
-            My Ideas
-          </h1>
-          <p className="text-gray-400 mt-2">
-            Submit and track your project ideas
-          </p>
-        </div>
+    <PageContainer>
+      <Section>
+        {/* Page header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-100">
+              My Ideas
+            </h1>
+            <p className="text-gray-400 mt-2">
+              Submit and track your project ideas
+            </p>
+          </div>
 
-        <Button
-          leftIcon={<Plus className="h-4 w-4" />}
-          onClick={() => setShowRecorder(!showRecorder)}
-        >
-          Submit New Idea
-        </Button>
-      </div>
+          <Button
+            leftIcon={<Plus className="h-4 w-4" />}
+            onClick={() => setShowRecorder(!showRecorder)}
+          >
+            Submit New Idea
+          </Button>
+        </div>
+      </Section>
+
+      <Section>
 
       {/* Idea recorder */}
       {showRecorder && (
@@ -175,6 +180,7 @@ export default function ClientIdeasPage() {
           </div>
         </Card>
       )}
-    </div>
+      </Section>
+    </PageContainer>
   );
 }
