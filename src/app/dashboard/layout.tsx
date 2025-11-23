@@ -264,6 +264,9 @@ export default function DashboardLayout({
                       <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
                         <Link href="/dashboard/seo" className="w-full">SEO Tools</Link>
                       </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                        <Link href="/dashboard/audits" className="w-full">Website Audits</Link>
+                      </DropdownMenuItem>
                       <DropdownMenuSeparator className="bg-slate-700" />
                       <DropdownMenuLabel className="text-slate-400">Automation</DropdownMenuLabel>
                       <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
