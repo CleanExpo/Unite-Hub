@@ -20,6 +20,7 @@ import {
   Target,
   ArrowRight,
   Info,
+  FileText,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { StorySummaryCard, StoryIndicator } from '@/ui/components/StorySummaryCard';
@@ -98,6 +99,10 @@ export default function ClientStoriesPage() {
           </p>
         </div>
         <div className="flex gap-2">
+          <Button variant="outline" onClick={() => router.push('/client/dashboard/reports-center')}>
+            <FileText className="h-4 w-4 mr-2" />
+            Reports
+          </Button>
           <Button variant="outline" onClick={() => router.push('/client/dashboard/touchpoints')}>
             <Clock className="h-4 w-4 mr-2" />
             Touchpoints

@@ -21,6 +21,7 @@ import {
   Star,
   BarChart3,
   Clock,
+  FileText,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { StorySummaryCard } from '@/ui/components/StorySummaryCard';
@@ -160,6 +161,13 @@ export default function FounderClientStoriesPage() {
           </p>
         </div>
         <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={() => router.push('/founder/dashboard/reports-center')}
+          >
+            <FileText className="h-4 w-4 mr-2" />
+            Reports
+          </Button>
           <Button
             variant="outline"
             onClick={() => router.push('/founder/dashboard/story-touchpoints')}
