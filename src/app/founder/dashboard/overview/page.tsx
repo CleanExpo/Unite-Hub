@@ -231,13 +231,49 @@ export default function FounderOverviewPage() {
               </div>
             </Section>
 
+            {/* Client Journeys */}
+            <Section className="mt-6">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-sm font-medium text-gray-500">Client Journeys</h2>
+                <Link
+                  href="/founder/dashboard/first-client-journey"
+                  className="text-xs text-teal-600 hover:text-teal-700 flex items-center gap-1"
+                >
+                  View All <ArrowRight className="w-3 h-3" />
+                </Link>
+              </div>
+              <Card>
+                <CardContent className="pt-4">
+                  <div className="flex items-center gap-4">
+                    <div className="p-3 rounded-lg bg-teal-100 text-teal-600">
+                      <Users className="w-6 h-6" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">
+                        First Client Journeys
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        Track soft-launch client progress through 90-day onboarding
+                      </p>
+                    </div>
+                    <Link
+                      href="/founder/dashboard/first-client-journey"
+                      className="px-3 py-1.5 text-xs font-medium text-teal-600 bg-teal-50 rounded-lg hover:bg-teal-100"
+                    >
+                      Monitor Progress
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+            </Section>
+
             {/* Quick Links */}
             <Section className="mt-6">
               <h2 className="text-sm font-medium text-gray-500 mb-3">Quick Actions</h2>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <QuickLink href="/founder/dashboard/financials" label="Financial Details" />
                 <QuickLink href="/founder/dashboard/timecard" label="Time Tracker" />
-                <QuickLink href="/staff/settings" label="System Settings" />
+                <QuickLink href="/founder/dashboard/first-client-journey" label="Client Journeys" />
                 <QuickLink href="/staff/approvals" label="Review Approvals" />
               </div>
             </Section>

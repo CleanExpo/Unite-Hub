@@ -14,7 +14,7 @@ import AgencyPresencePanel from "@/components/client/AgencyPresencePanel";
 import AgencyActivityFeed from "@/components/client/AgencyActivityFeed";
 import ProgressAndImpactGraphs from "@/components/client/ProgressAndImpactGraphs";
 import JustDroppedIdeasPanel from "@/components/client/JustDroppedIdeasPanel";
-import { AlertTriangle, Clock } from "lucide-react";
+import { AlertTriangle, Clock, Compass, ArrowRight } from "lucide-react";
 
 interface TrialInfo {
   isTrialing: boolean;
@@ -147,6 +147,29 @@ export default function ClientDashboardOverview() {
 
           {/* Right Column - Ideas */}
           <div className="space-y-6">
+            {/* Journey Entry Point */}
+            <div
+              onClick={() => router.push("/client/dashboard/journey")}
+              className="bg-gradient-to-br from-teal-50 to-blue-50 dark:from-teal-900/20 dark:to-blue-900/20 rounded-lg border border-teal-200 dark:border-teal-800 p-6 cursor-pointer hover:shadow-md transition-shadow"
+            >
+              <div className="flex items-start gap-3">
+                <div className="p-2 bg-teal-100 dark:bg-teal-800 rounded-lg">
+                  <Compass className="w-5 h-5 text-teal-600 dark:text-teal-300" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+                    Your 90-Day Journey
+                  </h3>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                    Track your progress from onboarding to optimization
+                  </p>
+                  <div className="flex items-center gap-1 mt-2 text-xs text-teal-600 dark:text-teal-400">
+                    View Journey <ArrowRight className="w-3 h-3" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <JustDroppedIdeasPanel />
 
             {/* Quick Actions */}
