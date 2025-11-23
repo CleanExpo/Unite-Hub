@@ -98,6 +98,10 @@ export default function ClientStoriesPage() {
           </p>
         </div>
         <div className="flex gap-2">
+          <Button variant="outline" onClick={() => router.push('/client/dashboard/touchpoints')}>
+            <Clock className="h-4 w-4 mr-2" />
+            Touchpoints
+          </Button>
           <Button variant="outline" onClick={() => router.push('/client/dashboard/alignment')}>
             <Target className="h-4 w-4 mr-2" />
             View Alignment
