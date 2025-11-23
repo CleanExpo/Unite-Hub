@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/Input';
 import { AILoader } from '@/components/ai/AILoader';
 import { AIInsightBubble } from '@/components/ai/AIInsightBubble';
 import { Bot, Send, Lightbulb, FolderKanban, HelpCircle } from 'lucide-react';
+import { PageContainer, Section } from '@/ui/layout/AppGrid';
 
 interface Message {
   id: string;
@@ -81,19 +82,22 @@ export default function ClientAssistantPage() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Page header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-100">
-          AI Assistant
-        </h1>
-        <p className="text-gray-400 mt-2">
-          Get instant answers about your projects, ideas, and proposals
-        </p>
-      </div>
+    <PageContainer>
+      <Section>
+        {/* Page header */}
+        <div>
+          <h1 className="text-3xl font-bold text-gray-100">
+            AI Assistant
+          </h1>
+          <p className="text-gray-400 mt-2">
+            Get instant answers about your projects, ideas, and proposals
+          </p>
+        </div>
+      </Section>
 
-      {/* Chat interface */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <Section>
+        {/* Chat interface */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main chat area */}
         <div className="lg:col-span-2">
           <Card className="h-[600px] flex flex-col">
@@ -251,6 +255,7 @@ export default function ClientAssistantPage() {
           </Card>
         </div>
       </div>
-    </div>
+      </Section>
+    </PageContainer>
   );
 }

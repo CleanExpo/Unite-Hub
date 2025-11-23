@@ -14,6 +14,7 @@ import StaffProgressRing from '@/components/staff/StaffProgressRing';
 import { FolderKanban, Plus, Search, Calendar, Users } from 'lucide-react';
 import { Input } from '@/components/ui/Input';
 import { getStaffProjects } from '@/lib/services/staff/staffService';
+import { PageContainer, Section } from '@/ui/layout/AppGrid';
 
 export default async function StaffProjectsPage() {
   // Fetch real projects from API
@@ -28,25 +29,28 @@ export default async function StaffProjectsPage() {
     : 0;
 
   return (
-    <div className="space-y-6">
-      {/* Page header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-100">
-            Projects
-          </h1>
-          <p className="text-gray-400 mt-2">
-            Manage client projects and track progress
-          </p>
+    <PageContainer>
+      <Section>
+        {/* Page header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-100">
+              Projects
+            </h1>
+            <p className="text-gray-400 mt-2">
+              Manage client projects and track progress
+            </p>
+          </div>
+
+          <Button leftIcon={<Plus className="h-4 w-4" />}>
+            New Project
+          </Button>
         </div>
+      </Section>
 
-        <Button leftIcon={<Plus className="h-4 w-4" />}>
-          New Project
-        </Button>
-      </div>
-
-      {/* Project stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <Section>
+        {/* Project stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card variant="glass">
           <div className="p-4">
             <p className="text-sm text-gray-400">Active Projects</p>
@@ -194,6 +198,7 @@ export default async function StaffProjectsPage() {
           </div>
         </Card>
       )}
-    </div>
+      </Section>
+    </PageContainer>
   );
 }

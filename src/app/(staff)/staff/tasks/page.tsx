@@ -14,6 +14,7 @@ import { TaskCard } from '@/components/staff/TaskCard';
 import ProofUploader from '@/components/staff/ProofUploader';
 import { Plus, Filter } from 'lucide-react';
 import { getStaffTasks, updateTaskStatus } from '@/lib/services/staff/staffService';
+import { PageContainer, Section } from '@/ui/layout/AppGrid';
 
 export default async function StaffTasksPage() {
   // Fetch real tasks from API
@@ -21,30 +22,33 @@ export default async function StaffTasksPage() {
   const tasks = response?.data || [];
 
   return (
-    <div className="space-y-6">
-      {/* Page header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-100">
-            Tasks
-          </h1>
-          <p className="text-gray-400 mt-2">
-            Manage your tasks and track progress
-          </p>
-        </div>
+    <PageContainer>
+      <Section>
+        {/* Page header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-100">
+              Tasks
+            </h1>
+            <p className="text-gray-400 mt-2">
+              Manage your tasks and track progress
+            </p>
+          </div>
 
-        <div className="flex items-center space-x-3">
-          <Button variant="outline" leftIcon={<Filter className="h-4 w-4" />}>
-            Filter
-          </Button>
-          <Button leftIcon={<Plus className="h-4 w-4" />}>
-            New Task
-          </Button>
+          <div className="flex items-center space-x-3">
+            <Button variant="outline" leftIcon={<Filter className="h-4 w-4" />}>
+              Filter
+            </Button>
+            <Button leftIcon={<Plus className="h-4 w-4" />}>
+              New Task
+            </Button>
+          </div>
         </div>
-      </div>
+      </Section>
 
-      {/* Task stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <Section>
+        {/* Task stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card variant="glass">
           <div className="p-4">
             <p className="text-sm text-gray-400">Pending</p>
@@ -102,6 +106,7 @@ export default async function StaffTasksPage() {
           </div>
         </Card>
       )}
-    </div>
+      </Section>
+    </PageContainer>
   );
 }

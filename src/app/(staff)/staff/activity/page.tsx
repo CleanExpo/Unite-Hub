@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Activity, Download, Filter } from 'lucide-react';
 import { getStaffActivity } from '@/lib/services/staff/staffService';
+import { PageContainer, Section } from '@/ui/layout/AppGrid';
 
 export default async function StaffActivityPage() {
   // Fetch real activity from API
@@ -48,30 +49,33 @@ export default async function StaffActivityPage() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Page header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-100">
-            Activity Log
-          </h1>
-          <p className="text-gray-400 mt-2">
-            View recent activity and system events
-          </p>
-        </div>
+    <PageContainer>
+      <Section>
+        {/* Page header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-100">
+              Activity Log
+            </h1>
+            <p className="text-gray-400 mt-2">
+              View recent activity and system events
+            </p>
+          </div>
 
-        <div className="flex items-center space-x-3">
-          <Button variant="outline" leftIcon={<Filter className="h-4 w-4" />}>
-            Filter
-          </Button>
-          <Button variant="outline" leftIcon={<Download className="h-4 w-4" />}>
-            Export
-          </Button>
+          <div className="flex items-center space-x-3">
+            <Button variant="outline" leftIcon={<Filter className="h-4 w-4" />}>
+              Filter
+            </Button>
+            <Button variant="outline" leftIcon={<Download className="h-4 w-4" />}>
+              Export
+            </Button>
+          </div>
         </div>
-      </div>
+      </Section>
 
-      {/* Activity stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <Section>
+        {/* Activity stats */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card variant="glass">
           <div className="p-4">
             <p className="text-sm text-gray-400">Today</p>
@@ -174,6 +178,7 @@ export default async function StaffActivityPage() {
           </div>
         </Card>
       )}
-    </div>
+      </Section>
+    </PageContainer>
   );
 }

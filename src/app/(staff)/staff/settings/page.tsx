@@ -12,22 +12,26 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Badge } from '@/components/ui/Badge';
 import { Settings, User, Bell, Shield, Database } from 'lucide-react';
+import { PageContainer, Section } from '@/ui/layout/AppGrid';
 
 export default function StaffSettingsPage() {
   return (
-    <div className="space-y-6 max-w-4xl">
-      {/* Page header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-100">
-          Settings
-        </h1>
-        <p className="text-gray-400 mt-2">
-          Manage your account and preferences
-        </p>
-      </div>
+    <PageContainer>
+      <Section>
+        {/* Page header */}
+        <div>
+          <h1 className="text-3xl font-bold text-gray-100">
+            Settings
+          </h1>
+          <p className="text-gray-400 mt-2">
+            Manage your account and preferences
+          </p>
+        </div>
+      </Section>
 
-      {/* Profile settings */}
-      <Card>
+      <Section>
+        {/* Profile settings */}
+        <Card>
         <div className="p-6">
           <div className="flex items-center space-x-3 mb-6">
             <User className="h-5 w-5 text-gray-400" />
@@ -197,6 +201,7 @@ export default function StaffSettingsPage() {
           Save Changes
         </Button>
       </div>
-    </div>
+      </Section>
+    </PageContainer>
   );
 }

@@ -6,6 +6,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { PageContainer, Section } from '@/ui/layout/AppGrid';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   fetchClientBilling,
@@ -52,10 +53,13 @@ export default function ClientReportsPage() {
   if (loading) return <div className="p-8">Loading your reports...</div>;
 
   return (
-    <div className="p-8 space-y-6">
-      <h1 className="text-3xl font-bold">Your Financial Reports</h1>
+    <PageContainer>
+      <Section>
+        <h1 className="text-3xl font-bold">Your Financial Reports</h1>
+      </Section>
 
-      <Tabs defaultValue="billing">
+      <Section>
+        <Tabs defaultValue="billing">
         <TabsList>
           <TabsTrigger value="billing">Billing Summary</TabsTrigger>
           <TabsTrigger value="hours">Hours Breakdown</TabsTrigger>
@@ -145,6 +149,7 @@ export default function ClientReportsPage() {
           </Card>
         </TabsContent>
       </Tabs>
-    </div>
+      </Section>
+    </PageContainer>
   );
 }

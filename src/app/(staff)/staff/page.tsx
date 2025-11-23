@@ -13,25 +13,29 @@ import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { FolderKanban, CheckSquare, Users, TrendingUp } from 'lucide-react';
 import { getDashboardStats } from '@/lib/services/staff/staffService';
+import { PageContainer, Section } from '@/ui/layout/AppGrid';
 
 export default async function StaffDashboardPage() {
   // Fetch real dashboard stats from API
   const stats = await getDashboardStats();
 
   return (
-    <div className="space-y-8">
-      {/* Page header */}
-      <div>
-        <h1 className="text-3xl font-bold text-gray-100">
-          Dashboard
-        </h1>
-        <p className="text-gray-400 mt-2">
-          Welcome back! Here's your overview for today.
-        </p>
-      </div>
+    <PageContainer>
+      <Section>
+        {/* Page header */}
+        <div>
+          <h1 className="text-3xl font-bold text-gray-100">
+            Dashboard
+          </h1>
+          <p className="text-gray-400 mt-2">
+            Welcome back! Here's your overview for today.
+          </p>
+        </div>
+      </Section>
 
-      {/* Stats grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <Section>
+        {/* Stats grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* Active Projects */}
         <Card variant="glass">
           <div className="p-6">
@@ -131,6 +135,7 @@ export default async function StaffDashboardPage() {
           </div>
         </div>
       </Card>
-    </div>
+      </Section>
+    </PageContainer>
   );
 }

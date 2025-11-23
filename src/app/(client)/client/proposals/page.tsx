@@ -28,6 +28,7 @@ import { ProposalTierCard } from '@/components/client/ProposalTierCard';
 import { getClientProposal, selectProposal } from '@/lib/services/client/proposalService';
 import { useToast } from '@/contexts/ToastContext';
 import type { ProposalScope } from '@/lib/projects/scope-planner';
+import { PageContainer, Section } from '@/ui/layout/AppGrid';
 
 export default function ClientProposalsPage() {
   const router = useRouter();
@@ -158,13 +159,14 @@ export default function ClientProposalsPage() {
   const hasPackages = proposal.packages && proposal.packages.length > 0;
 
   return (
-    <div className="space-y-8">
-      {/* Page Header */}
-      <div>
-        <div className="flex items-center gap-3 mb-2">
-          <h1 className="text-3xl font-bold text-gray-100">
-            {proposal.idea.title}
-          </h1>
+    <PageContainer>
+      <Section>
+        {/* Page Header */}
+        <div>
+          <div className="flex items-center gap-3 mb-2">
+            <h1 className="text-3xl font-bold text-gray-100">
+              {proposal.idea.title}
+            </h1>
           {isAIGenerated && (
             <Badge className="bg-purple-600/20 text-purple-300 border-purple-500/30">
               <Sparkles className="w-3 h-3 mr-1" />
@@ -176,6 +178,9 @@ export default function ClientProposalsPage() {
           Review your proposal packages and select the best fit for your project
         </p>
       </div>
+      </Section>
+
+      <Section>
 
       {/* Proposal Overview */}
       {proposal.sections && proposal.sections.length > 0 && (
@@ -303,6 +308,7 @@ export default function ClientProposalsPage() {
           {proposal.metadata.aiModel && ` • ${proposal.metadata.aiModel}`}
         </div>
       )}
-    </div>
+      </Section>
+    </PageContainer>
   );
 }

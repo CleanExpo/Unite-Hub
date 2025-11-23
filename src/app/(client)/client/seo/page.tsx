@@ -16,6 +16,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
 import SeoDashboardShell from "@/components/seo/SeoDashboardShell";
 import type { SeoProfile } from "@/lib/seo/seoTypes";
+import { PageContainer, Section } from '@/ui/layout/AppGrid';
 
 export default function ClientSeoPage() {
   const { user, currentOrganization } = useAuth();
@@ -114,40 +115,42 @@ export default function ClientSeoPage() {
   const selectedProfile = seoProfiles.find((p) => p.id === selectedProfileId);
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Profile Selector (only show if multiple profiles) */}
-      {seoProfiles.length > 1 && (
-        <div className="border-b bg-card">
-          <div className="container mx-auto px-4 py-3">
-            <div className="flex items-center gap-4">
-              <label htmlFor="profile-select" className="text-sm font-medium">
-                Website:
-              </label>
-              <select
-                id="profile-select"
-                value={selectedProfileId || ""}
-                onChange={(e) => setSelectedProfileId(e.target.value)}
-                className="px-3 py-1.5 bg-background border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-              >
-                {seoProfiles.map((profile) => (
-                  <option key={profile.id} value={profile.id}>
-                    {profile.domain}
-                  </option>
-                ))}
-              </select>
+    <PageContainer>
+      <Section>
+        {/* Profile Selector (only show if multiple profiles) */}
+        {seoProfiles.length > 1 && (
+          <div className="border-b bg-card">
+            <div className="container mx-auto px-4 py-3">
+              <div className="flex items-center gap-4">
+                <label htmlFor="profile-select" className="text-sm font-medium">
+                  Website:
+                </label>
+                <select
+                  id="profile-select"
+                  value={selectedProfileId || ""}
+                  onChange={(e) => setSelectedProfileId(e.target.value)}
+                  className="px-3 py-1.5 bg-background border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                >
+                  {seoProfiles.map((profile) => (
+                    <option key={profile.id} value={profile.id}>
+                      {profile.domain}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Dashboard Shell (Client View - Read-Only) */}
-      {selectedProfile && currentOrganization && (
-        <SeoDashboardShell
-          seoProfile={selectedProfile}
-          organizationId={currentOrganization.org_id}
-          userRole="client"
-        />
-      )}
-    </div>
+        {/* Dashboard Shell (Client View - Read-Only) */}
+        {selectedProfile && currentOrganization && (
+          <SeoDashboardShell
+            seoProfile={selectedProfile}
+            organizationId={currentOrganization.org_id}
+            userRole="client"
+          />
+        )}
+      </Section>
+    </PageContainer>
   );
 }

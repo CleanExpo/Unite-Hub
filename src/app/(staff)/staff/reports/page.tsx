@@ -21,6 +21,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
+import { PageContainer, Section } from '@/ui/layout/AppGrid';
 
 export default function StaffReportsPage() {
   const { currentOrganization } = useAuth();
@@ -64,15 +65,18 @@ export default function StaffReportsPage() {
   if (loading) return <div className="p-8">Loading reports...</div>;
 
   return (
-    <div className="p-8 space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Financial Reports</h1>
-        <Button onClick={handleRefresh}>
-          <RefreshCw className="w-4 h-4 mr-2" /> Refresh
-        </Button>
-      </div>
+    <PageContainer>
+      <Section>
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold">Financial Reports</h1>
+          <Button onClick={handleRefresh}>
+            <RefreshCw className="w-4 h-4 mr-2" /> Refresh
+          </Button>
+        </div>
+      </Section>
 
-      <Tabs defaultValue="summary">
+      <Section>
+        <Tabs defaultValue="summary">
         <TabsList>
           <TabsTrigger value="summary">Summary</TabsTrigger>
           <TabsTrigger value="pnl">P&L</TabsTrigger>
@@ -227,7 +231,8 @@ export default function StaffReportsPage() {
             ))}
           </div>
         </TabsContent>
-      </Tabs>
-    </div>
+        </Tabs>
+      </Section>
+    </PageContainer>
   );
 }

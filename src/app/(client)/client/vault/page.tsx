@@ -8,6 +8,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { PageContainer, Section } from '@/ui/layout/AppGrid';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -145,25 +146,29 @@ export default function ClientVaultPage() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Page header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-100">
-            Digital Vault
-          </h1>
-          <p className="text-gray-400 mt-2">
-            Securely store API keys, credentials, and sensitive data
-          </p>
-        </div>
+    <PageContainer>
+      <Section>
+        {/* Page header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-100">
+              Digital Vault
+            </h1>
+            <p className="text-gray-400 mt-2">
+              Securely store API keys, credentials, and sensitive data
+            </p>
+          </div>
 
-        <Button
-          leftIcon={<Plus className="h-4 w-4" />}
-          onClick={() => setShowAddModal(true)}
-        >
-          Add Entry
-        </Button>
-      </div>
+          <Button
+            leftIcon={<Plus className="h-4 w-4" />}
+            onClick={() => setShowAddModal(true)}
+          >
+            Add Entry
+          </Button>
+        </div>
+      </Section>
+
+      <Section>
 
       {/* Security notice */}
       <Card variant="warning">
@@ -374,6 +379,7 @@ export default function ClientVaultPage() {
           </div>
         </div>
       </Modal>
-    </div>
+      </Section>
+    </PageContainer>
   );
 }

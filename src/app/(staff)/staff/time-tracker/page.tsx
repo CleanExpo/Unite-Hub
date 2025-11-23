@@ -64,6 +64,7 @@ import {
   RefreshCcw,
 } from 'lucide-react';
 import { format } from 'date-fns';
+import { PageContainer, Section } from '@/ui/layout/AppGrid';
 
 // Types
 interface TimeSession {
@@ -569,13 +570,14 @@ export default function StaffTimeTrackerPage() {
   }
 
   return (
-    <div className="container mx-auto py-8 space-y-8">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Time Tracker</h1>
-          <p className="text-muted-foreground">Track your hours and manage time entries</p>
-        </div>
+    <PageContainer>
+      <Section>
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold">Time Tracker</h1>
+            <p className="text-muted-foreground">Track your hours and manage time entries</p>
+          </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={fetchTimeEntries}>
             <RefreshCcw className="w-4 h-4 mr-2" />
@@ -974,6 +976,7 @@ export default function StaffTimeTrackerPage() {
           </CardContent>
         </Card>
       )}
-    </div>
+      </Section>
+    </PageContainer>
   );
 }
