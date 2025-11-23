@@ -1,0 +1,190 @@
+"use client";
+
+/**
+ * Sub-Pillar Concept Generator Page
+ * Phase 33: Honest Visual Playground
+ *
+ * Generate AI concepts for specific sub-pillar
+ */
+
+import { useState } from "react";
+import { useRouter, useParams } from "next/navigation";
+import { getPillar, getSubPillar, DISCLAIMERS } from "@/lib/content/pillars-config";
+import { ArrowLeft, AlertTriangle, Sparkles, Loader2, Info } from "lucide-react";
+
+export default function SubPillarPage() {
+  const router = useRouter();
+  const params = useParams();
+  const pillarId = params.pillar as string;
+  const subPillarId = params.subpillar as string;
+
+  const pillar = getPillar(pillarId);
+  const subPillar = getSubPillar(pillarId, subPillarId);
+
+  const [generating, setGenerating] = useState(false);
+  const [concepts, setConcepts] = useState<
+    Array<{
+      id: string;
+      title: string;
+      content: string;
+      disclaimer: string;
+      generatedBy: string;
+    }>
+  >([]);
+
+  if (!pillar || !subPillar) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-gray-500 dark:text-gray-400">Content not found</p>
+          <button
+            onClick={() => router.push("/client/dashboard/visual-playground")}
+            className="mt-4 text-teal-600 hover:text-teal-700"
+          >
+            Back to Playground
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const handleGenerate = async () => {
+    setGenerating(true);
+
+    // Simulate AI generation (would call actual AI bridges in production)
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    const newConcept = {
+      id: Date.now().toString(),
+      title: `${subPillar.title} Concept`,
+      content: `This is an AI-generated concept preview for "${subPillar.title}".
+
+In a production environment, this would contain actual generated content from our AI tools (OpenAI, Gemini, etc.) based on your brand context and requirements.
+
+Key elements that would be included:
+• Structural layout suggestions
+• Content direction and tone
+• Visual hierarchy recommendations
+• Platform-specific optimizations
+
+Remember: This is a starting point for exploration, not a final deliverable.`,
+      disclaimer: subPillar.disclaimer,
+      generatedBy: "AI Concept Generator",
+    };
+
+    setConcepts((prev) => [newConcept, ...prev]);
+    setGenerating(false);
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Back Button */}
+        <button
+          onClick={() =>
+            router.push(`/client/dashboard/visual-playground/${pillarId}`)
+          }
+          className="flex items-center gap-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 mb-6"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to {pillar.title}
+        </button>
+
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-2">
+            <Sparkles className="w-8 h-8 text-teal-600" />
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+              {subPillar.title}
+            </h1>
+          </div>
+          <p className="text-gray-500 dark:text-gray-400">
+            {subPillar.description}
+          </p>
+        </div>
+
+        {/* Disclaimer */}
+        <div className="mb-8 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+          <div className="flex items-start gap-3">
+            <AlertTriangle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
+                {subPillar.disclaimer}
+              </p>
+              <p className="text-xs text-yellow-700 dark:text-yellow-300 mt-1">
+                {DISCLAIMERS.general}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Generate Button */}
+        <div className="mb-8">
+          <button
+            onClick={handleGenerate}
+            disabled={generating}
+            className="flex items-center gap-2 px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {generating ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Generating Concept...
+              </>
+            ) : (
+              <>
+                <Sparkles className="w-5 h-5" />
+                Generate Concept Preview
+              </>
+            )}
+          </button>
+        </div>
+
+        {/* Generated Concepts */}
+        {concepts.length > 0 && (
+          <div className="space-y-6">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+              Generated Concepts
+            </h2>
+
+            {concepts.map((concept) => (
+              <div
+                key={concept.id}
+                className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6"
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <h3 className="font-medium text-gray-900 dark:text-white">
+                    {concept.title}
+                  </h3>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                    {concept.generatedBy}
+                  </span>
+                </div>
+
+                <div className="prose prose-sm dark:prose-invert max-w-none mb-4">
+                  <pre className="whitespace-pre-wrap text-sm text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
+                    {concept.content}
+                  </pre>
+                </div>
+
+                <div className="flex items-center gap-2 text-xs text-yellow-600 dark:text-yellow-400">
+                  <Info className="w-3 h-3" />
+                  {concept.disclaimer}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Empty State */}
+        {concepts.length === 0 && !generating && (
+          <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+            <Sparkles className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+            <p className="text-gray-500 dark:text-gray-400">
+              Click &quot;Generate Concept Preview&quot; to create AI-generated ideas
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
