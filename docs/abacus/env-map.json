@@ -1,0 +1,160 @@
+{
+  "generated": "2025-11-23",
+  "total_variables": 25,
+  "variables": {
+    "supabase": {
+      "NEXT_PUBLIC_SUPABASE_URL": {
+        "required": true,
+        "client_exposed": true,
+        "description": "Supabase project URL"
+      },
+      "NEXT_PUBLIC_SUPABASE_ANON_KEY": {
+        "required": true,
+        "client_exposed": true,
+        "description": "Supabase anonymous key for client"
+      },
+      "SUPABASE_SERVICE_ROLE_KEY": {
+        "required": true,
+        "client_exposed": false,
+        "description": "Supabase service role key for server"
+      }
+    },
+    "auth": {
+      "NEXTAUTH_URL": {
+        "required": true,
+        "client_exposed": false,
+        "description": "NextAuth.js callback URL"
+      },
+      "NEXTAUTH_SECRET": {
+        "required": true,
+        "client_exposed": false,
+        "description": "NextAuth.js session encryption secret"
+      },
+      "GOOGLE_CLIENT_ID": {
+        "required": true,
+        "client_exposed": false,
+        "description": "Google OAuth client ID"
+      },
+      "GOOGLE_CLIENT_SECRET": {
+        "required": true,
+        "client_exposed": false,
+        "description": "Google OAuth client secret"
+      }
+    },
+    "ai": {
+      "ANTHROPIC_API_KEY": {
+        "required": true,
+        "client_exposed": false,
+        "description": "Claude API key for AI features"
+      },
+      "OPENROUTER_API_KEY": {
+        "required": false,
+        "client_exposed": false,
+        "description": "OpenRouter API key for multi-model routing"
+      },
+      "PERPLEXITY_API_KEY": {
+        "required": false,
+        "client_exposed": false,
+        "description": "Perplexity API key for SEO intelligence"
+      },
+      "GEMINI_API_KEY": {
+        "required": false,
+        "client_exposed": false,
+        "description": "Google Gemini API key for image generation"
+      },
+      "OPENAI_API_KEY": {
+        "required": false,
+        "client_exposed": false,
+        "description": "OpenAI API key for Whisper transcription"
+      }
+    },
+    "email": {
+      "SENDGRID_API_KEY": {
+        "required": false,
+        "client_exposed": false,
+        "description": "SendGrid API key (priority 1)"
+      },
+      "RESEND_API_KEY": {
+        "required": false,
+        "client_exposed": false,
+        "description": "Resend API key (priority 2)"
+      },
+      "EMAIL_SERVER_HOST": {
+        "required": false,
+        "client_exposed": false,
+        "description": "SMTP host (priority 3)"
+      },
+      "EMAIL_SERVER_PORT": {
+        "required": false,
+        "client_exposed": false,
+        "description": "SMTP port"
+      },
+      "EMAIL_SERVER_USER": {
+        "required": false,
+        "client_exposed": false,
+        "description": "SMTP username"
+      },
+      "EMAIL_SERVER_PASSWORD": {
+        "required": false,
+        "client_exposed": false,
+        "description": "SMTP password"
+      },
+      "EMAIL_FROM": {
+        "required": false,
+        "client_exposed": false,
+        "description": "Default from email address"
+      }
+    },
+    "stripe": {
+      "STRIPE_SECRET_KEY": {
+        "required": false,
+        "client_exposed": false,
+        "description": "Stripe secret key"
+      },
+      "STRIPE_WEBHOOK_SECRET": {
+        "required": false,
+        "client_exposed": false,
+        "description": "Stripe webhook signing secret"
+      },
+      "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY": {
+        "required": false,
+        "client_exposed": true,
+        "description": "Stripe publishable key for client"
+      }
+    },
+    "whatsapp": {
+      "WHATSAPP_PHONE_NUMBER_ID": {
+        "required": false,
+        "client_exposed": false,
+        "description": "WhatsApp Business phone number ID"
+      },
+      "WHATSAPP_ACCESS_TOKEN": {
+        "required": false,
+        "client_exposed": false,
+        "description": "WhatsApp Business API token"
+      },
+      "WHATSAPP_VERIFY_TOKEN": {
+        "required": false,
+        "client_exposed": false,
+        "description": "WhatsApp webhook verification token"
+      }
+    }
+  },
+  "required_for_mvp": [
+    "NEXT_PUBLIC_SUPABASE_URL",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "NEXTAUTH_URL",
+    "NEXTAUTH_SECRET",
+    "GOOGLE_CLIENT_ID",
+    "GOOGLE_CLIENT_SECRET",
+    "ANTHROPIC_API_KEY"
+  ],
+  "optional_features": {
+    "seo_intelligence": ["PERPLEXITY_API_KEY", "OPENROUTER_API_KEY"],
+    "image_generation": ["GEMINI_API_KEY"],
+    "email_service": ["SENDGRID_API_KEY", "RESEND_API_KEY"],
+    "payments": ["STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET"],
+    "whatsapp": ["WHATSAPP_PHONE_NUMBER_ID", "WHATSAPP_ACCESS_TOKEN"]
+  }
+}

@@ -1,0 +1,291 @@
+{
+  "generated": "2025-11-23",
+  "total_endpoints": 104,
+  "api_groups": {
+    "auth": {
+      "endpoints": [
+        {
+          "path": "/api/auth/[...nextauth]",
+          "methods": ["GET", "POST"],
+          "auth_required": false,
+          "description": "NextAuth.js handler"
+        }
+      ]
+    },
+    "agents": {
+      "endpoints": [
+        {
+          "path": "/api/agents/contact-intelligence",
+          "methods": ["POST"],
+          "auth_required": true,
+          "workspace_filtered": true,
+          "description": "AI contact scoring and analysis"
+        },
+        {
+          "path": "/api/agents/content-personalization",
+          "methods": ["POST"],
+          "auth_required": true,
+          "workspace_filtered": true,
+          "description": "AI content generation"
+        }
+      ]
+    },
+    "contacts": {
+      "endpoints": [
+        {
+          "path": "/api/contacts/[contactId]",
+          "methods": ["GET", "PATCH", "DELETE"],
+          "auth_required": true,
+          "workspace_filtered": true
+        },
+        {
+          "path": "/api/contacts/[contactId]/emails/[emailId]",
+          "methods": ["GET", "DELETE"],
+          "auth_required": true,
+          "workspace_filtered": true
+        },
+        {
+          "path": "/api/contacts/[contactId]/emails/[emailId]/primary",
+          "methods": ["POST"],
+          "auth_required": true,
+          "workspace_filtered": true
+        },
+        {
+          "path": "/api/contacts/delete",
+          "methods": ["DELETE"],
+          "auth_required": true,
+          "workspace_filtered": true
+        },
+        {
+          "path": "/api/contacts/hot-leads",
+          "methods": ["GET"],
+          "auth_required": true,
+          "workspace_filtered": true
+        },
+        {
+          "path": "/api/contacts/analyze",
+          "methods": ["POST"],
+          "auth_required": true,
+          "workspace_filtered": true
+        }
+      ]
+    },
+    "campaigns": {
+      "endpoints": [
+        {
+          "path": "/api/campaigns/from-template",
+          "methods": ["POST"],
+          "auth_required": true,
+          "workspace_filtered": true
+        },
+        {
+          "path": "/api/campaigns/drip",
+          "methods": ["GET", "POST"],
+          "auth_required": true,
+          "workspace_filtered": true
+        }
+      ]
+    },
+    "email": {
+      "endpoints": [
+        {
+          "path": "/api/email/send",
+          "methods": ["POST"],
+          "auth_required": true,
+          "workspace_filtered": true
+        },
+        {
+          "path": "/api/email/link",
+          "methods": ["GET"],
+          "auth_required": false
+        },
+        {
+          "path": "/api/email/parse",
+          "methods": ["POST"],
+          "auth_required": true
+        },
+        {
+          "path": "/api/email/sync",
+          "methods": ["POST"],
+          "auth_required": true
+        },
+        {
+          "path": "/api/email/webhook",
+          "methods": ["POST"],
+          "auth_required": false
+        },
+        {
+          "path": "/api/emails/process",
+          "methods": ["POST"],
+          "auth_required": true
+        }
+      ]
+    },
+    "integrations": {
+      "gmail": [
+        "/api/integrations/gmail/authorize",
+        "/api/integrations/gmail/callback",
+        "/api/integrations/gmail/callback-multi",
+        "/api/integrations/gmail/connect",
+        "/api/integrations/gmail/connect-multi",
+        "/api/integrations/gmail/disconnect",
+        "/api/integrations/gmail/list",
+        "/api/integrations/gmail/send",
+        "/api/integrations/gmail/set-primary",
+        "/api/integrations/gmail/sync",
+        "/api/integrations/gmail/sync-all",
+        "/api/integrations/gmail/toggle-sync",
+        "/api/integrations/gmail/update-label"
+      ],
+      "outlook": [
+        "/api/integrations/outlook/callback",
+        "/api/integrations/outlook/connect",
+        "/api/integrations/outlook/accounts",
+        "/api/integrations/outlook/calendar/create",
+        "/api/integrations/outlook/calendar/events",
+        "/api/integrations/outlook/disconnect",
+        "/api/integrations/outlook/send",
+        "/api/integrations/outlook/sync"
+      ],
+      "common": [
+        "/api/integrations/list"
+      ]
+    },
+    "whatsapp": {
+      "endpoints": [
+        {
+          "path": "/api/whatsapp/send",
+          "methods": ["POST"],
+          "auth_required": true
+        },
+        {
+          "path": "/api/whatsapp/conversations",
+          "methods": ["GET"],
+          "auth_required": true
+        },
+        {
+          "path": "/api/whatsapp/conversations/[id]/messages",
+          "methods": ["GET"],
+          "auth_required": true
+        },
+        {
+          "path": "/api/whatsapp/templates",
+          "methods": ["GET", "POST"],
+          "auth_required": true
+        },
+        {
+          "path": "/api/webhooks/whatsapp",
+          "methods": ["GET", "POST"],
+          "auth_required": false
+        }
+      ]
+    },
+    "subscription": {
+      "endpoints": [
+        "/api/subscription/cancel",
+        "/api/subscription/downgrade",
+        "/api/subscription/reactivate",
+        "/api/subscription/upgrade",
+        "/api/subscription/[orgId]",
+        "/api/subscription/portal",
+        "/api/subscription/invoices"
+      ]
+    },
+    "calendar": {
+      "endpoints": [
+        "/api/calendar/availability",
+        "/api/calendar/create-meeting",
+        "/api/calendar/detect-meeting",
+        "/api/calendar/generate",
+        "/api/calendar/suggest-times",
+        "/api/calendar/[postId]",
+        "/api/calendar/[postId]/approve",
+        "/api/calendar/[postId]/regenerate"
+      ]
+    },
+    "approvals": {
+      "endpoints": [
+        "/api/approvals/[id]",
+        "/api/approvals/[id]/approve",
+        "/api/approvals/[id]/decline"
+      ]
+    },
+    "media": {
+      "endpoints": [
+        "/api/media/transcribe",
+        "/api/media/analyze",
+        "/api/media/search"
+      ]
+    },
+    "mindmap": {
+      "endpoints": [
+        "/api/mindmap/[mindmapId]",
+        "/api/mindmap/[mindmapId]/ai-analyze",
+        "/api/mindmap/[mindmapId]/connections",
+        "/api/mindmap/[mindmapId]/nodes",
+        "/api/mindmap/nodes/[nodeId]",
+        "/api/mindmap/suggestions/[suggestionId]"
+      ]
+    },
+    "projects": {
+      "endpoints": [
+        "/api/projects/[projectId]/mindmap",
+        "/api/projects/create"
+      ]
+    },
+    "images": {
+      "endpoints": [
+        "/api/images/generate",
+        "/api/images/regenerate"
+      ]
+    },
+    "sequences": {
+      "endpoints": [
+        "/api/sequences/[id]",
+        "/api/sequences/generate"
+      ]
+    },
+    "audits": {
+      "endpoints": [
+        {
+          "path": "/api/audits",
+          "methods": ["GET", "POST"],
+          "auth_required": true,
+          "workspace_filtered": true,
+          "description": "Website audit management"
+        }
+      ]
+    },
+    "other": {
+      "endpoints": [
+        "/api/organizations",
+        "/api/organizations/create",
+        "/api/organization/clients",
+        "/api/profile/avatar",
+        "/api/profile/update",
+        "/api/team/[id]",
+        "/api/clients",
+        "/api/demo/initialize",
+        "/api/onboarding/complete-step",
+        "/api/onboarding/skip",
+        "/api/onboarding/start",
+        "/api/onboarding/status",
+        "/api/stripe/webhook",
+        "/api/stripe/checkout",
+        "/api/tracking/pixel/[trackingPixelId]",
+        "/api/monitoring/cache-stats",
+        "/api/docs",
+        "/api/deployment-check",
+        "/api/hooks/favorite",
+        "/api/hooks/search",
+        "/api/test/db"
+      ]
+    }
+  },
+  "auth_patterns": {
+    "bearer_token": true,
+    "cookie_session": true,
+    "api_key": false
+  },
+  "middleware_location": "src/lib/auth/middleware.ts"
+}

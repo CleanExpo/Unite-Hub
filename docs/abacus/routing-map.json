@@ -1,0 +1,186 @@
+{
+  "generated": "2025-11-23",
+  "total_pages": 120,
+  "total_api_routes": 104,
+  "route_groups": {
+    "dashboard": {
+      "base": "/dashboard",
+      "auth_required": true,
+      "layout": "src/app/dashboard/layout.tsx",
+      "pages": [
+        "/dashboard",
+        "/dashboard/overview",
+        "/dashboard/modern",
+        "/dashboard/approvals",
+        "/dashboard/audits",
+        "/dashboard/billing",
+        "/dashboard/calendar",
+        "/dashboard/campaigns",
+        "/dashboard/campaigns/drip",
+        "/dashboard/contacts",
+        "/dashboard/contacts/[id]",
+        "/dashboard/content",
+        "/dashboard/insights",
+        "/dashboard/insights/competitors",
+        "/dashboard/intelligence",
+        "/dashboard/ai-tools",
+        "/dashboard/ai-tools/code-generator",
+        "/dashboard/ai-tools/marketing-copy",
+        "/dashboard/media",
+        "/dashboard/meetings",
+        "/dashboard/messages",
+        "/dashboard/messages/whatsapp",
+        "/dashboard/profile",
+        "/dashboard/projects",
+        "/dashboard/projects/new",
+        "/dashboard/projects/[projectId]/mindmap",
+        "/dashboard/resources",
+        "/dashboard/resources/landing-pages",
+        "/dashboard/resources/landing-pages/[id]",
+        "/dashboard/settings",
+        "/dashboard/settings/integrations",
+        "/dashboard/sites",
+        "/dashboard/team",
+        "/dashboard/workspaces"
+      ]
+    },
+    "client": {
+      "base": "/client",
+      "auth_required": true,
+      "layout": "src/app/(client)/layout.tsx",
+      "pages": [
+        "/client",
+        "/client/assistant",
+        "/client/home",
+        "/client/ideas",
+        "/client/projects",
+        "/client/projects/[id]",
+        "/client/projects/[id]/time",
+        "/client/proposals",
+        "/client/proposals/cancelled",
+        "/client/proposals/checkout",
+        "/client/proposals/success",
+        "/client/reports",
+        "/client/seo",
+        "/client/vault"
+      ]
+    },
+    "staff": {
+      "base": "/staff",
+      "auth_required": true,
+      "layout": "src/app/(staff)/layout.tsx",
+      "pages": [
+        "/staff",
+        "/staff/activity",
+        "/staff/dashboard",
+        "/staff/projects",
+        "/staff/reports",
+        "/staff/scope-review",
+        "/staff/seo",
+        "/staff/settings",
+        "/staff/tasks",
+        "/staff/time-tracker"
+      ]
+    },
+    "marketing": {
+      "base": "/",
+      "auth_required": false,
+      "layout": "src/app/(marketing)/layout.tsx",
+      "pages": [
+        "/",
+        "/about",
+        "/api",
+        "/careers",
+        "/changelog",
+        "/contact",
+        "/features",
+        "/integrations",
+        "/pricing",
+        "/privacy",
+        "/security",
+        "/support",
+        "/terms"
+      ]
+    },
+    "auth": {
+      "base": "/auth",
+      "auth_required": false,
+      "pages": [
+        "/auth/signin",
+        "/auth/signup",
+        "/auth/implicit-callback",
+        "/forgot-password",
+        "/register",
+        "/auth/login",
+        "/client/login",
+        "/onboarding",
+        "/onboarding/step-1-info",
+        "/onboarding/step-2-payment",
+        "/onboarding/step-3-assets",
+        "/onboarding/step-4-contacts"
+      ]
+    },
+    "console": {
+      "base": "/console",
+      "auth_required": true,
+      "admin_only": true,
+      "pages": [
+        "/console",
+        "/console/gslpie",
+        "/console/tcpqel",
+        "/console/asrs",
+        "/console/mcse",
+        "/console/upewe",
+        "/console/aire",
+        "/console/sorie",
+        "/console/egcbi",
+        "/console/grh",
+        "/console/raaoe",
+        "/console/aglbase",
+        "/console/ucscel"
+      ]
+    },
+    "demo": {
+      "base": "/demo",
+      "auth_required": false,
+      "pages": [
+        "/demo",
+        "/brand-demo",
+        "/modern-demo",
+        "/client-portal-demo",
+        "/intake-demo",
+        "/demo-workspace",
+        "/demo-workspace/brief",
+        "/demo-workspace/queue",
+        "/demo-workspace/vault",
+        "/demo-workspace/settings"
+      ]
+    }
+  },
+  "dynamic_routes": [
+    "/dashboard/contacts/[id]",
+    "/dashboard/projects/[projectId]/mindmap",
+    "/dashboard/resources/landing-pages/[id]",
+    "/client/projects/[id]",
+    "/client/projects/[id]/time"
+  ],
+  "protected_routes": [
+    "/dashboard/*",
+    "/client/*",
+    "/staff/*",
+    "/console/*",
+    "/api/*"
+  ],
+  "public_routes": [
+    "/",
+    "/about",
+    "/contact",
+    "/pricing",
+    "/features",
+    "/privacy",
+    "/terms",
+    "/security",
+    "/auth/*",
+    "/demo/*"
+  ]
+}

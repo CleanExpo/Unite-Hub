@@ -1,0 +1,135 @@
+{
+  "generated": "2025-11-23",
+  "auth_system": {
+    "provider": "Supabase Auth",
+    "oauth_flow": "implicit",
+    "session_storage": "localStorage",
+    "token_type": "Bearer"
+  },
+  "patterns": {
+    "client_auth": {
+      "file": "src/contexts/AuthContext.tsx",
+      "method": "supabase.auth.getSession()",
+      "storage": "localStorage"
+    },
+    "api_auth": {
+      "file": "src/lib/auth/middleware.ts",
+      "method": "authenticateRequest()",
+      "supports": ["bearer_token", "cookie_session"]
+    },
+    "rls": {
+      "enabled": true,
+      "policy_pattern": "workspace-based isolation",
+      "helper_function": "auth.uid()"
+    }
+  },
+  "protected_routes": {
+    "dashboard": {
+      "pattern": "/dashboard/*",
+      "auth_required": true,
+      "workspace_required": true
+    },
+    "client": {
+      "pattern": "/client/*",
+      "auth_required": true,
+      "workspace_required": true
+    },
+    "staff": {
+      "pattern": "/staff/*",
+      "auth_required": true,
+      "workspace_required": true
+    },
+    "console": {
+      "pattern": "/console/*",
+      "auth_required": true,
+      "admin_only": true
+    },
+    "api": {
+      "pattern": "/api/*",
+      "auth_required": true,
+      "exceptions": [
+        "/api/auth/*",
+        "/api/email/webhook",
+        "/api/webhooks/*",
+        "/api/tracking/*",
+        "/api/demo/*"
+      ]
+    }
+  },
+  "public_routes": [
+    "/",
+    "/about",
+    "/contact",
+    "/pricing",
+    "/features",
+    "/privacy",
+    "/terms",
+    "/security",
+    "/auth/*",
+    "/demo/*",
+    "/brand-demo",
+    "/modern-demo"
+  ],
+  "workspace_isolation": {
+    "required_tables": [
+      "contacts",
+      "campaigns",
+      "drip_campaigns",
+      "emails",
+      "generated_content",
+      "website_audits",
+      "whatsapp_messages",
+      "whatsapp_conversations"
+    ],
+    "filter_column": "workspace_id",
+    "org_column": "org_id"
+  },
+  "admin_users": {
+    "identification": "email whitelist",
+    "emails": [
+      "admin@unite-group.in",
+      "contact@unite-group.in"
+    ],
+    "permissions": [
+      "view_all_workspaces",
+      "bypass_rls",
+      "access_console"
+    ]
+  },
+  "oauth_providers": {
+    "google": {
+      "enabled": true,
+      "scopes": [
+        "openid",
+        "profile",
+        "email",
+        "https://www.googleapis.com/auth/gmail.readonly",
+        "https://www.googleapis.com/auth/gmail.send"
+      ]
+    }
+  },
+  "security_headers": {
+    "cors": {
+      "allow_origin": "*",
+      "allow_methods": ["GET", "POST", "PATCH", "DELETE", "OPTIONS"]
+    },
+    "csp": "default-src 'self'"
+  },
+  "middleware_usage": {
+    "example": "withAuth(handler, { requireWorkspace: true, allowAdmin: true })",
+    "returns": {
+      "success": "boolean",
+      "userId": "string",
+      "email": "string",
+      "workspaceId": "string",
+      "orgId": "string",
+      "isAdmin": "boolean"
+    }
+  },
+  "critical_files": [
+    "src/lib/supabase.ts",
+    "src/lib/auth/middleware.ts",
+    "src/contexts/AuthContext.tsx",
+    "src/app/api/auth/[...nextauth]/route.ts"
+  ]
+}
