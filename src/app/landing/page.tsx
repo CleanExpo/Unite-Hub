@@ -39,16 +39,16 @@ export default function LandingPage() {
           </Badge>
 
           <h1 className="text-6xl font-bold text-white max-w-4xl mx-auto">
-            Transform Your Marketing Agency with <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">AI-Powered Automation</span>
+            Get 90 Days of <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Real Marketing Momentum</span> — Not Hype
           </h1>
 
           <p className="text-xl text-slate-400 max-w-2xl mx-auto">
-            Email processing, AI content generation, campaign management, and client tracking—all in one platform. Designed for agencies that demand enterprise-grade tools without the enterprise complexity.
+            Start with a 14-day guided trial. Stay for a 90-day activation program that guarantees real insights, real action, and real measurable progress. AI-powered email processing, content generation, and campaign management for agencies who value honest results.
           </p>
 
           <div className="flex gap-4 justify-center">
             <Button size="lg" className="bg-blue-600 hover:bg-blue-700 gap-2" asChild>
-              <a href="/signup">Start Free Trial <ArrowRight className="w-4 h-4" /></a>
+              <a href="/signup">Start 14-Day Guided Trial <ArrowRight className="w-4 h-4" /></a>
             </Button>
             <Button size="lg" variant="outline" className="border-yellow-400/30 text-yellow-400 hover:bg-yellow-400/10" asChild>
               <a href="/demo">🧪 Try Demo</a>
@@ -61,8 +61,23 @@ export default function LandingPage() {
           {/* Trust Badges */}
           <div className="flex justify-center gap-8 text-sm text-slate-400">
             <div>✅ No credit card required</div>
-            <div>✅ 14-day free trial</div>
-            <div>✅ Cancel anytime</div>
+            <div>✅ 14-day guided trial</div>
+            <div>✅ 90-day activation program</div>
+          </div>
+
+          {/* Expectation Alignment */}
+          <div className="mt-8 bg-slate-800/50 border border-slate-700 rounded-lg p-6 max-w-3xl mx-auto text-left">
+            <h3 className="text-lg font-semibold text-white mb-3">What to Expect</h3>
+            <div className="grid md:grid-cols-2 gap-4 text-sm">
+              <div>
+                <div className="text-blue-400 font-medium mb-1">Days 1-14: Guided Trial</div>
+                <p className="text-slate-400">Platform setup, Gmail connection, first email processing, AI content test</p>
+              </div>
+              <div>
+                <div className="text-cyan-400 font-medium mb-1">Days 15-90: Activation</div>
+                <p className="text-slate-400">Real lead scoring, campaign launches, measurable engagement metrics, honest progress reports</p>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -132,14 +147,28 @@ export default function LandingPage() {
           </div>
         </div>
 
+        {/* Marketing Honesty Statement */}
+        <div className="mt-24 bg-slate-800/50 border border-slate-700 rounded-lg p-8 text-center">
+          <h3 className="text-2xl font-bold text-white mb-4">Our Marketing Honesty Promise</h3>
+          <p className="text-slate-400 mb-6 max-w-3xl mx-auto">
+            We don't promise overnight SEO success or viral content. Real marketing results take time—typically 90+ days for meaningful traction.
+            Our platform gives you the tools and data to make informed decisions, but your results depend on consistent effort, quality content, and realistic expectations.
+          </p>
+          <div className="flex flex-wrap justify-center gap-6 text-sm text-slate-400">
+            <div>📊 Real metrics, not vanity numbers</div>
+            <div>🎯 Honest progress tracking</div>
+            <div>⏱️ 90-day realistic timelines</div>
+          </div>
+        </div>
+
         {/* CTA Section */}
-        <div className="mt-24 bg-gradient-to-r from-blue-600/20 to-cyan-600/20 border border-blue-600/30 rounded-lg p-12 text-center">
-          <h3 className="text-3xl font-bold text-white mb-4">Ready to Transform Your Agency?</h3>
+        <div className="mt-12 bg-gradient-to-r from-blue-600/20 to-cyan-600/20 border border-blue-600/30 rounded-lg p-12 text-center">
+          <h3 className="text-3xl font-bold text-white mb-4">Ready for Real Marketing Progress?</h3>
           <p className="text-slate-300 mb-8 max-w-2xl mx-auto">
-            Join 100+ marketing agencies using Unite-Hub to automate their workflows and scale their business.
+            Start your 14-day guided trial, then commit to 90 days of real marketing activation. All prices GST-inclusive.
           </p>
           <Button size="lg" className="bg-blue-600 hover:bg-blue-700 gap-2">
-            Start Your Free Trial <ArrowRight className="w-4 h-4" />
+            Start 14-Day Guided Trial <ArrowRight className="w-4 h-4" />
           </Button>
         </div>
       </div>

@@ -27,7 +27,7 @@ const pricingTiers = [
       { name: 'Custom integrations', included: false },
       { name: 'SSO (SAML)', included: false },
     ],
-    cta: 'Start Free Trial',
+    cta: 'Start 14-Day Trial',
     popular: false,
   },
   {
@@ -49,7 +49,7 @@ const pricingTiers = [
       { name: 'Custom integrations', included: false },
       { name: 'SSO (SAML)', included: false },
     ],
-    cta: 'Start Free Trial',
+    cta: 'Start 14-Day Trial',
     popular: true,
   },
   {
@@ -78,8 +78,8 @@ const pricingTiers = [
 
 const faqs = [
   {
-    question: 'How does the free trial work?',
-    answer: 'All plans include a 14-day free trial with full access to features. No credit card required. Cancel anytime during the trial period with no charges.',
+    question: 'How does the trial and activation work?',
+    answer: 'Every plan begins with a 14-day guided trial for platform setup and initial testing. Then enters a 90-day activation program where you\'ll see real results. No credit card required for trial. 90-day minimum commitment after trial ends.',
   },
   {
     question: 'Can I change plans later?',
@@ -98,12 +98,12 @@ const faqs = [
     answer: 'We accept all major credit cards (Visa, MasterCard, American Express, Discover) and ACH payments for annual plans.',
   },
   {
-    question: 'Can I cancel anytime?',
-    answer: 'Yes, you can cancel your subscription at any time. Your access will continue until the end of your current billing period.',
+    question: 'What about the 90-day commitment?',
+    answer: 'After your 14-day trial, plans have a 90-day minimum lock-in to ensure meaningful results. Real SEO and marketing traction requires consistent effort over 90+ days. You can cancel after the initial 90 days with 30-day notice.',
   },
   {
-    question: 'Do you offer refunds?',
-    answer: 'We offer a 30-day money-back guarantee for annual plans. Monthly plans can be canceled anytime without penalty.',
+    question: 'Are prices GST-inclusive?',
+    answer: 'Yes, all displayed prices include GST (10% for Australian customers). Enterprise pricing is discussed individually.',
   },
   {
     question: 'What\'s included in Enterprise support?',
@@ -120,8 +120,11 @@ export default function PricingPage() {
         {/* Hero Section */}
         <div className="text-center mb-16">
           <h1 className="text-5xl font-bold mb-6">Simple, Transparent Pricing</h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-            Choose the plan that fits your needs. All plans include a 14-day free trial.
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-4">
+            Every plan starts with a 14-day guided trial, then a 90-day activation program.
+          </p>
+          <p className="text-sm text-muted-foreground max-w-2xl mx-auto mb-8">
+            All prices GST-inclusive • 90-day minimum after trial • Real results take time
           </p>
 
           {/* Billing Toggle */}
@@ -244,20 +247,34 @@ export default function PricingPage() {
           <div className="flex flex-wrap justify-center gap-8 items-center text-muted-foreground">
             <div className="flex items-center gap-2">
               <Check className="h-5 w-5 text-primary" />
-              <span>14-day free trial</span>
+              <span>14-day guided trial</span>
             </div>
             <div className="flex items-center gap-2">
               <Check className="h-5 w-5 text-primary" />
-              <span>No credit card required</span>
+              <span>No credit card for trial</span>
             </div>
             <div className="flex items-center gap-2">
               <Check className="h-5 w-5 text-primary" />
-              <span>Cancel anytime</span>
+              <span>90-day activation program</span>
             </div>
             <div className="flex items-center gap-2">
               <Check className="h-5 w-5 text-primary" />
-              <span>30-day money-back guarantee</span>
+              <span>GST-inclusive pricing</span>
             </div>
+          </div>
+        </div>
+
+        {/* Marketing Honesty Statement */}
+        <div className="mb-20 bg-muted/30 border rounded-lg p-8">
+          <h3 className="text-xl font-bold text-center mb-4">Our Honest Marketing Commitment</h3>
+          <p className="text-center text-muted-foreground max-w-3xl mx-auto mb-6">
+            We don't promise overnight SEO results or viral campaigns. Real marketing success takes 90+ days of consistent effort.
+            Our platform provides the tools and data—your results depend on quality content and realistic expectations.
+          </p>
+          <div className="flex flex-wrap justify-center gap-6 text-sm">
+            <span>📊 Real metrics only</span>
+            <span>⏱️ Honest timelines</span>
+            <span>🎯 No vanity numbers</span>
           </div>
         </div>
 
