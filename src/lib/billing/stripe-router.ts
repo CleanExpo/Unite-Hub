@@ -16,12 +16,23 @@ const TEST_MODE_DOMAINS = [
   "carsi.com.au",
 ];
 
-// Admin emails that always use TEST mode
-const TEST_MODE_EMAILS = [
-  "admin@unite-group.in",
-  "contact@unite-group.in",
-  "dev@unite-group.in",
+// Staff Sandbox Registry - Specific emails that always use TEST mode
+// Phase 29.2: Register approved staff accounts
+const SANDBOX_STAFF_REGISTRY = [
+  // Founders & Executives
+  { email: "phill.mcgurk@gmail.com", name: "Phill McGurk", role: "founder" },
+  // Staff Admins
+  { email: "support@carsi.com.au", name: "Claire Brooks", role: "staff_admin" },
+  // Engineering Team
+  { email: "ranamuzamil1199@gmail.com", name: "Rana Muzamil", role: "engineering" },
+  // Internal Unite-Group accounts
+  { email: "admin@unite-group.in", name: "Admin", role: "admin" },
+  { email: "contact@unite-group.in", name: "Contact", role: "admin" },
+  { email: "dev@unite-group.in", name: "Developer", role: "engineering" },
 ];
+
+// Extract just emails for quick lookup
+const TEST_MODE_EMAILS = SANDBOX_STAFF_REGISTRY.map(s => s.email.toLowerCase());
 
 // Roles that use TEST mode
 const TEST_MODE_ROLES = ["founder", "staff_admin", "internal_team", "super_admin"];
@@ -203,3 +214,26 @@ export const STRIPE_ENV_VARS = {
     priceElite: "STRIPE_LIVE_PRICE_ELITE",
   },
 };
+
+/**
+ * Get staff member info from sandbox registry
+ */
+export function getSandboxStaffInfo(email: string) {
+  return SANDBOX_STAFF_REGISTRY.find(
+    s => s.email.toLowerCase() === email.toLowerCase()
+  );
+}
+
+/**
+ * Check if email is in sandbox registry
+ */
+export function isRegisteredSandboxStaff(email: string): boolean {
+  return TEST_MODE_EMAILS.includes(email.toLowerCase());
+}
+
+/**
+ * Get all sandbox staff members
+ */
+export function getSandboxRegistry() {
+  return SANDBOX_STAFF_REGISTRY;
+}
