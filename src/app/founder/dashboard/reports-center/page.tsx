@@ -26,6 +26,7 @@ import { useRouter } from 'next/navigation';
 import { ReportSummaryCard } from '@/ui/components/ReportSummaryCard';
 import { ReportSectionBlock } from '@/ui/components/ReportSectionBlock';
 import { CalloutHint } from '@/ui/components/CalloutHint';
+import { ReportExportBar } from '@/ui/components/ReportExportBar';
 import {
   buildFounderReport,
   ComposedReport,
@@ -267,20 +268,17 @@ export default function FounderReportCenterPage() {
                 </div>
 
                 {/* Export actions */}
-                <div className="flex gap-2 mt-4">
-                  <Button variant="outline" size="sm" onClick={handleCopyMarkdown}>
-                    {copied === 'markdown' ? (
-                      <Check className="h-4 w-4 mr-2 text-green-500" />
-                    ) : (
-                      <Copy className="h-4 w-4 mr-2" />
-                    )}
-                    Copy Markdown
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={handleDownloadHTML}>
-                    <Download className="h-4 w-4 mr-2" />
-                    Download HTML
-                  </Button>
+                <div className="mt-4">
+                  <ReportExportBar
+                    reportType={selectedType}
+                    clientId={selectedClient || ''}
+                    workspaceId={`ws_${selectedClient}`}
+                    clientName={clients.find(c => c.client_id === selectedClient)?.client_name}
+                  />
                 </div>
+                <p className="text-xs text-muted-foreground mt-2">
+                  All exports are based on real data from the selected timeframe.
+                </p>
               </CardContent>
             </Card>
 
