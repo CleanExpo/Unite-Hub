@@ -65,3 +65,56 @@
     overflow-x: hidden;
   }
 }
+
+/* Phase 37: Standardized Spacing System */
+@layer utilities {
+  /* Page spacing */
+  .page-padding {
+    @apply px-4 sm:px-6 lg:px-8 py-6 sm:py-8;
+  }
+
+  /* Section spacing */
+  .section-margin {
+    @apply mb-6 sm:mb-8;
+  }
+
+  /* Card padding */
+  .card-padding {
+    @apply p-4 sm:p-6;
+  }
+
+  /* Chatbot safe zone - prevents content overlap with chatbot */
+  .chatbot-safe {
+    @apply pb-20 lg:pb-0 lg:pr-96;
+  }
+
+  /* Responsive grid gaps */
+  .grid-gap-sm {
+    @apply gap-2 sm:gap-3;
+  }
+
+  .grid-gap-md {
+    @apply gap-4 sm:gap-6;
+  }
+
+  .grid-gap-lg {
+    @apply gap-6 sm:gap-8;
+  }
+
+  /* Standard breakpoint containers */
+  .container-sm {
+    @apply max-w-2xl mx-auto;
+  }
+
+  .container-md {
+    @apply max-w-4xl mx-auto;
+  }
+
+  .container-lg {
+    @apply max-w-6xl mx-auto;
+  }
+
+  .container-xl {
+    @apply max-w-7xl mx-auto;
+  }
+}
