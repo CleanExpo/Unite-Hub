@@ -21,7 +21,9 @@ import {
   PlayCircle,
   Target,
   Zap,
+  BarChart3,
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { JourneyTimeline, JourneyIndicator } from '@/ui/components/JourneyTimeline';
 import { CalloutHint, DemoBanner } from '@/ui/components/CalloutHint';
 import { GuidedTourStepper, useGuidedTour } from '@/ui/components/GuidedTourStepper';
@@ -48,6 +50,7 @@ interface ClientJourneyData {
 }
 
 export default function FounderFirstClientJourneyPage() {
+  const router = useRouter();
   const [clients, setClients] = useState<ClientJourneyData[]>([]);
   const [selectedClient, setSelectedClient] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -189,10 +192,16 @@ export default function FounderFirstClientJourneyPage() {
             Monitor soft-launch client progress and identify intervention points
           </p>
         </div>
-        <Button variant="outline" onClick={tour.startTour}>
-          <PlayCircle className="h-4 w-4 mr-2" />
-          Operations Tour
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => router.push('/founder/dashboard/alignment')}>
+            <BarChart3 className="h-4 w-4 mr-2" />
+            Alignment
+          </Button>
+          <Button variant="outline" onClick={tour.startTour}>
+            <PlayCircle className="h-4 w-4 mr-2" />
+            Operations Tour
+          </Button>
+        </div>
       </div>
 
       {/* Summary cards */}

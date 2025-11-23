@@ -6,6 +6,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -20,6 +21,7 @@ import {
   Lightbulb,
   BookOpen,
   PlayCircle,
+  BarChart3,
 } from 'lucide-react';
 import { JourneyTimeline } from '@/ui/components/JourneyTimeline';
 import { CalloutHint, DemoBanner, NoDataPlaceholder } from '@/ui/components/CalloutHint';
@@ -36,6 +38,7 @@ import { CLIENT_GUIDED_TOUR } from '@/lib/guides/roleGuidedTourConfig';
 import { getDemoClientData, isDemoModeEnabled } from '@/lib/guides/demoClientScenario';
 
 export default function ClientJourneyPage() {
+  const router = useRouter();
   const [journeyState, setJourneyState] = useState<JourneyState | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isDemoMode, setIsDemoMode] = useState(false);
@@ -120,10 +123,16 @@ export default function ClientJourneyPage() {
             Track your progress through the 90-day onboarding and activation process
           </p>
         </div>
-        <Button variant="outline" onClick={tour.startTour}>
-          <PlayCircle className="h-4 w-4 mr-2" />
-          Start Tour
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => router.push('/client/dashboard/alignment')}>
+            <BarChart3 className="h-4 w-4 mr-2" />
+            Alignment
+          </Button>
+          <Button variant="outline" onClick={tour.startTour}>
+            <PlayCircle className="h-4 w-4 mr-2" />
+            Start Tour
+          </Button>
+        </div>
       </div>
 
       {/* Current status card */}
