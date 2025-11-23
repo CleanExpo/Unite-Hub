@@ -25,16 +25,15 @@ interface SidebarNavigationProps {
 }
 
 const navigationItems = [
-  { name: "Dashboard", href: "/portal/dashboard", icon: LayoutDashboard, enabled: true },
-  { name: "Emails", href: "/portal/emails", icon: Mail, enabled: true },
-  { name: "Assets", href: "/portal/assets", icon: FileText, enabled: true },
-  { name: "Persona", href: "/portal/persona", icon: Users, enabled: true },
-  { name: "Mind Map", href: "/portal/mindmap", icon: Lightbulb, enabled: true },
-  { name: "Strategy", href: "/portal/strategy", icon: Target, enabled: true },
-  { name: "Campaigns", href: "#", icon: Megaphone, enabled: false, badge: "Soon" },
-  { name: "Hooks Library", href: "/portal/hooks", icon: Sparkles, enabled: true },
-  { name: "AI Images", href: "/portal/images", icon: ImageIcon, enabled: true },
-  { name: "Settings", href: "/portal/settings", icon: Settings, enabled: true },
+  { name: "Home", href: "/client", icon: LayoutDashboard, enabled: true },
+  { name: "Workspace", href: "/client/workspace", icon: FileText, enabled: true },
+  { name: "My Ideas", href: "/client/ideas", icon: Lightbulb, enabled: true },
+  { name: "Projects", href: "/client/projects", icon: Target, enabled: true },
+  { name: "Digital Vault", href: "/client/vault", icon: FileText, enabled: true },
+  { name: "AI Assistant", href: "/client/assistant", icon: Sparkles, enabled: true },
+  { name: "Reports", href: "/client/reports", icon: Mail, enabled: true },
+  { name: "SEO", href: "/client/seo", icon: ImageIcon, enabled: true },
+  { name: "Proposals", href: "/client/proposals", icon: Megaphone, enabled: true },
 ];
 
 export function SidebarNavigation({ isOpen, onToggle }: SidebarNavigationProps) {
@@ -60,7 +59,7 @@ export function SidebarNavigation({ isOpen, onToggle }: SidebarNavigationProps) 
         {/* Logo */}
         <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
           {isOpen && (
-            <Link href="/portal/dashboard" className="flex items-center space-x-2">
+            <Link href="/client" className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">UH</span>
               </div>

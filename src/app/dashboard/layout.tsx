@@ -226,6 +226,12 @@ export default function DashboardLayout({
                       <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
                         <Link href="/dashboard/campaigns" className="w-full">Campaigns</Link>
                       </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                        <Link href="/dashboard/drip-campaigns" className="w-full">Drip Campaigns</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                        <Link href="/dashboard/email-templates" className="w-full">Email Templates</Link>
+                      </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
 
@@ -252,10 +258,19 @@ export default function DashboardLayout({
                       <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
                         <Link href="/dashboard/insights" className="w-full">Analytics Insights</Link>
                       </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                        <Link href="/dashboard/analytics" className="w-full">Analytics</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                        <Link href="/dashboard/seo" className="w-full">SEO Tools</Link>
+                      </DropdownMenuItem>
                       <DropdownMenuSeparator className="bg-slate-700" />
                       <DropdownMenuLabel className="text-slate-400">Automation</DropdownMenuLabel>
                       <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
                         <Link href="/dashboard/queue" className="w-full">Task Queue</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                        <Link href="/dashboard/tasks" className="w-full">Tasks</Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
                         <Link href="/dashboard/approvals" className="w-full">Approvals</Link>
@@ -279,6 +294,12 @@ export default function DashboardLayout({
                       <DropdownMenuLabel className="text-slate-400">Business</DropdownMenuLabel>
                       <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
                         <Link href="/dashboard/billing" className="w-full">Billing & Payments</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                        <Link href="/dashboard/reports" className="w-full">Reports</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                        <Link href="/dashboard/time-tracker" className="w-full">Time Tracker</Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
                         <Link href="/dashboard/resources" className="w-full">Resources</Link>
