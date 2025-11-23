@@ -117,7 +117,8 @@
       "Bash(npm run)",
       "Bash(npm run seo:full:*)",
       "Bash(npm run seo:research:*)",
-      "Bash(npm run seo:eeat:*)"
+      "Bash(npm run seo:eeat:*)",
+      "Bash(git branch:*)"
     ],
     "deny": [],
     "ask": []
