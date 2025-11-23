@@ -2,8 +2,11 @@
  * Australian Pricing Configuration
  *
  * Phase 29: Stripe Activation + Australian Pricing
+ * Phase 32: Annual Plans (12 months for price of 10)
  * All prices in AUD, GST inclusive
  */
+
+export type BillingInterval = "month" | "year";
 
 export interface PlanLimit {
   aiTokens: number;
@@ -23,10 +26,12 @@ export interface PricingPlan {
   id: string;
   name: string;
   price: number;
+  annualPrice: number;
   currency: "AUD";
-  interval: "month";
+  interval: BillingInterval;
   gstIncluded: boolean;
-  stripePriceId: string;
+  stripePriceIdMonthly: string;
+  stripePriceIdAnnual: string;
   limits: PlanLimit;
   overages: OveragePricing;
   features: string[];
@@ -38,10 +43,12 @@ export const PRICING_PLANS: Record<string, PricingPlan> = {
     id: "starter",
     name: "Starter",
     price: 495,
+    annualPrice: 4950, // 12 months for price of 10
     currency: "AUD",
     interval: "month",
     gstIncluded: true,
-    stripePriceId: "price_starter_aud_495",
+    stripePriceIdMonthly: "price_starter_monthly",
+    stripePriceIdAnnual: "price_starter_annual",
     limits: {
       aiTokens: 20000,
       audits: 2,
@@ -69,10 +76,12 @@ export const PRICING_PLANS: Record<string, PricingPlan> = {
     id: "pro",
     name: "Pro",
     price: 895,
+    annualPrice: 8950, // 12 months for price of 10
     currency: "AUD",
     interval: "month",
     gstIncluded: true,
-    stripePriceId: "price_pro_aud_895",
+    stripePriceIdMonthly: "price_pro_monthly",
+    stripePriceIdAnnual: "price_pro_annual",
     limits: {
       aiTokens: 250000,
       audits: 20,
@@ -102,10 +111,12 @@ export const PRICING_PLANS: Record<string, PricingPlan> = {
     id: "elite",
     name: "Elite",
     price: 1295,
+    annualPrice: 12950, // 12 months for price of 10
     currency: "AUD",
     interval: "month",
     gstIncluded: true,
-    stripePriceId: "price_elite_aud_1295",
+    stripePriceIdMonthly: "price_elite_monthly",
+    stripePriceIdAnnual: "price_elite_annual",
     limits: {
       aiTokens: 2000000,
       audits: 100,
@@ -146,6 +157,7 @@ export const BILLING_CONFIG = {
   taxRate: 0.10, // 10% GST
   gstIncluded: true,
   trialDays: 14,
+  annualDiscount: 2, // 2 months free on annual
   webhookEvents: [
     "invoice.payment_succeeded",
     "invoice.payment_failed",
@@ -186,14 +198,14 @@ export function getLimit(planId: string, limitType: keyof PlanLimit): number {
  */
 export function calculateOverage(
   planId: string,
-  overageType: "aiTokens" | "audit",
+  overageType: "aiTokensPer1000" | "audit",
   quantity: number
 ): number {
   const plan = getPlan(planId);
   if (!plan) return 0;
 
-  if (overageType === "aiTokens") {
-    return (quantity / 1000) * plan.overages.aiTokensPer1000;
+  if (overageType === "aiTokensPer1000") {
+    return quantity * plan.overages.aiTokensPer1000;
   }
   return quantity * plan.overages.audit;
 }
@@ -215,4 +227,51 @@ export function formatPrice(price: number): string {
  */
 export function getAllPlans(): PricingPlan[] {
   return Object.values(PRICING_PLANS);
+}
+
+/**
+ * Get price for billing interval
+ */
+export function getPriceForInterval(
+  planId: string,
+  interval: BillingInterval
+): number {
+  const plan = getPlan(planId);
+  if (!plan) return 0;
+  return interval === "year" ? plan.annualPrice : plan.price;
+}
+
+/**
+ * Get monthly equivalent for annual plans
+ */
+export function getMonthlyEquivalent(planId: string): number {
+  const plan = getPlan(planId);
+  if (!plan) return 0;
+  return Math.round(plan.annualPrice / 12);
+}
+
+/**
+ * Get savings percentage for annual billing
+ */
+export function getAnnualSavingsPercent(): number {
+  return Math.round((2 / 12) * 100); // 2 months free = ~17%
+}
+
+/**
+ * Get Stripe price ID for plan and interval
+ */
+export function getStripePriceId(
+  planId: string,
+  interval: BillingInterval
+): string | undefined {
+  const plan = getPlan(planId);
+  if (!plan) return undefined;
+  return interval === "year" ? plan.stripePriceIdAnnual : plan.stripePriceIdMonthly;
+}
+
+/**
+ * Format interval for display
+ */
+export function formatInterval(interval: BillingInterval): string {
+  return interval === "year" ? "annually" : "monthly";
 }
