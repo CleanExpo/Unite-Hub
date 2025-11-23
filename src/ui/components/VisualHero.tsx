@@ -7,8 +7,8 @@
 
 "use client";
 
-import React from "react";
-import { Play, AlertTriangle } from "lucide-react";
+import React, { useState } from "react";
+import { Play, AlertTriangle, RefreshCw, ImageOff } from "lucide-react";
 import AIModelBadge from "@/components/ui/visual/AIModelBadge";
 import type { AIModel } from "@/components/ui/visual/AIModelBadge";
 
@@ -20,6 +20,9 @@ interface VisualHeroProps {
   disclaimer?: string;
   aspectRatio?: "16:9" | "4:3" | "1:1" | "21:9";
   onPlay?: () => void;
+  onRetry?: () => void;
+  loading?: boolean;
+  error?: boolean;
   className?: string;
 }
 
@@ -38,9 +41,13 @@ export function VisualHero({
   disclaimer = "AI-generated concept - requires approval for use",
   aspectRatio = "16:9",
   onPlay,
+  onRetry,
+  loading = false,
+  error = false,
   className = "",
 }: VisualHeroProps) {
   const isVideo = !!videoUrl;
+  const [imgError, setImgError] = useState(false);
 
   return (
     <div className={`relative overflow-hidden rounded-lg ${className}`}>
@@ -51,13 +58,40 @@ export function VisualHero({
           ${aspectRatioClasses[aspectRatio]}
         `}
       >
-        {imageUrl ? (
+        {/* Loading state */}
+        {loading && (
+          <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse">
+            <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+          </div>
+        )}
+
+        {/* Error state */}
+        {(error || imgError) && !loading && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-800">
+            <ImageOff className="w-10 h-10 text-gray-400 mb-2" />
+            <p className="text-sm text-gray-500 mb-2">Failed to load</p>
+            {onRetry && (
+              <button
+                type="button"
+                onClick={onRetry}
+                className="flex items-center gap-1 px-2 py-1 text-xs bg-white dark:bg-gray-700 border rounded hover:bg-gray-50"
+              >
+                <RefreshCw className="w-3 h-3" />
+                Retry
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Image content */}
+        {!loading && !error && !imgError && imageUrl ? (
           <img
             src={imageUrl}
             alt={alt}
             className="w-full h-full object-cover"
+            onError={() => setImgError(true)}
           />
-        ) : (
+        ) : !loading && !error && !imgError && (
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-gray-300 dark:text-gray-600">
               {isVideo ? (
