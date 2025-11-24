@@ -204,9 +204,14 @@ export default function AIDOOnboardingPage() {
     }
 
     try {
-      const { getGSCAuthUrl } = await import('@/lib/integrations/google-search-console');
-      const authUrl = getGSCAuthUrl(currentOrganization.org_id);
-      window.location.href = authUrl;
+      const response = await fetch(`/api/aido/auth/gsc/url?workspaceId=${currentOrganization.org_id}`);
+      const data = await response.json();
+
+      if (!response.ok || !data.authUrl) {
+        throw new Error(data.error || 'Failed to get auth URL');
+      }
+
+      window.location.href = data.authUrl;
     } catch (error) {
       console.error('Failed to generate GSC auth URL:', error);
       alert('Failed to initiate Google Search Console OAuth. Please try again.');
@@ -220,9 +225,14 @@ export default function AIDOOnboardingPage() {
     }
 
     try {
-      const { getGBPAuthUrl } = await import('@/lib/integrations/google-business-profile');
-      const authUrl = getGBPAuthUrl(currentOrganization.org_id);
-      window.location.href = authUrl;
+      const response = await fetch(`/api/aido/auth/gbp/url?workspaceId=${currentOrganization.org_id}`);
+      const data = await response.json();
+
+      if (!response.ok || !data.authUrl) {
+        throw new Error(data.error || 'Failed to get auth URL');
+      }
+
+      window.location.href = data.authUrl;
     } catch (error) {
       console.error('Failed to generate GBP auth URL:', error);
       alert('Failed to initiate Google Business Profile OAuth. Please try again.');
@@ -236,9 +246,14 @@ export default function AIDOOnboardingPage() {
     }
 
     try {
-      const { getGA4AuthUrl } = await import('@/lib/integrations/google-analytics-4');
-      const authUrl = getGA4AuthUrl(currentOrganization.org_id);
-      window.location.href = authUrl;
+      const response = await fetch(`/api/aido/auth/ga4/url?workspaceId=${currentOrganization.org_id}`);
+      const data = await response.json();
+
+      if (!response.ok || !data.authUrl) {
+        throw new Error(data.error || 'Failed to get auth URL');
+      }
+
+      window.location.href = data.authUrl;
     } catch (error) {
       console.error('Failed to generate GA4 auth URL:', error);
       alert('Failed to initiate Google Analytics 4 OAuth. Please try again.');
