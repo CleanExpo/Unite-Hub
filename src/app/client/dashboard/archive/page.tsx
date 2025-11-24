@@ -131,7 +131,7 @@ function generateDemoEntries(): ClientArchiveEntry[] {
   const entries: ClientArchiveEntry[] = [];
 
   // Generate entries over last 30 days
-  for (let i = 0; i < 15; i++) {
+  for (let i = 0; i < 18; i++) {
     const eventDate = new Date(now);
     eventDate.setDate(eventDate.getDate() - Math.floor(Math.random() * 30));
 
@@ -141,6 +141,11 @@ function generateDemoEntries(): ClientArchiveEntry[] {
       { type: 'touchpoint', source: 'touchpoints', category: 'events', icon: 'MessageCircle', color: 'text-cyan-500', label: 'Touchpoint' },
       { type: 'performance_event', source: 'performance', category: 'events', icon: 'TrendingUp', color: 'text-emerald-500', label: 'Performance' },
       { type: 'success_event', source: 'success', category: 'milestones', icon: 'Trophy', color: 'text-yellow-500', label: 'Success' },
+      // VIF event types (Phase 79)
+      { type: 'vif_asset_created', source: 'visual_intelligence_fabric', category: 'visual_intelligence', icon: 'Image', color: 'text-fuchsia-500', label: 'Visual Created' },
+      { type: 'vif_campaign_launched', source: 'visual_intelligence_fabric', category: 'visual_intelligence', icon: 'Rocket', color: 'text-blue-500', label: 'Campaign Launched' },
+      { type: 'vif_visual_high_performer', source: 'visual_intelligence_fabric', category: 'visual_intelligence', icon: 'TrendingUp', color: 'text-green-500', label: 'High Performer' },
+      { type: 'vif_creative_quality_scored', source: 'visual_intelligence_fabric', category: 'visual_intelligence', icon: 'Star', color: 'text-yellow-500', label: 'Quality Scored' },
     ];
 
     const selected = types[Math.floor(Math.random() * types.length)];

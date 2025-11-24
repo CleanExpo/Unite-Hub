@@ -58,6 +58,7 @@ const SOURCE_OPTIONS: Array<{ value: SourceEngine; label: string }> = [
   { value: 'performance', label: 'Performance' },
   { value: 'success', label: 'Success' },
   { value: 'creative_ops', label: 'Creative Ops' },
+  { value: 'visual_intelligence_fabric', label: 'Visual Intelligence' },
   { value: 'production', label: 'Production' },
   { value: 'director', label: 'Director' },
 ];
@@ -68,6 +69,7 @@ const CATEGORY_OPTIONS: Array<{ value: ArchiveCategory; label: string }> = [
   { value: 'events', label: 'Events' },
   { value: 'alerts', label: 'Alerts' },
   { value: 'milestones', label: 'Milestones' },
+  { value: 'visual_intelligence', label: 'Visual Intelligence' },
 ];
 
 export function ArchiveFilterBar({
@@ -322,6 +324,13 @@ export function ArchiveQuickFilters({
         onClick={() => onSelect({ importanceMin: 70 })}
       >
         High Priority
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => onSelect({ sources: ['visual_intelligence_fabric'] })}
+      >
+        Visual Intelligence
       </Button>
     </div>
   );

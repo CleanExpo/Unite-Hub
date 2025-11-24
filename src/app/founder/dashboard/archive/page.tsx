@@ -283,6 +283,10 @@ function generateFounderDemoEntries(clients: ClientItem[]): ClientArchiveEntry[]
     { type: 'performance_event', source: 'performance', category: 'events', icon: 'TrendingUp', color: 'text-emerald-500', label: 'Performance' },
     { type: 'success_event', source: 'success', category: 'milestones', icon: 'Trophy', color: 'text-yellow-500', label: 'Success' },
     { type: 'director_alert', source: 'director', category: 'alerts', icon: 'AlertTriangle', color: 'text-red-500', label: 'Director Alert' },
+    // VIF event types (Phase 79)
+    { type: 'vif_asset_created', source: 'visual_intelligence_fabric', category: 'visual_intelligence', icon: 'Image', color: 'text-fuchsia-500', label: 'Visual Created' },
+    { type: 'vif_campaign_launched', source: 'visual_intelligence_fabric', category: 'visual_intelligence', icon: 'Rocket', color: 'text-blue-500', label: 'Campaign Launched' },
+    { type: 'vif_ab_visual_test_concluded', source: 'visual_intelligence_fabric', category: 'visual_intelligence', icon: 'Trophy', color: 'text-emerald-500', label: 'A/B Test Winner' },
   ];
 
   clients.forEach((client, clientIndex) => {

@@ -14,6 +14,7 @@ import {
   MessageCircle,
   Trophy,
   TrendingUp,
+  TrendingDown,
   Palette,
   Target,
   Factory,
@@ -21,6 +22,15 @@ import {
   Shield,
   ExternalLink,
   Info,
+  // VIF-specific icons (Phase 79)
+  Wand2,
+  Image,
+  Sparkles,
+  GitBranch,
+  Package,
+  Rocket,
+  FlaskConical,
+  Star,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import {
@@ -41,11 +51,26 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   MessageCircle,
   Trophy,
   TrendingUp,
+  TrendingDown,
   Palette,
   Target,
   Factory,
   AlertTriangle,
   Shield,
+  // VIF-specific icons (Phase 79)
+  Wand2,
+  Image,
+  Sparkles,
+  GitBranch,
+  Package,
+  Rocket,
+  FlaskConical,
+  Star,
+};
+
+// Check if entry is a VIF event
+const isVifEvent = (eventType: string): boolean => {
+  return eventType.startsWith('vif_');
 };
 
 export function ArchiveEntryCard({
@@ -106,6 +131,12 @@ export function ArchiveEntryCard({
               <Badge variant="outline" className="text-[10px]">
                 {source.label}
               </Badge>
+              {/* VIF badge for visual intelligence events */}
+              {isVifEvent(entry.event_type) && (
+                <Badge className="text-[10px] bg-fuchsia-500/20 text-fuchsia-500 border-fuchsia-500/30">
+                  VIF
+                </Badge>
+              )}
               <Badge
                 variant="outline"
                 className={`text-[10px] ${importance.color}`}

@@ -481,6 +481,390 @@ export async function logGovernanceAlert(
   });
 }
 
+// ============================================
+// VIF-specific ingestion helpers (Phase 79)
+// ============================================
+
+import {
+  VifArchiveDetails,
+  calculateVifImportanceScore,
+} from './vifArchiveEvents';
+
+/**
+ * Log VIF method used
+ */
+export async function logVifMethodUsed(
+  ctx: IngestionContext,
+  params: {
+    methodId: string;
+    methodName: string;
+    methodCategory?: string;
+    summary?: string;
+  }
+): Promise<string | null> {
+  return createEntry({
+    workspace_id: ctx.workspaceId,
+    client_id: ctx.clientId,
+    event_date: new Date().toISOString(),
+    event_type: 'vif_method_used',
+    source_engine: 'visual_intelligence_fabric',
+    category: 'visual_intelligence',
+    importance_score: calculateVifImportanceScore('vif_method_used'),
+    summary: params.summary || `VIF method: ${params.methodName}`,
+    details_json: {
+      methodId: params.methodId,
+      methodName: params.methodName,
+      methodCategory: params.methodCategory,
+    },
+    is_demo: ctx.isDemo,
+    truth_completeness: 'complete',
+    data_sources: ['visual_intelligence_fabric'],
+    tags: ['vif', 'method', params.methodCategory || 'general'],
+  });
+}
+
+/**
+ * Log VIF asset created
+ */
+export async function logVifAssetCreated(
+  ctx: IngestionContext,
+  params: {
+    assetId: string;
+    assetType: string;
+    methodId?: string;
+    methodName?: string;
+    provider?: string;
+    qualityScore?: number;
+    isFirst?: boolean;
+  }
+): Promise<string | null> {
+  const importance = calculateVifImportanceScore('vif_asset_created', {
+    isFirst: params.isFirst,
+  });
+
+  return createEntry({
+    workspace_id: ctx.workspaceId,
+    client_id: ctx.clientId,
+    event_date: new Date().toISOString(),
+    event_type: 'vif_asset_created',
+    source_engine: 'visual_intelligence_fabric',
+    category: 'visual_intelligence',
+    importance_score: importance,
+    summary: `Visual ${params.assetType} created${params.isFirst ? ' (first)' : ''}`,
+    details_json: {
+      assetId: params.assetId,
+      assetType: params.assetType,
+      methodId: params.methodId,
+      methodName: params.methodName,
+      provider: params.provider,
+      qualityScore: params.qualityScore,
+      isFirst: params.isFirst,
+    },
+    is_demo: ctx.isDemo,
+    truth_completeness: 'complete',
+    data_sources: ['visual_intelligence_fabric'],
+    tags: ['vif', 'asset', params.assetType],
+  });
+}
+
+/**
+ * Log VIF asset refined
+ */
+export async function logVifAssetRefined(
+  ctx: IngestionContext,
+  params: {
+    assetId: string;
+    originalAssetId?: string;
+    assetType: string;
+    fitnessDelta?: number;
+    context?: string;
+  }
+): Promise<string | null> {
+  const importance = calculateVifImportanceScore('vif_asset_refined', {
+    fitnessDelta: params.fitnessDelta,
+  });
+
+  return createEntry({
+    workspace_id: ctx.workspaceId,
+    client_id: ctx.clientId,
+    event_date: new Date().toISOString(),
+    event_type: 'vif_asset_refined',
+    source_engine: 'visual_intelligence_fabric',
+    category: 'visual_intelligence',
+    importance_score: importance,
+    summary: `Visual ${params.assetType} refined${params.fitnessDelta ? ` (+${(params.fitnessDelta * 100).toFixed(0)}%)` : ''}`,
+    details_json: {
+      assetId: params.assetId,
+      originalAssetId: params.originalAssetId,
+      assetType: params.assetType,
+      fitnessDelta: params.fitnessDelta,
+      context: params.context,
+    },
+    is_demo: ctx.isDemo,
+    truth_completeness: params.fitnessDelta ? 'complete' : 'partial',
+    data_sources: ['visual_intelligence_fabric'],
+    tags: ['vif', 'refined', params.assetType],
+  });
+}
+
+/**
+ * Log VIF evolution step
+ */
+export async function logVifEvolutionStep(
+  ctx: IngestionContext,
+  params: {
+    evolutionId: string;
+    generationNumber: number;
+    bestCandidateId: string;
+    fitnessDelta: number;
+    metrics?: Record<string, number>;
+  }
+): Promise<string | null> {
+  const importance = calculateVifImportanceScore('vif_evolution_step', {
+    fitnessDelta: params.fitnessDelta,
+  });
+
+  return createEntry({
+    workspace_id: ctx.workspaceId,
+    client_id: ctx.clientId,
+    event_date: new Date().toISOString(),
+    event_type: 'vif_evolution_step',
+    source_engine: 'visual_intelligence_fabric',
+    category: 'visual_intelligence',
+    importance_score: importance,
+    summary: `Evolution gen ${params.generationNumber}: +${(params.fitnessDelta * 100).toFixed(0)}% fitness`,
+    details_json: {
+      evolutionId: params.evolutionId,
+      generationNumber: params.generationNumber,
+      bestCandidateId: params.bestCandidateId,
+      fitnessDelta: params.fitnessDelta,
+      metrics: params.metrics,
+    },
+    is_demo: ctx.isDemo,
+    truth_completeness: 'complete',
+    data_sources: ['visual_intelligence_fabric'],
+    tags: ['vif', 'evolution', `gen-${params.generationNumber}`],
+  });
+}
+
+/**
+ * Log VIF campaign bundle created
+ */
+export async function logVifCampaignBundleCreated(
+  ctx: IngestionContext,
+  params: {
+    campaignId: string;
+    campaignName: string;
+    bundleTemplate?: string;
+    assetCount: number;
+    channels?: string[];
+  }
+): Promise<string | null> {
+  return createEntry({
+    workspace_id: ctx.workspaceId,
+    client_id: ctx.clientId,
+    event_date: new Date().toISOString(),
+    event_type: 'vif_campaign_bundle_created',
+    source_engine: 'visual_intelligence_fabric',
+    category: 'visual_intelligence',
+    importance_score: calculateVifImportanceScore('vif_campaign_bundle_created'),
+    summary: `Campaign bundle: ${params.campaignName} (${params.assetCount} assets)`,
+    details_json: {
+      campaignId: params.campaignId,
+      campaignName: params.campaignName,
+      bundleTemplate: params.bundleTemplate,
+      assetCount: params.assetCount,
+      channels: params.channels,
+    },
+    is_demo: ctx.isDemo,
+    truth_completeness: 'complete',
+    data_sources: ['visual_intelligence_fabric'],
+    tags: ['vif', 'campaign', 'bundle'],
+  });
+}
+
+/**
+ * Log VIF campaign launched
+ */
+export async function logVifCampaignLaunched(
+  ctx: IngestionContext,
+  params: {
+    campaignId: string;
+    campaignName: string;
+    channel: string;
+  }
+): Promise<string | null> {
+  return createEntry({
+    workspace_id: ctx.workspaceId,
+    client_id: ctx.clientId,
+    event_date: new Date().toISOString(),
+    event_type: 'vif_campaign_launched',
+    source_engine: 'visual_intelligence_fabric',
+    category: 'visual_intelligence',
+    importance_score: calculateVifImportanceScore('vif_campaign_launched'),
+    summary: `Campaign launched: ${params.campaignName} on ${params.channel}`,
+    details_json: {
+      campaignId: params.campaignId,
+      campaignName: params.campaignName,
+      channel: params.channel,
+    },
+    is_demo: ctx.isDemo,
+    truth_completeness: 'complete',
+    data_sources: ['visual_intelligence_fabric', 'production'],
+    tags: ['vif', 'campaign', 'launched', params.channel],
+  });
+}
+
+/**
+ * Log VIF A/B test started
+ */
+export async function logVifAbTestStarted(
+  ctx: IngestionContext,
+  params: {
+    testId: string;
+    variantAId: string;
+    variantBId: string;
+    channels?: string[];
+  }
+): Promise<string | null> {
+  return createEntry({
+    workspace_id: ctx.workspaceId,
+    client_id: ctx.clientId,
+    event_date: new Date().toISOString(),
+    event_type: 'vif_ab_visual_test_started',
+    source_engine: 'visual_intelligence_fabric',
+    category: 'visual_intelligence',
+    importance_score: calculateVifImportanceScore('vif_ab_visual_test_started'),
+    summary: `A/B visual test started`,
+    details_json: {
+      testId: params.testId,
+      variantAId: params.variantAId,
+      variantBId: params.variantBId,
+      channels: params.channels,
+    },
+    is_demo: ctx.isDemo,
+    truth_completeness: 'complete',
+    data_sources: ['visual_intelligence_fabric', 'vif_reactive'],
+    tags: ['vif', 'ab-test', 'started'],
+  });
+}
+
+/**
+ * Log VIF A/B test concluded
+ */
+export async function logVifAbTestConcluded(
+  ctx: IngestionContext,
+  params: {
+    testId: string;
+    winnerVariantId: string;
+    significanceLevel: number;
+    metrics?: Record<string, number>;
+  }
+): Promise<string | null> {
+  const importance = calculateVifImportanceScore('vif_ab_visual_test_concluded', {
+    significance: params.significanceLevel,
+  });
+
+  return createEntry({
+    workspace_id: ctx.workspaceId,
+    client_id: ctx.clientId,
+    event_date: new Date().toISOString(),
+    event_type: 'vif_ab_visual_test_concluded',
+    source_engine: 'visual_intelligence_fabric',
+    category: 'visual_intelligence',
+    importance_score: importance,
+    summary: `A/B test winner: ${(params.significanceLevel * 100).toFixed(0)}% confidence`,
+    details_json: {
+      testId: params.testId,
+      winnerVariantId: params.winnerVariantId,
+      significanceLevel: params.significanceLevel,
+      metrics: params.metrics,
+    },
+    is_demo: ctx.isDemo,
+    truth_completeness: 'complete',
+    data_sources: ['visual_intelligence_fabric', 'vif_reactive'],
+    tags: ['vif', 'ab-test', 'winner'],
+  });
+}
+
+/**
+ * Log VIF visual performance event (high/under performer)
+ */
+export async function logVifVisualPerformanceEvent(
+  ctx: IngestionContext,
+  params: {
+    assetId: string;
+    performanceLabel: 'high_performer' | 'underperformer';
+    performanceScore?: number;
+    metrics?: Record<string, number>;
+  }
+): Promise<string | null> {
+  const eventType = params.performanceLabel === 'high_performer'
+    ? 'vif_visual_high_performer'
+    : 'vif_visual_underperformer';
+
+  return createEntry({
+    workspace_id: ctx.workspaceId,
+    client_id: ctx.clientId,
+    event_date: new Date().toISOString(),
+    event_type: eventType,
+    source_engine: 'visual_intelligence_fabric',
+    category: 'visual_intelligence',
+    importance_score: calculateVifImportanceScore(eventType),
+    summary: params.performanceLabel === 'high_performer'
+      ? `High-performing visual identified`
+      : `Underperforming visual flagged`,
+    details_json: {
+      assetId: params.assetId,
+      performanceLabel: params.performanceLabel,
+      performanceScore: params.performanceScore,
+      metrics: params.metrics,
+    },
+    is_demo: ctx.isDemo,
+    truth_completeness: params.metrics ? 'complete' : 'metrics_only',
+    data_sources: ['visual_intelligence_fabric', 'vif_reactive', 'performance'],
+    tags: ['vif', 'performance', params.performanceLabel],
+  });
+}
+
+/**
+ * Log VIF creative quality scored
+ */
+export async function logVifCreativeQualityScored(
+  ctx: IngestionContext,
+  params: {
+    assetId: string;
+    qualityGrade: string;
+    qualityScore?: number;
+    components?: Record<string, number>;
+  }
+): Promise<string | null> {
+  const importance = calculateVifImportanceScore('vif_creative_quality_scored', {
+    qualityGrade: params.qualityGrade,
+  });
+
+  return createEntry({
+    workspace_id: ctx.workspaceId,
+    client_id: ctx.clientId,
+    event_date: new Date().toISOString(),
+    event_type: 'vif_creative_quality_scored',
+    source_engine: 'visual_intelligence_fabric',
+    category: 'visual_intelligence',
+    importance_score: importance,
+    summary: `Quality grade: ${params.qualityGrade}`,
+    details_json: {
+      assetId: params.assetId,
+      qualityGrade: params.qualityGrade,
+      qualityScore: params.qualityScore,
+      qualityComponents: params.components,
+    },
+    is_demo: ctx.isDemo,
+    truth_completeness: params.components ? 'complete' : 'partial',
+    data_sources: ['visual_intelligence_fabric', 'creative_director'],
+    tags: ['vif', 'quality', `grade-${params.qualityGrade.toLowerCase()}`],
+  });
+}
+
 export default {
   logReportEntry,
   logStoryEntry,
@@ -492,4 +876,15 @@ export default {
   logDirectorEvent,
   logVifEvent,
   logGovernanceAlert,
+  // VIF-specific (Phase 79)
+  logVifMethodUsed,
+  logVifAssetCreated,
+  logVifAssetRefined,
+  logVifEvolutionStep,
+  logVifCampaignBundleCreated,
+  logVifCampaignLaunched,
+  logVifAbTestStarted,
+  logVifAbTestConcluded,
+  logVifVisualPerformanceEvent,
+  logVifCreativeQualityScored,
 };

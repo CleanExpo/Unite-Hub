@@ -18,7 +18,19 @@ export type ArchiveEventType =
   | 'vif_event'
   | 'production_event'
   | 'director_alert'
-  | 'governance_alert';
+  | 'governance_alert'
+  // VIF-specific event types (Phase 79)
+  | 'vif_method_used'
+  | 'vif_asset_created'
+  | 'vif_asset_refined'
+  | 'vif_evolution_step'
+  | 'vif_campaign_bundle_created'
+  | 'vif_campaign_launched'
+  | 'vif_ab_visual_test_started'
+  | 'vif_ab_visual_test_concluded'
+  | 'vif_visual_high_performer'
+  | 'vif_visual_underperformer'
+  | 'vif_creative_quality_scored';
 
 /**
  * Source engines that generate archive entries
@@ -29,6 +41,7 @@ export type SourceEngine =
   | 'creative_ops'
   | 'creative_director'
   | 'vif'
+  | 'visual_intelligence_fabric' // VIF Phase 79
   | 'production'
   | 'director'
   | 'governance'
@@ -44,7 +57,8 @@ export type ArchiveCategory =
   | 'stories'
   | 'events'
   | 'alerts'
-  | 'milestones';
+  | 'milestones'
+  | 'visual_intelligence'; // VIF Phase 79
 
 /**
  * Truth completeness status
@@ -216,6 +230,18 @@ export function getEventTypeDisplay(type: ArchiveEventType): {
     production_event: { icon: 'Factory', color: 'text-slate-500', label: 'Production' },
     director_alert: { icon: 'AlertTriangle', color: 'text-red-500', label: 'Director Alert' },
     governance_alert: { icon: 'Shield', color: 'text-amber-500', label: 'Governance' },
+    // VIF-specific event types (Phase 79)
+    vif_method_used: { icon: 'Wand2', color: 'text-violet-500', label: 'VIF Method' },
+    vif_asset_created: { icon: 'Image', color: 'text-fuchsia-500', label: 'Visual Created' },
+    vif_asset_refined: { icon: 'Sparkles', color: 'text-pink-500', label: 'Visual Refined' },
+    vif_evolution_step: { icon: 'GitBranch', color: 'text-purple-500', label: 'Evolution Step' },
+    vif_campaign_bundle_created: { icon: 'Package', color: 'text-indigo-500', label: 'Campaign Bundle' },
+    vif_campaign_launched: { icon: 'Rocket', color: 'text-blue-500', label: 'Campaign Launched' },
+    vif_ab_visual_test_started: { icon: 'FlaskConical', color: 'text-cyan-500', label: 'A/B Test Started' },
+    vif_ab_visual_test_concluded: { icon: 'Trophy', color: 'text-emerald-500', label: 'A/B Test Winner' },
+    vif_visual_high_performer: { icon: 'TrendingUp', color: 'text-green-500', label: 'High Performer' },
+    vif_visual_underperformer: { icon: 'TrendingDown', color: 'text-orange-500', label: 'Underperformer' },
+    vif_creative_quality_scored: { icon: 'Star', color: 'text-yellow-500', label: 'Quality Scored' },
   };
 
   return displays[type] || { icon: 'Circle', color: 'text-muted-foreground', label: type };
@@ -234,6 +260,7 @@ export function getSourceEngineDisplay(source: SourceEngine): {
     creative_ops: { label: 'Creative Ops', color: 'bg-pink-500/10' },
     creative_director: { label: 'Creative Director', color: 'bg-rose-500/10' },
     vif: { label: 'VIF', color: 'bg-orange-500/10' },
+    visual_intelligence_fabric: { label: 'Visual Intelligence', color: 'bg-fuchsia-500/10' },
     production: { label: 'Production', color: 'bg-slate-500/10' },
     director: { label: 'Director', color: 'bg-red-500/10' },
     governance: { label: 'Governance', color: 'bg-amber-500/10' },
