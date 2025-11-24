@@ -122,7 +122,14 @@
       "Bash(npm run test:aido:*)",
       "Bash(npm run dev:*)",
       "Bash(timeout /t 3 /nobreak)",
-      "Bash(timeout /t 2 /nobreak)"
+      "Bash(timeout /t 2 /nobreak)",
+      "Bash(Get-Process node -ErrorAction SilentlyContinue)",
+      "Bash(Stop-Process -Force)",
+      "Bash(tasklist:*)",
+      "Bash(if exist .next rd /s /q .next)",
+      "Bash(rd /s /q .next)",
+      "Bash(timeout /t 15 /nobreak)",
+      "Bash(instrumentation.ts)"
     ],
     "deny": [],
     "ask": []
