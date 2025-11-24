@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 import { getSupabaseServer } from "@/lib/supabase";
 
 const anthropic = new Anthropic({
@@ -190,7 +191,8 @@ Extract the following information from the email:
 Return ONLY a valid JSON object with these exact keys. No markdown, no explanation.`;
 
   try {
-    const message = await anthropic.messages.create({
+    const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create{
       model: "claude-sonnet-4-5-20250929",
       max_tokens: 2048,
       system: systemPrompt,
@@ -200,7 +202,10 @@ Return ONLY a valid JSON object with these exact keys. No markdown, no explanati
           content: `Analyze this email and return the intelligence JSON:\n\n${emailContent}`,
         },
       ],
+    })
     });
+
+    const message = result.data;;
 
     const response = message.content[0];
     if (response.type !== "text") {

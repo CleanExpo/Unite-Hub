@@ -245,3 +245,18 @@ export interface AuditLog {
   details: Record<string, any>;
   created_at: string;
 }
+
+// =====================================================
+// CONNECTION POOLING (P0 Blocker #1)
+// =====================================================
+
+/**
+ * NOTE: Pool utilities have been moved to '@/lib/supabase-server'
+ * to prevent importing Node.js 'pg' module on client-side.
+ *
+ * For server-side API routes, use:
+ *   import { getSupabasePooled, queryWithPool } from '@/lib/supabase-server';
+ *
+ * For client-side components, continue using:
+ *   import { supabase, supabaseBrowser } from '@/lib/supabase';
+ */

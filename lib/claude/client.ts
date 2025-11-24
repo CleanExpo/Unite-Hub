@@ -1,4 +1,5 @@
-import Anthropic from '@anthropic-ai/sdk';
+import Anthropic from "@anthropic-ai/sdk";
+import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 
 // Initialize Anthropic client
 export const anthropic = new Anthropic({

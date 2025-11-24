@@ -1,5 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { db } from "@/lib/db";
+import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -117,27 +118,31 @@ ${
 
 Generate hyper-personalized ${contentType} email for this prospect.`;
 
-    const message = await anthropic.messages.create({
-      model: "claude-opus-4-1-20250805",
-      max_tokens: 2000,
-      thinking: {
-        type: "enabled",
-        budget_tokens: 5000,
-      },
-      system: [
-        {
-          type: "text",
-          text: systemPrompt,
-          cache_control: { type: "ephemeral" }, // Cache static instructions
+    const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create({
+        model: "claude-opus-4-1-20250805",
+        max_tokens: 2000,
+        thinking: {
+          type: "enabled",
+          budget_tokens: 5000,
         },
-      ],
-      messages: [
-        {
-          role: "user",
-          content: prospectData,
-        },
-      ],
+        system: [
+          {
+            type: "text",
+            text: systemPrompt,
+            cache_control: { type: "ephemeral" }, // Cache static instructions
+          },
+        ],
+        messages: [
+          {
+            role: "user",
+            content: prospectData,
+          },
+        ],
+      });
     });
+
+    const message = result.data;
 
     // Log cache performance for cost monitoring
     console.log("Content Personalization - Cache Stats:", {

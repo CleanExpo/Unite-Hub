@@ -9,7 +9,8 @@
  */
 
 import { GoogleGenAI } from '@google/genai';
-import Anthropic from '@anthropic-ai/sdk';
+import Anthropic from "@anthropic-ai/sdk";
+import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 import { supabaseStaff } from '../auth/supabase';
 
 // Initialize AI clients
@@ -116,7 +117,8 @@ export async function runAI(eventType: AIEventType, payload: any) {
  * Process idea submission using Anthropic Extended Thinking
  */
 async function processIdeaSubmission(payload: { ideaId: string; content: string }) {
-  const message = await anthropic.messages.create({
+  const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create{
     model: 'claude-opus-4-1-20250805',
     max_tokens: 4096,
     thinking: {
@@ -140,7 +142,10 @@ Provide:
 Format as structured JSON.`,
       },
     ],
-  });
+  })
+    });
+
+    const message = result.data;;
 
   return {
     status: 'processed',
@@ -153,7 +158,8 @@ Format as structured JSON.`,
  * Generate proposal using Anthropic
  */
 async function generateProposal(payload: { ideaId: string; interpretation: any }) {
-  const message = await anthropic.messages.create({
+  const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create{
     model: 'claude-sonnet-4-5-20250929',
     max_tokens: 4096,
     messages: [
@@ -173,7 +179,10 @@ Include:
 Format as structured JSON with these sections.`,
       },
     ],
-  });
+  })
+    });
+
+    const message = result.data;;
 
   return {
     status: 'generated',

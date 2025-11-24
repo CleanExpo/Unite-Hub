@@ -18,7 +18,8 @@
  */
 
 import { callGemini3, checkGeminiDailyBudget, type ThinkingLevel } from '@/lib/google/gemini-client';
-import Anthropic from '@anthropic-ai/sdk';
+import Anthropic from "@anthropic-ai/sdk";
+import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 import OpenAI from 'openai';
 import { getSupabaseAdmin } from '@/lib/supabase';
 
@@ -290,7 +291,8 @@ async function routeToAnthropic(params: {
   const startTime = Date.now();
 
   try {
-    const response = await anthropic.messages.create({
+    const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create{
       model: modelId,
       max_tokens: maxTokens,
       ...(requiresExtendedThinking && {
@@ -312,7 +314,10 @@ async function routeToAnthropic(params: {
       messages: [
         { role: 'user' as const, content: prompt }
       ],
+    })
     });
+
+    const response = result.data;;
 
     const latency = Date.now() - startTime;
 

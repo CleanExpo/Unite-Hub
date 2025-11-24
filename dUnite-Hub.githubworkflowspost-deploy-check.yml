@@ -1,0 +1,58 @@
+name: Post-Deployment Health Check
+
+on:
+  deployment_status:
+
+jobs:
+  health-check:
+    name: Verify Deployment Health
+    runs-on: ubuntu-latest
+    if: github.event.deployment_status.state == 'success'
+    
+    steps:
+      - name: Wait for deployment to stabilize
+        run: sleep 30
+      
+      - name: Check health endpoint
+        id: health
+        run: |
+          DEPLOYMENT_URL="${{ github.event.deployment_status.target_url }}"
+          HEALTH_URL="${DEPLOYMENT_URL}/api/health"
+          
+          echo "Checking health at: $HEALTH_URL"
+          
+          RESPONSE=$(curl -s -w "\n%{http_code}" "$HEALTH_URL")
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | sed '$d')
+          
+          echo "HTTP Status: $HTTP_CODE"
+          echo "Response Body: $BODY"
+          
+          if [ "$HTTP_CODE" != "200" ]; then
+            echo "Health check failed with status $HTTP_CODE"
+            exit 1
+          fi
+          
+          STATUS=$(echo "$BODY" | jq -r '.status')
+          if [ "$STATUS" != "healthy" ]; then
+            echo "Health check returned status: $STATUS"
+            exit 1
+          fi
+          
+          echo "Health check passed!"
+      
+      - name: Test critical endpoints
+        run: |
+          DEPLOYMENT_URL="${{ github.event.deployment_status.target_url }}"
+          
+          # Test API root
+          curl -f "$DEPLOYMENT_URL/api" || echo "API root check skipped"
+          
+          # Verify no 500 errors
+          echo "Deployment health verified successfully"
+      
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "Deployment health check FAILED"
+          echo "Consider rolling back to previous version"

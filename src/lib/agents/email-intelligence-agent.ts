@@ -10,6 +10,7 @@
 
 import Anthropic from "@anthropic-ai/sdk";
 import { db } from "@/lib/db";
+import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -208,24 +209,28 @@ ${email.body.substring(0, 4000)} ${email.body.length > 4000 ? "...[truncated]" :
 Analyze this email and extract business intelligence.
 `.trim();
 
-    // Call Claude with prompt caching
-    const message = await anthropic.messages.create({
-      model: "claude-sonnet-4-5-20250929",
-      max_tokens: 4096,
-      system: [
-        {
-          type: "text",
-          text: SYSTEM_PROMPT,
-          cache_control: { type: "ephemeral" }, // Cache system prompt (90% cost savings on repeat calls)
-        },
-      ],
-      messages: [
-        {
-          role: "user",
-          content: emailContent,
-        },
-      ],
+    // Call Claude with prompt caching and retry logic
+    const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create({
+        model: "claude-sonnet-4-5-20250929",
+        max_tokens: 4096,
+        system: [
+          {
+            type: "text",
+            text: SYSTEM_PROMPT,
+            cache_control: { type: "ephemeral" }, // Cache system prompt (90% cost savings on repeat calls)
+          },
+        ],
+        messages: [
+          {
+            role: "user",
+            content: emailContent,
+          },
+        ],
+      });
     });
+
+    const message = result.data;
 
     // Extract text response
     const responseText = message.content

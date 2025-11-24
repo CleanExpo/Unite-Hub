@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 import { getSupabaseServer } from "@/lib/supabase";
 import { apiRateLimit } from "@/lib/rate-limit";
 
@@ -95,7 +96,8 @@ Return as JSON array:
   ]
 }`;
 
-  const message = await anthropic.messages.create({
+  const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create{
     model: "claude-3-5-sonnet-20241022",
     max_tokens: 4000,
     messages: [
@@ -104,7 +106,10 @@ Return as JSON array:
         content: prompt,
       },
     ],
-  });
+  })
+    });
+
+    const message = result.data;;
 
   const content = message.content[0];
   if (content.type !== "text") {

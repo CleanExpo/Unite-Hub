@@ -4,6 +4,7 @@ import { aiAgentRateLimit } from "@/lib/rate-limit";
 import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
 import { UUIDSchema } from "@/lib/validation/schemas";
 import Anthropic from "@anthropic-ai/sdk";
+import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 
 /**
  * POST /api/sequences/generate
@@ -142,7 +143,8 @@ Format your response as JSON with this structure:
     console.log("Generating sequence with Claude AI...");
 
     // Generate sequence with Claude
-    const completion = await anthropic.messages.create({
+    const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create{
       model: "claude-sonnet-4-20250514",
       max_tokens: 4000,
       messages: [
@@ -151,7 +153,10 @@ Format your response as JSON with this structure:
           content: prompt,
         },
       ],
+    })
     });
+
+    const completion = result.data;;
 
     const responseText = completion.content[0].type === "text"
       ? completion.content[0].text

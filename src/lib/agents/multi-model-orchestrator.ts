@@ -4,6 +4,7 @@
  */
 
 import Anthropic from "@anthropic-ai/sdk";
+import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 import { getOpenRouterClient } from "../openrouter";
 import { glob } from "glob";
 import { readFile } from "fs/promises";
@@ -179,7 +180,8 @@ Generate specific code changes, file edits, and implementation steps.`;
   ): Promise<OrchestrationResult> {
     const tokenEstimate = Math.ceil((task.length + context.length) / 4);
 
-    const message = await anthropic.messages.create({
+    const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create{
       model: MODELS.claude.name,
       max_tokens: 4096,
       messages: [
@@ -188,7 +190,10 @@ Generate specific code changes, file edits, and implementation steps.`;
           content: `${task}\n\n---\n\nContext:\n${context.slice(0, 150_000)}`,
         },
       ],
+    })
     });
+
+    const message = result.data;;
 
     const response =
       message.content[0].type === "text" ? message.content[0].text : "";

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 import { getSupabaseServer } from "@/lib/supabase";
 import {
   CONTENT_CALENDAR_SYSTEM_PROMPT,
@@ -138,7 +139,8 @@ export async function POST(req: NextRequest) {
     });
 
     // Call Claude AI to generate calendar
-    const message = await anthropic.messages.create({
+    const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create{
       model: "claude-sonnet-4-20250514",
       max_tokens: 8000,
       system: CONTENT_CALENDAR_SYSTEM_PROMPT,
@@ -148,7 +150,10 @@ export async function POST(req: NextRequest) {
           content: userPrompt,
         },
       ],
+    })
     });
+
+    const message = result.data;;
 
     // Parse AI response
     const responseText =

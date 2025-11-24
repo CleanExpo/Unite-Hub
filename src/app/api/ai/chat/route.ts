@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import { apiRateLimit } from "@/lib/rate-limit";
 import Anthropic from "@anthropic-ai/sdk";
+import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -62,7 +63,8 @@ Help them make decisions about approving or iterating on this content.`;
     }
 
     // Call Claude API
-    const response = await anthropic.messages.create({
+    const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create{
       model: "claude-sonnet-4-20250514",
       max_tokens: 1024,
       system: systemPrompt,
@@ -72,7 +74,10 @@ Help them make decisions about approving or iterating on this content.`;
           content: message,
         },
       ],
+    })
     });
+
+    const response = result.data;;
 
     // Extract text response
     const textContent = response.content.find((c) => c.type === "text");

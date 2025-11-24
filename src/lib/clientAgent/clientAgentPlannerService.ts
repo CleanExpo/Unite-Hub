@@ -3,7 +3,8 @@
  * Phase 83: AI-powered planning for client operations
  */
 
-import Anthropic from '@anthropic-ai/sdk';
+import Anthropic from "@anthropic-ai/sdk";
+import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 import {
   PlannerInput,
   PlannerOutput,
@@ -28,7 +29,8 @@ export async function planAgentResponse(
   const conversationHistory = buildConversationHistory(input.session_history);
 
   try {
-    const response = await anthropic.messages.create({
+    const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create{
       model: 'claude-sonnet-4-5-20250929',
       max_tokens: 2048,
       system: systemPrompt,
@@ -36,7 +38,10 @@ export async function planAgentResponse(
         ...conversationHistory,
         { role: 'user', content: input.user_message },
       ],
+    })
     });
+
+    const response = result.data;;
 
     const content = response.content[0];
     if (content.type !== 'text') {
@@ -225,7 +230,8 @@ export async function generateSimpleResponse(
   context: ContextSnapshot
 ): Promise<string> {
   try {
-    const response = await anthropic.messages.create({
+    const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create{
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 512,
       system: `You are a helpful CRM assistant. Answer questions concisely based on the provided context. If you don't have enough information, say so honestly.
@@ -233,7 +239,10 @@ export async function generateSimpleResponse(
 Context:
 ${buildContextSummary(context)}`,
       messages: [{ role: 'user', content: message }],
+    })
     });
+
+    const response = result.data;;
 
     const content = response.content[0];
     if (content.type !== 'text') {

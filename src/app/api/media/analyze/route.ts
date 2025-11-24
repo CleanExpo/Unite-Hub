@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import Anthropic from "@anthropic-ai/sdk";
+import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 
 /**
  * POST /api/media/analyze
@@ -171,7 +172,8 @@ Format your response as valid JSON with these exact keys:
 
     let analysis;
     try {
-      const message = await anthropic.messages.create({
+      const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create{
         model: "claude-opus-4-1-20250805",
         max_tokens: 4000,
         thinking: {
@@ -191,7 +193,10 @@ Format your response as valid JSON with these exact keys:
             content: userPrompt,
           },
         ],
-      });
+      })
+    });
+
+    const message = result.data;;
 
       // Log cache performance
       console.log("🧠 Claude AI Analysis Cache Stats:", {

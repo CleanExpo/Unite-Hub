@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import Anthropic from "@anthropic-ai/sdk";
+import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 import {
   generateCompetitorAnalysisPrompt,
   type CompetitorData,
@@ -118,7 +119,8 @@ export async function POST(request: NextRequest) {
     );
 
     // Call Claude AI
-    const message = await anthropic.messages.create({
+    const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create{
       model: "claude-sonnet-4-20250514",
       max_tokens: 8000,
       temperature: 0.7,
@@ -128,7 +130,10 @@ export async function POST(request: NextRequest) {
           content: prompt,
         },
       ],
+    })
     });
+
+    const message = result.data;;
 
     // Extract JSON response
     const content = message.content[0];

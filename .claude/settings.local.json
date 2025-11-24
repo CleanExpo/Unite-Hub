@@ -118,7 +118,11 @@
       "Bash(npm run seo:full:*)",
       "Bash(npm run seo:research:*)",
       "Bash(npm run seo:eeat:*)",
-      "Bash(git branch:*)"
+      "Bash(git branch:*)",
+      "Bash(npm run test:aido:*)",
+      "Bash(npm run dev:*)",
+      "Bash(timeout /t 3 /nobreak)",
+      "Bash(timeout /t 2 /nobreak)"
     ],
     "deny": [],
     "ask": []

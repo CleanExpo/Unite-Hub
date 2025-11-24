@@ -5,6 +5,7 @@
 
 import Anthropic from '@anthropic-ai/sdk';
 import { db } from '../db';
+import { callAnthropicWithRetry } from '@/lib/anthropic/rate-limiter';
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY || '',
@@ -118,23 +119,27 @@ export async function analyzeWhatsAppMessage(
 
     context += `\nNew Message from Customer:\n${message}`;
 
-    const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-5-20250929',
-      max_tokens: 1000,
-      system: [
-        {
-          type: "text",
-          text: WHATSAPP_ANALYSIS_SYSTEM_PROMPT,
-          cache_control: { type: "ephemeral" }, // Cache static instructions
-        },
-      ],
-      messages: [
-        {
-          role: 'user',
-          content: context
-        }
-      ]
+    const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create({
+        model: 'claude-sonnet-4-5-20250929',
+        max_tokens: 1000,
+        system: [
+          {
+            type: "text",
+            text: WHATSAPP_ANALYSIS_SYSTEM_PROMPT,
+            cache_control: { type: "ephemeral" }, // Cache static instructions
+          },
+        ],
+        messages: [
+          {
+            role: 'user',
+            content: context
+          }
+        ]
+      });
     });
+
+    const response = result.data;
 
     // Log cache performance
     console.log("WhatsApp Analysis - Cache Stats:", {
@@ -210,23 +215,27 @@ Analysis:
 
 Generate a professional response.`;
 
-    const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-5-20250929',
-      max_tokens: 300,
-      system: [
-        {
-          type: "text",
-          text: WHATSAPP_RESPONSE_SYSTEM_PROMPT,
-          cache_control: { type: "ephemeral" }, // Cache static instructions
-        },
-      ],
-      messages: [
-        {
-          role: 'user',
-          content: userContext
-        }
-      ]
+    const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create({
+        model: 'claude-sonnet-4-5-20250929',
+        max_tokens: 300,
+        system: [
+          {
+            type: "text",
+            text: WHATSAPP_RESPONSE_SYSTEM_PROMPT,
+            cache_control: { type: "ephemeral" }, // Cache static instructions
+          },
+        ],
+        messages: [
+          {
+            role: 'user',
+            content: userContext
+          }
+        ]
+      });
     });
+
+    const response = result.data;
 
     // Log cache performance
     console.log("WhatsApp Response - Cache Stats:", {
@@ -274,23 +283,27 @@ ${conversationSummary}
 
 Analyze and provide update recommendations.`;
 
-    const response = await anthropic.messages.create({
-      model: 'claude-sonnet-4-5-20250929',
-      max_tokens: 500,
-      system: [
-        {
-          type: "text",
-          text: WHATSAPP_CONTACT_UPDATE_SYSTEM_PROMPT,
-          cache_control: { type: "ephemeral" }, // Cache static instructions
-        },
-      ],
-      messages: [
-        {
-          role: 'user',
-          content: userContext
-        }
-      ]
+    const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create({
+        model: 'claude-sonnet-4-5-20250929',
+        max_tokens: 500,
+        system: [
+          {
+            type: "text",
+            text: WHATSAPP_CONTACT_UPDATE_SYSTEM_PROMPT,
+            cache_control: { type: "ephemeral" }, // Cache static instructions
+          },
+        ],
+        messages: [
+          {
+            role: 'user',
+            content: userContext
+          }
+        ]
+      });
     });
+
+    const response = result.data;
 
     // Log cache performance
     console.log("WhatsApp Contact Update - Cache Stats:", {

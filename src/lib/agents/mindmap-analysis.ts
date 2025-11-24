@@ -7,6 +7,7 @@
  */
 
 import Anthropic from "@anthropic-ai/sdk";
+import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -158,7 +159,8 @@ export async function analyzeMindmap(
     }[analysisType];
 
     // Call Claude with Extended Thinking
-    const message = await anthropic.messages.create({
+    const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create{
       model: "claude-sonnet-4-5-20250929",
       max_tokens: 4096,
       thinking: {
@@ -178,7 +180,10 @@ export async function analyzeMindmap(
           content: context,
         },
       ],
+    })
     });
+
+    const message = result.data;;
 
     // Extract response
     const responseText = message.content
@@ -349,7 +354,8 @@ Respond in JSON format:
   "dependencies": ["dep1", "dep2"]
 }`;
 
-    const message = await anthropic.messages.create({
+    const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create{
       model: "claude-sonnet-4-5-20250929",
       max_tokens: 1024,
       messages: [
@@ -358,7 +364,10 @@ Respond in JSON format:
           content: prompt,
         },
       ],
+    })
     });
+
+    const message = result.data;;
 
     const responseText = message.content
       .filter((block) => block.type === "text")

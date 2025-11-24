@@ -1,6 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { GoogleCalendarService, TimeSlot } from "@/lib/services/google-calendar";
 import { db } from "@/lib/db";
+import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,

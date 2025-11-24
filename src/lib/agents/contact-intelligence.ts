@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 import { db } from "@/lib/db";
 
 const anthropic = new Anthropic({
@@ -95,7 +96,8 @@ ${interactions
 Analyze this contact and return your assessment as JSON.`;
 
     // Call Claude with extended thinking + prompt caching
-    const message = await anthropic.messages.create({
+    const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create{
       model: "claude-opus-4-1-20250805",
       max_tokens: 16000,
       thinking: {
@@ -115,7 +117,10 @@ Analyze this contact and return your assessment as JSON.`;
           content: contactData,
         },
       ],
+    })
     });
+
+    const message = result.data;;
 
     // Log cache performance for cost monitoring
     console.log("Contact Intelligence - Cache Stats:", {

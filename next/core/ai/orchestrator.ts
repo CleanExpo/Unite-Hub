@@ -11,6 +11,7 @@
 import { GoogleGenerativeAI } from '@google/genai';
 import Anthropic from '@anthropic-ai/sdk';
 import { supabaseStaff } from '../auth/supabase';
+import { callAnthropicWithRetry } from '../../../src/lib/anthropic/rate-limiter';
 
 // Initialize AI clients
 const gemini = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY || '');
@@ -116,17 +117,18 @@ export async function runAI(eventType: AIEventType, payload: any) {
  * Process idea submission using Anthropic Extended Thinking
  */
 async function processIdeaSubmission(payload: { ideaId: string; content: string }) {
-  const message = await anthropic.messages.create({
-    model: 'claude-opus-4-1-20250805',
-    max_tokens: 4096,
-    thinking: {
-      type: 'enabled',
-      budget_tokens: 5000,
-    },
-    messages: [
-      {
-        role: 'user',
-        content: `Analyze this client idea submission and structure it:
+  const result = await callAnthropicWithRetry(async () => {
+    return await anthropic.messages.create({
+      model: 'claude-opus-4-1-20250805',
+      max_tokens: 4096,
+      thinking: {
+        type: 'enabled',
+        budget_tokens: 5000,
+      },
+      messages: [
+        {
+          role: 'user',
+          content: `Analyze this client idea submission and structure it:
 
 Idea: ${payload.content}
 
@@ -138,9 +140,12 @@ Provide:
 5. Potential challenges
 
 Format as structured JSON.`,
-      },
-    ],
+        },
+      ],
+    });
   });
+
+  const message = result.data;
 
   return {
     status: 'processed',
@@ -153,13 +158,14 @@ Format as structured JSON.`,
  * Generate proposal using Anthropic
  */
 async function generateProposal(payload: { ideaId: string; interpretation: any }) {
-  const message = await anthropic.messages.create({
-    model: 'claude-sonnet-4-5-20250929',
-    max_tokens: 4096,
-    messages: [
-      {
-        role: 'user',
-        content: `Generate a detailed project proposal based on this analysis:
+  const result = await callAnthropicWithRetry(async () => {
+    return await anthropic.messages.create({
+      model: 'claude-sonnet-4-5-20250929',
+      max_tokens: 4096,
+      messages: [
+        {
+          role: 'user',
+          content: `Generate a detailed project proposal based on this analysis:
 
 ${JSON.stringify(payload.interpretation, null, 2)}
 
@@ -171,9 +177,12 @@ Include:
 5. Success metrics
 
 Format as structured JSON with these sections.`,
-      },
-    ],
+        },
+      ],
+    });
   });
+
+  const message = result.data;
 
   return {
     status: 'generated',

@@ -14,6 +14,8 @@ const nextConfig = {
     // Enable optimized compilation
     optimizeCss: true,
     optimizePackageImports: ['lucide-react', '@anthropic-ai/sdk', 'recharts'],
+    // Enable OpenTelemetry instrumentation
+    instrumentationHook: true,
   },
 
   // Turbopack configuration (required for Next.js 16)

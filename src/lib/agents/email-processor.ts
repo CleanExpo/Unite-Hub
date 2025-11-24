@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 import { db } from "@/lib/db";
 import { detectMeetingIntent } from "./calendar-intelligence";
 
@@ -153,7 +154,8 @@ ${body.substring(0, 2000)}
 
 Analyze this email and extract intent and key information.`;
 
-    const message = await anthropic.messages.create({
+    const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create{
       model: "claude-sonnet-4-5-20250929",
       max_tokens: 1000,
       system: [
@@ -169,7 +171,10 @@ Analyze this email and extract intent and key information.`;
           content: emailContent,
         },
       ],
+    })
     });
+
+    const message = result.data;;
 
     // Log cache performance for cost monitoring
     console.log("Email Processor - Cache Stats:", {

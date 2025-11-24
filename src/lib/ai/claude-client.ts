@@ -3,6 +3,7 @@
  */
 
 import Anthropic from "@anthropic-ai/sdk";
+import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 import {
   generateSectionCopyPrompt,
   generateSEOMetadataPrompt,
@@ -47,7 +48,8 @@ export async function generateSectionCopy(
   try {
     const prompt = generateSectionCopyPrompt(context);
 
-    const message = await anthropic.messages.create({
+    const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create{
       model: "claude-3-5-sonnet-20241022",
       max_tokens: 2000,
       messages: [
@@ -56,7 +58,10 @@ export async function generateSectionCopy(
           content: prompt,
         },
       ],
+    })
     });
+
+    const message = result.data;;
 
     const content = message.content[0];
     if (content.type === "text") {
@@ -98,7 +103,8 @@ export async function generateSEOMetadata(context: {
   try {
     const prompt = generateSEOMetadataPrompt(context);
 
-    const message = await anthropic.messages.create({
+    const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create{
       model: "claude-3-5-sonnet-20241022",
       max_tokens: 1000,
       messages: [
@@ -107,7 +113,10 @@ export async function generateSEOMetadata(context: {
           content: prompt,
         },
       ],
+    })
     });
+
+    const message = result.data;;
 
     const content = message.content[0];
     if (content.type === "text") {
@@ -139,7 +148,8 @@ export async function generateCopyTips(
   try {
     const prompt = generateCopyTipsPrompt(pageType, persona);
 
-    const message = await anthropic.messages.create({
+    const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create{
       model: "claude-3-5-sonnet-20241022",
       max_tokens: 1500,
       messages: [
@@ -148,7 +158,10 @@ export async function generateCopyTips(
           content: prompt,
         },
       ],
+    })
     });
+
+    const message = result.data;;
 
     const content = message.content[0];
     if (content.type === "text") {
@@ -177,7 +190,8 @@ export async function generateDesignTips(pageType: string): Promise<string[]> {
   try {
     const prompt = generateDesignTipsPrompt(pageType);
 
-    const message = await anthropic.messages.create({
+    const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create{
       model: "claude-3-5-sonnet-20241022",
       max_tokens: 1500,
       messages: [
@@ -186,7 +200,10 @@ export async function generateDesignTips(pageType: string): Promise<string[]> {
           content: prompt,
         },
       ],
+    })
     });
+
+    const message = result.data;;
 
     const content = message.content[0];
     if (content.type === "text") {
@@ -232,7 +249,8 @@ export async function generateCopyVariations(
   try {
     const prompt = generateCopyVariationsPrompt(currentCopy, context, count);
 
-    const message = await anthropic.messages.create({
+    const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create{
       model: "claude-3-5-sonnet-20241022",
       max_tokens: 2500,
       messages: [
@@ -241,7 +259,10 @@ export async function generateCopyVariations(
           content: prompt,
         },
       ],
+    })
     });
+
+    const message = result.data;;
 
     const content = message.content[0];
     if (content.type === "text") {
@@ -278,7 +299,8 @@ export async function improveCopy(
   try {
     const prompt = improveCopyPrompt(currentCopy, context);
 
-    const message = await anthropic.messages.create({
+    const result = await callAnthropicWithRetry(async () => {
+      return await anthropic.messages.create{
       model: "claude-3-5-sonnet-20241022",
       max_tokens: 2000,
       messages: [
@@ -287,7 +309,10 @@ export async function improveCopy(
           content: prompt,
         },
       ],
+    })
     });
+
+    const message = result.data;;
 
     const content = message.content[0];
     if (content.type === "text") {
