@@ -8,8 +8,7 @@
 import { useMemo } from 'react';
 import { VisualMethodCard } from './VisualMethodCard';
 import { FilterState } from './VisualMethodFilterBar';
-import { METHOD_REGISTRY } from '@/lib/visual/methods/catalog';
-import { MethodMetadata } from '@/lib/visual/methods/metadata';
+import { METHOD_METADATA_REGISTRY, MethodMetadata } from '@/lib/visual/methods/metadata';
 
 interface VisualMethodGridProps {
   filters: FilterState;
@@ -23,7 +22,7 @@ export function VisualMethodGrid({
   className = '',
 }: VisualMethodGridProps) {
   const filteredMethods = useMemo(() => {
-    let methods = Array.from(METHOD_REGISTRY.values());
+    let methods = Array.from(METHOD_METADATA_REGISTRY.values());
 
     // Search filter
     if (filters.search) {

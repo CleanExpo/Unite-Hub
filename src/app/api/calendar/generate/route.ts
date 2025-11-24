@@ -140,7 +140,7 @@ export async function POST(req: NextRequest) {
 
     // Call Claude AI to generate calendar
     const result = await callAnthropicWithRetry(async () => {
-      return await anthropic.messages.create{
+      return await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 8000,
       system: CONTENT_CALENDAR_SYSTEM_PROMPT,

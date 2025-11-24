@@ -129,7 +129,11 @@
       "Bash(if exist .next rd /s /q .next)",
       "Bash(rd /s /q .next)",
       "Bash(timeout /t 15 /nobreak)",
-      "Bash(instrumentation.ts)"
+      "Bash(instrumentation.ts)",
+      "Bash(npx next build:*)",
+      "Bash(timeout 60 bash:*)",
+      "Bash(for file in src/app/api/ai/chat/route.ts src/app/api/calendar/generate/route.ts \"src/app/api/calendar/[postId]/regenerate/route.ts\" src/app/api/competitors/analyze/route.ts src/app/api/landing-pages/generate/route.ts \"src/app/api/landing-pages/[id]/alternatives/route.ts\" \"src/app/api/landing-pages/[id]/regenerate/route.ts\" src/app/api/media/analyze/route.ts src/app/api/sequences/generate/route.ts src/app/api/social-templates/generate/route.ts \"src/app/api/social-templates/[id]/variations/route.ts\" src/lib/agents/contact-intelligence.ts src/lib/agents/email-processor.ts src/lib/agents/intelligence-extraction.ts src/lib/agents/mindmap-analysis.ts src/lib/agents/multi-model-orchestrator.ts src/lib/ai/claude-client.ts src/lib/ai/enhanced-router.ts src/lib/ai/orchestrator.ts src/lib/clientAgent/clientAgentPlannerService.ts)",
+      "Bash(do sed -i 's/\\.create{/.create({/g' \"$file\")"
     ],
     "deny": [],
     "ask": []

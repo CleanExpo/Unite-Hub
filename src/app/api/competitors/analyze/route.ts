@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
 
     // Call Claude AI
     const result = await callAnthropicWithRetry(async () => {
-      return await anthropic.messages.create{
+      return await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 8000,
       temperature: 0.7,

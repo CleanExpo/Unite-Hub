@@ -118,7 +118,7 @@ export async function runAI(eventType: AIEventType, payload: any) {
  */
 async function processIdeaSubmission(payload: { ideaId: string; content: string }) {
   const result = await callAnthropicWithRetry(async () => {
-      return await anthropic.messages.create{
+      return await anthropic.messages.create({
     model: 'claude-opus-4-1-20250805',
     max_tokens: 4096,
     thinking: {
@@ -159,7 +159,7 @@ Format as structured JSON.`,
  */
 async function generateProposal(payload: { ideaId: string; interpretation: any }) {
   const result = await callAnthropicWithRetry(async () => {
-      return await anthropic.messages.create{
+      return await anthropic.messages.create({
     model: 'claude-sonnet-4-5-20250929',
     max_tokens: 4096,
     messages: [

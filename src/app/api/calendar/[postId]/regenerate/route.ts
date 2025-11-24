@@ -147,7 +147,7 @@ Create a fresh version that's more engaging and effective.`;
 
     // Call Claude AI
     const result = await callAnthropicWithRetry(async () => {
-      return await anthropic.messages.create{
+      return await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 2000,
       system: systemPrompt,

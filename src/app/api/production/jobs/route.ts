@@ -14,7 +14,7 @@ import {
   type JobType,
   type JobStatus,
 } from '@/lib/production/productionEngine';
-import { addToQueue } from '@/lib/production/jobQueue';
+import { queueJob } from '@/lib/production/jobQueue';
 
 export async function GET(req: NextRequest) {
   try {
@@ -128,7 +128,7 @@ export async function POST(req: NextRequest) {
 
     // Optionally add to queue for automatic processing
     if (autoProcess) {
-      await addToQueue(job.id);
+      await queueJob(job.id);
     }
 
     return NextResponse.json({ job });
@@ -202,7 +202,7 @@ export async function PATCH(req: NextRequest) {
         newStatus = 'completed';
         break;
       case 'process':
-        await addToQueue(jobId);
+        await queueJob(jobId);
         return NextResponse.json({ success: true, message: 'Job added to queue' });
       default:
         return NextResponse.json({ error: 'Invalid action' }, { status: 400 });

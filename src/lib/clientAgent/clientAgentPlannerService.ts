@@ -30,7 +30,7 @@ export async function planAgentResponse(
 
   try {
     const result = await callAnthropicWithRetry(async () => {
-      return await anthropic.messages.create{
+      return await anthropic.messages.create({
       model: 'claude-sonnet-4-5-20250929',
       max_tokens: 2048,
       system: systemPrompt,
@@ -231,7 +231,7 @@ export async function generateSimpleResponse(
 ): Promise<string> {
   try {
     const result = await callAnthropicWithRetry(async () => {
-      return await anthropic.messages.create{
+      return await anthropic.messages.create({
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 512,
       system: `You are a helpful CRM assistant. Answer questions concisely based on the provided context. If you don't have enough information, say so honestly.

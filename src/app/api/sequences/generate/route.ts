@@ -144,7 +144,7 @@ Format your response as JSON with this structure:
 
     // Generate sequence with Claude
     const result = await callAnthropicWithRetry(async () => {
-      return await anthropic.messages.create{
+      return await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 4000,
       messages: [

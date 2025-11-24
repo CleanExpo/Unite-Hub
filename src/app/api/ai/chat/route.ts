@@ -64,7 +64,7 @@ Help them make decisions about approving or iterating on this content.`;
 
     // Call Claude API
     const result = await callAnthropicWithRetry(async () => {
-      return await anthropic.messages.create{
+      return await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
       max_tokens: 1024,
       system: systemPrompt,

@@ -97,7 +97,7 @@ Return as JSON array:
 }`;
 
   const result = await callAnthropicWithRetry(async () => {
-      return await anthropic.messages.create{
+      return await anthropic.messages.create({
     model: "claude-3-5-sonnet-20241022",
     max_tokens: 4000,
     messages: [

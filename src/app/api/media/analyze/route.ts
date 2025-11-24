@@ -173,7 +173,7 @@ Format your response as valid JSON with these exact keys:
     let analysis;
     try {
       const result = await callAnthropicWithRetry(async () => {
-      return await anthropic.messages.create{
+      return await anthropic.messages.create({
         model: "claude-opus-4-1-20250805",
         max_tokens: 4000,
         thinking: {

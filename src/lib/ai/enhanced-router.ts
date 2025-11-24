@@ -292,7 +292,7 @@ async function routeToAnthropic(params: {
 
   try {
     const result = await callAnthropicWithRetry(async () => {
-      return await anthropic.messages.create{
+      return await anthropic.messages.create({
       model: modelId,
       max_tokens: maxTokens,
       ...(requiresExtendedThinking && {

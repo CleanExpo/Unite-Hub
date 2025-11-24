@@ -181,7 +181,7 @@ Generate specific code changes, file edits, and implementation steps.`;
     const tokenEstimate = Math.ceil((task.length + context.length) / 4);
 
     const result = await callAnthropicWithRetry(async () => {
-      return await anthropic.messages.create{
+      return await anthropic.messages.create({
       model: MODELS.claude.name,
       max_tokens: 4096,
       messages: [

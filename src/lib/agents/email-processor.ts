@@ -155,7 +155,7 @@ ${body.substring(0, 2000)}
 Analyze this email and extract intent and key information.`;
 
     const result = await callAnthropicWithRetry(async () => {
-      return await anthropic.messages.create{
+      return await anthropic.messages.create({
       model: "claude-sonnet-4-5-20250929",
       max_tokens: 1000,
       system: [

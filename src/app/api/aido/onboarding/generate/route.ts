@@ -19,7 +19,7 @@ import {
   BusinessProfileInput,
   AuthorityFigureInput,
 } from '@/lib/ai/onboarding-intelligence';
-import { checkTierRateLimit } from '@/lib/rate-limiter';
+import { checkTierRateLimit } from '@/lib/rate-limit-tiers';
 
 export async function POST(req: NextRequest) {
   try {

@@ -74,7 +74,7 @@ async function getUserTier(userId: string): Promise<PlanTier> {
       .eq('user_id', userId)
       .single();
     
-    if (error || \!data) {
+    if (error || !data) {
       return 'free'; // Default to free tier
     }
     

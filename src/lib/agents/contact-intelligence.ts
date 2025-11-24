@@ -97,7 +97,7 @@ Analyze this contact and return your assessment as JSON.`;
 
     // Call Claude with extended thinking + prompt caching
     const result = await callAnthropicWithRetry(async () => {
-      return await anthropic.messages.create{
+      return await anthropic.messages.create({
       model: "claude-opus-4-1-20250805",
       max_tokens: 16000,
       thinking: {

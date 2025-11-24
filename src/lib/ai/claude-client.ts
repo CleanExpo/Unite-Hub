@@ -49,7 +49,7 @@ export async function generateSectionCopy(
     const prompt = generateSectionCopyPrompt(context);
 
     const result = await callAnthropicWithRetry(async () => {
-      return await anthropic.messages.create{
+      return await anthropic.messages.create({
       model: "claude-3-5-sonnet-20241022",
       max_tokens: 2000,
       messages: [
@@ -104,7 +104,7 @@ export async function generateSEOMetadata(context: {
     const prompt = generateSEOMetadataPrompt(context);
 
     const result = await callAnthropicWithRetry(async () => {
-      return await anthropic.messages.create{
+      return await anthropic.messages.create({
       model: "claude-3-5-sonnet-20241022",
       max_tokens: 1000,
       messages: [
@@ -149,7 +149,7 @@ export async function generateCopyTips(
     const prompt = generateCopyTipsPrompt(pageType, persona);
 
     const result = await callAnthropicWithRetry(async () => {
-      return await anthropic.messages.create{
+      return await anthropic.messages.create({
       model: "claude-3-5-sonnet-20241022",
       max_tokens: 1500,
       messages: [
@@ -191,7 +191,7 @@ export async function generateDesignTips(pageType: string): Promise<string[]> {
     const prompt = generateDesignTipsPrompt(pageType);
 
     const result = await callAnthropicWithRetry(async () => {
-      return await anthropic.messages.create{
+      return await anthropic.messages.create({
       model: "claude-3-5-sonnet-20241022",
       max_tokens: 1500,
       messages: [
@@ -250,7 +250,7 @@ export async function generateCopyVariations(
     const prompt = generateCopyVariationsPrompt(currentCopy, context, count);
 
     const result = await callAnthropicWithRetry(async () => {
-      return await anthropic.messages.create{
+      return await anthropic.messages.create({
       model: "claude-3-5-sonnet-20241022",
       max_tokens: 2500,
       messages: [
@@ -300,7 +300,7 @@ export async function improveCopy(
     const prompt = improveCopyPrompt(currentCopy, context);
 
     const result = await callAnthropicWithRetry(async () => {
-      return await anthropic.messages.create{
+      return await anthropic.messages.create({
       model: "claude-3-5-sonnet-20241022",
       max_tokens: 2000,
       messages: [

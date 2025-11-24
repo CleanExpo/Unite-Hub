@@ -160,7 +160,7 @@ export async function analyzeMindmap(
 
     // Call Claude with Extended Thinking
     const result = await callAnthropicWithRetry(async () => {
-      return await anthropic.messages.create{
+      return await anthropic.messages.create({
       model: "claude-sonnet-4-5-20250929",
       max_tokens: 4096,
       thinking: {
@@ -355,7 +355,7 @@ Respond in JSON format:
 }`;
 
     const result = await callAnthropicWithRetry(async () => {
-      return await anthropic.messages.create{
+      return await anthropic.messages.create({
       model: "claude-sonnet-4-5-20250929",
       max_tokens: 1024,
       messages: [
