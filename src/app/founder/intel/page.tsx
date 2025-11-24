@@ -22,6 +22,7 @@ import { useRouter } from 'next/navigation';
 import { FounderIntelOverview } from '@/components/founderIntel/FounderIntelOverview';
 import { FounderIntelAlertsPanel } from '@/components/founderIntel/FounderIntelAlertsPanel';
 import { FounderIntelSnapshotList } from '@/components/founderIntel/FounderIntelSnapshotList';
+import { PerformanceRealityStrip } from '@/components/performanceReality/PerformanceRealityStrip';
 import {
   FounderIntelSnapshot,
   FounderIntelAlert,
@@ -145,6 +146,21 @@ export default function FounderIntelPage() {
             Generate Snapshot
           </Button>
         </div>
+      </div>
+
+      {/* Performance Reality Strip */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <h2 className="text-sm font-medium text-muted-foreground">Performance Reality</h2>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => router.push('/founder/performance-reality')}
+          >
+            View Details
+          </Button>
+        </div>
+        <PerformanceRealityStrip scope="global" />
       </div>
 
       {/* Health Overview */}
