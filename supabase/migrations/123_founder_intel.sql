@@ -34,7 +34,7 @@ CREATE POLICY founder_intel_snapshots_select ON founder_intel_snapshots
   FOR SELECT
   USING (
     auth.uid() IN (
-      SELECT user_id FROM user_profiles WHERE role IN ('founder', 'admin', 'owner')
+      SELECT user_id FROM user_organizations WHERE role IN ('admin', 'owner')
     )
   );
 
@@ -43,7 +43,7 @@ CREATE POLICY founder_intel_snapshots_insert ON founder_intel_snapshots
   FOR INSERT
   WITH CHECK (
     auth.uid() IN (
-      SELECT user_id FROM user_profiles WHERE role IN ('founder', 'admin', 'owner')
+      SELECT user_id FROM user_organizations WHERE role IN ('admin', 'owner')
     )
   );
 
@@ -84,7 +84,7 @@ CREATE POLICY founder_intel_alerts_select ON founder_intel_alerts
   FOR SELECT
   USING (
     auth.uid() IN (
-      SELECT user_id FROM user_profiles WHERE role IN ('founder', 'admin', 'owner')
+      SELECT user_id FROM user_organizations WHERE role IN ('admin', 'owner')
     )
   );
 
@@ -93,7 +93,7 @@ CREATE POLICY founder_intel_alerts_insert ON founder_intel_alerts
   FOR INSERT
   WITH CHECK (
     auth.uid() IN (
-      SELECT user_id FROM user_profiles WHERE role IN ('founder', 'admin', 'owner')
+      SELECT user_id FROM user_organizations WHERE role IN ('admin', 'owner')
     )
   );
 
@@ -102,12 +102,12 @@ CREATE POLICY founder_intel_alerts_update ON founder_intel_alerts
   FOR UPDATE
   USING (
     auth.uid() IN (
-      SELECT user_id FROM user_profiles WHERE role IN ('founder', 'admin', 'owner')
+      SELECT user_id FROM user_organizations WHERE role IN ('admin', 'owner')
     )
   )
   WITH CHECK (
     auth.uid() IN (
-      SELECT user_id FROM user_profiles WHERE role IN ('founder', 'admin', 'owner')
+      SELECT user_id FROM user_organizations WHERE role IN ('admin', 'owner')
     )
   );
 
