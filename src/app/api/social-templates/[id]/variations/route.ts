@@ -121,6 +121,6 @@ Return as JSON array:
     throw new Error("Could not parse JSON from Claude response");
   }
 
-  const result = JSON.parse(jsonMatch[0]);
-  return result.variations;
+  const parsedResult = JSON.parse(jsonMatch[0]);
+  return parsedResult.variations;
 }

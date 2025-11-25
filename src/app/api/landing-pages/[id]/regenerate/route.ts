@@ -140,6 +140,6 @@ Return as JSON:
     throw new Error("Could not parse JSON from Claude response");
   }
 
-  const result = JSON.parse(jsonMatch[0]);
-  return result.copyVariations;
+  const parsedResult = JSON.parse(jsonMatch[0]);
+  return parsedResult.copyVariations;
 }

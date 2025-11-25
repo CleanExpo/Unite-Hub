@@ -178,6 +178,6 @@ Return as JSON array with this structure:
     throw new Error("Could not parse JSON from Claude response");
   }
 
-  const result = JSON.parse(jsonMatch[0]);
-  return result.templates;
+  const parsedResult = JSON.parse(jsonMatch[0]);
+  return parsedResult.templates;
 }

@@ -102,10 +102,10 @@ export async function checkTierRateLimit(
   const day = Math.floor(now / 86400000);
   
   // Keys for different time windows
-  const minuteKey = \;
-  const hourKey = \;
-  const dayKey = \;
-  const aiDayKey = \;
+  const minuteKey = `rate-limit:${userId}:minute:${minute}`;
+  const hourKey = `rate-limit:${userId}:hour:${hour}`;
+  const dayKey = `rate-limit:${userId}:day:${day}`;
+  const aiDayKey = `rate-limit:${userId}:ai:day:${day}`;
   
   // Get counts from Redis (or fallback to in-memory)
   const counts = await getCounts([minuteKey, hourKey, dayKey, aiDayKey]);
