@@ -222,16 +222,16 @@ CREATE INDEX IF NOT EXISTS idx_governance_policies_risk_level ON governance_poli
 
 CREATE INDEX IF NOT EXISTS idx_governance_audit_policy ON governance_audit(policy_id);
 CREATE INDEX IF NOT EXISTS idx_governance_audit_action ON governance_audit(action);
-CREATE INDEX IF NOT EXISTS idx_governance_audit_created ON governance_audit(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_governance_audit_created ON governance_audit(created_at);
 
 CREATE INDEX IF NOT EXISTS idx_model_routing_request ON model_routing_decisions(request_id);
 CREATE INDEX IF NOT EXISTS idx_model_routing_model ON model_routing_decisions(selected_model);
-CREATE INDEX IF NOT EXISTS idx_model_routing_created ON model_routing_decisions(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_model_routing_created ON model_routing_decisions(created_at);
 
 CREATE INDEX IF NOT EXISTS idx_model_rewards_model ON model_rewards(model_id);
 CREATE INDEX IF NOT EXISTS idx_model_rewards_task ON model_rewards(task_type);
 CREATE INDEX IF NOT EXISTS idx_model_rewards_model_task ON model_rewards(model_id, task_type);
-CREATE INDEX IF NOT EXISTS idx_model_rewards_overall ON model_rewards(overall_score DESC);
+CREATE INDEX IF NOT EXISTS idx_model_rewards_overall ON model_rewards(overall_score);
 
 CREATE INDEX IF NOT EXISTS idx_risk_boundaries_profile ON risk_boundaries(profile_id);
 CREATE INDEX IF NOT EXISTS idx_risk_boundaries_dimension ON risk_boundaries(dimension);
@@ -240,10 +240,10 @@ CREATE INDEX IF NOT EXISTS idx_risk_boundaries_severity ON risk_boundaries(sever
 CREATE INDEX IF NOT EXISTS idx_risk_assessments_decision ON risk_assessments(decision_id);
 CREATE INDEX IF NOT EXISTS idx_risk_assessments_level ON risk_assessments(risk_level);
 
-CREATE INDEX IF NOT EXISTS idx_simulation_scenarios_created ON simulation_scenarios(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_simulation_scenarios_created ON simulation_scenarios(created_at);
 
 CREATE INDEX IF NOT EXISTS idx_simulation_results_scenario ON simulation_results(scenario_id);
-CREATE INDEX IF NOT EXISTS idx_simulation_results_created ON simulation_results(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_simulation_results_created ON simulation_results(created_at);
 
 CREATE INDEX IF NOT EXISTS idx_governance_reports_period ON governance_reports(period_start, period_end);
 
