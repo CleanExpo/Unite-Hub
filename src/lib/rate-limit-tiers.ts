@@ -190,13 +190,13 @@ function createRateLimitResponse(
   
   return NextResponse.json(
     {
-      error: \,
-      message: \,
+      error: 'Rate limit exceeded',
+      message: `Too many ${resourceType}. Please try again in ${retryAfter} seconds.`,
       tier,
       limit,
       window,
       retryAfter,
-      upgrade: tier \!== 'enterprise' ? \ : undefined,
+      upgrade: tier !== 'enterprise' ? 'Upgrade to increase limits' : undefined,
     },
     {
       status: 429,
