@@ -49,3 +49,12 @@ export type { AdaptationProfile, AdaptationParams } from './executionAdaptationM
 
 export { optimizerArchiveBridge } from './optimizerArchiveBridge';
 export type { OptimizationResult } from './optimizerArchiveBridge';
+
+export { agentNegotiationEngine } from '../negotiation';
+export type { AgentProposal, ConsensusScore, NegotiationSession } from '../negotiation';
+
+export { arbitrationModel } from '../negotiation';
+export type { ArbitrationInput, ArbitrationDecision } from '../negotiation';
+
+export { negotiationArchiveBridge } from '../negotiation';
+export type { NegotiationRecord, NegotiationPattern } from '../negotiation';
