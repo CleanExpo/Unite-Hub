@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS governance_audit (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   decision_id TEXT NOT NULL,
-  policy_id UUID NOT NULL REFERENCES governance_policies(id),
+  policy_id UUID NOT NULL REFERENCES governance_policies(id) ON DELETE CASCADE,
   agent_id TEXT NOT NULL,
   action TEXT NOT NULL CHECK (action IN ('approved', 'rejected', 'escalated', 'modified', 'overridden')),
   violations JSONB,
@@ -75,20 +75,6 @@ CREATE TABLE IF NOT EXISTS model_rewards (
   metadata JSONB
 );
 
--- Risk boundaries
-CREATE TABLE IF NOT EXISTS risk_boundaries (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  profile_id UUID NOT NULL,
-  name TEXT NOT NULL,
-  description TEXT,
-  dimension TEXT NOT NULL CHECK (dimension IN ('cost', 'latency', 'accuracy', 'scope', 'frequency')),
-  severity TEXT NOT NULL CHECK (severity IN ('low', 'medium', 'high', 'critical')),
-  threshold NUMERIC NOT NULL,
-  unit TEXT,
-  founder_approval_required BOOLEAN DEFAULT FALSE
-);
-
 -- Risk profiles (conservative, balanced, aggressive)
 CREATE TABLE IF NOT EXISTS risk_profiles (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -98,6 +84,20 @@ CREATE TABLE IF NOT EXISTS risk_profiles (
   description TEXT,
   founder_approved BOOLEAN DEFAULT FALSE,
   active BOOLEAN DEFAULT FALSE
+);
+
+-- Risk boundaries
+CREATE TABLE IF NOT EXISTS risk_boundaries (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  profile_id UUID NOT NULL REFERENCES risk_profiles(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  description TEXT,
+  dimension TEXT NOT NULL CHECK (dimension IN ('cost', 'latency', 'accuracy', 'scope', 'frequency')),
+  severity TEXT NOT NULL CHECK (severity IN ('low', 'medium', 'high', 'critical')),
+  threshold NUMERIC NOT NULL,
+  unit TEXT,
+  founder_approval_required BOOLEAN DEFAULT FALSE
 );
 
 -- Risk assessments
@@ -128,7 +128,7 @@ CREATE TABLE IF NOT EXISTS simulation_scenarios (
 CREATE TABLE IF NOT EXISTS simulation_results (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  scenario_id UUID NOT NULL REFERENCES simulation_scenarios(id),
+  scenario_id UUID NOT NULL REFERENCES simulation_scenarios(id) ON DELETE CASCADE,
   agent_behavior JSONB,
   model_selection JSONB,
   resource_utilization JSONB,
@@ -151,28 +151,6 @@ CREATE TABLE IF NOT EXISTS governance_reports (
   recommendations JSONB
 );
 
--- Add risk_boundaries foreign key constraint
-DO $$
-BEGIN
-  IF NOT EXISTS (
-    SELECT 1 FROM information_schema.table_constraints
-    WHERE table_name = 'risk_boundaries' AND constraint_name = 'risk_boundaries_profile_fk'
-  ) THEN
-    ALTER TABLE risk_boundaries ADD CONSTRAINT risk_boundaries_profile_fk FOREIGN KEY (profile_id) REFERENCES risk_profiles(id);
-  END IF;
-END $$;
-
--- Add simulation_results foreign key constraint (already defined inline, but ensure it exists)
-DO $$
-BEGIN
-  IF NOT EXISTS (
-    SELECT 1 FROM information_schema.table_constraints
-    WHERE table_name = 'simulation_results' AND constraint_name = 'simulation_results_scenario_fk'
-  ) THEN
-    ALTER TABLE simulation_results ADD CONSTRAINT simulation_results_scenario_fk FOREIGN KEY (scenario_id) REFERENCES simulation_scenarios(id);
-  END IF;
-END $$;
-
 -- Enable RLS
 ALTER TABLE model_capabilities ENABLE ROW LEVEL SECURITY;
 ALTER TABLE governance_policies ENABLE ROW LEVEL SECURITY;
@@ -187,37 +165,37 @@ ALTER TABLE simulation_results ENABLE ROW LEVEL SECURITY;
 ALTER TABLE governance_reports ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies (authenticated read)
-CREATE POLICY "Allow authenticated read model_capabilities" ON model_capabilities
+CREATE POLICY IF NOT EXISTS "Allow authenticated read model_capabilities" ON model_capabilities
   FOR SELECT USING (auth.role() = 'authenticated');
 
-CREATE POLICY "Allow authenticated read governance_policies" ON governance_policies
+CREATE POLICY IF NOT EXISTS "Allow authenticated read governance_policies" ON governance_policies
   FOR SELECT USING (auth.role() = 'authenticated');
 
-CREATE POLICY "Allow authenticated read governance_audit" ON governance_audit
+CREATE POLICY IF NOT EXISTS "Allow authenticated read governance_audit" ON governance_audit
   FOR SELECT USING (auth.role() = 'authenticated');
 
-CREATE POLICY "Allow authenticated read model_routing" ON model_routing_decisions
+CREATE POLICY IF NOT EXISTS "Allow authenticated read model_routing" ON model_routing_decisions
   FOR SELECT USING (auth.role() = 'authenticated');
 
-CREATE POLICY "Allow authenticated read model_rewards" ON model_rewards
+CREATE POLICY IF NOT EXISTS "Allow authenticated read model_rewards" ON model_rewards
   FOR SELECT USING (auth.role() = 'authenticated');
 
-CREATE POLICY "Allow authenticated read risk_boundaries" ON risk_boundaries
+CREATE POLICY IF NOT EXISTS "Allow authenticated read risk_boundaries" ON risk_boundaries
   FOR SELECT USING (auth.role() = 'authenticated');
 
-CREATE POLICY "Allow authenticated read risk_profiles" ON risk_profiles
+CREATE POLICY IF NOT EXISTS "Allow authenticated read risk_profiles" ON risk_profiles
   FOR SELECT USING (auth.role() = 'authenticated');
 
-CREATE POLICY "Allow authenticated read risk_assessments" ON risk_assessments
+CREATE POLICY IF NOT EXISTS "Allow authenticated read risk_assessments" ON risk_assessments
   FOR SELECT USING (auth.role() = 'authenticated');
 
-CREATE POLICY "Allow authenticated read simulation_scenarios" ON simulation_scenarios
+CREATE POLICY IF NOT EXISTS "Allow authenticated read simulation_scenarios" ON simulation_scenarios
   FOR SELECT USING (auth.role() = 'authenticated');
 
-CREATE POLICY "Allow authenticated read simulation_results" ON simulation_results
+CREATE POLICY IF NOT EXISTS "Allow authenticated read simulation_results" ON simulation_results
   FOR SELECT USING (auth.role() = 'authenticated');
 
-CREATE POLICY "Allow authenticated read governance_reports" ON governance_reports
+CREATE POLICY IF NOT EXISTS "Allow authenticated read governance_reports" ON governance_reports
   FOR SELECT USING (auth.role() = 'authenticated');
 
 -- Indexes for performance
