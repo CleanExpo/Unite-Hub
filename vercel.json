@@ -12,6 +12,10 @@
     {
       "path": "/api/aido/google-curve/monitor",
       "schedule": "0 */6 * * *"
+    },
+    {
+      "path": "/api/cron/health-check",
+      "schedule": "*/5 * * * *"
     }
   ]
 }

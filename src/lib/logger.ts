@@ -43,6 +43,19 @@ transports.push(
   })
 );
 
+// Database transport (autonomous monitoring - enabled in production)
+if (process.env.NODE_ENV === 'production' || process.env.ENABLE_DB_LOGGING === 'true') {
+  // Lazy load to avoid circular dependencies
+  import('./monitoring/winston-database-transport').then(({ DatabaseTransport }) => {
+    const dbTransport = new DatabaseTransport();
+    // Add to logger's transports
+    logger.add(dbTransport);
+    console.log('✅ Database logging transport enabled');
+  }).catch(err => {
+    console.warn('⚠️  Failed to load database transport:', err.message);
+  });
+}
+
 // File transports (only in production or if LOG_TO_FILE is enabled)
 if (process.env.NODE_ENV === 'production' || process.env.LOG_TO_FILE === 'true') {
   const logDir = process.env.LOG_DIR || path.join(process.cwd(), 'logs');
