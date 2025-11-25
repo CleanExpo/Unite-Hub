@@ -15,3 +15,6 @@ export { safetyInterventionController } from './safetyInterventionController';
 export type { InterventionResult } from './safetyInterventionController';
 
 export { safetyArchiveBridge } from './safetyArchiveBridge';
+
+export { safetyEnforcementManager } from './safetyEnforcementManager';
+export type { EnforcementDecision, EnforcementResult, EnforcementState } from './safetyEnforcementManager';
