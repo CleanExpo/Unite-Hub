@@ -72,8 +72,7 @@ CREATE TABLE IF NOT EXISTS model_rewards (
   cost_score INTEGER CHECK (cost_score >= 0 AND cost_score <= 100),
   latency_score INTEGER CHECK (latency_score >= 0 AND latency_score <= 100),
   overall_score INTEGER CHECK (overall_score >= 0 AND overall_score <= 100),
-  metadata JSONB,
-  CONSTRAINT reward_uniqueness UNIQUE (model_id, task_type, created_at)
+  metadata JSONB
 );
 
 -- Risk boundaries
@@ -239,6 +238,7 @@ CREATE INDEX IF NOT EXISTS idx_model_routing_created ON model_routing_decisions(
 
 CREATE INDEX IF NOT EXISTS idx_model_rewards_model ON model_rewards(model_id);
 CREATE INDEX IF NOT EXISTS idx_model_rewards_task ON model_rewards(task_type);
+CREATE INDEX IF NOT EXISTS idx_model_rewards_model_task ON model_rewards(model_id, task_type);
 CREATE INDEX IF NOT EXISTS idx_model_rewards_overall ON model_rewards(overall_score DESC);
 
 CREATE INDEX IF NOT EXISTS idx_risk_boundaries_profile ON risk_boundaries(profile_id);
