@@ -311,6 +311,51 @@ async function checkEmailService() {
   }
 }
 
+// 5B. REDIS CACHING
+async function checkRedis() {
+  logSection('5B. REDIS CACHING');
+
+  try {
+    // Import Redis client
+    const { getRedisClient } = await import('../src/lib/redis.ts');
+    const redis = getRedisClient();
+
+    // Test ping
+    const pingResult = await redis.ping();
+    if (pingResult === 'PONG') {
+      logCheck('Redis Connection', 'pass', 'Connected (using mock fallback)');
+    } else {
+      logCheck('Redis Connection', 'fail', 'Unexpected ping response');
+    }
+
+    // Test basic operations
+    await redis.set('health_check_test', 'test_value', 'EX', 10);
+    const value = await redis.get('health_check_test');
+
+    if (value === 'test_value') {
+      logCheck('Redis Operations', 'pass', 'SET/GET working');
+    } else {
+      logCheck('Redis Operations', 'warn', 'SET/GET returned unexpected value');
+    }
+
+    // Cleanup
+    await redis.del('health_check_test');
+
+    // Check if using real Redis or mock
+    const redisUrl = process.env.REDIS_URL || process.env.UPSTASH_REDIS_REST_URL;
+    if (!redisUrl) {
+      logCheck('Redis Mode', 'warn', 'Using in-memory mock (production should use real Redis)');
+      healthReport.warnings.push('Redis not configured - using in-memory fallback');
+    } else {
+      logCheck('Redis Mode', 'pass', 'Using real Redis connection');
+    }
+
+  } catch (error) {
+    logCheck('Redis Check', 'fail', error.message);
+    healthReport.warnings.push('Redis check failed: ' + error.message);
+  }
+}
+
 // 6. FRONTEND BUILD STATUS
 async function checkFrontend() {
   logSection('6. FRONTEND BUILD STATUS');
@@ -433,6 +478,7 @@ async function runHealthCheck() {
   await checkPayments();
   await checkAIModels();
   await checkEmailService();
+  await checkRedis();
   await checkFrontend();
   await checkEnvironment();
   await checkAPIEndpoints();

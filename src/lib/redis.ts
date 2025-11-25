@@ -78,6 +78,24 @@ function createMockRedisClient(): Redis {
       const remaining = Math.floor((item.expiry - Date.now()) / 1000);
       return remaining > 0 ? remaining : -2;
     },
+    ping: async () => {
+      return 'PONG';
+    },
+    keys: async (pattern: string) => {
+      // Simple pattern matching for mock (just prefix matching)
+      const regex = new RegExp('^' + pattern.replace('*', '.*') + '$');
+      return Array.from(mockData.keys()).filter(key => regex.test(key));
+    },
+    exists: async (...keys: string[]) => {
+      return keys.filter(key => mockData.has(key)).length;
+    },
+    quit: async () => {
+      mockData.clear();
+      return 'OK';
+    },
+    disconnect: () => {
+      mockData.clear();
+    },
   } as unknown as Redis;
 }
 
