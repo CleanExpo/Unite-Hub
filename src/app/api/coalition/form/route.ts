@@ -114,7 +114,7 @@ export async function POST(req: NextRequest) {
       proposal: {
         taskId: coalitionProposal.taskId,
         agentIds: coalitionProposal.agentIds,
-        synergySc ore: coalitionProposal.coalitionSynergyScore,
+        synergyScore: coalitionProposal.coalitionSynergyScore,
         recommendedLeader: coalitionProposal.recommendedLeader,
         estimatedOutcome: coalitionProposal.estimatedOutcome,
         safetyApproved: coalitionProposal.safetyApproved,
