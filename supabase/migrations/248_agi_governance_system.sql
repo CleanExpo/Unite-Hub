@@ -247,20 +247,15 @@ CREATE INDEX IF NOT EXISTS idx_simulation_results_created ON simulation_results(
 
 CREATE INDEX IF NOT EXISTS idx_governance_reports_period ON governance_reports(period_start, period_end);
 
--- Comments
-DO $$
-BEGIN
-  COMMENT ON TABLE model_capabilities IS 'Catalog of available models with capabilities, cost, and performance characteristics';
-  COMMENT ON TABLE governance_policies IS 'Governance policies enforcing risk boundaries and approval requirements';
-  COMMENT ON TABLE governance_audit IS 'Audit trail of governance decisions and founder actions';
-  COMMENT ON TABLE model_routing_decisions IS 'History of model selection decisions for routing';
-  COMMENT ON TABLE model_rewards IS 'Performance reward signals for models across task types';
-  COMMENT ON TABLE risk_boundaries IS 'Risk dimensions and thresholds within a profile';
-  COMMENT ON TABLE risk_profiles IS 'Risk profiles (conservative, balanced, aggressive)';
-  COMMENT ON TABLE risk_assessments IS 'Risk assessments of agent decisions';
-  COMMENT ON TABLE simulation_scenarios IS 'Scenario definitions for behavior forecasting';
-  COMMENT ON TABLE simulation_results IS 'Results from simulation runs';
-  COMMENT ON TABLE governance_reports IS 'Periodic governance and compliance reports';
-EXCEPTION WHEN OTHERS THEN
-  NULL;
-END $$;
+-- Table comments (optional, can add later via console)
+-- COMMENT ON TABLE model_capabilities IS 'Catalog of available models with capabilities, cost, and performance characteristics';
+-- COMMENT ON TABLE governance_policies IS 'Governance policies enforcing risk boundaries and approval requirements';
+-- COMMENT ON TABLE governance_audit IS 'Audit trail of governance decisions and founder actions';
+-- COMMENT ON TABLE model_routing_decisions IS 'History of model selection decisions for routing';
+-- COMMENT ON TABLE model_rewards IS 'Performance reward signals for models across task types';
+-- COMMENT ON TABLE risk_boundaries IS 'Risk dimensions and thresholds within a profile';
+-- COMMENT ON TABLE risk_profiles IS 'Risk profiles (conservative, balanced, aggressive)';
+-- COMMENT ON TABLE risk_assessments IS 'Risk assessments of agent decisions';
+-- COMMENT ON TABLE simulation_scenarios IS 'Scenario definitions for behavior forecasting';
+-- COMMENT ON TABLE simulation_results IS 'Results from simulation runs';
+-- COMMENT ON TABLE governance_reports IS 'Periodic governance and compliance reports';
