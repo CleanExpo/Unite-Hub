@@ -321,28 +321,5 @@ CREATE POLICY strategy_patterns_founder_update ON strategy_patterns
     )
   );
 
--- Audit triggers for automatic timestamp updates
-CREATE TRIGGER strategic_objectives_updated_trigger
-BEFORE UPDATE ON strategic_objectives
-FOR EACH ROW
-EXECUTE FUNCTION update_timestamp();
-
-CREATE TRIGGER strategy_hierarchies_updated_trigger
-BEFORE UPDATE ON strategy_hierarchies
-FOR EACH ROW
-EXECUTE FUNCTION update_timestamp();
-
-CREATE TRIGGER strategy_validations_updated_trigger
-BEFORE UPDATE ON strategy_validations
-FOR EACH ROW
-EXECUTE FUNCTION update_timestamp();
-
-CREATE TRIGGER strategy_archives_updated_trigger
-BEFORE UPDATE ON strategy_archives
-FOR EACH ROW
-EXECUTE FUNCTION update_timestamp();
-
-CREATE TRIGGER strategy_patterns_updated_trigger
-BEFORE UPDATE ON strategy_patterns
-FOR EACH ROW
-EXECUTE FUNCTION update_timestamp();
+-- Note: Timestamps (created_at, updated_at) are managed at the application layer
+-- via explicit SET updated_at = NOW() in UPDATE queries
