@@ -67,3 +67,15 @@ export type { BidScoringInput, ScoringBreakdown, BidComparison } from '../market
 
 export { auctionArchiveBridge } from '../marketplace';
 export type { AuctionArchiveEntry, MarketplacePattern, MarketplaceAnalytics } from '../marketplace';
+
+export { coalitionFormationEngine } from '../coalition';
+export type { CoalitionCandidate, CoalitionProposal } from '../coalition';
+
+export { coalitionRoleAllocator } from '../coalition';
+export type { RoleAssignment, RoleAllocationResult } from '../coalition';
+
+export { coalitionLifecycleManager } from '../coalition';
+export type { CoalitionState, CoalitionHealthMetrics, CoalitionExecutionStats } from '../coalition';
+
+export { coalitionArchiveBridge } from '../coalition';
+export type { CoalitionArchiveEntry, CoalitionPattern, CoalitionAnalytics } from '../coalition';
