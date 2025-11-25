@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm outdated:*)"
+      "Bash(npm outdated:*)",
+      "Bash(npm run test:health:*)"
     ],
     "deny": [],
     "ask": []

@@ -1,0 +1,252 @@
+{
+  "timestamp": "2025-11-25T00:25:16.154Z",
+  "overall_status": "degraded",
+  "checks": {
+    "Database Connection": {
+      "status": "pass",
+      "details": "Supabase connected",
+      "timestamp": "2025-11-25T00:25:16.653Z"
+    },
+    "Table: organizations": {
+      "status": "pass",
+      "details": "0 rows",
+      "timestamp": "2025-11-25T00:25:16.754Z"
+    },
+    "Table: user_profiles": {
+      "status": "pass",
+      "details": "0 rows",
+      "timestamp": "2025-11-25T00:25:16.867Z"
+    },
+    "Table: user_organizations": {
+      "status": "pass",
+      "details": "0 rows",
+      "timestamp": "2025-11-25T00:25:16.941Z"
+    },
+    "Table: workspaces": {
+      "status": "pass",
+      "details": "0 rows",
+      "timestamp": "2025-11-25T00:25:17.008Z"
+    },
+    "Table: contacts": {
+      "status": "pass",
+      "details": "0 rows",
+      "timestamp": "2025-11-25T00:25:17.080Z"
+    },
+    "Table: subscriptions": {
+      "status": "pass",
+      "details": "0 rows",
+      "timestamp": "2025-11-25T00:25:17.147Z"
+    },
+    "Table: campaigns": {
+      "status": "pass",
+      "details": "0 rows",
+      "timestamp": "2025-11-25T00:25:17.220Z"
+    },
+    "Table: drip_campaigns": {
+      "status": "pass",
+      "details": "0 rows",
+      "timestamp": "2025-11-25T00:25:17.308Z"
+    },
+    "Table: emails": {
+      "status": "pass",
+      "details": "0 rows",
+      "timestamp": "2025-11-25T00:25:17.382Z"
+    },
+    "Table: integrations": {
+      "status": "pass",
+      "details": "0 rows",
+      "timestamp": "2025-11-25T00:25:17.484Z"
+    },
+    "RLS Policies": {
+      "status": "warn",
+      "details": "Unable to verify RLS policies",
+      "timestamp": "2025-11-25T00:25:17.547Z"
+    },
+    "Auth Configuration": {
+      "status": "pass",
+      "details": "Supabase Auth initialized",
+      "timestamp": "2025-11-25T00:25:17.547Z"
+    },
+    "Google OAuth": {
+      "status": "pass",
+      "details": "Credentials configured",
+      "timestamp": "2025-11-25T00:25:17.548Z"
+    },
+    "User Profiles": {
+      "status": "pass",
+      "details": "1 users registered",
+      "timestamp": "2025-11-25T00:25:17.624Z"
+    },
+    "Stripe Connection": {
+      "status": "pass",
+      "details": "Balance: aud",
+      "timestamp": "2025-11-25T00:25:18.019Z"
+    },
+    "Stripe Price IDs": {
+      "status": "pass",
+      "details": "Starter: 249, Pro: 549",
+      "timestamp": "2025-11-25T00:25:18.482Z"
+    },
+    "Stripe Webhooks": {
+      "status": "pass",
+      "details": "Webhook secret configured",
+      "timestamp": "2025-11-25T00:25:18.482Z"
+    },
+    "Active Subscriptions": {
+      "status": "pass",
+      "details": "0 subscriptions",
+      "timestamp": "2025-11-25T00:25:18.579Z"
+    },
+    "Claude Opus 4.5": {
+      "status": "pass",
+      "details": "API key valid",
+      "timestamp": "2025-11-25T00:25:21.296Z"
+    },
+    "OpenRouter": {
+      "status": "pass",
+      "details": "API key configured",
+      "timestamp": "2025-11-25T00:25:21.296Z"
+    },
+    "Gemini": {
+      "status": "pass",
+      "details": "API key configured",
+      "timestamp": "2025-11-25T00:25:21.296Z"
+    },
+    "OpenAI": {
+      "status": "pass",
+      "details": "API key configured",
+      "timestamp": "2025-11-25T00:25:21.296Z"
+    },
+    "Perplexity": {
+      "status": "pass",
+      "details": "API key configured",
+      "timestamp": "2025-11-25T00:25:21.296Z"
+    },
+    "SendGrid": {
+      "status": "pass",
+      "details": "Configured",
+      "timestamp": "2025-11-25T00:25:21.296Z"
+    },
+    "Gmail SMTP": {
+      "status": "pass",
+      "details": "Configured",
+      "timestamp": "2025-11-25T00:25:21.296Z"
+    },
+    "Email Service": {
+      "status": "pass",
+      "details": "At least one provider configured",
+      "timestamp": "2025-11-25T00:25:21.296Z"
+    },
+    "Production Build": {
+      "status": "pass",
+      "details": ".next directory exists",
+      "timestamp": "2025-11-25T00:25:21.297Z"
+    },
+    "Next.js Version": {
+      "status": "pass",
+      "details": "^16.0.1",
+      "timestamp": "2025-11-25T00:25:21.297Z"
+    },
+    "React Version": {
+      "status": "pass",
+      "details": "^19.2.0",
+      "timestamp": "2025-11-25T00:25:21.297Z"
+    },
+    "Dependency: @anthropic-ai/sdk": {
+      "status": "pass",
+      "details": "^0.71.0",
+      "timestamp": "2025-11-25T00:25:21.297Z"
+    },
+    "Dependency: @supabase/supabase-js": {
+      "status": "pass",
+      "details": "^2.81.1",
+      "timestamp": "2025-11-25T00:25:21.297Z"
+    },
+    "Dependency: stripe": {
+      "status": "pass",
+      "details": "^19.3.0",
+      "timestamp": "2025-11-25T00:25:21.297Z"
+    },
+    "Dependency: @radix-ui/react-dropdown-menu": {
+      "status": "pass",
+      "details": "^2.1.16",
+      "timestamp": "2025-11-25T00:25:21.297Z"
+    },
+    "ENV: NEXT_PUBLIC_SUPABASE_URL": {
+      "status": "pass",
+      "details": "✓",
+      "timestamp": "2025-11-25T00:25:21.297Z"
+    },
+    "ENV: NEXT_PUBLIC_SUPABASE_ANON_KEY": {
+      "status": "pass",
+      "details": "✓",
+      "timestamp": "2025-11-25T00:25:21.297Z"
+    },
+    "ENV: SUPABASE_SERVICE_ROLE_KEY": {
+      "status": "pass",
+      "details": "✓",
+      "timestamp": "2025-11-25T00:25:21.297Z"
+    },
+    "ENV: ANTHROPIC_API_KEY": {
+      "status": "pass",
+      "details": "✓",
+      "timestamp": "2025-11-25T00:25:21.297Z"
+    },
+    "ENV: GOOGLE_CLIENT_ID": {
+      "status": "pass",
+      "details": "✓",
+      "timestamp": "2025-11-25T00:25:21.297Z"
+    },
+    "ENV: GOOGLE_CLIENT_SECRET": {
+      "status": "pass",
+      "details": "✓",
+      "timestamp": "2025-11-25T00:25:21.297Z"
+    },
+    "ENV: NEXTAUTH_SECRET": {
+      "status": "pass",
+      "details": "✓",
+      "timestamp": "2025-11-25T00:25:21.297Z"
+    },
+    "ENV: STRIPE_SECRET_KEY": {
+      "status": "pass",
+      "details": "✓",
+      "timestamp": "2025-11-25T00:25:21.297Z"
+    },
+    "API Routes Directory": {
+      "status": "pass",
+      "details": "Exists",
+      "timestamp": "2025-11-25T00:25:21.297Z"
+    },
+    "Endpoint: /api/auth/initialize-user": {
+      "status": "pass",
+      "details": "File exists",
+      "timestamp": "2025-11-25T00:25:21.297Z"
+    },
+    "Endpoint: /api/contacts": {
+      "status": "pass",
+      "details": "File exists",
+      "timestamp": "2025-11-25T00:25:21.297Z"
+    },
+    "Endpoint: /api/campaigns": {
+      "status": "pass",
+      "details": "File exists",
+      "timestamp": "2025-11-25T00:25:21.297Z"
+    },
+    "Endpoint: /api/subscriptions/create-checkout": {
+      "status": "warn",
+      "details": "Not found",
+      "timestamp": "2025-11-25T00:25:21.297Z"
+    },
+    "Endpoint: /api/test-opus-4-5": {
+      "status": "pass",
+      "details": "File exists",
+      "timestamp": "2025-11-25T00:25:21.297Z"
+    }
+  },
+  "critical_issues": [],
+  "warnings": [
+    "RLS policies verification failed",
+    "Missing endpoint: /api/subscriptions/create-checkout"
+  ],
+  "recommendations": []
+}
