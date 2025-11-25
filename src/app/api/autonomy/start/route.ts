@@ -1,6 +1,6 @@
 /**
- * GET /api/autonomy/status
- * Retrieve status of a global autonomy run
+ * POST /api/autonomy/start
+ * Start a global autonomy run with full cross-agent coordination
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -8,10 +8,16 @@ import { getSupabaseServer } from '@/lib/supabase';
 import { globalAutonomyEngine } from '@/lib/autonomy';
 import { apiRateLimit } from '@/lib/rate-limit';
 
-export async function GET(req: NextRequest) {
+interface StartAutonomyBody {
+  workspaceId: string;
+  objective: string;
+  description?: string;
+}
+
+export async function POST(req: NextRequest) {
   try {
     const clientId = req.headers.get('x-forwarded-for') || 'unknown';
-    const rateLimit = await apiRateLimit(`autonomy-status:${clientId}`, 30, 60);
+    const rateLimit = await apiRateLimit(`autonomy-start:${clientId}`, 5, 60);
 
     if (!rateLimit.allowed) {
       return NextResponse.json(
@@ -40,12 +46,11 @@ export async function GET(req: NextRequest) {
       userId = data.user.id;
     }
 
-    const runId = req.nextUrl.searchParams.get('runId');
-    const workspaceId = req.nextUrl.searchParams.get('workspaceId');
+    const body: StartAutonomyBody = await req.json();
 
-    if (!runId || !workspaceId) {
+    if (!body.workspaceId || !body.objective) {
       return NextResponse.json(
-        { error: 'runId and workspaceId are required' },
+        { error: 'workspaceId and objective are required' },
         { status: 400 }
       );
     }
@@ -56,7 +61,7 @@ export async function GET(req: NextRequest) {
     const { data: workspace } = await supabase
       .from('workspaces')
       .select('id, org_id')
-      .eq('id', workspaceId)
+      .eq('id', body.workspaceId)
       .single();
 
     if (!workspace) {
@@ -74,11 +79,31 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 });
     }
 
-    // Get run status
-    const autonomyRun = await globalAutonomyEngine.getRunDetails(runId);
+    // Start autonomy run
+    const autonomyRun = await globalAutonomyEngine.startGlobalAutonomyRun({
+      workspaceId: body.workspaceId,
+      objective: body.objective,
+      description: body.description,
+      userId,
+    });
 
-    // Filter events to last 50 for performance
-    const recentEvents = autonomyRun.events.slice(-50);
+    // Log execution
+    await supabase.from('audit_logs').insert({
+      workspace_id: body.workspaceId,
+      user_id: userId,
+      action: 'autonomy_started',
+      resource_type: 'autonomy_run',
+      resource_id: autonomyRun.runId,
+      details: {
+        objective: body.objective,
+        autonomyScore: autonomyRun.autonomyScore,
+        riskScore: autonomyRun.riskScore,
+        uncertaintyScore: autonomyRun.uncertaintyScore,
+        activeAgents: autonomyRun.activeAgents,
+        totalSteps: autonomyRun.totalSteps,
+      },
+      timestamp: new Date().toISOString(),
+    });
 
     return NextResponse.json(
       {
@@ -89,25 +114,17 @@ export async function GET(req: NextRequest) {
         autonomyScore: autonomyRun.autonomyScore,
         riskScore: autonomyRun.riskScore,
         uncertaintyScore: autonomyRun.uncertaintyScore,
-        readinessScore: autonomyRun.readinessScore,
-        consistencyScore: autonomyRun.consistencyScore,
-        confidenceScore: autonomyRun.confidenceScore,
         activeAgents: autonomyRun.activeAgents,
         totalSteps: autonomyRun.totalSteps,
         completedSteps: autonomyRun.completedSteps,
-        failedSteps: autonomyRun.failedSteps,
-        events: recentEvents,
-        eventCount: autonomyRun.events.length,
-        startedAt: autonomyRun.startedAt,
-        completedAt: autonomyRun.completedAt,
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error getting autonomy status:', error);
+    console.error('Error starting autonomy run:', error);
     const message = error instanceof Error ? error.message : 'Internal server error';
     return NextResponse.json(
-      { error: 'Failed to get autonomy status', details: message },
+      { error: 'Failed to start autonomy run', details: message },
       { status: 500 }
     );
   }
