@@ -67,7 +67,9 @@
     "seo:bing": "node scripts/seo-intelligence.mjs bing",
     "seo:backlinks": "node scripts/seo-intelligence.mjs backlinks",
     "seo:full": "node scripts/seo-intelligence.mjs comprehensive",
-    "seo:help": "node scripts/seo-intelligence.mjs --help"
+    "seo:help": "node scripts/seo-intelligence.mjs --help",
+    "test:monitoring": "node scripts/test-monitoring-system.mjs",
+    "test:health": "node scripts/test-monitoring-system.mjs"
   },
   "keywords": [],
   "author": "",

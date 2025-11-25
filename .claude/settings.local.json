@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(npm outdated:*)",
-      "Bash(npm run test:health:*)"
+      "Bash(npm run test:health:*)",
+      "Bash(node scripts/test-monitoring-system.mjs:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []
