@@ -9,6 +9,11 @@ import {
   fetchStrategyHistory,
   type StrategyCreateRequest,
 } from '@/lib/strategy/strategyClient';
+import {
+  useRefreshOnFocus,
+  usePeriodicRefresh,
+  useSynchronizedPolling,
+} from '@/hooks/useStrategyData';
 import { StrategyHierarchyPanel } from '@/components/strategy/StrategyHierarchyPanel';
 import { StrategyValidationPanel } from '@/components/strategy/StrategyValidationPanel';
 import { StrategySynergyBreakdown } from '@/components/strategy/StrategySynergyBreakdown';
@@ -109,66 +114,85 @@ export default function StrategyPage() {
     initWorkspace();
   }, []);
 
-  // Polling logic for active strategy
-  useEffect(() => {
-    if (!workspaceId || !activeStrategy || !pollingActive) return;
-
-    const interval = setInterval(async () => {
-      try {
-        const status = await fetchStrategyStatus(workspaceId, activeStrategy.id);
-        if (status.strategy) {
-          setActiveStrategy({
-            ...activeStrategy,
-            status: status.strategy.status as any,
-          });
-        }
-      } catch (error) {
-        console.error('Polling error:', error);
-      }
-    }, pollingInterval);
-
-    return () => clearInterval(interval);
-  }, [
-    workspaceId,
-    activeStrategy,
-    pollingActive,
-    pollingInterval,
-    setActiveStrategy,
-  ]);
-
-  // Load strategy history on mount
-  useEffect(() => {
+  // Load strategy history on mount and when workspace changes
+  const loadHistory = useCallback(async () => {
     if (!workspaceId) return;
 
-    const loadHistory = async () => {
-      setIsLoadingHistory(true);
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        const history = await fetchStrategyHistory(workspaceId, {}, session?.access_token);
+    setIsLoadingHistory(true);
+    try {
+      const history = await fetchStrategyHistory(workspaceId, {});
 
-        if (history.completedStrategies) {
-          setHistoricalStrategies(
-            history.completedStrategies.map((s) => ({
-              id: s.id,
-              outcome: s.outcome as 'successful' | 'partial_success' | 'failed',
-              completionRate: s.completionRate,
-              timeEfficiency: s.timeEfficiency,
-              costEfficiency: s.costEfficiency,
-              patterns: s.patterns,
-              archivedAt: s.archivedAt,
-            }))
-          );
-        }
-      } catch (error) {
-        console.error('Error loading history:', error);
-        setErrorMessage('Failed to load strategy history');
-      } finally {
-        setIsLoadingHistory(false);
+      if (history.completedStrategies) {
+        setHistoricalStrategies(
+          history.completedStrategies.map((s) => ({
+            id: s.id,
+            outcome: s.outcome as 'successful' | 'partial_success' | 'failed',
+            completionRate: s.completionRate,
+            timeEfficiency: s.timeEfficiency,
+            costEfficiency: s.costEfficiency,
+            patterns: s.patterns,
+            archivedAt: s.archivedAt,
+          }))
+        );
       }
-    };
-
-    loadHistory();
+    } catch (error) {
+      console.error('Error loading history:', error);
+      setErrorMessage('Failed to load strategy history');
+    } finally {
+      setIsLoadingHistory(false);
+    }
   }, [workspaceId, setHistoricalStrategies, setIsLoadingHistory, setErrorMessage]);
+
+  useEffect(() => {
+    if (workspaceId) {
+      loadHistory();
+    }
+  }, [workspaceId, loadHistory]);
+
+  // Real-time update engine
+  // Refresh on window focus
+  useRefreshOnFocus(
+    useCallback(async () => {
+      if (activeStrategy && workspaceId) {
+        try {
+          await fetchStrategyStatus(workspaceId, activeStrategy.id);
+          await loadHistory();
+        } catch (error) {
+          console.error('Error refreshing on focus:', error);
+        }
+      }
+    }, [activeStrategy, workspaceId, loadHistory]),
+    !!activeStrategy && !!workspaceId
+  );
+
+  // Periodic refresh with adaptive intervals
+  usePeriodicRefresh(
+    useCallback(async () => {
+      if (activeStrategy && workspaceId) {
+        try {
+          await fetchStrategyStatus(workspaceId, activeStrategy.id);
+        } catch (error) {
+          console.error('Error in periodic refresh:', error);
+        }
+      }
+    }, [activeStrategy, workspaceId]),
+    {
+      initialInterval: 5000,
+      maxInterval: 20000,
+      backoffMultiplier: 1.5,
+      enabled: pollingActive && !!activeStrategy && !!workspaceId,
+    }
+  );
+
+  // Synchronized polling for multiple resources
+  const { pollAll, isPolling: isSyncPolling } = useSynchronizedPolling(
+    workspaceId || '',
+    activeStrategy?.id || null,
+    {
+      interval: pollingInterval,
+      enabled: pollingActive && !!activeStrategy,
+    }
+  );
 
   // Handle strategy creation
   const handleCreateStrategy = useCallback(
@@ -232,6 +256,9 @@ export default function StrategyPage() {
             context: '',
             priority: 'medium',
           });
+
+          // Reload history after creating new strategy
+          await loadHistory();
         }
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Failed to create strategy';
@@ -241,8 +268,31 @@ export default function StrategyPage() {
         setIsCreating(false);
       }
     },
-    [formData, workspaceId, setActiveStrategy, setDecompositionMetrics, setErrorMessage]
+    [formData, workspaceId, setActiveStrategy, setDecompositionMetrics, setErrorMessage, loadHistory]
   );
+
+  // Handle manual refresh of all data
+  const handleRefreshAll = useCallback(async () => {
+    setIsLoadingStrategy(true);
+    setIsLoadingValidation(true);
+    setIsLoadingHistory(true);
+
+    try {
+      // Refresh active strategy if exists
+      if (activeStrategy && workspaceId) {
+        await fetchStrategyStatus(workspaceId, activeStrategy.id);
+      }
+
+      // Refresh history
+      await loadHistory();
+    } catch (error) {
+      console.error('Error refreshing data:', error);
+    } finally {
+      setIsLoadingStrategy(false);
+      setIsLoadingValidation(false);
+      setIsLoadingHistory(false);
+    }
+  }, [activeStrategy, workspaceId, loadHistory, setIsLoadingStrategy, setIsLoadingValidation, setIsLoadingHistory]);
 
   if (!workspaceId) {
     return (
@@ -284,12 +334,25 @@ export default function StrategyPage() {
           </button>
 
           <button
+            onClick={handleRefreshAll}
+            disabled={isLoadingStrategy || isLoadingValidation || isLoadingHistory}
+            className="bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors"
+            title="Manually refresh all data"
+          >
+            <RefreshCw
+              className={`w-5 h-5 ${isLoadingStrategy || isLoadingValidation || isLoadingHistory ? 'animate-spin' : ''}`}
+            />
+            Refresh
+          </button>
+
+          <button
             onClick={() => setPollingActive(!pollingActive)}
             className={`px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors ${
               pollingActive
                 ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
                 : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
             }`}
+            title={pollingActive ? 'Polling is enabled' : 'Polling is disabled'}
           >
             <RefreshCw className={`w-5 h-5 ${pollingActive ? 'animate-spin' : ''}`} />
             {pollingActive ? 'Polling' : 'Paused'}
