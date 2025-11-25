@@ -284,6 +284,74 @@ export async function POST(request: NextRequest): Promise<NextResponse<Initializ
 
     result.data!.workspaceId = workspaceId;
 
+    // STEP 4: Create Trial Profile for new organizations (idempotent)
+    if (result.created.organization) {
+      // Check if trial profile already exists
+      const { data: existingTrialProfile } = await supabase
+        .from('trial_profiles')
+        .select('id')
+        .eq('workspace_id', workspaceId)
+        .maybeSingle();
+
+      if (!existingTrialProfile) {
+        const trialStartedAt = new Date().toISOString();
+        const trialExpiresAt = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString();
+
+        const { error: trialError } = await supabase
+          .from('trial_profiles')
+          .insert({
+            workspace_id: workspaceId,
+            is_trial: true,
+            trial_started_at: trialStartedAt,
+            trial_expires_at: trialExpiresAt,
+            trial_ended_at: null,
+            trial_converted_at: null,
+            ai_tokens_cap: 50000,
+            ai_tokens_used: 0,
+            vif_generations_cap: 10,
+            vif_generations_used: 0,
+            blueprints_cap: 5,
+            blueprints_created: 0,
+            production_jobs_cap: 0,
+            production_jobs_created: 0,
+            enabled_modules: [
+              'website_audit',
+              'brand_persona',
+              'initial_roadmap',
+              'analytics_readonly',
+              'topic_relevance',
+            ],
+            limited_modules: ['blueprinter', 'founder_ops', 'content_generation'],
+            disabled_modules: [
+              'high_volume_campaigns',
+              'automated_weekly',
+              'cross_brand_orchestration',
+              'timestamped_production',
+              'living_intelligence',
+            ],
+            upgrade_prompt_shown_count: 0,
+            upgrade_prompt_dismissed_count: 0,
+            last_upgrade_prompt_at: null,
+          });
+
+        if (trialError) {
+          console.error('[initialize-user] Trial profile creation failed:', trialError);
+          return NextResponse.json(
+            {
+              ...result,
+              error: 'Failed to create trial profile',
+              details: trialError,
+            },
+            { status: 500 }
+          );
+        }
+
+        console.log('[initialize-user] ✅ Trial profile created for workspace:', workspaceId);
+      } else {
+        console.log('[initialize-user] ✅ Trial profile already exists for workspace:', workspaceId);
+      }
+    }
+
     // GROUND TRUTH VERIFICATION: Verify all entities exist
     const verification = await Promise.all([
       supabase.from('user_profiles').select('id').eq('id', user.id).single(),

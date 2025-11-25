@@ -14,7 +14,9 @@ import AgencyPresencePanel from "@/components/client/AgencyPresencePanel";
 import AgencyActivityFeed from "@/components/client/AgencyActivityFeed";
 import ProgressAndImpactGraphs from "@/components/client/ProgressAndImpactGraphs";
 import JustDroppedIdeasPanel from "@/components/client/JustDroppedIdeasPanel";
+import { TrialCapabilityBanner } from "@/components/trial/TrialCapabilityBanner";
 import { AlertTriangle, Clock, Compass, ArrowRight } from "lucide-react";
+import type { TrialState } from "@/lib/trial/trialExperienceEngine";
 
 interface TrialInfo {
   isTrialing: boolean;
@@ -26,6 +28,9 @@ export default function ClientDashboardOverview() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [userName, setUserName] = useState("");
+  const [workspaceId, setWorkspaceId] = useState<string>("");
+  const [trialState, setTrialState] = useState<TrialState | null>(null);
+  const [isInTrial, setIsInTrial] = useState(false);
   const [trialInfo, setTrialInfo] = useState<TrialInfo>({
     isTrialing: false,
     daysRemaining: 0,
@@ -42,18 +47,45 @@ export default function ClientDashboardOverview() {
           return;
         }
 
-        // Get user profile
+        // Get user profile and workspace
         const { data: profile } = await supabase
           .from("user_profiles")
-          .select("full_name")
+          .select("full_name, workspace_id")
           .eq("user_id", session.user.id)
           .single();
 
         if (profile) {
           setUserName(profile.full_name || session.user.email?.split("@")[0] || "there");
+          if (profile.workspace_id) {
+            setWorkspaceId(profile.workspace_id);
+
+            // Load trial state from API
+            try {
+              const profileResponse = await fetch(
+                `/api/trial/profile?workspaceId=${profile.workspace_id}`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${session.access_token}`,
+                  },
+                }
+              );
+
+              if (profileResponse.ok) {
+                const profileData = await profileResponse.json();
+                if (profileData.isTrialActive) {
+                  setIsInTrial(true);
+                  if (profileData.trialState) {
+                    setTrialState(profileData.trialState);
+                  }
+                }
+              }
+            } catch (err) {
+              console.error("Error loading trial profile:", err);
+            }
+          }
         }
 
-        // Check subscription status
+        // Check subscription status (legacy)
         const response = await fetch("/api/billing/subscription", {
           headers: {
             Authorization: `Bearer ${session.access_token}`,
@@ -98,26 +130,13 @@ export default function ClientDashboardOverview() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Trial Banner */}
-        {trialInfo.isTrialing && (
-          <div className="mb-6 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
-            <div className="flex items-center gap-3">
-              <Clock className="w-5 h-5 text-yellow-600" />
-              <div className="flex-1">
-                <p className="text-sm font-medium text-yellow-800 dark:text-yellow-200">
-                  Trial Period Active
-                </p>
-                <p className="text-sm text-yellow-700 dark:text-yellow-300">
-                  {trialInfo.daysRemaining} days remaining. Upgrade to continue using all features.
-                </p>
-              </div>
-              <button
-                onClick={() => router.push("/pricing")}
-                className="px-4 py-2 bg-yellow-600 text-white text-sm font-medium rounded-lg hover:bg-yellow-700"
-              >
-                Upgrade Now
-              </button>
-            </div>
+        {/* Trial Capability Banner */}
+        {isInTrial && trialState && (
+          <div className="mb-8">
+            <TrialCapabilityBanner
+              trialState={trialState}
+              onUpgradeClick={() => router.push("/pricing")}
+            />
           </div>
         )}
 

@@ -12,7 +12,6 @@ import {
   isModuleDisabled,
   isModuleLimited,
   calculateCapacityUsage,
-  shouldShowUpgradePrompt,
   generateUpgradeMessage,
 } from './trialCapabilityProfile';
 

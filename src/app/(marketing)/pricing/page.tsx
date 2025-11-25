@@ -264,6 +264,87 @@ export default function PricingPage() {
           </div>
         </div>
 
+        {/* Trial Experience Section */}
+        <div className="mb-20 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900 rounded-lg p-8">
+          <h2 className="text-2xl font-bold text-center mb-4">Your 14-Day Trial Experience</h2>
+          <p className="text-center text-muted-foreground max-w-3xl mx-auto mb-8">
+            Start free—no credit card required. Get full access to core features while we learn your needs.
+          </p>
+
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            {/* Trial Limits */}
+            <Card className="bg-white dark:bg-gray-800">
+              <CardHeader>
+                <CardTitle className="text-lg">Trial Limits (25% Capacity)</CardTitle>
+                <CardDescription>Conservative limits for testing</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-3 text-sm">
+                  <li className="flex items-center gap-2">
+                    <span className="text-yellow-600 dark:text-yellow-400">⚠️</span>
+                    <span>50,000 AI tokens/month (soft cap - warn but allow)</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-red-600 dark:text-red-400">🔒</span>
+                    <span>10 visual generations maximum (hard cap - blocked)</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-red-600 dark:text-red-400">🔒</span>
+                    <span>5 blueprints maximum (hard cap - blocked)</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-red-600 dark:text-red-400">🚫</span>
+                    <span>Production jobs disabled</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="text-orange-600 dark:text-orange-400">⚡</span>
+                    <span>5 modules limited, 5 disabled</span>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+
+            {/* What You Get */}
+            <Card className="bg-white dark:bg-gray-800">
+              <CardHeader>
+                <CardTitle className="text-lg">Still Included in Trial</CardTitle>
+                <CardDescription>Full access to core tools</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-3 text-sm">
+                  <li className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-green-600" />
+                    <span>Website audit & analysis</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-green-600" />
+                    <span>Brand persona builder</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-green-600" />
+                    <span>90-day roadmap generator</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-green-600" />
+                    <span>Analytics overview (read-only)</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-green-600" />
+                    <span>Email support during trial</span>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="mt-8 p-4 bg-white dark:bg-gray-800 rounded border border-blue-200 dark:border-blue-900">
+            <p className="text-xs text-muted-foreground text-center">
+              <strong>Our Honest Promise:</strong> We show upgrade prompts when you hit limits, but never nag. No surprise charges.
+              Trial period lasts exactly 14 days. You choose if/when to upgrade. All limits are displayed in your dashboard.
+            </p>
+          </div>
+        </div>
+
         {/* Marketing Honesty Statement */}
         <div className="mb-20 bg-muted/30 border rounded-lg p-8">
           <h3 className="text-xl font-bold text-center mb-4">Our Honest Marketing Commitment</h3>

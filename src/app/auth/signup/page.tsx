@@ -47,7 +47,11 @@ export default function SignUpPage() {
       <Card className="w-full max-w-md bg-slate-800 border-slate-700">
         <CardHeader className="space-y-2 text-center">
           <h1 className="text-2xl font-bold text-white">Create Your Account</h1>
-          <CardDescription>Start automating your marketing today</CardDescription>
+          <CardDescription>Start your free 14-day trial today</CardDescription>
+          <div className="pt-2 text-xs text-slate-400">
+            <p>✓ No credit card required</p>
+            <p>✓ Instant access to core features</p>
+          </div>
         </CardHeader>
 
         <CardContent>

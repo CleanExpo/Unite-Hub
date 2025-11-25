@@ -1,14 +1,65 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart3, TrendingUp, Users, Mail, Target, Activity } from "lucide-react";
+import { BarChart3, TrendingUp, Users, Mail, Target, Activity, Eye } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 export default function AnalyticsPage() {
+  const [isInTrial, setIsInTrial] = useState(false);
+  const [workspaceId, setWorkspaceId] = useState<string>("");
+
+  useEffect(() => {
+    async function checkTrial() {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) return;
+
+        const { data: profile } = await supabase
+          .from("user_profiles")
+          .select("workspace_id")
+          .eq("user_id", session.user.id)
+          .single();
+
+        if (profile?.workspace_id) {
+          setWorkspaceId(profile.workspace_id);
+
+          // Check trial status via API
+          const response = await fetch(
+            `/api/trial/status?workspaceId=${profile.workspace_id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${session.access_token}`,
+              },
+            }
+          );
+
+          if (response.ok) {
+            const data = await response.json();
+            setIsInTrial(data.isTrialActive);
+          }
+        }
+      } catch (error) {
+        console.error("Error checking trial status:", error);
+      }
+    }
+
+    checkTrial();
+  }, []);
+
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold text-white">Analytics</h1>
         <p className="text-slate-400 mt-1">Track performance metrics and business insights</p>
+        {isInTrial && (
+          <div className="mt-4 p-3 bg-blue-900/30 border border-blue-700 rounded-lg flex items-center gap-2">
+            <Eye className="h-4 w-4 text-blue-400" />
+            <span className="text-sm text-blue-200">
+              <strong>Read-only mode:</strong> During your trial, analytics are viewable but not editable. Upgrade to manage data settings.
+            </span>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
