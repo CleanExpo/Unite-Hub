@@ -1,21 +1,15 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm outdated:*)",
-      "Bash(npm run test:health:*)",
-      "Bash(node scripts/test-monitoring-system.mjs:*)",
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(git push:*)",
-      "Bash(npm run build:*)",
-      "Bash(node scripts/verify-build-ready.mjs:*)",
-      "Bash(npx vercel:*)",
-      "Bash(npx tsc:*)",
-      "Bash(/tmp/build.log)",
-      "Bash(/tmp/build2.log)",
-      "Bash(timeout 60 npm run build:*)",
-      "Bash(test:*)",
-      "Bash(timeout 180 npm run build:*)"
+      "Bash(\"PHASE_4_COMPLETION_REPORT.md\" )",
+      "Bash(\"PHASE_4_EXECUTION_API_GUIDE.md\" )",
+      "Bash(\"src/lib/strategy/execution-engine.ts\" )",
+      "Bash(\"src/lib/strategy/agent-task-propagator.ts\" )",
+      "Bash(\"src/lib/strategy/execution-health-monitor.ts\" )",
+      "Bash(\"src/lib/strategy/execution-bridge.ts\" )",
+      "Bash(\"src/app/api/executions/\" )",
+      "Bash(\"src/components/ExecutionDashboard.tsx\" )",
+      "Bash(\"supabase/migrations/237_phase_4_execution_system.sql\")"
     ],
     "deny": [],
     "ask": []
