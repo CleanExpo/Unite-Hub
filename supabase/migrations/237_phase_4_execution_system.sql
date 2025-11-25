@@ -261,16 +261,18 @@ BEGIN
       FOR SELECT USING (
         l4_item_id IN (
           SELECT id FROM strategy_l4_items
-          WHERE strategy_l4_items.workspace_id = task_propagation_logs.workspace_id
+          WHERE strategy_l4_items.workspace_id IN (
+            SELECT workspace_id FROM strategy_executions
+            WHERE strategy_executions.id = task_propagation_logs.execution_id
+          )
         )
       );
   ELSE
-    -- Fallback: Simple workspace-based policy if strategy_l4_items doesn't exist yet
+    -- Fallback: Simple execution-based policy if strategy_l4_items doesn't exist yet
     CREATE POLICY task_propagation_logs_users_select ON task_propagation_logs
       FOR SELECT USING (
         execution_id IN (
           SELECT id FROM strategy_executions
-          WHERE strategy_executions.workspace_id = task_propagation_logs.workspace_id
         )
       );
   END IF;
