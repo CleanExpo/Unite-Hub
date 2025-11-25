@@ -13,7 +13,7 @@
 -- 1. Strategy Executions Table
 CREATE TABLE IF NOT EXISTS strategy_executions (
   id TEXT PRIMARY KEY,
-  strategy_id TEXT NOT NULL REFERENCES hierarchical_strategies(id) ON DELETE CASCADE,
+  strategy_id TEXT NOT NULL,
   workspace_id TEXT NOT NULL,
   user_id TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'running', 'paused', 'completed', 'failed', 'cancelled')),
@@ -30,6 +30,16 @@ CREATE TABLE IF NOT EXISTS strategy_executions (
   CONSTRAINT valid_execution_status CHECK (status IN ('pending', 'running', 'paused', 'completed', 'failed', 'cancelled'))
 );
 
+-- Add foreign key constraint if hierarchical_strategies table exists
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'hierarchical_strategies') THEN
+    ALTER TABLE strategy_executions
+    ADD CONSTRAINT fk_strategy_executions_strategy_id
+    FOREIGN KEY (strategy_id) REFERENCES hierarchical_strategies(id) ON DELETE CASCADE;
+  END IF;
+END $$;
+
 CREATE INDEX idx_strategy_executions_strategy_id ON strategy_executions(strategy_id);
 CREATE INDEX idx_strategy_executions_workspace_id ON strategy_executions(workspace_id);
 CREATE INDEX idx_strategy_executions_user_id ON strategy_executions(user_id);
@@ -40,7 +50,7 @@ CREATE INDEX idx_strategy_executions_started_at ON strategy_executions(started_a
 CREATE TABLE IF NOT EXISTS agent_tasks (
   id TEXT PRIMARY KEY,
   execution_id TEXT NOT NULL REFERENCES strategy_executions(id) ON DELETE CASCADE,
-  l4_item_id TEXT NOT NULL REFERENCES strategy_l4_items(id) ON DELETE CASCADE,
+  l4_item_id TEXT NOT NULL,
   agent_type TEXT NOT NULL CHECK (agent_type IN ('email', 'content', 'research', 'scheduling', 'analysis', 'coordination')),
   status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'assigned', 'in_progress', 'completed', 'failed', 'skipped')),
   priority TEXT NOT NULL DEFAULT 'medium' CHECK (priority IN ('high', 'medium', 'low')),
@@ -60,6 +70,16 @@ CREATE TABLE IF NOT EXISTS agent_tasks (
   CONSTRAINT valid_task_status CHECK (status IN ('pending', 'assigned', 'in_progress', 'completed', 'failed', 'skipped')),
   CONSTRAINT valid_priority CHECK (priority IN ('high', 'medium', 'low'))
 );
+
+-- Add foreign key constraint for l4_item_id if strategy_l4_items table exists
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'strategy_l4_items') THEN
+    ALTER TABLE agent_tasks
+    ADD CONSTRAINT fk_agent_tasks_l4_item_id
+    FOREIGN KEY (l4_item_id) REFERENCES strategy_l4_items(id) ON DELETE CASCADE;
+  END IF;
+END $$;
 
 CREATE INDEX idx_agent_tasks_execution_id ON agent_tasks(execution_id);
 CREATE INDEX idx_agent_tasks_l4_item_id ON agent_tasks(l4_item_id);
@@ -92,12 +112,22 @@ CREATE INDEX idx_execution_health_snapshots_created_at ON execution_health_snaps
 CREATE TABLE IF NOT EXISTS task_propagation_logs (
   id BIGSERIAL PRIMARY KEY,
   execution_id TEXT NOT NULL REFERENCES strategy_executions(id) ON DELETE CASCADE,
-  l4_item_id TEXT NOT NULL REFERENCES strategy_l4_items(id) ON DELETE CASCADE,
+  l4_item_id TEXT NOT NULL,
   source_l4_id TEXT,
   propagation_rules JSONB,
   created_tasks TEXT[] NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- Add foreign key constraint for l4_item_id if strategy_l4_items table exists
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'strategy_l4_items') THEN
+    ALTER TABLE task_propagation_logs
+    ADD CONSTRAINT fk_task_propagation_logs_l4_item_id
+    FOREIGN KEY (l4_item_id) REFERENCES strategy_l4_items(id) ON DELETE CASCADE;
+  END IF;
+END $$;
 
 CREATE INDEX idx_task_propagation_logs_execution_id ON task_propagation_logs(execution_id);
 CREATE INDEX idx_task_propagation_logs_l4_item_id ON task_propagation_logs(l4_item_id);
