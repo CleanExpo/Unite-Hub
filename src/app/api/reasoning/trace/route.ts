@@ -1,34 +1,22 @@
 /**
- * POST /api/memory/retrieve
- * Retrieve and rank memories using hybrid search
+ * GET /api/reasoning/trace
+ * Retrieve complete reasoning trace
  *
- * Implements multi-modal retrieval combining keyword search, temporal decay,
- * confidence filtering, and optional relationship traversal.
+ * Returns full reasoning trace including passes, memory, uncertainty,
+ * risk, and outcome for analysis and debugging.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabase';
-import { MemoryRetriever, MemoryRanker } from '@/lib/memory';
 import { apiRateLimit } from '@/lib/rate-limit';
 
-interface RetrieveMemoryBody {
-  workspaceId: string;
-  query: string;
-  memoryTypes?: string[];
-  limit?: number;
-  offset?: number;
-  minImportance?: number;
-  minConfidence?: number;
-  includeRelated?: boolean;
-}
-
-export async function POST(req: NextRequest) {
+export async function GET(req: NextRequest) {
   try {
     // Rate limiting
     const clientId = req.headers.get('x-forwarded-for') || 'unknown';
     const rateLimit = await apiRateLimit(
-      `memory-retrieve:${clientId}`,
-      200, // 200 requests
+      `reasoning-trace:${clientId}`,
+      30, // 30 requests
       3600 // per hour
     );
 
@@ -68,20 +56,21 @@ export async function POST(req: NextRequest) {
       userId = data.user.id;
     }
 
-    // Parse request body
-    const body: RetrieveMemoryBody = await req.json();
+    // Parse query parameters
+    const workspaceId = req.nextUrl.searchParams.get('workspaceId');
+    const runId = req.nextUrl.searchParams.get('runId');
 
-    // Validate required fields
-    if (!body.workspaceId) {
+    // Validate required parameters
+    if (!workspaceId) {
       return NextResponse.json(
-        { error: 'workspaceId is required' },
+        { error: 'workspaceId query parameter is required' },
         { status: 400 }
       );
     }
 
-    if (!body.query) {
+    if (!runId) {
       return NextResponse.json(
-        { error: 'query is required' },
+        { error: 'runId query parameter is required' },
         { status: 400 }
       );
     }
@@ -92,7 +81,7 @@ export async function POST(req: NextRequest) {
     const { data: workspace, error: wsError } = await supabase
       .from('workspaces')
       .select('id, org_id')
-      .eq('id', body.workspaceId)
+      .eq('id', workspaceId)
       .single();
 
     if (wsError || !workspace) {
@@ -117,58 +106,59 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Retrieve memories
-    const retriever = new MemoryRetriever();
-    const ranker = new MemoryRanker();
+    // Get reasoning run
+    const { data: run, error: runError } = await supabase
+      .from('reasoning_runs')
+      .select('*')
+      .eq('id', runId)
+      .eq('workspace_id', workspaceId)
+      .single();
 
-    const retrieveResult = await retriever.retrieve({
-      workspaceId: body.workspaceId,
-      query: body.query,
-      memoryTypes: body.memoryTypes,
-      limit: body.limit || 10,
-      offset: body.offset || 0,
-      minImportance: body.minImportance,
-      minConfidence: body.minConfidence,
-      includeRelated: body.includeRelated !== false,
-    });
+    if (runError || !run) {
+      return NextResponse.json(
+        { error: 'Reasoning run not found' },
+        { status: 404 }
+      );
+    }
 
-    // Rank the results
-    const rankingResult = await ranker.rank({
-      memories: retrieveResult.memories.map(m => ({
-        id: m.id,
-        memoryType: m.memoryType,
-        importance: m.importance,
-        confidence: m.confidence,
-        createdAt: m.createdAt,
-        recallPriority: m.recallPriority,
-      })),
-      context: {
-        query: body.query,
-      },
-    });
+    // Get all passes for this run
+    const { data: passes, error: passError } = await supabase
+      .from('reasoning_passes')
+      .select('*')
+      .eq('run_id', runId)
+      .order('pass_number', { ascending: true });
 
-    // Combine retrieved data with ranking
-    const rankedMemories = rankingResult.rankedMemories.map(ranked => {
-      const original = retrieveResult.memories.find(m => m.id === ranked.id);
-      return {
-        ...original,
-        rank: ranked.rank,
-        percentile: ranked.percentile,
-        scoreBreakdown: ranked.scoreBreakdown,
-      };
-    });
+    if (passError) {
+      return NextResponse.json(
+        { error: 'Failed to fetch passes' },
+        { status: 500 }
+      );
+    }
+
+    // Get artifacts for each pass
+    const passesWithArtifacts = await Promise.all(
+      (passes || []).map(async (pass) => {
+        const { data: artifacts } = await supabase
+          .from('reasoning_artifacts')
+          .select('*')
+          .eq('pass_id', pass.id);
+
+        return {
+          ...pass,
+          artifacts: artifacts || [],
+        };
+      })
+    );
 
     // Log to audit trail
     await supabase.from('audit_logs').insert({
-      workspace_id: body.workspaceId,
+      workspace_id: workspaceId,
       user_id: userId,
-      action: 'memory_retrieved',
-      resource_type: 'memory',
-      resource_id: body.workspaceId,
+      action: 'reasoning_trace_viewed',
+      resource_type: 'reasoning_run',
+      resource_id: runId,
       details: {
-        query: body.query,
-        resultCount: rankedMemories.length,
-        executionTime: retrieveResult.executionTimeMs,
+        passCount: passesWithArtifacts.length,
       },
       timestamp: new Date().toISOString(),
     });
@@ -176,22 +166,36 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        memories: rankedMemories,
-        relatedMemories: retrieveResult.relatedMemories,
-        totalCount: retrieveResult.totalCount,
-        executionTimeMs: retrieveResult.executionTimeMs,
-        retrievalStrategy: retrieveResult.retrievalStrategy,
+        run: {
+          id: run.id,
+          objective: run.objective,
+          agent: run.agent,
+          status: run.status,
+          riskScore: run.risk_score,
+          uncertaintyScore: run.uncertainty_score,
+          createdAt: run.created_at,
+          completedAt: run.completed_at,
+        },
+        passes: passesWithArtifacts,
+        summary: {
+          totalPasses: passesWithArtifacts.length,
+          finalRisk: run.risk_score,
+          finalUncertainty: run.uncertainty_score,
+          duration: run.completed_at
+            ? new Date(run.completed_at).getTime() - new Date(run.created_at).getTime()
+            : null,
+        },
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error retrieving memories:', error);
+    console.error('Error retrieving reasoning trace:', error);
 
     const message = error instanceof Error ? error.message : 'Internal server error';
 
     return NextResponse.json(
       {
-        error: 'Failed to retrieve memories',
+        error: 'Failed to retrieve reasoning trace',
         details: message,
       },
       { status: 500 }

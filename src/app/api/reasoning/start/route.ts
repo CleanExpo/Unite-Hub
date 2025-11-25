@@ -1,25 +1,21 @@
 /**
- * POST /api/memory/retrieve
- * Retrieve and rank memories using hybrid search
+ * POST /api/reasoning/start
+ * Begin multi-pass reasoning run
  *
- * Implements multi-modal retrieval combining keyword search, temporal decay,
- * confidence filtering, and optional relationship traversal.
+ * Accepts objective and optional starting memories, executes full
+ * 5-pass reasoning engine, returns complete trace.
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabase';
-import { MemoryRetriever, MemoryRanker } from '@/lib/memory';
+import { PassEngine } from '@/lib/reasoning';
 import { apiRateLimit } from '@/lib/rate-limit';
 
-interface RetrieveMemoryBody {
+interface StartReasoningBody {
   workspaceId: string;
-  query: string;
-  memoryTypes?: string[];
-  limit?: number;
-  offset?: number;
-  minImportance?: number;
-  minConfidence?: number;
-  includeRelated?: boolean;
+  agent: string;
+  objective: string;
+  initialMemoryIds?: string[];
 }
 
 export async function POST(req: NextRequest) {
@@ -27,9 +23,9 @@ export async function POST(req: NextRequest) {
     // Rate limiting
     const clientId = req.headers.get('x-forwarded-for') || 'unknown';
     const rateLimit = await apiRateLimit(
-      `memory-retrieve:${clientId}`,
-      200, // 200 requests
-      3600 // per hour
+      `reasoning-start:${clientId}`,
+      10, // 10 requests
+      60 // per minute (expensive operation)
     );
 
     if (!rateLimit.allowed) {
@@ -69,7 +65,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Parse request body
-    const body: RetrieveMemoryBody = await req.json();
+    const body: StartReasoningBody = await req.json();
 
     // Validate required fields
     if (!body.workspaceId) {
@@ -79,9 +75,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (!body.query) {
+    if (!body.agent) {
       return NextResponse.json(
-        { error: 'query is required' },
+        { error: 'agent is required' },
+        { status: 400 }
+      );
+    }
+
+    if (!body.objective) {
+      return NextResponse.json(
+        { error: 'objective is required' },
         { status: 400 }
       );
     }
@@ -117,58 +120,29 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Retrieve memories
-    const retriever = new MemoryRetriever();
-    const ranker = new MemoryRanker();
+    // Execute multi-pass reasoning
+    console.log(`🧠 Starting reasoning for: ${body.objective}`);
+    const passEngine = new PassEngine();
 
-    const retrieveResult = await retriever.retrieve({
+    const trace = await passEngine.executeReasoning({
       workspaceId: body.workspaceId,
-      query: body.query,
-      memoryTypes: body.memoryTypes,
-      limit: body.limit || 10,
-      offset: body.offset || 0,
-      minImportance: body.minImportance,
-      minConfidence: body.minConfidence,
-      includeRelated: body.includeRelated !== false,
-    });
-
-    // Rank the results
-    const rankingResult = await ranker.rank({
-      memories: retrieveResult.memories.map(m => ({
-        id: m.id,
-        memoryType: m.memoryType,
-        importance: m.importance,
-        confidence: m.confidence,
-        createdAt: m.createdAt,
-        recallPriority: m.recallPriority,
-      })),
-      context: {
-        query: body.query,
-      },
-    });
-
-    // Combine retrieved data with ranking
-    const rankedMemories = rankingResult.rankedMemories.map(ranked => {
-      const original = retrieveResult.memories.find(m => m.id === ranked.id);
-      return {
-        ...original,
-        rank: ranked.rank,
-        percentile: ranked.percentile,
-        scoreBreakdown: ranked.scoreBreakdown,
-      };
+      agent: body.agent,
+      objective: body.objective,
+      initialMemoryIds: body.initialMemoryIds,
     });
 
     // Log to audit trail
     await supabase.from('audit_logs').insert({
       workspace_id: body.workspaceId,
       user_id: userId,
-      action: 'memory_retrieved',
-      resource_type: 'memory',
-      resource_id: body.workspaceId,
+      action: 'reasoning_started',
+      resource_type: 'reasoning_run',
+      resource_id: trace.runId,
       details: {
-        query: body.query,
-        resultCount: rankedMemories.length,
-        executionTime: retrieveResult.executionTimeMs,
+        agent: body.agent,
+        objective: body.objective,
+        finalRisk: trace.finalRisk,
+        finalUncertainty: trace.finalUncertainty,
       },
       timestamp: new Date().toISOString(),
     });
@@ -176,22 +150,25 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        memories: rankedMemories,
-        relatedMemories: retrieveResult.relatedMemories,
-        totalCount: retrieveResult.totalCount,
-        executionTimeMs: retrieveResult.executionTimeMs,
-        retrievalStrategy: retrieveResult.retrievalStrategy,
+        runId: trace.runId,
+        objective: trace.objective,
+        agent: trace.agent,
+        finalRisk: trace.finalRisk,
+        finalUncertainty: trace.finalUncertainty,
+        passCount: trace.passes.length,
+        totalTimeMs: trace.totalTimeMs,
+        finalDecision: trace.finalDecision,
       },
-      { status: 200 }
+      { status: 201 }
     );
   } catch (error) {
-    console.error('Error retrieving memories:', error);
+    console.error('Error starting reasoning:', error);
 
     const message = error instanceof Error ? error.message : 'Internal server error';
 
     return NextResponse.json(
       {
-        error: 'Failed to retrieve memories',
+        error: 'Failed to start reasoning',
         details: message,
       },
       { status: 500 }

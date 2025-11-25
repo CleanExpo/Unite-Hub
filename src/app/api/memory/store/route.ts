@@ -9,7 +9,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabase';
 import { MemoryStore } from '@/lib/memory';
-import { apiRateLimit } from '@/lib/api-rate-limit';
+import { apiRateLimit } from '@/lib/rate-limit';
 
 interface StoreMemoryBody {
   workspaceId: string;
