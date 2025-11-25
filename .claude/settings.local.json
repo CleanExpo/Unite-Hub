@@ -12,7 +12,10 @@
       "Bash(npx vercel:*)",
       "Bash(npx tsc:*)",
       "Bash(/tmp/build.log)",
-      "Bash(/tmp/build2.log)"
+      "Bash(/tmp/build2.log)",
+      "Bash(timeout 60 npm run build:*)",
+      "Bash(test:*)",
+      "Bash(timeout 180 npm run build:*)"
     ],
     "deny": [],
     "ask": []
