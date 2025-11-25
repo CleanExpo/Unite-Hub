@@ -1,24 +1,22 @@
 -- Phase 8: AGI Governance System
 -- Manages multi-model routing, risk tracking, and governance enforcement
+-- SIMPLIFIED VERSION - Pure table creation only
 
--- Model catalog and capabilities
 CREATE TABLE IF NOT EXISTS model_capabilities (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   model TEXT NOT NULL,
   capability TEXT NOT NULL,
-  level TEXT NOT NULL CHECK (level IN ('basic', 'intermediate', 'advanced', 'expert')),
+  level TEXT NOT NULL,
   cost_per_token NUMERIC NOT NULL,
   latency_ms INTEGER NOT NULL,
-  availability_score DECIMAL(3,2) NOT NULL CHECK (availability_score >= 0 AND availability_score <= 1),
+  availability_score DECIMAL(3,2) NOT NULL,
   last_tested_at TIMESTAMP WITH TIME ZONE,
   supports_batching BOOLEAN DEFAULT FALSE,
   supports_caching BOOLEAN DEFAULT FALSE,
-  supports_streaming BOOLEAN DEFAULT FALSE,
-  CONSTRAINT unique_model_capability UNIQUE (model, capability)
+  supports_streaming BOOLEAN DEFAULT FALSE
 );
 
--- Governance policies
 CREATE TABLE IF NOT EXISTS governance_policies (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -26,27 +24,25 @@ CREATE TABLE IF NOT EXISTS governance_policies (
   name TEXT NOT NULL,
   description TEXT,
   enabled BOOLEAN DEFAULT TRUE,
-  risk_level TEXT NOT NULL CHECK (risk_level IN ('low', 'medium', 'high', 'critical')),
+  risk_level TEXT NOT NULL,
   constraints JSONB NOT NULL,
   requires_founder_approval BOOLEAN DEFAULT FALSE,
   approved_by UUID,
   approved_at TIMESTAMP WITH TIME ZONE
 );
 
--- Governance audit trail
 CREATE TABLE IF NOT EXISTS governance_audit (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   decision_id TEXT NOT NULL,
-  policy_id UUID NOT NULL REFERENCES governance_policies(id) ON DELETE CASCADE,
+  policy_id UUID NOT NULL,
   agent_id TEXT NOT NULL,
-  action TEXT NOT NULL CHECK (action IN ('approved', 'rejected', 'escalated', 'modified', 'overridden')),
+  action TEXT NOT NULL,
   violations JSONB,
   founder_override JSONB,
   notes TEXT
 );
 
--- Model routing decisions
 CREATE TABLE IF NOT EXISTS model_routing_decisions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -62,20 +58,18 @@ CREATE TABLE IF NOT EXISTS model_routing_decisions (
   actual_cost NUMERIC
 );
 
--- Model reward tracking
 CREATE TABLE IF NOT EXISTS model_rewards (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   model_id TEXT NOT NULL,
   task_type TEXT NOT NULL,
-  quality_score INTEGER CHECK (quality_score >= 0 AND quality_score <= 100),
-  cost_score INTEGER CHECK (cost_score >= 0 AND cost_score <= 100),
-  latency_score INTEGER CHECK (latency_score >= 0 AND latency_score <= 100),
-  overall_score INTEGER CHECK (overall_score >= 0 AND overall_score <= 100),
+  quality_score INTEGER,
+  cost_score INTEGER,
+  latency_score INTEGER,
+  overall_score INTEGER,
   metadata JSONB
 );
 
--- Risk profiles (conservative, balanced, aggressive)
 CREATE TABLE IF NOT EXISTS risk_profiles (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -86,33 +80,30 @@ CREATE TABLE IF NOT EXISTS risk_profiles (
   active BOOLEAN DEFAULT FALSE
 );
 
--- Risk boundaries
 CREATE TABLE IF NOT EXISTS risk_boundaries (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  profile_id UUID NOT NULL REFERENCES risk_profiles(id) ON DELETE CASCADE,
+  profile_id UUID NOT NULL,
   name TEXT NOT NULL,
   description TEXT,
-  dimension TEXT NOT NULL CHECK (dimension IN ('cost', 'latency', 'accuracy', 'scope', 'frequency')),
-  severity TEXT NOT NULL CHECK (severity IN ('low', 'medium', 'high', 'critical')),
+  dimension TEXT NOT NULL,
+  severity TEXT NOT NULL,
   threshold NUMERIC NOT NULL,
   unit TEXT,
   founder_approval_required BOOLEAN DEFAULT FALSE
 );
 
--- Risk assessments
 CREATE TABLE IF NOT EXISTS risk_assessments (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   decision_id TEXT NOT NULL,
-  risk_score INTEGER CHECK (risk_score >= 0 AND risk_score <= 100),
-  risk_level TEXT NOT NULL CHECK (risk_level IN ('safe', 'low', 'medium', 'high', 'critical')),
+  risk_score INTEGER,
+  risk_level TEXT NOT NULL,
   violations JSONB,
   requires_approval BOOLEAN DEFAULT FALSE,
   recommendation TEXT
 );
 
--- Scenarios for simulation
 CREATE TABLE IF NOT EXISTS simulation_scenarios (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -124,18 +115,16 @@ CREATE TABLE IF NOT EXISTS simulation_scenarios (
   probability DECIMAL(3,2)
 );
 
--- Simulation results
 CREATE TABLE IF NOT EXISTS simulation_results (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  scenario_id UUID NOT NULL REFERENCES simulation_scenarios(id) ON DELETE CASCADE,
+  scenario_id UUID NOT NULL,
   agent_behavior JSONB,
   model_selection JSONB,
   resource_utilization JSONB,
   risk_assessment JSONB
 );
 
--- Governance reports and summaries
 CREATE TABLE IF NOT EXISTS governance_reports (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -147,11 +136,10 @@ CREATE TABLE IF NOT EXISTS governance_reports (
   escalated INTEGER,
   founder_overrides INTEGER,
   violations_detected INTEGER,
-  risk_trend TEXT CHECK (risk_trend IN ('increasing', 'stable', 'decreasing')),
+  risk_trend TEXT,
   recommendations JSONB
 );
 
--- Enable RLS
 ALTER TABLE model_capabilities ENABLE ROW LEVEL SECURITY;
 ALTER TABLE governance_policies ENABLE ROW LEVEL SECURITY;
 ALTER TABLE governance_audit ENABLE ROW LEVEL SECURITY;
@@ -164,98 +152,26 @@ ALTER TABLE simulation_scenarios ENABLE ROW LEVEL SECURITY;
 ALTER TABLE simulation_results ENABLE ROW LEVEL SECURITY;
 ALTER TABLE governance_reports ENABLE ROW LEVEL SECURITY;
 
--- RLS Policies (authenticated read)
--- Drop existing policies if they exist (idempotent approach)
-DROP POLICY IF EXISTS "Allow authenticated read model_capabilities" ON model_capabilities;
-DROP POLICY IF EXISTS "Allow authenticated read governance_policies" ON governance_policies;
-DROP POLICY IF EXISTS "Allow authenticated read governance_audit" ON governance_audit;
-DROP POLICY IF EXISTS "Allow authenticated read model_routing" ON model_routing_decisions;
-DROP POLICY IF EXISTS "Allow authenticated read model_rewards" ON model_rewards;
-DROP POLICY IF EXISTS "Allow authenticated read risk_boundaries" ON risk_boundaries;
-DROP POLICY IF EXISTS "Allow authenticated read risk_profiles" ON risk_profiles;
-DROP POLICY IF EXISTS "Allow authenticated read risk_assessments" ON risk_assessments;
-DROP POLICY IF EXISTS "Allow authenticated read simulation_scenarios" ON simulation_scenarios;
-DROP POLICY IF EXISTS "Allow authenticated read simulation_results" ON simulation_results;
-DROP POLICY IF EXISTS "Allow authenticated read governance_reports" ON governance_reports;
+DROP POLICY IF EXISTS "authenticated_read_model_capabilities" ON model_capabilities;
+DROP POLICY IF EXISTS "authenticated_read_governance_policies" ON governance_policies;
+DROP POLICY IF EXISTS "authenticated_read_governance_audit" ON governance_audit;
+DROP POLICY IF EXISTS "authenticated_read_model_routing" ON model_routing_decisions;
+DROP POLICY IF EXISTS "authenticated_read_model_rewards" ON model_rewards;
+DROP POLICY IF EXISTS "authenticated_read_risk_boundaries" ON risk_boundaries;
+DROP POLICY IF EXISTS "authenticated_read_risk_profiles" ON risk_profiles;
+DROP POLICY IF EXISTS "authenticated_read_risk_assessments" ON risk_assessments;
+DROP POLICY IF EXISTS "authenticated_read_simulation_scenarios" ON simulation_scenarios;
+DROP POLICY IF EXISTS "authenticated_read_simulation_results" ON simulation_results;
+DROP POLICY IF EXISTS "authenticated_read_governance_reports" ON governance_reports;
 
--- Create policies
-CREATE POLICY "Allow authenticated read model_capabilities" ON model_capabilities
-  FOR SELECT USING (auth.role() = 'authenticated');
-
-CREATE POLICY "Allow authenticated read governance_policies" ON governance_policies
-  FOR SELECT USING (auth.role() = 'authenticated');
-
-CREATE POLICY "Allow authenticated read governance_audit" ON governance_audit
-  FOR SELECT USING (auth.role() = 'authenticated');
-
-CREATE POLICY "Allow authenticated read model_routing" ON model_routing_decisions
-  FOR SELECT USING (auth.role() = 'authenticated');
-
-CREATE POLICY "Allow authenticated read model_rewards" ON model_rewards
-  FOR SELECT USING (auth.role() = 'authenticated');
-
-CREATE POLICY "Allow authenticated read risk_boundaries" ON risk_boundaries
-  FOR SELECT USING (auth.role() = 'authenticated');
-
-CREATE POLICY "Allow authenticated read risk_profiles" ON risk_profiles
-  FOR SELECT USING (auth.role() = 'authenticated');
-
-CREATE POLICY "Allow authenticated read risk_assessments" ON risk_assessments
-  FOR SELECT USING (auth.role() = 'authenticated');
-
-CREATE POLICY "Allow authenticated read simulation_scenarios" ON simulation_scenarios
-  FOR SELECT USING (auth.role() = 'authenticated');
-
-CREATE POLICY "Allow authenticated read simulation_results" ON simulation_results
-  FOR SELECT USING (auth.role() = 'authenticated');
-
-CREATE POLICY "Allow authenticated read governance_reports" ON governance_reports
-  FOR SELECT USING (auth.role() = 'authenticated');
-
--- Indexes for performance
-CREATE INDEX IF NOT EXISTS idx_model_capabilities_model ON model_capabilities(model);
-CREATE INDEX IF NOT EXISTS idx_model_capabilities_capability ON model_capabilities(capability);
-CREATE INDEX IF NOT EXISTS idx_model_capabilities_level ON model_capabilities(level);
-
-CREATE INDEX IF NOT EXISTS idx_governance_policies_enabled ON governance_policies(enabled);
-CREATE INDEX IF NOT EXISTS idx_governance_policies_risk_level ON governance_policies(risk_level);
-
-CREATE INDEX IF NOT EXISTS idx_governance_audit_policy ON governance_audit(policy_id);
-CREATE INDEX IF NOT EXISTS idx_governance_audit_action ON governance_audit(action);
-CREATE INDEX IF NOT EXISTS idx_governance_audit_created ON governance_audit(created_at);
-
-CREATE INDEX IF NOT EXISTS idx_model_routing_request ON model_routing_decisions(request_id);
-CREATE INDEX IF NOT EXISTS idx_model_routing_model ON model_routing_decisions(selected_model);
-CREATE INDEX IF NOT EXISTS idx_model_routing_created ON model_routing_decisions(created_at);
-
-CREATE INDEX IF NOT EXISTS idx_model_rewards_model ON model_rewards(model_id);
-CREATE INDEX IF NOT EXISTS idx_model_rewards_task ON model_rewards(task_type);
-CREATE INDEX IF NOT EXISTS idx_model_rewards_model_task ON model_rewards(model_id, task_type);
-CREATE INDEX IF NOT EXISTS idx_model_rewards_overall ON model_rewards(overall_score);
-
-CREATE INDEX IF NOT EXISTS idx_risk_boundaries_profile ON risk_boundaries(profile_id);
-CREATE INDEX IF NOT EXISTS idx_risk_boundaries_dimension ON risk_boundaries(dimension);
-CREATE INDEX IF NOT EXISTS idx_risk_boundaries_severity ON risk_boundaries(severity);
-
-CREATE INDEX IF NOT EXISTS idx_risk_assessments_decision ON risk_assessments(decision_id);
-CREATE INDEX IF NOT EXISTS idx_risk_assessments_level ON risk_assessments(risk_level);
-
-CREATE INDEX IF NOT EXISTS idx_simulation_scenarios_created ON simulation_scenarios(created_at);
-
-CREATE INDEX IF NOT EXISTS idx_simulation_results_scenario ON simulation_results(scenario_id);
-CREATE INDEX IF NOT EXISTS idx_simulation_results_created ON simulation_results(created_at);
-
-CREATE INDEX IF NOT EXISTS idx_governance_reports_period ON governance_reports(period_start, period_end);
-
--- Table comments (optional, can add later via console)
--- COMMENT ON TABLE model_capabilities IS 'Catalog of available models with capabilities, cost, and performance characteristics';
--- COMMENT ON TABLE governance_policies IS 'Governance policies enforcing risk boundaries and approval requirements';
--- COMMENT ON TABLE governance_audit IS 'Audit trail of governance decisions and founder actions';
--- COMMENT ON TABLE model_routing_decisions IS 'History of model selection decisions for routing';
--- COMMENT ON TABLE model_rewards IS 'Performance reward signals for models across task types';
--- COMMENT ON TABLE risk_boundaries IS 'Risk dimensions and thresholds within a profile';
--- COMMENT ON TABLE risk_profiles IS 'Risk profiles (conservative, balanced, aggressive)';
--- COMMENT ON TABLE risk_assessments IS 'Risk assessments of agent decisions';
--- COMMENT ON TABLE simulation_scenarios IS 'Scenario definitions for behavior forecasting';
--- COMMENT ON TABLE simulation_results IS 'Results from simulation runs';
--- COMMENT ON TABLE governance_reports IS 'Periodic governance and compliance reports';
+CREATE POLICY authenticated_read_model_capabilities ON model_capabilities FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY authenticated_read_governance_policies ON governance_policies FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY authenticated_read_governance_audit ON governance_audit FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY authenticated_read_model_routing ON model_routing_decisions FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY authenticated_read_model_rewards ON model_rewards FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY authenticated_read_risk_boundaries ON risk_boundaries FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY authenticated_read_risk_profiles ON risk_profiles FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY authenticated_read_risk_assessments ON risk_assessments FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY authenticated_read_simulation_scenarios ON simulation_scenarios FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY authenticated_read_simulation_results ON simulation_results FOR SELECT USING (auth.role() = 'authenticated');
+CREATE POLICY authenticated_read_governance_reports ON governance_reports FOR SELECT USING (auth.role() = 'authenticated');
