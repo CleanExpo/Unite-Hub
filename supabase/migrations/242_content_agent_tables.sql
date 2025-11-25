@@ -110,9 +110,10 @@ CREATE INDEX IF NOT EXISTS idx_content_research_links_research ON content_resear
 
 CREATE INDEX IF NOT EXISTS idx_content_performance_content ON content_performance(content_id);
 
--- Conditional index creation for performance_event (handles both old and new column names)
+-- Conditional index creation for content_performance (handles schema variations)
 DO $$
 BEGIN
+  -- Try to create index on performance_event column
   IF EXISTS (SELECT 1 FROM information_schema.columns
              WHERE table_name = 'content_performance' AND column_name = 'performance_event') THEN
     CREATE INDEX IF NOT EXISTS idx_content_performance_event ON content_performance(performance_event);
@@ -120,20 +121,52 @@ BEGIN
              WHERE table_name = 'content_performance' AND column_name = 'event_type') THEN
     CREATE INDEX IF NOT EXISTS idx_content_performance_event_legacy ON content_performance(event_type);
   END IF;
+
+  -- Try to create index on created_at column
+  IF EXISTS (SELECT 1 FROM information_schema.columns
+             WHERE table_name = 'content_performance' AND column_name = 'created_at') THEN
+    CREATE INDEX IF NOT EXISTS idx_content_performance_created ON content_performance(created_at DESC);
+  END IF;
 END $$;
 
-CREATE INDEX IF NOT EXISTS idx_content_performance_created ON content_performance(created_at DESC);
+-- Comments (with error handling for schema variations)
+DO $$
+BEGIN
+  -- Table comments
+  COMMENT ON TABLE content_outputs IS 'Stores content generation requests and outputs with risk assessment and founder governance routing.';
+  COMMENT ON TABLE content_variants IS 'A/B testing variants for optimizing content performance (tone, length, personalization).';
+  COMMENT ON TABLE content_research_links IS 'Links content outputs to research insights for citation and evidence tracking.';
+  COMMENT ON TABLE content_performance IS 'Tracks content performance metrics (sends, views, clicks, conversions, etc.).';
 
--- Comments
-COMMENT ON TABLE content_outputs IS 'Stores content generation requests and outputs with risk assessment and founder governance routing.';
-COMMENT ON TABLE content_variants IS 'A/B testing variants for optimizing content performance (tone, length, personalization).';
-COMMENT ON TABLE content_research_links IS 'Links content outputs to research insights for citation and evidence tracking.';
-COMMENT ON TABLE content_performance IS 'Tracks content performance metrics (sends, views, clicks, conversions, etc.).';
+  -- Column comments (will succeed even if columns don't exist in old schema)
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'content_outputs' AND column_name = 'intent') THEN
+    COMMENT ON COLUMN content_outputs.intent IS 'Content type: email, post, script, article, ad, training, or website.';
+  END IF;
 
-COMMENT ON COLUMN content_outputs.intent IS 'Content type: email, post, script, article, ad, training, or website.';
-COMMENT ON COLUMN content_outputs.risk_level IS 'Risk classification: low (0-19), medium (20-39), high (40-69), critical (70+).';
-COMMENT ON COLUMN content_outputs.tone_aligned IS 'TRUE if content aligns with brand tone guidelines and positioning.';
-COMMENT ON COLUMN content_outputs.requires_founder_review IS 'TRUE if risk level is high/critical OR tone alignment fails.';
-COMMENT ON COLUMN content_outputs.ready_to_use IS 'TRUE if approved by founder or auto-approved by system.';
-COMMENT ON COLUMN content_outputs.thinking_process IS 'Record of extended thinking process (for transparency and debugging).';
-COMMENT ON COLUMN content_research_links.integration_type IS 'How research is integrated: supports claim, provides context, strengthens narrative, or illustrates point.';
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'content_outputs' AND column_name = 'risk_level') THEN
+    COMMENT ON COLUMN content_outputs.risk_level IS 'Risk classification: low (0-19), medium (20-39), high (40-69), critical (70+).';
+  END IF;
+
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'content_outputs' AND column_name = 'tone_aligned') THEN
+    COMMENT ON COLUMN content_outputs.tone_aligned IS 'TRUE if content aligns with brand tone guidelines and positioning.';
+  END IF;
+
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'content_outputs' AND column_name = 'requires_founder_review') THEN
+    COMMENT ON COLUMN content_outputs.requires_founder_review IS 'TRUE if risk level is high/critical OR tone alignment fails.';
+  END IF;
+
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'content_outputs' AND column_name = 'ready_to_use') THEN
+    COMMENT ON COLUMN content_outputs.ready_to_use IS 'TRUE if approved by founder or auto-approved by system.';
+  END IF;
+
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'content_outputs' AND column_name = 'thinking_process') THEN
+    COMMENT ON COLUMN content_outputs.thinking_process IS 'Record of extended thinking process (for transparency and debugging).';
+  END IF;
+
+  IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'content_research_links' AND column_name = 'integration_type') THEN
+    COMMENT ON COLUMN content_research_links.integration_type IS 'How research is integrated: supports claim, provides context, strengthens narrative, or illustrates point.';
+  END IF;
+EXCEPTION WHEN OTHERS THEN
+  -- Silently ignore comment errors (they're non-critical)
+  NULL;
+END $$;
