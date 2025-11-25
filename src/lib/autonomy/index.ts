@@ -58,3 +58,12 @@ export type { ArbitrationInput, ArbitrationDecision } from '../negotiation';
 
 export { negotiationArchiveBridge } from '../negotiation';
 export type { NegotiationRecord, NegotiationPattern } from '../negotiation';
+
+export { taskMarketplaceEngine } from '../marketplace';
+export type { MarketplaceTask, AgentBid, AuctionSession, BidResponse } from '../marketplace';
+
+export { bidEvaluationModel } from '../marketplace';
+export type { BidScoringInput, ScoringBreakdown, BidComparison } from '../marketplace';
+
+export { auctionArchiveBridge } from '../marketplace';
+export type { AuctionArchiveEntry, MarketplacePattern, MarketplaceAnalytics } from '../marketplace';
