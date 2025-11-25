@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { ingestRealityEvent } from '@/lib/aido/database/reality-events';
+import { createRealityEvent } from '@/lib/aido/database/reality-events';
 
 export async function POST(req: NextRequest) {
   try {
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Ingest event (processing happens asynchronously)
-    const event = await ingestRealityEvent({
+    const event = await createRealityEvent({
       clientId,
       workspaceId,
       eventType,

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { checkTierRateLimit } from '@/lib/rate-limit-tiers';
-import { getSerpHistory } from '@/lib/aido/database/serp-observations';
+import { getSerpObservation } from '@/lib/aido/database/serp-observations';
 import { createChangeSignal } from '@/lib/aido/database/change-signals';
 import { createStrategyRecommendation } from '@/lib/aido/database/strategy-recommendations';
 
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Fetch SERP history
-    const history = await getSerpHistory(
+    const history = await getSerpObservation(
       workspaceId,
       keyword,
       days || 30

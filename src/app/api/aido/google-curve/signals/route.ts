@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getActiveSignals } from '@/lib/aido/database/change-signals';
+import { getActiveChangeSignals } from '@/lib/aido/database/change-signals';
 
 export async function GET(req: NextRequest) {
   try {
@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
     const clientId = req.nextUrl.searchParams.get('clientId');
     const severity = req.nextUrl.searchParams.get('severity');
 
-    const signals = await getActiveSignals(
+    const signals = await getActiveChangeSignals(
       workspaceId,
       clientId || undefined,
       severity || undefined

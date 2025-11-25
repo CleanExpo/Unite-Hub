@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { recordSerpObservation } from '@/lib/aido/database/serp-observations';
+import { createSerpObservation } from '@/lib/aido/database/serp-observations';
 import { createChangeSignal } from '@/lib/aido/database/change-signals';
 
 export async function POST(req: NextRequest) {
@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
     const observations = [];
 
     for (const keyword of keywords) {
-      const observation = await recordSerpObservation({
+      const observation = await createSerpObservation({
         clientId,
         workspaceId,
         keyword,

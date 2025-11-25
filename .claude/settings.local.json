@@ -4,7 +4,10 @@
       "Bash(npm outdated:*)",
       "Bash(npm run test:health:*)",
       "Bash(node scripts/test-monitoring-system.mjs:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(npm run build:*)"
     ],
     "deny": [],
     "ask": []

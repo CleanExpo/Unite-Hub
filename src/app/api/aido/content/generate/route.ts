@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { checkTierRateLimit } from '@/lib/rate-limit-tiers';
-import { generateAlgorithmicImmuneContent } from '@/lib/aido/content-generation-ai';
+import { generateContent } from '@/lib/aido/content-generation-ai';
 import { getClientProfile } from '@/lib/aido/database/client-profiles';
 
 export async function POST(req: NextRequest) {
@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
 
     // Generate content with AI (Claude Opus 4 Extended Thinking)
     const startTime = Date.now();
-    const contentAsset = await generateAlgorithmicImmuneContent({
+    const contentAsset = await generateContent({
       clientId,
       workspaceId,
       topicId,

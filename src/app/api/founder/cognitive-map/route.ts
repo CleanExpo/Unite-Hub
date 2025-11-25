@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseBrowser } from '@/lib/supabase';
-import { getCognitiveSnapshot, generateCognitiveSnapshot } from '@/lib/founderCognitiveMap';
+import { getCognitiveMap, generateCognitiveMap } from '@/lib/founderCognitiveMap';
 
 export async function GET(req: NextRequest) {
   try {
@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'tenantId required' }, { status: 400 });
     }
 
-    const snapshot = await getCognitiveSnapshot(tenantId);
+    const snapshot = await getCognitiveMap(tenantId);
 
     return NextResponse.json({
       success: true,
@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'tenantId required' }, { status: 400 });
     }
 
-    const snapshot = await generateCognitiveSnapshot(tenantId);
+    const snapshot = await generateCognitiveMap(tenantId);
 
     if (!snapshot) {
       return NextResponse.json({ error: 'Failed to generate cognitive map' }, { status: 500 });

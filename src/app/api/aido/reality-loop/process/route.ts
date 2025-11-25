@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getPendingRealityEvents, updateEventStatus } from '@/lib/aido/database/reality-events';
+import { getRealityEvents, updateRealityEventStatus } from '@/lib/aido/database/reality-events';
 import { checkTierRateLimit } from '@/lib/rate-limit-tiers';
 
 export async function POST(req: NextRequest) {
@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
       }
     } else if (clientId) {
       // Process all pending events for client
-      eventsToProcess = await getPendingRealityEvents(clientId, workspaceId);
+      eventsToProcess = await getRealityEvents(clientId, workspaceId);
     } else {
       return NextResponse.json(
         { error: 'Must provide either eventId or clientId' },
@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
     const results = await Promise.all(
       eventsToProcess.map(async (event: any) => {
         try {
-          await updateEventStatus(event.id, workspaceId, 'processed');
+          await updateRealityEventStatus(event.id, workspaceId, 'processed');
           return { id: event.id, status: 'success' };
         } catch (err: any) {
           return { id: event.id, status: 'failed', error: err.message };

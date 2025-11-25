@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseBrowser } from '@/lib/supabase';
-import { getBenchmarkBands, getTenantReport } from '@/lib/crossTenant/benchmarks';
+import { getBenchmarkBands, getTenantBenchmarks } from '@/lib/crossTenant/benchmarks';
 
 export async function GET(req: NextRequest) {
   try {
@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
     const metricName = req.nextUrl.searchParams.get('metricName');
 
     if (tenantId) {
-      const report = await getTenantReport(tenantId);
+      const report = await getTenantBenchmarks(tenantId);
       return NextResponse.json({
         report,
         confidence: 0.8,

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabase';
 import { supabaseBrowser } from '@/lib/supabase';
-import { validateBoundaryCrossing, getBoundaryCrossings } from '@/lib/crossTenant/boundary';
+import { validateCrossing, getCrossingLogs } from '@/lib/crossTenant/boundary';
 
 export async function GET(req: NextRequest) {
   try {
@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'tenantId required' }, { status: 400 });
     }
 
-    const crossings = await getBoundaryCrossings(tenantId);
+    const crossings = await getCrossingLogs(tenantId);
 
     return NextResponse.json({
       crossings,
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
 
     const { tenantId, dataType, targetScope } = await req.json();
 
-    const result = await validateBoundaryCrossing(tenantId, dataType, targetScope);
+    const result = await validateCrossing(tenantId, dataType, targetScope);
 
     return NextResponse.json({
       result,
