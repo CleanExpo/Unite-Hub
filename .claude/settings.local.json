@@ -9,7 +9,8 @@
       "Bash(git push:*)",
       "Bash(npm run build:*)",
       "Bash(node scripts/verify-build-ready.mjs:*)",
-      "Bash(npx vercel:*)"
+      "Bash(npx vercel:*)",
+      "Bash(npx tsc:*)"
     ],
     "deny": [],
     "ask": []
