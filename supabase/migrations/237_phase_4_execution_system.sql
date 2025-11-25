@@ -252,13 +252,29 @@ CREATE POLICY execution_health_snapshots_users_insert ON execution_health_snapsh
   );
 
 -- 12. RLS Policies for other tables (readonly for users via API)
-CREATE POLICY task_propagation_logs_users_select ON task_propagation_logs
-  FOR SELECT USING (
-    l4_item_id IN (
-      SELECT id FROM strategy_l4_items
-      WHERE strategy_l4_items.workspace_id = task_propagation_logs.workspace_id
-    )
-  );
+
+-- Conditional RLS policy for task_propagation_logs (only if strategy_l4_items exists)
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'strategy_l4_items') THEN
+    CREATE POLICY task_propagation_logs_users_select ON task_propagation_logs
+      FOR SELECT USING (
+        l4_item_id IN (
+          SELECT id FROM strategy_l4_items
+          WHERE strategy_l4_items.workspace_id = task_propagation_logs.workspace_id
+        )
+      );
+  ELSE
+    -- Fallback: Simple workspace-based policy if strategy_l4_items doesn't exist yet
+    CREATE POLICY task_propagation_logs_users_select ON task_propagation_logs
+      FOR SELECT USING (
+        execution_id IN (
+          SELECT id FROM strategy_executions
+          WHERE strategy_executions.workspace_id = task_propagation_logs.workspace_id
+        )
+      );
+  END IF;
+END $$;
 
 CREATE POLICY execution_events_users_select ON execution_events
   FOR SELECT USING (
