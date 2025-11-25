@@ -22,6 +22,7 @@ const MODEL_COSTS = {
   // ============================================
 
   // Anthropic Claude (Direct API) - Big 4 Gatekeeper #1
+  "claude-opus-4.5": { input: 15, output: 75 },             // Flagship: Latest Opus with Extended Thinking
   "claude-opus-4.1": { input: 15, output: 75 },             // Flagship: Extended Thinking
   "claude-sonnet-4.5": { input: 3, output: 15 },            // Flagship: Balanced
   "claude-haiku-4.5": { input: 0.8, output: 4 },            // Flagship: Fast
@@ -96,6 +97,7 @@ export type ModelName =
   // ============================================
 
   // Anthropic Claude (Direct API) - Big 4 Gatekeeper #1
+  | "claude-opus-4.5"             // Flagship: Latest Opus (Nov 2024) with Extended Thinking
   | "claude-opus-4.1"             // Flagship: Extended Thinking, best reasoning
   | "claude-sonnet-4.5"           // Flagship: Balanced performance
   | "claude-haiku-4.5"            // Flagship: Fast responses
@@ -228,6 +230,7 @@ export class ModelRouter {
 
     const premiumModels: ModelName[] = [
       // Big 4 Flagship Models
+      "claude-opus-4.5",
       "claude-opus-4.1",
       "claude-sonnet-4.5",
       "claude-haiku-4.5",
@@ -279,8 +282,8 @@ export class ModelRouter {
       generate_persona: "gemini-3.0-pro",
       generate_strategy: "gemini-3.0-pro",
 
-      // Premium tasks → Claude Opus 4.1 (Big 4 flagship gatekeeper)
-      generate_content: "claude-opus-4.1",
+      // Premium tasks → Claude Opus 4.5 (Big 4 flagship gatekeeper - LATEST)
+      generate_content: "claude-opus-4.5",
 
       // Ultra-premium tasks → Claude Sonnet 4.5 (Big 4 flagship gatekeeper)
       security_audit: "claude-sonnet-4.5",
@@ -320,7 +323,7 @@ export class ModelRouter {
         default: "gemini-2.0-flash",
       },
       premium: {
-        reasoning: "claude-opus-4.1",
+        reasoning: "claude-opus-4.5",
         fast: "claude-sonnet-4.5",
         coding: "gemini-3.0-pro",
         multimodal: "gemini-2.5-flash-image",
@@ -416,6 +419,7 @@ export class ModelRouter {
     startTime: number
   ): Promise<ModelResponse> {
     const anthropicModel = {
+      "claude-opus-4.5": "claude-opus-4-5-20251101",
       "claude-opus-4.1": "claude-opus-4-1-20250805",
       "claude-sonnet-4.5": "claude-sonnet-4-5-20250929",
       "claude-haiku-4.5": "claude-haiku-4-5-20251001",
@@ -432,8 +436,8 @@ export class ModelRouter {
       messages: [{ role: "user", content: prompt }],
     };
 
-    // Enable Extended Thinking for Opus if requested
-    if (model === "claude-opus-4.1" && options.thinkingBudget) {
+    // Enable Extended Thinking for Opus models if requested
+    if ((model === "claude-opus-4.5" || model === "claude-opus-4.1") && options.thinkingBudget) {
       messageOptions.thinking = {
         type: "enabled",
         budget_tokens: options.thinkingBudget,

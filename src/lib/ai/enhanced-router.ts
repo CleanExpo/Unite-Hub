@@ -283,7 +283,7 @@ async function routeToAnthropic(params: {
   // Model selection
   let modelId: string;
   if (requiresExtendedThinking) {
-    modelId = 'claude-opus-4-1-20250805'; // Best for deep thinking
+    modelId = 'claude-opus-4-5-20251101'; // Latest Opus (Nov 2024) - Best for deep thinking
   } else {
     modelId = 'claude-sonnet-4-5-20250929'; // Best for standard + caching
   }
@@ -395,6 +395,11 @@ function calculateOpenRouterCost(modelId: string, usage: { input: number; output
  */
 function calculateAnthropicCost(modelId: string, usage: any): number {
   const pricing: Record<string, { input: number; output: number; thinking?: number }> = {
+    "claude-opus-4-5-20251101": {
+      input: 15 / 1_000_000,
+      output: 75 / 1_000_000,
+      thinking: 7.50 / 1_000_000 // Extended Thinking tokens
+    },
     "claude-opus-4-1-20250805": {
       input: 15 / 1_000_000,
       output: 75 / 1_000_000,

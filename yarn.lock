@@ -35,10 +35,10 @@
     package-manager-detector "^1.3.0"
     tinyexec "^1.0.1"
 
-"@anthropic-ai/sdk@^0.68.0":
-  version "0.68.0"
-  resolved "https://registry.npmjs.org/@anthropic-ai/sdk/-/sdk-0.68.0.tgz"
-  integrity sha512-SMYAmbbiprG8k1EjEPMTwaTqssDT7Ae+jxcR5kWXiqTlbwMR2AthXtscEVWOHkRfyAV5+y3PFYTJRNa3OJWIEw==
+"@anthropic-ai/sdk@^0.71.0":
+  version "0.71.0"
+  resolved "https://registry.npmjs.org/@anthropic-ai/sdk/-/sdk-0.71.0.tgz"
+  integrity sha512-go1XeWXmpxuiTkosSXpb8tokLk2ZLkIRcXpbWVwJM6gH5OBtHOVsfPfGuqI1oW7RRt4qc59EmYbrXRZ0Ng06Jw==
   dependencies:
     json-schema-to-ts "^3.1.1"
 
