@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
+import { apiRateLimit } from "@/lib/rate-limit";
 
 // Anthropic API pricing (as of 2025)
 const PRICING = {
@@ -85,6 +86,12 @@ function getModelForAgent(action: string): "opus" | "sonnet" | "haiku" {
 
 export async function GET(req: NextRequest) {
   try {
+    // Apply rate limiting (cache stats)
+    const rateLimitResult = await apiRateLimit(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
+
     const supabase = await getSupabaseServer();
 
     // Get workspaceId from query params

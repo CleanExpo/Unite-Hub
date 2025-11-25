@@ -3,10 +3,12 @@
  * GET /api/monitoring/dashboard
  *
  * Returns comprehensive monitoring data for the dashboard
+ * Rate limited: 5 requests per minute
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabase';
+import { apiRateLimit } from '@/lib/rate-limit';
 import {
   getErrorStats,
   checkSystemHealth,
@@ -18,6 +20,12 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
   try {
+    // Apply rate limiting (monitoring dashboard)
+    const rateLimitResult = await apiRateLimit(req);
+    if (rateLimitResult) {
+      return rateLimitResult;
+    }
+
     // Run all checks in parallel
     const [errorStats, systemHealth, recentErrors, slowRequests] = await Promise.all([
       getErrorStats(24), // Last 24 hours
