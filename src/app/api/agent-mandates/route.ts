@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseBrowser } from '@/lib/supabase';
-import { getMandates, createMandate, validateAction } from '@/lib/agentMandates';
+import { getMandates, updateMandate, validateAction } from '@/lib/agentMandates';
 
 export async function GET(req: NextRequest) {
   try {
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
     const { action, tenantId, agentName, mandate, autonomyLevel, riskCaps, mandateId, actionType, actionDetails, estimatedRisk } = await req.json();
 
     if (action === 'create') {
-      const result = await createMandate(tenantId, agentName, mandate, autonomyLevel, riskCaps);
+      const result = await updateMandate(tenantId, agentName, mandate, autonomyLevel, riskCaps);
       return NextResponse.json({
         mandate: result,
         confidence: 0.9,

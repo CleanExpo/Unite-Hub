@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseBrowser } from '@/lib/supabase';
-import { getSessions, createSession, castVote, resolveSession } from '@/lib/council';
+import { getSessions, createSession, submitVote, resolveSession } from '@/lib/council';
 
 export async function GET(req: NextRequest) {
   try {
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (action === 'vote') {
-      const voteResult = await castVote(sessionId, agentName, vote, confidence, reasoning);
+      const voteResult = await submitVote(sessionId, agentName, vote, confidence, reasoning);
       return NextResponse.json({
         vote: voteResult,
         confidence: 0.85,

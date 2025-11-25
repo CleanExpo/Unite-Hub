@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { checkTierRateLimit } from '@/lib/rate-limit-tiers';
 import { getSerpHistory } from '@/lib/aido/database/serp-observations';
 import { createChangeSignal } from '@/lib/aido/database/change-signals';
-import { createRecommendation } from '@/lib/aido/database/strategy-recommendations';
+import { createStrategyRecommendation } from '@/lib/aido/database/strategy-recommendations';
 
 export async function POST(req: NextRequest) {
   try {
@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
       signals.push(signal);
 
       // Create recommendation
-      const recommendation = await createRecommendation({
+      const recommendation = await createStrategyRecommendation({
         clientId,
         workspaceId,
         pillarId: 'google_curve',

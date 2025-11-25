@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseBrowser } from '@/lib/supabase';
-import { compressMemory } from '@/lib/memoryCompression';
+import { compressAndStore } from '@/lib/memoryCompression';
 
 export async function POST(req: NextRequest) {
   try {
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'sourceType required' }, { status: 400 });
     }
 
-    const packet = await compressMemory(sourceType, tenantId, regionId);
+    const packet = await compressAndStore(sourceType, tenantId, regionId);
 
     if (!packet) {
       return NextResponse.json({ error: 'Failed to compress memory' }, { status: 500 });

@@ -7,7 +7,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabase';
 import { supabaseBrowser } from '@/lib/supabase';
 import {
-  createProductionJob,
+  createJob,
   getClientJobs,
   updateJobStatus,
   updateJobSafety,
@@ -113,7 +113,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Create the job
-    const job = await createProductionJob(
+    const job = await createJob(
       clientId,
       jobType as JobType,
       title,

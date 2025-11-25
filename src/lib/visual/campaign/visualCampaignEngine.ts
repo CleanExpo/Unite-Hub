@@ -4,8 +4,16 @@
  */
 
 import { CampaignChannel, CHANNEL_PROFILES, getChannelProfile } from './channelProfiles';
-import { METHOD_REGISTRY, getMethodById, getMethodsByCategory, filterMethods } from '../methods/catalog';
-import { MethodMetadata, BrandPersonality, IndustryTag } from '../methods/metadata';
+import { METHOD_METADATA_REGISTRY, getMethodMetadata, getMethodsByCategory, MethodMetadata, BrandPersonality, IndustryTag, ChannelId } from '../methods/metadata';
+
+// Helper function to filter methods by channels
+function filterMethods({ channels }: { channels: ChannelId[] }): MethodMetadata[] {
+  return Array.from(METHOD_METADATA_REGISTRY.values()).filter(method =>
+    channels.some(channel =>
+      method.primary_channel === channel || method.supported_channels.includes(channel)
+    )
+  );
+}
 
 export interface CampaignBrief {
   campaign_id: string;
