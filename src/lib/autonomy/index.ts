@@ -28,3 +28,15 @@ export type { FailurePrediction as PredictionModel, SignalInput, ContributingFac
 
 export { correctionArchiveBridge } from './correctionArchiveBridge';
 export type { CorrectionArchiveData } from './correctionArchiveBridge';
+
+export { alignmentCalibrationEngine } from './alignmentCalibrationEngine';
+export type { CalibrationMetrics, CalibrationProposal, CalibrationCycle } from './alignmentCalibrationEngine';
+
+export { autonomyTuningModel } from './autonomyTuningModel';
+export type { ParameterAdjustment, TuningResult, CalibratedParameters } from './autonomyTuningModel';
+
+export { thresholdAdjustmentModel } from './thresholdAdjustmentModel';
+export type { ThresholdAdjustmentParams, ThresholdAdjustmentResult, ThresholdSet } from './thresholdAdjustmentModel';
+
+export { calibrationArchiveBridge } from './calibrationArchiveBridge';
+export type { CalibrationArchiveEntry, CalibrationPattern } from './calibrationArchiveBridge';

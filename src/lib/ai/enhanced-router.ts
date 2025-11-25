@@ -19,7 +19,9 @@
 
 import { callGemini3, checkGeminiDailyBudget, type ThinkingLevel } from '@/lib/google/gemini-client';
 import Anthropic from "@anthropic-ai/sdk";
-import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
+import { callAnthropicWithRetry, checkAnthropicAvailability } from "@/lib/anthropic/rate-limiter";
+import { getAnthropicClient, isAnthropicAvailable } from '@/lib/anthropic/client';
+import { ANTHROPIC_MODELS } from '@/lib/anthropic/models';
 import OpenAI from 'openai';
 import { getSupabaseAdmin } from '@/lib/supabase';
 
@@ -33,10 +35,19 @@ const openrouter = new OpenAI({
   }
 });
 
-// Direct Anthropic client
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || '',
-});
+// Helper function to get Anthropic client (with fallback handling)
+function getAnthropicClientSafe(): Anthropic | null {
+  try {
+    if (!isAnthropicAvailable()) {
+      console.warn('⚠️ Anthropic unavailable (circuit breaker or not configured)');
+      return null;
+    }
+    return getAnthropicClient();
+  } catch (error) {
+    console.error('❌ Failed to get Anthropic client:', error);
+    return null;
+  }
+}
 
 export type AIProvider = 'gemini' | 'openrouter' | 'anthropic_direct';
 export type TaskSource = 'gmail' | 'calendar' | 'drive' | 'generic';
@@ -160,18 +171,31 @@ export async function enhancedRouteAI(options: EnhancedRouterOptions): Promise<A
       };
     }
 
-    // Decision 2: Direct Anthropic for advanced features
+    // Decision 2: Direct Anthropic for advanced features (with fallback)
     if (requiresExtendedThinking || requiresCaching) {
       console.log('🔀 Routing to Anthropic Direct (advanced features)');
-      return await routeToAnthropic({
-        taskType,
-        prompt,
-        systemPrompt,
-        requiresExtendedThinking,
-        requiresCaching,
-        maxTokens,
-        workspaceId
-      });
+      
+      // Check if Anthropic is available
+      const anthropicClient = getAnthropicClientSafe();
+      if (!anthropicClient) {
+        console.warn('⚠️ Anthropic unavailable, falling back to OpenRouter');
+        return await routeToOpenRouter({ taskType, prompt, systemPrompt, maxTokens, workspaceId });
+      }
+
+      try {
+        return await routeToAnthropic({
+          taskType,
+          prompt,
+          systemPrompt,
+          requiresExtendedThinking,
+          requiresCaching,
+          maxTokens,
+          workspaceId
+        });
+      } catch (error) {
+        console.error('❌ Anthropic failed, falling back to OpenRouter:', error);
+        return await routeToOpenRouter({ taskType, prompt, systemPrompt, maxTokens, workspaceId });
+      }
     }
 
     // Decision 3: OpenRouter for cost optimization (default)
@@ -280,12 +304,18 @@ async function routeToAnthropic(params: {
 }): Promise<AIResponse> {
   const { taskType, prompt, systemPrompt, requiresExtendedThinking, requiresCaching, maxTokens, workspaceId } = params;
 
-  // Model selection
+  // Get Anthropic client safely
+  const anthropic = getAnthropicClientSafe();
+  if (!anthropic) {
+    throw new Error('Anthropic client not available');
+  }
+
+  // Model selection using constants
   let modelId: string;
   if (requiresExtendedThinking) {
-    modelId = 'claude-opus-4-5-20251101'; // Latest Opus (Nov 2024) - Best for deep thinking
+    modelId = ANTHROPIC_MODELS.OPUS_4_5; // Latest Opus - Best for deep thinking
   } else {
-    modelId = 'claude-sonnet-4-5-20250929'; // Best for standard + caching
+    modelId = ANTHROPIC_MODELS.SONNET_4_5; // Best for standard + caching
   }
 
   const startTime = Date.now();

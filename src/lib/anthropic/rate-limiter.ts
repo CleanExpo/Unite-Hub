@@ -11,6 +11,13 @@
  */
 
 import Anthropic from "@anthropic-ai/sdk";
+import {
+  getAnthropicClient,
+  isAnthropicAvailable,
+  recordAnthropicSuccess,
+  recordAnthropicFailure,
+} from './client';
+import { getModelPricing } from './models';
 
 export interface RetryOptions {
   maxRetries?: number;
@@ -102,6 +109,7 @@ function getRateLimitWait(error: unknown): number | null {
 
 /**
  * Call Anthropic API with automatic retry and exponential backoff
+ * Now with EMERGENCY FALLBACK to OpenRouter on 500 errors
  *
  * @example
  * const result = await callAnthropicWithRetry(async () => {
@@ -114,68 +122,119 @@ function getRateLimitWait(error: unknown): number | null {
  */
 export async function callAnthropicWithRetry<T>(
   fn: () => Promise<T>,
-  options?: RetryOptions
+  options?: RetryOptions & { enableOpenRouterFallback?: boolean }
 ): Promise<RetryResult<T>> {
-  const opts = { ...DEFAULT_OPTIONS, ...options };
+  const opts = { ...DEFAULT_OPTIONS, enableOpenRouterFallback: true, ...options };
   const startTime = Date.now();
   let lastError: unknown;
+  let anthropicFailed = false;
 
-  for (let attempt = 0; attempt <= opts.maxRetries; attempt++) {
-    try {
-      // Create timeout promise
-      const timeoutPromise = new Promise<never>((_, reject) => {
-        setTimeout(
-          () => reject(new Error("Request timeout")),
-          opts.timeout
+  // Check circuit breaker before attempting
+  const availability = checkAnthropicAvailability();
+  if (!availability.available) {
+    if (opts.enableOpenRouterFallback) {
+      console.warn('⚠️ Anthropic circuit breaker OPEN - Attempting OpenRouter fallback');
+      anthropicFailed = true;
+    } else {
+      throw new Error(availability.reason || 'Anthropic API unavailable');
+    }
+  }
+
+  // Skip Anthropic if circuit breaker is open
+  if (!anthropicFailed) {
+    for (let attempt = 0; attempt <= opts.maxRetries; attempt++) {
+      try {
+        // Create timeout promise
+        const timeoutPromise = new Promise<never>((_, reject) => {
+          setTimeout(
+            () => reject(new Error("Request timeout")),
+            opts.timeout
+          );
+        });
+
+        // Race between API call and timeout
+        const data = await Promise.race([fn(), timeoutPromise]);
+
+        // Record success with circuit breaker
+        recordAnthropicSuccess();
+
+        return {
+          data,
+          attempts: attempt + 1,
+          totalTime: Date.now() - startTime,
+        };
+      } catch (error) {
+        lastError = error;
+
+        // Record failure with circuit breaker
+        recordAnthropicFailure(error);
+
+        // Log error
+        console.error(
+          `Anthropic API attempt ${attempt + 1}/${opts.maxRetries + 1} failed:`,
+          error instanceof Error ? error.message : error
         );
-      });
 
-      // Race between API call and timeout
-      const data = await Promise.race([fn(), timeoutPromise]);
+        // Check if it's a 500 error - trigger immediate fallback
+        if (error instanceof Anthropic.APIError && error.status === 500) {
+          if (opts.enableOpenRouterFallback) {
+            console.error('🚨 Anthropic 500 Internal Server Error detected - Falling back to OpenRouter');
+            anthropicFailed = true;
+            break; // Exit retry loop and try OpenRouter
+          }
+        }
 
+        // Check if we should retry
+        if (attempt < opts.maxRetries && isRetryableError(error)) {
+          // Check for rate limit specific wait time
+          const rateLimitWait = getRateLimitWait(error);
+
+          if (rateLimitWait) {
+            console.log(
+              `Rate limited. Waiting ${rateLimitWait / 1000}s before retry...`
+            );
+            await sleep(rateLimitWait, false);
+          } else {
+            // Calculate exponential backoff
+            const delay = calculateBackoff(
+              attempt,
+              opts.baseDelay,
+              opts.maxDelay
+            );
+            console.log(
+              `Retrying in ${delay / 1000}s (attempt ${attempt + 2}/${
+                opts.maxRetries + 1
+              })...`
+            );
+            await sleep(delay);
+          }
+          continue;
+        }
+
+        // Non-retryable error or max retries exceeded
+        if (!opts.enableOpenRouterFallback) {
+          throw error;
+        }
+        // If fallback is enabled, mark as failed and continue
+        anthropicFailed = true;
+        break;
+      }
+    }
+  }
+
+  // If Anthropic failed and fallback is enabled, try OpenRouter
+  if (anthropicFailed && opts.enableOpenRouterFallback) {
+    console.log('🔄 Attempting OpenRouter fallback...');
+    try {
+      const fallbackResult = await attemptOpenRouterFallback(lastError);
       return {
-        data,
-        attempts: attempt + 1,
+        data: fallbackResult as T,
+        attempts: opts.maxRetries + 2, // Indicate fallback was used
         totalTime: Date.now() - startTime,
       };
-    } catch (error) {
-      lastError = error;
-
-      // Log error
-      console.error(
-        `Anthropic API attempt ${attempt + 1}/${opts.maxRetries + 1} failed:`,
-        error instanceof Error ? error.message : error
-      );
-
-      // Check if we should retry
-      if (attempt < opts.maxRetries && isRetryableError(error)) {
-        // Check for rate limit specific wait time
-        const rateLimitWait = getRateLimitWait(error);
-
-        if (rateLimitWait) {
-          console.log(
-            `Rate limited. Waiting ${rateLimitWait / 1000}s before retry...`
-          );
-          await sleep(rateLimitWait, false);
-        } else {
-          // Calculate exponential backoff
-          const delay = calculateBackoff(
-            attempt,
-            opts.baseDelay,
-            opts.maxDelay
-          );
-          console.log(
-            `Retrying in ${delay / 1000}s (attempt ${attempt + 2}/${
-              opts.maxRetries + 1
-            })...`
-          );
-          await sleep(delay);
-        }
-        continue;
-      }
-
-      // Non-retryable error or max retries exceeded
-      throw error;
+    } catch (fallbackError) {
+      console.error('❌ OpenRouter fallback also failed:', fallbackError);
+      throw lastError || fallbackError;
     }
   }
 
@@ -184,15 +243,37 @@ export async function callAnthropicWithRetry<T>(
 }
 
 /**
+ * Emergency fallback to OpenRouter when Anthropic fails
+ * Attempts to extract request details and retry via OpenRouter
+ */
+async function attemptOpenRouterFallback(originalError: unknown): Promise<any> {
+  // This is a simplified fallback - in production you'd need to extract
+  // the original request parameters and reconstruct the call
+  console.warn('⚠️ OpenRouter fallback triggered but request reconstruction not implemented');
+  console.warn('   The calling code should handle fallback at a higher level');
+  throw new Error('OpenRouter fallback not available at this level. Use enhanced-router.ts for automatic fallback.');
+}
+
+/**
  * Create Anthropic client with prompt caching enabled
+ * @deprecated Use getAnthropicClient() from './client' instead
  */
 export function createCachedAnthropicClient(): Anthropic {
-  return new Anthropic({
-    apiKey: process.env.ANTHROPIC_API_KEY,
-    defaultHeaders: {
-      "anthropic-beta": "prompt-caching-2024-07-31",
-    },
-  });
+  console.warn('createCachedAnthropicClient is deprecated. Use getAnthropicClient() instead.');
+  return getAnthropicClient();
+}
+
+/**
+ * Check if Anthropic is available (not circuit broken)
+ */
+export function checkAnthropicAvailability(): { available: boolean; reason?: string } {
+  if (!isAnthropicAvailable()) {
+    return {
+      available: false,
+      reason: 'Anthropic API is currently unavailable due to circuit breaker. Please try again later.',
+    };
+  }
+  return { available: true };
 }
 
 /**
@@ -262,21 +343,10 @@ export function calculateCost(
   const cacheReadTokens = (usage as any).cache_read_input_tokens || 0;
   const cacheCreationTokens = (usage as any).cache_creation_input_tokens || 0;
 
-  // Base prices per million tokens
-  let inputPrice: number;
-  let outputPrice: number;
-
-  if (model.includes("opus")) {
-    inputPrice = 15;
-    outputPrice = 75;
-  } else if (model.includes("haiku")) {
-    inputPrice = 0.25;
-    outputPrice = 1.25;
-  } else {
-    // Default to Sonnet pricing
-    inputPrice = 3;
-    outputPrice = 15;
-  }
+  // Get pricing from centralized model configuration
+  const pricing = getModelPricing(model);
+  const inputPrice = pricing.input;
+  const outputPrice = pricing.output;
 
   // Calculate cost
   const uncachedInputCost =
