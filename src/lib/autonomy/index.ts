@@ -79,3 +79,15 @@ export type { CoalitionState, CoalitionHealthMetrics, CoalitionExecutionStats } 
 
 export { coalitionArchiveBridge } from '../coalition';
 export type { CoalitionArchiveEntry, CoalitionPattern, CoalitionAnalytics } from '../coalition';
+
+export { strategyHierarchyEngine } from '../strategy';
+export type { StrategyHierarchy, StrategyLevel, StrategyItem } from '../strategy';
+
+export { strategicDecompositionModel } from '../strategy';
+export type { DecompositionAnalysis, DecompositionMetrics } from '../strategy';
+
+export { strategyValidationModel } from '../strategy';
+export type { MultiAgentValidationResult, AgentValidation, StrategyConflict } from '../strategy';
+
+export { strategyArchiveBridge } from '../strategy';
+export type { StrategyArchiveRecord, StrategyPattern } from '../strategy';
