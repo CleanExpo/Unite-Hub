@@ -8,7 +8,8 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "Bash(npm run build:*)",
-      "Bash(node scripts/verify-build-ready.mjs:*)"
+      "Bash(node scripts/verify-build-ready.mjs:*)",
+      "Bash(npx vercel:*)"
     ],
     "deny": [],
     "ask": []
