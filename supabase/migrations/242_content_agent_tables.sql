@@ -109,7 +109,19 @@ CREATE INDEX IF NOT EXISTS idx_content_research_links_content ON content_researc
 CREATE INDEX IF NOT EXISTS idx_content_research_links_research ON content_research_links(research_id);
 
 CREATE INDEX IF NOT EXISTS idx_content_performance_content ON content_performance(content_id);
-CREATE INDEX IF NOT EXISTS idx_content_performance_event ON content_performance(performance_event);
+
+-- Conditional index creation for performance_event (handles both old and new column names)
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.columns
+             WHERE table_name = 'content_performance' AND column_name = 'performance_event') THEN
+    CREATE INDEX IF NOT EXISTS idx_content_performance_event ON content_performance(performance_event);
+  ELSIF EXISTS (SELECT 1 FROM information_schema.columns
+             WHERE table_name = 'content_performance' AND column_name = 'event_type') THEN
+    CREATE INDEX IF NOT EXISTS idx_content_performance_event_legacy ON content_performance(event_type);
+  END IF;
+END $$;
+
 CREATE INDEX IF NOT EXISTS idx_content_performance_created ON content_performance(created_at DESC);
 
 -- Comments
