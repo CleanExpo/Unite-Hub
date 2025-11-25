@@ -40,3 +40,12 @@ export type { ThresholdAdjustmentParams, ThresholdAdjustmentResult, ThresholdSet
 
 export { calibrationArchiveBridge } from './calibrationArchiveBridge';
 export type { CalibrationArchiveEntry, CalibrationPattern } from './calibrationArchiveBridge';
+
+export { executionOptimizer } from './executionOptimizer';
+export type { ExecutionOptimization, ExecutionOptimizationParams } from './executionOptimizer';
+
+export { executionAdaptationModel } from './executionAdaptationModel';
+export type { AdaptationProfile, AdaptationParams } from './executionAdaptationModel';
+
+export { optimizerArchiveBridge } from './optimizerArchiveBridge';
+export type { OptimizationResult } from './optimizerArchiveBridge';
