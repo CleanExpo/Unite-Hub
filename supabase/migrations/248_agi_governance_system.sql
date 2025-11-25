@@ -43,8 +43,7 @@ CREATE TABLE IF NOT EXISTS governance_audit (
   action TEXT NOT NULL CHECK (action IN ('approved', 'rejected', 'escalated', 'modified', 'overridden')),
   violations JSONB,
   founder_override JSONB,
-  notes TEXT,
-  CONSTRAINT audit_reference FOREIGN KEY (policy_id) REFERENCES governance_policies(id)
+  notes TEXT
 );
 
 -- Model routing decisions
@@ -152,6 +151,28 @@ CREATE TABLE IF NOT EXISTS governance_reports (
   risk_trend TEXT CHECK (risk_trend IN ('increasing', 'stable', 'decreasing')),
   recommendations JSONB
 );
+
+-- Add risk_boundaries foreign key constraint
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.table_constraints
+    WHERE table_name = 'risk_boundaries' AND constraint_name = 'risk_boundaries_profile_fk'
+  ) THEN
+    ALTER TABLE risk_boundaries ADD CONSTRAINT risk_boundaries_profile_fk FOREIGN KEY (profile_id) REFERENCES risk_profiles(id);
+  END IF;
+END $$;
+
+-- Add simulation_results foreign key constraint (already defined inline, but ensure it exists)
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.table_constraints
+    WHERE table_name = 'simulation_results' AND constraint_name = 'simulation_results_scenario_fk'
+  ) THEN
+    ALTER TABLE simulation_results ADD CONSTRAINT simulation_results_scenario_fk FOREIGN KEY (scenario_id) REFERENCES simulation_scenarios(id);
+  END IF;
+END $$;
 
 -- Enable RLS
 ALTER TABLE model_capabilities ENABLE ROW LEVEL SECURITY;
