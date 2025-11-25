@@ -165,37 +165,51 @@ ALTER TABLE simulation_results ENABLE ROW LEVEL SECURITY;
 ALTER TABLE governance_reports ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies (authenticated read)
-CREATE POLICY IF NOT EXISTS "Allow authenticated read model_capabilities" ON model_capabilities
+-- Drop existing policies if they exist (idempotent approach)
+DROP POLICY IF EXISTS "Allow authenticated read model_capabilities" ON model_capabilities;
+DROP POLICY IF EXISTS "Allow authenticated read governance_policies" ON governance_policies;
+DROP POLICY IF EXISTS "Allow authenticated read governance_audit" ON governance_audit;
+DROP POLICY IF EXISTS "Allow authenticated read model_routing" ON model_routing_decisions;
+DROP POLICY IF EXISTS "Allow authenticated read model_rewards" ON model_rewards;
+DROP POLICY IF EXISTS "Allow authenticated read risk_boundaries" ON risk_boundaries;
+DROP POLICY IF EXISTS "Allow authenticated read risk_profiles" ON risk_profiles;
+DROP POLICY IF EXISTS "Allow authenticated read risk_assessments" ON risk_assessments;
+DROP POLICY IF EXISTS "Allow authenticated read simulation_scenarios" ON simulation_scenarios;
+DROP POLICY IF EXISTS "Allow authenticated read simulation_results" ON simulation_results;
+DROP POLICY IF EXISTS "Allow authenticated read governance_reports" ON governance_reports;
+
+-- Create policies
+CREATE POLICY "Allow authenticated read model_capabilities" ON model_capabilities
   FOR SELECT USING (auth.role() = 'authenticated');
 
-CREATE POLICY IF NOT EXISTS "Allow authenticated read governance_policies" ON governance_policies
+CREATE POLICY "Allow authenticated read governance_policies" ON governance_policies
   FOR SELECT USING (auth.role() = 'authenticated');
 
-CREATE POLICY IF NOT EXISTS "Allow authenticated read governance_audit" ON governance_audit
+CREATE POLICY "Allow authenticated read governance_audit" ON governance_audit
   FOR SELECT USING (auth.role() = 'authenticated');
 
-CREATE POLICY IF NOT EXISTS "Allow authenticated read model_routing" ON model_routing_decisions
+CREATE POLICY "Allow authenticated read model_routing" ON model_routing_decisions
   FOR SELECT USING (auth.role() = 'authenticated');
 
-CREATE POLICY IF NOT EXISTS "Allow authenticated read model_rewards" ON model_rewards
+CREATE POLICY "Allow authenticated read model_rewards" ON model_rewards
   FOR SELECT USING (auth.role() = 'authenticated');
 
-CREATE POLICY IF NOT EXISTS "Allow authenticated read risk_boundaries" ON risk_boundaries
+CREATE POLICY "Allow authenticated read risk_boundaries" ON risk_boundaries
   FOR SELECT USING (auth.role() = 'authenticated');
 
-CREATE POLICY IF NOT EXISTS "Allow authenticated read risk_profiles" ON risk_profiles
+CREATE POLICY "Allow authenticated read risk_profiles" ON risk_profiles
   FOR SELECT USING (auth.role() = 'authenticated');
 
-CREATE POLICY IF NOT EXISTS "Allow authenticated read risk_assessments" ON risk_assessments
+CREATE POLICY "Allow authenticated read risk_assessments" ON risk_assessments
   FOR SELECT USING (auth.role() = 'authenticated');
 
-CREATE POLICY IF NOT EXISTS "Allow authenticated read simulation_scenarios" ON simulation_scenarios
+CREATE POLICY "Allow authenticated read simulation_scenarios" ON simulation_scenarios
   FOR SELECT USING (auth.role() = 'authenticated');
 
-CREATE POLICY IF NOT EXISTS "Allow authenticated read simulation_results" ON simulation_results
+CREATE POLICY "Allow authenticated read simulation_results" ON simulation_results
   FOR SELECT USING (auth.role() = 'authenticated');
 
-CREATE POLICY IF NOT EXISTS "Allow authenticated read governance_reports" ON governance_reports
+CREATE POLICY "Allow authenticated read governance_reports" ON governance_reports
   FOR SELECT USING (auth.role() = 'authenticated');
 
 -- Indexes for performance
