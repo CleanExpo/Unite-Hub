@@ -10,7 +10,9 @@
       "Bash(npm run build:*)",
       "Bash(node scripts/verify-build-ready.mjs:*)",
       "Bash(npx vercel:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(/tmp/build.log)",
+      "Bash(/tmp/build2.log)"
     ],
     "deny": [],
     "ask": []

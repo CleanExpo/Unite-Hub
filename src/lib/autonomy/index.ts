@@ -16,3 +16,15 @@ export type { AutonomyScoringParams } from './autonomyScoringModel';
 
 export { autonomyArchiveBridge } from './autonomyArchiveBridge';
 export type { AutonomyArchiveData } from './autonomyArchiveBridge';
+
+export { selfCorrectionEngine } from './selfCorrectionEngine';
+export type { CorrectionCycle, FailurePrediction, WeaknessCluster } from './selfCorrectionEngine';
+
+export { weaknessClusterModel } from './weaknessClusterModel';
+export type { WeaknessCluster as ClusterModel, WeaknessNode, FailurePattern, MemoryContradiction, AgentPerformanceIssue } from './weaknessClusterModel';
+
+export { predictiveFailureModel } from './predictiveFailureModel';
+export type { FailurePrediction as PredictionModel, SignalInput, ContributingFactor } from './predictiveFailureModel';
+
+export { correctionArchiveBridge } from './correctionArchiveBridge';
+export type { CorrectionArchiveData } from './correctionArchiveBridge';
