@@ -539,3 +539,66 @@ export async function orchestrateNoBluffAnalysis(input: any) {
     };
   }
 }
+
+/**
+ * Execute Blue Ocean Strategy Engine from orchestrator
+ */
+export async function orchestrateBlueOceanStrategy(input: any) {
+  try {
+    const { generateBlueOceanStrategy, saveBlueOceanStrategy } = await import('./BlueOceanStrategyEngine');
+
+    logger.info('🌊 Orchestrator calling Blue Ocean Strategy Engine', {
+      projectId: input.projectId,
+      businessName: input.businessName,
+      industry: input.industry,
+    });
+
+    const strategy = await generateBlueOceanStrategy({
+      businessName: input.businessName,
+      industry: input.industry,
+      targetAudience: input.targetAudience,
+      currentChallenges: input.currentChallenges || [],
+      existingCompetitors: input.existingCompetitors || [],
+      desiredOutcome: input.desiredOutcome,
+      budgetRange: input.budgetRange,
+    });
+
+    if (!strategy.success || !strategy.strategy) {
+      return {
+        success: false,
+        error: strategy.error,
+      };
+    }
+
+    // Attach projectId for database persistence
+    const strategyWithProject = {
+      ...strategy.strategy,
+      projectId: input.projectId,
+    };
+
+    // Save strategy
+    const saveResult = await saveBlueOceanStrategy(strategyWithProject);
+
+    return {
+      success: saveResult.success,
+      strategyId: saveResult.strategyId,
+      strategyData: {
+        businessName: strategy.strategy.businessName,
+        newCategoryName: strategy.strategy.newCategoryName,
+        categoryDescription: strategy.strategy.categoryDescription,
+        defensibilityScore: strategy.strategy.defensibilityScore,
+        marketOpportunitySizeEstimate: strategy.strategy.marketOpportunitySizeEstimate,
+        executionPhases: strategy.strategy.executionSteps.length,
+        strategicAdvantages: strategy.strategy.strategicAdvantages.length,
+      },
+      subAgentRouting: strategy.strategy.subAgentRouting,
+      error: saveResult.error,
+    };
+  } catch (error) {
+    logger.error('❌ Blue Ocean Strategy execution failed', { error });
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
+}
