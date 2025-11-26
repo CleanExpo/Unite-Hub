@@ -12,7 +12,7 @@
 Unite-Hub is an **AI-first customer relationship and marketing automation platform** built with:
 - **Frontend**: Next.js 16 + React 19 + shadcn/ui + Tailwind CSS
 - **Backend**: Next.js API Routes + Supabase PostgreSQL
-- **AI Layer**: Anthropic Claude API (Opus 4, Sonnet 4.5, Haiku 4.5)
+- **AI Layer**: Anthropic Claude API (Opus 4.5, Sonnet 4.5, Haiku 4.5)
 - **Infrastructure**: Vercel (hosting) + Supabase (database + auth)
 
 ### Core Features
@@ -141,7 +141,7 @@ Unite-Hub/
 
 ### AI & Integrations
 - **Anthropic Claude API**:
-  - `claude-opus-4-1-20250805` - Content generation (Extended Thinking)
+  - `claude-opus-4-5-20251101` - Content generation (Extended Thinking)
   - `claude-sonnet-4-5-20250929` - Standard operations
   - `claude-haiku-4-5-20251001` - Quick tasks
 - **@anthropic-ai/sdk** v0.68.0 - Official SDK

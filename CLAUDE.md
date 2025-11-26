@@ -318,7 +318,7 @@ import { callAnthropicWithRetry } from '@/lib/anthropic/rate-limiter';
 
 const result = await callAnthropicWithRetry(async () => {
   return await anthropic.messages.create({
-    model: 'claude-opus-4-1-20250805',
+    model: 'claude-opus-4-5-20251101',
     max_tokens: 2048,
     messages: [{ role: 'user', content: 'Analyze contact...' }],
   });
@@ -356,7 +356,7 @@ console.log('Cache hit:', (message.usage.cache_read_input_tokens || 0) > 0);
 
 ```typescript
 const message = await anthropic.messages.create({
-  model: 'claude-opus-4-1-20250805',
+  model: 'claude-opus-4-5-20251101',
   thinking: {
     type: 'enabled',
     budget_tokens: 10000, // Use for complex analysis only
@@ -653,7 +653,7 @@ User Request → Orchestrator (.claude/agent.md)
 ```
 
 ### AI Model Selection
-- **Opus 4** (`claude-opus-4-1-20250805`) - Content generation with Extended Thinking (5000-10000 token budget)
+- **Opus 4.5** (`claude-opus-4-5-20251101`) - Content generation with Extended Thinking (5000-10000 token budget)
 - **Sonnet 4.5** (`claude-sonnet-4-5-20250929`) - Standard operations
 - **Haiku 4.5** (`claude-haiku-4-5-20251001`) - Quick tasks, documentation
 

@@ -157,7 +157,7 @@ Please execute this task fully and provide output in JSON format matching the ex
     );
 
     const messageParams: any = {
-      model: 'claude-opus-4-1-20250805',
+      model: 'claude-opus-4-5-20251101',
       max_tokens: useExtendedThinking ? 16000 : 4096,
       system: systemPrompt,
       messages: [

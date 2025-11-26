@@ -430,7 +430,7 @@ function calculateAnthropicCost(modelId: string, usage: any): number {
       output: 75 / 1_000_000,
       thinking: 7.50 / 1_000_000 // Extended Thinking tokens
     },
-    "claude-opus-4-1-20250805": {
+    "claude-opus-4-5-20251101": {
       input: 15 / 1_000_000,
       output: 75 / 1_000_000,
       thinking: 7.50 / 1_000_000 // Extended Thinking tokens

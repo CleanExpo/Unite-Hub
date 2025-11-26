@@ -168,7 +168,7 @@ Format the response as JSON with these exact fields:
 }`;
 
     const response = await this.anthropic.messages.create({
-      model: 'claude-opus-4-1-20250805',
+      model: 'claude-opus-4-5-20251101',
       max_tokens: 2000,
       messages: [
         {
@@ -220,7 +220,7 @@ Format response as JSON:
 }`;
 
     const response = await this.anthropic.messages.create({
-      model: 'claude-opus-4-1-20250805',
+      model: 'claude-opus-4-5-20251101',
       max_tokens: 2000,
       messages: [
         {
@@ -267,7 +267,7 @@ Format response as JSON:
 }`;
 
     const response = await this.anthropic.messages.create({
-      model: 'claude-opus-4-1-20250805',
+      model: 'claude-opus-4-5-20251101',
       max_tokens: 2000,
       messages: [
         {
@@ -329,7 +329,7 @@ Format response as JSON:
 }`;
 
     const response = await this.anthropic.messages.create({
-      model: 'claude-opus-4-1-20250805',
+      model: 'claude-opus-4-5-20251101',
       max_tokens: 2000,
       messages: [
         {
@@ -491,7 +491,7 @@ Format as JSON array:
 [{"keyword": "...", "competitors": [...], "difficulty": number}]`;
 
     const response = await this.anthropic.messages.create({
-      model: 'claude-opus-4-1-20250805',
+      model: 'claude-opus-4-5-20251101',
       max_tokens: 2000,
       messages: [
         {

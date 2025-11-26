@@ -26,7 +26,7 @@ Unite-Hub uses a **hierarchical multi-agent architecture** coordinated by an Orc
 ### 1. Orchestrator Agent
 
 **ID**: `unite-hub.orchestrator`
-**Model**: `claude-sonnet-4-5-20250929` (primary), `claude-opus-4-1-20250805` (complex reasoning)
+**Model**: `claude-sonnet-4-5-20250929` (primary), `claude-opus-4-5-20251101` (complex reasoning)
 **Skill File**: `.claude/skills/orchestrator/SKILL.md`
 
 #### Role
@@ -72,7 +72,7 @@ User Request → Orchestrator
 ### 2. Email Agent
 
 **ID**: `unite-hub.email-agent`
-**Model**: `claude-sonnet-4-5-20250929` (standard), `claude-opus-4-1-20250805` (complex intent analysis)
+**Model**: `claude-sonnet-4-5-20250929` (standard), `claude-opus-4-5-20251101` (complex intent analysis)
 **Skill File**: `.claude/skills/email-agent/SKILL.md`
 
 #### Role
@@ -136,7 +136,7 @@ Processes incoming emails, extracts sender data, identifies communication intent
 ### 3. Content Agent
 
 **ID**: `unite-hub.content-agent`
-**Model**: `claude-opus-4-1-20250805` (Extended Thinking enabled, 5000-10000 token budget)
+**Model**: `claude-opus-4-5-20251101` (Extended Thinking enabled, 5000-10000 token budget)
 **Skill File**: `.claude/skills/content-agent/SKILL.md`
 
 #### Role

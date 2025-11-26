@@ -4,7 +4,7 @@
   "description": "Processes incoming emails, extracts intents, links to contacts, updates CRM",
   "models": {
     "default": "claude-sonnet-4-5-20250929",
-    "analysis": "claude-opus-4-1-20250805",
+    "analysis": "claude-opus-4-5-20251101",
     "quick": "claude-haiku-4-5-20251001"
   },
   "capabilities": [

@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { RefreshCw, Trash2, Download } from 'lucide-react';
-import { log } from '@/lib/logger';
+import { log } from '@/lib/logger-client';
 
 interface ConsoleLog {
   id: string;

@@ -304,7 +304,7 @@ export class CoalitionFormationEngine {
         coalitionId: proposal.coalitionId,
         taskId: proposal.taskId,
         agentIds: proposal.agentIds,
-        synergySco re: proposal.coalitionSynergyScore,
+        synergyScore: proposal.coalitionSynergyScore,
         safetyApproved: proposal.safetyApproved,
         safetyVetoes: proposal.safetyVetoes,
         timestamp: proposal.timestamp,

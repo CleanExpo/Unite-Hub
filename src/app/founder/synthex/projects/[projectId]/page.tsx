@@ -13,9 +13,9 @@ import {
   Mail,
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
-import { createApiLogger } from '@/lib/logger';
+import { createClientLogger } from '@/lib/logger-client';
 
-const logger = createApiLogger({ context: 'ManagedServiceProjectDetail' });
+const logger = createClientLogger({ context: 'ManagedServiceProjectDetail' });
 
 interface ProjectDetail {
   id: string;

@@ -56,7 +56,7 @@ const MODEL_CONFIGS = {
     supportsThinking: false,
   },
   'claude-opus': {
-    id: 'claude-opus-4-1-20250805',
+    id: 'claude-opus-4-5-20251101',
     costPer1kInputTokens: 0.015,
     costPer1kOutputTokens: 0.075,
     maxTokens: 8192,

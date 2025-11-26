@@ -4,9 +4,9 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Calendar, TrendingUp, Clock, AlertCircle, CheckCircle } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
-import { createApiLogger } from '@/lib/logger';
+import { createClientLogger } from '@/lib/logger-client';
 
-const logger = createApiLogger({ context: 'ManagedServiceProjects' });
+const logger = createClientLogger({ context: 'ManagedServiceProjects' });
 
 interface ManagedServiceProject {
   id: string;

@@ -399,7 +399,7 @@ export default function ResearchAgentPage() {
                   <li className="flex items-start gap-2">
                     <span className="text-orange-600 font-bold">•</span>
                     <span>
-                      <span className="font-medium">Risk Score >= 40</span> - Significant risk threshold crossed
+                      <span className="font-medium">Risk Score &gt;= 40</span> - Significant risk threshold crossed
                     </span>
                   </li>
                 </ul>
