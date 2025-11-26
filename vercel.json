@@ -20,6 +20,10 @@
     {
       "path": "/api/seo/sync-rankings",
       "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/managed/scheduler/weekly",
+      "schedule": "0 9 * * 1"
     }
   ]
 }
