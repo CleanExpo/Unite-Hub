@@ -240,9 +240,9 @@ CREATE POLICY "founders_view_autonomous_integrations" ON synthex_autonomous_inte
   FOR SELECT
   USING (
     EXISTS (
-      SELECT 1 FROM user_profiles
-      WHERE user_profiles.id = auth.uid()
-      AND user_profiles.role = 'founder'
+      SELECT 1 FROM user_organizations
+      WHERE user_organizations.user_id = auth.uid()
+      AND user_organizations.role = 'owner'
     )
   );
 
@@ -257,9 +257,9 @@ CREATE POLICY "founders_view_ga4_metrics" ON synthex_ga4_metrics
   FOR SELECT
   USING (
     EXISTS (
-      SELECT 1 FROM user_profiles
-      WHERE user_profiles.id = auth.uid()
-      AND user_profiles.role = 'founder'
+      SELECT 1 FROM user_organizations
+      WHERE user_organizations.user_id = auth.uid()
+      AND user_organizations.role = 'owner'
     )
   );
 
@@ -273,9 +273,9 @@ CREATE POLICY "founders_view_gsc_metrics" ON synthex_gsc_metrics
   FOR SELECT
   USING (
     EXISTS (
-      SELECT 1 FROM user_profiles
-      WHERE user_profiles.id = auth.uid()
-      AND user_profiles.role = 'founder'
+      SELECT 1 FROM user_organizations
+      WHERE user_organizations.user_id = auth.uid()
+      AND user_organizations.role = 'owner'
     )
   );
 
@@ -289,9 +289,9 @@ CREATE POLICY "founders_view_core_vitals" ON synthex_core_vitals_metrics
   FOR SELECT
   USING (
     EXISTS (
-      SELECT 1 FROM user_profiles
-      WHERE user_profiles.id = auth.uid()
-      AND user_profiles.role = 'founder'
+      SELECT 1 FROM user_organizations
+      WHERE user_organizations.user_id = auth.uid()
+      AND user_organizations.role = 'owner'
     )
   );
 
