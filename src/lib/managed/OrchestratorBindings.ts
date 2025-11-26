@@ -389,3 +389,97 @@ export async function syncTaskWithOrchestrator(taskId: string) {
 
   return status;
 }
+
+/**
+ * Execute ProjectCreationEngine from orchestrator
+ */
+export async function orchestrateProjectCreation(input: any) {
+  try {
+    const { createManagedServiceProject } = await import('./ProjectCreationEngine');
+
+    logger.info('🔨 Orchestrator calling ProjectCreationEngine', {
+      projectName: input.clientName,
+      serviceType: input.serviceType,
+    });
+
+    const result = await createManagedServiceProject(input);
+
+    return {
+      success: result.success,
+      projectId: result.projectId,
+      message: result.message,
+      error: result.error,
+    };
+  } catch (error) {
+    logger.error('❌ ProjectCreationEngine execution failed', { error });
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
+}
+
+/**
+ * Execute SEOBaselineEngine from orchestrator
+ */
+export async function orchestrateSEOBaseline(input: any) {
+  try {
+    const { runSEOBaseline } = await import('./SEOBaselineEngine');
+
+    logger.info('🔍 Orchestrator calling SEOBaselineEngine', {
+      projectId: input.projectId,
+      websiteUrl: input.websiteUrl,
+    });
+
+    const result = await runSEOBaseline(input);
+
+    return {
+      success: result.success,
+      metrics: result.metrics,
+      rankings: result.rankings,
+      domainMetrics: result.domainMetrics,
+      competitors: result.competitors,
+      error: result.error,
+    };
+  } catch (error) {
+    logger.error('❌ SEOBaselineEngine execution failed', { error });
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
+}
+
+/**
+ * Execute ReportGenerationEngine from orchestrator
+ */
+export async function orchestrateReportGeneration(input: any) {
+  try {
+    const { generateWeeklyReport } = await import('./ReportGenerationEngine');
+
+    logger.info('📊 Orchestrator calling ReportGenerationEngine', {
+      projectId: input.projectId,
+      reportType: input.reportType,
+    });
+
+    const result = await generateWeeklyReport(
+      input.projectId,
+      input.startDate,
+      input.endDate
+    );
+
+    return {
+      success: result.success,
+      reportId: result.reportId,
+      reportUrl: result.reportUrl,
+      metricsCount: result.metricsCount,
+      error: result.error,
+    };
+  } catch (error) {
+    logger.error('❌ ReportGenerationEngine execution failed', { error });
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
+}
