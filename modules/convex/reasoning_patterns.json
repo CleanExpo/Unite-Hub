@@ -1,0 +1,408 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-11-27",
+  "description": "CONVEX Reasoning Patterns - Strategic decision-making rules for marketing intelligence system",
+
+  "categories": {
+    "compression_rules": {
+      "id": "pattern_compression_001",
+      "name": "Message Compression Rules",
+      "description": "Simplify complex concepts into memorable, actionable statements",
+      "rules": [
+        {
+          "rule_id": "compress_001",
+          "rule": "Simplify first, expand only if needed",
+          "principle": "Start with core insight, add complexity only to strengthen core message",
+          "example": {
+            "verbose": "Our AI-powered contact management system uses machine learning algorithms to analyze communication patterns and behavioral indicators to predict which leads have the highest probability of conversion based on multiple weighted factors including email engagement frequency, response sentiment analysis, interaction recency, and historical transaction data.",
+            "compressed": "AI predicts your hottest leads automatically"
+          },
+          "application": "Always find the one-sentence core value before expanding",
+          "metric": "If explanation takes >30 seconds, too complex"
+        },
+        {
+          "rule_id": "compress_002",
+          "rule": "Bias toward high-conversion action over complexity",
+          "principle": "Choose messaging that drives action over messaging that demonstrates sophistication",
+          "example": {
+            "sophisticated": "Leveraging proprietary algorithms trained on 50M+ interactions",
+            "conversion_focused": "See your best opportunities in 60 seconds"
+          },
+          "application": "Test messaging by asking: Does this make someone want to try it?",
+          "metric": "CTR lift indicates winning message"
+        },
+        {
+          "rule_id": "compress_003",
+          "rule": "Focus on outcome, not product description",
+          "principle": "Customer buys outcome, not features or methodology",
+          "mappings": [
+            {
+              "feature": "AI lead scoring",
+              "outcome": "Close deals faster with less prospecting"
+            },
+            {
+              "feature": "Gmail integration",
+              "outcome": "Never miss an opportunity from email"
+            },
+            {
+              "feature": "Automated workflows",
+              "outcome": "Sales team focuses on selling, not admin"
+            }
+          ],
+          "application": "Always translate feature → outcome → emotional benefit",
+          "metric": "Messaging shifts from 'we have X' to 'you achieve Y'"
+        },
+        {
+          "rule_id": "compress_004",
+          "rule": "Remove friction, amplify clarity",
+          "principle": "Every word should serve the conversion goal",
+          "techniques": [
+            {
+              "technique": "Remove qualifiers",
+              "ineffective": "Our solution typically helps most companies generally improve their processes",
+              "effective": "Close deals 30% faster"
+            },
+            {
+              "technique": "Remove industry jargon",
+              "ineffective": "Leveraging CRM paradigms for enhanced customer journey orchestration",
+              "effective": "Manage every customer relationship better"
+            },
+            {
+              "technique": "Remove uncertain language",
+              "ineffective": "Might help you possibly improve conversions",
+              "effective": "Increase conversions by 25%"
+            }
+          ],
+          "application": "Edit for clarity as aggressively as clarity",
+          "metric": "Word count reduction while increasing clarity"
+        },
+        {
+          "rule_id": "compress_005",
+          "rule": "Anchor recommendations in measurable value",
+          "principle": "Always include numbers, percentages, time metrics",
+          "examples": [
+            {
+              "without_anchor": "Save time on prospecting",
+              "with_anchor": "Save 10 hours per week on prospecting"
+            },
+            {
+              "without_anchor": "Improve sales productivity",
+              "with_anchor": "Close 3 deals per week instead of 1"
+            },
+            {
+              "without_anchor": "Better customer understanding",
+              "with_anchor": "Know customer intent before they call"
+            }
+          ],
+          "application": "Every benefit statement should include a metric",
+          "metric": "Anchor-to-claim ratio of 1:1 minimum"
+        }
+      ]
+    },
+
+    "high_conversion_logic": {
+      "id": "pattern_conversion_001",
+      "name": "High-Conversion Logic",
+      "description": "Decision-making framework for maximizing customer acquisition and conversion",
+      "rules": [
+        {
+          "rule_id": "conversion_001",
+          "rule": "Start with the customer's desired outcome",
+          "principle": "All strategy flows from understanding what customer wants to achieve",
+          "process": [
+            {
+              "step": 1,
+              "action": "Define customer's desired outcome",
+              "question": "What does success look like for them?",
+              "example": "Close 5 deals per month (instead of 3)"
+            },
+            {
+              "step": 2,
+              "action": "Identify gaps between current and desired",
+              "question": "What prevents them achieving outcome?",
+              "example": "Waste 15 hours/week on prospecting"
+            },
+            {
+              "step": 3,
+              "action": "Position solution as gap-closer",
+              "message": "Save time prospecting → Focus on closing → Hit target",
+              "alignment": "Every message connects back to outcome"
+            }
+          ],
+          "application": "All messaging, positioning, and offers derive from customer outcome"
+        },
+        {
+          "rule_id": "conversion_002",
+          "rule": "Work backward to identify objections",
+          "principle": "Sales conversion is removing objections, not adding features",
+          "process": [
+            {
+              "step": 1,
+              "action": "List all possible objections",
+              "examples": [
+                "Is it right for our business?",
+                "Will it actually work?",
+                "Can we afford it?",
+                "Will team actually use it?",
+                "What if support is slow?"
+              ]
+            },
+            {
+              "step": 2,
+              "action": "Rank by impact on conversion",
+              "top_3_objections": "Focus messaging and proof here"
+            },
+            {
+              "step": 3,
+              "action": "Design messaging to preempt objection",
+              "objection": "Will it actually work?",
+              "solution": "45 case studies showing specific results"
+            }
+          ],
+          "application": "Website copy addresses top 5 objections before visitor asks"
+        },
+        {
+          "rule_id": "conversion_003",
+          "rule": "Design messaging to address objections",
+          "principle": "Specific proof beats general claims",
+          "messaging_framework": [
+            {
+              "objection": "Is it right for us?",
+              "proof_type": "Customer profile match",
+              "example": "Built for 10-50 person sales teams closing $100k-1M deals"
+            },
+            {
+              "objection": "Will it actually work?",
+              "proof_type": "Specific results",
+              "example": "Average client closes 35% more deals in 90 days"
+            },
+            {
+              "objection": "Is it expensive?",
+              "proof_type": "ROI calculation",
+              "example": "Pays for itself in 3 deals (saves 50 hours at $150/hr)"
+            },
+            {
+              "objection": "What if support sucks?",
+              "proof_type": "Relationship guarantee",
+              "example": "Direct Slack access to implementation team"
+            }
+          ],
+          "application": "Every landing page section addresses one objection"
+        },
+        {
+          "rule_id": "conversion_004",
+          "rule": "Test, measure, iterate on messaging",
+          "principle": "Small messaging changes drive big conversion changes",
+          "test_framework": [
+            {
+              "element": "Headline",
+              "test": "3 headlines (benefit vs. problem vs. curiosity)",
+              "metric": "Click-through rate"
+            },
+            {
+              "element": "Subheadline",
+              "test": "With proof vs. without proof",
+              "metric": "Scroll depth"
+            },
+            {
+              "element": "CTA text",
+              "test": "Action verb + benefit vs. minimal text",
+              "metric": "CTA click rate"
+            },
+            {
+              "element": "Social proof",
+              "test": "Testimonial vs. case study vs. stats",
+              "metric": "Conversion rate"
+            }
+          ],
+          "application": "A/B test messaging monthly, implement winners",
+          "minimum_sample": "500 visitors per variant"
+        },
+        {
+          "rule_id": "conversion_005",
+          "rule": "Never copy competitor messaging directly",
+          "principle": "Unique positioning drives disproportionate conversion",
+          "why": "If you say same thing as competitor, customer picks based on brand/price",
+          "approach": [
+            {
+              "step": 1,
+              "action": "Analyze competitor messaging",
+              "goal": "Understand their positioning"
+            },
+            {
+              "step": 2,
+              "action": "Find positioning gap",
+              "question": "What are they NOT claiming?"
+            },
+            {
+              "step": 3,
+              "action": "Own that gap",
+              "example": "Competitors all claim 'fastest', you own 'simplest'"
+            }
+          ],
+          "application": "If messaging is same as competitor, it's wrong messaging"
+        }
+      ]
+    },
+
+    "safety_rules": {
+      "id": "pattern_safety_001",
+      "name": "Safety & Compliance Rules",
+      "description": "Ensure all marketing claims are factual, ethical, and compliant",
+      "rules": [
+        {
+          "rule_id": "safety_001",
+          "rule": "All claims must be factual and verifiable",
+          "principle": "Truth Layer validation mandatory before output",
+          "requirements": [
+            {
+              "requirement": "No fabricated statistics",
+              "example": "❌ '85% of users see results' (unsourced)",
+              "correct": "✅ '85% of users in case study saw results within 90 days'"
+            },
+            {
+              "requirement": "No exaggerated performance claims",
+              "example": "❌ 'Guaranteed 10x sales increase'",
+              "correct": "✅ 'Average client increased sales 35% in 90 days' (with case studies)"
+            },
+            {
+              "requirement": "Source citations required for studies",
+              "example": "❌ 'Studies show...'",
+              "correct": "✅ 'Harvard Business Review study (2023) shows...'"
+            }
+          ],
+          "audit_process": "Every claim >5% benefit needs case study or verification"
+        },
+        {
+          "rule_id": "safety_002",
+          "rule": "Competitive comparisons must be non-defamatory",
+          "principle": "Compare capabilities fairly, never attack character/motive",
+          "allowed": [
+            "CompetitorX doesn't have feature Y (verifiable)",
+            "Their approach takes 4 weeks, ours takes 1 week (verifiable)",
+            "They charge $500/mo, we charge $100/mo (verifiable)"
+          ],
+          "forbidden": [
+            "CompetitorX is a scam",
+            "Competitors don't care about customer success",
+            "Everyone uses competitor except smart companies"
+          ],
+          "audit_process": "Review all competitor comparisons for defamation risk"
+        },
+        {
+          "rule_id": "safety_003",
+          "rule": "Avoid fabricating social proof or testimonials",
+          "principle": "Real proof beats made-up proof",
+          "requirements": [
+            {
+              "requirement": "All testimonials must be from real customers",
+              "verification": "Confirmed contact info, verifiable company"
+            },
+            {
+              "requirement": "Customer counts must be actual users",
+              "example": "❌ 'Trusted by 1M+ users' (includes free tier non-users)",
+              "correct": "✅ 'Used by 50k+ paying customers'"
+            },
+            {
+              "requirement": "Case study results must be typical",
+              "example": "❌ Show only outlier results (client with perfect storm)",
+              "correct": "✅ Show range - best case, average case, good results"
+            }
+          ],
+          "audit_process": "Every testimonial documented with customer permission"
+        },
+        {
+          "rule_id": "safety_004",
+          "rule": "Present limitations alongside benefits",
+          "principle": "Transparency increases trust and conversion",
+          "requirements": [
+            {
+              "requirement": "Acknowledge ideal customer profile",
+              "example": "Works best for sales teams with 10-50 people and $500k+ annual contracts"
+            },
+            {
+              "requirement": "Include timeline to results",
+              "example": "Most clients see results within 90 days, some faster/slower"
+            },
+            {
+              "requirement": "Note what solution doesn't do",
+              "example": "We don't handle customer support tickets - we prepare your team"
+            }
+          ],
+          "benefit": "Prevents wrong-fit customers, improves satisfaction"
+        },
+        {
+          "rule_id": "safety_005",
+          "rule": "Disclose material conflicts of interest",
+          "principle": "Transparency prevents legal/ethical issues",
+          "disclosures": [
+            {
+              "conflict": "Compensation for review",
+              "disclosure": "Disclose if reviewer receives payment/free access"
+            },
+            {
+              "conflict": "Partnership relationship",
+              "disclosure": "Disclose if featured company is partner"
+            },
+            {
+              "conflict": "Affiliate commission",
+              "disclosure": "Disclose affiliate relationship in recommendation"
+            }
+          ],
+          "audit_process": "Every recommendation reviewed for undisclosed conflicts"
+        }
+      ]
+    }
+  },
+
+  "application_guidance": {
+    "compression_rules_priority": [
+      "Rule 001: Simplify first - always start here",
+      "Rule 003: Focus on outcome - reframe benefits",
+      "Rule 004: Remove friction - ruthlessly edit",
+      "Rule 005: Anchor in metrics - add numbers",
+      "Rule 002: Bias toward action - remove jargon"
+    ],
+    "conversion_rules_priority": [
+      "Rule 001: Start with customer outcome - foundation",
+      "Rule 002: Identify objections - prevent failures",
+      "Rule 003: Design proof - overcome skepticism",
+      "Rule 004: Test and iterate - continuous improvement",
+      "Rule 005: Own unique positioning - avoid copy"
+    ],
+    "safety_rules_priority": [
+      "Rule 001: Verify all claims - mandatory audit",
+      "Rule 004: Include limitations - transparency first",
+      "Rule 002: Fair comparisons - never defame",
+      "Rule 003: Real proof only - no fabrication",
+      "Rule 005: Disclose conflicts - legal requirement"
+    ]
+  },
+
+  "decision_trees": {
+    "messaging_selection": {
+      "question_1": "What is customer's core desired outcome?",
+      "if_unclear": "STOP - Go interview customers before proceeding",
+      "question_2": "What prevents them from achieving outcome?",
+      "question_3": "How does our solution uniquely close that gap?",
+      "output": "Positioning statement that compresses to one sentence"
+    },
+    "claim_validation": {
+      "question_1": "Is this claim factual?",
+      "if_no": "REJECT - Find factual alternative",
+      "question_2": "Is claim >5% benefit?",
+      "if_yes": "REQUIRE case study verification",
+      "question_3": "Is this owned position or competitor claim?",
+      "if_competitor": "REFRAME - Find our unique angle",
+      "output": "Verified claim ready for marketing"
+    }
+  },
+
+  "metadata": {
+    "totalRules": 15,
+    "categories": 3,
+    "estimatedTrainingTime": "4-6 hours",
+    "updateCadence": "Quarterly based on market feedback",
+    "lastValidated": "2025-11-27"
+  }
+}

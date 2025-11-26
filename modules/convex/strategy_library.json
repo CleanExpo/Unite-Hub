@@ -1,0 +1,682 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-11-27",
+  "description": "CONVEX Marketing Intelligence Framework Library - Complete system for autonomous high-conversion marketing strategies",
+
+  "frameworks": {
+    "brand_positioning": {
+      "id": "framework_brand_positioning_001",
+      "name": "Brand Positioning Framework",
+      "description": "Define uncontested market categories and ownership language",
+      "category": "strategic",
+      "components": [
+        {
+          "name": "Category Domination Model",
+          "description": "Choose between creating new categories vs dominating existing ones",
+          "decisions": [
+            {
+              "decision": "Create New Category",
+              "when": "Market shows convergence, customer dissatisfaction with existing solutions",
+              "benefits": ["First mover advantage", "Own positioning narrative", "Reduced direct competition"],
+              "challenges": ["Customer education needed", "Market development time", "Requires proof of concept"]
+            },
+            {
+              "decision": "Dominate Existing Category",
+              "when": "Category established with clear buyer intent",
+              "benefits": ["Existing demand", "Proven market", "Clear buyer search behavior"],
+              "challenges": ["Incumbent competition", "Positioning against established players", "Higher CAC"]
+            }
+          ]
+        },
+        {
+          "name": "Value Ladder Matrix",
+          "description": "Structure offerings from entry-level to premium",
+          "tiers": [
+            {
+              "name": "Awareness/Free",
+              "description": "Entry point, no commitment",
+              "examples": ["Free tools", "Lead magnets", "Webinars"],
+              "conversion_rate": "3-5%"
+            },
+            {
+              "name": "Foundation",
+              "description": "First paid tier, low-risk investment",
+              "priceRange": "$9-99/mo",
+              "conversion_rate": "15-25%"
+            },
+            {
+              "name": "Professional",
+              "description": "Mid-market tier with comprehensive features",
+              "priceRange": "$99-999/mo",
+              "conversion_rate": "8-12%"
+            },
+            {
+              "name": "Enterprise",
+              "description": "Custom solutions, dedicated support",
+              "priceRange": "$1000+/mo",
+              "conversion_rate": "2-5%"
+            }
+          ]
+        },
+        {
+          "name": "Message Compression",
+          "description": "Simplify complex positioning into memorable statements",
+          "rules": [
+            "One core claim maximum (avoid 'and' statements)",
+            "Use outcome language, not feature language",
+            "Make it ownable (competitors can't claim same)",
+            "Measurable (includes numbers when possible)",
+            "Memorable (use alliteration, rhyme, or metaphor)"
+          ],
+          "examples": [
+            {
+              "industry": "Project Management",
+              "weak": "Cloud-based team collaboration platform with advanced features and integrations",
+              "strong": "The simplest PM tool that actually gets done"
+            },
+            {
+              "industry": "Email Marketing",
+              "weak": "Email marketing software with automation and segmentation",
+              "strong": "Email sequences that close deals, not inboxes"
+            }
+          ]
+        },
+        {
+          "name": "Offer-Audience Fit",
+          "description": "Precision match between offer and target psychology",
+          "psychographicFactors": [
+            {
+              "factor": "Decision-Making Style",
+              "conservative": "Risk-averse, needs proof, wants established solutions",
+              "progressive": "Early adopter, comfortable with new approaches, wants innovation"
+            },
+            {
+              "factor": "Pain Priority",
+              "urgency": "immediate, solving now",
+              "development": "solving month-long journey"
+            },
+            {
+              "factor": "Budget Authority",
+              "self-funded": "Price-sensitive, ROI-focused",
+              "enterprise": "Focused on capability and reliability"
+            }
+          ]
+        },
+        {
+          "name": "Retention Flywheel",
+          "description": "Build sustainable customer lifetime value",
+          "phases": [
+            {
+              "name": "Onboarding",
+              "goal": "First success within 7 days",
+              "tactics": ["Personal walkthrough", "Quick win opportunity", "Education resources"]
+            },
+            {
+              "name": "Habit Formation",
+              "goal": "Become default tool within 30 days",
+              "tactics": ["Feature discovery", "Workflow integration", "Team expansion"]
+            },
+            {
+              "name": "Expansion",
+              "goal": "Increase usage within 90 days",
+              "tactics": ["Advanced features", "Team collaboration", "Integration ecosystem"]
+            },
+            {
+              "name": "Advocacy",
+              "goal": "Customer becomes promoter",
+              "tactics": ["Case study participation", "Referral program", "Community involvement"]
+            }
+          ]
+        }
+      ]
+    },
+
+    "funnel_design": {
+      "id": "framework_funnel_design_001",
+      "name": "Funnel Design Framework",
+      "description": "Create high-conversion customer acquisition funnels",
+      "category": "conversion",
+      "components": [
+        {
+          "name": "Awareness Activation",
+          "description": "Attention-grabbing hook that compels engagement",
+          "elements": [
+            {
+              "element": "Headline Hook",
+              "purpose": "Stop scrolling, create curiosity",
+              "formula": "[Unexpected insight] that changes how you [core outcome]",
+              "examples": [
+                "The one email metric that predicts replies (it's not open rate)",
+                "Why 90% of SEO strategies fail (and what actually works)"
+              ]
+            },
+            {
+              "element": "Subheadline",
+              "purpose": "Clarify hook promise",
+              "characteristics": ["Results-focused", "Specific", "Benefit-oriented"]
+            },
+            {
+              "element": "Lead Image/Video",
+              "purpose": "Visual proof of concept",
+              "characteristics": ["Shows transformation", "Not stock photo", "Authentic"]
+            }
+          ]
+        },
+        {
+          "name": "Micro-Commitment Sequencing",
+          "description": "Small asks before big asks to build momentum",
+          "sequence": [
+            {
+              "step": 1,
+              "ask": "See/Read",
+              "friction": "Minimal (scroll, watch, read)",
+              "conversion": "70-90%"
+            },
+            {
+              "step": 2,
+              "ask": "Engage/React",
+              "friction": "Low (click, comment, poll)",
+              "conversion": "40-60%"
+            },
+            {
+              "step": 3,
+              "ask": "Share/Refer",
+              "friction": "Medium (give name, send link)",
+              "conversion": "10-20%"
+            },
+            {
+              "step": 4,
+              "ask": "Trial/Purchase",
+              "friction": "High (card, commitment)",
+              "conversion": "2-8%"
+            }
+          ],
+          "principle": "Each commitment builds obligation for next ask"
+        },
+        {
+          "name": "Conversion Tension Points",
+          "description": "Identify and resolve purchase hesitation",
+          "commonTensions": [
+            {
+              "tension": "Is it right for me?",
+              "resolution": "Clear customer profile match statement"
+            },
+            {
+              "tension": "Will it actually work?",
+              "resolution": "Social proof and guarantee"
+            },
+            {
+              "tension": "Am I paying too much?",
+              "resolution": "Value stacking and comparison"
+            },
+            {
+              "tension": "What if it breaks?",
+              "resolution": "Support and recovery guarantees"
+            }
+          ]
+        },
+        {
+          "name": "Social Weight Anchoring",
+          "description": "Leverage social proof and authority",
+          "types": [
+            {
+              "type": "Authority Anchoring",
+              "elements": ["Expert credentials", "Years in business", "Industry positions"],
+              "weight": 35
+            },
+            {
+              "type": "Social Proof",
+              "elements": ["Customer count", "Case studies", "Testimonials"],
+              "weight": 30
+            },
+            {
+              "type": "Scarcity/Urgency",
+              "elements": ["Limited spots", "Time-bound offer", "Deadline"],
+              "weight": 20
+            },
+            {
+              "type": "Similarity Bias",
+              "elements": ["Customer looks like buyer", "Same industry", "Same challenges"],
+              "weight": 15
+            }
+          ]
+        },
+        {
+          "name": "Emotional Trigger Mapping",
+          "description": "Connect features to emotional outcomes",
+          "triggers": [
+            {
+              "trigger": "Certainty",
+              "features": ["Predictable results", "Transparent pricing", "Clear roadmap"],
+              "emotion": "Confidence"
+            },
+            {
+              "trigger": "Control",
+              "features": ["Customization", "No lock-in", "Simple controls"],
+              "emotion": "Autonomy"
+            },
+            {
+              "trigger": "Progress",
+              "features": ["Visible metrics", "Milestone tracking", "Growth indicators"],
+              "emotion": "Momentum"
+            },
+            {
+              "trigger": "Belonging",
+              "features": ["Community", "Team features", "Shared values"],
+              "emotion": "Connection"
+            }
+          ]
+        },
+        {
+          "name": "Frictionless CTA Structure",
+          "description": "Make action irresistible",
+          "elements": [
+            {
+              "element": "CTA Text",
+              "formula": "[Action] + [Primary Benefit]",
+              "examples": [
+                "Start my free trial → Free trial shows results in 7 days",
+                "See pricing → Pricing that doesn't surprise"
+              ]
+            },
+            {
+              "element": "Visual Prominence",
+              "characteristics": ["Contrasting color", "Large button", "Multiple placements"]
+            },
+            {
+              "element": "Risk Removal",
+              "elements": ["No credit card", "Money-back guarantee", "Pause anytime"]
+            }
+          ]
+        }
+      ]
+    },
+
+    "seo_pattern_library": {
+      "id": "framework_seo_patterns_001",
+      "name": "SEO Pattern Library",
+      "description": "Dominate search rankings through systematic optimization",
+      "category": "visibility",
+      "components": [
+        {
+          "name": "Semantic Cluster Mapping",
+          "description": "Group keywords by search intent and meaning",
+          "pattern": {
+            "primary_keyword": "Contact management software",
+            "intent": "Transactional (buyer searching)",
+            "cluster": {
+              "awareness": [
+                "what is contact management",
+                "contact management systems",
+                "how to organize contacts"
+              ],
+              "consideration": [
+                "best contact management software",
+                "contact management tool comparison",
+                "affordable contact management"
+              ],
+              "decision": [
+                "contact management software free trial",
+                "contact management software pricing",
+                "implement contact management"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Topical Authority Building",
+          "description": "Establish expertise across related topics",
+          "framework": {
+            "pillar": "Lead Management",
+            "subtopics": [
+              "Lead scoring methodology",
+              "Lead qualification criteria",
+              "Lead nurturing sequences",
+              "Lead database management",
+              "Lead source tracking"
+            ],
+            "content_depth": "Comprehensive (1000-3000 words per subtopic)",
+            "interlink_strategy": "Hub-and-spoke linking between pillar and subtopics"
+          }
+        },
+        {
+          "name": "Search Intent Mapping",
+          "description": "Understand what searchers actually want",
+          "intents": [
+            {
+              "intent": "Informational",
+              "example": "How does lead scoring work",
+              "content_type": "How-to, explanation, educational",
+              "format": "Blog post, video, guide"
+            },
+            {
+              "intent": "Navigational",
+              "example": "Contact management software login",
+              "content_type": "Direct to tool/feature",
+              "format": "Branded search, direct link"
+            },
+            {
+              "intent": "Commercial",
+              "example": "Best lead management tools",
+              "content_type": "Comparison, reviews, case studies",
+              "format": "Comparison page, review article"
+            },
+            {
+              "intent": "Transactional",
+              "example": "Buy lead management software",
+              "content_type": "Pricing, signup, conversion",
+              "format": "Product page, pricing page"
+            }
+          ]
+        },
+        {
+          "name": "SERP Gap Exploitation",
+          "description": "Find unmet opportunities in search results",
+          "process": [
+            {
+              "step": 1,
+              "action": "Analyze top 10 SERP results for target keyword",
+              "look_for": ["Content type", "Depth", "Format", "Gaps"]
+            },
+            {
+              "step": 2,
+              "action": "Identify what's missing",
+              "opportunities": [
+                "No video content (create video)",
+                "All blog posts (create interactive tool)",
+                "No recent updates (update with 2025 data)",
+                "No comprehensive guide (create pillar page)"
+              ]
+            },
+            {
+              "step": 3,
+              "action": "Create content that fills gap",
+              "advantage": "Differentiated from existing results"
+            }
+          ]
+        },
+        {
+          "name": "Geo-Signal Consolidation",
+          "description": "Dominate local search rankings",
+          "signals": [
+            {
+              "signal": "Google Business Profile",
+              "optimization": ["Complete profile", "Accurate NAP", "Service areas", "Regular posts"]
+            },
+            {
+              "signal": "Local Citations",
+              "optimization": ["Directory listings", "NAP consistency", "Local reviews"]
+            },
+            {
+              "signal": "Geo-Specific Content",
+              "optimization": ["Location pages", "Local case studies", "Community involvement"]
+            },
+            {
+              "signal": "Geo-Markup",
+              "optimization": ["Schema markup", "Structured data", "Local business schema"]
+            }
+          ]
+        },
+        {
+          "name": "Power Content Creation",
+          "description": "Build authoritative, conversion-focused content",
+          "framework": {
+            "type": "Comprehensive guide",
+            "structure": [
+              "Compelling headline with keyword",
+              "One-paragraph summary with key takeaways",
+              "Table of contents with internal links",
+              "7-15 detailed sections (250-500 words each)",
+              "Real examples and case studies",
+              "Actionable next steps",
+              "Strong internal linking structure",
+              "External links to authoritative sources"
+            ],
+            "seo_optimization": [
+              "Target keyword in H1",
+              "Related keywords in subheadings",
+              "Internal links to related topics",
+              "Image alt text optimization",
+              "Content structure for featured snippets"
+            ],
+            "conversion_optimization": [
+              "Clear value proposition above fold",
+              "Multiple CTAs throughout",
+              "Downloadable resources",
+              "Lead capture forms",
+              "Newsletter signup"
+            ]
+          }
+        }
+      ]
+    },
+
+    "competitor_model": {
+      "id": "framework_competitor_analysis_001",
+      "name": "Competitor Model",
+      "description": "Understand competitive landscape and disruption signals",
+      "category": "competitive_intelligence",
+      "components": [
+        {
+          "name": "Feature-to-Outcome Mapping",
+          "description": "How competitors translate features to benefits",
+          "pattern": {
+            "competitor": "CompetitorX",
+            "feature": "AI-powered lead scoring",
+            "stated_benefit": "Identify high-value leads",
+            "real_outcome": "Close deals 30% faster",
+            "buyer_language": "Save time prospecting"
+          }
+        },
+        {
+          "name": "Weakness Opportunity Matrix",
+          "description": "Where competitors fall short",
+          "framework": {
+            "weakness": "Slow onboarding (30 days to first result)",
+            "opportunity": "Position faster implementation",
+            "your_solution": "First result in 7 days",
+            "messaging": "Get up and running in a week, not a month"
+          }
+        },
+        {
+          "name": "Disruption Early-Warning",
+          "description": "Signals that competitor positioning is vulnerable",
+          "signals": [
+            {
+              "signal": "Messaging shift",
+              "indicator": "Competitor changes core positioning",
+              "meaning": "They're losing on current positioning"
+            },
+            {
+              "signal": "Pricing change",
+              "indicator": "Major price adjustment (up or down)",
+              "meaning": "Market dynamics forcing repositioning"
+            },
+            {
+              "signal": "Feature removal",
+              "indicator": "Sunsetting features customers use",
+              "meaning": "Cost pressure or strategic shift"
+            },
+            {
+              "signal": "Leadership change",
+              "indicator": "New CMO/CEO with different background",
+              "meaning": "Significant strategic direction change coming"
+            },
+            {
+              "signal": "Communication cadence drop",
+              "indicator": "Fewer blog posts, webinars, updates",
+              "meaning": "Resource constraints or market issues"
+            }
+          ]
+        },
+        {
+          "name": "Counterplay Architecture",
+          "description": "Moves to neutralize competitor advantages",
+          "framework": {
+            "competitor_advantage": "Established brand with 50k+ users",
+            "your_position": "Smaller but faster, more specialized",
+            "counterplay": [
+              "Own specific use case (our customers are niche)",
+              "Superior customer service (we know our customers)",
+              "Innovation velocity (ship 10x faster)",
+              "Community building (customers who evangelize)"
+            ],
+            "messaging": "We're not trying to be them. We're built for [specific segment]."
+          }
+        }
+      ]
+    },
+
+    "offer_architecture": {
+      "id": "framework_offer_architecture_001",
+      "name": "Offer Architecture",
+      "description": "Design compelling offers that maximize perceived value",
+      "category": "monetization",
+      "components": [
+        {
+          "name": "Offer Strength Scoring",
+          "description": "10-point test for offer viability",
+          "criteria": [
+            {
+              "criterion": "Specific (not generic)",
+              "weight": 1,
+              "example": "For marketing managers" vs "For businesses"
+            },
+            {
+              "criterion": "Valuable (solves real problem)",
+              "weight": 1,
+              "example": "Save 10 hours/week" vs "Works great"
+            },
+            {
+              "criterion": "Credible (believable)",
+              "weight": 1,
+              "example": "Backed by case study" vs "Just trust us"
+            },
+            {
+              "criterion": "Exclusive (hard to copy)",
+              "weight": 1,
+              "example": "Proprietary method" vs "Standard tool"
+            },
+            {
+              "criterion": "Urgent (time-limited)",
+              "weight": 1,
+              "example": "50 spots available" vs "Always available"
+            },
+            {
+              "criterion": "Unique angle (differentiated)",
+              "weight": 1,
+              "example": "Only AI-powered approach" vs "We also have AI"
+            },
+            {
+              "criterion": "Risk-reversed (guarantees)",
+              "weight": 1,
+              "example": "100% refund if no results" vs "Standard return policy"
+            },
+            {
+              "criterion": "Easy action (minimal friction)",
+              "weight": 1,
+              "example": "One-click signup" vs "Long form"
+            },
+            {
+              "criterion": "Social proof (real proof)",
+              "weight": 1,
+              "example": "Case study with $5M saved" vs "5-star reviews"
+            },
+            {
+              "criterion": "Clear outcome (specific result)",
+              "weight": 1,
+              "example": "Increase conversion 35%" vs "Get better results"
+            }
+          ],
+          "scoring": {
+            "scale": "0-10",
+            "8-10": "Exceptional offer, ready to launch",
+            "6-7": "Good offer, needs refinement",
+            "4-5": "Average offer, significant work needed",
+            "0-3": "Weak offer, redesign recommended"
+          }
+        },
+        {
+          "name": "Feature to Outcome Translation",
+          "description": "Connect product features to customer outcomes",
+          "pattern": {
+            "feature": "AI-powered lead scoring",
+            "customer_context": "Sales manager struggling with manual qualification",
+            "translation": {
+              "feature_description": "Uses machine learning to score leads",
+              "benefit": "Automatically identifies hot leads",
+              "outcome": "Close 3 deals/week instead of 1",
+              "emotional_payoff": "Hit quota without working weekends"
+            }
+          }
+        },
+        {
+          "name": "Risk Reversal Structures",
+          "description": "Remove customer purchase risk",
+          "types": [
+            {
+              "type": "Money-Back Guarantee",
+              "structure": "If not satisfied within 30 days, full refund",
+              "effectiveness": "5-8% refund rate (proves confidence)"
+            },
+            {
+              "type": "Performance Guarantee",
+              "structure": "If you don't achieve X result, we extend free",
+              "example": "If leads don't increase 20%, get 3 free months"
+            },
+            {
+              "type": "Try-First Guarantee",
+              "structure": "Use free, pay if you keep",
+              "example": "14-day free trial, card not required"
+            },
+            {
+              "type": "Relationship Guarantee",
+              "structure": "Direct access to team, dedicated support",
+              "example": "Slack access to implementation team"
+            }
+          ]
+        },
+        {
+          "name": "Value Expansion Model",
+          "description": "Increase perceived value without increasing cost",
+          "methods": [
+            {
+              "method": "Stacking",
+              "example": "$500 video course + $200 templates + $100 tool access = $800 total value for $200"
+            },
+            {
+              "method": "Bundling",
+              "example": "Combine 3 tools into one offer (1+1+1 at discount)"
+            },
+            {
+              "method": "Bonuses",
+              "example": "Free consultation worth $2000 with purchase"
+            },
+            {
+              "method": "Exclusive Access",
+              "example": "Private community (normal $50/mo) free with purchase"
+            },
+            {
+              "method": "Time-Limited Premium",
+              "example": "Free premium features for 90 days (normally $99/mo)"
+            }
+          ]
+        }
+      ]
+    }
+  },
+
+  "metadata": {
+    "totalFrameworks": 5,
+    "totalComponents": 25,
+    "estimatedImplementationTime": "60-80 hours",
+    "requiredSkills": [
+      "Marketing strategy",
+      "Conversion psychology",
+      "Competitive analysis",
+      "Copywriting",
+      "Data analysis"
+    ],
+    "lastValidated": "2025-11-27"
+  }
+}
