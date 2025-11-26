@@ -10,7 +10,11 @@
       "Bash(\"src/app/api/executions/\" )",
       "Bash(\"src/components/ExecutionDashboard.tsx\" )",
       "Bash(\"supabase/migrations/237_phase_4_execution_system.sql\")",
-      "Bash(echo:*)"
+      "Bash(echo:*)",
+      "Bash(npm search:*)",
+      "Bash(docker:*)",
+      "Bash(cat:*)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []

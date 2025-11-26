@@ -1,6 +1,14 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { createHash } from "crypto";
+
+/**
+ * Generate device fingerprint from user agent and IP
+ */
+function generateDeviceFingerprint(userAgent: string, ip: string): string {
+  return createHash('sha256').update(`${userAgent}:${ip}`).digest('hex');
+}
 
 export async function middleware(req: NextRequest) {
   let response = NextResponse.next({
@@ -56,16 +64,9 @@ export async function middleware(req: NextRequest) {
   );
 
   // Try to refresh the session on every request to maintain auth state
-  // This ensures the session stays fresh across browser restarts
   const { data: { session } } = await supabase.auth.getSession();
 
   const isAuthenticated = !!session?.user;
-
-  // Protected routes that require authentication
-  const protectedPaths = ["/dashboard"];
-  const isProtectedPath = protectedPaths.some((path) =>
-    req.nextUrl.pathname.startsWith(path)
-  );
 
   // Auth pages that should redirect if already logged in
   const authPaths = ["/login", "/register", "/forgot-password"];
@@ -73,29 +74,98 @@ export async function middleware(req: NextRequest) {
     req.nextUrl.pathname.startsWith(path)
   );
 
-  // IMPORTANT: With implicit OAuth flow, sessions are stored in localStorage (client-side only)
-  // Middleware cannot see these sessions, so we CANNOT rely on server-side protection
-  // Instead, we let all requests through and rely on client-side AuthContext to handle redirects
+  // Public routes (no auth required)
+  const publicPaths = ["/", "/privacy", "/terms", "/security", "/api/auth", "/api/cron", "/api/webhooks"];
+  const isPublicPath = publicPaths.some((path) =>
+    req.nextUrl.pathname.startsWith(path)
+  );
 
-  // Only redirect to login if there's NO server-side session AND no existing redirectTo param
-  // (to avoid redirect loops)
-  const hasRedirectToParam = req.nextUrl.searchParams.has('redirectTo');
+  // Allow public paths to pass through
+  if (isPublicPath) {
+    return response;
+  }
 
-  // TEMPORARY: Disable dashboard protection entirely for implicit OAuth flow
-  // Implicit flow stores sessions in localStorage only, not accessible to middleware
-  // Dashboard pages will handle authentication client-side via AuthContext
-  // This allows users coming from OAuth to land on dashboard successfully
+  // If not authenticated, redirect to login
+  if (!isAuthenticated) {
+    const redirectUrl = req.nextUrl.clone();
+    redirectUrl.pathname = "/login";
+    redirectUrl.searchParams.set("redirectTo", req.nextUrl.pathname);
+    return NextResponse.redirect(redirectUrl);
+  }
 
-  // Only protect dashboard if user is directly accessing (not from OAuth redirect)
-  // if (isProtectedPath && !isAuthenticated && !hasRedirectToParam) {
-  //   const redirectUrl = req.nextUrl.clone();
-  //   redirectUrl.pathname = "/login";
-  //   redirectUrl.searchParams.set("redirectTo", req.nextUrl.pathname);
-  //   return NextResponse.redirect(redirectUrl);
-  // }
+  // Get user profile and role
+  try {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', session.user.id)
+      .single();
 
-  // Redirect to dashboard if accessing auth pages while authenticated (PKCE flow only)
-  // Don't redirect for implicit flow (no server-side session)
+    const userRole = profile?.role || 'customer';
+
+    // RBAC: Route based on role
+    if (userRole === 'admin') {
+      // Admin user (Phill, Claire, Rana)
+      const userAgent = req.headers.get('user-agent') || '';
+      const ip = req.headers.get('x-forwarded-for') ||
+                 req.headers.get('x-real-ip') ||
+                 'unknown';
+
+      const deviceFingerprint = generateDeviceFingerprint(userAgent, ip);
+
+      // Check if device is trusted
+      const { data: trustedDevice } = await supabase
+        .from('admin_trusted_devices')
+        .select('id')
+        .eq('user_id', session.user.id)
+        .eq('device_fingerprint', deviceFingerprint)
+        .eq('is_trusted', true)
+        .gte('expires_at', new Date().toISOString())
+        .single();
+
+      // Check if there's a valid approval
+      const { data: validApproval } = await supabase
+        .from('admin_approvals')
+        .select('id')
+        .eq('user_id', session.user.id)
+        .eq('approved', true)
+        .gte('expires_at', new Date().toISOString())
+        .single();
+
+      // If no trust and no valid approval, redirect to await approval page
+      if (!trustedDevice && !validApproval) {
+        if (req.nextUrl.pathname === '/auth/await-approval') {
+          return response; // Allow await-approval page
+        }
+        const redirectUrl = req.nextUrl.clone();
+        redirectUrl.pathname = '/auth/await-approval';
+        return NextResponse.redirect(redirectUrl);
+      }
+
+      // Redirect to CRM if trying to access customer dashboard
+      if (req.nextUrl.pathname.startsWith('/synthex') ||
+          req.nextUrl.pathname === '/synthex/dashboard') {
+        const redirectUrl = req.nextUrl.clone();
+        redirectUrl.pathname = '/crm';
+        return NextResponse.redirect(redirectUrl);
+      }
+    } else {
+      // Customer user - restrict access to CRM
+      if (req.nextUrl.pathname.startsWith('/crm') ||
+          req.nextUrl.pathname.startsWith('/api/crm') ||
+          req.nextUrl.pathname === '/auth/await-approval') {
+        const redirectUrl = req.nextUrl.clone();
+        redirectUrl.pathname = '/synthex/dashboard';
+        return NextResponse.redirect(redirectUrl);
+      }
+    }
+  } catch (error) {
+    console.error('Error in RBAC middleware:', error);
+    // On error, continue to destination (fail open)
+    return response;
+  }
+
+  // Redirect to dashboard if accessing auth pages while authenticated
   if (isAuthPath && isAuthenticated) {
     const redirectUrl = req.nextUrl.clone();
     redirectUrl.pathname = "/dashboard/overview";
