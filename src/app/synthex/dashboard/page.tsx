@@ -98,6 +98,7 @@ export default function SynthexDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showJobModal, setShowJobModal] = useState(false);
+  const [creatingJob, setCreatingJob] = useState(false);
 
   // Fetch tenant data on mount
   useEffect(() => {
@@ -109,59 +110,81 @@ export default function SynthexDashboard() {
     fetchTenantData();
   }, [tenantId, router]);
 
+  const handleCreateJob = async (jobData: any) => {
+    setCreatingJob(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        throw new Error('Not authenticated');
+      }
+
+      const response = await fetch('/api/synthex/job', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify(jobData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to create job');
+      }
+
+      // Refresh jobs list
+      await fetchTenantData();
+      setShowJobModal(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to create job');
+    } finally {
+      setCreatingJob(false);
+    }
+  };
+
   const fetchTenantData = async () => {
     try {
       setLoading(true);
 
-      // Get current user
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) {
+      // Get current session for authentication
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
         router.push('/login');
         return;
       }
 
-      // Fetch tenant
-      const { data: tenantData } = await supabase
-        .from('synthex_tenants')
-        .select('*')
-        .eq('id', tenantId)
-        .eq('owner_user_id', user.id)
-        .single();
+      // Fetch tenant data from API
+      const tenantRes = await fetch(`/api/synthex/tenant?tenantId=${tenantId}`, {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
 
-      if (!tenantData) {
-        setError('Tenant not found');
-        return;
+      if (!tenantRes.ok) {
+        throw new Error('Failed to fetch tenant');
       }
 
+      const { tenant: tenantData } = await tenantRes.json();
       setTenant(tenantData);
 
-      // Fetch subscription
-      const { data: subData } = await supabase
-        .from('synthex_plan_subscriptions')
-        .select('*')
-        .eq('tenant_id', tenantId)
-        .single();
+      // Fetch billing info from API
+      const billingRes = await fetch(`/api/synthex/billing?tenantId=${tenantId}`, {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
 
-      if (subData) {
-        setSubscription(subData);
+      if (billingRes.ok) {
+        const billingData = await billingRes.json();
+        setSubscription(billingData.subscription);
+        calculateUsageStats(tenantData.id, billingData.subscription);
       }
 
-      // Fetch recent jobs
-      const { data: jobsData } = await supabase
-        .from('synthex_project_jobs')
-        .select('*')
-        .eq('tenant_id', tenantId)
-        .order('created_at', { ascending: false })
-        .limit(20);
+      // Fetch jobs from API
+      const jobsRes = await fetch(`/api/synthex/job?tenantId=${tenantId}`, {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
 
-      if (jobsData) {
-        setJobs(jobsData);
+      if (jobsRes.ok) {
+        const { jobs: jobsData } = await jobsRes.json();
+        setJobs(jobsData || []);
       }
-
-      // Calculate usage stats
-      calculateUsageStats(tenantData.id, subData);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load dashboard');
     } finally {
@@ -169,36 +192,34 @@ export default function SynthexDashboard() {
     }
   };
 
-  const calculateUsageStats = async (tenantIdVal: string, subData: Subscription | null) => {
-    const { data: jobsThisMonth } = await supabase
-      .from('synthex_project_jobs')
-      .select('id', { count: 'exact' })
-      .eq('tenant_id', tenantIdVal)
-      .gte('created_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString());
-
-    const { data: brandsData } = await supabase
-      .from('synthex_brands')
-      .select('id', { count: 'exact' })
-      .eq('tenant_id', tenantIdVal)
-      .eq('status', 'active');
+  const calculateUsageStats = (tenantIdVal: string, subData: Subscription | null) => {
+    // Filter jobs from this month
+    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const jobsThisMonth = jobs.filter((job) => {
+      const jobDate = new Date(job.created_at);
+      return jobDate >= thirtyDaysAgo;
+    });
 
     // Get plan limits
-    const planMap: Record<string, { jobsLimit: number; brandsLimit: number }> = {
-      launch: { jobsLimit: 8, brandsLimit: 2 },
-      growth: { jobsLimit: 25, brandsLimit: 5 },
-      scale: { jobsLimit: 999, brandsLimit: 999 },
+    const planMap: Record<string, { jobsLimit: number; brandsLimit: number; costBudget: number }> = {
+      launch: { jobsLimit: 8, brandsLimit: 2, costBudget: 30 },
+      growth: { jobsLimit: 25, brandsLimit: 5, costBudget: 100 },
+      scale: { jobsLimit: 999, brandsLimit: 999, costBudget: 500 },
     };
 
     const planCode = subData?.planCode || 'launch';
     const planLimits = planMap[planCode];
 
+    // Calculate cost from jobs (rough estimate: $0.15 per job)
+    const costThisMonth = jobsThisMonth.length * 0.15;
+
     setUsageStats({
-      jobsThisMonth: jobsThisMonth?.length || 0,
+      jobsThisMonth: jobsThisMonth.length,
       jobLimit: planLimits.jobsLimit,
-      brandsActive: brandsData?.length || 0,
+      brandsActive: 1, // TODO: Fetch actual brands count
       brandsLimit: planLimits.brandsLimit,
-      costThisMonth: (jobsThisMonth?.length || 0) * 0.15, // Rough estimate
-      costBudget: 30, // AUD per month
+      costThisMonth,
+      costBudget: planLimits.costBudget,
     });
   };
 
@@ -502,16 +523,13 @@ export default function SynthexDashboard() {
       </div>
 
       {/* Job Creation Modal */}
-      {showJobModal && (
-        <JobCreationModal
-          tenantId={tenantId!}
-          onClose={() => setShowJobModal(false)}
-          onJobCreated={() => {
-            setShowJobModal(false);
-            fetchTenantData();
-          }}
-        />
-      )}
+      <JobCreationModal
+        isOpen={showJobModal}
+        onClose={() => setShowJobModal(false)}
+        onCreateJob={handleCreateJob}
+        tenantId={tenantId || ''}
+        isLoading={creatingJob}
+      />
     </div>
   );
 }

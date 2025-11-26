@@ -39,11 +39,10 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 // Import pricing engine
 import {
   PLANS,
-  OFFER_TIERS,
-  INDUSTRIES,
   calculateEffectivePrice,
   getCurrentOfferTier,
   getOfferBanner,
+  getAllIndustries,
 } from '@/lib/synthex/synthexOfferEngine';
 
 // ============================================================================
@@ -226,12 +225,18 @@ export default function SynthexOnboarding() {
     setError(null);
 
     try {
+      // Get current session for authentication
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        throw new Error('Not authenticated');
+      }
+
       // Call API to create tenant, subscription, and brand
-      const response = await fetch('/api/synthex/create-tenant', {
+      const response = await fetch('/api/synthex/tenant', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+          Authorization: `Bearer ${session.access_token}`,
         },
         body: JSON.stringify({
           businessName: state.businessProfile.businessName,
@@ -252,10 +257,10 @@ export default function SynthexOnboarding() {
         throw new Error(errorData.error || 'Failed to create account');
       }
 
-      const { tenantId, subscriptionId } = await response.json();
+      const { tenant, subscription } = await response.json();
 
-      // Redirect to dashboard
-      router.push(`/synthex/dashboard?tenantId=${tenantId}`);
+      // Redirect to dashboard with tenantId
+      router.push(`/synthex/dashboard?tenantId=${tenant.id}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -366,8 +371,8 @@ export default function SynthexOnboarding() {
                     <SelectValue placeholder="Select your industry" />
                   </SelectTrigger>
                   <SelectContent>
-                    {INDUSTRIES.map((ind) => (
-                      <SelectItem key={ind.code} value={ind.code}>
+                    {getAllIndustries().map((ind) => (
+                      <SelectItem key={ind.industry} value={ind.industry}>
                         {ind.label}
                       </SelectItem>
                     ))}
