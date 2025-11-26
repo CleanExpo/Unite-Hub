@@ -9,7 +9,8 @@
       "Bash(\"src/lib/strategy/execution-bridge.ts\" )",
       "Bash(\"src/app/api/executions/\" )",
       "Bash(\"src/components/ExecutionDashboard.tsx\" )",
-      "Bash(\"supabase/migrations/237_phase_4_execution_system.sql\")"
+      "Bash(\"supabase/migrations/237_phase_4_execution_system.sql\")",
+      "Bash(echo:*)"
     ],
     "deny": [],
     "ask": []

@@ -90,7 +90,7 @@ export function deriveCognitiveState(
   const recommendations = generateCognitiveRecommendations(state, factors);
 
   // Task suitability
-  const taskSuitability = [
+  const task_suitability = [
     { task_type: 'strategic_thinking', suitability: getTaskSuitability(state, 'strategic_thinking') as 'ideal' | 'ok' | 'difficult' | 'not_recommended' },
     { task_type: 'deep_analysis', suitability: getTaskSuitability(state, 'deep_analysis') as 'ideal' | 'ok' | 'difficult' | 'not_recommended' },
     { task_type: 'creative_work', suitability: getTaskSuitability(state, 'creative_work') as 'ideal' | 'ok' | 'difficult' | 'not_recommended' },
@@ -122,31 +122,31 @@ function generateCognitiveRecommendations(
 
   switch (state) {
     case 'sharp':
-      recommendations.push('You're in peak cognitive condition – ideal for strategic decisions');
+      recommendations.push('You\'re in peak cognitive condition - ideal for strategic decisions');
       break;
 
     case 'good':
-      recommendations.push('Cognitive state is good – tackle important tasks now');
+      recommendations.push('Cognitive state is good - tackle important tasks now');
       break;
 
     case 'tired':
       if (sleepFactor && sleepFactor.value < 50) {
-        recommendations.push('Sleep is below optimal – prioritize rest tonight');
+        recommendations.push('Sleep is below optimal - prioritize rest tonight');
       }
       if (stressFactor && stressFactor.value < 50) {
-        recommendations.push('Stress is elevated – consider a break or stress-relief activity');
+        recommendations.push('Stress is elevated - consider a break or stress-relief activity');
       }
-      recommendations.push('Save complex decisions for later – stick to routine tasks');
+      recommendations.push('Save complex decisions for later - stick to routine tasks');
       break;
 
     case 'fatigued':
-      recommendations.push('You're significantly fatigued – avoid high-stakes decisions');
+      recommendations.push('You\'re significantly fatigued - avoid high-stakes decisions');
       recommendations.push('Consider delegating or rescheduling non-urgent work');
       recommendations.push('Prioritize rest and recovery');
       break;
 
     case 'overloaded':
-      recommendations.push('⚠️ Overloaded state detected – urgent intervention needed');
+      recommendations.push('⚠️ Overloaded state detected - urgent intervention needed');
       recommendations.push('Stop taking on new work immediately');
       recommendations.push('Focus only on critical items');
       recommendations.push('Strongly recommend taking time off soon');
