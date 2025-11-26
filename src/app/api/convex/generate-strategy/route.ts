@@ -349,10 +349,29 @@ export async function POST(req: NextRequest) {
     }
 
     // Store strategy in database
-    const supabase = await getSupabaseServer();
+    const { saveStrategy } = await import('@/lib/convex/strategy-persistence');
     const strategyId = `strategy-${Date.now()}`;
+    const workspaceId = req.nextUrl.searchParams.get('workspaceId') || 'default-workspace';
+    const userId = 'system'; // In production, get from auth context
 
-    logger.info(`[CONVEX-API] Strategy generated successfully: ${strategyId}`);
+    // Save to database
+    const savedStrategy = await saveStrategy(workspaceId, userId, {
+      strategyId,
+      strategy,
+      score,
+      frameworks: analyzedFrameworks,
+      executionPlan,
+      successMetrics,
+      metadata: {
+        businessName,
+        industry,
+        targetAudience,
+        desiredOutcome,
+        framework,
+      },
+    });
+
+    logger.info(`[CONVEX-API] Strategy generated and saved: ${strategyId}`);
 
     return NextResponse.json({
       strategyId,
@@ -361,6 +380,7 @@ export async function POST(req: NextRequest) {
       frameworks: analyzedFrameworks,
       executionPlan,
       successMetrics,
+      databaseId: savedStrategy?.id,
     });
   } catch (error) {
     logger.error('[CONVEX-API] Strategy generation error:', error);
