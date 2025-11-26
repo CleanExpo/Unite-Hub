@@ -11,8 +11,8 @@ import { ModelCapability } from './types';
 const modelCapabilities: ModelCapability[] = [
   // Anthropic Models
   {
-    id: 'claude-opus-4-1-20250805',
-    model: 'claude-opus-4-1-20250805',
+    id: 'claude-opus-4-5-20251101',
+    model: 'claude-opus-4-5-20251101',
     capability: 'extended-thinking',
     level: 'expert',
     costPerToken: 0.015,
@@ -25,7 +25,7 @@ const modelCapabilities: ModelCapability[] = [
   },
   {
     id: 'claude-opus-4-1-extended-thinking',
-    model: 'claude-opus-4-1-20250805',
+    model: 'claude-opus-4-5-20251101',
     capability: 'complex-reasoning',
     level: 'expert',
     costPerToken: 0.015,

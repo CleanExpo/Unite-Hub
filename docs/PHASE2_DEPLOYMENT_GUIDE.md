@@ -351,7 +351,7 @@ Before marking Phase 2 as complete, verify:
      -H "anthropic-version: 2023-06-01" \
      -H "Content-Type: application/json" \
      -d '{
-       "model": "claude-opus-4-1-20250805",
+       "model": "claude-opus-4-5-20251101",
        "max_tokens": 1024,
        "messages": [{"role": "user", "content": "Hello"}]
      }'
@@ -616,7 +616,7 @@ Get AI analysis status and result.
   "status": "completed",
   "progress": 100,
   "analysis": { ... },
-  "model_used": "claude-opus-4-1-20250805",
+  "model_used": "claude-opus-4-5-20251101",
   "analyzed_at": "2025-01-17T10:35:00Z"
 }
 ```

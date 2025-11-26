@@ -174,7 +174,7 @@ Format your response as valid JSON with these exact keys:
     try {
       const result = await callAnthropicWithRetry(async () => {
       return await anthropic.messages.create({
-        model: "claude-opus-4-1-20250805",
+        model: "claude-opus-4-5-20251101",
         max_tokens: 4000,
         thinking: {
           type: "enabled",
@@ -254,7 +254,7 @@ Format your response as valid JSON with these exact keys:
       .update({
         ai_analysis: analysis,
         ai_analyzed_at: new Date().toISOString(),
-        ai_model_used: "claude-opus-4-1-20250805",
+        ai_model_used: "claude-opus-4-5-20251101",
         status: "completed", // Final status
         progress: 100,
       })
@@ -284,7 +284,7 @@ Format your response as valid JSON with these exact keys:
         mediaId,
         filename: mediaFile.original_filename,
         file_type: mediaFile.file_type,
-        model: "claude-opus-4-1-20250805",
+        model: "claude-opus-4-5-20251101",
         analysis_summary: analysis.summary,
       },
     });

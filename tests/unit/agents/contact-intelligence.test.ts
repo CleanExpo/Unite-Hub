@@ -107,7 +107,7 @@ describe('Contact Intelligence Agent', () => {
           }),
         },
       ],
-      model: 'claude-opus-4-1-20250805',
+      model: 'claude-opus-4-5-20251101',
       stop_reason: 'end_turn',
       usage: {
         input_tokens: 1000,
@@ -135,7 +135,7 @@ describe('Contact Intelligence Agent', () => {
 
     expect(mockCreate).toHaveBeenCalledWith(
       expect.objectContaining({
-        model: 'claude-opus-4-1-20250805',
+        model: 'claude-opus-4-5-20251101',
         thinking: expect.objectContaining({
           type: 'enabled',
           budget_tokens: 10000,

@@ -71,7 +71,7 @@ Scores 60-79 = Warm leads | 80-100 = Hot leads
 - **Microsoft Graph API** - Outlook/Microsoft 365 integration for email and calendar
 
 ### AI & Integrations
-- **Anthropic Claude API** - Claude Opus 4 (`claude-opus-4-1-20250805`) with Extended Thinking (5,000-10,000 token budgets)
+- **Anthropic Claude API** - Claude Opus 4 (`claude-opus-4-5-20251101`) with Extended Thinking (5,000-10,000 token budgets)
 - **@anthropic-ai/sdk** v0.68.0 - Official Anthropic SDK
 - **googleapis** v166.0.0 - Google API client for Gmail
 - **@microsoft/microsoft-graph-client** - Microsoft Graph SDK for Outlook integration

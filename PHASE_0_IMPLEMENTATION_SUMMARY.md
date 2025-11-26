@@ -166,7 +166,7 @@ Scale    ($299/mo) - Unlimited brands & jobs ← Enterprise
 ```typescript
 // Replace mock implementation with:
 const result = await callClaudeWithExtendedThinking({
-  model: 'claude-opus-4-1-20250805',
+  model: 'claude-opus-4-5-20251101',
   thinking: { budget_tokens: 10000 },
   messages: [{ role: 'user', content: agentPayload }],
 });

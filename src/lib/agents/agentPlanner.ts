@@ -78,7 +78,7 @@ const SAFE_COMMANDS = [
  */
 export class AgentPlanner {
   private anthropic: Anthropic;
-  private model: string = "claude-opus-4-1-20250805";
+  private model: string = "claude-opus-4-5-20251101";
 
   constructor(apiKey?: string) {
     this.anthropic = new Anthropic({

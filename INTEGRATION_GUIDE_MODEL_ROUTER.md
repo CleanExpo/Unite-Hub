@@ -150,7 +150,7 @@ ${JSON.stringify(contact, null, 2)}`,
 
 export async function generateBlogPost(topic: string) {
   const message = await anthropic.messages.create({
-    model: "claude-opus-4-1-20250805",
+    model: "claude-opus-4-5-20251101",
     max_tokens: 8192,
     thinking: {
       type: "enabled",
@@ -320,7 +320,7 @@ async function extractIntelligence(email: string) {
 ```typescript
 // Old: Always use Opus with Extended Thinking
 const message = await anthropic.messages.create({
-  model: "claude-opus-4-1-20250805",
+  model: "claude-opus-4-5-20251101",
   thinking: { type: "enabled", budget_tokens: 7500 },
   messages: [{ role: "user", content: strategyPrompt }],
 });

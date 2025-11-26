@@ -7,7 +7,7 @@
 **Type:** Core CRM Agent
 **Priority:** P0 (Critical - Week 2)
 **Status:** 🟡 Specification Complete - Implementation Pending
-**Model:** `claude-sonnet-4-5-20250929` (standard operations), `claude-opus-4-1-20250805` (AI scoring)
+**Model:** `claude-sonnet-4-5-20250929` (standard operations), `claude-opus-4-5-20251101` (AI scoring)
 
 ### Database Tables Used
 

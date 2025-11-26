@@ -248,7 +248,7 @@ Return as JSON matching the MarketingStrategy interface.`;
 3. **Call Claude API** (Extended Thinking for high-quality strategy):
    ```typescript
    const message = await anthropic.messages.create({
-     model: 'claude-opus-4-1-20250805',
+     model: 'claude-opus-4-5-20251101',
      max_tokens: 8192,
      temperature: 0.5,
      thinking: {

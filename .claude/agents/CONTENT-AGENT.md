@@ -7,7 +7,7 @@
 **Type:** AI-Powered Creative Agent
 **Priority:** P1 (Core - Week 3)
 **Status:** 🟡 Specification Complete - Implementation Pending
-**Model:** `claude-opus-4-1-20250805` (Extended Thinking enabled, 5000-10000 token budget)
+**Model:** `claude-opus-4-5-20251101` (Extended Thinking enabled, 5000-10000 token budget)
 
 ### Database Tables Used
 
@@ -102,7 +102,7 @@ interface GeneratedContent {
   generated_html?: string; // HTML version (for emails)
 
   // AI generation metadata
-  ai_model: string; // e.g., "claude-opus-4-1-20250805"
+  ai_model: string; // e.g., "claude-opus-4-5-20251101"
   thinking_tokens?: number; // Extended Thinking tokens used
   thinking_summary?: string; // AI's reasoning process
 
@@ -361,7 +361,7 @@ interface ImageGenerationResult {
     sentiment_score: 0.85, // Very positive
     status: "draft"
   },
-  ai_model: "claude-opus-4-1-20250805",
+  ai_model: "claude-opus-4-5-20251101",
   thinking_tokens_used: 6842,
   thinking_summary: "I focused on addressing the customer's stated pain points (manual data entry, lack of automation) while referencing specific details from our demo conversation. The pricing inquiry shows strong buying intent, so I positioned the next step clearly: booking a pricing discussion call...",
   quality_scores: {
@@ -441,7 +441,7 @@ Use Markdown formatting for emphasis (**bold**, *italic*).
 
   // 3. Call Claude with Extended Thinking
   const message = await anthropic.messages.create({
-    model: 'claude-opus-4-1-20250805',
+    model: 'claude-opus-4-5-20251101',
     max_tokens: 4096,
     thinking: {
       type: 'enabled',
@@ -480,7 +480,7 @@ Use Markdown formatting for emphasis (**bold**, *italic*).
     content_type: request.content_type,
     generated_text: generatedText,
     generated_html: generatedHTML,
-    ai_model: 'claude-opus-4-1-20250805',
+    ai_model: 'claude-opus-4-5-20251101',
     thinking_tokens: thinkingBlock?.thinking_tokens || 0,
     thinking_summary: request.include_thinking_summary ? thinkingSummary : undefined,
     word_count: countWords(generatedText),
@@ -495,7 +495,7 @@ Use Markdown formatting for emphasis (**bold**, *italic*).
 
   // 9. Calculate cost
   const costUSD = calculateAnthropicCost({
-    model: 'claude-opus-4-1-20250805',
+    model: 'claude-opus-4-5-20251101',
     input_tokens: message.usage.input_tokens,
     output_tokens: message.usage.output_tokens,
     thinking_tokens: thinkingBlock?.thinking_tokens || 0,
@@ -504,7 +504,7 @@ Use Markdown formatting for emphasis (**bold**, *italic*).
   return {
     success: true,
     content,
-    ai_model: 'claude-opus-4-1-20250805',
+    ai_model: 'claude-opus-4-5-20251101',
     thinking_tokens_used: thinkingBlock?.thinking_tokens || 0,
     thinking_summary: request.include_thinking_summary ? thinkingSummary : undefined,
     quality_scores: {
@@ -529,7 +529,7 @@ function calculateAnthropicCost(usage: {
 }): number {
   // Pricing for claude-opus-4 (as of 2025-01-18)
   const pricing = {
-    'claude-opus-4-1-20250805': {
+    'claude-opus-4-5-20251101': {
       input: 7.5 / 1_000_000, // $7.50 per MTok
       output: 22.5 / 1_000_000, // $22.50 per MTok
       thinking: 7.5 / 1_000_000, // $7.50 per MTok (same as input)

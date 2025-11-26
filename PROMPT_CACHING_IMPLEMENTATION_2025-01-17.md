@@ -31,7 +31,7 @@ After thorough code review, **Anthropic prompt caching is ALREADY implemented co
 **Implementation** (Lines 105-118):
 ```typescript
 const message = await anthropic.messages.create({
-  model: "claude-opus-4-1-20250805",
+  model: "claude-opus-4-5-20251101",
   max_tokens: 16000,
   thinking: {
     type: "enabled",
@@ -76,7 +76,7 @@ console.log("Contact Intelligence - Cache Stats:", {
 **Implementation** (Lines 127-140):
 ```typescript
 const message = await anthropic.messages.create({
-  model: "claude-opus-4-1-20250805",
+  model: "claude-opus-4-5-20251101",
   max_tokens: 2000,
   thinking: {
     type: "enabled",
@@ -481,7 +481,7 @@ node scripts/test-prompt-caching.mjs
 **Request Structure**:
 ```typescript
 {
-  model: "claude-opus-4-1-20250805",
+  model: "claude-opus-4-5-20251101",
   system: [
     {
       type: "text",

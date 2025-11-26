@@ -623,7 +623,7 @@ async function executeCoordinationAgent(request: AgentExecutionRequest): Promise
         subJobsCreated: 0,
       },
       generatedAt: new Date().toISOString(),
-      model: 'claude-opus-4-1-20250805',
+      model: 'claude-opus-4-5-20251101',
       tokens: {
         input: 4000,
         output: 2000,

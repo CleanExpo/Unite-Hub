@@ -83,7 +83,7 @@ The **Content Calendar Agent** is now fully implemented and ready to generate co
 
 ### Model Configuration
 
-**Primary Model**: `claude-opus-4-1-20250805`
+**Primary Model**: `claude-opus-4-5-20251101`
 - **Why Opus 4**: Strategic planning requires highest reasoning capability
 - **Extended Thinking**: 10,000 token budget for complex calendar planning
 - **Max Tokens**: 16,384 (large output for ~90 posts)

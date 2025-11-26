@@ -68,7 +68,7 @@ const nexusAIConfig = {
   ],
   models: {
     primary: "claude-sonnet-4-5-20250929",
-    complex: "claude-opus-4-1-20250805"
+    complex: "claude-opus-4-5-20251101"
   },
   features: {
     extendedThinking: true,

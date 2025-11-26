@@ -7,7 +7,7 @@
 **Type:** Specialized Marketing Automation Agent
 **Priority:** P1 (Core - Week 3)
 **Status:** 🟡 Specification Complete - Implementation Pending
-**Model:** `claude-sonnet-4-5-20250929` (standard operations), `claude-opus-4-1-20250805` (complex analytics)
+**Model:** `claude-sonnet-4-5-20250929` (standard operations), `claude-opus-4-5-20251101` (complex analytics)
 
 ### Database Tables Used
 

@@ -122,7 +122,7 @@ All 4 media API endpoints have been reviewed against Unite-Hub architecture patt
   - Tracks input_tokens, cache_creation_tokens, cache_read_tokens
   - Logs cache hit/miss for optimization analysis
 - ✅ Extended Thinking (Lines 177-180)
-  - Uses Opus 4 model: `claude-opus-4-1-20250805`
+  - Uses Opus 4 model: `claude-opus-4-5-20251101`
   - 5000 thinking token budget for deep analysis
   - Appropriate for complex media analysis tasks
 - ✅ Audit Logging (Lines 271-285)

@@ -78,7 +78,7 @@ content-calendar-agent:
   queue: content_calendar_queue
   concurrency: 1
   thinking_budget: 10000 tokens
-  model: claude-opus-4-1-20250805
+  model: claude-opus-4-5-20251101
 ```
 
 **Total Agents**: 7 (was 6)
@@ -132,7 +132,7 @@ content-calendar-agent:
 
 ### AI Model Configuration
 
-**Model**: Claude Opus 4 (`claude-opus-4-1-20250805`)
+**Model**: Claude Opus 4 (`claude-opus-4-5-20251101`)
 - **Extended Thinking**: 10,000 token budget
 - **Max Output**: 16,384 tokens (~90 posts)
 - **Temperature**: 0.6 (balanced creativity)

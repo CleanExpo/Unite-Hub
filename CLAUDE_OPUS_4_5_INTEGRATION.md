@@ -354,7 +354,7 @@ Cost: $0.3020
 **Model ID Update**:
 ```typescript
 // OLD (Opus 4.1)
-model: 'claude-opus-4-1-20250805'
+model: 'claude-opus-4-5-20251101'
 
 // NEW (Opus 4.5)
 model: 'claude-opus-4-5-20251101'

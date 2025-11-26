@@ -159,7 +159,7 @@ REQUIREMENTS:
 Return as JSON array of posts.`;
 
    const message = await anthropic.messages.create({
-     model: 'claude-opus-4-1-20250805',
+     model: 'claude-opus-4-5-20251101',
      max_tokens: 16384, // Large output for 90 posts
      temperature: 0.6,
      thinking: {

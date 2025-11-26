@@ -7,7 +7,7 @@
 **Type:** Multi-Channel Marketing Agent
 **Priority:** P2 (Enhancement - Week 5)
 **Status:** 🟡 Specification Complete - Implementation Pending
-**Model:** `claude-sonnet-4-5-20250929` (content generation), `claude-opus-4-1-20250805` (strategy planning)
+**Model:** `claude-sonnet-4-5-20250929` (content generation), `claude-opus-4-5-20251101` (strategy planning)
 
 ### Database Tables Used
 

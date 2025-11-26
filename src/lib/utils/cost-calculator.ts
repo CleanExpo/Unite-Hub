@@ -7,7 +7,7 @@
 export const ANTHROPIC_PRICING = {
   opus: {
     name: "Claude Opus 4",
-    model: "claude-opus-4-1-20250805",
+    model: "claude-opus-4-5-20251101",
     input: 15, // $15 per MTok
     output: 75, // $75 per MTok
     thinking: 7.5, // $7.50 per MTok (for Extended Thinking)

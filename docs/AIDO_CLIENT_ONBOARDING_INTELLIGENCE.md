@@ -334,7 +334,7 @@ Extract:
 
   const result = await callAnthropicWithRetry(async () => {
     return await anthropic.messages.create({
-      model: 'claude-opus-4-1-20250805',
+      model: 'claude-opus-4-5-20251101',
       max_tokens: 4096,
       thinking: {
         type: 'enabled',
@@ -477,7 +477,7 @@ Generate authoritative bio optimized for E-E-A-T signals.`;
 
   const result = await callAnthropicWithRetry(async () => {
     return await anthropic.messages.create({
-      model: 'claude-opus-4-1-20250805',
+      model: 'claude-opus-4-5-20251101',
       max_tokens: 4096,
       thinking: {
         type: 'enabled',
@@ -632,7 +632,7 @@ CRITICAL: Extract 15-20 actual questions this persona asks (for H2 headings).`;
 
   const result = await callAnthropicWithRetry(async () => {
     return await anthropic.messages.create({
-      model: 'claude-opus-4-1-20250805',
+      model: 'claude-opus-4-5-20251101',
       max_tokens: 8192,
       thinking: {
         type: 'enabled',
@@ -756,7 +756,7 @@ Recommend specific questions to target (for H2 headings).`;
 
   const result = await callAnthropicWithRetry(async () => {
     return await anthropic.messages.create({
-      model: 'claude-opus-4-1-20250805',
+      model: 'claude-opus-4-5-20251101',
       max_tokens: 4096,
       thinking: {
         type: 'enabled',

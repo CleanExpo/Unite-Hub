@@ -191,7 +191,7 @@ export default function AIDOSettingsPage() {
                 className="w-full px-3 py-2 border rounded-md bg-white dark:bg-gray-800"
               >
                 <option value="claude-sonnet-4-5-20250929">Claude Sonnet 4.5 (Recommended)</option>
-                <option value="claude-opus-4-1-20250805">Claude Opus 4 (Premium)</option>
+                <option value="claude-opus-4-5-20251101">Claude Opus 4 (Premium)</option>
                 <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 (Fast)</option>
               </select>
               <p className="text-xs text-gray-500">Higher-tier models provide better quality but cost more</p>

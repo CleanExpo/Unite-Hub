@@ -7,7 +7,7 @@
 **Type:** Intelligence & Insights Agent
 **Priority:** P1 (Core - Week 4)
 **Status:** 🟡 Specification Complete - Implementation Pending
-**Model:** `claude-sonnet-4-5-20250929` (standard analytics), `claude-opus-4-1-20250805` (predictive insights)
+**Model:** `claude-sonnet-4-5-20250929` (standard analytics), `claude-opus-4-5-20251101` (predictive insights)
 
 ### Database Tables Used
 
@@ -894,7 +894,7 @@ Return JSON object with:
 
   // 3. Call Claude Opus for predictions
   const message = await anthropic.messages.create({
-    model: 'claude-opus-4-1-20250805',
+    model: 'claude-opus-4-5-20251101',
     max_tokens: 4096,
     system: systemPrompt,
     messages: [

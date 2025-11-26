@@ -449,7 +449,7 @@ BEGIN
   -- Anthropic pricing (per million tokens)
   IF provider_param = 'anthropic' THEN
     CASE model_param
-      WHEN 'claude-opus-4-1-20250805' THEN
+      WHEN 'claude-opus-4-5-20251101' THEN
         input_rate := 15.00;
         output_rate := 75.00;
       WHEN 'claude-sonnet-4-5-20250929' THEN

@@ -84,7 +84,7 @@ The **Docker-based Multi-Agent System** for Unite-Hub is now fully implemented a
 
 **AI Models** (via Model Router):
 - Claude Sonnet 4.5 (`claude-sonnet-4-5-20250929`) - Standard tasks
-- Claude Opus 4 (`claude-opus-4-1-20250805`) - Extended Thinking (content, strategy)
+- Claude Opus 4 (`claude-opus-4-5-20251101`) - Extended Thinking (content, strategy)
 - Claude Haiku 4.5 (`claude-haiku-4-5-20251001`) - Quick tasks
 
 **Infrastructure**:

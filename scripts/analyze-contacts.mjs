@@ -56,7 +56,7 @@ Recent: ${emailSummary || "None"}
 Return only JSON with: engagement_score, buying_intent, decision_stage, role_type, next_best_action, risk_signals[], opportunity_signals[], engagement_velocity, sentiment_score`;
 
       const message = await anthropic.messages.create({
-        model: "claude-opus-4-1-20250805",
+        model: "claude-opus-4-5-20251101",
         max_tokens: 1024,
         messages: [{ role: "user", content: prompt }],
       });

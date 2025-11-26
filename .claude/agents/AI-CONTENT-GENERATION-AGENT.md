@@ -125,7 +125,7 @@ Return as JSON matching BlogPost interface.`;
 3. **Call Claude API** (Extended Thinking):
    ```typescript
    const message = await anthropic.messages.create({
-     model: 'claude-opus-4-1-20250805',
+     model: 'claude-opus-4-5-20251101',
      max_tokens: 8192,
      temperature: 0.7, // Creative but controlled
      thinking: {
@@ -162,7 +162,7 @@ Return as JSON matching BlogPost interface.`;
        title: blogPost.title,
        content_type: 'blog_post',
        generated_text: JSON.stringify(blogPost),
-       ai_model: 'claude-opus-4-1-20250805',
+       ai_model: 'claude-opus-4-5-20251101',
        status: 'draft',
      })
      .select()
@@ -473,7 +473,7 @@ Return as JSON matching CaseStudy interface.`;
 3. **Call Claude API** (Extended Thinking):
    ```typescript
    const message = await anthropic.messages.create({
-     model: 'claude-opus-4-1-20250805',
+     model: 'claude-opus-4-5-20251101',
      max_tokens: 4096,
      temperature: 0.6,
      thinking: {

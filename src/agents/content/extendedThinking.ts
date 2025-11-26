@@ -42,7 +42,7 @@ export interface ThinkingOutput {
 export async function performExtendedThinking(input: ThinkingInput): Promise<ThinkingOutput> {
   // In production, this would call:
   // const message = await anthropic.messages.create({
-  //   model: 'claude-opus-4-1-20250805',
+  //   model: 'claude-opus-4-5-20251101',
   //   max_tokens: 16000,
   //   thinking: {
   //     type: 'enabled',

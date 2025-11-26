@@ -130,7 +130,7 @@ export async function analyzeContactWithRetry(contactData: any) {
     });
 
     return await anthropic.messages.create({
-      model: 'claude-opus-4-1-20250805',
+      model: 'claude-opus-4-5-20251101',
       max_tokens: 2048,
       messages: [
         {
@@ -236,7 +236,7 @@ export async function analyzeContactCached(
 
   try {
     const message = await anthropic.messages.create({
-      model: 'claude-opus-4-1-20250805',
+      model: 'claude-opus-4-5-20251101',
       max_tokens: 2048,
       system: [
         {
@@ -410,7 +410,7 @@ export async function analyzeContactWithThinking(contactData: any) {
   });
 
   const message = await anthropic.messages.create({
-    model: 'claude-opus-4-1-20250805',
+    model: 'claude-opus-4-5-20251101',
     max_tokens: 16000,
     thinking: {
       type: 'enabled',

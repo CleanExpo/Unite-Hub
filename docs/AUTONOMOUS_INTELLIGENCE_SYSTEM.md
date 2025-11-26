@@ -338,7 +338,7 @@ identifyKnowledgeGaps(contactId) → Gap[]
 
 **Purpose:** Generate contextual questions based on knowledge gaps
 
-**Model:** Claude Opus 4 with Extended Thinking (`claude-opus-4-1-20250805`)
+**Model:** Claude Opus 4 with Extended Thinking (`claude-opus-4-5-20251101`)
 
 **Features:**
 - Gap-based question generation

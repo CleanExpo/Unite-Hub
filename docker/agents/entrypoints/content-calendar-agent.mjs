@@ -234,7 +234,7 @@ Example post structure:
   const startTime = Date.now();
 
   const message = await anthropic.messages.create({
-    model: 'claude-opus-4-1-20250805',
+    model: 'claude-opus-4-5-20251101',
     max_tokens: 16384, // Large output for 90 posts
     temperature: 0.6,
     thinking: {
@@ -425,7 +425,7 @@ async function processTask(task) {
   await supabase.from('agent_executions').insert({
     task_id: task.id,
     agent_name: AGENT_NAME,
-    model_used: 'claude-opus-4-1-20250805',
+    model_used: 'claude-opus-4-5-20251101',
     tokens_input: result.performance?.tokens_input,
     tokens_output: result.performance?.tokens_output,
     cost_estimate_usd: result.performance?.cost_estimate_usd,

@@ -124,7 +124,7 @@ The Phase 2B Multimedia Input System has been **fully implemented** with all bac
   - Entities (people, organizations, locations, products)
   - Insights
 - Copy to clipboard (Markdown format)
-- Model attribution (shows "Analyzed by claude-opus-4-1-20250805")
+- Model attribution (shows "Analyzed by claude-opus-4-5-20251101")
 - Loading states and empty states
 
 ---
@@ -202,7 +202,7 @@ All operations are scoped to `workspace_id`:
 
 ### Claude Opus 4 (AI Analysis)
 
-**Model**: `claude-opus-4-1-20250805`
+**Model**: `claude-opus-4-5-20251101`
 **Thinking Budget**: 5000 tokens (Extended Thinking)
 **Max Output**: 4000 tokens
 **System Prompt**: Cached for 90% cost savings
