@@ -1,10 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Bash(timeout 90 npm run build:*)",
-      "Bash(node -c:*)",
-      "Bash(node --version:*)",
-      "Bash(ls -la \"d:\\Unite-Hub\\supabase\\migrations\"\" | grep -i \"25[0-9] \")"
+      "Bash(also. Otherwise, we will look silly.\"\n\nSynthex.social is now a LIVING CASE STUDY of what it sells:\n- Using the same SEO tools (DataForSEO + Semrush) as clients\n- Transparent metrics with real rankings data\n- No fake scarcity, no unverifiable claims, no dark patterns\n- All content backed by verifiable data with citations\n- Daily self-monitoring and public dashboard (/founder/synthex-seo)\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
     ],
     "deny": [],
     "ask": []
