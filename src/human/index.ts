@@ -1,21 +1,33 @@
 /**
- * Phase 11 – Wake-Window Mode & Real-Time Advisor Integration
+ * Phases 11 & 12 – Wake-Window Mode + Real-Time Dialogue Layer
  *
- * Central exports for the complete wake-window pipeline:
+ * Central exports for the complete autonomous AI pipeline:
+ *
+ * PHASE 11 – Wake-Window Mode & Real-Time Advisor Integration:
  * 1. wakeWindowEngine – Detect wake words, capture audio, transcribe locally, delete raw audio
  * 2. contextCompressionEngine – Compress transcripts to minimal context packets
  * 3. microReasoningRouter – Route to local/cloud reasoning or advisor network
  * 4. realTimeAdvisorBridge – Generate personalized advisor responses
  * 5. glassesRealtimeBridge – Output to hardware with audio/visual/haptic
  *
+ * PHASE 12 – Real-Time Dialogue Layer & Memory Consolidation:
+ * 1. dialogueStateEngine – Track conversation state, emotions, turns, memory
+ * 2. voicePersonaEngine – Apply Phill's authentic voice + energy-aware modulation
+ * 3. realtimeDialogueOrchestrator – Main loop: orchestrate user → advisor → persona → glasses
+ * 4. glassesVoiceOutput – Ultra-low-latency TTS synthesis for glasses + phone
+ * 5. dialogueSafetyFilter – Hard validation against Phase 8 governance + Phase 10 autonomy
+ * 6. dialogueMemoryConsolidator – Long-term memory consolidation with importance scoring
+ *
  * Integration points:
  * - Phase 9: personalAdvisor, businessBrain, dailyBriefingEngine
  * - Phase 10: cognitiveStateEngine, autonomyPolicyEngine, lifeSignalIngestor
  * - Phase 8: agiGovernor for governance validation
+ * - Phase 5: unified_agent_memory for long-term memory
  *
  * End-to-end flow:
  * Wake word detected → Audio captured → Transcribed locally → Context compressed
- * → Routed to advisor → Response generated → Output to glasses
+ * → Routed to advisor → Response generated → Dialogue orchestrated → Voice output
+ * → Safety validated → Memory consolidated → Output to glasses
  * Latency target: <2 seconds, Cost: <$0.01 per advisor call
  */
 
@@ -109,6 +121,122 @@ export {
   shouldShowBatteryWarning,
   estimateSessionRuntime,
 } from './glassesRealtimeBridge';
+
+// ============================================================================
+// DIALOGUE STATE ENGINE (Phase 12)
+// ============================================================================
+
+export {
+  type UserEmotion,
+  type AssistantTone,
+  type DialogueTurn,
+  type DialogueSessionState,
+  detectUserEmotion,
+  analyzeUserEnergyLevel,
+  analyzeUserConfidence,
+  createUserTurn,
+  createAssistantTurn,
+  initializeDialogueSession,
+  updateSessionAfterUserTurn,
+  updateSessionAfterAssistantTurn,
+  getShortTermContext,
+  extractMemoryFragments,
+  detectInterrupt,
+  detectBacktrackRequest,
+  endDialogueSession,
+  getSessionSummary,
+} from './dialogueStateEngine';
+
+// ============================================================================
+// VOICE PERSONA ENGINE (Phase 12)
+// ============================================================================
+
+export {
+  type PhillPersona,
+  type PersonalizedResponse,
+  type VoiceProfile,
+  PHILL_PERSONA,
+  selectAppropriateTone,
+  personalizeResponse,
+  applyCrisisMode,
+  modulateByCognitiveState,
+  validatePersonaAlignment,
+  generateSpeakingParameters,
+} from './voicePersonaEngine';
+
+// ============================================================================
+// REAL-TIME DIALOGUE ORCHESTRATOR (Phase 12)
+// ============================================================================
+
+export {
+  type DialogueOrchestrationConfig,
+  type DialogueInteraction,
+  DEFAULT_CONFIG,
+  initiateDialogueSession,
+  processDialogueInteraction,
+  handleInterrupt,
+  handleBacktrack,
+  concludeDialogueSession,
+  processConversationFlow,
+} from './realtimeDialogueOrchestrator';
+
+// ============================================================================
+// GLASSES VOICE OUTPUT (Phase 12)
+// ============================================================================
+
+export {
+  type TTSParams,
+  type AudioOutput,
+  type VoiceOutputConfig,
+  type AudioChunk,
+  type UserVoicePreferences,
+  DEFAULT_VOICE_OUTPUT_CONFIG,
+  DEFAULT_USER_VOICE_PREFERENCES,
+  selectVoiceProfile,
+  speakQuick,
+  speakAdvisory,
+  speakAlert,
+  streamAudioOutput,
+  modulateVoiceByEmotion,
+  adjustForAccessibility,
+  calculateVoiceMetrics,
+} from './glassesVoiceOutput';
+
+// ============================================================================
+// DIALOGUE SAFETY FILTER (Phase 12)
+// ============================================================================
+
+export {
+  type SafetyStatus,
+  type BlockReason,
+  type SafetyCheckResult,
+  type DialogueSafetyConfig,
+  type SafetyPolicy,
+  DEFAULT_SAFETY_CONFIG,
+  validateDialogueSafety,
+  validateBatchSafety,
+  createCustomSafetyPolicy,
+} from './dialogueSafetyFilter';
+
+// ============================================================================
+// DIALOGUE MEMORY CONSOLIDATOR (Phase 12)
+// ============================================================================
+
+export {
+  type MemoryDomain,
+  type MemoryEmotionalValence,
+  type MemoryFragment,
+  type ConsolidatedMemory,
+  type UnifiedMemorySync,
+  type MemoryRetentionPolicy,
+  DEFAULT_MEMORY_RETENTION_POLICY,
+  extractMemoryFromSession,
+  scoreMemoryImportance,
+  consolidateMemory,
+  prepareForUnifiedSync,
+  handleBidirectionalUpdate,
+  pruneMemoriesByRetentionPolicy,
+} from './dialogueMemoryConsolidator';
 
 // ============================================================================
 // RE-EXPORT PHASE 10 TYPES FOR CONVENIENCE
