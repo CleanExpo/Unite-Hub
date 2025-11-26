@@ -483,3 +483,59 @@ export async function orchestrateReportGeneration(input: any) {
     };
   }
 }
+
+/**
+ * Execute No Bluff Protocol SEO/GEO Engine from orchestrator
+ */
+export async function orchestrateNoBluffAnalysis(input: any) {
+  try {
+    const { runNoBluffAnalysis, generateNoBluffReport, generateImplementationRoadmap } = await import('./NoBluffProtocolEngine');
+
+    logger.info('🔥 Orchestrator calling No Bluff Protocol Engine', {
+      projectId: input.projectId,
+      websiteUrl: input.websiteUrl,
+      geoTargets: input.targetGeography?.length || 0,
+    });
+
+    const analysis = await runNoBluffAnalysis(
+      input.projectId,
+      input.websiteUrl,
+      input.targetGeography || [],
+      input.competitors || [],
+      input.depth || 'standard'
+    );
+
+    if (!analysis.success || !analysis.analysis) {
+      return {
+        success: false,
+        error: analysis.error,
+      };
+    }
+
+    // Generate report
+    const reportResult = await generateNoBluffReport(analysis.analysis);
+
+    // Generate roadmap
+    const roadmap = generateImplementationRoadmap(analysis.analysis);
+
+    return {
+      success: reportResult.success,
+      reportId: reportResult.reportId,
+      analysisData: {
+        keywords: analysis.analysis.keywords,
+        contentGaps: analysis.analysis.contentGaps.length,
+        quickWins: analysis.analysis.quickWins.length,
+        recommendations: analysis.analysis.recommendations.length,
+        metrics: analysis.analysis.metrics,
+      },
+      roadmap,
+      error: reportResult.error,
+    };
+  } catch (error) {
+    logger.error('❌ No Bluff Protocol execution failed', { error });
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    };
+  }
+}
