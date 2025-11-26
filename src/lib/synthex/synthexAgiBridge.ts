@@ -31,6 +31,7 @@ import {
   storeJobResult,
   getJob,
 } from './synthexJobRouter';
+import { getLLMClient } from './llmProviderClient';
 
 type SynthexProjectJob = Database['public']['Tables']['synthex_project_jobs']['Row'];
 
@@ -372,43 +373,153 @@ async function executeAgent(request: AgentExecutionRequest): Promise<AgentExecut
 async function executeContentAgent(request: AgentExecutionRequest): Promise<AgentExecutionResult> {
   const { jobId, agentPayload } = request;
   const jobType = agentPayload.jobType;
+  const startTime = Date.now();
 
-  // Enrich payload based on job type
-  let enrichedPayload = { ...agentPayload };
+  try {
+    const llmClient = getLLMClient();
+    let llmResponse: any;
 
-  if (jobType === 'initial_launch_pack') {
-    enrichedPayload = buildInitialLaunchPackPayload(
-      agentPayload,
-      agentPayload.brand,
-      agentPayload.tenant
-    );
-  } else if (jobType === 'content_batch') {
-    enrichedPayload = buildContentBatchPayload(agentPayload, agentPayload.brand);
-  } else if (jobType === 'geo_pages') {
-    enrichedPayload = buildGeoPagesPayload(agentPayload, agentPayload.brand);
-  } else if (jobType === 'review_campaign') {
-    enrichedPayload = buildReviewCampaignPayload(agentPayload, agentPayload.brand);
-  } else if (jobType === 'email_sequence') {
-    enrichedPayload = buildEmailSequencePayload(agentPayload, agentPayload.brand);
+    if (jobType === 'initial_launch_pack') {
+      // Generate comprehensive launch pack
+      llmResponse = await llmClient.generateContent(
+        'comprehensive business launch',
+        `${agentPayload.brand?.brandName || 'Your Business'} (${agentPayload.tenant?.industry})`,
+        {
+          businessName: agentPayload.tenant?.businessName,
+          tagline: agentPayload.brand?.tagline,
+          valueProposition: agentPayload.brand?.valueProposition,
+          targetAudience: agentPayload.brand?.targetAudience,
+          tone: agentPayload.brand?.toneVoice || 'professional',
+          industry: agentPayload.tenant?.industry,
+        },
+        3
+      );
+
+      return {
+        success: true,
+        jobId,
+        resultType: 'content_generated',
+        data: {
+          type: 'initial_launch_pack',
+          content: llmResponse.content,
+          generatedAt: new Date().toISOString(),
+          model: llmResponse.model,
+          tokens: {
+            input: llmResponse.inputTokens,
+            output: llmResponse.outputTokens,
+          },
+        },
+        cost: llmResponse.cost,
+        executionTimeMs: Date.now() - startTime,
+      };
+    } else if (jobType === 'content_batch') {
+      // Generate content batch
+      llmResponse = await llmClient.generateContent(
+        agentPayload.content_types?.[0] || 'marketing content',
+        agentPayload.topic || 'business promotion',
+        {
+          businessName: agentPayload.brand?.brandName,
+          tagline: agentPayload.brand?.tagline,
+          valueProposition: agentPayload.brand?.valueProposition,
+          targetAudience: agentPayload.brand?.targetAudience,
+          tone: agentPayload.brand?.toneVoice || 'professional',
+          industry: agentPayload.tenant?.industry,
+        },
+        agentPayload.count || 5
+      );
+
+      return {
+        success: true,
+        jobId,
+        resultType: 'content_generated',
+        data: {
+          type: 'content_batch',
+          contentCount: agentPayload.count || 5,
+          content: llmResponse.content,
+          generatedAt: new Date().toISOString(),
+          model: llmResponse.model,
+        },
+        cost: llmResponse.cost,
+        executionTimeMs: Date.now() - startTime,
+      };
+    } else if (jobType === 'email_sequence') {
+      // Generate email sequence
+      llmResponse = await llmClient.generateEmailSequence(
+        agentPayload.email_type || 'welcome',
+        agentPayload.email_count || 3,
+        {
+          businessName: agentPayload.brand?.brandName,
+          tagline: agentPayload.brand?.tagline,
+          tone: agentPayload.brand?.toneVoice || 'professional',
+          industry: agentPayload.tenant?.industry,
+          targetAudience: agentPayload.brand?.targetAudience,
+        }
+      );
+
+      return {
+        success: true,
+        jobId,
+        resultType: 'email_sequence',
+        data: {
+          type: 'email_sequence',
+          emailCount: agentPayload.email_count || 3,
+          content: llmResponse.content,
+          generatedAt: new Date().toISOString(),
+          model: llmResponse.model,
+        },
+        cost: llmResponse.cost,
+        executionTimeMs: Date.now() - startTime,
+      };
+    } else if (jobType === 'geo_pages') {
+      // Generate location pages
+      llmResponse = await llmClient.generateContent(
+        'location-specific landing pages',
+        `${agentPayload.service_name} in ${(agentPayload.locations || []).join(', ')}`,
+        {
+          businessName: agentPayload.brand?.brandName,
+          tagline: agentPayload.brand?.tagline,
+          tone: agentPayload.brand?.toneVoice || 'professional',
+          industry: agentPayload.tenant?.industry,
+          targetAudience: agentPayload.brand?.targetAudience,
+        },
+        (agentPayload.locations || []).length
+      );
+
+      return {
+        success: true,
+        jobId,
+        resultType: 'seo_pages',
+        data: {
+          type: 'geo_pages',
+          locations: agentPayload.locations || [],
+          content: llmResponse.content,
+          generatedAt: new Date().toISOString(),
+          model: llmResponse.model,
+        },
+        cost: llmResponse.cost,
+        executionTimeMs: Date.now() - startTime,
+      };
+    }
+
+    // Default fallback
+    return {
+      success: false,
+      jobId,
+      resultType: 'error',
+      data: {},
+      executionTimeMs: Date.now() - startTime,
+      error: `Unsupported job type: ${jobType}`,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      jobId,
+      resultType: 'error',
+      data: { error: String(error) },
+      executionTimeMs: Date.now() - startTime,
+      error: error instanceof Error ? error.message : 'Content generation failed',
+    };
   }
-
-  // For MVP: Return mock result
-  // In production: Call actual Claude API with Extended Thinking
-  return {
-    success: true,
-    jobId,
-    resultType: 'content_generated',
-    data: {
-      content: generateMockContentResult(jobType, enrichedPayload),
-      generatedAt: new Date().toISOString(),
-      model: 'claude-opus-4-1-20250805',
-      tokens: {
-        input: 2500,
-        output: 1200,
-      },
-    },
-    cost: 0.15, // Estimated cost
-  };
 }
 
 /**
