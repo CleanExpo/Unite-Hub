@@ -92,11 +92,70 @@ export default function SynthexPortfolio() {
   const [error, setError] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'health' | 'revenue' | 'recent'>('health');
+  const [actionLoading, setActionLoading] = useState<string | null>(null);
 
   // Fetch founder data on mount
   useEffect(() => {
     fetchPortfolioData();
   }, []);
+
+  const handleSendMessage = async (tenantId: string) => {
+    setActionLoading(`message-${tenantId}`);
+    try {
+      // TODO: Implement message sending
+      alert('Message feature coming soon');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleAdjustPlan = async (tenantId: string) => {
+    setActionLoading(`plan-${tenantId}`);
+    try {
+      // Navigate to plan adjustment page
+      router.push(`/founder/synthex-portfolio/adjust-plan?tenantId=${tenantId}`);
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleSuspendAccount = async (tenantId: string) => {
+    setActionLoading(`suspend-${tenantId}`);
+    try {
+      if (!confirm('Are you sure you want to suspend this account?')) {
+        return;
+      }
+
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        throw new Error('Not authenticated');
+      }
+
+      // Call API to suspend tenant
+      const response = await fetch('/api/synthex/tenant', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          tenantId,
+          status: 'suspended',
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to suspend account');
+      }
+
+      // Refresh portfolio
+      await fetchPortfolioData();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to suspend account');
+    } finally {
+      setActionLoading(null);
+    }
+  };
 
   const fetchPortfolioData = async () => {
     try {
@@ -469,9 +528,23 @@ export default function SynthexPortfolio() {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                              <DropdownMenuItem>Send message</DropdownMenuItem>
-                              <DropdownMenuItem>Adjust plan</DropdownMenuItem>
-                              <DropdownMenuItem className="text-red-600">
+                              <DropdownMenuItem
+                                onClick={() => handleSendMessage(tenant.id)}
+                                disabled={actionLoading === `message-${tenant.id}`}
+                              >
+                                Send message
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => handleAdjustPlan(tenant.id)}
+                                disabled={actionLoading === `plan-${tenant.id}`}
+                              >
+                                Adjust plan
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                className="text-red-600"
+                                onClick={() => handleSuspendAccount(tenant.id)}
+                                disabled={actionLoading === `suspend-${tenant.id}`}
+                              >
                                 Suspend account
                               </DropdownMenuItem>
                             </DropdownMenuContent>
