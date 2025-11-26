@@ -36,11 +36,17 @@ import {
   Plus,
   Settings,
   Loader2,
+  ImageIcon,
+  Film,
+  Sparkles,
 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import JobCreationModal from '@/components/synthex/JobCreationModal';
 import JobProgressCard from '@/components/synthex/JobProgressCard';
 import ResultPreviewCard from '@/components/synthex/ResultPreviewCard';
+import VisualGenerationPanel from '@/components/synthex/VisualGenerationPanel';
+import VideoCreationPanel from '@/components/synthex/VideoCreationPanel';
+import SeoAnalysisPanel from '@/components/synthex/SeoAnalysisPanel';
 
 // ============================================================================
 // TYPES
@@ -374,6 +380,18 @@ export default function SynthexDashboard() {
               <Zap size={16} />
               Jobs ({jobs.length})
             </TabsTrigger>
+            <TabsTrigger value="visual" className="gap-2">
+              <ImageIcon size={16} />
+              Visual Generation
+            </TabsTrigger>
+            <TabsTrigger value="videos" className="gap-2">
+              <Film size={16} />
+              Video Creation
+            </TabsTrigger>
+            <TabsTrigger value="seo" className="gap-2">
+              <Sparkles size={16} />
+              SEO Intelligence
+            </TabsTrigger>
             <TabsTrigger value="results" className="gap-2">
               <TrendingUp size={16} />
               Results
@@ -448,6 +466,31 @@ export default function SynthexDashboard() {
                 </CardContent>
               </Card>
             )}
+          </TabsContent>
+
+          {/* Visual Generation Tab */}
+          <TabsContent value="visual" className="space-y-4">
+            <VisualGenerationPanel
+              tenantId={tenantId || ''}
+              planCode={subscription?.planCode || 'launch'}
+            />
+          </TabsContent>
+
+          {/* Video Creation Tab */}
+          <TabsContent value="videos" className="space-y-4">
+            <VideoCreationPanel
+              tenantId={tenantId || ''}
+              planCode={subscription?.planCode || 'launch'}
+              brandName={tenant?.businessName || 'Your Brand'}
+            />
+          </TabsContent>
+
+          {/* SEO Intelligence Tab */}
+          <TabsContent value="seo" className="space-y-4">
+            <SeoAnalysisPanel
+              tenantId={tenantId || ''}
+              planCode={subscription?.planCode || 'launch'}
+            />
           </TabsContent>
 
           {/* Results Tab */}

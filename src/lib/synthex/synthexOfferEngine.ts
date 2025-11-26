@@ -16,6 +16,15 @@ import { supabaseAdmin } from '@/lib/supabase';
 // PLAN DEFINITIONS
 // ============================================================================
 
+export interface VisualGenerationCapabilities {
+  graphicsPerMonth: number; // Monthly graphics/images
+  videosPerMonth: number; // Monthly video edits
+  brandKitsPerMonth: number; // Brand kit generation
+  supportedModels: string[]; // Gemini, DALLE-3, VEO3, NanoBanana
+  aiDesignerAccess: boolean; // Full design customization
+  videoEditingFeatures: string[];
+}
+
 export interface Plan {
   code: string;
   name: string;
@@ -25,6 +34,7 @@ export interface Plan {
   idealFor: string;
   jobsPerMonth: number;
   agentAccess: string[];
+  visualCapabilities: VisualGenerationCapabilities;
 }
 
 export const PLANS: Record<string, Plan> = {
@@ -44,6 +54,14 @@ export const PLANS: Record<string, Plan> = {
     idealFor: 'Small businesses, startups',
     jobsPerMonth: 8,
     agentAccess: ['content_agent', 'research_agent'],
+    visualCapabilities: {
+      graphicsPerMonth: 10,
+      videosPerMonth: 2,
+      brandKitsPerMonth: 1,
+      supportedModels: ['gemini_3_pro', 'nano_banana_2'],
+      aiDesignerAccess: false,
+      videoEditingFeatures: ['basic_editing', 'auto_captions'],
+    },
   },
   growth: {
     code: 'growth',
@@ -63,6 +81,14 @@ export const PLANS: Record<string, Plan> = {
     idealFor: 'Growing agencies, established businesses',
     jobsPerMonth: 25,
     agentAccess: ['content_agent', 'research_agent', 'analysis_agent', 'coordination_agent'],
+    visualCapabilities: {
+      graphicsPerMonth: 50,
+      videosPerMonth: 10,
+      brandKitsPerMonth: 3,
+      supportedModels: ['gemini_3_pro', 'nano_banana_2', 'dalle_3', 'veo3'],
+      aiDesignerAccess: true,
+      videoEditingFeatures: ['basic_editing', 'auto_captions', 'transitions', 'effects', 'music_library'],
+    },
   },
   scale: {
     code: 'scale',
@@ -90,6 +116,23 @@ export const PLANS: Record<string, Plan> = {
       'business_brain',
       'parallel_phill',
     ],
+    visualCapabilities: {
+      graphicsPerMonth: -1, // Unlimited
+      videosPerMonth: -1, // Unlimited
+      brandKitsPerMonth: -1, // Unlimited
+      supportedModels: ['gemini_3_pro', 'nano_banana_2', 'dalle_3', 'veo3', 'imagen2'],
+      aiDesignerAccess: true,
+      videoEditingFeatures: [
+        'basic_editing',
+        'auto_captions',
+        'transitions',
+        'effects',
+        'music_library',
+        'advanced_color_grading',
+        'custom_animations',
+        'stock_footage_integration',
+      ],
+    },
   },
 };
 
@@ -561,4 +604,87 @@ export async function getOfferStats(): Promise<{
   }
 
   return stats;
+}
+
+// ============================================================================
+// VISUAL GENERATION CAPABILITIES
+// ============================================================================
+
+/**
+ * Get visual generation capabilities for a plan
+ */
+export function getVisualCapabilities(planCode: string): VisualGenerationCapabilities | null {
+  const plan = PLANS[planCode];
+  return plan?.visualCapabilities || null;
+}
+
+/**
+ * Check if plan supports a specific visual model
+ */
+export function supportsVisualModel(planCode: string, model: string): boolean {
+  const capabilities = getVisualCapabilities(planCode);
+  return capabilities?.supportedModels.includes(model) || false;
+}
+
+/**
+ * Get graphics quota for a plan
+ */
+export function getGraphicsQuota(planCode: string): number {
+  const capabilities = getVisualCapabilities(planCode);
+  return capabilities?.graphicsPerMonth || 0;
+}
+
+/**
+ * Get video editing quota for a plan
+ */
+export function getVideoQuota(planCode: string): number {
+  const capabilities = getVisualCapabilities(planCode);
+  return capabilities?.videosPerMonth || 0;
+}
+
+/**
+ * Get brand kit quota for a plan
+ */
+export function getBrandKitQuota(planCode: string): number {
+  const capabilities = getVisualCapabilities(planCode);
+  return capabilities?.brandKitsPerMonth || 0;
+}
+
+/**
+ * Check if plan has access to AI designer
+ */
+export function hasAIDesignerAccess(planCode: string): boolean {
+  const capabilities = getVisualCapabilities(planCode);
+  return capabilities?.aiDesignerAccess || false;
+}
+
+/**
+ * Get available video editing features for a plan
+ */
+export function getVideoFeatures(planCode: string): string[] {
+  const capabilities = getVisualCapabilities(planCode);
+  return capabilities?.videoEditingFeatures || [];
+}
+
+/**
+ * Get visual generation summary for all plans
+ */
+export function getVisualGenerationSummary(): Array<{
+  planCode: string;
+  planName: string;
+  graphicsPerMonth: number;
+  videosPerMonth: number;
+  brandKitsPerMonth: number;
+  aiDesignerAccess: boolean;
+  supportedModels: string[];
+}> {
+  return Object.entries(PLANS).map(([code, plan]) => ({
+    planCode: code,
+    planName: plan.name,
+    graphicsPerMonth: plan.visualCapabilities.graphicsPerMonth,
+    videosPerMonth: plan.visualCapabilities.videosPerMonth,
+    brandKitsPerMonth: plan.visualCapabilities.brandKitsPerMonth,
+    aiDesignerAccess: plan.visualCapabilities.aiDesignerAccess,
+    supportedModels: plan.visualCapabilities.supportedModels,
+  }));
 }
