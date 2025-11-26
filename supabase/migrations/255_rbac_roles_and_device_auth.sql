@@ -78,12 +78,14 @@ CREATE INDEX IF NOT EXISTS idx_admin_devices_fingerprint
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policy: Users can view their own profile
-CREATE POLICY IF NOT EXISTS rls_profiles_self_view ON public.profiles
+DROP POLICY IF EXISTS rls_profiles_self_view ON public.profiles;
+CREATE POLICY rls_profiles_self_view ON public.profiles
   FOR SELECT
   USING (auth.uid() = id);
 
 -- RLS Policy: Users can update their own profile (except role)
-CREATE POLICY IF NOT EXISTS rls_profiles_self_update ON public.profiles
+DROP POLICY IF EXISTS rls_profiles_self_update ON public.profiles;
+CREATE POLICY rls_profiles_self_update ON public.profiles
   FOR UPDATE
   USING (auth.uid() = id)
   WITH CHECK (auth.uid() = id AND role = OLD.role);
@@ -92,12 +94,14 @@ CREATE POLICY IF NOT EXISTS rls_profiles_self_update ON public.profiles
 ALTER TABLE public.admin_approvals ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policy: Users can view their own approval requests
-CREATE POLICY IF NOT EXISTS rls_admin_approvals_own ON public.admin_approvals
+DROP POLICY IF EXISTS rls_admin_approvals_own ON public.admin_approvals;
+CREATE POLICY rls_admin_approvals_own ON public.admin_approvals
   FOR SELECT
   USING (auth.uid() = user_id OR auth.uid() = approved_by);
 
 -- RLS Policy: Only Phill can approve
-CREATE POLICY IF NOT EXISTS rls_admin_approvals_approve ON public.admin_approvals
+DROP POLICY IF EXISTS rls_admin_approvals_approve ON public.admin_approvals;
+CREATE POLICY rls_admin_approvals_approve ON public.admin_approvals
   FOR UPDATE
   USING (
     EXISTS (
@@ -111,7 +115,8 @@ CREATE POLICY IF NOT EXISTS rls_admin_approvals_approve ON public.admin_approval
 ALTER TABLE public.admin_trusted_devices ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policy: Users can view their own devices
-CREATE POLICY IF NOT EXISTS rls_admin_devices_own ON public.admin_trusted_devices
+DROP POLICY IF EXISTS rls_admin_devices_own ON public.admin_trusted_devices;
+CREATE POLICY rls_admin_devices_own ON public.admin_trusted_devices
   FOR SELECT
   USING (auth.uid() = user_id);
 
@@ -266,7 +271,8 @@ CREATE INDEX IF NOT EXISTS idx_admin_access_audit_created
 ALTER TABLE public.admin_access_audit ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policy: Only admins can view audit logs
-CREATE POLICY IF NOT EXISTS rls_audit_admin_only ON public.admin_access_audit
+DROP POLICY IF EXISTS rls_audit_admin_only ON public.admin_access_audit;
+CREATE POLICY rls_audit_admin_only ON public.admin_access_audit
   FOR SELECT
   USING (
     EXISTS (
