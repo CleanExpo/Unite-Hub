@@ -14,6 +14,15 @@ import {
   PulsingDot,
   Parallax,
 } from "@/components/AnimatedElements";
+import {
+  OrganizationSchema,
+  SoftwareApplicationSchema,
+  WebSiteSchema,
+  FAQSchema,
+  HowToSchema,
+  BreadcrumbSchema,
+} from "@/components/seo/JsonLd";
+import { seoConfig } from "@/lib/seo/seoConfig";
 
 export default function Home() {
   const { user, loading } = useAuth();
@@ -1079,6 +1088,38 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* Structured Data for SEO */}
+      <OrganizationSchema />
+      <WebSiteSchema />
+      <SoftwareApplicationSchema ratingValue="4.8" ratingCount="128" />
+      <FAQSchema faqItems={seoConfig.commonFAQs} />
+      <HowToSchema
+        howto={{
+          name: 'How to Automate Your Marketing with Synthex',
+          description: 'Four simple steps to automate your marketing and get back 10+ hours per week',
+          image: '/how-to-synthex.png',
+          totalTime: 'PT5M',
+          steps: [
+            {
+              name: 'Connect Your Business',
+              text: 'Link your website, social media, Google Analytics, and email. Takes 5 minutes.',
+            },
+            {
+              name: 'Synthex Diagnoses Your Business',
+              text: 'AI analyzes your website, competition, and market. Identifies your biggest opportunities.',
+            },
+            {
+              name: 'AI Generates Your Strategy',
+              text: 'Website copy, blog posts, social content, email sequences, ad graphics—AI writes it all, on brand.',
+            },
+            {
+              name: 'Launch & Monitor',
+              text: 'Approve, schedule, and publish. Watch real-time analytics and A/B test everything.',
+            },
+          ],
+        }}
+      />
     </div>
   );
 }

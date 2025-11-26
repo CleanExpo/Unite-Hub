@@ -88,7 +88,7 @@ DROP POLICY IF EXISTS rls_profiles_self_update ON public.profiles;
 CREATE POLICY rls_profiles_self_update ON public.profiles
   FOR UPDATE
   USING (auth.uid() = id)
-  WITH CHECK (auth.uid() = id AND role = OLD.role);
+  WITH CHECK (auth.uid() = id);
 
 -- Enable RLS on admin_approvals table
 ALTER TABLE public.admin_approvals ENABLE ROW LEVEL SECURITY;

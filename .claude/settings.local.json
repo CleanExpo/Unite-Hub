@@ -1,20 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(\"PHASE_4_COMPLETION_REPORT.md\" )",
-      "Bash(\"PHASE_4_EXECUTION_API_GUIDE.md\" )",
-      "Bash(\"src/lib/strategy/execution-engine.ts\" )",
-      "Bash(\"src/lib/strategy/agent-task-propagator.ts\" )",
-      "Bash(\"src/lib/strategy/execution-health-monitor.ts\" )",
-      "Bash(\"src/lib/strategy/execution-bridge.ts\" )",
-      "Bash(\"src/app/api/executions/\" )",
-      "Bash(\"src/components/ExecutionDashboard.tsx\" )",
-      "Bash(\"supabase/migrations/237_phase_4_execution_system.sql\")",
-      "Bash(echo:*)",
-      "Bash(npm search:*)",
-      "Bash(docker:*)",
-      "Bash(cat:*)",
-      "Bash(curl:*)"
+      "Bash(timeout 90 npm run build:*)",
+      "Bash(node -c:*)",
+      "Bash(node --version:*)",
+      "Bash(ls -la \"d:\\Unite-Hub\\supabase\\migrations\"\" | grep -i \"25[0-9] \")"
     ],
     "deny": [],
     "ask": []

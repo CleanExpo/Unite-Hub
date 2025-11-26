@@ -214,6 +214,9 @@ export async function middleware(req: NextRequest) {
 export const config = {
   matcher: [
     "/dashboard/:path*",
+    "/crm/:path*",
+    "/auth/:path*",
+    "/synthex/:path*",
     "/login",
     "/register",
     "/forgot-password",

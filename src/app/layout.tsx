@@ -22,26 +22,26 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Unite-Hub | AI-Powered CRM & Marketing Automation",
-    template: "%s | Unite-Hub"
+    default: "Synthex - AI Marketing Platform for Small Businesses",
+    template: "%s | Synthex"
   },
-  description: "AI-first customer relationship and marketing automation platform. Manage contacts, automate campaigns, and grow your business with intelligent AI agents.",
-  keywords: ["CRM", "AI", "Marketing Automation", "Contact Management", "Email Campaigns", "Lead Scoring", "Business Growth"],
-  authors: [{ name: "Unite-Hub" }],
-  creator: "Unite-Hub",
-  publisher: "Unite-Hub",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://unite-hub.com'),
+  description: "AI-powered marketing without the agency bill. Get website optimization, SEO, social media, and content creation automated for your small business. No retainer. No complexity.",
+  keywords: ["AI marketing platform", "small business marketing", "AI SEO tools", "marketing automation", "local SEO", "social media automation", "AI copywriting", "affordable marketing"],
+  authors: [{ name: "Synthex" }],
+  creator: "Synthex",
+  publisher: "Synthex",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://synthex.social'),
   openGraph: {
-    title: "Unite-Hub - AI-Powered CRM & Marketing Automation",
-    description: "Transform your customer relationships with AI-powered automation, intelligent lead scoring, and personalized campaigns.",
-    url: 'https://unite-hub.com',
-    siteName: 'Unite-Hub',
+    title: "Synthex - AI Marketing Without the Agency Bill",
+    description: "Finally, an AI platform built for REAL small businesses. Marketing, SEO, branding, and social media handled by AI.",
+    url: 'https://synthex.social',
+    siteName: 'Synthex',
     images: [
       {
-        url: '/logos/unite-hub-logo.png',
+        url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Unite-Hub Logo',
+        alt: 'Synthex - AI Marketing Platform',
       }
     ],
     locale: 'en_US',
@@ -49,9 +49,11 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Unite-Hub - AI-Powered CRM',
-    description: 'Transform your customer relationships with AI-powered automation',
-    images: ['/logos/unite-hub-logo.png'],
+    title: 'Synthex - AI Marketing for Small Businesses',
+    description: 'Marketing automation without the complexity or agency costs',
+    images: ['/og-image.png'],
+    creator: '@synthexsocial',
+    site: '@synthexsocial',
   },
   icons: {
     icon: [
@@ -72,6 +74,17 @@ export const metadata: Metadata = {
     ],
   },
   manifest: '/site.webmanifest',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 };
 
 export default function RootLayout({
