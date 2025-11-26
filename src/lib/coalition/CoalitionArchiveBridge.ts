@@ -11,7 +11,7 @@ export interface CoalitionArchiveEntry {
   coalitionId: string;
   taskId: string;
   agentIds: string[];
-  synergySc ore: number;
+  synergyScore: number;
   outcome: 'success' | 'partial_success' | 'failure';
   executionTime: number;
   completedAt: string;
@@ -84,7 +84,7 @@ export class CoalitionArchiveBridge {
    */
   private async detectAndRecordPattern(entry: CoalitionArchiveEntry): Promise<void> {
     // Pattern 1: High Synergy Coalition
-    if (entry.synergySc ore >= 80) {
+    if (entry.synergyScore >= 80) {
       this.recordPattern('high_synergy_coalition', entry);
     }
 
@@ -146,7 +146,7 @@ export class CoalitionArchiveBridge {
 
     // Update statistics
     pattern.occurrenceCount++;
-    pattern.averageSynergy = (pattern.averageSynergy * (pattern.occurrenceCount - 1) + entry.synergySc ore) / pattern.occurrenceCount;
+    pattern.averageSynergy = (pattern.averageSynergy * (pattern.occurrenceCount - 1) + entry.synergyScore) / pattern.occurrenceCount;
 
     const isSuccess = entry.outcome === 'success' ? 1 : entry.outcome === 'partial_success' ? 0.5 : 0;
     pattern.successRate = (pattern.successRate * (pattern.occurrenceCount - 1) + isSuccess) / pattern.occurrenceCount;
@@ -227,7 +227,7 @@ export class CoalitionArchiveBridge {
     // Basic counts
     const successfulCoalitions = entries.filter((e) => e.outcome === 'success').length;
     const failedCoalitions = entries.filter((e) => e.outcome === 'failure').length;
-    const averageSynergy = entries.reduce((sum, e) => sum + e.synergySc ore, 0) / entries.length;
+    const averageSynergy = entries.reduce((sum, e) => sum + e.synergyScore, 0) / entries.length;
 
     // Most effective agent pairs
     const agentPairMap = new Map<string, { count: number; successes: number }>();

@@ -152,7 +152,7 @@ export async function GET(req: NextRequest) {
           taskId: c.task_id,
           leaderId: c.leader_id,
           agentCount: (c.agent_ids || []).length,
-          synergySc ore: c.synergy_score,
+          synergyScore: c.synergy_score,
           outcome: c.outcome,
           executionTime: c.execution_time_ms,
           patternType: c.pattern_type,

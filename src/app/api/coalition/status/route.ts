@@ -107,7 +107,7 @@ export async function GET(req: NextRequest) {
         taskId: activeProposal.task_id,
         taskComplexity: activeProposal.task_complexity,
         agentIds: activeProposal.agent_ids,
-        synergySc ore: activeProposal.synergy_score,
+        synergyScore: activeProposal.synergy_score,
         recommendedLeader: activeProposal.recommended_leader,
         estimatedOutcome: activeProposal.estimated_outcome,
         safetyApproved: activeProposal.safety_approved,
@@ -135,7 +135,7 @@ export async function GET(req: NextRequest) {
         .map((h: any) => ({
           taskId: h.task_id,
           agentCount: (h.agent_ids || []).length,
-          synergySc ore: h.synergy_score,
+          synergyScore: h.synergy_score,
           outcome: h.outcome,
           completedAt: h.completed_at,
         })),

@@ -72,10 +72,10 @@ Synthex Team`,
     }),
 
     unite_hub: (name: string): EmailTemplate => ({
-      subject: 'Streamline Your Operations – Let's Talk',
+      subject: 'Streamline Your Operations – Let\'s Talk',
       body: `Hi ${name},
 
-Following up on my previous email about Unite-Hub's operations platform.
+Following up on my previous email about Unite-Hub\'s operations platform.
 
 We help trade businesses automate daily tasks, manage contacts, and coordinate teams from one place—saving hours per week.
 

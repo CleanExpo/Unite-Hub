@@ -49,7 +49,7 @@ export interface CoalitionHistory {
   coalitionId: string;
   taskId: string;
   agentIds: string[];
-  synergySc ore: number;
+  synergyScore: number;
   outcome: 'success' | 'partial_success' | 'failure';
   executionTime: number;
   completedAt: string;

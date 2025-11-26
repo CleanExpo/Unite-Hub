@@ -24,11 +24,11 @@ export function CoalitionSynergyPanel({ workspaceId }: CoalitionSynergyPanelProp
     if (historicalCoalitions.length < 2) return null;
 
     const recent = historicalCoalitions.slice(0, 10);
-    const scores = recent.map((c) => c.synergySc ore);
+    const scores = recent.map((c) => c.synergyScore);
 
     const avgRecent = scores.reduce((a, b) => a + b, 0) / scores.length;
     const avgAll =
-      historicalCoalitions.reduce((sum, c) => sum + c.synergySc ore, 0) /
+      historicalCoalitions.reduce((sum, c) => sum + c.synergyScore, 0) /
       historicalCoalitions.length;
 
     return {
@@ -65,12 +65,12 @@ export function CoalitionSynergyPanel({ workspaceId }: CoalitionSynergyPanelProp
   return (
     <div className="space-y-6">
       {/* Main Synergy Score */}
-      <div className={`rounded-lg p-6 ${getSynergyColor(activeCoalition.synergySc ore)}`}>
+      <div className={`rounded-lg p-6 ${getSynergyColor(activeCoalition.synergyScore)}`}>
         <p className="text-xs font-semibold opacity-75 mb-2">Current Synergy Score</p>
         <div className="flex items-baseline justify-between gap-4">
           <div>
-            <p className="text-4xl font-bold">{formatSynergyScore(activeCoalition.synergySc ore)}</p>
-            <p className="text-sm mt-2">{getSynergyStatusLabel(activeCoalition.synergySc ore)}</p>
+            <p className="text-4xl font-bold">{formatSynergyScore(activeCoalition.synergyScore)}</p>
+            <p className="text-sm mt-2">{getSynergyStatusLabel(activeCoalition.synergyScore)}</p>
           </div>
           {synergyTrend && (
             <div className="text-right">
@@ -127,11 +127,11 @@ export function CoalitionSynergyPanel({ workspaceId }: CoalitionSynergyPanelProp
                 Capability Overlap (35%)
               </label>
               <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                {formatPercentage((activeCoalition.synergySc ore * 0.35).toFixed(1))}
+                {formatPercentage((activeCoalition.synergyScore * 0.35).toFixed(1))}
               </span>
             </div>
             <Progress
-              value={(activeCoalition.synergySc ore * 0.35)}
+              value={(activeCoalition.synergyScore * 0.35)}
               className="h-2"
             />
             <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
@@ -146,11 +146,11 @@ export function CoalitionSynergyPanel({ workspaceId }: CoalitionSynergyPanelProp
                 Skill Complement (25%)
               </label>
               <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                {formatPercentage((activeCoalition.synergySc ore * 0.25).toFixed(1))}
+                {formatPercentage((activeCoalition.synergyScore * 0.25).toFixed(1))}
               </span>
             </div>
             <Progress
-              value={(activeCoalition.synergySc ore * 0.25)}
+              value={(activeCoalition.synergyScore * 0.25)}
               className="h-2"
             />
             <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
@@ -165,11 +165,11 @@ export function CoalitionSynergyPanel({ workspaceId }: CoalitionSynergyPanelProp
                 Historical Success (20%)
               </label>
               <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                {formatPercentage((activeCoalition.synergySc ore * 0.2).toFixed(1))}
+                {formatPercentage((activeCoalition.synergyScore * 0.2).toFixed(1))}
               </span>
             </div>
             <Progress
-              value={(activeCoalition.synergySc ore * 0.2)}
+              value={(activeCoalition.synergyScore * 0.2)}
               className="h-2"
             />
             <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
@@ -184,11 +184,11 @@ export function CoalitionSynergyPanel({ workspaceId }: CoalitionSynergyPanelProp
                 Safety Profile (20%)
               </label>
               <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                {formatPercentage((activeCoalition.synergySc ore * 0.2).toFixed(1))}
+                {formatPercentage((activeCoalition.synergyScore * 0.2).toFixed(1))}
               </span>
             </div>
             <Progress
-              value={(activeCoalition.synergySc ore * 0.2)}
+              value={(activeCoalition.synergyScore * 0.2)}
               className="h-2"
             />
             <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">

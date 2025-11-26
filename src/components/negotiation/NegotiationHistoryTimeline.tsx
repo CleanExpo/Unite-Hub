@@ -102,6 +102,7 @@ export const NegotiationHistoryTimeline: React.FC<NegotiationHistoryTimelineProp
             value={filters.agent || ''}
             onChange={(e) => setFilters({ ...filters, agent: e.target.value || undefined })}
             className="text-xs bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded px-2 py-1"
+            title="Filter by agent"
           >
             <option value="">All Agents</option>
             {uniqueAgents.map((agent) => (
@@ -116,6 +117,7 @@ export const NegotiationHistoryTimeline: React.FC<NegotiationHistoryTimelineProp
             value={filters.outcome || ''}
             onChange={(e) => setFilters({ ...filters, outcome: e.target.value || undefined })}
             className="text-xs bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded px-2 py-1"
+            title="Filter by outcome"
           >
             <option value="">All Outcomes</option>
             {outcomes.map((outcome) => (
@@ -130,11 +132,12 @@ export const NegotiationHistoryTimeline: React.FC<NegotiationHistoryTimelineProp
             value={filters.consensusBand || ''}
             onChange={(e) => setFilters({ ...filters, consensusBand: e.target.value || undefined })}
             className="text-xs bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded px-2 py-1"
+            title="Filter by consensus band"
           >
             <option value="">All Consensus Levels</option>
             <option value="high">High (≥65%)</option>
             <option value="medium">Medium (50-64%)</option>
-            <option value="low">Low (<50%)</option>
+            <option value="low">Low (&lt;50%)</option>
           </select>
 
           {/* Safety Involved Filter */}
@@ -148,6 +151,7 @@ export const NegotiationHistoryTimeline: React.FC<NegotiationHistoryTimelineProp
               }
             }}
             className="text-xs bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded px-2 py-1"
+            title="Filter by safety involvement"
           >
             <option value="">All Sessions</option>
             <option value="yes">Safety Veto Only</option>

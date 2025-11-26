@@ -1,13 +1,16 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { createHash } from "crypto";
 
 /**
  * Generate device fingerprint from user agent and IP
+ * Uses Web Crypto API for Edge Runtime compatibility
  */
-function generateDeviceFingerprint(userAgent: string, ip: string): string {
-  return createHash('sha256').update(`${userAgent}:${ip}`).digest('hex');
+async function generateDeviceFingerprint(userAgent: string, ip: string): Promise<string> {
+  const data = new TextEncoder().encode(`${userAgent}:${ip}`);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
 export async function middleware(req: NextRequest) {
@@ -111,7 +114,7 @@ export async function middleware(req: NextRequest) {
                  req.headers.get('x-real-ip') ||
                  'unknown';
 
-      const deviceFingerprint = generateDeviceFingerprint(userAgent, ip);
+      const deviceFingerprint = await generateDeviceFingerprint(userAgent, ip);
 
       // Check if device is trusted
       const { data: trustedDevice } = await supabase

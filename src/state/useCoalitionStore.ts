@@ -16,7 +16,7 @@ export interface CoalitionProposal {
   taskId: string;
   taskComplexity: number;
   agentIds: string[];
-  synergySc ore: number;
+  synergyScore: number;
   recommendedLeader: string;
   estimatedOutcome: number;
   safetyApproved: boolean;
@@ -36,7 +36,7 @@ export interface CoalitionRole {
 export interface HistoricalCoalition {
   taskId: string;
   agentCount: number;
-  synergySc ore: number;
+  synergyScore: number;
   outcome: 'success' | 'partial_success' | 'failure';
   completedAt: string;
   patternType?: string;
@@ -115,7 +115,7 @@ export const useCoalitionStore = create<CoalitionStore>((set, get) => (
       const { activeCoalition } = get();
       if (!activeCoalition) return 'none';
 
-      const score = activeCoalition.synergySc ore;
+      const score = activeCoalition.synergyScore;
       if (score >= 80) return 'high';
       if (score >= 65) return 'medium';
       return 'low';

@@ -104,7 +104,7 @@ export function CoalitionHistoryTimeline({ workspaceId }: CoalitionHistoryTimeli
               <p className="text-gray-600 dark:text-gray-400">Avg Synergy</p>
               <p className="font-semibold text-gray-900 dark:text-white">
                 {formatPercentage(
-                  filteredCoalitions.reduce((sum, c) => sum + c.synergySc ore, 0) /
+                  filteredCoalitions.reduce((sum, c) => sum + c.synergyScore, 0) /
                     filteredCoalitions.length
                 )}
               </p>
@@ -169,7 +169,7 @@ function CoalitionTimelineEntry({
               <div className="flex flex-wrap items-center gap-2 text-xs text-gray-600 dark:text-gray-400">
                 <span>{coalition.agentCount} agents</span>
                 <span>•</span>
-                <span>Synergy: {formatSynergyScore(coalition.synergySc ore)}</span>
+                <span>Synergy: {formatSynergyScore(coalition.synergyScore)}</span>
                 <span>•</span>
                 <span>{getTimeElapsed(coalition.completedAt)}</span>
               </div>
@@ -201,7 +201,7 @@ function CoalitionTimelineEntry({
               <div>
                 <p className="text-gray-600 dark:text-gray-400">Synergy Score</p>
                 <p className="font-medium text-gray-900 dark:text-white">
-                  {formatSynergyScore(coalition.synergySc ore)}
+                  {formatSynergyScore(coalition.synergyScore)}
                 </p>
               </div>
               <div>
