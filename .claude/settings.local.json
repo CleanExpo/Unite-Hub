@@ -11,7 +11,8 @@
       "Bash(fi)",
       "Bash(done)",
       "Bash(xargs sed:*)",
-      "Bash(node -e:*)"
+      "Bash(node -e:*)",
+      "Bash(node scripts/test-weekly-scheduler.mjs:*)"
     ],
     "deny": [],
     "ask": []
