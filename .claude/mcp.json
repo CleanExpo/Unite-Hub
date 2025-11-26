@@ -27,6 +27,16 @@
         "DATAFORSEO_API_PASSWORD": "${DATAFORSEO_API_PASSWORD}"
       },
       "description": "DataForSEO API - SEO intelligence (SERP, competitors, keywords, backlinks, local GEO)"
+    },
+    "digitalocean": {
+      "command": "npx",
+      "args": [
+        "@digitalocean/mcp@latest"
+      ],
+      "env": {
+        "DIGITALOCEAN_API_TOKEN": "${DIGITALOCEAN_API_TOKEN}"
+      },
+      "description": "DigitalOcean MCP - Manage apps, droplets, databases, domains, and infrastructure"
     }
   }
 }
