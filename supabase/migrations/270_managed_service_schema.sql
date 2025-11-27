@@ -54,11 +54,11 @@ CREATE TABLE IF NOT EXISTS managed_service_projects (
   CONSTRAINT status_valid CHECK (status IN ('pending', 'active', 'paused', 'completed', 'cancelled'))
 );
 
-CREATE INDEX idx_managed_service_projects_tenant_status
+CREATE INDEX IF NOT EXISTS idx_managed_service_projects_tenant_status
   ON managed_service_projects(tenant_id, status);
-CREATE INDEX idx_managed_service_projects_stripe_customer
+CREATE INDEX IF NOT EXISTS idx_managed_service_projects_stripe_customer
   ON managed_service_projects(stripe_customer_id);
-CREATE INDEX idx_managed_service_projects_created
+CREATE INDEX IF NOT EXISTS idx_managed_service_projects_created
   ON managed_service_projects(created_at DESC);
 
 -- ============================================================================
@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS managed_service_contracts (
   CONSTRAINT status_valid CHECK (status IN ('draft', 'signed', 'executed', 'expired'))
 );
 
-CREATE INDEX idx_managed_service_contracts_project_status
+CREATE INDEX IF NOT EXISTS idx_managed_service_contracts_project_status
   ON managed_service_contracts(project_id, status);
 
 -- ============================================================================
@@ -135,9 +135,9 @@ CREATE TABLE IF NOT EXISTS managed_service_timelines (
   CONSTRAINT unique_project_phase UNIQUE(project_id, phase_number)
 );
 
-CREATE INDEX idx_managed_service_timelines_project_status
+CREATE INDEX IF NOT EXISTS idx_managed_service_timelines_project_status
   ON managed_service_timelines(project_id, status);
-CREATE INDEX idx_managed_service_timelines_dates
+CREATE INDEX IF NOT EXISTS idx_managed_service_timelines_dates
   ON managed_service_timelines(planned_end_date, actual_end_date);
 
 -- ============================================================================
@@ -182,13 +182,13 @@ CREATE TABLE IF NOT EXISTS managed_service_tasks (
   CONSTRAINT priority_valid CHECK (priority IN ('low', 'normal', 'high', 'critical'))
 );
 
-CREATE INDEX idx_managed_service_tasks_project_status
+CREATE INDEX IF NOT EXISTS idx_managed_service_tasks_project_status
   ON managed_service_tasks(project_id, status);
-CREATE INDEX idx_managed_service_tasks_agent
+CREATE INDEX IF NOT EXISTS idx_managed_service_tasks_agent
   ON managed_service_tasks(assigned_agent_id);
-CREATE INDEX idx_managed_service_tasks_due_date
+CREATE INDEX IF NOT EXISTS idx_managed_service_tasks_due_date
   ON managed_service_tasks(due_date);
-CREATE INDEX idx_managed_service_tasks_timeline
+CREATE INDEX IF NOT EXISTS idx_managed_service_tasks_timeline
   ON managed_service_tasks(timeline_id);
 
 -- ============================================================================
@@ -236,9 +236,9 @@ CREATE TABLE IF NOT EXISTS managed_service_reports (
   CONSTRAINT status_valid CHECK (status IN ('draft', 'sent', 'reviewed'))
 );
 
-CREATE INDEX idx_managed_service_reports_project_period
+CREATE INDEX IF NOT EXISTS idx_managed_service_reports_project_period
   ON managed_service_reports(project_id, period_start_date DESC);
-CREATE INDEX idx_managed_service_reports_status
+CREATE INDEX IF NOT EXISTS idx_managed_service_reports_status
   ON managed_service_reports(status);
 
 -- ============================================================================
@@ -267,11 +267,11 @@ CREATE TABLE IF NOT EXISTS managed_service_stripe_events (
   CONSTRAINT unique_stripe_event UNIQUE(stripe_event_id)
 );
 
-CREATE INDEX idx_managed_service_stripe_events_project
+CREATE INDEX IF NOT EXISTS idx_managed_service_stripe_events_project
   ON managed_service_stripe_events(project_id);
-CREATE INDEX idx_managed_service_stripe_events_type
+CREATE INDEX IF NOT EXISTS idx_managed_service_stripe_events_type
   ON managed_service_stripe_events(event_type, processed);
-CREATE INDEX idx_managed_service_stripe_events_received
+CREATE INDEX IF NOT EXISTS idx_managed_service_stripe_events_received
   ON managed_service_stripe_events(received_at DESC);
 
 -- ============================================================================
@@ -308,11 +308,11 @@ CREATE TABLE IF NOT EXISTS managed_service_notifications (
   CONSTRAINT status_valid CHECK (status IN ('pending', 'sent', 'bounced', 'complained'))
 );
 
-CREATE INDEX idx_managed_service_notifications_project_type
+CREATE INDEX IF NOT EXISTS idx_managed_service_notifications_project_type
   ON managed_service_notifications(project_id, notification_type);
-CREATE INDEX idx_managed_service_notifications_status
+CREATE INDEX IF NOT EXISTS idx_managed_service_notifications_status
   ON managed_service_notifications(status);
-CREATE INDEX idx_managed_service_notifications_scheduled
+CREATE INDEX IF NOT EXISTS idx_managed_service_notifications_scheduled
   ON managed_service_notifications(scheduled_for) WHERE status = 'pending';
 
 -- ============================================================================

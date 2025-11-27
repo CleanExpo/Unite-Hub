@@ -204,6 +204,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS strategy_audit_trigger ON managed_service_strategies;
 CREATE TRIGGER strategy_audit_trigger
 AFTER INSERT OR UPDATE ON managed_service_strategies
 FOR EACH ROW

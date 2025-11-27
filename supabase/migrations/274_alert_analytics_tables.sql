@@ -404,12 +404,15 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 -- Purpose: Track all analytics table changes
 -- ============================================================================
 
+DROP TRIGGER IF EXISTS alert_analytics_audit ON convex_alert_analytics;
 CREATE TRIGGER alert_analytics_audit AFTER INSERT OR UPDATE OR DELETE ON convex_alert_analytics
   FOR EACH ROW EXECUTE FUNCTION log_convex_change();
 
+DROP TRIGGER IF EXISTS alert_patterns_audit ON convex_alert_patterns;
 CREATE TRIGGER alert_patterns_audit AFTER INSERT OR UPDATE OR DELETE ON convex_alert_patterns
   FOR EACH ROW EXECUTE FUNCTION log_convex_change();
 
+DROP TRIGGER IF EXISTS alert_predictions_audit ON convex_alert_predictions;
 CREATE TRIGGER alert_predictions_audit AFTER INSERT OR UPDATE OR DELETE ON convex_alert_predictions
   FOR EACH ROW EXECUTE FUNCTION log_convex_change();
 
