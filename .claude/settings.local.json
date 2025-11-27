@@ -1,19 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm run build:*)",
-      "Bash(npm install:*)",
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(while read f)",
-      "Bash(do if head -1 \"$f\")",
-      "Bash(then echo \"$f\")",
-      "Bash(fi)",
-      "Bash(done)",
-      "Bash(xargs sed:*)",
-      "Bash(node -e:*)",
-      "Bash(node scripts/test-weekly-scheduler.mjs:*)",
-      "Bash(ls -la \"d:\\Unite-Hub\\src\\app\\api\\convex\\frameworks\"\" 2>/dev/null || echo \"Directory not found \")"
+      "Bash(ls:*)",
+      "Bash(npm test:*)"
     ],
     "deny": [],
     "ask": []
