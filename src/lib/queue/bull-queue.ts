@@ -1,0 +1,235 @@
+/**
+ * Bull Job Queue Setup
+ * Manages background jobs for alerts, analytics, and predictions
+ */
+
+import Queue, { Job, Queue as BullQueue } from 'bull';
+
+// Redis connection config
+const redisConfig = {
+  host: process.env.REDIS_HOST || 'localhost',
+  port: parseInt(process.env.REDIS_PORT || '6379'),
+  password: process.env.REDIS_PASSWORD,
+  maxRetriesPerRequest: null,
+  enableReadyCheck: false,
+};
+
+// Job Queues
+export const alertQueue: BullQueue = new Queue('alerts', {
+  redis: redisConfig,
+  defaultJobOptions: {
+    attempts: 3,
+    backoff: {
+      type: 'exponential',
+      delay: 2000,
+    },
+    removeOnComplete: {
+      age: 3600, // Remove after 1 hour
+    },
+    removeOnFail: {
+      age: 86400, // Keep failed jobs for 24 hours
+    },
+  },
+});
+
+export const analyticsQueue: BullQueue = new Queue('analytics', {
+  redis: redisConfig,
+  defaultJobOptions: {
+    attempts: 3,
+    backoff: {
+      type: 'exponential',
+      delay: 2000,
+    },
+    removeOnComplete: true,
+  },
+});
+
+export const predictionQueue: BullQueue = new Queue('predictions', {
+  redis: redisConfig,
+  defaultJobOptions: {
+    attempts: 2,
+    backoff: {
+      type: 'exponential',
+      delay: 2000,
+    },
+    removeOnComplete: {
+      age: 7200, // Remove after 2 hours
+    },
+  },
+});
+
+export const notificationQueue: BullQueue = new Queue('notifications', {
+  redis: redisConfig,
+  defaultJobOptions: {
+    attempts: 5,
+    backoff: {
+      type: 'exponential',
+      delay: 1000,
+    },
+    removeOnComplete: {
+      age: 1800, // Remove after 30 minutes
+    },
+  },
+});
+
+// Queue Event Listeners
+
+// Alert Queue Events
+alertQueue.on('completed', (job: Job) => {
+  console.log(`[Alert Queue] Job ${job.id} completed`);
+});
+
+alertQueue.on('failed', (job: Job | undefined, err: Error) => {
+  console.error(`[Alert Queue] Job failed:`, err.message);
+});
+
+alertQueue.on('error', (error: Error) => {
+  console.error('[Alert Queue] Error:', error);
+});
+
+alertQueue.on('active', (job: Job) => {
+  console.log(`[Alert Queue] Job ${job.id} started processing`);
+});
+
+// Analytics Queue Events
+analyticsQueue.on('completed', (job: Job) => {
+  console.log(`[Analytics Queue] Job ${job.id} completed`);
+});
+
+analyticsQueue.on('failed', (job: Job | undefined, err: Error) => {
+  console.error(`[Analytics Queue] Job failed:`, err.message);
+});
+
+analyticsQueue.on('error', (error: Error) => {
+  console.error('[Analytics Queue] Error:', error);
+});
+
+// Prediction Queue Events
+predictionQueue.on('completed', (job: Job) => {
+  console.log(`[Prediction Queue] Job ${job.id} completed`);
+});
+
+predictionQueue.on('failed', (job: Job | undefined, err: Error) => {
+  console.error(`[Prediction Queue] Job failed:`, err.message);
+});
+
+predictionQueue.on('error', (error: Error) => {
+  console.error('[Prediction Queue] Error:', error);
+});
+
+// Notification Queue Events
+notificationQueue.on('completed', (job: Job) => {
+  console.log(`[Notification Queue] Job ${job.id} completed`);
+});
+
+notificationQueue.on('failed', (job: Job | undefined, err: Error) => {
+  console.error(`[Notification Queue] Job failed:`, err.message);
+});
+
+notificationQueue.on('error', (error: Error) => {
+  console.error('[Notification Queue] Error:', error);
+});
+
+// Queue Management Functions
+
+/**
+ * Initialize all queue processors
+ */
+export async function initializeQueues() {
+  console.log('[Queue] Initializing all queues...');
+
+  // Clear stuck jobs
+  await Promise.all([
+    alertQueue.clean(0, 'active'),
+    analyticsQueue.clean(0, 'active'),
+    predictionQueue.clean(0, 'active'),
+    notificationQueue.clean(0, 'active'),
+  ]);
+
+  console.log('[Queue] All queues initialized');
+}
+
+/**
+ * Shutdown all queues
+ */
+export async function shutdownQueues() {
+  console.log('[Queue] Shutting down all queues...');
+
+  await Promise.all([
+    alertQueue.close(),
+    analyticsQueue.close(),
+    predictionQueue.close(),
+    notificationQueue.close(),
+  ]);
+
+  console.log('[Queue] All queues shut down');
+}
+
+/**
+ * Get queue metrics
+ */
+export async function getQueueMetrics() {
+  const metrics = {
+    alert: await alertQueue.getStats(),
+    analytics: await analyticsQueue.getStats(),
+    prediction: await predictionQueue.getStats(),
+    notification: await notificationQueue.getStats(),
+  };
+
+  return metrics;
+}
+
+/**
+ * Get queue status
+ */
+export async function getQueueStatus() {
+  const alertCounts = await alertQueue.getJobCounts();
+  const analyticsCounts = await analyticsQueue.getJobCounts();
+  const predictionCounts = await predictionQueue.getJobCounts();
+  const notificationCounts = await notificationQueue.getJobCounts();
+
+  return {
+    alert: alertCounts,
+    analytics: analyticsCounts,
+    prediction: predictionCounts,
+    notification: notificationCounts,
+  };
+}
+
+/**
+ * Get queue health
+ */
+export async function getQueueHealth() {
+  const status = await getQueueStatus();
+
+  const failed =
+    (status.alert.failed || 0) +
+    (status.analytics.failed || 0) +
+    (status.prediction.failed || 0) +
+    (status.notification.failed || 0);
+
+  const delayed =
+    (status.alert.delayed || 0) +
+    (status.analytics.delayed || 0) +
+    (status.prediction.delayed || 0) +
+    (status.notification.delayed || 0);
+
+  return {
+    healthy: failed < 10 && delayed < 50,
+    failed_jobs: failed,
+    delayed_jobs: delayed,
+    status,
+  };
+}
+
+export default {
+  alertQueue,
+  analyticsQueue,
+  predictionQueue,
+  notificationQueue,
+  initializeQueues,
+  shutdownQueues,
+  getQueueMetrics,
+  getQueueStatus,
+  getQueueHealth,
+};
