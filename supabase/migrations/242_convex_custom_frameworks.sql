@@ -271,9 +271,19 @@ CREATE TABLE IF NOT EXISTS convex_framework_usage (
 
   -- Constraints
   CONSTRAINT fk_workspace_id FOREIGN KEY (workspace_id) REFERENCES workspaces(id) ON DELETE CASCADE,
-  CONSTRAINT fk_framework_id FOREIGN KEY (framework_id) REFERENCES convex_custom_frameworks(id) ON DELETE CASCADE,
-  CONSTRAINT fk_strategy_id FOREIGN KEY (strategy_id) REFERENCES convex_strategy_scores(id) ON DELETE CASCADE
+  CONSTRAINT fk_framework_id FOREIGN KEY (framework_id) REFERENCES convex_custom_frameworks(id) ON DELETE CASCADE
 );
+
+-- Add foreign key to convex_strategy_scores if table exists (created in migration 240)
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'convex_strategy_scores') THEN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.table_constraints WHERE constraint_name = 'fk_strategy_id' AND table_name = 'convex_framework_usage') THEN
+      ALTER TABLE convex_framework_usage
+      ADD CONSTRAINT fk_strategy_id FOREIGN KEY (strategy_id) REFERENCES convex_strategy_scores(id) ON DELETE CASCADE;
+    END IF;
+  END IF;
+END $$;
 
 -- Indexes for performance
 CREATE INDEX IF NOT EXISTS idx_framework_usage_framework ON convex_framework_usage(framework_id);
