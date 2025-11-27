@@ -1,24 +1,71 @@
-# Migration 270 - Column Name Fix
+# Migration 270 - Complete Fix Summary
 
-**Status**: ✅ Fixed in commit 6ab15d3
-**Error**: `ERROR: 42703: column user_organizations.organization_id does not exist`
-**Root Cause**: Wrong column name in RLS policy
+**Status**: ✅ All issues fixed
+**Fixes Applied**: 2 critical SQL errors
 
 ---
 
-## What Was Fixed
+## Issues Fixed
+
+### Issue 1: Column Name Error (FIXED)
+
+**Commit**: 6ab15d3
+**Error**: `ERROR: 42703: column user_organizations.organization_id does not exist`
+**Root Cause**: Wrong column name in RLS policy
 
 The RLS policy `"founders_manage_projects"` in migration 270 referenced a non-existent column:
 
-### ❌ Before (Lines 341, 349)
+#### ❌ Before (Lines 341, 349)
+
 ```sql
 AND user_organizations.organization_id = managed_service_projects.tenant_id
 ```
 
-### ✅ After
+#### ✅ After
+
 ```sql
 AND user_organizations.org_id = managed_service_projects.tenant_id
 ```
+
+---
+
+### Issue 2: Missing Migration Log Table (FIXED)
+
+**Commit**: c227795 (Latest)
+**Error**: `ERROR: 42P01: relation "public.migration_log" does not exist`
+**Root Cause**: Unconditional INSERT into non-existent table
+
+The end of migration 270 attempted to log completion to `public.migration_log` without checking if the table exists:
+
+#### ❌ Before (Lines 479-486)
+
+```sql
+-- Log migration completion
+DO $$
+BEGIN
+  INSERT INTO public.migration_log (version, name, status, completed_at)
+  VALUES (270, 'managed_service_schema', 'success', NOW())
+  ON CONFLICT DO NOTHING;
+END;
+$$;
+```
+
+#### ✅ After
+
+```sql
+-- Log migration completion (if migration_log table exists)
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'migration_log') THEN
+    INSERT INTO public.migration_log (version, name, status, completed_at)
+    VALUES (270, 'managed_service_schema', 'success', NOW())
+    ON CONFLICT DO NOTHING;
+  END IF;
+END;
+$$;
+```
+
+**Pattern**: This matches the idempotent pattern used in migrations 271 and 272
 
 ---
 
@@ -46,13 +93,14 @@ Just apply it normally:
 
 ```sql
 -- Run migration 270 (managed_service_schema)
--- It will now apply successfully without column errors
+-- It will now apply successfully without errors
 ```
 
 Or if deploying to Supabase:
-1. Push code to repository
-2. Supabase will apply migration 270 with the fix
-3. No errors should occur
+
+- Push code to repository
+- Supabase will apply migration 270 with the fix
+- No errors should occur
 
 ---
 
@@ -74,7 +122,7 @@ SELECT EXISTS (SELECT 1 FROM information_schema.tables
 
 Now the full sequence is:
 
-```
+```text
 1. Migration 270 (managed_service_schema) ✅ FIXED
    ↓
 2. Migration 242 (convex_custom_frameworks)
@@ -101,4 +149,3 @@ Now the full sequence is:
 ---
 
 **All migrations are now correct and ready for deployment.**
-
