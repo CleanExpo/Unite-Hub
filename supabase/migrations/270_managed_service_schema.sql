@@ -338,7 +338,7 @@ CREATE POLICY "founders_manage_projects" ON managed_service_projects
     EXISTS (
       SELECT 1 FROM user_organizations
       WHERE user_organizations.user_id = auth.uid()
-      AND user_organizations.organization_id = managed_service_projects.tenant_id
+      AND user_organizations.org_id = managed_service_projects.tenant_id
       AND user_organizations.role = 'owner'
     )
   )
@@ -346,7 +346,7 @@ CREATE POLICY "founders_manage_projects" ON managed_service_projects
     EXISTS (
       SELECT 1 FROM user_organizations
       WHERE user_organizations.user_id = auth.uid()
-      AND user_organizations.organization_id = managed_service_projects.tenant_id
+      AND user_organizations.org_id = managed_service_projects.tenant_id
       AND user_organizations.role = 'owner'
     )
   );
