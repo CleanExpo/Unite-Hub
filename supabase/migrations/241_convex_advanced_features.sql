@@ -5,6 +5,13 @@
 -- Date: 2025-11-27
 
 -- ============================================================================
+-- EXTENSIONS (must be created first)
+-- ============================================================================
+
+-- Enable pg_trgm for full-text search before indexes that use it
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
+-- ============================================================================
 -- TABLE 1: convex_strategy_versions
 -- Purpose: Store version history for strategies with changeset tracking
 -- ============================================================================
@@ -431,13 +438,6 @@ BEGIN
   EXCEPTION WHEN duplicate_object THEN NULL;
   END;
 END $$;
-
--- ============================================================================
--- EXTENSIONS
--- ============================================================================
-
--- Enable pg_trgm for full-text search if not already enabled
-CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
 -- ============================================================================
 -- SUMMARY
