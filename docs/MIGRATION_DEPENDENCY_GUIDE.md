@@ -8,16 +8,29 @@ Phase 5 Week 3 introduced 3 new migrations (272, 273, 274) with specific depende
 
 ## Migration Dependency Chain
 
-### Migration 272: Managed Service Strategies
-**Status**: ✅ Standalone (no dependencies)
+### Migration 270: Managed Service Schema (PREREQUISITE)
+**Status**: ✅ Must be applied first
 **Tables Created**:
-- `managed_service_strategies`
+- `managed_service_projects` (referenced by migration 272)
+- Other managed service core tables
+
+**Dependencies**: None
+**Must be applied before**: Migrations 271, 272
+
+---
+
+### Migration 272: Managed Service Strategies
+**Status**: ✅ Depends on Migration 270
+**Tables Created**:
+- `managed_service_strategies` (foreign key to `managed_service_projects`)
 - `strategy_execution_phases`
 - `strategy_mutations`
 - `strategy_sub_agent_executions`
 
-**Dependencies**: None
-**Can be applied**: Immediately after previous migrations (271, etc.)
+**Dependencies**:
+- ✅ `managed_service_projects` (created in migration 270)
+
+**Can be applied**: After migration 270
 
 ---
 
@@ -89,10 +102,12 @@ EXISTS (
 ### Option 1: Full Sequential (Recommended for Fresh Database)
 
 ```
-1. All migrations up to 271
-2. Migration 272 (managed service strategies)
-3. Migration 273 (framework alerts)
-4. Migration 274 (analytics)
+1. All migrations up to 269
+2. Migration 270 (managed service projects) - PREREQUISITE
+3. Migration 271 (if exists)
+4. Migration 272 (managed service strategies)
+5. Migration 273 (framework alerts)
+6. Migration 274 (analytics)
 ```
 
 ### Option 2: Skip if Already Applied
@@ -214,9 +229,11 @@ Migration 274: Analytics & Predictions       | true
 
 | Migration | Tables | Dependencies | Status |
 |-----------|--------|--------------|--------|
-| 272 | 4 | None | ✅ Ready |
-| 273 | 3 | Migration 242 | ⚠️ Depends on 242 |
-| 274 | 4 | Migration 242 + 273 | ⚠️ Depends on 242, 273 |
+| 270 | 4+ | None | ✅ Must apply first |
+| 242 | 1+ | None | ✅ Standalone |
+| 272 | 4 | Migration 270 | ✅ After 270 |
+| 273 | 3 | Migration 242 | ✅ After 242 |
+| 274 | 4 | Migration 242 + 273 | ✅ After 242, 273 |
 
 **Action Items**:
 1. Ensure migrations are applied in numerical order
