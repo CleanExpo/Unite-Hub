@@ -12,7 +12,8 @@
       "Bash(done)",
       "Bash(xargs sed:*)",
       "Bash(node -e:*)",
-      "Bash(node scripts/test-weekly-scheduler.mjs:*)"
+      "Bash(node scripts/test-weekly-scheduler.mjs:*)",
+      "Bash(ls -la \"d:\\Unite-Hub\\src\\app\\api\\convex\\frameworks\"\" 2>/dev/null || echo \"Directory not found \")"
     ],
     "deny": [],
     "ask": []
