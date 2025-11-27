@@ -101,13 +101,28 @@ EXISTS (
 
 ### Option 1: Full Sequential (Recommended for Fresh Database)
 
+#### Phase 1: Foundation
+
+```text
+1. All migrations up to 239
+2. Migration 240 (convex_framework_tables)
+3. Migration 241 (convex_advanced_features)
 ```
-1. All migrations up to 269
-2. Migration 270 (managed service projects) - PREREQUISITE
-3. Migration 271 (if exists)
-4. Migration 272 (managed service strategies)
-5. Migration 273 (framework alerts)
-6. Migration 274 (analytics)
+
+#### Phase 2: Managed Services
+
+```text
+4. Migration 270 (managed_service_schema) ✅ FIXED
+5. Migration 271 (platform_mode_toggle)
+6. Migration 272 (managed_service_strategies)
+```
+
+#### Phase 3: Custom Frameworks & Alerts
+
+```text
+7. Migration 242 (convex_custom_frameworks) ✅ FIXED
+8. Migration 273 (convex_framework_alerts)
+9. Migration 274 (alert_analytics_tables)
 ```
 
 ### Option 2: Skip if Already Applied
@@ -227,13 +242,16 @@ Migration 274: Analytics & Predictions       | true
 
 ## Summary
 
-| Migration | Tables | Dependencies | Status |
-|-----------|--------|--------------|--------|
-| 270 | 4+ | None | ✅ Must apply first |
-| 242 | 1+ | None | ✅ Standalone |
-| 272 | 4 | Migration 270 | ✅ After 270 |
-| 273 | 3 | Migration 242 | ✅ After 242 |
-| 274 | 4 | Migration 242 + 273 | ✅ After 242, 273 |
+| Migration | Phase | Tables | Dependencies | Status |
+|-----------|-------|--------|--------------|--------|
+| 240 | Foundation | 4+ | None | ✅ Apply first |
+| 241 | Foundation | 4+ | Migration 240 | ✅ After 240 |
+| 270 | Managed Services | 7+ | None | ✅ Independent (FIXED) |
+| 271 | Managed Services | 1+ | None | ✅ Independent |
+| 272 | Managed Services | 4 | Migration 270 | ✅ After 270 |
+| 242 | Custom Frameworks | 5 | Migration 240 | ✅ After 240 (FIXED - conditional FK) |
+| 273 | Framework Alerts | 3 | Migration 242 | ✅ After 242 |
+| 274 | Analytics | 4 | Migrations 242, 273 | ✅ After 242, 273 |
 
 **Action Items**:
 1. Ensure migrations are applied in numerical order
