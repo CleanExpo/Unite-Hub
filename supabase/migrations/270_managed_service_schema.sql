@@ -476,11 +476,13 @@ CREATE INDEX IF NOT EXISTS idx_managed_service_notifications_pending
 -- MIGRATION COMPLETE
 -- ============================================================================
 
--- Log migration completion
+-- Log migration completion (if migration_log table exists)
 DO $$
 BEGIN
-  INSERT INTO public.migration_log (version, name, status, completed_at)
-  VALUES (270, 'managed_service_schema', 'success', NOW())
-  ON CONFLICT DO NOTHING;
+  IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'migration_log') THEN
+    INSERT INTO public.migration_log (version, name, status, completed_at)
+    VALUES (270, 'managed_service_schema', 'success', NOW())
+    ON CONFLICT DO NOTHING;
+  END IF;
 END;
 $$;
