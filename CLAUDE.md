@@ -33,6 +33,7 @@ Unite-Hub is an **AI-first CRM and marketing automation platform** built with:
 6. **Multimedia System** ✅ - File upload, OpenAI Whisper transcription, Claude AI analysis, full-text search
 7. **Real-Time Alerts** ✅ (Phase 5 Week 4) - WebSocket streaming, intelligent deduplication, multi-channel notifications
 8. **Advanced Analytics** ✅ (Phase 5 Week 3) - Pattern detection, predictive insights, trend analysis
+9. **SEO Enhancement Suite** ✅ (NEW) - Technical audits, content optimization, schema generation, CTR testing, competitor gap analysis
 
 ---
 
@@ -57,6 +58,8 @@ npm run test:api         # Legacy API flow tests
 npm run test:gemini      # Test Gemini 3 setup (NEW)
 npm run test:gmail-intelligence # Test Gmail intelligence extraction (NEW)
 npm run benchmark:email-intelligence # Benchmark Gemini vs Claude (NEW)
+npm run integrity:check  # Founder Intelligence OS integrity check (NEW)
+npm run founder:check    # Alias for integrity:check (NEW)
 ```
 
 ### Database
@@ -278,6 +281,55 @@ const {
 - ✅ Job success rate: 99.5%+
 - ✅ WebSocket connections: 1,000+
 - ✅ System uptime: 99.9% capable
+
+---
+
+## SEO Enhancement Suite ✅ NEW
+
+Legitimate SEO optimization toolkit integrated into Unite-Hub tier pricing.
+
+### Services (`src/lib/seoEnhancement/`)
+- **seoAuditService** - Technical audits, Core Web Vitals, mobile/security checks
+- **contentOptimizationService** - Keyword analysis, readability, search intent
+- **richResultsService** - Schema markup generation (12 types), validation
+- **ctrOptimizationService** - A/B testing, CTR benchmarking, AI variants
+- **competitorGapService** - Keyword/content/backlink gap analysis
+
+### API Routes (`/api/seo-enhancement/`)
+- `/audit` - Technical SEO audits
+- `/content` - Content optimization analysis
+- `/schema` - Schema markup generation
+- `/ctr` - CTR testing and benchmarks
+- `/competitors` - Competitor gap analysis
+
+### Quick Usage
+```typescript
+// Run audit
+const response = await fetch('/api/seo-enhancement/audit', {
+  method: 'POST',
+  headers: { Authorization: `Bearer ${token}` },
+  body: JSON.stringify({ workspaceId, url: 'https://example.com', auditType: 'full' }),
+});
+
+// Generate schema
+const schema = await fetch('/api/seo-enhancement/schema', {
+  method: 'POST',
+  headers: { Authorization: `Bearer ${token}` },
+  body: JSON.stringify({ workspaceId, url, schemaType: 'LocalBusiness' }),
+});
+```
+
+### Orchestrator Agents
+SEO tasks available via orchestrator:
+- `seo-audit` - Technical SEO analysis
+- `seo-content` - Content optimization
+- `seo-schema` - Schema generation
+- `seo-ctr` - CTR optimization
+- `seo-competitor` - Competitive analysis
+
+### Documentation
+- **Full Guide**: `docs/SEO_ENHANCEMENT_SUITE.md`
+- **API Reference**: `docs/SEO_ENHANCEMENT_API_REFERENCE.md`
 
 ---
 
@@ -879,7 +931,88 @@ const audit = await fullSEOAudit('example.com', ['competitor.com']);
 
 ---
 
+## Founder Intelligence OS
+
+**NEW** (2025-11-28): Comprehensive founder-level intelligence system integrating 8 AI agents for autonomous business operations.
+
+### Quick Start
+
+```bash
+# Verify complete installation
+npm run integrity:check
+
+# Expected output: 100% PASS
+# ✓ Database Tables: 15/15 present
+# ✓ Services: 9/9 present
+# ✓ API Routes: 23/23 present
+# ✓ Agents: 8/8 present
+# ✓ Environment: 3/3 configured
+```
+
+### System Components
+
+**Core Engines (8 AI Agents)**:
+1. **Founder OS Agent** - Main orchestrator, task automation, approval workflows
+2. **AI Phill** - Personal assistant, insights, journal entries
+3. **Cognitive Twin** - Deep memory, decision momentum, strategic digest
+4. **SEO Leak Engine** - Vulnerability detection, gap analysis
+5. **Social Inbox** - Unified inbox across platforms
+6. **Search Suite** - Keyword tracking, ranking monitoring
+7. **Boost Bump** - Browser automation for repetitive tasks
+8. **Pre-Client Identity** - Email-to-contact identity resolution
+
+**Database Schema (15 Tables)**:
+- `founder_businesses` - Multi-brand management
+- `founder_business_vault_secrets` - Encrypted credentials
+- `founder_business_signals` - Real-time health signals
+- `founder_os_snapshots` - Daily intelligence snapshots
+- `ai_phill_insights` + `ai_phill_journal_entries` - AI assistant memory
+- `cognitive_twin_scores` + `cognitive_twin_digests` + `cognitive_twin_decisions` - Strategic memory
+- `seo_leak_signal_profiles` - SEO vulnerabilities
+- `social_inbox_accounts` + `social_messages` - Social unified inbox
+- `search_keywords` - Keyword tracking
+- `boost_jobs` - Automation tasks
+- `pre_clients` - Email-derived contacts
+
+**API Routes (23 Endpoints)**:
+- `/api/founder/assistant` - AI Phill interface
+- `/api/founder/awareness` - Situational awareness
+- `/api/founder/cognitive-map` - Decision visualization
+- `/api/founder/ops/*` - Task management (10 routes)
+- `/api/founder/memory/*` - Cognitive twin (10 routes)
+- `/api/founder/settings/platform-mode` - Mode detection
+
+### Integrity Check
+
+**See**: `scripts/INTEGRITY_CHECK_README.md` for complete documentation
+
+**What it checks**:
+- All 15 database tables exist and are accessible
+- All 9 service files present with valid exports
+- All 23 API routes exist
+- All 8 agent files present with valid exports
+- All 3 required environment variables configured
+
+**Usage**:
+```bash
+npm run integrity:check    # Full verification
+npm run founder:check      # Alias
+```
+
+**Troubleshooting**:
+- Missing tables → Run migrations 300-305 in Supabase SQL Editor
+- Missing services → Check `src/lib/founderOps/`, `src/lib/founder/`
+- Missing routes → Check `src/app/api/founder/`
+- Missing agents → Check `src/lib/agents/`
+
+---
+
 ## Important Files
+
+### Founder Intelligence OS
+- **`scripts/run-integrity-check.mjs`** - Installation verification script
+- **`scripts/INTEGRITY_CHECK_README.md`** - Complete integrity check documentation
+- **Migration files** - `supabase/migrations/300-305_*.sql` (Founder OS core tables)
 
 ### Production Enhancements
 - **`PRODUCTION_GRADE_ASSESSMENT.md`** - Complete production audit (65% ready → 95% roadmap)

@@ -443,7 +443,7 @@ POST /api/founder/synthex/setup-analytics
 ✅ Keywords: 10 tracked
 ```
 
-### Professional Tier ($297/month)
+### Professional Tier ($895/month AUD inc GST)
 ```
 ✅ All Starter features
 ✅ + Competitor tracking

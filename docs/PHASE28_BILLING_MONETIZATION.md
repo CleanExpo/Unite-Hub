@@ -97,11 +97,11 @@ FOR ALL USING (
 
 **3-Tier Pricing Structure**:
 
-| Plan | Price | Billing | Target |
-|------|-------|---------|--------|
-| **Starter** | $97 AUD/mo | Monthly | Small business |
-| **Pro** | $297 AUD/mo | Monthly | Growing teams |
-| **Elite** | $997 AUD/mo | Monthly | Agencies |
+| Plan | Price (AUD inc GST) | Billing | Target |
+|------|---------------------|---------|--------|
+| **Starter** | $495/mo | Monthly | Small business |
+| **Pro** | $895/mo | Monthly | Growing teams |
+| **Elite** | $1,295/mo | Monthly | Agencies |
 
 **Feature Matrix**:
 
@@ -615,7 +615,7 @@ export async function createPortalSession(workspaceId: string) {
 **Phase 28 Complete**: 2025-11-23
 **System Status**: 🟢 BILLING READY
 **System Health**: 92%
-**Revenue Model**: 3-tier SaaS ($97-$997 AUD/mo)
+**Revenue Model**: 3-tier SaaS ($495-$1,295 AUD/mo inc GST)
 
 ---
 

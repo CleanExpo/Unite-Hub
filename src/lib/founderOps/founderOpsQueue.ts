@@ -15,6 +15,7 @@
  */
 
 import { createApiLogger } from '@/lib/logger';
+import { supabaseAdmin } from '@/lib/supabase';
 import type { FounderTask } from './founderOpsTaskLibrary';
 import type { DailyQueue, ScheduledTask } from './founderOpsScheduler';
 
@@ -86,24 +87,44 @@ export class FounderOpsQueueManager {
       date: dateStr,
     });
 
-    // TODO: Fetch from database (founder_ops_queue table)
-    // For now, return mock status
+    try {
+      // Query tasks for the given date
+      const { data: tasks, error } = await supabaseAdmin
+        .from('founder_ops_tasks')
+        .select('id, status')
+        .eq('workspace_id', this.workspaceId)
+        .gte('scheduled_for', `${dateStr}T00:00:00`)
+        .lt('scheduled_for', `${dateStr}T23:59:59`);
 
-    const mockStatus: QueueStatus = {
-      id: `queue_${dateStr}`,
-      workspace_id: this.workspaceId,
-      queue_date: dateStr,
-      status: 'active',
-      total_tasks: 0,
-      completed_tasks: 0,
-      in_progress_tasks: 0,
-      pending_tasks: 0,
-      is_paused: false,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    };
+      if (error) {
+        logger.error('Error fetching queue status', { error: error.message });
+        return null;
+      }
 
-    return mockStatus;
+      const taskList = tasks || [];
+      const completed = taskList.filter(t => t.status === 'completed').length;
+      const inProgress = taskList.filter(t => t.status === 'in_progress').length;
+      const pending = taskList.filter(t => ['scheduled', 'draft', 'pending_review'].includes(t.status)).length;
+
+      const queueStatus: QueueStatus = {
+        id: `queue_${dateStr}_${this.workspaceId}`,
+        workspace_id: this.workspaceId,
+        queue_date: dateStr,
+        status: completed === taskList.length && taskList.length > 0 ? 'completed' : 'active',
+        total_tasks: taskList.length,
+        completed_tasks: completed,
+        in_progress_tasks: inProgress,
+        pending_tasks: pending,
+        is_paused: false,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+
+      return queueStatus;
+    } catch (err) {
+      logger.error('Exception fetching queue status', { error: err });
+      return null;
+    }
   }
 
   /**
@@ -117,38 +138,94 @@ export class FounderOpsQueueManager {
       date: dateStr,
     });
 
-    // TODO: Calculate from database
-    // For now, return mock metrics
+    try {
+      const { data: tasks, error } = await supabaseAdmin
+        .from('founder_ops_tasks')
+        .select('id, status, estimated_duration_minutes, started_at, completed_at')
+        .eq('workspace_id', this.workspaceId)
+        .gte('scheduled_for', `${dateStr}T00:00:00`)
+        .lt('scheduled_for', `${dateStr}T23:59:59`);
 
-    const metrics: QueueMetrics = {
-      date: dateStr,
-      total_tasks: 0,
-      completed: 0,
-      in_progress: 0,
-      pending: 0,
-      completion_percentage: 0,
-      estimated_time_remaining_minutes: 0,
-      time_elapsed_minutes: 0,
-      average_task_duration_minutes: 0,
-    };
+      if (error) {
+        logger.error('Error fetching queue metrics', { error: error.message });
+      }
 
-    return metrics;
+      const taskList = tasks || [];
+      const completed = taskList.filter(t => t.status === 'completed').length;
+      const inProgress = taskList.filter(t => t.status === 'in_progress').length;
+      const pending = taskList.filter(t => ['scheduled', 'draft', 'pending_review'].includes(t.status)).length;
+
+      const completedTasks = taskList.filter(t => t.completed_at && t.started_at);
+      const totalDuration = completedTasks.reduce((sum, t) => {
+        const start = new Date(t.started_at).getTime();
+        const end = new Date(t.completed_at).getTime();
+        return sum + (end - start) / (1000 * 60);
+      }, 0);
+      const avgDuration = completedTasks.length > 0 ? totalDuration / completedTasks.length : 0;
+
+      const remainingEstimate = taskList
+        .filter(t => t.status !== 'completed')
+        .reduce((sum, t) => sum + (t.estimated_duration_minutes || 15), 0);
+
+      const metrics: QueueMetrics = {
+        date: dateStr,
+        total_tasks: taskList.length,
+        completed,
+        in_progress: inProgress,
+        pending,
+        completion_percentage: taskList.length > 0 ? Math.round((completed / taskList.length) * 100) : 0,
+        estimated_time_remaining_minutes: remainingEstimate,
+        time_elapsed_minutes: Math.round(totalDuration),
+        average_task_duration_minutes: Math.round(avgDuration),
+      };
+
+      return metrics;
+    } catch (err) {
+      logger.error('Exception calculating queue metrics', { error: err });
+      return {
+        date: dateStr,
+        total_tasks: 0,
+        completed: 0,
+        in_progress: 0,
+        pending: 0,
+        completion_percentage: 0,
+        estimated_time_remaining_minutes: 0,
+        time_elapsed_minutes: 0,
+        average_task_duration_minutes: 0,
+      };
+    }
   }
 
   /**
    * Get all queues for a date range
    */
   async getQueuesInRange(startDate: Date, endDate: Date): Promise<QueueStatus[]> {
+    const startStr = this.formatDate(startDate);
+    const endStr = this.formatDate(endDate);
+
     logger.info('Fetching queues in range', {
       workspaceId: this.workspaceId,
-      startDate: this.formatDate(startDate),
-      endDate: this.formatDate(endDate),
+      startDate: startStr,
+      endDate: endStr,
     });
 
-    // TODO: Fetch from database
-    // For now, return empty array
+    try {
+      const queues: QueueStatus[] = [];
+      const current = new Date(startDate);
 
-    return [];
+      while (current <= endDate) {
+        const status = await this.getQueueStatus(current);
+        if (status) {
+          queues.push(status);
+        }
+        current.setDate(current.getDate() + 1);
+      }
+
+      return queues;
+    } catch (err) {
+      logger.error('Exception fetching queues in range', { error: err });
+      return [];
+    }
   }
 
   // ====================================
@@ -168,13 +245,29 @@ export class FounderOpsQueueManager {
       reason,
     });
 
-    // TODO: Update database
-    // - Set is_paused = true
-    // - Set paused_at = now
-    // - Set paused_by = userId
-    // - Update status = 'paused'
+    try {
+      // Update all scheduled tasks for this date to 'paused' status
+      const { error } = await supabaseAdmin
+        .from('founder_ops_tasks')
+        .update({
+          status: 'paused',
+          updated_at: new Date().toISOString(),
+        })
+        .eq('workspace_id', this.workspaceId)
+        .eq('status', 'scheduled')
+        .gte('scheduled_for', `${dateStr}T00:00:00`)
+        .lt('scheduled_for', `${dateStr}T23:59:59`);
 
-    logger.info('Queue paused', { date: dateStr });
+      if (error) {
+        logger.error('Error pausing queue', { error: error.message });
+        throw error;
+      }
+
+      logger.info('Queue paused', { date: dateStr, userId, reason });
+    } catch (err) {
+      logger.error('Exception pausing queue', { error: err });
+      throw err;
+    }
   }
 
   /**
@@ -189,13 +282,29 @@ export class FounderOpsQueueManager {
       userId,
     });
 
-    // TODO: Update database
-    // - Set is_paused = false
-    // - Clear paused_at
-    // - Clear paused_by
-    // - Update status = 'active'
+    try {
+      // Update all paused tasks for this date back to 'scheduled' status
+      const { error } = await supabaseAdmin
+        .from('founder_ops_tasks')
+        .update({
+          status: 'scheduled',
+          updated_at: new Date().toISOString(),
+        })
+        .eq('workspace_id', this.workspaceId)
+        .eq('status', 'paused')
+        .gte('scheduled_for', `${dateStr}T00:00:00`)
+        .lt('scheduled_for', `${dateStr}T23:59:59`);
 
-    logger.info('Queue resumed', { date: dateStr });
+      if (error) {
+        logger.error('Error resuming queue', { error: error.message });
+        throw error;
+      }
+
+      logger.info('Queue resumed', { date: dateStr, userId });
+    } catch (err) {
+      logger.error('Exception resuming queue', { error: err });
+      throw err;
+    }
   }
 
   /**
@@ -211,12 +320,29 @@ export class FounderOpsQueueManager {
       reason,
     });
 
-    // TODO: Update database
-    // - Set all pending tasks to 'archived' status
-    // - Update queue status = 'completed'
-    // - Log cancellation to audit logs
+    try {
+      // Archive all non-completed tasks for this date
+      const { error } = await supabaseAdmin
+        .from('founder_ops_tasks')
+        .update({
+          status: 'archived',
+          updated_at: new Date().toISOString(),
+        })
+        .eq('workspace_id', this.workspaceId)
+        .in('status', ['scheduled', 'paused', 'draft', 'pending_review'])
+        .gte('scheduled_for', `${dateStr}T00:00:00`)
+        .lt('scheduled_for', `${dateStr}T23:59:59`);
 
-    logger.info('Queue canceled', { date: dateStr });
+      if (error) {
+        logger.error('Error canceling queue', { error: error.message });
+        throw error;
+      }
+
+      logger.info('Queue canceled', { date: dateStr, userId, reason });
+    } catch (err) {
+      logger.error('Exception canceling queue', { error: err });
+      throw err;
+    }
   }
 
   /**
@@ -232,18 +358,33 @@ export class FounderOpsQueueManager {
       userId,
     });
 
-    // TODO: Update database
-    // - Update scheduled_order for each task based on position in taskIds array
+    try {
+      // Update scheduled_order for each task based on position in taskIds array
+      for (let i = 0; i < taskIds.length; i++) {
+        const taskId = taskIds[i];
+        const order = i + 1;
 
-    for (let i = 0; i < taskIds.length; i++) {
-      const taskId = taskIds[i];
-      const order = i + 1;
+        const { error } = await supabaseAdmin
+          .from('founder_ops_tasks')
+          .update({
+            priority_order: order,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', taskId)
+          .eq('workspace_id', this.workspaceId);
 
-      // Update task with new order
-      logger.debug('Updating task order', { taskId, order });
+        if (error) {
+          logger.error('Error updating task order', { taskId, order, error: error.message });
+        } else {
+          logger.debug('Updated task order', { taskId, order });
+        }
+      }
+
+      logger.info('Queue reordered', { date: dateStr, taskCount: taskIds.length });
+    } catch (err) {
+      logger.error('Exception reordering queue', { error: err });
+      throw err;
     }
-
-    logger.info('Queue reordered', { date: dateStr });
   }
 
   // ====================================
@@ -255,25 +396,59 @@ export class FounderOpsQueueManager {
    */
   async getCurrentQueue(): Promise<DailyQueue> {
     const today = new Date();
+    const dateStr = this.formatDate(today);
 
     logger.info('Fetching current queue', {
       workspaceId: this.workspaceId,
-      date: this.formatDate(today),
+      date: dateStr,
     });
 
-    // TODO: Use scheduler to get daily queue
-    // For now, return empty queue
+    try {
+      const { data: tasks, error } = await supabaseAdmin
+        .from('founder_ops_tasks')
+        .select('*')
+        .eq('workspace_id', this.workspaceId)
+        .gte('scheduled_for', `${dateStr}T00:00:00`)
+        .lt('scheduled_for', `${dateStr}T23:59:59`)
+        .order('priority_order', { ascending: true });
 
-    const emptyQueue: DailyQueue = {
-      date: this.formatDate(today),
-      tasks: [],
-      total_duration_minutes: 0,
-      capacity_used_percentage: 0,
-      by_brand: {},
-      by_priority: { low: 0, medium: 0, high: 0, urgent: 0 },
-    };
+      if (error) {
+        logger.error('Error fetching current queue', { error: error.message });
+      }
 
-    return emptyQueue;
+      const taskList = tasks || [];
+      const totalDuration = taskList.reduce((sum, t) => sum + (t.estimated_duration_minutes || 15), 0);
+      const byBrand: Record<string, number> = {};
+      const byPriority = { low: 0, medium: 0, high: 0, urgent: 0 };
+
+      taskList.forEach(t => {
+        byBrand[t.brand_slug || 'unknown'] = (byBrand[t.brand_slug || 'unknown'] || 0) + 1;
+        const p = t.priority as keyof typeof byPriority;
+        if (p in byPriority) byPriority[p]++;
+      });
+
+      const dailyCapacityMinutes = 480; // 8 hours
+      const queue: DailyQueue = {
+        date: dateStr,
+        tasks: taskList as unknown as ScheduledTask[],
+        total_duration_minutes: totalDuration,
+        capacity_used_percentage: Math.min(100, Math.round((totalDuration / dailyCapacityMinutes) * 100)),
+        by_brand: byBrand,
+        by_priority: byPriority,
+      };
+
+      return queue;
+    } catch (err) {
+      logger.error('Exception fetching current queue', { error: err });
+      return {
+        date: dateStr,
+        tasks: [],
+        total_duration_minutes: 0,
+        capacity_used_percentage: 0,
+        by_brand: {},
+        by_priority: { low: 0, medium: 0, high: 0, urgent: 0 },
+      };
+    }
   }
 
   /**
@@ -288,13 +463,27 @@ export class FounderOpsQueueManager {
       date: dateStr,
     });
 
-    // TODO: Query database for next pending task in queue
-    // - Filter by queue_date = dateStr
-    // - Filter by status = 'scheduled'
-    // - Order by scheduled_order ASC
-    // - Limit 1
+    try {
+      const { data: task, error } = await supabaseAdmin
+        .from('founder_ops_tasks')
+        .select('*')
+        .eq('workspace_id', this.workspaceId)
+        .eq('status', 'scheduled')
+        .gte('scheduled_for', `${dateStr}T00:00:00`)
+        .lt('scheduled_for', `${dateStr}T23:59:59`)
+        .order('priority_order', { ascending: true })
+        .limit(1)
+        .single();
 
-    return null;
+      if (error && error.code !== 'PGRST116') {
+        logger.error('Error fetching next task', { error: error.message });
+      }
+
+      return task as unknown as ScheduledTask || null;
+    } catch (err) {
+      logger.error('Exception fetching next task', { error: err });
+      return null;
+    }
   }
 
   /**
@@ -310,9 +499,25 @@ export class FounderOpsQueueManager {
       count,
     });
 
-    // TODO: Query database for next N pending tasks
+    try {
+      const { data: tasks, error } = await supabaseAdmin
+        .from('founder_ops_tasks')
+        .select('*')
+        .eq('workspace_id', this.workspaceId)
+        .in('status', ['scheduled', 'pending_review'])
+        .gte('scheduled_for', `${dateStr}T00:00:00`)
+        .order('priority_order', { ascending: true })
+        .limit(count);
 
-    return [];
+      if (error) {
+        logger.error('Error fetching upcoming tasks', { error: error.message });
+      }
+
+      return (tasks || []) as unknown as ScheduledTask[];
+    } catch (err) {
+      logger.error('Exception fetching upcoming tasks', { error: err });
+      return [];
+    }
   }
 
   // ====================================
@@ -338,19 +543,53 @@ export class FounderOpsQueueManager {
       date: dateStr,
     });
 
-    // TODO: Calculate from database
+    try {
+      const { data: tasks, error } = await supabaseAdmin
+        .from('founder_ops_tasks')
+        .select('id, status, started_at, completed_at')
+        .eq('workspace_id', this.workspaceId)
+        .gte('scheduled_for', `${dateStr}T00:00:00`)
+        .lt('scheduled_for', `${dateStr}T23:59:59`);
 
-    const summary = {
-      total: 0,
-      completed: 0,
-      in_progress: 0,
-      pending: 0,
-      failed: 0,
-      completion_rate: 0,
-      average_duration_minutes: 0,
-    };
+      if (error) {
+        logger.error('Error fetching queue summary', { error: error.message });
+      }
 
-    return summary;
+      const taskList = tasks || [];
+      const completed = taskList.filter(t => t.status === 'completed').length;
+      const inProgress = taskList.filter(t => t.status === 'in_progress').length;
+      const pending = taskList.filter(t => ['scheduled', 'draft', 'pending_review'].includes(t.status)).length;
+      const failed = taskList.filter(t => t.status === 'failed').length;
+
+      const completedTasks = taskList.filter(t => t.completed_at && t.started_at);
+      const totalDuration = completedTasks.reduce((sum, t) => {
+        const start = new Date(t.started_at).getTime();
+        const end = new Date(t.completed_at).getTime();
+        return sum + (end - start) / (1000 * 60);
+      }, 0);
+      const avgDuration = completedTasks.length > 0 ? totalDuration / completedTasks.length : 0;
+
+      return {
+        total: taskList.length,
+        completed,
+        in_progress: inProgress,
+        pending,
+        failed,
+        completion_rate: taskList.length > 0 ? Math.round((completed / taskList.length) * 100) : 0,
+        average_duration_minutes: Math.round(avgDuration),
+      };
+    } catch (err) {
+      logger.error('Exception calculating queue summary', { error: err });
+      return {
+        total: 0,
+        completed: 0,
+        in_progress: 0,
+        pending: 0,
+        failed: 0,
+        completion_rate: 0,
+        average_duration_minutes: 0,
+      };
+    }
   }
 
   /**
@@ -365,25 +604,83 @@ export class FounderOpsQueueManager {
     most_productive_day: string;
     least_productive_day: string;
   }> {
+    const startStr = this.formatDate(startDate);
+    const endStr = this.formatDate(endDate);
+
     logger.info('Calculating queue performance', {
       workspaceId: this.workspaceId,
-      startDate: this.formatDate(startDate),
-      endDate: this.formatDate(endDate),
+      startDate: startStr,
+      endDate: endStr,
     });
 
-    // TODO: Calculate from database
+    try {
+      const { data: tasks, error } = await supabaseAdmin
+        .from('founder_ops_tasks')
+        .select('id, status, scheduled_for, started_at, completed_at')
+        .eq('workspace_id', this.workspaceId)
+        .gte('scheduled_for', `${startStr}T00:00:00`)
+        .lte('scheduled_for', `${endStr}T23:59:59`);
 
-    const performance = {
-      total_queues: 0,
-      average_completion_rate: 0,
-      average_tasks_per_day: 0,
-      total_tasks_completed: 0,
-      total_time_spent_minutes: 0,
-      most_productive_day: this.formatDate(new Date()),
-      least_productive_day: this.formatDate(new Date()),
-    };
+      if (error) {
+        logger.error('Error fetching queue performance', { error: error.message });
+      }
 
-    return performance;
+      const taskList = tasks || [];
+      const completedTasks = taskList.filter(t => t.status === 'completed');
+
+      // Calculate total time spent
+      const totalTimeSpent = completedTasks.reduce((sum, t) => {
+        if (t.started_at && t.completed_at) {
+          const start = new Date(t.started_at).getTime();
+          const end = new Date(t.completed_at).getTime();
+          return sum + (end - start) / (1000 * 60);
+        }
+        return sum;
+      }, 0);
+
+      // Group by day to calculate productivity
+      const byDay: Record<string, number> = {};
+      completedTasks.forEach(t => {
+        const day = t.scheduled_for?.split('T')[0] || 'unknown';
+        byDay[day] = (byDay[day] || 0) + 1;
+      });
+
+      const days = Object.entries(byDay);
+      const mostProductiveDay = days.length > 0
+        ? days.reduce((a, b) => a[1] > b[1] ? a : b)[0]
+        : startStr;
+      const leastProductiveDay = days.length > 0
+        ? days.reduce((a, b) => a[1] < b[1] ? a : b)[0]
+        : startStr;
+
+      // Calculate days in range
+      const daysInRange = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+
+      return {
+        total_queues: daysInRange,
+        average_completion_rate: taskList.length > 0
+          ? Math.round((completedTasks.length / taskList.length) * 100)
+          : 0,
+        average_tasks_per_day: daysInRange > 0
+          ? Math.round(taskList.length / daysInRange)
+          : 0,
+        total_tasks_completed: completedTasks.length,
+        total_time_spent_minutes: Math.round(totalTimeSpent),
+        most_productive_day: mostProductiveDay,
+        least_productive_day: leastProductiveDay,
+      };
+    } catch (err) {
+      logger.error('Exception calculating queue performance', { error: err });
+      return {
+        total_queues: 0,
+        average_completion_rate: 0,
+        average_tasks_per_day: 0,
+        total_tasks_completed: 0,
+        total_time_spent_minutes: 0,
+        most_productive_day: startStr,
+        least_productive_day: startStr,
+      };
+    }
   }
 
   // ====================================

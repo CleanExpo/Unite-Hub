@@ -17,6 +17,10 @@ import type { SeoCredential } from "@/lib/seo/seoTypes";
 
 describe("buildGscAuthUrl", () => {
   it("should build a valid OAuth authorization URL", () => {
+    // Set env var for test
+    const originalClientId = process.env.GOOGLE_GSC_CLIENT_ID;
+    process.env.GOOGLE_GSC_CLIENT_ID = "test-client-id";
+
     const options = {
       redirect_uri: "https://app.example.com/callback",
       state: "test-state-token",
@@ -24,6 +28,7 @@ describe("buildGscAuthUrl", () => {
     };
 
     const authUrl = buildGscAuthUrl(options);
+    process.env.GOOGLE_GSC_CLIENT_ID = originalClientId;
 
     expect(authUrl).toContain("https://accounts.google.com/o/oauth2/v2/auth");
     expect(authUrl).toContain("redirect_uri=https%3A%2F%2Fapp.example.com%2Fcallback");

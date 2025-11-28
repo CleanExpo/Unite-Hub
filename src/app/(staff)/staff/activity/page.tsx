@@ -8,9 +8,9 @@
 // Force dynamic rendering to avoid build-time data fetching
 export const dynamic = 'force-dynamic';
 
-import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Activity, Download, Filter } from 'lucide-react';
 import { getStaffActivity } from '@/lib/services/staff/staffService';
 import { PageContainer, Section } from '@/ui/layout/AppGrid';

@@ -1,7 +1,25 @@
 /**
  * Attachment Storage Handler
  * Uploads email attachments to cloud storage
+ *
+ * ⚠️ PLACEHOLDER IMPLEMENTATION
+ * Cloud storage is not yet configured. Attachment URLs are mock placeholders.
+ * Configure one of: AWS S3, Google Cloud Storage, Azure Blob, Cloudflare R2
  */
+
+const STORAGE_NOT_CONFIGURED_WARNING =
+  "⚠️  Gmail attachment storage not configured. " +
+  "Using placeholder URLs - attachments will not be retrievable. " +
+  "Configure cloud storage (S3/GCS/R2) for production use.";
+
+let warnedAboutStorage = false;
+
+function warnStorageNotConfigured() {
+  if (!warnedAboutStorage) {
+    console.warn(STORAGE_NOT_CONFIGURED_WARNING);
+    warnedAboutStorage = true;
+  }
+}
 
 export interface UploadedAttachment {
   fileName: string;
@@ -20,12 +38,15 @@ export async function uploadAttachment(
   mimeType: string,
   clientId: string
 ): Promise<UploadedAttachment> {
+  // Warn once about placeholder status
+  warnStorageNotConfigured();
+
   try {
     // Decode base64 content
     const buffer = Buffer.from(content, "base64");
     const fileSize = buffer.length;
 
-    // TODO: Implement actual cloud storage upload
+    // PLACEHOLDER: Cloud storage not configured
     // Options:
     // 1. AWS S3
     // 2. Google Cloud Storage

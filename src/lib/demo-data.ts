@@ -2,8 +2,17 @@
  * Demo Data Provider
  *
  * Provides mock data for development and testing without requiring database connection.
- * Use in development mode or when demoing features.
+ * Use ONLY when NEXT_PUBLIC_DEMO_MODE=true is explicitly set.
+ *
+ * IMPORTANT: Demo mode is now OFF by default in all environments.
+ * To enable demo mode, set NEXT_PUBLIC_DEMO_MODE=true in your environment.
  */
+
+/**
+ * Check if demo mode is explicitly enabled via environment variable.
+ * Returns false by default - must be explicitly enabled.
+ */
+const DEMO_MODE_ENABLED = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 
 export const DEMO_ORG_ID = "demo-unite-hub-org-123" as any;
 
@@ -216,26 +225,64 @@ export function getDemoTeamMembers() {
   return demoTeamMembers;
 }
 
-// Check if we're in demo mode
+/**
+ * Check if we're in demo mode.
+ *
+ * Demo mode is enabled ONLY when:
+ * 1. NEXT_PUBLIC_DEMO_MODE=true is set in environment, AND
+ * 2. Either localStorage has demo_org_id OR we're explicitly in demo mode
+ *
+ * Note: No longer auto-enables for NODE_ENV=development
+ */
 export function isDemoMode(): boolean {
-  if (typeof window === "undefined") return false;
+  // If demo mode is not explicitly enabled via env, always return false
+  if (!DEMO_MODE_ENABLED) {
+    return false;
+  }
 
+  // Server-side: only check env flag
+  if (typeof window === "undefined") {
+    return DEMO_MODE_ENABLED;
+  }
+
+  // Client-side: check localStorage OR env flag
   const demoOrgId = localStorage.getItem("demo_org_id");
-  return demoOrgId === DEMO_ORG_ID || process.env.NODE_ENV === "development";
+  return demoOrgId === DEMO_ORG_ID || DEMO_MODE_ENABLED;
 }
 
-// Initialize demo mode
+/**
+ * Initialize demo mode (client-side only).
+ * Note: NEXT_PUBLIC_DEMO_MODE=true must be set for this to have effect.
+ */
 export function enableDemoMode() {
   if (typeof window === "undefined") return;
+
+  if (!DEMO_MODE_ENABLED) {
+    console.warn(
+      "Demo mode cannot be enabled: NEXT_PUBLIC_DEMO_MODE is not set to 'true'. " +
+        "Set NEXT_PUBLIC_DEMO_MODE=true in your environment to enable demo mode."
+    );
+    return;
+  }
 
   localStorage.setItem("demo_org_id", DEMO_ORG_ID);
   console.log("Demo mode enabled");
 }
 
-// Disable demo mode
+/**
+ * Disable demo mode (client-side only).
+ */
 export function disableDemoMode() {
   if (typeof window === "undefined") return;
 
   localStorage.removeItem("demo_org_id");
   console.log("Demo mode disabled");
+}
+
+/**
+ * Check if demo mode is available (env flag is set).
+ * Useful for showing/hiding demo mode toggle in UI.
+ */
+export function isDemoModeAvailable(): boolean {
+  return DEMO_MODE_ENABLED;
 }

@@ -19,9 +19,9 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { PageContainer, Section } from '@/ui/layout/AppGrid';
-import { Card } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Loader2, Sparkles, Calendar, Clock, CheckCircle2, XCircle, Pause, ArrowRight, Package, FolderKanban } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 

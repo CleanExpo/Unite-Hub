@@ -8,9 +8,9 @@
 'use client';
 
 import { useState } from 'react';
-import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { AILoader } from '@/components/ai/AILoader';
 import { AIInsightBubble } from '@/components/ai/AIInsightBubble';
 import { Bot, Send, Lightbulb, FolderKanban, HelpCircle } from 'lucide-react';

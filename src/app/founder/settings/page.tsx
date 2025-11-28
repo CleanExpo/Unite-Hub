@@ -2,7 +2,8 @@
 
 /**
  * Founder Settings
- * Admin-only configuration for platform settings (Stripe mode, system config)
+ * Admin-only configuration for platform settings (Stripe, DataForSEO, SEMRush, AI modes)
+ * Phase 10: Extended to support per-service mode toggles
  */
 
 import { useState, useEffect } from 'react';
@@ -10,9 +11,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { ArrowLeft, Save, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Save, AlertCircle, CheckCircle2, Settings2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { log } from '@/lib/logger-client';
+import { FounderModeToggle } from '@/components/founder/FounderModeToggle';
 
 interface PlatformMode {
   mode: 'test' | 'live';
@@ -166,7 +168,16 @@ export default function FounderSettingsPage() {
           </Alert>
         )}
 
-        {/* Stripe Mode Toggle Card */}
+        {/* Multi-Service Mode Toggle (Phase 10) */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <Settings2 className="h-5 w-5 text-blue-400" />
+            <h2 className="text-xl font-semibold text-white">Service Mode Controls</h2>
+          </div>
+          <FounderModeToggle />
+        </div>
+
+        {/* Legacy Stripe Mode Toggle Card (Deprecated - use above controls) */}
         <Card className="border-gray-700 bg-gray-800">
           <CardHeader>
             <div className="flex items-center justify-between">

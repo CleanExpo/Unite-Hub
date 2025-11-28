@@ -1,0 +1,221 @@
+{
+  "version": "1.0.0",
+  "description": "Animation Style Library - Client-friendly named styles for visual inspiration",
+  "accessibility_notice": "All animations are designed to be safe and accessible. No rapid flashing or strobing effects. All effects respect prefers-reduced-motion.",
+  "styles": [
+    {
+      "id": "clip-fade-radiance",
+      "name": "Clip-Fade Radiance",
+      "category": "Reveal Effects",
+      "description": "Elegant circular reveal with soft fade. Perfect for hero sections and introductions.",
+      "mood": "elegant",
+      "intensity": "normal",
+      "bestFor": ["Hero sections", "Page intros", "Image reveals"],
+      "industries": ["Corporate", "SaaS", "Agency"],
+      "previewDescription": "Content appears from a circular iris opening from the center"
+    },
+    {
+      "id": "beam-sweep-alpha",
+      "name": "Beam-Sweep Alpha",
+      "category": "Light Effects",
+      "description": "Subtle horizontal light sweep across elements. Adds polish without distraction.",
+      "mood": "professional",
+      "intensity": "subtle",
+      "bestFor": ["Cards", "Featured content", "Product images"],
+      "industries": ["Corporate", "SaaS", "E-commerce"],
+      "previewDescription": "A soft light sweeps horizontally across the element"
+    },
+    {
+      "id": "beam-sweep-omega",
+      "name": "Beam-Sweep Omega",
+      "category": "Light Effects",
+      "description": "Vertical ascending light beam. Ethereal and calming feel.",
+      "mood": "calm",
+      "intensity": "subtle",
+      "bestFor": ["Wellness brands", "Spiritual content", "Premium products"],
+      "industries": ["Health & Wellness", "Nonprofit", "Luxury"],
+      "previewDescription": "A gentle light rises upward through the element"
+    },
+    {
+      "id": "flashlight-cursor-tracking",
+      "name": "Flashlight Cursor Tracking",
+      "category": "Interactive Effects",
+      "description": "Soft spotlight follows cursor movement. Creates an exploratory experience.",
+      "mood": "interactive",
+      "intensity": "normal",
+      "bestFor": ["Portfolios", "Galleries", "Interactive showcases"],
+      "industries": ["Agency", "Creative", "SaaS"],
+      "previewDescription": "A soft glow follows your cursor across the page"
+    },
+    {
+      "id": "switching-card-morph",
+      "name": "Switching Card Morph FX",
+      "category": "Transition Effects",
+      "description": "Cards transform smoothly between states. Fluid, organic transitions.",
+      "mood": "dynamic",
+      "intensity": "normal",
+      "bestFor": ["Product showcases", "Galleries", "Feature cards"],
+      "industries": ["SaaS", "Agency", "E-commerce"],
+      "previewDescription": "Cards smoothly morph and transform when switching content"
+    },
+    {
+      "id": "glass-distortion-intro",
+      "name": "Glass-Distortion Intro",
+      "category": "Intro Effects",
+      "description": "Content emerges from frosted glass blur. Modern, premium feel.",
+      "mood": "modern",
+      "intensity": "normal",
+      "bestFor": ["Dashboards", "App interfaces", "Modal dialogs"],
+      "industries": ["SaaS", "Fintech", "Corporate"],
+      "previewDescription": "Content fades in from a frosted blur effect"
+    },
+    {
+      "id": "quantum-glow-pulse",
+      "name": "Quantum Glow Pulse",
+      "category": "Glow Effects",
+      "description": "Mesmerizing color-shifting glow effect. Slow, hypnotic pulse.",
+      "mood": "futuristic",
+      "intensity": "subtle",
+      "bestFor": ["Tech products", "AI features", "Premium CTAs"],
+      "industries": ["Tech", "SaaS", "Gaming"],
+      "previewDescription": "A slow, ethereal glow shifts through colors around the element"
+    },
+    {
+      "id": "ribbon-trail-scroller",
+      "name": "Ribbon-Trail Scroller",
+      "category": "Scroll Effects",
+      "description": "Smooth scroll animations with trailing ribbon effects.",
+      "mood": "dynamic",
+      "intensity": "dramatic",
+      "bestFor": ["Long-form pages", "Storytelling", "Case studies"],
+      "industries": ["Agency", "Creative", "Publishing"],
+      "previewDescription": "Elements animate with flowing trails as you scroll"
+    },
+    {
+      "id": "magnetic-cursor-pull",
+      "name": "Magnetic Cursor Pull",
+      "category": "Interactive Effects",
+      "description": "Interactive elements subtly pull toward cursor. Satisfying magnetic snap.",
+      "mood": "playful",
+      "intensity": "subtle",
+      "bestFor": ["Buttons", "Navigation", "Interactive elements"],
+      "industries": ["Agency", "Creative", "SaaS"],
+      "previewDescription": "Elements gently attract toward your cursor"
+    },
+    {
+      "id": "split-reveal-slider",
+      "name": "Split-Reveal Slider",
+      "category": "Transition Effects",
+      "description": "Content splits apart to reveal new content. Dramatic, theatrical.",
+      "mood": "dramatic",
+      "intensity": "dramatic",
+      "bestFor": ["Before/after", "Comparisons", "Portfolio reveals"],
+      "industries": ["Agency", "Creative", "Real Estate"],
+      "previewDescription": "Content splits open from the center to reveal new content"
+    },
+    {
+      "id": "parallax-depth-field",
+      "name": "Parallax Depth Field",
+      "category": "Scroll Effects",
+      "description": "Multi-layer parallax creating 3D depth. Cinematic scroll experience.",
+      "mood": "immersive",
+      "intensity": "dramatic",
+      "bestFor": ["Landing pages", "Storytelling", "Brand experiences"],
+      "industries": ["Agency", "Creative", "Corporate"],
+      "previewDescription": "Multiple layers move at different speeds creating depth"
+    },
+    {
+      "id": "neon-edge-reactive",
+      "name": "Neon Edge-Reactive UI",
+      "category": "Glow Effects",
+      "description": "Cyberpunk-inspired neon border effects. Reactive to hover and focus.",
+      "mood": "bold",
+      "intensity": "normal",
+      "bestFor": ["Gaming sites", "Tech products", "Dark mode UIs"],
+      "industries": ["Gaming", "Tech", "Entertainment"],
+      "previewDescription": "Neon glow pulses along element borders on interaction"
+    },
+    {
+      "id": "soft-material-morph",
+      "name": "Soft-Material Morph Drift",
+      "category": "Transition Effects",
+      "description": "Organic shape morphing with soft materials. Gentle, flowing transitions.",
+      "mood": "friendly",
+      "intensity": "subtle",
+      "bestFor": ["Nonprofit sites", "Healthcare", "Education"],
+      "industries": ["Nonprofit", "Healthcare", "Education"],
+      "previewDescription": "Shapes gently morph and flow between states"
+    },
+    {
+      "id": "velocity-triggered-panels",
+      "name": "Velocity-Triggered Panels",
+      "category": "Scroll Effects",
+      "description": "Panels animate based on scroll speed. Dynamic response to user interaction.",
+      "mood": "energetic",
+      "intensity": "normal",
+      "bestFor": ["Product launches", "News sites", "Dynamic content"],
+      "industries": ["SaaS", "News/Media", "E-commerce"],
+      "previewDescription": "Panels respond dynamically to your scroll speed"
+    },
+    {
+      "id": "cinematic-iris-open",
+      "name": "Cinematic Iris Open",
+      "category": "Intro Effects",
+      "description": "Film-style iris transition. Classic Hollywood feel.",
+      "mood": "cinematic",
+      "intensity": "dramatic",
+      "bestFor": ["Video sites", "Film portfolios", "Creative intros"],
+      "industries": ["Entertainment", "Creative", "Agency"],
+      "previewDescription": "Classic film iris opening effect reveals content"
+    }
+  ],
+  "categories": [
+    {
+      "id": "reveal",
+      "name": "Reveal Effects",
+      "description": "Animations that reveal content in creative ways"
+    },
+    {
+      "id": "light",
+      "name": "Light Effects",
+      "description": "Soft light beams and shimmers"
+    },
+    {
+      "id": "interactive",
+      "name": "Interactive Effects",
+      "description": "Cursor and interaction-driven animations"
+    },
+    {
+      "id": "transition",
+      "name": "Transition Effects",
+      "description": "Content switching and morphing"
+    },
+    {
+      "id": "intro",
+      "name": "Intro Effects",
+      "description": "Page and section entrance animations"
+    },
+    {
+      "id": "glow",
+      "name": "Glow Effects",
+      "description": "Pulsing glows and ambient effects"
+    },
+    {
+      "id": "scroll",
+      "name": "Scroll Effects",
+      "description": "Scroll-triggered animations"
+    }
+  ],
+  "moods": [
+    { "id": "professional", "name": "Professional", "color": "#3B82F6" },
+    { "id": "playful", "name": "Playful", "color": "#F59E0B" },
+    { "id": "calm", "name": "Calm", "color": "#10B981" },
+    { "id": "bold", "name": "Bold", "color": "#EF4444" },
+    { "id": "futuristic", "name": "Futuristic", "color": "#8B5CF6" },
+    { "id": "immersive", "name": "Immersive", "color": "#EC4899" },
+    { "id": "elegant", "name": "Elegant", "color": "#6366F1" },
+    { "id": "dynamic", "name": "Dynamic", "color": "#F97316" },
+    { "id": "modern", "name": "Modern", "color": "#06B6D4" },
+    { "id": "cinematic", "name": "Cinematic", "color": "#A855F7" }
+  ]
+}

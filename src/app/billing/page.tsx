@@ -8,9 +8,9 @@ import { DownloadCloud, CreditCard, FileText } from "lucide-react";
 
 export default function BillingPage() {
   const invoices = [
-    { id: "INV-001", date: "2024-11-01", amount: "$299.00", status: "Paid", dueDate: "2024-11-15" },
-    { id: "INV-002", date: "2024-10-01", amount: "$299.00", status: "Paid", dueDate: "2024-10-15" },
-    { id: "INV-003", date: "2024-09-01", amount: "$99.00", status: "Paid", dueDate: "2024-09-15" },
+    { id: "INV-001", date: "2024-11-01", amount: "A$895.00", status: "Paid", dueDate: "2024-11-15" },
+    { id: "INV-002", date: "2024-10-01", amount: "A$895.00", status: "Paid", dueDate: "2024-10-15" },
+    { id: "INV-003", date: "2024-09-01", amount: "A$495.00", status: "Paid", dueDate: "2024-09-15" },
   ];
 
   return (
@@ -32,7 +32,7 @@ export default function BillingPage() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
                 <p className="text-slate-400 text-sm">Monthly Cost</p>
-                <p className="text-2xl font-bold text-white">$299</p>
+                <p className="text-2xl font-bold text-white">A$895</p>
               </div>
               <div>
                 <p className="text-slate-400 text-sm">Billing Cycle</p>

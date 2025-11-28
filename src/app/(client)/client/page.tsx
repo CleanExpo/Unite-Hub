@@ -6,8 +6,8 @@
  */
 
 import { PageContainer, Section } from '@/ui/layout/AppGrid';
-import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Lightbulb, FolderKanban, Lock, Bot, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 

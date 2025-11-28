@@ -1,0 +1,71 @@
+{
+  "patch_version": "1.0.1",
+  "target_agent": "marketing_intelligence",
+  "description": "Enhance campaign generation, segmentation, audience psychology",
+
+  "enhancements": {
+    "campaign_generation": {
+      "apply_frameworks": [
+        "brand_positioning.message_compression_framework",
+        "funnel_design.emotional_trigger_mapping",
+        "funnel_design.micro_commitment_sequencing"
+      ],
+      "output_requirements": {
+        "include_emotional_hooks": true,
+        "apply_benefit_chaining": true,
+        "use_specific_outcomes": true
+      }
+    },
+    "segmentation": {
+      "apply_frameworks": [
+        "brand_positioning.offer_audience_precision_fit",
+        "funnel_design.social_weight_anchoring"
+      ],
+      "segment_dimensions": [
+        "pain_point_intensity",
+        "purchase_readiness",
+        "objection_profile",
+        "value_perception"
+      ]
+    },
+    "audience_psychology": {
+      "apply_frameworks": [
+        "funnel_design.emotional_trigger_mapping",
+        "offer_architecture.risk_reversal_models"
+      ],
+      "psychology_models": [
+        "loss_aversion_scoring",
+        "social_proof_sensitivity",
+        "urgency_responsiveness",
+        "authority_trust_level"
+      ]
+    }
+  },
+
+  "output_templates": {
+    "campaign_brief": {
+      "sections": [
+        "target_audience_profile",
+        "primary_pain_point",
+        "desired_outcome",
+        "emotional_triggers",
+        "objection_preemption",
+        "conversion_path",
+        "success_metrics"
+      ]
+    },
+    "content_guidelines": {
+      "include": [
+        "message_compression_rules",
+        "benefit_chain_structure",
+        "cta_framework"
+      ]
+    }
+  },
+
+  "quality_gates": {
+    "clarity_score_minimum": 0.8,
+    "conversion_focus_minimum": 0.7,
+    "audience_alignment_minimum": 0.75
+  }
+}

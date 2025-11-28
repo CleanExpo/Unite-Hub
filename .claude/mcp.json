@@ -37,6 +37,19 @@
         "DIGITALOCEAN_API_TOKEN": "${DIGITALOCEAN_API_TOKEN}"
       },
       "description": "DigitalOcean MCP - Manage apps, droplets, databases, domains, and infrastructure"
+    },
+    "stripe": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@stripe/mcp",
+        "--tools=all",
+        "--api-key=${STRIPE_SECRET_KEY}"
+      ],
+      "env": {
+        "STRIPE_SECRET_KEY": "${STRIPE_SECRET_KEY}"
+      },
+      "description": "Stripe MCP - Create products, prices, checkout sessions, manage subscriptions, invoices, and payments"
     }
   }
 }

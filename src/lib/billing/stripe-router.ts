@@ -79,42 +79,63 @@ export function getStripeClientForUser(
 
 /**
  * Get Stripe client by mode
+ * Falls back to STRIPE_SECRET_KEY if dual-mode keys aren't configured
  */
 export function getStripeClient(mode: BillingMode): Stripe {
-  const secretKey =
+  // Try mode-specific key first
+  let secretKey =
     mode === "test"
       ? process.env.STRIPE_TEST_SECRET_KEY
       : process.env.STRIPE_LIVE_SECRET_KEY;
 
+  // Fallback to single STRIPE_SECRET_KEY if dual-mode not configured
+  if (!secretKey) {
+    secretKey = process.env.STRIPE_SECRET_KEY;
+    if (secretKey) {
+      console.warn(
+        `[Stripe] Using fallback STRIPE_SECRET_KEY for ${mode} mode. ` +
+          `Configure ${mode === "test" ? "STRIPE_TEST_SECRET_KEY" : "STRIPE_LIVE_SECRET_KEY"} for dual-mode billing.`
+      );
+    }
+  }
+
   if (!secretKey) {
     throw new Error(
-      `Stripe ${mode.toUpperCase()} secret key not configured. ` +
-        `Set ${mode === "test" ? "STRIPE_TEST_SECRET_KEY" : "STRIPE_LIVE_SECRET_KEY"}`
+      `Stripe secret key not configured. ` +
+        `Set STRIPE_SECRET_KEY or ${mode === "test" ? "STRIPE_TEST_SECRET_KEY" : "STRIPE_LIVE_SECRET_KEY"}`
     );
   }
 
   return new Stripe(secretKey, {
-    apiVersion: "2023-10-16",
+    apiVersion: "2024-11-20.acacia",
     typescript: true,
   });
 }
 
 /**
  * Get publishable key for client-side
+ * Falls back to NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY if dual-mode not configured
  */
 export function getPublishableKey(mode: BillingMode): string {
-  return mode === "test"
-    ? process.env.NEXT_PUBLIC_STRIPE_TEST_PUBLISHABLE_KEY || ""
-    : process.env.NEXT_PUBLIC_STRIPE_LIVE_PUBLISHABLE_KEY || "";
+  const modeKey = mode === "test"
+    ? process.env.NEXT_PUBLIC_STRIPE_TEST_PUBLISHABLE_KEY
+    : process.env.NEXT_PUBLIC_STRIPE_LIVE_PUBLISHABLE_KEY;
+
+  // Fallback to single key
+  return modeKey || process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "";
 }
 
 /**
  * Get webhook secret by mode
+ * Falls back to STRIPE_WEBHOOK_SECRET if dual-mode not configured
  */
 export function getWebhookSecret(mode: BillingMode): string {
-  return mode === "test"
-    ? process.env.STRIPE_TEST_WEBHOOK_SECRET || ""
-    : process.env.STRIPE_LIVE_WEBHOOK_SECRET || "";
+  const modeSecret = mode === "test"
+    ? process.env.STRIPE_TEST_WEBHOOK_SECRET
+    : process.env.STRIPE_LIVE_WEBHOOK_SECRET;
+
+  // Fallback to single secret
+  return modeSecret || process.env.STRIPE_WEBHOOK_SECRET || "";
 }
 
 /**
@@ -158,20 +179,26 @@ export function isInSandboxMode(email?: string, role?: string): boolean {
 
 /**
  * Get price IDs for a mode
+ * Falls back to STRIPE_PRICE_ID_* if dual-mode not configured
  */
 export function getPriceIds(mode: BillingMode) {
+  // Fallback price IDs from single-mode configuration
+  const fallbackStarter = process.env.STRIPE_PRICE_ID_STARTER || "";
+  const fallbackPro = process.env.STRIPE_PRICE_ID_PROFESSIONAL || "";
+  const fallbackElite = process.env.STRIPE_PRICE_ID_ELITE || "";
+
   if (mode === "test") {
     return {
-      starter: process.env.STRIPE_TEST_PRICE_STARTER || "price_test_starter",
-      pro: process.env.STRIPE_TEST_PRICE_PRO || "price_test_pro",
-      elite: process.env.STRIPE_TEST_PRICE_ELITE || "price_test_elite",
+      starter: process.env.STRIPE_TEST_PRICE_STARTER || fallbackStarter || "price_test_starter",
+      pro: process.env.STRIPE_TEST_PRICE_PRO || fallbackPro || "price_test_pro",
+      elite: process.env.STRIPE_TEST_PRICE_ELITE || fallbackElite || "price_test_elite",
     };
   }
 
   return {
-    starter: process.env.STRIPE_LIVE_PRICE_STARTER || "price_live_starter",
-    pro: process.env.STRIPE_LIVE_PRICE_PRO || "price_live_pro",
-    elite: process.env.STRIPE_LIVE_PRICE_ELITE || "price_live_elite",
+    starter: process.env.STRIPE_LIVE_PRICE_STARTER || fallbackStarter || "price_live_starter",
+    pro: process.env.STRIPE_LIVE_PRICE_PRO || fallbackPro || "price_live_pro",
+    elite: process.env.STRIPE_LIVE_PRICE_ELITE || fallbackElite || "price_live_elite",
   };
 }
 

@@ -107,7 +107,7 @@ export const seoConfig = {
 
     pricing: {
       title: 'Pricing Plans - Affordable AI Marketing for Every Business',
-      description: 'Choose the perfect plan for your business. From Starter at $197/mo to Agency at $797/mo. All plans include AI-powered website optimization, SEO, and social media automation. 50% founder discount available.',
+      description: 'Choose the perfect plan for your business. From Starter at A$495/mo to Elite at A$1,295/mo. All plans include AI-powered website optimization, SEO, and social media automation. 14-day free trial.',
       keywords: [
         'AI marketing pricing',
         'affordable marketing automation',
@@ -338,7 +338,7 @@ export const seoConfig = {
     },
     {
       question: 'How much does Synthex cost?',
-      answer: 'Synthex offers three plans: Starter at $197/mo (50% founder discount), Professional at $297/mo (most popular), and Agency at $797/mo for white-label services. All plans include a free trial and can be canceled anytime.',
+      answer: 'Synthex offers three plans: Starter at A$495/mo, Pro at A$895/mo (most popular), and Elite at A$1,295/mo for white-label services. All prices are in AUD, GST inclusive. All plans include a 14-day free trial and can be canceled anytime.',
     },
     {
       question: 'Do I need technical skills to use Synthex?',

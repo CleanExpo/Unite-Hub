@@ -357,10 +357,10 @@
 | Premium ($1,295) | 5 | $6,475 | $77,700 |
 | **Total** | **50** | **$38,750** | **$465,000** |
 
-**Add-Ons** (30% adoption):
+**Add-Ons (AUD)** (30% adoption):
 - Video Content (15 × $495): $89,100/year
-- Extra Platforms (10 × $97): $11,640/year
-- **Total Add-Ons**: $100,740/year
+- Extra Platforms (10 × $149): $17,880/year
+- **Total Add-Ons**: $106,980/year
 
 **Total Revenue**: $565,740/year
 **Operating Costs**: $20,400/year
@@ -377,10 +377,10 @@
 | Premium ($1,295) | 20 | $25,900 | $310,800 |
 | **Total** | **150** | **$122,250** | **$1,467,000** |
 
-**Add-Ons** (40% adoption):
+**Add-Ons (AUD)** (40% adoption):
 - Video Content: $356,400/year
-- Extra Platforms: $34,920/year
-- **Total Add-Ons**: $391,320/year
+- Extra Platforms (30 × $149): $53,640/year
+- **Total Add-Ons**: $410,040/year
 
 **Total Revenue**: $1,858,320/year
 **Operating Costs**: $50,400/year
@@ -397,10 +397,10 @@
 | Premium ($1,295) | 40 | $51,800 | $621,600 |
 | **Total** | **300** | **$252,500** | **$3,030,000** |
 
-**Add-Ons** (50% adoption):
+**Add-Ons (AUD)** (50% adoption):
 - Video Content: $891,000/year
-- Extra Platforms: $87,300/year
-- **Total Add-Ons**: $978,300/year
+- Extra Platforms (75 × $149): $134,100/year
+- **Total Add-Ons**: $1,025,100/year
 
 **Total Revenue**: $4,008,300/year
 **Operating Costs**: $90,000/year

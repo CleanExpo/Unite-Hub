@@ -232,7 +232,7 @@
 
 ---
 
-**Brand Identity Package - $497-997**
+**Brand Identity Package - $795-1,495 AUD**
 - Logo variations (color, black/white, icon-only)
 - Color palette + typography guide
 - Brand voice guidelines (for AI to match)
@@ -245,7 +245,7 @@
 
 ---
 
-**SEO Audit & Strategy - $297 (one-time)**
+**SEO Audit & Strategy - $449 AUD (one-time)**
 - Comprehensive site audit (AI-powered via Perplexity Sonar)
 - Keyword gap analysis vs competitors
 - 90-day action plan
@@ -330,10 +330,10 @@
 
 ---
 
-### Scenario 3: Growth Package + SEO Audit ($297)
+### Scenario 3: Growth Package + SEO Audit ($449 AUD)
 
 **Investment**:
-- $895/month × 3 months + $297 audit = $2,982
+- $895/month × 3 months + $449 audit = $3,134 AUD
 
 **Expected Results (90 days)**:
 - **SEO Audit** (delivered Week 1):
@@ -437,7 +437,7 @@
 **Response**:
 > "Absolutely - this is an important decision. Here's what I suggest:
 >
-> 1. **Free SEO Audit** ($297 value): Let me run a quick audit on your website right now. It'll show you exactly where you're losing leads to competitors. Takes 10 minutes, and you keep the report even if you don't sign up.
+> 1. **Free SEO Audit** ($449 AUD value): Let me run a quick audit on your website right now. It'll show you exactly where you're losing leads to competitors. Takes 10 minutes, and you keep the report even if you don't sign up.
 >
 > 2. **48-Hour Hold**: I'll hold your spot in our onboarding queue for 48 hours. We only take 10 new clients/month (to ensure quality), and we're at 7/10 right now.
 >

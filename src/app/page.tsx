@@ -23,6 +23,8 @@ import {
   BreadcrumbSchema,
 } from "@/components/seo/JsonLd";
 import { seoConfig } from "@/lib/seo/seoConfig";
+import { PersonaVisual } from "@/components/marketing/PersonaVisual";
+import { detectPersonaFromContext } from "@/lib/visual/visualPersonas";
 
 export default function Home() {
   const { user, loading } = useAuth();
@@ -30,6 +32,20 @@ export default function Home() {
   const [servicesOpen, setServicesOpen] = useState(false);
   const [discountSlotsLeft, setDiscountSlotsLeft] = useState(50);
   const [discountSlotsLeft25, setDiscountSlotsLeft25] = useState(50);
+  const [personaId, setPersonaId] = useState<string | null>(null);
+
+  // Detect persona from URL params/context
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const detected = detectPersonaFromContext({
+        queryParam: urlParams.get("persona"),
+        utm_campaign: urlParams.get("utm_campaign"),
+        referrer: document.referrer,
+      });
+      setPersonaId(detected);
+    }
+  }, []);
 
   // Fetch live offer counter
   useEffect(() => {
@@ -441,13 +457,17 @@ export default function Home() {
 
             <ScrollReveal delay={100}>
               <Parallax offset={30}>
-                <div className="relative">
-                  <img
-                    src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=600&fit=crop"
-                    alt="Stressed business owner"
-                    className="rounded-xl shadow-2xl"
+                <div className="relative rounded-xl shadow-2xl overflow-hidden">
+                  <PersonaVisual
+                    sectionId="hero_main"
+                    personaId={personaId || undefined}
+                    width={600}
+                    height={600}
+                    alt="Business owner discovering AI marketing automation"
+                    className="w-full h-auto"
+                    overlay
+                    overlayOpacity={0.3}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a1e3b]/50 to-transparent rounded-xl"></div>
                 </div>
               </Parallax>
             </ScrollReveal>
@@ -739,7 +759,7 @@ export default function Home() {
           <h2 className="text-white text-3xl font-bold mb-12 pt-12">Choose Your Plan</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-            {/* Starter Plan */}
+            {/* Starter Plan - A$495/mo (Canonical from pricing-config.ts) */}
             <ScrollReveal delay={0}>
               <HoverLift className="h-full">
                 <div className="bg-white rounded-[20px] p-10 text-center shadow-[0_10px_30px_rgba(0,0,0,0.08)] transition-shadow hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)] h-full">
@@ -748,21 +768,21 @@ export default function Home() {
                   </div>
                   <h3 className="text-2xl font-bold mb-4 text-[#1a1a1a]">Starter</h3>
                   <div className="text-[42px] font-extrabold text-[#1a1a1a] mb-2">
-                    $197<span className="text-base text-[#666] font-medium">/mo</span>
+                    A$495<span className="text-base text-[#666] font-medium">/mo</span>
                   </div>
-                  <p className="text-sm text-[#999] mb-8">Billed monthly • 50% founder discount</p>
+                  <p className="text-sm text-[#999] mb-8">GST inclusive • 14-day free trial</p>
                   <ul className="text-left inline-block mb-9 space-y-3">
                     <li className="text-[#666] flex items-center">
                       <span className="text-[#347bf7] text-xl mr-2.5">✓</span>
-                      Website optimization
+                      500 contacts
                     </li>
                     <li className="text-[#666] flex items-center">
                       <span className="text-[#347bf7] text-xl mr-2.5">✓</span>
-                      Basic SEO setup
+                      20,000 AI tokens/month
                     </li>
                     <li className="text-[#666] flex items-center">
                       <span className="text-[#347bf7] text-xl mr-2.5">✓</span>
-                      4 social posts/week (auto-generated)
+                      2 website audits/month
                     </li>
                     <li className="text-[#666] flex items-center">
                       <span className="text-[#347bf7] text-xl mr-2.5">✓</span>
@@ -779,39 +799,39 @@ export default function Home() {
               </HoverLift>
             </ScrollReveal>
 
-            {/* Professional Plan (Highlighted) */}
+            {/* Pro Plan (Highlighted) - A$895/mo (Canonical from pricing-config.ts) */}
             <ScrollReveal delay={100}>
               <HoverLift className="h-full">
                 <div className="bg-[#0a1e3b] rounded-[20px] p-10 text-center text-white scale-100 md:scale-105 border-2 border-[#ff5722] shadow-[0_0_30px_rgba(255,87,34,0.3)] hover:shadow-[0_0_50px_rgba(255,87,34,0.5)] z-10 h-full transition-shadow">
                   <div className="h-20 w-20 mx-auto mb-5 rounded-full bg-[#0a1e3b] border-2 border-[#ff5722] flex items-center justify-center">
                     <span className="text-[#ff5722] font-bold text-lg">🚀</span>
                   </div>
-                  <h3 className="text-2xl font-bold mb-4">Professional</h3>
+                  <h3 className="text-2xl font-bold mb-4">Pro</h3>
                   <div className="text-[42px] font-extrabold mb-2">
-                    $297<span className="text-base text-white/70 font-medium">/mo</span>
+                    A$895<span className="text-base text-white/70 font-medium">/mo</span>
                   </div>
-                  <p className="text-sm text-white/70 mb-8">Billed monthly • 50% founder discount</p>
+                  <p className="text-sm text-white/70 mb-8">GST inclusive • 14-day free trial</p>
                   <div className="inline-block bg-[#ff5722] text-white px-3 py-1 rounded-full text-xs font-bold mb-4">MOST POPULAR</div>
                   <ul className="text-left inline-block mb-9 space-y-3">
                     <li className="text-white/90 flex items-center">
                       <span className="text-[#ff5722] text-xl mr-2.5">✓</span>
-                      Everything in Starter, plus:
+                      5,000 contacts
                     </li>
                     <li className="text-white/90 flex items-center">
                       <span className="text-[#ff5722] text-xl mr-2.5">✓</span>
-                      Full local SEO optimization
+                      250,000 AI tokens/month
                     </li>
                     <li className="text-white/90 flex items-center">
                       <span className="text-[#ff5722] text-xl mr-2.5">✓</span>
-                      10 social posts/week + AI graphics
+                      20 website audits/month
                     </li>
                     <li className="text-white/90 flex items-center">
                       <span className="text-[#ff5722] text-xl mr-2.5">✓</span>
-                      Monthly SEO & performance reports
+                      Unlimited campaigns
                     </li>
                     <li className="text-white/90 flex items-center">
                       <span className="text-[#ff5722] text-xl mr-2.5">✓</span>
-                      Priority support
+                      Priority support + API access
                     </li>
                   </ul>
                   <Link
@@ -824,42 +844,42 @@ export default function Home() {
               </HoverLift>
             </ScrollReveal>
 
-            {/* Enterprise Plan */}
+            {/* Elite Plan - A$1,295/mo (Canonical from pricing-config.ts) */}
             <ScrollReveal delay={200}>
               <HoverLift className="h-full">
                 <div className="bg-white rounded-[20px] p-10 text-center shadow-[0_10px_30px_rgba(0,0,0,0.08)] transition-shadow hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)] h-full">
                   <div className="h-20 w-20 mx-auto mb-5 rounded-full bg-gradient-to-br from-[#347bf7] to-[#5a9dff] flex items-center justify-center">
                     <span className="text-white font-bold text-lg">⭐</span>
                   </div>
-                  <h3 className="text-2xl font-bold mb-4 text-[#1a1a1a]">Agency</h3>
+                  <h3 className="text-2xl font-bold mb-4 text-[#1a1a1a]">Elite</h3>
                   <div className="text-[42px] font-extrabold text-[#1a1a1a] mb-2">
-                    $797<span className="text-base text-[#666] font-medium">/mo</span>
+                    A$1,295<span className="text-base text-[#666] font-medium">/mo</span>
                   </div>
-                  <p className="text-sm text-[#999] mb-8">For agencies & high-volume needs</p>
+                  <p className="text-sm text-[#999] mb-8">GST inclusive • For agencies & scale</p>
                   <ul className="text-left inline-block mb-9 space-y-3">
                     <li className="text-[#666] flex items-center">
                       <span className="text-[#347bf7] text-xl mr-2.5">✓</span>
-                      Everything in Professional, plus:
+                      Unlimited contacts
                     </li>
                     <li className="text-[#666] flex items-center">
                       <span className="text-[#347bf7] text-xl mr-2.5">✓</span>
-                      White-label branding
+                      2,000,000 AI tokens/month
                     </li>
                     <li className="text-[#666] flex items-center">
                       <span className="text-[#347bf7] text-xl mr-2.5">✓</span>
-                      Unlimited client sub-accounts
+                      100 website audits/month
                     </li>
                     <li className="text-[#666] flex items-center">
                       <span className="text-[#347bf7] text-xl mr-2.5">✓</span>
-                      Dedicated account manager
+                      White label + custom branding
                     </li>
                     <li className="text-[#666] flex items-center">
                       <span className="text-[#347bf7] text-xl mr-2.5">✓</span>
-                      API access & integrations
+                      10 team seats + agency tools
                     </li>
                   </ul>
                   <Link
-                    href="/login"
+                    href="/contact"
                     className="inline-block w-4/5 py-3 px-8 rounded-md font-semibold bg-transparent border-2 border-[#1a1a1a] text-[#1a1a1a] hover:bg-[#1a1a1a] hover:text-white transition-all"
                   >
                     Contact Sales
@@ -892,10 +912,14 @@ export default function Home() {
             >
               {/* Card 1 - Website Transformation */}
               <div className={`min-w-[600px] mx-4 rounded-2xl overflow-hidden relative transition-all duration-500 shadow-[0_15px_40px_rgba(0,0,0,0.2)] ${currentSlide === 0 ? 'opacity-100 scale-100 h-[420px] z-10' : 'opacity-50 scale-[0.85] h-[380px]'}`}>
-                <img
-                  src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=840&fit=crop"
+                <PersonaVisual
+                  sectionId="features_grid"
+                  personaId={personaId || undefined}
+                  width={1200}
+                  height={840}
                   alt="Website transformation showing modern design with enhanced copy and SEO"
                   className="w-full h-full object-cover"
+                  objectFit="cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-8">
                   <div>
@@ -907,10 +931,14 @@ export default function Home() {
 
               {/* Card 2 - Social Media Growth */}
               <div className={`min-w-[600px] mx-4 rounded-2xl overflow-hidden relative transition-all duration-500 shadow-[0_15px_40px_rgba(0,0,0,0.2)] ${currentSlide === 1 ? 'opacity-100 scale-100 h-[420px] z-10' : 'opacity-50 scale-[0.85] h-[380px]'}`}>
-                <img
-                  src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=840&fit=crop"
+                <PersonaVisual
+                  sectionId="ai_automation"
+                  personaId={personaId || undefined}
+                  width={1200}
+                  height={840}
                   alt="Social media analytics dashboard showing engagement and reach growth"
                   className="w-full h-full object-cover"
+                  objectFit="cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0a1e3b]/90 to-[#0a1e3b]/40 flex items-end p-8">
                   <div>
@@ -925,10 +953,14 @@ export default function Home() {
 
               {/* Card 3 - Rankings & Traffic */}
               <div className={`min-w-[600px] mx-4 rounded-2xl overflow-hidden relative transition-all duration-500 shadow-[0_15px_40px_rgba(0,0,0,0.2)] ${currentSlide === 2 ? 'opacity-100 scale-100 h-[420px] z-10' : 'opacity-50 scale-[0.85] h-[380px]'}`}>
-                <img
-                  src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&h=840&fit=crop"
+                <PersonaVisual
+                  sectionId="stats_metrics"
+                  personaId={personaId || undefined}
+                  width={1200}
+                  height={840}
                   alt="Business growth charts showing traffic and ranking improvements"
                   className="w-full h-full object-cover"
+                  objectFit="cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-8">
                   <div>

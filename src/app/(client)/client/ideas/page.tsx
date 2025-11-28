@@ -9,9 +9,9 @@
 
 import { useState, useEffect } from 'react';
 import { PageContainer, Section } from '@/ui/layout/AppGrid';
-import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { IdeaRecorder } from '@/components/client/IdeaRecorder';
 import { Lightbulb, Plus, Clock } from 'lucide-react';
 import { getClientIdeas, type ClientIdea } from '@/lib/services/client/clientService';

@@ -1,0 +1,83 @@
+UNITE-HUB GAP DETECTION ANALYSIS
+Generated: 2025-11-27
+Scope: D:\Unite-Hub\src (2,378 TypeScript/TSX files)
+
+=== ISSUE SUMMARY ===
+
+1. CONSOLE STATEMENTS (1,144 total)
+   - Severity: MEDIUM
+   - Affected Files: 100
+   - Top Offender: src/app/api/webhooks/whatsapp/route.ts (15 logs)
+   - Recommendation: Create logging wrapper; gate with DEBUG env var
+
+2. TODO/FIXME COMMENTS (139 total)
+   - Severity: HIGH
+   - Affected Files: 68
+   - Critical: Xero API integration still a stub (src/lib/timetracking/xeroSyncAdapter.ts:11)
+   - Recommendation: Create tickets for each; prioritize P0; remove post-v1 items
+
+3. CONVEX MIGRATION INCOMPLETE (6 references)
+   - Severity: CRITICAL
+   - Locations:
+     * src/lib/jobs/scheduled-jobs.ts - references 'convex_frameworks' table
+     * src/lib/processing/alert-processor.ts - 6 references to 'convex_framework_alert_*'
+   - Recommendation: Migrate to Supabase schema or delete
+
+4. ORPHAN FILES (54 total)
+   - Severity: HIGH
+   - Location: _disabled/ folder (4 Convex agents + 2 Convex lib folders)
+   - Size: 76 KB of dead code
+   - Recommendation: Backup and delete
+
+5. BROKEN COMPONENTS (16 total)
+   - Severity: MEDIUM
+   - Examples:
+     * src/components/common/UsageMetrics.tsx - still references Convex
+     * src/components/geo/GeoRadiusMap.tsx - Google Maps not integrated
+     * src/components/seo/panels/* - 5 components using mock data instead of APIs
+   - Recommendation: Wire up APIs; remove mock data
+
+6. MISSING AGENT BINDINGS (31 exported, 5-6 unused)
+   - Severity: HIGH
+   - Gap: 5+ agent functions not exposed via API routes
+   - Agents Affected:
+     * analysisAgent (8 exported, 3 endpoints) - GAP: 5 functions
+     * contentAgent (6 exported, 2 endpoints) - GAP: 4 functions
+     * researchAgent (7 exported, 1 endpoint) - GAP: 6 functions
+   - Recommendation: Create API wrapper for each function
+
+7. RUNTIME ERRORS IN LOGS
+   - Severity: CRITICAL
+   - Error: "`cookies` was called outside request scope" (22 occurrences)
+   - Root Cause: getSupabaseServer() called at module initialization
+   - Impact: Blocks production deployment
+
+=== QUICK WINS (3-4 hours total) ===
+
+1. Remove console logs from sandbox-users/route.ts (15 min)
+2. Delete _disabled/ folder (10 min)
+3. Delete empty test files (5 min)
+4. Fix convex_frameworks query in scheduled-jobs.ts (20 min)
+5. Create logging wrapper function (2-3 hours)
+
+=== CRITICAL FIXES NEEDED (P0) ===
+
+1. Resolve "cookies outside request scope" error
+2. Complete Convex to Supabase migration (6 table refs)
+3. Implement logging wrapper to gate 1,144 console statements
+4. Wire up broken components to APIs
+
+=== DEFERRED WORK (Post-MVP) ===
+
+- Xero API integration completion (8-12 hours)
+- Autonomy engine features (6-8 hours)
+- Unused agent function bindings (4-6 hours)
+- SEO panel API integrations (4-6 hours)
+- Google Maps integration (3-4 hours)
+
+=== TOTAL ESTIMATED FIX TIME ===
+
+Quick Wins: 3-4 hours
+Critical Fixes: 8-12 hours
+Complete Remediation: 40-60 hours
+

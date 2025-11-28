@@ -1,0 +1,79 @@
+{
+  "patch_version": "1.0.1",
+  "target_agent": "seo",
+  "description": "Enable semantic cluster scoring, topical authority, intent mapping",
+
+  "enhancements": {
+    "semantic_clustering": {
+      "apply_framework": "seo_patterns.semantic_cluster_mapping",
+      "features": {
+        "auto_cluster_detection": true,
+        "pillar_page_identification": true,
+        "internal_linking_optimization": true,
+        "content_gap_analysis": true
+      },
+      "output": {
+        "cluster_map": true,
+        "content_recommendations": true,
+        "linking_strategy": true
+      }
+    },
+    "topical_authority": {
+      "apply_framework": "seo_patterns.topical_authority_building",
+      "scoring_dimensions": [
+        { "dimension": "content_depth", "weight": 0.3 },
+        { "dimension": "content_breadth", "weight": 0.25 },
+        { "dimension": "backlink_quality", "weight": 0.25 },
+        { "dimension": "freshness", "weight": 0.2 }
+      ],
+      "authority_score_output": true
+    },
+    "intent_mapping": {
+      "apply_framework": "seo_patterns.search_intent_mapping",
+      "intent_types": ["informational", "navigational", "transactional", "commercial"],
+      "auto_content_type_recommendation": true
+    },
+    "serp_analysis": {
+      "apply_framework": "seo_patterns.serp_gap_exploitation",
+      "gap_detection": [
+        "content_format_gaps",
+        "depth_gaps",
+        "freshness_gaps",
+        "featured_snippet_opportunities"
+      ]
+    },
+    "local_seo": {
+      "apply_framework": "seo_patterns.geo_signal_consolidation",
+      "signal_optimization": true,
+      "nap_consistency_check": true
+    }
+  },
+
+  "scoring_models": {
+    "technical_score": {
+      "factors": ["page_speed", "mobile_friendly", "crawlability", "schema_markup"],
+      "weight": 0.25
+    },
+    "content_score": {
+      "factors": ["relevance", "depth", "uniqueness", "freshness"],
+      "weight": 0.35
+    },
+    "authority_score": {
+      "factors": ["backlink_quality", "domain_authority", "topical_coverage"],
+      "weight": 0.25
+    },
+    "user_experience_score": {
+      "factors": ["engagement", "bounce_rate", "time_on_page"],
+      "weight": 0.15
+    }
+  },
+
+  "output_formats": {
+    "seo_audit": {
+      "sections": ["technical_issues", "content_opportunities", "authority_building", "quick_wins"]
+    },
+    "content_plan": {
+      "sections": ["pillar_content", "cluster_content", "support_content", "timeline"]
+    }
+  }
+}

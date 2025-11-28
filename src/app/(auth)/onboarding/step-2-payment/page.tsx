@@ -46,28 +46,28 @@ export default function OnboardingStep2Page() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <PlanCard
               name="Starter"
-              price="$49"
+              price="A$495"
               features={[
-                "Up to 100 emails analyzed/month",
-                "1 persona generation",
-                "Basic mind map",
-                "5 campaign templates",
-                "Standard support",
+                "20,000 AI tokens/month",
+                "2 website audits/month",
+                "500 contacts",
+                "1 team seat",
+                "Email support",
               ]}
               selected={selectedPlan === "starter"}
               onSelect={() => setSelectedPlan("starter")}
             />
             <PlanCard
-              name="Professional"
-              price="$99"
+              name="Pro"
+              price="A$895"
               features={[
-                "Unlimited email analysis",
-                "Multiple personas",
-                "Advanced mind map with auto-expansion",
+                "250,000 AI tokens/month",
+                "20 website audits/month",
+                "5,000 contacts",
+                "3 team seats",
                 "Unlimited campaigns",
-                "Competitor analysis",
                 "Priority support",
-                "Advanced analytics",
+                "API access",
               ]}
               selected={selectedPlan === "professional"}
               onSelect={() => setSelectedPlan("professional")}

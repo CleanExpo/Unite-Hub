@@ -51,6 +51,11 @@ Available agents:
 - analysis: General data analysis and pattern recognition
 - reasoning: Multi-pass autonomous reasoning with uncertainty tracking
 - orchestrator: Coordinates other agents (meta-level)
+- seo-audit: Technical SEO audits, Core Web Vitals, mobile-friendliness
+- seo-content: Content optimization, keyword analysis, readability scoring
+- seo-schema: Schema markup generation, rich results optimization
+- seo-ctr: CTR benchmarking, title/meta A/B testing, click optimization
+- seo-competitor: Competitor gap analysis, keyword/content/backlink gaps
 
 Rules:
 1. Assign one agent per step
@@ -60,6 +65,11 @@ Rules:
 5. Use reasoning for complex analysis
 6. Use content-agent for generation tasks
 7. Use contact-intelligence for scoring/classification
+8. Use seo-audit for technical SEO analysis and Core Web Vitals
+9. Use seo-content for content optimization and keyword analysis
+10. Use seo-schema for structured data and rich results
+11. Use seo-ctr for CTR benchmarking and A/B testing
+12. Use seo-competitor for competitive gap analysis
 
 Output ONLY valid JSON with this structure:
 {
@@ -244,6 +254,133 @@ Provide a structured task breakdown that can be executed sequentially by the ava
         complexity: 'moderate',
         estimatedSteps: 2,
         reasoning: 'Scoring followed by pattern analysis',
+      };
+    }
+
+    // SEO-related objectives
+    if (
+      objective.includes('seo') ||
+      objective.includes('audit') ||
+      objective.includes('technical audit')
+    ) {
+      return {
+        agentChain: ['seo-audit', 'analysis'],
+        steps: [
+          {
+            stepIndex: 1,
+            assignedAgent: 'seo-audit',
+            inputContext: { objective: request.objective },
+            expectedOutput: 'Technical SEO audit with Core Web Vitals',
+            dependencies: [],
+          },
+          {
+            stepIndex: 2,
+            assignedAgent: 'analysis',
+            inputContext: { auditResults: 'from-step-1' },
+            expectedOutput: 'Analyzed SEO insights and recommendations',
+            dependencies: [1],
+          },
+        ],
+        complexity: 'moderate',
+        estimatedSteps: 2,
+        reasoning: 'SEO audit followed by analysis',
+      };
+    }
+
+    if (
+      objective.includes('keyword') ||
+      objective.includes('content optim') ||
+      objective.includes('readability')
+    ) {
+      return {
+        agentChain: ['seo-content'],
+        steps: [
+          {
+            stepIndex: 1,
+            assignedAgent: 'seo-content',
+            inputContext: { objective: request.objective },
+            expectedOutput: 'Content optimization analysis with keyword insights',
+            dependencies: [],
+          },
+        ],
+        complexity: 'simple',
+        estimatedSteps: 1,
+        reasoning: 'Single content optimization step',
+      };
+    }
+
+    if (
+      objective.includes('schema') ||
+      objective.includes('structured data') ||
+      objective.includes('rich result') ||
+      objective.includes('markup')
+    ) {
+      return {
+        agentChain: ['seo-schema'],
+        steps: [
+          {
+            stepIndex: 1,
+            assignedAgent: 'seo-schema',
+            inputContext: { objective: request.objective },
+            expectedOutput: 'Generated schema markup for rich results',
+            dependencies: [],
+          },
+        ],
+        complexity: 'simple',
+        estimatedSteps: 1,
+        reasoning: 'Schema generation step',
+      };
+    }
+
+    if (
+      objective.includes('ctr') ||
+      objective.includes('click-through') ||
+      objective.includes('title test') ||
+      objective.includes('meta test')
+    ) {
+      return {
+        agentChain: ['seo-ctr'],
+        steps: [
+          {
+            stepIndex: 1,
+            assignedAgent: 'seo-ctr',
+            inputContext: { objective: request.objective },
+            expectedOutput: 'CTR analysis and optimization recommendations',
+            dependencies: [],
+          },
+        ],
+        complexity: 'simple',
+        estimatedSteps: 1,
+        reasoning: 'CTR optimization step',
+      };
+    }
+
+    if (
+      objective.includes('competitor') ||
+      objective.includes('gap analysis') ||
+      objective.includes('backlink')
+    ) {
+      return {
+        agentChain: ['seo-competitor', 'analysis'],
+        steps: [
+          {
+            stepIndex: 1,
+            assignedAgent: 'seo-competitor',
+            inputContext: { objective: request.objective },
+            expectedOutput: 'Competitor gap analysis results',
+            dependencies: [],
+          },
+          {
+            stepIndex: 2,
+            assignedAgent: 'analysis',
+            inputContext: { gapAnalysis: 'from-step-1' },
+            expectedOutput: 'Strategic recommendations from gap analysis',
+            dependencies: [1],
+          },
+        ],
+        complexity: 'moderate',
+        estimatedSteps: 2,
+        reasoning: 'Competitor analysis followed by strategic insights',
       };
     }
 

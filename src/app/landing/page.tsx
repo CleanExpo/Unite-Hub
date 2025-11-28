@@ -110,24 +110,24 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <PricingCard
               name="Starter"
-              price="$249"
-              description="Perfect for small agencies"
+              price="A$495"
+              description="Perfect for small teams"
               features={[
-                "1 Client Account",
-                "Up to 5,000 contacts",
-                "Email processing",
-                "Basic reporting",
+                "20,000 AI tokens/month",
+                "500 contacts",
+                "1 team seat",
+                "Email support",
               ]}
             />
             <PricingCard
-              name="Professional"
-              price="$549"
+              name="Pro"
+              price="A$895"
               description="Most popular"
               features={[
-                "5 Client Accounts",
-                "Up to 50,000 contacts",
-                "Email + content generation",
-                "Advanced analytics",
+                "250,000 AI tokens/month",
+                "5,000 contacts",
+                "3 team seats",
+                "Unlimited campaigns",
                 "Priority support",
               ]}
               popular={true}

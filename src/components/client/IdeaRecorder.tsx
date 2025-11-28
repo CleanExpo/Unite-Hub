@@ -6,7 +6,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import Button from '../ui/Button';
+import { Button } from '@/components/ui/button';
 
 export interface IdeaRecorderProps {
   onSubmit?: (idea: { type: 'voice' | 'text' | 'video'; content: string }) => void;

@@ -19,6 +19,10 @@ import type { SeoCredential } from "@/lib/seo/seoTypes";
 
 describe("buildBraveAuthUrl", () => {
   it("should build a valid OAuth authorization URL", () => {
+    // Set env var for test
+    const originalClientId = process.env.BRAVE_CREATOR_CLIENT_ID;
+    process.env.BRAVE_CREATOR_CLIENT_ID = "test-client-id";
+
     const options = {
       redirect_uri: "https://app.example.com/callback",
       state: "test-state-token",
@@ -26,6 +30,7 @@ describe("buildBraveAuthUrl", () => {
     };
 
     const authUrl = buildBraveAuthUrl(options);
+    process.env.BRAVE_CREATOR_CLIENT_ID = originalClientId;
 
     expect(authUrl).toContain("https://creators.brave.com/oauth2/authorize");
     expect(authUrl).toContain("redirect_uri=https%3A%2F%2Fapp.example.com%2Fcallback");
@@ -293,7 +298,8 @@ describe("maskBraveCredential", () => {
     const credential = "abcdefgh12345678ijklmnop";
     const masked = maskBraveCredential(credential);
 
-    expect(masked).toBe("abcdefgh*************mnop");
+    // 24 chars - 8 start - 4 end = 12 masked
+    expect(masked).toBe("abcdefgh************mnop");
     expect(masked.length).toBe(credential.length);
   });
 

@@ -1,31 +1,39 @@
 'use client';
 
-import { Metadata } from 'next';
 import { useState } from 'react';
 import { Check, X, Zap, ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
+/**
+ * PRICING SOURCE: src/lib/billing/pricing-config.ts (CANONICAL)
+ * All prices in AUD, GST inclusive
+ *
+ * Starter: $495/mo, $4,950/yr (12 months for 10)
+ * Pro: $895/mo, $8,950/yr (12 months for 10)
+ * Elite: $1,295/mo, $12,950/yr (12 months for 10)
+ */
+
 const pricingTiers = [
   {
     name: 'Starter',
     description: 'Perfect for solo entrepreneurs and small teams',
-    monthlyPrice: 29,
-    annualPrice: 24, // $24/mo when billed annually ($288/year)
+    monthlyPrice: 495,
+    annualPrice: 412, // $4,950/year = ~$412/mo (17% savings)
+    currency: 'AUD',
     features: [
       { name: '500 contacts', included: true },
-      { name: '1 workspace', included: true },
-      { name: '3 team members', included: true },
-      { name: 'AI content generation', included: true },
-      { name: 'Email tracking (opens/clicks)', included: true },
-      { name: '5 drip campaigns', included: true },
-      { name: '10 hours media transcription/mo', included: true },
-      { name: 'Basic analytics', included: true },
+      { name: '1 team seat', included: true },
+      { name: '20,000 AI tokens/month', included: true },
+      { name: '2 website audits/month', included: true },
+      { name: '5 email campaigns', included: true },
+      { name: 'Basic AI workspace', included: true },
       { name: 'Email support', included: true },
+      { name: 'Core dashboard', included: true },
       { name: 'Priority support', included: false },
+      { name: 'API access', included: false },
       { name: 'Custom integrations', included: false },
-      { name: 'SSO (SAML)', included: false },
     ],
     cta: 'Start 14-Day Trial',
     popular: false,
@@ -33,45 +41,45 @@ const pricingTiers = [
   {
     name: 'Pro',
     description: 'For growing teams and agencies',
-    monthlyPrice: 99,
-    annualPrice: 82, // $82/mo when billed annually ($984/year)
+    monthlyPrice: 895,
+    annualPrice: 746, // $8,950/year = ~$746/mo (17% savings)
+    currency: 'AUD',
     features: [
       { name: '5,000 contacts', included: true },
-      { name: '5 workspaces', included: true },
-      { name: '25 team members', included: true },
-      { name: 'Advanced AI features (Extended Thinking)', included: true },
-      { name: 'Email tracking + automation', included: true },
-      { name: '50 drip campaigns', included: true },
-      { name: '100 hours media transcription/mo', included: true },
-      { name: 'Advanced analytics & reports', included: true },
-      { name: 'Priority email & chat support', included: true },
+      { name: '3 team seats', included: true },
+      { name: '250,000 AI tokens/month', included: true },
+      { name: '20 website audits/month', included: true },
+      { name: 'Unlimited campaigns', included: true },
+      { name: 'Full NEXUS AI workspace', included: true },
+      { name: 'Drip campaigns', included: true },
+      { name: 'Priority support', included: true },
+      { name: 'API access', included: true },
       { name: 'A/B testing', included: true },
       { name: 'Custom integrations', included: false },
-      { name: 'SSO (SAML)', included: false },
     ],
     cta: 'Start 14-Day Trial',
     popular: true,
   },
   {
-    name: 'Enterprise',
+    name: 'Elite',
     description: 'For large organizations with custom needs',
-    monthlyPrice: null,
-    annualPrice: null,
+    monthlyPrice: 1295,
+    annualPrice: 1079, // $12,950/year = ~$1,079/mo (17% savings)
+    currency: 'AUD',
     features: [
       { name: 'Unlimited contacts', included: true },
-      { name: 'Unlimited workspaces', included: true },
-      { name: 'Unlimited team members', included: true },
-      { name: 'Full AI capabilities', included: true },
-      { name: 'Advanced automation & workflows', included: true },
-      { name: 'Unlimited drip campaigns', included: true },
-      { name: 'Unlimited media transcription', included: true },
-      { name: 'Custom reporting & BI integration', included: true },
-      { name: 'Dedicated account manager', included: true },
-      { name: '99.9% uptime SLA', included: true },
+      { name: '10 team seats', included: true },
+      { name: '2,000,000 AI tokens/month', included: true },
+      { name: '100 website audits/month', included: true },
+      { name: 'Unlimited campaigns', included: true },
+      { name: 'Dedicated AI agent', included: true },
+      { name: 'Custom brand model', included: true },
+      { name: 'A/B testing', included: true },
+      { name: 'White label options', included: true },
+      { name: 'Agency integration', included: true },
       { name: 'Custom integrations', included: true },
-      { name: 'SSO (SAML)', included: true },
     ],
-    cta: 'Contact Sales',
+    cta: 'Start 14-Day Trial',
     popular: false,
   },
 ];
@@ -177,15 +185,15 @@ export default function PricingPage() {
                   {tier.monthlyPrice ? (
                     <>
                       <span className="text-4xl font-bold">
-                        $
+                        A$
                         {billingCycle === 'monthly'
-                          ? tier.monthlyPrice
-                          : tier.annualPrice}
+                          ? tier.monthlyPrice.toLocaleString()
+                          : tier.annualPrice.toLocaleString()}
                       </span>
                       <span className="text-muted-foreground">/month</span>
                       {billingCycle === 'annual' && (
                         <p className="text-sm text-muted-foreground mt-1">
-                          Billed annually (${tier.annualPrice! * 12}/year)
+                          Billed annually (A${(tier.annualPrice! * 12).toLocaleString()}/year)
                         </p>
                       )}
                     </>
@@ -408,10 +416,10 @@ export default function PricingPage() {
               <Zap className="h-8 w-8 mx-auto mb-3 text-primary" />
               <h3 className="font-semibold mb-2">Premium Support</h3>
               <p className="text-sm text-muted-foreground mb-3">
-                $99/month
+                A$99/month
               </p>
               <p className="text-xs text-muted-foreground">
-                Add to any plan for priority support
+                Add to any plan for priority support (GST inclusive)
               </p>
             </div>
           </div>

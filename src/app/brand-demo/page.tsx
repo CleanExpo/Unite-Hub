@@ -55,14 +55,14 @@ export default function BrandDemoPage() {
               <div className="border-2 border-unite-teal rounded-lg p-6 text-center">
                 <MembershipBadge tier="starter" size="lg" className="mx-auto mb-4" />
                 <h3 className="font-bold text-lg text-unite-navy">Starter Member</h3>
-                <p className="text-3xl font-bold text-unite-blue mt-2">$249</p>
-                <p className="text-muted-foreground">per month + GST</p>
+                <p className="text-3xl font-bold text-unite-blue mt-2">A$495</p>
+                <p className="text-muted-foreground">per month (GST inclusive)</p>
               </div>
               <div className="border-2 border-unite-orange rounded-lg p-6 text-center">
                 <MembershipBadge tier="professional" size="lg" className="mx-auto mb-4" />
-                <h3 className="font-bold text-lg text-unite-navy">Professional Member</h3>
-                <p className="text-3xl font-bold text-unite-orange mt-2">$549</p>
-                <p className="text-muted-foreground">per month + GST</p>
+                <h3 className="font-bold text-lg text-unite-navy">Pro Member</h3>
+                <p className="text-3xl font-bold text-unite-orange mt-2">A$895</p>
+                <p className="text-muted-foreground">per month (GST inclusive)</p>
               </div>
             </div>
           </CardContent>

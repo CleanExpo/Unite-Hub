@@ -1,0 +1,63 @@
+{
+  "analysis_metadata": {
+    "timestamp": "2025-11-27T21:55:00Z",
+    "codebase": "Unite-Hub",
+    "analysis_scope": "D:Unite-Hubsrc",
+    "total_ts_files": 2378,
+    "total_api_routes": 577,
+    "total_lib_loc": 18965
+  },
+  "issues_summary": {
+    "console_statements": {
+      "total": 1144,
+      "affected_files": 100,
+      "severity": "MEDIUM",
+      "top_files": [
+        "src/app/api/webhooks/whatsapp/route.ts (15)",
+        "src/lib/founderOps/founderOpsQueue.ts (12)",
+        "src/app/api/admin/sandbox-users/route.ts (8)",
+        "src/app/api/aido/onboarding/generate/route.ts (7)",
+        "src/app/(staff)/staff/time-tracker/page.tsx (9)"
+      ]
+    },
+    "todo_fixme_comments": {
+      "total": 139,
+      "affected_files": 68,
+      "severity": "HIGH",
+      "critical_items": [
+        "src/lib/timetracking/xeroSyncAdapter.ts:11 - Stub implementation",
+        "src/server/autonomyEngine.ts:171,197,498,509 - 4 unimplemented features",
+        "src/context/contextFusionEngine.ts:352 - Phase 9+ TODO",
+        "src/app/api/content/iterate/route.ts:60 - AI regeneration TODO"
+      ]
+    },
+    "convex_migration": {
+      "total_references": 6,
+      "severity": "CRITICAL",
+      "issues": [
+        "src/lib/jobs/scheduled-jobs.ts - convex_frameworks table",
+        "src/lib/processing/alert-processor.ts - 6x convex_framework_alert_* tables"
+      ]
+    },
+    "orphan_files": {
+      "total": 54,
+      "severity": "HIGH",
+      "locations": [
+        "_disabled/agents/ - 4 Convex agent files (76 KB)",
+        "_disabled/dashboard_convex/ - Entire dashboard folder",
+        "_disabled/lib_convex/ - Convex library functions"
+      ]
+    }
+  },
+  "statistics": {
+    "total_issues": 237,
+    "by_severity": {
+      "CRITICAL": 3,
+      "HIGH": 8,
+      "MEDIUM": 15,
+      "LOW": 2
+    },
+    "estimated_total_fix": "40-60 hours",
+    "quick_wins_total": "3-4 hours"
+  }
+}

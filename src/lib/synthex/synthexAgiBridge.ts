@@ -524,266 +524,191 @@ async function executeContentAgent(request: AgentExecutionRequest): Promise<Agen
 
 /**
  * Execute research agent (SEO, keywords, competitor analysis)
+ * Uses real Claude API for SEO research and keyword analysis
  */
 async function executeResearchAgent(request: AgentExecutionRequest): Promise<AgentExecutionResult> {
   const { jobId, agentPayload } = request;
   const jobType = agentPayload.jobType;
+  const startTime = Date.now();
 
-  // Enrich payload based on job type
-  let enrichedPayload = { ...agentPayload };
+  try {
+    const llmClient = getLLMClient();
+    let llmResponse: any;
 
-  if (jobType === 'seo_launch') {
-    enrichedPayload = buildSeoLaunchPayload(
-      agentPayload,
-      agentPayload.brand,
-      agentPayload.tenant
-    );
-  }
+    // Extract SEO parameters from payload
+    const domain = agentPayload.primary_domain || agentPayload.brand?.domain || agentPayload.domain || 'unknown.com';
+    const targetKeywords = agentPayload.target_keywords || agentPayload.keywords || [];
+    const industry = agentPayload.tenant?.industry || agentPayload.industry || 'general';
 
-  // For MVP: Return mock result
-  // In production: Call actual Claude API with research tools
-  return {
-    success: true,
-    jobId,
-    resultType: 'seo_pages',
-    data: {
-      research: generateMockResearchResult(jobType, enrichedPayload),
-      generatedAt: new Date().toISOString(),
-      model: 'claude-sonnet-4-5-20250929',
-      tokens: {
-        input: 3000,
-        output: 1500,
+    // Call real Claude API for SEO research
+    llmResponse = await llmClient.researchSEO(domain, targetKeywords, industry);
+
+    return {
+      success: true,
+      jobId,
+      resultType: jobType === 'seo_launch' ? 'seo_pages' : 'research_complete',
+      data: {
+        research: {
+          content: llmResponse.content,
+          domain,
+          targetKeywords,
+          industry,
+        },
+        generatedAt: new Date().toISOString(),
+        model: llmResponse.model,
+        tokens: {
+          input: llmResponse.inputTokens,
+          output: llmResponse.outputTokens,
+        },
       },
-    },
-    cost: 0.12,
-  };
+      cost: llmResponse.cost,
+      executionTimeMs: Date.now() - startTime,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      jobId,
+      resultType: 'error',
+      data: { error: String(error) },
+      executionTimeMs: Date.now() - startTime,
+      error: error instanceof Error ? error.message : 'Research agent failed',
+    };
+  }
 }
 
 /**
  * Execute analysis agent (reporting, insights, recommendations)
+ * Uses real Claude API for metrics analysis and business insights
  */
 async function executeAnalysisAgent(request: AgentExecutionRequest): Promise<AgentExecutionResult> {
   const { jobId, agentPayload } = request;
   const jobType = agentPayload.jobType;
+  const startTime = Date.now();
 
-  // Enrich payload based on job type
-  let enrichedPayload = { ...agentPayload };
+  try {
+    const llmClient = getLLMClient();
+    let llmResponse: any;
 
-  if (jobType === 'monthly_report') {
-    enrichedPayload = buildMonthlyReportPayload(agentPayload, agentPayload.brand);
-  }
+    // Extract metrics and focus area from payload
+    const metrics = agentPayload.metrics || {
+      websiteTraffic: agentPayload.websiteTraffic || {},
+      emailEngagement: agentPayload.emailEngagement || {},
+      socialPerformance: agentPayload.socialPerformance || {},
+      conversions: agentPayload.conversions || {},
+    };
+    const focus = agentPayload.focus || agentPayload.brand?.brandName || 'business performance';
 
-  // For MVP: Return mock result
-  // In production: Call actual Claude API
-  return {
-    success: true,
-    jobId,
-    resultType: 'analysis_report',
-    data: {
-      analysis: generateMockAnalysisResult(jobType, enrichedPayload),
-      generatedAt: new Date().toISOString(),
-      model: 'claude-sonnet-4-5-20250929',
-      tokens: {
-        input: 2000,
-        output: 2000,
+    // Call real Claude API for metrics analysis
+    llmResponse = await llmClient.analyzeMetrics(metrics, focus);
+
+    return {
+      success: true,
+      jobId,
+      resultType: 'analysis_report',
+      data: {
+        analysis: {
+          content: llmResponse.content,
+          focus,
+          metricsAnalyzed: Object.keys(metrics),
+        },
+        generatedAt: new Date().toISOString(),
+        model: llmResponse.model,
+        tokens: {
+          input: llmResponse.inputTokens,
+          output: llmResponse.outputTokens,
+        },
       },
-    },
-    cost: 0.10,
-  };
+      cost: llmResponse.cost,
+      executionTimeMs: Date.now() - startTime,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      jobId,
+      resultType: 'error',
+      data: { error: String(error) },
+      executionTimeMs: Date.now() - startTime,
+      error: error instanceof Error ? error.message : 'Analysis agent failed',
+    };
+  }
 }
 
 /**
  * Execute coordination agent (multi-step workflows, orchestration)
+ * Uses real Claude API with Extended Thinking for strategic planning
  */
 async function executeCoordinationAgent(request: AgentExecutionRequest): Promise<AgentExecutionResult> {
   const { jobId, agentPayload } = request;
   const jobType = agentPayload.jobType;
+  const startTime = Date.now();
 
-  // Enrich payload
-  let enrichedPayload = { ...agentPayload };
+  try {
+    const llmClient = getLLMClient();
+    let llmResponse: any;
 
-  if (jobType === 'initial_launch_pack') {
-    enrichedPayload = buildInitialLaunchPackPayload(
-      agentPayload,
-      agentPayload.brand,
-      agentPayload.tenant
-    );
-  }
+    // Build business context from payload
+    const businessContext = {
+      brandName: agentPayload.brand?.brandName || agentPayload.brand_name,
+      industry: agentPayload.tenant?.industry || agentPayload.industry,
+      businessName: agentPayload.tenant?.businessName || agentPayload.business_name,
+      targetAudience: agentPayload.brand?.targetAudience,
+      valueProposition: agentPayload.brand?.valueProposition,
+      region: agentPayload.tenant?.region,
+      jobType,
+    };
 
-  // For MVP: Coordination returns structured workflow plan
-  // In production: Orchestrates multiple sub-agents
-  return {
-    success: true,
-    jobId,
-    resultType: 'content_generated',
-    data: {
-      workflow: {
-        steps: generateMockWorkflowSteps(jobType, enrichedPayload),
-        status: 'orchestrated',
-        subJobsCreated: 0,
-      },
-      generatedAt: new Date().toISOString(),
-      model: 'claude-opus-4-5-20251101',
-      tokens: {
-        input: 4000,
-        output: 2000,
-      },
-    },
-    cost: 0.25,
-  };
-}
+    // Build analysis request based on job type
+    let analysisRequest = '';
+    if (jobType === 'initial_launch_pack') {
+      analysisRequest = `Create a comprehensive launch strategy for ${businessContext.brandName}:
+1. Define the optimal sequence of marketing activities
+2. Prioritize channels based on the target audience
+3. Create a content calendar for the first 30 days
+4. Identify quick wins and long-term strategic goals
+5. Recommend resource allocation`;
+    } else {
+      analysisRequest = `Analyze the workflow requirements for ${jobType} and create an orchestration plan with:
+1. Step-by-step execution sequence
+2. Dependencies between tasks
+3. Resource requirements
+4. Success metrics
+5. Risk mitigation strategies`;
+    }
 
-// ============================================================================
-// MOCK RESULT GENERATORS (MVP Implementation)
-// ============================================================================
+    // Call real Claude API with Extended Thinking for strategic analysis
+    llmResponse = await llmClient.analyzeStrategy(businessContext, analysisRequest);
 
-/**
- * Generate mock content result
- */
-function generateMockContentResult(jobType: string, payload: Record<string, any>) {
-  const brand = payload.brand?.brandName || 'Client Brand';
-
-  switch (jobType) {
-    case 'initial_launch_pack':
-      return {
-        website: {
-          homepage_draft: `<h1>Welcome to ${brand}</h1><p>${payload.instructions?.substring(0, 100)}</p>`,
-          services_page: `<h1>Our Services</h1><p>Comprehensive ${brand} service offerings</p>`,
-          about_page: `<h1>About ${brand}</h1><p>${payload.tenant?.businessName} story and mission</p>`,
-          contact_page: `<h1>Contact Us</h1><p>Get in touch with ${brand}</p>`,
-        },
-        social: {
-          linkedin_posts: [
-            `#${brand}: Exciting announcements coming soon!`,
-            `Industry insights from ${brand}`,
-            `Join our growing community at ${brand}`,
-          ],
-          facebook_posts: [
-            `Welcome to ${brand} on Facebook!`,
-            `Check out our latest updates`,
-            `Special announcement for our followers`,
-          ],
-          instagram_posts: [
-            `${brand} content for Instagram`,
-            `Behind the scenes at ${brand}`,
-            `Customer success story`,
-          ],
-        },
-        email: {
-          welcome_email_1: `Subject: Welcome to ${brand}\n\nDear customer,\n\nWelcome to ${brand}!`,
-          welcome_email_2: `Subject: Your ${brand} journey starts now\n\nHere's what you can expect...`,
-          welcome_email_3: `Subject: Special offer for new ${brand} members\n\nAs a thank you...`,
-        },
-      };
-
-    case 'content_batch':
-      return {
-        contentPieces: Array(payload.count || 5).fill(0).map((_, i) => ({
-          id: `content_${i + 1}`,
-          type: payload.content_types?.[i % payload.content_types.length] || 'article',
-          title: `${brand} Content ${i + 1}`,
-          body: `High-quality content piece ${i + 1} tailored for ${brand}`,
-          cta: 'Learn more',
-        })),
-      };
-
-    case 'email_sequence':
-      return {
-        emails: Array(payload.email_count || 3).fill(0).map((_, i) => ({
-          id: `email_${i + 1}`,
-          sequenceNumber: i + 1,
-          subjectLine: `${brand}: Message ${i + 1}`,
-          previewText: `Preview of email ${i + 1}`,
-          htmlContent: `<h1>${brand}</h1><p>Email content ${i + 1}</p>`,
-          plaintextContent: `${brand} email ${i + 1}`,
-          cta: 'Click here',
-        })),
-      };
-
-    default:
-      return { generated: 'content', jobType };
-  }
-}
-
-/**
- * Generate mock research result
- */
-function generateMockResearchResult(jobType: string, payload: Record<string, any>) {
-  if (jobType === 'seo_launch') {
     return {
-      keywordResearch: {
-        primaryKeywords: payload.target_keywords || [],
-        secondaryKeywords: [
-          `${payload.target_keywords?.[0]} strategies`,
-          `best ${payload.target_keywords?.[0]} practices`,
-        ],
-        competitorAnalysis: [
-          { domain: 'competitor1.com', strength: 0.75 },
-          { domain: 'competitor2.com', strength: 0.65 },
-        ],
+      success: true,
+      jobId,
+      resultType: 'content_generated',
+      data: {
+        workflow: {
+          strategy: llmResponse.content,
+          thinkingProcess: llmResponse.thinkingContent,
+          status: 'orchestrated',
+          businessContext,
+        },
+        generatedAt: new Date().toISOString(),
+        model: llmResponse.model,
+        tokens: {
+          input: llmResponse.inputTokens,
+          output: llmResponse.outputTokens,
+        },
       },
-      landingPages: Array(5).fill(0).map((_, i) => ({
-        id: `seo_page_${i + 1}`,
-        title: `${payload.target_keywords?.[0]} - Page ${i + 1}`,
-        metaDescription: `Optimized page ${i + 1} for ${payload.target_keywords?.[0]}`,
-        content: `<h1>${payload.target_keywords?.[0]}</h1><p>Content optimized for search engines</p>`,
-        keywords: payload.target_keywords || [],
-      })),
-      strategyDocument: `SEO Strategy for ${payload.primary_domain}\n\nTarget keywords: ${payload.target_keywords?.join(', ')}\n\nRecommendations...`,
+      cost: llmResponse.cost,
+      executionTimeMs: Date.now() - startTime,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      jobId,
+      resultType: 'error',
+      data: { error: String(error) },
+      executionTimeMs: Date.now() - startTime,
+      error: error instanceof Error ? error.message : 'Coordination agent failed',
     };
   }
-
-  return { research: 'data', jobType };
-}
-
-/**
- * Generate mock analysis result
- */
-function generateMockAnalysisResult(jobType: string, payload: Record<string, any>) {
-  if (jobType === 'monthly_report') {
-    return {
-      executiveSummary: `Monthly performance report for ${payload.brand?.brandName || 'client'}`,
-      metrics: {
-        websiteTraffic: { sessions: 2450, users: 1820, bounce_rate: 0.42 },
-        emailEngagement: { opens: 0.28, clicks: 0.06, conversions: 0.02 },
-        socialPerformance: { followers: 1200, engagement_rate: 0.045 },
-        conversions: { total: 185, conversion_rate: 0.075 },
-      },
-      recommendations: [
-        'Optimize email subject lines for higher open rates',
-        'Increase social media posting frequency',
-        'Improve website mobile experience',
-        'Test new landing page designs',
-        'Implement retargeting campaigns',
-        'Enhance CTAs on key pages',
-        'Conduct A/B testing on homepage',
-      ],
-      competitiveBenchmarks: {
-        traffic_vs_industry: '+15% above average',
-        engagement_vs_competitors: 'Competitive',
-        conversion_rate_vs_industry: '+25% above average',
-      },
-    };
-  }
-
-  return { analysis: 'data', jobType };
-}
-
-/**
- * Generate mock workflow steps
- */
-function generateMockWorkflowSteps(jobType: string, payload: Record<string, any>) {
-  if (jobType === 'initial_launch_pack') {
-    return [
-      { step: 1, action: 'Generate website foundation', agent: 'content_agent', status: 'pending' },
-      { step: 2, action: 'Create social media templates', agent: 'content_agent', status: 'pending' },
-      { step: 3, action: 'Build email starter', agent: 'content_agent', status: 'pending' },
-      { step: 4, action: 'Optimize for SEO', agent: 'research_agent', status: 'pending' },
-      { step: 5, action: 'Generate recommendations', agent: 'analysis_agent', status: 'pending' },
-    ];
-  }
-
-  return [{ step: 1, action: 'Process request', status: 'pending' }];
 }
 
 // ============================================================================

@@ -524,7 +524,7 @@ Performance Score: 90+
 }
 ```
 
-### Professional Tier ($297/month)
+### Professional Tier ($895/month AUD inc GST)
 
 ```typescript
 {

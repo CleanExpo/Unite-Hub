@@ -13,9 +13,19 @@ const nextConfig = {
   experimental: {
     // Enable optimized compilation
     optimizeCss: true,
-    optimizePackageImports: ['lucide-react', '@anthropic-ai/sdk', 'recharts'],
-    // Enable OpenTelemetry instrumentation
-    instrumentationHook: true,
+    // Phase 10: Extended package import optimization for better tree-shaking
+    // Note: zustand removed to avoid conflict with serverExternalPackages (Turbopack requirement)
+    optimizePackageImports: [
+      'lucide-react',
+      '@anthropic-ai/sdk',
+      'recharts',
+      'date-fns',
+      'lodash',
+      'framer-motion',
+      '@radix-ui/react-icons',
+      'zod',
+    ],
+    // Note: instrumentationHook removed - available by default in Next.js 16
   },
 
   // Turbopack configuration (required for Next.js 16)

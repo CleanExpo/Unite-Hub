@@ -4,40 +4,48 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
   apiVersion: "2024-11-20.acacia",
 });
 
+/**
+ * DEPRECATED: Use lib/stripe/client.ts and lib/billing/pricing-config.ts instead
+ * This file remains for backwards compatibility only.
+ *
+ * Canonical pricing source: src/lib/billing/pricing-config.ts
+ * All prices in AUD, GST inclusive
+ */
 export const PLANS = {
   starter: {
     name: "Starter",
-    price: 9900, // $99.00 in cents
+    price: 49500, // A$495.00 in cents (AUD, GST inclusive)
     interval: "month",
     features: [
-      "1 Client Account",
-      "Up to 5,000 contacts",
-      "Email processing",
-      "Basic reporting",
+      "20,000 AI tokens/month",
+      "2 website audits/month",
+      "500 contacts",
+      "1 team seat",
+      "5 email campaigns",
     ],
   },
   professional: {
-    name: "Professional",
-    price: 29900, // $299.00 in cents
+    name: "Pro",
+    price: 89500, // A$895.00 in cents (AUD, GST inclusive)
     interval: "month",
     features: [
-      "5 Client Accounts",
-      "Up to 50,000 contacts",
-      "Email + content generation",
-      "Advanced analytics",
-      "Priority support",
+      "250,000 AI tokens/month",
+      "20 website audits/month",
+      "5,000 contacts",
+      "3 team seats",
+      "Unlimited campaigns",
     ],
   },
-  enterprise: {
-    name: "Enterprise",
-    price: null, // Custom pricing
+  elite: {
+    name: "Elite",
+    price: 129500, // A$1,295.00 in cents (AUD, GST inclusive)
     interval: "month",
     features: [
-      "Unlimited accounts",
+      "2,000,000 AI tokens/month",
+      "100 website audits/month",
       "Unlimited contacts",
-      "All features included",
-      "Dedicated manager",
-      "Custom integrations",
+      "10 team seats",
+      "White label options",
     ],
   },
 };

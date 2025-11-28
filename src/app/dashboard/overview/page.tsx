@@ -58,7 +58,7 @@ export default function DashboardOverviewPage() {
   const [loading, setLoading] = useState(true);
   const [deployedCount, setDeployedCount] = useState(12);
 
-  const workspaceId = currentOrganization?.org_id || "demo";
+  const workspaceId = currentOrganization?.org_id; // No demo fallback - require valid workspace
 
   // Fetch pending content on mount
   useEffect(() => {
@@ -284,8 +284,8 @@ export default function DashboardOverviewPage() {
 
           {/* Right Sidebar */}
           <aside className="w-[320px] bg-[#0a1f2e]/60 backdrop-blur-sm border-l border-cyan-900/30 flex flex-col">
-            <NexusAssistant workspaceId={workspaceId} />
-            <ExecutionTicker workspaceId={workspaceId} />
+            <NexusAssistant workspaceId={workspaceId || ""} />
+            <ExecutionTicker workspaceId={workspaceId || ""} />
           </aside>
         </div>
       </div>

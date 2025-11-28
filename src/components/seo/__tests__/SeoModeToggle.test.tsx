@@ -22,7 +22,8 @@ describe("SeoModeToggle", () => {
 
     const standardButton = screen.getByText("Standard").closest("button");
     expect(standardButton).toHaveAttribute("aria-pressed", "true");
-    expect(standardButton).toHaveClass("bg-primary");
+    // Active state uses text-white class instead of bg-primary (gradient is on sliding background)
+    expect(standardButton).toHaveClass("text-white");
   });
 
   it("should highlight hypnotic mode when active", () => {
@@ -31,7 +32,8 @@ describe("SeoModeToggle", () => {
 
     const hypnoticButton = screen.getByText("Hypnotic").closest("button");
     expect(hypnoticButton).toHaveAttribute("aria-pressed", "true");
-    expect(hypnoticButton).toHaveClass("bg-primary");
+    // Active state uses text-white class instead of bg-primary (gradient is on sliding background)
+    expect(hypnoticButton).toHaveClass("text-white");
   });
 
   it("should call onModeChange when clicking standard button", () => {

@@ -4,6 +4,7 @@
  */
 
 import { createClient } from "@supabase/supabase-js";
+import { sendEmail } from "@/lib/email/email-service";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -147,7 +148,10 @@ export async function enforceAIBudget(
         `($${dailyStatus.spent_usd.toFixed(2)} / $${dailyStatus.limit_usd.toFixed(2)})`
     );
 
-    // TODO: Send alert email/notification to workspace admin
+    // Send alert email to workspace admin (async, don't block)
+    sendBudgetAlertEmail(workspaceId, dailyStatus).catch((err) =>
+      console.error("Failed to send budget alert email:", err)
+    );
   }
 
   return {
@@ -350,12 +354,32 @@ export async function sendBudgetAlert(
 
   console.log(`📧 Budget Alert:\n${subject}\n${message}`);
 
-  // TODO: Implement actual email sending via SendGrid/Resend
-  // await sendEmail({
-  //   to: budgetLimits.notify_email,
-  //   subject,
-  //   text: message,
-  // });
+  // Send email via multi-provider email service (SendGrid → Resend → SMTP)
+  try {
+    await sendEmail({
+      to: budgetLimits.notify_email,
+      subject,
+      text: message,
+      html: `<div style="font-family: sans-serif; padding: 20px;">
+        <h2 style="color: ${type === 'limit' ? '#dc2626' : '#f59e0b'};">${subject}</h2>
+        <p>${message.replace(/\n/g, '<br>')}</p>
+        <hr style="margin: 20px 0;">
+        <p style="color: #6b7280; font-size: 12px;">
+          This is an automated alert from Unite-Hub AI Cost Monitoring.
+        </p>
+      </div>`,
+    });
+    console.log(`✅ Budget alert email sent to ${budgetLimits.notify_email}`);
+  } catch (emailError) {
+    console.error(`❌ Failed to send budget alert email:`, emailError);
+  }
+}
+
+/**
+ * Helper to send budget alert when threshold is reached (called from enforceAIBudget)
+ */
+async function sendBudgetAlertEmail(workspaceId: string, status: BudgetStatus) {
+  await sendBudgetAlert(workspaceId, status, "threshold");
 }
 
 /**

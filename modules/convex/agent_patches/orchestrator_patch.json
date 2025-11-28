@@ -1,0 +1,84 @@
+{
+  "patch_version": "1.0.1",
+  "target_agent": "orchestrator",
+  "description": "Inject CONVEX-first strategy reasoning, brand matrices, funnel logic",
+
+  "capabilities_to_add": [
+    "convex_strategy_layer",
+    "convex_brand_matrix",
+    "convex_funnel_logic",
+    "convex_seo_engine",
+    "convex_market_shift_detector",
+    "convex_offer_architecture"
+  ],
+
+  "behaviors": [
+    {
+      "trigger": "marketing_request",
+      "action": "initiate_with_convex_patterns",
+      "description": "Always initiate marketing requests with CONVEX patterns"
+    },
+    {
+      "trigger": "content_generation",
+      "action": "inject_high_conversion_reasoning",
+      "description": "Inject high-conversion reasoning automatically"
+    },
+    {
+      "trigger": "funnel_design",
+      "action": "apply_micro_commitment_sequencing",
+      "description": "Generate funnels using micro-commitment sequencing"
+    },
+    {
+      "trigger": "output_validation",
+      "action": "score_against_convex_standards",
+      "description": "Score outputs against CONVEX standards"
+    }
+  ],
+
+  "routing_rules": {
+    "strategy_requests": {
+      "keywords": ["strategy", "positioning", "brand", "market"],
+      "primary_framework": "brand_positioning",
+      "fallback": "category_domination_model"
+    },
+    "funnel_requests": {
+      "keywords": ["funnel", "conversion", "landing", "signup"],
+      "primary_framework": "funnel_design",
+      "fallback": "micro_commitment_sequencing"
+    },
+    "seo_requests": {
+      "keywords": ["seo", "search", "ranking", "content"],
+      "primary_framework": "seo_patterns",
+      "fallback": "semantic_cluster_mapping"
+    },
+    "competitive_requests": {
+      "keywords": ["competitor", "market", "positioning", "advantage"],
+      "primary_framework": "competitor_model",
+      "fallback": "weakness_opportunity_matrix"
+    }
+  },
+
+  "integration_points": {
+    "pre_processing": {
+      "load_convex_library": true,
+      "apply_reasoning_patterns": true,
+      "validate_input_context": true
+    },
+    "processing": {
+      "use_convex_frameworks": true,
+      "apply_compression_rules": true,
+      "enforce_outcome_focus": true
+    },
+    "post_processing": {
+      "score_output": true,
+      "validate_truth_layer": true,
+      "apply_compliance_checks": true
+    }
+  },
+
+  "scoring_thresholds": {
+    "minimum_quality_score": 0.7,
+    "conversion_confidence": 0.6,
+    "brand_alignment": 0.8
+  }
+}

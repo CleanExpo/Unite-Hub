@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -9,6 +10,7 @@ import {
   AlertCircle,
   Clock,
   Home,
+  Loader2,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -34,14 +36,14 @@ interface StatusConfig {
   actionHref: string;
 }
 
-export default function ApprovalResultPage() {
+function ApprovalResultContent() {
   const searchParams = useSearchParams();
   const status = (searchParams.get("status") || "invalid") as StatusType;
 
   const statusConfigs: Record<StatusType, StatusConfig> = {
     approved: {
       icon: <CheckCircle className="w-16 h-16 text-green-400" />,
-      title: "Device Approved! ✓",
+      title: "Device Approved!",
       message:
         "The device has been successfully approved and trusted for 90 days. The user can now access the CRM system.",
       bgColor: "bg-green-500/10",
@@ -87,7 +89,7 @@ export default function ApprovalResultPage() {
       icon: <XCircle className="w-16 h-16 text-red-400" />,
       title: "Unauthorized",
       message:
-        "Only Phill (phill.mcgurk@gmail.com) can approve device access requests. Please ensure you are logged in with the correct account.",
+        "Only authorized administrators can approve device access requests. Please ensure you are logged in with the correct account.",
       bgColor: "bg-red-500/10",
       textColor: "text-red-200",
       borderColor: "border-red-500/30",
@@ -143,67 +145,75 @@ export default function ApprovalResultPage() {
   const config = statusConfigs[status];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center p-4">
-      <Card
-        className={`w-full max-w-md ${config.bgColor} border ${config.borderColor}`}
-      >
-        <div className="p-8 text-center">
-          {/* Icon */}
-          <div className="flex justify-center mb-6">{config.icon}</div>
-
-          {/* Title */}
-          <h1 className="text-2xl font-bold text-white mb-2">
-            {config.title}
-          </h1>
-
-          {/* Message */}
-          <p className={`text-sm ${config.textColor} mb-8 leading-relaxed`}>
-            {config.message}
-          </p>
-
-          {/* Info Box */}
-          <div className="bg-slate-700/50 border border-slate-600 rounded-lg p-4 mb-6">
-            <p className="text-xs text-slate-400 mb-2">Status Code:</p>
-            <p className="text-sm font-mono text-slate-300">{status}</p>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="space-y-3">
-            <Link href={config.actionHref} className="block">
-              <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                {config.actionLabel}
+    <Card
+      className={`w-full max-w-md ${config.bgColor} border ${config.borderColor}`}
+    >
+      <div className="p-8 text-center">
+        <div className="flex justify-center mb-6">{config.icon}</div>
+        <h1 className="text-2xl font-bold text-white mb-2">
+          {config.title}
+        </h1>
+        <p className={`text-sm ${config.textColor} mb-8 leading-relaxed`}>
+          {config.message}
+        </p>
+        <div className="bg-slate-700/50 border border-slate-600 rounded-lg p-4 mb-6">
+          <p className="text-xs text-slate-400 mb-2">Status Code:</p>
+          <p className="text-sm font-mono text-slate-300">{status}</p>
+        </div>
+        <div className="space-y-3">
+          <Link href={config.actionHref} className="block">
+            <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+              {config.actionLabel}
+            </Button>
+          </Link>
+          {status !== "approved" && (
+            <Link href="/admin/dashboard" className="block">
+              <Button
+                variant="outline"
+                className="w-full border-slate-600 hover:bg-slate-700"
+              >
+                <Home className="w-4 h-4 mr-2" />
+                Go to Dashboard
               </Button>
             </Link>
-
-            {status !== "approved" && (
-              <Link href="/admin/dashboard" className="block">
-                <Button
-                  variant="outline"
-                  className="w-full border-slate-600 hover:bg-slate-700"
-                >
-                  <Home className="w-4 h-4 mr-2" />
-                  Go to Dashboard
-                </Button>
-              </Link>
-            )}
-          </div>
-
-          {/* Footer Info */}
-          <div className="mt-8 pt-6 border-t border-slate-600">
-            <p className="text-xs text-slate-500">
-              Need help?{" "}
-              <a
-                href="mailto:support@example.com"
-                className="text-blue-400 hover:text-blue-300"
-              >
-                Contact Support
-              </a>
-            </p>
-          </div>
+          )}
         </div>
-      </Card>
+        <div className="mt-8 pt-6 border-t border-slate-600">
+          <p className="text-xs text-slate-500">
+            Need help?{" "}
+            <a
+              href="mailto:support@example.com"
+              className="text-blue-400 hover:text-blue-300"
+            >
+              Contact Support
+            </a>
+          </p>
+        </div>
+      </div>
+    </Card>
+  );
+}
 
-      {/* Background decoration */}
+function LoadingFallback() {
+  return (
+    <Card className="w-full max-w-md bg-slate-800/50 border border-slate-600">
+      <div className="p-8 text-center">
+        <div className="flex justify-center mb-6">
+          <Loader2 className="w-16 h-16 text-blue-400 animate-spin" />
+        </div>
+        <h1 className="text-2xl font-bold text-white mb-2">Loading...</h1>
+        <p className="text-sm text-slate-400">Please wait while we check your approval status.</p>
+      </div>
+    </Card>
+  );
+}
+
+export default function ApprovalResultPage() {
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center p-4">
+      <Suspense fallback={<LoadingFallback />}>
+        <ApprovalResultContent />
+      </Suspense>
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />

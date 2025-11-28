@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import Badge from '../ui/Badge';
+import { Badge } from '@/components/ui/badge';
 
 export interface Task {
   id: string;

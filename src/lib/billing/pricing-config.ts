@@ -47,8 +47,8 @@ export const PRICING_PLANS: Record<string, PricingPlan> = {
     currency: "AUD",
     interval: "month",
     gstIncluded: true,
-    stripePriceIdMonthly: "price_starter_monthly",
-    stripePriceIdAnnual: "price_starter_annual",
+    stripePriceIdMonthly: process.env.STRIPE_PRICE_ID_STARTER || "price_starter_monthly",
+    stripePriceIdAnnual: process.env.STRIPE_PRICE_ID_STARTER_ANNUAL || "price_starter_annual",
     limits: {
       aiTokens: 20000,
       audits: 2,
@@ -80,8 +80,8 @@ export const PRICING_PLANS: Record<string, PricingPlan> = {
     currency: "AUD",
     interval: "month",
     gstIncluded: true,
-    stripePriceIdMonthly: "price_pro_monthly",
-    stripePriceIdAnnual: "price_pro_annual",
+    stripePriceIdMonthly: process.env.STRIPE_PRICE_ID_PROFESSIONAL || "price_pro_monthly",
+    stripePriceIdAnnual: process.env.STRIPE_PRICE_ID_PROFESSIONAL_ANNUAL || "price_pro_annual",
     limits: {
       aiTokens: 250000,
       audits: 20,
@@ -115,8 +115,8 @@ export const PRICING_PLANS: Record<string, PricingPlan> = {
     currency: "AUD",
     interval: "month",
     gstIncluded: true,
-    stripePriceIdMonthly: "price_elite_monthly",
-    stripePriceIdAnnual: "price_elite_annual",
+    stripePriceIdMonthly: process.env.STRIPE_PRICE_ID_ELITE || "price_elite_monthly",
+    stripePriceIdAnnual: process.env.STRIPE_PRICE_ID_ELITE_ANNUAL || "price_elite_annual",
     limits: {
       aiTokens: 2000000,
       audits: 100,

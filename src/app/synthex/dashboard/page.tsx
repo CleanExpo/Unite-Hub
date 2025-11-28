@@ -179,7 +179,7 @@ export default function SynthexDashboard() {
       if (billingRes.ok) {
         const billingData = await billingRes.json();
         setSubscription(billingData.subscription);
-        calculateUsageStats(tenantData.id, billingData.subscription);
+        calculateUsageStats(tenantData.id, billingData.subscription, billingData.usage);
       }
 
       // Fetch jobs from API
@@ -198,7 +198,11 @@ export default function SynthexDashboard() {
     }
   };
 
-  const calculateUsageStats = (tenantIdVal: string, subData: Subscription | null) => {
+  const calculateUsageStats = (
+    tenantIdVal: string,
+    subData: Subscription | null,
+    usageData?: { brands: number; brandsLimit: number; jobsThisMonth: number; jobsLimit: number }
+  ) => {
     // Filter jobs from this month
     const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     const jobsThisMonth = jobs.filter((job) => {
@@ -221,9 +225,9 @@ export default function SynthexDashboard() {
 
     setUsageStats({
       jobsThisMonth: jobsThisMonth.length,
-      jobLimit: planLimits.jobsLimit,
-      brandsActive: 1, // TODO: Fetch actual brands count
-      brandsLimit: planLimits.brandsLimit,
+      jobLimit: usageData?.jobsLimit || planLimits.jobsLimit,
+      brandsActive: usageData?.brands ?? 0,
+      brandsLimit: usageData?.brandsLimit || planLimits.brandsLimit,
       costThisMonth,
       costBudget: planLimits.costBudget,
     });

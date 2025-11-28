@@ -363,6 +363,32 @@ export class OrchestratorEngine {
           risk = 30;
           break;
 
+        // SEO Enhancement Agents
+        case 'seo-audit':
+          output = await this.executeSEOAuditAgent(context);
+          risk = 20;
+          break;
+
+        case 'seo-content':
+          output = await this.executeSEOContentAgent(context);
+          risk = 25;
+          break;
+
+        case 'seo-schema':
+          output = await this.executeSEOSchemaAgent(context);
+          risk = 15;
+          break;
+
+        case 'seo-ctr':
+          output = await this.executeSEOCTRAgent(context);
+          risk = 20;
+          break;
+
+        case 'seo-competitor':
+          output = await this.executeSEOCompetitorAgent(context);
+          risk = 25;
+          break;
+
         default:
           output = { status: 'skipped', reason: `Unknown agent: ${agent}` };
           uncertainty = 80;
@@ -421,6 +447,193 @@ export class OrchestratorEngine {
       status: 'completed',
       analysisComplete: true,
     };
+  }
+
+  // SEO Enhancement Agent Execution Methods
+
+  private async executeSEOAuditAgent(context: Record<string, any>) {
+    // Technical SEO audit with Core Web Vitals
+    const { seoAuditService } = await import('@/lib/seoEnhancement');
+
+    try {
+      const url = context.url || context.objective?.match(/https?:\/\/[^\s]+/)?.[0];
+      if (!url) {
+        return {
+          status: 'failed',
+          error: 'No URL provided for SEO audit',
+        };
+      }
+
+      const auditJob = await seoAuditService.createAuditJob({
+        workspaceId: context.workspaceId,
+        url,
+        auditType: context.auditType || 'full',
+      });
+
+      return {
+        status: 'completed',
+        auditJobId: auditJob.id,
+        message: 'SEO audit job created and queued',
+      };
+    } catch (error) {
+      return {
+        status: 'failed',
+        error: error instanceof Error ? error.message : 'SEO audit failed',
+      };
+    }
+  }
+
+  private async executeSEOContentAgent(context: Record<string, any>) {
+    // Content optimization analysis
+    const { contentOptimizationService } = await import('@/lib/seoEnhancement');
+
+    try {
+      const url = context.url || context.objective?.match(/https?:\/\/[^\s]+/)?.[0];
+      const targetKeyword = context.targetKeyword || context.keyword;
+
+      if (!url || !targetKeyword) {
+        return {
+          status: 'failed',
+          error: 'URL and target keyword are required for content analysis',
+        };
+      }
+
+      const analysisJob = await contentOptimizationService.createContentAnalysis({
+        workspaceId: context.workspaceId,
+        url,
+        targetKeyword,
+        secondaryKeywords: context.secondaryKeywords,
+      });
+
+      return {
+        status: 'completed',
+        analysisJobId: analysisJob.id,
+        message: 'Content analysis job created and queued',
+      };
+    } catch (error) {
+      return {
+        status: 'failed',
+        error: error instanceof Error ? error.message : 'Content analysis failed',
+      };
+    }
+  }
+
+  private async executeSEOSchemaAgent(context: Record<string, any>) {
+    // Schema markup generation
+    const { richResultsService } = await import('@/lib/seoEnhancement');
+
+    try {
+      const url = context.url || context.objective?.match(/https?:\/\/[^\s]+/)?.[0];
+      const schemaType = context.schemaType || 'Article';
+
+      if (!url) {
+        return {
+          status: 'failed',
+          error: 'URL is required for schema generation',
+        };
+      }
+
+      const schema = await richResultsService.generateSchema(
+        context.workspaceId,
+        url,
+        schemaType,
+        context.pageInfo
+      );
+
+      const scriptTag = richResultsService.generateSchemaScript(schema.schema_json);
+
+      return {
+        status: 'completed',
+        schemaId: schema.id,
+        schemaType: schema.schema_type,
+        scriptTag,
+        message: 'Schema markup generated successfully',
+      };
+    } catch (error) {
+      return {
+        status: 'failed',
+        error: error instanceof Error ? error.message : 'Schema generation failed',
+      };
+    }
+  }
+
+  private async executeSEOCTRAgent(context: Record<string, any>) {
+    // CTR optimization and benchmarking
+    const { ctrOptimizationService } = await import('@/lib/seoEnhancement');
+
+    try {
+      const url = context.url || context.objective?.match(/https?:\/\/[^\s]+/)?.[0];
+      const keyword = context.keyword || context.targetKeyword;
+
+      if (!url || !keyword) {
+        return {
+          status: 'failed',
+          error: 'URL and keyword are required for CTR analysis',
+        };
+      }
+
+      // Check for CTR benchmark data
+      const currentData = context.currentData || {
+        impressions: context.impressions || 1000,
+        clicks: context.clicks || 30,
+        position: context.position || 5,
+      };
+
+      const benchmark = await ctrOptimizationService.analyzeCTRBenchmark(
+        context.workspaceId,
+        url,
+        keyword,
+        currentData
+      );
+
+      return {
+        status: 'completed',
+        benchmarkId: benchmark.id,
+        opportunityLevel: benchmark.opportunity_level,
+        estimatedClickGain: benchmark.estimated_click_gain,
+        message: 'CTR benchmark analysis completed',
+      };
+    } catch (error) {
+      return {
+        status: 'failed',
+        error: error instanceof Error ? error.message : 'CTR analysis failed',
+      };
+    }
+  }
+
+  private async executeSEOCompetitorAgent(context: Record<string, any>) {
+    // Competitor gap analysis
+    const { competitorGapService } = await import('@/lib/seoEnhancement');
+
+    try {
+      const clientDomain = context.clientDomain || context.domain;
+
+      if (!clientDomain) {
+        return {
+          status: 'failed',
+          error: 'Client domain is required for competitor analysis',
+        };
+      }
+
+      // Run keyword gap analysis
+      const keywordGap = await competitorGapService.analyzeKeywordGap(
+        context.workspaceId,
+        clientDomain
+      );
+
+      return {
+        status: 'completed',
+        analysisId: keywordGap.id,
+        gapKeywordsCount: keywordGap.gap_keywords?.length || 0,
+        totalSearchVolume: keywordGap.total_search_volume,
+        message: 'Competitor gap analysis completed',
+      };
+    } catch (error) {
+      return {
+        status: 'failed',
+        error: error instanceof Error ? error.message : 'Competitor analysis failed',
+      };
+    }
   }
 
   /**

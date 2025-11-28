@@ -7,10 +7,10 @@ export const dynamic = 'force-dynamic';
  * Will be wired to APIs in Phase 2 Step 4
  */
 
-import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { Badge } from '@/components/ui/Badge';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import { Settings, User, Bell, Shield, Database } from 'lucide-react';
 import { PageContainer, Section } from '@/ui/layout/AppGrid';
 

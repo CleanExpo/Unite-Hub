@@ -1,0 +1,88 @@
+{
+  "patch_version": "1.0.1",
+  "target_agent": "visual_intelligence",
+  "description": "Map visuals to CONVEX brand psychology anchors",
+
+  "enhancements": {
+    "brand_psychology_mapping": {
+      "visual_elements": {
+        "color_psychology": {
+          "trust": ["blue", "green", "white"],
+          "urgency": ["red", "orange", "yellow"],
+          "premium": ["black", "gold", "purple"],
+          "growth": ["green", "blue", "teal"]
+        },
+        "typography_psychology": {
+          "authority": ["serif", "bold", "large"],
+          "modern": ["sans-serif", "clean", "minimal"],
+          "friendly": ["rounded", "medium-weight", "readable"]
+        },
+        "imagery_psychology": {
+          "aspirational": ["success_scenarios", "transformation_visuals"],
+          "social_proof": ["team_photos", "customer_testimonials"],
+          "product_focused": ["feature_highlights", "comparison_visuals"]
+        }
+      }
+    },
+    "conversion_visual_optimization": {
+      "apply_frameworks": [
+        "funnel_design.frictionless_cta_structure",
+        "funnel_design.social_weight_anchoring"
+      ],
+      "cta_visual_rules": {
+        "contrast_ratio_minimum": 4.5,
+        "size_prominence": "high",
+        "position": "above_fold_and_repeated",
+        "whitespace_around": true
+      },
+      "trust_signals_placement": {
+        "logos": "near_cta",
+        "testimonials": "mid_page",
+        "certifications": "footer_and_checkout"
+      }
+    },
+    "emotional_resonance": {
+      "apply_framework": "funnel_design.emotional_trigger_mapping",
+      "visual_triggers": {
+        "fear": ["problem_visualization", "consequence_imagery"],
+        "desire": ["outcome_visualization", "lifestyle_imagery"],
+        "trust": ["faces", "credentials", "security_symbols"],
+        "urgency": ["countdown_visuals", "scarcity_indicators"]
+      }
+    }
+  },
+
+  "visual_scoring": {
+    "brand_consistency_score": {
+      "factors": ["color_adherence", "typography_match", "imagery_alignment"],
+      "threshold": 0.85
+    },
+    "conversion_optimization_score": {
+      "factors": ["cta_visibility", "trust_signal_placement", "visual_hierarchy"],
+      "threshold": 0.8
+    },
+    "emotional_impact_score": {
+      "factors": ["imagery_relevance", "color_psychology_match", "visual_storytelling"],
+      "threshold": 0.75
+    }
+  },
+
+  "output_formats": {
+    "visual_audit": {
+      "sections": [
+        "brand_alignment_analysis",
+        "conversion_optimization_recommendations",
+        "emotional_impact_assessment",
+        "priority_improvements"
+      ]
+    },
+    "design_guidelines": {
+      "include": [
+        "color_palette_psychology",
+        "typography_recommendations",
+        "imagery_guidelines",
+        "cta_visual_standards"
+      ]
+    }
+  }
+}

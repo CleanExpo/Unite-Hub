@@ -95,36 +95,36 @@
 
 ---
 
-**+1 Additional Social Platform** - $97/month
+**+1 Additional Social Platform** - $149 AUD/month
 - 4 posts/month on the new platform
 
-**Advanced Analytics Dashboard** - $147/month
+**Advanced Analytics Dashboard** - $219 AUD/month
 - Real-time metrics, custom KPIs, exportable reports
 
-**Google/Facebook Ads Management** - $297/month + 10% of ad spend
+**Google/Facebook Ads Management** - $449 AUD/month + 10% of ad spend
 - Campaign setup, optimization, monthly reporting
 
-**PR & Media Outreach** - $397/month
+**PR & Media Outreach** - $595 AUD/month
 - Press release writing, media list building, outreach campaigns
 
 ---
 
-### One-Time Projects
+### One-Time Projects (AUD)
 
-**New Website Build** - $1,497-3,997
+**New Website Build** - $2,495-5,995 AUD
 - AI-designed, SEO-optimized, mobile-responsive
 - Built in 2-3 days (not 2-3 months)
 - 5 pages standard, unlimited revisions in first 30 days
-- **Your cost**: ~$200 (AI generation + hosting setup)
+- **Your cost**: ~$300 AUD (AI generation + hosting setup)
 
-**Brand Identity Package** - $497-997
+**Brand Identity Package** - $795-1,495 AUD
 - Logo variations (color, black/white, icon)
 - Color palette + typography guide
 - Brand voice guidelines
 - Social media templates
-- **Your cost**: ~$50 (AI generation)
+- **Your cost**: ~$75 AUD (AI generation)
 
-**SEO Audit & Strategy** - $297 (one-time)
+**SEO Audit & Strategy** - $449 AUD (one-time)
 - Comprehensive site audit
 - Keyword gap analysis
 - 90-day action plan
@@ -187,10 +187,10 @@
 | Premium ($1,295) | 5 | $6,475 | $77,700 |
 | **Total** | **50** | **$38,750** | **$465,000** |
 
-**Add-On Revenue** (30% adoption):
+**Add-On Revenue (AUD)** (30% adoption):
 - Video Content (15 clients × $495): $7,425/month = $89,100/year
-- Extra Platforms (10 clients × $97): $970/month = $11,640/year
-- **Total Add-Ons**: $100,740/year
+- Extra Platforms (10 clients × $149): $1,490/month = $17,880/year
+- **Total Add-Ons**: $106,980/year
 
 **Total Revenue**: **$565,740/year**
 **Operating Costs**: ~$20,400/year
@@ -207,10 +207,10 @@
 | Premium ($1,295) | 20 | $25,900 | $310,800 |
 | **Total** | **150** | **$122,250** | **$1,467,000** |
 
-**Add-On Revenue** (40% adoption):
+**Add-On Revenue (AUD)** (40% adoption):
 - Video Content (60 clients × $495): $29,700/month = $356,400/year
-- Extra Platforms (30 clients × $97): $2,910/month = $34,920/year
-- **Total Add-Ons**: $391,320/year
+- Extra Platforms (30 clients × $149): $4,470/month = $53,640/year
+- **Total Add-Ons**: $410,040/year
 
 **Total Revenue**: **$1,858,320/year**
 **Operating Costs**: ~$50,400/year
@@ -227,10 +227,10 @@
 | Premium ($1,295) | 40 | $51,800 | $621,600 |
 | **Total** | **300** | **$252,500** | **$3,030,000** |
 
-**Add-On Revenue** (50% adoption):
+**Add-On Revenue (AUD)** (50% adoption):
 - Video Content (150 clients × $495): $74,250/month = $891,000/year
-- Extra Platforms (75 clients × $97): $7,275/month = $87,300/year
-- **Total Add-Ons**: $978,300/year
+- Extra Platforms (75 clients × $149): $11,175/month = $134,100/year
+- **Total Add-Ons**: $1,025,100/year
 
 **Total Revenue**: **$4,008,300/year**
 **Operating Costs**: ~$90,000/year
@@ -343,7 +343,7 @@
 ## ✅ Implementation Checklist
 
 - [x] Pricing structure finalized ($495/$895/$1,295)
-- [x] Add-on pricing defined ($97-$495/month)
+- [x] Add-on pricing defined ($149-$595 AUD/month)
 - [x] Service agreement terms (3-month lock-in, 3-day guarantee)
 - [x] Onboarding process (25% capacity ramp-up)
 - [x] Revenue projections (Year 1-3)

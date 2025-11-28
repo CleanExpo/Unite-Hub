@@ -9,8 +9,8 @@ export const dynamic = 'force-dynamic';
  */
 
 
-import { Card } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { FolderKanban, CheckSquare, Users, TrendingUp } from 'lucide-react';
 import { getDashboardStats } from '@/lib/services/staff/staffService';
 import { PageContainer, Section } from '@/ui/layout/AppGrid';

@@ -1,4 +1,6 @@
 import Stripe from "stripe";
+import { PRICING_PLANS, getPlan, type PricingPlan } from "@/lib/billing/pricing-config";
+import { getStripeKeys, type PlatformMode } from "@/lib/platform/platformMode";
 
 /**
  * Stripe Client for Unite-Hub CRM
@@ -9,51 +11,70 @@ import Stripe from "stripe";
  * - Product and price retrieval
  * - Invoice management
  * - Payment methods
+ *
+ * PRICING SOURCE: src/lib/billing/pricing-config.ts (CANONICAL)
+ * All prices in AUD, GST inclusive
+ *
+ * MODE ROUTING: src/lib/platform/platformMode.ts
+ * Uses test/live keys based on database platform mode setting
  */
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error("STRIPE_SECRET_KEY is required");
+// Default Stripe client (test mode fallback)
+// Use getStripeClient() in API routes for mode-aware client
+const defaultSecretKey = process.env.STRIPE_SECRET_KEY_TEST || process.env.STRIPE_SECRET_KEY;
+if (!defaultSecretKey) {
+  throw new Error("STRIPE_SECRET_KEY or STRIPE_SECRET_KEY_TEST is required");
 }
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+export const stripe = new Stripe(defaultSecretKey, {
   apiVersion: "2024-11-20.acacia",
   typescript: true,
 });
 
-// Plan configurations
+/**
+ * Get Stripe client for the current platform mode
+ * Use this in API routes for mode-aware Stripe operations
+ */
+export async function getStripeClient(): Promise<{ client: Stripe; mode: PlatformMode }> {
+  const keys = await getStripeKeys();
+  const secretKey = keys.secretKey || defaultSecretKey;
+
+  const client = new Stripe(secretKey!, {
+    apiVersion: "2024-11-20.acacia",
+    typescript: true,
+  });
+
+  return { client, mode: keys.mode };
+}
+
+// Re-export pricing from canonical source
+export { PRICING_PLANS, getPlan, type PricingPlan };
+
+// Legacy PLAN_TIERS for backwards compatibility - maps to canonical pricing
 export const PLAN_TIERS = {
   starter: {
-    name: "Starter",
-    priceId: process.env.STRIPE_PRICE_ID_STARTER!,
-    price: 24900, // $249 AUD/month
+    name: PRICING_PLANS.starter.name,
+    priceId: PRICING_PLANS.starter.stripePriceIdMonthly,
+    price: PRICING_PLANS.starter.price * 100, // Convert to cents
     currency: "aud",
-    interval: "month",
-    features: [
-      "1 Client Account",
-      "Basic email processing",
-      "Single persona generation",
-      "Basic mind mapping",
-      "Standard marketing strategy",
-      "Single platform campaigns",
-    ],
+    interval: "month" as const,
+    features: PRICING_PLANS.starter.features,
   },
   professional: {
-    name: "Professional",
-    priceId: process.env.STRIPE_PRICE_ID_PROFESSIONAL!,
-    price: 54900, // $549 AUD/month
+    name: PRICING_PLANS.pro.name,
+    priceId: PRICING_PLANS.pro.stripePriceIdMonthly,
+    price: PRICING_PLANS.pro.price * 100, // Convert to cents
     currency: "aud",
-    interval: "month",
-    features: [
-      "5 Client Accounts",
-      "Advanced email processing",
-      "Multi-persona generation",
-      "Advanced mind mapping with auto-expansion",
-      "Comprehensive marketing strategies with competitor analysis",
-      "Multi-platform campaigns",
-      "Hooks & scripts library",
-      "DALL-E image generation",
-      "Priority support",
-    ],
+    interval: "month" as const,
+    features: PRICING_PLANS.pro.features,
+  },
+  elite: {
+    name: PRICING_PLANS.elite.name,
+    priceId: PRICING_PLANS.elite.stripePriceIdMonthly,
+    price: PRICING_PLANS.elite.price * 100, // Convert to cents
+    currency: "aud",
+    interval: "month" as const,
+    features: PRICING_PLANS.elite.features,
   },
 } as const;
 
@@ -373,8 +394,14 @@ export async function getCustomerPaymentMethods(
  * Get plan tier from price ID
  */
 export function getPlanTierFromPriceId(priceId: string): PlanTier | null {
-  if (priceId === PLAN_TIERS.starter.priceId) return "starter";
-  if (priceId === PLAN_TIERS.professional.priceId) return "professional";
+  // Check all plans (monthly and annual)
+  for (const [key, plan] of Object.entries(PRICING_PLANS)) {
+    if (plan.stripePriceIdMonthly === priceId || plan.stripePriceIdAnnual === priceId) {
+      // Map 'pro' to 'professional' for legacy compatibility
+      if (key === 'pro') return 'professional';
+      return key as PlanTier;
+    }
+  }
   return null;
 }
 

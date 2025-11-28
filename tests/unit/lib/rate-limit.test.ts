@@ -131,20 +131,20 @@ describe('Rate Limiting', () => {
   });
 
   describe('aiAgentRateLimit', () => {
-    it('should enforce AI-specific limits (20 per 15 min)', async () => {
+    it('should enforce AI-specific limits (100 per 15 min)', async () => {
       const req = new NextRequest('http://localhost:3008/api/agents/contact-intelligence', {
         headers: {
           'x-forwarded-for': '192.168.1.105',
         },
       });
 
-      // Exhaust AI limit (20 requests allowed)
-      for (let i = 0; i < 20; i++) {
+      // Exhaust AI limit (100 requests allowed)
+      for (let i = 0; i < 100; i++) {
         const result = await aiAgentRateLimit(req);
         expect(result).toBeNull();
       }
 
-      // 21st request should be blocked
+      // 101st request should be blocked
       const result = await aiAgentRateLimit(req);
       expect(result).not.toBeNull();
       expect(result?.status).toBe(429);

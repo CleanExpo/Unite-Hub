@@ -389,8 +389,11 @@ export async function GET(req: NextRequest) {
       );
     }
 
+    // Get supabase client for database queries
+    const supabaseClient = await getSupabaseServer();
+
     // Build query
-    let query = supabase
+    let query = supabaseClient
       .from("media_files")
       .select("*")
       .eq("workspace_id", workspace_id)

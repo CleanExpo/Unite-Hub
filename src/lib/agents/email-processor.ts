@@ -2,6 +2,12 @@ import Anthropic from "@anthropic-ai/sdk";
 import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 import { db } from "@/lib/db";
 import { detectMeetingIntent } from "./calendar-intelligence";
+import {
+  reliableAgentExecution,
+  wrapWithChainOfThought,
+  validatePrompt,
+  stabilizeResponse,
+} from "./agent-reliability";
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -29,6 +35,7 @@ export interface EmailIntent {
 
 /**
  * Process an email with comprehensive AI analysis
+ * Phase 10: Now with reliability features (loop detection, chain-of-thought, stabilizers)
  */
 export async function processEmail(
   emailId: string,
@@ -38,18 +45,42 @@ export async function processEmail(
   meetingDetected: boolean;
   meetingIntent?: any;
 }> {
-  try {
-    const email = await db.emails.getById(emailId);
+  // Use reliable agent execution wrapper
+  const result = await reliableAgentExecution(
+    async () => {
+      const email = await db.emails.getById(emailId);
 
-    if (!email) {
-      throw new Error("Email not found");
+      if (!email) {
+        throw new Error("Email not found");
+      }
+
+      // Run intent extraction in parallel with meeting detection
+      const [{ intent: intentResult, cacheStats }, meetingResult] = await Promise.all([
+        extractEmailIntent(email.subject, email.body),
+        detectMeetingIntent(email.body, email.subject),
+      ]);
+
+      return { email, intentResult, cacheStats, meetingResult };
+    },
+    {
+      agentId: 'email-processor',
+      params: { emailId, workspaceId },
+      enableLoopDetection: true,
+      guardConfig: {
+        timeoutMs: 60000,
+        maxRetries: 3,
+        retryDelayMs: 2000,
+      },
     }
+  );
 
-    // Run intent extraction in parallel with meeting detection
-    const [{ intent: intentResult, cacheStats }, meetingResult] = await Promise.all([
-      extractEmailIntent(email.subject, email.body),
-      detectMeetingIntent(email.body, email.subject),
-    ]);
+  if (!result.success || !result.data) {
+    throw new Error(result.error || 'Email processing failed');
+  }
+
+  const { email, intentResult, cacheStats, meetingResult } = result.data;
+
+  try {
 
     // Update email with analysis
     await db.emails.updateSentiment(emailId, {

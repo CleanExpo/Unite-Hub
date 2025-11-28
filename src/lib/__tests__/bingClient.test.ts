@@ -163,7 +163,8 @@ describe("maskBingApiKey", () => {
     const apiKey = "abcdefgh12345678ijklmnop";
     const masked = maskBingApiKey(apiKey);
 
-    expect(masked).toBe("abcdefgh*************mnop");
+    // 24 chars - 8 start - 4 end = 12 masked
+    expect(masked).toBe("abcdefgh************mnop");
     expect(masked.length).toBe(apiKey.length);
   });
 

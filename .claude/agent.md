@@ -292,6 +292,87 @@ Maintains documentation files (README.md, .claude/claude.md, .claude/agent.md, A
 
 ---
 
+### 7. Stripe Agent
+
+**ID**: `unite-hub.stripe-agent`
+**Model**: `claude-sonnet-4-5-20250929`
+**Skill File**: `.claude/skills/stripe-agent/SKILL.md`
+**MCP Server**: `stripe` (via `@stripe/mcp`)
+
+#### Role
+Manages all Stripe billing operations including product/price creation, subscription management, checkout sessions, webhooks, and dual-mode (test/live) billing for staff vs. customer separation.
+
+#### Capabilities
+- Product and price management (create, list, update)
+- Checkout session creation
+- Subscription lifecycle management (create, upgrade, downgrade, cancel)
+- Customer management
+- Invoice generation and tracking
+- Webhook event processing
+- Dual-mode billing (test/live separation)
+- Billing report generation
+- Configuration auditing
+
+#### Tools Available
+- MCP Stripe tools: `mcp__stripe__create_product`, `mcp__stripe__create_price`, `mcp__stripe__create_checkout_session`, etc.
+- Database access via Supabase client
+- `text_editor_20250728` - Edit billing configuration files
+
+#### When to Invoke
+- User requests: "Setup Stripe products", "Create checkout session"
+- Orchestrator delegates billing operations
+- Webhook events received
+- User requests: "Audit billing configuration"
+- Scheduled: Monthly billing reports
+
+#### Input Requirements
+```json
+{
+  "action": "create_checkout" | "setup_products" | "process_webhook" | "audit" | "report",
+  "workspaceId": "uuid",
+  "userId": "uuid",
+  "email": "user@example.com",
+  "tier": "starter" | "professional" | "elite",
+  "billing": "monthly" | "annual"
+}
+```
+
+#### Output Format
+```json
+{
+  "success": true,
+  "action": "create_checkout",
+  "data": {
+    "checkoutUrl": "https://checkout.stripe.com/...",
+    "sessionId": "cs_xxx",
+    "mode": "test" | "live"
+  }
+}
+```
+
+#### Context Management
+- Loads: Workspace billing settings, customer data
+- Stores: Subscription records, invoice history
+- Memory: Not used (webhook-driven state)
+
+#### Dual-Mode Billing Logic
+```
+Email/Role Check
+  ├─→ Staff domain (unite-group.in, etc.) → TEST mode
+  ├─→ Sandbox registry email → TEST mode
+  ├─→ Staff role (founder, admin) → TEST mode
+  └─→ External customer → LIVE mode
+```
+
+#### Pricing Tiers (AUD, GST Included)
+| Tier | Monthly | Annual |
+|------|---------|--------|
+| Starter | $495 | $4,950 |
+| Professional | $895 | $8,950 |
+| Elite | $1,295 | $12,950 |
+
+---
+
 ## Agent Interaction Patterns
 
 ### Pattern 1: Full Pipeline (Email → Content)
@@ -507,6 +588,7 @@ await supabase.from("auditLogs").insert({
 | Frontend Agent | `.claude/skills/frontend/SKILL.md` | N/A (interactive) | N/A |
 | Backend Agent | `.claude/skills/backend/SKILL.md` | N/A (interactive) | N/A |
 | Docs Agent | `.claude/skills/docs/SKILL.md` | N/A (interactive) | N/A |
+| Stripe Agent | `.claude/skills/stripe-agent/SKILL.md` | `scripts/run-stripe-agent.mjs` | `.claude/mcp.json` |
 
 ---
 

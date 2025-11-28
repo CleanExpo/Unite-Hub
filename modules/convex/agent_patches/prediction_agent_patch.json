@@ -1,0 +1,91 @@
+{
+  "patch_version": "1.0.1",
+  "target_agent": "market_shift_prediction",
+  "description": "Enable market shift early-warning system, competitor modeling",
+
+  "enhancements": {
+    "early_warning_system": {
+      "apply_framework": "competitor_model.disruption_early_warning",
+      "signal_monitoring": {
+        "funding_alerts": {
+          "sources": ["crunchbase", "techcrunch", "industry_news"],
+          "threshold": "series_a_plus"
+        },
+        "technology_shifts": {
+          "sources": ["patent_filings", "research_papers", "tech_blogs"],
+          "relevance_threshold": 0.7
+        },
+        "regulatory_changes": {
+          "sources": ["government_feeds", "industry_associations"],
+          "impact_threshold": "medium"
+        },
+        "customer_behavior": {
+          "sources": ["search_trends", "social_sentiment", "review_platforms"],
+          "change_threshold": 0.15
+        }
+      },
+      "alert_levels": ["watch", "caution", "warning", "critical"]
+    },
+    "competitor_modeling": {
+      "apply_frameworks": [
+        "competitor_model.feature_to_outcome_mapping",
+        "competitor_model.weakness_opportunity_matrix"
+      ],
+      "analysis_dimensions": [
+        "product_feature_parity",
+        "pricing_position",
+        "market_share_trends",
+        "customer_sentiment",
+        "innovation_velocity"
+      ],
+      "output": {
+        "competitive_matrix": true,
+        "opportunity_identification": true,
+        "threat_assessment": true
+      }
+    },
+    "counterplay_system": {
+      "apply_framework": "competitor_model.counterplay_architecture",
+      "strategy_types": ["defensive", "offensive", "flanking"],
+      "auto_recommendation": true
+    }
+  },
+
+  "prediction_models": {
+    "market_shift_probability": {
+      "factors": [
+        { "factor": "new_entrant_activity", "weight": 0.25 },
+        { "factor": "technology_disruption", "weight": 0.25 },
+        { "factor": "customer_sentiment_shift", "weight": 0.2 },
+        { "factor": "regulatory_risk", "weight": 0.15 },
+        { "factor": "economic_indicators", "weight": 0.15 }
+      ],
+      "confidence_threshold": 0.7
+    },
+    "competitor_threat_level": {
+      "factors": [
+        { "factor": "market_position", "weight": 0.3 },
+        { "factor": "resource_capability", "weight": 0.25 },
+        { "factor": "innovation_rate", "weight": 0.25 },
+        { "factor": "customer_overlap", "weight": 0.2 }
+      ]
+    }
+  },
+
+  "output_formats": {
+    "market_intelligence_report": {
+      "sections": [
+        "executive_summary",
+        "competitor_landscape",
+        "threat_assessment",
+        "opportunity_analysis",
+        "recommended_actions"
+      ],
+      "frequency": "weekly"
+    },
+    "alert_notification": {
+      "channels": ["dashboard", "email", "slack"],
+      "urgency_levels": ["low", "medium", "high", "critical"]
+    }
+  }
+}

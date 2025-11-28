@@ -15,17 +15,17 @@
 - 🥈 **Growth**: $895/month (was $6,500 in old model) ⭐ RECOMMENDED
 - 🥇 **Premium**: $1,295/month (was $9,500 in old model)
 
-**Add-Ons**:
-- Video Content Package: $495/month (was not offered)
-- Extra Social Platform: $97/month
-- Advanced Analytics: $147/month
-- Google/Facebook Ads: $297/month + 10%
-- PR & Media Outreach: $397/month
+**Add-Ons (AUD)**:
+- Video Content Package: $495 AUD/month (was not offered)
+- Extra Social Platform: $149 AUD/month
+- Advanced Analytics: $219 AUD/month
+- Google/Facebook Ads: $449 AUD/month + 10%
+- PR & Media Outreach: $595 AUD/month
 
-**One-Time Projects**:
-- New Website Build: $1,497-3,997 (vs $5K-20K traditional)
-- Brand Identity Package: $497-997 (vs $2K-10K traditional)
-- SEO Audit & Strategy: $297 (vs $500-1,500 traditional)
+**One-Time Projects (AUD)**:
+- New Website Build: $2,495-5,995 AUD (vs $5K-20K traditional)
+- Brand Identity Package: $795-1,495 AUD (vs $2K-10K traditional)
+- SEO Audit & Strategy: $449 AUD (vs $500-1,500 traditional)
 
 ---
 

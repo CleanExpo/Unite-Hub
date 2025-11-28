@@ -1,0 +1,238 @@
+{
+  "version": "1.0.0",
+  "description": "Animation Style Wizard questions and scoring matrix",
+  "questions": [
+    {
+      "id": "q1-feeling",
+      "step": 1,
+      "question": "How do you want your website to feel?",
+      "helpText": "Think about the first impression visitors should have.",
+      "type": "single",
+      "options": [
+        {
+          "id": "calm",
+          "label": "Calm & Trustworthy",
+          "description": "Gentle, reassuring, builds confidence",
+          "icon": "leaf",
+          "scores": { "calm": 3, "friendly": 2, "professional": 1 }
+        },
+        {
+          "id": "energetic",
+          "label": "Energetic & Dynamic",
+          "description": "Exciting, active, attention-grabbing",
+          "icon": "zap",
+          "scores": { "dynamic": 3, "bold": 2, "playful": 1 }
+        },
+        {
+          "id": "bold",
+          "label": "Bold & Impactful",
+          "description": "Strong, memorable, makes a statement",
+          "icon": "flame",
+          "scores": { "bold": 3, "dramatic": 2, "immersive": 1 }
+        },
+        {
+          "id": "professional",
+          "label": "Professional & Clean",
+          "description": "Polished, refined, business-appropriate",
+          "icon": "briefcase",
+          "scores": { "professional": 3, "elegant": 2, "modern": 1 }
+        }
+      ]
+    },
+    {
+      "id": "q2-intensity",
+      "step": 2,
+      "question": "How noticeable should the animations be?",
+      "helpText": "Some clients prefer subtle polish, others want wow-factor.",
+      "type": "single",
+      "options": [
+        {
+          "id": "subtle",
+          "label": "Subtle & Minimal",
+          "description": "Barely noticeable, refined polish",
+          "icon": "minus",
+          "scores": { "intensity-subtle": 3 }
+        },
+        {
+          "id": "balanced",
+          "label": "Balanced & Noticeable",
+          "description": "Visible but not overwhelming",
+          "icon": "equal",
+          "scores": { "intensity-normal": 3 }
+        },
+        {
+          "id": "dramatic",
+          "label": "High-Impact & Dramatic",
+          "description": "Eye-catching, memorable effects",
+          "icon": "sparkles",
+          "scores": { "intensity-dramatic": 3 }
+        }
+      ]
+    },
+    {
+      "id": "q3-audience",
+      "step": 3,
+      "question": "Who is your primary audience?",
+      "helpText": "Different audiences respond to different visual styles.",
+      "type": "single",
+      "options": [
+        {
+          "id": "trades",
+          "label": "Trades & Service Businesses",
+          "description": "Plumbers, electricians, builders, contractors",
+          "icon": "wrench",
+          "persona": "trade",
+          "scores": { "persona-trade": 3, "professional": 1, "calm": 1 }
+        },
+        {
+          "id": "homeowners",
+          "label": "Homeowners & Consumers",
+          "description": "Residential customers, families",
+          "icon": "home",
+          "persona": "consumer",
+          "scores": { "persona-consumer": 3, "friendly": 1, "calm": 1 }
+        },
+        {
+          "id": "corporate",
+          "label": "Corporate & B2B",
+          "description": "Businesses, executives, decision-makers",
+          "icon": "building",
+          "persona": "corporate",
+          "scores": { "persona-corporate": 3, "professional": 2, "elegant": 1 }
+        },
+        {
+          "id": "tech",
+          "label": "Tech & SaaS",
+          "description": "Developers, startup founders, tech buyers",
+          "icon": "code",
+          "persona": "saas",
+          "scores": { "persona-saas": 3, "modern": 2, "futuristic": 1 }
+        },
+        {
+          "id": "creative",
+          "label": "Creative & Agencies",
+          "description": "Designers, artists, creative professionals",
+          "icon": "palette",
+          "persona": "creative",
+          "scores": { "persona-creative": 3, "bold": 2, "immersive": 1 }
+        },
+        {
+          "id": "government",
+          "label": "Government & Nonprofit",
+          "description": "Public sector, NGOs, community organizations",
+          "icon": "landmark",
+          "persona": "nonprofit",
+          "scores": { "persona-nonprofit": 3, "calm": 2, "professional": 1 }
+        }
+      ]
+    },
+    {
+      "id": "q4-priority",
+      "step": 4,
+      "question": "What's your #1 priority for animations?",
+      "helpText": "This helps us focus on what matters most to you.",
+      "type": "single",
+      "options": [
+        {
+          "id": "clarity",
+          "label": "Clarity & Usability",
+          "description": "Animations should help, not distract",
+          "icon": "eye",
+          "scores": { "priority-clarity": 3, "calm": 1 }
+        },
+        {
+          "id": "wow",
+          "label": "Wow Factor & Impressions",
+          "description": "Make visitors remember the site",
+          "icon": "star",
+          "scores": { "priority-wow": 3, "dramatic": 2, "bold": 1 }
+        },
+        {
+          "id": "speed",
+          "label": "Speed & Performance",
+          "description": "Fast loading, minimal overhead",
+          "icon": "rocket",
+          "scores": { "priority-speed": 3, "intensity-subtle": 1 }
+        },
+        {
+          "id": "storytelling",
+          "label": "Storytelling & Flow",
+          "description": "Guide visitors through a journey",
+          "icon": "book-open",
+          "scores": { "priority-storytelling": 3, "immersive": 2, "cinematic": 1 }
+        }
+      ]
+    },
+    {
+      "id": "q5-features",
+      "step": 5,
+      "question": "Which special features interest you?",
+      "helpText": "Select any that sound appealing. These are optional.",
+      "type": "multiple",
+      "options": [
+        {
+          "id": "cursor-effects",
+          "label": "Cursor Spotlight Effects",
+          "description": "Interactive light that follows the mouse",
+          "icon": "mouse-pointer",
+          "scores": { "feature-flashlight": 2 }
+        },
+        {
+          "id": "3d-elements",
+          "label": "3D Visual Elements",
+          "description": "Subtle 3D depth and motion",
+          "icon": "box",
+          "scores": { "feature-3d": 2 }
+        },
+        {
+          "id": "scroll-animations",
+          "label": "Scroll-Triggered Animations",
+          "description": "Content animates as you scroll",
+          "icon": "arrow-down",
+          "scores": { "feature-scroll": 2 }
+        },
+        {
+          "id": "video-backgrounds",
+          "label": "Video/Motion Backgrounds",
+          "description": "Ambient video or motion loops",
+          "icon": "video",
+          "scores": { "feature-video": 2 }
+        },
+        {
+          "id": "none",
+          "label": "Keep It Simple",
+          "description": "Just the essentials, nothing fancy",
+          "icon": "minus-circle",
+          "scores": { "intensity-subtle": 2 }
+        }
+      ]
+    }
+  ],
+  "styleMapping": {
+    "calm": ["soft-material-morph", "beam-sweep-omega", "glow-soft-breathe"],
+    "professional": ["clip-fade-radiance", "beam-sweep-alpha", "transition-fade-through"],
+    "elegant": ["clip-fade-radiance", "cinematic-iris-open", "glow-quantum-pulse"],
+    "dynamic": ["velocity-triggered-panels", "switching-card-morph", "ribbon-trail-scroller"],
+    "bold": ["neon-edge-reactive", "split-reveal-slider", "transition-split-reveal"],
+    "dramatic": ["split-reveal-slider", "parallax-depth-field", "cinematic-iris-open"],
+    "playful": ["magnetic-cursor-pull", "flashlight-cursor-tracking", "switching-card-morph"],
+    "futuristic": ["quantum-glow-pulse", "glass-distortion-intro", "neon-edge-reactive"],
+    "modern": ["glass-distortion-intro", "beam-shimmer", "card-tilt-hover"],
+    "immersive": ["parallax-depth-field", "flashlight-cursor-tracking", "beam-aurora"],
+    "cinematic": ["cinematic-iris-open", "parallax-depth-field", "split-reveal-slider"],
+    "friendly": ["soft-material-morph", "glow-soft-breathe", "card-fade-scale"]
+  },
+  "intensityMapping": {
+    "intensity-subtle": { "maxStyles": 3, "preferSubtle": true },
+    "intensity-normal": { "maxStyles": 5, "preferSubtle": false },
+    "intensity-dramatic": { "maxStyles": 7, "preferDramatic": true }
+  },
+  "personaDefaults": {
+    "trade": ["beam-sweep-alpha", "transition-slide-up", "glow-hover-lift"],
+    "consumer": ["soft-material-morph", "clip-fade-radiance", "card-fade-scale"],
+    "corporate": ["clip-fade-radiance", "beam-sweep-alpha", "transition-fade-through"],
+    "saas": ["glass-distortion-intro", "quantum-glow-pulse", "beam-shimmer"],
+    "creative": ["parallax-depth-field", "flashlight-cursor-tracking", "cinematic-iris-open"],
+    "nonprofit": ["soft-material-morph", "transition-fade-through", "glow-soft-breathe"]
+  }
+}

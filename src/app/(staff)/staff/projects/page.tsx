@@ -7,12 +7,12 @@ export const dynamic = 'force-dynamic';
  * Fully wired to /api/staff/projects
  */
 
-import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import StaffProgressRing from '@/components/staff/StaffProgressRing';
 import { FolderKanban, Plus, Search, Calendar, Users } from 'lucide-react';
-import { Input } from '@/components/ui/Input';
+import { Input } from '@/components/ui/input';
 import { getStaffProjects } from '@/lib/services/staff/staffService';
 import { PageContainer, Section } from '@/ui/layout/AppGrid';
 

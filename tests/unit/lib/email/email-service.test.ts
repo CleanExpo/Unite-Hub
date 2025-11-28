@@ -181,15 +181,34 @@ describe('Email Service', () => {
     });
 
     it('should handle SMTP connection errors', async () => {
-      const nodemailer = (await import('nodemailer')).default;
-      const mockSendMail = vi.fn().mockRejectedValue(new Error('SMTP connection failed'));
-
-      vi.mocked(nodemailer.createTransport).mockReturnValue({
-        sendMail: mockSendMail,
-        verify: vi.fn().mockRejectedValue(new Error('SMTP connection failed')),
-      } as any);
-
+      // Reset modules first
       vi.resetModules();
+
+      // Mock all providers to fail to test SMTP error handling
+      vi.doMock('@sendgrid/mail', () => ({
+        default: {
+          setApiKey: vi.fn(),
+          send: vi.fn().mockRejectedValue(new Error('SendGrid failed')),
+        },
+      }));
+
+      vi.doMock('resend', () => ({
+        Resend: vi.fn().mockImplementation(() => ({
+          emails: {
+            send: vi.fn().mockRejectedValue(new Error('Resend failed')),
+          },
+        })),
+      }));
+
+      vi.doMock('nodemailer', () => ({
+        default: {
+          createTransport: vi.fn().mockReturnValue({
+            sendMail: vi.fn().mockRejectedValue(new Error('SMTP connection failed')),
+            verify: vi.fn().mockRejectedValue(new Error('SMTP connection failed')),
+          }),
+        },
+      }));
+
       const { sendEmail } = await import('@/lib/email/email-service');
 
       const options: EmailOptions = {
@@ -201,6 +220,8 @@ describe('Email Service', () => {
 
       const result = await sendEmail(options);
 
+      // When provider is specified, it tries that first but falls back
+      // If all providers fail, success should be false
       expect(result.success).toBe(false);
       expect(result.error).toBeDefined();
     });

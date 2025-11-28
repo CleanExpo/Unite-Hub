@@ -1,0 +1,658 @@
+{
+  "generated": "2025-11-28",
+  "total_keys_defined": 62,
+  "total_keys_used_in_code": 78,
+  "issues_found": 3,
+  "env_issues": [
+    {
+      "line": 8,
+      "key": "CRON_SECRET",
+      "issue": "Missing equals sign - CRON_SECRET\"value\" should be CRON_SECRET=\"value\"",
+      "severity": "HIGH"
+    },
+    {
+      "line": 9,
+      "key": "DATADOG_API_KEY",
+      "issue": "Missing equals sign - DATADOG_API_KEY\"value\" should be DATADOG_API_KEY=\"value\"",
+      "severity": "HIGH"
+    },
+    {
+      "line": "94-97",
+      "key": "SEO_CREDENTIAL_ENCRYPTION_KEY",
+      "issue": "Malformed entries with spaces in key name",
+      "severity": "MEDIUM"
+    }
+  ],
+  "variables": [
+    {
+      "key": "ABACUS_API_KEY",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["abacus-integration"],
+      "used_in_files": [],
+      "notes": "Abacus.ai integration key"
+    },
+    {
+      "key": "ABACUS_CLI_KEY",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["abacus-cli"],
+      "used_in_files": [],
+      "notes": "Abacus CLI access"
+    },
+    {
+      "key": "ALERT_EMAILS",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["system-alerts"],
+      "used_in_files": ["src/lib/monitoring/"],
+      "notes": "Alert notification recipients"
+    },
+    {
+      "key": "ANTHROPIC_API_KEY",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["ai-agents", "content-generation", "email-processing", "contact-intelligence"],
+      "used_in_files": [
+        "src/lib/agents/",
+        "src/lib/synthex/",
+        "src/app/api/agents/",
+        "docker/agents/entrypoints/"
+      ],
+      "notes": "CRITICAL - Core AI functionality - Claude Opus/Sonnet/Haiku"
+    },
+    {
+      "key": "CONVEX_DEPLOYMENT",
+      "has_local_value": true,
+      "assumed_in_vercel": false,
+      "required_for_features": ["convex-legacy"],
+      "used_in_files": [],
+      "notes": "DEPRECATED - Convex migration complete, can be removed"
+    },
+    {
+      "key": "CONVEX_URL",
+      "has_local_value": true,
+      "assumed_in_vercel": false,
+      "required_for_features": ["convex-legacy"],
+      "used_in_files": [],
+      "notes": "DEPRECATED - Convex migration complete"
+    },
+    {
+      "key": "CRON_SECRET",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["scheduled-jobs", "autonomous-agents"],
+      "used_in_files": [
+        "src/app/api/cron/",
+        "docs/AIDO_API_REMAINING_ENDPOINTS_GUIDE.md",
+        "docs/GMAIL_INTEGRATION.md"
+      ],
+      "notes": "ISSUE: Malformed in .env.local line 8"
+    },
+    {
+      "key": "DATABASE_URL",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["database-migrations", "pooler-connection"],
+      "used_in_files": ["src/lib/db.ts", "apply-schema.mjs"],
+      "notes": "Supabase Pooler URL for direct connections"
+    },
+    {
+      "key": "DATADOG_API_KEY",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["monitoring", "apm"],
+      "used_in_files": ["src/lib/monitoring/"],
+      "notes": "ISSUE: Malformed in .env.local line 9"
+    },
+    {
+      "key": "DATADOG_SITE",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["monitoring"],
+      "used_in_files": ["src/lib/monitoring/"],
+      "notes": "Datadog region: ap2.datadoghq.com"
+    },
+    {
+      "key": "DATAFORSEO_API_LOGIN",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["seo-intelligence", "keyword-research", "serp-tracking"],
+      "used_in_files": [
+        "src/lib/seo/",
+        "scripts/seo-intelligence.mjs",
+        "docs/DATAFORSEO_MCP_SETUP.md"
+      ],
+      "notes": "DataForSEO API credentials"
+    },
+    {
+      "key": "DATAFORSEO_API_PASSWORD",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["seo-intelligence"],
+      "used_in_files": ["src/lib/seo/"],
+      "notes": "DataForSEO API password"
+    },
+    {
+      "key": "DIGITALOCEAN_API_TOKEN",
+      "has_local_value": true,
+      "assumed_in_vercel": false,
+      "required_for_features": ["do-spaces-storage"],
+      "used_in_files": [],
+      "notes": "DigitalOcean integration - optional"
+    },
+    {
+      "key": "DIRECT_CONNECT",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["direct-db-access"],
+      "used_in_files": ["apply-schema.mjs"],
+      "notes": "Direct PostgreSQL connection string"
+    },
+    {
+      "key": "ELEVENLABS_API_KEY",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["voice-synthesis", "text-to-speech"],
+      "used_in_files": ["src/lib/voice/", "docs/PHASE32_ELEVENLABS_VOICE_ENGINE.md"],
+      "notes": "ElevenLabs voice generation"
+    },
+    {
+      "key": "EMAIL_FROM",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["email-sending"],
+      "used_in_files": ["src/lib/email/email-service.ts"],
+      "notes": "Default sender email address"
+    },
+    {
+      "key": "EMAIL_SERVER_HOST",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["smtp-email"],
+      "used_in_files": ["src/lib/email/email-service.ts"],
+      "notes": "SMTP server host (smtp.gmail.com)"
+    },
+    {
+      "key": "EMAIL_SERVER_PASSWORD",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["smtp-email"],
+      "used_in_files": ["src/lib/email/email-service.ts"],
+      "notes": "Gmail App Password for SMTP"
+    },
+    {
+      "key": "EMAIL_SERVER_PORT",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["smtp-email"],
+      "used_in_files": ["src/lib/email/email-service.ts"],
+      "notes": "SMTP port (587)"
+    },
+    {
+      "key": "EMAIL_SERVER_USER",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["smtp-email"],
+      "used_in_files": ["src/lib/email/email-service.ts"],
+      "notes": "SMTP username"
+    },
+    {
+      "key": "GEMINI_API_KEY",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["image-generation", "visual-intelligence"],
+      "used_in_files": [
+        "src/lib/visual/",
+        "src/lib/synthex/geminiImageEngine.ts",
+        "docs/PHASE19_GEMINI_NANO_BANANA_2_IMAGE_ENGINE.md"
+      ],
+      "notes": "Google Gemini API for image generation"
+    },
+    {
+      "key": "GMAIL_CLIENT_ID",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["gmail-oauth"],
+      "used_in_files": ["src/app/api/integrations/gmail/"],
+      "notes": "Same as GOOGLE_CLIENT_ID"
+    },
+    {
+      "key": "GMAIL_CLIENT_SECRET",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["gmail-oauth"],
+      "used_in_files": ["src/app/api/integrations/gmail/"],
+      "notes": "Same as GOOGLE_CLIENT_SECRET"
+    },
+    {
+      "key": "GMAIL_REDIRECT_URI",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["gmail-oauth"],
+      "used_in_files": ["src/app/api/integrations/gmail/callback/"],
+      "notes": "Gmail OAuth callback URL"
+    },
+    {
+      "key": "GOOGLE_AI_API_KEY",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["google-ai"],
+      "used_in_files": ["docs/GEMINI_3_INTEGRATION_STRATEGY.md"],
+      "notes": "Alias for GEMINI_API_KEY"
+    },
+    {
+      "key": "GOOGLE_CALLBACK_URL",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["google-oauth"],
+      "used_in_files": [".claude/skills/backend/SKILL.md"],
+      "notes": "Google OAuth callback"
+    },
+    {
+      "key": "GOOGLE_CLIENT_ID",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["google-oauth", "gmail-integration"],
+      "used_in_files": [
+        "src/app/api/integrations/gmail/",
+        "docker/agents/entrypoints/email-integration-agent.mjs"
+      ],
+      "notes": "CRITICAL - Google OAuth client ID"
+    },
+    {
+      "key": "GOOGLE_CLIENT_SECRET",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["google-oauth", "gmail-integration"],
+      "used_in_files": [
+        "src/app/api/integrations/gmail/",
+        "docker/agents/entrypoints/email-integration-agent.mjs"
+      ],
+      "notes": "CRITICAL - Google OAuth client secret"
+    },
+    {
+      "key": "JENA_API_KEY",
+      "has_local_value": true,
+      "assumed_in_vercel": false,
+      "required_for_features": ["jina-ai"],
+      "used_in_files": [],
+      "notes": "Jina AI integration - optional"
+    },
+    {
+      "key": "JWT_SECRET",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["jwt-auth"],
+      "used_in_files": ["src/lib/auth.ts"],
+      "notes": "JWT signing secret"
+    },
+    {
+      "key": "MAX_FILE_SIZE_MB",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["file-uploads"],
+      "used_in_files": ["src/app/api/media/upload/"],
+      "notes": "Maximum upload size (100MB)"
+    },
+    {
+      "key": "NEXTAUTH_SECRET",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["nextauth"],
+      "used_in_files": ["src/lib/auth.ts", "docs/PHASE5_WEEK4_PLAN.md"],
+      "notes": "CRITICAL - NextAuth encryption secret"
+    },
+    {
+      "key": "NEXTAUTH_URL",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["nextauth"],
+      "used_in_files": ["src/lib/auth.ts"],
+      "notes": "NextAuth base URL"
+    },
+    {
+      "key": "NEXT_PUBLIC_APP_URL",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["frontend-routing", "oauth-callbacks"],
+      "used_in_files": [
+        "docs/API_SECURITY_AUDIT_2025-01-17.md",
+        "docs/GBP_CLIENT_SELF_SERVICE_ARCHITECTURE.md"
+      ],
+      "notes": "Public application URL"
+    },
+    {
+      "key": "NEXT_PUBLIC_BASE_URL",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["frontend-routing"],
+      "used_in_files": [],
+      "notes": "Production base URL"
+    },
+    {
+      "key": "NEXT_PUBLIC_CONVEX_URL",
+      "has_local_value": true,
+      "assumed_in_vercel": false,
+      "required_for_features": ["convex-legacy"],
+      "used_in_files": [],
+      "notes": "DEPRECATED - Convex migration complete"
+    },
+    {
+      "key": "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["stripe-payments"],
+      "used_in_files": ["src/components/billing/"],
+      "notes": "Stripe public key (client-side)"
+    },
+    {
+      "key": "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["supabase-client"],
+      "used_in_files": [
+        "src/lib/supabase.ts",
+        "check-session.mjs",
+        "examples/scraping-quickstart.ts"
+      ],
+      "notes": "CRITICAL - Supabase anonymous key (client-side)"
+    },
+    {
+      "key": "NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["file-storage"],
+      "used_in_files": ["src/lib/storage/"],
+      "notes": "Supabase storage bucket name"
+    },
+    {
+      "key": "NEXT_PUBLIC_SUPABASE_URL",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["supabase-client"],
+      "used_in_files": [
+        "src/lib/supabase.ts",
+        "docker/agents/entrypoints/",
+        "check-*.mjs"
+      ],
+      "notes": "CRITICAL - Supabase project URL"
+    },
+    {
+      "key": "NEXT_PUBLIC_URL",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["frontend-routing"],
+      "used_in_files": ["docs/OUTLOOK_API_REFERENCE.md"],
+      "notes": "Local dev URL"
+    },
+    {
+      "key": "OPENAI_API_KEY",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["whisper-transcription", "openai-fallback"],
+      "used_in_files": ["docker/agents/entrypoints/media-transcription-agent.mjs"],
+      "notes": "OpenAI API for Whisper transcription"
+    },
+    {
+      "key": "OPENROUTER_API_KEY",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["multi-model-routing", "sherlock-think"],
+      "used_in_files": [
+        "src/lib/ai/openrouter-intelligence.ts",
+        "docs/OPENROUTER_FIRST_STRATEGY.md"
+      ],
+      "notes": "OpenRouter for multi-model AI routing"
+    },
+    {
+      "key": "OPENROUTER_API_KEY_2",
+      "has_local_value": true,
+      "assumed_in_vercel": false,
+      "required_for_features": ["backup-openrouter"],
+      "used_in_files": [],
+      "notes": "Secondary OpenRouter key - backup"
+    },
+    {
+      "key": "ORG_ID",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["default-org"],
+      "used_in_files": ["create-tables.mjs"],
+      "notes": "Default organization ID for dev"
+    },
+    {
+      "key": "PERPLEXITY_API_KEY",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["seo-intelligence", "sonar-search"],
+      "used_in_files": [
+        "src/lib/ai/perplexity-sonar.ts",
+        "scripts/seo-intelligence.mjs",
+        "docs/PERPLEXITY_SONAR_SETUP.md"
+      ],
+      "notes": "Perplexity Sonar for real-time SEO research"
+    },
+    {
+      "key": "SEMRUSH_API",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["seo-competitor-analysis"],
+      "used_in_files": ["src/lib/seo/"],
+      "notes": "SEMRush API for competitor analysis"
+    },
+    {
+      "key": "SENDGRID_API_KEY",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["email-sending-priority-1"],
+      "used_in_files": ["src/lib/email/email-service.ts"],
+      "notes": "SendGrid API - primary email provider"
+    },
+    {
+      "key": "SEO_CREDENTIAL_ENCRYPTION_KEY",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["seo-credential-storage"],
+      "used_in_files": ["src/lib/seo/"],
+      "notes": "Encryption key for storing SEO credentials"
+    },
+    {
+      "key": "STRIPE_API_KEY",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["stripe-billing"],
+      "used_in_files": [],
+      "notes": "Legacy Stripe key - use STRIPE_SECRET_KEY"
+    },
+    {
+      "key": "STRIPE_PRICE_ID_PROFESSIONAL",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["subscription-tiers"],
+      "used_in_files": ["src/lib/stripe.ts"],
+      "notes": "Professional tier price ID"
+    },
+    {
+      "key": "STRIPE_PRICE_ID_STARTER",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["subscription-tiers"],
+      "used_in_files": ["src/lib/stripe.ts"],
+      "notes": "Starter tier price ID"
+    },
+    {
+      "key": "STRIPE_SECRET_KEY",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["stripe-billing"],
+      "used_in_files": [
+        "src/lib/stripe.ts",
+        "docs/API_SECURITY_AUDIT_2025-01-17.md",
+        "docs/PHASE39_STRIPE_BILLING_SYNC.md"
+      ],
+      "notes": "CRITICAL - Stripe secret key"
+    },
+    {
+      "key": "STRIPE_SECRET_TOKEN",
+      "has_local_value": true,
+      "assumed_in_vercel": false,
+      "required_for_features": ["stripe-org-token"],
+      "used_in_files": [],
+      "notes": "Organization-level Stripe token - optional"
+    },
+    {
+      "key": "STRIPE_WEBHOOK_SECRET",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["stripe-webhooks"],
+      "used_in_files": [
+        "src/app/api/webhooks/stripe/",
+        "docs/PHASE29_STRIPE_AU_PRICING.md"
+      ],
+      "notes": "CRITICAL - Stripe webhook signature verification"
+    },
+    {
+      "key": "SUPABASE_ACCESS_TOKEN",
+      "has_local_value": true,
+      "assumed_in_vercel": false,
+      "required_for_features": ["supabase-management-api"],
+      "used_in_files": [],
+      "notes": "Supabase management API token"
+    },
+    {
+      "key": "SUPABASE_SERVICE_ROLE_KEY",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["server-side-db", "admin-operations"],
+      "used_in_files": [
+        "src/lib/supabase.ts",
+        "docker/agents/entrypoints/",
+        "check-*.mjs",
+        "create-*.mjs"
+      ],
+      "notes": "CRITICAL - Supabase service role key (server-side only)"
+    },
+    {
+      "key": "VERCEL_OIDC_TOKEN",
+      "has_local_value": true,
+      "assumed_in_vercel": false,
+      "required_for_features": ["vercel-cli"],
+      "used_in_files": [],
+      "notes": "Vercel CLI authentication - local dev only"
+    },
+    {
+      "key": "WORKSPACE_ID",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["default-workspace"],
+      "used_in_files": [],
+      "notes": "Default workspace ID for dev"
+    },
+    {
+      "key": "ALLOWED_VIDEO_FORMATS",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["file-uploads"],
+      "used_in_files": ["src/app/api/media/upload/"],
+      "notes": "Allowed video file extensions"
+    },
+    {
+      "key": "ALLOWED_AUDIO_FORMATS",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["file-uploads"],
+      "used_in_files": ["src/app/api/media/upload/"],
+      "notes": "Allowed audio file extensions"
+    },
+    {
+      "key": "ALLOWED_DOCUMENT_FORMATS",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["file-uploads"],
+      "used_in_files": ["src/app/api/media/upload/"],
+      "notes": "Allowed document file extensions"
+    },
+    {
+      "key": "ALLOWED_IMAGE_FORMATS",
+      "has_local_value": true,
+      "assumed_in_vercel": true,
+      "required_for_features": ["file-uploads"],
+      "used_in_files": ["src/app/api/media/upload/"],
+      "notes": "Allowed image file extensions"
+    }
+  ],
+  "missing_from_local": [
+    {
+      "key": "REDIS_HOST",
+      "used_in_files": ["docs/PHASE5_WEEK4_PLAN.md"],
+      "notes": "Required for Redis caching - Phase 5 Week 4"
+    },
+    {
+      "key": "REDIS_PORT",
+      "used_in_files": ["src/lib/cache/"],
+      "notes": "Redis port configuration"
+    },
+    {
+      "key": "REDIS_PASSWORD",
+      "used_in_files": ["src/lib/cache/"],
+      "notes": "Redis authentication"
+    },
+    {
+      "key": "REDIS_URL",
+      "used_in_files": ["docs/PERPLEXITY_SONAR_SETUP.md"],
+      "notes": "Redis connection URL"
+    },
+    {
+      "key": "RABBITMQ_URL",
+      "used_in_files": ["docker/agents/entrypoints/"],
+      "notes": "RabbitMQ for agent messaging"
+    },
+    {
+      "key": "INTERNAL_API_KEY",
+      "used_in_files": ["docs/PHASE20_UNITE_HUB_IMAGE_HOOKS.md"],
+      "notes": "Internal API authentication"
+    },
+    {
+      "key": "ORCHESTRATOR_SECRET_KEY",
+      "used_in_files": ["docs/PHASE23_MAOS_ORCHESTRATOR_IMAGE_INTEGRATION.md"],
+      "notes": "Orchestrator authentication"
+    },
+    {
+      "key": "ENCRYPTION_MASTER_KEY",
+      "used_in_files": ["docs/GBP_CLIENT_SELF_SERVICE_ARCHITECTURE.md"],
+      "notes": "Master encryption key for credentials"
+    },
+    {
+      "key": "RESEND_API_KEY",
+      "used_in_files": ["src/lib/email/email-service.ts"],
+      "notes": "Resend email provider (priority 2)"
+    },
+    {
+      "key": "NODE_ENV",
+      "used_in_files": ["multiple"],
+      "notes": "Auto-set by Vercel/Next.js"
+    },
+    {
+      "key": "NEXT_RUNTIME",
+      "used_in_files": ["instrumentation.ts.disabled"],
+      "notes": "Auto-set by Next.js"
+    }
+  ],
+  "deprecated_keys": [
+    "CONVEX_DEPLOYMENT",
+    "CONVEX_URL",
+    "NEXT_PUBLIC_CONVEX_URL"
+  ],
+  "critical_keys": [
+    "ANTHROPIC_API_KEY",
+    "GOOGLE_CLIENT_ID",
+    "GOOGLE_CLIENT_SECRET",
+    "NEXTAUTH_SECRET",
+    "NEXT_PUBLIC_SUPABASE_URL",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "STRIPE_SECRET_KEY",
+    "STRIPE_WEBHOOK_SECRET"
+  ]
+}

@@ -7,9 +7,9 @@ export const dynamic = 'force-dynamic';
  * Fully wired to /api/staff/tasks
  */
 
-import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { TaskCard } from '@/components/staff/TaskCard';
 import ProofUploader from '@/components/staff/ProofUploader';
 import { Plus, Filter } from 'lucide-react';

@@ -61,13 +61,13 @@ export function UniteHubStructuredData() {
         "offers": {
           "@type": "AggregateOffer",
           "priceCurrency": "AUD",
-          "lowPrice": "249",
-          "highPrice": "549",
-          "offerCount": "2",
+          "lowPrice": "495",
+          "highPrice": "1295",
+          "offerCount": "3",
           "priceSpecification": [
             {
               "@type": "UnitPriceSpecification",
-              "price": "249.00",
+              "price": "495.00",
               "priceCurrency": "AUD",
               "name": "Starter Plan",
               "billingDuration": "P1M",
@@ -79,9 +79,21 @@ export function UniteHubStructuredData() {
             },
             {
               "@type": "UnitPriceSpecification",
-              "price": "549.00",
+              "price": "895.00",
               "priceCurrency": "AUD",
-              "name": "Professional Plan",
+              "name": "Pro Plan",
+              "billingDuration": "P1M",
+              "referenceQuantity": {
+                "@type": "QuantitativeValue",
+                "value": "1",
+                "unitText": "MONTH"
+              }
+            },
+            {
+              "@type": "UnitPriceSpecification",
+              "price": "1295.00",
+              "priceCurrency": "AUD",
+              "name": "Elite Plan",
               "billingDuration": "P1M",
               "referenceQuantity": {
                 "@type": "QuantitativeValue",
@@ -195,12 +207,12 @@ export function PricingStructuredData() {
       {
         "@type": "Offer",
         "name": "Starter Plan",
-        "description": "Perfect for small teams getting started with AI-powered CRM",
-        "price": "249.00",
+        "description": "Perfect for small businesses getting started with AI marketing",
+        "price": "495.00",
         "priceCurrency": "AUD",
         "priceSpecification": {
           "@type": "UnitPriceSpecification",
-          "price": "249.00",
+          "price": "495.00",
           "priceCurrency": "AUD",
           "billingDuration": "P1M",
           "referenceQuantity": {
@@ -212,27 +224,22 @@ export function PricingStructuredData() {
         "availability": "https://schema.org/InStock",
         "itemCondition": "https://schema.org/NewCondition",
         "validFrom": new Date().toISOString(),
-        "url": "https://unite-hub.com/pricing",
+        "url": "https://synthex.social/pricing",
         "seller": {
           "@type": "Organization",
-          "name": "Unite-Hub"
+          "name": "Synthex"
         },
-        "category": "CRM Software - Starter Tier",
+        "category": "AI Marketing Software - Starter Tier",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
-            "name": "Client Accounts",
-            "value": "1"
+            "name": "AI Content Generation",
+            "value": "Basic"
           },
           {
             "@type": "PropertyValue",
             "name": "Email Processing",
             "value": "Basic"
-          },
-          {
-            "@type": "PropertyValue",
-            "name": "Persona Generation",
-            "value": "Single"
           },
           {
             "@type": "PropertyValue",
@@ -243,13 +250,13 @@ export function PricingStructuredData() {
       },
       {
         "@type": "Offer",
-        "name": "Professional Plan",
-        "description": "For growing agencies and businesses with advanced AI automation needs",
-        "price": "549.00",
+        "name": "Pro Plan",
+        "description": "For growing businesses with advanced AI automation needs",
+        "price": "895.00",
         "priceCurrency": "AUD",
         "priceSpecification": {
           "@type": "UnitPriceSpecification",
-          "price": "549.00",
+          "price": "895.00",
           "priceCurrency": "AUD",
           "billingDuration": "P1M",
           "referenceQuantity": {
@@ -261,32 +268,22 @@ export function PricingStructuredData() {
         "availability": "https://schema.org/InStock",
         "itemCondition": "https://schema.org/NewCondition",
         "validFrom": new Date().toISOString(),
-        "url": "https://unite-hub.com/pricing",
+        "url": "https://synthex.social/pricing",
         "seller": {
           "@type": "Organization",
-          "name": "Unite-Hub"
+          "name": "Synthex"
         },
-        "category": "CRM Software - Professional Tier",
+        "category": "AI Marketing Software - Pro Tier",
         "additionalProperty": [
           {
             "@type": "PropertyValue",
-            "name": "Client Accounts",
-            "value": "5"
-          },
-          {
-            "@type": "PropertyValue",
-            "name": "Email Processing",
+            "name": "AI Content Generation",
             "value": "Advanced"
           },
           {
             "@type": "PropertyValue",
-            "name": "Persona Generation",
-            "value": "Multi-persona"
-          },
-          {
-            "@type": "PropertyValue",
-            "name": "DALL-E Integration",
-            "value": "Yes"
+            "name": "Social Playbooks",
+            "value": "Unlimited"
           },
           {
             "@type": "PropertyValue",
@@ -294,14 +291,63 @@ export function PricingStructuredData() {
             "value": "Priority"
           }
         ]
+      },
+      {
+        "@type": "Offer",
+        "name": "Elite Plan",
+        "description": "Full AI marketing automation suite with all premium features",
+        "price": "1295.00",
+        "priceCurrency": "AUD",
+        "priceSpecification": {
+          "@type": "UnitPriceSpecification",
+          "price": "1295.00",
+          "priceCurrency": "AUD",
+          "billingDuration": "P1M",
+          "referenceQuantity": {
+            "@type": "QuantitativeValue",
+            "value": "1",
+            "unitText": "MONTH"
+          }
+        },
+        "availability": "https://schema.org/InStock",
+        "itemCondition": "https://schema.org/NewCondition",
+        "validFrom": new Date().toISOString(),
+        "url": "https://synthex.social/pricing",
+        "seller": {
+          "@type": "Organization",
+          "name": "Synthex"
+        },
+        "category": "AI Marketing Software - Elite Tier",
+        "additionalProperty": [
+          {
+            "@type": "PropertyValue",
+            "name": "AI Content Generation",
+            "value": "Unlimited"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "API Access",
+            "value": "Yes"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "White Label",
+            "value": "Yes"
+          },
+          {
+            "@type": "PropertyValue",
+            "name": "Support",
+            "value": "Dedicated"
+          }
+        ]
       }
     ],
     "aggregateOffer": {
       "@type": "AggregateOffer",
       "priceCurrency": "AUD",
-      "lowPrice": "249",
-      "highPrice": "549",
-      "offerCount": "2"
+      "lowPrice": "495",
+      "highPrice": "1295",
+      "offerCount": "3"
     }
   };
 
