@@ -4356,3 +4356,169 @@ export async function runCollaborativeWorkflow(
 
   return results;
 }
+
+// ============================================================================
+// APPROVAL & STRATEGY INTENTS
+// ============================================================================
+
+import { StrategyGenerator } from '@/lib/strategy/strategyGenerator';
+import { getApprovalService } from '@/lib/approval/approvalService';
+import { getAIConsultationService } from '@/lib/ai/consultationService';
+
+/**
+ * Generate multi-path strategic options for a given context
+ */
+export async function generateStrategyOptions(context: {
+  businessName?: string;
+  industry?: string;
+  boostBumpEligible?: boolean;
+  seoFindings?: Record<string, unknown>;
+}): Promise<{
+  conservative: unknown;
+  aggressive: unknown;
+  blue_ocean: unknown;
+  data_driven: unknown;
+}> {
+  const options = StrategyGenerator.generateChoices({
+    businessName: context.businessName,
+    industry: context.industry,
+    boostBumpEligible: context.boostBumpEligible,
+    seoFindings: context.seoFindings,
+  });
+
+  return options;
+}
+
+/**
+ * Submit a task for client approval with auto-generated strategy options
+ */
+export async function submitForClientApproval(input: {
+  business_id: string;
+  client_id?: string;
+  created_by?: string;
+  title: string;
+  description: string;
+  data: Record<string, unknown>;
+  source: string;
+  context?: {
+    businessName?: string;
+    industry?: string;
+    boostBumpEligible?: boolean;
+  };
+}): Promise<{
+  approvalId: string;
+  strategyOptions: unknown;
+}> {
+  const approvalService = getApprovalService();
+
+  // Generate strategy options if context provided
+  const strategyOptions = input.context
+    ? StrategyGenerator.generateChoices({
+        businessName: input.context.businessName,
+        industry: input.context.industry,
+        boostBumpEligible: input.context.boostBumpEligible,
+        seoFindings: input.data,
+      })
+    : undefined;
+
+  const approval = await approvalService.create({
+    business_id: input.business_id,
+    client_id: input.client_id,
+    created_by: input.created_by,
+    title: input.title,
+    description: input.description,
+    data: input.data,
+    source: input.source,
+    strategy_options: strategyOptions,
+  });
+
+  await approvalService.logEvent(approval.id, 'submitted_via_orchestrator', {
+    source: input.source,
+  });
+
+  return {
+    approvalId: approval.id,
+    strategyOptions,
+  };
+}
+
+/**
+ * Start an AI consultation session
+ */
+export async function startAIConsultation(input: {
+  business_id: string;
+  client_id?: string;
+  created_by?: string;
+  context?: Record<string, unknown>;
+  explanation_mode?: 'eli5' | 'beginner' | 'technical' | 'founder';
+  title?: string;
+}): Promise<{
+  consultationId: string;
+}> {
+  const consultationService = getAIConsultationService();
+
+  const consultation = await consultationService.create({
+    business_id: input.business_id,
+    client_id: input.client_id,
+    created_by: input.created_by,
+    context: input.context,
+    explanation_mode: input.explanation_mode || 'founder',
+    title: input.title,
+  });
+
+  return {
+    consultationId: consultation.id,
+  };
+}
+
+// Add orchestrate handlers for new intents
+const strategyIntentPatterns = [
+  'strategy options',
+  'blue ocean strategy',
+  'marketing strategy choices',
+  'seo strategy choices',
+  'growth options',
+  'generate strategies',
+];
+
+const approvalIntentPatterns = [
+  'submit approval',
+  'send for approval',
+  'client must approve',
+  'require approval',
+  'needs client sign-off',
+];
+
+const consultationIntentPatterns = [
+  'start ai consultation',
+  'open strategy chat',
+  'talk to ai phill',
+  'discuss strategy',
+  'ai strategy session',
+];
+
+export function detectApprovalOrStrategyIntent(
+  prompt: string
+): 'strategy' | 'approval' | 'consultation' | null {
+  const lowerPrompt = prompt.toLowerCase();
+
+  for (const pattern of strategyIntentPatterns) {
+    if (lowerPrompt.includes(pattern)) {
+      return 'strategy';
+    }
+  }
+
+  for (const pattern of approvalIntentPatterns) {
+    if (lowerPrompt.includes(pattern)) {
+      return 'approval';
+    }
+  }
+
+  for (const pattern of consultationIntentPatterns) {
+    if (lowerPrompt.includes(pattern)) {
+      return 'consultation';
+    }
+  }
+
+  return null;
+}

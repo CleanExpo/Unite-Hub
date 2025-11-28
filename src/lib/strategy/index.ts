@@ -1,28 +1,22 @@
-// Strategy system exports for hierarchical multi-agent planning
+/**
+ * Strategy Module
+ *
+ * Exports Blue Ocean Engine and Strategy Generator for multi-path decision making.
+ */
 
-// Engines
-export { strategyHierarchyEngine, StrategyHierarchyEngine } from './StrategyHierarchyEngine';
-export type { StrategicObjective, StrategyLevel, StrategyItem, StrategyHierarchy } from './StrategyHierarchyEngine';
+export {
+  BlueOceanEngine,
+  type BlueOceanInput,
+  type BlueOceanOutput,
+  type BlueOceanOpportunity,
+  type StrategicCanvas,
+} from './blueOceanEngine';
 
-// Decomposition model
-export { strategicDecompositionModel, StrategicDecompositionModel } from './StrategicDecompositionModel';
-export type {
-  DecompositionRule,
-  DecompositionMetrics,
-  DecompositionAnalysis,
-  DecompositionIssue,
-} from './StrategicDecompositionModel';
-
-// Validation model
-export { strategyValidationModel, StrategyValidationModel } from './StrategyValidationModel';
-export type {
-  ValidationRule,
-  ValidationResult,
-  MultiAgentValidationResult,
-  AgentValidation,
-  StrategyConflict,
-} from './StrategyValidationModel';
-
-// Archive bridge
-export { strategyArchiveBridge, StrategyArchiveBridge } from './StrategyArchiveBridge';
-export type { StrategyArchiveRecord, StrategyPattern, StrategyPatternType } from './StrategyArchiveBridge';
+export {
+  StrategyGenerator,
+  type ExplanationMode,
+  type StrategyContext,
+  type StrategyOption,
+  type BlueOceanOption,
+  type StrategyChoices,
+} from './strategyGenerator';
