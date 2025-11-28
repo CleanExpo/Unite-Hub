@@ -150,17 +150,30 @@ CREATE TABLE IF NOT EXISTS seo_profiles (
 -- ============================================================
 
 -- AI Daily Summary - aggregated daily insights
-CREATE TABLE IF NOT EXISTS ai_daily_summary (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  workspace_id UUID NOT NULL,
-  summary_date DATE NOT NULL,
-  summary_type TEXT NOT NULL DEFAULT 'daily',
-  content JSONB NOT NULL DEFAULT '{}',
-  metrics JSONB DEFAULT '{}',
-  generated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  model_used TEXT,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
+-- Note: This may already exist as a materialized view in some deployments
+-- Only create if not exists
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.tables
+    WHERE table_schema = 'public' AND table_name = 'ai_daily_summary'
+  ) AND NOT EXISTS (
+    SELECT 1 FROM pg_matviews
+    WHERE schemaname = 'public' AND matviewname = 'ai_daily_summary'
+  ) THEN
+    CREATE TABLE ai_daily_summary (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      workspace_id UUID NOT NULL,
+      summary_date DATE NOT NULL,
+      summary_type TEXT NOT NULL DEFAULT 'daily',
+      content JSONB NOT NULL DEFAULT '{}',
+      metrics JSONB DEFAULT '{}',
+      generated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      model_used TEXT,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  END IF;
+END $$;
 
 -- ============================================================
 -- SOCIAL INBOX TABLES
@@ -233,7 +246,16 @@ ALTER TABLE client_actions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE integrations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE seo_credentials ENABLE ROW LEVEL SECURITY;
 ALTER TABLE seo_profiles ENABLE ROW LEVEL SECURITY;
-ALTER TABLE ai_daily_summary ENABLE ROW LEVEL SECURITY;
+-- Skip ai_daily_summary RLS if it's a materialized view
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.tables
+    WHERE table_schema = 'public' AND table_name = 'ai_daily_summary' AND table_type = 'BASE TABLE'
+  ) THEN
+    ALTER TABLE ai_daily_summary ENABLE ROW LEVEL SECURITY;
+  END IF;
+END $$;
 ALTER TABLE social_inbox_messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE social_playbooks ENABLE ROW LEVEL SECURITY;
 
@@ -246,7 +268,16 @@ DROP POLICY IF EXISTS "Users can access client actions" ON client_actions;
 DROP POLICY IF EXISTS "Users can access integrations" ON integrations;
 DROP POLICY IF EXISTS "Users can access SEO credentials" ON seo_credentials;
 DROP POLICY IF EXISTS "Users can access SEO profiles" ON seo_profiles;
-DROP POLICY IF EXISTS "Users can access AI summaries" ON ai_daily_summary;
+-- Skip ai_daily_summary policy drop if materialized view
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.tables
+    WHERE table_schema = 'public' AND table_name = 'ai_daily_summary' AND table_type = 'BASE TABLE'
+  ) THEN
+    DROP POLICY IF EXISTS "Users can access AI summaries" ON ai_daily_summary;
+  END IF;
+END $$;
 DROP POLICY IF EXISTS "Users can access social inbox" ON social_inbox_messages;
 DROP POLICY IF EXISTS "Users can access social playbooks" ON social_playbooks;
 
@@ -275,8 +306,17 @@ CREATE POLICY "Users can access SEO credentials" ON seo_credentials
 CREATE POLICY "Users can access SEO profiles" ON seo_profiles
   FOR ALL USING (auth.uid() IS NOT NULL);
 
-CREATE POLICY "Users can access AI summaries" ON ai_daily_summary
-  FOR ALL USING (auth.uid() IS NOT NULL);
+-- Skip ai_daily_summary policy create if materialized view
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.tables
+    WHERE table_schema = 'public' AND table_name = 'ai_daily_summary' AND table_type = 'BASE TABLE'
+  ) THEN
+    CREATE POLICY "Users can access AI summaries" ON ai_daily_summary
+      FOR ALL USING (auth.uid() IS NOT NULL);
+  END IF;
+END $$;
 
 CREATE POLICY "Users can access social inbox" ON social_inbox_messages
   FOR ALL USING (auth.uid() IS NOT NULL);
@@ -299,8 +339,8 @@ BEGIN
       'admin_approvals', 'admin_trusted_devices',
       'leads', 'clients', 'client_actions',
       'integrations', 'seo_credentials', 'seo_profiles',
-      'ai_daily_summary', 'social_inbox_messages', 'social_playbooks'
+      'social_inbox_messages', 'social_playbooks'
     );
 
-  RAISE NOTICE 'Migration 312 complete. Created/verified % tables', table_count;
+  RAISE NOTICE 'Migration 312 complete. Created/verified % tables (ai_daily_summary handled separately if exists)', table_count;
 END $$;
