@@ -114,6 +114,11 @@
             "date": 1764280337310,
             "name": "D:\\Unite-Hub\\logs\\error-2025-11-28.log",
             "hash": "4a724fdf0266db95d6d91e5fc724dbdb70ad72869f02c00724748e3db4df0de1"
+        },
+        {
+            "date": 1764370444315,
+            "name": "D:\\Unite-Hub\\logs\\error-2025-11-29.log",
+            "hash": "9c57a3890e6b6f2874d66f9fe8a44f4e0baed3b556645858c90613f40ba9d2dc"
         }
     ],
     "hashType": "sha256"
