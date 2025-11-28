@@ -638,4 +638,15 @@ export function getClientEmailIntelligenceService(): ClientEmailIntelligenceServ
   return serviceInstance;
 }
 
+// Backward-compatible singleton export for consumers expecting direct import
+export const clientEmailIntelligenceService = new Proxy(
+  {} as ClientEmailIntelligenceService,
+  {
+    get(_target, prop) {
+      const instance = getClientEmailIntelligenceService();
+      return (instance as unknown as Record<string | symbol, unknown>)[prop];
+    },
+  }
+);
+
 export default ClientEmailIntelligenceService;

@@ -96,7 +96,7 @@ export {
   type InsightStatus,
   type DetectedInsight,
   type OpportunityAnalysis,
-  type ExtractionResult,
+  type OpportunityExtractionResult,
   type ExtractedItem,
 } from './opportunityDetectorService';
 

@@ -28,6 +28,9 @@
       ],
       "@/convex/*": [
         "./convex/*"
+      ],
+      "@config/*": [
+        "./config/*"
       ]
     },
     "allowJs": true

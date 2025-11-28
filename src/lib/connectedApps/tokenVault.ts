@@ -243,4 +243,12 @@ export function getTokenVault(): TokenVault {
   return vaultInstance;
 }
 
+// Backward-compatible singleton export for consumers expecting direct import
+export const tokenVault = new Proxy({} as TokenVault, {
+  get(_target, prop) {
+    const instance = getTokenVault();
+    return (instance as unknown as Record<string | symbol, unknown>)[prop];
+  },
+});
+
 export default TokenVault;

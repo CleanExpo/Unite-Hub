@@ -42,8 +42,30 @@ export interface ApplyResult {
   error?: string;
 }
 
+// Map config thresholds to service-expected format
+const configThresholds = adsAutomationConfig.optimizationSettings.thresholds;
+const performanceThresholds = {
+  minROAS: configThresholds.roasLow,
+  minConversionRate: configThresholds.conversionRateLow,
+  minCTR: configThresholds.ctrLow,
+  maxROAS: configThresholds.roasHigh,
+  maxConversionRate: configThresholds.conversionRateHigh,
+  maxCTR: configThresholds.ctrHigh,
+};
+
+// Default enabled optimization types
+const defaultOptimizationTypes: OptimizationType[] = [
+  'budget_increase',
+  'budget_decrease',
+  'underperforming_ad',
+  'high_performer_scale',
+  'cost_efficiency',
+  'conversion_opportunity',
+  'trend_alert',
+];
+
 class AdsOptimizationService {
-  private thresholds = adsAutomationConfig.optimization.performanceThresholds;
+  private thresholds = performanceThresholds;
 
   /**
    * Analyze campaigns and detect optimization opportunities
@@ -57,7 +79,7 @@ class AdsOptimizationService {
       lookbackDays = 7,
       comparisonPeriod = 'previous_period',
       minDataPoints = 3,
-      enabledTypes = adsAutomationConfig.optimization.enabledOptimizationTypes,
+      enabledTypes = defaultOptimizationTypes,
     } = options;
 
     const supabase = await getSupabaseServer();

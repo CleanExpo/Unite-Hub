@@ -246,3 +246,6 @@ export function getReplayConfig(): ReplayTaskConfig {
 export function getSafetyConfig(): SafetyConfig {
   return browserAutomationBoostConfig.safety;
 }
+
+// Backward-compatible alias for consumers using the short name
+export const browserAutomationConfig = browserAutomationBoostConfig;

@@ -53,7 +53,7 @@ export interface OpportunityAnalysis {
   risks: DetectedInsight[];
 }
 
-export interface ExtractionResult {
+export interface OpportunityExtractionResult {
   tasks: ExtractedItem[];
   questions: ExtractedItem[];
   commitments: ExtractedItem[];
@@ -150,14 +150,14 @@ If nothing found for a category, return empty array.`;
         return this.emptyResult();
       }
 
-      return JSON.parse(jsonMatch[0]) as ExtractionResult;
+      return JSON.parse(jsonMatch[0]) as OpportunityExtractionResult;
     } catch (error) {
       console.error('[OpportunityDetector] Extraction error:', error);
       return this.emptyResult();
     }
   }
 
-  private emptyResult(): ExtractionResult {
+  private emptyResult(): OpportunityExtractionResult {
     return {
       tasks: [],
       questions: [],
@@ -253,7 +253,7 @@ If nothing found for a category, return empty array.`;
    * Convert extraction result to insight records
    */
   private convertToInsights(
-    extraction: ExtractionResult,
+    extraction: OpportunityExtractionResult,
     preClientId: string,
     workspaceId: string,
     messageId: string,
