@@ -10,7 +10,7 @@ Unite-Hub is an **AI-first CRM and marketing automation platform** built with:
 - **Frontend**: Next.js 16 (App Router, Turbopack) + React 19 + shadcn/ui + Tailwind CSS
 - **Backend**: Next.js API Routes (104 endpoints) + Supabase PostgreSQL
 - **AI Layer**: Anthropic Claude API (Opus 4, Sonnet 4.5, Haiku 4.5) with Extended Thinking
-- **Auth**: Supabase Auth with Google OAuth 2.0 (implicit flow)
+- **Auth**: Supabase Auth with Google OAuth 2.0 (PKCE flow - server-side session validation)
 - **Email**: Multi-provider system (SendGrid → Resend → Gmail SMTP with automatic failover)
 - **Real-Time**: WebSocket streaming, Redis caching, Bull job queues, node-cron scheduling
 
@@ -335,97 +335,91 @@ SEO tasks available via orchestrator:
 
 ## Critical Architecture Patterns
 
-### 1. Authentication Pattern (Implicit OAuth)
+### 1. Authentication Pattern (PKCE Flow)
 
-**Problem**: Supabase implicit OAuth stores tokens in localStorage (client-side only). Server-side API routes can't access these tokens directly.
+**Updated (2025-11-28)**: Migrated from implicit OAuth to PKCE flow for enhanced security.
 
-**Solution Pattern** (apply to all authenticated API routes):
+**Benefits of PKCE**:
+- Sessions stored in cookies (accessible server-side in middleware)
+- Proper server-side route protection
+- JWT validation with `getUser()` instead of just reading cookies
+- No localStorage token exposure
 
-**Client Side** (`src/app/dashboard/*/page.tsx`):
+**Key Files**:
+- `src/lib/supabase/client.ts` - Browser client with cookie storage
+- `src/lib/supabase/server.ts` - Server component client
+- `src/lib/supabase/middleware.ts` - Middleware client
+- `src/app/auth/callback/route.ts` - PKCE code exchange
+
+**Server-Side Auth** (preferred - use in API routes and Server Components):
 ```typescript
-const handleApiCall = async () => {
-  const { data: { session } } = await supabase.auth.getSession();
+import { createClient } from "@/lib/supabase/server";
 
-  if (!session) return;
+export async function GET() {
+  const supabase = await createClient();
+  const { data: { user }, error } = await supabase.auth.getUser();
 
-  const response = await fetch("/api/your-endpoint", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${session.access_token}`, // ← CRITICAL
-    },
-    body: JSON.stringify(data),
-  });
-};
-```
-
-**Server Side** (`src/app/api/*/route.ts`):
-```typescript
-import { NextRequest, NextResponse } from "next/server";
-import { getSupabaseServer } from "@/lib/supabase";
-
-export async function POST(req: NextRequest) {
-  try {
-    const authHeader = req.headers.get("authorization");
-    const token = authHeader?.replace("Bearer ", "");
-
-    let userId: string;
-
-    if (token) {
-      const { supabaseBrowser } = await import("@/lib/supabase");
-      const { data, error } = await supabaseBrowser.auth.getUser(token);
-
-      if (error || !data.user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-
-      userId = data.user.id;
-    } else {
-      const supabase = await getSupabaseServer();
-      const { data, error } = await supabase.auth.getUser();
-
-      if (error || !data.user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-
-      userId = data.user.id;
-    }
-
-    const supabase = await getSupabaseServer();
-    // Your API logic here using userId and supabase
-
-  } catch (error) {
-    console.error("API error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  if (error || !user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  // User is authenticated, proceed with your logic
+  const { data } = await supabase.from('table').select('*');
 }
 ```
 
-**Reference**: `src/app/api/profile/update/route.ts`
+**Client-Side Auth** (for client components):
+```typescript
+"use client";
+import { createClient } from "@/lib/supabase/client";
+
+const supabase = createClient();
+const { data: { session } } = await supabase.auth.getSession();
+```
+
+**Middleware Protection** (automatic with PKCE):
+```typescript
+// src/middleware.ts uses getUser() for JWT validation
+const { data: { user } } = await supabase.auth.getUser();
+```
+
+**Reference**: `src/middleware.ts`, `src/app/auth/callback/route.ts`
 
 ---
 
-### 2. Supabase Client Usage
+### 2. Supabase Client Usage (PKCE)
 
-**Three Client Types** (use the right one for each context):
+**Four Client Types** (use the right one for each context):
 
-1. **`supabaseBrowser`** - Client-side React components (accesses localStorage tokens)
+1. **Browser Client** - Client-side React components (PKCE cookies)
    ```typescript
-   import { supabase } from "@/lib/supabase";
+   import { createClient } from "@/lib/supabase/client";
+   const supabase = createClient();
    ```
 
-2. **`getSupabaseServer()`** - Server-side API routes, RSC (accesses cookies, SSR-compatible)
+2. **Server Client** - Server Components and API routes
    ```typescript
-   import { getSupabaseServer } from "@/lib/supabase";
-   const supabase = await getSupabaseServer();
+   import { createClient } from "@/lib/supabase/server";
+   const supabase = await createClient();
    ```
 
-3. **`supabaseAdmin`** - Admin operations bypassing RLS (uses service role key)
+3. **Middleware Client** - Next.js middleware only
+   ```typescript
+   import { createMiddlewareClient } from "@/lib/supabase/middleware";
+   const { supabase, response } = createMiddlewareClient(request);
+   ```
+
+4. **Admin Client** - Admin operations bypassing RLS
    ```typescript
    import { supabaseAdmin } from "@/lib/supabase";
    ```
 
-**CRITICAL**: Never use `supabaseServer` Proxy (removed due to async issues). Always call `await getSupabaseServer()`.
+**Legacy Exports** (still available for backward compatibility):
+```typescript
+import { supabase, supabaseBrowser, getSupabaseServer } from "@/lib/supabase";
+```
+
+**CRITICAL**: For new code, prefer the modular imports from `@/lib/supabase/client` and `@/lib/supabase/server`.
 
 ---
 
@@ -1237,8 +1231,9 @@ All phase reports in `docs/PHASE{N}_*.md`:
 
 ---
 
-**Last Update**: 2025-11-27 - Phase 5 Week 4 Complete (Real-Time & Monitoring)
-- Added WebSocket server, Redis cache, Bull queues, alert processor, scheduled jobs
-- Comprehensive metrics collection and health scoring (0-100)
-- Production-ready real-time alert system with <100ms latency, 80%+ cache hit rate, 99.5%+ job success
+**Last Update**: 2025-11-28 - PKCE Auth Migration Complete (Server-Side Session Validation)
+- Migrated from implicit OAuth to PKCE flow for enhanced security
+- Sessions now stored in cookies (accessible server-side in middleware)
+- Proper server-side route protection with JWT validation using getUser()
+- Added Business Identity Vault for AI Phill (Migration 310)
 - Total Phase 5: 16,116 LOC across 4 weeks

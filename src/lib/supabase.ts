@@ -24,16 +24,15 @@ function getSupabaseBrowser() {
     }
     _supabaseBrowser = createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
-        // Enable session persistence in localStorage
+        // Enable session persistence
         persistSession: true,
         // Automatically refresh tokens before they expire
         autoRefreshToken: true,
         // Detect session in URL (for OAuth callbacks)
         detectSessionInUrl: true,
-        // Use localStorage for session storage (browser only)
-        storage: typeof window !== 'undefined' ? window.localStorage : undefined,
-        // Flow type for OAuth (implicit flow as currently used)
-        flowType: 'implicit',
+        // PKCE Flow: Sessions stored in cookies, accessible server-side
+        // This replaces implicit flow which stored in localStorage
+        flowType: 'pkce',
       },
     });
   }

@@ -1,3 +1,14 @@
+/**
+ * Unite-Hub Middleware - PKCE Flow
+ *
+ * This middleware handles:
+ * 1. Session validation (PKCE sessions are in cookies, accessible server-side)
+ * 2. Role-based access control (RBAC)
+ * 3. Security headers
+ *
+ * With PKCE, we can now properly protect routes server-side.
+ */
+
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
@@ -81,10 +92,11 @@ export async function middleware(req: NextRequest) {
     }
   );
 
-  // Try to refresh the session on every request to maintain auth state
-  const { data: { session } } = await supabase.auth.getSession();
+  // Use getUser() instead of getSession() for better security
+  // getUser() validates the JWT with Supabase, getSession() only reads from cookies
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
 
-  const isAuthenticated = !!session?.user;
+  const isAuthenticated = !!user && !userError;
   const pathname = req.nextUrl.pathname;
 
   // Auth pages that should redirect if already logged in
@@ -99,14 +111,22 @@ export async function middleware(req: NextRequest) {
   const marketingPaths = ["/", "/pricing", "/landing"];
   const isMarketingPath = marketingPaths.includes(pathname);
 
+  // Protected route prefixes
+  const protectedPrefixes = ["/dashboard", "/founder", "/staff", "/client", "/crm", "/synthex"];
+  const isProtectedPath = protectedPrefixes.some((prefix) => pathname.startsWith(prefix));
+
   // Allow public paths for guests
   if (isPublicPath && !isAuthenticated) {
-    return response;
+    return addSecurityHeaders(response);
   }
 
-  // If not authenticated and not on public path or auth path, redirect to login
-  // Important: Don't redirect auth paths (login, register) to login - that causes infinite loop!
-  if (!isAuthenticated && !isPublicPath && !isAuthPath) {
+  // Allow auth paths for guests (prevent redirect loop)
+  if (isAuthPath && !isAuthenticated) {
+    return addSecurityHeaders(response);
+  }
+
+  // If not authenticated and trying to access protected path, redirect to login
+  if (!isAuthenticated && isProtectedPath) {
     const redirectUrl = req.nextUrl.clone();
     redirectUrl.pathname = "/login";
     redirectUrl.searchParams.set("redirectTo", pathname);
@@ -119,7 +139,7 @@ export async function middleware(req: NextRequest) {
       const { data: profile } = await supabase
         .from('profiles')
         .select('role')
-        .eq('id', session.user.id)
+        .eq('id', user.id)
         .maybeSingle(); // Use maybeSingle to gracefully handle missing profiles
 
       const userRole = normalizeRole(profile?.role); // Defaults to 'CLIENT' if no profile
@@ -132,10 +152,6 @@ export async function middleware(req: NextRequest) {
           redirectUrl.pathname = '/founder';
           return NextResponse.redirect(redirectUrl);
         }
-
-        // Device trust check disabled for now - tables may not be set up
-        // TODO: Re-enable when admin_trusted_devices and admin_approvals tables are populated
-        // For MVP, founders have full access without device verification
 
         // Redirect from synthex (client dashboard) to founder
         if (pathname.startsWith('/synthex')) {
@@ -188,11 +204,17 @@ export async function middleware(req: NextRequest) {
     } catch (error) {
       console.error('Error in RBAC middleware:', error);
       // On error, continue to destination (fail open)
-      return response;
+      return addSecurityHeaders(response);
     }
   }
 
-  // Add security headers to all responses
+  return addSecurityHeaders(response);
+}
+
+/**
+ * Add security headers to response
+ */
+function addSecurityHeaders(response: NextResponse): NextResponse {
   response.headers.set('X-Frame-Options', 'DENY');
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('X-XSS-Protection', '1; mode=block');
@@ -232,25 +254,23 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  // IMPORTANT: With implicit OAuth, sessions are in localStorage (client-side only).
-  // Middleware runs server-side and CANNOT read localStorage.
-  // Therefore, we only use middleware for:
-  // 1. Marketing page redirects for authenticated users (via cookies if available)
-  // 2. Security headers
-  // Client-side AuthContext handles protected route redirects.
+  // With PKCE, sessions are in cookies and accessible server-side
+  // We can now properly protect all routes
   matcher: [
+    // Marketing pages (redirect authenticated users)
     "/",
     "/pricing",
     "/landing",
+    // Auth pages (redirect if already authenticated)
     "/login",
     "/register",
     "/forgot-password",
-    // Protected routes removed - handled by client-side AuthContext
-    // "/dashboard/:path*",
-    // "/founder/:path*",
-    // "/staff/:path*",
-    // "/client/:path*",
-    // "/crm/:path*",
-    // "/synthex/:path*",
+    // Protected routes (require authentication)
+    "/dashboard/:path*",
+    "/founder/:path*",
+    "/staff/:path*",
+    "/client/:path*",
+    "/crm/:path*",
+    "/synthex/:path*",
   ],
 };

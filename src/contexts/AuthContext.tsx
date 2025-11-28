@@ -200,12 +200,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return { error: null };
   };
 
-  // Sign in with Google OAuth
+  // Sign in with Google OAuth (PKCE flow)
   const signInWithGoogle = async () => {
     const { data, error} = await supabaseBrowser.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/implicit-callback`,
+        // PKCE flow: redirect to server-side callback that exchanges code for session
+        redirectTo: `${window.location.origin}/auth/callback`,
       },
     });
 
