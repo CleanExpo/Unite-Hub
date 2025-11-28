@@ -4522,3 +4522,119 @@ export function detectApprovalOrStrategyIntent(
 
   return null;
 }
+
+// =============================================================================
+// BUSINESS IDENTITY VAULT & FOUNDER PORTFOLIO ENGINE (Migration 310)
+// =============================================================================
+
+const businessVaultIntentPatterns = [
+  'list businesses',
+  'show my businesses',
+  'business portfolio',
+  'company overview',
+  'all my companies',
+  'portfolio summary',
+];
+
+const businessSynopsisIntentPatterns = [
+  'business synopsis',
+  'analyze business',
+  'business health',
+  'company analysis',
+  'seo leak analysis',
+  'navboost analysis',
+];
+
+const portfolioSynopsisIntentPatterns = [
+  'portfolio synopsis',
+  'umbrella analysis',
+  'cross-business insights',
+  'multi-business summary',
+  'founder portfolio health',
+];
+
+export function detectBusinessVaultIntent(
+  prompt: string
+): 'list_businesses' | 'business_synopsis' | 'portfolio_synopsis' | null {
+  const lowerPrompt = prompt.toLowerCase();
+
+  for (const pattern of businessVaultIntentPatterns) {
+    if (lowerPrompt.includes(pattern)) {
+      return 'list_businesses';
+    }
+  }
+
+  for (const pattern of businessSynopsisIntentPatterns) {
+    if (lowerPrompt.includes(pattern)) {
+      return 'business_synopsis';
+    }
+  }
+
+  for (const pattern of portfolioSynopsisIntentPatterns) {
+    if (lowerPrompt.includes(pattern)) {
+      return 'portfolio_synopsis';
+    }
+  }
+
+  return null;
+}
+
+/**
+ * List all businesses overview for founder
+ */
+export async function handleListBusinessesOverview(): Promise<{
+  businesses: Array<{
+    business_key: string;
+    display_name: string;
+    primary_domain: string | null;
+    primary_region: string | null;
+    industry: string | null;
+  }>;
+  totalCount: number;
+}> {
+  const { listFounderBusinesses } = await import('@/lib/founder/businessVaultService');
+  const businesses = await listFounderBusinesses();
+
+  return {
+    businesses: businesses.map((b) => ({
+      business_key: b.business_key,
+      display_name: b.display_name,
+      primary_domain: b.primary_domain,
+      primary_region: b.primary_region,
+      industry: b.industry,
+    })),
+    totalCount: businesses.length,
+  };
+}
+
+/**
+ * Compile business synopsis with channels and snapshots
+ */
+export async function handleCompileBusinessSynopsis(input: {
+  businessKey: string;
+}): Promise<{
+  business: any;
+  channels: any[];
+  snapshots: any[];
+} | null> {
+  const { getBusinessWithChannels } = await import('@/lib/founder/businessVaultService');
+  return await getBusinessWithChannels(input.businessKey);
+}
+
+/**
+ * Compile portfolio-wide synopsis across all businesses
+ */
+export async function handleCompilePortfolioSynopsis(): Promise<{
+  totalBusinesses: number;
+  totalChannels: number;
+  totalSnapshots: number;
+  businesses: Array<{
+    business_key: string;
+    display_name: string;
+    channel_count: number;
+    latest_snapshot_date: string | null;
+  }>;
+}> {
+  const { getPortfolioStats } = await import('@/lib/founder/businessVaultService');
+  return await getPortfolioStats();
+}
