@@ -165,8 +165,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      // Set current organization
-      const savedOrgId = localStorage.getItem("currentOrganizationId");
+      // Set current organization (with SSR guard)
+      let savedOrgId: string | null = null;
+      if (typeof window !== 'undefined') {
+        savedOrgId = localStorage.getItem("currentOrganizationId");
+      }
       const savedOrg = orgs.find((org: any) => org.org_id === savedOrgId);
       const currentOrg = savedOrg || orgs[0] || null;
       console.log('[AuthContext] Current org set to:', currentOrg?.organization?.name);
@@ -244,13 +247,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setOrganizations([]);
     setCurrentOrganization(null);
     setSession(null);
-    localStorage.removeItem("currentOrganizationId");
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem("currentOrganizationId");
+    }
   };
 
   // Handle organization change
   const handleSetCurrentOrganization = (org: UserOrganization) => {
     setCurrentOrganization(org);
-    localStorage.setItem("currentOrganizationId", org.org_id);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem("currentOrganizationId", org.org_id);
+    }
   };
 
   // Session refresh handler (prevents session expiry)
@@ -350,10 +357,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setProfile(null);
         setOrganizations([]);
         setCurrentOrganization(null);
-        localStorage.removeItem("currentOrganizationId");
-
-        // Redirect to login page to prevent broken state
-        window.location.href = '/login';
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem("currentOrganizationId");
+          // Redirect to login page to prevent broken state
+          window.location.href = '/login';
+        }
         return; // Early return to prevent further processing
       }
 
