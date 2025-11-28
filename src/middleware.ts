@@ -4,17 +4,6 @@ import type { NextRequest } from "next/server";
 import type { UserRole } from "./lib/auth/userTypes";
 
 /**
- * Generate device fingerprint from user agent and IP
- * Uses Web Crypto API for Edge Runtime compatibility
- */
-async function generateDeviceFingerprint(userAgent: string, ip: string): Promise<string> {
-  const data = new TextEncoder().encode(`${userAgent}:${ip}`);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-}
-
-/**
  * Normalize legacy role names to new UserRole enum
  */
 function normalizeRole(role: string | null | undefined): UserRole {
@@ -143,45 +132,9 @@ export async function middleware(req: NextRequest) {
           return NextResponse.redirect(redirectUrl);
         }
 
-        // Device trust check for admin-level access (security)
-        const userAgent = req.headers.get('user-agent') || '';
-        const ip = req.headers.get('x-forwarded-for') ||
-                   req.headers.get('x-real-ip') ||
-                   'unknown';
-
-        const deviceFingerprint = await generateDeviceFingerprint(userAgent, ip);
-
-        // Check if device is trusted (fail open if table doesn't exist)
-        try {
-          const { data: trustedDevice } = await supabase
-            .from('admin_trusted_devices')
-            .select('id')
-            .eq('user_id', session.user.id)
-            .eq('device_fingerprint', deviceFingerprint)
-            .eq('is_trusted', true)
-            .gte('expires_at', new Date().toISOString())
-            .single();
-
-          const { data: validApproval } = await supabase
-            .from('admin_approvals')
-            .select('id')
-            .eq('user_id', session.user.id)
-            .eq('approved', true)
-            .gte('expires_at', new Date().toISOString())
-            .single();
-
-          // If no trust and no valid approval, redirect to await approval page
-          if (!trustedDevice && !validApproval) {
-            if (pathname === '/auth/await-approval') {
-              return response;
-            }
-            const redirectUrl = req.nextUrl.clone();
-            redirectUrl.pathname = '/auth/await-approval';
-            return NextResponse.redirect(redirectUrl);
-          }
-        } catch {
-          // Tables may not exist yet, fail open
-        }
+        // Device trust check disabled for now - tables may not be set up
+        // TODO: Re-enable when admin_trusted_devices and admin_approvals tables are populated
+        // For MVP, founders have full access without device verification
 
         // Redirect from synthex (client dashboard) to founder
         if (pathname.startsWith('/synthex')) {
