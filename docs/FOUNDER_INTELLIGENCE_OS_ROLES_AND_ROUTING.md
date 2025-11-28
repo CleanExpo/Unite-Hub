@@ -32,12 +32,29 @@ ALTER TABLE profiles
   ALTER COLUMN role SET DEFAULT 'CLIENT';
 ```
 
-### Migration 309: Seed Founder Roles
+### Migration 309: Seed Founder and Staff Roles
+
+This migration seeds the initial role assignments:
+- `phill.mcgurk@gmail.com` → FOUNDER
+- `support@carsi.com.au` → STAFF
+- `ranamuzamil1199@gmail.com` → STAFF
+
+**Important**: Users must have logged in at least once before running this migration, OR the migration will create profiles from auth.users automatically.
 
 ```sql
-UPDATE profiles
-SET role = 'FOUNDER'
-WHERE email = 'phill.mcgurk@gmail.com';
+-- Create profiles for any auth.users that don't have profiles yet
+INSERT INTO profiles (id, email, role)
+SELECT id, email, 'CLIENT'::user_role
+FROM auth.users
+WHERE id NOT IN (SELECT id FROM profiles WHERE id IS NOT NULL)
+ON CONFLICT (id) DO NOTHING;
+
+-- Set founder role for Phill
+UPDATE profiles SET role = 'FOUNDER'::user_role WHERE email = 'phill.mcgurk@gmail.com';
+
+-- Set staff roles
+UPDATE profiles SET role = 'STAFF'::user_role WHERE email = 'support@carsi.com.au';
+UPDATE profiles SET role = 'STAFF'::user_role WHERE email = 'ranamuzamil1199@gmail.com';
 ```
 
 ---
@@ -193,7 +210,17 @@ npm test -- tests/integration/auth/roleRouting.test.ts
 
 ### New user has wrong role
 1. Default is `CLIENT` - update in Supabase if needed
-2. Use SQL: `UPDATE profiles SET role = 'STAFF' WHERE email = 'user@example.com';`
+2. Use SQL: `UPDATE profiles SET role = 'STAFF'::user_role WHERE email = 'user@example.com';`
+
+### Profile not found for user
+1. Check if user has logged in at least once (triggers profile creation)
+2. If `profiles` table is empty but `user_profiles` has records, run migration 309
+3. The `initialize-user` endpoint now creates records in both tables
+
+### Schema Mismatch: user_profiles vs profiles
+- **`user_profiles`**: Main user data (full_name, avatar_url) - created by database trigger
+- **`profiles`**: Role-based access control - created by initialize-user endpoint
+- Both tables should have records for each user after first login
 
 ---
 
