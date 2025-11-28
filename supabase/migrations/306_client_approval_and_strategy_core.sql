@@ -59,6 +59,15 @@ ALTER TABLE client_approval_requests ENABLE ROW LEVEL SECURITY;
 ALTER TABLE client_approval_history ENABLE ROW LEVEL SECURITY;
 ALTER TABLE blue_ocean_strategies ENABLE ROW LEVEL SECURITY;
 
+-- Drop existing policies first (idempotent)
+DROP POLICY IF EXISTS "Users can view their business approvals" ON client_approval_requests;
+DROP POLICY IF EXISTS "Users can create approvals for their business" ON client_approval_requests;
+DROP POLICY IF EXISTS "Users can update their business approvals" ON client_approval_requests;
+DROP POLICY IF EXISTS "Users can view their approval history" ON client_approval_history;
+DROP POLICY IF EXISTS "Users can insert approval history" ON client_approval_history;
+DROP POLICY IF EXISTS "Users can view their blue ocean strategies" ON blue_ocean_strategies;
+DROP POLICY IF EXISTS "Users can create blue ocean strategies" ON blue_ocean_strategies;
+
 -- Approval requests: users can see their own business approvals
 CREATE POLICY "Users can view their business approvals"
   ON client_approval_requests FOR SELECT

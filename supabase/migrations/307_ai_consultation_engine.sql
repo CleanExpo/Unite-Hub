@@ -61,6 +61,15 @@ ALTER TABLE ai_consultations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ai_consultation_messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ai_consultation_insights ENABLE ROW LEVEL SECURITY;
 
+-- Drop existing policies first (idempotent)
+DROP POLICY IF EXISTS "Users can view their consultations" ON ai_consultations;
+DROP POLICY IF EXISTS "Users can create consultations" ON ai_consultations;
+DROP POLICY IF EXISTS "Users can update their consultations" ON ai_consultations;
+DROP POLICY IF EXISTS "Users can view consultation messages" ON ai_consultation_messages;
+DROP POLICY IF EXISTS "Users can insert consultation messages" ON ai_consultation_messages;
+DROP POLICY IF EXISTS "Users can view consultation insights" ON ai_consultation_insights;
+DROP POLICY IF EXISTS "Users can insert consultation insights" ON ai_consultation_insights;
+
 -- Consultations: users can manage their own
 CREATE POLICY "Users can view their consultations"
   ON ai_consultations FOR SELECT
