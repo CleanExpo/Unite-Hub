@@ -104,8 +104,9 @@ export async function middleware(req: NextRequest) {
     return response;
   }
 
-  // If not authenticated and not on public path, redirect to login
-  if (!isAuthenticated && !isPublicPath) {
+  // If not authenticated and not on public path or auth path, redirect to login
+  // Important: Don't redirect auth paths (login, register) to login - that causes infinite loop!
+  if (!isAuthenticated && !isPublicPath && !isAuthPath) {
     const redirectUrl = req.nextUrl.clone();
     redirectUrl.pathname = "/login";
     redirectUrl.searchParams.set("redirectTo", pathname);
