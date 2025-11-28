@@ -25,25 +25,17 @@ export async function POST(req: NextRequest) {
 
     let userId: string;
 
-    if (token) {
-      const { supabaseBrowser } = await import("@/lib/supabase");
-      const { data, error } = await supabaseBrowser.auth.getUser(token);
+    // Use server-side auth with token or cookie-based session
+    const { getSupabaseServerWithAuth } = await import("@/lib/supabase");
+    const supabaseAuth = token
+      ? getSupabaseServerWithAuth(token)
+      : await getSupabaseServer();
 
-      if (error || !data.user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-
-      userId = data.user.id;
-    } else {
-      const supabase = await getSupabaseServer();
-      const { data, error } = await supabase.auth.getUser();
-
-      if (error || !data.user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-
-      userId = data.user.id;
+    const { data, error } = await supabaseAuth.auth.getUser();
+    if (error || !data.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    userId = data.user.id;
 
     // Parse request body
     const { workspaceId, contactId, to, subject, body } = await req.json();

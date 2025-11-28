@@ -106,7 +106,11 @@ export default function DashboardLayout({
             </p>
             <div className="flex flex-col gap-3">
               <Button
-                onClick={() => window.location.href = '/onboarding'}
+                onClick={() => {
+                  if (typeof window !== 'undefined') {
+                    window.location.href = '/onboarding';
+                  }
+                }}
                 className="bg-blue-600 hover:bg-blue-700 text-white"
               >
                 Create Organization
@@ -115,7 +119,9 @@ export default function DashboardLayout({
                 variant="outline"
                 onClick={async () => {
                   await signOut();
-                  window.location.href = '/login';
+                  if (typeof window !== 'undefined') {
+                    window.location.href = '/login';
+                  }
                 }}
                 className="border-slate-600 text-slate-300 hover:bg-slate-700"
               >
@@ -378,7 +384,9 @@ export default function DashboardLayout({
                       className="text-red-400 cursor-pointer"
                       onClick={async () => {
                         await signOut();
-                        window.location.href = '/login';
+                        if (typeof window !== 'undefined') {
+                          window.location.href = '/login';
+                        }
                       }}
                     >
                       Logout

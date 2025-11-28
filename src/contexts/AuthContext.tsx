@@ -44,6 +44,7 @@ interface AuthContextType {
   currentOrganization: UserOrganization | null;
   session: Session | null;
   loading: boolean;
+  isHydrated: boolean; // True after client-side hydration complete
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signInWithGoogle: () => Promise<{ error: any }>;
   signUp: (email: string, password: string, fullName: string) => Promise<{ error: any }>;
@@ -70,6 +71,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [currentOrganization, setCurrentOrganization] = useState<UserOrganization | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  // Track hydration to prevent SSR/CSR mismatch flash
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  // Mark as hydrated after first client render
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   // Fetch user profile via API (bypasses RLS issues)
   const fetchProfile = async (userId: string, providedSession?: Session | null) => {
@@ -205,11 +213,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Sign in with Google OAuth (PKCE flow)
   const signInWithGoogle = async () => {
+    // Guard for SSR safety
+    const origin = typeof window !== 'undefined' ? window.location.origin : '';
+
     const { data, error} = await supabaseBrowser.auth.signInWithOAuth({
       provider: 'google',
       options: {
         // PKCE flow: redirect to server-side callback that exchanges code for session
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${origin}/auth/callback`,
       },
     });
 
@@ -279,7 +290,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             console.error('[AuthContext] Session refresh failed:', error);
             // Redirect to login on failed refresh
             await signOut();
-            window.location.href = '/login';
+            if (typeof window !== 'undefined') {
+              window.location.href = '/login';
+            }
           } else {
             console.log('[AuthContext] Session refreshed successfully');
             setSession(data.session);
@@ -460,6 +473,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     currentOrganization,
     session,
     loading,
+    isHydrated,
     signIn,
     signInWithGoogle,
     signUp,

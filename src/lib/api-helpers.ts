@@ -21,7 +21,84 @@
  * ```
  */
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+
+// ============================================================================
+// AUTHENTICATION HELPERS
+// ============================================================================
+
+/**
+ * Authenticates a user from an API request using server-side methods only.
+ *
+ * IMPORTANT: This replaces the old pattern that used supabaseBrowser on the server.
+ * - If Authorization header present: Uses getSupabaseServerWithAuth(token)
+ * - If no header: Uses getSupabaseServer() to read session from cookies
+ *
+ * @example
+ * export async function POST(req: NextRequest) {
+ *   const { user, supabase, error } = await authenticateRequest(req);
+ *   if (error) return error;
+ *   // user is authenticated, supabase client has their context
+ * }
+ */
+export async function authenticateRequest(req: NextRequest): Promise<{
+  user: { id: string; email?: string } | null;
+  supabase: any;
+  error: NextResponse | null;
+}> {
+  try {
+    const authHeader = req.headers.get("authorization");
+    const token = authHeader?.replace("Bearer ", "");
+
+    const { getSupabaseServer, getSupabaseServerWithAuth } = await import("@/lib/supabase");
+
+    // Use token-based auth or cookie-based session
+    const supabase = token
+      ? getSupabaseServerWithAuth(token)
+      : await getSupabaseServer();
+
+    const { data, error } = await supabase.auth.getUser();
+
+    if (error || !data.user) {
+      return {
+        user: null,
+        supabase,
+        error: NextResponse.json({ error: "Unauthorized" }, { status: 401 }),
+      };
+    }
+
+    return {
+      user: data.user,
+      supabase,
+      error: null,
+    };
+  } catch (err) {
+    console.error("[authenticateRequest] Error:", err);
+    return {
+      user: null,
+      supabase: null,
+      error: NextResponse.json({ error: "Authentication failed" }, { status: 500 }),
+    };
+  }
+}
+
+/**
+ * Gets the user ID from an API request (convenience wrapper)
+ *
+ * @example
+ * const { userId, error } = await getUserId(req);
+ * if (error) return error;
+ */
+export async function getUserId(req: NextRequest): Promise<{
+  userId: string | null;
+  error: NextResponse | null;
+}> {
+  const { user, error } = await authenticateRequest(req);
+  return {
+    userId: user?.id ?? null,
+    error,
+  };
+}
 
 // ============================================================================
 // RESPONSE HELPERS

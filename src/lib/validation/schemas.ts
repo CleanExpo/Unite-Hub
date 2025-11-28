@@ -111,3 +111,156 @@ export const contactFormSchema = z.object({
 });
 
 export type ContactFormData = z.infer<typeof contactFormSchema>;
+
+// ============================================
+// API ROUTE VALIDATION HELPERS
+// ============================================
+
+/**
+ * Safe parse request body with typed response
+ * Use in API routes for standardized validation
+ */
+export async function safeParseBody<T extends z.ZodType>(
+  req: Request,
+  schema: T
+): Promise<{ success: true; data: z.infer<T> } | { success: false; error: string; response: Response }> {
+  try {
+    const body = await req.json();
+    const result = schema.safeParse(body);
+
+    if (!result.success) {
+      return {
+        success: false,
+        error: formatZodError(result.error),
+        response: new Response(
+          JSON.stringify({ error: 'Validation failed', details: formatZodError(result.error) }),
+          { status: 400, headers: { 'Content-Type': 'application/json' } }
+        ),
+      };
+    }
+
+    return { success: true, data: result.data };
+  } catch (e) {
+    return {
+      success: false,
+      error: 'Invalid JSON body',
+      response: new Response(
+        JSON.stringify({ error: 'Invalid JSON body' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      ),
+    };
+  }
+}
+
+/**
+ * Safe parse URL search params with typed response
+ */
+export function safeParseParams<T extends z.ZodType>(
+  searchParams: URLSearchParams,
+  schema: T
+): { success: true; data: z.infer<T> } | { success: false; error: string } {
+  const params: Record<string, string> = {};
+  searchParams.forEach((value, key) => {
+    params[key] = value;
+  });
+
+  const result = schema.safeParse(params);
+
+  if (!result.success) {
+    return { success: false, error: formatZodError(result.error) };
+  }
+
+  return { success: true, data: result.data };
+}
+
+// ============================================
+// COMMON API SCHEMAS
+// ============================================
+
+// Workspace-scoped base schema (all operations must include this)
+export const WorkspaceScopedSchema = z.object({
+  workspaceId: UUIDSchema,
+});
+
+// Pagination schema
+export const PaginationSchema = z.object({
+  page: z.coerce.number().int().positive().default(1),
+  limit: z.coerce.number().int().positive().max(100).default(20),
+  sortBy: z.string().optional(),
+  sortOrder: z.enum(['asc', 'desc']).default('desc'),
+});
+
+// ID parameter schema
+export const IdParamSchema = z.object({
+  id: UUIDSchema,
+});
+
+// Contact schemas
+export const CreateContactSchema = z.object({
+  workspaceId: UUIDSchema,
+  name: z.string().min(1, 'Name is required'),
+  email: EmailSchema,
+  company: z.string().optional(),
+  phone: z.string().optional(),
+  status: z.enum(['new', 'contacted', 'qualified', 'proposal', 'negotiation', 'closed_won', 'closed_lost']).default('new'),
+  tags: z.array(z.string()).optional(),
+});
+
+export const UpdateContactSchema = CreateContactSchema.partial().omit({ workspaceId: true });
+
+// Campaign schemas
+export const CreateCampaignSchema = z.object({
+  workspaceId: UUIDSchema,
+  name: z.string().min(1, 'Campaign name is required'),
+  subject: z.string().min(1, 'Subject is required'),
+  content: z.string().min(1, 'Content is required'),
+  status: z.enum(['draft', 'scheduled', 'active', 'paused', 'completed']).default('draft'),
+  scheduledAt: z.string().datetime().optional(),
+});
+
+export const UpdateCampaignSchema = CreateCampaignSchema.partial().omit({ workspaceId: true });
+
+// Email schemas
+export const SendEmailSchema = z.object({
+  workspaceId: UUIDSchema,
+  contactId: UUIDSchema,
+  to: EmailSchema,
+  subject: z.string().min(1, 'Subject is required'),
+  body: z.string().min(1, 'Body is required'),
+});
+
+// Content generation schemas
+export const GenerateContentSchema = z.object({
+  workspaceId: UUIDSchema,
+  contactId: UUIDSchema.optional(),
+  type: z.enum(['email', 'followup', 'proposal', 'social', 'blog']).default('email'),
+  tone: z.enum(['professional', 'friendly', 'formal', 'casual']).default('professional'),
+  context: z.string().optional(),
+});
+
+// AI Agent schemas
+export const AgentActionSchema = z.object({
+  workspaceId: UUIDSchema,
+  action: z.string(),
+  params: z.record(z.unknown()).optional(),
+});
+
+// Search schema
+export const SearchSchema = z.object({
+  workspaceId: UUIDSchema,
+  query: z.string().min(1, 'Search query is required'),
+  type: z.enum(['contacts', 'emails', 'campaigns', 'content', 'all']).default('all'),
+  ...PaginationSchema.shape,
+});
+
+// Type exports
+export type WorkspaceScoped = z.infer<typeof WorkspaceScopedSchema>;
+export type Pagination = z.infer<typeof PaginationSchema>;
+export type CreateContact = z.infer<typeof CreateContactSchema>;
+export type UpdateContact = z.infer<typeof UpdateContactSchema>;
+export type CreateCampaign = z.infer<typeof CreateCampaignSchema>;
+export type UpdateCampaign = z.infer<typeof UpdateCampaignSchema>;
+export type SendEmail = z.infer<typeof SendEmailSchema>;
+export type GenerateContent = z.infer<typeof GenerateContentSchema>;
+export type AgentAction = z.infer<typeof AgentActionSchema>;
+export type SearchParams = z.infer<typeof SearchSchema>;

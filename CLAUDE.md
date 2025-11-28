@@ -583,6 +583,22 @@ BEGIN
 END $$;
 ```
 
+### ⚠️ CRITICAL: Schema Reference (MANDATORY)
+
+**Before writing ANY SQL migration, check `.claude/SCHEMA_REFERENCE.md`**
+
+This document contains:
+- Actual table schemas (profiles, user_profiles, user_organizations)
+- Custom types (user_role ENUM)
+- Supabase restrictions (no auth schema access)
+- Correct role check patterns
+- Pre-migration checklist
+
+**Common Mistakes to Avoid**:
+- `profiles.role` uses `user_role` ENUM ('FOUNDER', 'STAFF', 'CLIENT', 'ADMIN')
+- `user_profiles` does NOT have a role column
+- Functions must be in `public` schema, NOT `auth`
+
 ### ⚠️ CRITICAL: RLS Migration Workflow (MANDATORY)
 
 **Before ANY RLS-related work**:

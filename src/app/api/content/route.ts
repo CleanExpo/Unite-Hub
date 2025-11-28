@@ -300,21 +300,16 @@ export async function PATCH(req: NextRequest) {
     const token = authHeader?.replace("Bearer ", "");
     let userId: string;
 
-    if (token) {
-      const { supabaseBrowser } = await import("@/lib/supabase");
-      const { data, error } = await supabaseBrowser.auth.getUser(token);
-      if (error || !data.user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-      userId = data.user.id;
-    } else {
-      const supabase = await getSupabaseServer();
-      const { data, error } = await supabase.auth.getUser();
-      if (error || !data.user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-      userId = data.user.id;
+    // Use server-side auth with token or cookie-based session
+    const supabaseAuth = token
+      ? (await import("@/lib/supabase")).getSupabaseServerWithAuth(token)
+      : await getSupabaseServer();
+
+    const { data, error } = await supabaseAuth.auth.getUser();
+    if (error || !data.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    userId = data.user.id;
 
     const body = await req.json();
     const { contentId, workspaceId, title, generatedText, status } = body;
@@ -399,21 +394,16 @@ export async function DELETE(req: NextRequest) {
     const token = authHeader?.replace("Bearer ", "");
     let userId: string;
 
-    if (token) {
-      const { supabaseBrowser } = await import("@/lib/supabase");
-      const { data, error } = await supabaseBrowser.auth.getUser(token);
-      if (error || !data.user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-      userId = data.user.id;
-    } else {
-      const supabase = await getSupabaseServer();
-      const { data, error } = await supabase.auth.getUser();
-      if (error || !data.user) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-      userId = data.user.id;
+    // Use server-side auth with token or cookie-based session
+    const supabaseAuth = token
+      ? (await import("@/lib/supabase")).getSupabaseServerWithAuth(token)
+      : await getSupabaseServer();
+
+    const { data, error } = await supabaseAuth.auth.getUser();
+    if (error || !data.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    userId = data.user.id;
 
     const contentId = req.nextUrl.searchParams.get("contentId");
     const workspaceId = req.nextUrl.searchParams.get("workspaceId");
