@@ -170,6 +170,34 @@ export async function POST(request: NextRequest): Promise<NextResponse<Initializ
       console.log('[initialize-user] ✅ Profile already exists:', user.id);
     }
 
+    // STEP 1b: Verify/Create Profiles record for role-based routing (idempotent)
+    // The 'profiles' table is used by middleware for RBAC (separate from user_profiles)
+    const { data: existingRoleProfile } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('id', user.id)
+      .maybeSingle();
+
+    if (!existingRoleProfile) {
+      const { error: roleProfileError } = await supabase
+        .from('profiles')
+        .insert({
+          id: user.id,
+          email: user.email!,
+          role: 'CLIENT', // Default role for new users
+        });
+
+      if (roleProfileError) {
+        console.error('[initialize-user] Role profile creation failed:', roleProfileError);
+        // Non-blocking: log but continue - middleware will handle missing profiles gracefully
+        console.warn('[initialize-user] ⚠️ Role profile not created, user will default to CLIENT role');
+      } else {
+        console.log('[initialize-user] ✅ Role profile created with CLIENT role:', user.id);
+      }
+    } else {
+      console.log('[initialize-user] ✅ Role profile already exists:', user.id);
+    }
+
     // STEP 2: Verify/Create Organization (idempotent)
     const { data: existingOrgs } = await supabase
       .from('user_organizations')

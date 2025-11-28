@@ -119,9 +119,9 @@ export async function middleware(req: NextRequest) {
         .from('profiles')
         .select('role')
         .eq('id', session.user.id)
-        .single();
+        .maybeSingle(); // Use maybeSingle to gracefully handle missing profiles
 
-      const userRole = normalizeRole(profile?.role);
+      const userRole = normalizeRole(profile?.role); // Defaults to 'CLIENT' if no profile
 
       // FOUNDER/ADMIN: Bypass marketing pages, go to founder dashboard
       if (userRole === 'FOUNDER' || userRole === 'ADMIN') {

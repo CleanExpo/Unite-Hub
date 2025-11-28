@@ -18,22 +18,31 @@ export async function getUserRole(req?: any) {
       .from('profiles')
       .select('id, email, role')
       .eq('id', user.id)
-      .single();
+      .maybeSingle(); // Use maybeSingle to gracefully handle missing profiles
 
     if (error) {
       console.warn('Failed to fetch profile:', error);
-      // Return user info even if profile doesn't exist yet
+      // Return user info even if profile query fails
       return {
         id: user.id,
         email: user.email,
-        role: 'customer' // default to customer
+        role: 'CLIENT' // default to CLIENT (using new enum value)
+      };
+    }
+
+    // If no profile exists, return default with CLIENT role
+    if (!profile) {
+      return {
+        id: user.id,
+        email: user.email,
+        role: 'CLIENT'
       };
     }
 
     return {
-      id: profile?.id,
-      email: profile?.email || user.email,
-      role: profile?.role || 'customer'
+      id: profile.id,
+      email: profile.email || user.email,
+      role: profile.role || 'CLIENT'
     };
   } catch (error) {
     console.error('Error in getUserRole:', error);
@@ -66,7 +75,7 @@ export async function ensureUserProfile(userId: string, email: string) {
       .insert({
         id: userId,
         email,
-        role: 'customer' // default role
+        role: 'CLIENT' // default role (using new enum value)
       })
       .select()
       .single();

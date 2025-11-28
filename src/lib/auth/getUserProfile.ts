@@ -46,11 +46,22 @@ export async function getUserProfile(): Promise<UserProfile | null> {
       .from('profiles')
       .select('id, email, role, full_name, avatar_url, created_at, updated_at')
       .eq('id', user.id)
-      .single();
+      .maybeSingle(); // Use maybeSingle to gracefully handle missing profiles
 
-    if (profileError || !profile) {
+    if (profileError) {
       console.error('Error fetching user profile:', profileError);
       return null;
+    }
+
+    // If no profile exists, return a default profile with CLIENT role
+    if (!profile) {
+      return {
+        id: user.id,
+        email: user.email || '',
+        role: 'CLIENT' as UserRole,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
     }
 
     // Normalize role to uppercase enum value
