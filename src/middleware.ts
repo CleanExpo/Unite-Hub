@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import type { UserRole } from "./lib/auth/userTypes";
 
 /**
  * Generate device fingerprint from user agent and IP
@@ -11,6 +12,31 @@ async function generateDeviceFingerprint(userAgent: string, ip: string): Promise
   const hashBuffer = await crypto.subtle.digest('SHA-256', data);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+/**
+ * Normalize legacy role names to new UserRole enum
+ */
+function normalizeRole(role: string | null | undefined): UserRole {
+  if (!role) return 'CLIENT';
+  const upperRole = role.toUpperCase();
+  if (upperRole === 'FOUNDER' || upperRole === 'ADMIN' || role === 'admin') return 'FOUNDER';
+  if (upperRole === 'STAFF') return 'STAFF';
+  if (upperRole === 'CLIENT' || upperRole === 'CUSTOMER' || role === 'customer') return 'CLIENT';
+  return 'CLIENT';
+}
+
+/**
+ * Get the default dashboard for a role
+ */
+function getDefaultDashboard(role: UserRole): string {
+  switch (role) {
+    case 'FOUNDER': return '/founder';
+    case 'STAFF': return '/staff/dashboard';
+    case 'ADMIN': return '/founder'; // Admin gets founder access
+    case 'CLIENT':
+    default: return '/client';
+  }
 }
 
 export async function middleware(req: NextRequest) {
@@ -70,109 +96,146 @@ export async function middleware(req: NextRequest) {
   const { data: { session } } = await supabase.auth.getSession();
 
   const isAuthenticated = !!session?.user;
+  const pathname = req.nextUrl.pathname;
 
   // Auth pages that should redirect if already logged in
   const authPaths = ["/login", "/register", "/forgot-password"];
-  const isAuthPath = authPaths.some((path) =>
-    req.nextUrl.pathname.startsWith(path)
-  );
+  const isAuthPath = authPaths.some((path) => pathname.startsWith(path));
 
-  // Public routes (no auth required)
-  const publicPaths = ["/", "/privacy", "/terms", "/security", "/api/auth", "/api/cron", "/api/webhooks"];
-  const isPublicPath = publicPaths.some((path) =>
-    req.nextUrl.pathname.startsWith(path)
-  );
+  // Public routes (no auth required) - includes marketing pages
+  const publicPaths = ["/", "/pricing", "/landing", "/privacy", "/terms", "/security", "/support", "/api/auth", "/api/cron", "/api/webhooks", "/api/public"];
+  const isPublicPath = publicPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`));
 
-  // Allow public paths to pass through
-  if (isPublicPath) {
+  // Marketing paths that logged-in founders/staff should bypass
+  const marketingPaths = ["/", "/pricing", "/landing"];
+  const isMarketingPath = marketingPaths.includes(pathname);
+
+  // Allow public paths for guests
+  if (isPublicPath && !isAuthenticated) {
     return response;
   }
 
-  // If not authenticated, redirect to login
-  if (!isAuthenticated) {
+  // If not authenticated and not on public path, redirect to login
+  if (!isAuthenticated && !isPublicPath) {
     const redirectUrl = req.nextUrl.clone();
     redirectUrl.pathname = "/login";
-    redirectUrl.searchParams.set("redirectTo", req.nextUrl.pathname);
+    redirectUrl.searchParams.set("redirectTo", pathname);
     return NextResponse.redirect(redirectUrl);
   }
 
-  // Get user profile and role
-  try {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', session.user.id)
-      .single();
-
-    const userRole = profile?.role || 'customer';
-
-    // RBAC: Route based on role
-    if (userRole === 'admin') {
-      // Admin user (Phill, Claire, Rana)
-      const userAgent = req.headers.get('user-agent') || '';
-      const ip = req.headers.get('x-forwarded-for') ||
-                 req.headers.get('x-real-ip') ||
-                 'unknown';
-
-      const deviceFingerprint = await generateDeviceFingerprint(userAgent, ip);
-
-      // Check if device is trusted
-      const { data: trustedDevice } = await supabase
-        .from('admin_trusted_devices')
-        .select('id')
-        .eq('user_id', session.user.id)
-        .eq('device_fingerprint', deviceFingerprint)
-        .eq('is_trusted', true)
-        .gte('expires_at', new Date().toISOString())
+  // Get user profile and role for authenticated users
+  if (isAuthenticated) {
+    try {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', session.user.id)
         .single();
 
-      // Check if there's a valid approval
-      const { data: validApproval } = await supabase
-        .from('admin_approvals')
-        .select('id')
-        .eq('user_id', session.user.id)
-        .eq('approved', true)
-        .gte('expires_at', new Date().toISOString())
-        .single();
+      const userRole = normalizeRole(profile?.role);
 
-      // If no trust and no valid approval, redirect to await approval page
-      if (!trustedDevice && !validApproval) {
-        if (req.nextUrl.pathname === '/auth/await-approval') {
-          return response; // Allow await-approval page
+      // FOUNDER/ADMIN: Bypass marketing pages, go to founder dashboard
+      if (userRole === 'FOUNDER' || userRole === 'ADMIN') {
+        // Redirect from marketing/pricing to founder dashboard
+        if (isMarketingPath) {
+          const redirectUrl = req.nextUrl.clone();
+          redirectUrl.pathname = '/founder';
+          return NextResponse.redirect(redirectUrl);
         }
+
+        // Device trust check for admin-level access (security)
+        const userAgent = req.headers.get('user-agent') || '';
+        const ip = req.headers.get('x-forwarded-for') ||
+                   req.headers.get('x-real-ip') ||
+                   'unknown';
+
+        const deviceFingerprint = await generateDeviceFingerprint(userAgent, ip);
+
+        // Check if device is trusted (fail open if table doesn't exist)
+        try {
+          const { data: trustedDevice } = await supabase
+            .from('admin_trusted_devices')
+            .select('id')
+            .eq('user_id', session.user.id)
+            .eq('device_fingerprint', deviceFingerprint)
+            .eq('is_trusted', true)
+            .gte('expires_at', new Date().toISOString())
+            .single();
+
+          const { data: validApproval } = await supabase
+            .from('admin_approvals')
+            .select('id')
+            .eq('user_id', session.user.id)
+            .eq('approved', true)
+            .gte('expires_at', new Date().toISOString())
+            .single();
+
+          // If no trust and no valid approval, redirect to await approval page
+          if (!trustedDevice && !validApproval) {
+            if (pathname === '/auth/await-approval') {
+              return response;
+            }
+            const redirectUrl = req.nextUrl.clone();
+            redirectUrl.pathname = '/auth/await-approval';
+            return NextResponse.redirect(redirectUrl);
+          }
+        } catch {
+          // Tables may not exist yet, fail open
+        }
+
+        // Redirect from synthex (client dashboard) to founder
+        if (pathname.startsWith('/synthex')) {
+          const redirectUrl = req.nextUrl.clone();
+          redirectUrl.pathname = '/founder';
+          return NextResponse.redirect(redirectUrl);
+        }
+      }
+
+      // STAFF: Bypass marketing pages, go to staff dashboard
+      if (userRole === 'STAFF') {
+        if (isMarketingPath) {
+          const redirectUrl = req.nextUrl.clone();
+          redirectUrl.pathname = '/staff/dashboard';
+          return NextResponse.redirect(redirectUrl);
+        }
+
+        // Block staff from founder-only areas
+        if (pathname.startsWith('/founder')) {
+          const redirectUrl = req.nextUrl.clone();
+          redirectUrl.pathname = '/staff/dashboard';
+          return NextResponse.redirect(redirectUrl);
+        }
+      }
+
+      // CLIENT: Restrict from founder/staff areas
+      if (userRole === 'CLIENT') {
+        if (pathname.startsWith('/founder') || pathname.startsWith('/staff') ||
+            pathname.startsWith('/crm') || pathname === '/auth/await-approval') {
+          const redirectUrl = req.nextUrl.clone();
+          redirectUrl.pathname = '/client';
+          return NextResponse.redirect(redirectUrl);
+        }
+
+        // Redirect from marketing to client dashboard
+        if (isMarketingPath) {
+          const redirectUrl = req.nextUrl.clone();
+          redirectUrl.pathname = '/client';
+          return NextResponse.redirect(redirectUrl);
+        }
+      }
+
+      // Redirect to role-appropriate dashboard if accessing auth pages while authenticated
+      if (isAuthPath) {
         const redirectUrl = req.nextUrl.clone();
-        redirectUrl.pathname = '/auth/await-approval';
+        redirectUrl.pathname = getDefaultDashboard(userRole);
         return NextResponse.redirect(redirectUrl);
       }
 
-      // Redirect to CRM if trying to access customer dashboard
-      if (req.nextUrl.pathname.startsWith('/synthex') ||
-          req.nextUrl.pathname === '/synthex/dashboard') {
-        const redirectUrl = req.nextUrl.clone();
-        redirectUrl.pathname = '/crm';
-        return NextResponse.redirect(redirectUrl);
-      }
-    } else {
-      // Customer user - restrict access to CRM
-      if (req.nextUrl.pathname.startsWith('/crm') ||
-          req.nextUrl.pathname.startsWith('/api/crm') ||
-          req.nextUrl.pathname === '/auth/await-approval') {
-        const redirectUrl = req.nextUrl.clone();
-        redirectUrl.pathname = '/synthex/dashboard';
-        return NextResponse.redirect(redirectUrl);
-      }
+    } catch (error) {
+      console.error('Error in RBAC middleware:', error);
+      // On error, continue to destination (fail open)
+      return response;
     }
-  } catch (error) {
-    console.error('Error in RBAC middleware:', error);
-    // On error, continue to destination (fail open)
-    return response;
-  }
-
-  // Redirect to dashboard if accessing auth pages while authenticated
-  if (isAuthPath && isAuthenticated) {
-    const redirectUrl = req.nextUrl.clone();
-    redirectUrl.pathname = "/dashboard/overview";
-    return NextResponse.redirect(redirectUrl);
   }
 
   // Add security headers to all responses
@@ -216,7 +279,13 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
+    "/",
+    "/pricing",
+    "/landing",
     "/dashboard/:path*",
+    "/founder/:path*",
+    "/staff/:path*",
+    "/client/:path*",
     "/crm/:path*",
     "/auth/:path*",
     "/synthex/:path*",
