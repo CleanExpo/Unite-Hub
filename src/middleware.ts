@@ -232,19 +232,25 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
+  // IMPORTANT: With implicit OAuth, sessions are in localStorage (client-side only).
+  // Middleware runs server-side and CANNOT read localStorage.
+  // Therefore, we only use middleware for:
+  // 1. Marketing page redirects for authenticated users (via cookies if available)
+  // 2. Security headers
+  // Client-side AuthContext handles protected route redirects.
   matcher: [
     "/",
     "/pricing",
     "/landing",
-    "/dashboard/:path*",
-    "/founder/:path*",
-    "/staff/:path*",
-    "/client/:path*",
-    "/crm/:path*",
-    "/auth/:path*",
-    "/synthex/:path*",
     "/login",
     "/register",
     "/forgot-password",
+    // Protected routes removed - handled by client-side AuthContext
+    // "/dashboard/:path*",
+    // "/founder/:path*",
+    // "/staff/:path*",
+    // "/client/:path*",
+    // "/crm/:path*",
+    // "/synthex/:path*",
   ],
 };
