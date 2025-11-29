@@ -55,11 +55,29 @@ interface PriorityAction {
 export class AbacusAnalyzer {
   private apiKey: string;
   private baseUrl = 'https://api.abacus.ai/api/v0';
+  private isConfigured: boolean;
 
   constructor() {
     this.apiKey = process.env.ABACUS_API_KEY || '';
-    if (!this.apiKey) {
-      throw new Error('ABACUS_API_KEY not configured');
+    this.isConfigured = !!this.apiKey;
+    if (!this.isConfigured) {
+      console.warn('ABACUS_API_KEY not configured. AbacusAnalyzer will be unavailable.');
+    }
+  }
+
+  /**
+   * Check if the analyzer is properly configured
+   */
+  isAvailable(): boolean {
+    return this.isConfigured;
+  }
+
+  /**
+   * Ensure API is configured before making calls
+   */
+  private ensureConfigured(): void {
+    if (!this.isConfigured) {
+      throw new Error('ABACUS_API_KEY not configured. AbacusAnalyzer is unavailable.');
     }
   }
 
@@ -68,6 +86,7 @@ export class AbacusAnalyzer {
    * to make it fully functional
    */
   async analyzeDashboardRequirements(): Promise<AnalysisResult> {
+    this.ensureConfigured();
     const dashboardComponents = this.getDashboardComponents();
 
     // Call Abacus AI to analyze requirements

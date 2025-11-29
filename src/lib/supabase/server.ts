@@ -10,35 +10,53 @@
  */
 
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
-import { cookies } from 'next/headers';
+
+// Dynamic import of cookies to prevent build-time evaluation
+async function getCookieStore() {
+  // Only import next/headers at runtime
+  const { cookies } = await import('next/headers');
+  try {
+    return await cookies();
+  } catch {
+    return null;
+  }
+}
 
 /**
  * Create a Supabase server client for Server Components and API Routes
  * Reads session from cookies (PKCE flow)
  */
 export async function createClient() {
-  const cookieStore = await cookies();
+  const cookieStore = await getCookieStore();
 
   return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key',
     {
       cookies: {
         get(name: string) {
-          return cookieStore.get(name)?.value;
+          // Return undefined if cookieStore not available
+          if (!cookieStore) return undefined;
+          try {
+            return cookieStore.get(name)?.value;
+          } catch {
+            return undefined;
+          }
         },
         set(name: string, value: string, options: CookieOptions) {
+          if (!cookieStore) return;
           try {
             cookieStore.set({ name, value, ...options });
-          } catch (error) {
+          } catch {
             // Setting cookies in Server Components may fail
             // This is expected during static rendering
           }
         },
         remove(name: string, options: CookieOptions) {
+          if (!cookieStore) return;
           try {
             cookieStore.set({ name, value: '', ...options });
-          } catch (error) {
+          } catch {
             // Removing cookies in Server Components may fail
             // This is expected during static rendering
           }

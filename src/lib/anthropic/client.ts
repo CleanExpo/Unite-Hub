@@ -257,3 +257,21 @@ export function resetCircuitBreaker(): void {
 
 // Default export for backward compatibility
 export default getAnthropicClient;
+
+/**
+ * Lazy-initialized Anthropic client export
+ *
+ * This provides a drop-in replacement for:
+ *   const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+ *
+ * Replace with:
+ *   import { anthropic } from '@/lib/anthropic/client';
+ *
+ * The client is only initialized when first accessed, avoiding build-time errors.
+ */
+export const anthropic = new Proxy({} as Anthropic, {
+  get(_, prop) {
+    const client = manager.getClient();
+    return (client as any)[prop];
+  },
+});

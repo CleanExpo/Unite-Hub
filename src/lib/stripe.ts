@@ -1,7 +1,22 @@
 import Stripe from "stripe";
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2024-11-20.acacia",
+// Lazy-initialized Stripe client to avoid build-time errors
+let _stripeInstance: Stripe | null = null;
+
+function getStripeClient(): Stripe {
+  if (!_stripeInstance) {
+    _stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
+      apiVersion: "2024-11-20.acacia",
+    });
+  }
+  return _stripeInstance;
+}
+
+// Backward compatible export using Proxy
+export const stripe = new Proxy({} as Stripe, {
+  get(_, prop) {
+    return getStripeClient()[prop as keyof Stripe];
+  },
 });
 
 /**

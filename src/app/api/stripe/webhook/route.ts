@@ -22,9 +22,12 @@ import { publicRateLimit } from "@/lib/rate-limit";
  * - payment_intent.failed
  */
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-11-20.acacia",
-});
+// Lazy initialization to avoid build-time errors
+function getStripeClient() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY || '', {
+    apiVersion: "2024-11-20.acacia",
+  });
+}
 
 // Disable body parsing, need raw body for signature verification
 export const runtime = "nodejs";
@@ -63,6 +66,7 @@ export async function POST(req: NextRequest) {
     // Verify webhook signature
     let event: Stripe.Event;
     try {
+      const stripe = getStripeClient();
       event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
     } catch (err: any) {
       console.error("Webhook signature verification failed:", err.message);

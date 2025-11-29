@@ -1,14 +1,7 @@
-import Anthropic from "@anthropic-ai/sdk";
+import { anthropic } from "@/lib/anthropic/client";
 import { GoogleCalendarService, TimeSlot } from "@/lib/services/google-calendar";
 import { db } from "@/lib/db";
 import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
-
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-  defaultHeaders: {
-    "anthropic-beta": "prompt-caching-2024-07-31", // Required for prompt caching
-  },
-});
 
 // Static system prompts for caching (90% cost savings)
 const MEETING_SUGGESTION_SYSTEM_PROMPT = `You are an AI scheduling assistant analyzing meeting requests and suggesting optimal times.

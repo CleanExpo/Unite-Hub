@@ -1,10 +1,6 @@
-import Anthropic from "@anthropic-ai/sdk";
+import { anthropic } from "@/lib/anthropic/client";
 import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 import { getSupabaseServer } from "@/lib/supabase";
-
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY!,
-});
 
 interface EmailIntelligence {
   id: string;

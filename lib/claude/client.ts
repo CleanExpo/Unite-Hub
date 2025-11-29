@@ -1,9 +1,25 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 
-// Initialize Anthropic client
-export const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
+// Lazy-initialized Anthropic client
+let _anthropic: Anthropic | null = null;
+
+function getAnthropicClient(): Anthropic {
+  if (!_anthropic) {
+    const apiKey = process.env.ANTHROPIC_API_KEY;
+    if (!apiKey) {
+      throw new Error('ANTHROPIC_API_KEY is not configured');
+    }
+    _anthropic = new Anthropic({ apiKey });
+  }
+  return _anthropic;
+}
+
+// Backward compatible export using Proxy
+export const anthropic = new Proxy({} as Anthropic, {
+  get(_, prop) {
+    return getAnthropicClient()[prop as keyof Anthropic];
+  },
 });
 
 // Model configuration

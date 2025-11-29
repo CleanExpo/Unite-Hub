@@ -9,7 +9,8 @@
 
 import { NextRequest } from 'next/server';
 import { withApiHandler } from '@/app/api/_middleware';
-import { successResponse, errorResponse } from '@/app/api/_middleware/response';
+import { successResponse } from '@/app/api/_middleware/response';
+import { errorResponse } from '@/core/errors';
 import {
   createRateLimitOverride,
   blockIp,

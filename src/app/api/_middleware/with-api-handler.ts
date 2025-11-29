@@ -29,11 +29,9 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { withAuth } from '@/core/auth/with-auth';
-import { withRole } from '@/core/auth/with-role';
-import { withWorkspace } from '@/core/auth/with-workspace';
+import { withAuth, withRole, withWorkspace } from '@/core/auth';
 import { applyRateLimit } from './rate-limit';
-import { handleErrors } from '@/core/errors/handle-errors';
+import { handleErrors } from '@/core/errors';
 import type { User } from '@supabase/supabase-js';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { RateLimitTier } from '@/core/security/types';

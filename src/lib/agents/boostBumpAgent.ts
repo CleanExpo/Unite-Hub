@@ -7,7 +7,6 @@
  * @module agents/boostBumpAgent
  */
 
-import Anthropic from '@anthropic-ai/sdk';
 import { callAnthropicWithRetry } from '@/lib/anthropic/rate-limiter';
 import { db } from '@/lib/db';
 import {
@@ -34,12 +33,8 @@ import {
 // Types & Interfaces
 // ============================================================================
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
-  defaultHeaders: {
-    'anthropic-beta': 'prompt-caching-2024-07-31',
-  },
-});
+// Use centralized lazy-initialized client
+import { anthropic } from '@/lib/anthropic/client';
 
 export interface BoostJobAnalysis {
   recommendedBoostType: BoostType;

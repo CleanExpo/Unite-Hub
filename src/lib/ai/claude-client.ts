@@ -2,7 +2,7 @@
  * Claude AI Client for Landing Page Copy Generation
  */
 
-import Anthropic from "@anthropic-ai/sdk";
+import { anthropic } from "@/lib/anthropic/client";
 import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
 import {
   generateSectionCopyPrompt,
@@ -12,10 +12,6 @@ import {
   generateCopyVariationsPrompt,
   improveCopyPrompt,
 } from "./landing-page-prompts";
-
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || "",
-});
 
 interface CopyGenerationContext {
   businessName: string;

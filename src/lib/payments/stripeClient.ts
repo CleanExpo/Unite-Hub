@@ -19,14 +19,30 @@
 
 import Stripe from 'stripe';
 
-// Initialize Stripe client
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2024-12-18.acacia',
-  typescript: true,
+// Lazy-initialized Stripe client to avoid build-time errors
+let _stripeClient: Stripe | null = null;
+
+function getStripeClient(): Stripe {
+  if (!_stripeClient) {
+    _stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
+      apiVersion: '2024-12-18.acacia',
+      typescript: true,
+    });
+  }
+  return _stripeClient;
+}
+
+// Backward compatible export using Proxy
+const stripe = new Proxy({} as Stripe, {
+  get(_, prop) {
+    return getStripeClient()[prop as keyof Stripe];
+  },
 });
 
-// Webhook signing secret
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || '';
+// Webhook signing secret (lazy evaluated in functions that need it)
+function getWebhookSecret(): string {
+  return process.env.STRIPE_WEBHOOK_SECRET || '';
+}
 
 /**
  * Checkout Session Configuration
@@ -166,6 +182,7 @@ export function verifyWebhookSignature(
   signature: string
 ): Stripe.Event {
   try {
+    const webhookSecret = getWebhookSecret();
     if (!webhookSecret) {
       throw new Error('STRIPE_WEBHOOK_SECRET is not configured');
     }

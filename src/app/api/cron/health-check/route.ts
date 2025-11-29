@@ -15,19 +15,25 @@ import { logHealthCheck, logUptimeCheck } from '@/lib/monitoring/autonomous-moni
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60; // 60 seconds max
 
-// Initialize clients
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Initialize clients lazily to avoid build-time errors
+function getSupabaseClient() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+    process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+  );
+}
 
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY!,
-});
+function getAnthropicClient() {
+  return new Anthropic({
+    apiKey: process.env.ANTHROPIC_API_KEY || '',
+  });
+}
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-11-20.acacia',
-});
+function getStripeClient() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY || '', {
+    apiVersion: '2024-11-20.acacia',
+  });
+}
 
 export async function GET(req: NextRequest) {
   const startTime = Date.now();
@@ -79,6 +85,7 @@ export async function GET(req: NextRequest) {
 
     // 2. Anthropic API
     try {
+      const anthropic = getAnthropicClient();
       const message = await anthropic.messages.create({
         model: 'claude-opus-4-5-20251101',
         max_tokens: 10,
@@ -91,6 +98,7 @@ export async function GET(req: NextRequest) {
 
     // 3. Stripe API
     try {
+      const stripe = getStripeClient();
       const balance = await stripe.balance.retrieve();
       logCheck('Stripe API', 'pass', `Balance retrieved`);
     } catch (error: any) {

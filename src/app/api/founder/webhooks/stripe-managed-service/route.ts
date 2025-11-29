@@ -24,8 +24,21 @@ import Stripe from 'stripe';
 
 const logger = createApiLogger({ route: '/api/founder/webhooks/stripe-managed-service' });
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+// Initialize Stripe lazily to avoid build-time errors
+let stripeClient: Stripe | null = null;
+
+function getStripeClient(): Stripe {
+  if (!stripeClient) {
+    const secretKey = process.env.STRIPE_SECRET_KEY;
+    if (!secretKey) {
+      throw new Error('STRIPE_SECRET_KEY not configured');
+    }
+    stripeClient = new Stripe(secretKey);
+  }
+  return stripeClient;
+}
+
+const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || '';
 
 interface StripeEvent {
   id: string;
@@ -43,6 +56,7 @@ function verifyWebhookSignature(
   signature: string
 ): StripeEvent | null {
   try {
+    const stripe = getStripeClient();
     const event = stripe.webhooks.constructEvent(body, signature, webhookSecret) as StripeEvent;
     return event;
   } catch (error) {
