@@ -159,6 +159,53 @@ Before writing ANY migration:
 
 ---
 
+## Founder Intelligence OS Tables (migrations 300-305)
+
+**CRITICAL: These tables use owner_user_id or founder_business_id, NOT workspace_id**
+
+### Scoping Patterns:
+
+| Table | Scoping Column | FK |
+|-------|---------------|-----|
+| `founder_businesses` | `owner_user_id` | `auth.users(id)` |
+| `ai_phill_insights` | `owner_user_id` | `auth.users(id)` |
+| `ai_phill_journal_entries` | `owner_user_id` | `auth.users(id)` |
+| `cognitive_twin_scores` | `owner_user_id` | `auth.users(id)` |
+| `cognitive_twin_digests` | `owner_user_id` | `auth.users(id)` |
+| `cognitive_twin_decisions` | `owner_user_id` | `auth.users(id)` |
+| `founder_os_snapshots` | `owner_user_id` | `auth.users(id)` |
+| `seo_leak_signal_profiles` | `founder_business_id` | `founder_businesses(id)` |
+| `social_inbox_accounts` | `founder_business_id` | `founder_businesses(id)` |
+| `social_messages` | `social_account_id` | `social_inbox_accounts(id)` |
+
+### RLS Policy Patterns:
+
+**For owner_user_id scoped tables:**
+```sql
+CREATE POLICY "table_owner_select" ON table_name
+  FOR SELECT TO authenticated
+  USING (owner_user_id = auth.uid());
+```
+
+**For founder_business_id scoped tables:**
+```sql
+CREATE POLICY "table_business_select" ON table_name
+  FOR SELECT TO authenticated
+  USING (
+    founder_business_id IN (
+      SELECT id FROM founder_businesses WHERE owner_user_id = auth.uid()
+    )
+  );
+```
+
+**Common Mistakes:**
+- ❌ Using `workspace_id` on Founder OS tables - They don't have it
+- ❌ Using `is_workspace_member()` - Use `owner_user_id = auth.uid()` instead
+- ✅ Use `owner_user_id = auth.uid()` for direct user ownership
+- ✅ Use subquery to `founder_businesses` for business-scoped tables
+
+---
+
 ## audit_logs Table (migration 001)
 
 **CRITICAL: This table uses org_id, NOT user_id or workspace_id**
