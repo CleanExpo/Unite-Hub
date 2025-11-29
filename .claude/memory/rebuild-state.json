@@ -3,7 +3,7 @@
     "task_id": "rebuild-zero-foundation",
     "branch": "rebuild/zero-foundation-20251129",
     "created": "2025-11-29T10:30:00Z",
-    "last_checkpoint": "2025-11-29T12:00:00Z",
+    "last_checkpoint": "2025-11-29T13:45:00Z",
     "version": "1.0.0"
   },
   "business_context": {
@@ -112,7 +112,39 @@
         "enables_rate_limiting": true
       }
     },
-    "phase_4": { "name": "Data Layer Rebuild", "status": "pending" },
+    "phase_4": {
+      "name": "Data Layer Rebuild",
+      "status": "completed",
+      "tasks": {
+        "4.1": { "action": "Create migration 400 - Core foundation consolidation", "status": "completed", "output": "supabase/migrations/400_core_foundation_consolidation.sql" },
+        "4.2": { "action": "Create migration 401 - Synthex tier management", "status": "completed", "output": "supabase/migrations/401_synthex_tier_management.sql" },
+        "4.3": { "action": "Create migration 402 - Extended RLS policies", "status": "completed", "output": "supabase/migrations/402_extended_rls_policies.sql" },
+        "4.4": { "action": "Create migration 403 - Rate limiting infrastructure", "status": "completed", "output": "supabase/migrations/403_rate_limiting_infrastructure.sql" }
+      },
+      "migrations_created": [
+        {
+          "file": "400_core_foundation_consolidation.sql",
+          "purpose": "RLS helper functions (is_staff, is_founder, is_client, get_user_role, has_role), audit_logs schema enhancement, connection pooling verification"
+        },
+        {
+          "file": "401_synthex_tier_management.sql",
+          "purpose": "ADR-006: synthex_tier_limits table, workspace subscription fields, tier check functions (workspace_has_tier, workspace_has_feature), usage tracking"
+        },
+        {
+          "file": "402_extended_rls_policies.sql",
+          "purpose": "RLS policies for extended tables (founder_businesses, ai_phill_insights, cognitive_twin, seo_leak, social_inbox, generated_content, ai_memory, pre_clients)"
+        },
+        {
+          "file": "403_rate_limiting_infrastructure.sql",
+          "purpose": "rate_limit_logs, rate_limit_overrides, blocked_ips tables with helper functions and analytics view"
+        }
+      ],
+      "database_enhancements": {
+        "new_tables": ["synthex_tier_limits", "synthex_usage_tracking", "rate_limit_logs", "rate_limit_overrides", "blocked_ips"],
+        "new_functions": ["is_staff", "is_founder", "is_client", "get_user_role", "has_role", "workspace_has_tier", "workspace_has_feature", "get_workspace_limit", "is_ip_blocked", "log_rate_limit"],
+        "rls_enhanced_tables": 17
+      }
+    },
     "phase_5": { "name": "API Layer Rebuild", "status": "pending" },
     "phase_6": { "name": "External Integrations Rebuild", "status": "pending" },
     "phase_7": { "name": "Agent System Verification", "status": "pending" },
@@ -173,7 +205,11 @@
     "3.2: Core database module (client, workspace-scope, rls-helpers)",
     "3.3: Core security module (rate-limiter, audit-logger)",
     "3.4: Core errors module (app-error, handler)",
-    "3.5: Core barrel export"
+    "3.5: Core barrel export",
+    "4.1: Migration 400 - Core foundation consolidation",
+    "4.2: Migration 401 - Synthex tier management",
+    "4.3: Migration 402 - Extended RLS policies",
+    "4.4: Migration 403 - Rate limiting infrastructure"
   ],
   "active_subagent_states": {}
 }
