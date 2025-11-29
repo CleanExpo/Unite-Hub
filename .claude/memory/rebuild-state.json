@@ -3,7 +3,7 @@
     "task_id": "rebuild-zero-foundation",
     "branch": "rebuild/zero-foundation-20251129",
     "created": "2025-11-29T10:30:00Z",
-    "last_checkpoint": "2025-11-29T10:30:00Z",
+    "last_checkpoint": "2025-11-29T12:00:00Z",
     "version": "1.0.0"
   },
   "business_context": {
@@ -73,7 +73,45 @@
         "docs/rebuild/architecture/ARCHITECTURAL_DECISIONS.md"
       ]
     },
-    "phase_3": { "name": "Foundation Layer Rebuild", "status": "pending" },
+    "phase_3": {
+      "name": "Foundation Layer Rebuild",
+      "status": "completed",
+      "tasks": {
+        "3.1": { "action": "Create src/core/auth/ module", "status": "completed", "files": ["types.ts", "session.ts", "guards.ts", "middleware.ts", "index.ts"] },
+        "3.2": { "action": "Create src/core/database/ module", "status": "completed", "files": ["types.ts", "client.ts", "workspace-scope.ts", "rls-helpers.ts", "index.ts"] },
+        "3.3": { "action": "Create src/core/security/ module", "status": "completed", "files": ["types.ts", "rate-limiter.ts", "audit-logger.ts", "index.ts"] },
+        "3.4": { "action": "Create src/core/errors/ module", "status": "completed", "files": ["types.ts", "app-error.ts", "handler.ts", "index.ts"] },
+        "3.5": { "action": "Create src/core/index.ts barrel export", "status": "completed" }
+      },
+      "modules_created": {
+        "src/core/auth/": {
+          "purpose": "ADR-001: Centralized Auth Middleware",
+          "files": ["types.ts", "session.ts", "guards.ts", "middleware.ts", "index.ts"],
+          "exports": ["withAuth", "withRole", "withWorkspace", "withUniteHubAccess", "withSynthexAccess", "PERMISSION_PRESETS"]
+        },
+        "src/core/database/": {
+          "purpose": "ADR-002 + ADR-003: Workspace Scoping + Connection Pooling",
+          "files": ["types.ts", "client.ts", "workspace-scope.ts", "rls-helpers.ts", "index.ts"],
+          "exports": ["createWorkspaceScopedClient", "getPooledClient", "getAdminClient", "userHasWorkspaceAccess"]
+        },
+        "src/core/security/": {
+          "purpose": "Rate limiting and audit logging",
+          "files": ["types.ts", "rate-limiter.ts", "audit-logger.ts", "index.ts"],
+          "exports": ["withRateLimit", "checkRateLimit", "auditLogger", "logAuth", "logData"]
+        },
+        "src/core/errors/": {
+          "purpose": "Standardized error handling",
+          "files": ["types.ts", "app-error.ts", "handler.ts", "index.ts"],
+          "exports": ["AppError", "handleErrors", "errorResponse", "NotFoundError", "ValidationError"]
+        }
+      },
+      "impact": {
+        "fixes_auth_routes": 174,
+        "fixes_workspace_routes": 399,
+        "enables_pooling": true,
+        "enables_rate_limiting": true
+      }
+    },
     "phase_4": { "name": "Data Layer Rebuild", "status": "pending" },
     "phase_5": { "name": "API Layer Rebuild", "status": "pending" },
     "phase_6": { "name": "External Integrations Rebuild", "status": "pending" },
@@ -99,7 +137,7 @@
     "npm_version": "10.8.3",
     "git_version": "2.51.1",
     "platform": "win32",
-    "working_directory": "D:/Unite-Hub"
+    "working_directory": "C:/Unite-Hub"
   },
   "key_patterns": {
     "authentication": "PKCE flow with server-side sessions",
@@ -130,7 +168,12 @@
     "2.3: Database migration design",
     "2.4: Dependency graph creation",
     "2.5: Acceptance criteria definition",
-    "2.6: Architectural decisions documentation"
+    "2.6: Architectural decisions documentation",
+    "3.1: Core auth module (types, session, guards, middleware)",
+    "3.2: Core database module (client, workspace-scope, rls-helpers)",
+    "3.3: Core security module (rate-limiter, audit-logger)",
+    "3.4: Core errors module (app-error, handler)",
+    "3.5: Core barrel export"
   ],
   "active_subagent_states": {}
 }
