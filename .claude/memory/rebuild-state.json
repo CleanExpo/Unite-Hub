@@ -1,0 +1,136 @@
+{
+  "metadata": {
+    "task_id": "rebuild-zero-foundation",
+    "branch": "rebuild/zero-foundation-20251129",
+    "created": "2025-11-29T10:30:00Z",
+    "last_checkpoint": "2025-11-29T10:30:00Z",
+    "version": "1.0.0"
+  },
+  "business_context": {
+    "company": "Unite-Hub",
+    "industry": "Marketing agency for Australian trade industry businesses",
+    "projects": {
+      "unite_hub": {
+        "description": "CRM for Unite-Group Nexus Team",
+        "access": "Staff only (3 email addresses)",
+        "role_based_features": true
+      },
+      "synthex": {
+        "description": "Autonomous Marketing Agency",
+        "access": "Clients through paywall",
+        "tier_objects": ["starter", "professional", "elite"]
+      }
+    },
+    "ecosystem": [
+      "Disaster Recovery (restoration services)",
+      "CARSI (Cleaning and Restoration Science Institute)",
+      "NRPG (National Restoration Professionals Group)"
+    ],
+    "market": "$2.8 billion Australian restoration market"
+  },
+  "phase_progress": {
+    "phase_0": {
+      "name": "Environment & Context Initialization",
+      "status": "completed",
+      "tasks": {
+        "0.1": { "action": "Validate execution environment", "status": "completed" },
+        "0.2": { "action": "Create rebuild branch", "status": "completed" },
+        "0.3": { "action": "Build skills inventory", "status": "completed" },
+        "0.4": { "action": "Internalize project conventions", "status": "completed" },
+        "0.5": { "action": "Initialize memory persistence", "status": "completed" }
+      }
+    },
+    "phase_1": {
+      "name": "Comprehensive Systems Audit",
+      "status": "completed",
+      "findings": {
+        "total_routes": 655,
+        "routes_without_auth": 174,
+        "routes_without_workspace_filter": 399,
+        "routes_with_todos": 20,
+        "total_migrations": 366,
+        "duplicate_migrations": 69,
+        "any_type_usages": 332
+      }
+    },
+    "phase_2": {
+      "name": "Architecture Design",
+      "status": "completed",
+      "tasks": {
+        "2.1": { "action": "Design module structure preserving agent interfaces", "status": "completed", "output": "docs/rebuild/architecture/MODULE_STRUCTURE.md" },
+        "2.2": { "action": "Define API contracts using OpenAPI 3.1", "status": "completed", "output": "docs/rebuild/architecture/API_CONTRACTS.md" },
+        "2.3": { "action": "Design database schema migrations", "status": "completed", "output": "docs/rebuild/architecture/DATABASE_MIGRATIONS.md" },
+        "2.4": { "action": "Create dependency graph with build order", "status": "completed", "output": "docs/rebuild/architecture/DEPENDENCY_GRAPH.md" },
+        "2.5": { "action": "Define acceptance criteria and tests", "status": "completed", "output": "docs/rebuild/architecture/ACCEPTANCE_CRITERIA.md" },
+        "2.6": { "action": "Document architectural decisions", "status": "completed", "output": "docs/rebuild/architecture/ARCHITECTURAL_DECISIONS.md" }
+      },
+      "documents_created": [
+        "docs/rebuild/architecture/MODULE_STRUCTURE.md",
+        "docs/rebuild/architecture/API_CONTRACTS.md",
+        "docs/rebuild/architecture/DATABASE_MIGRATIONS.md",
+        "docs/rebuild/architecture/DEPENDENCY_GRAPH.md",
+        "docs/rebuild/architecture/ACCEPTANCE_CRITERIA.md",
+        "docs/rebuild/architecture/ARCHITECTURAL_DECISIONS.md"
+      ]
+    },
+    "phase_3": { "name": "Foundation Layer Rebuild", "status": "pending" },
+    "phase_4": { "name": "Data Layer Rebuild", "status": "pending" },
+    "phase_5": { "name": "API Layer Rebuild", "status": "pending" },
+    "phase_6": { "name": "External Integrations Rebuild", "status": "pending" },
+    "phase_7": { "name": "Agent System Verification", "status": "pending" },
+    "phase_8": { "name": "Frontend & Landing Page", "status": "pending" },
+    "phase_9": { "name": "Security & Australian Compliance", "status": "pending" },
+    "phase_10": { "name": "Final Verification & Documentation", "status": "pending" }
+  },
+  "preserved_assets": {
+    "skill_files": 19,
+    "agent_files": 26,
+    "agent_definition": ".claude/agent.md",
+    "conventions": [
+      "CLAUDE.md",
+      ".claude/CLAUDE.md",
+      ".claude/SCHEMA_REFERENCE.md",
+      ".claude/RLS_WORKFLOW.md"
+    ],
+    "status": "PRESERVED - Do not modify without approval"
+  },
+  "environment": {
+    "node_version": "v24.11.0",
+    "npm_version": "10.8.3",
+    "git_version": "2.51.1",
+    "platform": "win32",
+    "working_directory": "D:/Unite-Hub"
+  },
+  "key_patterns": {
+    "authentication": "PKCE flow with server-side sessions",
+    "database": "Supabase PostgreSQL with RLS",
+    "workspace_isolation": "All queries must filter by workspace_id",
+    "user_role_enum": ["FOUNDER", "STAFF", "CLIENT", "ADMIN"],
+    "agent_mode": "HUMAN_GOVERNED - advisory only"
+  },
+  "architectural_decisions": [
+    "ADR-001: Centralized Auth Middleware",
+    "ADR-002: Automatic Workspace Scoping",
+    "ADR-003: Connection Pooling via Supabase",
+    "ADR-004: Project Separation via Route Groups",
+    "ADR-005: Preserve Agent Architecture",
+    "ADR-006: Tier-Gated Features for Synthex",
+    "ADR-007: Human-Governed Mode for All Agents",
+    "ADR-008: Versioned API Paths"
+  ],
+  "completed_tasks": [
+    "0.1: Environment validation",
+    "0.2: Branch creation",
+    "0.3: Skills inventory",
+    "0.4: Project conventions",
+    "0.5: Memory persistence initialization",
+    "1.1-1.5: Comprehensive systems audit",
+    "2.1: Module structure design",
+    "2.2: API contracts (OpenAPI 3.1)",
+    "2.3: Database migration design",
+    "2.4: Dependency graph creation",
+    "2.5: Acceptance criteria definition",
+    "2.6: Architectural decisions documentation"
+  ],
+  "active_subagent_states": {}
+}
