@@ -155,34 +155,19 @@ BEGIN
     ALTER TABLE audit_logs ADD COLUMN user_agent TEXT;
   END IF;
 
-  -- Add timestamp column (rename from created_at if needed, or add if missing)
-  IF NOT EXISTS (
-    SELECT 1 FROM information_schema.columns
-    WHERE table_schema = 'public'
-    AND table_name = 'audit_logs'
-    AND column_name = 'timestamp'
-  ) THEN
-    -- Check if created_at exists
-    IF EXISTS (
-      SELECT 1 FROM information_schema.columns
-      WHERE table_schema = 'public'
-      AND table_name = 'audit_logs'
-      AND column_name = 'created_at'
-    ) THEN
-      -- Add timestamp as alias view
-      ALTER TABLE audit_logs ADD COLUMN timestamp TIMESTAMPTZ DEFAULT NOW();
-    ELSE
-      ALTER TABLE audit_logs ADD COLUMN timestamp TIMESTAMPTZ DEFAULT NOW();
-    END IF;
-  END IF;
+  -- NOTE: audit_logs already has created_at column from original schema
+  -- We use created_at directly instead of adding redundant timestamp column
 END $$;
 
 -- Create indexes for efficient audit log queries
-CREATE INDEX IF NOT EXISTS idx_audit_logs_timestamp ON audit_logs(timestamp DESC);
+-- NOTE: audit_logs table structure from 001_initial_schema.sql:
+--   id, org_id, action, resource, resource_id, agent, status, error_message, details, created_at
+-- Does NOT have: user_id, workspace_id, timestamp (use org_id and created_at)
+CREATE INDEX IF NOT EXISTS idx_audit_logs_created_at_desc ON audit_logs(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_audit_logs_category ON audit_logs(category);
 CREATE INDEX IF NOT EXISTS idx_audit_logs_severity ON audit_logs(severity);
-CREATE INDEX IF NOT EXISTS idx_audit_logs_user_timestamp ON audit_logs(user_id, timestamp DESC);
-CREATE INDEX IF NOT EXISTS idx_audit_logs_workspace_timestamp ON audit_logs(workspace_id, timestamp DESC);
+-- Index on org_id + created_at for org-scoped queries (org_id is the existing FK)
+CREATE INDEX IF NOT EXISTS idx_audit_logs_org_created ON audit_logs(org_id, created_at DESC);
 
 -- ============================================================================
 -- SECTION 3: Ensure workspaces table has org_id properly linked

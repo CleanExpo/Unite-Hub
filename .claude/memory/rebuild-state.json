@@ -145,7 +145,36 @@
         "rls_enhanced_tables": 17
       }
     },
-    "phase_5": { "name": "API Layer Rebuild", "status": "pending" },
+    "phase_5": {
+      "name": "API Layer Rebuild",
+      "status": "completed",
+      "tasks": {
+        "5.1": { "action": "Create API middleware stack", "status": "completed", "files": ["_middleware/index.ts", "_middleware/with-api-handler.ts", "_middleware/validation.ts", "_middleware/response.ts"] },
+        "5.2": { "action": "Create versioned API structure", "status": "completed", "files": ["v1/README.md", "v1/health/route.ts", "v1/contacts/route.ts", "v1/contacts/[id]/route.ts"] },
+        "5.3": { "action": "Migrate high-priority routes", "status": "completed", "files": ["v1/auth/session/route.ts", "v1/campaigns/route.ts", "v1/emails/route.ts", "v1/agents/orchestrator/route.ts"] }
+      },
+      "middleware_created": {
+        "src/app/api/_middleware/": {
+          "purpose": "Composable API middleware utilities",
+          "files": ["index.ts", "with-api-handler.ts", "validation.ts", "response.ts"],
+          "exports": ["withApiHandler", "validateBody", "validateQuery", "parseWorkspaceId", "successResponse", "paginatedResponse", "streamResponse", "CommonSchemas"]
+        }
+      },
+      "versioned_routes_created": {
+        "v1/health": { "methods": ["GET", "HEAD"], "auth": false, "purpose": "Health check and monitoring" },
+        "v1/auth/session": { "methods": ["GET"], "auth": true, "purpose": "Session info and workspaces" },
+        "v1/contacts": { "methods": ["GET", "POST"], "auth": true, "workspace": true, "purpose": "Contact list and create" },
+        "v1/contacts/[id]": { "methods": ["GET", "PUT", "DELETE"], "auth": true, "workspace": true, "purpose": "Contact CRUD" },
+        "v1/campaigns": { "methods": ["GET", "POST"], "auth": true, "workspace": true, "tier_gated": true, "purpose": "Campaign management" },
+        "v1/emails": { "methods": ["GET", "POST"], "auth": true, "workspace": true, "rate_limited": "staff", "purpose": "Email queue" },
+        "v1/agents/orchestrator": { "methods": ["GET", "POST"], "auth": true, "roles": ["FOUNDER", "STAFF", "ADMIN"], "rate_limited": "agent", "purpose": "AI task submission" }
+      },
+      "impact": {
+        "new_middleware_files": 4,
+        "new_route_files": 7,
+        "demonstrates_patterns": ["auth", "workspace_scoping", "rate_limiting", "tier_gating", "role_based_access", "zod_validation", "pagination", "streaming"]
+      }
+    },
     "phase_6": { "name": "External Integrations Rebuild", "status": "pending" },
     "phase_7": { "name": "Agent System Verification", "status": "pending" },
     "phase_8": { "name": "Frontend & Landing Page", "status": "pending" },

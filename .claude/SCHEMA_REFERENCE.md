@@ -159,6 +159,39 @@ Before writing ANY migration:
 
 ---
 
+## audit_logs Table (migration 001)
+
+**CRITICAL: This table uses org_id, NOT user_id or workspace_id**
+
+```sql
+id UUID PRIMARY KEY
+org_id UUID NOT NULL REFERENCES organizations(id)  -- PARENT ORG, NOT workspace
+action TEXT NOT NULL
+resource TEXT NOT NULL
+resource_id TEXT
+agent TEXT NOT NULL
+status TEXT NOT NULL CHECK (status IN ('success', 'error', 'warning'))
+error_message TEXT
+details JSONB DEFAULT '{}'
+created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()  -- NOT "timestamp"
+```
+
+**Additional columns added by migration 400:**
+- severity TEXT DEFAULT 'INFO'
+- category TEXT DEFAULT 'DATA'
+- success BOOLEAN DEFAULT true
+- duration_ms INTEGER
+- ip_address TEXT
+- user_agent TEXT
+
+**Common Mistakes:**
+- ❌ `audit_logs.user_id` - Does NOT exist
+- ❌ `audit_logs.workspace_id` - Does NOT exist
+- ❌ `audit_logs.timestamp` - Use `created_at` instead
+- ✅ `audit_logs.org_id` - Correct FK to organizations
+
+---
+
 ## Migration Numbers
 
 | Number | Purpose |
