@@ -141,15 +141,22 @@ export function resetClients(): void {
 }
 
 /**
- * Re-export createClient from supabase/server for authenticated operations
+ * Lazy-loaded createClient from supabase/server for authenticated operations
  *
  * This client reads auth from cookies and should be used for:
  * - Server Components
  * - API routes that need user context
+ *
+ * We use a wrapper function instead of re-export to prevent
+ * Turbopack from evaluating cookies() during build.
  */
-export { createClient } from '@/lib/supabase/server';
+export async function createClient() {
+  const { createClient: _createClient } = await import('@/lib/supabase/server');
+  return _createClient();
+}
 
 /**
  * Re-export browser client for client components
+ * This is safe because browser client doesn't use cookies()
  */
 export { createClient as createBrowserClient } from '@/lib/supabase/client';

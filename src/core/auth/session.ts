@@ -7,9 +7,20 @@
  * @module core/auth/session
  */
 
-import { createClient } from '@/lib/supabase/server';
 import { User, Session, SupabaseClient } from '@supabase/supabase-js';
 import { UserProfile, UserRole } from './types';
+
+/**
+ * Lazy import of createClient to prevent build-time evaluation of cookies()
+ *
+ * Turbopack evaluates module-level imports during static analysis,
+ * which causes cookies() to be called outside request context.
+ * Using dynamic import defers this to runtime.
+ */
+async function getSupabaseClient() {
+  const { createClient } = await import('@/lib/supabase/server');
+  return createClient();
+}
 
 /**
  * Session validation result
@@ -40,7 +51,7 @@ export interface ProfileResult {
  * @returns SessionResult with validation status
  */
 export async function getValidatedSession(): Promise<SessionResult> {
-  const supabase = await createClient();
+  const supabase = await getSupabaseClient();
 
   // Use getUser() for JWT validation (more secure than getSession)
   const { data: { user }, error: userError } = await supabase.auth.getUser();
@@ -143,6 +154,42 @@ export async function getUserWorkspace(
     .maybeSingle();
 
   return workspace?.id || null;
+}
+
+/**
+ * Check if user has access to a specific workspace
+ *
+ * @param supabase - Supabase client
+ * @param userId - User ID
+ * @param workspaceId - Workspace ID to check
+ * @returns True if user has access
+ */
+export async function verifyWorkspaceAccess(
+  supabase: SupabaseClient,
+  userId: string,
+  workspaceId: string
+): Promise<boolean> {
+  // Check if user owns the workspace
+  const { data: ownedWorkspace } = await supabase
+    .from('workspaces')
+    .select('id')
+    .eq('id', workspaceId)
+    .eq('owner_id', userId)
+    .maybeSingle();
+
+  if (ownedWorkspace) {
+    return true;
+  }
+
+  // Check if user is a member of the organization
+  const { data: membership } = await supabase
+    .from('user_organizations')
+    .select('organization_id')
+    .eq('user_id', userId)
+    .eq('organization_id', workspaceId)
+    .maybeSingle();
+
+  return !!membership;
 }
 
 /**

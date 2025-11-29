@@ -145,54 +145,59 @@ export function checkRateLimit(
 }
 
 /**
- * Rate limit middleware
+ * Rate limit middleware (curried)
  *
  * @param tier - Rate limit tier
- * @returns Middleware function
+ * @returns Function that wraps a handler with rate limiting
  *
  * @example
- * export const POST = withRateLimit('staff', async (request) => {
+ * // Curried usage (preferred)
+ * export const POST = withRateLimit('staff')(async (request) => {
  *   // Handler with 100/min rate limit
  * });
+ *
+ * // Or inline
+ * export const POST = withRateLimit('staff')(withWorkspace(async (ctx) => {
+ *   // Combined workspace + rate limit
+ * }));
  */
-export function withRateLimit<T extends (...args: any[]) => Promise<NextResponse>>(
-  tier: RateLimitTier,
-  handler: T
-): T {
-  return (async (...args: Parameters<T>) => {
-    const request = args[0] as NextRequest;
-    const result = checkRateLimit(request, tier);
+export function withRateLimit(tier: RateLimitTier) {
+  return function <T extends (...args: any[]) => Promise<NextResponse>>(handler: T): T {
+    return (async (...args: Parameters<T>) => {
+      const request = args[0] as NextRequest;
+      const result = checkRateLimit(request, tier);
 
-    if (!result.allowed) {
-      return NextResponse.json(
-        {
-          error: {
-            code: SECURITY_ERROR_CODES.RATE_LIMITED,
-            message: 'Too many requests. Please try again later.',
-            retryAfter: result.retryAfter,
+      if (!result.allowed) {
+        return NextResponse.json(
+          {
+            error: {
+              code: SECURITY_ERROR_CODES.RATE_LIMITED,
+              message: 'Too many requests. Please try again later.',
+              retryAfter: result.retryAfter,
+            },
           },
-        },
-        {
-          status: 429,
-          headers: {
-            'X-RateLimit-Limit': String(RATE_LIMIT_CONFIGS[tier].maxRequests),
-            'X-RateLimit-Remaining': '0',
-            'X-RateLimit-Reset': String(result.reset),
-            'Retry-After': String(result.retryAfter),
-          },
-        }
-      );
-    }
+          {
+            status: 429,
+            headers: {
+              'X-RateLimit-Limit': String(RATE_LIMIT_CONFIGS[tier].maxRequests),
+              'X-RateLimit-Remaining': '0',
+              'X-RateLimit-Reset': String(result.reset),
+              'Retry-After': String(result.retryAfter),
+            },
+          }
+        );
+      }
 
-    const response = await handler(...args);
+      const response = await handler(...args);
 
-    // Add rate limit headers to successful responses
-    response.headers.set('X-RateLimit-Limit', String(RATE_LIMIT_CONFIGS[tier].maxRequests));
-    response.headers.set('X-RateLimit-Remaining', String(result.remaining));
-    response.headers.set('X-RateLimit-Reset', String(result.reset));
+      // Add rate limit headers to successful responses
+      response.headers.set('X-RateLimit-Limit', String(RATE_LIMIT_CONFIGS[tier].maxRequests));
+      response.headers.set('X-RateLimit-Remaining', String(result.remaining));
+      response.headers.set('X-RateLimit-Reset', String(result.reset));
 
-    return response;
-  }) as T;
+      return response;
+    }) as T;
+  };
 }
 
 /**

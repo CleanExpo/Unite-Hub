@@ -7,12 +7,34 @@
  * - Middleware
  *
  * PKCE sessions are stored in cookies, making them accessible server-side.
+ *
+ * IMPORTANT: This module uses dynamic imports to prevent cookies() from being
+ * called during Turbopack's static analysis phase.
  */
 
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 
+/**
+ * Check if we're in a build-time/static context
+ * During build, there's no request context so cookies() would fail
+ */
+function isBuildTime(): boolean {
+  // Check for Next.js build phase environment variable
+  if (process.env.NEXT_PHASE === 'phase-production-build') {
+    return true;
+  }
+  // Also check if we're in edge runtime without request context
+  // This is a secondary check for edge cases
+  return typeof globalThis.Request === 'undefined';
+}
+
 // Dynamic import of cookies to prevent build-time evaluation
 async function getCookieStore() {
+  // Skip during build phase
+  if (isBuildTime()) {
+    return null;
+  }
+
   // Only import next/headers at runtime
   const { cookies } = await import('next/headers');
   try {
