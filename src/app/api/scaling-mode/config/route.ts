@@ -1,6 +1,7 @@
 /**
  * Scaling Mode Config API
  * Phase 86: Get and update scaling mode configuration
+ * ADMIN ONLY - Controls system scaling behavior
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -11,8 +12,45 @@ import {
   setAutoModeEnabled,
 } from '@/lib/scalingMode';
 import { logEvent } from '@/lib/scalingMode/scalingHistoryService';
+import { createClient } from '@/lib/supabase/server';
+
+// Helper to verify admin access
+async function verifyAdminAccess(): Promise<{ authorized: boolean; userId?: string; error?: NextResponse }> {
+  const supabase = await createClient();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    return {
+      authorized: false,
+      error: NextResponse.json({ error: 'Unauthorized - authentication required' }, { status: 401 })
+    };
+  }
+
+  // Get user profile to check role
+  const { data: profile } = await supabase
+    .from('user_profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single();
+
+  const role = profile?.role || 'CLIENT';
+  if (!['ADMIN', 'FOUNDER'].includes(role)) {
+    return {
+      authorized: false,
+      error: NextResponse.json({ error: 'Forbidden - admin access required' }, { status: 403 })
+    };
+  }
+
+  return { authorized: true, userId: user.id };
+}
 
 export async function GET(req: NextRequest) {
+  // Verify admin access
+  const authCheck = await verifyAdminAccess();
+  if (!authCheck.authorized) {
+    return authCheck.error;
+  }
+
   try {
     const environment = req.nextUrl.searchParams.get('environment') || 'production';
 
@@ -36,6 +74,12 @@ export async function GET(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
+  // Verify admin access
+  const authCheck = await verifyAdminAccess();
+  if (!authCheck.authorized) {
+    return authCheck.error;
+  }
+
   try {
     const body = await req.json();
     const { environment = 'production', action, ...updates } = body;

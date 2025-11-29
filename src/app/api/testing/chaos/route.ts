@@ -1,14 +1,52 @@
 /**
  * Chaos Test API
  * Phase 65: Manage chaos test execution and events
+ * ADMIN ONLY - Chaos tests can destabilize the system
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import ChaosTestEngine, { ApprovedFault, ChaosMode } from '@/lib/testing/chaosTestEngine';
+import { createClient } from '@/lib/supabase/server';
 
 const chaosTestEngine = new ChaosTestEngine();
 
+// Helper to verify admin access
+async function verifyAdminAccess(): Promise<{ authorized: boolean; userId?: string; error?: NextResponse }> {
+  const supabase = await createClient();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    return {
+      authorized: false,
+      error: NextResponse.json({ error: 'Unauthorized - authentication required' }, { status: 401 })
+    };
+  }
+
+  // Get user profile to check role
+  const { data: profile } = await supabase
+    .from('user_profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single();
+
+  const role = profile?.role || 'CLIENT';
+  if (!['ADMIN', 'FOUNDER'].includes(role)) {
+    return {
+      authorized: false,
+      error: NextResponse.json({ error: 'Forbidden - admin access required for chaos testing' }, { status: 403 })
+    };
+  }
+
+  return { authorized: true, userId: user.id };
+}
+
 export async function GET(req: NextRequest) {
+  // Verify admin access
+  const authCheck = await verifyAdminAccess();
+  if (!authCheck.authorized) {
+    return authCheck.error;
+  }
+
   try {
     const { searchParams } = new URL(req.url);
     const workspaceId = searchParams.get('workspaceId');
@@ -68,6 +106,12 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  // Verify admin access
+  const authCheck = await verifyAdminAccess();
+  if (!authCheck.authorized) {
+    return authCheck.error;
+  }
+
   try {
     const body = await req.json();
     const { action, workspaceId, fault, mode, intensity, duration_seconds, auto_pause_threshold } = body;

@@ -3,6 +3,7 @@
  * GET /api/ai/extended-thinking/prompts
  *
  * Lists available thinking prompt templates
+ * AUTH REQUIRED - Exposes system prompt templates
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -13,8 +14,17 @@ import {
   THINKING_PROMPTS,
   getPromptsForCategory,
 } from "@/lib/ai/thinking-prompts";
+import { createClient } from '@/lib/supabase/server';
 
 export async function GET(req: NextRequest) {
+  // Require authentication - prompts are internal system configuration
+  const supabase = await createClient();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    return NextResponse.json({ error: 'Unauthorized - authentication required' }, { status: 401 });
+  }
+
   try {
     // Optional query parameters for filtering
     const category = req.nextUrl.searchParams.get("category");
