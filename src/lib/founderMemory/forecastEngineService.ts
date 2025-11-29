@@ -263,7 +263,7 @@ Return JSON:
 }`;
 
       const response = await this.anthropic.messages.create({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-5-20250929',
         max_tokens: 1500,
         messages: [{ role: 'user', content: prompt }],
       });
@@ -385,7 +385,7 @@ Return JSON array of strings:
 ["recommendation1", "recommendation2", "recommendation3"]`;
 
       const response = await this.anthropic.messages.create({
-        model: 'claude-haiku-4-20250514',
+        model: 'claude-haiku-4-5-20251001',
         max_tokens: 500,
         messages: [{ role: 'user', content: prompt }],
       });

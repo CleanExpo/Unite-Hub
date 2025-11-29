@@ -44,10 +44,15 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    // Fetch pending content
+    // Fetch pending content with workspace filter
+    if (!workspaceId) {
+      return NextResponse.json({ error: "Workspace ID required" }, { status: 400 });
+    }
+
     const { data: content, error } = await supabase
       .from("generated_content")
       .select("*")
+      .eq("workspace_id", workspaceId)
       .eq("status", "pending")
       .order("created_at", { ascending: false });
 

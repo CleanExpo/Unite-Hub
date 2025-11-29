@@ -328,7 +328,7 @@ curl -X POST "http://localhost:3008/api/aido/onboarding/generate?workspaceId=YOU
   "generation": {
     "duration": "45.3s",
     "estimatedCost": "$1.50-2.50",
-    "model": "claude-opus-4-20250514"
+    "model": "claude-opus-4-5-20251101"
   }
 }
 ```

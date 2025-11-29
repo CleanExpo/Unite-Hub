@@ -11,11 +11,11 @@
 export const ANTHROPIC_MODELS = {
   // Claude Opus 4 (Most capable, extended thinking)
   OPUS_4_5: 'claude-opus-4-5-20251101',
-  OPUS_4: 'claude-opus-4-20250514',
+  OPUS_4: 'claude-opus-4-5-20251101',
   
   // Claude Sonnet 4 (Balanced capability/cost)
   SONNET_4_5: 'claude-sonnet-4-5-20250929',
-  SONNET_4: 'claude-sonnet-4-20250514',
+  SONNET_4: 'claude-sonnet-4-5-20250929',
   
   // Claude Sonnet 3.5 (Previous generation)
   SONNET_3_5_V2: 'claude-3-5-sonnet-20241022',

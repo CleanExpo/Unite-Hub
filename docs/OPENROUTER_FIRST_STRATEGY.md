@@ -46,10 +46,10 @@ const OPENROUTER_MODELS = {
 // Only when OpenRouter doesn't support features
 const DIRECT_ANTHROPIC_MODELS = {
   // Latest Claude Sonnet 4 (not on OpenRouter yet)
-  latest_sonnet: "claude-sonnet-4-20250514",
+  latest_sonnet: "claude-sonnet-4-5-20250929",
 
   // When using Extended Thinking (not supported on OpenRouter)
-  deep_thinking: "claude-opus-4-20250514",
+  deep_thinking: "claude-opus-4-5-20251101",
 
   // When using Prompt Caching (not supported on OpenRouter)
   cached_prompts: "claude-sonnet-4-5-20250929"
@@ -135,7 +135,7 @@ export async function routeAIRequest(options: {
   // Decision tree
   if (requiresThinking) {
     // Extended Thinking only on direct Anthropic API
-    return callDirectAnthropic({ ...options, model: 'claude-opus-4-20250514' });
+    return callDirectAnthropic({ ...options, model: 'claude-opus-4-5-20251101' });
   }
 
   if (requiresCaching) {

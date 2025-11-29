@@ -206,7 +206,7 @@ Respond with JSON only:
 
     try {
       const response = await anthropic.messages.create({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-5-20250929',
         max_tokens: 500,
         messages: [{ role: 'user', content: prompt }],
       });
@@ -254,7 +254,7 @@ Respond with one word only: positive, neutral, negative, or mixed`;
 
     try {
       const response = await anthropic.messages.create({
-        model: 'claude-haiku-4-20250514',
+        model: 'claude-haiku-4-5-20251001',
         max_tokens: 20,
         messages: [{ role: 'user', content: prompt }],
       });
@@ -354,7 +354,7 @@ Respond with JSON only:
 
     try {
       const response = await anthropic.messages.create({
-        model: 'claude-haiku-4-20250514',
+        model: 'claude-haiku-4-5-20251001',
         max_tokens: 200,
         messages: [{ role: 'user', content: prompt }],
       });

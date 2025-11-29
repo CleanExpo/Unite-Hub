@@ -563,10 +563,10 @@ The engine uses these Claude models:
 
 | Task | Model | Reasoning |
 |------|-------|-----------|
-| Theme classification | `claude-sonnet-4-20250514` | Balance of quality and cost |
-| Timeline narrative | `claude-sonnet-4-20250514` | Quality narrative generation |
-| Insight extraction | `claude-sonnet-4-20250514` | Complex analysis |
-| Profile enrichment | `claude-haiku-4-20250514` | Cost-effective for simple tasks |
+| Theme classification | `claude-sonnet-4-5-20250929` | Balance of quality and cost |
+| Timeline narrative | `claude-sonnet-4-5-20250929` | Quality narrative generation |
+| Insight extraction | `claude-sonnet-4-5-20250929` | Complex analysis |
+| Profile enrichment | `claude-haiku-4-5-20251001` | Cost-effective for simple tasks |
 
 ### Ingestion Limits
 

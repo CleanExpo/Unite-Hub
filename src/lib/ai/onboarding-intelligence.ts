@@ -191,7 +191,7 @@ IMPORTANT:
 6. Return ONLY valid JSON, no explanation text`;
 
   const message = await anthropic.messages.create({
-    model: 'claude-opus-4-20250514',
+    model: 'claude-opus-4-5-20251101',
     max_tokens: 4096,
     messages: [{ role: 'user', content: prompt }],
   });
@@ -267,7 +267,7 @@ TONE:
 Return ONLY valid JSON, no explanation text`;
 
   const message = await anthropic.messages.create({
-    model: 'claude-opus-4-20250514',
+    model: 'claude-opus-4-5-20251101',
     max_tokens: 4096,
     messages: [{ role: 'user', content: prompt }],
   });
@@ -391,7 +391,7 @@ PERSONA DIFFERENTIATION:
 Return ONLY valid JSON array, no explanation text`;
 
   const message = await anthropic.messages.create({
-    model: 'claude-opus-4-20250514',
+    model: 'claude-opus-4-5-20251101',
     max_tokens: 8192,
     messages: [{ role: 'user', content: prompt }],
   });
@@ -510,7 +510,7 @@ REQUIREMENTS:
 Return ONLY valid JSON, no explanation text`;
 
   const message = await anthropic.messages.create({
-    model: 'claude-opus-4-20250514',
+    model: 'claude-opus-4-5-20251101',
     max_tokens: 4096,
     messages: [{ role: 'user', content: prompt }],
   });

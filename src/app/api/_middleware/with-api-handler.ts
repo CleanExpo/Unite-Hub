@@ -32,10 +32,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { withAuth } from '@/core/auth/with-auth';
 import { withRole } from '@/core/auth/with-role';
 import { withWorkspace } from '@/core/auth/with-workspace';
-import { withRateLimit, RateLimitTier } from '@/core/security/rate-limiting';
+import { applyRateLimit } from './rate-limit';
 import { handleErrors } from '@/core/errors/handle-errors';
 import type { User } from '@supabase/supabase-js';
 import type { SupabaseClient } from '@supabase/supabase-js';
+import type { RateLimitTier } from '@/core/security/types';
 
 /**
  * User roles for role-based access control
@@ -164,13 +165,10 @@ export function withApiHandler(
 
       // Apply rate limiting first (before any expensive operations)
       if (rateLimit) {
-        const rateLimitResponse = await withRateLimit(
-          async () => NextResponse.json({ success: true }),
-          rateLimit
-        )(request);
+        const rateLimitResponse = await applyRateLimit(request, rateLimit);
 
         // If rate limit returns error response, return it immediately
-        if (rateLimitResponse.status === 429) {
+        if (rateLimitResponse) {
           return rateLimitResponse;
         }
       }

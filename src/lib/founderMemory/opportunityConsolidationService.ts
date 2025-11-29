@@ -411,7 +411,7 @@ Return JSON only:
 {"value_score": 70, "effort_score": 40, "time_horizon_weeks": 4, "category": "new_client"}`;
 
       const response = await this.anthropic.messages.create({
-        model: 'claude-haiku-4-20250514',
+        model: 'claude-haiku-4-5-20251001',
         max_tokens: 200,
         messages: [{ role: 'user', content: prompt }],
       });

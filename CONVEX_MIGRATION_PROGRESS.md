@@ -159,7 +159,7 @@
 **Status**: FULLY MIGRATED
 **Changes**:
 - Replaced `ConvexHttpClient` with `getSupabaseServer()`
-- Integrated Anthropic SDK with Claude Sonnet 4 (`claude-sonnet-4-20250514`)
+- Integrated Anthropic SDK with Claude Sonnet 4 (`claude-sonnet-4-5-20250929`)
 - Added AI-specific rate limiting (20 req/15min - AI agent tier)
 - Added input validation with `UUIDSchema`
 - Generates complete email sequences with AI reasoning
@@ -177,7 +177,7 @@
 - `user_organizations` - Authorization
 
 **AI Integration**:
-- Model: `claude-sonnet-4-20250514`
+- Model: `claude-sonnet-4-5-20250929`
 - Max tokens: 4000
 - Structured JSON prompt for consistent output
 - Personalization tags: {{first_name}}, {{company_name}}
@@ -531,7 +531,7 @@
 - `user_organizations` - Authorization
 
 **AI Integration**:
-- Model: `claude-sonnet-4-20250514`
+- Model: `claude-sonnet-4-5-20250929`
 - Max tokens: 2000
 - Generates fresh copy, hashtags, image prompts, CTAs
 - AI reasoning for content decisions
@@ -557,7 +557,7 @@
 - `user_organizations` - Authorization
 
 **AI Integration**:
-- Model: `claude-sonnet-4-20250514`
+- Model: `claude-sonnet-4-5-20250929`
 - Max tokens: 8000 (large calendar generation)
 - Uses CONTENT_CALENDAR_SYSTEM_PROMPT
 - Uses buildContentCalendarUserPrompt helper

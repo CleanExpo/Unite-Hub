@@ -641,7 +641,7 @@ Business Snapshot:
 Provide a concise founder-focused insight about the current state and one priority action.`;
 
       const response = await this.anthropic.messages.create({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-5-20250929',
         max_tokens: 200,
         messages: [{ role: 'user', content: prompt }],
       });

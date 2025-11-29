@@ -31,15 +31,39 @@ export async function POST(req: NextRequest) {
 
     const supabase = await getSupabaseServer();
 
-    // Get the content
+    // Get user's workspace for authorization
+    const { data: userOrgs } = await supabase
+      .from("user_organizations")
+      .select("org_id")
+      .eq("user_id", userData.user.id)
+      .limit(1)
+      .single();
+
+    if (!userOrgs) {
+      return NextResponse.json({ error: "User has no organization" }, { status: 403 });
+    }
+
+    const { data: workspace } = await supabase
+      .from("workspaces")
+      .select("id")
+      .eq("org_id", userOrgs.org_id)
+      .limit(1)
+      .single();
+
+    if (!workspace) {
+      return NextResponse.json({ error: "No workspace found" }, { status: 403 });
+    }
+
+    // Get the content - with workspace verification
     const { data: content, error: fetchError } = await supabase
       .from("generated_content")
       .select("*")
       .eq("id", contentId)
+      .eq("workspace_id", workspace.id)
       .single();
 
     if (fetchError || !content) {
-      return NextResponse.json({ error: "Content not found" }, { status: 404 });
+      return NextResponse.json({ error: "Content not found or access denied" }, { status: 404 });
     }
 
     // Log the iteration request

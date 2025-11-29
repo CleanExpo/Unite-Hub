@@ -309,7 +309,7 @@ export async function POST(req: NextRequest) {
       generation: {
         duration: `${(duration / 1000).toFixed(1)}s`,
         estimatedCost: '$1.50-2.50',
-        model: 'claude-opus-4-20250514',
+        model: 'claude-opus-4-5-20251101',
       },
       summary: {
         businessProfile: {

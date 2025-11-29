@@ -45,8 +45,8 @@
 | **Sonnet 4.5** | `claude-sonnet-4-5-20250929` | Complex agents, coding, highest intelligence |
 | **Haiku 4.5** | `claude-haiku-4-5-20251001` | Real-time apps, high-volume processing |
 | **Opus 4.1** | `claude-opus-4-1-20250805` | Enhanced Opus 4 capabilities |
-| **Sonnet 4** | `claude-sonnet-4-20250514` | Extended thinking, balanced performance |
-| **Opus 4** | `claude-opus-4-20250514` | Extended thinking, maximum capability |
+| **Sonnet 4** | `claude-sonnet-4-5-20250929` | Extended thinking, balanced performance |
+| **Opus 4** | `claude-opus-4-5-20251101` | Extended thinking, maximum capability |
 
 ### Deprecated/Retired Models
 - Claude Sonnet 3.7 - deprecated (Oct 28, 2025)
@@ -300,11 +300,11 @@ Claude Sonnet 4.5 and Haiku 4.5 track remaining context:
 ### Supported Models
 
 - Claude Sonnet 4.5 (`claude-sonnet-4-5-20250929`)
-- Claude Sonnet 4 (`claude-sonnet-4-20250514`)
+- Claude Sonnet 4 (`claude-sonnet-4-5-20250929`)
 - Claude Haiku 4.5 (`claude-haiku-4-5-20251001`)
 - Claude Opus 4.5 (`claude-opus-4-5-20251101`)
 - Claude Opus 4.1 (`claude-opus-4-1-20250805`)
-- Claude Opus 4 (`claude-opus-4-20250514`)
+- Claude Opus 4 (`claude-opus-4-5-20251101`)
 - Claude Sonnet 3.7 (`claude-3-7-sonnet-20250219`) - deprecated
 
 ### How Extended Thinking Works

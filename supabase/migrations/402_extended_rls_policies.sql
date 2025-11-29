@@ -61,10 +61,15 @@ END $$;
 DO $$
 BEGIN
   IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'founder_businesses') THEN
+    -- Drop ALL possible policy names (old and new naming conventions)
     DROP POLICY IF EXISTS "founder_businesses_select" ON founder_businesses;
     DROP POLICY IF EXISTS "founder_businesses_insert" ON founder_businesses;
     DROP POLICY IF EXISTS "founder_businesses_update" ON founder_businesses;
     DROP POLICY IF EXISTS "founder_businesses_delete" ON founder_businesses;
+    DROP POLICY IF EXISTS "founder_businesses_owner_select" ON founder_businesses;
+    DROP POLICY IF EXISTS "founder_businesses_owner_insert" ON founder_businesses;
+    DROP POLICY IF EXISTS "founder_businesses_owner_update" ON founder_businesses;
+    DROP POLICY IF EXISTS "founder_businesses_owner_delete" ON founder_businesses;
 
     -- Owner can SELECT their own businesses
     CREATE POLICY "founder_businesses_owner_select" ON founder_businesses
@@ -97,8 +102,11 @@ END $$;
 DO $$
 BEGIN
   IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'ai_phill_insights') THEN
+    -- Drop ALL possible policy names (old and new naming conventions)
     DROP POLICY IF EXISTS "ai_phill_insights_select" ON ai_phill_insights;
     DROP POLICY IF EXISTS "ai_phill_insights_insert" ON ai_phill_insights;
+    DROP POLICY IF EXISTS "ai_phill_insights_owner_select" ON ai_phill_insights;
+    DROP POLICY IF EXISTS "ai_phill_insights_owner_insert" ON ai_phill_insights;
 
     -- Owner can SELECT their own insights
     CREATE POLICY "ai_phill_insights_owner_select" ON ai_phill_insights
@@ -117,6 +125,9 @@ END $$;
 DO $$
 BEGIN
   IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'ai_phill_journal_entries') THEN
+    -- Drop ALL possible policy names (old and new naming conventions)
+    DROP POLICY IF EXISTS "ai_phill_journal_select" ON ai_phill_journal_entries;
+    DROP POLICY IF EXISTS "ai_phill_journal_insert" ON ai_phill_journal_entries;
     DROP POLICY IF EXISTS "ai_phill_journal_owner_select" ON ai_phill_journal_entries;
     DROP POLICY IF EXISTS "ai_phill_journal_owner_insert" ON ai_phill_journal_entries;
 
@@ -139,8 +150,11 @@ END $$;
 DO $$
 BEGIN
   IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'cognitive_twin_scores') THEN
+    -- Drop ALL possible policy names (old and new naming conventions)
     DROP POLICY IF EXISTS "cognitive_twin_scores_select" ON cognitive_twin_scores;
     DROP POLICY IF EXISTS "cognitive_twin_scores_insert" ON cognitive_twin_scores;
+    DROP POLICY IF EXISTS "cognitive_twin_scores_owner_select" ON cognitive_twin_scores;
+    DROP POLICY IF EXISTS "cognitive_twin_scores_owner_insert" ON cognitive_twin_scores;
 
     CREATE POLICY "cognitive_twin_scores_owner_select" ON cognitive_twin_scores
       FOR SELECT TO authenticated
@@ -157,7 +171,11 @@ END $$;
 DO $$
 BEGIN
   IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'cognitive_twin_digests') THEN
+    -- Drop ALL possible policy names (old and new naming conventions)
     DROP POLICY IF EXISTS "cognitive_twin_digests_select" ON cognitive_twin_digests;
+    DROP POLICY IF EXISTS "cognitive_twin_digests_insert" ON cognitive_twin_digests;
+    DROP POLICY IF EXISTS "cognitive_twin_digests_owner_select" ON cognitive_twin_digests;
+    DROP POLICY IF EXISTS "cognitive_twin_digests_owner_insert" ON cognitive_twin_digests;
 
     CREATE POLICY "cognitive_twin_digests_owner_select" ON cognitive_twin_digests
       FOR SELECT TO authenticated
@@ -170,7 +188,11 @@ END $$;
 DO $$
 BEGIN
   IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'cognitive_twin_decisions') THEN
+    -- Drop ALL possible policy names (old and new naming conventions)
     DROP POLICY IF EXISTS "cognitive_twin_decisions_select" ON cognitive_twin_decisions;
+    DROP POLICY IF EXISTS "cognitive_twin_decisions_insert" ON cognitive_twin_decisions;
+    DROP POLICY IF EXISTS "cognitive_twin_decisions_owner_select" ON cognitive_twin_decisions;
+    DROP POLICY IF EXISTS "cognitive_twin_decisions_owner_insert" ON cognitive_twin_decisions;
 
     CREATE POLICY "cognitive_twin_decisions_owner_select" ON cognitive_twin_decisions
       FOR SELECT TO authenticated
@@ -188,8 +210,13 @@ END $$;
 DO $$
 BEGIN
   IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'seo_leak_signal_profiles') THEN
+    -- Drop ALL possible policy names (old and new naming conventions)
     DROP POLICY IF EXISTS "seo_leak_profiles_select" ON seo_leak_signal_profiles;
     DROP POLICY IF EXISTS "seo_leak_profiles_insert" ON seo_leak_signal_profiles;
+    DROP POLICY IF EXISTS "seo_leak_profiles_update" ON seo_leak_signal_profiles;
+    DROP POLICY IF EXISTS "seo_leak_profiles_business_select" ON seo_leak_signal_profiles;
+    DROP POLICY IF EXISTS "seo_leak_profiles_business_insert" ON seo_leak_signal_profiles;
+    DROP POLICY IF EXISTS "seo_leak_profiles_business_update" ON seo_leak_signal_profiles;
 
     -- User can SELECT profiles for businesses they own
     CREATE POLICY "seo_leak_profiles_business_select" ON seo_leak_signal_profiles
@@ -215,8 +242,13 @@ END $$;
 DO $$
 BEGIN
   IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'social_inbox_accounts') THEN
+    -- Drop ALL possible policy names (old and new naming conventions)
     DROP POLICY IF EXISTS "social_inbox_select" ON social_inbox_accounts;
     DROP POLICY IF EXISTS "social_inbox_insert" ON social_inbox_accounts;
+    DROP POLICY IF EXISTS "social_inbox_update" ON social_inbox_accounts;
+    DROP POLICY IF EXISTS "social_inbox_business_select" ON social_inbox_accounts;
+    DROP POLICY IF EXISTS "social_inbox_business_insert" ON social_inbox_accounts;
+    DROP POLICY IF EXISTS "social_inbox_business_update" ON social_inbox_accounts;
 
     CREATE POLICY "social_inbox_business_select" ON social_inbox_accounts
       FOR SELECT TO authenticated
@@ -241,7 +273,11 @@ END $$;
 DO $$
 BEGIN
   IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'social_messages') THEN
+    -- Drop ALL possible policy names (old and new naming conventions)
     DROP POLICY IF EXISTS "social_messages_select" ON social_messages;
+    DROP POLICY IF EXISTS "social_messages_insert" ON social_messages;
+    DROP POLICY IF EXISTS "social_messages_business_select" ON social_messages;
+    DROP POLICY IF EXISTS "social_messages_business_insert" ON social_messages;
 
     CREATE POLICY "social_messages_business_select" ON social_messages
       FOR SELECT TO authenticated
@@ -269,9 +305,13 @@ BEGIN
       SELECT 1 FROM information_schema.columns
       WHERE table_name = 'generated_content' AND column_name = 'workspace_id'
     ) THEN
+      -- Drop ALL possible policy names (old and new naming conventions)
       DROP POLICY IF EXISTS "generated_content_select" ON generated_content;
       DROP POLICY IF EXISTS "generated_content_insert" ON generated_content;
       DROP POLICY IF EXISTS "generated_content_update" ON generated_content;
+      DROP POLICY IF EXISTS "generated_content_workspace_select" ON generated_content;
+      DROP POLICY IF EXISTS "generated_content_workspace_insert" ON generated_content;
+      DROP POLICY IF EXISTS "generated_content_workspace_update" ON generated_content;
 
       CREATE POLICY "generated_content_workspace_select" ON generated_content
         FOR SELECT TO authenticated
@@ -299,9 +339,13 @@ BEGIN
       SELECT 1 FROM information_schema.columns
       WHERE table_name = 'ai_memory' AND column_name = 'workspace_id'
     ) THEN
+      -- Drop ALL possible policy names (old and new naming conventions)
       DROP POLICY IF EXISTS "ai_memory_select" ON ai_memory;
       DROP POLICY IF EXISTS "ai_memory_insert" ON ai_memory;
       DROP POLICY IF EXISTS "ai_memory_update" ON ai_memory;
+      DROP POLICY IF EXISTS "ai_memory_workspace_select" ON ai_memory;
+      DROP POLICY IF EXISTS "ai_memory_workspace_insert" ON ai_memory;
+      DROP POLICY IF EXISTS "ai_memory_workspace_update" ON ai_memory;
 
       CREATE POLICY "ai_memory_workspace_select" ON ai_memory
         FOR SELECT TO authenticated
@@ -329,7 +373,11 @@ END $$;
 DO $$
 BEGIN
   IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'founder_os_snapshots') THEN
+    -- Drop ALL possible policy names (old and new naming conventions)
     DROP POLICY IF EXISTS "founder_os_snapshots_select" ON founder_os_snapshots;
+    DROP POLICY IF EXISTS "founder_os_snapshots_insert" ON founder_os_snapshots;
+    DROP POLICY IF EXISTS "founder_os_snapshots_owner_select" ON founder_os_snapshots;
+    DROP POLICY IF EXISTS "founder_os_snapshots_owner_insert" ON founder_os_snapshots;
 
     CREATE POLICY "founder_os_snapshots_owner_select" ON founder_os_snapshots
       FOR SELECT TO authenticated

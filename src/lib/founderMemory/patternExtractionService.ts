@@ -257,7 +257,7 @@ Return as JSON array:
 Focus on actionable, meaningful patterns. Return empty array if no significant patterns found.`;
 
       const response = await this.anthropic.messages.create({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-5-20250929',
         max_tokens: 2000,
         messages: [{ role: 'user', content: prompt }],
       });
