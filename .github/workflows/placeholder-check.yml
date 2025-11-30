@@ -1,0 +1,127 @@
+name: Placeholder Check
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  placeholder-audit:
+    name: Audit Placeholders
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install ts-node
+        run: npm install -g ts-node typescript
+
+      - name: Run placeholder audit
+        id: audit
+        run: |
+          npx ts-node scripts/audit-placeholders.ts > placeholder-report.json 2>&1 || true
+          cat placeholder-report.json
+
+      - name: Check for critical placeholders
+        run: |
+          CRITICAL_COUNT=$(cat placeholder-report.json | jq -r '.bySeverity.critical // 0')
+          echo "Critical placeholders found: $CRITICAL_COUNT"
+          if [ "$CRITICAL_COUNT" -gt "0" ]; then
+            echo "::error::Found $CRITICAL_COUNT critical placeholder(s) that must be fixed before merging"
+            exit 1
+          fi
+
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: placeholder-audit-report
+          path: placeholder-report.json
+          retention-days: 30
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request' && failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const report = JSON.parse(fs.readFileSync('placeholder-report.json', 'utf8'));
+
+            let comment = '## Placeholder Audit Failed\n\n';
+            comment += `Found **${report.bySeverity.critical || 0}** critical placeholder(s) that must be fixed.\n\n`;
+
+            if (report.matches && report.matches.length > 0) {
+              comment += '### Critical Issues:\n\n';
+              const criticalMatches = report.matches.filter(m => m.severity === 'critical').slice(0, 10);
+              for (const match of criticalMatches) {
+                comment += `- **${match.file}:${match.line}** - ${match.pattern}\n`;
+              }
+              if (report.bySeverity.critical > 10) {
+                comment += `\n...and ${report.bySeverity.critical - 10} more.\n`;
+              }
+            }
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+  navigation-audit:
+    name: Audit Navigation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install ts-node
+        run: npm install -g ts-node typescript
+
+      - name: Run navigation audit
+        id: nav-audit
+        run: |
+          npx ts-node scripts/audit-navigation.ts > navigation-report.json 2>&1 || true
+          cat navigation-report.json
+
+      - name: Check for navigation issues
+        run: |
+          DEAD_LINKS=$(cat navigation-report.json | jq -r '.summary.deadLinksCount // 0')
+          MISSING_PAGES=$(cat navigation-report.json | jq -r '.summary.missingPagesCount // 0')
+          echo "Dead links found: $DEAD_LINKS"
+          echo "Missing pages found: $MISSING_PAGES"
+          if [ "$DEAD_LINKS" -gt "10" ]; then
+            echo "::warning::Found $DEAD_LINKS dead link(s) - consider fixing these"
+          fi
+          if [ "$MISSING_PAGES" -gt "5" ]; then
+            echo "::warning::Found $MISSING_PAGES missing page(s) - consider creating these pages"
+          fi
+
+      - name: Upload navigation report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: navigation-audit-report
+          path: navigation-report.json
+          retention-days: 30
