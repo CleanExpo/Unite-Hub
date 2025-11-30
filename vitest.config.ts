@@ -15,7 +15,6 @@ export default defineConfig({
       '**/tests/e2e/**',
       '**/tests/api/**',
       '**/tests/strategy/**',
-      '**/tests/integration/**',
       '**/tests/phase1/**',
       '**/*.e2e.spec.ts',
       '**/*.e2e.test.ts',
