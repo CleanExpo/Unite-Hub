@@ -73,8 +73,17 @@ function inferPriority(message: string, meta: any): ErrorPriority {
 
 /**
  * Custom Winston transport that logs to database
+ *
+ * Uses a circuit breaker pattern to prevent infinite recursion:
+ * When database logging fails, subsequent log.error calls should NOT
+ * trigger more database writes until the circuit resets.
  */
 export class DatabaseTransport extends Transport {
+  private isLogging = false;
+  private circuitOpen = false;
+  private circuitOpenedAt = 0;
+  private readonly circuitResetMs = 30000; // Reset after 30 seconds
+
   constructor(opts?: DatabaseTransportOptions) {
     super(opts);
   }
@@ -89,6 +98,29 @@ export class DatabaseTransport extends Transport {
       callback();
       return;
     }
+
+    // Circuit breaker: prevent recursive logging and respect circuit state
+    if (this.isLogging) {
+      // Already in a logging call - skip to prevent recursion
+      callback();
+      return;
+    }
+
+    // Check if circuit is open (database unavailable)
+    if (this.circuitOpen) {
+      // Check if it's time to reset the circuit
+      if (Date.now() - this.circuitOpenedAt > this.circuitResetMs) {
+        this.circuitOpen = false;
+        console.log('[DatabaseTransport] Circuit reset - retrying database logging');
+      } else {
+        // Circuit still open, skip database logging
+        callback();
+        return;
+      }
+    }
+
+    // Set flag to prevent recursive logging
+    this.isLogging = true;
 
     try {
       const severity = mapSeverity(info.level);
@@ -121,8 +153,13 @@ export class DatabaseTransport extends Transport {
         route: info.route,
       });
     } catch (error) {
-      // Don't throw - just log to console
-      console.error('Failed to log to database:', error);
+      // Open circuit to prevent flooding failed database with retries
+      this.circuitOpen = true;
+      this.circuitOpenedAt = Date.now();
+      console.error('[DatabaseTransport] Failed to log to database, opening circuit for 30s:',
+        error instanceof Error ? error.message : error);
+    } finally {
+      this.isLogging = false;
     }
 
     callback();

@@ -80,7 +80,8 @@ export async function logError(params: {
       });
 
     if (error) {
-      log.error('Failed to log error to database', { error, params });
+      // Use console.error to avoid infinite loop with DatabaseTransport
+      console.error('[logError] Failed to log error to database:', error.message);
       return null;
     }
 
@@ -97,7 +98,8 @@ export async function logError(params: {
 
     return data;
   } catch (error) {
-    log.error('Exception in logError', { error, params });
+    // Use console.error to avoid infinite loop with DatabaseTransport
+    console.error('[logError] Exception in logError:', error instanceof Error ? error.message : error);
     return null;
   }
 }
