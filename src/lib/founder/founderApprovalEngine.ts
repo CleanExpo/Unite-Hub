@@ -16,7 +16,7 @@ export interface ApprovalRequest {
   createdAt: string;
   createdByAgent: 'email' | 'content' | 'research' | 'scheduling' | 'analysis' | 'coordination';
   riskLevel: 'low' | 'medium' | 'high' | 'critical';
-  itemType: 'claim' | 'campaign' | 'email' | 'automation' | 'brand_change' | 'override';
+  itemType: 'claim' | 'campaign' | 'email' | 'automation' | 'brand_change' | 'override' | 'analysis_report';
   brand: BrandId;
   summary: string;
   details: Record<string, any>;

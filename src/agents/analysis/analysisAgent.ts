@@ -159,15 +159,17 @@ export async function analyzeMetrics(options: {
 
   const approval = evaluateApproval({
     id,
+    createdAt: new Date().toISOString(),
     riskLevel: riskAssessment.level,
     itemType: 'analysis_report',
+    brand,
     summary: `${timeframe} Analysis Report for ${brand}`,
-    createdByAgent: 'analysis_agent',
+    createdByAgent: 'analysis',
     details: {
-      kpis,
-      anomaliesCount: anomalies.length,
-      insightsCount: insights.length,
-      requiresAction: insights.filter((i) => i.priority === 'critical').length > 0,
+      anomaliesFound: anomalies.length,
+      criticalAnomalies: anomalies.filter((a) => a.severity === 'critical').length,
+      financialHealth: kpis.financialHealth,
+      staffOverload: kpis.staffOverload,
     },
   });
 
