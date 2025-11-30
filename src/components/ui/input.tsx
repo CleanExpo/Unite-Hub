@@ -1,101 +1,237 @@
 /**
- * Input Component - Phase 2 UI Library
- * Accessible form input with labels, errors, and dark mode
+ * Input Component
+ *
+ * Text input component with support for multiple input types,
+ * error states, and validation feedback.
+ *
+ * @example
+ * // Basic input
+ * <Input placeholder="Enter your name" />
+ *
+ * @example
+ * // Input with error
+ * <Input error={true} errorMessage="Email is required" />
+ *
+ * @example
+ * // Textarea
+ * <Input as="textarea" rows={4} placeholder="Enter message" />
  */
 
-import React from 'react';
+import { forwardRef, InputHTMLAttributes, TextareaHTMLAttributes, ReactNode } from 'react';
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  /** Whether the input has an error @default false */
+  error?: boolean;
+
+  /** Error message to display below input */
+  errorMessage?: string;
+
+  /** Label text for the input */
   label?: string;
-  error?: string;
-  helpText?: string;
-  leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
+
+  /** Helper text displayed below input */
+  helperText?: string;
+
+  /** Whether to render as textarea @default false */
+  as?: 'input' | 'textarea';
+
+  /** Number of rows for textarea */
+  rows?: number;
+
+  /** Icon to display on the left side of input */
+  icon?: ReactNode;
+
+  /** Icon to display on the right side of input */
+  iconRight?: ReactNode;
+
+  /** Additional CSS classes */
+  className?: string;
+
+  /** Size variant @default 'md' */
+  size?: 'sm' | 'md';
+
+  /** Full width input @default false */
+  fullWidth?: boolean;
 }
 
-export default function Input({
-  label,
-  error,
-  helpText,
-  leftIcon,
-  rightIcon,
-  id,
-  className = '',
-  ...props
-}: InputProps) {
-  const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
-  const hasError = !!error;
+/**
+ * Input Component
+ *
+ * Uses design tokens:
+ * - Background: bg-input (#111214)
+ * - Border: border-subtle (rgba(255, 255, 255, 0.08))
+ * - Text: text-primary (#f8f8f8)
+ * - Placeholder: text-muted (#6b7280)
+ * - Focus ring: focus:ring-accent-500
+ *
+ * States:
+ * - Default: normal input
+ * - Focus: border-accent-500, ring-accent-500
+ * - Error: border-error, text-error
+ * - Disabled: opacity-50, cursor-not-allowed
+ */
+export const Input = forwardRef<
+  HTMLInputElement | HTMLTextAreaElement,
+  InputProps
+>(
+  (
+    {
+      error = false,
+      errorMessage,
+      label,
+      helperText,
+      as = 'input',
+      rows = 4,
+      icon,
+      iconRight,
+      className = '',
+      size = 'md',
+      fullWidth = false,
+      disabled = false,
+      type = 'text',
+      ...props
+    },
+    ref
+  ) => {
+    const baseStyles = `
+      w-full
+      bg-input
+      text-text-primary
+      border
+      rounded-md
+      transition-all
+      duration-normal
+      ease-out
+      placeholder-text-muted
+      focus:outline-none
+      focus:border-accent-500
+      focus:ring-2
+      focus:ring-accent-500
+      focus:ring-offset-2
+      focus:ring-offset-bg-base
+      disabled:opacity-50
+      disabled:cursor-not-allowed
+    `;
 
-  return (
-    <div className="w-full">
-      {label && (
-        <label
-          htmlFor={inputId}
-          className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-        >
-          {label}
-          {props.required && <span className="text-red-500 ml-1">*</span>}
-        </label>
-      )}
+    const borderStyles = error
+      ? 'border-error'
+      : 'border-border-subtle';
 
-      <div className="relative">
-        {leftIcon && (
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-            {leftIcon}
-          </div>
+    const sizeStyles = {
+      sm: 'px-3 py-2 text-sm',
+      md: 'px-4 py-3 text-base',
+    };
+
+    const fullWidthStyle = fullWidth ? 'w-full' : '';
+
+    const wrapperStyles = `
+      flex
+      flex-col
+      gap-1
+      ${fullWidthStyle}
+    `;
+
+    const inputWrapperStyles = `
+      relative
+      flex
+      items-center
+      ${fullWidthStyle}
+    `;
+
+    const Element = as === 'textarea' ? 'textarea' : 'input';
+
+    return (
+      <div className={wrapperStyles}>
+        {/* Label */}
+        {label && (
+          <label
+            className="
+              text-sm
+              font-medium
+              text-text-primary
+            "
+          >
+            {label}
+          </label>
         )}
 
-        <input
-          id={inputId}
-          className={`
-            block w-full rounded-lg border
-            ${hasError ? 'border-red-300 focus:border-red-500 focus:ring-red-500' : 'border-gray-300 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600'}
-            ${leftIcon ? 'pl-10' : 'pl-4'}
-            ${rightIcon ? 'pr-10' : 'pr-4'}
-            py-2.5
-            bg-white dark:bg-gray-800
-            text-gray-900 dark:text-gray-100
-            placeholder-gray-400 dark:placeholder-gray-500
-            focus:outline-none focus:ring-2
-            disabled:opacity-50 disabled:cursor-not-allowed
-            transition-colors
-            ${className}
-          `}
-          aria-invalid={hasError}
-          aria-describedby={
-            error ? `${inputId}-error` : helpText ? `${inputId}-help` : undefined
-          }
-          {...props}
-        />
+        {/* Input wrapper */}
+        <div className={inputWrapperStyles}>
+          {/* Left icon */}
+          {icon && (
+            <span
+              className="
+                absolute
+                left-3
+                text-text-secondary
+                pointer-events-none
+              "
+            >
+              {icon}
+            </span>
+          )}
 
-        {rightIcon && (
-          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
-            {rightIcon}
-          </div>
+          {/* Input element */}
+          <Element
+            ref={ref as any}
+            disabled={disabled}
+            rows={as === 'textarea' ? rows : undefined}
+            type={as === 'input' ? type : undefined}
+            className={`
+              ${baseStyles}
+              ${borderStyles}
+              ${sizeStyles[size]}
+              ${icon ? 'pl-10' : ''}
+              ${iconRight ? 'pr-10' : ''}
+              ${className}
+            `.trim()}
+            {...(props as any)}
+          />
+
+          {/* Right icon */}
+          {iconRight && (
+            <span
+              className="
+                absolute
+                right-3
+                text-text-secondary
+                pointer-events-none
+              "
+            >
+              {iconRight}
+            </span>
+          )}
+        </div>
+
+        {/* Error message */}
+        {error && errorMessage && (
+          <p
+            className="
+              text-sm
+              text-error
+              font-medium
+            "
+          >
+            {errorMessage}
+          </p>
+        )}
+
+        {/* Helper text */}
+        {!error && helperText && (
+          <p
+            className="
+              text-sm
+              text-text-secondary
+            "
+          >
+            {helperText}
+          </p>
         )}
       </div>
+    );
+  }
+);
 
-      {error && (
-        <p
-          id={`${inputId}-error`}
-          className="mt-2 text-sm text-red-600 dark:text-red-400"
-          role="alert"
-        >
-          {error}
-        </p>
-      )}
+Input.displayName = 'Input';
 
-      {helpText && !error && (
-        <p
-          id={`${inputId}-help`}
-          className="mt-2 text-sm text-gray-500 dark:text-gray-400"
-        >
-          {helpText}
-        </p>
-      )}
-    </div>
-  );
-}
-
-// Named export for compatibility
-export { Input };
+export default Input;

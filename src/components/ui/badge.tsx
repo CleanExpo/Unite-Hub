@@ -1,47 +1,139 @@
 /**
- * Badge Component - Phase 2 UI Library
- * Small status indicators and labels
+ * Badge Component
+ *
+ * Small semantic indicator component for status, tags, and labels.
+ * Supports 4 semantic variants.
+ *
+ * @example
+ * // Success badge
+ * <Badge variant="success">Active</Badge>
+ *
+ * @example
+ * // Warning badge
+ * <Badge variant="warning">Pending</Badge>
  */
 
-import React from 'react';
+import { forwardRef, ReactNode, HTMLAttributes } from 'react';
 
-export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  variant?: 'default' | 'success' | 'warning' | 'danger' | 'info' | 'outline';
-  size?: 'sm' | 'md' | 'lg';
-  children: React.ReactNode;
+export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
+  /** Badge content */
+  children?: ReactNode;
+
+  /** Semantic color variant @default 'neutral' */
+  variant?: 'success' | 'warning' | 'accent' | 'neutral';
+
+  /** Size variant @default 'md' */
+  size?: 'sm' | 'md';
+
+  /** Additional CSS classes */
+  className?: string;
+
+  /** Make badge dismissible with X button @default false */
+  dismissible?: boolean;
+
+  /** Callback when badge is dismissed */
+  onDismiss?: () => void;
 }
 
-export default function Badge({
-  variant = 'default',
-  size = 'md',
-  children,
-  className = '',
-  ...props
-}: BadgeProps) {
-  const variantClasses = {
-    default: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200',
-    success: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-    warning: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
-    danger: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
-    info: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-    outline: 'bg-transparent border-2 border-gray-300 text-gray-700 dark:border-gray-600 dark:text-gray-300',
-  };
+/**
+ * Badge Component
+ *
+ * Uses design tokens:
+ * - Success: bg-success-50, text-success-500
+ * - Warning: bg-warning-50, text-warning-500
+ * - Accent: bg-accent-100, text-accent-500
+ * - Neutral: bg-bg-hover, text-text-secondary
+ *
+ * All badges use:
+ * - Border radius: rounded-full (100px)
+ * - Font size: text-sm
+ * - Font weight: font-semibold
+ * - Padding: 6px 12px
+ */
+export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
+  (
+    {
+      children,
+      variant = 'neutral',
+      size = 'md',
+      className = '',
+      dismissible = false,
+      onDismiss,
+      ...props
+    },
+    ref
+  ) => {
+    const baseStyles = `
+      inline-flex
+      items-center
+      gap-2
+      rounded-full
+      font-semibold
+      transition-all
+      duration-fast
+      ease-out
+    `;
 
-  const sizeClasses = {
-    sm: 'px-2 py-0.5 text-xs',
-    md: 'px-2.5 py-1 text-sm',
-    lg: 'px-3 py-1.5 text-base',
-  };
+    const variantStyles = {
+      success: 'bg-success-50 text-success-500',
+      warning: 'bg-warning-50 text-warning-500',
+      accent: 'bg-accent-100 text-accent-500',
+      neutral: 'bg-bg-hover text-text-secondary',
+    };
 
-  return (
-    <span
-      className={`inline-flex items-center font-medium rounded-full ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
-      {...props}
-    >
-      {children}
-    </span>
-  );
-}
+    const sizeStyles = {
+      sm: 'px-2 py-1 text-xs',
+      md: 'px-3 py-1.5 text-sm',
+    };
 
-// Named export for compatibility
-export { Badge };
+    return (
+      <span
+        ref={ref}
+        className={`
+          ${baseStyles}
+          ${variantStyles[variant]}
+          ${sizeStyles[size]}
+          ${className}
+        `.trim()}
+        {...props}
+      >
+        {children}
+
+        {dismissible && (
+          <button
+            onClick={onDismiss}
+            className="
+              ml-1
+              inline-flex
+              items-center
+              justify-center
+              rounded-full
+              w-4
+              h-4
+              hover:opacity-70
+              transition-opacity
+              duration-fast
+            "
+            aria-label="Dismiss badge"
+          >
+            <svg
+              className="w-3 h-3"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+        )}
+      </span>
+    );
+  }
+);
+
+Badge.displayName = 'Badge';
+
+export default Badge;

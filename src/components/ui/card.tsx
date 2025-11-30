@@ -1,118 +1,138 @@
 /**
- * Card Component - Phase 2 UI Library
- * Flexible card container with header, footer, and variants
+ * Card Component
+ *
+ * Base card component for displaying content with consistent styling.
+ * Includes hover state, accent bar, and responsive support.
+ *
+ * @example
+ * // Basic card
+ * <Card>
+ *   <h3>Card Title</h3>
+ *   <p>Card content goes here</p>
+ * </Card>
+ *
+ * @example
+ * // Card with accent bar
+ * <Card accentBar>
+ *   Card with top accent bar
+ * </Card>
  */
 
-import React from 'react';
+import { forwardRef, ReactNode, HTMLAttributes } from 'react';
 
-export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: 'default' | 'bordered' | 'elevated' | 'flat';
-  padding?: 'none' | 'sm' | 'md' | 'lg';
-  header?: React.ReactNode;
-  footer?: React.ReactNode;
+export interface CardProps extends HTMLAttributes<HTMLDivElement> {
+  /** Card children content */
+  children?: ReactNode;
+
+  /** Whether to show accent bar at the top @default false */
+  accentBar?: boolean;
+
+  /** Whether to apply hover animation @default true */
+  interactive?: boolean;
+
+  /** Padding amount @default 'md' */
+  padding?: 'sm' | 'md' | 'lg';
+
+  /** Additional CSS classes */
+  className?: string;
+
+  /** Background color variant @default 'default' */
+  variant?: 'default' | 'raised';
 }
 
-export default function Card({
-  variant = 'default',
-  padding = 'md',
-  header,
-  footer,
-  children,
-  className = '',
-  ...props
-}: CardProps) {
-  const variantClasses = {
-    default: 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm',
-    bordered: 'bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600',
-    elevated: 'bg-white dark:bg-gray-800 shadow-lg border border-gray-100 dark:border-gray-700',
-    flat: 'bg-gray-50 dark:bg-gray-900',
-  };
+/**
+ * Card Component
+ *
+ * Base card styling uses design tokens:
+ * - Background: bg-card (#141517)
+ * - Border: border-subtle (rgba(255, 255, 255, 0.08))
+ * - Radius: rounded-lg (14px)
+ * - Shadow: shadow-card
+ *
+ * Hover state (when interactive=true):
+ * - Border: border-medium (rgba(255, 255, 255, 0.14))
+ * - Transform: translateY(-4px)
+ * - Smooth transition using ease-out 0.28s
+ */
+export const Card = forwardRef<HTMLDivElement, CardProps>(
+  (
+    {
+      children,
+      accentBar = false,
+      interactive = true,
+      padding = 'md',
+      variant = 'default',
+      className = '',
+      ...props
+    },
+    ref
+  ) => {
+    const baseStyles = `
+      bg-bg-card
+      border
+      border-border-subtle
+      rounded-lg
+      shadow-card
+      transition-all
+      duration-normal
+      ease-out
+    `;
 
-  const paddingClasses = {
-    none: '',
-    sm: 'p-4',
-    md: 'p-6',
-    lg: 'p-8',
-  };
+    const interactiveStyles = interactive
+      ? `
+        hover:border-border-medium
+        hover:shadow-lg
+        hover:-translate-y-1
+        cursor-pointer
+      `
+      : '';
 
-  return (
-    <div
-      className={`rounded-xl ${variantClasses[variant]} ${className}`}
-      {...props}
-    >
-      {header && (
-        <div className={`border-b border-gray-200 dark:border-gray-700 ${paddingClasses[padding]} pb-4`}>
-          {header}
-        </div>
-      )}
+    const paddingStyles = {
+      sm: 'p-4',
+      md: 'p-6',
+      lg: 'p-8',
+    };
 
-      <div className={paddingClasses[padding]}>
+    const variantStyles = {
+      default: '',
+      raised: 'bg-bg-raised',
+    };
+
+    return (
+      <div
+        ref={ref}
+        className={`
+          relative
+          ${baseStyles}
+          ${interactiveStyles}
+          ${paddingStyles[padding]}
+          ${variantStyles[variant]}
+          ${className}
+        `.trim()}
+        {...props}
+      >
+        {/* Accent bar at top */}
+        {accentBar && (
+          <div
+            className="
+              absolute
+              top-0
+              left-0
+              right-0
+              h-1
+              bg-accent-500
+              rounded-t-lg
+            "
+          />
+        )}
+
+        {/* Content */}
         {children}
       </div>
+    );
+  }
+);
 
-      {footer && (
-        <div className={`border-t border-gray-200 dark:border-gray-700 ${paddingClasses[padding]} pt-4`}>
-          {footer}
-        </div>
-      )}
-    </div>
-  );
-}
+Card.displayName = 'Card';
 
-/**
- * CardHeader - Semantic header component
- */
-export function CardHeader({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  return (
-    <div className={`text-lg font-semibold text-gray-900 dark:text-gray-100 ${className}`}>
-      {children}
-    </div>
-  );
-}
-
-/**
- * CardTitle - Title within card
- */
-export function CardTitle({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  return (
-    <h3 className={`text-xl font-bold text-gray-900 dark:text-gray-100 ${className}`}>
-      {children}
-    </h3>
-  );
-}
-
-/**
- * CardDescription - Subtitle/description text
- */
-export function CardDescription({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  return (
-    <p className={`text-sm text-gray-600 dark:text-gray-400 ${className}`}>
-      {children}
-    </p>
-  );
-}
-
-/**
- * CardContent - Main content area
- */
-export function CardContent({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  return (
-    <div className={`p-6 pt-0 ${className}`}>
-      {children}
-    </div>
-  );
-}
-
-/**
- * CardFooter - Footer area for actions
- */
-export function CardFooter({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  return (
-    <div className={`flex items-center p-6 pt-0 ${className}`}>
-      {children}
-    </div>
-  );
-}
-
-// Named export for Card compatibility
-export { Card };
+export default Card;
