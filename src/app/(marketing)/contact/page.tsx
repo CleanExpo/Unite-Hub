@@ -260,10 +260,10 @@ export default function ContactPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground mb-2">
-                  [Your Business Address]
+                  Remote-First Company
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  [City, State ZIP]
+                  Serving Clients Globally
                 </p>
               </CardContent>
             </Card>

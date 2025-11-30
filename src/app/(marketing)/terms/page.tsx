@@ -207,7 +207,7 @@ export default function TermsPage() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">13. Dispute Resolution</h2>
           <p>
-            <strong>Governing Law:</strong> These Terms are governed by the laws of [Your Jurisdiction], without regard
+            <strong>Governing Law:</strong> These Terms are governed by the laws of New South Wales, Australia, without regard
             to conflict of law principles.
           </p>
           <p>
@@ -252,8 +252,7 @@ export default function TermsPage() {
             <p>
               <strong>Mailing Address:</strong><br />
               Unite-Hub Legal Team<br />
-              [Your Business Address]<br />
-              [City, State ZIP]
+              contact@unite-group.in
             </p>
           </div>
         </section>

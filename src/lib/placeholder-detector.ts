@@ -79,6 +79,34 @@ const SCANNABLE_EXTENSIONS = ['.tsx', '.ts', '.jsx', '.js', '.md', '.mdx', '.jso
 // Directories to skip
 const SKIP_DIRECTORIES = ['node_modules', '.next', '.git', 'dist', 'build', '.vercel', '_disabled'];
 
+// Files to skip (patterns that are expected to have placeholders)
+const SKIP_FILES = [
+  'placeholder-detector.ts',  // This file itself contains patterns
+  '.test.ts', '.test.tsx', '.spec.ts', '.spec.tsx',  // Test files
+  'mock', 'fixture', '__mocks__',  // Mock files
+];
+
+// False positive patterns - code constructs that look like placeholders but aren't
+const FALSE_POSITIVE_PATTERNS = [
+  /\[\s*[\w]+\s*,\s*set[\w]+\s*\]/,  // React useState: [value, setValue]
+  /\[\s*[\w]+\s*,\s*[\w]+\s*\]/,     // Array destructuring: [a, b]
+  /\[placeholder/i,                  // CSS attribute selector: [placeholder*="name"]
+  /data-\[placeholder\]/i,           // Tailwind data attribute: data-[placeholder]:
+  /placeholder[:=]\s*["'{]/i,        // JSX attribute: placeholder="..." or placeholder={
+  /placehold(?:er|\.co).*(?:fallback|error|dev|mock|comment)/i,  // Intentional fallbacks
+  /\/\/ .*placeholder/i,             // Comments about placeholders
+  /\* .*placeholder/i,               // Multi-line comment about placeholders
+  /pattern.*placeholder/i,           // Pattern definitions containing "placeholder"
+  /description.*placeholder/i,       // Description containing "placeholder"
+  /<Select.*placeholder/i,           // Select component with placeholder prop
+  /const\s+\[\s*\w+\s*,?\s*\w*\]/,   // Const destructuring: const [a, b] or const [a]
+  /useState\s*[(<]/,                 // useState hook: useState( or useState<
+  /\bconst\s+\[/,                    // Any const with array destructuring
+  /\blet\s+\[/,                      // Any let with array destructuring
+  /document\.querySelector.*\[/,     // querySelector with attribute selector
+  /input\[placeholder/i,             // Input placeholder selector
+];
+
 /**
  * Recursively get all files in a directory
  */
@@ -108,16 +136,41 @@ function getAllFiles(dirPath: string, files: string[] = []): string[] {
 }
 
 /**
+ * Check if a line is a false positive
+ */
+function isFalsePositive(line: string): boolean {
+  return FALSE_POSITIVE_PATTERNS.some(pattern => pattern.test(line));
+}
+
+/**
+ * Check if file should be skipped
+ */
+function shouldSkipFile(filePath: string): boolean {
+  const fileName = path.basename(filePath);
+  return SKIP_FILES.some(skip => fileName.includes(skip));
+}
+
+/**
  * Scan a single file for placeholders
  */
 function scanFile(filePath: string): PlaceholderReport[] {
   const reports: PlaceholderReport[] = [];
+
+  // Skip certain files
+  if (shouldSkipFile(filePath)) {
+    return reports;
+  }
 
   try {
     const content = fs.readFileSync(filePath, 'utf-8');
     const lines = content.split('\n');
 
     lines.forEach((line, lineIndex) => {
+      // Skip false positives
+      if (isFalsePositive(line)) {
+        return;
+      }
+
       // Check each pattern type
       for (const [type, patterns] of Object.entries(PLACEHOLDER_PATTERNS)) {
         for (const { pattern, severity, description } of patterns) {

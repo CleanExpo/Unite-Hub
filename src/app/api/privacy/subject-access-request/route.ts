@@ -124,7 +124,7 @@ async function sendSARConfirmationEmail(
         <p>If you have questions about your request:</p>
         <ul style="padding-left: 20px;">
           <li><strong>Email:</strong> <a href="mailto:privacy@unite-hub.com.au" style="color: #0066cc;">privacy@unite-hub.com.au</a></li>
-          <li><strong>Phone:</strong> [Your Phone Number]</li>
+          <li><strong>Contact:</strong> contact@unite-group.in</li>
           <li><strong>Mail:</strong> Unite-Hub Privacy Team, Level 1, 123 Business Street, Brisbane QLD 4000</li>
         </ul>
 
@@ -167,7 +167,7 @@ ${process.env.NEXT_PUBLIC_APP_URL || 'https://unite-hub.com.au'}/subject-access-
 
 Contact Information:
 - Email: privacy@unite-hub.com.au
-- Phone: [Your Phone Number]
+- Contact: contact@unite-group.in
 - Mail: Unite-Hub Privacy Team, Level 1, 123 Business Street, Brisbane QLD 4000
 
 This is an automated confirmation email from Unite-Hub Pty Ltd.

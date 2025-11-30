@@ -8,6 +8,9 @@
  * This component replaces placeholder images with persona-adaptive visuals.
  */
 
+// Fallback placeholder as SVG data URL - teal gradient with Unite-Hub branding
+const FALLBACK_PLACEHOLDER = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='450' viewBox='0 0 800 450'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%2314b8a6'/%3E%3Cstop offset='100%25' style='stop-color:%230d9488'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23grad)' width='800' height='450'/%3E%3Ctext x='400' y='225' text-anchor='middle' fill='white' font-family='system-ui' font-size='24' font-weight='500'%3EImage Loading...%3C/text%3E%3C/svg%3E";
+
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { selectVisualProfile, VisualProfile, generateImagePrompt } from "@/lib/visual/visualStyleMatrix";
@@ -194,7 +197,7 @@ export function PersonaVisual({
       {/* Main Image */}
       {fill ? (
         <Image
-          src={imageSrc || "/images/placeholder.jpg"}
+          src={imageSrc || FALLBACK_PLACEHOLDER}
           alt={imageAlt}
           fill
           priority={priority}
@@ -208,7 +211,7 @@ export function PersonaVisual({
         />
       ) : (
         <Image
-          src={imageSrc || "/images/placeholder.jpg"}
+          src={imageSrc || FALLBACK_PLACEHOLDER}
           alt={imageAlt}
           width={width || 800}
           height={height || 450}
