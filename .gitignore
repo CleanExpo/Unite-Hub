@@ -156,3 +156,4 @@ out/
 coverage/
 __tests__/__snapshots__/
 *.tgz
+.claude/mcp.json
