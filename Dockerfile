@@ -106,6 +106,8 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
 # Set port environment variable
 ENV PORT=3008
 ENV HOSTNAME="0.0.0.0"
+# Increase Node.js heap for runtime (professional-l has 8GB, give Node 6GB)
+ENV NODE_OPTIONS="--max-old-space-size=6144"
 
 # Start Next.js standalone server
 CMD ["node", "server.js"]
