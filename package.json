@@ -77,7 +77,10 @@
     "test:monitoring": "node scripts/test-monitoring-system.mjs",
     "test:health": "node scripts/test-monitoring-system.mjs",
     "integrity:check": "node scripts/run-integrity-check.mjs",
-    "founder:check": "node scripts/run-integrity-check.mjs"
+    "founder:check": "node scripts/run-integrity-check.mjs",
+    "audit:placeholders": "node scripts/audit-placeholders.mjs",
+    "audit:navigation": "node scripts/audit-navigation.mjs",
+    "audit:all": "npm run audit:placeholders && npm run audit:navigation"
   },
   "keywords": [],
   "author": "",
