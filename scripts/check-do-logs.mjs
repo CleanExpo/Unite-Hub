@@ -2,7 +2,7 @@
 import https from 'https';
 
 const appId = 'dbaa4c4e-c69c-4b20-ae2c-22b366986dbc';
-const deployId = '5c4fc072-85ca-40e4-b463-91498d0d4f37';
+const deployId = '1bd667ca-9172-4f5c-ab5a-bf0ff614a70f';
 const componentName = 'unite-hub2';
 const token = process.env.DIGITALOCEAN_API_TOKEN;
 
@@ -49,15 +49,16 @@ async function main() {
     console.log('\n✅ DEPLOYMENT SUCCESSFUL!');
     const app = await request(`/v2/apps/${appId}`);
     console.log('Live URL:', app.app?.live_url);
+    // Continue to show runtime logs
+  }
+
+  if (d.phase !== 'BUILDING' && d.phase !== 'ACTIVE') {
     return;
   }
 
-  if (d.phase !== 'BUILDING') {
-    return;
-  }
-
-  // Get log URL
-  const logsResult = await request(`/v2/apps/${appId}/deployments/${deployId}/components/${componentName}/logs?type=BUILD&follow=false`);
+  // Get log URL (BUILD for building phase, RUN for active)
+  const logType = d.phase === 'BUILDING' ? 'BUILD' : 'RUN';
+  const logsResult = await request(`/v2/apps/${appId}/deployments/${deployId}/components/${componentName}/logs?type=${logType}&follow=false`);
   const logUrl = logsResult.live_url || logsResult.url;
 
   if (!logUrl) {
@@ -80,7 +81,7 @@ async function main() {
       res.on('data', chunk => { output += chunk.toString(); });
       res.on('end', () => {
         const lines = output.split('\n');
-        console.log('\n--- Last 50 build log lines ---');
+        console.log(`\n--- Last 50 ${logType.toLowerCase()} log lines ---`);
         console.log(lines.slice(-50).join('\n'));
         resolve();
       });

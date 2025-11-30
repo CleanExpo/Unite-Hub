@@ -5,7 +5,9 @@
       "Bash(npm test:*)",
       "Bash(git checkout:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git -C \"d:\\Unite-Hub\" status)",
+      "Bash(git ls-tree:*)"
     ],
     "deny": [],
     "ask": []

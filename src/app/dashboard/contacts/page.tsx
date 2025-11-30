@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Pagination } from "@/components/patterns/Pagination";
+import { Container } from "@/components/layout/Container";
 import {
   Table,
   TableBody,
@@ -34,9 +36,12 @@ import { ContactsListSkeleton } from "@/components/skeletons/ContactsListSkeleto
 import { StatsGridSkeleton } from "@/components/skeletons/StatsCardSkeleton";
 import { ErrorState } from "@/components/ErrorState";
 
+const ITEMS_PER_PAGE = 10;
+
 export default function ContactsPage() {
   const { workspaceId, loading: workspaceLoading } = useWorkspace();
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const [allContacts, setAllContacts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -85,13 +90,6 @@ export default function ContactsPage() {
     }
   }, [workspaceId, workspaceLoading]);
 
-  // Filter by search term
-  const contacts = allContacts.filter((contact: any) =>
-    contact.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    contact.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    contact.company?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   const handleContactAdded = () => {
     // Refresh contacts list
     fetchContacts();
@@ -128,9 +126,26 @@ export default function ContactsPage() {
     fetchContacts();
   };
 
+  // Calculate pagination
+  const contacts = allContacts.filter((contact: any) =>
+    contact.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    contact.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    contact.company?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(contacts.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginatedContacts = contacts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  // Reset to page 1 when search term changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
   return (
-    <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
-      <Breadcrumbs items={[{ label: "Contacts" }]} />
+    <div className="space-y-8">
+      <Container size="lg" padding="lg">
+        <Breadcrumbs items={[{ label: "Contacts" }]} />
 
       {/* Header */}
       <div className="flex justify-between items-center">
@@ -250,7 +265,7 @@ export default function ContactsPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {contacts.map((contact) => (
+                  {paginatedContacts.map((contact) => (
                   <TableRow key={contact.id} className="border-slate-700/50 hover:bg-slate-700/30 transition-colors">
                     <TableCell>
                       <Link
@@ -354,6 +369,19 @@ export default function ContactsPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Pagination */}
+      {contacts.length > 0 && totalPages > 1 && (
+        <div className="flex justify-center pt-6 border-t border-border-subtle mt-6">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+            showPageNumbers
+          />
+        </div>
+      )}
+      </Container>
 
       {/* Add Contact Modal */}
       {workspaceId && (
