@@ -9,8 +9,21 @@
  * - Content wrapper generation
  */
 
-import { chromium, Browser, Page, BrowserContext } from 'playwright';
 import * as crypto from 'crypto';
+
+// Dynamic import types for playwright (installed as devDependency)
+type Browser = Awaited<ReturnType<typeof import('playwright')['chromium']['launch']>>;
+type Page = Awaited<ReturnType<Browser['newPage']>>;
+type BrowserContext = Awaited<ReturnType<Browser['newContext']>>;
+
+// Dynamic playwright loader - only loads if available
+async function getPlaywright() {
+  try {
+    return await import('playwright');
+  } catch {
+    throw new Error('Playwright is not available. This service requires playwright to be installed.');
+  }
+}
 
 export interface GSiteConfig {
   headless?: boolean;
@@ -55,6 +68,7 @@ export class GSiteService {
   async initialize(): Promise<void> {
     if (this.browser) return;
 
+    const { chromium } = await getPlaywright();
     this.browser = await chromium.launch({
       headless: this.config.headless,
       slowMo: this.config.slowMo,
