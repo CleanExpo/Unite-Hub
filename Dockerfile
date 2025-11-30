@@ -29,9 +29,12 @@ FROM base AS deps
 # Copy package files (ignore yarn.lock if exists)
 COPY package.json package-lock.json* ./
 
-# Install all dependencies for build stage
+# Install ALL dependencies including devDependencies for build stage
+# NODE_ENV=development ensures devDependencies are installed
 # Using --legacy-peer-deps for compatibility with older packages
+ENV NODE_ENV=development
 RUN npm install --legacy-peer-deps --ignore-scripts
+ENV NODE_ENV=production
 
 # ==================================================
 # Builder stage - Build Next.js application
