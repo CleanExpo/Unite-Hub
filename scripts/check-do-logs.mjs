@@ -2,7 +2,7 @@
 import https from 'https';
 
 const appId = 'dbaa4c4e-c69c-4b20-ae2c-22b366986dbc';
-const deployId = 'af3cfcac-815d-4f4f-872e-d7b61412d479';
+const deployId = '5c4fc072-85ca-40e4-b463-91498d0d4f37';
 const componentName = 'unite-hub2';
 const token = process.env.DIGITALOCEAN_API_TOKEN;
 

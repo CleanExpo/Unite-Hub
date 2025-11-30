@@ -1,0 +1,69 @@
+{
+  "mcpServers": {
+    "gemini-media": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        ".claude/mcp_servers/gemini-media/dist/index.js"
+      ],
+      "env": {
+        "GOOGLE_API_KEY": "${GEMINI_API_KEY}"
+      },
+      "description": "Gemini Media Analysis - Image, audio, and video recognition using Google Gemini AI"
+    },
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest"
+      ],
+      "env": {
+        "PLAYWRIGHT_BROWSER": "chromium",
+        "PLAYWRIGHT_HEADLESS": "true"
+      }
+    },
+    "sherlock-think-alpha": {
+      "command": "node",
+      "args": [
+        ".claude/mcp_servers/sherlock-think/index.js"
+      ],
+      "description": "Sherlock Think Alpha - 1.84M context thinking model via OpenRouter"
+    },
+    "dataforseo": {
+      "command": "npx",
+      "args": [
+        "dataforseo-mcp-server"
+      ],
+      "env": {
+        "DATAFORSEO_API_LOGIN": "${DATAFORSEO_API_LOGIN}",
+        "DATAFORSEO_API_PASSWORD": "${DATAFORSEO_API_PASSWORD}"
+      },
+      "description": "DataForSEO API - SEO intelligence (SERP, competitors, keywords, backlinks, local GEO)"
+    },
+    "digitalocean": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@digitalocean/mcp",
+        "--services",
+        "apps"
+      ],
+      "env": {
+        "DIGITALOCEAN_API_TOKEN": "${DIGITALOCEAN_API_TOKEN}"
+      },
+      "description": "DigitalOcean MCP - Manage apps, droplets, databases, domains, and infrastructure"
+    },
+    "stripe": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@stripe/mcp",
+        "--tools=all",
+        "--api-key=${STRIPE_SECRET_KEY}"
+      ],
+      "env": {
+        "STRIPE_SECRET_KEY": "${STRIPE_SECRET_KEY}"
+      },
+      "description": "Stripe MCP - Create products, prices, checkout sessions, manage subscriptions, invoices, and payments"
+    }
+  }
+}
