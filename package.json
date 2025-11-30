@@ -88,7 +88,10 @@
     "synthex:phase1": "node scripts/synthex-phase1-generator.mjs",
     "synthex:assess-phase1": "node scripts/synthex-quality-assessor.mjs phase1",
     "synthex:assess": "node scripts/synthex-quality-assessor.mjs",
-    "check:build-memory": "node scripts/check-build-memory.mjs"
+    "synthex:ultra-premium-prompts": "node scripts/synthex-ultra-premium-prompts.mjs",
+    "check:build-memory": "node scripts/check-build-memory.mjs",
+    "health:check": "node scripts/site-health-check.mjs",
+    "health:quick": "node -e \"require(\"https\").get(\"https://hammerhead-app-zr38x.ondigitalocean.app/api/health\",(r)=>{let d=\"\";r.on(\"data\",c=>d+=c);r.on(\"end\",()=>console.log(r.statusCode,JSON.parse(d).status))})\""
   },
   "keywords": [],
   "author": "",
