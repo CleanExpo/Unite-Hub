@@ -33,6 +33,8 @@ const nextConfig = {
     'sharp',
     'puppeteer',
     'puppeteer-core',
+    'playwright',
+    'playwright-core',
     '@sparticuz/chromium',
     'pdfkit',
     'canvas'
