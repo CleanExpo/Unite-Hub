@@ -20,9 +20,9 @@ const nextConfig = {
     ]
   },
 
-  // TypeScript - skip during Vercel builds (run in CI instead)
+  // TypeScript - skip during Vercel/Docker builds (run in CI instead)
   typescript: {
-    ignoreBuildErrors: process.env.VERCEL === '1',
+    ignoreBuildErrors: process.env.VERCEL === '1' || process.env.SKIP_TYPE_CHECK === '1',
   },
 
   // Transpile these packages for compatibility
