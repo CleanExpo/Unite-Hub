@@ -60,10 +60,12 @@ ENV SKIP_TYPE_CHECK=1
 # Increase Node memory for large builds
 ENV NODE_OPTIONS="--max-old-space-size=3072"
 
-# Provide dummy values for build-time env vars (replaced at runtime)
+# Provide valid-looking dummy values for build-time env vars (replaced at runtime)
+# These pass format validation but are not real credentials
 ENV NEXT_PUBLIC_SUPABASE_URL="https://placeholder.supabase.co"
-ENV NEXT_PUBLIC_SUPABASE_ANON_KEY="placeholder-key"
-ENV ANTHROPIC_API_KEY="placeholder-key"
+ENV NEXT_PUBLIC_SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsYWNlaG9sZGVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2MDAwMDAwMDAsImV4cCI6MjAwMDAwMDAwMH0.placeholder"
+ENV SUPABASE_SERVICE_ROLE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsYWNlaG9sZGVyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTYwMDAwMDAwMCwiZXhwIjoyMDAwMDAwMDAwfQ.placeholder"
+ENV ANTHROPIC_API_KEY="sk-ant-placeholder-00000000000000000000000000000000000000000000000000000000000"
 
 RUN npm run build
 
