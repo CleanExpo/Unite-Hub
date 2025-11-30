@@ -42,7 +42,10 @@
     "digitalocean": {
       "command": "npx",
       "args": [
-        "@digitalocean/mcp@latest"
+        "-y",
+        "@digitalocean/mcp",
+        "--services",
+        "apps"
       ],
       "env": {
         "DIGITALOCEAN_API_TOKEN": "${DIGITALOCEAN_API_TOKEN}"
