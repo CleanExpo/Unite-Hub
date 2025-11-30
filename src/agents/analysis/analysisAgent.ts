@@ -121,7 +121,12 @@ export async function analyzeMetrics(options: {
   const anomalies = detectAnomalies(datasets, kpis);
 
   // Step 3: Generate forecast
-  const forecast = generateForecast(datasets, timeframe, kpis);
+  // Map timeframe to forecast period (only supports 7d, 30d, 90d)
+  const forecastPeriod = timeframe === '24h' ? '7d' :
+                         timeframe === 'quarter' ? '90d' :
+                         timeframe === 'year' ? '90d' :
+                         timeframe as '7d' | '30d' | '90d';
+  const forecast = generateForecast(datasets, forecastPeriod, kpis);
 
   // Step 4: Derive insights
   const insights = deriveInsights({
