@@ -107,9 +107,9 @@ export default function ForgotPasswordPage() {
         <div className="relative z-10 flex items-center justify-between text-sm text-slate-400">
           <span>© 2025 Unite-Hub</span>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-white transition-colors">Privacy</a>
-            <a href="#" className="hover:text-white transition-colors">Terms</a>
-            <a href="#" className="hover:text-white transition-colors">Help</a>
+            <a href="/privacy" className="hover:text-white transition-colors">Privacy</a>
+            <a href="/terms" className="hover:text-white transition-colors">Terms</a>
+            <a href="/support" className="hover:text-white transition-colors">Help</a>
           </div>
         </div>
       </div>

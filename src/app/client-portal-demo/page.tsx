@@ -117,24 +117,24 @@ export default function ClientPortalDemo() {
         </div>
 
         <nav className="flex-1 px-4 py-6 space-y-2">
-          <a href="#" className="flex items-center px-3 py-2.5 rounded-lg bg-gradient-to-r from-unite-teal to-unite-blue text-white">
+          <a href="/portal/projects" className="flex items-center px-3 py-2.5 rounded-lg bg-gradient-to-r from-unite-teal to-unite-blue text-white">
             <span className="mr-3">📊</span>
             <span className="text-sm font-medium">My Projects</span>
           </a>
-          <a href="#" className="flex items-center px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100">
+          <a href="/client/dashboard/production" className="flex items-center px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100">
             <span className="mr-3">📁</span>
             <span className="text-sm font-medium">Deliverables</span>
           </a>
-          <a href="#" className="flex items-center px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100">
+          <a href="/portal/messages" className="flex items-center px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100">
             <span className="mr-3">💬</span>
             <span className="text-sm font-medium">Messages</span>
             <span className="ml-auto bg-unite-orange text-white px-2 py-0.5 rounded-full text-xs font-bold">2</span>
           </a>
-          <a href="#" className="flex items-center px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100">
+          <a href="/portal/invoices" className="flex items-center px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100">
             <span className="mr-3">📄</span>
             <span className="text-sm font-medium">Invoices</span>
           </a>
-          <a href="#" className="flex items-center px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100">
+          <a href="/portal/settings" className="flex items-center px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100">
             <span className="mr-3">⚙️</span>
             <span className="text-sm font-medium">Settings</span>
           </a>

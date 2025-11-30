@@ -64,7 +64,11 @@ export function EmailPreview({
               </Button>
             )}
             {step.cta.type === "link" && (
-              <a href="#" className="text-primary hover:underline">
+              <a
+                href={step.cta.url || "#"}
+                className="text-primary hover:underline"
+                onClick={(e) => { if (!step.cta.url) e.preventDefault(); }}
+              >
                 {step.cta.text}
               </a>
             )}
@@ -85,9 +89,9 @@ export function EmailPreview({
             <p>Best regards,</p>
             <p className="font-medium">{senderName}</p>
             <p className="mt-2">
-              <a href="#" className="hover:underline">Unsubscribe</a>
+              <span className="hover:underline cursor-default text-muted-foreground" title="Preview only">Unsubscribe</span>
               {" | "}
-              <a href="#" className="hover:underline">Update preferences</a>
+              <span className="hover:underline cursor-default text-muted-foreground" title="Preview only">Update preferences</span>
             </p>
           </div>
         </div>

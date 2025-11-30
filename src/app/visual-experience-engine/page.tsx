@@ -604,13 +604,13 @@ function FinalCTASection() {
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Link>
 
-            <a
-              href="#"
-              className="flex items-center gap-3 px-8 py-4 rounded-xl bg-white/5 border border-white/10 text-white font-semibold text-lg hover:bg-white/10 transition-colors"
+            <button
+              onClick={() => window.alert('Style Guide coming soon!')}
+              className="flex items-center gap-3 px-8 py-4 rounded-xl bg-white/5 border border-white/10 text-white font-semibold text-lg hover:bg-white/10 transition-colors cursor-pointer"
             >
               <Download className="w-5 h-5" />
               Download Style Guide
-            </a>
+            </button>
           </div>
         </motion.div>
       </div>

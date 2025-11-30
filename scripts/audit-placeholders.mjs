@@ -71,6 +71,26 @@ const FALSE_POSITIVE_PATTERNS = [
   /\blet\s+\[/,                      // Any let with array destructuring
   /document\.querySelector.*\[/,     // querySelector with attribute selector
   /input\[placeholder/i,             // Input placeholder selector
+  /^\s*\/\//,                        // Lines starting with comments
+  /^\s*\*/,                          // Lines starting with block comment
+  /Fallback to placeholder/i,        // Comment about fallback behavior
+  /copyText.*\[/,                    // Social media template copyText
+  /Provide.*format.*\[/i,            // AI prompt format instructions
+  /template.*\[Your/i,               // Template placeholders for users
+  /\[Pattern \d+\]/,                 // AI format patterns like [Pattern 1]
+  /\[Issue \d+/,                     // AI format patterns like [Issue 1]
+  /\[Recommendation \d+/,            // AI format patterns like [Recommendation 1]
+  /placeholderUrl/i,                 // Variable named placeholderUrl (intentional)
+  /\[Your (?:detailed|Name|answer)/i,// AI prompt/template patterns
+  /\[Main content/i,                 // Content template
+  /\[Compelling headline/i,          // Content template
+  /DALL-E.*fail/i,                   // DALL-E fallback comments
+  /if.*fail.*placehold/i,            // Fallback logic
+  /imageUrl.*placehold/i,            // Image URL fallback variable
+  /Return.*placeholder.*response/i,  // Comment about returning placeholder
+  /placeholder.*for.*development/i,  // Development mode placeholder
+  /encodeURIComponent.*text/i,       // Dynamic placeholder text generation
+  /jinaImages.*set.*placehold/i,     // Jina images fallback
 ];
 
 function isFalsePositive(line) {

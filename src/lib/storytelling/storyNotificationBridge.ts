@@ -121,7 +121,7 @@ export function buildClientStoryEmailBody(touchpoint: StoryTouchpoint): EmailCon
   </div>
 
   <div style="text-align: center; margin: 24px 0;">
-    <a href="#" style="background: #333; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-size: 14px;">
+    <a href="{{DASHBOARD_URL}}/client/dashboard/touchpoints" style="background: #333; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-size: 14px;">
       View Full Story in Dashboard
     </a>
   </div>
@@ -224,7 +224,7 @@ export function buildFounderDigestEmailBody(
   </div>
 
   <div style="text-align: center; margin: 24px 0;">
-    <a href="#" style="background: #333; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-size: 14px;">
+    <a href="{{DASHBOARD_URL}}/dashboard/touchpoints" style="background: #333; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-size: 14px;">
       View All Stories in Dashboard
     </a>
   </div>
