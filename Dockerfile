@@ -60,6 +60,11 @@ ENV SKIP_TYPE_CHECK=1
 # Increase Node memory for large builds
 ENV NODE_OPTIONS="--max-old-space-size=3072"
 
+# Provide dummy values for build-time env vars (replaced at runtime)
+ENV NEXT_PUBLIC_SUPABASE_URL="https://placeholder.supabase.co"
+ENV NEXT_PUBLIC_SUPABASE_ANON_KEY="placeholder-key"
+ENV ANTHROPIC_API_KEY="placeholder-key"
+
 RUN npm run build
 
 # ==================================================
