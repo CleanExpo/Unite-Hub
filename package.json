@@ -224,8 +224,5 @@
     "@rollup/rollup-win32-x64-msvc": "^4.53.3",
     "@tailwindcss/oxide-win32-x64-msvc": "^4.1.17",
     "lightningcss-win32-x64-msvc": "^1.30.2"
-  },
-  "overrides": {
-    "zustand": "5.0.8"
   }
 }
