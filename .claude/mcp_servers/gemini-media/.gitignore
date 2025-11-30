@@ -4,8 +4,8 @@ package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
-# Build output
-dist/
+# Build output - NOTE: dist/ is committed for immediate MCP server use
+# dist/
 build/
 *.tsbuildinfo
 
