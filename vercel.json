@@ -3,32 +3,6 @@
   "framework": "nextjs",
   "installCommand": "npm install --legacy-peer-deps --ignore-scripts",
   "buildCommand": "next build",
-  "functions": {
-    "api/**/*.ts": {
-      "memory": 1024,
-      "maxDuration": 60
-    },
-    "api/agent/execute.ts": {
-      "memory": 3008,
-      "maxDuration": 300
-    },
-    "api/ai/**/*.ts": {
-      "memory": 1024,
-      "maxDuration": 120
-    },
-    "api/ai/extended-thinking/**/*.ts": {
-      "memory": 3008,
-      "maxDuration": 300
-    },
-    "api/audit/**/*.ts": {
-      "memory": 1024,
-      "maxDuration": 120
-    },
-    "api/agents/**/*.ts": {
-      "memory": 1024,
-      "maxDuration": 120
-    }
-  },
   "crons": [
     { "path": "/api/cron/health-check", "schedule": "*/5 * * * *" },
     { "path": "/api/agents/continuous-intelligence", "schedule": "*/30 * * * *" },
