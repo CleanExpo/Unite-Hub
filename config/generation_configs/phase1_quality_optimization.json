@@ -1,0 +1,321 @@
+{
+  "quality_optimization_strategy": "premium_production_grade",
+  "target_metrics": {
+    "average_quality_score": 8.7,
+    "auto_approve_threshold": 8.5,
+    "minimum_acceptable": 8.0,
+    "auto_approve_rate_target": 90,
+    "dimension_minimums": {
+      "brand_alignment": 8.5,
+      "technical_quality": 8.5,
+      "message_clarity": 8.5,
+      "emotional_tone": 8.3,
+      "audience_fit": 8.2,
+      "uniqueness": 8.2
+    }
+  },
+  "premium_prompt_engineering": {
+    "core_principles": [
+      "Extreme clarity and specificity",
+      "Professional photography standards",
+      "Brand identity reinforcement",
+      "Subject mastery and expertise portrayal",
+      "High-end commercial aesthetic",
+      "No generic elements or stock photo appearance"
+    ],
+    "forbidden_elements": [
+      "blurry backgrounds",
+      "generic expressions",
+      "stereotypical poses",
+      "low-quality lighting",
+      "watermarks or logos",
+      "amateur composition",
+      "cluttered scenes",
+      "artificial look",
+      "oversaturated colors",
+      "jarring contrasts"
+    ],
+    "quality_markers_required": [
+      "Sharp focus throughout",
+      "Professional studio-quality lighting",
+      "Expert composition with rule of thirds",
+      "Natural depth of field",
+      "True-to-life color grading",
+      "Professional-grade subject mastery",
+      "Cinematic quality production value",
+      "High-end commercial aesthetic",
+      "Museum-quality clarity",
+      "Brand-aligned visual sophistication"
+    ]
+  },
+  "enhanced_prompt_templates": {
+    "industry_card_photorealistic_premium": {
+      "structure": "PROFESSIONAL COMMERCIAL IMAGE: {subject_mastery}. Subject: {professional_descriptor}. Setting: {professional_environment}. Pose: {expert_confidence_pose}. Lighting: {professional_studio_lighting}. Composition: {rule_of_thirds_composition}. Technical: {technical_excellence_requirements}. Quality: Cinema-grade production value, museum-quality clarity, professional photography standards. Brand: {brand_color} accent, {brand_aesthetic}, sophisticated visual hierarchy. Avoid: Watermarks, logos, generic look, amateur composition, blur, oversaturation. Style: High-end commercial photography, professional headshot quality where applicable.",
+      "variables": {
+        "subject_mastery": "Demonstrate exceptional expertise and professional mastery in {trade_name} field",
+        "professional_descriptor": "Certified professional {trade_name} expert with {years_experience} years experience, displaying confidence and competence",
+        "professional_environment": "Premium {trade_setting} environment, clean and organized, modern equipment visible, professional workspace",
+        "expert_confidence_pose": "Natural, confident posture demonstrating authority, eye contact with camera or focused on task, relaxed confidence",
+        "professional_studio_lighting": "Three-point studio lighting setup, warm professional tones, shadow detail preserved, flattering key light",
+        "rule_of_thirds_composition": "Subject positioned on rule-of-thirds line, balanced negative space, leading lines, visual hierarchy",
+        "technical_excellence_requirements": "Sharp focus entire subject, bokeh background, professional DOF, no distortion, color accurate",
+        "brand_color": "Primary brand color for industry",
+        "brand_aesthetic": "Modern, professional, trustworthy"
+      },
+      "examples_by_industry": {
+        "plumbing": {
+          "subject_mastery": "Demonstrate exceptional expertise in modern plumbing systems and pipe installation",
+          "professional_descriptor": "Master plumber with 15+ years of advanced certification",
+          "professional_environment": "State-of-the-art plumbing workshop, premium copper pipes, precision tools on workbench",
+          "years_experience": 15
+        },
+        "electrical": {
+          "subject_mastery": "Demonstrate mastery of complex electrical systems and safety protocols",
+          "professional_descriptor": "Licensed master electrician with advanced certifications",
+          "professional_environment": "Modern electrical lab, advanced testing equipment, organized panel systems",
+          "years_experience": 18
+        },
+        "building": {
+          "subject_mastery": "Demonstrate construction expertise and architectural knowledge",
+          "professional_descriptor": "Master builder with architectural certification",
+          "professional_environment": "Premium construction site or design studio, blueprints visible, advanced tools",
+          "years_experience": 20
+        },
+        "restoration": {
+          "subject_mastery": "Demonstrate precision restoration and damage assessment expertise",
+          "professional_descriptor": "Certified restoration specialist with damage assessment expertise",
+          "professional_environment": "Professional restoration workspace, assessment equipment, before/after visible",
+          "years_experience": 12
+        },
+        "hvac": {
+          "subject_mastery": "Demonstrate HVAC systems expertise and precision installation skills",
+          "professional_descriptor": "NATE-certified HVAC technician with advanced refrigeration knowledge",
+          "professional_environment": "Modern HVAC facility, diagnostic equipment, system components organized",
+          "years_experience": 14
+        },
+        "landscaping": {
+          "subject_mastery": "Demonstrate landscape design expertise and horticultural mastery",
+          "professional_descriptor": "Master landscape architect with botanical certification",
+          "professional_environment": "Botanical garden or premium landscape design studio, plants and design tools visible",
+          "years_experience": 16
+        }
+      }
+    },
+    "industry_card_illustrated_premium": {
+      "structure": "PREMIUM ILLUSTRATED STYLE: Character-driven {trade_name} expert. Character: {character_description}. Setting: {premium_setting}. Style: {illustration_style}. Quality: Cinema-quality illustration, Pixar-grade character design, professional digital art standards. Color palette: {color_palette}. Expression: {expert_expression}. Context: {expertise_context}. Brand: {brand_alignment}. Technical: Smooth gradients, anti-aliased lines, professional color grading, high-resolution clarity.",
+      "variables": {
+        "character_description": "Confident, professional {trade} expert with distinctive personality, modern appearance",
+        "premium_setting": "Modern, upscale workshop or service environment",
+        "illustration_style": "Contemporary digital art, high-end professional illustration",
+        "color_palette": "Harmonious colors with industry accent color as primary highlight",
+        "expert_expression": "Confident, approachable, professional expertise evident",
+        "expertise_context": "Subtle visual indicators of deep knowledge and certification",
+        "brand_alignment": "Clear brand color integration, modern aesthetic"
+      }
+    },
+    "hero_section_premium": {
+      "structure": "PREMIUM HERO IMAGE - HIGH-END COMMERCIAL PRODUCTION: Concept: {hero_concept}. Visual: {visual_direction}. Composition: {cinematic_composition}. Lighting: {premium_lighting}. Color: {color_direction}. Mood: {emotional_target}. Quality: Cinematic production value, Getty Images quality, premium brand aesthetic. Technical: Sharp throughout, professional color grading, advanced composition, dramatic visual impact. Avoid: Generic stock photo look, clichés, oversaturation, blur, amateur production. Style: High-end commercial photography or premium illustration, suitable for Fortune 500 brands.",
+      "variables": {
+        "hero_concept": "Core visual metaphor for the campaign",
+        "visual_direction": "Specific visual approach and key elements",
+        "cinematic_composition": "Advanced composition technique with visual impact",
+        "premium_lighting": "Professional cinematic lighting setup",
+        "color_direction": "Sophisticated color palette direction",
+        "emotional_target": "Specific emotional response desired"
+      }
+    },
+    "blog_featured_premium": {
+      "structure": "PREMIUM BLOG FEATURED IMAGE: Article: {article_title}. Topic: {topic_description}. Visual: {visual_concept}. Composition: {composition_strategy}. Lighting: {professional_lighting}. Quality: Professional magazine cover quality, editorial photography standards, premium publication aesthetic. Color: {color_treatment}. Style: High-end editorial photography, suitable for top-tier publications. Technical: Sharp, well-composed, professional color grading, visual hierarchy clear, engaging thumbnail. Avoid: Generic stock look, blurry, amateur, poorly lit, oversaturated.",
+      "variables": {
+        "article_title": "Exact blog article title",
+        "topic_description": "Detailed topic and key concepts",
+        "visual_concept": "Specific visual representation of topic",
+        "composition_strategy": "Professional composition approach",
+        "professional_lighting": "Appropriate lighting for subject matter",
+        "color_treatment": "Color grading approach"
+      }
+    }
+  },
+  "pre_flight_quality_checks": {
+    "enabled": true,
+    "checks": [
+      {
+        "name": "prompt_specificity",
+        "requirement": "Prompt includes at least 12 specific descriptive elements",
+        "minimum_score": 10
+      },
+      {
+        "name": "quality_markers",
+        "requirement": "Prompt includes at least 5 quality/technical requirements",
+        "minimum_score": 10
+      },
+      {
+        "name": "brand_alignment",
+        "requirement": "Prompt explicitly mentions brand colors or aesthetic",
+        "minimum_score": 10
+      },
+      {
+        "name": "forbidden_elements_exclusion",
+        "requirement": "Prompt includes 'Avoid:' clause with at least 8 forbidden elements",
+        "minimum_score": 10
+      },
+      {
+        "name": "style_specificity",
+        "requirement": "Prompt specifies exact style and quality benchmark",
+        "minimum_score": 10
+      }
+    ],
+    "passing_score": 50,
+    "actions_on_failure": {
+      "below_40": "regenerate_prompt",
+      "40_to_49": "revise_prompt",
+      "50_plus": "approve_for_generation"
+    }
+  },
+  "scoring_calibration": {
+    "brand_alignment": {
+      "weight": 0.25,
+      "evaluation_criteria": [
+        "Color scheme matches Synthex palette exactly",
+        "Visual style aligns with premium professional aesthetic",
+        "No off-brand elements or conflicting visual identity",
+        "Dark theme background appropriate (if applicable)",
+        "Orange accent color prominent and well-placed",
+        "Professional confidence evident throughout"
+      ],
+      "perfect_score_requirements": [
+        "Brand colors used precisely",
+        "Visual identity indistinguishable from Synthex brand",
+        "Every element reinforces brand positioning",
+        "Premium aesthetic throughout"
+      ]
+    },
+    "technical_quality": {
+      "weight": 0.20,
+      "evaluation_criteria": [
+        "Extreme sharpness and clarity throughout",
+        "Professional exposure with no blown highlights/blocked shadows",
+        "Advanced composition with clear visual hierarchy",
+        "Professional depth of field and focus control",
+        "Color accuracy and professional grading",
+        "No artifacts, noise, or quality degradation"
+      ],
+      "perfect_score_requirements": [
+        "Museum-quality clarity and sharpness",
+        "Cinematography-grade production value",
+        "Zero technical defects",
+        "Professional publishing standard"
+      ]
+    },
+    "message_clarity": {
+      "weight": 0.20,
+      "evaluation_criteria": [
+        "Subject and intent immediately clear",
+        "Professional expertise unmistakable",
+        "Industry context obvious without text",
+        "Visual storytelling is compelling",
+        "Call-to-action or value proposition clear",
+        "No confusion or ambiguity"
+      ],
+      "perfect_score_requirements": [
+        "Instantly communicates value and expertise",
+        "Professional credentials evident visually",
+        "Memorable and impactful visual story",
+        "Persuasive without being manipulative"
+      ]
+    },
+    "emotional_tone": {
+      "weight": 0.15,
+      "evaluation_criteria": [
+        "Evokes intended emotional response perfectly",
+        "Confidence and competence palpable",
+        "Professional yet approachable",
+        "Trustworthy and reliable impression",
+        "Aspirational but achievable feel",
+        "No negative emotional undertones"
+      ],
+      "perfect_score_requirements": [
+        "Emotional resonance is powerful and authentic",
+        "Confidence conveyed without arrogance",
+        "Trustworthiness immediately apparent",
+        "Emotional impact lasts beyond viewing"
+      ]
+    },
+    "audience_fit": {
+      "weight": 0.10,
+      "evaluation_criteria": [
+        "Appeals directly to target audience",
+        "Addresses audience pain points visually",
+        "Shows understanding of audience needs",
+        "Speaks audience's visual language",
+        "Aspirational yet relatable",
+        "Motivates action from target persona"
+      ],
+      "perfect_score_requirements": [
+        "Audience feels personally addressed",
+        "Deeply resonates with target values",
+        "Compels immediate engagement",
+        "Memorable to exact audience demographic"
+      ]
+    },
+    "uniqueness": {
+      "weight": 0.10,
+      "evaluation_criteria": [
+        "Completely original composition",
+        "No stock photo appearance whatsoever",
+        "Distinctive visual approach",
+        "Memorable and stand-out aesthetic",
+        "Professional execution beyond generic standards",
+        "Competitive advantage clear"
+      ],
+      "perfect_score_requirements": [
+        "Instantly distinguishable from competitors",
+        "Unique visual approach proprietary-feeling",
+        "Remembered long after viewing",
+        "Sets new standard in industry"
+      ]
+    }
+  },
+  "quality_improvement_strategies": {
+    "iteration_approach": "incremental_refinement",
+    "max_iterations_per_concept": 3,
+    "prompt_refinement_triggers": {
+      "below_7_5": "Major prompt overhaul - clarity and specificity improvements",
+      "7_5_to_8_0": "Prompt enhancement - add quality markers and premium specifications",
+      "8_0_to_8_5": "Fine-tuning - precise element adjustments for perfect alignment",
+      "8_5_plus": "Perfect - approve for production"
+    },
+    "retry_strategy": {
+      "technical_failures": "Auto-retry with enhanced technical specifications",
+      "minor_quality_gaps": "Auto-enhance with stricter quality requirements",
+      "major_quality_gaps": "Complete prompt redesign with premium template",
+      "off_brand": "Brand realignment with specific color and aesthetic refinement"
+    }
+  },
+  "success_milestones": {
+    "phase1_complete": {
+      "requirement": "45 concepts with average score >= 8.5",
+      "auto_approve_minimum": "40/45 (89%)",
+      "human_review_maximum": "5/45 (11%)",
+      "reject_threshold": "0/45 (0%)"
+    },
+    "phase1_excellent": {
+      "requirement": "45 concepts with average score >= 8.7",
+      "auto_approve_minimum": "42/45 (93%)",
+      "human_review_maximum": "3/45 (7%)",
+      "reject_threshold": "0/45 (0%)"
+    }
+  },
+  "documentation": {
+    "quality_benchmark": "CNN-grade journalism photography, Fortune 500 brand marketing, premium editorial standards",
+    "target_publications": [
+      "National Geographic",
+      "The New York Times",
+      "Forbes",
+      "Architectural Digest",
+      "Wired Magazine"
+    ],
+    "competitive_analysis": "Must exceed visual quality of all current competitor marketing materials",
+    "roi_justification": "10% higher quality scores = 40-50% higher engagement and conversion rates"
+  }
+}

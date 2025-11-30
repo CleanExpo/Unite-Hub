@@ -1,0 +1,494 @@
+{
+  "phase": "1_concepts",
+  "title": "Phase 1: Concept Generation",
+  "description": "Generate 45 concept variations across industry cards, hero section, and blog featured images",
+  "budget": {
+    "total_allocated": 100,
+    "phase1_budget": 4.65,
+    "cost_per_image": 0.1035,
+    "model": "gemini-2.5-flash-image"
+  },
+  "generation_schedule": {
+    "batch_1_start": "immediately",
+    "batch_1_name": "Industry Card Concepts",
+    "batch_1_count": 18,
+    "batch_2_name": "Hero Section Concepts",
+    "batch_2_count": 3,
+    "batch_3_name": "Blog Featured Image Concepts",
+    "batch_3_count": 24,
+    "total_images": 45
+  },
+  "batch_1_industry_cards": {
+    "name": "Industry Card Concepts",
+    "description": "3 concept variations per industry (6 industries × 3 = 18 images)",
+    "industries": [
+      {
+        "industry": "plumbing",
+        "color": "#3b82f6",
+        "icon": "droplet",
+        "variations": [
+          {
+            "id": "plumb_card_001",
+            "variation": "photorealistic",
+            "brief": "Modern plumber installing copper pipes with professional tools, workshop background, clean bright lighting",
+            "style": "photorealistic",
+            "mood": "professional",
+            "composition": "subject-left",
+            "size": "800x600"
+          },
+          {
+            "id": "plumb_card_002",
+            "variation": "illustrated",
+            "brief": "Cartoon plumber character with wrench and pipes, friendly face, blueprints in background",
+            "style": "illustrated",
+            "mood": "friendly",
+            "composition": "centered",
+            "size": "800x600"
+          },
+          {
+            "id": "plumb_card_003",
+            "variation": "isometric",
+            "brief": "Isometric view of residential plumbing system with hot water tank, pipes, and fixtures",
+            "style": "isometric",
+            "mood": "technical",
+            "composition": "centered",
+            "size": "800x600"
+          }
+        ]
+      },
+      {
+        "industry": "electrical",
+        "color": "#f59e0b",
+        "icon": "zap",
+        "variations": [
+          {
+            "id": "elec_card_001",
+            "variation": "photorealistic",
+            "brief": "Licensed electrician working on circuit board, safety gear, professional workshop, warm lighting",
+            "style": "photorealistic",
+            "mood": "professional",
+            "composition": "subject-left",
+            "size": "800x600"
+          },
+          {
+            "id": "elec_card_002",
+            "variation": "illustrated",
+            "brief": "Friendly electrician character with tools, lightbulb ideas floating around, bright colors",
+            "style": "illustrated",
+            "mood": "friendly",
+            "composition": "centered",
+            "size": "800x600"
+          },
+          {
+            "id": "elec_card_003",
+            "variation": "isometric",
+            "brief": "3D isometric electrical system in home with panel, wiring, outlets, and components",
+            "style": "isometric",
+            "mood": "technical",
+            "composition": "centered",
+            "size": "800x600"
+          }
+        ]
+      },
+      {
+        "industry": "building",
+        "color": "#10b981",
+        "icon": "home",
+        "variations": [
+          {
+            "id": "build_card_001",
+            "variation": "photorealistic",
+            "brief": "Professional builder/contractor on residential construction site, hard hat, tools, modern home frame",
+            "style": "photorealistic",
+            "mood": "professional",
+            "composition": "subject-left",
+            "size": "800x600"
+          },
+          {
+            "id": "build_card_002",
+            "variation": "illustrated",
+            "brief": "Cartoon builder with hammer, thumbs up, blueprints, colorful construction tools around",
+            "style": "illustrated",
+            "mood": "friendly",
+            "composition": "centered",
+            "size": "800x600"
+          },
+          {
+            "id": "build_card_003",
+            "variation": "isometric",
+            "brief": "Isometric cross-section of residential construction with multiple floors, rooms, and building phases",
+            "style": "isometric",
+            "mood": "technical",
+            "composition": "centered",
+            "size": "800x600"
+          }
+        ]
+      },
+      {
+        "industry": "restoration",
+        "color": "#ff6b35",
+        "icon": "shield",
+        "variations": [
+          {
+            "id": "rest_card_001",
+            "variation": "photorealistic",
+            "brief": "Professional restoration technician with equipment repairing water-damaged interior, detail-oriented",
+            "style": "photorealistic",
+            "mood": "professional",
+            "composition": "subject-left",
+            "size": "800x600"
+          },
+          {
+            "id": "rest_card_002",
+            "variation": "illustrated",
+            "brief": "Restoration expert with tools and equipment, before-after comparison, friendly demeanor",
+            "style": "illustrated",
+            "mood": "friendly",
+            "composition": "centered",
+            "size": "800x600"
+          },
+          {
+            "id": "rest_card_003",
+            "variation": "isometric",
+            "brief": "Isometric view of restoration process: damaged area, equipment, drying systems, final result",
+            "style": "isometric",
+            "mood": "technical",
+            "composition": "centered",
+            "size": "800x600"
+          }
+        ]
+      },
+      {
+        "industry": "hvac",
+        "color": "#06b6d4",
+        "icon": "wind",
+        "variations": [
+          {
+            "id": "hvac_card_001",
+            "variation": "photorealistic",
+            "brief": "HVAC technician servicing air conditioning unit, professional attire, tools, residential setting",
+            "style": "photorealistic",
+            "mood": "professional",
+            "composition": "subject-left",
+            "size": "800x600"
+          },
+          {
+            "id": "hvac_card_002",
+            "variation": "illustrated",
+            "brief": "Friendly HVAC technician with cooling system, temperature controls, comfort-focused imagery",
+            "style": "illustrated",
+            "mood": "friendly",
+            "composition": "centered",
+            "size": "800x600"
+          },
+          {
+            "id": "hvac_card_003",
+            "variation": "isometric",
+            "brief": "Isometric HVAC system in home showing furnace, ductwork, thermostat, air flow patterns",
+            "style": "isometric",
+            "mood": "technical",
+            "composition": "centered",
+            "size": "800x600"
+          }
+        ]
+      },
+      {
+        "industry": "landscaping",
+        "color": "#22c55e",
+        "icon": "leaf",
+        "variations": [
+          {
+            "id": "land_card_001",
+            "variation": "photorealistic",
+            "brief": "Professional landscaper with tools, manicured garden, landscape design in progress, natural lighting",
+            "style": "photorealistic",
+            "mood": "professional",
+            "composition": "subject-left",
+            "size": "800x600"
+          },
+          {
+            "id": "land_card_002",
+            "variation": "illustrated",
+            "brief": "Friendly landscaper with plants and tools, garden design elements, vibrant green colors",
+            "style": "illustrated",
+            "mood": "friendly",
+            "composition": "centered",
+            "size": "800x600"
+          },
+          {
+            "id": "land_card_003",
+            "variation": "isometric",
+            "brief": "Isometric aerial view of residential landscaping: pathways, plants, water features, before-after",
+            "style": "isometric",
+            "mood": "technical",
+            "composition": "centered",
+            "size": "800x600"
+          }
+        ]
+      }
+    ],
+    "base_prompt_template": "Create a professional {style} image for a service industry card. Subject: {brief}. Style: {style} design with {mood} tone. Composition: {composition}. Color accent: {color}. Resolution: {size}. High quality, modern aesthetic, clean professional appearance. Avoid watermarks, logos, or generic stock photos.",
+    "total_images": 18,
+    "estimated_cost": 1.8635
+  },
+  "batch_2_hero_section": {
+    "name": "Hero Section Concepts",
+    "description": "3 hero image concepts for the main landing page",
+    "variations": [
+      {
+        "id": "hero_001",
+        "title": "Unified Excellence - Dark Theme Hero",
+        "brief": "Sleek, modern hero image showing interconnected service professionals from all 6 trades working together, dark blue background with orange accent highlights, digital connection threads linking them, professional and aspirational",
+        "style": "photorealistic",
+        "mood": "aspirational",
+        "composition": "dynamic-diagonal",
+        "size": "1920x1080"
+      },
+      {
+        "id": "hero_002",
+        "title": "Trust & Expertise Hero",
+        "brief": "Confident professional contractors in modern workshop setting with technology interface, showing mastery and expertise, warm professional lighting, conveying reliability and skill, clean contemporary aesthetic",
+        "style": "photorealistic",
+        "mood": "confident",
+        "composition": "subject-centered",
+        "size": "1920x1080"
+      },
+      {
+        "id": "hero_003",
+        "title": "Innovation in Service Hero",
+        "brief": "Modern illustration-style hero with abstract geometric shapes representing different trades, connected by flowing orange lines, symbolizing unified service platform, tech-forward and approachable",
+        "style": "illustrated",
+        "mood": "innovative",
+        "composition": "abstract-centered",
+        "size": "1920x1080"
+      }
+    ],
+    "base_prompt_template": "Create a premium hero image for a unified contractor services platform. Brief: {brief}. Style: {style} with {mood} mood. Composition: {composition}. Color scheme: Dark background (#08090a-#1a1d20) with orange accents (#ff6b35). Resolution: {size}. Premium, high-end professional appearance, suitable for landing page hero. Avoid people looking directly at camera unless specified.",
+    "total_images": 3,
+    "estimated_cost": 0.3105
+  },
+  "batch_3_blog_featured": {
+    "name": "Blog Featured Images",
+    "description": "24 blog featured image concepts (4 per category × 6 industries)",
+    "categories": [
+      {
+        "industry": "plumbing",
+        "color": "#3b82f6",
+        "articles": [
+          {
+            "id": "blog_plumb_001",
+            "title": "Guide to Water Quality",
+            "brief": "Clean filtered water flowing through modern pipes, water testing equipment, professional laboratory-like setting"
+          },
+          {
+            "id": "blog_plumb_002",
+            "title": "Emergency Pipe Repair",
+            "brief": "Quick-response plumber fixing burst pipe, immediate action, professional tools, efficient solution-focused"
+          },
+          {
+            "id": "blog_plumb_003",
+            "title": "Drain Maintenance Tips",
+            "brief": "Cross-section diagram of properly maintained drain system, clean flow, prevention-focused imagery"
+          },
+          {
+            "id": "blog_plumb_004",
+            "title": "Modern Water Systems",
+            "brief": "Contemporary smart water management system, technology integration, sustainable solutions"
+          }
+        ]
+      },
+      {
+        "industry": "electrical",
+        "color": "#f59e0b",
+        "articles": [
+          {
+            "id": "blog_elec_001",
+            "title": "Home Safety Inspection",
+            "brief": "Electrician with testing equipment inspecting home wiring, safety-focused, professional assessment"
+          },
+          {
+            "id": "blog_elec_002",
+            "title": "Energy Efficiency Upgrades",
+            "brief": "Modern LED installations, energy-saving technology, bright efficient lighting solutions"
+          },
+          {
+            "id": "blog_elec_003",
+            "title": "Backup Power Systems",
+            "brief": "Generator and backup power installation, emergency preparedness, professional installation"
+          },
+          {
+            "id": "blog_elec_004",
+            "title": "Smart Home Wiring",
+            "brief": "Smart home technology integration, connected systems, modern convenience automation"
+          }
+        ]
+      },
+      {
+        "industry": "building",
+        "color": "#10b981",
+        "articles": [
+          {
+            "id": "blog_build_001",
+            "title": "Custom Home Design",
+            "brief": "Architect with blueprints, 3D home models, collaborative design process, modern home design"
+          },
+          {
+            "id": "blog_build_002",
+            "title": "Foundation Inspection",
+            "brief": "Detailed foundation inspection, structural assessment tools, professional quality control"
+          },
+          {
+            "id": "blog_build_003",
+            "title": "Renovation Best Practices",
+            "brief": "Professional renovation in progress, careful planning, skilled craftsmanship, transformation"
+          },
+          {
+            "id": "blog_build_004",
+            "title": "Building Code Compliance",
+            "brief": "Compliance documentation, regulatory standards, professional certification, safety compliance"
+          }
+        ]
+      },
+      {
+        "industry": "restoration",
+        "color": "#ff6b35",
+        "articles": [
+          {
+            "id": "blog_rest_001",
+            "title": "Water Damage Recovery",
+            "brief": "Before-and-after restoration, water damage assessment, professional recovery equipment in action"
+          },
+          {
+            "id": "blog_rest_002",
+            "title": "Fire Damage Restoration",
+            "brief": "Professional restoration of fire-damaged property, recovery equipment, expert assessment"
+          },
+          {
+            "id": "blog_rest_003",
+            "title": "Mold Prevention",
+            "brief": "Moisture control and mold prevention strategies, healthy indoor environment, professional treatment"
+          },
+          {
+            "id": "blog_rest_004",
+            "title": "Emergency Response",
+            "brief": "Quick response restoration team, immediate action, emergency equipment, crisis management"
+          }
+        ]
+      },
+      {
+        "industry": "hvac",
+        "color": "#06b6d4",
+        "articles": [
+          {
+            "id": "blog_hvac_001",
+            "title": "Seasonal Maintenance",
+            "brief": "HVAC technician performing seasonal maintenance, filter replacement, system optimization"
+          },
+          {
+            "id": "blog_hvac_002",
+            "title": "Energy Savings",
+            "brief": "Modern efficient HVAC system, energy consumption reduction, smart thermostat technology"
+          },
+          {
+            "id": "blog_hvac_003",
+            "title": "Air Quality Solutions",
+            "brief": "Advanced air filtration system, indoor air quality testing, health-focused HVAC solutions"
+          },
+          {
+            "id": "blog_hvac_004",
+            "title": "Emergency Repairs",
+            "brief": "Emergency HVAC repair response, technician expertise, quick restoration of comfort"
+          }
+        ]
+      },
+      {
+        "industry": "landscaping",
+        "color": "#22c55e",
+        "articles": [
+          {
+            "id": "blog_land_001",
+            "title": "Garden Design Trends",
+            "brief": "Modern landscape design showcase, aesthetic outdoor space, professional garden layout"
+          },
+          {
+            "id": "blog_land_002",
+            "title": "Sustainable Landscaping",
+            "brief": "Eco-friendly landscaping practices, native plants, water conservation, sustainable design"
+          },
+          {
+            "id": "blog_land_003",
+            "title": "Hardscape Installation",
+            "brief": "Professional hardscape features, patio installation, creative outdoor living spaces"
+          },
+          {
+            "id": "blog_land_004",
+            "title": "Seasonal Care Guide",
+            "brief": "Seasonal landscape maintenance, seasonal plant care, professional landscape preservation"
+          }
+        ]
+      }
+    ],
+    "base_prompt_template": "Create a blog featured image for an article titled '{title}' in the {industry} industry. Brief: {brief}. Style: Professional illustrated or photorealistic. Mood: Informative and authoritative. Size: 1200x630. Color accent: {color}. High quality blog header image, suitable for SEO and social sharing. Include subtle {industry} industry visual elements.",
+    "total_images": 24,
+    "estimated_cost": 2.484
+  },
+  "quality_assessment_config": {
+    "scoring_dimensions": [
+      {
+        "dimension": "brand_alignment",
+        "weight": 0.25,
+        "criteria": "Matches Synthex visual identity (dark theme, orange accents, professional)",
+        "target": 8.5
+      },
+      {
+        "dimension": "technical_quality",
+        "weight": 0.20,
+        "criteria": "Sharp focus, proper exposure, correct composition, no artifacts",
+        "target": 8.0
+      },
+      {
+        "dimension": "message_clarity",
+        "weight": 0.20,
+        "criteria": "Image clearly communicates intended message and industry",
+        "target": 8.5
+      },
+      {
+        "dimension": "emotional_tone",
+        "weight": 0.15,
+        "criteria": "Evokes intended mood (professional, friendly, innovative, etc.)",
+        "target": 8.0
+      },
+      {
+        "dimension": "audience_fit",
+        "weight": 0.10,
+        "criteria": "Resonates with target audience (small business owners, homeowners)",
+        "target": 7.5
+      },
+      {
+        "dimension": "uniqueness",
+        "weight": 0.10,
+        "criteria": "Original, not generic stock photo aesthetic",
+        "target": 7.5
+      }
+    ],
+    "thresholds": {
+      "auto_approve": 8.5,
+      "human_review": "6.0-8.5",
+      "reject": "< 6.0"
+    },
+    "acceptable_average": 7.5
+  },
+  "execution_notes": {
+    "phase1_goals": [
+      "Generate 45 concept variations quickly",
+      "Collect stakeholder feedback on direction and tone",
+      "Identify successful prompt patterns for scaling",
+      "Validate industry color schemes and styles",
+      "Confirm quality standards are achievable"
+    ],
+    "budget_tracking": "Log all token usage and API costs in real-time against $4.65 allocation",
+    "feedback_collection": "Prepare brief feedback form for stakeholders (1-2 questions per image)",
+    "success_criteria": "Average quality score ≥ 7.5 across all 45 images for phase 1 concepts",
+    "next_phase_trigger": "Upon completion and stakeholder feedback, proceed to Phase 2 refinement"
+  }
+}
