@@ -1,5 +1,15 @@
 {
   "mcpServers": {
+    "gemini-media": {
+      "command": "node",
+      "args": [
+        ".claude/mcp_servers/gemini-media/dist/index.js"
+      ],
+      "env": {
+        "GEMINI_API_KEY": "${GEMINI_API_KEY}"
+      },
+      "description": "Gemini Media Analysis - Image, audio, and video recognition using Google Gemini AI"
+    },
     "playwright": {
       "command": "npx",
       "args": [
