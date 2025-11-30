@@ -1,3 +1,7 @@
+// Route segment config for Vercel
+export const maxDuration = 120; // 2 minutes
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import { extractEmailIntelligence } from "@/lib/agents/intelligence-extraction";

@@ -1,25 +1,35 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-
-  // Enable standalone output for Vercel/Docker
+  // Use standalone output for optimized serverless deployment
   output: 'standalone',
 
+  // MOVED FROM experimental - Now at root level in Next.js 16
+  outputFileTracingExcludes: {
+    '*': [
+      './logs/**',
+      './health-check-reports/**',
+      './**/*.log',
+      './**/*.log.*',
+      './node_modules/@swc/core-linux-x64-gnu',
+      './node_modules/@swc/core-linux-x64-musl',
+      './node_modules/@esbuild/linux-x64',
+      './node_modules/sharp/vendor/**',
+      './src/lib/__tests__/**',
+      './coverage/**',
+      './.git/**'
+    ]
+  },
+
+  // TypeScript - skip during Vercel builds (run in CI instead)
   typescript: {
-    // Ignore TypeScript errors during Vercel builds
     ignoreBuildErrors: process.env.VERCEL === '1',
   },
 
-  eslint: {
-    // Ignore ESLint during Vercel builds
-    ignoreDuringBuilds: process.env.VERCEL === '1',
-  },
-
+  // Transpile these packages for compatibility
   transpilePackages: ['reactflow', '@reactflow/core', '@reactflow/background', '@reactflow/controls', '@reactflow/minimap'],
 
-  // Next.js 16: Move serverComponentsExternalPackages to top level
+  // Mark heavy packages as external (not bundled into each function)
   serverExternalPackages: [
-    'zustand',
     'sharp',
     'puppeteer',
     'puppeteer-core',
@@ -29,80 +39,34 @@ const nextConfig = {
   ],
 
   experimental: {
-    // CRITICAL: Exclude large files from serverless function bundles
-    outputFileTracingExcludes: {
-      '*': [
-        './logs/**',
-        './health-check-reports/**',
-        './**/*.log',
-        './**/*.log.*',
-        './node_modules/@swc/core-linux-x64-gnu',
-        './node_modules/@swc/core-linux-x64-musl',
-        './node_modules/@esbuild/linux-x64',
-        './node_modules/sharp/vendor/**',
-        './src/lib/__tests__/**',
-        './coverage/**',
-        './.git/**'
-      ]
-    },
-    // Enable optimized compilation
+    // CSS optimization
     optimizeCss: true,
-    // Phase 10: Extended package import optimization for better tree-shaking
+
+    // Tree-shake these packages for smaller bundles
     optimizePackageImports: [
       'lucide-react',
       '@anthropic-ai/sdk',
-      'recharts',
+      '@radix-ui/react-icons',
       'date-fns',
       'lodash',
       'lodash-es',
-      'framer-motion',
-      '@radix-ui/react-icons',
       '@tanstack/react-query',
       '@tanstack/react-table',
-      'zod',
-    ],
-    // Note: instrumentationHook removed - available by default in Next.js 16
+      'recharts',
+      'framer-motion',
+      'zod'
+    ]
   },
 
-  // Turbopack configuration (required for Next.js 16)
+  // Turbopack configuration (Next.js 16)
   turbopack: {
-    // Specify the correct root directory to avoid workspace detection errors
     root: process.cwd(),
   },
 
   // Compression
   compress: true,
 
-  // Note: swcMinify is deprecated in Next.js 16 (always enabled by default)
-  // Removed: swcMinify: true
-
-  // Note: webpack config may not work with Turbopack
-  // Keeping for backwards compatibility but may be ignored
-  webpack: (config, { isServer }) => {
-    // Optimize bundle size
-    config.optimization = {
-      ...config.optimization,
-      moduleIds: 'deterministic',
-      runtimeChunk: 'single',
-      splitChunks: {
-        chunks: 'all',
-        cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name(module) {
-              const packageName = module.context.match(
-                /[\\/]node_modules[\\/](.*?)([\\/]|$)/
-              )?.[1];
-              return `vendor.${packageName?.replace('@', '')}`;
-            },
-          },
-        },
-      },
-    };
-    return config;
-  },
-
-  // Configure external image domains
+  // Image optimization
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: '**' }
@@ -110,9 +74,10 @@ const nextConfig = {
     formats: ['image/avif', 'image/webp']
   },
 
-  // Disable production source maps to reduce bundle size
+  // Disable production source maps for faster builds
   productionBrowserSourceMaps: false,
 
+  // Redirects
   redirects: async () => [
     {
       source: '/dashboard',
@@ -126,34 +91,13 @@ const nextConfig = {
     {
       source: '/:path*',
       headers: [
-        {
-          key: 'X-DNS-Prefetch-Control',
-          value: 'on',
-        },
-        {
-          key: 'Strict-Transport-Security',
-          value: 'max-age=63072000; includeSubDomains; preload',
-        },
-        {
-          key: 'X-Frame-Options',
-          value: 'DENY',
-        },
-        {
-          key: 'X-Content-Type-Options',
-          value: 'nosniff',
-        },
-        {
-          key: 'X-XSS-Protection',
-          value: '1; mode=block',
-        },
-        {
-          key: 'Referrer-Policy',
-          value: 'origin-when-cross-origin',
-        },
-        {
-          key: 'Permissions-Policy',
-          value: 'camera=(), microphone=(), geolocation=()',
-        },
+        { key: 'X-DNS-Prefetch-Control', value: 'on' },
+        { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
+        { key: 'X-Frame-Options', value: 'DENY' },
+        { key: 'X-Content-Type-Options', value: 'nosniff' },
+        { key: 'X-XSS-Protection', value: '1; mode=block' },
+        { key: 'Referrer-Policy', value: 'origin-when-cross-origin' },
+        { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
         {
           key: 'Content-Security-Policy',
           value: [
@@ -168,12 +112,18 @@ const nextConfig = {
             "base-uri 'self'",
             "form-action 'self'",
             "frame-ancestors 'none'",
-            "upgrade-insecure-requests",
-          ].join('; '),
-        },
-      ],
+            "upgrade-insecure-requests"
+          ].join('; ')
+        }
+      ]
     },
-  ],
+    {
+      source: '/api/:path*',
+      headers: [
+        { key: 'Cache-Control', value: 'no-store, max-age=0' }
+      ]
+    }
+  ]
 };
 
 export default nextConfig;

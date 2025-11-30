@@ -4,6 +4,10 @@
  * Rate limited: 5 requests/minute
  */
 
+// Route segment config for Vercel
+export const maxDuration = 300; // 5 minutes
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import { apiRateLimit } from "@/lib/rate-limit";

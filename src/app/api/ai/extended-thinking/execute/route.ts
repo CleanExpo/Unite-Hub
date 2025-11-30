@@ -5,6 +5,10 @@
  * Executes Claude Opus 4.5 Extended Thinking with budget management and cost tracking
  */
 
+// Route segment config for Vercel
+export const maxDuration = 300; // 5 minutes
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import { ExtendedThinkingEngine, getExtendedThinkingEngine } from "@/lib/ai/extended-thinking-engine";

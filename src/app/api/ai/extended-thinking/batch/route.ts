@@ -5,6 +5,10 @@
  * Execute multiple Extended Thinking operations in batch with cost tracking
  */
 
+// Route segment config for Vercel
+export const maxDuration = 300; // 5 minutes
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import { getExtendedThinkingEngine } from "@/lib/ai/extended-thinking-engine";

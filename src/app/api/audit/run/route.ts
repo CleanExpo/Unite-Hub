@@ -6,6 +6,10 @@
  * GSC, Bing, Brave, and generates CSV + MD + HTML reports.
  */
 
+// Route segment config for Vercel
+export const maxDuration = 120; // 2 minutes
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import ClientDataManager, { type ReportFile } from "@/server/clientDataManager";
