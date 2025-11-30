@@ -6,3 +6,6 @@
  */
 
 export { Container, type ContainerProps } from './Container';
+export { Navigation, type NavigationProps, type NavItem } from './Navigation';
+export { Sidebar, type SidebarProps, type SidebarItem } from './Sidebar';
+export { DashboardLayout, type DashboardLayoutProps } from './DashboardLayout';
