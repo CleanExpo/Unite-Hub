@@ -23,7 +23,7 @@
     "validate:env": "node scripts/validate-env.mjs",
     "agent:email": "node scripts/run-email-agent.mjs",
     "dev": "next dev -p 3008",
-    "build": "cross-env NODE_OPTIONS=--max-old-space-size=16384 next build",
+    "build": "next build",
     "vercel-build": "next build",
     "start": "next start",
     "typecheck": "cross-env NODE_OPTIONS=--max-old-space-size=8192 tsc --noEmit",
@@ -224,5 +224,8 @@
     "@rollup/rollup-win32-x64-msvc": "^4.53.3",
     "@tailwindcss/oxide-win32-x64-msvc": "^4.1.17",
     "lightningcss-win32-x64-msvc": "^1.30.2"
+  },
+  "overrides": {
+    "zustand": "5.0.8"
   }
 }

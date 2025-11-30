@@ -47,7 +47,9 @@ export interface ReportFile {
 }
 
 export class ClientDataManager {
-  private static BASE_PATH = process.env.DOCKER_CLIENT_DATA_PATH || "/app/clients";
+  // Use environment variable or fallback - defined as constant to prevent Turbopack glob expansion
+  // The /app/clients path with dynamic segments was causing Turbopack to match 17,171 files
+  private static BASE_PATH = process.env.CLIENT_DATA_PATH || process.env.DOCKER_CLIENT_DATA_PATH || "/data/clients";
   private static STORAGE_LIMIT_MB = 500;
   private static RETENTION_DAYS = 365;
 

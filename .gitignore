@@ -140,3 +140,19 @@ navigation-report.json
 logs/*.log
 logs/combined-*.log
 logs/error-*.log
+
+# === CRITICAL: Large files causing Vercel deployment failures ===
+logs/
+*.log
+*.log.*
+health-check-reports/
+
+# Build outputs
+.next/
+.vercel/
+out/
+
+# Large test/dev artifacts
+coverage/
+__tests__/__snapshots__/
+*.tgz

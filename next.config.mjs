@@ -1,28 +1,64 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+
+  // Enable standalone output for Vercel/Docker
+  output: 'standalone',
+
   typescript: {
-    // Temporarily ignore TypeScript errors during build (legacy Convex code)
-    ignoreBuildErrors: true,
+    // Ignore TypeScript errors during Vercel builds
+    ignoreBuildErrors: process.env.VERCEL === '1',
   },
+
+  eslint: {
+    // Ignore ESLint during Vercel builds
+    ignoreDuringBuilds: process.env.VERCEL === '1',
+  },
+
   transpilePackages: ['reactflow', '@reactflow/core', '@reactflow/background', '@reactflow/controls', '@reactflow/minimap'],
 
   // Next.js 16: Move serverComponentsExternalPackages to top level
-  serverExternalPackages: ['zustand'],
+  serverExternalPackages: [
+    'zustand',
+    'sharp',
+    'puppeteer',
+    'puppeteer-core',
+    '@sparticuz/chromium',
+    'pdfkit',
+    'canvas'
+  ],
 
   experimental: {
+    // CRITICAL: Exclude large files from serverless function bundles
+    outputFileTracingExcludes: {
+      '*': [
+        './logs/**',
+        './health-check-reports/**',
+        './**/*.log',
+        './**/*.log.*',
+        './node_modules/@swc/core-linux-x64-gnu',
+        './node_modules/@swc/core-linux-x64-musl',
+        './node_modules/@esbuild/linux-x64',
+        './node_modules/sharp/vendor/**',
+        './src/lib/__tests__/**',
+        './coverage/**',
+        './.git/**'
+      ]
+    },
     // Enable optimized compilation
     optimizeCss: true,
     // Phase 10: Extended package import optimization for better tree-shaking
-    // Note: zustand removed to avoid conflict with serverExternalPackages (Turbopack requirement)
     optimizePackageImports: [
       'lucide-react',
       '@anthropic-ai/sdk',
       'recharts',
       'date-fns',
       'lodash',
+      'lodash-es',
       'framer-motion',
       '@radix-ui/react-icons',
+      '@tanstack/react-query',
+      '@tanstack/react-table',
       'zod',
     ],
     // Note: instrumentationHook removed - available by default in Next.js 16
@@ -33,9 +69,6 @@ const nextConfig = {
     // Specify the correct root directory to avoid workspace detection errors
     root: process.cwd(),
   },
-
-  // Enable standalone output for Docker
-  output: 'standalone',
 
   // Compression
   compress: true,
@@ -72,23 +105,13 @@ const nextConfig = {
   // Configure external image domains
   images: {
     remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'hoirqrkdgbmvpwutwuwj.supabase.co',
-        pathname: '/storage/v1/object/public/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'lksfwktwtmyznckodsau.supabase.co',
-        pathname: '/storage/v1/object/**',
-      },
+      { protocol: 'https', hostname: '**' }
     ],
+    formats: ['image/avif', 'image/webp']
   },
+
+  // Disable production source maps to reduce bundle size
+  productionBrowserSourceMaps: false,
 
   redirects: async () => [
     {

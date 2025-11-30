@@ -1,29 +1,40 @@
 {
-  "buildCommand": "npm run build",
-  "devCommand": "npm run dev",
-  "installCommand": "npm install --legacy-peer-deps --ignore-scripts",
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
-  "outputDirectory": ".next",
-  "crons": [
-    {
-      "path": "/api/agents/continuous-intelligence",
-      "schedule": "*/30 * * * *"
+  "installCommand": "npm install --legacy-peer-deps --ignore-scripts",
+  "buildCommand": "next build",
+  "functions": {
+    "api/**/*.ts": {
+      "memory": 1024,
+      "maxDuration": 60
     },
-    {
-      "path": "/api/aido/google-curve/monitor",
-      "schedule": "0 */6 * * *"
+    "api/agent/execute.ts": {
+      "memory": 3008,
+      "maxDuration": 300
     },
-    {
-      "path": "/api/cron/health-check",
-      "schedule": "*/5 * * * *"
+    "api/ai/**/*.ts": {
+      "memory": 1024,
+      "maxDuration": 120
     },
-    {
-      "path": "/api/seo/sync-rankings",
-      "schedule": "0 6 * * *"
+    "api/ai/extended-thinking/**/*.ts": {
+      "memory": 3008,
+      "maxDuration": 300
     },
-    {
-      "path": "/api/managed/scheduler/weekly",
-      "schedule": "0 9 * * 1"
+    "api/audit/**/*.ts": {
+      "memory": 1024,
+      "maxDuration": 120
+    },
+    "api/agents/**/*.ts": {
+      "memory": 1024,
+      "maxDuration": 120
     }
-  ]
+  },
+  "crons": [
+    { "path": "/api/cron/health-check", "schedule": "*/5 * * * *" },
+    { "path": "/api/agents/continuous-intelligence", "schedule": "*/30 * * * *" },
+    { "path": "/api/aido/google-curve/monitor", "schedule": "0 */6 * * *" },
+    { "path": "/api/seo/sync-rankings", "schedule": "0 6 * * *" },
+    { "path": "/api/managed/scheduler/weekly", "schedule": "0 9 * * 1" }
+  ],
+  "regions": ["iad1"]
 }
