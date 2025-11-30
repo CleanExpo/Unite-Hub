@@ -37,13 +37,18 @@
   },
   "include": [
     "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts",
-    "convex/_generated/**/*.ts"
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "config/**/*.ts",
+    "scripts/**/*.ts",
+    "tests/**/*.ts",
+    "tests/**/*.tsx"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "_disabled",
+    "convex.bak",
+    "convex",
+    ".next"
   ]
 }

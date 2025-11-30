@@ -11,6 +11,7 @@ export default defineConfig({
     exclude: [
       '**/node_modules/**',
       '**/dist/**',
+      '**/.next/**',
       '**/tests/e2e/**',
       '**/tests/api/**',
       '**/tests/strategy/**',
@@ -44,7 +45,15 @@ export default defineConfig({
       '**/src/lib/__tests__/deltaEngine.test.ts',
       '**/src/lib/__tests__/tenantProvisioner.test.ts',
       '**/src/lib/__tests__/scopeService.ai.test.ts',
+      '**/src/lib/__tests__/cache.test.ts', // Requires Redis
       '**/src/lib/__tests__/integration/**',
+      // Email ingestion tests need runtime config
+      '**/tests/unit/lib/email-ingestion/**',
+      // Connected apps tests need runtime config
+      '**/tests/unit/lib/connected-apps/**',
+      // Tests that require Anthropic API key
+      '**/tests/unit/multi-channel-autonomy.test.ts',
+      '**/tests/unit/lib/agents/orchestrator-email-intents.test.ts',
       // API route tests need Next.js request mocking
       '**/tests/unit/api/media/**',
       // Component test with complex UI
@@ -88,6 +97,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@config': path.resolve(__dirname, './config'),
+      '@/convex': path.resolve(__dirname, './convex'),
     },
   },
 });

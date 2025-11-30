@@ -79,7 +79,7 @@ export async function traceDatabase<T>(
   query: () => Promise<T>
 ): Promise<T> {
   return traceOperation(
-    \,
+    `db.${operation}.${table}`,
     query,
     {
       attributes: {
@@ -102,7 +102,7 @@ export async function traceExternalAPI<T>(
   call: () => Promise<T>
 ): Promise<T> {
   return traceOperation(
-    \,
+    `api.${service}.${method}`,
     call,
     {
       attributes: {

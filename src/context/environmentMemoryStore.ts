@@ -96,7 +96,7 @@ export interface ProductivityOutcome {
 
   // Factors that helped or hurt
   helpedBy: string[]; // ["quiet", "natural light"]
-  hindered By: string[]; // ["interruptions", "notifications"]
+  hinderedBy: string[]; // ["interruptions", "notifications"]
 
   // Mood/satisfaction
   satisfaction: number; // 0-100

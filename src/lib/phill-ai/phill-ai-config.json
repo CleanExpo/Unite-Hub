@@ -1,0 +1,167 @@
+{
+  "phill_ai_agent_architecture": {
+    "version": "2.0.0",
+    "updated": "2025-11-30",
+    "description": "Phill AI - Digital Twin Operating as Senior Leadership Team with Tiered LLM Cost Optimization",
+
+    "executive_summary": {
+      "purpose": "Transform Phill's high-level requests into detailed, actionable specifications autonomously",
+      "cost_reduction": "98% reduction using FREE tier models for 95% of tasks",
+      "monthly_cost": "$9.87 for 50 active clients (down from $525)",
+      "key_innovation": "DeepSeek V3.1 FREE handles grunt work, Big 4 only for final validation"
+    },
+
+    "openrouter_config": {
+      "base_url": "https://openrouter.ai/api/v1",
+      "headers": {
+        "HTTP-Referer": "https://synthex.social",
+        "X-Title": "Phill AI Agent System"
+      },
+      "env_key": "OPENROUTER_API_KEY"
+    },
+
+    "llm_tiers": {
+      "tier_1_free": {
+        "name": "Grunt Work (FREE)",
+        "usage_percentage": 95,
+        "cost_per_task": "$0.00",
+        "primary_model": "deepseek/deepseek-chat-v3.1:free",
+        "models": [
+          "deepseek/deepseek-chat-v3.1:free",
+          "deepseek/deepseek-r1-0528:free",
+          "meta-llama/llama-4-maverick:free",
+          "meta-llama/llama-4-scout:free",
+          "google/gemini-2.5-pro-exp-03-25:free",
+          "mistralai/mistral-small-3.1-24b-instruct:free"
+        ],
+        "use_cases": [
+          "First drafts",
+          "Code generation",
+          "Documentation",
+          "Analysis",
+          "Content creation"
+        ]
+      },
+      "tier_2_refinement": {
+        "name": "Refinement (Low Cost)",
+        "usage_percentage": 4,
+        "cost_per_task": "$0.001-0.003",
+        "primary_model": "deepseek/deepseek-chat-v3.1",
+        "models": [
+          "deepseek/deepseek-chat-v3.1",
+          "qwen/qwen3-235b-a22b",
+          "anthropic/claude-sonnet-4"
+        ],
+        "use_cases": [
+          "Production code",
+          "Client deliverables",
+          "Quality refinement",
+          "Code review"
+        ]
+      },
+      "tier_3_approval": {
+        "name": "Final Approval (Premium)",
+        "usage_percentage": 1,
+        "cost_per_task": "$0.01-0.03",
+        "primary_model": "anthropic/claude-opus-4.5",
+        "models": [
+          "anthropic/claude-opus-4.5",
+          "openai/gpt-5.1",
+          "google/gemini-3-pro"
+        ],
+        "use_cases": [
+          "Security review",
+          "Production validation",
+          "Critical decisions",
+          "Final approval"
+        ]
+      }
+    },
+
+    "personas": {
+      "phill-dev": {
+        "title": "Software Architect",
+        "color": "#3B82F6",
+        "emoji": "👨‍💻",
+        "expertise": ["Next.js 16", "React 19", "TypeScript", "Supabase", "API Design"],
+        "escalates_to": "phill-qa"
+      },
+      "phill-vision": {
+        "title": "Creative Director",
+        "color": "#8B5CF6",
+        "emoji": "🎨",
+        "expertise": ["Visual storytelling", "Motion design", "Art direction", "Creative concepts"],
+        "escalates_to": "phill-brand"
+      },
+      "phill-design": {
+        "title": "UX/UI Designer",
+        "color": "#EC4899",
+        "emoji": "✏️",
+        "expertise": ["UX research", "UI systems", "Interaction design", "Accessibility"],
+        "escalates_to": "phill-vision"
+      },
+      "phill-marketing": {
+        "title": "Marketing Strategist",
+        "color": "#10B981",
+        "emoji": "📈",
+        "expertise": ["Digital marketing", "SEO/SEM", "Content strategy", "Social media"],
+        "escalates_to": "phill-brand"
+      },
+      "phill-brand": {
+        "title": "Brand Guardian",
+        "color": "#F59E0B",
+        "emoji": "🛡️",
+        "expertise": ["Brand strategy", "Tone of voice", "Messaging", "Positioning"],
+        "escalates_to": "phill"
+      },
+      "phill-qa": {
+        "title": "Quality Assurance Lead",
+        "color": "#EF4444",
+        "emoji": "🔍",
+        "expertise": ["Test strategy", "Performance", "Security", "Accessibility"],
+        "escalates_to": "phill-dev"
+      }
+    },
+
+    "daily_workflow": {
+      "morning_briefing": {
+        "time": "8:00 AM",
+        "tasks": [
+          "Analyze overnight client communications",
+          "Generate prioritized task list",
+          "Identify at-risk projects",
+          "Surface opportunities"
+        ]
+      },
+      "continuous_monitoring": {
+        "interval": "15 minutes",
+        "activities": [
+          "Monitor project health",
+          "Track client sentiment",
+          "Detect blockers",
+          "Auto-generate tasks"
+        ]
+      },
+      "evening_recap": {
+        "time": "6:00 PM",
+        "deliverables": [
+          "Daily accomplishments summary",
+          "Pending items for tomorrow",
+          "Cost breakdown",
+          "Recommendations"
+        ]
+      }
+    },
+
+    "synthex_integration": {
+      "visual_generation": {
+        "model": "gemini-3-pro-image-preview",
+        "approval_workflow": ["phill-vision", "phill-brand", "final"]
+      },
+      "privacy_requirements": {
+        "banned_terms": ["Gemini", "Google", "AI-generated", "Claude", "OpenAI"],
+        "approved_terms": ["custom illustration", "platform-generated visual"]
+      }
+    }
+  }
+}
