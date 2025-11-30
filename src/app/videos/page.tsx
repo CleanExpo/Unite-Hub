@@ -8,19 +8,27 @@
  */
 
 import React, { useState, useMemo } from "react";
-import { VideoPlayer } from "@/components/video/VideoPlayer";
-import { VIDEO_LIBRARY, VIDEO_CATEGORIES, type VideoContent } from "@/lib/video/videoLibrary";
+import { ExplainerVideo } from "@/components/video/ExplainerVideo";
+import { VIDEO_LIBRARY, type VideoEntry } from "@/lib/video/content-library";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Search, Play, Clock, Filter } from "lucide-react";
+
+// Define categories locally
+const VIDEO_CATEGORIES = [
+  { id: "onboarding", label: "Onboarding", icon: "🚀" },
+  { id: "features", label: "Features", icon: "✨" },
+  { id: "tutorials", label: "Tutorials", icon: "📚" },
+  { id: "marketing", label: "Marketing", icon: "📢" },
+];
 
 export default function VideoLibraryPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [selectedVideo, setSelectedVideo] = useState<VideoContent | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<VideoEntry | null>(null);
 
   // Get all videos from library
   const allVideos = useMemo(() => {
@@ -33,7 +41,7 @@ export default function VideoLibraryPage() {
       const matchesSearch = searchQuery === "" ||
         video.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         video.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        video.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+        (video.tags || []).some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
 
       const matchesCategory = selectedCategory === "all" || video.category === selectedCategory;
 
@@ -49,10 +57,10 @@ export default function VideoLibraryPage() {
       }
       acc[video.category].push(video);
       return acc;
-    }, {} as Record<string, VideoContent[]>);
+    }, {} as Record<string, VideoEntry[]>);
   }, [filteredVideos]);
 
-  const handleVideoSelect = (video: VideoContent) => {
+  const handleVideoSelect = (video: VideoEntry) => {
     setSelectedVideo(video);
   };
 
@@ -178,13 +186,15 @@ export default function VideoLibraryPage() {
                   Close
                 </Button>
               </div>
-              <VideoPlayer
-                src={selectedVideo.url}
+              <ExplainerVideo
+                videoId={selectedVideo.id}
                 title={selectedVideo.title}
+                description={selectedVideo.description}
+                thumbnail={selectedVideo.thumbnail}
                 autoPlay
               />
               <div className="mt-4 flex flex-wrap gap-2">
-                {selectedVideo.tags.map(tag => (
+                {(selectedVideo.tags || []).map(tag => (
                   <Badge key={tag} variant="outline">{tag}</Badge>
                 ))}
               </div>
@@ -196,8 +206,17 @@ export default function VideoLibraryPage() {
   );
 }
 
+// Format duration from seconds to mm:ss
+function formatDuration(seconds: number): string {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins}:${secs.toString().padStart(2, '0')}`;
+}
+
 // Video Card Component
-function VideoCard({ video, onSelect }: { video: VideoContent; onSelect: (video: VideoContent) => void }) {
+function VideoCard({ video, onSelect }: { video: VideoEntry; onSelect: (video: VideoEntry) => void }) {
+  const tags = video.tags || [];
+
   return (
     <Card
       className="cursor-pointer hover:shadow-lg transition-shadow group"
@@ -224,7 +243,7 @@ function VideoCard({ video, onSelect }: { video: VideoContent; onSelect: (video:
           {video.duration && (
             <Badge className="absolute bottom-2 right-2 bg-black/70 text-white">
               <Clock className="h-3 w-3 mr-1" />
-              {video.duration}
+              {formatDuration(video.duration)}
             </Badge>
           )}
         </div>
@@ -233,14 +252,14 @@ function VideoCard({ video, onSelect }: { video: VideoContent; onSelect: (video:
       </CardHeader>
       <CardContent className="pt-0">
         <div className="flex flex-wrap gap-1">
-          {video.tags.slice(0, 3).map(tag => (
+          {tags.slice(0, 3).map(tag => (
             <Badge key={tag} variant="secondary" className="text-xs">
               {tag}
             </Badge>
           ))}
-          {video.tags.length > 3 && (
+          {tags.length > 3 && (
             <Badge variant="outline" className="text-xs">
-              +{video.tags.length - 3}
+              +{tags.length - 3}
             </Badge>
           )}
         </div>
