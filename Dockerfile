@@ -26,14 +26,12 @@ ENV NPM_CONFIG_LOGLEVEL=warn
 # ==================================================
 FROM base AS deps
 
-# Copy package files
+# Copy package files (ignore yarn.lock if exists)
 COPY package.json package-lock.json* ./
 
-# Install production dependencies
-RUN npm ci --omit=dev --ignore-scripts
-
 # Install all dependencies for build stage
-RUN npm ci --ignore-scripts
+# Using --legacy-peer-deps for compatibility with older packages
+RUN npm install --legacy-peer-deps --ignore-scripts
 
 # ==================================================
 # Builder stage - Build Next.js application
