@@ -84,7 +84,11 @@
     "founder:check": "node scripts/run-integrity-check.mjs",
     "audit:placeholders": "node scripts/audit-placeholders.mjs",
     "audit:navigation": "node scripts/audit-navigation.mjs",
-    "audit:all": "npm run audit:placeholders && npm run audit:navigation"
+    "audit:all": "npm run audit:placeholders && npm run audit:navigation",
+    "synthex:phase1": "node scripts/synthex-phase1-generator.mjs",
+    "synthex:assess-phase1": "node scripts/synthex-quality-assessor.mjs phase1",
+    "synthex:assess": "node scripts/synthex-quality-assessor.mjs",
+    "check:build-memory": "node scripts/check-build-memory.mjs"
   },
   "keywords": [],
   "author": "",

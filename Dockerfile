@@ -2,6 +2,25 @@
 # Multi-stage Dockerfile for Unite-Hub
 # Optimized for Next.js 16 with standalone output
 # ==================================================
+#
+# MEMORY CONFIGURATION (Updated: 2025-11-30)
+# ==========================================
+# Current: professional-l (8GB RAM) → Node heap: 6GB
+#
+# WARNING SIGNS (check build logs for these):
+#   - "JavaScript heap out of memory"
+#   - "Allocation failed"
+#   - "Last few GCs" appearing in logs
+#   - Build hanging during "Finalizing page optimization"
+#
+# UPGRADE PATH if OOM occurs:
+#   1. professional-l  (8GB)  → NODE_OPTIONS=6144  (current)
+#   2. professional-xl (16GB) → NODE_OPTIONS=12288
+#   3. professional-2xl(32GB) → NODE_OPTIONS=24576
+#
+# To upgrade: Change instance_size_slug in .do/app.yaml
+# Run: npm run check:build-memory to analyze recent builds
+# ==================================================
 
 # Base stage - Common dependencies
 FROM node:22-alpine AS base
