@@ -194,11 +194,10 @@ export async function analyzeMetrics(options: {
   };
 
   // Step 7: Log event
-  logFounderEvent({
-    timestamp: new Date().toISOString(),
-    event: 'agent_action',
-    actor: 'analysis_agent',
-    data: {
+  logFounderEvent(
+    'agent_action',
+    'analysis_agent',
+    {
       analysisId: id,
       brand,
       timeframe,
@@ -207,7 +206,8 @@ export async function analyzeMetrics(options: {
       riskScore: riskAssessment.score,
       approvalStatus,
     },
-  });
+    { brand }
+  );
 
   return result;
 }

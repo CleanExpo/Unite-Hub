@@ -20,13 +20,13 @@ export function detectAnomalies(datasets: AnalysisDatasets, kpis: KPIResult): An
   anomalies.push(...detectResearchAnomalies(datasets.research));
 
   // Check content anomalies
-  anomalies.push(...detectContentAnomalies(datasets.content, kpis));
+  anomalies.push(...detectContentAnomalies(kpis, datasets.content));
 
   // Check scheduling anomalies
-  anomalies.push(...detectSchedulingAnomalies(datasets.scheduling, kpis));
+  anomalies.push(...detectSchedulingAnomalies(kpis, datasets.scheduling));
 
   // Check staff anomalies
-  anomalies.push(...detectStaffAnomalies(datasets.staff, kpis));
+  anomalies.push(...detectStaffAnomalies(kpis, datasets.staff));
 
   // Check financial anomalies
   anomalies.push(...detectFinancialAnomalies(datasets.financials));
@@ -139,7 +139,7 @@ function detectResearchAnomalies(research?: Array<any>): Anomaly[] {
 /**
  * Detect content generation anomalies
  */
-function detectContentAnomalies(content?: Array<any>, kpis: KPIResult): Anomaly[] {
+function detectContentAnomalies(kpis: KPIResult, content?: Array<any>): Anomaly[] {
   const anomalies: Anomaly[] = [];
   if (!content || content.length === 0) return anomalies;
 
@@ -177,7 +177,7 @@ function detectContentAnomalies(content?: Array<any>, kpis: KPIResult): Anomaly[
 /**
  * Detect scheduling anomalies
  */
-function detectSchedulingAnomalies(scheduling?: Array<any>, kpis: KPIResult): Anomaly[] {
+function detectSchedulingAnomalies(kpis: KPIResult, scheduling?: Array<any>): Anomaly[] {
   const anomalies: Anomaly[] = [];
   if (!scheduling || scheduling.length === 0) return anomalies;
 
@@ -216,7 +216,7 @@ function detectSchedulingAnomalies(scheduling?: Array<any>, kpis: KPIResult): An
 /**
  * Detect staff utilization anomalies
  */
-function detectStaffAnomalies(staff?: Array<any>, kpis: KPIResult): Anomaly[] {
+function detectStaffAnomalies(kpis: KPIResult, staff?: Array<any>): Anomaly[] {
   const anomalies: Anomaly[] = [];
   if (!staff || staff.length === 0) return anomalies;
 

@@ -9,10 +9,45 @@ description: Master coordinator for Unite-Hub workflows. Routes tasks to special
 
 The Orchestrator Agent is the **command center** of Unite-Hub. It:
 - Receives high-level instructions from users
+- **Routes through Truth Layer first** (NEW: honesty-first principle)
 - Breaks tasks into specialist workflows
-- Coordinates email-agent and content-agent
+- Coordinates email-agent, content-agent, and diagnostic agents
 - Maintains system state and memory
 - Reports on progress and health
+
+## NEW: Honest-First Routing (CRITICAL CHANGE)
+
+All tasks now route through this decision tree:
+
+```
+Task Request
+    ↓
+┌─→ Truth Layer Validation
+│   ├─ System state: Is build working?
+│   ├─ Type safety: Any unresolved errors?
+│   ├─ Test coverage: Do critical paths have tests?
+│   └─ Dependencies: Blockers on other systems?
+│
+├─ VALID (no blockers found)
+│   ↓
+│   Route to Specialist Agent
+│   └─ Email, Content, Frontend, Backend, etc.
+│
+└─ INVALID (blockers found)
+    ├─ Log blocker (Transparency Reporter)
+    ├─ Analyze root cause (Build Diagnostics)
+    ├─ Escalate if needed
+    └─ Report to user with timeline
+```
+
+### Why This Matters
+
+**Before**: Agents would attempt tasks and fail halfway, wasting time.
+**After**: We know if work is possible before starting.
+
+Example:
+- ❌ OLD: "Generate landing page" → Build fails → Blocked
+- ✅ NEW: "Can't generate landing page, build broken. Root cause: [X]. Estimated fix: 30min. Should we proceed?"
 
 ## Core Workflows
 
