@@ -57,8 +57,9 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 # Skip TypeScript checking to reduce memory usage (checked in CI)
 ENV SKIP_TYPE_CHECK=1
-# Increase Node memory for large builds
-ENV NODE_OPTIONS="--max-old-space-size=3072"
+# Increase Node memory for large builds (590 static pages)
+# professional-l has 8GB RAM, give Node 6GB for build
+ENV NODE_OPTIONS="--max-old-space-size=6144"
 
 # Provide valid-looking dummy values for build-time env vars (replaced at runtime)
 # These pass format validation but are not real credentials
