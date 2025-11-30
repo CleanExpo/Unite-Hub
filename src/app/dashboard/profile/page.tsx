@@ -16,6 +16,8 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Edit2, Save, X, Upload, Trash2, Loader2 } from "lucide-react";
 import { ErrorState } from "@/components/ErrorState";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Container } from "@/components/layout/Container";
+import { Alert } from "@/components/patterns/Alert";
 
 const TIMEZONES = [
   { value: "UTC", label: "UTC (Coordinated Universal Time)" },
@@ -340,7 +342,7 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+      <Container size="xl" padding="lg" className="space-y-8">
         <Breadcrumbs items={[{ label: "Profile" }]} />
 
         <div className="flex items-center justify-between">
@@ -374,22 +376,22 @@ export default function ProfilePage() {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </Container>
     );
   }
 
   if (!user) {
     return (
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="bg-slate-800 border border-slate-700 rounded-lg p-8 text-center">
-          <p className="text-slate-400">Please log in to view your profile.</p>
+      <Container size="xl" padding="lg">
+        <div className="bg-bg-card border border-border-subtle rounded-lg p-8 text-center">
+          <p className="text-text-secondary">Please log in to view your profile.</p>
         </div>
-      </div>
+      </Container>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
+    <Container size="xl" padding="lg" className="space-y-8">
       <Breadcrumbs items={[{ label: "Profile" }]} />
 
       {/* Page Header */}
@@ -441,9 +443,9 @@ export default function ProfilePage() {
       </div>
 
       {/* Profile Card */}
-      <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
+      <Card className="bg-bg-card border border-border-subtle">
         <CardHeader>
-          <CardTitle className="text-white text-xl font-semibold">Account Information</CardTitle>
+          <CardTitle className="text-text-primary text-xl font-semibold">Account Information</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* Avatar Section */}
@@ -698,9 +700,9 @@ export default function ProfilePage() {
       </Card>
 
       {/* Notification Preferences */}
-      <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
+      <Card className="bg-bg-card border border-border-subtle">
         <CardHeader>
-          <CardTitle className="text-white text-xl font-semibold">Notification Preferences</CardTitle>
+          <CardTitle className="text-text-primary text-xl font-semibold">Notification Preferences</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
@@ -782,9 +784,9 @@ export default function ProfilePage() {
       </Card>
 
       {/* Account Stats */}
-      <Card className="bg-slate-800/50 backdrop-blur-sm border-slate-700/50">
+      <Card className="bg-bg-card border border-border-subtle">
         <CardHeader>
-          <CardTitle className="text-white text-xl font-semibold">Account Activity</CardTitle>
+          <CardTitle className="text-text-primary text-xl font-semibold">Account Activity</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -812,6 +814,6 @@ export default function ProfilePage() {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </Container>
   );
 }
