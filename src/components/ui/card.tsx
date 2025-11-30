@@ -135,4 +135,75 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
 
 Card.displayName = 'Card';
 
+/**
+ * CardHeader Component
+ * Container for card header content (title, description, actions)
+ */
+export const CardHeader = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+  ({ className = '', ...props }, ref) => (
+    <div
+      ref={ref}
+      className={`flex flex-col space-y-1.5 p-6 ${className}`}
+      {...props}
+    />
+  )
+);
+CardHeader.displayName = 'CardHeader';
+
+/**
+ * CardTitle Component
+ * Title text for the card
+ */
+export const CardTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingElement>>(
+  ({ className = '', ...props }, ref) => (
+    <h3
+      ref={ref}
+      className={`text-2xl font-semibold leading-none tracking-tight ${className}`}
+      {...props}
+    />
+  )
+);
+CardTitle.displayName = 'CardTitle';
+
+/**
+ * CardDescription Component
+ * Subtitle/description text for the card
+ */
+export const CardDescription = forwardRef<HTMLParagraphElement, HTMLAttributes<HTMLParagraphElement>>(
+  ({ className = '', ...props }, ref) => (
+    <p
+      ref={ref}
+      className={`text-sm text-text-secondary ${className}`}
+      {...props}
+    />
+  )
+);
+CardDescription.displayName = 'CardDescription';
+
+/**
+ * CardContent Component
+ * Main content area of the card
+ */
+export const CardContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+  ({ className = '', ...props }, ref) => (
+    <div ref={ref} className={`p-6 pt-0 ${className}`} {...props} />
+  )
+);
+CardContent.displayName = 'CardContent';
+
+/**
+ * CardFooter Component
+ * Footer area for card actions
+ */
+export const CardFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+  ({ className = '', ...props }, ref) => (
+    <div
+      ref={ref}
+      className={`flex items-center p-6 pt-0 ${className}`}
+      {...props}
+    />
+  )
+);
+CardFooter.displayName = 'CardFooter';
+
 export default Card;
