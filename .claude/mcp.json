@@ -1,16 +1,5 @@
 {
   "mcpServers": {
-    "gemini-media": {
-      "type": "stdio",
-      "command": "node",
-      "args": [
-        ".claude/mcp_servers/gemini-media/dist/index.js"
-      ],
-      "env": {
-        "GOOGLE_API_KEY": "${GEMINI_API_KEY}"
-      },
-      "description": "Gemini Media Analysis - Image, audio, and video recognition using Google Gemini AI"
-    },
     "playwright": {
       "command": "npx",
       "args": [
@@ -21,11 +10,25 @@
         "PLAYWRIGHT_HEADLESS": "true"
       }
     },
+    "gemini-media": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        ".claude/mcp_servers/gemini-media/dist/index.js"
+      ],
+      "env": {
+        "GOOGLE_API_KEY": "AIzaSyBUNpD-NSYTGwLKip3SoSCgZ_s37qCVBB4"
+      },
+      "description": "Gemini Media Analysis - Image, audio, and video recognition using Google Gemini AI"
+    },
     "sherlock-think-alpha": {
       "command": "node",
       "args": [
         ".claude/mcp_servers/sherlock-think/index.js"
       ],
+      "env": {
+        "OPENROUTER_API_KEY": "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"
+      },
       "description": "Sherlock Think Alpha - 1.84M context thinking model via OpenRouter"
     },
     "dataforseo": {
@@ -34,8 +37,8 @@
         "dataforseo-mcp-server"
       ],
       "env": {
-        "DATAFORSEO_API_LOGIN": "${DATAFORSEO_API_LOGIN}",
-        "DATAFORSEO_API_PASSWORD": "${DATAFORSEO_API_PASSWORD}"
+        "DATAFORSEO_API_LOGIN": "phill@disasterrecovery.com.au",
+        "DATAFORSEO_API_PASSWORD": "f1f7eebc972699a7"
       },
       "description": "DataForSEO API - SEO intelligence (SERP, competitors, keywords, backlinks, local GEO)"
     },
@@ -48,7 +51,7 @@
         "apps"
       ],
       "env": {
-        "DIGITALOCEAN_API_TOKEN": "${DIGITALOCEAN_API_TOKEN}"
+        "DIGITALOCEAN_API_TOKEN": "dop_v1_41e91fab90fbb94570043e2a298d665539e2de545eed9c6e5f3defe337cb7795"
       },
       "description": "DigitalOcean MCP - Manage apps, droplets, databases, domains, and infrastructure"
     },
@@ -57,11 +60,10 @@
       "args": [
         "-y",
         "@stripe/mcp",
-        "--tools=all",
-        "--api-key=${STRIPE_SECRET_KEY}"
+        "--tools=all"
       ],
       "env": {
-        "STRIPE_SECRET_KEY": "${STRIPE_SECRET_KEY}"
+        "STRIPE_SECRET_KEY": "sk_test_51SK3Z3BY5KEPMwxdfeioDqPuuDSAt3aH2lZiwfth5Ki7eZB6DquvOLw4BPBENvoBCjjX4UNXdxH2qPBuKutWhXuS0042D7vlG0"
       },
       "description": "Stripe MCP - Create products, prices, checkout sessions, manage subscriptions, invoices, and payments"
     }
