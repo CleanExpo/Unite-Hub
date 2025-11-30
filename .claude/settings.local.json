@@ -27,7 +27,8 @@
       "Bash(done)",
       "Bash(taskkill:*)",
       "Bash(timeout 3 npx sleep:*)",
-      "Bash(__NEW_LINE__ cd 'd:\\Unite-Hub' git diff package.json)"
+      "Bash(__NEW_LINE__ cd 'd:\\Unite-Hub' git diff package.json)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []

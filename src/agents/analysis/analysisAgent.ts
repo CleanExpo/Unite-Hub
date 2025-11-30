@@ -137,15 +137,16 @@ export async function analyzeMetrics(options: {
   });
 
   // Step 5: Risk scoring
+  // Build claim based on analysis findings
+  const criticalCount = anomalies.filter((a) => a.severity === 'critical').length;
+  const claim = criticalCount > 0
+    ? `Analysis Report with ${criticalCount} critical anomaly/anomalies`
+    : `Analysis Report: ${timeframe}`;
+
   const riskAssessment = scoreRisk({
     brand,
-    claim: `Analysis Report: ${timeframe}`,
+    claim,
     context: 'internal',
-    details: {
-      anomaliesFound: anomalies.length,
-      criticalAnomalies: anomalies.filter((a) => a.severity === 'critical').length,
-      staffOverload: kpis.staffOverload,
-    },
   });
 
   // Step 6: Approval routing
