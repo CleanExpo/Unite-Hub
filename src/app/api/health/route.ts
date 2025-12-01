@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /**
  * Health Check API Endpoint
  * Used by Docker healthcheck and monitoring systems
@@ -10,6 +11,7 @@ import { createApiLogger } from "@/lib/logger";
 import { getRedisClient } from "@/lib/redis";
 import { getSupabaseServer } from "@/lib/supabase";
 import { getPoolStats } from "@/lib/db/connection-pool";
+import { healthTracker } from "@/lib/deployment/health-tracker";
 
 type HealthStatus = "healthy" | "degraded" | "unhealthy";
 
@@ -25,6 +27,13 @@ interface HealthResponse {
   uptime: number;
   environment: string | undefined;
   version: string;
+  deployment: string;
+  graceful_shutdown: {
+    enabled: boolean;
+    accepting_requests: boolean;
+    active_connections: number;
+  };
+  readiness: boolean;
   checks: {
     redis: HealthCheck;
     database: HealthCheck;
@@ -87,8 +96,12 @@ function determineOverallStatus(
     (check) => check.status === "unhealthy"
   ).length;
 
-  if (unhealthyCount === 0) return "healthy";
-  if (unhealthyCount === 1) return "degraded";
+  if (unhealthyCount === 0) {
+return "healthy";
+}
+  if (unhealthyCount === 1) {
+return "degraded";
+}
   return "unhealthy";
 }
 
@@ -119,12 +132,25 @@ export async function GET(request: NextRequest) {
       ? ((poolStats.successfulRequests / poolStats.totalRequests) * 100).toFixed(2)
       : '100.00';
 
+    // Get deployment environment and graceful shutdown status
+    const deploymentEnv = process.env.DEPLOYMENT_ENV || 'unknown';
+    const healthStatus = healthTracker.getStatus();
+    const activeConnections = healthTracker.getActiveConnections();
+    const readiness = healthTracker.isReady();
+
     const health: HealthResponse = {
       status: overallStatus,
       timestamp: new Date().toISOString(),
       uptime: process.uptime(),
       environment: process.env.NODE_ENV,
       version: "1.0.0",
+      deployment: deploymentEnv,
+      graceful_shutdown: {
+        enabled: true,
+        accepting_requests: healthStatus.acceptingRequests,
+        active_connections: activeConnections,
+      },
+      readiness,
       checks: {
         redis: redisCheck,
         database: dbCheck,

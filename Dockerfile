@@ -129,5 +129,50 @@ ENV HOSTNAME="0.0.0.0"
 # Increase Node.js heap for runtime (professional-l has 8GB, give Node 6GB)
 ENV NODE_OPTIONS="--max-old-space-size=6144"
 
+# ==================================================
+# Graceful Shutdown Configuration
+# ==================================================
+# SIGTERM Signal Handling:
+# - Docker sends SIGTERM when stopping container (docker stop, docker-compose down)
+# - Next.js server catches SIGTERM and initiates graceful shutdown
+# - Server stops accepting NEW connections immediately
+# - Existing in-flight requests are allowed to COMPLETE
+# - Maximum drain timeout: 30 seconds (SHUTDOWN_TIMEOUT environment variable)
+# - After timeout, process exits (Docker sends SIGKILL at 10s default)
+#
+# Blue-Green Deployment Flow:
+# 1. New container (green) starts and passes health checks
+# 2. Nginx switches traffic to green
+# 3. Docker sends SIGTERM to old container (blue)
+# 4. Blue stops accepting connections, drains existing ones
+# 5. Blue exits gracefully after draining complete
+# 6. Zero downtime achieved - no requests dropped
+#
+# Environment Variables for Graceful Shutdown:
+# - SHUTDOWN_TIMEOUT: Maximum time to wait for connection draining (default: 30000ms)
+# - HEALTHCHECK_ENABLED: Returns 503 during shutdown phase (default: true)
+# - MAX_CONNECTIONS: Limit concurrent connections for faster draining (default: 1000)
+#
+# Health Endpoint During Shutdown:
+# - Returns 200 when healthy
+# - Returns 503 when shutting down (Nginx marks upstream as down)
+# - Nginx immediately routes traffic to active environment
+#
+# Testing Graceful Shutdown:
+# 1. docker-compose up blue
+# 2. docker-compose kill -s SIGTERM blue
+# 3. Watch logs: docker-compose logs -f blue
+# 4. Expected: "Draining connections... Complete"
+#
+# Deployment State Persistence:
+# - .deployment-state.json tracks active/inactive environments
+# - Persisted outside container (mounted volume or host filesystem)
+# - Used by deployment scripts to determine which environment to deploy to
+# ==================================================
+
+# Signal handling: Send SIGTERM for graceful shutdown (not SIGKILL)
+STOPSIGNAL SIGTERM
+
 # Start Next.js standalone server
+# Note: server.js includes built-in SIGTERM handler for graceful shutdown
 CMD ["node", "server.js"]

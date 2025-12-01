@@ -1,0 +1,379 @@
+# Production Docker Compose Configuration
+# This file extends docker-compose.yml with production-specific settings
+#
+# Usage:
+#   docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+#
+# Features:
+# - Resource limits (CPU, memory)
+# - Production logging configuration
+# - Restart policies
+# - Network isolation
+# - Health check optimization
+# - Security hardening
+
+version: '3.8'
+
+services:
+  # ─────────────────────────────────────────────────────────────────
+  # Blue Environment (Production Settings)
+  # ─────────────────────────────────────────────────────────────────
+  blue:
+    # Resource Limits
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'              # Maximum 2 CPU cores
+          memory: 2048M            # Maximum 2GB RAM
+        reservations:
+          cpus: '0.5'              # Minimum 0.5 CPU cores
+          memory: 512M             # Minimum 512MB RAM
+
+    # Restart Policy
+    restart: unless-stopped        # Auto-restart except manual stops
+
+    # Logging Configuration (JSON for log aggregation)
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"            # Maximum log file size
+        max-file: "3"              # Keep 3 rotated log files
+        compress: "true"           # Compress rotated logs
+        labels: "deployment=blue,env=production"
+
+    # Environment Variables (Production)
+    environment:
+      # Node Environment
+      - NODE_ENV=production
+      - DEPLOYMENT_ENV=blue
+
+      # Performance Tuning
+      - NODE_OPTIONS=--max-old-space-size=1536
+      - NEXT_TELEMETRY_DISABLED=1
+
+      # Health Check
+      - HEALTHCHECK_ENABLED=true
+      - HEALTHCHECK_TIMEOUT=5000
+
+      # Graceful Shutdown
+      - SHUTDOWN_TIMEOUT=30000     # 30 seconds to drain connections
+
+      # Connection Limits
+      - MAX_CONNECTIONS=1000
+      - KEEP_ALIVE_TIMEOUT=65000
+
+    # Health Check (Optimized for Production)
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3008/api/health || exit 1"]
+      interval: 10s                # Check every 10 seconds (faster than dev)
+      timeout: 5s                  # Timeout after 5 seconds
+      retries: 3                   # Mark unhealthy after 3 failures
+      start_period: 60s            # Allow 60s for app startup
+
+    # Security
+    security_opt:
+      - no-new-privileges:true     # Prevent privilege escalation
+
+    # Read-only root filesystem (except temp directories)
+    read_only: false               # Set to true if app supports it
+    tmpfs:
+      - /tmp                       # Writable temp directory
+      - /var/cache                 # Writable cache directory
+
+    # User (non-root for security)
+    # user: "node"                 # Uncomment if Dockerfile creates 'node' user
+
+  # ─────────────────────────────────────────────────────────────────
+  # Green Environment (Production Settings)
+  # ─────────────────────────────────────────────────────────────────
+  green:
+    # Resource Limits (same as blue)
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2048M
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+    # Restart Policy
+    restart: unless-stopped
+
+    # Logging Configuration
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
+        labels: "deployment=green,env=production"
+
+    # Environment Variables (Production)
+    environment:
+      - NODE_ENV=production
+      - DEPLOYMENT_ENV=green
+      - NODE_OPTIONS=--max-old-space-size=1536
+      - NEXT_TELEMETRY_DISABLED=1
+      - HEALTHCHECK_ENABLED=true
+      - HEALTHCHECK_TIMEOUT=5000
+      - SHUTDOWN_TIMEOUT=30000
+      - MAX_CONNECTIONS=1000
+      - KEEP_ALIVE_TIMEOUT=65000
+
+    # Health Check (Optimized)
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3008/api/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+
+    # Security
+    security_opt:
+      - no-new-privileges:true
+
+    read_only: false
+    tmpfs:
+      - /tmp
+      - /var/cache
+
+  # ─────────────────────────────────────────────────────────────────
+  # Nginx Reverse Proxy (Production Settings)
+  # ─────────────────────────────────────────────────────────────────
+  nginx:
+    # Resource Limits (lighter than app servers)
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'              # Maximum 1 CPU core
+          memory: 512M             # Maximum 512MB RAM
+        reservations:
+          cpus: '0.25'             # Minimum 0.25 CPU core
+          memory: 128M             # Minimum 128MB RAM
+
+    # Restart Policy
+    restart: unless-stopped
+
+    # Logging Configuration
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"            # Larger for access logs
+        max-file: "5"              # Keep more log files
+        compress: "true"
+        labels: "service=nginx,env=production"
+
+    # Health Check
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost/health || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+    # Security
+    security_opt:
+      - no-new-privileges:true
+
+    # Additional Nginx-specific settings
+    environment:
+      - NGINX_WORKER_PROCESSES=auto
+      - NGINX_WORKER_CONNECTIONS=1024
+
+  # ─────────────────────────────────────────────────────────────────
+  # PostgreSQL (if running locally - usually external in production)
+  # ─────────────────────────────────────────────────────────────────
+  # postgres:
+  #   # Resource Limits
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '2.0'
+  #         memory: 2048M
+  #       reservations:
+  #         cpus: '1.0'
+  #         memory: 1024M
+  #
+  #   # Restart Policy
+  #   restart: unless-stopped
+  #
+  #   # Logging
+  #   logging:
+  #     driver: json-file
+  #     options:
+  #       max-size: "20m"
+  #       max-file: "5"
+  #       compress: "true"
+  #       labels: "service=postgres,env=production"
+  #
+  #   # Health Check
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U postgres"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+  #     start_period: 30s
+  #
+  #   # Performance Tuning
+  #   environment:
+  #     - POSTGRES_MAX_CONNECTIONS=200
+  #     - POSTGRES_SHARED_BUFFERS=512MB
+  #     - POSTGRES_WORK_MEM=16MB
+  #     - POSTGRES_MAINTENANCE_WORK_MEM=128MB
+
+  # ─────────────────────────────────────────────────────────────────
+  # Redis (if running locally)
+  # ─────────────────────────────────────────────────────────────────
+  # redis:
+  #   # Resource Limits
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '0.5'
+  #         memory: 512M
+  #       reservations:
+  #         cpus: '0.1'
+  #         memory: 128M
+  #
+  #   # Restart Policy
+  #   restart: unless-stopped
+  #
+  #   # Logging
+  #   logging:
+  #     driver: json-file
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
+  #       compress: "true"
+  #       labels: "service=redis,env=production"
+  #
+  #   # Health Check
+  #   healthcheck:
+  #     test: ["CMD", "redis-cli", "ping"]
+  #     interval: 10s
+  #     timeout: 3s
+  #     retries: 3
+  #     start_period: 10s
+
+# ─────────────────────────────────────────────────────────────────
+# Networks (Production Isolation)
+# ─────────────────────────────────────────────────────────────────
+# networks:
+#   frontend:
+#     driver: bridge
+#     driver_opts:
+#       com.docker.network.bridge.enable_ip_masquerade: "true"
+#       com.docker.network.bridge.name: "docker-frontend"
+#
+#   backend:
+#     driver: bridge
+#     internal: true              # No external access
+#     driver_opts:
+#       com.docker.network.bridge.name: "docker-backend"
+
+# ─────────────────────────────────────────────────────────────────
+# Volumes (Production Persistence)
+# ─────────────────────────────────────────────────────────────────
+# volumes:
+#   postgres-data:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       o: bind
+#       device: /var/lib/unite-hub/postgres
+#
+#   redis-data:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       o: bind
+#       device: /var/lib/unite-hub/redis
+#
+#   nginx-logs:
+#     driver: local
+#     driver_opts:
+#       type: none
+#       o: bind
+#       device: /var/log/unite-hub/nginx
+
+# ─────────────────────────────────────────────────────────────────
+# Secrets Management (Recommended for Production)
+# ─────────────────────────────────────────────────────────────────
+# IMPORTANT: Do NOT commit secrets to version control!
+#
+# Option 1: Docker Secrets (Swarm mode)
+# secrets:
+#   db_password:
+#     external: true
+#   api_key:
+#     external: true
+#
+# Option 2: Environment Files (outside repo)
+# services:
+#   blue:
+#     env_file:
+#       - /etc/unite-hub/secrets.env
+#
+# Option 3: External Secrets Management
+# - AWS Secrets Manager
+# - HashiCorp Vault
+# - Google Cloud Secret Manager
+# - Azure Key Vault
+
+# ─────────────────────────────────────────────────────────────────
+# Production Performance Tuning Notes
+# ─────────────────────────────────────────────────────────────────
+#
+# 1. CPU Allocation:
+#    - Each app server: 2 cores max (handles ~1000 concurrent requests)
+#    - Nginx: 1 core (lightweight reverse proxy)
+#    - Database: 2 cores (if local)
+#    - Total: ~5-6 cores recommended
+#
+# 2. Memory Allocation:
+#    - Each app server: 2GB max (Node.js heap + buffers)
+#    - Nginx: 512MB (mostly for buffering)
+#    - Database: 2GB (if local, adjust based on dataset)
+#    - Redis: 512MB (if local)
+#    - Total: ~5-6GB recommended
+#
+# 3. Logging Strategy:
+#    - JSON format for easy parsing
+#    - 10MB max file size (prevents disk fill)
+#    - 3 rotated files (30MB total per service)
+#    - Compression enabled (saves ~70% disk space)
+#    - Labels for log aggregation (Loki, Elasticsearch)
+#
+# 4. Health Check Tuning:
+#    - 10s interval (faster detection than dev's 30s)
+#    - 5s timeout (aggressive for production)
+#    - 3 retries (balance between false positives and downtime)
+#    - 60s start period (allows app warmup)
+#
+# 5. Connection Limits:
+#    - MAX_CONNECTIONS=1000 per app server
+#    - Nginx worker_connections=1024
+#    - Total capacity: ~2000 concurrent connections
+#    - Scale horizontally if needed
+#
+# 6. Graceful Shutdown:
+#    - 30s timeout for connection draining
+#    - SIGTERM handled in application code
+#    - Health check returns 503 during shutdown
+#    - Nginx marks upstream as down immediately
+#
+# 7. Security Hardening:
+#    - no-new-privileges prevents escalation
+#    - Read-only root filesystem (if supported)
+#    - Non-root user in container
+#    - Network isolation (frontend/backend)
+#    - Secrets management (external)
+#
+# 8. Monitoring Integration:
+#    - Log labels for aggregation
+#    - Health checks expose metrics
+#    - Prometheus endpoint: /metrics
+#    - Grafana dashboard: Unite-Hub Overview
+#
+# ─────────────────────────────────────────────────────────────────

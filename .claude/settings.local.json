@@ -1,33 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(timeout 240 npm run build:*)",
-      "Bash(cat:*)",
-      "Bash(npx husky:*)",
-      "Bash(npm run typecheck:*)",
-      "Bash(cut:*)",
-      "Bash(npx tsc:*)",
-      "Bash(echo:*)",
-      "Bash(test:*)",
-      "Bash(for:*)",
-      "Bash(do echo \"=== BUILD TEST $i ===\")",
-      "Bash(done)",
-      "Bash(npm install:*)",
-      "Bash(npm run lint:*)",
-      "Bash(npx lint-staged:*)",
-      "Bash(chmod:*)",
-      "Bash(npx supabase:*)",
-      "Bash(timeout 60 npx tsc:*)",
-      "Bash(timeout 30 npx tsc:*)",
-      "Bash(find:*)",
-      "Bash(timeout 120 npm run build:*)",
-      "Bash(timeout 180 bash -c \"cd d:\\Unite-Hub && npm run build 2>&1 | grep -E ''error|Error|Compiled|✓|✗'' | tail -20\")",
-      "Bash(do find src/app/api -path */$route* -name route.ts)",
-      "Bash(npm run build:*)",
-      "Bash(git add:*)",
-      "Bash(git commit -m \"$(cat <<''EOF''\nfix: Phase 6.2 - Replace missing InternalServerError with DatabaseError\n\nFix compilation errors in routes 17-20 by replacing imports of non-existent InternalServerError\nwith DatabaseError class which returns 500 status code and is the appropriate error class for\nfailed database operations.\n\nRoutes affected:\n- /api/autopilot/actions/[id]/approve\n- /api/autopilot/actions/[id]/skip\n- /api/approvals/[id]/approve\n- /api/approvals/[id]/decline\n\nBuild now succeeds: npm run build completes successfully.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
-      "Bash(git commit:*)",
-      "Bash(timeout 30 npm run lint:next:*)"
+      "Bash(node -c:*)",
+      "Bash(node:*)",
+      "Bash(timeout 180 npm run build)"
     ],
     "deny": [],
     "ask": []
