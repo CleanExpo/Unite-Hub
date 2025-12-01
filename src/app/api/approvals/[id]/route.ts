@@ -1,4 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+ 
+import type { NextRequest } from "next/server";
+import { withErrorBoundary, AuthenticationError, AuthorizationError, NotFoundError, DatabaseError, successResponse } from "@/lib/errors/boundaries";
 import { getSupabaseServer } from "@/lib/supabase";
 import { apiRateLimit } from "@/lib/rate-limit";
 import { validateUserAuth } from "@/lib/workspace-validation";
@@ -7,103 +9,90 @@ import { validateUserAuth } from "@/lib/workspace-validation";
  * GET /api/approvals/[id]
  * Get a single approval by ID
  */
-export async function GET(request: NextRequest, context: { params: Promise<{ id: string }> }) {
-  try {
-    // Apply rate limiting
-    const rateLimitResult = await apiRateLimit(request);
-    if (rateLimitResult) {
-      return rateLimitResult;
-    }
-
-    // Validate user authentication
-    const user = await validateUserAuth(request);
-
-    const { id } = await context.params;
-
-    const supabase = await getSupabaseServer();
-    const { data: approval, error } = await supabase
-      .from("approvals")
-      .select("*")
-      .eq("id", id)
-      .single();
-
-    if (error) {
-      console.error("Error fetching approval:", error);
-      return NextResponse.json({ error: error.message }, { status: 404 });
-    }
-
-    // Verify org ownership
-    if (approval.org_id !== user.orgId) {
-      return NextResponse.json({ error: "Access denied" }, { status: 403 });
-    }
-
-    return NextResponse.json({ approval });
-  } catch (error) {
-    if (error instanceof Error) {
-      if (error.message.includes("Unauthorized")) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-      if (error.message.includes("Forbidden")) {
-        return NextResponse.json({ error: "Access denied" }, { status: 403 });
-      }
-    }
-    console.error("Unexpected error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+export const GET = withErrorBoundary(async (request: NextRequest, context: { params: Promise<{ id: string }> }) => {
+  // Apply rate limiting (returns early if rate limited - NOT wrapped by error boundary)
+  const rateLimitResult = await apiRateLimit(request);
+  if (rateLimitResult) {
+    return rateLimitResult;
   }
-}
+
+  // Validate user authentication
+  let user;
+  try {
+    user = await validateUserAuth(request);
+  } catch {
+    throw new AuthenticationError("Authentication required");
+  }
+
+  const { id } = await context.params;
+
+  const supabase = await getSupabaseServer();
+  const { data: approval, error } = await supabase
+    .from("approvals")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error || !approval) {
+    throw new NotFoundError(`Approval ${id} not found`);
+  }
+
+  // Verify org ownership
+  if (approval.org_id !== user.orgId) {
+    throw new AuthorizationError("Access denied to this approval");
+  }
+
+  return successResponse({
+    approval,
+  }, undefined, undefined, 200);
+});
 
 /**
  * DELETE /api/approvals/[id]
  * Delete an approval
  */
-export async function DELETE(request: NextRequest, context: { params: Promise<{ id: string }> }) {
-  try {
-    // Apply rate limiting
-    const rateLimitResult = await apiRateLimit(request);
-    if (rateLimitResult) {
-      return rateLimitResult;
-    }
-
-    // Validate user authentication
-    const user = await validateUserAuth(request);
-
-    const { id } = await context.params;
-
-    // Get approval to verify org ownership
-    const supabase = await getSupabaseServer();
-    const { data: approval, error: fetchError } = await supabase
-      .from("approvals")
-      .select("org_id")
-      .eq("id", id)
-      .single();
-
-    if (fetchError || !approval) {
-      return NextResponse.json({ error: "Approval not found" }, { status: 404 });
-    }
-
-    // Verify org ownership
-    if (approval.org_id !== user.orgId) {
-      return NextResponse.json({ error: "Access denied" }, { status: 403 });
-    }
-
-    const { error } = await supabase.from("approvals").delete().eq("id", id);
-
-    if (error) {
-      console.error("Error deleting approval:", error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    if (error instanceof Error) {
-      if (error.message.includes("Unauthorized")) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-      if (error.message.includes("Forbidden")) {
-        return NextResponse.json({ error: "Access denied" }, { status: 403 });
-      }
-    }
-    console.error("Unexpected error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+export const DELETE = withErrorBoundary(async (request: NextRequest, context: { params: Promise<{ id: string }> }) => {
+  // Apply rate limiting (returns early if rate limited - NOT wrapped by error boundary)
+  const rateLimitResult = await apiRateLimit(request);
+  if (rateLimitResult) {
+    return rateLimitResult;
   }
-}
+
+  // Validate user authentication
+  let user;
+  try {
+    user = await validateUserAuth(request);
+  } catch {
+    throw new AuthenticationError("Authentication required");
+  }
+
+  const { id } = await context.params;
+
+  // Get approval to verify org ownership
+  const supabase = await getSupabaseServer();
+  const { data: approval, error: fetchError } = await supabase
+    .from("approvals")
+    .select("org_id")
+    .eq("id", id)
+    .single();
+
+  if (fetchError || !approval) {
+    throw new NotFoundError(`Approval ${id} not found`);
+  }
+
+  // Verify org ownership
+  if (approval.org_id !== user.orgId) {
+    throw new AuthorizationError("Access denied to this approval");
+  }
+
+  const { error } = await supabase.from("approvals").delete().eq("id", id);
+
+  if (error) {
+    throw new DatabaseError("Failed to delete approval");
+  }
+
+  return successResponse({
+    success: true,
+    message: "Approval deleted successfully",
+  }, undefined, undefined, 200);
+});
