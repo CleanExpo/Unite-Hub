@@ -1,0 +1,91 @@
+{
+  "$schema": "https://synthex.com.au/schemas/vce-v2-tokens.json",
+  "meta": {
+    "module": "tokens",
+    "version": "2.0.0",
+    "description": "Token economics, client tier system, billing integration, and usage tracking",
+    "currency": "AUD",
+    "last_updated": "2025-11-30"
+  },
+
+  "token_cost_matrix": {
+    "image_generation": {
+      "nano_banana_pro": {
+        "model_id": "gemini-3-pro-image-preview",
+        "costs": {
+          "1K": {"tokens": 1210},
+          "2K": {"tokens": 1210},
+          "4K": {"tokens": 2000}
+        }
+      },
+      "nano_banana": {
+        "model_id": "gemini-2.5-flash-image",
+        "costs": {"standard": {"tokens": 1290}}
+      }
+    },
+
+    "video_generation": {
+      "veo_3_1": {
+        "model_id": "veo-3.1-generate-preview",
+        "costs": {
+          "720p": {"4s": 600, "6s": 900, "8s": 1200},
+          "1080p": {"8s": 1800}
+        },
+        "extension_cost": {"per_7s": 1050}
+      }
+    },
+
+    "text_to_speech": {
+      "tts_flash": {
+        "model_id": "gemini-2.5-flash-preview-tts",
+        "costs": {"per_1000_input_tokens": 15}
+      }
+    },
+
+    "text_generation": {
+      "pro": {
+        "model_id": "gemini-3-pro",
+        "costs": {"input_per_1000": 1.50, "output_per_1000": 12.0}
+      },
+      "flash": {
+        "model_id": "gemini-2.5-flash",
+        "costs": {"input_per_1000": 0.075, "output_per_1000": 0.30}
+      }
+    }
+  },
+
+  "client_tier_system": {
+    "tiers": {
+      "starter": {
+        "name": "Starter",
+        "monthly_aud": 199,
+        "monthly_tokens": 50000,
+        "target_audience": "Solo tradies, micro businesses"
+      },
+      "growth": {
+        "name": "Growth",
+        "monthly_aud": 499,
+        "monthly_tokens": 150000,
+        "target_audience": "Growing SMBs"
+      },
+      "professional": {
+        "name": "Professional",
+        "monthly_aud": 999,
+        "monthly_tokens": 400000,
+        "target_audience": "Established SMBs"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "monthly_aud": "custom",
+        "monthly_tokens": "custom",
+        "target_audience": "Large businesses, franchises"
+      }
+    }
+  },
+
+  "billing_integration": {
+    "payment_provider": "Stripe",
+    "currency": "AUD",
+    "billing_cycle": "monthly"
+  }
+}

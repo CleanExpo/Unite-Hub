@@ -1,0 +1,749 @@
+{
+  "$schema": "https://synthex.com.au/schemas/vce-v2-infrastructure.json",
+  "meta": {
+    "module": "infrastructure",
+    "version": "2.0.0",
+    "description": "Technical infrastructure, processing pipelines, delivery optimization, storage, and SEO",
+    "primary_region": "Sydney (syd1)",
+    "cloud_provider": "Digital Ocean",
+    "last_updated": "2025-11-30"
+  },
+
+  "cloud_infrastructure": {
+    "provider": "Digital Ocean",
+    "primary_region": "syd1",
+    "backup_region": "sgp1",
+    "components": {
+      "compute": {
+        "app_platform": {
+          "service": "App Platform",
+          "instances": "auto-scaled",
+          "min_instances": 2,
+          "max_instances": 10,
+          "instance_size": "professional-m"
+        },
+        "functions": {
+          "service": "Functions",
+          "use_cases": ["image_processing", "video_transcoding", "webhook_handlers"]
+        }
+      },
+      "database": {
+        "primary": {
+          "service": "Managed PostgreSQL",
+          "cluster": "db-s-2vcpu-4gb",
+          "high_availability": true,
+          "read_replicas": 1
+        },
+        "cache": {
+          "service": "Managed Redis",
+          "cluster": "db-s-1vcpu-2gb",
+          "use_cases": ["session_cache", "task_queue", "rate_limiting", "pipeline_state"]
+        }
+      },
+      "storage": {
+        "service": "Spaces",
+        "region": "syd1",
+        "buckets": {
+          "production": "synthex-media-prod",
+          "staging": "synthex-media-staging",
+          "originals": "synthex-media-originals",
+          "temp": "synthex-media-temp"
+        }
+      },
+      "cdn": {
+        "service": "Spaces CDN",
+        "custom_domain": "media.synthex.com.au",
+        "edge_caching": true
+      }
+    }
+  },
+
+  "storage_architecture": {
+    "buckets": {
+      "synthex-media-prod": {
+        "purpose": "Production-ready optimized assets",
+        "access": "public-read",
+        "cdn_enabled": true,
+        "lifecycle": {
+          "transition_to_infrequent_access": "90 days",
+          "delete_unused": "365 days"
+        },
+        "structure": "/{client_id}/{asset_type}/{page_type}/{page_slug}/{filename}"
+      },
+      "synthex-media-originals": {
+        "purpose": "Original generated assets before optimization",
+        "access": "private",
+        "cdn_enabled": false,
+        "lifecycle": {
+          "delete_after": "30 days"
+        },
+        "structure": "/{client_id}/{date}/{request_id}/{filename}"
+      },
+      "synthex-media-temp": {
+        "purpose": "Temporary processing files",
+        "access": "private",
+        "cdn_enabled": false,
+        "lifecycle": {
+          "delete_after": "24 hours"
+        }
+      }
+    },
+    "file_naming": {
+      "pattern": "{seo_slug}-{hash8}.{ext}",
+      "seo_slug": {
+        "max_length": 50,
+        "separator": "-",
+        "lowercase": true,
+        "no_special_chars": true
+      },
+      "hash": {
+        "algorithm": "xxhash",
+        "length": 8,
+        "purpose": "cache_busting_and_uniqueness"
+      },
+      "examples": [
+        "plumber-brisbane-emergency-services-a1b2c3d4.webp",
+        "hero-video-restoration-professional-e5f6g7h8.mp4",
+        "testimonial-john-builder-sydney-i9j0k1l2.webp"
+      ]
+    }
+  },
+
+  "processing_pipelines": {
+    "image_processing": {
+      "tool": "Sharp",
+      "pipeline_steps": [
+        {
+          "step": "input_validation",
+          "checks": ["format", "dimensions", "file_size", "color_profile"]
+        },
+        {
+          "step": "metadata_strip",
+          "action": "Remove EXIF, XMP, IPTC data for privacy",
+          "preserve": ["color_profile"]
+        },
+        {
+          "step": "color_profile_conversion",
+          "target": "sRGB",
+          "intent": "perceptual"
+        },
+        {
+          "step": "resize_variants",
+          "variants": {
+            "thumbnail": {"width": 150, "height": 150, "fit": "cover"},
+            "small": {"width": 400, "quality": 80},
+            "medium": {"width": 800, "quality": 85},
+            "large": {"width": 1200, "quality": 85},
+            "full": {"width": 1920, "quality": 90},
+            "retina": {"width": 2560, "quality": 85}
+          }
+        },
+        {
+          "step": "format_conversion",
+          "outputs": [
+            {"format": "webp", "quality": 85, "effort": 6},
+            {"format": "avif", "quality": 80, "effort": 6},
+            {"format": "jpeg", "quality": 85, "progressive": true}
+          ]
+        },
+        {
+          "step": "optimization",
+          "actions": ["strip_metadata", "optimize_huffman_tables", "subsample_chroma"]
+        },
+        {
+          "step": "blur_placeholder",
+          "generate": true,
+          "size": 20,
+          "format": "base64_webp"
+        }
+      ],
+      "output_structure": {
+        "original": "/{path}/original.{ext}",
+        "variants": "/{path}/{size}.{format}",
+        "placeholder": "/{path}/placeholder.txt"
+      }
+    },
+
+    "video_processing": {
+      "tool": "FFmpeg",
+      "pipeline_steps": [
+        {
+          "step": "input_validation",
+          "checks": ["format", "duration", "resolution", "codec", "audio_tracks"]
+        },
+        {
+          "step": "download_from_veo",
+          "timeout_ms": 300000,
+          "retry": 3
+        },
+        {
+          "step": "audio_normalization",
+          "target_lufs": -14,
+          "true_peak": -1
+        },
+        {
+          "step": "transcode_variants",
+          "variants": {
+            "720p": {
+              "resolution": "1280x720",
+              "video_codec": "libx264",
+              "video_bitrate": "2500k",
+              "audio_codec": "aac",
+              "audio_bitrate": "128k",
+              "profile": "main",
+              "preset": "medium"
+            },
+            "1080p": {
+              "resolution": "1920x1080",
+              "video_codec": "libx264",
+              "video_bitrate": "5000k",
+              "audio_codec": "aac",
+              "audio_bitrate": "192k",
+              "profile": "high",
+              "preset": "medium"
+            },
+            "720p_webm": {
+              "resolution": "1280x720",
+              "video_codec": "libvpx-vp9",
+              "video_bitrate": "2000k",
+              "audio_codec": "libopus",
+              "audio_bitrate": "128k"
+            }
+          }
+        },
+        {
+          "step": "hls_packaging",
+          "enabled": true,
+          "segment_duration": 6,
+          "playlist_type": "vod",
+          "variants": ["720p", "1080p"]
+        },
+        {
+          "step": "thumbnail_extraction",
+          "count": 5,
+          "format": "webp",
+          "quality": 85
+        },
+        {
+          "step": "poster_generation",
+          "timestamp": "00:00:01",
+          "format": "webp",
+          "quality": 90
+        }
+      ],
+      "output_structure": {
+        "mp4_720p": "/{path}/720p.mp4",
+        "mp4_1080p": "/{path}/1080p.mp4",
+        "webm_720p": "/{path}/720p.webm",
+        "hls_master": "/{path}/hls/master.m3u8",
+        "hls_segments": "/{path}/hls/{quality}/{segment}.ts",
+        "thumbnails": "/{path}/thumbs/thumb_{n}.webp",
+        "poster": "/{path}/poster.webp"
+      }
+    },
+
+    "audio_processing": {
+      "tool": "FFmpeg",
+      "pipeline_steps": [
+        {
+          "step": "input_validation",
+          "checks": ["format", "duration", "sample_rate", "channels"]
+        },
+        {
+          "step": "normalization",
+          "target_lufs": -16,
+          "true_peak": -1
+        },
+        {
+          "step": "noise_reduction",
+          "enabled": true,
+          "threshold": -30
+        },
+        {
+          "step": "format_conversion",
+          "outputs": [
+            {"format": "mp3", "bitrate": "192k", "quality": 2},
+            {"format": "aac", "bitrate": "192k"},
+            {"format": "ogg", "bitrate": "192k"},
+            {"format": "wav", "sample_rate": 44100, "bit_depth": 16}
+          ]
+        },
+        {
+          "step": "waveform_generation",
+          "enabled": true,
+          "width": 1800,
+          "height": 140,
+          "format": "json"
+        }
+      ],
+      "output_structure": {
+        "mp3": "/{path}/audio.mp3",
+        "aac": "/{path}/audio.aac",
+        "ogg": "/{path}/audio.ogg",
+        "wav": "/{path}/audio.wav",
+        "waveform": "/{path}/waveform.json"
+      }
+    }
+  },
+
+  "cdn_configuration": {
+    "provider": "Digital Ocean Spaces CDN",
+    "custom_domain": "media.synthex.com.au",
+    "ssl": {
+      "enabled": true,
+      "provider": "lets_encrypt",
+      "auto_renewal": true
+    },
+    "caching": {
+      "default_ttl": 31536000,
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable",
+        "Vary": "Accept"
+      },
+      "cache_key_includes": ["path", "accept_header"]
+    },
+    "cors": {
+      "allowed_origins": [
+        "https://synthex.com.au",
+        "https://www.synthex.com.au",
+        "https://app.synthex.com.au",
+        "https://*.synthex.com.au"
+      ],
+      "allowed_methods": ["GET", "HEAD"],
+      "allowed_headers": ["*"],
+      "max_age": 86400
+    },
+    "security_headers": {
+      "X-Content-Type-Options": "nosniff",
+      "X-Frame-Options": "SAMEORIGIN",
+      "Referrer-Policy": "strict-origin-when-cross-origin"
+    },
+    "compression": {
+      "enabled": true,
+      "types": ["text/html", "text/css", "application/javascript", "application/json", "image/svg+xml"]
+    }
+  },
+
+  "delivery_optimization": {
+    "responsive_images": {
+      "strategy": "srcset_with_sizes",
+      "breakpoints": [320, 640, 768, 1024, 1280, 1536, 1920, 2560],
+      "format_priority": ["avif", "webp", "jpeg"],
+      "lazy_loading": {
+        "enabled": true,
+        "threshold": "200px",
+        "placeholder": "blur"
+      },
+      "example_output": {
+        "html": "<picture><source type=\"image/avif\" srcset=\"...\" sizes=\"...\"><source type=\"image/webp\" srcset=\"...\" sizes=\"...\"><img src=\"...\" alt=\"...\" loading=\"lazy\" decoding=\"async\"></picture>"
+      }
+    },
+    "video_delivery": {
+      "strategy": "adaptive_streaming",
+      "primary_format": "hls",
+      "fallback_format": "mp4",
+      "autoplay_considerations": {
+        "muted_autoplay": true,
+        "preload": "metadata",
+        "poster_required": true
+      },
+      "bandwidth_detection": {
+        "enabled": true,
+        "start_quality": "720p",
+        "upgrade_threshold": "3 seconds buffer"
+      }
+    },
+    "audio_delivery": {
+      "primary_format": "mp3",
+      "fallback_format": "aac",
+      "streaming": {
+        "enabled": true,
+        "chunk_size": "64kb"
+      }
+    },
+    "preloading": {
+      "critical_assets": {
+        "hero_image": "preload",
+        "hero_video_poster": "preload",
+        "primary_font": "preload"
+      },
+      "dns_prefetch": [
+        "media.synthex.com.au",
+        "fonts.googleapis.com",
+        "fonts.gstatic.com"
+      ]
+    }
+  },
+
+  "seo_optimization": {
+    "image_seo": {
+      "filename_template": "{primary_keyword}-{descriptor}-{location}.{ext}",
+      "alt_text": {
+        "max_length": 125,
+        "include_keyword": true,
+        "descriptive": true,
+        "template": "{description} for {industry} in {location}"
+      },
+      "title_attribute": {
+        "max_length": 70,
+        "template": "{keyword} | {brand}"
+      },
+      "structured_data": {
+        "type": "ImageObject",
+        "properties": {
+          "@context": "https://schema.org",
+          "@type": "ImageObject",
+          "contentUrl": "{cdn_url}",
+          "name": "{title}",
+          "description": "{alt_text}",
+          "width": "{width}",
+          "height": "{height}",
+          "encodingFormat": "{mime_type}",
+          "creator": {
+            "@type": "Organization",
+            "name": "Synthex"
+          }
+        }
+      }
+    },
+    "video_seo": {
+      "filename_template": "{keyword}-{type}-{identifier}.{ext}",
+      "structured_data": {
+        "type": "VideoObject",
+        "properties": {
+          "@context": "https://schema.org",
+          "@type": "VideoObject",
+          "name": "{title}",
+          "description": "{description}",
+          "thumbnailUrl": "{poster_url}",
+          "contentUrl": "{video_url}",
+          "duration": "{iso_duration}",
+          "uploadDate": "{upload_date}",
+          "publisher": {
+            "@type": "Organization",
+            "name": "Synthex",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://synthex.com.au/logo.png"
+            }
+          }
+        }
+      },
+      "transcript": {
+        "generate": true,
+        "format": "WebVTT",
+        "include_in_page": true
+      },
+      "sitemap": {
+        "include": true,
+        "update_frequency": "weekly"
+      }
+    },
+    "audio_seo": {
+      "structured_data": {
+        "type": "AudioObject",
+        "properties": {
+          "@context": "https://schema.org",
+          "@type": "AudioObject",
+          "name": "{title}",
+          "description": "{description}",
+          "contentUrl": "{audio_url}",
+          "duration": "{iso_duration}",
+          "encodingFormat": "{mime_type}"
+        }
+      },
+      "transcript": {
+        "generate": true,
+        "include_in_page": true
+      }
+    },
+    "open_graph": {
+      "image": {
+        "og:image": "{cdn_url}",
+        "og:image:width": "{width}",
+        "og:image:height": "{height}",
+        "og:image:type": "{mime_type}",
+        "og:image:alt": "{alt_text}"
+      },
+      "video": {
+        "og:video": "{video_url}",
+        "og:video:type": "video/mp4",
+        "og:video:width": "{width}",
+        "og:video:height": "{height}"
+      }
+    },
+    "twitter_cards": {
+      "image": {
+        "twitter:card": "summary_large_image",
+        "twitter:image": "{cdn_url}",
+        "twitter:image:alt": "{alt_text}"
+      },
+      "video": {
+        "twitter:card": "player",
+        "twitter:player": "{embed_url}",
+        "twitter:player:width": "{width}",
+        "twitter:player:height": "{height}"
+      }
+    }
+  },
+
+  "api_endpoints": {
+    "base_url": "https://api.synthex.com.au/v2",
+    "authentication": {
+      "type": "bearer_token",
+      "header": "Authorization: Bearer {api_key}"
+    },
+    "rate_limiting": {
+      "default": "100 requests/minute",
+      "burst": "20 requests/second",
+      "by_tier": {
+        "starter": "50 requests/minute",
+        "growth": "100 requests/minute",
+        "professional": "200 requests/minute",
+        "enterprise": "custom"
+      }
+    },
+    "endpoints": {
+      "content_generation": {
+        "path": "/content/generate",
+        "method": "POST",
+        "description": "Initiate visual content generation pipeline",
+        "request_body": {
+          "page_type": "string (required)",
+          "page_slug": "string (required)",
+          "content_brief": "string (required)",
+          "target_audience": "string",
+          "asset_types": "array<string>",
+          "priority": "string",
+          "budget_tokens": "number"
+        },
+        "response": {
+          "request_id": "string",
+          "status": "string",
+          "estimated_completion": "datetime"
+        }
+      },
+      "generation_status": {
+        "path": "/content/status/{request_id}",
+        "method": "GET",
+        "description": "Check generation pipeline status",
+        "response": {
+          "request_id": "string",
+          "status": "string",
+          "progress_percent": "number",
+          "assets_completed": "number",
+          "assets_total": "number",
+          "current_step": "string"
+        }
+      },
+      "asset_retrieve": {
+        "path": "/assets/{asset_id}",
+        "method": "GET",
+        "description": "Retrieve generated asset details",
+        "response": {
+          "asset_id": "string",
+          "type": "string",
+          "urls": "object",
+          "metadata": "object",
+          "quality_score": "number"
+        }
+      },
+      "token_usage": {
+        "path": "/usage/tokens",
+        "method": "GET",
+        "description": "Get token usage statistics",
+        "query_params": {
+          "period": "string (day|week|month)",
+          "breakdown": "boolean"
+        },
+        "response": {
+          "total_tokens": "number",
+          "remaining_tokens": "number",
+          "breakdown_by_type": "object"
+        }
+      },
+      "webhook_register": {
+        "path": "/webhooks",
+        "method": "POST",
+        "description": "Register webhook for pipeline events",
+        "request_body": {
+          "url": "string (required)",
+          "events": "array<string>",
+          "secret": "string"
+        }
+      }
+    },
+    "webhook_events": [
+      "generation.started",
+      "generation.progress",
+      "generation.completed",
+      "generation.failed",
+      "asset.ready",
+      "review.required",
+      "tokens.low",
+      "tokens.exhausted"
+    ]
+  },
+
+  "security": {
+    "api_security": {
+      "authentication": "Bearer tokens (JWT)",
+      "token_expiry": "24 hours",
+      "refresh_tokens": true,
+      "ip_whitelist": "optional per client"
+    },
+    "storage_security": {
+      "encryption_at_rest": true,
+      "encryption_in_transit": true,
+      "bucket_policies": "least_privilege",
+      "signed_urls": {
+        "enabled": true,
+        "expiry": "1 hour",
+        "use_cases": ["temp_uploads", "private_assets"]
+      }
+    },
+    "content_security": {
+      "synthid_watermarking": {
+        "enabled": true,
+        "mandatory": true,
+        "provider": "Google",
+        "description": "All AI-generated images include SynthID for identification"
+      },
+      "content_moderation": {
+        "enabled": true,
+        "provider": "Google Cloud Vision",
+        "checks": ["safe_search", "violence", "adult"],
+        "threshold": "medium"
+      }
+    },
+    "privacy": {
+      "data_retention": {
+        "originals": "30 days",
+        "processed": "as_long_as_client_active",
+        "logs": "90 days",
+        "analytics": "2 years"
+      },
+      "gdpr_compliance": true,
+      "australian_privacy_act": true,
+      "data_location": "Australia (syd1)"
+    }
+  },
+
+  "monitoring_and_analytics": {
+    "performance_monitoring": {
+      "provider": "Digital Ocean Monitoring + Custom",
+      "metrics": [
+        "api_latency_p50",
+        "api_latency_p95",
+        "api_latency_p99",
+        "error_rate",
+        "throughput",
+        "cdn_hit_rate",
+        "storage_usage",
+        "bandwidth_usage"
+      ],
+      "alerts": {
+        "high_latency": "p95 > 5s for 5 minutes",
+        "high_error_rate": "error_rate > 1% for 5 minutes",
+        "storage_critical": "usage > 90%"
+      }
+    },
+    "asset_analytics": {
+      "tracked_events": [
+        "asset.view",
+        "asset.click",
+        "asset.play",
+        "asset.complete",
+        "asset.download"
+      ],
+      "aggregations": [
+        "views_by_asset",
+        "engagement_by_type",
+        "performance_by_zone",
+        "conversion_correlation"
+      ],
+      "reporting": {
+        "frequency": "daily",
+        "retention": "2 years"
+      }
+    },
+    "pipeline_analytics": {
+      "tracked_metrics": [
+        "generation_time",
+        "tokens_consumed",
+        "quality_scores",
+        "enhancement_iterations",
+        "human_escalations",
+        "success_rate"
+      ],
+      "dashboards": {
+        "operations": "Real-time pipeline health",
+        "quality": "Quality trends and issues",
+        "cost": "Token consumption and efficiency"
+      }
+    }
+  },
+
+  "disaster_recovery": {
+    "backup_strategy": {
+      "database": {
+        "frequency": "daily",
+        "retention": "30 days",
+        "point_in_time_recovery": "7 days"
+      },
+      "storage": {
+        "cross_region_replication": true,
+        "target_region": "sgp1",
+        "versioning": true
+      }
+    },
+    "failover": {
+      "database": "automatic to standby",
+      "storage": "manual failover to sgp1",
+      "rto": "1 hour",
+      "rpo": "1 hour"
+    }
+  },
+
+  "integration_requirements": {
+    "gemini_api": {
+      "api_key": "GEMINI_API_KEY",
+      "base_url": "https://generativelanguage.googleapis.com/v1beta",
+      "primary_model": "gemini-3-pro",
+      "models_used": [
+        "gemini-3-pro",
+        "gemini-3-pro-image-preview",
+        "gemini-2.5-flash",
+        "gemini-2.5-flash-image",
+        "gemini-2.5-flash-preview-tts",
+        "gemini-embedding-001",
+        "veo-3.1-generate-preview",
+        "imagen-4.0-generate-001"
+      ],
+      "sdk": {
+        "python": "google-generativeai",
+        "javascript": "@google/generative-ai"
+      }
+    },
+    "processing_tools": {
+      "sharp": {
+        "version": "^0.33.0",
+        "purpose": "Image processing and optimization"
+      },
+      "ffmpeg": {
+        "version": "6.x",
+        "purpose": "Video and audio processing"
+      }
+    },
+    "task_queue": {
+      "redis": {
+        "version": "7.x",
+        "purpose": "Task queue and caching"
+      },
+      "bullmq": {
+        "version": "^5.0.0",
+        "purpose": "Queue management"
+      }
+    }
+  }
+}

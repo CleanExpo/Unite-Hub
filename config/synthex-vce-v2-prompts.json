@@ -1,0 +1,664 @@
+{
+  "$schema": "https://synthex.com.au/schemas/vce-v2-prompts.json",
+  "meta": {
+    "module": "prompts",
+    "version": "2.0.0",
+    "description": "Prompt engineering templates, variables, style guidelines, and industry-specific customizations",
+    "last_updated": "2025-11-30"
+  },
+
+  "master_image_prompt_template": {
+    "description": "Core image generation prompt structure with 9 integrated components",
+    "components": [
+      {
+        "name": "subject",
+        "description": "Primary subject, composition, and focal point",
+        "variables": ["subject_type", "primary_subject", "secondary_elements", "composition_style"],
+        "example": "Experienced plumber in professional uniform working on copper pipe installation"
+      },
+      {
+        "name": "style",
+        "description": "Visual style, medium, and artistic direction",
+        "variables": ["style_modifier", "medium", "artistic_direction"],
+        "example": "Photorealistic professional photography style, clean modern aesthetic"
+      },
+      {
+        "name": "mood",
+        "description": "Emotional tone, atmosphere, and psychological impact",
+        "variables": ["mood_tone", "emotional_weight", "atmosphere"],
+        "example": "Professional, trustworthy, competent, solution-focused atmosphere"
+      },
+      {
+        "name": "composition",
+        "description": "Visual framing, layout, and spatial arrangement",
+        "variables": ["layout", "focal_point", "depth", "framing"],
+        "example": "Rule of thirds composition with subject in left frame, detail work in sharp focus"
+      },
+      {
+        "name": "lighting",
+        "description": "Light quality, direction, intensity, and mood creation",
+        "variables": ["light_type", "direction", "intensity", "quality"],
+        "example": "Warm natural diffused sunlight with subtle shadows, highlighting professional competence"
+      },
+      {
+        "name": "color_palette",
+        "description": "Primary colors, accents, and brand alignment",
+        "variables": ["primary_colors", "accent_color", "brand_primary", "brand_accent"],
+        "example": "Warm earth tones with professional blue accents (#3b82f6), clean color grading"
+      },
+      {
+        "name": "technical_requirements",
+        "description": "Image specifications and technical parameters",
+        "variables": ["resolution_size", "aspect_ratio", "image_format", "quality_target"],
+        "example": "2K resolution (1696x2528), 2:3 aspect ratio, premium quality, suitable for hero section"
+      },
+      {
+        "name": "brand_context",
+        "description": "Brand values, messaging, and visual identity",
+        "variables": ["brand_name", "brand_values", "target_demographic", "industry_context"],
+        "example": "Professional trades company branding, reliability focus, Australian context"
+      },
+      {
+        "name": "avoid_list",
+        "description": "Explicit exclusions and quality guardrails",
+        "variables": ["avoid_elements", "quality_issues", "brand_violations"],
+        "example": "Avoid generic stock imagery, avoid poor safety practices, avoid dated aesthetics"
+      }
+    ],
+    "complete_template": "Create a {style} image of {subject}. The composition should {composition}. Lighting should be {lighting} to emphasize {mood}. Use a {color_palette} color palette with {accent_color} accents, aligned with {brand_context}. Technical specs: {technical_requirements}. IMPORTANT - Avoid: {avoid_list}"
+  },
+
+  "zone_specific_templates": {
+    "hero_section": {
+      "name": "Hero Section Image",
+      "purpose": "Large impact, brand statement, above-the-fold visibility",
+      "aspect_ratio": "16:9",
+      "resolution": "1080p",
+      "composition_focus": "Dynamic, engaging, clear focal point",
+      "prompt_modifier": "Create an impactful, attention-grabbing image for hero section. Composition should draw eye to center with clear visual hierarchy. Strong lighting contrast to create depth. Vibrant colors with brand accent prominence.",
+      "variables": {
+        "primary_subject": "Main value proposition visual",
+        "secondary_elements": "Complementary supporting elements",
+        "emotional_appeal": "High - aspirational, inspiring",
+        "text_overlay_safe": true,
+        "text_overlay_areas": ["bottom_left", "bottom_right"]
+      }
+    },
+
+    "product_demo": {
+      "name": "Product/Service Demonstration",
+      "purpose": "Show actual product or service in action with clear context",
+      "aspect_ratio": "4:3",
+      "resolution": "1K-2K",
+      "composition_focus": "Product central, context visible, action-oriented",
+      "prompt_modifier": "Product-focused image showing actual service delivery or product quality. Center composition on product/service with context elements. Detail-sharp focus on product area. Professional, trustworthy atmosphere.",
+      "variables": {
+        "product_focus": "Clear, detailed, professional",
+        "action_context": "Service being delivered or product being used",
+        "detail_level": "High - show quality and craftsmanship",
+        "safety_emphasis": true
+      }
+    },
+
+    "testimonial_portrait": {
+      "name": "Testimonial/Client Portrait",
+      "purpose": "Build trust through authentic client representation",
+      "aspect_ratio": "1:1",
+      "resolution": "1K",
+      "composition_focus": "Portrait-centric, warm, approachable, professional",
+      "prompt_modifier": "Professional portrait of satisfied client/user. Composition: subject fills frame with slight headroom. Warm, approachable lighting. Friendly professional atmosphere suggesting reliability and satisfaction.",
+      "variables": {
+        "framing": "Close portrait, chest-up framing",
+        "expression": "Warm, confident, satisfied",
+        "environment": "Professional but relatable context",
+        "authenticity": "Genuine, non-staged appearance"
+      }
+    },
+
+    "industry_card": {
+      "name": "Industry-Specific Service Card",
+      "purpose": "Represent specific trade/service category with visual clarity",
+      "aspect_ratio": "1:1",
+      "resolution": "1K",
+      "composition_focus": "Service focus, clear identification, industry-appropriate",
+      "prompt_modifier": "Industry-specific service visual for card display. Clear service identification. Professional tradesperson in action. Brand colors prominent. Composition suitable for 1:1 square format.",
+      "variables": {
+        "industry": "Specific trade (plumbing, electrical, building, etc)",
+        "service_type": "Clear service identification",
+        "brand_color_prominence": "High - 20-30% of image",
+        "icon_friendly": true
+      }
+    },
+
+    "blog_featured": {
+      "name": "Blog Post Featured Image",
+      "purpose": "Engage readers, support article topic, SEO enhancement",
+      "aspect_ratio": "16:9",
+      "resolution": "1200px wide",
+      "composition_focus": "Topic-relevant, visually interesting, readable with text overlay",
+      "prompt_modifier": "Blog featured image aligned with article topic. Composition supports text overlay with 40% left/right margins clear. Visually interesting, on-brand, high shareability.",
+      "variables": {
+        "topic_alignment": "Directly supports article subject",
+        "text_overlay_safe": true,
+        "safe_margins": "40px on sides for text",
+        "shareability": "High - visually striking"
+      }
+    },
+
+    "process_step": {
+      "name": "Process Step/How-To Image",
+      "purpose": "Illustrate sequential process or how-to content",
+      "aspect_ratio": "1:1",
+      "resolution": "800px",
+      "composition_focus": "Step clarity, action visible, sequential context",
+      "prompt_modifier": "Specific process step visualization. Single action/moment in sequence. Clear, step-by-step appropriate. Detail sharp on key action point.",
+      "variables": {
+        "step_number": "Position in sequence",
+        "action_focus": "Single clear action",
+        "detail_required": "Medium-high",
+        "context_minimal": "Focus on action, minimal distraction"
+      }
+    },
+
+    "cta_support": {
+      "name": "Call-to-Action Support Image",
+      "purpose": "Encourage user action with compelling visual",
+      "aspect_ratio": "1:1",
+      "resolution": "1K",
+      "composition_focus": "Action-oriented, motivational, benefit-clear",
+      "prompt_modifier": "Motivational CTA support image. Shows benefit/outcome of action. Emotional resonance for desired action. Brand accent colors prominent.",
+      "variables": {
+        "action_type": "What should user do?",
+        "benefit_visible": "Show result/benefit of action",
+        "emotional_trigger": "Motivation, confidence, trust",
+        "urgency_implied": "Moderate to high"
+      }
+    }
+  },
+
+  "industry_customizations": {
+    "plumbing": {
+      "industry_code": "plumbing",
+      "color_accent": "#3b82f6",
+      "color_accent_name": "Professional Blue",
+      "visual_elements": [
+        "Quality copper/stainless steel materials",
+        "Professional tools and equipment",
+        "Clean, dry installations",
+        "Satisfied client interactions",
+        "Water flow, clean systems"
+      ],
+      "avoid_elements": [
+        "Burst pipes or water damage",
+        "Rust or corrosion",
+        "Unsafe practices",
+        "Cluttered or dirty installations"
+      ],
+      "tone": "Professional, reliable, solution-focused, trustworthy",
+      "messaging_emphasis": "Quality workmanship, reliability, emergency availability",
+      "style_modifiers": ["Professional", "Clean", "Technical", "Trustworthy"],
+      "sample_prompts": {
+        "hero": "Professional plumber installing quality copper pipes in modern Brisbane home, using proper techniques, bright natural lighting emphasizing clean installation, #3b82f6 blue accents visible on tools and workspace",
+        "testimonial": "Satisfied homeowner, warm smile, professional attire, relaxed home setting, conveying trust and satisfaction with plumbing work completed"
+      }
+    },
+
+    "electrical": {
+      "industry_code": "electrical",
+      "color_accent": "#f59e0b",
+      "color_accent_name": "Safety Orange",
+      "visual_elements": [
+        "Modern electrical installations",
+        "Safety compliance and proper grounding",
+        "LED technology and smart systems",
+        "Professional electrical testing",
+        "Safety-first work practices"
+      ],
+      "avoid_elements": [
+        "Exposed wiring or hazards",
+        "Outdated equipment",
+        "Unsafe work practices",
+        "Electrical hazard scenarios"
+      ],
+      "tone": "Professional, safety-conscious, technical, innovative",
+      "messaging_emphasis": "Safety, compliance, modern technology, expertise",
+      "style_modifiers": ["Professional", "Technical", "Modern", "Safe"],
+      "sample_prompts": {
+        "hero": "Licensed electrician installing modern smart home electrical system, proper safety equipment visible, #f59e0b safety highlights on warning markers and equipment",
+        "testimonial": "Professional electrician at job site, confident posture, safety compliance gear, clean modern electrical installation visible in background"
+      }
+    },
+
+    "building": {
+      "industry_code": "building",
+      "color_accent": "#10b981",
+      "color_accent_name": "Construction Green",
+      "visual_elements": [
+        "Quality construction techniques",
+        "Strong structural elements",
+        "Project completion milestones",
+        "Client satisfaction on-site",
+        "Building codes compliance"
+      ],
+      "avoid_elements": [
+        "Safety hazards or non-compliance",
+        "Poor construction quality",
+        "Unfinished or neglected projects",
+        "Non-standard techniques"
+      ],
+      "tone": "Professional, competent, results-focused, quality-driven",
+      "messaging_emphasis": "Quality craftsmanship, structural integrity, project completion",
+      "style_modifiers": ["Professional", "Solid", "Quality", "Complete"],
+      "sample_prompts": {
+        "hero": "Skilled builders completing quality home construction, excellent craftsmanship visible, #10b981 accents on safety equipment and quality markers",
+        "testimonial": "Satisfied homeowner in newly constructed home, proud expression, quality finishes visible, natural lighting emphasizing completed work quality"
+      }
+    },
+
+    "restoration": {
+      "industry_code": "restoration",
+      "color_accent": "#ff6b35",
+      "color_accent_name": "Vibrant Orange",
+      "visual_elements": [
+        "Before/after transformation potential",
+        "Expert restoration techniques",
+        "Property improvement and renewal",
+        "Attention to historical detail",
+        "Client delight with results"
+      ],
+      "avoid_elements": [
+        "Overly damaged 'before' states",
+        "Loss of original character",
+        "Poor-quality repairs",
+        "Incomplete restorations"
+      ],
+      "tone": "Skilled, detail-oriented, transformation-focused, pride in work",
+      "messaging_emphasis": "Expert transformation, attention to detail, preservation of character",
+      "style_modifiers": ["Skilled", "Detailed", "Transformative", "Expert"],
+      "sample_prompts": {
+        "hero": "Expert restoration craftsperson working on heritage property restoration, fine detail work visible, #ff6b35 accents on tools and quality finishes",
+        "testimonial": "Delighted property owner in restored space, pride and satisfaction evident, beautifully restored original features visible"
+      }
+    },
+
+    "hvac": {
+      "industry_code": "hvac",
+      "color_accent": "#06b6d4",
+      "color_accent_name": "Cool Cyan",
+      "visual_elements": [
+        "Modern HVAC systems",
+        "Temperature control efficiency",
+        "Professional installation",
+        "Maintenance and service excellence",
+        "Home comfort technology"
+      ],
+      "avoid_elements": [
+        "Outdated equipment",
+        "Improper installation",
+        "Non-functional systems",
+        "Safety hazards"
+      ],
+      "tone": "Professional, efficient, comfort-focused, modern",
+      "messaging_emphasis": "Comfort, efficiency, reliability, modern technology",
+      "style_modifiers": ["Professional", "Modern", "Efficient", "Comfortable"],
+      "sample_prompts": {
+        "hero": "HVAC technician installing modern climate control system, professional installation technique visible, #06b6d4 accents on system components and technology",
+        "testimonial": "Homeowner enjoying comfortable home climate, relaxed atmosphere, modern system visible, satisfaction with temperature control"
+      }
+    },
+
+    "landscaping": {
+      "industry_code": "landscaping",
+      "color_accent": "#22c55e",
+      "color_accent_name": "Landscape Green",
+      "visual_elements": [
+        "Beautiful landscape designs",
+        "Plant health and growth",
+        "Outdoor living spaces",
+        "Water features and hardscaping",
+        "Property transformation"
+      ],
+      "avoid_elements": [
+        "Dead or unhealthy plants",
+        "Poorly maintained landscapes",
+        "Overgrown or neglected areas",
+        "Unsafe outdoor conditions"
+      ],
+      "tone": "Creative, environmental-conscious, transformative, aesthetic",
+      "messaging_emphasis": "Beauty, outdoor living, property value, environmental stewardship",
+      "style_modifiers": ["Creative", "Beautiful", "Natural", "Professional"],
+      "sample_prompts": {
+        "hero": "Professional landscape designer creating stunning outdoor living space, vibrant healthy plants, #22c55e accents on landscaping features and natural elements",
+        "testimonial": "Satisfied homeowner enjoying beautiful new landscape, relaxation and pride in outdoor space, lush healthy plants visible"
+      }
+    }
+  },
+
+  "style_modifiers": {
+    "photorealistic": {
+      "description": "Highly realistic, photograph-quality imagery",
+      "prompt_extension": "Photorealistic style, camera-quality detail, natural lighting, authentic textures, shot with professional photography techniques",
+      "best_for": ["Product demo", "Testimonials", "Before/After", "Trust-building"],
+      "quality_level": "Premium"
+    },
+
+    "illustrated": {
+      "description": "Hand-drawn or illustrated style with character",
+      "prompt_extension": "Illustrated art style, hand-drawn quality, artistic interpretation, slightly stylized, custom artwork aesthetic",
+      "best_for": ["Conceptual visuals", "Process steps", "Infographics", "Creative content"],
+      "quality_level": "High"
+    },
+
+    "isometric": {
+      "description": "3D isometric technical illustration",
+      "prompt_extension": "Isometric 3D illustration style, technical drawing quality, clean geometric forms, clear perspective, technical accuracy",
+      "best_for": ["Process steps", "Technical explanations", "Service breakdowns"],
+      "quality_level": "High"
+    },
+
+    "flat_vector": {
+      "description": "Modern flat design with solid colors",
+      "prompt_extension": "Flat design style, vector-quality, solid colors, minimal shading, modern geometric forms, clean lines",
+      "best_for": ["Icons", "Service cards", "Infographics"],
+      "quality_level": "Standard"
+    },
+
+    "cinematic": {
+      "description": "Film-quality cinematic presentation",
+      "prompt_extension": "Cinematic style, film-quality lighting and composition, dramatic mood, Hollywood-grade visual production, depth and atmosphere",
+      "best_for": ["Hero images", "Video thumbnails", "High-impact visuals"],
+      "quality_level": "Premium"
+    }
+  },
+
+  "tts_voice_profiles": {
+    "synthex_default": {
+      "voice_id": "Sulafat",
+      "gender": "Male",
+      "age_perception": "35-45",
+      "accent": "Australian (neutral)",
+      "tone": "Professional, trustworthy, authoritative",
+      "use_cases": ["Brand voice", "Primary narration", "Professional messaging"],
+      "characteristics": "Clear enunciation, confident delivery, warm professional tone",
+      "sample_script": "Welcome to [Brand]. We deliver exceptional service with reliability you can trust.",
+      "recommended_for": [
+        "hero_video",
+        "brand_messaging",
+        "professional_narration",
+        "authority_building"
+      ]
+    },
+
+    "restore_assist_guide": {
+      "voice_id": "Sulafat",
+      "gender": "Male",
+      "age_perception": "40-50",
+      "accent": "Australian (warm)",
+      "tone": "Knowledgeable guide, mentor figure",
+      "use_cases": ["Tutorial content", "How-to guides", "Expert guidance"],
+      "characteristics": "Measured pacing, clear instruction, warm approachable tone",
+      "sample_script": "Let me walk you through the proper way to tackle this project step by step.",
+      "recommended_for": [
+        "how_to_video",
+        "tutorial_content",
+        "expert_guidance",
+        "educational_content"
+      ]
+    },
+
+    "educational": {
+      "voice_id": "Charon",
+      "gender": "Female",
+      "age_perception": "30-40",
+      "accent": "Australian (neutral)",
+      "tone": "Clear, engaging, educational",
+      "use_cases": ["Educational content", "Process explanation", "Technical guidance"],
+      "characteristics": "Clear articulation, engaging pace, friendly professionalismus",
+      "sample_script": "In this video, you'll learn the most efficient way to achieve professional results.",
+      "recommended_for": [
+        "educational_content",
+        "process_explanation",
+        "skill_building",
+        "technical_tutorials"
+      ]
+    },
+
+    "friendly_intro": {
+      "voice_id": "Achird",
+      "gender": "Female",
+      "age_perception": "25-35",
+      "accent": "Australian (warm, friendly)",
+      "tone": "Warm, welcoming, approachable",
+      "use_cases": ["Welcome messages", "Introduction", "Customer engagement"],
+      "characteristics": "Warm tone, natural rhythm, friendly engagement",
+      "sample_script": "Hi there! We're so glad you're here. Let's show you what we can do for you.",
+      "recommended_for": [
+        "welcome_video",
+        "introduction",
+        "customer_greeting",
+        "engagement_content"
+      ]
+    },
+
+    "authoritative": {
+      "voice_id": "Orus",
+      "gender": "Male",
+      "age_perception": "45-55",
+      "accent": "Australian (deep, authoritative)",
+      "tone": "Authority, expertise, command",
+      "use_cases": ["Expert positioning", "Compliance messaging", "Technical authority"],
+      "characteristics": "Deep resonant tone, measured cadence, command presence",
+      "sample_script": "With over 20 years of industry expertise, we ensure your project meets the highest standards.",
+      "recommended_for": [
+        "expertise_positioning",
+        "authority_building",
+        "compliance_messaging",
+        "technical_authority"
+      ]
+    }
+  },
+
+  "video_prompt_templates": {
+    "hero_video": {
+      "name": "Hero Video",
+      "duration": "6-8 seconds",
+      "aspect_ratio": "16:9",
+      "structure": [
+        {
+          "phase": "Hook (0-1s)",
+          "description": "Immediate attention grab, surprising or compelling opening"
+        },
+        {
+          "phase": "Value (1-4s)",
+          "description": "Show service/product, demonstrate value, establish benefit"
+        },
+        {
+          "phase": "Trust (4-6s)",
+          "description": "Build credibility, show quality, satisfied client reaction"
+        },
+        {
+          "phase": "CTA (6-8s)",
+          "description": "Clear call to action, next steps, conversion path"
+        }
+      ],
+      "prompt_guidelines": "Opening must be visually striking and engaging within first 1 second. Show actual service delivery. Include satisfied client moment. End with clear CTA. Natural conversational dialogue or expert narration. Upbeat professional tone.",
+      "duration_seconds": 6
+    },
+
+    "explainer_clip": {
+      "name": "Explainer Video",
+      "duration": "30-90 seconds",
+      "aspect_ratio": "16:9",
+      "structure": [
+        {
+          "phase": "Problem (0-10s)",
+          "description": "Establish the problem or need"
+        },
+        {
+          "phase": "Solution (10-20s)",
+          "description": "Introduce the solution clearly"
+        },
+        {
+          "phase": "Benefits (20-35s)",
+          "description": "Show specific benefits and outcomes"
+        },
+        {
+          "phase": "Process (35-50s)",
+          "description": "Walk through how service works"
+        },
+        {
+          "phase": "Social Proof (50-60s)",
+          "description": "Show client testimonials or results"
+        },
+        {
+          "phase": "CTA (60-90s)",
+          "description": "Final call to action and contact information"
+        }
+      ],
+      "prompt_guidelines": "Clear step-by-step progression. Visual variety between phases. Expert narration explaining each step. Include on-screen text for key points. Professional pacing with 1-2 second transitions. Ending with clickable CTA.",
+      "duration_seconds": 90
+    },
+
+    "testimonial_video": {
+      "name": "Client Testimonial",
+      "duration": "15-30 seconds",
+      "aspect_ratio": "1:1",
+      "structure": [
+        {
+          "phase": "Introduction (0-3s)",
+          "description": "Name, role, or context"
+        },
+        {
+          "phase": "Problem (3-8s)",
+          "description": "Specific problem they faced"
+        },
+        {
+          "phase": "Solution (8-15s)",
+          "description": "How service solved the problem"
+        },
+        {
+          "phase": "Results (15-25s)",
+          "description": "Specific results and satisfaction"
+        },
+        {
+          "phase": "Recommendation (25-30s)",
+          "description": "Would recommend, final statement"
+        }
+      ],
+      "prompt_guidelines": "Authentic client speaking naturally. Genuine emotion and satisfaction visible. Specific problem and solution mentioned. Measurable results if possible. Professional setting but relatable. Vertical 1:1 format for social media.",
+      "duration_seconds": 30
+    },
+
+    "social_short": {
+      "name": "Social Media Short",
+      "duration": "15-60 seconds",
+      "aspect_ratio": "9:16",
+      "structure": [
+        {
+          "phase": "Hook (0-2s)",
+          "description": "Stop the scroll - visual or verbal hook"
+        },
+        {
+          "phase": "Content (2-10s)",
+          "description": "Main message or demonstration"
+        },
+        {
+          "phase": "Engagement (10-15s)",
+          "description": "Question, poll, or engagement prompt"
+        },
+        {
+          "phase": "CTA (final 3-5s)",
+          "description": "Follow, save, share, or link"
+        }
+      ],
+      "prompt_guidelines": "Fast-paced, vertical format. Hook in first 2 seconds. Quick cuts and transitions. Text overlays for key points. Trending audio or custom voiceover. Platform-specific formatting (TikTok, Instagram Reels, Shorts). High entertainment value.",
+      "duration_seconds": 30
+    }
+  },
+
+  "variables_reference": {
+    "content_types": [
+      "hero_image",
+      "product_showcase",
+      "testimonial",
+      "process_step",
+      "before_after",
+      "hero_video",
+      "explainer_video",
+      "testimonial_video",
+      "social_short",
+      "blog_featured"
+    ],
+    "industries": [
+      "plumbing",
+      "electrical",
+      "building",
+      "restoration",
+      "hvac",
+      "landscaping"
+    ],
+    "locations": [
+      "Brisbane",
+      "Sydney",
+      "Melbourne",
+      "Perth",
+      "Adelaide",
+      "Hobart",
+      "Darwin",
+      "Canberra"
+    ],
+    "tone_options": [
+      "professional",
+      "friendly",
+      "authoritative",
+      "approachable",
+      "expert",
+      "trustworthy",
+      "innovative",
+      "reliable"
+    ],
+    "brand_values": [
+      "quality",
+      "reliability",
+      "expertise",
+      "customer_focus",
+      "innovation",
+      "safety",
+      "professionalism",
+      "integrity"
+    ]
+  },
+
+  "quality_checklist": {
+    "image_quality": [
+      "Clear focal point and composition",
+      "Professional lighting with appropriate shadows",
+      "Color accuracy and brand alignment",
+      "No visible watermarks or artifacts",
+      "Proper exposure and contrast",
+      "Sharp focus on important elements",
+      "Natural or appropriate background",
+      "Professional overall presentation"
+    ],
+    "video_quality": [
+      "Smooth transitions between segments",
+      "Clear audio with proper levels",
+      "Professional editing and pacing",
+      "Brand consistency throughout",
+      "Proper color grading and correction",
+      "Legible on-screen text",
+      "Appropriate music or sound effects",
+      "Clear call-to-action at end"
+    ],
+    "brand_alignment": [
+      "Color palette matches brand guidelines",
+      "Visual style consistent with brand identity",
+      "Message aligns with brand voice",
+      "Professional presentation level",
+      "Industry-appropriate visuals",
+      "Target audience clearly addressed",
+      "No conflicting brand elements",
+      "Overall cohesive appearance"
+    ]
+  }
+}

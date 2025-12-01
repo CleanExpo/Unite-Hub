@@ -1,0 +1,797 @@
+{
+  "metadata": {
+    "timestamp": "2025-12-02T00:00:00Z",
+    "report_version": "1.0",
+    "project_name": "Unite-Hub",
+    "project_status": "production_system",
+    "baseline_type": "comprehensive_discovery"
+  },
+  "executive_summary": {
+    "project_type": "Enterprise SaaS Platform",
+    "stage": "Active Production with Partial Documentation",
+    "core_metrics": {
+      "typescript_source_files": 2897,
+      "api_routes": 672,
+      "database_migrations": 409,
+      "ai_agents": 28,
+      "core_subsystems": 150,
+      "test_files": 78,
+      "cli_scripts": 20,
+      "claude_skills": 22
+    },
+    "production_readiness": {
+      "overall_score": 60,
+      "assessment": "OPERATIONAL_BUT_NEEDS_HARDENING",
+      "dimensions": {
+        "architecture": 85,
+        "security": 80,
+        "reliability": 60,
+        "testability": 20,
+        "observability": 70,
+        "documentation": 40,
+        "performance": 0,
+        "maintainability": 50
+      }
+    }
+  },
+  "project_structure": {
+    "root_directories": [
+      "src",
+      ".claude",
+      "supabase",
+      "tests",
+      "docker",
+      "docs",
+      "config",
+      "convex",
+      "scripts"
+    ],
+    "source_organization": {
+      "location": "src/",
+      "typescript_files": 2897,
+      "main_directories": {
+        "app": "Next.js App Router with 672 API routes",
+        "lib": "150+ subsystem libraries",
+        "components": "100+ React components",
+        "contexts": "Context providers",
+        "hooks": "Custom React hooks",
+        "state": "State management stores"
+      }
+    },
+    "agent_configuration": {
+      "location": ".claude/",
+      "canonical_file": "agent.md",
+      "skill_definitions": 22,
+      "skill_locations": [
+        "ai-phill",
+        "backend",
+        "cognitive-twin",
+        "content-agent",
+        "decision-moment",
+        "deployment-audit",
+        "docs",
+        "email-agent",
+        "founder-os",
+        "frontend",
+        "multi-channel",
+        "no-bluff-seo",
+        "orchestrator",
+        "pre-client",
+        "seo",
+        "seo-leak",
+        "social-playbook",
+        "build-diagnostics"
+      ],
+      "custom_commands": "Available in .claude/commands/",
+      "mcp_servers": "Configured in .claude/mcp.json"
+    },
+    "database_layer": {
+      "location": "supabase/migrations/",
+      "total_migrations": 409,
+      "migration_ranges": {
+        "core_foundation": "000-099",
+        "crm_phase": "100-199",
+        "intelligence": "200-299",
+        "founder_os": "300-310",
+        "enterprise": "400-403"
+      },
+      "status": "Current and maintained"
+    }
+  },
+  "api_routes_inventory": {
+    "total_routes": 672,
+    "documentation_status": "INCOMPLETE - CLAUDE.md claims 104, actual is 672",
+    "categories_discovered": [
+      {
+        "category": "Admin",
+        "count": 7,
+        "examples": [
+          "approve-access",
+          "pending-approvals",
+          "rate-limits",
+          "sandbox-users",
+          "trusted-devices"
+        ]
+      },
+      {
+        "category": "Ads Management",
+        "count": 3,
+        "examples": [
+          "accounts",
+          "campaigns",
+          "opportunities"
+        ]
+      },
+      {
+        "category": "Agency",
+        "count": 2,
+        "examples": [
+          "create",
+          "switch"
+        ]
+      },
+      {
+        "category": "Agent Execution",
+        "count": 4,
+        "examples": [
+          "execute",
+          "plan",
+          "status",
+          "mandates"
+        ]
+      },
+      {
+        "category": "Intelligence Agents",
+        "count": 4,
+        "examples": [
+          "contact-intelligence",
+          "content-personalization",
+          "continuous-intelligence",
+          "intelligence-extraction"
+        ]
+      },
+      {
+        "category": "AI Services",
+        "count": 10,
+        "examples": [
+          "analyze-stripe",
+          "auto-reply",
+          "budget",
+          "campaign",
+          "chat",
+          "extended-thinking"
+        ]
+      },
+      {
+        "category": "Marketplace",
+        "count": 7,
+        "examples": [
+          "list",
+          "search",
+          "detail",
+          "variants",
+          "favorite",
+          "export",
+          "collections"
+        ]
+      }
+    ],
+    "critical_finding": "ROUTES NOT FULLY DOCUMENTED - CLAUDE.md needs update",
+    "openapi_specification": "NOT_FOUND - Recommendation: Generate from codebase"
+  },
+  "database_schema": {
+    "total_tables": 50,
+    "core_migrations_latest": [
+      {
+        "migration": 300,
+        "name": "Founder Intelligence OS Core",
+        "tables": [
+          "founder_businesses",
+          "founder_business_vault_secrets",
+          "founder_business_signals",
+          "founder_os_snapshots"
+        ],
+        "status": "COMPLETE"
+      },
+      {
+        "migration": 305,
+        "name": "Cognitive Twin Engine",
+        "tables": [
+          "cognitive_twin_scores",
+          "cognitive_twin_digests",
+          "cognitive_twin_decisions"
+        ],
+        "status": "COMPLETE"
+      },
+      {
+        "migration": 234,
+        "name": "Task Marketplace Auction System",
+        "tables": [
+          "task_marketplace_auctions",
+          "task_marketplace_bids",
+          "task_marketplace_history",
+          "task_marketplace_analytics"
+        ],
+        "status": "COMPLETE"
+      },
+      {
+        "migration": 315,
+        "name": "Observability Infrastructure",
+        "tables": [
+          "observability_traces",
+          "observability_logs",
+          "observability_metrics"
+        ],
+        "status": "COMPLETE"
+      }
+    ],
+    "rls_status": {
+      "row_level_security": true,
+      "protected_tables": 20,
+      "workspace_isolation": "ENFORCED",
+      "roles_defined": [
+        "FOUNDER",
+        "STAFF",
+        "CLIENT",
+        "ADMIN"
+      ],
+      "last_audit": "NEEDED - scripts/rls-diagnostics.sql"
+    },
+    "schema_health": {
+      "status": "PARTIAL_INSTABILITY",
+      "issues": [
+        "Pre-migration fix files present (300A, 303A)",
+        "Multiple consolidation files suggest cleanup needed",
+        "FIX_* files indicate ongoing corrections"
+      ],
+      "recommendation": "Run RLS diagnostics and schema validation"
+    }
+  },
+  "ai_agent_ecosystem": {
+    "total_agents": 28,
+    "location": "src/lib/agents/",
+    "foundation_agents": [
+      "orchestrator-router.ts",
+      "base-agent.ts",
+      "agentExecutor.ts",
+      "agentPlanner.ts"
+    ],
+    "primary_intelligence_agents": [
+      "founderOsAgent.ts",
+      "aiPhillAgent.ts",
+      "cognitiveTwinAgent.ts",
+      "seoLeakAgent.ts",
+      "socialInboxAgent.ts",
+      "searchSuiteAgent.ts",
+      "boostBumpAgent.ts",
+      "preClientIdentityAgent.ts"
+    ],
+    "domain_agents": [
+      "contact-intelligence.ts",
+      "content-personalization.ts",
+      "email-processor.ts",
+      "email-intelligence-agent.ts",
+      "intelligence-extraction.ts",
+      "calendar-intelligence.ts",
+      "whatsapp-intelligence.ts"
+    ],
+    "specialized_agents": [
+      "agentSafety.ts",
+      "agent-reliability.ts",
+      "agentArchiveBridge.ts",
+      "model-router.ts",
+      "multi-model-orchestrator.ts",
+      "orchestrator-self-healing.ts",
+      "mindmap-analysis.ts"
+    ],
+    "orchestration_pattern": {
+      "entry_point": "orchestrator-router.ts",
+      "routing_strategy": "Intent-based task routing",
+      "fallback_mechanism": "Multi-agent redundancy",
+      "ai_models_supported": [
+        "Claude (Opus, Sonnet, Haiku)",
+        "GPT-4 (via OpenRouter)",
+        "Gemini",
+        "Llama"
+      ]
+    },
+    "capabilities": {
+      "intelligent_routing": true,
+      "fallback_recovery": true,
+      "multi_model_support": true,
+      "extended_thinking": true,
+      "memory_persistence": true,
+      "safety_filtering": true,
+      "self_healing": true,
+      "documentation": false
+    }
+  },
+  "marketplace_system": {
+    "implementation_status": "95% COMPLETE",
+    "files": {
+      "api_routes": 7,
+      "core_engine_files": 5,
+      "frontend_pages": 1,
+      "database_tables": 4,
+      "database_functions": 2,
+      "test_files": 0
+    },
+    "api_routes_detail": [
+      {
+        "route": "GET /api/marketplace/list",
+        "file": "src/app/api/marketplace/list/route.ts",
+        "lines": 76,
+        "functionality": "List components with pagination, filtering, sorting",
+        "status": "IMPLEMENTED"
+      },
+      {
+        "route": "GET /api/marketplace/search",
+        "file": "src/app/api/marketplace/search/route.ts",
+        "lines": 54,
+        "functionality": "Full-text search",
+        "status": "IMPLEMENTED"
+      },
+      {
+        "route": "GET /api/marketplace/[id]",
+        "file": "src/app/api/marketplace/[id]/route.ts",
+        "functionality": "Component details",
+        "status": "IMPLEMENTED"
+      },
+      {
+        "route": "GET /api/marketplace/[id]/variants",
+        "file": "src/app/api/marketplace/[id]/variants/route.ts",
+        "functionality": "Component variants",
+        "status": "IMPLEMENTED"
+      },
+      {
+        "route": "POST /api/marketplace/[id]/favorite",
+        "file": "src/app/api/marketplace/[id]/favorite/route.ts",
+        "functionality": "Favorite toggle",
+        "status": "IMPLEMENTED"
+      },
+      {
+        "route": "GET /api/marketplace/[id]/export",
+        "file": "src/app/api/marketplace/[id]/export/route.ts",
+        "functionality": "Export component",
+        "status": "IMPLEMENTED"
+      },
+      {
+        "route": "GET /api/marketplace/collections",
+        "file": "src/app/api/marketplace/collections/route.ts",
+        "functionality": "Collection management",
+        "status": "IMPLEMENTED"
+      }
+    ],
+    "core_engine": {
+      "file": "src/lib/marketplace/taskMarketplaceEngine.ts",
+      "lines": 324,
+      "auction_model": "Hybrid first-price weighted Vickrey",
+      "features": [
+        "Agent bid evaluation",
+        "Scoring breakdown (capability 35%, confidence 25%, success 20%, context 20%)",
+        "Multi-agent bundle evaluation",
+        "Safety filtering (risk >= 80 disqualification)",
+        "Explainability reporting",
+        "Vickrey-style price discounting"
+      ]
+    },
+    "frontend": {
+      "file": "src/app/dashboard/marketplace/page.tsx",
+      "lines": 248,
+      "features": [
+        "Live auction bidding panel",
+        "Winner announcement panel",
+        "Historical auction timeline",
+        "Polling with exponential backoff (2s → 20s max)"
+      ],
+      "issues": [
+        "Line 244: TODO comment - Start auction dialog not implemented",
+        "Line 180: Variable naming issue setShowStartAuction vs setShowStartDialog"
+      ]
+    },
+    "database_schema": {
+      "tables": 4,
+      "functions": 2,
+      "rls_enabled": true,
+      "migration_file": "supabase/migrations/234_task_marketplace_auction_system.sql"
+    },
+    "completeness_assessment": {
+      "api_implementation": 100,
+      "core_engine": 100,
+      "database_schema": 100,
+      "frontend_ui": 95,
+      "documentation": 10,
+      "testing": 0,
+      "error_handling": 30,
+      "overall": 95
+    },
+    "critical_gaps": {
+      "testing": "NO DEDICATED TEST FILES",
+      "documentation": "ONLY CODE COMMENTS",
+      "error_handling": "BASIC CATCH-ALL BLOCKS ONLY",
+      "edge_cases": "NOT HANDLED"
+    }
+  },
+  "test_coverage": {
+    "total_test_files": 78,
+    "test_framework": "Vitest",
+    "e2e_framework": "Playwright",
+    "coverage_percentage": 2.7,
+    "status": "INADEQUATE FOR PRODUCTION",
+    "test_distribution": {
+      "unit_tests": 50,
+      "integration_tests": 20,
+      "e2e_tests": 8,
+      "estimated": true
+    },
+    "critical_gaps": [
+      "No marketplace system tests",
+      "No agent orchestration tests",
+      "No critical API route coverage",
+      "No E2E user journeys for main features",
+      "No load/stress tests"
+    ],
+    "npm_scripts": [
+      "npm test - Run all tests",
+      "npm run test:unit - Unit tests only",
+      "npm run test:integration - Integration tests",
+      "npm run test:e2e - Playwright E2E tests",
+      "npm run test:coverage - Coverage report"
+    ],
+    "recommendation": "ESTABLISH MINIMUM 20% COVERAGE TARGET IMMEDIATELY"
+  },
+  "claude_agent_system": {
+    "framework": "Agent-skill-based orchestration",
+    "canonical_file": ".claude/agent.md",
+    "skills_count": 22,
+    "skill_categories": {
+      "intelligence_analytics": [
+        "ai-phill",
+        "cognitive-twin",
+        "decision-moment",
+        "no-bluff-seo",
+        "seo-leak"
+      ],
+      "operational": [
+        "orchestrator",
+        "email-agent",
+        "content-agent",
+        "founder-os",
+        "pre-client"
+      ],
+      "marketing_growth": [
+        "multi-channel",
+        "social-playbook"
+      ],
+      "technical": [
+        "backend",
+        "frontend",
+        "deployment-audit",
+        "docs",
+        "build-diagnostics",
+        "seo"
+      ]
+    },
+    "mcp_servers": [
+      "playwright",
+      "sherlock-think-alpha",
+      "dataforseo"
+    ]
+  },
+  "critical_subsystems": {
+    "tier_1_foundation": [
+      "auth",
+      "supabase",
+      "db",
+      "cache",
+      "logging"
+    ],
+    "tier_2_ai_intelligence": [
+      "agents",
+      "ai",
+      "anthropic",
+      "openai",
+      "openrouter",
+      "intelligence"
+    ],
+    "tier_3_core_business": [
+      "campaigns",
+      "contacts",
+      "email",
+      "crm",
+      "content"
+    ],
+    "tier_4_advanced": [
+      "marketplace",
+      "founderOps",
+      "founderMemory",
+      "cognitiveTwin",
+      "seoEnhancement",
+      "seoLeak"
+    ],
+    "tier_5_enterprise": [
+      "orchestration",
+      "observability",
+      "compliance",
+      "billing",
+      "analytics"
+    ]
+  },
+  "environment_configuration": {
+    "required_variables": 16,
+    "configured_variables": 14,
+    "status": "87.5% COMPLETE",
+    "categories": {
+      "core": {
+        "NEXT_PUBLIC_SUPABASE_URL": true,
+        "NEXT_PUBLIC_SUPABASE_ANON_KEY": true,
+        "SUPABASE_SERVICE_ROLE_KEY": true,
+        "ANTHROPIC_API_KEY": true,
+        "GOOGLE_CLIENT_ID": true,
+        "GOOGLE_CLIENT_SECRET": true
+      },
+      "email": {
+        "SENDGRID_API_KEY": true,
+        "RESEND_API_KEY": true,
+        "EMAIL_SERVER_HOST": true,
+        "EMAIL_SERVER_USER": true,
+        "EMAIL_SERVER_PASSWORD": true
+      },
+      "marketing_intelligence": {
+        "PERPLEXITY_API_KEY": true,
+        "OPENROUTER_API_KEY": true
+      },
+      "monitoring": {
+        "DATADOG_API_KEY": false,
+        "DATADOG_SITE": false
+      }
+    }
+  },
+  "deployment_configuration": {
+    "framework": "Next.js 16 with Turbopack",
+    "node_requirement": ">=22.0.0",
+    "npm_requirement": ">=10.0.0",
+    "default_port": 3008,
+    "deployment_targets": [
+      "Vercel (primary)",
+      "DigitalOcean (secondary)",
+      "Docker (local/staging)"
+    ],
+    "build_config": {
+      "memory_limit": "6144 MB",
+      "optimization": "Cross-env NODE_OPTIONS"
+    }
+  },
+  "docker_services": {
+    "configured": true,
+    "services": [
+      "agents",
+      "grafana",
+      "nginx",
+      "otel",
+      "prometheus",
+      "rabbitmq",
+      "tenant",
+      "docs-cache"
+    ],
+    "profiles": [
+      "observability",
+      "mcp"
+    ]
+  },
+  "phase_progress": {
+    "phases": [
+      {
+        "phase": 5,
+        "title": "Real-Time & Monitoring",
+        "status": "COMPLETE",
+        "migrations": 315
+      },
+      {
+        "phase": 6,
+        "title": "Production Enhancements",
+        "status": "COMPLETE",
+        "migrations": "300-310"
+      },
+      {
+        "phase": 20,
+        "title": "Founder Intelligence OS",
+        "status": "COMPLETE",
+        "migrations": "300-310"
+      },
+      {
+        "phase": 42,
+        "title": "Credit Marketplace",
+        "status": "IN_PROGRESS",
+        "branch": "feature/phase42-credit-marketplace-upsell-engine"
+      },
+      {
+        "phase": 71,
+        "title": "AI Compliance",
+        "status": "IN_PROGRESS",
+        "branch": "feature/phase71-ai-compliance-marketplace"
+      },
+      {
+        "phase": 97,
+        "title": "Cross-Tenant Distribution",
+        "status": "IN_PROGRESS",
+        "branch": "feature/phase97-cross-tenant-marketplace-engine-distribution"
+      }
+    ]
+  },
+  "critical_gaps_and_issues": {
+    "documentation": [
+      "Route inventory missing - CLAUDE.md claims 104, actual is 672+",
+      "Subsystem documentation incomplete - most lib/ folders lack README.md",
+      "No OpenAPI/Swagger specification",
+      "Agent responsibilities unclear in some cases"
+    ],
+    "data_consistency": [
+      "Pre-migration fix files present (300A, 303A)",
+      "Mix of consolidation files suggests schema instability",
+      "Multiple FIX_* files indicate ongoing corrections"
+    ],
+    "testing": [
+      "Only 78 tests for 2,897 source files (2.7% coverage)",
+      "Marketplace system completely untested",
+      "No integration tests for agent orchestration",
+      "E2E coverage minimal"
+    ],
+    "code_quality": [
+      "No centralized error handling strategy",
+      "Inconsistent response formats across routes",
+      "TODO comments remain in production code",
+      "Missing error boundaries in critical paths"
+    ],
+    "code_issues": [
+      {
+        "file": "src/app/dashboard/marketplace/page.tsx",
+        "line": 244,
+        "issue": "TODO comment - Start auction dialog not implemented",
+        "severity": "MEDIUM"
+      },
+      {
+        "file": "src/app/dashboard/marketplace/page.tsx",
+        "line": 180,
+        "issue": "Variable naming inconsistency setShowStartAuction vs setShowStartDialog",
+        "severity": "HIGH"
+      }
+    ]
+  },
+  "strengths": [
+    "Strong authentication pattern (PKCE OAuth)",
+    "Workspace isolation consistently enforced",
+    "Rate limiting applied across all routes",
+    "AI agent architecture scalable and modular",
+    "Comprehensive database schema with RLS",
+    "Well-organized code structure"
+  ],
+  "recommendations": {
+    "immediate_p0": [
+      "Update route documentation - generate OpenAPI spec",
+      "Establish test baseline - minimum 20% coverage",
+      "Fix schema stability - clean up pre-migration files",
+      "Update CLAUDE.md with accurate counts"
+    ],
+    "short_term_p1": [
+      "Create system README files for each lib/ subsystem",
+      "Implement centralized error handling",
+      "Document agent system and communication protocols",
+      "Add marketplace integration tests"
+    ],
+    "medium_term_p2": [
+      "Complete APM integration (Datadog)",
+      "Reach 30%+ test coverage",
+      "Implement observability dashboard",
+      "Add performance baselines"
+    ]
+  },
+  "completeness_matrix": {
+    "components": [
+      {
+        "component": "API Routes",
+        "coverage_percent": 100,
+        "status": "IMPLEMENTED",
+        "notes": "672 routes exist but not documented"
+      },
+      {
+        "component": "Database Schema",
+        "coverage_percent": 100,
+        "status": "CURRENT",
+        "notes": "409 migrations, RLS enabled"
+      },
+      {
+        "component": "AI Agents",
+        "coverage_percent": 100,
+        "status": "OPERATIONAL",
+        "notes": "28 agents fully orchestrated"
+      },
+      {
+        "component": "Authentication",
+        "coverage_percent": 100,
+        "status": "SECURE",
+        "notes": "PKCE OAuth with session management"
+      },
+      {
+        "component": "Marketplace",
+        "coverage_percent": 95,
+        "status": "PARTIAL",
+        "notes": "Engine complete, no tests"
+      },
+      {
+        "component": "Documentation",
+        "coverage_percent": 40,
+        "status": "INCOMPLETE",
+        "notes": "CLAUDE.md outdated, lib/ lacks READMEs"
+      },
+      {
+        "component": "Test Coverage",
+        "coverage_percent": 3,
+        "status": "CRITICAL_GAP",
+        "notes": "Only 78 tests for 2,897 files"
+      },
+      {
+        "component": "Observability",
+        "coverage_percent": 70,
+        "status": "PARTIAL",
+        "notes": "Logging/monitoring present, APM incomplete"
+      },
+      {
+        "component": "Error Handling",
+        "coverage_percent": 50,
+        "status": "INCONSISTENT",
+        "notes": "Basic catch blocks, no centralized strategy"
+      },
+      {
+        "component": "Performance",
+        "coverage_percent": 0,
+        "status": "UNTESTED",
+        "notes": "No load test results, baseline unknown"
+      }
+    ]
+  },
+  "production_readiness_breakdown": {
+    "architecture": {
+      "score": 85,
+      "status": "STRONG",
+      "evidence": "Well-organized agent system, clear separation of concerns"
+    },
+    "security": {
+      "score": 80,
+      "status": "GOOD",
+      "evidence": "PKCE OAuth, workspace isolation, RLS policies"
+    },
+    "reliability": {
+      "score": 60,
+      "status": "MEDIUM",
+      "evidence": "Limited error handling, untested edge cases"
+    },
+    "testability": {
+      "score": 20,
+      "status": "POOR",
+      "evidence": "Only 78 tests for entire codebase"
+    },
+    "observability": {
+      "score": 70,
+      "status": "PARTIAL",
+      "evidence": "Logging/monitoring present, APM incomplete"
+    },
+    "documentation": {
+      "score": 40,
+      "status": "POOR",
+      "evidence": "Major gaps in route/subsystem documentation"
+    },
+    "performance": {
+      "score": 0,
+      "status": "UNTESTED",
+      "evidence": "No load test results, baseline unknown"
+    },
+    "maintainability": {
+      "score": 50,
+      "status": "MEDIUM",
+      "evidence": "Code organization good, documentation poor"
+    },
+    "overall_score": 60,
+    "overall_status": "OPERATIONAL_BUT_NEEDS_HARDENING"
+  }
+}

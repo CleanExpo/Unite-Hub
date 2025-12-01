@@ -1,0 +1,389 @@
+{
+  "$schema": "https://synthex.com.au/schemas/vce-v2-models.json",
+  "meta": {
+    "module": "models",
+    "version": "2.0.0",
+    "description": "Complete Gemini API model registry with specifications, capabilities, and constraints",
+    "api_base_url": "https://generativelanguage.googleapis.com/v1beta",
+    "documentation_source": "https://ai.google.dev/gemini-api/docs",
+    "last_updated": "2025-11-30"
+  },
+
+  "image_generation": {
+    "primary_models": {
+      "nano_banana_pro": {
+        "model_id": "gemini-3-pro-image-preview",
+        "display_name": "Nano Banana Pro (Gemini 3 Pro Image Preview)",
+        "description": "State-of-the-art image generation optimized for professional asset production with advanced reasoning",
+        "status": "preview",
+        "production_allowed": true,
+        "use_cases": [
+          "Hero images",
+          "High-fidelity product shots",
+          "Complex multi-element compositions",
+          "Text-heavy infographics",
+          "Brand assets requiring precise control",
+          "Multi-turn iterative editing"
+        ],
+        "capabilities": {
+          "text_to_image": true,
+          "image_to_image": true,
+          "multi_image_composition": true,
+          "text_rendering": "advanced",
+          "thinking_mode": true,
+          "google_search_grounding": true,
+          "max_reference_images": 14,
+          "max_human_reference_images": 5,
+          "max_object_reference_images": 6
+        },
+        "output_specifications": {
+          "resolutions": {
+            "1K": {
+              "tokens_per_image": 1210,
+              "aspect_ratios": {
+                "1:1": "1024x1024",
+                "2:3": "848x1264",
+                "3:2": "1264x848",
+                "3:4": "896x1200",
+                "4:3": "1200x896",
+                "4:5": "928x1152",
+                "5:4": "1152x928",
+                "9:16": "768x1376",
+                "16:9": "1376x768",
+                "21:9": "1584x672"
+              }
+            },
+            "2K": {
+              "tokens_per_image": 1210,
+              "aspect_ratios": {
+                "1:1": "2048x2048",
+                "2:3": "1696x2528",
+                "3:2": "2528x1696",
+                "3:4": "1792x2400",
+                "4:3": "2400x1792",
+                "4:5": "1856x2304",
+                "5:4": "2304x1856",
+                "9:16": "1536x2752",
+                "16:9": "2752x1536",
+                "21:9": "3168x1344"
+              }
+            },
+            "4K": {
+              "tokens_per_image": 2000,
+              "aspect_ratios": {
+                "1:1": "4096x4096",
+                "2:3": "3392x5056",
+                "3:2": "5056x3392",
+                "3:4": "3584x4800",
+                "4:3": "4800x3584",
+                "4:5": "3712x4608",
+                "5:4": "4608x3712",
+                "9:16": "3072x5504",
+                "16:9": "5504x3072",
+                "21:9": "6336x2688"
+              }
+            }
+          },
+          "default_resolution": "1K",
+          "output_format": "PNG",
+          "watermark": "SynthID"
+        },
+        "input_specifications": {
+          "max_prompt_tokens": 480,
+          "supported_image_formats": ["PNG", "JPEG", "WEBP", "GIF"],
+          "max_input_images": 14
+        },
+        "thinking_mode": {
+          "enabled_by_default": true,
+          "can_disable": false,
+          "interim_images": "up_to_2",
+          "thought_signatures": {
+            "description": "Encrypted representations of thinking process for multi-turn context",
+            "handling": "Auto-managed by SDK, pass back exactly as received"
+          }
+        },
+        "api_config": {
+          "endpoint": "/models/gemini-3-pro-image-preview:generateContent",
+          "response_modalities": ["TEXT", "IMAGE"],
+          "image_config": {
+            "aspect_ratio": "string",
+            "image_size": "string (1K|2K|4K)"
+          }
+        },
+        "recommended_for": ["hero_images", "infographics", "product_mockups", "brand_assets", "complex_compositions"]
+      },
+
+      "nano_banana": {
+        "model_id": "gemini-2.5-flash-image",
+        "display_name": "Nano Banana (Gemini 2.5 Flash Image)",
+        "description": "Fast, efficient image generation optimized for high-volume, low-latency tasks",
+        "status": "preview",
+        "production_allowed": true,
+        "use_cases": [
+          "Rapid content generation",
+          "A/B testing variations",
+          "Blog images",
+          "Social media content",
+          "Quick iterations"
+        ],
+        "capabilities": {
+          "text_to_image": true,
+          "image_to_image": true,
+          "multi_image_composition": true,
+          "text_rendering": "good",
+          "thinking_mode": false,
+          "google_search_grounding": false,
+          "max_reference_images": 3
+        },
+        "output_specifications": {
+          "tokens_per_image": 1290,
+          "fixed_resolution": "1024px (varies by aspect ratio)",
+          "aspect_ratios": {
+            "1:1": "1024x1024",
+            "2:3": "832x1248",
+            "3:2": "1248x832",
+            "3:4": "864x1184",
+            "4:3": "1184x864",
+            "4:5": "896x1152",
+            "5:4": "1152x896",
+            "9:16": "768x1344",
+            "16:9": "1344x768",
+            "21:9": "1536x672"
+          },
+          "output_format": "PNG",
+          "watermark": "SynthID"
+        },
+        "input_specifications": {
+          "max_prompt_tokens": 480,
+          "supported_image_formats": ["PNG", "JPEG", "WEBP", "GIF"],
+          "max_input_images": 3
+        },
+        "api_config": {
+          "endpoint": "/models/gemini-2.5-flash-image:generateContent",
+          "response_modalities": ["TEXT", "IMAGE"],
+          "image_config": {
+            "aspect_ratio": "string"
+          }
+        },
+        "recommended_for": ["blog_images", "social_content", "rapid_iterations", "bulk_generation"]
+      }
+    },
+
+    "specialized_models": {
+      "imagen_4": {
+        "model_id": "imagen-4.0-generate-001",
+        "display_name": "Imagen 4",
+        "description": "Specialized high-fidelity image generation for photorealism and artistic styles",
+        "status": "stable",
+        "variants": {
+          "standard": {
+            "model_id": "imagen-4.0-generate-001",
+            "images_per_request": "1-4",
+            "image_sizes": ["1K", "2K"]
+          },
+          "ultra": {
+            "model_id": "imagen-4.0-ultra-generate-001",
+            "images_per_request": 1,
+            "image_sizes": ["1K", "2K"],
+            "quality": "highest"
+          },
+          "fast": {
+            "model_id": "imagen-4.0-fast-generate-001",
+            "images_per_request": "1-4",
+            "optimized_for": "speed"
+          }
+        },
+        "capabilities": {
+          "text_to_image": true,
+          "photorealism": "excellent",
+          "artistic_styles": "excellent",
+          "typography": "advanced",
+          "prompt_parameterization": true
+        },
+        "output_specifications": {
+          "aspect_ratios": ["1:1", "3:4", "4:3", "9:16", "16:9"],
+          "default_aspect_ratio": "1:1",
+          "person_generation": {
+            "dont_allow": "Block all people",
+            "allow_adult": "Adults only (default)",
+            "allow_all": "Adults and children (not in EU/UK/CH/MENA)"
+          }
+        },
+        "input_specifications": {
+          "max_prompt_tokens": 480,
+          "language": "English only"
+        },
+        "api_config": {
+          "endpoint": "/models/imagen-4.0-generate-001:predict",
+          "parameters": {
+            "numberOfImages": "1-4",
+            "imageSize": "1K|2K",
+            "aspectRatio": "string",
+            "personGeneration": "string"
+          }
+        },
+        "recommended_for": ["photorealistic_hero", "artistic_illustrations", "logo_generation", "typography_heavy"]
+      },
+
+      "imagen_3": {
+        "model_id": "imagen-3.0-generate-002",
+        "display_name": "Imagen 3",
+        "description": "Previous generation Imagen model",
+        "status": "stable",
+        "note": "Consider Imagen 4 for new projects"
+      }
+    }
+  },
+
+  "video_generation": {
+    "primary_model": {
+      "veo_3_1": {
+        "model_id": "veo-3.1-generate-preview",
+        "display_name": "Veo 3.1",
+        "description": "State-of-the-art video generation with native audio, 720p/1080p output",
+        "status": "preview",
+        "capabilities": {
+          "text_to_video": true,
+          "image_to_video": true,
+          "video_extension": true,
+          "frame_interpolation": true,
+          "reference_images": true,
+          "native_audio": true,
+          "dialogue_generation": true,
+          "sound_effects": true,
+          "ambient_audio": true
+        },
+        "output_specifications": {
+          "resolutions": ["720p", "1080p"],
+          "default_resolution": "720p",
+          "1080p_constraint": "8s duration only",
+          "frame_rate": "24fps",
+          "durations": ["4s", "6s", "8s"],
+          "extension_duration": "7s per extension",
+          "max_extensions": 20,
+          "max_total_duration": "148s",
+          "aspect_ratios": ["16:9", "9:16"],
+          "formats": ["MP4", "WebM"]
+        },
+        "input_specifications": {
+          "max_prompt_tokens": 1024,
+          "reference_images": {
+            "max_total": 3,
+            "reference_type": "asset"
+          },
+          "first_last_frame": {
+            "supported": true,
+            "requires_8s_duration": true
+          },
+          "video_extension_input": {
+            "max_input_duration": "141s",
+            "aspect_ratio": "9:16 or 16:9",
+            "resolution": "720p",
+            "source": "previous_veo_generation_only"
+          }
+        },
+        "audio_capabilities": {
+          "dialogue": {
+            "format": "Use quotes for speech",
+            "example": "A man murmurs, 'This must be the key.'"
+          },
+          "sound_effects": {
+            "format": "Explicit description",
+            "example": "tires screeching loudly, engine roaring"
+          },
+          "ambient": {
+            "format": "Environment description",
+            "example": "A faint, eerie hum resonates in the background"
+          }
+        },
+        "person_generation": {
+          "text_to_video": "allow_all only",
+          "image_to_video": "allow_adult only",
+          "extension": "allow_all only"
+        },
+        "api_config": {
+          "endpoint": "/models/veo-3.1-generate-preview:predictLongRunning",
+          "async_operation": true,
+          "polling_required": true,
+          "parameters": {
+            "prompt": "string",
+            "negativePrompt": "string (optional)",
+            "image": "Image object (optional)",
+            "lastFrame": "Image object (optional)",
+            "referenceImages": "VideoGenerationReferenceImage[] (optional)",
+            "video": "Video object (for extension)",
+            "aspectRatio": "16:9|9:16",
+            "resolution": "720p|1080p",
+            "durationSeconds": "4|6|8",
+            "personGeneration": "string"
+          }
+        },
+        "limitations": {
+          "latency": "11s min, 6min max (peak hours)",
+          "retention": "2 days (must download within this period)",
+          "watermark": "SynthID mandatory",
+          "eu_uk_ch_mena_restrictions": "personGeneration limited to allow_adult"
+        },
+        "recommended_for": ["explainer_videos", "hero_video", "product_demos", "testimonial_enhancement"]
+      }
+    }
+  },
+
+  "text_generation": {
+    "primary": {
+      "model_id": "gemini-3-pro",
+      "display_name": "Gemini 3 Pro",
+      "description": "Most advanced Gemini model - primary for all agent operations",
+      "status": "stable",
+      "capabilities": {
+        "multimodal_input": true,
+        "image_understanding": true,
+        "video_understanding": true,
+        "audio_understanding": true,
+        "long_context": true,
+        "function_calling": true,
+        "structured_output": true
+      },
+      "context_window": 1000000,
+      "output_tokens_max": 65536,
+      "use_in_pipeline": [
+        "Orchestrator Agent",
+        "Content Strategist Agent",
+        "Quality Reviewer Agent",
+        "Enhancer Agent",
+        "SEO Optimizer Agent",
+        "Performance Analyzer Agent"
+      ]
+    },
+    "fallback": {
+      "model_id": "gemini-2.5-flash",
+      "display_name": "Gemini 2.5 Flash",
+      "description": "Fast, cost-effective fallback for high-volume or time-sensitive operations",
+      "status": "stable",
+      "use_in_pipeline": ["Fallback for all agents", "Batch processing", "Quick iterations"]
+    }
+  },
+
+  "model_selection_guide": {
+    "by_use_case": {
+      "hero_image_generation": {
+        "primary": "gemini-3-pro-image-preview",
+        "fallback": "imagen-4.0-generate-001",
+        "rationale": "4K support, thinking mode for complex compositions"
+      },
+      "rapid_content_generation": {
+        "primary": "gemini-2.5-flash-image",
+        "rationale": "Speed optimized, cost effective for bulk"
+      },
+      "explainer_video_with_audio": {
+        "primary": "veo-3.1-generate-preview",
+        "rationale": "Native audio, dialogue support"
+      },
+      "agent_operations": {
+        "primary": "gemini-3-pro",
+        "fallback": "gemini-2.5-flash",
+        "rationale": "Advanced reasoning for orchestration, strategy, and quality control"
+      }
+    }
+  }
+}

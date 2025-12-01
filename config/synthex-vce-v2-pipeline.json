@@ -1,0 +1,539 @@
+{
+  "$schema": "https://synthex.com.au/schemas/vce-v2-pipeline.json",
+  "meta": {
+    "module": "pipeline",
+    "version": "2.0.0",
+    "description": "Autonomous AI agent definitions, workflows, quality control, and orchestration patterns",
+    "last_updated": "2025-11-30"
+  },
+
+  "agents": {
+    "orchestrator": {
+      "role": "Master coordinator for content generation workflows",
+      "model": "gemini-3-pro",
+      "model_id": "gemini-3-pro",
+      "temperature": 0.3,
+      "max_tokens": 4096,
+      "system_prompt": "You are the Synthex Content Orchestrator. Your role is to coordinate multi-modal content generation workflows, delegate tasks to specialist agents, monitor quality, and ensure brand consistency across all outputs. You make strategic decisions about which agents to invoke, in what order, and when to escalate to human review.",
+      "capabilities": [
+        "workflow_coordination",
+        "agent_delegation",
+        "quality_monitoring",
+        "brand_consistency_enforcement",
+        "error_recovery",
+        "human_escalation"
+      ],
+      "tools_access": [
+        "agent_router",
+        "task_queue_manager",
+        "quality_checker",
+        "notification_system"
+      ]
+    },
+
+    "content_strategist": {
+      "role": "Strategic content planning and messaging",
+      "model": "gemini-3-pro",
+      "model_id": "gemini-3-pro",
+      "temperature": 0.4,
+      "max_tokens": 2048,
+      "system_prompt": "You are the Content Strategist. Your role is to analyze user requirements, industry context, target audience, and business objectives to create strategic briefs that guide all downstream content generation. You consider competitive landscape, SEO opportunities, and brand positioning.",
+      "capabilities": [
+        "requirement_analysis",
+        "audience_research",
+        "messaging_strategy",
+        "seo_planning",
+        "competitive_analysis"
+      ],
+      "dependencies": ["orchestrator"]
+    },
+
+    "image_generator": {
+      "role": "Visual content generation",
+      "model": "gemini-3-pro-image-preview",
+      "model_id": "gemini-3-pro-image-preview",
+      "temperature": 0.7,
+      "max_tokens": 480,
+      "system_prompt": "You are the Image Generation Specialist. Your role is to craft detailed, nuanced image prompts that guide Gemini's image generation model to produce high-quality visuals that align with brand guidelines, user requirements, and technical specifications. You understand composition, lighting, color theory, and visual hierarchy.",
+      "capabilities": [
+        "prompt_engineering",
+        "image_generation",
+        "aspect_ratio_optimization",
+        "quality_assessment",
+        "iteration_management"
+      ],
+      "model_variants": {
+        "primary": "gemini-3-pro-image-preview",
+        "fallback": "gemini-2.5-flash-image"
+      }
+    },
+
+    "video_generator": {
+      "role": "Video content creation",
+      "model": "veo-3.1-generate-preview",
+      "model_id": "veo-3.1-generate-preview",
+      "temperature": 0.6,
+      "max_tokens": 1024,
+      "system_prompt": "You are the Video Generation Specialist. Your role is to create compelling video scripts, visual descriptions, and technical specifications that guide Veo 3.1's video generation. You understand pacing, storytelling, emotional beats, and technical constraints (duration, resolution, audio integration).",
+      "capabilities": [
+        "script_writing",
+        "visual_description",
+        "audio_integration",
+        "technical_optimization",
+        "pacing_control"
+      ]
+    },
+
+    "voice_synthesizer": {
+      "role": "Audio and voice generation",
+      "model": "gemini-2.5-flash-preview-tts",
+      "model_id": "gemini-2.5-flash-preview-tts",
+      "temperature": 0.2,
+      "max_tokens": 512,
+      "system_prompt": "You are the Voice Synthesis Specialist. Your role is to prepare text for text-to-speech conversion, select appropriate voices and styles for different content types, and ensure audio quality meets production standards. You understand voice characteristics, pacing, emphasis, and emotional delivery.",
+      "capabilities": [
+        "script_preparation",
+        "voice_selection",
+        "emphasis_marking",
+        "quality_validation",
+        "audio_editing_specs"
+      ]
+    },
+
+    "quality_reviewer": {
+      "role": "Automated quality assessment and approval workflow",
+      "model": "gemini-3-pro",
+      "model_id": "gemini-3-pro",
+      "temperature": 0.2,
+      "max_tokens": 1024,
+      "system_prompt": "You are the Quality Reviewer. Your role is to evaluate content against Synthex quality standards, brand guidelines, technical specifications, and audience fit. You provide structured scoring, identify issues, and recommend improvements. You determine whether content is auto-approved, needs human review, or should be rejected.",
+      "capabilities": [
+        "quality_scoring",
+        "issue_identification",
+        "improvement_recommendations",
+        "brand_compliance_checking",
+        "audience_fit_assessment"
+      ],
+      "scoring_dimensions": {
+        "brand_alignment": {
+          "weight": 0.25,
+          "criteria": [
+            "Visual consistency with brand identity",
+            "Messaging alignment with brand voice",
+            "Color palette adherence",
+            "Typography appropriateness"
+          ]
+        },
+        "technical_quality": {
+          "weight": 0.20,
+          "criteria": [
+            "Image resolution and clarity",
+            "Audio quality and levels",
+            "Video encoding and format",
+            "Performance metrics"
+          ]
+        },
+        "message_clarity": {
+          "weight": 0.20,
+          "criteria": [
+            "Clear value proposition",
+            "Concise messaging",
+            "Call-to-action clarity",
+            "Information hierarchy"
+          ]
+        },
+        "emotional_tone": {
+          "weight": 0.15,
+          "criteria": [
+            "Emotional resonance",
+            "Tone appropriateness",
+            "Audience connection",
+            "Impact potential"
+          ]
+        },
+        "audience_fit": {
+          "weight": 0.10,
+          "criteria": [
+            "Target audience relevance",
+            "Industry appropriateness",
+            "Pain point addressing",
+            "Solution clarity"
+          ]
+        },
+        "uniqueness": {
+          "weight": 0.10,
+          "criteria": [
+            "Originality of concept",
+            "Differentiation from competitors",
+            "Innovation in approach",
+            "Memorability factor"
+          ]
+        }
+      }
+    },
+
+    "enhancer": {
+      "role": "Post-processing and refinement",
+      "model": "gemini-3-pro",
+      "model_id": "gemini-3-pro",
+      "temperature": 0.5,
+      "max_tokens": 2048,
+      "system_prompt": "You are the Content Enhancer. Your role is to take reviewed content and iteratively improve it based on feedback. You enhance messaging, refine visuals through regeneration, optimize audio, and ensure all elements work cohesively. You implement structural improvements and quality enhancements.",
+      "capabilities": [
+        "iterative_improvement",
+        "messaging_refinement",
+        "visual_enhancement",
+        "audio_optimization",
+        "cohesion_improvement"
+      ]
+    },
+
+    "seo_optimizer": {
+      "role": "SEO and search optimization",
+      "model": "gemini-3-pro",
+      "model_id": "gemini-3-pro",
+      "temperature": 0.3,
+      "max_tokens": 1536,
+      "system_prompt": "You are the SEO Optimizer. Your role is to ensure all content is optimized for search visibility. You analyze keywords, optimize meta descriptions, structure content for featured snippets, and ensure technical SEO requirements are met. You understand search intent and ranking factors.",
+      "capabilities": [
+        "keyword_optimization",
+        "meta_tag_generation",
+        "structured_data_creation",
+        "content_structure_optimization",
+        "schema_markup_generation"
+      ]
+    },
+
+    "performance_analyzer": {
+      "role": "Analytics and performance optimization",
+      "model": "gemini-2.5-flash",
+      "model_id": "gemini-2.5-flash",
+      "temperature": 0.2,
+      "max_tokens": 1024,
+      "system_prompt": "You are the Performance Analyzer. Your role is to track content performance metrics, identify optimization opportunities, and provide data-driven recommendations. You analyze engagement rates, conversion metrics, and user behavior to continuously improve content effectiveness.",
+      "capabilities": [
+        "metrics_analysis",
+        "trend_identification",
+        "optimization_recommendation",
+        "a_b_testing_design",
+        "insight_generation"
+      ]
+    }
+  },
+
+  "workflows": {
+    "standard_content_generation": {
+      "name": "Standard Content Generation",
+      "description": "Complete multi-modal content generation from concept to quality approval",
+      "trigger": "user_request",
+      "steps": [
+        {
+          "step": 1,
+          "agent": "orchestrator",
+          "task": "Receive and validate user request",
+          "output": "validated_brief"
+        },
+        {
+          "step": 2,
+          "agent": "content_strategist",
+          "task": "Create strategic brief and content strategy",
+          "input": "user_brief",
+          "output": "strategic_brief"
+        },
+        {
+          "step": 3,
+          "agent": "image_generator",
+          "task": "Generate primary visual content",
+          "input": "strategic_brief",
+          "output": "generated_images",
+          "parallel": true
+        },
+        {
+          "step": 3,
+          "agent": "video_generator",
+          "task": "Generate video content if requested",
+          "input": "strategic_brief",
+          "output": "generated_videos",
+          "parallel": true
+        },
+        {
+          "step": 3,
+          "agent": "voice_synthesizer",
+          "task": "Prepare audio and voice content",
+          "input": "strategic_brief",
+          "output": "audio_content",
+          "parallel": true
+        },
+        {
+          "step": 4,
+          "agent": "seo_optimizer",
+          "task": "Optimize content for search",
+          "input": "strategic_brief",
+          "output": "seo_optimization"
+        },
+        {
+          "step": 5,
+          "agent": "quality_reviewer",
+          "task": "Assess content quality and approval status",
+          "input": ["generated_images", "generated_videos", "audio_content", "seo_optimization"],
+          "output": "quality_assessment"
+        },
+        {
+          "step": 6,
+          "condition": "quality_assessment.score >= 8.5",
+          "action": "auto_approve",
+          "output": "approved_content"
+        },
+        {
+          "step": 6,
+          "condition": "6.0 <= quality_assessment.score < 8.5",
+          "action": "human_review",
+          "output": "pending_review"
+        },
+        {
+          "step": 6,
+          "condition": "quality_assessment.score < 6.0",
+          "action": "reject_and_suggest_improvements",
+          "output": "rejected_content"
+        }
+      ],
+      "success_criteria": "Approved content delivered to user",
+      "max_duration_minutes": 30
+    },
+
+    "rapid_iteration": {
+      "name": "Rapid Iteration Cycle",
+      "description": "Quick feedback loop for rapid content refinement",
+      "trigger": "user_feedback",
+      "steps": [
+        {
+          "step": 1,
+          "agent": "orchestrator",
+          "task": "Receive user feedback and changes",
+          "output": "feedback_brief"
+        },
+        {
+          "step": 2,
+          "agent": "enhancer",
+          "task": "Apply changes and refinements",
+          "input": "feedback_brief",
+          "output": "refined_content"
+        },
+        {
+          "step": 3,
+          "agent": "quality_reviewer",
+          "task": "Quick quality check on changes",
+          "input": "refined_content",
+          "output": "quality_check"
+        },
+        {
+          "step": 4,
+          "agent": "orchestrator",
+          "task": "Present refined content to user",
+          "output": "delivery"
+        }
+      ],
+      "success_criteria": "Refined content accepted by user",
+      "max_duration_minutes": 5
+    },
+
+    "video_production": {
+      "name": "Video Production Workflow",
+      "description": "Specialized workflow for complex video content with multiple assets",
+      "trigger": "video_request",
+      "steps": [
+        {
+          "step": 1,
+          "agent": "content_strategist",
+          "task": "Plan video strategy and script structure",
+          "output": "video_strategy"
+        },
+        {
+          "step": 2,
+          "agent": "video_generator",
+          "task": "Create detailed video script and visuals",
+          "input": "video_strategy",
+          "output": "video_script"
+        },
+        {
+          "step": 3,
+          "agent": "image_generator",
+          "task": "Generate key frame visuals",
+          "input": "video_strategy",
+          "output": "key_frames",
+          "parallel": true
+        },
+        {
+          "step": 3,
+          "agent": "voice_synthesizer",
+          "task": "Generate narration and audio elements",
+          "input": "video_script",
+          "output": "audio_track",
+          "parallel": true
+        },
+        {
+          "step": 4,
+          "agent": "video_generator",
+          "task": "Generate video with all assets",
+          "input": ["video_script", "key_frames", "audio_track"],
+          "output": "final_video"
+        },
+        {
+          "step": 5,
+          "agent": "quality_reviewer",
+          "task": "Review video quality and brand alignment",
+          "input": "final_video",
+          "output": "video_assessment"
+        }
+      ],
+      "success_criteria": "Video approved and ready for distribution",
+      "max_duration_minutes": 45
+    },
+
+    "human_escalation": {
+      "name": "Human Review Escalation",
+      "description": "Content requiring human expert review and approval",
+      "trigger": "quality_review_threshold",
+      "steps": [
+        {
+          "step": 1,
+          "agent": "quality_reviewer",
+          "task": "Prepare content summary and scoring rationale",
+          "output": "review_package"
+        },
+        {
+          "step": 2,
+          "action": "human_review",
+          "task": "Expert review and approval decision",
+          "input": "review_package",
+          "output": "human_approval_decision"
+        },
+        {
+          "step": 3,
+          "condition": "human_decision == approved",
+          "agent": "orchestrator",
+          "task": "Deliver approved content to user",
+          "output": "approved_delivery"
+        },
+        {
+          "step": 3,
+          "condition": "human_decision == needs_changes",
+          "agent": "enhancer",
+          "task": "Apply human-requested changes",
+          "output": "revised_content"
+        }
+      ],
+      "success_criteria": "Human approval obtained and content delivered",
+      "sla_hours": 4
+    }
+  },
+
+  "task_queue": {
+    "redis_config": {
+      "host": "localhost",
+      "port": 6379,
+      "database": 0,
+      "key_prefix": "synthex:queue:"
+    },
+    "queue_types": {
+      "content_generation": {
+        "priority_levels": [1, 2, 3, 4, 5],
+        "max_concurrent": 10,
+        "timeout_seconds": 300
+      },
+      "quality_review": {
+        "priority_levels": [1, 2, 3],
+        "max_concurrent": 5,
+        "timeout_seconds": 60
+      },
+      "enhancement": {
+        "priority_levels": [1, 2, 3],
+        "max_concurrent": 3,
+        "timeout_seconds": 120
+      },
+      "delivery": {
+        "priority_levels": [1, 2],
+        "max_concurrent": 20,
+        "timeout_seconds": 30
+      }
+    }
+  },
+
+  "state_management": {
+    "backend": "centralized",
+    "persistence": "redis",
+    "state_schema": {
+      "workflow_id": "uuid",
+      "status": "pending|running|completed|failed|human_review",
+      "current_step": "integer",
+      "agent_inputs": "json",
+      "agent_outputs": "json",
+      "quality_score": "float",
+      "approval_status": "auto_approved|pending_review|rejected",
+      "created_at": "timestamp",
+      "updated_at": "timestamp",
+      "completed_at": "timestamp"
+    }
+  },
+
+  "error_handling": {
+    "retry_strategy": {
+      "max_attempts": 3,
+      "backoff_type": "exponential",
+      "backoff_multiplier": 2,
+      "initial_delay_ms": 1000
+    },
+    "fallback_agents": {
+      "image_generator": "gemini-2.5-flash-image",
+      "video_generator": "none_available",
+      "voice_synthesizer": "none_available",
+      "content_strategist": "gemini-2.5-flash"
+    },
+    "escalation_criteria": [
+      "consecutive_failures >= 2",
+      "quality_score < 5.0",
+      "user_requested_review",
+      "brand_compliance_violation"
+    ]
+  },
+
+  "observability": {
+    "logging": {
+      "type": "structured_json",
+      "level": "info",
+      "fields": [
+        "timestamp",
+        "workflow_id",
+        "agent_name",
+        "step_number",
+        "action",
+        "duration_ms",
+        "status",
+        "error_message"
+      ]
+    },
+    "metrics": {
+      "type": "prometheus",
+      "metrics": [
+        "workflow_duration_seconds",
+        "agent_processing_time_ms",
+        "quality_score_distribution",
+        "approval_rate_percent",
+        "error_rate_percent",
+        "queue_depth",
+        "throughput_workflows_per_minute"
+      ]
+    },
+    "tracing": {
+      "type": "opentelemetry",
+      "sample_rate": 0.1,
+      "trace_attributes": [
+        "workflow_id",
+        "user_id",
+        "client_id",
+        "service_name",
+        "agent_name"
+      ]
+    }
+  }
+}

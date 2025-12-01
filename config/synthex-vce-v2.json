@@ -1,0 +1,405 @@
+{
+  "$schema": "https://synthex.com.au/schemas/vce-v2.json",
+  "meta": {
+    "name": "Synthex Visual Content Engine",
+    "version": "2.0.0",
+    "created": "2025-11-30",
+    "author": "Unite-Hub",
+    "description": "Autonomous multi-LLM visual content generation pipeline powered by Google Gemini API",
+    "target_platform": "Synthex AI Marketing SaaS",
+    "target_audience": "Australian SMB owners in trade industries seeking local market dominance",
+    "tagline": "Automates content, campaigns, and strategy",
+    "infrastructure": "Digital Ocean (Sydney - syd1)",
+    "primary_api": "Google Gemini API",
+    "documentation_version": "gemini-api-2025-11"
+  },
+
+  "module_registry": {
+    "description": "References to all VCE specification modules",
+    "modules": [
+      {
+        "id": "models",
+        "file": "synthex-vce-v2-models.json",
+        "description": "Complete Gemini API model registry with specifications, capabilities, and constraints"
+      },
+      {
+        "id": "tokens",
+        "file": "synthex-vce-v2-tokens.json",
+        "description": "Token economics, client tier system, billing integration, and usage tracking"
+      },
+      {
+        "id": "pipeline",
+        "file": "synthex-vce-v2-pipeline.json",
+        "description": "Autonomous AI agent definitions, workflows, quality control, and orchestration"
+      },
+      {
+        "id": "prompts",
+        "file": "synthex-vce-v2-prompts.json",
+        "description": "Prompt engineering templates, variables, and style guidelines"
+      },
+      {
+        "id": "infrastructure",
+        "file": "synthex-vce-v2-infrastructure.json",
+        "description": "Technical infrastructure, processing pipelines, delivery optimization, and SEO"
+      }
+    ],
+    "load_order": ["models", "tokens", "pipeline", "prompts", "infrastructure"]
+  },
+
+  "philosophy": {
+    "core_principle": "Every page optimized, not filled. High-impact visual stimulation with clear understanding. Inspire, don't push.",
+    "content_strategy_principles": [
+      "Visual content serves understanding, not decoration",
+      "High-impact zones get premium assets, low-impact zones stay clean",
+      "Every visual must earn its place through engagement value",
+      "Consistent brand language across all generated assets",
+      "Progressive disclosure - reveal complexity as user scrolls deeper",
+      "Quality over quantity - fewer perfect assets beat many mediocre ones",
+      "Automation with human oversight for brand-critical content"
+    ],
+    "psychology_framework": {
+      "attention_patterns": {
+        "text_heavy_pages": "F-pattern",
+        "visual_heavy_pages": "Z-pattern"
+      },
+      "cognitive_load": {
+        "max_competing_elements_per_viewport": 3,
+        "progressive_complexity": true,
+        "breathing_room_required": true
+      },
+      "emotional_triggers": {
+        "positive": ["aspiration", "success", "growth", "simplicity", "trust", "confidence", "empowerment"],
+        "avoid": ["fear", "urgency", "scarcity", "pressure", "complexity", "negativity", "competitor_criticism"]
+      },
+      "decision_psychology": {
+        "reduce_friction": true,
+        "social_proof_placement": "adjacent_to_cta",
+        "outcome_visualization": "show_success_not_process"
+      }
+    }
+  },
+
+  "brand_visual_identity": {
+    "style": {
+      "primary": "Modern, clean, confident, approachable",
+      "secondary": "Professional, premium, trustworthy",
+      "avoid": ["generic stock", "overly corporate", "cold/clinical", "cluttered", "aggressive"]
+    },
+    "lighting": {
+      "primary": "Warm, natural, optimistic",
+      "hero_zones": "Golden hour, soft diffused",
+      "product_shots": "Three-point softbox, controlled shadows"
+    },
+    "color_grading": {
+      "tint": "Slight warm",
+      "clarity": "High",
+      "contrast": "Controlled, not harsh",
+      "saturation": "Natural to slightly elevated"
+    },
+    "human_element": {
+      "show": "Outcomes - happy business owners, successful projects, growth",
+      "avoid": "Process shots, confused expressions, problem states"
+    },
+    "design_tokens": {
+      "colors": {
+        "background": {
+          "base": "#08090a",
+          "raised": "#0f1012",
+          "card": "#141517"
+        },
+        "accent": {
+          "primary": "#ff6b35",
+          "hover": "#ff8555",
+          "glow": "rgba(255, 107, 53, 0.15)"
+        },
+        "semantic": {
+          "success": "#10b981",
+          "info": "#3b82f6",
+          "warning": "#f59e0b",
+          "error": "#ef4444"
+        },
+        "text": {
+          "primary": "#ffffff",
+          "secondary": "#e5e7eb",
+          "muted": "#9ca3af",
+          "subtle": "#6b7280"
+        }
+      },
+      "typography": {
+        "display": {
+          "family": "Sora",
+          "weights": [600, 700, 800]
+        },
+        "body": {
+          "family": "DM Sans",
+          "weights": [400, 500, 600]
+        },
+        "forbidden": ["Inter", "Roboto", "Arial", "system-ui defaults"]
+      }
+    }
+  },
+
+  "messaging_framework": {
+    "approach": "positive-psychology",
+    "tone": {
+      "primary": "Helpful",
+      "secondary": "Empowering",
+      "voice": "Expert friend, not salesperson"
+    },
+    "rules": [
+      "Focus on advantages and benefits, not problems avoided",
+      "Highlight gains, not loss aversion",
+      "Use empowering, active language",
+      "Remove all negative framing",
+      "Position features as opportunities, not solutions to pain",
+      "Show transformation, not before/after problems"
+    ],
+    "forbidden_messaging": [
+      "Pain-point focus headlines",
+      "Fear-based language",
+      "Competitor criticism",
+      "Phrases like 'no retainers', 'stop paying', 'tired of'",
+      "Problem-focused copy",
+      "Scarcity tactics",
+      "Aggressive CTAs"
+    ],
+    "example_transformations": [
+      {
+        "bad": "Stop losing customers to competitors",
+        "good": "Attract more customers in your local area"
+      },
+      {
+        "bad": "Tired of agencies that don't deliver?",
+        "good": "Marketing that works as hard as you do"
+      },
+      {
+        "bad": "Don't miss out on local leads",
+        "good": "Capture every opportunity in your market"
+      }
+    ]
+  },
+
+  "page_hierarchy": {
+    "description": "Visual density and emotion targets by page type",
+    "types": {
+      "landing": {
+        "visual_density": "high",
+        "video_allowed": true,
+        "max_hero_assets": 3,
+        "target_emotion": ["inspiration", "possibility", "trust"],
+        "primary_goal": "Convert visitor to lead"
+      },
+      "pillar": {
+        "visual_density": "medium-high",
+        "video_allowed": true,
+        "max_hero_assets": 2,
+        "target_emotion": ["clarity", "confidence", "expertise"],
+        "primary_goal": "Establish authority, drive to sub-pillars"
+      },
+      "sub_pillar": {
+        "visual_density": "medium",
+        "video_allowed": true,
+        "max_hero_assets": 1,
+        "target_emotion": ["understanding", "empowerment"],
+        "primary_goal": "Educate, capture intent"
+      },
+      "blog": {
+        "visual_density": "low-medium",
+        "video_allowed": false,
+        "max_hero_assets": 1,
+        "target_emotion": ["helpfulness", "expertise"],
+        "primary_goal": "Inform, build trust, internal linking"
+      },
+      "support": {
+        "visual_density": "low",
+        "video_allowed": true,
+        "max_hero_assets": 1,
+        "target_emotion": ["reassurance", "simplicity"],
+        "primary_goal": "Resolve questions, reduce friction"
+      },
+      "dashboard": {
+        "visual_density": "minimal",
+        "video_allowed": false,
+        "max_hero_assets": 0,
+        "target_emotion": ["control", "clarity", "progress"],
+        "primary_goal": "Enable action, show results"
+      }
+    }
+  },
+
+  "high_impact_zones": {
+    "description": "Prioritized content zones by engagement impact",
+    "landing_page": [
+      {
+        "zone": "hero",
+        "impact_score": 10,
+        "content_types": ["hero-image", "hero-video", "product-preview"],
+        "max_dimensions": "1920x1080",
+        "size_limits": {
+          "image": "200kb",
+          "video": "5mb"
+        },
+        "loading": "eager",
+        "psychology": "First impression. Must convey success, simplicity, possibility within 3 seconds. User decides to stay or leave here."
+      },
+      {
+        "zone": "product_demo",
+        "impact_score": 9,
+        "content_types": ["animated-dashboard", "screenshot", "micro-video"],
+        "max_dimensions": "800x600",
+        "duration_limit": "15s",
+        "psychology": "Show product in action. Reduce uncertainty. Bridge imagination gap."
+      },
+      {
+        "zone": "social_proof",
+        "impact_score": 8,
+        "content_types": ["testimonial-video", "client-logos", "result-screenshots"],
+        "duration_limit": "30-60s",
+        "psychology": "Social validation reduces risk perception. Real results from real businesses."
+      },
+      {
+        "zone": "process_flow",
+        "impact_score": 7,
+        "content_types": ["animated-diagram", "step-illustrations"],
+        "format": ["SVG", "Lottie", "WebP-sequence"],
+        "psychology": "Simplify complexity. Reduce cognitive barrier to understanding."
+      },
+      {
+        "zone": "industry_cards",
+        "impact_score": 6,
+        "content_types": ["industry-illustration", "outcome-image"],
+        "max_dimensions": "400x300",
+        "consistency": "Must use same illustration style across all industry cards",
+        "psychology": "Recognition. Industry-specific relatability. 'This is for people like me.'"
+      },
+      {
+        "zone": "cta_proximity",
+        "impact_score": 8,
+        "content_types": ["success-image", "micro-animation", "trust-badge"],
+        "placement": "Adjacent to primary CTA button",
+        "psychology": "Final push. Reinforce positive outcome at decision moment."
+      }
+    ]
+  },
+
+  "content_refresh_schedule": {
+    "hero_assets": {
+      "frequency": "quarterly",
+      "trigger": ["seasonal", "campaign_change", "performance_drop"]
+    },
+    "product_screenshots": {
+      "frequency": "monthly",
+      "trigger": ["feature_release", "ui_change"]
+    },
+    "industry_illustrations": {
+      "frequency": "quarterly",
+      "trigger": ["new_industry_added", "style_refresh"]
+    },
+    "testimonials": {
+      "frequency": "monthly",
+      "trigger": ["new_testimonial_captured", "featured_client_change"]
+    },
+    "process_diagrams": {
+      "frequency": "on_change",
+      "trigger": ["workflow_update", "feature_change"]
+    },
+    "blog_images": {
+      "frequency": "on_publish",
+      "trigger": ["new_post", "post_update"]
+    },
+    "seasonal_campaigns": {
+      "EOFY": {
+        "period": "May-June",
+        "themes": ["Financial planning", "Tax optimization", "Year review"]
+      },
+      "new_year": {
+        "period": "January",
+        "themes": ["Fresh start", "Goal setting", "Growth planning"]
+      },
+      "spring": {
+        "period": "September",
+        "themes": ["Renewal", "Growth", "New beginnings"]
+      }
+    }
+  },
+
+  "quality_standards": {
+    "auto_approve_threshold": 8.5,
+    "human_review_threshold": 6.0,
+    "reject_threshold": 6.0,
+    "max_enhancement_iterations": 3,
+    "evaluation_criteria": {
+      "brand_alignment": {
+        "weight": 0.25,
+        "description": "Adherence to brand colors, typography, tone, and visual style"
+      },
+      "technical_quality": {
+        "weight": 0.20,
+        "description": "Resolution, compression, format optimization, loading performance"
+      },
+      "message_clarity": {
+        "weight": 0.20,
+        "description": "Clear communication of intended message without confusion"
+      },
+      "emotional_tone": {
+        "weight": 0.15,
+        "description": "Alignment with target emotion for page/zone"
+      },
+      "audience_fit": {
+        "weight": 0.10,
+        "description": "Relevance and appeal to target audience (Australian SMB trade)"
+      },
+      "uniqueness": {
+        "weight": 0.10,
+        "description": "Distinctiveness from stock/generic imagery"
+      }
+    }
+  },
+
+  "human_escalation": {
+    "triggers": [
+      "Asset fails quality after 3 enhancement iterations",
+      "Content strategist uncertain about visual direction",
+      "High-impact zone asset (hero, testimonial, demo)",
+      "New content type not in guidelines",
+      "Brand guideline conflict detected",
+      "Legal or compliance concern",
+      "Client-specific customization required",
+      "Quality score between 6.0 and 8.5"
+    ],
+    "notification_channels": ["dashboard_alert", "email", "slack"],
+    "sla": {
+      "critical": "4 hours",
+      "standard": "24 hours",
+      "low": "48 hours"
+    },
+    "escalation_queue": {
+      "priority_1": "Hero assets, client-facing video",
+      "priority_2": "Landing page content, testimonials",
+      "priority_3": "Blog images, support content"
+    }
+  },
+
+  "compliance": {
+    "watermarking": {
+      "provider": "Google SynthID",
+      "mandatory": true,
+      "description": "All Gemini-generated images include SynthID watermark for AI content identification"
+    },
+    "copyright": {
+      "original_content_only": true,
+      "no_artist_style_copying": true,
+      "no_brand_imitation": true
+    },
+    "privacy": {
+      "no_real_faces_without_consent": true,
+      "australian_privacy_act_compliant": true,
+      "data_retention": "90_days_raw_30_days_processed"
+    },
+    "advertising_standards": {
+      "acma_compliant": true,
+      "no_misleading_claims": true,
+      "testimonials_must_be_genuine": true
+    }
+  }
+}
