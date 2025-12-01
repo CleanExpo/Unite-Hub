@@ -16,14 +16,10 @@ interface PlanBody {
 
 export async function POST(req: NextRequest) {
   try {
-    const clientId = req.headers.get('x-forwarded-for') || 'unknown';
-    const rateLimit = await apiRateLimit(`orchestrator-plan:${clientId}`, 10, 60);
-
-    if (!rateLimit.allowed) {
-      return NextResponse.json(
-        { error: 'Rate limit exceeded', retryAfter: rateLimit.resetInSeconds },
-        { status: 429 }
-      );
+    // Rate limiting
+    const rateLimitResponse = await apiRateLimit(req);
+    if (rateLimitResponse) {
+      return rateLimitResponse;
     }
 
     const authHeader = req.headers.get('authorization');

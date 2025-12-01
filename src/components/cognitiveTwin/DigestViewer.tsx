@@ -224,7 +224,7 @@ export default function DigestViewer({
                   variant="ghost"
                   size="sm"
                   onClick={() => onExport?.("md")}
-                  leftIcon={<Download className="w-4 h-4" />}
+                  icon={<Download className="w-4 h-4" />}
                 >
                   Export
                 </Button>
@@ -232,7 +232,7 @@ export default function DigestViewer({
                   variant="ghost"
                   size="sm"
                   onClick={onShare}
-                  leftIcon={<Share2 className="w-4 h-4" />}
+                  icon={<Share2 className="w-4 h-4" />}
                 >
                   Share
                 </Button>
@@ -403,7 +403,7 @@ export default function DigestViewer({
             <Button
               variant="outline"
               fullWidth
-              leftIcon={<Download className="w-4 h-4" />}
+              icon={<Download className="w-4 h-4" />}
               onClick={() => onExport?.("pdf")}
             >
               Export as PDF
@@ -411,7 +411,7 @@ export default function DigestViewer({
             <Button
               variant="outline"
               fullWidth
-              leftIcon={<Mail className="w-4 h-4" />}
+              icon={<Mail className="w-4 h-4" />}
               onClick={onShare}
             >
               Email Digest
@@ -419,7 +419,7 @@ export default function DigestViewer({
             <Button
               variant="outline"
               fullWidth
-              leftIcon={<Printer className="w-4 h-4" />}
+              icon={<Printer className="w-4 h-4" />}
               onClick={() => window.print()}
             >
               Print

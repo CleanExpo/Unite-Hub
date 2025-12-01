@@ -179,7 +179,7 @@ export default function ClientAssistantPage() {
                 <Button
                   onClick={handleSend}
                   disabled={!input.trim() || isLoading}
-                  leftIcon={<Send className="h-4 w-4" />}
+                  icon={<Send className="h-4 w-4" />}
                 >
                   Send
                 </Button>

@@ -17,16 +17,16 @@ import { checkRateLimit } from '@/lib/auth/rate-limiter';
 export async function GET(req: NextRequest) {
   try {
     // Rate limiting: 30 req/min
-    const rateLimitResult = checkRateLimit({
-      identifier: 'optimizer-status',
-      limit: 30,
+    const rateLimitResult = checkRateLimit('optimizer-status', {
+      requests: 30,
       window: 60,
     });
 
     if (!rateLimitResult.allowed) {
+      const retryAfterSeconds = Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000);
       return NextResponse.json(
-        { error: 'Rate limit exceeded', retryAfter: rateLimitResult.retryAfter },
-        { status: 429, headers: { 'Retry-After': rateLimitResult.retryAfter.toString() } }
+        { error: 'Rate limit exceeded', retryAfter: retryAfterSeconds },
+        { status: 429, headers: { 'Retry-After': retryAfterSeconds.toString() } }
       );
     }
 

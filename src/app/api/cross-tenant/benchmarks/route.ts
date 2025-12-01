@@ -28,7 +28,11 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    const bands = await getBenchmarkBands(metricName || undefined);
+    if (!metricName) {
+      return NextResponse.json({ error: 'metricName query parameter is required' }, { status: 400 });
+    }
+
+    const bands = await getBenchmarkBands(metricName);
     return NextResponse.json({
       bands,
       confidence: 0.85,

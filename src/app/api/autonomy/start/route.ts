@@ -16,14 +16,10 @@ interface StartAutonomyBody {
 
 export async function POST(req: NextRequest) {
   try {
-    const clientId = req.headers.get('x-forwarded-for') || 'unknown';
-    const rateLimit = await apiRateLimit(`autonomy-start:${clientId}`, 5, 60);
-
-    if (!rateLimit.allowed) {
-      return NextResponse.json(
-        { error: 'Rate limit exceeded', retryAfter: rateLimit.resetInSeconds },
-        { status: 429 }
-      );
+    // Rate limiting
+    const rateLimitResponse = await apiRateLimit(req);
+    if (rateLimitResponse) {
+      return rateLimitResponse;
     }
 
     const authHeader = req.headers.get('authorization');

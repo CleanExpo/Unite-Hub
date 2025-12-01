@@ -110,22 +110,25 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Build user prompt
+    // Build user prompt - map request fields to function parameters
+    const competitorInfo = body.competitors ? `Competitors: ${body.competitors.join(', ')}` : '';
+    const budgetInfo = body.budget ? `Budget: ${body.budget}` : '';
+    const timelineInfo = body.timeline ? `Timeline: ${body.timeline}` : '';
     const userPrompt = buildStrategyUserPrompt({
-      persona: body.persona,
-      businessGoals: body.businessGoals,
-      budget: body.budget,
-      timeline: body.timeline,
-      competitors: body.competitors,
+      businessName: body.persona?.name || 'Target Business',
+      businessDescription: `${body.businessGoals}. ${budgetInfo} ${timelineInfo}`,
+      targetAudience: JSON.stringify(body.persona),
+      goals: body.businessGoals,
+      industry: competitorInfo || body.persona?.demographics?.industry,
     });
 
     // Call Claude API with maximum token limit for comprehensive strategy
     const message = await createMessage(
       [{ role: 'user', content: userPrompt }],
-      STRATEGY_SYSTEM_PROMPT,
       {
+        system: STRATEGY_SYSTEM_PROMPT,
         temperature: 0.7,
-        max_tokens: 4096,
+        maxTokens: 4096,
       }
     );
 

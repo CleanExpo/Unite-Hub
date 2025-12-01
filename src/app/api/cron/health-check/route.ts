@@ -31,7 +31,7 @@ function getAnthropicClient() {
 
 function getStripeClient() {
   return new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-    apiVersion: '2024-11-20.acacia',
+    apiVersion: '2025-10-29.clover',
   });
 }
 
@@ -69,6 +69,7 @@ export async function GET(req: NextRequest) {
 
     // 1. Database connectivity
     try {
+      const supabase = getSupabaseClient();
       const { data, error } = await supabase
         .from('organizations')
         .select('count')
@@ -116,6 +117,7 @@ export async function GET(req: NextRequest) {
 
     for (const table of criticalTables) {
       try {
+        const supabase = getSupabaseClient();
         const { error } = await supabase
           .from(table)
           .select('*', { count: 'exact', head: true });

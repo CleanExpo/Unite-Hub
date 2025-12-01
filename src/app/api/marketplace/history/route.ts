@@ -10,9 +10,8 @@ import { checkRateLimit } from '@/lib/auth/rate-limiter';
 
 export async function GET(req: NextRequest) {
   try {
-    const rateLimitResult = checkRateLimit({
-      identifier: 'marketplace-history',
-      limit: 30,
+    const rateLimitResult = checkRateLimit('marketplace-history', {
+      requests: 30,
       window: 60,
     });
 

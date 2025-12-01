@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getRealityEvents, updateRealityEventStatus } from '@/lib/aido/database/reality-events';
+import { getRealityEvents, updateRealityEventStatus, RealityEvent } from '@/lib/aido/database/reality-events';
 import { checkTierRateLimit } from '@/lib/rate-limit-tiers';
 
 export async function POST(req: NextRequest) {
@@ -21,9 +21,9 @@ export async function POST(req: NextRequest) {
     // AI rate limiting
     const rateLimitResult = await checkTierRateLimit(req, data.user.id, 'ai');
     if (!rateLimitResult.allowed) {
-      return NextResponse.json(
-        { error: rateLimitResult.error },
-        { status: 429, headers: rateLimitResult.headers }
+      return rateLimitResult.response || NextResponse.json(
+        { error: 'Rate limit exceeded', message: 'AI processing requires quota. Upgrade to increase limit.', tier: rateLimitResult.tier },
+        { status: 429 }
       );
     }
 
@@ -35,18 +35,24 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { eventId, clientId } = body;
 
-    let eventsToProcess = [];
+    let eventsToProcess: RealityEvent[] = [];
 
     if (eventId) {
       // Process single event
-      const event = await getRealityEvents(workspaceId, clientId, undefined, 'pending', 1);
-      const targetEvent = event.find((e: any) => e.id === eventId);
+      const events = await getRealityEvents(workspaceId, {
+        clientId: clientId || undefined,
+        processingStatus: 'pending'
+      });
+      const targetEvent = events.find(e => e.id === eventId);
       if (targetEvent) {
         eventsToProcess = [targetEvent];
       }
     } else if (clientId) {
       // Process all pending events for client
-      eventsToProcess = await getRealityEvents(clientId, workspaceId);
+      eventsToProcess = await getRealityEvents(workspaceId, {
+        clientId,
+        processingStatus: 'pending'
+      });
     } else {
       return NextResponse.json(
         { error: 'Must provide either eventId or clientId' },
@@ -69,7 +75,7 @@ export async function POST(req: NextRequest) {
     const results = await Promise.all(
       eventsToProcess.map(async (event: any) => {
         try {
-          await updateRealityEventStatus(event.id, workspaceId, 'processed');
+          await updateRealityEventStatus(event.id, workspaceId, 'completed');
           return { id: event.id, status: 'success' };
         } catch (err: any) {
           return { id: event.id, status: 'failed', error: err.message };

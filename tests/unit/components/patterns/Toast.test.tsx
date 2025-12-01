@@ -15,6 +15,7 @@ describe('Toast Component (Phase 2B)', () => {
       message: 'Test message',
       type: 'info' as const,
       onClose: vi.fn(),
+      onRemove: vi.fn(),
     };
 
     beforeEach(() => {
@@ -106,20 +107,23 @@ describe('Toast Component (Phase 2B)', () => {
 
       it('should call onClose when close button is clicked', async () => {
         const onClose = vi.fn();
+        const onRemove = vi.fn();
         const user = userEvent.setup();
 
         render(
-          <ToastItem {...defaultProps} onClose={onClose} />
+          <ToastItem {...defaultProps} onClose={onClose} onRemove={onRemove} />
         );
 
         const closeButton = screen.getByRole('button', { name: /close|dismiss/i });
         await user.click(closeButton);
 
-        expect(onClose).toHaveBeenCalledWith('toast-1');
+        expect(onClose).toHaveBeenCalledTimes(1);
+        expect(onRemove).toHaveBeenCalledWith('toast-1');
       });
 
       it('should auto-dismiss after duration', async () => {
         const onClose = vi.fn();
+        const onRemove = vi.fn();
 
         vi.useFakeTimers();
 
@@ -128,20 +132,23 @@ describe('Toast Component (Phase 2B)', () => {
             {...defaultProps}
             duration={3000}
             onClose={onClose}
+            onRemove={onRemove}
           />
         );
 
-        expect(onClose).not.toHaveBeenCalled();
+        expect(onRemove).not.toHaveBeenCalled();
 
         vi.advanceTimersByTime(3000);
 
-        expect(onClose).toHaveBeenCalledWith('toast-1');
+        expect(onClose).toHaveBeenCalledTimes(1);
+        expect(onRemove).toHaveBeenCalledWith('toast-1');
 
         vi.useRealTimers();
       });
 
       it('should not auto-dismiss if duration is 0', async () => {
         const onClose = vi.fn();
+        const onRemove = vi.fn();
 
         vi.useFakeTimers();
 
@@ -150,12 +157,14 @@ describe('Toast Component (Phase 2B)', () => {
             {...defaultProps}
             duration={0}
             onClose={onClose}
+            onRemove={onRemove}
           />
         );
 
         vi.advanceTimersByTime(10000);
 
         expect(onClose).not.toHaveBeenCalled();
+        expect(onRemove).not.toHaveBeenCalled();
 
         vi.useRealTimers();
       });
@@ -194,10 +203,11 @@ describe('Toast Component (Phase 2B)', () => {
 
       it('should be keyboard accessible', async () => {
         const onClose = vi.fn();
+        const onRemove = vi.fn();
         const user = userEvent.setup();
 
         render(
-          <ToastItem {...defaultProps} onClose={onClose} />
+          <ToastItem {...defaultProps} onClose={onClose} onRemove={onRemove} />
         );
 
         // Tab to close button
@@ -210,6 +220,7 @@ describe('Toast Component (Phase 2B)', () => {
         await user.keyboard('{Enter}');
 
         expect(onClose).toHaveBeenCalledTimes(1);
+        expect(onRemove).toHaveBeenCalledTimes(1);
       });
     });
   });
@@ -217,7 +228,7 @@ describe('Toast Component (Phase 2B)', () => {
   describe('ToastContainer Component', () => {
     describe('Basic Rendering', () => {
       it('should render empty container', () => {
-        const { container } = render(<ToastContainer toasts={[]} />);
+        const { container } = render(<ToastContainer toasts={[]} onRemove={vi.fn()} />);
 
         const toastContainer = container.querySelector('[role="region"]');
         expect(toastContainer).toBeInTheDocument();
@@ -233,7 +244,7 @@ describe('Toast Component (Phase 2B)', () => {
         render(
           <ToastContainer
             toasts={toasts}
-            onClose={vi.fn()}
+            onRemove={vi.fn()}
           />
         );
 
@@ -252,7 +263,7 @@ describe('Toast Component (Phase 2B)', () => {
           <ToastContainer
             toasts={toasts}
             position="top-right"
-            onClose={vi.fn()}
+            onRemove={vi.fn()}
           />
         );
 
@@ -264,7 +275,7 @@ describe('Toast Component (Phase 2B)', () => {
 
     describe('Toast Management', () => {
       it('should call onClose when individual toast closes', async () => {
-        const onClose = vi.fn();
+        const onRemove = vi.fn();
         const user = userEvent.setup();
 
         const toasts: Toast[] = [
@@ -272,31 +283,31 @@ describe('Toast Component (Phase 2B)', () => {
         ];
 
         render(
-          <ToastContainer toasts={toasts} onClose={onClose} />
+          <ToastContainer toasts={toasts} onRemove={onRemove} />
         );
 
         const closeButton = screen.getByRole('button', { name: /close|dismiss/i });
         await user.click(closeButton);
 
-        expect(onClose).toHaveBeenCalledWith('1');
+        expect(onRemove).toHaveBeenCalledWith('1');
       });
 
       it('should remove toast when closed', () => {
-        const onClose = vi.fn();
+        const onRemove = vi.fn();
         const toasts: Toast[] = [
           { id: '1', message: 'Toast 1', type: 'info' },
           { id: '2', message: 'Toast 2', type: 'success' },
         ];
 
         const { rerender } = render(
-          <ToastContainer toasts={toasts} onClose={onClose} />
+          <ToastContainer toasts={toasts} onRemove={onRemove} />
         );
 
         // Simulate removing first toast
         rerender(
           <ToastContainer
             toasts={[toasts[1]]}
-            onClose={onClose}
+            onRemove={onRemove}
           />
         );
 
@@ -305,7 +316,7 @@ describe('Toast Component (Phase 2B)', () => {
       });
 
       it('should handle toast updates', () => {
-        const onClose = vi.fn();
+        const onRemove = vi.fn();
         const toasts: Toast[] = [
           { id: '1', message: 'Updated message', type: 'info' },
         ];
@@ -313,12 +324,12 @@ describe('Toast Component (Phase 2B)', () => {
         const { rerender } = render(
           <ToastContainer
             toasts={[{ id: '1', message: 'Original message', type: 'info' }]}
-            onClose={onClose}
+            onRemove={onRemove}
           />
         );
 
         rerender(
-          <ToastContainer toasts={toasts} onClose={onClose} />
+          <ToastContainer toasts={toasts} onRemove={onRemove} />
         );
 
         expect(screen.getByText('Updated message')).toBeInTheDocument();
@@ -335,7 +346,7 @@ describe('Toast Component (Phase 2B)', () => {
         }));
 
         render(
-          <ToastContainer toasts={toasts} onClose={vi.fn()} />
+          <ToastContainer toasts={toasts} onRemove={vi.fn()} />
         );
 
         const alerts = screen.getAllByRole('alert');
@@ -353,7 +364,7 @@ describe('Toast Component (Phase 2B)', () => {
           <ToastContainer
             toasts={toasts}
             maxToasts={3}
-            onClose={vi.fn()}
+            onRemove={vi.fn()}
           />
         );
 
@@ -402,7 +413,7 @@ describe('Toast Component (Phase 2B)', () => {
             <ToastContainer
               toasts={[{ id: '1', message: 'Test', type: 'info' }]}
               position={position}
-              onClose={vi.fn()}
+              onRemove={vi.fn()}
             />
           );
 
@@ -417,7 +428,7 @@ describe('Toast Component (Phase 2B)', () => {
         const { container } = render(
           <ToastContainer
             toasts={[{ id: '1', message: 'Test', type: 'info' }]}
-            onClose={vi.fn()}
+            onRemove={vi.fn()}
           />
         );
 
@@ -431,7 +442,7 @@ describe('Toast Component (Phase 2B)', () => {
         ];
 
         const { container } = render(
-          <ToastContainer toasts={toasts} onClose={vi.fn()} />
+          <ToastContainer toasts={toasts} onRemove={vi.fn()} />
         );
 
         const alert = container.querySelector('[role="alert"]');
@@ -448,7 +459,7 @@ describe('Toast Component (Phase 2B)', () => {
         ];
 
         const { container } = render(
-          <ToastContainer toasts={toasts} onClose={vi.fn()} />
+          <ToastContainer toasts={toasts} onRemove={vi.fn()} />
         );
 
         // Should apply design token colors (not hardcoded)
@@ -469,7 +480,7 @@ describe('Toast Component (Phase 2B)', () => {
           <ToastContainer
             toasts={toasts.slice(0, 3)}
             maxToasts={3}
-            onClose={vi.fn()}
+            onRemove={vi.fn()}
           />
         );
 
@@ -477,12 +488,12 @@ describe('Toast Component (Phase 2B)', () => {
       });
 
       it('should efficiently update when toasts change', () => {
-        const onClose = vi.fn();
+        const onRemove = vi.fn();
 
         const { rerender } = render(
           <ToastContainer
             toasts={[{ id: '1', message: 'Toast 1', type: 'info' }]}
-            onClose={onClose}
+            onRemove={onRemove}
           />
         );
 
@@ -493,7 +504,7 @@ describe('Toast Component (Phase 2B)', () => {
               { id: '2', message: 'Toast 2', type: 'success' },
               { id: '3', message: 'Toast 3', type: 'error' },
             ]}
-            onClose={onClose}
+            onRemove={onRemove}
           />
         );
 
@@ -503,7 +514,7 @@ describe('Toast Component (Phase 2B)', () => {
 
     describe('Integration', () => {
       it('should work with action buttons', async () => {
-        const onClose = vi.fn();
+        const onRemove = vi.fn();
         const onAction = vi.fn();
         const user = userEvent.setup();
 
@@ -518,7 +529,7 @@ describe('Toast Component (Phase 2B)', () => {
         ];
 
         render(
-          <ToastContainer toasts={toasts} onClose={onClose} />
+          <ToastContainer toasts={toasts} onRemove={onRemove} />
         );
 
         const actionButton = screen.getByRole('button', { name: /undo/i });
@@ -530,20 +541,20 @@ describe('Toast Component (Phase 2B)', () => {
       it('should auto-dismiss toasts', async () => {
         vi.useFakeTimers();
 
-        const onClose = vi.fn();
+        const onRemove = vi.fn();
         const toasts: Toast[] = [
           { id: '1', message: 'Toast', type: 'info', duration: 2000 },
         ];
 
         render(
-          <ToastContainer toasts={toasts} onClose={onClose} />
+          <ToastContainer toasts={toasts} onRemove={onRemove} />
         );
 
         expect(screen.getByText('Toast')).toBeInTheDocument();
 
         vi.advanceTimersByTime(2000);
 
-        expect(onClose).toHaveBeenCalledWith('1');
+        expect(onRemove).toHaveBeenCalledWith('1');
 
         vi.useRealTimers();
       });

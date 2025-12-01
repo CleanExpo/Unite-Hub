@@ -7,10 +7,9 @@
  * @module api/admin/rate-limits
  */
 
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { withApiHandler } from '@/app/api/_middleware';
 import { successResponse } from '@/app/api/_middleware/response';
-import { errorResponse } from '@/core/errors';
 import {
   createRateLimitOverride,
   blockIp,
@@ -71,13 +70,13 @@ export const POST = withApiHandler(
 
     // Validate required fields
     if (!maxRequests || maxRequests < 1) {
-      return errorResponse('maxRequests is required and must be positive', 400);
+      return NextResponse.json({ error: 'maxRequests is required and must be positive' }, { status: 400 });
     }
 
     if (!clientKey && !endpointPattern && !workspaceId) {
-      return errorResponse(
-        'At least one of clientKey, endpointPattern, or workspaceId is required',
-        400
+      return NextResponse.json(
+        { error: 'At least one of clientKey, endpointPattern, or workspaceId is required' },
+        { status: 400 }
       );
     }
 
@@ -99,7 +98,7 @@ export const POST = withApiHandler(
       });
     } catch (error) {
       console.error('Error creating rate limit override:', error);
-      return errorResponse('Failed to create rate limit override', 500);
+      return NextResponse.json({ error: 'Failed to create rate limit override' }, { status: 500 });
     }
   },
   {

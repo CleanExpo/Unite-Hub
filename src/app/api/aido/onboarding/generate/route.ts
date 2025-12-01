@@ -45,12 +45,11 @@ export async function POST(req: NextRequest) {
     const rateLimitResult = await checkTierRateLimit(req, data.user.id, 'ai');
 
     if (!rateLimitResult.allowed) {
-      return NextResponse.json(
+      return rateLimitResult.response || NextResponse.json(
         {
           error: 'Rate limit exceeded',
-          limit: rateLimitResult.limit,
+          tier: rateLimitResult.tier,
           remaining: rateLimitResult.remaining,
-          resetAt: rateLimitResult.resetAt,
           message:
             'You have reached your AI generation limit. Upgrade to Professional or Enterprise for higher limits.',
         },
@@ -107,8 +106,8 @@ export async function POST(req: NextRequest) {
     // Fetch GSC data if token exists
     if (!fetchedGscData && businessInput.website) {
       try {
-        const { data: gscToken } = await supabaseBrowser
-          .from('oauth_tokens')
+        const { data: gscToken } = await (supabaseBrowser
+          .from('oauth_tokens') as any)
           .select('access_token, refresh_token, expires_at')
           .eq('workspace_id', workspaceId)
           .eq('provider', 'google_search_console')
@@ -128,8 +127,8 @@ export async function POST(req: NextRequest) {
             accessToken = refreshed.accessToken;
 
             // Update token in database
-            await supabaseBrowser
-              .from('oauth_tokens')
+            await (supabaseBrowser
+              .from('oauth_tokens') as any)
               .update({
                 access_token: refreshed.accessToken,
                 expires_at: new Date(refreshed.expiresAt).toISOString(),
@@ -156,8 +155,8 @@ export async function POST(req: NextRequest) {
     // Fetch GBP data if token exists
     if (!fetchedGbpData) {
       try {
-        const { data: gbpToken } = await supabaseBrowser
-          .from('oauth_tokens')
+        const { data: gbpToken } = await (supabaseBrowser
+          .from('oauth_tokens') as any)
           .select('access_token, refresh_token, expires_at, metadata')
           .eq('workspace_id', workspaceId)
           .eq('provider', 'google_business_profile')
@@ -175,8 +174,8 @@ export async function POST(req: NextRequest) {
             const refreshed = await refreshAccessToken(gbpToken.refresh_token);
             accessToken = refreshed.accessToken;
 
-            await supabaseBrowser
-              .from('oauth_tokens')
+            await (supabaseBrowser
+              .from('oauth_tokens') as any)
               .update({
                 access_token: refreshed.accessToken,
                 expires_at: new Date(refreshed.expiresAt).toISOString(),
@@ -211,8 +210,8 @@ export async function POST(req: NextRequest) {
     // Fetch GA4 data if token exists
     if (!fetchedGa4Data) {
       try {
-        const { data: ga4Token } = await supabaseBrowser
-          .from('oauth_tokens')
+        const { data: ga4Token } = await (supabaseBrowser
+          .from('oauth_tokens') as any)
           .select('access_token, refresh_token, expires_at, metadata')
           .eq('workspace_id', workspaceId)
           .eq('provider', 'google_analytics_4')
@@ -230,8 +229,8 @@ export async function POST(req: NextRequest) {
             const refreshed = await refreshAccessToken(ga4Token.refresh_token);
             accessToken = refreshed.accessToken;
 
-            await supabaseBrowser
-              .from('oauth_tokens')
+            await (supabaseBrowser
+              .from('oauth_tokens') as any)
               .update({
                 access_token: refreshed.accessToken,
                 expires_at: new Date(refreshed.expiresAt).toISOString(),

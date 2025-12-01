@@ -59,7 +59,7 @@ export interface ContentResult {
   toneAlignment: {
     aligned: boolean;
     issues: string[];
-    matchedTones: string[];
+    matchedTones?: string[];
   };
   riskAssessment: {
     score: number;
@@ -102,11 +102,22 @@ export class ContentAgent {
     const toneAlignment = checkBrandToneAlignment(request.brand, content);
 
     // Step 3: Risk Assessment
+    // Map content intent to valid contentType
+    const contentTypeMap: Record<ContentIntent, 'social' | 'email' | 'landing_page' | 'blog' | 'video' | undefined> = {
+      email: 'email',
+      post: 'social',
+      script: 'video',
+      article: 'blog',
+      ad: 'social',
+      training: 'blog',
+      website: 'landing_page',
+    };
+
     const riskInput: RiskScoringInput = {
       brand: request.brand,
       claim: content,
       context: request.intent === 'email' ? 'email' : 'public',
-      contentType: 'generated_content',
+      contentType: contentTypeMap[request.intent],
     };
 
     const riskAssessment = scoreRisk(riskInput);

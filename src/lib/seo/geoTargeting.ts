@@ -90,6 +90,14 @@ export class GeoTargeting {
   };
 
   /**
+   * Get cost multiplier for a radius
+   */
+  static getCostMultiplier(radiusKm: number): number {
+    const validRadius = radiusKm as RadiusKm;
+    return this.COST_MULTIPLIERS[validRadius] ?? 1.0;
+  }
+
+  /**
    * Save GEO questionnaire responses
    */
   static async saveQuestionnaire(questionnaire: GeoQuestionnaire): Promise<{

@@ -21,12 +21,14 @@ export async function POST(req: NextRequest) {
     // AI rate limiting (stricter than API)
     const rateLimitResult = await checkTierRateLimit(req, data.user.id, 'ai');
     if (!rateLimitResult.allowed) {
-      return NextResponse.json(
+      return rateLimitResult.response || NextResponse.json(
         {
-          error: rateLimitResult.error,
-          upgradeUrl: '/dashboard/settings/billing'
+          error: 'Rate limit exceeded',
+          message: 'Intent cluster generation requires AI quota. Upgrade to increase limit.',
+          upgradeUrl: '/dashboard/settings/billing',
+          tier: rateLimitResult.tier
         },
-        { status: 429, headers: rateLimitResult.headers }
+        { status: 429 }
       );
     }
 
@@ -66,8 +68,7 @@ export async function POST(req: NextRequest) {
       topicId,
       seedKeywords,
       industry,
-      location,
-      competitorDomains
+      location
     });
 
     return NextResponse.json({

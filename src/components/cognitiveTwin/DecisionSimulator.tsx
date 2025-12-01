@@ -193,7 +193,7 @@ export default function DecisionSimulator({
                 variant="ghost"
                 size="sm"
                 onClick={addOption}
-                leftIcon={<Plus className="w-4 h-4" />}
+                icon={<Plus className="w-4 h-4" />}
                 disabled={options.length >= 5}
               >
                 Add Option
@@ -246,7 +246,7 @@ export default function DecisionSimulator({
             onClick={handleAnalyze}
             loading={analyzing}
             disabled={!isFormValid() || analyzing}
-            leftIcon={<Lightbulb className="w-4 h-4" />}
+            icon={<Lightbulb className="w-4 h-4" />}
           >
             {analyzing ? "Analyzing..." : "Analyze Decision"}
           </Button>
@@ -427,7 +427,7 @@ export default function DecisionSimulator({
                   onClick={handleRecordDecision}
                   loading={recording}
                   disabled={!rationale.trim() || recording || success}
-                  leftIcon={success ? <CheckCircle className="w-4 h-4" /> : <Save className="w-4 h-4" />}
+                  icon={success ? <CheckCircle className="w-4 h-4" /> : <Save className="w-4 h-4" />}
                 >
                   {success ? "Decision Recorded!" : recording ? "Recording..." : "Record Decision"}
                 </Button>

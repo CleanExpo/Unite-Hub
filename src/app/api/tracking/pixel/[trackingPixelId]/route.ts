@@ -24,7 +24,7 @@ export async function GET(
 
     const { trackingPixelId } = await params;
     const userAgent = req.headers.get("user-agent") || "";
-    const ip = req.ip || req.headers.get("x-forwarded-for") || "";
+    const ip = req.headers.get("x-forwarded-for") || "";
 
     // Find sent email by tracking pixel
     const { data: sentEmails } = await supabase

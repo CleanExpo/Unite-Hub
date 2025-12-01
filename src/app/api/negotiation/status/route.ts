@@ -11,9 +11,8 @@ import { agentNegotiationEngine } from '@/lib/negotiation';
 
 export async function GET(req: NextRequest) {
   try {
-    const rateLimitResult = checkRateLimit({
-      identifier: 'negotiation-status',
-      limit: 30,
+    const rateLimitResult = checkRateLimit('negotiation-status', {
+      requests: 30,
       window: 60,
     });
 

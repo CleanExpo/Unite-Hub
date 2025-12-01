@@ -154,8 +154,9 @@ export async function PATCH(
 
       // Auto-execute if approved
       const execution = await executionEngine.executeProposal({
-        proposal_id: id,
-        executed_by: userId,
+        proposal: approved,
+        executor_type: "HUMAN",
+        executor_id: userId,
       });
 
       return NextResponse.json({
@@ -163,7 +164,7 @@ export async function PATCH(
         execution,
         message: execution.success
           ? "Proposal approved and executed"
-          : `Proposal approved but execution failed: ${execution.error}`,
+          : `Proposal approved but execution failed: ${execution.error_message}`,
         timestamp: new Date().toISOString(),
       });
     } else {

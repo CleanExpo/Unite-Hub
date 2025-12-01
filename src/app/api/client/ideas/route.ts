@@ -13,8 +13,15 @@ export const GET = withClientAuth(async (req) => {
   try {
     const clientId = getUserId(req);
 
-    const { data: ideas, error } = await supabaseStaff
-      .from('ideas')
+    if (!clientId) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    const { data: ideas, error } = await (supabaseStaff
+      .from('ideas') as any)
       .select('*')
       .eq('client_id', clientId)
       .order('created_at', { ascending: false });
@@ -53,8 +60,15 @@ export const POST = withClientAuth(async (req) => {
 
     const clientId = getUserId(req);
 
-    const { data: idea, error } = await supabaseStaff
-      .from('ideas')
+    if (!clientId) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    const { data: idea, error } = await (supabaseStaff
+      .from('ideas') as any)
       .insert({
         client_id: clientId,
         ...data,

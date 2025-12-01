@@ -7,10 +7,9 @@
  * @module api/admin/rate-limits/block-ip
  */
 
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { withApiHandler } from '@/app/api/_middleware';
 import { successResponse } from '@/app/api/_middleware/response';
-import { errorResponse } from '@/core/errors';
 import { blockIp, unblockIp } from '@/lib/services/rate-limit-service';
 
 /**
@@ -24,17 +23,17 @@ export const POST = withApiHandler(
 
     // Validate required fields
     if (!ip) {
-      return errorResponse('ip is required', 400);
+      return NextResponse.json({ error: 'ip is required' }, { status: 400 });
     }
 
     if (!reason) {
-      return errorResponse('reason is required', 400);
+      return NextResponse.json({ error: 'reason is required' }, { status: 400 });
     }
 
     // Validate IP format (basic check)
     const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
     if (!ipRegex.test(ip)) {
-      return errorResponse('Invalid IP address format', 400);
+      return NextResponse.json({ error: 'Invalid IP address format' }, { status: 400 });
     }
 
     try {
@@ -48,7 +47,7 @@ export const POST = withApiHandler(
       });
     } catch (error) {
       console.error('Error blocking IP:', error);
-      return errorResponse('Failed to block IP address', 500);
+      return NextResponse.json({ error: 'Failed to block IP address' }, { status: 500 });
     }
   },
   {
@@ -69,7 +68,7 @@ export const DELETE = withApiHandler(
 
     // Validate required fields
     if (!ip) {
-      return errorResponse('ip parameter is required', 400);
+      return NextResponse.json({ error: 'ip parameter is required' }, { status: 400 });
     }
 
     try {
@@ -81,7 +80,7 @@ export const DELETE = withApiHandler(
       });
     } catch (error) {
       console.error('Error unblocking IP:', error);
-      return errorResponse('Failed to unblock IP address', 500);
+      return NextResponse.json({ error: 'Failed to unblock IP address' }, { status: 500 });
     }
   },
   {

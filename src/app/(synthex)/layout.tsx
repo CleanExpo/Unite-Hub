@@ -100,7 +100,7 @@ export default async function SynthexLayout({ children }: SynthexLayoutProps) {
 
   // Check if user has valid role for Synthex access
   // Allow CLIENT role, or FOUNDER/ADMIN for testing
-  const userRole = session.user?.user_metadata?.role;
+  const userRole = (session.user?.user_metadata as { role?: string })?.role;
   const allowedRoles = ['CLIENT', 'FOUNDER', 'ADMIN'];
 
   if (userRole && !allowedRoles.includes(userRole)) {

@@ -5,7 +5,8 @@
 
 import React from 'react';
 
-export default function AILoader({ message = 'AI is thinking...' }: { message?: string }) {
+export default function AILoader({ message, text = 'AI is thinking...' }: { message?: string; text?: string }) {
+  const displayText = message || text;
   return (
     <div className="flex items-center gap-3 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
       <div className="flex gap-1">

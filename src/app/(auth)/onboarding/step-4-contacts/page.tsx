@@ -51,7 +51,7 @@ export default function OnboardingStep4Page() {
         .from("user_organizations")
         .select("org_id")
         .eq("user_id", session.user.id)
-        .single();
+        .single() as { data: { org_id: string } | null };
 
       if (!userOrgs) {
         throw new Error("No organization found. Please contact support.");
@@ -62,7 +62,7 @@ export default function OnboardingStep4Page() {
         .from("workspaces")
         .select("id")
         .eq("organization_id", userOrgs.org_id)
-        .single();
+        .single() as { data: { id: string } | null };
 
       if (!workspace) {
         throw new Error("No workspace found. Please contact support.");

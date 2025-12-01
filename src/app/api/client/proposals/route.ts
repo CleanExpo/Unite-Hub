@@ -11,9 +11,16 @@ export const GET = withClientAuth(async (req) => {
   try {
     const clientId = getUserId(req);
 
+    if (!clientId) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     // Get proposals for user's ideas
-    const { data: proposals, error } = await supabaseStaff
-      .from('proposal_scopes')
+    const { data: proposals, error } = await (supabaseStaff
+      .from('proposal_scopes') as any)
       .select('*, ideas!inner(client_id)')
       .eq('ideas.client_id', clientId)
       .order('created_at', { ascending: false });

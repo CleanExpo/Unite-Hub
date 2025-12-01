@@ -11,9 +11,8 @@ import { coalitionFormationEngine } from '@/lib/coalition';
 
 export async function POST(req: NextRequest) {
   try {
-    const rateLimitResult = checkRateLimit({
-      identifier: 'coalition-form',
-      limit: 10,
+    const rateLimitResult = checkRateLimit('coalition-form', {
+      requests: 10,
       window: 60,
     });
 

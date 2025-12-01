@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
       eventType,
       sourceSystem,
       sourceId,
-      timestamp: new Date(timestamp),
+      timestamp: new Date(timestamp).toISOString(),
       location,
       rawPayload
     });
@@ -75,8 +75,8 @@ export async function POST(req: NextRequest) {
       success: true,
       event: {
         id: event.id,
-        eventType: event.eventType,
-        processingStatus: event.processingStatus
+        eventType: event.event_type,
+        processingStatus: event.processing_status
       },
       message: 'Event ingested successfully. Processing will complete within 1-2 minutes.'
     });

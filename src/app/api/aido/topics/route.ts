@@ -22,9 +22,9 @@ export async function POST(req: NextRequest) {
     // Rate limiting
     const rateLimitResult = await checkTierRateLimit(req, data.user.id, 'api');
     if (!rateLimitResult.allowed) {
-      return NextResponse.json(
-        { error: rateLimitResult.error },
-        { status: 429, headers: rateLimitResult.headers }
+      return rateLimitResult.response || NextResponse.json(
+        { error: 'Rate limit exceeded', tier: rateLimitResult.tier },
+        { status: 429 }
       );
     }
 
@@ -102,7 +102,10 @@ export async function GET(req: NextRequest) {
     const clientId = req.nextUrl.searchParams.get('clientId');
     const status = req.nextUrl.searchParams.get('status');
 
-    const topics = await getTopics(workspaceId, clientId || undefined, status || undefined);
+    const allTopics = await getTopics(workspaceId, clientId || undefined);
+
+    // Filter by status if provided
+    const topics = status ? allTopics.filter(t => t.status === status) : allTopics;
 
     return NextResponse.json({
       success: true,

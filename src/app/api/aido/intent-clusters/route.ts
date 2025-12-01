@@ -23,13 +23,18 @@ export async function GET(req: NextRequest) {
     }
 
     const topicId = req.nextUrl.searchParams.get('topicId');
+    const clientId = req.nextUrl.searchParams.get('clientId');
     const minBusinessImpact = req.nextUrl.searchParams.get('minBusinessImpact');
 
-    const clusters = await getIntentClusters(
-      workspaceId,
-      topicId || undefined,
-      minBusinessImpact ? parseFloat(minBusinessImpact) : undefined
-    );
+    const allClusters = await getIntentClusters(workspaceId, {
+      topicId: topicId || undefined,
+      clientId: clientId || undefined
+    });
+
+    // Filter by minBusinessImpact if provided
+    const clusters = minBusinessImpact
+      ? allClusters.filter(c => c.business_impact_score >= parseFloat(minBusinessImpact))
+      : allClusters;
 
     return NextResponse.json({
       success: true,

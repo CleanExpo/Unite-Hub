@@ -98,7 +98,6 @@ export class ResearchAgent {
       brand: queryRequest.brand,
       claim: summary,
       context: 'internal',
-      contentType: 'research',
     });
 
     logRiskAssessment(resultId, riskAssessment.score, riskAssessment.level, queryRequest.brand);
@@ -113,7 +112,7 @@ export class ResearchAgent {
         createdAt: timestamp,
         createdByAgent: 'research',
         riskLevel: riskAssessment.level,
-        itemType: 'research',
+        itemType: 'analysis_report',
         brand: queryRequest.brand,
         summary: `${queryRequest.category.toUpperCase()}: ${queryRequest.query}`,
         details: {

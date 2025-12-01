@@ -17,7 +17,7 @@ import type { BrandId } from '@/lib/brands/brandRegistry';
 import { scoreRisk } from '@/lib/founder/founderRiskEngine';
 import { evaluateApproval } from '@/lib/founder/founderApprovalEngine';
 import { logFounderEvent } from '@/lib/founder/founderEventLog';
-import { buildWorkflow, decomposeObjective } from './workflowEngine';
+import { decomposeObjective } from './workflowEngine';
 import { sequenceTasks, resolveDependencies } from './taskSequencer';
 import { executeWorkflowStep, monitorExecution, handleFailure } from './executionMonitor';
 
@@ -99,13 +99,8 @@ export async function executeObjective(objective: WorkflowObjective): Promise<Wo
   // Step 4: Initial risk assessment
   const initialRisk = scoreRisk({
     brand: objective.brand,
-    claim: `Workflow: ${objective.objective}`,
-    context: 'workflow',
-    details: {
-      taskCount: sequencedTasks.length,
-      complexity: calculateWorkflowComplexity(sequencedTasks),
-      hasExternalCalls: sequencedTasks.some((t) => t.agent !== 'coordination'),
-    },
+    claim: `Workflow: ${objective.objective} (${sequencedTasks.length} tasks, complexity: ${calculateWorkflowComplexity(sequencedTasks)})`,
+    context: 'internal',
   });
 
   // Step 5: Check if founder approval required before execution
@@ -132,10 +127,12 @@ export async function executeObjective(objective: WorkflowObjective): Promise<Wo
   if (requiresApproval) {
     const approval = evaluateApproval({
       id: executionId,
+      createdAt: new Date().toISOString(),
       riskLevel: initialRisk.level,
       itemType: 'workflow_execution',
+      brand: objective.brand,
       summary: objective.objective,
-      createdByAgent: 'coordination_agent',
+      createdByAgent: 'coordination',
       details: {
         objective: objective.objective,
         taskCount: sequencedTasks.length,
@@ -143,20 +140,38 @@ export async function executeObjective(objective: WorkflowObjective): Promise<Wo
       },
     });
 
+    // Handle pending_founder_review case (string literal)
+    if (approval === 'pending_founder_review') {
+      execution.approvalStatus = 'pending_review';
+      execution.status = 'blocked';
+      logFounderEvent(
+        'agent_action',
+        'coordination_agent',
+        {
+          executionId,
+          objective: objective.objective,
+          reason: 'Pending founder review',
+          action: 'workflow_blocked',
+        }
+      );
+      return execution;
+    }
+
+    // Now TypeScript knows approval is ApprovalDecision
     execution.approvalStatus = approval.approved ? 'approved' : 'rejected';
 
     if (!approval.approved) {
       execution.status = 'blocked';
-      logFounderEvent({
-        timestamp: new Date().toISOString(),
-        event: 'workflow_blocked',
-        actor: 'coordination_agent',
-        data: {
+      logFounderEvent(
+        'agent_action',
+        'coordination_agent',
+        {
           executionId,
           objective: objective.objective,
           reason: 'Founder rejected workflow',
-        },
-      });
+          action: 'workflow_blocked',
+        }
+      );
       return execution;
     }
 
@@ -225,17 +240,17 @@ async function executeWorkflow(execution: WorkflowExecution): Promise<WorkflowEx
         executionMap.set(task.id, taskExecution);
         taskResults.set(task.id, result);
 
-        logFounderEvent({
-          timestamp: new Date().toISOString(),
-          event: 'workflow_task_completed',
-          actor: 'coordination_agent',
-          data: {
+        logFounderEvent(
+          'agent_action',
+          'coordination_agent',
+          {
             executionId: execution.id,
             taskId: task.id,
             taskAgent: task.agent,
             duration: taskExecution.duration,
-          },
-        });
+            action: 'workflow_task_completed',
+          }
+        );
 
         break; // Success, exit retry loop
       } catch (error) {
@@ -269,15 +284,11 @@ async function executeWorkflow(execution: WorkflowExecution): Promise<WorkflowEx
 
   // Step 9: Final risk assessment
   const failedTasks = Array.from(executionMap.values()).filter((e) => e.status === 'failed');
+  const completedTasks = Array.from(executionMap.values()).filter((e) => e.status === 'completed').length;
   const finalRisk = scoreRisk({
     brand: execution.objective.brand,
-    claim: `Workflow completed with ${failedTasks.length} failures`,
-    context: 'workflow_completion',
-    details: {
-      completedTasks: Array.from(executionMap.values()).filter((e) => e.status === 'completed').length,
-      failedTasks: failedTasks.length,
-      insights: execution.results.aggregatedInsights,
-    },
+    claim: `Workflow completed with ${failedTasks.length} failures, ${completedTasks} successful tasks`,
+    context: 'internal',
   });
 
   execution.riskAssessment = finalRisk;
@@ -285,11 +296,10 @@ async function executeWorkflow(execution: WorkflowExecution): Promise<WorkflowEx
   execution.completedAt = new Date();
 
   // Step 10: Log final event
-  logFounderEvent({
-    timestamp: new Date().toISOString(),
-    event: 'workflow_completed',
-    actor: 'coordination_agent',
-    data: {
+  logFounderEvent(
+    'agent_action',
+    'coordination_agent',
+    {
       executionId: execution.id,
       objective: execution.objective.objective,
       status: execution.status,
@@ -297,8 +307,9 @@ async function executeWorkflow(execution: WorkflowExecution): Promise<WorkflowEx
       failedTasks: failedTasks.length,
       duration: execution.completedAt.getTime() - execution.startedAt.getTime(),
       insights: execution.results.aggregatedInsights,
-    },
-  });
+      action: 'workflow_completed',
+    }
+  );
 
   return execution;
 }

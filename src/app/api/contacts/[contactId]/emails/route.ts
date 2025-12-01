@@ -68,7 +68,7 @@ export async function POST(
     }
 
     // Check if email already exists for this contact
-    const existingEmails = await db.clientEmails.getByContact(contactId);
+    const existingEmails = await db.clientEmails.getByContact(contactId) as Array<{ email: string; [key: string]: any }>;
     const duplicate = existingEmails.find((e) => e.email === email);
 
     if (duplicate) {

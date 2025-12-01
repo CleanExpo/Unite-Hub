@@ -46,7 +46,7 @@ export default function StaffSettingsPage() {
               type="email"
               defaultValue="staff@unite-group.in"
               disabled
-              helpText="Email cannot be changed"
+              helperText="Email cannot be changed"
             />
 
             <div>

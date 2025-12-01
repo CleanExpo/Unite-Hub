@@ -13,6 +13,7 @@
  */
 
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import type { Database } from '@/types/database.generated';
 
 /**
  * Check if we're in a build-time/static context
@@ -51,7 +52,7 @@ async function getCookieStore() {
 export async function createClient() {
   const cookieStore = await getCookieStore();
 
-  return createServerClient(
+  return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key',
     {

@@ -16,7 +16,7 @@ import { selfCorrectionEngine, correctionArchiveBridge } from '@/lib/autonomy';
  * Rate Limit: 30 requests/minute per client
  */
 export async function GET(req: NextRequest) {
-  const clientId = req.headers.get('x-client-id') || req.ip || 'unknown';
+  const clientId = req.headers.get('x-client-id') || req.headers.get('x-forwarded-for') || 'unknown';
 
   // Rate limiting (30 per minute)
   const rateLimitResult = checkRateLimit(`correction:status:${clientId}`, { requests: 30, window: 60 });

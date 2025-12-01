@@ -13,7 +13,7 @@ import { selfCorrectionEngine } from '@/lib/autonomy';
  * Rate Limit: 5 requests/minute per client
  */
 export async function POST(req: NextRequest) {
-  const clientId = req.headers.get('x-client-id') || req.ip || 'unknown';
+  const clientId = req.headers.get('x-client-id') || req.headers.get('x-forwarded-for') || 'unknown';
 
   // Rate limiting (5 per minute)
   const rateLimitResult = checkRateLimit(`correction:start:${clientId}`, { requests: 5, window: 60 });

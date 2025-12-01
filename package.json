@@ -94,6 +94,8 @@
     "check:build-memory": "node scripts/check-build-memory.mjs",
     "health:check": "node scripts/site-health-check.mjs",
     "health:quick": "node -e \"require(\"https\").get(\"https://hammerhead-app-zr38x.ondigitalocean.app/api/health\",(r)=>{let d=\"\";r.on(\"data\",c=>d+=c);r.on(\"end\",()=>console.log(r.statusCode,JSON.parse(d).status))})\"",
+    "types:generate": "bash scripts/generate-types.sh",
+    "types:check": "npm run types:generate && tsc --noEmit --skipLibCheck",
     "prepare": "husky"
   },
   "keywords": [],
@@ -235,7 +237,7 @@
     "playwright": "^1.57.0-alpha-2025-11-07",
     "postcss": "^8.4.35",
     "shadcn": "^3.5.0",
-    "supabase": "^2.58.5",
+    "supabase": "^2.63.1",
     "tailwindcss": "^4.0.0",
     "tw-animate-css": "^1.2.9",
     "typescript": "^5.3.3",

@@ -9,7 +9,10 @@ import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
 export interface ModalProps {
-  open: boolean;
+  /** Whether the modal is open (preferred) */
+  open?: boolean;
+  /** Alias for open - for backwards compatibility */
+  isOpen?: boolean;
   onClose: () => void;
   children: React.ReactNode;
   title?: string;
@@ -19,14 +22,17 @@ export interface ModalProps {
 
 export default function Modal({
   open,
+  isOpen,
   onClose,
   children,
   title,
   size = 'md',
   showCloseButton = true,
 }: ModalProps) {
+  // Support both 'open' and 'isOpen' props
+  const isModalOpen = open ?? isOpen ?? false;
   useEffect(() => {
-    if (open) {
+    if (isModalOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
@@ -35,20 +41,20 @@ export default function Modal({
     return () => {
       document.body.style.overflow = 'unset';
     };
-  }, [open]);
+  }, [isModalOpen]);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && open) {
+      if (e.key === 'Escape' && isModalOpen) {
         onClose();
       }
     };
 
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
-  }, [open, onClose]);
+  }, [isModalOpen, onClose]);
 
-  if (!open) return null;
+  if (!isModalOpen) return null;
 
   const sizeClasses = {
     sm: 'max-w-sm',

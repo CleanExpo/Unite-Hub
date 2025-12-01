@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'workspaceId required' }, { status: 400 });
     }
 
-    const preferences = await getPreferences(workspaceId, userId);
+    const preferences = await getPreferences(userId);
 
     return NextResponse.json({
       success: true,

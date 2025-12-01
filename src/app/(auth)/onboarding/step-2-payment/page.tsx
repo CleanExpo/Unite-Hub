@@ -80,7 +80,7 @@ export default function OnboardingStep2Page() {
               Continue with {selectedPlan === "starter" ? "Starter" : "Professional"} Plan
               <ArrowRight className="h-4 w-4" />
             </Button>
-            <Button onClick={handleSkip} variant="outline" className="gap-2">
+            <Button onClick={handleSkip} variant="secondary" className="gap-2">
               <SkipForward className="h-4 w-4" />
               Skip for now
             </Button>

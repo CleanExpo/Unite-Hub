@@ -58,7 +58,7 @@ export async function GET(req: NextRequest) {
     // Get approval request
     const { data: approval, error: fetchError } = await supabase
       .from("admin_approvals")
-      .select("id, user_id, approval_token, approved, expires_at, ip_address, user_agent")
+      .select("id, user_id, approval_token, approved, expires_at, ip_address, user_agent, created_at")
       .eq("id", requestId)
       .eq("approval_token", token)
       .single();

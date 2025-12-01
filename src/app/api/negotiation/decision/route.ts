@@ -11,9 +11,8 @@ import { arbitrationModel, negotiationArchiveBridge } from '@/lib/negotiation';
 
 export async function POST(req: NextRequest) {
   try {
-    const rateLimitResult = checkRateLimit({
-      identifier: 'negotiation-decision',
-      limit: 10,
+    const rateLimitResult = checkRateLimit('negotiation-decision', {
+      requests: 10,
       window: 60,
     });
 

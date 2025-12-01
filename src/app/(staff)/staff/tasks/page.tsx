@@ -36,10 +36,10 @@ export default async function StaffTasksPage() {
           </div>
 
           <div className="flex items-center space-x-3">
-            <Button variant="outline" leftIcon={<Filter className="h-4 w-4" />}>
+            <Button variant="outline" icon={<Filter className="h-4 w-4" />}>
               Filter
             </Button>
-            <Button leftIcon={<Plus className="h-4 w-4" />}>
+            <Button icon={<Plus className="h-4 w-4" />}>
               New Task
             </Button>
           </div>
@@ -86,8 +86,8 @@ export default async function StaffTasksPage() {
             <TaskCard
               key={task.id}
               task={task}
-              onViewDetails={() => console.log('View task:', task.id)}
-              onUpdateStatus={() => console.log('Update task:', task.id)}
+              onViewProof={() => console.log('View task:', task.id)}
+              onStatusChange={() => console.log('Update task:', task.id)}
             />
           ))}
         </div>
@@ -100,7 +100,7 @@ export default async function StaffTasksPage() {
             <p className="text-gray-400 mb-4">
               No tasks found. Create your first task to get started.
             </p>
-            <Button leftIcon={<Plus className="h-4 w-4" />}>
+            <Button icon={<Plus className="h-4 w-4" />}>
               Create Task
             </Button>
           </div>

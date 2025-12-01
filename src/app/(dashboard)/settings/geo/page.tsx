@@ -51,7 +51,7 @@ export default function GeoSettingsPage() {
         .from("seo_client_profiles")
         .select("client_id, domain, subscription_tier, geo_radius_km")
         .eq("organization_id", currentOrganization.org_id)
-        .single();
+        .single() as { data: { client_id: string; domain: string; subscription_tier: string; geo_radius_km: number | null } | null; error: unknown };
 
       if (data) {
         setClientId(data.client_id);
@@ -273,7 +273,7 @@ export default function GeoSettingsPage() {
               </div>
               <Slider
                 value={[newRadius]}
-                onValueChange={(values) => setNewRadius(values[0])}
+                onValueChange={(values: number[]) => setNewRadius(values[0])}
                 min={3}
                 max={maxRadius}
                 step={1}

@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { createServerClient as createSSRServerClient, type CookieOptions } from '@supabase/ssr';
+import type { Database } from '@/types/database.generated';
 
 // Get environment variables with proper fallbacks
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
@@ -15,14 +16,14 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 // Client-side (browser) - lazy initialization
-let _supabaseBrowser: ReturnType<typeof createClient> | null = null;
+let _supabaseBrowser: ReturnType<typeof createClient<Database>> | null = null;
 
 function getSupabaseBrowser() {
   if (!_supabaseBrowser) {
     if (!supabaseUrl || !supabaseAnonKey) {
       throw new Error('Supabase environment variables are not configured. Please check NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY');
     }
-    _supabaseBrowser = createClient(supabaseUrl, supabaseAnonKey, {
+    _supabaseBrowser = createClient<Database>(supabaseUrl, supabaseAnonKey, {
       auth: {
         // Enable session persistence
         persistSession: true,
@@ -40,9 +41,9 @@ function getSupabaseBrowser() {
 }
 
 // Export lazy-initialized client
-export const supabase = new Proxy({} as ReturnType<typeof createClient>, {
+export const supabase = new Proxy({} as ReturnType<typeof createClient<Database>>, {
   get(target, prop) {
-    return getSupabaseBrowser()[prop as keyof ReturnType<typeof createClient>];
+    return getSupabaseBrowser()[prop as keyof ReturnType<typeof createClient<Database>>];
   }
 });
 
@@ -55,7 +56,7 @@ export async function getSupabaseServer() {
     const { cookies } = await import('next/headers');
     const cookieStore = await cookies();
 
-    return createSSRServerClient(
+    return createSSRServerClient<Database>(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
@@ -86,7 +87,7 @@ export async function getSupabaseServer() {
     // During build-time static analysis, cookies() may not be available
     // Return a client without cookie-based auth (will work for unauthenticated operations)
     console.warn('getSupabaseServer: cookies() not available, using anonymous client');
-    return createClient(
+    return createClient<Database>(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
@@ -126,7 +127,7 @@ export function getSupabaseServerWithAuth(token: string) {
     throw new Error('Supabase environment variables not configured');
   }
 
-  return createClient(supabaseUrl, supabaseAnonKey, {
+  return createClient<Database>(supabaseUrl, supabaseAnonKey, {
     global: {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -141,7 +142,7 @@ export function getSupabaseServerWithAuth(token: string) {
 
 // Admin client (service role) - bypasses RLS, use for server-side operations
 // Lazy initialization to ensure environment variables are available
-let _supabaseAdmin: ReturnType<typeof createClient> | null = null;
+let _supabaseAdmin: ReturnType<typeof createClient<Database>> | null = null;
 
 export function getSupabaseAdmin() {
   if (!_supabaseAdmin) {
@@ -152,7 +153,7 @@ export function getSupabaseAdmin() {
       throw new Error('SUPABASE_SERVICE_ROLE_KEY or NEXT_PUBLIC_SUPABASE_URL not configured');
     }
 
-    _supabaseAdmin = createClient(url, serviceRoleKey, {
+    _supabaseAdmin = createClient<Database>(url, serviceRoleKey, {
       auth: {
         autoRefreshToken: false,
         persistSession: false
@@ -163,9 +164,9 @@ export function getSupabaseAdmin() {
 }
 
 // Export as proxy for direct method access (supabaseAdmin.rpc(), supabaseAdmin.from(), etc.)
-export const supabaseAdmin = new Proxy({} as ReturnType<typeof createClient>, {
+export const supabaseAdmin = new Proxy({} as ReturnType<typeof createClient<Database>>, {
   get(target, prop) {
-    return getSupabaseAdmin()[prop as keyof ReturnType<typeof createClient>];
+    return getSupabaseAdmin()[prop as keyof ReturnType<typeof createClient<Database>>];
   }
 });
 

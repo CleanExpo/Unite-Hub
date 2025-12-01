@@ -20,7 +20,7 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   children?: ReactNode;
 
   /** Semantic color variant @default 'neutral' */
-  variant?: 'success' | 'warning' | 'accent' | 'neutral';
+  variant?: 'success' | 'warning' | 'accent' | 'neutral' | 'default' | 'secondary' | 'outline' | 'destructive' | 'danger' | 'info' | 'error';
 
   /** Size variant @default 'md' */
   size?: 'sm' | 'md';
@@ -74,11 +74,18 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
       ease-out
     `;
 
-    const variantStyles = {
+    const variantStyles: Record<string, string> = {
       success: 'bg-success-50 text-success-500',
       warning: 'bg-warning-50 text-warning-500',
       accent: 'bg-accent-100 text-accent-500',
       neutral: 'bg-bg-hover text-text-secondary',
+      default: 'bg-bg-hover text-text-secondary',
+      secondary: 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300',
+      outline: 'bg-transparent border border-border-subtle text-text-secondary',
+      destructive: 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400',
+      danger: 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400',
+      info: 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400',
+      error: 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400',
     };
 
     const sizeStyles = {

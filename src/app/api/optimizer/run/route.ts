@@ -18,16 +18,16 @@ import { executionOptimizer, executionAdaptationModel, optimizerArchiveBridge } 
 export async function POST(req: NextRequest) {
   try {
     // Rate limiting: 10 req/min
-    const rateLimitResult = checkRateLimit({
-      identifier: 'optimizer-run',
-      limit: 10,
+    const rateLimitResult = checkRateLimit('optimizer-run', {
+      requests: 10,
       window: 60,
     });
 
     if (!rateLimitResult.allowed) {
+      const retryAfterSeconds = Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000);
       return NextResponse.json(
-        { error: 'Rate limit exceeded', retryAfter: rateLimitResult.retryAfter },
-        { status: 429, headers: { 'Retry-After': rateLimitResult.retryAfter.toString() } }
+        { error: 'Rate limit exceeded', retryAfter: retryAfterSeconds },
+        { status: 429, headers: { 'Retry-After': retryAfterSeconds.toString() } }
       );
     }
 

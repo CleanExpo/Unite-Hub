@@ -17,7 +17,8 @@ describe('Dropdown Component (Phase 2B)', () => {
 
   const defaultProps = {
     options: defaultOptions,
-    onSelect: vi.fn(),
+    value: '',
+    onChange: vi.fn(),
     placeholder: 'Select an option',
   };
 
@@ -69,7 +70,7 @@ describe('Dropdown Component (Phase 2B)', () => {
       render(
         <Dropdown
           {...defaultProps}
-          onSelect={onSelect}
+          onChange={onSelect}
         />
       );
 
@@ -79,7 +80,7 @@ describe('Dropdown Component (Phase 2B)', () => {
       const option = screen.getByRole('option', { name: /option 2/i });
       await user.click(option);
 
-      expect(onSelect).toHaveBeenCalledWith({ id: 'opt2', label: 'Option 2', value: 'value2' });
+      expect(onSelect).toHaveBeenCalledWith('value2');
     });
 
     it('should close dropdown after selection', async () => {
@@ -104,7 +105,7 @@ describe('Dropdown Component (Phase 2B)', () => {
       const { rerender } = render(
         <Dropdown
           {...defaultProps}
-          onSelect={onSelect}
+          onChange={onSelect}
         />
       );
 
@@ -119,7 +120,7 @@ describe('Dropdown Component (Phase 2B)', () => {
         <Dropdown
           {...defaultProps}
           value="value1"
-          onSelect={onSelect}
+          onChange={onSelect}
         />
       );
       await user.click(trigger);
@@ -219,7 +220,7 @@ describe('Dropdown Component (Phase 2B)', () => {
         <Dropdown
           {...defaultProps}
           multiple={true}
-          onSelect={onSelect}
+          onChange={onSelect}
         />
       );
 
@@ -260,7 +261,7 @@ describe('Dropdown Component (Phase 2B)', () => {
           {...defaultProps}
           multiple={true}
           value={['value1']}
-          onSelect={onSelect}
+          onChange={onSelect}
         />
       );
 
@@ -398,7 +399,7 @@ describe('Dropdown Component (Phase 2B)', () => {
       render(
         <Dropdown
           {...defaultProps}
-          onSelect={onSelect}
+          onChange={onSelect}
         />
       );
 

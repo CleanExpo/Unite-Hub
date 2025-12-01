@@ -128,9 +128,9 @@ export async function POST(req: NextRequest) {
 
     // Run audit engine
     const engine = new AuditEngine();
-    const auditResult = await engine.runAudit(auditConfig);
+    const auditResult = await engine.runAudit(auditConfig) as any;
 
-    if (!auditResult.success) {
+    if (auditResult.status === "failed") {
       // Update audit status to failed
       await supabase
         .from("seo_audit_history")

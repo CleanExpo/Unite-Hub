@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
-import type { TeamMember, TablesInsert } from "@/types/database";
+import type { Database } from "@/types/database.generated";
 import { apiRateLimit } from "@/lib/rate-limit";
+
+type TeamMember = Database['public']['Tables']['team_members']['Row'];
+type TablesInsert<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Insert'];
 import {
   parsePagination,
   createPaginationMeta,

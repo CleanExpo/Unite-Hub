@@ -80,26 +80,24 @@ export function applyTuning(
   // Apply immediately if auto-allowed
   if (autoAllowed) {
     tuningProfile[agent] = { ...existing, [param]: constrainedValue };
-    logFounderEvent({
-      timestamp: change.createdAt,
-      event: 'agent_action',
-      actor: 'optimization_auto_tuner',
-      data: {
+    logFounderEvent(
+      'agent_action',
+      'optimization_auto_tuner',
+      {
         action: 'auto_tuning_applied',
         change,
-      },
-    });
+      }
+    );
   } else {
     // Log for founder approval
-    logFounderEvent({
-      timestamp: change.createdAt,
-      event: 'agent_action',
-      actor: 'optimization_auto_tuner',
-      data: {
+    logFounderEvent(
+      'agent_action',
+      'optimization_auto_tuner',
+      {
         action: 'tuning_pending_approval',
         change,
-      },
-    });
+      }
+    );
   }
 
   changeHistory.push(change);
@@ -115,7 +113,7 @@ export function runAutoTuner(profile: RiskSafetyProfile = defaultRiskSafetyProfi
 
   // Process suggestions into tuning changes
   for (const suggestion of suggestions) {
-    let param = suggestion.area;
+    let param: string = suggestion.area;
     let value: any = null;
 
     // Map suggestion area to specific parameters
@@ -169,16 +167,15 @@ export function approveTuningChange(changeId: string, profile: RiskSafetyProfile
   change.autoApplied = true;
   change.requiresFounderApproval = false;
 
-  logFounderEvent({
-    timestamp: new Date().toISOString(),
-    event: 'founder_action',
-    actor: 'founder',
-    data: {
+  logFounderEvent(
+    'approval_decision',
+    'founder',
+    {
       action: 'tuning_approved',
       changeId,
       change,
-    },
-  });
+    }
+  );
 
   return true;
 }
@@ -192,16 +189,15 @@ export function rejectTuningChange(changeId: string, reason: string): boolean {
 
   change.requiresFounderApproval = false;
 
-  logFounderEvent({
-    timestamp: new Date().toISOString(),
-    event: 'founder_action',
-    actor: 'founder',
-    data: {
+  logFounderEvent(
+    'approval_decision',
+    'founder',
+    {
       action: 'tuning_rejected',
       changeId,
       reason,
-    },
-  });
+    }
+  );
 
   return true;
 }

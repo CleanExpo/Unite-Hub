@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { checkTierRateLimit } from '@/lib/rate-limit-tiers';
-import { getSerpObservation } from '@/lib/aido/database/serp-observations';
+import { getSerpObservationsByKeyword } from '@/lib/aido/database/serp-observations';
 import { createChangeSignal } from '@/lib/aido/database/change-signals';
 import { createStrategyRecommendation } from '@/lib/aido/database/strategy-recommendations';
 
@@ -23,12 +23,13 @@ export async function POST(req: NextRequest) {
     // AI rate limiting (Extended Thinking is expensive)
     const rateLimitResult = await checkTierRateLimit(req, data.user.id, 'ai');
     if (!rateLimitResult.allowed) {
-      return NextResponse.json(
+      return rateLimitResult.response || NextResponse.json(
         {
-          error: rateLimitResult.error,
-          message: 'Google Curve analysis requires Extended Thinking AI. Upgrade to increase quota.'
+          error: 'Rate limit exceeded',
+          message: 'Google Curve analysis requires Extended Thinking AI. Upgrade to increase quota.',
+          tier: rateLimitResult.tier
         },
-        { status: 429, headers: rateLimitResult.headers }
+        { status: 429 }
       );
     }
 
@@ -48,9 +49,10 @@ export async function POST(req: NextRequest) {
     }
 
     // Fetch SERP history
-    const history = await getSerpObservation(
-      workspaceId,
+    const history = await getSerpObservationsByKeyword(
       keyword,
+      workspaceId,
+      clientId,
       days || 30
     );
 
@@ -70,8 +72,8 @@ export async function POST(req: NextRequest) {
     const recommendations = [];
 
     // Detect position changes
-    const recentPosition = history[0].position;
-    const previousPosition = history[1].position;
+    const recentPosition = history[0].position ?? 0;
+    const previousPosition = history[1].position ?? 0;
     const positionChange = previousPosition - recentPosition;
 
     if (Math.abs(positionChange) >= 5) {
@@ -80,7 +82,7 @@ export async function POST(req: NextRequest) {
         workspaceId,
         pillarId: 'google_curve',
         signalType: 'ranking_shift',
-        severity: Math.abs(positionChange) >= 10 ? 'major' : 'moderate',
+        severity: Math.abs(positionChange) >= 10 ? 'critical' : 'high',
         description: `Keyword "${keyword}" ${positionChange > 0 ? 'improved' : 'dropped'} ${Math.abs(positionChange)} positions`,
         rawEvidence: {
           keyword,
@@ -102,24 +104,21 @@ export async function POST(req: NextRequest) {
         description: positionChange > 0
           ? `Keyword improved ${Math.abs(positionChange)} positions. Analyze winning factors and replicate.`
           : `Keyword dropped ${Math.abs(positionChange)} positions. Immediate content refresh required.`,
-        priority: Math.abs(positionChange) >= 10 ? 'urgent' : 'high',
+        priority: Math.abs(positionChange) >= 10 ? 'critical' : 'high',
         actions: [
           {
             step: 1,
-            description: 'Review SERP features and AI answer changes',
-            estimatedHours: 1
+            action: 'Review SERP features and AI answer changes'
           },
           {
             step: 2,
-            description: positionChange > 0
+            action: positionChange > 0
               ? 'Document winning content patterns'
-              : 'Update content with fresh data and examples',
-            estimatedHours: positionChange > 0 ? 2 : 4
+              : 'Update content with fresh data and examples'
           },
           {
             step: 3,
-            description: 'Monitor for 7 days to confirm trend',
-            estimatedHours: 0.5
+            action: 'Monitor for 7 days to confirm trend'
           }
         ],
         estimatedImpact: Math.abs(positionChange) >= 10 ? 'high' : 'medium'
@@ -129,7 +128,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Detect AI answer changes
-    const recentAIPresence = history.filter(h => h.aiAnswerPresent).length;
+    const recentAIPresence = history.filter(h => h.ai_answer_present).length;
     const aiPresenceRate = recentAIPresence / history.length;
 
     if (aiPresenceRate > 0.7) {
@@ -138,7 +137,7 @@ export async function POST(req: NextRequest) {
         workspaceId,
         pillarId: 'google_curve',
         signalType: 'ai_answer_format_change',
-        severity: 'moderate',
+        severity: 'medium',
         description: `AI Overviews appearing in ${(aiPresenceRate * 100).toFixed(0)}% of searches for "${keyword}"`,
         rawEvidence: {
           keyword,

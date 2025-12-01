@@ -107,7 +107,7 @@ export async function POST(req: NextRequest) {
       new_value: { email, name, role, notes },
     });
 
-    return success(data, 201);
+    return NextResponse.json({ success: true, data }, { status: 201 });
   } catch (error) {
     console.error("Sandbox users POST error:", error);
     return errors.internal("Internal server error");

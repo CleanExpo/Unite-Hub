@@ -40,8 +40,8 @@ export async function POST(req: NextRequest) {
     const supabaseAdmin = getSupabaseAdmin();
 
     // Check if profile already exists
-    const { data: existingProfile } = await supabaseAdmin
-      .from('user_profiles')
+    const { data: existingProfile } = await (supabaseAdmin
+      .from('user_profiles') as any)
       .select('id')
       .eq('id', user.id)
       .maybeSingle();
@@ -61,8 +61,8 @@ export async function POST(req: NextRequest) {
       user.email?.split('@')[0] ||
       'User';
 
-    const { data: newProfile, error: profileError } = await supabaseAdmin
-      .from('user_profiles')
+    const { data: newProfile, error: profileError } = await (supabaseAdmin
+      .from('user_profiles') as any)
       .insert({
         id: user.id,
         email: user.email!,

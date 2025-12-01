@@ -128,14 +128,13 @@ export async function POST(req: NextRequest) {
       contact.custom_fields?.packageTier || contact.custom_fields?.tier || "professional";
 
     const userPrompt = buildContentCalendarUserPrompt({
-      persona,
-      strategy,
-      businessContext,
+      businessType: businessContext,
+      targetAudience: persona?.target_audience || contact.company || "General audience",
+      persona: persona ? JSON.stringify(persona) : undefined,
+      strategy: strategy ? JSON.stringify(strategy) : undefined,
       platforms,
       startDate,
-      durationDays,
-      contentPillars: strategy.content_pillars,
-      tier: packageTier,
+      endDate,
     });
 
     // Call Claude AI to generate calendar

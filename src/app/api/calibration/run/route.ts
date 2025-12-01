@@ -19,16 +19,16 @@ import { alignmentCalibrationEngine, autonomyTuningModel, thresholdAdjustmentMod
 export async function POST(req: NextRequest) {
   try {
     // Rate limiting: 10 req/min
-    const rateLimitResult = checkRateLimit({
-      identifier: 'calibration-run',
-      limit: 10,
+    const rateLimitResult = checkRateLimit('calibration-run', {
+      requests: 10,
       window: 60,
     });
 
     if (!rateLimitResult.allowed) {
+      const retryAfterSeconds = Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000);
       return NextResponse.json(
-        { error: 'Rate limit exceeded', retryAfter: rateLimitResult.retryAfter },
-        { status: 429, headers: { 'Retry-After': rateLimitResult.retryAfter.toString() } }
+        { error: 'Rate limit exceeded', retryAfter: retryAfterSeconds },
+        { status: 429, headers: { 'Retry-After': retryAfterSeconds.toString() } }
       );
     }
 
@@ -123,6 +123,9 @@ export async function POST(req: NextRequest) {
     });
 
     // 4. Propose threshold adjustments
+    // Convert numeric rates to string categories for threshold model
+    const fpRate = calibrationCycle.findings.falsePositiveRate;
+    const fnRate = calibrationCycle.findings.falseNegativeRate;
     const thresholdProposals = await thresholdAdjustmentModel.proposeAdjustments({
       workspaceId,
       cycleId: calibrationCycle.cycleId,
@@ -135,8 +138,8 @@ export async function POST(req: NextRequest) {
         memory_corruption_threshold: 85,
       },
       metrics: {
-        falsePositiveRate: calibrationCycle.findings.falsePositiveRate,
-        falseNegativeRate: calibrationCycle.findings.falseNegativeRate,
+        falsePositiveRate: fpRate > 0.3 ? 'HIGH' : fpRate > 0.15 ? 'MEDIUM' : 'LOW',
+        falseNegativeRate: fnRate > 0.3 ? 'HIGH' : fnRate > 0.15 ? 'MEDIUM' : 'LOW',
         cascadeRiskDetected: false,
         deadlockRiskDetected: false,
         memoryCorruptionRisk: false,

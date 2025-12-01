@@ -42,7 +42,7 @@ export default function StaffSeoPage() {
           .from("seo_profiles")
           .select("*")
           .eq("organization_id", currentOrganization.org_id)
-          .order("created_at", { ascending: false });
+          .order("created_at", { ascending: false }) as { data: SeoProfile[] | null; error: unknown };
 
         if (fetchError) throw fetchError;
 
@@ -139,7 +139,7 @@ export default function StaffSeoPage() {
                 >
                   {seoProfiles.map((profile) => (
                     <option key={profile.id} value={profile.id}>
-                      {profile.profile_name} ({profile.domain})
+                      {profile.domain}
                     </option>
                   ))}
                 </select>

@@ -19,16 +19,16 @@ import { agentNegotiationEngine } from '@/lib/negotiation';
 export async function POST(req: NextRequest) {
   try {
     // Rate limiting: 10 req/min
-    const rateLimitResult = checkRateLimit({
-      identifier: 'negotiation-start',
-      limit: 10,
+    const rateLimitResult = checkRateLimit('negotiation-start', {
+      requests: 10,
       window: 60,
     });
 
     if (!rateLimitResult.allowed) {
+      const retryAfterSeconds = Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000);
       return NextResponse.json(
-        { error: 'Rate limit exceeded', retryAfter: rateLimitResult.retryAfter },
-        { status: 429, headers: { 'Retry-After': rateLimitResult.retryAfter.toString() } }
+        { error: 'Rate limit exceeded', retryAfter: retryAfterSeconds },
+        { status: 429, headers: { 'Retry-After': retryAfterSeconds.toString() } }
       );
     }
 

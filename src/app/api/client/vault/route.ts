@@ -13,8 +13,15 @@ export const GET = withClientAuth(async (req) => {
   try {
     const clientId = getUserId(req);
 
-    const { data: entries, error } = await supabaseStaff
-      .from('digital_vault')
+    if (!clientId) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
+    const { data: entries, error } = await (supabaseStaff
+      .from('digital_vault') as any)
       .select('id, key_name, category, created_at') // Don't expose encrypted values in list
       .eq('client_id', clientId)
       .order('created_at', { ascending: false });
@@ -53,10 +60,17 @@ export const POST = withClientAuth(async (req) => {
 
     const clientId = getUserId(req);
 
+    if (!clientId) {
+      return NextResponse.json(
+        { error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     // In production, encrypt the value before storing
     // For now, store as-is (would use crypto library in production)
-    const { data: entry, error } = await supabaseStaff
-      .from('digital_vault')
+    const { data: entry, error } = await (supabaseStaff
+      .from('digital_vault') as any)
       .insert({
         client_id: clientId,
         ...data,

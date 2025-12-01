@@ -251,9 +251,32 @@ export async function clientLogout() {
 }
 
 /**
+ * Client session type
+ */
+export interface ClientSessionData {
+  access_token: string;
+  refresh_token: string;
+  expires_in: number;
+  expires_at?: number;
+  token_type: string;
+  user: {
+    id: string;
+    email?: string;
+    [key: string]: unknown;
+  };
+  client: {
+    id: string;
+    name: string | null;
+    email: string | null;
+    subscription_tier: string | null;
+    active: boolean;
+  };
+}
+
+/**
  * Get current client session (with client_users table verification)
  */
-export async function getClientSession() {
+export async function getClientSession(): Promise<ClientSessionData | null> {
   const { data, error } = await supabaseStaff.auth.getSession();
 
   if (error || !data.session) {
@@ -265,7 +288,7 @@ export async function getClientSession() {
     .from('client_users')
     .select('id, name, email, subscription_tier, active')
     .eq('id', data.session.user.id)
-    .single();
+    .single() as { data: { id: string; name: string | null; email: string | null; subscription_tier: string | null; active: boolean } | null; error: unknown };
 
   if (clientError || !clientData) {
     console.error('Client not found in client_users table:', clientError);
@@ -279,7 +302,12 @@ export async function getClientSession() {
   }
 
   return {
-    ...data.session,
+    access_token: data.session.access_token,
+    refresh_token: data.session.refresh_token || '',
+    expires_in: data.session.expires_in || 0,
+    expires_at: data.session.expires_at,
+    token_type: data.session.token_type,
+    user: data.session.user,
     client: clientData,
   };
 }

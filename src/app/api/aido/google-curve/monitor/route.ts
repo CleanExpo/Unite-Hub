@@ -54,8 +54,8 @@ export async function POST(req: NextRequest) {
         position: Math.floor(Math.random() * 20) + 1, // Placeholder
         featuresPresent: ['ai_overview', 'featured_snippet'], // Placeholder
         aiAnswerPresent: Math.random() > 0.5,
-        aiAnswerSummary: null,
-        sourceDomains: []
+        aiAnswerSummary: undefined,
+        sourceDomainsUsed: []
       });
 
       observations.push(observation);

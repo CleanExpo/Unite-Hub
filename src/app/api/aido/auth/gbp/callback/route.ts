@@ -61,8 +61,8 @@ export async function GET(req: NextRequest) {
       expiresAt: tokens.expiry_date,
     });
 
-    const { data: tokenData, error: tokenError } = await supabaseBrowser
-      .from('oauth_tokens')
+    const { data: tokenData, error: tokenError } = await (supabaseBrowser
+      .from('oauth_tokens') as any)
       .upsert({
         workspace_id: workspaceId,
         user_id: session.user.id,

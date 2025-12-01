@@ -9,6 +9,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import { DeltaEngine } from "@/lib/seo/deltaEngine";
 import { ClientDataManager } from "@/lib/clientDataManager";
+import fs from "fs/promises";
 
 export async function GET(req: NextRequest) {
   try {
@@ -105,15 +106,15 @@ export async function GET(req: NextRequest) {
     if (currentAudit.delta_summary && Object.keys(currentAudit.delta_summary).length > 0) {
       // Try to load full delta from file
       try {
-        const deltaPath = `reports/deltas/delta-${auditId}.json`;
-        const deltaContent = await ClientDataManager.readFile(
+        const deltaResult = await ClientDataManager.readReport(
           currentAudit.client_id,
-          deltaPath
+          'reports',
+          `deltas/delta-${auditId}.json`
         );
 
-        if (deltaContent) {
+        if (deltaResult.success && deltaResult.content) {
           return NextResponse.json({
-            delta: JSON.parse(deltaContent),
+            delta: JSON.parse(deltaResult.content),
             cached: true,
           });
         }
@@ -166,14 +167,8 @@ export async function GET(req: NextRequest) {
     let currentData, previousData;
 
     try {
-      const currentContent = await ClientDataManager.readFile(
-        currentAudit.client_id,
-        currentJsonPath
-      );
-      const previousContent = await ClientDataManager.readFile(
-        previousAudit.client_id,
-        previousJsonPath
-      );
+      const currentContent = await fs.readFile(currentJsonPath, "utf-8");
+      const previousContent = await fs.readFile(previousJsonPath, "utf-8");
 
       currentData = JSON.parse(currentContent || "{}");
       previousData = JSON.parse(previousContent || "{}");
@@ -204,13 +199,16 @@ export async function GET(req: NextRequest) {
 
     // Save delta to file for caching
     try {
-      await ClientDataManager.writeReport({
-        clientId: currentAudit.client_id,
-        fileName: `delta-${auditId}.json`,
-        content: JSON.stringify(deltaResult, null, 2),
-        format: "json",
-        subFolder: "deltas",
-      });
+      await ClientDataManager.writeReport(
+        {
+          clientId: currentAudit.client_id,
+          category: "reports",
+          filename: `delta-${auditId}`,
+          timestamp: new Date().toISOString().replace(/[:.]/g, "-"),
+          type: "json",
+        },
+        JSON.stringify(deltaResult, null, 2)
+      );
     } catch (err) {
       console.error("Failed to cache delta file:", err);
       // Non-fatal, continue

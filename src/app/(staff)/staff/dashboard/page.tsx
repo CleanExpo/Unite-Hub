@@ -32,7 +32,7 @@ export default async function StaffDashboardPage() {
         {/* AI Daily Briefing */}
         <div>
           <h2 className='text-xl font-semibold mb-2'>AI Daily Briefing</h2>
-          <AIInsightBubble text={aiBrief.debug || 'AI evaluating systems…'} />
+          <AIInsightBubble text={'debug' in aiBrief ? aiBrief.debug : (aiBrief.summary || 'AI evaluating systems…')} />
         </div>
       </Section>
 

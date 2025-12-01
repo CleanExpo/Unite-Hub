@@ -57,7 +57,7 @@ export default function GeoOnboardingPage() {
         .from("seo_client_profiles")
         .select("client_id, subscription_tier")
         .eq("organization_id", currentOrganization.org_id)
-        .single();
+        .single() as { data: { client_id: string; subscription_tier: string } | null; error: unknown };
 
       if (data) {
         setClientId(data.client_id);

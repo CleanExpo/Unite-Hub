@@ -397,7 +397,7 @@ export default function JournalEntryForm({
                   placeholder="Add a tag..."
                   className="flex-1"
                 />
-                <Button variant="outline" onClick={handleAddTag} leftIcon={<Tag className="w-4 h-4" />}>
+                <Button variant="outline" onClick={handleAddTag} icon={<Tag className="w-4 h-4" />}>
                   Add
                 </Button>
               </div>
@@ -440,7 +440,7 @@ export default function JournalEntryForm({
                 onClick={handleSaveDraft}
                 loading={saving}
                 disabled={!isFormValid() || saving || publishing}
-                leftIcon={<Save className="w-4 h-4" />}
+                icon={<Save className="w-4 h-4" />}
                 className="flex-1"
               >
                 Save Draft
@@ -450,7 +450,7 @@ export default function JournalEntryForm({
                 onClick={handlePublish}
                 loading={publishing}
                 disabled={!isFormValid() || saving || publishing}
-                leftIcon={<Send className="w-4 h-4" />}
+                icon={<Send className="w-4 h-4" />}
                 className="flex-1"
               >
                 Publish
@@ -514,7 +514,7 @@ export default function JournalEntryForm({
                 fullWidth
                 size="sm"
                 onClick={loadPrompts}
-                leftIcon={<Sparkles className="w-4 h-4" />}
+                icon={<Sparkles className="w-4 h-4" />}
               >
                 Refresh Prompts
               </Button>

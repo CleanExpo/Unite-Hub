@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseBrowser } from '@/lib/supabase';
+import { supabaseBrowser, getSupabaseServer } from '@/lib/supabase';
 import { getMandates, updateMandate, validateAction } from '@/lib/agentMandates';
 
 export async function GET(req: NextRequest) {
@@ -51,7 +51,28 @@ export async function POST(req: NextRequest) {
     const { action, tenantId, agentName, mandate, autonomyLevel, riskCaps, mandateId, actionType, actionDetails, estimatedRisk } = await req.json();
 
     if (action === 'create') {
-      const result = await updateMandate(tenantId, agentName, mandate, autonomyLevel, riskCaps);
+      // Create mandate directly in database
+      const supabase = await getSupabaseServer();
+      const { data: result, error } = await supabase
+        .from('agent_mandates')
+        .insert({
+          tenant_id: tenantId,
+          agent_name: agentName,
+          role_description: mandate || '',
+          autonomy_level: autonomyLevel || 0,
+          risk_cap: riskCaps?.cap || 'low',
+          action_scope: [],
+          forbidden_actions: [],
+          requires_human_approval: true,
+          is_active: true,
+        })
+        .select()
+        .single();
+
+      if (error) {
+        return NextResponse.json({ error: 'Failed to create mandate' }, { status: 500 });
+      }
+
       return NextResponse.json({
         mandate: result,
         confidence: 0.9,
@@ -60,7 +81,8 @@ export async function POST(req: NextRequest) {
     }
 
     if (action === 'validate') {
-      const result = await validateAction(mandateId, actionType, actionDetails, estimatedRisk);
+      // validateAction takes (tenantId, agentName, action)
+      const result = await validateAction(tenantId, agentName, actionType);
       return NextResponse.json({
         validation: result,
         confidence: 0.85,

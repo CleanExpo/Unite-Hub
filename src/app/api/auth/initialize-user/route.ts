@@ -36,7 +36,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<Initializ
     // Apply strict rate limiting (10 requests per 15 minutes for auth endpoints)
     const rateLimitResult = await strictRateLimit(request);
     if (rateLimitResult) {
-      return rateLimitResult;
+      return rateLimitResult as NextResponse<InitializationResult>;
     }
 
     // Check for Authorization header (implicit OAuth flow)
@@ -130,8 +130,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<Initializ
     };
 
     // STEP 1: Verify/Create Profile (idempotent)
-    const { data: existingProfile } = await supabase
-      .from('user_profiles')
+    const { data: existingProfile } = await (supabase
+      .from('user_profiles') as any)
       .select('id')
       .eq('id', user.id)
       .maybeSingle();
@@ -143,8 +143,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<Initializ
         user.email?.split('@')[0] ||
         'User';
 
-      const { error: profileError } = await supabase
-        .from('user_profiles')
+      const { error: profileError } = await (supabase
+        .from('user_profiles') as any)
         .insert({
           id: user.id,
           email: user.email!,
@@ -172,15 +172,15 @@ export async function POST(request: NextRequest): Promise<NextResponse<Initializ
 
     // STEP 1b: Verify/Create Profiles record for role-based routing (idempotent)
     // The 'profiles' table is used by middleware for RBAC (separate from user_profiles)
-    const { data: existingRoleProfile } = await supabase
-      .from('profiles')
+    const { data: existingRoleProfile } = await (supabase
+      .from('profiles') as any)
       .select('id')
       .eq('id', user.id)
       .maybeSingle();
 
     if (!existingRoleProfile) {
-      const { error: roleProfileError } = await supabase
-        .from('profiles')
+      const { error: roleProfileError } = await (supabase
+        .from('profiles') as any)
         .insert({
           id: user.id,
           email: user.email!,
@@ -199,8 +199,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<Initializ
     }
 
     // STEP 2: Verify/Create Organization (idempotent)
-    const { data: existingOrgs } = await supabase
-      .from('user_organizations')
+    const { data: existingOrgs } = await (supabase
+      .from('user_organizations') as any)
       .select('org_id, organizations(id, name)')
       .eq('user_id', user.id)
       .limit(1);
@@ -209,8 +209,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<Initializ
 
     if (!existingOrgs || existingOrgs.length === 0) {
       // Create organization
-      const { data: newOrg, error: orgError } = await supabase
-        .from('organizations')
+      const { data: newOrg, error: orgError } = await (supabase
+        .from('organizations') as any)
         .insert({
           name: `${user.user_metadata?.full_name || user.email?.split('@')[0]}'s Organization`,
           email: user.email!,
@@ -238,8 +238,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<Initializ
       console.log('[initialize-user] ✅ Organization created:', orgId);
 
       // Link user to organization
-      const { error: userOrgError } = await supabase
-        .from('user_organizations')
+      const { error: userOrgError } = await (supabase
+        .from('user_organizations') as any)
         .insert({
           user_id: user.id,
           org_id: orgId,
@@ -252,7 +252,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<Initializ
         return NextResponse.json(
           {
             ...result,
-            data: { ...result.data, orgId },
+            data: { userId: user.id, orgId },
             error: 'Failed to link user to organization',
             details: userOrgError,
           },
@@ -270,8 +270,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<Initializ
     result.data!.orgId = orgId;
 
     // STEP 3: Verify/Create Workspace (idempotent) - CRITICAL FIX
-    const { data: existingWorkspaces } = await supabase
-      .from('workspaces')
+    const { data: existingWorkspaces } = await (supabase
+      .from('workspaces') as any)
       .select('id, name')
       .eq('org_id', orgId)
       .limit(1);
@@ -280,8 +280,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<Initializ
 
     if (!existingWorkspaces || existingWorkspaces.length === 0) {
       // Create workspace
-      const { data: newWorkspace, error: workspaceError } = await supabase
-        .from('workspaces')
+      const { data: newWorkspace, error: workspaceError } = await (supabase
+        .from('workspaces') as any)
         .insert({
           org_id: orgId,
           name: 'Default Workspace',
@@ -315,8 +315,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<Initializ
     // STEP 4: Create Trial Profile for new organizations (idempotent)
     if (result.created.organization) {
       // Check if trial profile already exists
-      const { data: existingTrialProfile } = await supabase
-        .from('trial_profiles')
+      const { data: existingTrialProfile } = await (supabase
+        .from('trial_profiles') as any)
         .select('id')
         .eq('workspace_id', workspaceId)
         .maybeSingle();
@@ -325,8 +325,8 @@ export async function POST(request: NextRequest): Promise<NextResponse<Initializ
         const trialStartedAt = new Date().toISOString();
         const trialExpiresAt = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString();
 
-        const { error: trialError } = await supabase
-          .from('trial_profiles')
+        const { error: trialError } = await (supabase
+          .from('trial_profiles') as any)
           .insert({
             workspace_id: workspaceId,
             is_trial: true,
@@ -382,9 +382,9 @@ export async function POST(request: NextRequest): Promise<NextResponse<Initializ
 
     // GROUND TRUTH VERIFICATION: Verify all entities exist
     const verification = await Promise.all([
-      supabase.from('user_profiles').select('id').eq('id', user.id).single(),
-      supabase.from('user_organizations').select('org_id').eq('user_id', user.id).eq('org_id', orgId).single(),
-      supabase.from('workspaces').select('id').eq('id', workspaceId).eq('org_id', orgId).single(),
+      (supabase.from('user_profiles') as any).select('id').eq('id', user.id).single(),
+      (supabase.from('user_organizations') as any).select('org_id').eq('user_id', user.id).eq('org_id', orgId).single(),
+      (supabase.from('workspaces') as any).select('id').eq('id', workspaceId).eq('org_id', orgId).single(),
     ]);
 
     const [profileCheck, userOrgCheck, workspaceCheck] = verification;

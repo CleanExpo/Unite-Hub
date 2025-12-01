@@ -73,19 +73,21 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Build user prompt
+    // Build user prompt - map email data to function parameters
+    const emailSummary = body.emails.map(e => `From: ${e.from}\nSubject: ${e.subject}\n${e.body}`).join('\n\n---\n\n');
     const userPrompt = buildMindmapUserPrompt({
-      emails: body.emails,
-      focusArea: body.focusArea,
+      topic: body.emails[0]?.subject || 'Email Analysis',
+      businessContext: emailSummary,
+      focus: body.focusArea,
     });
 
     // Call Claude API
     const message = await createMessage(
       [{ role: 'user', content: userPrompt }],
-      MINDMAP_SYSTEM_PROMPT,
       {
+        system: MINDMAP_SYSTEM_PROMPT,
         temperature: 0.6,
-        max_tokens: 4096,
+        maxTokens: 4096,
       }
     );
 

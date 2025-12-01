@@ -97,21 +97,23 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Build user prompt
+    // Build user prompt - map email/business data to function parameters
+    const emailContext = body.emails.map(e => `From: ${e.from}\nSubject: ${e.subject}\n${e.body}`).join('\n\n');
+    const assetsInfo = body.assets ? body.assets.map(a => `${a.type}: ${a.description}`).join('; ') : '';
     const userPrompt = buildPersonaUserPrompt({
-      emails: body.emails,
-      businessDescription: body.businessDescription,
-      assets: body.assets,
-      notes: body.notes,
+      businessType: body.businessDescription || 'Business derived from emails',
+      targetAudience: emailContext,
+      industry: assetsInfo || undefined,
+      goals: body.notes,
     });
 
     // Call Claude API with higher token limit for complex analysis
     const message = await createMessage(
       [{ role: 'user', content: userPrompt }],
-      PERSONA_SYSTEM_PROMPT,
       {
+        system: PERSONA_SYSTEM_PROMPT,
         temperature: 0.6,
-        max_tokens: 4096,
+        maxTokens: 4096,
       }
     );
 

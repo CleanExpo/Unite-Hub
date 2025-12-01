@@ -37,7 +37,7 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
   className?: string;
 
   /** Background color variant @default 'default' */
-  variant?: 'default' | 'raised';
+  variant?: 'default' | 'raised' | 'glass' | 'gradient' | 'warning' | 'bordered' | 'flat' | 'elevated';
 }
 
 /**
@@ -93,9 +93,15 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
       lg: 'p-8',
     };
 
-    const variantStyles = {
+    const variantStyles: Record<string, string> = {
       default: '',
       raised: 'bg-bg-raised',
+      glass: 'bg-bg-card/80 backdrop-blur-sm',
+      gradient: 'bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10',
+      warning: 'bg-yellow-500/10 border-yellow-500/30',
+      bordered: 'border-2',
+      flat: 'bg-gray-50 dark:bg-gray-900 shadow-none',
+      elevated: 'shadow-xl',
     };
 
     return (

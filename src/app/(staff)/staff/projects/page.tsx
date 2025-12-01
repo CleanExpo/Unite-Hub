@@ -42,7 +42,7 @@ export default async function StaffProjectsPage() {
             </p>
           </div>
 
-          <Button leftIcon={<Plus className="h-4 w-4" />}>
+          <Button icon={<Plus className="h-4 w-4" />}>
             New Project
           </Button>
         </div>
@@ -85,7 +85,7 @@ export default async function StaffProjectsPage() {
         <div className="flex-1">
           <Input
             placeholder="Search projects..."
-            leftIcon={<Search className="h-4 w-4" />}
+            icon={<Search className="h-4 w-4" />}
           />
         </div>
         <Button variant="outline">
@@ -121,10 +121,10 @@ export default async function StaffProjectsPage() {
 
               {/* Client info */}
               <h3 className="text-lg font-semibold text-gray-100 mb-1">
-                {project.name || project.client_users?.name || 'Unnamed Project'}
+                {project.name || 'Unnamed Project'}
               </h3>
               <p className="text-sm text-gray-400 mb-4">
-                {project.client_users?.email || project.description || 'No description'}
+                {project.description || 'No description'}
               </p>
 
               {/* Progress bar */}
@@ -192,7 +192,7 @@ export default async function StaffProjectsPage() {
             <p className="text-gray-400 mb-4">
               No projects found. Create your first project to get started.
             </p>
-            <Button leftIcon={<Plus className="h-4 w-4" />}>
+            <Button icon={<Plus className="h-4 w-4" />}>
               Create Project
             </Button>
           </div>

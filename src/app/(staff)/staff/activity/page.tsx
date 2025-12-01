@@ -63,10 +63,10 @@ export default async function StaffActivityPage() {
           </div>
 
           <div className="flex items-center space-x-3">
-            <Button variant="outline" leftIcon={<Filter className="h-4 w-4" />}>
+            <Button variant="outline" icon={<Filter className="h-4 w-4" />}>
               Filter
             </Button>
-            <Button variant="outline" leftIcon={<Download className="h-4 w-4" />}>
+            <Button variant="outline" icon={<Download className="h-4 w-4" />}>
               Export
             </Button>
           </div>

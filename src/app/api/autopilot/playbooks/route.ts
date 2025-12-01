@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
     const playbook = await generatePlaybook(workspaceId);
 
     // Get preferences and auto-execute eligible actions
-    const preferences = await getPreferences(workspaceId, userId);
+    const preferences = await getPreferences(userId);
     const autoResults = await executeAutoBatch(playbook.id, preferences);
 
     // Get updated actions

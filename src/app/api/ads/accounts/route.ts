@@ -79,14 +79,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const account = await adsIngestionService.connectAccount(workspaceId, {
+    const account = await adsIngestionService.connectAccount(
+      workspaceId,
       provider,
-      accessToken,
-      refreshToken,
-      accountId,
-      developerToken,
-      loginCustomerId,
-    });
+      {
+        accessToken,
+        refreshToken,
+      },
+      {
+        externalAccountId: accountId,
+        name: accountId, // Use accountId as name if not provided
+      }
+    );
 
     return NextResponse.json({ account });
   } catch (error) {
@@ -119,7 +123,16 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: 'accountId required' }, { status: 400 });
     }
 
-    await adsIngestionService.disconnectAccount(accountId);
+    // Disconnect account by deleting from database
+    const supabase = await getSupabaseServer();
+    const { error } = await supabase
+      .from('ad_accounts')
+      .delete()
+      .eq('id', accountId);
+
+    if (error) {
+      throw error;
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {

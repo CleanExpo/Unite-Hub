@@ -134,7 +134,7 @@ export async function POST(req: NextRequest) {
           if (gapResult.success && gapResult.gaps) {
             affectedSuburbs = gapResult.gaps
               .slice(0, 10)
-              .map((gap) => gap.suburb);
+              .map((gap) => gap.suburb_name);
           }
         }
       } catch (error) {

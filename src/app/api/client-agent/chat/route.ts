@@ -169,7 +169,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Check for early warnings
-    const hasActiveWarnings = context.early_warnings && context.early_warnings.length > 0;
+    const hasActiveWarnings = !!(context.early_warnings && context.early_warnings.length > 0);
     const hasHighWarnings = context.early_warnings?.some(w => w.severity === 'high') || false;
 
     // Build safety info

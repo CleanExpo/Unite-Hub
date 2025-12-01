@@ -27,29 +27,30 @@ export async function GET(req: NextRequest) {
     const status = req.nextUrl.searchParams.get('status');
     const limit = req.nextUrl.searchParams.get('limit');
 
-    const events = await getRealityEvents(
-      workspaceId,
-      clientId || undefined,
-      eventType || undefined,
-      status || undefined,
-      limit ? parseInt(limit) : 50
-    );
+    const allEvents = await getRealityEvents(workspaceId, {
+      clientId: clientId || undefined,
+      eventType: eventType || undefined,
+      processingStatus: status || undefined
+    });
+
+    // Apply limit after fetching
+    const events = limit ? allEvents.slice(0, parseInt(limit)) : allEvents.slice(0, 50);
 
     // Calculate statistics
     const stats = {
       total: events.length,
       byStatus: {
-        pending: events.filter(e => e.processingStatus === 'pending').length,
-        processed: events.filter(e => e.processingStatus === 'processed').length,
-        contentCreated: events.filter(e => e.processingStatus === 'content_created').length,
-        failed: events.filter(e => e.processingStatus === 'failed').length
+        pending: events.filter(e => e.processing_status === 'pending').length,
+        processed: events.filter(e => e.processing_status === 'processed').length,
+        contentCreated: events.filter(e => e.processing_status === 'content_created').length,
+        failed: events.filter(e => e.processing_status === 'failed').length
       },
       byEventType: events.reduce((acc: any, e) => {
-        acc[e.eventType] = (acc[e.eventType] || 0) + 1;
+        acc[e.event_type] = (acc[e.event_type] || 0) + 1;
         return acc;
       }, {}),
       contentOpportunities: events.filter(e =>
-        e.normalizedPayload?.contentOpportunity?.score > 0.6
+        (e.normalized_payload as any)?.content_opportunity?.score > 0.6
       ).length
     };
 

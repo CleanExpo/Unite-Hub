@@ -53,14 +53,22 @@ export async function GET(req: NextRequest) {
     }
 
     // Verify user has access to workspace
+    // First get the org_id from the workspace
+    const { data: workspace } = await supabaseAdmin
+      .from('workspaces')
+      .select('org_id')
+      .eq('id', workspaceId)
+      .maybeSingle();
+
+    if (!workspace?.org_id) {
+      return NextResponse.json({ error: 'Workspace not found' }, { status: 404 });
+    }
+
     const { data: userOrg, error: orgError } = await supabaseAdmin
       .from('user_organizations')
       .select('role')
       .eq('user_id', userId)
-      .eq(
-        'org_id',
-        (await supabaseAdmin.from('workspaces').select('org_id').eq('id', workspaceId).maybeSingle()).data?.org_id
-      )
+      .eq('org_id', workspace.org_id)
       .maybeSingle();
 
     if (orgError || !userOrg) {

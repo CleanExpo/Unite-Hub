@@ -31,7 +31,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { withAuth, withRole, withWorkspace } from '@/core/auth';
 import { applyRateLimit } from './rate-limit';
-import { handleErrors } from '@/core/errors';
+import { errorResponse } from '@/core/errors';
 import type { User } from '@supabase/supabase-js';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { RateLimitTier } from '@/core/security/types';
@@ -173,8 +173,8 @@ export function withApiHandler(
 
       // Apply authentication if required
       if (auth) {
-        const authResponse = await withAuth(async (req, { user }) => {
-          context.user = user;
+        const authResponse = await withAuth(async (authContext) => {
+          context.user = authContext.user;
           return NextResponse.json({ success: true });
         })(request);
 
@@ -187,8 +187,8 @@ export function withApiHandler(
       // Apply role-based access control if required
       if (roles && context.user) {
         const roleResponse = await withRole(
-          async () => NextResponse.json({ success: true }),
-          roles
+          roles,
+          async () => NextResponse.json({ success: true })
         )(request);
 
         // If role check fails, return error response
@@ -200,9 +200,9 @@ export function withApiHandler(
       // Apply workspace isolation if required
       if (workspace && context.user) {
         const workspaceResponse = await withWorkspace(
-          async (req, { workspaceId, db }) => {
-            context.workspaceId = workspaceId;
-            context.db = db;
+          async (wsContext) => {
+            context.workspaceId = wsContext.workspace.workspaceId;
+            context.db = wsContext.supabase;
             return NextResponse.json({ success: true });
           }
         )(request);
@@ -217,7 +217,7 @@ export function withApiHandler(
       return await handler(request, context);
     } catch (error) {
       // Handle all errors through centralized error handler
-      return handleErrors(error);
+      return errorResponse(error);
     }
   };
 }

@@ -6,16 +6,19 @@
 import React from 'react';
 
 export interface AIInsightBubbleProps {
-  text: string;
+  text?: string;
+  content?: string;
   type?: 'insight' | 'suggestion' | 'warning';
   icon?: React.ReactNode;
 }
 
 export default function AIInsightBubble({
   text,
+  content,
   type = 'insight',
   icon,
 }: AIInsightBubbleProps) {
+  const displayText = text || content;
   const typeStyles = {
     insight: 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800 text-blue-900 dark:text-blue-100',
     suggestion: 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 text-green-900 dark:text-green-100',
@@ -45,7 +48,7 @@ export default function AIInsightBubble({
       <div className="flex-shrink-0 mt-0.5">
         {icon || defaultIcons[type]}
       </div>
-      <p className="text-sm leading-relaxed">{text}</p>
+      <p className="text-sm leading-relaxed">{displayText}</p>
     </div>
   );
 }

@@ -82,7 +82,7 @@ export default function ClientIdeasPage() {
           </div>
 
           <Button
-            leftIcon={<Plus className="h-4 w-4" />}
+            icon={<Plus className="h-4 w-4" />}
             onClick={() => setShowRecorder(!showRecorder)}
           >
             Submit New Idea
@@ -172,7 +172,7 @@ export default function ClientIdeasPage() {
               No ideas submitted yet. Share your first project idea to get started.
             </p>
             <Button
-              leftIcon={<Plus className="h-4 w-4" />}
+              icon={<Plus className="h-4 w-4" />}
               onClick={() => setShowRecorder(true)}
             >
               Submit Your First Idea

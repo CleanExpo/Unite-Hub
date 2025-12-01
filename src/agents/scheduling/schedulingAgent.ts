@@ -36,7 +36,7 @@ import {
   logApprovalDecision,
 } from '@/lib/founder/founderEventLog';
 import { calculateAvailability } from './availabilityEngine';
-import { detectConflicts } from './conflictEngine';
+import { detectConflicts, type ConflictAnalysis } from './conflictEngine';
 import { buildSchedulingEmail, buildCalendarInvite } from './schedulingComms';
 
 export interface CalendarEvent {
@@ -72,7 +72,7 @@ export interface SchedulingResult {
   id: string;
   request: SchedulingRequest;
   availableSlots: AvailabilitySlot[];
-  conflicts: Array<{ eventA: CalendarEvent; eventB: CalendarEvent; overlap: number }>;
+  conflicts: ConflictAnalysis[];
   proposalEmail: string;
   calendarInvite: string;
   riskAssessment: {
@@ -142,7 +142,7 @@ export class SchedulingAgent {
       brand: request.brand,
       claim: proposalEmail,
       context: 'email',
-      contentType: 'scheduling_proposal',
+      contentType: 'email',
     };
 
     const riskAssessment = scoreRisk(riskInput);
@@ -156,7 +156,7 @@ export class SchedulingAgent {
       createdAt: timestamp,
       createdByAgent: 'scheduling',
       riskLevel: riskAssessment.level,
-      itemType: 'scheduling',
+      itemType: 'email',
       brand: request.brand,
       summary: `Meeting proposal to ${request.participant}`,
       details: {

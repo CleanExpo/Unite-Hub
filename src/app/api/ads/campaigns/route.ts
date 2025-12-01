@@ -95,28 +95,13 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { action, accountId, campaignId, startDate, endDate } = body;
 
-    if (action === 'sync') {
+    if (action === 'sync' || action === 'syncMetrics') {
       if (!accountId) {
         return NextResponse.json({ error: 'accountId required for sync' }, { status: 400 });
       }
 
-      const result = await adsIngestionService.syncCampaigns(accountId, {
-        fullSync: body.fullSync,
-      });
-
-      return NextResponse.json(result);
-    }
-
-    if (action === 'syncMetrics') {
-      if (!accountId) {
-        return NextResponse.json({ error: 'accountId required for metrics sync' }, { status: 400 });
-      }
-
-      const result = await adsIngestionService.syncMetrics(accountId, {
-        campaignId,
-        startDate: startDate ? new Date(startDate) : undefined,
-        endDate: endDate ? new Date(endDate) : undefined,
-      });
+      // Use syncAccount which syncs both campaigns and metrics
+      const result = await adsIngestionService.syncAccount(accountId);
 
       return NextResponse.json(result);
     }
@@ -129,7 +114,6 @@ export async function POST(req: NextRequest) {
 
       const stats = await adsIngestionService.getPerformanceStats(workspaceId, {
         accountId,
-        campaignId,
         startDate: startDate ? new Date(startDate) : undefined,
         endDate: endDate ? new Date(endDate) : undefined,
       });

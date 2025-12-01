@@ -11,9 +11,8 @@ import { coalitionArchiveBridge } from '@/lib/coalition';
 
 export async function GET(req: NextRequest) {
   try {
-    const rateLimitResult = checkRateLimit({
-      identifier: 'coalition-history',
-      limit: 30,
+    const rateLimitResult = checkRateLimit('coalition-history', {
+      requests: 30,
       window: 60,
     });
 

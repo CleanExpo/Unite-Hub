@@ -42,7 +42,7 @@ export default function ClientSeoPage() {
           .from("seo_profiles")
           .select("*")
           .eq("organization_id", currentOrganization.org_id)
-          .order("created_at", { ascending: false });
+          .order("created_at", { ascending: false }) as { data: SeoProfile[] | null; error: unknown };
 
         if (fetchError) throw fetchError;
 

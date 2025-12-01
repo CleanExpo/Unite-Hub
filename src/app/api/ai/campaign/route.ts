@@ -99,22 +99,23 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Build user prompt
+    // Build user prompt - map request fields to function parameters
+    // The function expects campaignGoal and targetAudience as required fields
     const userPrompt = buildCampaignUserPrompt({
-      strategy: body.strategy,
-      platforms: body.platforms,
+      campaignGoal: body.objective,
+      targetAudience: body.strategy?.positioning?.uvp || JSON.stringify(body.strategy),
       budget: body.budget,
       duration: body.duration,
-      objective: body.objective,
+      channels: body.platforms,
     });
 
     // Call Claude API with maximum token limit for comprehensive campaign
     const message = await createMessage(
       [{ role: 'user', content: userPrompt }],
-      CAMPAIGN_SYSTEM_PROMPT,
       {
+        system: CAMPAIGN_SYSTEM_PROMPT,
         temperature: 0.8,
-        max_tokens: 4096,
+        maxTokens: 4096,
       }
     );
 

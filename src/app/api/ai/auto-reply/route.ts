@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createMessage, parseJSONResponse, rateLimiter } from '@/lib/claude/client';
 import { AUTO_REPLY_SYSTEM_PROMPT, buildAutoReplyUserPrompt } from '@/lib/claude/prompts';
-import type { ConversationContext } from '@/lib/claude/context';
 import { aiAgentRateLimit } from "@/lib/rate-limit";
 import { validateUserAuth } from "@/lib/workspace-validation";
 
@@ -61,32 +60,30 @@ export async function POST(req: NextRequest) {
     }
 
     // Build user prompt
+    // Parse "from" into name and email if possible
+    const fromMatch = body.from.match(/^(.+?)\s*<(.+?)>$/) || [null, body.from, body.from];
+    const senderName = fromMatch[1] || body.from;
+    const senderEmail = fromMatch[2] || body.from;
+
     const userPrompt = buildAutoReplyUserPrompt({
-      from: body.from,
-      subject: body.subject,
-      body: body.body,
-      context: body.context,
+      emailSubject: body.subject,
+      emailBody: body.body,
+      senderName,
+      senderEmail,
+      businessContext: body.context,
     });
 
-    // Create conversation context
-    const context = new ConversationContext('email');
-    context.addUserMessage(userPrompt);
+    // Call Claude API with user prompt
+    const messages = [{ role: 'user' as const, content: userPrompt }];
 
-    // Call Claude API
-    const message = await createMessage(
-      context.getMessages(),
-      AUTO_REPLY_SYSTEM_PROMPT,
-      {
-        temperature: 0.7,
-        max_tokens: 3000,
-      }
-    );
+    const message = await createMessage(messages, {
+      system: AUTO_REPLY_SYSTEM_PROMPT,
+      temperature: 0.7,
+      maxTokens: 3000,
+    });
 
     // Parse response
     const response = parseJSONResponse<AutoReplyResponse>(message);
-
-    // Add assistant response to context
-    context.addAssistantMessage(JSON.stringify(response));
 
     // Return auto-reply data
     return NextResponse.json({

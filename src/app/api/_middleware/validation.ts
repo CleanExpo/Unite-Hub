@@ -13,7 +13,7 @@
 
 import { NextRequest } from 'next/server';
 import { z, ZodSchema, ZodError } from 'zod';
-import { ValidationError } from '@/core/errors/app-error';
+import { ValidationError } from '@/lib/utils/error-handler';
 
 /**
  * Parse and validate JSON request body
@@ -322,11 +322,11 @@ export const CommonSchemas = {
  * );
  * ```
  */
-export function combineSchemas<T extends ZodSchema[]>(
+export function combineSchemas<T extends z.ZodObject<any>[]>(
   ...schemas: T
 ): z.ZodObject<any> {
   return schemas.reduce(
-    (acc, schema) => acc.merge(schema as z.ZodObject<any>),
+    (acc: z.ZodObject<any>, schema) => acc.merge(schema),
     z.object({})
-  ) as z.ZodObject<any>;
+  );
 }

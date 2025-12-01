@@ -14,6 +14,7 @@
  */
 
 import { forwardRef, ReactNode, ButtonHTMLAttributes } from 'react';
+import { Slot } from '@radix-ui/react-slot';
 
 /**
  * Button variant styles - can be used with other components like AlertDialog
@@ -22,7 +23,7 @@ export const buttonVariants = ({
   variant = 'primary',
   size = 'md',
 }: {
-  variant?: 'primary' | 'secondary' | 'destructive' | 'outline' | 'ghost' | 'link';
+  variant?: 'primary' | 'secondary' | 'destructive' | 'outline' | 'ghost' | 'link' | 'default' | 'success';
   size?: 'sm' | 'md' | 'lg' | 'icon';
 } = {}) => {
   const baseStyles = `
@@ -39,6 +40,8 @@ export const buttonVariants = ({
     outline: 'border border-border-subtle bg-transparent hover:bg-bg-hover text-text-primary',
     ghost: 'hover:bg-bg-hover text-text-primary',
     link: 'text-accent-500 underline-offset-4 hover:underline',
+    default: 'bg-accent-500 text-white hover:bg-accent-400 shadow-sm',
+    success: 'bg-green-600 text-white hover:bg-green-700',
   };
 
   const sizeStyles: Record<string, string> = {
@@ -53,10 +56,10 @@ export const buttonVariants = ({
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   /** Visual variant of the button @default 'primary' */
-  variant?: 'primary' | 'secondary';
+  variant?: 'primary' | 'secondary' | 'destructive' | 'outline' | 'ghost' | 'link' | 'default' | 'success';
 
   /** Button size @default 'md' */
-  size?: 'sm' | 'md';
+  size?: 'sm' | 'md' | 'lg' | 'icon';
 
   /** Whether the button is in a loading state @default false */
   isLoading?: boolean;
@@ -78,6 +81,9 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
   /** Icon to display on the right side of button */
   iconRight?: ReactNode;
+
+  /** When true, renders children as the element (for use with Link components) */
+  asChild?: boolean;
 }
 
 /**
@@ -99,11 +105,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       iconRight,
       children,
       className = '',
+      asChild = false,
       ...props
     },
     ref
   ) => {
     const isDisabled = disabled || isLoading;
+    const Comp = asChild ? Slot : 'button';
 
     const baseStyles = `
       inline-flex
@@ -125,7 +133,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       active:scale-95
     `;
 
-    const variantStyles = {
+    const variantStyles: Record<string, string> = {
       primary: `
         bg-accent-500
         text-white
@@ -143,11 +151,49 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         hover:border-border-medium
         active:bg-bg-input
       `,
+      destructive: `
+        bg-red-600
+        text-white
+        hover:bg-red-700
+        active:bg-red-800
+      `,
+      outline: `
+        border
+        border-border-subtle
+        bg-transparent
+        hover:bg-bg-hover
+        text-text-primary
+      `,
+      ghost: `
+        hover:bg-bg-hover
+        text-text-primary
+      `,
+      link: `
+        text-accent-500
+        underline-offset-4
+        hover:underline
+      `,
+      default: `
+        bg-accent-500
+        text-white
+        hover:bg-accent-400
+        active:bg-accent-600
+        shadow-button-primary
+        hover:shadow-button-primary
+      `,
+      success: `
+        bg-green-600
+        text-white
+        hover:bg-green-700
+        active:bg-green-800
+      `,
     };
 
-    const sizeStyles = {
+    const sizeStyles: Record<string, string> = {
       sm: 'px-5 py-2.5 text-sm min-h-10',
       md: 'px-7 py-3 text-md min-h-11',
+      lg: 'px-8 py-4 text-lg min-h-12',
+      icon: 'h-10 w-10 p-0',
     };
 
     const fullWidthStyle = fullWidth ? 'w-full' : '';
@@ -176,7 +222,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     );
 
     return (
-      <button
+      <Comp
         ref={ref}
         disabled={isDisabled}
         className={`
@@ -199,7 +245,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {iconRight && !isLoading && (
           <span className="flex items-center justify-center">{iconRight}</span>
         )}
-      </button>
+      </Comp>
     );
   }
 );

@@ -211,7 +211,7 @@ export async function POST(req: NextRequest) {
       organizationId,
       businessName,
       businessIndustry,
-      websiteUrl,
+      businessUrl: websiteUrl,
     });
 
     if (!kitResult.success || !kitResult.kit) {

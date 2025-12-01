@@ -91,8 +91,8 @@ export async function POST(req: NextRequest) {
       .eq("user_id", userId)
       .single();
 
-    if (existingProfile?.[customerIdField]) {
-      customerId = existingProfile[customerIdField];
+    if ((existingProfile as Record<string, any>)?.[customerIdField]) {
+      customerId = (existingProfile as Record<string, any>)[customerIdField];
     } else {
       // Create new Stripe customer
       const customer = await stripe.customers.create({
@@ -112,7 +112,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Create checkout session
-    const session = await stripe.checkout.sessions.create({
+    const checkoutSession = await stripe.checkout.sessions.create({
       customer: customerId,
       mode: "subscription",
       payment_method_types: ["card"],
@@ -148,7 +148,7 @@ export async function POST(req: NextRequest) {
       action: "checkout.session_created",
       userId,
       metadata: {
-        session_id: session.id,
+        session_id: checkoutSession.id,
         plan_id: planId,
         mode,
         is_sandbox: isSandbox,
@@ -156,8 +156,8 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({
-      sessionId: session.id,
-      url: session.url,
+      sessionId: checkoutSession.id,
+      url: checkoutSession.url,
       mode,
       isSandbox,
     });
@@ -207,13 +207,13 @@ export async function GET(req: NextRequest) {
 
     const stripe = getStripeClientForUser(userEmail, userRole);
 
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    const checkoutSession = await stripe.checkout.sessions.retrieve(sessionId);
 
     return NextResponse.json({
-      status: session.status,
-      paymentStatus: session.payment_status,
-      customerEmail: session.customer_email,
-      subscriptionId: session.subscription,
+      status: checkoutSession.status,
+      paymentStatus: checkoutSession.payment_status,
+      customerEmail: checkoutSession.customer_email,
+      subscriptionId: checkoutSession.subscription,
     });
   } catch (error) {
     console.error("Get checkout session error:", error);

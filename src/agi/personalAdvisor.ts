@@ -152,8 +152,8 @@ export async function processAdvisorRequest(request: AdvisorRequest): Promise<Ad
     recommendations: generateStubRecommendations(request.domain, adviceType),
     nextSteps: generateStubNextSteps(adviceType),
 
-    agentUsed: selectedAgent,
-    modelUsed: selectedModel,
+    agentUsed: selectedAgent ?? undefined,
+    modelUsed: selectedModel ?? undefined,
     timestamp: new Date().toISOString()
   };
 

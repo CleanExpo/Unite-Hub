@@ -25,11 +25,15 @@ export async function GET(req: NextRequest) {
     const clientId = req.nextUrl.searchParams.get('clientId');
     const severity = req.nextUrl.searchParams.get('severity');
 
-    const signals = await getActiveChangeSignals(
+    const allSignals = await getActiveChangeSignals(
       workspaceId,
-      clientId || undefined,
-      severity || undefined
+      clientId || undefined
     );
+
+    // Filter by severity if provided
+    const signals = severity
+      ? allSignals.filter(s => s.severity === severity)
+      : allSignals;
 
     // Calculate statistics
     const stats = {
@@ -41,11 +45,11 @@ export async function GET(req: NextRequest) {
         minor: signals.filter(s => s.severity === 'minor').length
       },
       byType: signals.reduce((acc: any, s) => {
-        acc[s.signalType] = (acc[s.signalType] || 0) + 1;
+        acc[s.signal_type] = (acc[s.signal_type] || 0) + 1;
         return acc;
       }, {}),
       recentAlerts: signals.filter(s =>
-        new Date(s.detectedAt).getTime() > Date.now() - 24 * 60 * 60 * 1000
+        new Date(s.detected_at).getTime() > Date.now() - 24 * 60 * 60 * 1000
       ).length
     };
 

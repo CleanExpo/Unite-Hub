@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
     // Determine billing mode
     const mode = getBillingModeForUser(userEmail, userRole);
     const customerIdField = `stripe_customer_id_${mode}`;
-    const customerId = profile?.[customerIdField];
+    const customerId = (profile as Record<string, any>)?.[customerIdField];
 
     if (!customerId) {
       return NextResponse.json(

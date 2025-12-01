@@ -61,12 +61,12 @@ export default async function StaffLayout({ children }: StaffLayoutProps) {
   // Session guard: redirect to login if not authenticated
   const session = await getStaffSession();
 
-  if (!session || !session.user) {
+  if (!session || !session.session?.user) {
     redirect('/auth/login');
   }
 
-  const userEmail = session.user.email || 'User';
-  const userRole = session.user.user_metadata?.role || 'Staff';
+  const userEmail = session.session.user.email || 'User';
+  const userRole = session.session.user.user_metadata?.role || 'Staff';
 
   return (
     <div className="min-h-screen flex bg-gray-950">

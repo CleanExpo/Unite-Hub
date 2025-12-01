@@ -61,21 +61,21 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Build user prompt
+    // Build user prompt - map request fields to function parameters
     const userPrompt = buildHooksUserPrompt({
-      persona: body.persona,
-      business: body.business,
-      platforms: body.platforms,
-      toneOfVoice: body.toneOfVoice,
+      topic: body.business,
+      targetAudience: body.persona?.name || JSON.stringify(body.persona),
+      platform: body.platforms.join(', '),
+      style: body.toneOfVoice,
     });
 
     // Call Claude API with high creativity for hooks
     const message = await createMessage(
       [{ role: 'user', content: userPrompt }],
-      HOOKS_SYSTEM_PROMPT,
       {
+        system: HOOKS_SYSTEM_PROMPT,
         temperature: 0.9,
-        max_tokens: 4096,
+        maxTokens: 4096,
       }
     );
 

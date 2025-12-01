@@ -43,6 +43,7 @@ import {
   getCurrentOfferTier,
   getOfferBanner,
   getAllIndustries,
+  INDUSTRY_PRESETS,
 } from '@/lib/synthex/synthexOfferEngine';
 
 // ============================================================================
@@ -641,7 +642,7 @@ export default function SynthexOnboarding() {
                   <div>
                     <div className="text-sm text-slate-600">Industry</div>
                     <div className="font-medium">
-                      {INDUSTRIES.find((i) => i.code === state.businessProfile.industry)?.label}
+                      {INDUSTRY_PRESETS[state.businessProfile.industry]?.label || state.businessProfile.industry}
                     </div>
                   </div>
                   <div>

@@ -135,7 +135,7 @@ export default function ClientHomePage() {
             Ready to bring your ideas to life? Start by submitting your first project idea and let our AI create a detailed proposal for you.
           </p>
           <Link href="/client/ideas">
-            <Button leftIcon={<Lightbulb className="h-4 w-4" />}>
+            <Button icon={<Lightbulb className="h-4 w-4" />}>
               Submit Your First Idea
             </Button>
           </Link>

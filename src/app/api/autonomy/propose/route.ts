@@ -86,15 +86,24 @@ export async function POST(req: NextRequest) {
     }
 
     // Create proposal
+    // Map route fields to interface fields
+    const triggerMap: Record<string, string> = {
+      MANUAL: "MANUAL_TRIGGER",
+      DELTA_REPORT: "DELTA_REPORT",
+      STRATEGY_TRIGGER: "STRATEGY_TRIGGER",
+      SCHEDULED: "SCHEDULED_TRIGGER",
+    };
+
     const proposal = await proposalEngine.createProposal({
       client_id,
       organization_id: client.org_id,
-      domain,
+      domain_scope: domain as any,  // Map domain to domain_scope
+      trigger: (triggerMap[source || "MANUAL"] || "MANUAL_TRIGGER") as any,
       change_type,
+      title: `${change_type} change for ${domain}`,
+      description: rationale,
       proposed_diff,
-      rationale,
       created_by: userId,
-      source: source || "MANUAL",
     });
 
     return NextResponse.json({

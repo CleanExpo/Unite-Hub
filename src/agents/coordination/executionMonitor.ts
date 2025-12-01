@@ -307,8 +307,8 @@ export async function handleFailure(
         attempts: 0,
       };
 
-      depExecution.status = 'blocked';
-      depExecution.error = `Dependency failed: ${task.id}`;
+      depExecution.status = 'failed';
+      depExecution.error = `Dependency blocked: ${task.id} failed`;
       execution.executions.set(depTask.id, depExecution);
     }
   }

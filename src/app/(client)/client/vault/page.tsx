@@ -160,7 +160,7 @@ export default function ClientVaultPage() {
           </div>
 
           <Button
-            leftIcon={<Plus className="h-4 w-4" />}
+            icon={<Plus className="h-4 w-4" />}
             onClick={() => setShowAddModal(true)}
           >
             Add Entry
@@ -308,7 +308,7 @@ export default function ClientVaultPage() {
               No vault entries yet. Add your first API key or credential to get started.
             </p>
             <Button
-              leftIcon={<Plus className="h-4 w-4" />}
+              icon={<Plus className="h-4 w-4" />}
               onClick={() => setShowAddModal(true)}
             >
               Add First Entry
@@ -329,7 +329,7 @@ export default function ClientVaultPage() {
             placeholder="e.g., AWS Access Key"
             value={newEntryName}
             onChange={(e) => setNewEntryName(e.target.value)}
-            helpText="A descriptive name for this entry"
+            helperText="A descriptive name for this entry"
           />
 
           <div>
@@ -354,7 +354,7 @@ export default function ClientVaultPage() {
             value={newEntryValue}
             onChange={(e) => setNewEntryValue(e.target.value)}
             placeholder="Enter the sensitive value"
-            helpText="This will be encrypted and securely stored"
+            helperText="This will be encrypted and securely stored"
           />
 
           <div className="flex items-center justify-end space-x-3 pt-4">
