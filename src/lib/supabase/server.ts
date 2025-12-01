@@ -12,6 +12,8 @@
  * called during Turbopack's static analysis phase.
  */
 
+/* eslint-disable no-undef, no-console */
+
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import type { Database } from '@/types/database.generated';
 
@@ -48,18 +50,35 @@ async function getCookieStore() {
 /**
  * Create a Supabase server client for Server Components and API Routes
  * Reads session from cookies (PKCE flow)
+ *
+ * Supports connection pooling via optional SUPABASE_POOLER_URL environment variable.
+ * If pooler is configured, uses pooler URL; otherwise falls back to standard Supabase URL.
  */
 export async function createClient() {
   const cookieStore = await getCookieStore();
 
+  // Import pooling config dynamically to avoid issues during build
+  let connectionUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';
+
+  try {
+    // Attempt to use pooling config if available (Phase 6.5)
+    const { getConnectionUrl } = await import('./pooling-config');
+    connectionUrl = getConnectionUrl();
+  } catch {
+    // Fallback to standard URL if pooling config not available
+    // This maintains backward compatibility
+  }
+
   return createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+    connectionUrl,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key',
     {
       cookies: {
         get(name: string) {
           // Return undefined if cookieStore not available
-          if (!cookieStore) return undefined;
+          if (!cookieStore) {
+return undefined;
+}
           try {
             return cookieStore.get(name)?.value;
           } catch {
@@ -67,7 +86,9 @@ export async function createClient() {
           }
         },
         set(name: string, value: string, options: CookieOptions) {
-          if (!cookieStore) return;
+          if (!cookieStore) {
+return;
+}
           try {
             cookieStore.set({ name, value, ...options });
           } catch {
@@ -76,7 +97,9 @@ export async function createClient() {
           }
         },
         remove(name: string, options: CookieOptions) {
-          if (!cookieStore) return;
+          if (!cookieStore) {
+return;
+}
           try {
             cookieStore.set({ name, value: '', ...options });
           } catch {
