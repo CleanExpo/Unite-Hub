@@ -8,7 +8,7 @@ import { NextRequest } from 'next/server';
 import { withErrorBoundary, successResponse } from '@/lib/errors/boundaries';
 import { getSupabaseServer } from '@/lib/supabase';
 import { skipAction } from '@/lib/autopilot';
-import { AuthenticationError, InternalServerError } from '@/core/errors/app-error';
+import { AuthenticationError, DatabaseError } from '@/core/errors/app-error';
 
 export const POST = withErrorBoundary(async (
   req: NextRequest,
@@ -36,7 +36,7 @@ export const POST = withErrorBoundary(async (
   const success = await skipAction(id);
 
   if (!success) {
-    throw new InternalServerError('Failed to skip action');
+    throw new DatabaseError('Failed to skip action');
   }
 
   return successResponse({

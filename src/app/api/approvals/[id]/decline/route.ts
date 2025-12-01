@@ -2,7 +2,7 @@
 import { NextRequest } from "next/server";
 import { withErrorBoundary, successResponse } from "@/lib/errors/boundaries";
 import { getSupabaseServer } from "@/lib/supabase";
-import { AuthenticationError, AuthorizationError, NotFoundError, InternalServerError, ValidationError } from "@/core/errors/app-error";
+import { AuthenticationError, AuthorizationError, NotFoundError, DatabaseError, ValidationError } from "@/core/errors/app-error";
 
 /**
  * POST /api/approvals/[id]/decline
@@ -98,7 +98,7 @@ throw error;
     .single();
 
   if (error) {
-    throw new InternalServerError(`Failed to decline: ${error.message}`);
+    throw new DatabaseError(`Failed to decline: ${error.message}`);
   }
 
   return successResponse({ approval });

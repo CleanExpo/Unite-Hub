@@ -8,7 +8,7 @@ import { NextRequest } from 'next/server';
 import { withErrorBoundary, successResponse } from '@/lib/errors/boundaries';
 import { getSupabaseServer } from '@/lib/supabase';
 import { approveAndExecute } from '@/lib/autopilot';
-import { AuthenticationError, InternalServerError } from '@/core/errors/app-error';
+import { AuthenticationError, DatabaseError } from '@/core/errors/app-error';
 
 export const POST = withErrorBoundary(async (
   req: NextRequest,
@@ -40,7 +40,7 @@ export const POST = withErrorBoundary(async (
   const result = await approveAndExecute(id, userId);
 
   if (!result.success) {
-    throw new InternalServerError(result.error || 'Execution failed');
+    throw new DatabaseError(result.error || 'Execution failed');
   }
 
   return successResponse({

@@ -2,7 +2,7 @@
 import { NextRequest } from "next/server";
 import { withErrorBoundary, successResponse } from "@/lib/errors/boundaries";
 import { getSupabaseServer } from "@/lib/supabase";
-import { AuthenticationError, AuthorizationError, NotFoundError, InternalServerError } from "@/core/errors/app-error";
+import { AuthenticationError, AuthorizationError, NotFoundError, DatabaseError } from "@/core/errors/app-error";
 
 /**
  * POST /api/approvals/[id]/approve
@@ -90,7 +90,7 @@ throw error;
     .single();
 
   if (error) {
-    throw new InternalServerError(`Failed to approve: ${error.message}`);
+    throw new DatabaseError(`Failed to approve: ${error.message}`);
   }
 
   return successResponse({ approval });
