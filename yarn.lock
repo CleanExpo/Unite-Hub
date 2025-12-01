@@ -1625,6 +1625,26 @@
     enabled "2.0.x"
     kuler "^2.0.0"
 
+"@datadog/browser-core@6.24.1":
+  version "6.24.1"
+  resolved "https://registry.npmjs.org/@datadog/browser-core/-/browser-core-6.24.1.tgz"
+  integrity sha512-ViLqvvCrZtKRCrSCcrZmSbc4Th7Y0rUQ7PruP1KGNgmE2fY4rrRP/n77zXuF8y/bmBce0na8kCdoCUkKzl/xuQ==
+
+"@datadog/browser-rum-core@6.24.1":
+  version "6.24.1"
+  resolved "https://registry.npmjs.org/@datadog/browser-rum-core/-/browser-rum-core-6.24.1.tgz"
+  integrity sha512-wBc67Zseh/KvFVhDjM54w6Zm6fkTYnsfhMeVZIDlCYZ0s9T73CVIQtEF2GTp+PogRkQtFGffWGZDaW/xppUV8A==
+  dependencies:
+    "@datadog/browser-core" "6.24.1"
+
+"@datadog/browser-rum@^6.24.1":
+  version "6.24.1"
+  resolved "https://registry.npmjs.org/@datadog/browser-rum/-/browser-rum-6.24.1.tgz"
+  integrity sha512-PKLCcyOtRROVGp5nagkxBNotP+VmMmBDYHR/C1uNM5ibU3R6AR5EFc6XAAKuWI/6lfcxJx0MeXUM0pdNNs2yMg==
+  dependencies:
+    "@datadog/browser-core" "6.24.1"
+    "@datadog/browser-rum-core" "6.24.1"
+
 "@date-fns/tz@^1.4.1":
   version "1.4.1"
   resolved "https://registry.npmjs.org/@date-fns/tz/-/tz-1.4.1.tgz"
