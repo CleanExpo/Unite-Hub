@@ -1,72 +1,105 @@
-import { NextRequest, NextResponse } from "next/server";
+ 
+import { NextRequest } from "next/server";
+import { withErrorBoundary, successResponse } from "@/lib/errors/boundaries";
 import { getSupabaseServer } from "@/lib/supabase";
-import { apiRateLimit } from "@/lib/rate-limit";
-import { validateUserAuth } from "@/lib/workspace-validation";
+import { AuthenticationError, AuthorizationError, NotFoundError, InternalServerError, ValidationError } from "@/core/errors/app-error";
 
 /**
  * POST /api/approvals/[id]/decline
  * Decline an approval request
  */
-export async function POST(request: NextRequest, context: { params: Promise<{ id: string }> }) {
+export const POST = withErrorBoundary(async (
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) => {
+  const { id } = await params;
+
+  // Authenticate and get user
+  let userId: string;
+  let orgId: string;
+
   try {
-    // Apply rate limiting
-    const rateLimitResult = await apiRateLimit(request);
-    if (rateLimitResult) {
-      return rateLimitResult;
-    }
+    const authHeader = request.headers.get("authorization");
+    const token = authHeader?.replace("Bearer ", "");
 
-    // Validate user authentication
-    const user = await validateUserAuth(request);
-
-    const { id } = await context.params;
-    const body = await request.json();
-    const { reviewedById, reason } = body;
-
-    // Get approval to verify org ownership
-    const supabase = await getSupabaseServer();
-    const { data: existingApproval, error: fetchError } = await supabase
-      .from("approvals")
-      .select("org_id")
-      .eq("id", id)
-      .single();
-
-    if (fetchError || !existingApproval) {
-      return NextResponse.json({ error: "Approval not found" }, { status: 404 });
-    }
-
-    // Verify org ownership
-    if (existingApproval.org_id !== user.orgId) {
-      return NextResponse.json({ error: "Access denied" }, { status: 403 });
-    }
-
-    const { data: approval, error } = await supabase
-      .from("approvals")
-      .update({
-        status: "declined",
-        reviewed_by_id: reviewedById || user.userId,
-        reviewed_at: new Date().toISOString(),
-        decline_reason: reason || "No reason provided",
-      })
-      .eq("id", id)
-      .select()
-      .single();
-
-    if (error) {
-      console.error("Error declining approval:", error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
-    return NextResponse.json({ approval });
-  } catch (error) {
-    if (error instanceof Error) {
-      if (error.message.includes("Unauthorized")) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-      if (error.message.includes("Forbidden")) {
-        return NextResponse.json({ error: "Access denied" }, { status: 403 });
-      }
-    }
-    console.error("Unexpected error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
-  }
+    if (token) {
+      const { supabaseBrowser } = await import("@/lib/supabase");
+      const { data, error } = await supabaseBrowser.auth.getUser(token);
+      if (error || !data.user) {
+throw new AuthenticationError();
 }
+      userId = data.user.id;
+    } else {
+      const supabase = await getSupabaseServer();
+      const { data, error } = await supabase.auth.getUser();
+      if (error || !data.user) {
+throw new AuthenticationError();
+}
+      userId = data.user.id;
+    }
+
+    // Get org_id from user profile or request context
+    const supabase = await getSupabaseServer();
+    const { data: userProfile, error: profileError } = await supabase
+      .from("user_profiles")
+      .select("org_id")
+      .eq("user_id", userId)
+      .single();
+
+    if (profileError || !userProfile?.org_id) {
+      throw new AuthenticationError();
+    }
+    orgId = userProfile.org_id;
+  } catch (error) {
+    if (error instanceof AuthenticationError) {
+throw error;
+}
+    throw new AuthenticationError();
+  }
+
+  const body = await request.json();
+  const { reviewedById, reason } = body;
+
+  // Validate reason is provided
+  if (!reason) {
+    throw new ValidationError(
+      [{ field: "reason", message: "Reason is required for decline" }],
+      "Validation failed"
+    );
+  }
+
+  // Get approval to verify org ownership
+  const supabase = await getSupabaseServer();
+  const { data: existingApproval, error: fetchError } = await supabase
+    .from("approvals")
+    .select("org_id")
+    .eq("id", id)
+    .single();
+
+  if (fetchError || !existingApproval) {
+    throw new NotFoundError("Approval", id);
+  }
+
+  // Verify org ownership
+  if (existingApproval.org_id !== orgId) {
+    throw new AuthorizationError("Access denied");
+  }
+
+  const { data: approval, error } = await supabase
+    .from("approvals")
+    .update({
+      status: "declined",
+      reviewed_by_id: reviewedById || userId,
+      reviewed_at: new Date().toISOString(),
+      decline_reason: reason,
+    })
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) {
+    throw new InternalServerError(`Failed to decline: ${error.message}`);
+  }
+
+  return successResponse({ approval });
+});
