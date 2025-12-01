@@ -31,7 +31,9 @@
     "vercel-build": "cross-env NODE_OPTIONS=--max-old-space-size=6144 next build",
     "start": "next start",
     "typecheck": "cross-env NODE_OPTIONS=--max-old-space-size=8192 tsc --noEmit",
-    "lint": "next lint",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "lint:next": "next lint",
     "convex": "convex dev",
     "email-agent": "node scripts/run-email-agent.mjs",
     "content-agent": "node scripts/run-content-agent.mjs",
@@ -91,7 +93,8 @@
     "synthex:ultra-premium-prompts": "node scripts/synthex-ultra-premium-prompts.mjs",
     "check:build-memory": "node scripts/check-build-memory.mjs",
     "health:check": "node scripts/site-health-check.mjs",
-    "health:quick": "node -e \"require(\"https\").get(\"https://hammerhead-app-zr38x.ondigitalocean.app/api/health\",(r)=>{let d=\"\";r.on(\"data\",c=>d+=c);r.on(\"end\",()=>console.log(r.statusCode,JSON.parse(d).status))})\""
+    "health:quick": "node -e \"require(\"https\").get(\"https://hammerhead-app-zr38x.ondigitalocean.app/api/health\",(r)=>{let d=\"\";r.on(\"data\",c=>d+=c);r.on(\"end\",()=>console.log(r.statusCode,JSON.parse(d).status))})\"",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
@@ -199,6 +202,7 @@
     "zustand": "^4.5.7"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.3",
     "@playwright/mcp": "^0.0.46",
     "@playwright/test": "^1.57.0",
     "@tailwindcss/postcss": "^4.0.0",
@@ -212,14 +216,20 @@
     "@types/nodemailer": "^7.0.3",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
+    "@typescript-eslint/eslint-plugin": "^8.48.0",
+    "@typescript-eslint/parser": "^8.48.0",
     "@vitejs/plugin-react": "^4.7.0",
     "@vitest/coverage-v8": "^1.0.0",
     "@vitest/ui": "^1.6.1",
     "critters": "^0.0.23",
     "cross-env": "^10.1.0",
+    "eslint": "^9.39.1",
+    "eslint-config-next": "^16.0.6",
     "happy-dom": "^12.10.3",
+    "husky": "^9.1.7",
     "jsdom": "^27.2.0",
     "k6": "^0.0.0",
+    "lint-staged": "^16.2.7",
     "msw": "^2.0.0",
     "pg": "^8.16.3",
     "playwright": "^1.57.0-alpha-2025-11-07",
@@ -235,5 +245,10 @@
     "@rollup/rollup-win32-x64-msvc": "^4.53.3",
     "@tailwindcss/oxide-win32-x64-msvc": "^4.1.17",
     "lightningcss-win32-x64-msvc": "^1.30.2"
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx}": [
+      "eslint --fix"
+    ]
   }
 }
