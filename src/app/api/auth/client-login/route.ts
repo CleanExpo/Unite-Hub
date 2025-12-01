@@ -1,5 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
+ 
+import type { NextRequest } from 'next/server';
 import { clientLogin } from '@/lib/auth/supabase';
+import { withErrorBoundary, ValidationError, AuthenticationError } from '@/lib/errors/boundaries';
+import { successResponse } from '@/lib/errors/boundaries';
 
 /**
  * Client Login API Route
@@ -9,40 +12,28 @@ import { clientLogin } from '@/lib/auth/supabase';
  * Verifies user exists in client_users table
  * Checks active status
  */
-export async function POST(req: NextRequest) {
-  try {
-    const { email, password } = await req.json();
+export const POST = withErrorBoundary(async (req: NextRequest) => {
+  const { email, password } = await req.json();
 
-    // Validate input
-    if (!email || !password) {
-      return NextResponse.json(
-        { error: 'Email and password are required' },
-        { status: 400 }
-      );
-    }
-
-    // Attempt client login
-    const result = await clientLogin(email, password);
-
-    if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 401 }
-      );
-    }
-
-    // Return success with session data
-    return NextResponse.json({
-      success: true,
-      user: result.user,
-      session: result.session,
-      client: result.client,
+  // Validate input
+  if (!email || !password) {
+    throw new ValidationError('Email and password are required', {
+      email: email ? undefined : 'Email is required',
+      password: password ? undefined : 'Password is required',
     });
-  } catch (error) {
-    console.error('Client login API error:', error);
-    return NextResponse.json(
-      { error: 'An unexpected error occurred' },
-      { status: 500 }
-    );
   }
-}
+
+  // Attempt client login
+  const result = await clientLogin(email, password);
+
+  if (!result.success) {
+    throw new AuthenticationError(result.error || 'Authentication failed');
+  }
+
+  // Return success with session data
+  return successResponse({
+    user: result.user,
+    session: result.session,
+    client: result.client,
+  }, undefined, 'Login successful', 200);
+});

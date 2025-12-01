@@ -1,5 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+ 
 import { clientLogout } from '@/lib/auth/supabase';
+import { withErrorBoundary, DatabaseError } from '@/lib/errors/boundaries';
+import { successResponse } from '@/lib/errors/boundaries';
 
 /**
  * Client Logout API Route
@@ -7,23 +9,12 @@ import { clientLogout } from '@/lib/auth/supabase';
  *
  * Signs out the current client user
  */
-export async function POST(req: NextRequest) {
-  try {
-    const result = await clientLogout();
+export const POST = withErrorBoundary(async () => {
+  const result = await clientLogout();
 
-    if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error('Client logout API error:', error);
-    return NextResponse.json(
-      { error: 'An unexpected error occurred' },
-      { status: 500 }
-    );
+  if (!result.success) {
+    throw new DatabaseError(result.error || 'Logout operation failed');
   }
-}
+
+  return successResponse({}, undefined, 'Logout successful', 200);
+});
