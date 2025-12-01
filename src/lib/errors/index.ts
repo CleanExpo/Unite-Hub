@@ -62,9 +62,26 @@ export {
   errorResponse,
   successResponse,
   toResult,
-  chain,
+  chainOperations,
   getErrorCodeAndStatus,
 } from './boundaries';
+
+// ============================================================================
+// ERROR LOGGING & MONITORING
+// ============================================================================
+
+export type {
+  ErrorContext,
+  ErrorLogEntry,
+} from './logging';
+
+export {
+  errorLogger,
+  logApiError,
+  createErrorContext,
+  getErrorMonitoringData,
+  checkErrorHealth,
+} from './logging';
 
 // ============================================================================
 // SPECIFIC ERROR CLASSES
