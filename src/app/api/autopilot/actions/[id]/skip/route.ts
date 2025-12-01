@@ -3,48 +3,43 @@
  * Phase 89: Skip a suggested action
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+ 
+import { NextRequest } from 'next/server';
+import { withErrorBoundary, successResponse } from '@/lib/errors/boundaries';
 import { getSupabaseServer } from '@/lib/supabase';
 import { skipAction } from '@/lib/autopilot';
+import { AuthenticationError, InternalServerError } from '@/core/errors/app-error';
 
-export async function POST(
+export const POST = withErrorBoundary(async (
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    const authHeader = req.headers.get('authorization');
-    const token = authHeader?.replace('Bearer ', '');
+) => {
+  const authHeader = req.headers.get('authorization');
+  const token = authHeader?.replace('Bearer ', '');
 
-    if (token) {
-      const { supabaseBrowser } = await import('@/lib/supabase');
-      const { data, error } = await supabaseBrowser.auth.getUser(token);
-      if (error || !data.user) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-      }
-    } else {
-      const supabase = await getSupabaseServer();
-      const { data, error } = await supabase.auth.getUser();
-      if (error || !data.user) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-      }
+  if (token) {
+    const { supabaseBrowser } = await import('@/lib/supabase');
+    const { data, error } = await supabaseBrowser.auth.getUser(token);
+    if (error || !data.user) {
+      throw new AuthenticationError();
     }
-
-    const { id } = await params;
-
-    const success = await skipAction(id);
-
-    if (!success) {
-      return NextResponse.json(
-        { error: 'Failed to skip action' },
-        { status: 400 }
-      );
+  } else {
+    const supabase = await getSupabaseServer();
+    const { data, error } = await supabase.auth.getUser();
+    if (error || !data.user) {
+      throw new AuthenticationError();
     }
-
-    return NextResponse.json({
-      success: true,
-    });
-  } catch (error: any) {
-    console.error('Skip action error:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
   }
-}
+
+  const { id } = await params;
+
+  const success = await skipAction(id);
+
+  if (!success) {
+    throw new InternalServerError('Failed to skip action');
+  }
+
+  return successResponse({
+    success: true,
+  });
+});
