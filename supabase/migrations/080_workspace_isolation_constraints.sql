@@ -34,7 +34,7 @@ BEGIN
   SELECT COUNT(*) INTO null_drip FROM drip_campaigns WHERE workspace_id IS NULL;
   SELECT COUNT(*) INTO null_steps FROM campaign_steps WHERE workspace_id IS NULL;
   SELECT COUNT(*) INTO null_enrollments FROM campaign_enrollments WHERE workspace_id IS NULL;
-  SELECT COUNT(*) INTO null_content FROM "generatedContent" WHERE workspace_id IS NULL;
+  SELECT COUNT(*) INTO null_content FROM "generated_content" WHERE workspace_id IS NULL;
 
   IF null_contacts > 0 THEN
     RAISE WARNING 'Found % contacts with NULL workspace_id - must backfill first', null_contacts;
@@ -61,7 +61,7 @@ BEGIN
   END IF;
 
   IF null_content > 0 THEN
-    RAISE WARNING 'Found % generatedContent with NULL workspace_id - must backfill first', null_content;
+    RAISE WARNING 'Found % generated_content with NULL workspace_id - must backfill first', null_content;
   END IF;
 
   -- Only proceed if no NULL values found
@@ -70,162 +70,207 @@ BEGIN
   END IF;
 END $$;
 
--- Add NOT NULL constraints (only if no NULL values exist)
-ALTER TABLE contacts
-  ALTER COLUMN workspace_id SET NOT NULL;
-
-ALTER TABLE emails
-  ALTER COLUMN workspace_id SET NOT NULL;
-
-ALTER TABLE campaigns
-  ALTER COLUMN workspace_id SET NOT NULL;
-
-ALTER TABLE drip_campaigns
-  ALTER COLUMN workspace_id SET NOT NULL;
-
-ALTER TABLE campaign_steps
-  ALTER COLUMN workspace_id SET NOT NULL;
-
-ALTER TABLE campaign_enrollments
-  ALTER COLUMN workspace_id SET NOT NULL;
-
-ALTER TABLE "generatedContent"
-  ALTER COLUMN workspace_id SET NOT NULL;
+-- Add NOT NULL constraints (idempotent - safe to run multiple times)
+-- SET NOT NULL is idempotent in PostgreSQL - no error if already NOT NULL
+ALTER TABLE contacts ALTER COLUMN workspace_id SET NOT NULL;
+ALTER TABLE emails ALTER COLUMN workspace_id SET NOT NULL;
+ALTER TABLE campaigns ALTER COLUMN workspace_id SET NOT NULL;
+ALTER TABLE drip_campaigns ALTER COLUMN workspace_id SET NOT NULL;
+ALTER TABLE campaign_steps ALTER COLUMN workspace_id SET NOT NULL;
+ALTER TABLE campaign_enrollments ALTER COLUMN workspace_id SET NOT NULL;
+ALTER TABLE generated_content ALTER COLUMN workspace_id SET NOT NULL;
 
 -- =====================================================
--- STEP 2: Add Check Constraints
+-- STEP 2: Add Check Constraints (if not exist)
 -- =====================================================
 
 -- Prevent empty UUID strings (some ORMs might pass empty strings instead of NULL)
-ALTER TABLE contacts
-  ADD CONSTRAINT contacts_workspace_id_not_empty
-  CHECK (workspace_id::text != '' AND workspace_id::text != '00000000-0000-0000-0000-000000000000');
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'contacts_workspace_id_not_empty') THEN
+    ALTER TABLE contacts ADD CONSTRAINT contacts_workspace_id_not_empty
+      CHECK (workspace_id::text != '' AND workspace_id::text != '00000000-0000-0000-0000-000000000000');
+  END IF;
+END $$;
 
-ALTER TABLE emails
-  ADD CONSTRAINT emails_workspace_id_not_empty
-  CHECK (workspace_id::text != '' AND workspace_id::text != '00000000-0000-0000-0000-000000000000');
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'emails_workspace_id_not_empty') THEN
+    ALTER TABLE emails ADD CONSTRAINT emails_workspace_id_not_empty
+      CHECK (workspace_id::text != '' AND workspace_id::text != '00000000-0000-0000-0000-000000000000');
+  END IF;
+END $$;
 
-ALTER TABLE campaigns
-  ADD CONSTRAINT campaigns_workspace_id_not_empty
-  CHECK (workspace_id::text != '' AND workspace_id::text != '00000000-0000-0000-0000-000000000000');
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'campaigns_workspace_id_not_empty') THEN
+    ALTER TABLE campaigns ADD CONSTRAINT campaigns_workspace_id_not_empty
+      CHECK (workspace_id::text != '' AND workspace_id::text != '00000000-0000-0000-0000-000000000000');
+  END IF;
+END $$;
 
-ALTER TABLE drip_campaigns
-  ADD CONSTRAINT drip_campaigns_workspace_id_not_empty
-  CHECK (workspace_id::text != '' AND workspace_id::text != '00000000-0000-0000-0000-000000000000');
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'drip_campaigns_workspace_id_not_empty') THEN
+    ALTER TABLE drip_campaigns ADD CONSTRAINT drip_campaigns_workspace_id_not_empty
+      CHECK (workspace_id::text != '' AND workspace_id::text != '00000000-0000-0000-0000-000000000000');
+  END IF;
+END $$;
 
-ALTER TABLE campaign_steps
-  ADD CONSTRAINT campaign_steps_workspace_id_not_empty
-  CHECK (workspace_id::text != '' AND workspace_id::text != '00000000-0000-0000-0000-000000000000');
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'campaign_steps_workspace_id_not_empty') THEN
+    ALTER TABLE campaign_steps ADD CONSTRAINT campaign_steps_workspace_id_not_empty
+      CHECK (workspace_id::text != '' AND workspace_id::text != '00000000-0000-0000-0000-000000000000');
+  END IF;
+END $$;
 
-ALTER TABLE campaign_enrollments
-  ADD CONSTRAINT campaign_enrollments_workspace_id_not_empty
-  CHECK (workspace_id::text != '' AND workspace_id::text != '00000000-0000-0000-0000-000000000000');
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'campaign_enrollments_workspace_id_not_empty') THEN
+    ALTER TABLE campaign_enrollments ADD CONSTRAINT campaign_enrollments_workspace_id_not_empty
+      CHECK (workspace_id::text != '' AND workspace_id::text != '00000000-0000-0000-0000-000000000000');
+  END IF;
+END $$;
 
-ALTER TABLE "generatedContent"
-  ADD CONSTRAINT generatedContent_workspace_id_not_empty
-  CHECK (workspace_id::text != '' AND workspace_id::text != '00000000-0000-0000-0000-000000000000');
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'generated_content_workspace_id_not_empty') THEN
+    ALTER TABLE generated_content ADD CONSTRAINT generated_content_workspace_id_not_empty
+      CHECK (workspace_id::text != '' AND workspace_id::text != '00000000-0000-0000-0000-000000000000');
+  END IF;
+END $$;
 
 -- =====================================================
--- STEP 3: Create Foreign Key Constraints
+-- STEP 3: Create Foreign Key Constraints (if not exist)
 -- =====================================================
 
 -- Ensure workspace_id references valid workspaces
-ALTER TABLE contacts
-  ADD CONSTRAINT contacts_workspace_id_fkey
-  FOREIGN KEY (workspace_id) REFERENCES workspaces(id) ON DELETE CASCADE;
+-- Using DO blocks to check if constraint exists before adding
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'contacts_workspace_id_fkey') THEN
+    ALTER TABLE contacts ADD CONSTRAINT contacts_workspace_id_fkey
+      FOREIGN KEY (workspace_id) REFERENCES workspaces(id) ON DELETE CASCADE;
+  END IF;
+END $$;
 
-ALTER TABLE emails
-  ADD CONSTRAINT emails_workspace_id_fkey
-  FOREIGN KEY (workspace_id) REFERENCES workspaces(id) ON DELETE CASCADE;
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'emails_workspace_id_fkey') THEN
+    ALTER TABLE emails ADD CONSTRAINT emails_workspace_id_fkey
+      FOREIGN KEY (workspace_id) REFERENCES workspaces(id) ON DELETE CASCADE;
+  END IF;
+END $$;
 
-ALTER TABLE campaigns
-  ADD CONSTRAINT campaigns_workspace_id_fkey
-  FOREIGN KEY (workspace_id) REFERENCES workspaces(id) ON DELETE CASCADE;
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'campaigns_workspace_id_fkey') THEN
+    ALTER TABLE campaigns ADD CONSTRAINT campaigns_workspace_id_fkey
+      FOREIGN KEY (workspace_id) REFERENCES workspaces(id) ON DELETE CASCADE;
+  END IF;
+END $$;
 
-ALTER TABLE drip_campaigns
-  ADD CONSTRAINT drip_campaigns_workspace_id_fkey
-  FOREIGN KEY (workspace_id) REFERENCES workspaces(id) ON DELETE CASCADE;
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'drip_campaigns_workspace_id_fkey') THEN
+    ALTER TABLE drip_campaigns ADD CONSTRAINT drip_campaigns_workspace_id_fkey
+      FOREIGN KEY (workspace_id) REFERENCES workspaces(id) ON DELETE CASCADE;
+  END IF;
+END $$;
 
-ALTER TABLE campaign_steps
-  ADD CONSTRAINT campaign_steps_workspace_id_fkey
-  FOREIGN KEY (workspace_id) REFERENCES workspaces(id) ON DELETE CASCADE;
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'campaign_steps_workspace_id_fkey') THEN
+    ALTER TABLE campaign_steps ADD CONSTRAINT campaign_steps_workspace_id_fkey
+      FOREIGN KEY (workspace_id) REFERENCES workspaces(id) ON DELETE CASCADE;
+  END IF;
+END $$;
 
-ALTER TABLE campaign_enrollments
-  ADD CONSTRAINT campaign_enrollments_workspace_id_fkey
-  FOREIGN KEY (workspace_id) REFERENCES workspaces(id) ON DELETE CASCADE;
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'campaign_enrollments_workspace_id_fkey') THEN
+    ALTER TABLE campaign_enrollments ADD CONSTRAINT campaign_enrollments_workspace_id_fkey
+      FOREIGN KEY (workspace_id) REFERENCES workspaces(id) ON DELETE CASCADE;
+  END IF;
+END $$;
 
-ALTER TABLE "generatedContent"
-  ADD CONSTRAINT generatedContent_workspace_id_fkey
-  FOREIGN KEY (workspace_id) REFERENCES workspaces(id) ON DELETE CASCADE;
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'generated_content_workspace_id_fkey') THEN
+    ALTER TABLE generated_content ADD CONSTRAINT generated_content_workspace_id_fkey
+      FOREIGN KEY (workspace_id) REFERENCES workspaces(id) ON DELETE CASCADE;
+  END IF;
+END $$;
 
 -- =====================================================
 -- STEP 4: Create Composite Indexes for Performance
 -- =====================================================
 
 -- Contacts: Most common query patterns
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_contacts_workspace_id_email
+CREATE INDEX IF NOT EXISTS idx_contacts_workspace_id_email
   ON contacts(workspace_id, email);
 
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_contacts_workspace_id_status
+CREATE INDEX IF NOT EXISTS idx_contacts_workspace_id_status
   ON contacts(workspace_id, status);
 
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_contacts_workspace_id_ai_score
+CREATE INDEX IF NOT EXISTS idx_contacts_workspace_id_ai_score
   ON contacts(workspace_id, ai_score DESC)
   WHERE ai_score >= 80;  -- Partial index for hot leads
 
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_contacts_workspace_id_created_at
+CREATE INDEX IF NOT EXISTS idx_contacts_workspace_id_created_at
   ON contacts(workspace_id, created_at DESC);
 
 -- Emails: Common query patterns
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_emails_workspace_id_contact_id
+CREATE INDEX IF NOT EXISTS idx_emails_workspace_id_contact_id
   ON emails(workspace_id, contact_id);
 
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_emails_workspace_id_processed
+CREATE INDEX IF NOT EXISTS idx_emails_workspace_id_processed
   ON emails(workspace_id, is_processed)
   WHERE is_processed = false;  -- Partial index for unprocessed
 
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_emails_workspace_id_received_at
+CREATE INDEX IF NOT EXISTS idx_emails_workspace_id_received_at
   ON emails(workspace_id, received_at DESC);
 
 -- Campaigns: Common query patterns
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_campaigns_workspace_id_status
+CREATE INDEX IF NOT EXISTS idx_campaigns_workspace_id_status
   ON campaigns(workspace_id, status);
 
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_campaigns_workspace_id_created_at
+CREATE INDEX IF NOT EXISTS idx_campaigns_workspace_id_created_at
   ON campaigns(workspace_id, created_at DESC);
 
 -- Drip Campaigns: Common query patterns
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_drip_campaigns_workspace_id_status
+CREATE INDEX IF NOT EXISTS idx_drip_campaigns_workspace_id_status
   ON drip_campaigns(workspace_id, status);
 
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_drip_campaigns_workspace_id_created_at
+CREATE INDEX IF NOT EXISTS idx_drip_campaigns_workspace_id_created_at
   ON drip_campaigns(workspace_id, created_at DESC);
 
 -- Campaign Steps: Join optimization
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_campaign_steps_workspace_id_campaign_id
+CREATE INDEX IF NOT EXISTS idx_campaign_steps_workspace_id_campaign_id
   ON campaign_steps(workspace_id, campaign_id);
 
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_campaign_steps_campaign_id_step_number
+CREATE INDEX IF NOT EXISTS idx_campaign_steps_campaign_id_step_number
   ON campaign_steps(campaign_id, step_number);
 
 -- Campaign Enrollments: Common query patterns
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_campaign_enrollments_workspace_id_status
+CREATE INDEX IF NOT EXISTS idx_campaign_enrollments_workspace_id_status
   ON campaign_enrollments(workspace_id, status)
   WHERE status = 'active';  -- Partial index for active enrollments
 
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_campaign_enrollments_contact_id_campaign_id
+CREATE INDEX IF NOT EXISTS idx_campaign_enrollments_contact_id_campaign_id
   ON campaign_enrollments(contact_id, campaign_id);
 
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_campaign_enrollments_workspace_id_created_at
+CREATE INDEX IF NOT EXISTS idx_campaign_enrollments_workspace_id_created_at
   ON campaign_enrollments(workspace_id, created_at DESC);
 
 -- Generated Content: Common query patterns
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_generatedContent_workspace_id_status
-  ON "generatedContent"(workspace_id, status)
+CREATE INDEX IF NOT EXISTS idx_generated_content_workspace_id_status
+  ON "generated_content"(workspace_id, status)
   WHERE status = 'draft';  -- Partial index for drafts
 
-CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_generatedContent_workspace_id_created_at
-  ON "generatedContent"(workspace_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_generated_content_workspace_id_created_at
+  ON "generated_content"(workspace_id, created_at DESC);
 
 -- =====================================================
 -- STEP 5: Create Workspace Context Function
@@ -328,9 +373,8 @@ SELECT
   'contacts' AS table_name,
   id,
   workspace_id,
-  email,
-  created_at,
-  updated_at
+  email AS identifier,
+  created_at
 FROM contacts
 WHERE workspace_id IS NULL OR workspace_id::text = ''
 
@@ -340,9 +384,8 @@ SELECT
   'emails' AS table_name,
   id,
   workspace_id,
-  subject AS email,
-  created_at,
-  updated_at
+  subject AS identifier,
+  created_at
 FROM emails
 WHERE workspace_id IS NULL OR workspace_id::text = ''
 
@@ -352,9 +395,8 @@ SELECT
   'campaigns' AS table_name,
   id,
   workspace_id,
-  name AS email,
-  created_at,
-  updated_at
+  name AS identifier,
+  created_at
 FROM campaigns
 WHERE workspace_id IS NULL OR workspace_id::text = '';
 
