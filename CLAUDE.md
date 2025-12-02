@@ -150,8 +150,18 @@ See `docs/MULTI_PLATFORM_MARKETING_INTELLIGENCE.md`
 
 ## Context Window Optimization
 
-**📚 For agents**: See `.claude/context-manifest.md` for smart doc routing that saves 76% context window.
+**📚 Current approach**: `.claude/context-manifest.md` saves 76% context window
 
-**Quick tip**: Load CLAUDE.md (147 lines) + only the 1-2 docs your task needs. Don't load everything at startup.
+- Load CLAUDE.md (147 lines) + 1-2 task-specific docs on-demand
+- Smart routing table for 9 common task types
+- Zero code changes needed, live now
 
-**Example**: Email task? Load CLAUDE.md + `EMAIL_SERVICE_COMPLETE.md` (not 1,430 lines of legacy docs)
+**🚀 Future approach**: See `.claude/ADVANCED_TOOL_USE_STRATEGY.md`
+
+- Anthropic Nov 2025 features: Tool Search Tool (85% savings) + Programmatic Tool Calling (75% savings on workflows) + Tool Use Examples (90% accuracy)
+- Phased rollout plan, ROI analysis
+- Migrate when features leave beta for 85-95% savings
+
+**Quick tip**: Load CLAUDE.md + only the 1-2 docs your task needs. Don't load full 1,430 lines.
+
+**Example**: Email task → CLAUDE.md + `EMAIL_SERVICE_COMPLETE.md` = 76% context saved
