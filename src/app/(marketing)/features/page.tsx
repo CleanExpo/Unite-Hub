@@ -7,6 +7,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { TextLoop } from '@/components/ui/text-loop';
 
 export const metadata: Metadata = {
   title: 'Features | Unite-Hub',
@@ -277,13 +278,65 @@ export default function FeaturesPage() {
           </div>
         </div>
 
+        {/* Transformation Showcase */}
+        <div className="mb-20">
+          <h2 className="text-3xl font-bold text-center mb-4">See the Transformation</h2>
+          <p className="text-lg text-muted-foreground text-center mb-12 max-w-2xl mx-auto">
+            Watch how Unite-Hub transforms your marketing workflow from manual chaos to automated excellence
+          </p>
+          <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div>
+              <h3 className="text-2xl font-bold mb-4 text-red-600">❌ Without Unite-Hub</h3>
+              <ul className="space-y-3 text-muted-foreground">
+                <li className="flex gap-2">
+                  <span className="text-red-600">✗</span>
+                  <span>Manual email sorting and follow-ups</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="text-red-600">✗</span>
+                  <span>Leads slip through cracks constantly</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="text-red-600">✗</span>
+                  <span>Hours spent on repetitive tasks</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="text-red-600">✗</span>
+                  <span>No clear lead scoring or prioritization</span>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-2xl font-bold mb-4 text-green-600">✅ With Unite-Hub</h3>
+              <ul className="space-y-3 text-muted-foreground">
+                <li className="flex gap-2">
+                  <span className="text-green-600">✓</span>
+                  <span>AI-powered email analysis and scoring</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="text-green-600">✓</span>
+                  <span>Hot leads automatically identified</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="text-green-600">✓</span>
+                  <span>10+ hours saved per week per team member</span>
+                </li>
+                <li className="flex gap-2">
+                  <span className="text-green-600">✓</span>
+                  <span>Intelligent composite lead scoring (0-100)</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
         {/* AI Models Section */}
         <div className="mb-20 bg-muted/50 border rounded-lg p-8">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold mb-4">Powered by Claude AI</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               We use Anthropic's state-of-the-art AI models to deliver intelligent features
-              that actually work.
+              that actually work. Choose from:
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
@@ -393,6 +446,23 @@ export default function FeaturesPage() {
                 </tr>
               </tbody>
             </table>
+          </div>
+        </div>
+
+        {/* Feature Highlight */}
+        <div className="mb-20 bg-gradient-to-r from-blue-50 to-teal-50 border rounded-lg p-8">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold mb-4">What Customers Love Most</h2>
+          </div>
+          <div className="max-w-2xl mx-auto text-center">
+            <p className="text-2xl font-semibold text-primary mb-4">
+              <TextLoop interval={4000}>
+                <span>🚀 10+ hours saved per week</span>
+                <span>🎯 Hot leads instantly identified</span>
+                <span>📧 Personalized content in seconds</span>
+                <span>📊 AI-powered lead scoring</span>
+              </TextLoop>
+            </p>
           </div>
         </div>
 

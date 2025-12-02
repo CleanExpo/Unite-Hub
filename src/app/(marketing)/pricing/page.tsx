@@ -5,6 +5,8 @@ import { Check, X, Zap, ArrowRight } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { MetricsCard } from '@/components/ui/metrics-card';
+import { TextLoop } from '@/components/ui/text-loop';
 
 /**
  * PRICING SOURCE: src/lib/billing/pricing-config.ts (CANONICAL)
@@ -160,6 +162,41 @@ export default function PricingPage() {
                 Save 17%
               </Badge>
             </button>
+          </div>
+        </div>
+
+        {/* Value Metrics */}
+        <div className="mb-20">
+          <h2 className="text-3xl font-bold text-center mb-12">What You Get With Unite-Hub</h2>
+          <div className="grid md:grid-cols-4 gap-6">
+            <MetricsCard
+              label="Time Saved Weekly"
+              value={10}
+              suffix="hours"
+              icon="⏱️"
+              trend={{ value: 10, direction: "up" }}
+            />
+            <MetricsCard
+              label="Leads Automatically Scored"
+              value={100}
+              suffix="%"
+              icon="🎯"
+              trend={{ value: 5, direction: "up" }}
+            />
+            <MetricsCard
+              label="AI Models Available"
+              value={3}
+              suffix="models"
+              icon="🧠"
+              trend={{ value: 0, direction: "up" }}
+            />
+            <MetricsCard
+              label="Contacts Supported"
+              value={5000}
+              suffix="max"
+              icon="👥"
+              trend={{ value: 8, direction: "up" }}
+            />
           </div>
         </div>
 
@@ -364,6 +401,25 @@ export default function PricingPage() {
             <span>📊 Real metrics only</span>
             <span>⏱️ Honest timelines</span>
             <span>🎯 No vanity numbers</span>
+          </div>
+        </div>
+
+        {/* Pricing Comparison */}
+        <div className="mb-20 bg-gradient-to-r from-blue-50 to-teal-50 border rounded-lg p-8">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold mb-4">Choose Your Plan</h2>
+            <p className="text-lg text-muted-foreground">
+              All plans include a 14-day trial + 90-day activation program. Pick the plan that fits your team:
+            </p>
+          </div>
+          <div className="max-w-2xl mx-auto text-center">
+            <p className="text-xl font-semibold text-primary">
+              <TextLoop interval={3000}>
+                <span>🚀 Starter: Perfect for solopreneurs ($495/mo)</span>
+                <span>💼 Pro: Great for growing teams ($895/mo)</span>
+                <span>👑 Elite: Built for enterprises ($1,295/mo)</span>
+              </TextLoop>
+            </p>
           </div>
         </div>
 
