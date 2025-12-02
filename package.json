@@ -47,6 +47,8 @@
     "generate-content": "node scripts/generate-content.mjs",
     "process-campaigns": "node scripts/process-campaigns.mjs",
     "test:caching": "node scripts/test-prompt-caching.mjs",
+    "datadog:setup": "node scripts/setup-datadog.mjs",
+    "datadog:example": "node scripts/datadog-example.mjs",
     "docker:start": "docker-compose up -d",
     "docker:start:dev": "docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d",
     "docker:stop": "docker-compose down",

@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */
+/* eslint-disable no-undef, @typescript-eslint/no-explicit-any */
 /* global process */
 
 /**
@@ -242,9 +242,15 @@ async function checkExternalAPIs(): Promise<DependencyCheck> {
   }
 }
 
-export async function GET(_request: NextRequest) {
+export async function GET(request: NextRequest) {
+  const requestId = request.headers.get('x-request-id') || `req_${Date.now()}`;
+  const checkStart = Date.now();
+
   try {
-    logger.info('Deep health check requested');
+    logger.info('Deep health check requested', { requestId });
+
+    // Check if Datadog export is requested
+    const shouldExportToDatadog = request.nextUrl.searchParams.get('export') === 'datadog';
 
     // Run all dependency checks in parallel
     const [database, cache, ai, external] = await Promise.all([
@@ -265,6 +271,8 @@ export async function GET(_request: NextRequest) {
       ? 'degraded'
       : 'healthy';
 
+    const checkDuration = Date.now() - checkStart;
+
     const response: DeepHealthResponse = {
       status: overallStatus,
       timestamp: new Date().toISOString(),
@@ -276,25 +284,58 @@ export async function GET(_request: NextRequest) {
       },
     };
 
+    // Export to Datadog if enabled
+    if (shouldExportToDatadog && process.env.DATADOG_API_KEY) {
+      try {
+        const { getDatadogClient } = await import('@/lib/monitoring/datadog-client');
+        const { default: HealthMetricsExporter } = await import('@/lib/monitoring/health-metrics-exporter');
+
+        const client = getDatadogClient();
+        const exporter = new HealthMetricsExporter(client);
+
+        await exporter.exportHealthMetrics(response);
+
+        logger.debug('Health metrics exported to Datadog', { requestId });
+      } catch (exportError) {
+        logger.warn('Failed to export to Datadog', { error: exportError, requestId });
+        // Don't fail the health check if Datadog export fails
+      }
+    }
+
     logger.info('Deep health check complete', {
       status: overallStatus,
+      duration_ms: checkDuration,
       database: database.status,
       cache: cache.status,
       ai: ai.status,
       external: external.status,
+      requestId,
     });
 
     const httpStatus = overallStatus === 'healthy' ? 200 : overallStatus === 'degraded' ? 200 : 503;
 
-    return NextResponse.json(response, {
-      status: httpStatus,
-      headers: {
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
+    return NextResponse.json(
+      {
+        ...response,
+        metadata: {
+          request_id: requestId,
+          check_duration_ms: checkDuration,
+        },
       },
-    });
+      {
+        status: httpStatus,
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'X-Request-ID': requestId,
+        },
+      }
+    );
   } catch (error) {
+    const checkDuration = Date.now() - checkStart;
     logger.error('Deep health check failed', {
       error: error instanceof Error ? error.message : 'Unknown error',
+      duration_ms: checkDuration,
+      requestId,
     });
 
     return NextResponse.json(
@@ -307,8 +348,18 @@ export async function GET(_request: NextRequest) {
           ai_services: { status: 'unknown', latency_ms: 0, timestamp: new Date().toISOString() },
           external_apis: { status: 'unknown', latency_ms: 0, timestamp: new Date().toISOString() },
         },
+        metadata: {
+          request_id: requestId,
+          check_duration_ms: checkDuration,
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
       },
-      { status: 503 }
+      {
+        status: 503,
+        headers: {
+          'X-Request-ID': requestId,
+        },
+      }
     );
   }
 }

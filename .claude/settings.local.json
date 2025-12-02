@@ -6,7 +6,11 @@
       "Bash(npx vitest:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(npm run test:verification:*)"
+      "Bash(npm run test:verification:*)",
+      "Bash(cat:*)",
+      "Bash(find:*)",
+      "Bash(npm run test:integration:*)",
+      "Bash(npm test:*)"
     ],
     "deny": [],
     "ask": []

@@ -15,6 +15,9 @@ import { UncertaintyModel } from './uncertaintyModel';
 import { OrchestratorArchiveBridge } from './orchestratorArchiveBridge';
 import { MemoryRetriever } from '@/lib/memory';
 import { independentVerifier, VerificationRequest } from '@/lib/agents/independent-verifier';
+import * as milestones from '@/lib/integrity/milestone-definitions';
+import * as gates from '@/lib/integrity/completion-gates';
+import * as progress from '@/lib/integrity/progress-reporter';
 
 export interface OrchestratorTask {
   id?: string;
@@ -62,6 +65,11 @@ export interface OrchestratorTrace {
   }>;
   finalOutput?: Record<string, any>;
   totalTimeMs?: number;
+  // Completion integrity fields
+  milestonesDefined?: boolean;
+  completionPercentage?: number;
+  blockingIssuesCount?: number;
+  progressReport?: progress.TaskProgressReport;
 }
 
 export class OrchestratorEngine {
@@ -135,6 +143,32 @@ export class OrchestratorEngine {
       // Step 4: Calculate overall task risk
       const taskRisk = this.riskSupervisor.assessTaskRisk(stepsWithRisk);
 
+      // Step 4.5: Define milestones for each step
+      // CRITICAL: Milestones MUST be defined before execution starts
+      for (let i = 0; i < stepsWithRisk.length; i++) {
+        const step = stepsWithRisk[i];
+        const defaultCriteria = milestones.generateDefaultMilestones(
+          step.assignedAgent,
+          step.stepIndex
+        );
+
+        await milestones.defineMilestone(taskId, step.stepIndex, {
+          stepName: `${step.assignedAgent} execution`,
+          criteria: defaultCriteria,
+          requiredProofs: [
+            {
+              proofType: 'file_exists',
+              location: `audit-reports/evidence/${taskId}`,
+            },
+          ],
+          weightage: Math.round(100 / stepsWithRisk.length), // Equal weight for now
+          createdBy: 'orchestrator-engine',
+        });
+      }
+
+      // Lock milestones before execution
+      await milestones.lockMilestones(taskId);
+
       // Step 5: Update task in database with plan
       await supabase.rpc('update_orchestrator_task', {
         p_task_id: taskId,
@@ -181,6 +215,13 @@ export class OrchestratorEngine {
       await supabase.rpc('update_orchestrator_task', {
         p_task_id: taskId,
         p_status: 'running',
+      });
+
+      // Step 2.5: Record task started event
+      await progress.recordProgressEvent(taskId, {
+        timestamp: Date.now(),
+        eventType: 'task_started',
+        description: `Task execution started: ${task.objective}`,
       });
 
       // Step 3: Get task steps from decomposition
@@ -230,6 +271,15 @@ export class OrchestratorEngine {
         if (verificationResult.verified) {
           // Only mark as completed if verification passed (all criteria met)
           step.status = 'completed';
+
+          // Record milestone completed event
+          await progress.recordProgressEvent(taskId, {
+            timestamp: Date.now(),
+            eventType: 'milestone_completed',
+            stepIndex: step.stepIndex,
+            stepName: step.assignedAgent,
+            description: `Step ${step.stepIndex} (${step.assignedAgent}) completed and verified`,
+          });
         } else {
           // Verification failed - mark as failed with error message
           step.status = 'failed';
@@ -241,6 +291,15 @@ export class OrchestratorEngine {
             `[OrchestratorEngine] Step ${step.stepIndex} verification failed:`,
             verificationResult.error
           );
+
+          // Record milestone failed event
+          await progress.recordProgressEvent(taskId, {
+            timestamp: Date.now(),
+            eventType: 'milestone_failed',
+            stepIndex: step.stepIndex,
+            stepName: step.assignedAgent,
+            description: `Step ${step.stepIndex} (${step.assignedAgent}) failed verification: ${verificationResult.error}`,
+          });
 
           // Emit signal for human review
           signals.push({
@@ -325,24 +384,62 @@ export class OrchestratorEngine {
         });
       }
 
-      // Step 5: Verify all steps are complete and verified before marking task complete
-      // CRITICAL: Task CANNOT be marked 'completed' unless ALL steps are verified
-      const failedSteps = steps.filter((s) => s.status !== 'completed' || !s.verified);
+      // Step 5: CHECK COMPLETION GATES before marking task complete
+      // CRITICAL: Task CANNOT be marked 'completed' unless ALL gates pass
+      const taskMilestones = await milestones.getMilestones(taskId);
 
-      if (failedSteps.length > 0) {
+      if (!taskMilestones) {
+        throw new Error(`No milestones defined for task ${taskId}`);
+      }
+
+      // Build step evidence map
+      const stepEvidence = new Map<number, Record<string, unknown>>();
+      for (const step of steps) {
+        if (step.outputPayload) {
+          stepEvidence.set(step.stepIndex, step.outputPayload);
+        }
+      }
+
+      // Check completion gates
+      const gateResult = await gates.canTaskComplete(taskId, taskMilestones, stepEvidence);
+
+      if (!gateResult.canComplete) {
         console.error(
-          `[OrchestratorEngine] Task has unverified or failed steps. Cannot mark task complete.`,
+          `[OrchestratorEngine] Completion gates BLOCKED task completion`,
           {
-            totalSteps: steps.length,
-            failedCount: failedSteps.length,
-            failedSteps: failedSteps.map((s) => ({
-              stepIndex: s.stepIndex,
-              agent: s.assignedAgent,
-              status: s.status,
-              verified: s.verified,
-              error: s.error,
-            })),
+            decision: gateResult.decision,
+            reason: gateResult.decisionReason,
+            blockedSteps: gateResult.blockedSteps,
+            blockingIssues: gateResult.blockingIssues.length,
           }
+        );
+
+        // Record task blocked event
+        await progress.recordProgressEvent(taskId, {
+          timestamp: Date.now(),
+          eventType: 'task_blocked',
+          description: `Task blocked by completion gates: ${gateResult.decisionReason}`,
+          metadata: {
+            blockingIssues: gateResult.blockingIssues.length,
+            blockedSteps: gateResult.blockedSteps,
+          },
+        });
+
+        // Generate progress report with blocking issues
+        const checkpointStatuses = await Promise.all(
+          steps.map(s =>
+            import('@/lib/integrity/checkpoint-validators').then(cv =>
+              cv.getCheckpointStatus(taskId, s.stepIndex)
+            )
+          )
+        ).then(statuses => statuses.filter(s => s !== null) as any[]);
+
+        const progressReport = await progress.reportProgress(
+          taskId,
+          taskMilestones,
+          steps.length - 1,
+          checkpointStatuses,
+          gateResult
         );
 
         // Mark task as paused for human review
@@ -363,16 +460,44 @@ export class OrchestratorEngine {
           signals: [
             ...signals,
             {
-              type: 'incomplete_workflow',
-              severity: 85,
-              message: `Workflow has ${failedSteps.length} unverified/failed step(s). Requires human review before completion.`,
+              type: 'completion_gates_blocked',
+              severity: 90,
+              message: `${gates.formatBlockingIssues(gateResult.blockingIssues)}`,
             },
           ],
           totalTimeMs: Date.now() - startTime,
+          milestonesDefined: true,
+          completionPercentage: gateResult.overallCompletionPercentage,
+          blockingIssuesCount: gateResult.blockingIssues.length,
+          progressReport,
         };
       }
 
-      // Step 5: Assemble final output (only if all steps verified)
+      // Step 6: Generate final progress report (all gates passed)
+      const checkpointStatuses = await Promise.all(
+        steps.map(s =>
+          import('@/lib/integrity/checkpoint-validators').then(cv =>
+            cv.getCheckpointStatus(taskId, s.stepIndex)
+          )
+        )
+      ).then(statuses => statuses.filter(s => s !== null) as any[]);
+
+      const finalProgressReport = await progress.reportProgress(
+        taskId,
+        taskMilestones,
+        steps.length - 1,
+        checkpointStatuses,
+        gateResult
+      );
+
+      // Record task completed event
+      await progress.recordProgressEvent(taskId, {
+        timestamp: Date.now(),
+        eventType: 'task_completed',
+        description: `Task completed successfully - all ${steps.length} steps verified`,
+      });
+
+      // Step 7: Assemble final output (only if all gates passed)
       const finalOutput = {
         steps: steps.map((s) => ({
           agent: s.assignedAgent,
@@ -387,6 +512,12 @@ export class OrchestratorEngine {
           finalRisk: Math.round(cumulativeRisk),
           finalUncertainty: Math.round(cumulativeUncertainty),
           allStepsVerified: steps.every((s) => s.verified),
+        },
+        completionIntegrity: {
+          gatesPassed: true,
+          completionPercentage: gateResult.overallCompletionPercentage,
+          blockingIssues: 0,
+          progressReport: finalProgressReport,
         },
       };
 
@@ -421,6 +552,10 @@ export class OrchestratorEngine {
         signals,
         finalOutput,
         totalTimeMs: Date.now() - startTime,
+        milestonesDefined: true,
+        completionPercentage: gateResult.overallCompletionPercentage,
+        blockingIssuesCount: 0,
+        progressReport: finalProgressReport,
       };
     } catch (error) {
       console.error('Error executing workflow:', error);

@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */
+/* eslint-disable no-undef, @typescript-eslint/no-unused-vars */
 /* global process, AbortController, setTimeout, clearInterval, fetch, URL */
 
 /**
@@ -111,12 +111,18 @@ async function checkRouteHealth(route: string): Promise<RouteHealth> {
 }
 
 export async function GET(request: NextRequest) {
+  const requestId = request.headers.get('x-request-id') || `req_${Date.now()}`;
+  const checkStart = Date.now();
+
   try {
-    logger.info('Routes health check requested');
+    logger.info('Routes health check requested', { requestId });
+
+    // Check if Datadog export is requested
+    const shouldExportToDatadog = request.nextUrl.searchParams.get('export') === 'datadog';
 
     // Discover all routes
     const routes = await discoverRoutes();
-    logger.info(`Discovered ${routes.length} routes`);
+    logger.info(`Discovered ${routes.length} routes`, { requestId });
 
     // Check subset of routes (full check would take too long)
     // Check every 10th route plus critical ones
@@ -150,6 +156,7 @@ export async function GET(request: NextRequest) {
     // Calculate stats
     const healthy = results.filter(r => r.status === 'accessible').length;
     const errors = results.filter(r => r.status === 'error').length;
+    const checkDuration = Date.now() - checkStart;
 
     const response = {
       total_routes_in_system: routes.length,
@@ -161,22 +168,55 @@ export async function GET(request: NextRequest) {
       timestamp: new Date().toISOString(),
     };
 
+    // Export to Datadog if enabled
+    if (shouldExportToDatadog && process.env.DATADOG_API_KEY) {
+      try {
+        const { getDatadogClient } = await import('@/lib/monitoring/datadog-client');
+        const { default: HealthMetricsExporter } = await import('@/lib/monitoring/health-metrics-exporter');
+
+        const client = getDatadogClient();
+        const exporter = new HealthMetricsExporter(client);
+
+        await exporter.exportRouteHealth(response);
+
+        logger.debug('Route health metrics exported to Datadog', { requestId });
+      } catch (exportError) {
+        logger.warn('Failed to export to Datadog', { error: exportError, requestId });
+        // Don't fail the health check if Datadog export fails
+      }
+    }
+
     logger.info('Routes health check complete', {
       total: routes.length,
       checked: results.length,
       healthy,
       unhealthy: errors,
+      duration_ms: checkDuration,
+      requestId,
     });
 
-    return NextResponse.json(response, {
-      status: 200,
-      headers: {
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
+    return NextResponse.json(
+      {
+        ...response,
+        metadata: {
+          request_id: requestId,
+          check_duration_ms: checkDuration,
+        },
       },
-    });
+      {
+        status: 200,
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'X-Request-ID': requestId,
+        },
+      }
+    );
   } catch (error) {
+    const checkDuration = Date.now() - checkStart;
     logger.error('Routes health check failed', {
       error: error instanceof Error ? error.message : 'Unknown error',
+      duration_ms: checkDuration,
+      requestId,
     });
 
     return NextResponse.json(
@@ -187,8 +227,17 @@ export async function GET(request: NextRequest) {
         unhealthy: 0,
         error: error instanceof Error ? error.message : 'Unknown error',
         timestamp: new Date().toISOString(),
+        metadata: {
+          request_id: requestId,
+          check_duration_ms: checkDuration,
+        },
       },
-      { status: 503 }
+      {
+        status: 503,
+        headers: {
+          'X-Request-ID': requestId,
+        },
+      }
     );
   }
 }
