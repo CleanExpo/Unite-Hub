@@ -29,7 +29,9 @@ import { HeroVideoPlayer } from "@/components/hero-video-player";
 import { CaseStudyCard } from "@/components/landing/CaseStudyCard";
 import { IntegrationCard, GmailIcon, SlackIcon, ZapierIcon, HubSpotIcon, StripeIcon, SalesforceIcon, MailchimpIcon, PipedriveIcon } from "@/components/landing/IntegrationCard";
 import { FAQAccordion, FAQSchemaMarkup, faqData } from "@/components/landing/FAQAccordion";
+import { FeatureVideoCarousel } from "@/components/landing/FeatureVideoCarousel";
 import { caseStudies, integrations } from "@/data/landing-data";
+import { featureVideos } from "@/data/feature-videos-data";
 
 export default function Home() {
   const { user, loading } = useAuth();
@@ -1030,6 +1032,27 @@ export default function Home() {
               ]}
             />
           </div>
+        </div>
+      </section>
+
+      {/* Feature Video Carousel Section */}
+      <section className="py-24 bg-gradient-to-b from-white to-[#f4f7fa]">
+        <div className="max-w-[1400px] mx-auto px-5">
+          <div className="text-center mb-16">
+            <ScrollReveal>
+              <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
+                See Features in Action
+              </h2>
+            </ScrollReveal>
+            <ScrollReveal delay={100}>
+              <p className="text-xl text-[#404040] max-w-[700px] mx-auto">
+                30-second walkthroughs of Synthex's most powerful features
+              </p>
+            </ScrollReveal>
+          </div>
+          <ScrollReveal delay={200}>
+            <FeatureVideoCarousel videos={featureVideos} />
+          </ScrollReveal>
         </div>
       </section>
 
