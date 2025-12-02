@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { UniteHubStructuredData } from "@/components/StructuredData";
@@ -15,14 +15,20 @@ export const viewport: Viewport = {
   maximumScale: 5,
 };
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Optimized font loading with display swap
+const inter = Inter({
+  variable: "--font-body",
   subsets: ["latin"],
+  display: "swap",
+  preload: true,
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const dmSans = DM_Sans({
+  variable: "--font-heading",
   subsets: ["latin"],
+  display: "swap",
+  preload: true,
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -102,7 +108,7 @@ export default function RootLayout({
       <head>
         <UniteHubStructuredData />
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${inter.variable} ${dmSans.variable} antialiased`}>
         <Providers>
           {children}
           <CookieConsent />

@@ -47,6 +47,10 @@
   --ring: oklch(14.9% 0.052 259.12);
   --radius: 0.5rem;
 
+  /* Typography */
+  --font-body: var(--font-body);
+  --font-heading: var(--font-heading);
+
   /* ========================================
      WCAG AA High-Contrast Text Colors
      (Added for accessibility compliance)
@@ -222,8 +226,8 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  /* Typography */
-  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  /* Typography - Using next/font optimized fonts */
+  --font-sans: var(--font-body), system-ui, -apple-system, sans-serif;
   --font-mono: "Monaco", "Courier New", monospace;
 
   /* Shadows */
@@ -258,6 +262,12 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: var(--font-body), var(--font-sans);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading), var(--font-sans);
+    font-weight: 600;
   }
 
   html, body {
