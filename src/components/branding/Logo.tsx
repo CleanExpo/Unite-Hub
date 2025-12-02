@@ -41,6 +41,8 @@ export function Logo({
         height={dimensions.height}
         priority
         className="object-contain"
+        placeholder="blur"
+        blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iIzM0N2JmNyIvPjwvc3ZnPg=="
       />
       {showText && variant === 'default' && (
         <div className="flex flex-col">
@@ -84,6 +86,8 @@ export function MembershipBadge({ tier, size = 'md', className }: MembershipBadg
         width={dimensions.width}
         height={dimensions.height}
         className="object-contain"
+        placeholder="blur"
+        blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iIzM0N2JmNyIvPjwvc3ZnPg=="
       />
     </div>
   );
