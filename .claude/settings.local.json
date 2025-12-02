@@ -19,7 +19,8 @@
       "Bash(cross-env NODE_OPTIONS=--max-old-space-size=6144 next build:*)",
       "Bash(npx next build:*)",
       "Bash(gh pr create:*)",
-      "Bash(npm run lint:*)"
+      "Bash(npm run lint:*)",
+      "Bash(npx tsc:*)"
     ],
     "deny": [],
     "ask": []

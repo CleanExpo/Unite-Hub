@@ -23,6 +23,8 @@ import { seoConfig } from "@/lib/seo/seoConfig";
 import { PersonaVisual } from "@/components/marketing/PersonaVisual";
 import { detectPersonaFromContext } from "@/lib/visual/visualPersonas";
 import ThreeDPhotoCarousel from "@/components/ui/three-d-carousel";
+import { TextLoop } from "@/components/ui/text-loop";
+import { InfiniteSlider } from "@/components/ui/infinite-slider";
 
 export default function Home() {
   const { user, loading } = useAuth();
@@ -140,7 +142,16 @@ export default function Home() {
 
           <ScrollReveal delay={100}>
             <h1 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
-              Marketing, SEO & AI.<br />
+              <TextLoop
+                interval={4000}
+                className="inline-block"
+              >
+                <span>Marketing, SEO & AI.</span>
+                <span>Website & Content.</span>
+                <span>Social Media & Automation.</span>
+                <span>Growth Without Hiring.</span>
+              </TextLoop>
+              <br />
               <AnimatedGradientText text="Without the Agency Bill." className="bg-gradient-to-r from-[#347bf7] to-[#00d4aa]" />
             </h1>
           </ScrollReveal>
@@ -353,6 +364,25 @@ export default function Home() {
               </HoverLift>
             </ScrollReveal>
           </div>
+        </div>
+      </section>
+
+      {/* Trusted By Section */}
+      <section className="py-16 bg-gradient-to-r from-gray-50 to-gray-100 border-y border-gray-200">
+        <div className="max-w-[1200px] mx-auto px-5">
+          <div className="text-center mb-8">
+            <p className="text-sm font-semibold text-gray-600 uppercase tracking-wider">Trusted by Businesses Across Industries</p>
+          </div>
+          <InfiniteSlider gap={40} duration={25} pauseOnHover>
+            <div className="flex items-center justify-center h-12 px-4 text-gray-600 font-semibold whitespace-nowrap">🏗️ Construction</div>
+            <div className="flex items-center justify-center h-12 px-4 text-gray-600 font-semibold whitespace-nowrap">💇 Hair & Beauty</div>
+            <div className="flex items-center justify-center h-12 px-4 text-gray-600 font-semibold whitespace-nowrap">🔧 Trades</div>
+            <div className="flex items-center justify-center h-12 px-4 text-gray-600 font-semibold whitespace-nowrap">🏥 Healthcare</div>
+            <div className="flex items-center justify-center h-12 px-4 text-gray-600 font-semibold whitespace-nowrap">📚 Education</div>
+            <div className="flex items-center justify-center h-12 px-4 text-gray-600 font-semibold whitespace-nowrap">🛍️ Retail</div>
+            <div className="flex items-center justify-center h-12 px-4 text-gray-600 font-semibold whitespace-nowrap">❤️ Non-Profit</div>
+            <div className="flex items-center justify-center h-12 px-4 text-gray-600 font-semibold whitespace-nowrap">🎓 Coaching</div>
+          </InfiniteSlider>
         </div>
       </section>
 
