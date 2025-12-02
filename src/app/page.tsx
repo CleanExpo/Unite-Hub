@@ -1,17 +1,15 @@
+/* eslint-disable no-undef, no-console */
 "use client";
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import Image from "next/image";
 import Link from "next/link";
-import { ChevronDown, ChevronLeft, ChevronRight, CheckCircle, Zap, BarChart3, MessageSquare } from "lucide-react";
 import {
   FloatingGradientBalls,
   ScrollReveal,
   AnimatedGradientText,
   AnimatedCounter,
   HoverLift,
-  PulsingDot,
   Parallax,
 } from "@/components/AnimatedElements";
 import {
@@ -20,18 +18,15 @@ import {
   WebSiteSchema,
   FAQSchema,
   HowToSchema,
-  BreadcrumbSchema,
 } from "@/components/seo/JsonLd";
 import { seoConfig } from "@/lib/seo/seoConfig";
 import { PersonaVisual } from "@/components/marketing/PersonaVisual";
 import { detectPersonaFromContext } from "@/lib/visual/visualPersonas";
+import ThreeDPhotoCarousel from "@/components/ui/three-d-carousel";
 
 export default function Home() {
   const { user, loading } = useAuth();
-  const [currentSlide, setCurrentSlide] = useState(1);
-  const [servicesOpen, setServicesOpen] = useState(false);
   const [discountSlotsLeft, setDiscountSlotsLeft] = useState(50);
-  const [discountSlotsLeft25, setDiscountSlotsLeft25] = useState(50);
   const [personaId, setPersonaId] = useState<string | null>(null);
 
   // Detect persona from URL params/context
@@ -55,7 +50,6 @@ export default function Home() {
         if (response.ok) {
           const data = await response.json();
           setDiscountSlotsLeft(data.remaining_50_off || 50);
-          setDiscountSlotsLeft25(data.remaining_25_off || 50);
         }
       } catch (error) {
         console.error('Failed to fetch offer data:', error);
@@ -63,14 +57,6 @@ export default function Home() {
     };
     fetchOfferData();
   }, []);
-
-  const nextSlide = () => {
-    if (currentSlide < 2) setCurrentSlide(currentSlide + 1);
-  };
-
-  const prevSlide = () => {
-    if (currentSlide > 0) setCurrentSlide(currentSlide - 1);
-  };
 
   return (
     <div className="min-h-screen bg-[#f4f7fa] overflow-x-hidden">
@@ -891,7 +877,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Synthex Features Carousel */}
+      {/* Synthex Features - 3D Carousel */}
       <section className="py-20 bg-white overflow-hidden">
         <div className="max-w-[1200px] mx-auto px-5">
           <div className="text-center mb-16">
@@ -903,109 +889,36 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="relative max-w-[1400px] mx-auto flex items-center justify-center">
-            <div
-              className="flex transition-transform duration-500 ease-in-out"
-              style={{
-                transform: `translateX(${currentSlide === 0 ? '630px' : currentSlide === 1 ? '0px' : '-630px'})`
-              }}
-            >
-              {/* Card 1 - Website Transformation */}
-              <div className={`min-w-[600px] mx-4 rounded-2xl overflow-hidden relative transition-all duration-500 shadow-[0_15px_40px_rgba(0,0,0,0.2)] ${currentSlide === 0 ? 'opacity-100 scale-100 h-[420px] z-10' : 'opacity-50 scale-[0.85] h-[380px]'}`}>
-                <PersonaVisual
-                  sectionId="features_grid"
-                  personaId={personaId || undefined}
-                  width={1200}
-                  height={840}
-                  alt="Website transformation showing modern design with enhanced copy and SEO"
-                  className="w-full h-full object-cover"
-                  objectFit="cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-8">
-                  <div>
-                    <h3 className="text-2xl font-bold text-white mb-2">Website Enhanced</h3>
-                    <p className="text-white/80">AI-optimized copy, SEO-ready structure, conversion-focused design</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Card 2 - Social Media Growth */}
-              <div className={`min-w-[600px] mx-4 rounded-2xl overflow-hidden relative transition-all duration-500 shadow-[0_15px_40px_rgba(0,0,0,0.2)] ${currentSlide === 1 ? 'opacity-100 scale-100 h-[420px] z-10' : 'opacity-50 scale-[0.85] h-[380px]'}`}>
-                <PersonaVisual
-                  sectionId="ai_automation"
-                  personaId={personaId || undefined}
-                  width={1200}
-                  height={840}
-                  alt="Social media analytics dashboard showing engagement and reach growth"
-                  className="w-full h-full object-cover"
-                  objectFit="cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0a1e3b]/90 to-[#0a1e3b]/40 flex items-end p-8">
-                  <div>
-                    <div className="inline-block bg-[#00d4aa] text-white text-sm font-semibold px-3 py-1 rounded mb-4">
-                      10x Social Posts
-                    </div>
-                    <h3 className="text-2xl font-bold text-white mb-2">Social Media Automation</h3>
-                    <p className="text-white/70">AI writes, designs, and schedules posts across all platforms</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Card 3 - Rankings & Traffic */}
-              <div className={`min-w-[600px] mx-4 rounded-2xl overflow-hidden relative transition-all duration-500 shadow-[0_15px_40px_rgba(0,0,0,0.2)] ${currentSlide === 2 ? 'opacity-100 scale-100 h-[420px] z-10' : 'opacity-50 scale-[0.85] h-[380px]'}`}>
-                <PersonaVisual
-                  sectionId="stats_metrics"
-                  personaId={personaId || undefined}
-                  width={1200}
-                  height={840}
-                  alt="Business growth charts showing traffic and ranking improvements"
-                  className="w-full h-full object-cover"
-                  objectFit="cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-8">
-                  <div>
-                    <h3 className="text-2xl font-bold text-white mb-2">Measurable Results</h3>
-                    <p className="text-white/80">Google rankings, local leads, website traffic—tracked in real-time</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Carousel Controls */}
-          <div className="flex justify-center items-center mt-8 gap-5">
-            <button
-              type="button"
-              onClick={prevSlide}
-              className="w-10 h-10 bg-[#e0e5ec] rounded-full flex items-center justify-center cursor-pointer text-[#1a1a1a] hover:bg-[#d0dbe7] transition-colors"
-              title="Previous slide"
-              aria-label="View previous feature"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-
-            <div className="flex gap-2">
-              {[0, 1, 2].map((i) => (
-                <button
-                  key={i}
-                  type="button"
-                  onClick={() => setCurrentSlide(i)}
-                  className={`rounded-full cursor-pointer transition-colors ${currentSlide === i ? 'w-3 h-3 bg-[#0056b3]' : 'w-2.5 h-2.5 bg-[#ccc]'}`}
-                  title={`Go to slide ${i + 1}`}
-                  aria-label={`Go to feature ${i + 1}`}
-                />
-              ))}
-            </div>
-
-            <button
-              type="button"
-              onClick={nextSlide}
-              className="w-10 h-10 bg-[#e0e5ec] rounded-full flex items-center justify-center cursor-pointer text-[#1a1a1a] hover:bg-[#d0dbe7] transition-colors"
-              title="Next slide"
-              aria-label="View next feature"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
+          <div className="max-w-[900px] mx-auto">
+            <ThreeDPhotoCarousel
+              autoPlay={true}
+              autoPlayInterval={6000}
+              showTitles={true}
+              showDescriptions={true}
+              images={[
+                {
+                  id: "1",
+                  src: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=900&h=600&fit=crop",
+                  alt: "Website transformation",
+                  title: "Website Enhanced",
+                  description: "AI-optimized copy, SEO-ready structure, conversion-focused design"
+                },
+                {
+                  id: "2",
+                  src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=900&h=600&fit=crop",
+                  alt: "Social media automation",
+                  title: "Social Media Automation",
+                  description: "AI writes, designs, and schedules posts across all platforms"
+                },
+                {
+                  id: "3",
+                  src: "https://images.unsplash.com/photo-1543269865-cbdf26effbad?w=900&h=600&fit=crop",
+                  alt: "Measurable results",
+                  title: "Measurable Results",
+                  description: "Google rankings, local leads, website traffic—tracked in real-time"
+                }
+              ]}
+            />
           </div>
         </div>
       </section>
