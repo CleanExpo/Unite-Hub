@@ -26,6 +26,10 @@ import ThreeDPhotoCarousel from "@/components/ui/three-d-carousel";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
 import { MobileNav } from "@/components/mobile-nav";
 import { HeroVideoPlayer } from "@/components/hero-video-player";
+import { CaseStudyCard } from "@/components/landing/CaseStudyCard";
+import { IntegrationCard, GmailIcon, SlackIcon, ZapierIcon, HubSpotIcon, StripeIcon, SalesforceIcon, MailchimpIcon, PipedriveIcon } from "@/components/landing/IntegrationCard";
+import { FAQAccordion, FAQSchemaMarkup, faqData } from "@/components/landing/FAQAccordion";
+import { caseStudies, integrations } from "@/data/landing-data";
 
 export default function Home() {
   const { user, loading } = useAuth();
@@ -370,6 +374,32 @@ export default function Home() {
                 </div>
               </HoverLift>
             </ScrollReveal>
+          </div>
+        </div>
+      </section>
+
+      {/* Case Studies Section */}
+      <section className="py-20 bg-gradient-to-br from-[#f9fafb] to-[#f4f7fa]">
+        <div className="max-w-[1200px] mx-auto px-5">
+          <div className="text-center mb-16">
+            <ScrollReveal>
+              <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
+                See Synthex In Action
+              </h2>
+            </ScrollReveal>
+            <ScrollReveal delay={100}>
+              <p className="text-xl text-[#666] max-w-[700px] mx-auto">
+                Real results from real businesses just like yours
+              </p>
+            </ScrollReveal>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {caseStudies.map((study, idx) => (
+              <ScrollReveal key={study.company} delay={idx * 100}>
+                <CaseStudyCard {...study} delay={idx * 100} />
+              </ScrollReveal>
+            ))}
           </div>
         </div>
       </section>
@@ -776,6 +806,49 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Integrations Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-[1200px] mx-auto px-5">
+          <div className="text-center mb-16">
+            <ScrollReveal>
+              <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
+                Works With Your Stack
+              </h2>
+            </ScrollReveal>
+            <ScrollReveal delay={100}>
+              <p className="text-xl text-[#666] max-w-[700px] mx-auto">
+                Connect the tools you already use
+              </p>
+            </ScrollReveal>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {integrations.map((integration, idx) => {
+              const iconMap: Record<string, React.ReactNode> = {
+                gmail: <GmailIcon />,
+                slack: <SlackIcon />,
+                zapier: <ZapierIcon />,
+                hubspot: <HubSpotIcon />,
+                stripe: <StripeIcon />,
+                salesforce: <SalesforceIcon />,
+                mailchimp: <MailchimpIcon />,
+                pipedrive: <PipedriveIcon />,
+              };
+
+              return (
+                <ScrollReveal key={integration.name} delay={idx * 50}>
+                  <IntegrationCard
+                    {...integration}
+                    icon={iconMap[integration.iconName]}
+                    delay={idx * 50}
+                  />
+                </ScrollReveal>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
       {/* Pricing Section */}
       <section id="pricing" className="text-center pb-20 bg-gradient-to-b from-[#051224] via-[#051224] to-[#f4f7fa]" style={{ paddingTop: '1px' }}>
         <div className="max-w-[1200px] mx-auto px-5">
@@ -960,6 +1033,31 @@ export default function Home() {
         </div>
       </section>
 
+      {/* FAQ Section */}
+      <section className="py-20 bg-gradient-to-b from-white to-[#f4f7fa]">
+        <div className="max-w-[1200px] mx-auto px-5">
+          <div className="text-center mb-16">
+            <ScrollReveal>
+              <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
+                Frequently Asked Questions
+              </h2>
+            </ScrollReveal>
+            <ScrollReveal delay={100}>
+              <p className="text-xl text-[#666] max-w-[700px] mx-auto">
+                Everything you need to know
+              </p>
+            </ScrollReveal>
+          </div>
+
+          <ScrollReveal delay={200}>
+            <FAQAccordion
+              items={faqData}
+              categories={['Getting Started', 'Platform & Security', 'ROI & Results']}
+            />
+          </ScrollReveal>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="py-12 bg-[#051224] text-white">
         <div className="max-w-[1200px] mx-auto px-5">
@@ -1076,6 +1174,7 @@ export default function Home() {
       <WebSiteSchema />
       <SoftwareApplicationSchema ratingValue="4.8" ratingCount="128" />
       <FAQSchema faqItems={seoConfig.commonFAQs} />
+      <FAQSchemaMarkup items={faqData} />
       <HowToSchema
         howto={{
           name: 'How to Automate Your Marketing with Synthex',
