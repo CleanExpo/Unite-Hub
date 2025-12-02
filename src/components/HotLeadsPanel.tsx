@@ -1,3 +1,4 @@
+/* eslint-disable no-undef, no-console */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -5,13 +6,33 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Loader2, Zap, TrendingUp, Target, AlertCircle } from "lucide-react";
+import { Loader2, Zap, TrendingUp, AlertCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabaseBrowser } from "@/lib/supabase";
+import { HotLeadsSkeleton } from "@/components/skeletons/HotLeadsSkeleton";
+
+interface HotLead {
+  id: string;
+  name: string;
+  email?: string;
+  job_title?: string;
+  company?: string;
+  compositeScore: number;
+  ai_score: number;
+  buying_intent?: string;
+  decision_stage?: string;
+  role_type?: string;
+  sentiment_score: number;
+  ai_analysis?: {
+    next_best_action?: string;
+  };
+  opportunity_signals?: string[];
+  risk_signals?: string[];
+}
 
 export function HotLeadsPanel({ workspaceId }: { workspaceId: string }) {
   const { session } = useAuth();
-  const [hotLeads, setHotLeads] = useState<any[]>([]);
+  const [hotLeads, setHotLeads] = useState<HotLead[]>([]);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -99,6 +120,11 @@ export function HotLeadsPanel({ workspaceId }: { workspaceId: string }) {
     }
   };
 
+  // Show skeleton during initial load
+  if (loading) {
+    return <HotLeadsSkeleton items={3} />;
+  }
+
   return (
     <Card className="bg-slate-800 border-slate-700">
       <CardHeader className="flex flex-row items-center justify-between">
@@ -134,11 +160,7 @@ export function HotLeadsPanel({ workspaceId }: { workspaceId: string }) {
             <p className="text-red-300 text-sm">{error}</p>
           </div>
         )}
-        {loading ? (
-          <div className="flex items-center justify-center py-8">
-            <Loader2 className="w-6 h-6 animate-spin text-blue-400" />
-          </div>
-        ) : hotLeads.length === 0 ? (
+        {hotLeads.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-slate-400">No hot leads yet. Analyze contacts to get started.</p>
           </div>
