@@ -27,10 +27,6 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
 
-  // Disable TypeScript type checking to prevent worker process crash
-  // Next.js already validates types during Turbopack compilation
-  typecheck: false,
-
   // Transpile these packages for compatibility
   transpilePackages: ['reactflow', '@reactflow/core', '@reactflow/background', '@reactflow/controls', '@reactflow/minimap'],
 
