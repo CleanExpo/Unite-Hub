@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /**
  * Button Component
  *
@@ -45,10 +46,10 @@ export const buttonVariants = ({
   };
 
   const sizeStyles: Record<string, string> = {
-    sm: 'h-9 px-3 text-sm',
-    md: 'h-10 px-4 py-2',
-    lg: 'h-11 px-8 text-lg',
-    icon: 'h-10 w-10',
+    sm: 'h-11 px-3 text-sm',      // 44px minimum for accessibility
+    md: 'h-11 px-4 py-2',         // 44px minimum for accessibility
+    lg: 'h-12 px-8 text-lg',      // 48px for larger variant
+    icon: 'h-11 w-11',            // 44px minimum for accessibility
   };
 
   return `${baseStyles} ${variantStyles[variant] || variantStyles.primary} ${sizeStyles[size] || sizeStyles.md}`;
