@@ -20,7 +20,9 @@
       "Bash(npx next build:*)",
       "Bash(gh pr create:*)",
       "Bash(npm run lint:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(npx eslint:*)",
+      "Bash(npm run typecheck:*)"
     ],
     "deny": [],
     "ask": []

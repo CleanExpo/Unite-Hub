@@ -116,7 +116,8 @@
     "deploy:logs:green": "docker-compose logs -f --tail=100 green",
     "deploy:logs:nginx": "docker-compose logs -f --tail=100 nginx",
     "deploy:state": "cat .deployment-state.json | jq",
-    "deploy:cleanup": "bash scripts/cleanup-deployment.sh"
+    "deploy:cleanup": "bash scripts/cleanup-deployment.sh",
+    "generate:images": "node scripts/generate-images.mjs"
   },
   "keywords": [],
   "author": "",
