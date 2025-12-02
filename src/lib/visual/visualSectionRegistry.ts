@@ -46,18 +46,19 @@ export interface SectionConfig {
 
 /**
  * Landing page section configurations
+ * 5 WHYS Marketing Theory: Human-centered imagery focused on emotional outcomes
  */
 export const LANDING_SECTIONS: Record<string, SectionConfig> = {
-  // Hero Section
+  // Hero Section - 5 WHYS: Show real business owners who escaped overwhelm
   hero_main: {
     id: "hero_main",
     label: "Main Hero",
     description: "Primary landing hero with headline and CTA",
     imagePrompt:
-      "Professional business dashboard interface, modern UI design, clean data visualization, blue accent lighting, tech aesthetic, high resolution",
+      "Australian tradesperson on job site, phone in hand, confident smile, golden hour lighting, real human success story, NO TEXT NO LABELS",
     videoPrompt:
       "Smooth camera movement revealing dashboard interface, professional lighting, minimal motion graphics",
-    fallbackImage: "/images/hero/default-hero.jpg",
+    fallbackImage: "/images/generated/hero-trades-owner.jpg",
     componentDefaults: {
       variant: "hero",
       backgroundType: "gradient",
@@ -67,40 +68,40 @@ export const LANDING_SECTIONS: Record<string, SectionConfig> = {
     personaOverrides: {
       trades_owner: {
         imagePrompt:
-          "Small business owner using tablet on worksite, construction tools, practical technology, Australian setting, natural lighting",
-        fallbackImage: "/images/hero/trades-hero.jpg",
+          "Australian tradie on construction site, phone in hand, confident and in control, hi-vis vest, golden hour, relief and control feeling, NO TEXT",
+        fallbackImage: "/images/generated/hero-trades-owner.jpg",
       },
       agency_owner: {
         imagePrompt:
-          "Marketing agency team reviewing analytics dashboard, modern office, multiple screens, professional lighting, collaborative atmosphere",
-        fallbackImage: "/images/hero/agency-hero.jpg",
+          "Creative agency owner in modern office, relaxed but productive, time for creativity again, warm natural lighting, NO TEXT",
+        fallbackImage: "/images/generated/hero-agency-owner.jpg",
       },
       nonprofit: {
         imagePrompt:
-          "Community volunteers using technology, diverse group, warm lighting, collaborative workspace, positive atmosphere",
-        fallbackImage: "/images/hero/nonprofit-hero.jpg",
+          "Nonprofit leader in community they serve, genuine warmth, purpose fulfilled, documentary style, NO TEXT",
+        fallbackImage: "/images/generated/hero-nonprofit-leader.jpg",
       },
       consultant: {
         imagePrompt:
-          "Professional consultant with laptop in modern setting, confident posture, clean background, business casual, natural lighting",
-        fallbackImage: "/images/hero/consultant-hero.jpg",
+          "Professional consultant closing deal with client, confident handshake, expertise recognized, professional success feeling, NO TEXT",
+        fallbackImage: "/images/generated/hero-consultant.jpg",
       },
       marketing_manager: {
         imagePrompt:
-          "Marketing professional analyzing campaign metrics on large display, modern office, data visualization, focused atmosphere",
-        fallbackImage: "/images/hero/marketing-hero.jpg",
+          "Marketing manager leaving office on time, work-life balance achieved, weekend plans happening, relief and balance, NO TEXT",
+        fallbackImage: "/images/generated/hero-marketing-manager.jpg",
       },
     },
   },
 
-  // Features Section
+  // Features Section - 5 WHYS: Show humans benefiting from features
   features_grid: {
     id: "features_grid",
     label: "Features Grid",
     description: "Feature showcase with icons and descriptions",
     imagePrompt:
-      "Abstract technology pattern, interconnected nodes, clean geometric design, subtle blue glow, modern aesthetic",
-    fallbackImage: "/images/features/features-bg.jpg",
+      "Business owner with clarity, seeing clearly what works, fog has lifted feeling, warm illustration style, NO TEXT",
+    fallbackImage: "/images/generated/feature-analytics-dashboard.jpg",
     componentDefaults: {
       variant: "feature",
       backgroundType: "pattern",
@@ -109,14 +110,14 @@ export const LANDING_SECTIONS: Record<string, SectionConfig> = {
     },
   },
 
-  // AI Automation Section
+  // AI Automation Section - 5 WHYS: AI as helpful assistant not cold tech
   ai_automation: {
     id: "ai_automation",
     label: "AI Automation",
     description: "AI-powered automation showcase",
     imagePrompt:
-      "Futuristic AI interface, neural network visualization, flowing data streams, blue and purple gradient, high-tech aesthetic",
-    fallbackImage: "/images/features/ai-automation.jpg",
+      "Business owner with helpful assistant sorting tasks, supported feeling, warm illustration, NO TEXT NO ROBOTS",
+    fallbackImage: "/images/generated/feature-workflow-automation.jpg",
     componentDefaults: {
       variant: "feature",
       backgroundType: "gradient",
@@ -125,23 +126,25 @@ export const LANDING_SECTIONS: Record<string, SectionConfig> = {
     personaOverrides: {
       trades_owner: {
         imagePrompt:
-          "AI assistant helping schedule jobs on mobile device, calendar interface, practical UI, worksite context",
+          "Tradie with helpful scheduling assistant, jobs organized, supported feeling, warm style, NO TEXT",
+        fallbackImage: "/images/generated/feature-workflow-automation.jpg",
       },
       agency_owner: {
         imagePrompt:
-          "AI-powered marketing automation dashboard, campaign flows, analytics charts, professional UI",
+          "Agency owner with AI helping content creation, creative collaboration not replacement, NO TEXT",
+        fallbackImage: "/images/generated/feature-ai-content-generation.jpg",
       },
     },
   },
 
-  // Testimonials Section
+  // Testimonials Section - 5 WHYS: Real success stories with case study images
   testimonials: {
     id: "testimonials",
     label: "Testimonials",
     description: "Customer success stories and quotes",
     imagePrompt:
-      "Professional headshot placeholder, neutral background, soft lighting, business portrait style",
-    fallbackImage: "/images/testimonials/testimonial-bg.jpg",
+      "Construction business owner proudly standing with fleet and crew, documentary photography, pride and growth feeling, NO TEXT",
+    fallbackImage: "/images/generated/case-study-construction.jpg",
     componentDefaults: {
       variant: "testimonial",
       backgroundType: "solid",
@@ -151,23 +154,25 @@ export const LANDING_SECTIONS: Record<string, SectionConfig> = {
     personaOverrides: {
       trades_owner: {
         imagePrompt:
-          "Tradesperson in work uniform, friendly expression, job site background, authentic portrait",
+          "Builder owner with expanded business, new trucks, happy crew, documentary style, pride feeling, NO TEXT",
+        fallbackImage: "/images/generated/case-study-construction.jpg",
       },
       agency_owner: {
         imagePrompt:
-          "Marketing professional in modern office, confident expression, clean background, corporate portrait",
+          "Agency team celebrating big client win, candid office moment, team triumph feeling, NO TEXT",
+        fallbackImage: "/images/generated/case-study-agency.jpg",
       },
     },
   },
 
-  // Stats/Metrics Section
+  // Stats/Metrics Section - 5 WHYS: Growth that you can feel
   stats_metrics: {
     id: "stats_metrics",
     label: "Stats & Metrics",
     description: "Key performance metrics display",
     imagePrompt:
-      "Data visualization graphics, ascending charts, success indicators, green and blue color scheme, professional infographic style",
-    fallbackImage: "/images/stats/stats-bg.jpg",
+      "Business owner looking at visibly grown business, pride feeling, tangible success, lifestyle photography, NO TEXT",
+    fallbackImage: "/images/generated/integration-analytics.jpg",
     componentDefaults: {
       variant: "stats",
       backgroundType: "gradient",
@@ -176,14 +181,14 @@ export const LANDING_SECTIONS: Record<string, SectionConfig> = {
     },
   },
 
-  // Pricing Section
+  // Pricing Section - 5 WHYS: Show achievable success at each tier
   pricing_plans: {
     id: "pricing_plans",
     label: "Pricing Plans",
     description: "Pricing tiers and comparison",
     imagePrompt:
-      "Clean pricing card design, tier comparison visual, checkmark icons, professional layout, trust signals",
-    fallbackImage: "/images/pricing/pricing-bg.jpg",
+      "Small business owner taking first confident step, possibility feeling, warm lifestyle photography, NO TEXT",
+    fallbackImage: "/images/generated/feature-lead-scoring.jpg",
     componentDefaults: {
       variant: "pricing",
       backgroundType: "solid",
@@ -192,14 +197,14 @@ export const LANDING_SECTIONS: Record<string, SectionConfig> = {
     },
   },
 
-  // CTA Section
+  // CTA Section - 5 WHYS: Adventure awaits, take the first step
   cta_final: {
     id: "cta_final",
     label: "Final CTA",
     description: "Bottom-of-page call to action",
     imagePrompt:
-      "Inspirational business success visual, team celebration, achievement moment, warm lighting, positive atmosphere",
-    fallbackImage: "/images/cta/cta-bg.jpg",
+      "Person taking first step on Australian mountain trail at golden hour, adventure and possibility feeling, NO TEXT",
+    fallbackImage: "/images/generated/feature-contact-intelligence.jpg",
     componentDefaults: {
       variant: "cta",
       backgroundType: "gradient",
@@ -209,27 +214,30 @@ export const LANDING_SECTIONS: Record<string, SectionConfig> = {
     personaOverrides: {
       trades_owner: {
         imagePrompt:
-          "Happy tradesperson completing job successfully, satisfied customer handshake, professional completion",
+          "Tradie confidently starting new chapter, tools ready, opportunity ahead, warm lighting, NO TEXT",
+        fallbackImage: "/images/generated/hero-trades-owner.jpg",
       },
       agency_owner: {
         imagePrompt:
-          "Marketing team celebrating campaign success, analytics showing growth, modern office celebration",
+          "Creative professional ready for the next level, confident smile, modern setting, NO TEXT",
+        fallbackImage: "/images/generated/hero-agency-owner.jpg",
       },
       nonprofit: {
         imagePrompt:
-          "Community impact moment, volunteers and beneficiaries together, meaningful connection, warm atmosphere",
+          "Community leader ready to amplify their cause, purpose and hope feeling, warm atmosphere, NO TEXT",
+        fallbackImage: "/images/generated/hero-nonprofit-leader.jpg",
       },
     },
   },
 
-  // How It Works Section
+  // How It Works Section - 5 WHYS: Simple steps to success
   how_it_works: {
     id: "how_it_works",
     label: "How It Works",
     description: "Step-by-step process explanation",
     imagePrompt:
-      "Process flow diagram, numbered steps, clean arrows, professional infographic, blue accent colors",
-    fallbackImage: "/images/features/how-it-works.jpg",
+      "Person opening door to new possibilities, excitement feeling, hopeful illustration style, NO TEXT",
+    fallbackImage: "/images/generated/feature-drip-sequences.jpg",
     componentDefaults: {
       variant: "feature",
       backgroundType: "solid",
@@ -238,14 +246,14 @@ export const LANDING_SECTIONS: Record<string, SectionConfig> = {
     },
   },
 
-  // Integrations Section
+  // Integrations Section - 5 WHYS: Everything working together smoothly
   integrations: {
     id: "integrations",
     label: "Integrations",
     description: "Third-party integration showcase",
     imagePrompt:
-      "Connected app icons, API integration visual, data flow between platforms, modern tech aesthetic",
-    fallbackImage: "/images/features/integrations.jpg",
+      "Business owner as conductor with orchestra of tools in harmony, no more juggling feeling, playful illustration, NO TEXT",
+    fallbackImage: "/images/generated/feature-integrations-hub.jpg",
     componentDefaults: {
       variant: "feature",
       backgroundType: "pattern",
@@ -254,14 +262,14 @@ export const LANDING_SECTIONS: Record<string, SectionConfig> = {
     },
   },
 
-  // Use Cases Section
+  // Use Cases Section - 5 WHYS: Real industry success stories
   use_cases: {
     id: "use_cases",
     label: "Use Cases",
     description: "Industry-specific use cases",
     imagePrompt:
-      "Multi-industry collage, diverse business scenarios, professional settings, real-world applications",
-    fallbackImage: "/images/features/use-cases.jpg",
+      "Business owner in their element, thriving and successful, documentary style, pride feeling, NO TEXT",
+    fallbackImage: "/images/generated/case-study-construction.jpg",
     componentDefaults: {
       variant: "feature",
       backgroundType: "solid",
@@ -270,18 +278,18 @@ export const LANDING_SECTIONS: Record<string, SectionConfig> = {
     personaOverrides: {
       trades_owner: {
         imagePrompt:
-          "Trades business scenarios: plumber, electrician, builder at work, practical technology use",
-        fallbackImage: "/images/use-cases/trades.jpg",
+          "Construction business owner with thriving crew and fleet, scaled up successfully, documentary style, NO TEXT",
+        fallbackImage: "/images/generated/case-study-construction.jpg",
       },
       agency_owner: {
         imagePrompt:
-          "Marketing agency workflow, client presentations, campaign management, creative collaboration",
-        fallbackImage: "/images/use-cases/agency.jpg",
+          "Marketing agency team celebrating big win, creative collaboration, team triumph feeling, NO TEXT",
+        fallbackImage: "/images/generated/case-study-agency.jpg",
       },
       nonprofit: {
         imagePrompt:
-          "Nonprofit operations, donor management, volunteer coordination, community outreach",
-        fallbackImage: "/images/use-cases/nonprofit.jpg",
+          "Fitness coach with thriving community, full class, impact and community feeling, NO TEXT",
+        fallbackImage: "/images/generated/case-study-fitness.jpg",
       },
     },
   },
@@ -302,7 +310,9 @@ export function getSectionConfigForPersona(
   personaId: string | null
 ): SectionConfig | null {
   const baseConfig = LANDING_SECTIONS[sectionId];
-  if (!baseConfig) return null;
+  if (!baseConfig) {
+return null;
+}
 
   if (!personaId || !baseConfig.personaOverrides?.[personaId]) {
     return baseConfig;
@@ -348,7 +358,9 @@ export function generateSectionImagePrompt(
   additionalModifiers?: string[]
 ): string {
   const config = getSectionConfigForPersona(sectionId, personaId);
-  if (!config) return "";
+  if (!config) {
+return "";
+}
 
   let prompt = config.imagePrompt;
 

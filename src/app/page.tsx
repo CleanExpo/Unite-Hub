@@ -1010,24 +1010,24 @@ export default function Home() {
               images={[
                 {
                   id: "1",
-                  src: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=900&h=600&fit=crop",
-                  alt: "Website transformation",
-                  title: "Website Enhanced",
-                  description: "AI-optimized copy, SEO-ready structure, conversion-focused design"
+                  src: "/images/generated/carousel-crm-intelligence.jpg",
+                  alt: "Business owner using CRM intelligence dashboard to understand customers",
+                  title: "CRM Intelligence",
+                  description: "Know your customers better with AI-powered contact insights and lead scoring"
                 },
                 {
                   id: "2",
-                  src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=900&h=600&fit=crop",
-                  alt: "Social media automation",
-                  title: "Social Media Automation",
-                  description: "AI writes, designs, and schedules posts across all platforms"
+                  src: "/images/generated/carousel-email-automation.jpg",
+                  alt: "Marketing automation showing email sequences running automatically",
+                  title: "Email Automation",
+                  description: "Your marketing runs itself with smart drip campaigns and automated follow-ups"
                 },
                 {
                   id: "3",
-                  src: "https://images.unsplash.com/photo-1543269865-cbdf26effbad?w=900&h=600&fit=crop",
-                  alt: "Measurable results",
-                  title: "Measurable Results",
-                  description: "Google rankings, local leads, website traffic—tracked in real-time"
+                  src: "/images/generated/carousel-social-media.jpg",
+                  alt: "Social media content calendar with AI-generated posts scheduled",
+                  title: "Social Media Success",
+                  description: "Post consistently across platforms with AI-generated content that resonates"
                 }
               ]}
             />

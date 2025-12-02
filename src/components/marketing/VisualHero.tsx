@@ -43,7 +43,6 @@ export function VisualHero({
   ctaSecondary,
   personaId,
   businessType,
-  energyLevel = "neutral", // eslint-disable-line @typescript-eslint/no-unused-vars
   visualMode = "image_only",
   heroImage,
   heroVideo,
@@ -65,33 +64,37 @@ export function VisualHero({
 
   // Get dynamic background gradient based on profile
   const getBackgroundGradient = () => {
-    if (!profile) return "radial-gradient(circle at center top, #0d2a5c 0%, #051224 70%)";
+    if (!profile) {
+return "radial-gradient(circle at center top, #0d2a5c 0%, #051224 70%)";
+}
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const primary = profile.cssVariables["--primary"] || "#347bf7";
     const background = profile.cssVariables["--background"] || "#0a1e3b";
 
     return `radial-gradient(circle at center top, ${background} 0%, #051224 70%)`;
   };
 
-  // Default image based on business type
+  // Default image based on business type - 5 WHYS human-centered images
   const getDefaultImage = () => {
-    if (heroImage) return heroImage;
+    if (heroImage) {
+return heroImage;
+}
 
-    // Map business type to appropriate imagery
+    // Map business type to 5 WHYS generated human-centered imagery
     const imageMap: Record<string, string> = {
-      trade: "/images/hero/trades-hero.jpg",
-      agency: "/images/hero/agency-hero.jpg",
-      nonprofit: "/images/hero/nonprofit-hero.jpg",
-      professional: "/images/hero/professional-hero.jpg",
+      trade: "/images/generated/hero-trades-owner.jpg",
+      agency: "/images/generated/hero-agency-owner.jpg",
+      nonprofit: "/images/generated/hero-nonprofit-leader.jpg",
+      professional: "/images/generated/hero-consultant.jpg",
     };
 
-    return imageMap[businessType || "trade"] || "/images/hero/default-hero.jpg";
+    return imageMap[businessType || "trade"] || "/images/generated/hero-trades-owner.jpg";
   };
 
   // Get alt text that's persona-aware and SEO-friendly
   const getAltText = () => {
-    if (heroImageAlt && heroImageAlt !== "Hero visual") return heroImageAlt;
+    if (heroImageAlt && heroImageAlt !== "Hero visual") {
+return heroImageAlt;
+}
 
     const personaAlts: Record<string, string> = {
       trades_owner: "Small business owner managing marketing with AI tools",
