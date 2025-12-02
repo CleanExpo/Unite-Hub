@@ -23,14 +23,15 @@ import { seoConfig } from "@/lib/seo/seoConfig";
 import { PersonaVisual } from "@/components/marketing/PersonaVisual";
 import { detectPersonaFromContext } from "@/lib/visual/visualPersonas";
 import ThreeDPhotoCarousel from "@/components/ui/three-d-carousel";
-import { TextLoop } from "@/components/ui/text-loop";
 import { InfiniteSlider } from "@/components/ui/infinite-slider";
-import { MetricsCard } from "@/components/ui/metrics-card";
+import { MobileNav } from "@/components/mobile-nav";
+import { HeroVideoPlayer } from "@/components/hero-video-player";
 
 export default function Home() {
   const { user, loading } = useAuth();
   const [discountSlotsLeft, setDiscountSlotsLeft] = useState(50);
   const [personaId, setPersonaId] = useState<string | null>(null);
+  const [isDismissed, setIsDismissed] = useState(false);
 
   // Detect persona from URL params/context
   useEffect(() => {
@@ -82,6 +83,8 @@ export default function Home() {
             </a>
           </nav>
 
+          <MobileNav user={user} loading={loading} />
+
           <div className="hidden md:flex gap-4">
             {loading ? (
               <div className="h-10 w-20 bg-white/20 rounded animate-pulse" />
@@ -113,8 +116,15 @@ export default function Home() {
       </header>
 
       {/* Discount Banner */}
-      {discountSlotsLeft > 0 && (
-        <div className="fixed top-20 right-5 z-40 bg-gradient-to-r from-[#ff5722] to-[#ff784e] text-white rounded-lg p-4 shadow-lg max-w-xs">
+      {discountSlotsLeft > 0 && !isDismissed && (
+        <div className="fixed top-20 right-5 z-40 hidden md:block bg-gradient-to-r from-[#ff5722] to-[#ff784e] text-white rounded-lg p-4 shadow-lg max-w-xs">
+          <button
+            onClick={() => setIsDismissed(true)}
+            className="absolute top-2 right-2 text-white/70 hover:text-white text-xl leading-none"
+            aria-label="Close discount banner"
+          >
+            ×
+          </button>
           <div className="text-sm font-bold mb-1">🚀 Limited Founder Offer</div>
           <div className="text-xs mb-2">{discountSlotsLeft} spots left at 50% off</div>
           <Link href="/login" className="text-xs underline font-semibold">Claim your spot →</Link>
@@ -143,23 +153,19 @@ export default function Home() {
 
           <ScrollReveal delay={100}>
             <h1 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
-              <TextLoop
-                interval={4000}
-                className="inline-block"
-              >
-                <span>Marketing, SEO & AI.</span>
-                <span>Website & Content.</span>
-                <span>Social Media & Automation.</span>
-                <span>Growth Without Hiring.</span>
-              </TextLoop>
+              <span className="text-white">AI Marketing That Actually Works</span>
               <br />
-              <AnimatedGradientText text="Without the Agency Bill." className="bg-gradient-to-r from-[#347bf7] to-[#00d4aa]" />
+              <AnimatedGradientText text="No Agency. No Team. Just Results." className="bg-gradient-to-r from-[#00d4aa] to-[#ff5722]" />
             </h1>
           </ScrollReveal>
 
           <p className="text-xl opacity-90 max-w-[700px] mx-auto mb-12 leading-relaxed">
             For trades, local services, non-profits, coaches, and online businesses. Get your website, SEO, branding, and social media handled by AI. No monthly retainer. No confusing tools.
           </p>
+
+          <ScrollReveal delay={150}>
+            <HeroVideoPlayer />
+          </ScrollReveal>
 
           <ScrollReveal delay={200}>
             <div className="flex flex-col md:flex-row justify-center gap-5 mb-16">
@@ -168,7 +174,7 @@ export default function Home() {
                   href="/login"
                   className="block bg-gradient-to-r from-[#347bf7] to-[#5a9dff] text-white py-4 px-8 rounded-lg text-base font-semibold border-none shadow-[0_4px_15px_rgba(52,123,247,0.4)] hover:shadow-[0_6px_20px_rgba(52,123,247,0.6)] transition-all"
                 >
-                  Start My AI Marketing Trial
+                  Start Free Trial
                 </Link>
               </HoverLift>
               <HoverLift className="w-full md:w-auto">
@@ -904,85 +910,6 @@ export default function Home() {
                 </div>
               </HoverLift>
             </ScrollReveal>
-          </div>
-        </div>
-      </section>
-
-      {/* Component Showcase - Real-Time Metrics & Animations */}
-      <section className="py-20 bg-gradient-to-br from-blue-50 to-teal-50 border-t border-gray-200">
-        <div className="max-w-[1200px] mx-auto px-5">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
-              Production-Ready Animation Components
-            </h2>
-            <p className="text-xl text-[#666] max-w-[700px] mx-auto">
-              Built with Framer Motion for engaging user experiences. See examples in action.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-            <ScrollReveal delay={0}>
-              <MetricsCard
-                label="Contacts Added"
-                value={2843}
-                suffix="this month"
-                icon="👥"
-                trend={{ value: 23.5, direction: "up" }}
-              />
-            </ScrollReveal>
-            <ScrollReveal delay={100}>
-              <MetricsCard
-                label="Email Opens"
-                value={68}
-                suffix="%"
-                icon="📧"
-                trend={{ value: 12.3, direction: "up" }}
-              />
-            </ScrollReveal>
-            <ScrollReveal delay={200}>
-              <MetricsCard
-                label="Campaign ROI"
-                value={340}
-                suffix="%"
-                icon="📈"
-                trend={{ value: 45.2, direction: "up" }}
-              />
-            </ScrollReveal>
-          </div>
-
-          <div className="bg-white rounded-lg p-8 shadow-sm border border-gray-100">
-            <div className="text-center mb-12">
-              <h3 className="text-2xl font-bold text-[#1a1a1a] mb-4">Component Examples</h3>
-              <p className="text-[#666]">Scroll down to see more, or visit our <a href="/showcases/components" className="text-blue-600 hover:underline">full component showcase</a></p>
-            </div>
-
-            <div className="space-y-8">
-              {/* TextLoop Example */}
-              <div className="border-l-4 border-blue-500 pl-6">
-                <h4 className="font-semibold text-lg mb-2">TextLoop Component</h4>
-                <p className="text-gray-600 mb-4">Perfect for rotating headlines and value propositions:</p>
-                <div className="bg-gray-50 p-4 rounded inline-block text-lg font-semibold">
-                  <TextLoop interval={3000}>
-                    <span className="text-blue-600">Increase Engagement by 300%</span>
-                    <span className="text-teal-600">Save 10+ Hours Per Week</span>
-                    <span className="text-purple-600">Automate Your Marketing</span>
-                  </TextLoop>
-                </div>
-              </div>
-
-              {/* InfiniteSlider Example */}
-              <div className="border-l-4 border-teal-500 pl-6">
-                <h4 className="font-semibold text-lg mb-2">InfiniteSlider Component</h4>
-                <p className="text-gray-600 mb-4">Endless carousel for logos, brands, and features:</p>
-                <InfiniteSlider gap={24} duration={20}>
-                  <div className="whitespace-nowrap text-sm font-medium text-gray-700 bg-white px-4 py-2 rounded border border-gray-200">✨ AI-Powered</div>
-                  <div className="whitespace-nowrap text-sm font-medium text-gray-700 bg-white px-4 py-2 rounded border border-gray-200">🚀 Fast Setup</div>
-                  <div className="whitespace-nowrap text-sm font-medium text-gray-700 bg-white px-4 py-2 rounded border border-gray-200">💰 Cost Effective</div>
-                  <div className="whitespace-nowrap text-sm font-medium text-gray-700 bg-white px-4 py-2 rounded border border-gray-200">📊 Real-Time Analytics</div>
-                  <div className="whitespace-nowrap text-sm font-medium text-gray-700 bg-white px-4 py-2 rounded border border-gray-200">🔒 Enterprise Security</div>
-                </InfiniteSlider>
-              </div>
-            </div>
           </div>
         </div>
       </section>
