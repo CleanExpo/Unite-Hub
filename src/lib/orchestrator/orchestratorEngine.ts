@@ -14,6 +14,7 @@ import { RiskSupervisor } from './riskSupervisor';
 import { UncertaintyModel } from './uncertaintyModel';
 import { OrchestratorArchiveBridge } from './orchestratorArchiveBridge';
 import { MemoryRetriever } from '@/lib/memory';
+import { independentVerifier, VerificationRequest } from '@/lib/agents/independent-verifier';
 
 export interface OrchestratorTask {
   id?: string;
@@ -33,6 +34,16 @@ export interface ExecutionStep {
   uncertaintyScore?: number;
   status: 'pending' | 'running' | 'completed' | 'failed' | 'skipped';
   error?: string;
+  // Independent verification fields
+  verified?: boolean;
+  verificationAttempts?: number;
+  lastVerificationError?: string;
+  verificationEvidence?: Array<{
+    criterion: string;
+    result: 'pass' | 'fail';
+    proof: string;
+    checked_at: string;
+  }>;
 }
 
 export interface OrchestratorTrace {
@@ -207,7 +218,56 @@ export class OrchestratorEngine {
         step.outputPayload = stepResult.output;
         step.riskScore = stepResult.risk;
         step.uncertaintyScore = stepResult.uncertainty;
-        step.status = 'completed';
+
+        // 4b1: CRITICAL - Verify step execution before marking complete
+        // This prevents self-attestation and ensures only verified work is marked done
+        const verificationResult = await this.verifyStepExecution(step, stepResult.output);
+
+        step.verificationAttempts = verificationResult.attempts;
+        step.verificationEvidence = verificationResult.evidence;
+        step.verified = verificationResult.verified;
+
+        if (verificationResult.verified) {
+          // Only mark as completed if verification passed (all criteria met)
+          step.status = 'completed';
+        } else {
+          // Verification failed - mark as failed with error message
+          step.status = 'failed';
+          step.error = verificationResult.error;
+          step.lastVerificationError = verificationResult.error;
+
+          // Log verification failure
+          console.error(
+            `[OrchestratorEngine] Step ${step.stepIndex} verification failed:`,
+            verificationResult.error
+          );
+
+          // Emit signal for human review
+          signals.push({
+            type: 'verification_failed',
+            severity: 80,
+            message: `Step ${step.stepIndex} (${step.assignedAgent}) failed verification. Reason: ${verificationResult.error}`,
+          });
+
+          // Mark task as paused for human review after verification failure
+          await supabase.rpc('update_orchestrator_task', {
+            p_task_id: taskId,
+            p_status: 'paused',
+          });
+
+          return {
+            taskId,
+            objective: task.objective,
+            status: 'paused',
+            agentChain: task.agent_chain,
+            steps: [...steps, step],
+            riskScore: step.riskScore!,
+            uncertaintyScore: step.uncertaintyScore!,
+            confidenceScore: 100 - step.uncertaintyScore!,
+            signals,
+            totalTimeMs: Date.now() - startTime,
+          };
+        }
 
         steps.push(step);
 
@@ -265,17 +325,68 @@ export class OrchestratorEngine {
         });
       }
 
-      // Step 5: Assemble final output
+      // Step 5: Verify all steps are complete and verified before marking task complete
+      // CRITICAL: Task CANNOT be marked 'completed' unless ALL steps are verified
+      const failedSteps = steps.filter((s) => s.status !== 'completed' || !s.verified);
+
+      if (failedSteps.length > 0) {
+        console.error(
+          `[OrchestratorEngine] Task has unverified or failed steps. Cannot mark task complete.`,
+          {
+            totalSteps: steps.length,
+            failedCount: failedSteps.length,
+            failedSteps: failedSteps.map((s) => ({
+              stepIndex: s.stepIndex,
+              agent: s.assignedAgent,
+              status: s.status,
+              verified: s.verified,
+              error: s.error,
+            })),
+          }
+        );
+
+        // Mark task as paused for human review
+        await supabase.rpc('update_orchestrator_task', {
+          p_task_id: taskId,
+          p_status: 'paused',
+        });
+
+        return {
+          taskId,
+          objective: task.objective,
+          status: 'paused',
+          agentChain: task.agent_chain,
+          steps,
+          riskScore: Math.round(cumulativeRisk),
+          uncertaintyScore: Math.round(cumulativeUncertainty),
+          confidenceScore: 100 - Math.round(cumulativeUncertainty),
+          signals: [
+            ...signals,
+            {
+              type: 'incomplete_workflow',
+              severity: 85,
+              message: `Workflow has ${failedSteps.length} unverified/failed step(s). Requires human review before completion.`,
+            },
+          ],
+          totalTimeMs: Date.now() - startTime,
+        };
+      }
+
+      // Step 5: Assemble final output (only if all steps verified)
       const finalOutput = {
         steps: steps.map((s) => ({
           agent: s.assignedAgent,
           result: s.outputPayload,
+          verified: s.verified,
+          verificationEvidence: s.verificationEvidence?.length || 0,
         })),
         summary: {
           totalSteps: steps.length,
           completedSteps: steps.filter((s) => s.status === 'completed').length,
+          verifiedSteps: steps.filter((s) => s.verified).length,
           finalRisk: Math.round(cumulativeRisk),
           finalUncertainty: Math.round(cumulativeUncertainty),
+          allStepsVerified: steps.every((s) => s.verified),
         },
       };
 
@@ -289,7 +400,7 @@ export class OrchestratorEngine {
         finalUncertainty: Math.round(cumulativeUncertainty),
       });
 
-      // Step 7: Update task status to completed
+      // Step 7: Update task status to completed (with verification confirmation)
       await supabase.rpc('update_orchestrator_task', {
         p_task_id: taskId,
         p_status: 'completed',
@@ -403,6 +514,115 @@ export class OrchestratorEngine {
         uncertainty: 90,
       };
     }
+  }
+
+  /**
+   * Verify a step execution using the Independent Verifier
+   * CRITICAL: Task status CANNOT be marked 'completed' without verification=true
+   */
+  private async verifyStepExecution(
+    step: ExecutionStep,
+    output: Record<string, any>,
+    maxRetries: number = 3
+  ): Promise<{
+    verified: boolean;
+    attempts: number;
+    evidence: Array<{
+      criterion: string;
+      result: 'pass' | 'fail';
+      proof: string;
+      checked_at: string;
+    }>;
+    error?: string;
+  }> {
+    let attempts = 0;
+    let lastError: string | undefined;
+
+    for (attempts = 1; attempts <= maxRetries; attempts++) {
+      try {
+        // Build verification criteria based on step output
+        const completionCriteria: string[] = [];
+
+        // All steps must have non-null output
+        if (output && Object.keys(output).length > 0) {
+          completionCriteria.push('output_not_null');
+        }
+
+        // Agent-specific criteria
+        switch (step.assignedAgent) {
+          case 'email-agent':
+            if (output.emailsProcessed !== undefined) {
+              completionCriteria.push(`emails_processed_${output.emailsProcessed}`);
+            }
+            break;
+
+          case 'content-agent':
+            if (output.generatedContent) {
+              completionCriteria.push('content_generated');
+              // Check for placeholders
+              completionCriteria.push('no_placeholders_in_content');
+            }
+            break;
+
+          case 'contact-intelligence':
+            if (output.contactsAnalyzed !== undefined) {
+              completionCriteria.push(`contacts_analyzed_${output.contactsAnalyzed}`);
+            }
+            break;
+
+          case 'seo-audit':
+          case 'seo-content':
+          case 'seo-schema':
+          case 'seo-ctr':
+          case 'seo-competitor':
+            if (output.analysisId || output.auditJobId || output.benchmarkId) {
+              completionCriteria.push('job_created_in_database');
+            }
+            break;
+
+          default:
+            completionCriteria.push('step_executed');
+        }
+
+        // Create verification request
+        const verificationRequest: VerificationRequest = {
+          task_id: step.stepIndex.toString(),
+          claimed_outputs: output.analysisId ? [output.analysisId] : [],
+          completion_criteria: completionCriteria,
+          requesting_agent_id: step.assignedAgent,
+        };
+
+        // Verify with Independent Verifier
+        const result = await independentVerifier.verify(verificationRequest);
+
+        return {
+          verified: result.verified,
+          attempts,
+          evidence: result.evidence,
+          error: result.verified ? undefined : `Failed: ${result.summary}`,
+        };
+      } catch (error) {
+        lastError = error instanceof Error ? error.message : String(error);
+        console.warn(
+          `[OrchestratorEngine] Verification attempt ${attempts} failed:`,
+          lastError
+        );
+
+        // Don't retry if it's a permanent error (e.g., network issue)
+        if (attempts < maxRetries) {
+          // Exponential backoff: 1s, 2s, 4s
+          const delay = Math.pow(2, attempts - 1) * 1000;
+          await new Promise((resolve) => setTimeout(resolve, delay));
+        }
+      }
+    }
+
+    return {
+      verified: false,
+      attempts,
+      evidence: [],
+      error: lastError || 'Verification failed after all retry attempts',
+    };
   }
 
   private async executeEmailAgent(context: Record<string, any>) {

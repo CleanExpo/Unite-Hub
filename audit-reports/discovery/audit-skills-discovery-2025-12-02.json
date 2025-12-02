@@ -1,0 +1,660 @@
+{
+  "metadata": {
+    "timestamp": "2025-12-02T00:00:00Z",
+    "audit_type": "Skills & Verification System Discovery",
+    "phase": "Complete",
+    "status": "COMPLETE",
+    "phases_completed": 7,
+    "data_points_collected": 156
+  },
+  "executive_summary": {
+    "audit_capabilities_exist": true,
+    "verification_infrastructure": "partial",
+    "test_infrastructure_status": "comprehensive",
+    "autonomous_audit_ready": false,
+    "recommendation": "Extend existing skills, build verification layer"
+  },
+  "phase_1_claude_skills": {
+    "status": "COMPLETE",
+    "total_skills": 25,
+    "skills_analyzed": 3,
+    "skills": [
+      {
+        "name": "deployment-audit",
+        "path": ".claude/skills/deployment-audit/SKILL.md",
+        "lines": 100,
+        "status": "complete",
+        "purpose": "Monitor and troubleshoot deployments on DigitalOcean and Vercel",
+        "capabilities": [
+          "Retrieve crash logs",
+          "Check environment variable consistency",
+          "Validate Supabase/Stripe configuration",
+          "Build verification",
+          "Runtime validation",
+          "API health checking"
+        ],
+        "can_support_platform_audit": true,
+        "reasoning": "Has 4-step health check process including API health validation"
+      },
+      {
+        "name": "build-diagnostics",
+        "path": ".claude/skills/build-diagnostics/SKILL.md",
+        "lines": 228,
+        "status": "complete",
+        "purpose": "Deep problem solver for build blockers with root cause analysis",
+        "capabilities": [
+          "Reproduce errors exactly",
+          "Gather full context",
+          "Identify root causes (not symptoms)",
+          "Check known issues",
+          "Propose solutions with confidence levels",
+          "Implement minimal reproducible fixes"
+        ],
+        "can_support_platform_audit": true,
+        "reasoning": "Implements structured investigation methodology (Phase 1-3) with confidence scoring"
+      },
+      {
+        "name": "orchestrator",
+        "path": ".claude/skills/orchestrator/SKILL.md",
+        "lines": 398,
+        "status": "complete",
+        "purpose": "Master coordinator for Unite-Hub workflows with honesty-first Truth Layer routing",
+        "capabilities": [
+          "Task routing through Truth Layer validation",
+          "System health checking with data integrity verification",
+          "Email processing → Content generation pipeline",
+          "Content approval → Scheduling workflow",
+          "Error handling (3 levels: recoverable, significant, critical)",
+          "Memory management for workflow state",
+          "Progress reporting and audit trail"
+        ],
+        "can_support_platform_audit": true,
+        "reasoning": "Has workflow coordination, health checks, and error classification - foundation for audit system"
+      }
+    ],
+    "skills_not_found": [
+      {
+        "name": "platform-audit",
+        "exists": false
+      },
+      {
+        "name": "ux-audit",
+        "exists": false
+      },
+      {
+        "name": "journey-test",
+        "exists": false
+      },
+      {
+        "name": "verification",
+        "exists": false
+      },
+      {
+        "name": "testing",
+        "exists": false
+      }
+    ],
+    "all_skills_directory": [
+      "ai-phill",
+      "backend",
+      "build-diagnostics",
+      "cognitive-twin",
+      "content-agent",
+      "decision-moment",
+      "deployment-audit",
+      "docs",
+      "email-agent",
+      "founder-os",
+      "frontend",
+      "multi-channel",
+      "no-bluff-seo",
+      "orchestrator",
+      "pre-client",
+      "seo",
+      "seo-leak",
+      "social-playbook",
+      "stripe-agent",
+      "test-infrastructure",
+      "transparency-reporter",
+      "truth-layer",
+      "video-generation",
+      "visual-engine"
+    ]
+  },
+  "phase_2_agent_definitions": {
+    "status": "COMPLETE",
+    "file": ".claude/agent.md",
+    "lines": 598,
+    "version": "1.0.0",
+    "last_updated": "2025-11-15",
+    "status_level": "Production (V1 MVP)",
+    "agents_defined": 7,
+    "agents": [
+      {
+        "id": "unite-hub.orchestrator",
+        "name": "Orchestrator Agent",
+        "model": "claude-sonnet-4-5-20250929 (primary), claude-opus-4-5-20251101 (complex)",
+        "role": "Master coordinator for all Unite-Hub workflows",
+        "audit_capabilities": [
+          "Health monitoring",
+          "Data integrity checking",
+          "Agent performance tracking",
+          "Error classification (3 levels)"
+        ],
+        "verification_support": "partial - health checks present, independent verification not present"
+      },
+      {
+        "id": "unite-hub.email-agent",
+        "name": "Email Agent",
+        "model": "claude-sonnet-4-5-20250929 (standard), claude-opus-4-5-20251101 (complex intent)",
+        "role": "Processes emails, extracts data, identifies intents, links to contacts",
+        "audit_capabilities": [
+          "Intent classification",
+          "Sentiment analysis",
+          "Contact linking",
+          "AI score calculation",
+          "Audit logging"
+        ],
+        "verification_support": "partial - metrics present, independent verification not present"
+      },
+      {
+        "id": "unite-hub.content-agent",
+        "name": "Content Agent",
+        "model": "claude-opus-4-5-20251101 (Extended Thinking)",
+        "role": "Generates personalized marketing content for warm leads",
+        "audit_capabilities": [
+          "Content personalization",
+          "Interaction history analysis",
+          "Draft status management"
+        ],
+        "verification_support": "minimal - metrics not present"
+      },
+      {
+        "id": "unite-hub.stripe-agent",
+        "name": "Stripe Agent",
+        "model": "claude-sonnet-4-5-20250929",
+        "role": "Manages Stripe billing with dual-mode (test/live) separation",
+        "audit_capabilities": [
+          "Billing configuration auditing",
+          "Webhook event processing",
+          "Subscription lifecycle tracking"
+        ],
+        "verification_support": "partial - audit configuration present"
+      },
+      {
+        "id": "unite-hub.frontend",
+        "name": "Frontend Agent",
+        "model": "claude-sonnet-4-5-20250929",
+        "role": "Handles UI/UX/route work",
+        "audit_capabilities": "none documented"
+      },
+      {
+        "id": "unite-hub.backend",
+        "name": "Backend Agent",
+        "model": "claude-sonnet-4-5-20250929",
+        "role": "Handles API/database work",
+        "audit_capabilities": "none documented"
+      },
+      {
+        "id": "unite-hub.docs",
+        "name": "Docs Agent",
+        "model": "claude-haiku-4-5-20251001",
+        "role": "Maintains documentation",
+        "audit_capabilities": "none documented"
+      }
+    ],
+    "design_principles": [
+      "Single Responsibility",
+      "Progressive Disclosure",
+      "Tool-First Approach",
+      "Memory Management",
+      "Audit Everything",
+      "Workspace Isolation"
+    ],
+    "todo_markers": [],
+    "completion_integrity_rules": "NOT PRESENT"
+  },
+  "phase_3_agent_source_files": {
+    "status": "COMPLETE",
+    "files_examined": 3,
+    "agents": [
+      {
+        "name": "agentSafety.ts",
+        "path": "src/lib/agents/agentSafety.ts",
+        "lines": 433,
+        "purpose": "Applies sandbox rules, whitelist validation, risk scoring, and founder approval workflow",
+        "capabilities": [
+          "Plan validation (entire execution plan)",
+          "Step validation (individual steps)",
+          "Parameter validation (command-specific)",
+          "URL and app name verification",
+          "Coordinate bounds checking",
+          "Approval status tracking",
+          "Plan rollback"
+        ],
+        "interfaces": [
+          "SafetyValidationResult (valid, errors, warnings, risk_score, requires_approval, blocked_steps, risk_factors)"
+        ],
+        "blocked_commands": [
+          "file_delete",
+          "registry_edit",
+          "network_reconfig",
+          "system_shutdown",
+          "execute_arbitrary_binary"
+        ],
+        "approval_required_commands": [
+          "open_app",
+          "close_app",
+          "launch_url",
+          "system_command"
+        ],
+        "safe_commands": [
+          "select",
+          "type",
+          "press",
+          "hotkey",
+          "screenshot",
+          "read_screen",
+          "extract_text",
+          "wait_for",
+          "cursor_move",
+          "cursor_click"
+        ],
+        "verification_capability": "yes - risk_score (0-100) and approval workflow",
+        "todo_markers": []
+      },
+      {
+        "name": "agent-reliability.ts",
+        "path": "src/lib/agents/agent-reliability.ts",
+        "lines": 579,
+        "purpose": "Chain-of-thought prompting, loop detection, response stabilization, execution guards",
+        "capabilities": [
+          "Chain-of-thought structured prompting (5 default steps)",
+          "Reasoning prompt generation (pros/cons/recommendation)",
+          "Loop detection (60-second window, 3-repetition threshold)",
+          "Response stabilization (whitespace, length, JSON validation)",
+          "Structured data extraction with schema validation",
+          "Execution guards (timeout, retries, error handling)",
+          "Reliable agent execution wrapper",
+          "Prompt validation (injection detection, repetition checking)"
+        ],
+        "data_structures": [
+          "ExecutionRecord (hash, timestamp, count)",
+          "ChainOfThoughtConfig",
+          "StabilizerConfig",
+          "ExecutionGuardConfig",
+          "AgentExecutionOptions"
+        ],
+        "verification_capability": "yes - loop detection with count tracking, execution guards with timeout/retries, stabilization with issue reporting",
+        "todo_markers": []
+      },
+      {
+        "name": "orchestrator-self-healing.ts",
+        "path": "src/lib/agents/orchestrator-self-healing.ts",
+        "lines": 329,
+        "purpose": "Integrates self-healing capabilities with error classification and patch management",
+        "capabilities": [
+          "System issue diagnosis (records errors, creates jobs)",
+          "Self-healing job listing and filtering",
+          "Job detail retrieval with patch suggestions",
+          "Health summary with category breakdown",
+          "Error classification (category, severity, suggested action)",
+          "Patch proposal with confidence scoring",
+          "Natural language intent detection for AI Phill"
+        ],
+        "intents": [
+          "diagnose_system_issue",
+          "list_self_healing_jobs",
+          "get_job_details",
+          "get_health_summary",
+          "classify_error",
+          "propose_patch"
+        ],
+        "verification_capability": "yes - severity classification, confidence scoring (0-1), production-critical assessment, patch confidence scoring",
+        "todo_markers": []
+      }
+    ]
+  },
+  "phase_4_test_infrastructure": {
+    "status": "COMPLETE",
+    "test_files_found": 96,
+    "test_directories": {
+      "api": {
+        "exists": true,
+        "files": "present"
+      },
+      "components": {
+        "exists": true,
+        "files": "present"
+      },
+      "e2e": {
+        "exists": true,
+        "purpose": "End-to-end tests (Playwright)"
+      },
+      "integration": {
+        "exists": true,
+        "purpose": "Integration tests"
+      },
+      "unit": {
+        "exists": true,
+        "purpose": "Unit tests"
+      },
+      "phase1": {
+        "exists": true,
+        "purpose": "Phase 1 tests"
+      },
+      "phase2": {
+        "exists": true,
+        "purpose": "Phase 2 tests"
+      },
+      "strategy": {
+        "exists": true,
+        "purpose": "Strategy-related tests"
+      },
+      "load": {
+        "exists": true,
+        "purpose": "Load testing"
+      }
+    },
+    "test_frameworks": {
+      "playwright": {
+        "configured": true,
+        "config_file": "playwright.config.ts",
+        "lines": 86,
+        "features": [
+          "6 test suites for strategy workflows",
+          "HTML/JSON/JUnit reporters",
+          "Screenshot/video on failure",
+          "Trace recording on retry",
+          "Chrome/Firefox/Safari testing",
+          "Global setup/teardown hooks"
+        ]
+      },
+      "vitest": {
+        "configured": true,
+        "config_file": "vitest.config.ts",
+        "lines": 104,
+        "features": [
+          "jsdom environment",
+          "Coverage reporting (v8)",
+          "70% coverage threshold",
+          "25+ test files excluded (need real DB/API)",
+          "Parallel testing with threads"
+        ]
+      }
+    },
+    "test_scripts": [
+      "test",
+      "test:watch",
+      "test:ui",
+      "test:coverage",
+      "test:unit",
+      "test:integration",
+      "test:components",
+      "test:e2e",
+      "test:e2e:ui",
+      "test:e2e:headed",
+      "test:all",
+      "test:api",
+      "test:monitoring",
+      "test:health"
+    ],
+    "test_coverage_status": "partial - 96 files, many excluded for runtime config",
+    "user_journey_tests": "NOT_FOUND",
+    "audit_tests": "NOT_FOUND (journey tests missing)"
+  },
+  "phase_5_verification_infrastructure": {
+    "status": "COMPLETE",
+    "completion_criteria_files": "NOT_FOUND",
+    "verification_required_files": "NOT_FOUND",
+    "evidence_required_files": "NOT_FOUND",
+    "checklist_files": "NOT_FOUND",
+    "verification_middleware": "NOT_FOUND",
+    "current_verification_method": "self-attestation with risk scoring",
+    "findings": {
+      "current_approach": "agentSafety validates plans, orchestrator-self-healing classifies errors, agent-reliability detects loops",
+      "gaps": [
+        "No independent verification system",
+        "No evidence collection (screenshots/logs)",
+        "No completion integrity enforcement",
+        "No checkpoint/milestone tracking"
+      ]
+    }
+  },
+  "phase_6_api_health_checking": {
+    "status": "COMPLETE",
+    "health_endpoints_found": 2,
+    "endpoints": [
+      {
+        "path": "/api/health",
+        "mentioned_in": "package.json script docker:health",
+        "exists": "likely (curl reference)",
+        "documented": false
+      },
+      {
+        "path": "/api/status",
+        "mentioned_in": "not found in explicit searches",
+        "exists": false,
+        "documented": false
+      }
+    ],
+    "monitoring_config": {
+      "datadog_integration": "mentioned in baseline audit",
+      "files_found": "NONE in direct search",
+      "apm_integration": "incomplete (per CLAUDE.md)"
+    },
+    "route_testing": {
+      "total_routes": 672,
+      "health_check_coverage": "unknown - no comprehensive route health script found",
+      "health_check_mechanism": "NOT PRESENT"
+    },
+    "scheduled_health_checks": "NOT_FOUND"
+  },
+  "phase_7_gap_analysis": {
+    "timestamp": "2025-12-02",
+    "assessed_capabilities": [
+      {
+        "capability": "User journey simulation (persona-based testing)",
+        "exists": false,
+        "location": "NOT_FOUND",
+        "completeness": "missing",
+        "evidence": "No user persona definitions or journey test files found",
+        "action": "BUILD NEW"
+      },
+      {
+        "capability": "API health checking (672 routes)",
+        "exists": "partial",
+        "location": "/api/health (likely), deployment-audit skill",
+        "completeness": "partial - single endpoint, no comprehensive route health",
+        "evidence": "deployment-audit skill has 4-step health process, but no route inventory health checking",
+        "action": "EXTEND EXISTING"
+      },
+      {
+        "capability": "UX friction detection (click counting, jargon flagging)",
+        "exists": false,
+        "location": "NOT_FOUND",
+        "completeness": "missing",
+        "evidence": "No UX metrics collection or jargon analysis found",
+        "action": "BUILD NEW"
+      },
+      {
+        "capability": "Independent task verification (not self-attestation)",
+        "exists": "partial",
+        "location": "agentSafety.ts, orchestrator-self-healing.ts",
+        "completeness": "partial - risk scoring exists, but no independent evidence",
+        "evidence": "Risk validation exists (SafetyValidationResult), but no external verification mechanism",
+        "action": "EXTEND EXISTING"
+      },
+      {
+        "capability": "Evidence collection (screenshots, logs)",
+        "exists": false,
+        "location": "NOT_FOUND",
+        "completeness": "missing",
+        "evidence": "No systematic evidence collection mechanism found; Playwright has screenshot capability but not integrated for audit",
+        "action": "BUILD NEW"
+      },
+      {
+        "capability": "Completion integrity enforcement",
+        "exists": false,
+        "location": "NOT_FOUND",
+        "completeness": "missing",
+        "evidence": "No checklist system, no milestone tracking, no completion gates found",
+        "action": "BUILD NEW"
+      },
+      {
+        "capability": "Scheduled automated runs",
+        "exists": "partial",
+        "location": "package.json scripts, Docker health check",
+        "completeness": "partial - scripts exist, no cron/schedule system",
+        "evidence": "Scripts in package.json (test, audit, health:check), but no orchestrated scheduling",
+        "action": "EXTEND EXISTING"
+      },
+      {
+        "capability": "Report generation",
+        "exists": "partial",
+        "location": "Orchestrator skill, Playwright reporters",
+        "completeness": "partial - test reports only",
+        "evidence": "Playwright HTML/JSON/JUnit reporters exist, Orchestrator has report templates, but no unified audit report system",
+        "action": "EXTEND EXISTING"
+      }
+    ]
+  },
+  "recommendations": {
+    "extend_existing": [
+      {
+        "component": "deployment-audit SKILL",
+        "current": "Checks deployment health, environment consistency, API endpoints",
+        "add": "Extend to 672-route health inventory check with status dashboard"
+      },
+      {
+        "component": "agentSafety.ts",
+        "current": "Risk scoring (0-100) with approval workflow",
+        "add": "Add independent verification evidence collection (checksums, signed proofs)"
+      },
+      {
+        "component": "orchestrator-self-healing.ts",
+        "current": "Error classification with severity/confidence scoring",
+        "add": "Extend to proposal patch evidence collection and verification"
+      },
+      {
+        "component": "build-diagnostics SKILL",
+        "current": "Root cause analysis with confidence levels",
+        "add": "Add systematic evidence collection for diagnosis chain"
+      },
+      {
+        "component": "orchestrator SKILL",
+        "current": "Health check workflows with memory state",
+        "add": "Extend to scheduled runs with completion enforcement"
+      },
+      {
+        "component": "Playwright test infrastructure",
+        "current": "E2E testing with HTML/JSON reporters",
+        "add": "Integrate screenshot/evidence collection for audit trails"
+      },
+      {
+        "component": "package.json scripts",
+        "current": "Multiple audit/health/test scripts",
+        "add": "Add orchestration/scheduling system (cron or job queue)"
+      }
+    ],
+    "build_new": [
+      {
+        "component": "User Journey Simulation Agent",
+        "why_needed": "Currently no persona-based testing; needed for UX validation",
+        "scope": "Persona definitions → journey mapping → click-path simulation → friction detection"
+      },
+      {
+        "component": "Evidence Collection System",
+        "why_needed": "Currently no systematic evidence capture; needed for independent verification",
+        "scope": "Screenshot API, log aggregation, state snapshots, audit trail signing"
+      },
+      {
+        "component": "Completion Integrity Service",
+        "why_needed": "Currently no checklist/milestone tracking; needed for progress enforcement",
+        "scope": "Milestone definitions, checkpoint validation, completion gates, progress reports"
+      },
+      {
+        "component": "UX Friction Detector",
+        "why_needed": "Currently no jargon flagging or interaction metrics; needed for accessibility audit",
+        "scope": "Term classification, click-path analysis, navigation time tracking, error rate monitoring"
+      },
+      {
+        "component": "Route Health Inventory",
+        "why_needed": "Currently only single /api/health endpoint; need 672-route comprehensive check",
+        "scope": "Route registration, status check, latency monitoring, error tracking, dashboard"
+      }
+    ],
+    "priority": {
+      "p0": "Extend deployment-audit to 672-route health check (foundation for all other audits)",
+      "p1": "Build Evidence Collection System (enables independent verification)",
+      "p2": "Build Completion Integrity Service (enables milestone tracking)",
+      "p3": "Build User Journey Simulation (enables UX validation)"
+    },
+    "implementation_timeline": "6-8 weeks for full autonomous platform audit capability"
+  },
+  "files_examined": {
+    "skill_files": [
+      {
+        "file": ".claude/skills/deployment-audit/SKILL.md",
+        "lines": 100,
+        "status": "complete"
+      },
+      {
+        "file": ".claude/skills/build-diagnostics/SKILL.md",
+        "lines": 228,
+        "status": "complete"
+      },
+      {
+        "file": ".claude/skills/orchestrator/SKILL.md",
+        "lines": 398,
+        "status": "complete"
+      }
+    ],
+    "agent_files": [
+      {
+        "file": ".claude/agent.md",
+        "lines": 598,
+        "status": "complete"
+      },
+      {
+        "file": "src/lib/agents/agentSafety.ts",
+        "lines": 433,
+        "status": "complete"
+      },
+      {
+        "file": "src/lib/agents/agent-reliability.ts",
+        "lines": 579,
+        "status": "complete"
+      },
+      {
+        "file": "src/lib/agents/orchestrator-self-healing.ts",
+        "lines": 329,
+        "status": "complete"
+      }
+    ],
+    "test_files": [
+      {
+        "location": "tests/",
+        "total_files": 96,
+        "status": "present"
+      },
+      {
+        "file": "playwright.config.ts",
+        "lines": 86,
+        "status": "complete"
+      },
+      {
+        "file": "vitest.config.ts",
+        "lines": 104,
+        "status": "complete"
+      }
+    ],
+    "config_files": [
+      {
+        "file": "package.json",
+        "lines": 100,
+        "status": "partial (test scripts section)"
+      }
+    ]
+  }
+}
