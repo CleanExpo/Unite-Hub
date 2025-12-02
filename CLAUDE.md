@@ -103,7 +103,7 @@ See `docs/MULTI_PLATFORM_MARKETING_INTELLIGENCE.md`
 - **Agents**: Founder OS | AI Phill | Cognitive Twin | SEO Leak | Social Inbox | Search Suite | Boost Bump | Pre-Client Identity
 - **Tables**: founder_businesses | founder_business_vault_secrets | ai_phill_* | cognitive_twin_* | seo_leak_signal_profiles | social_inbox_* | search_keywords | boost_jobs | pre_clients
 - **Files**: `scripts/run-integrity-check.mjs` | `scripts/INTEGRITY_CHECK_README.md` | Migrations 300-305
-- **Troubleshoot**: Missing tables → Supabase migrations 300-305 | Missing routes → `src/app/api/founder/` | Missing services → `src/lib/founder/` `src/lib/founderOps/`
+- **Troubleshoot**: Missing tables → Supabase migrations 300-305 | Missing routes → `src/app/api/founder/` | Missing services → `src/lib/founder/` | `src/lib/founderOps/`
 
 ## Environment & Config
 
@@ -145,3 +145,13 @@ See `docs/MULTI_PLATFORM_MARKETING_INTELLIGENCE.md`
 ---
 
 **Status**: PKCE auth ✅ | Phase 5 ✅ | 235+ tests ✅ | SEO suite ✅ | Founder OS ✅ | Last: 2025-12-02
+
+---
+
+## Context Window Optimization
+
+**📚 For agents**: See `.claude/context-manifest.md` for smart doc routing that saves 76% context window.
+
+**Quick tip**: Load CLAUDE.md (147 lines) + only the 1-2 docs your task needs. Don't load everything at startup.
+
+**Example**: Email task? Load CLAUDE.md + `EMAIL_SERVICE_COMPLETE.md` (not 1,430 lines of legacy docs)
