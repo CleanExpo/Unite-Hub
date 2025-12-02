@@ -1,13 +1,16 @@
+/* eslint-disable no-console, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, no-undef */
+/* global fetch, URLSearchParams */
+
 /**
  * Orchestrator Dashboard Data Service
  *
  * Provides data formatting, analysis, and utility functions for dashboard UI
+ *
+ * Note: This service is used by client components, so we avoid importing
+ * server-only modules like winston/logger. Use browser console for debugging.
  */
 
 import { createClient } from '@/lib/supabase/client';
-import { createApiLogger } from '@/lib/logger';
-
-const logger = createApiLogger({ context: 'DashboardService' });
 
 // ============================================================================
 // TYPES
@@ -109,7 +112,7 @@ export async function getTaskList(
       count: data.count || 0,
     };
   } catch (error) {
-    logger.error('Failed to fetch task list', {
+    console.error('Failed to fetch task list', {
       error: error instanceof Error ? error.message : String(error),
       filters,
     });
@@ -137,7 +140,7 @@ export async function getTaskDetail(
 
     return await response.json();
   } catch (error) {
-    logger.error('Failed to fetch task detail', {
+    console.error('Failed to fetch task detail', {
       taskId,
       error: error instanceof Error ? error.message : String(error),
     });
@@ -223,7 +226,7 @@ export async function getFailureAnalysis(
     const data = await response.json();
     return data.analysis;
   } catch (error) {
-    logger.error('Failed to fetch failure analysis', {
+    console.error('Failed to fetch failure analysis', {
       taskId,
       error: error instanceof Error ? error.message : String(error),
     });
