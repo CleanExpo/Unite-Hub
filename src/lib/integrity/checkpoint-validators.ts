@@ -17,11 +17,11 @@
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import * as crypto from 'crypto';
-import { createLogger } from '@/lib/logger';
+import { createApiLogger } from '@/lib/logger';
 import { MilestoneDefinition, MilestoneCriterion } from './milestone-definitions';
 import * as evidenceCollector from '@/lib/agents/evidence-collector';
 
-const logger = createLogger({ context: 'CheckpointValidators' });
+const logger = createApiLogger({ route: 'CheckpointValidators' });
 
 // ============================================================================
 // TYPES

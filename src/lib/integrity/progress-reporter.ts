@@ -16,12 +16,12 @@
 
 import * as fs from 'fs/promises';
 import * as path from 'path';
-import { createLogger } from '@/lib/logger';
+import { createApiLogger } from '@/lib/logger';
 import { TaskMilestones, MilestoneDefinition } from './milestone-definitions';
 import { CheckpointStatus, getAllCheckpointStatuses } from './checkpoint-validators';
 import { TaskGateResult } from './completion-gates';
 
-const logger = createLogger({ context: 'ProgressReporter' });
+const logger = createApiLogger({ route: 'ProgressReporter' });
 
 // ============================================================================
 // TYPES

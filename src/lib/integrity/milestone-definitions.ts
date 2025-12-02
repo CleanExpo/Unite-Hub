@@ -16,9 +16,9 @@
 
 import * as fs from 'fs/promises';
 import * as path from 'path';
-import { createLogger } from '@/lib/logger';
+import { createApiLogger } from '@/lib/logger';
 
-const logger = createLogger({ context: 'MilestoneDefinitions' });
+const logger = createApiLogger({ route: 'MilestoneDefinitions' });
 
 // ============================================================================
 // TYPES

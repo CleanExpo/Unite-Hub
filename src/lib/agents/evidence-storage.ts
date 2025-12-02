@@ -14,10 +14,10 @@
 
 import * as fs from 'fs/promises';
 import * as path from 'path';
-import { createLogger } from '@/lib/logger';
+import { createApiLogger } from '@/lib/logger';
 import { EvidencePackage } from './evidence-collector';
 
-const logger = createLogger({ context: 'EvidenceStorage' });
+const logger = createApiLogger({ route: 'EvidenceStorage' });
 
 export interface EvidenceRecord {
   id: string;

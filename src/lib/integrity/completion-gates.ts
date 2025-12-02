@@ -16,7 +16,7 @@
 
 import * as fs from 'fs/promises';
 import * as path from 'path';
-import { createLogger } from '@/lib/logger';
+import { createApiLogger } from '@/lib/logger';
 import { MilestoneDefinition, TaskMilestones } from './milestone-definitions';
 import {
   CheckpointValidationResult,
@@ -24,7 +24,7 @@ import {
   validateCheckpointChain,
 } from './checkpoint-validators';
 
-const logger = createLogger({ context: 'CompletionGates' });
+const logger = createApiLogger({ route: 'CompletionGates' });
 
 // ============================================================================
 // TYPES

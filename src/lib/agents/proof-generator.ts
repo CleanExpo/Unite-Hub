@@ -14,10 +14,10 @@
 
 import * as crypto from 'crypto';
 import * as fs from 'fs/promises';
-import { createLogger } from '@/lib/logger';
+import { createApiLogger } from '@/lib/logger';
 import { EvidencePackage } from './evidence-collector';
 
-const logger = createLogger({ context: 'ProofGenerator' });
+const logger = createApiLogger({ route: 'ProofGenerator' });
 
 export interface ProofPackage {
   evidence_id: string;
