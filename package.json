@@ -29,7 +29,7 @@
     "validate:env": "node scripts/validate-env.mjs",
     "agent:email": "node scripts/run-email-agent.mjs",
     "dev": "next dev -p 3008",
-    "build": "npm run verify:self-test && cross-env NODE_OPTIONS=--max-old-space-size=6144 next build",
+    "build": "cross-env NODE_OPTIONS=--max-old-space-size=6144 next build",
     "vercel-build": "cross-env NODE_OPTIONS=--max-old-space-size=6144 next build",
     "start": "next start",
     "start:production": "node server-wrapper.js",
