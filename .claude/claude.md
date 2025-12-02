@@ -623,6 +623,37 @@ After P0 fixes:
 
 ---
 
+## 5 Whys Image Generation Methodology (MANDATORY)
+
+**⚠️ CRITICAL**: ALL images for Unite-Hub/Synthex MUST follow this methodology. NO exceptions.
+
+### The Story We're Selling
+
+Businesses across Australia (and the world) struggling to get their brand message out to potential customers. **We help them be heard.**
+
+### 5 Whys Framework (Apply to EVERY Image)
+
+1. **WHY this image?** - What business problem does it address?
+2. **WHY this style?** - What visual approach best communicates the message?
+3. **WHY this situation?** - What scenario resonates with the target audience?
+4. **WHY this person?** - Who should the audience see themselves as?
+5. **WHY this feeling?** - What emotion do we want to evoke?
+
+### Required Elements
+
+✅ **DO USE**: Human-centered imagery, variety of styles (photorealistic, illustration, lifestyle), coffee shop meetings, success celebrations, natural warm colors, genuine expressions
+
+❌ **DO NOT USE**: Robots, cold tech, sci-fi, purple/cyan/teal AI colors, text/labels/numbers in images, generic stock poses, vendor names (Gemini, Google, etc.)
+
+### Technical
+
+- **Model**: `gemini-3-pro-image-preview`
+- **Script**: `scripts/generate-images-5whys-human.mjs`
+- **Output**: `public/images/generated/`
+- **Approval**: `pending` → `revised` → `approved`/`rejected`
+
+---
+
 ## Contact & Support
 
 For issues and questions:

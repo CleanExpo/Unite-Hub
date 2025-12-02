@@ -1,0 +1,118 @@
+# Phase 2 P2c - Feature Video Carousel Implementation Files
+
+**IMPORTANT**: Due to Windows file system issues, some component files need to be created manually.
+Follow the instructions below to complete the implementation.
+
+## Files to Create
+
+### 1. src/data/feature-videos-data.ts
+
+Create file at: `d:\Unite-Hub\src\data\feature-videos-data.ts`
+
+Copy contents from: `docs/code-snippets/feature-videos-data.ts.txt` (see below)
+
+### 2. src/components/landing/VideoPlayer.tsx
+
+Create file at: `d:\Unite-Hub\src\components\landing\VideoPlayer.tsx`
+
+Copy contents from: `docs/code-snippets/VideoPlayer.tsx.txt` (see below)
+
+### 3. src/components/landing/FeatureVideoCard.tsx
+
+Create file at: `d:\Unite-Hub\src\components\landing\FeatureVideoCard.tsx`
+
+Copy contents from: `docs/code-snippets/FeatureVideoCard.tsx.txt` (see below)
+
+### 4. src/components/landing/FeatureVideoCarousel.tsx
+
+Create file at: `d:\Unite-Hub\src\components\landing\FeatureVideoCarousel.tsx`
+
+Copy contents from: `docs/code-snippets/FeatureVideoCarousel.tsx.txt` (see below)
+
+## Quick Setup (30 seconds)
+
+Run these commands in PowerShell or CMD:
+
+```powershell
+# Navigate to project
+cd d:\Unite-Hub
+
+# Create data file
+# Copy code from IMPLEMENTATION_FILES_CODE.md section 1
+
+# Create VideoPlayer component
+# Copy code from IMPLEMENTATION_FILES_CODE.md section 2
+
+# Create FeatureVideoCard component
+# Copy code from IMPLEMENTATION_FILES_CODE.md section 3
+
+# Create FeatureVideoCarousel component
+# Copy code from IMPLEMENTATION_FILES_CODE.md section 4
+
+# Test the implementation
+npm run dev
+```
+
+## Alternative: Use Git
+
+If you have the code in a repository:
+
+```bash
+git checkout main
+git pull origin main
+# Files should be in the repository
+```
+
+## Verification
+
+After creating the files, verify:
+
+```bash
+cd d:\Unite-Hub
+
+# Check files exist
+ls src/data/feature-videos-data.ts
+ls src/components/landing/VideoPlayer.tsx
+ls src/components/landing/FeatureVideoCard.tsx
+ls src/components/landing/FeatureVideoCarousel.tsx
+
+# Check TypeScript (should show 0 errors in our files)
+npx tsc --noEmit
+
+# Start dev server
+npm run dev
+
+# Open http://localhost:3008
+# Scroll to "See Features in Action" section
+# Videos should load and play
+```
+
+## What's Already Complete
+
+✅ Documentation (4 files):
+  - docs/PHASE_2_P2C_FEATURE_VIDEOS.md
+  - docs/VIDEO_PRODUCTION_GUIDE.md
+  - docs/FEATURE_VIDEO_CAROUSEL_README.md
+  - docs/PHASE_2_P2C_SUMMARY.md
+
+✅ Landing Page Integration:
+  - src/app/page.tsx (imports and section added)
+
+⏳ Component Files (need manual creation):
+  - src/data/feature-videos-data.ts
+  - src/components/landing/VideoPlayer.tsx
+  - src/components/landing/FeatureVideoCard.tsx
+  - src/components/landing/FeatureVideoCarousel.tsx
+
+## Support
+
+If you encounter issues:
+
+1. Check file paths match exactly (case-sensitive)
+2. Ensure TypeScript is installed: `npm install -g typescript`
+3. Clear Next.js cache: `rm -rf .next`
+4. Restart dev server: `npm run dev`
+
+For detailed implementation guide, see:
+- docs/FEATURE_VIDEO_CAROUSEL_README.md
+- docs/PHASE_2_P2C_FEATURE_VIDEOS.md

@@ -148,6 +148,98 @@ See `docs/MULTI_PLATFORM_MARKETING_INTELLIGENCE.md`
 
 ---
 
+## 5 Whys Image Generation Methodology (MANDATORY)
+
+**⚠️ CRITICAL**: ALL images for Unite-Hub/Synthex MUST follow this methodology. NO exceptions.
+
+### The Story We're Selling
+
+Businesses across Australia (and the world) struggling to get their brand message out to potential customers. **We help them be heard.**
+
+### 5 Whys Framework (Apply to EVERY Image)
+
+Before generating any image, answer these 5 questions:
+
+1. **WHY this image?** - What business problem does it address?
+2. **WHY this style?** - What visual approach best communicates the message?
+3. **WHY this situation?** - What scenario resonates with the target audience?
+4. **WHY this person?** - Who should the audience see themselves as?
+5. **WHY this feeling?** - What emotion do we want to evoke?
+
+### Required Elements
+
+✅ **DO USE**:
+- HUMAN-CENTERED imagery - real people, real emotions
+- Variety of styles: Photorealistic, Warm illustration, Lifestyle, Landscape
+- Coffee shop meetings, success celebrations, human connection
+- Australian/global business context
+- Natural, warm color palettes
+- Genuine expressions and situations
+
+❌ **DO NOT USE**:
+- NO robots, NO cold tech imagery, NO sci-fi elements
+- NO purple/cyan/teal AI default colors
+- NO text, labels, words, or numbers in images
+- NO generic stock photo poses
+- NO vendor names exposed (Gemini, Google, OpenAI, etc.)
+
+### Technical Implementation
+
+**Model**: `gemini-3-pro-image-preview` (Nano Banana 2)
+
+**Package**: `@google/genai`
+
+**Environment**: `GEMINI_API_KEY`
+
+**Script**: `scripts/generate-images-5whys-human.mjs`
+
+**Prompt Structure**:
+```javascript
+{
+  id: 'image-id',
+  category: 'hero|carousel|feature|lifestyle|casestudy|integration|dashboard|pricing',
+  fiveWhys: {
+    why1_image: 'What business problem does it address?',
+    why2_style: 'What visual approach best communicates?',
+    why3_situation: 'What scenario resonates with audience?',
+    why4_person: 'Who should audience see themselves as?',
+    why5_feeling: 'What emotion do we want to evoke?',
+  },
+  prompt: `[Style] description with human focus...
+CRITICAL REQUIREMENTS:
+- NO TEXT, NO LABELS, NO WORDS, NO NUMBERS
+- HUMAN-CENTERED imagery - real people, real emotions
+- NO robots, NO cold tech imagery, NO sci-fi elements
+- Warm, genuine, relatable imagery
+- Australian/global business context`
+}
+```
+
+### Style Guide by Category
+
+| Category | Style | Example Feeling |
+|----------|-------|-----------------|
+| hero | Photorealistic | Relief, Control, Success |
+| carousel | Soft illustration | Recognition, Possibility |
+| feature | Warm watercolor | Hope, Clarity |
+| lifestyle | Documentary | Connection, Joy |
+| casestudy | Editorial | Trust, Results |
+| integration | Clean minimalist | Simplicity, Ease |
+| dashboard | Modern lifestyle | Empowerment |
+| pricing | Professional | Confidence |
+
+### Approval Workflow
+
+States: `pending` → `revised` → `approved` / `rejected`
+
+Migration: `079_image_approvals_multistep_workflow.sql`
+
+### Reference Script
+
+See `scripts/generate-images-5whys-human.mjs` for complete implementation with 53 image definitions following the 5 Whys methodology.
+
+---
+
 ## Context Window Optimization
 
 **📚 Current approach**: `.claude/context-manifest.md` saves 76% context window

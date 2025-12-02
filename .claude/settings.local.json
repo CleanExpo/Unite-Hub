@@ -23,7 +23,9 @@
       "Bash(npx tsc:*)",
       "Bash(npx eslint:*)",
       "Bash(npm run typecheck:*)",
-      "Bash(git stash pop:*)"
+      "Bash(git stash pop:*)",
+      "Bash(git stash drop:*)",
+      "Bash(findstr:*)"
     ],
     "deny": [],
     "ask": []
