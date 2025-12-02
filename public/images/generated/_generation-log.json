@@ -1,0 +1,131 @@
+{
+  "images": [
+    {
+      "id": "hero-dashboard",
+      "category": "homepage",
+      "attempted": "2025-12-02T05:06:07.589Z",
+      "error": "No image content generated",
+      "status": "failed"
+    },
+    {
+      "id": "hero-automation",
+      "category": "homepage",
+      "attempted": "2025-12-02T05:06:09.882Z",
+      "error": "No image content generated",
+      "status": "failed"
+    },
+    {
+      "id": "hero-growth",
+      "category": "homepage",
+      "attempted": "2025-12-02T05:06:12.151Z",
+      "error": "No image content generated",
+      "status": "failed"
+    },
+    {
+      "id": "hero-team",
+      "category": "homepage",
+      "attempted": "2025-12-02T05:06:21.850Z",
+      "error": "No image content generated",
+      "status": "failed"
+    },
+    {
+      "id": "hero-ai",
+      "category": "homepage",
+      "attempted": "2025-12-02T05:06:24.167Z",
+      "error": "No image content generated",
+      "status": "failed"
+    },
+    {
+      "id": "feature-email",
+      "category": "features",
+      "attempted": "2025-12-02T05:06:33.999Z",
+      "error": "No image content generated",
+      "status": "failed"
+    },
+    {
+      "id": "feature-scoring",
+      "category": "features",
+      "attempted": "2025-12-02T05:06:36.246Z",
+      "error": "No image content generated",
+      "status": "failed"
+    },
+    {
+      "id": "feature-campaigns",
+      "category": "features",
+      "attempted": "2025-12-02T05:06:48.899Z",
+      "error": "No image content generated",
+      "status": "failed"
+    },
+    {
+      "id": "feature-alerts",
+      "category": "features",
+      "attempted": "2025-12-02T05:06:51.072Z",
+      "error": "No image content generated",
+      "status": "failed"
+    },
+    {
+      "id": "feature-analytics",
+      "category": "features",
+      "attempted": "2025-12-02T05:07:00.658Z",
+      "error": "No image content generated",
+      "status": "failed"
+    },
+    {
+      "id": "feature-seo",
+      "category": "features",
+      "attempted": "2025-12-02T05:07:10.042Z",
+      "error": "No image content generated",
+      "status": "failed"
+    },
+    {
+      "id": "industry-saas",
+      "category": "industries",
+      "attempted": "2025-12-02T05:07:20.508Z",
+      "error": "No image content generated",
+      "status": "failed"
+    },
+    {
+      "id": "industry-ecommerce",
+      "category": "industries",
+      "attempted": "2025-12-02T05:07:29.503Z",
+      "error": "No image content generated",
+      "status": "failed"
+    },
+    {
+      "id": "industry-services",
+      "category": "industries",
+      "attempted": "2025-12-02T05:07:31.795Z",
+      "error": "No image content generated",
+      "status": "failed"
+    },
+    {
+      "id": "industry-agencies",
+      "category": "industries",
+      "attempted": "2025-12-02T05:07:40.699Z",
+      "error": "No image content generated",
+      "status": "failed"
+    },
+    {
+      "id": "industry-realestate",
+      "category": "industries",
+      "attempted": "2025-12-02T05:07:42.531Z",
+      "error": "No image content generated",
+      "status": "failed"
+    },
+    {
+      "id": "industry-healthcare",
+      "category": "industries",
+      "attempted": "2025-12-02T05:07:44.874Z",
+      "error": "No image content generated",
+      "status": "failed"
+    }
+  ],
+  "summary": {
+    "total": 35,
+    "success": 0,
+    "failed": 17,
+    "skipped": 0
+  },
+  "startTime": "2025-12-02T05:05:56.765Z",
+  "lastUpdated": "2025-12-02T05:07:45.888Z"
+}

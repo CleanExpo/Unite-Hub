@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#DC2626;stop-opacity:0.1" />
+      <stop offset="100%" style="stop-color:#DC2626;stop-opacity:0.3" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="#DC262620"/>
+  <rect width="800" height="600" fill="url(#grad)"/>
+  <circle cx="400" cy="300" r="100" fill="#DC2626" opacity="0.2"/>
+  <text x="50%" y="50%" font-size="32" font-weight="bold" text-anchor="middle" dominant-baseline="middle" fill="#DC2626">
+    about-mission
+  </text>
+  <text x="50%" y="65%" font-size="16" text-anchor="middle" dominant-baseline="middle" fill="#DC2626" opacity="0.7">
+    800×600
+  </text>
+</svg>

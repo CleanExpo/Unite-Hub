@@ -1,0 +1,327 @@
+{
+  "images": [
+    {
+      "id": "hero-dashboard",
+      "category": "homepage",
+      "created": "2025-12-02T05:07:39.415Z",
+      "dimensions": "1200×600",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "hero-automation",
+      "category": "homepage",
+      "created": "2025-12-02T05:07:39.417Z",
+      "dimensions": "1200×600",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "hero-growth",
+      "category": "homepage",
+      "created": "2025-12-02T05:07:39.420Z",
+      "dimensions": "1200×600",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "hero-team",
+      "category": "homepage",
+      "created": "2025-12-02T05:07:39.422Z",
+      "dimensions": "1200×600",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "hero-ai",
+      "category": "homepage",
+      "created": "2025-12-02T05:07:39.425Z",
+      "dimensions": "1200×600",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "feature-email",
+      "category": "features",
+      "created": "2025-12-02T05:07:39.428Z",
+      "dimensions": "800×600",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "feature-scoring",
+      "category": "features",
+      "created": "2025-12-02T05:07:39.430Z",
+      "dimensions": "800×600",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "feature-campaigns",
+      "category": "features",
+      "created": "2025-12-02T05:07:39.432Z",
+      "dimensions": "800×600",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "feature-alerts",
+      "category": "features",
+      "created": "2025-12-02T05:07:39.434Z",
+      "dimensions": "800×600",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "feature-analytics",
+      "category": "features",
+      "created": "2025-12-02T05:07:39.436Z",
+      "dimensions": "800×600",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "feature-seo",
+      "category": "features",
+      "created": "2025-12-02T05:07:39.438Z",
+      "dimensions": "800×600",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "industry-saas",
+      "category": "industries",
+      "created": "2025-12-02T05:07:39.441Z",
+      "dimensions": "1000×600",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "industry-ecommerce",
+      "category": "industries",
+      "created": "2025-12-02T05:07:39.444Z",
+      "dimensions": "1000×600",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "industry-services",
+      "category": "industries",
+      "created": "2025-12-02T05:07:39.446Z",
+      "dimensions": "1000×600",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "industry-agencies",
+      "category": "industries",
+      "created": "2025-12-02T05:07:39.448Z",
+      "dimensions": "1000×600",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "industry-realestate",
+      "category": "industries",
+      "created": "2025-12-02T05:07:39.450Z",
+      "dimensions": "1000×600",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "industry-healthcare",
+      "category": "industries",
+      "created": "2025-12-02T05:07:39.452Z",
+      "dimensions": "1000×600",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "empty-contacts",
+      "category": "dashboard",
+      "created": "2025-12-02T05:07:39.454Z",
+      "dimensions": "600×400",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "empty-campaigns",
+      "category": "dashboard",
+      "created": "2025-12-02T05:07:39.456Z",
+      "dimensions": "600×400",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "celebrate-success",
+      "category": "dashboard",
+      "created": "2025-12-02T05:07:39.459Z",
+      "dimensions": "600×400",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "loading-state",
+      "category": "dashboard",
+      "created": "2025-12-02T05:07:39.462Z",
+      "dimensions": "600×400",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "error-state",
+      "category": "dashboard",
+      "created": "2025-12-02T05:07:39.464Z",
+      "dimensions": "600×400",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "onboarding-welcome",
+      "category": "dashboard",
+      "created": "2025-12-02T05:07:39.466Z",
+      "dimensions": "600×400",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "about-mission",
+      "category": "about",
+      "created": "2025-12-02T05:07:39.469Z",
+      "dimensions": "800×600",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "about-team",
+      "category": "about",
+      "created": "2025-12-02T05:07:39.471Z",
+      "dimensions": "800×600",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "about-values",
+      "category": "about",
+      "created": "2025-12-02T05:07:39.474Z",
+      "dimensions": "800×600",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "contact-hero",
+      "category": "contact",
+      "created": "2025-12-02T05:07:39.477Z",
+      "dimensions": "1000×600",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "support-team",
+      "category": "contact",
+      "created": "2025-12-02T05:07:39.479Z",
+      "dimensions": "800×600",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "blog-hero",
+      "category": "blog",
+      "created": "2025-12-02T05:07:39.481Z",
+      "dimensions": "1200×600",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "learning-journey",
+      "category": "blog",
+      "created": "2025-12-02T05:07:39.483Z",
+      "dimensions": "800×400",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "case-study",
+      "category": "blog",
+      "created": "2025-12-02T05:07:39.485Z",
+      "dimensions": "800×400",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "integration-workflow",
+      "category": "integrations",
+      "created": "2025-12-02T05:07:39.489Z",
+      "dimensions": "1000×600",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "integration-api",
+      "category": "integrations",
+      "created": "2025-12-02T05:07:39.492Z",
+      "dimensions": "800×600",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "automation-workflow",
+      "category": "integrations",
+      "created": "2025-12-02T05:07:39.494Z",
+      "dimensions": "800×600",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    },
+    {
+      "id": "conversion-funnel",
+      "category": "conversion",
+      "created": "2025-12-02T05:07:39.496Z",
+      "dimensions": "800×600",
+      "status": "created",
+      "type": "svg_placeholder",
+      "note": "Replace with real image from Gemini API"
+    }
+  ],
+  "summary": {
+    "total": 35,
+    "created": 35,
+    "skipped": 0
+  },
+  "startTime": "2025-12-02T05:07:39.411Z",
+  "note": "These are placeholder SVG images. Replace with real generated images from Gemini API or another service.",
+  "lastUpdated": "2025-12-02T05:07:39.496Z"
+}
