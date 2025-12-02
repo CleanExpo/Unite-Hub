@@ -5,7 +5,7 @@
  */
 
 import { google } from 'googleapis';
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { createApiLogger } from '@/lib/logger';
 
 const logger = createApiLogger({ service: 'analyticsService' });

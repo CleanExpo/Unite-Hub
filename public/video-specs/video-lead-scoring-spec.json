@@ -1,0 +1,118 @@
+{
+  "videoId": "video-lead-scoring",
+  "title": "Why Your Salesperson Is Wasting 40+ Hours on Cold Leads",
+  "duration": "30s",
+  "resolution": "4K (3840x2160)",
+  "frameRate": "30fps",
+  "codec": "H.264",
+  "productionNotes": "Professional 4K marketing video, smooth transitions, focus on visual storytelling and clear messaging. Utilize motion graphics and text overlays to highlight key statistics and emotional impact. Sound design to enhance the emotional tone of each scene. Color grade for a modern, professional look.",
+  "scenes": [
+    {
+      "sceneNumber": 1,
+      "startTime": "0s",
+      "endTime": "5s",
+      "description": "The Reality Check",
+      "visuals": [
+        "Salesperson's calendar showing 12 scheduled calls",
+        "Quick montage of call interactions: Call 1: 'We're not ready yet' → Hangs up, call ends; Call 2: 'Still evaluating options' → Dead end; Call 3: 'Checking with the team' → No buying signal; Call 4-12: Similar rejections, dead ends",
+        "Time counter visible: '6 hours spent on non-deals'",
+        "Inbox showing unread emails (hot prospects in subject lines: 'We want to move forward THIS month', 'Budget approved', 'Decision made')",
+        "Hot prospects never get called—sitting ignored in inbox"
+      ],
+      "audio": {
+        "voiceover": "Your salesperson makes 12 calls today. 9 of them go nowhere. 6 hours wasted on leads that'll never buy. Meanwhile, the hot ones? Sitting in the inbox, untouched.",
+        "music": "Subtle, frustrating background music"
+      },
+      "textOnScreen": "9 cold calls. 0 conversions. 6 wasted hours.",
+      "emotion": "Frustration, wasted effort, demoralization"
+    },
+    {
+      "sceneNumber": 2,
+      "startTime": "6s",
+      "endTime": "13s",
+      "description": "The Qualification Gap",
+      "visuals": [
+        "Same inbox from salesperson view, All emails appear identical on surface",
+        "Quick interviews with different reps: Rep 1: 'I just call them in order'; Rep 2: 'I call the ones I remember'; Rep 3: Shrugs 'Honestly, I don't know'",
+        "Animation: Hot leads and cold leads mixed randomly, no way to distinguish",
+        "Chaos indicator (jumbled leads)"
+      ],
+      "audio": {
+        "voiceover": "Without scoring, it's just luck. You call them in order. Or the ones you remember. The actually hot leads? The ones ready to buy right now? You miss them.",
+        "music": "Slightly more upbeat but still uncertain music"
+      },
+      "textOnScreen": "26% conversion improvement with proper lead scoring (Gartner)",
+      "visualEmphasis": "\"Guessing doesn't work\"",
+      "emotion": "Helplessness, system failure"
+    },
+    {
+      "sceneNumber": 3,
+      "startTime": "14s",
+      "endTime": "22s",
+      "description": "The Cost of Guessing",
+      "visuals": [
+        "Deal opportunity timeline showing massive waste",
+        "Monday morning: Rep calls COLD lead (wasting time)",
+        "Hours shown ticking by: Rep on call with unqualified prospect",
+        "Meanwhile: HOT PROSPECT enters the system but never gets attention",
+        "Tuesday: Rep still working cold lead, zero progress",
+        "Wednesday: Hot prospect gets impatient, looks at competitors",
+        "Friday: Your competitor closes the deal with HOT PROSPECT",
+        "Notification appears: 'Competitor won: $45,000 deal'",
+        "Meanwhile: Rep's cold lead still hasn't moved or converted",
+        "Timestamp emphasis: 'Only 3-day window was open, opportunity missed'",
+        "Financial impact visualization: Revenue to competitor shown"
+      ],
+      "audio": {
+        "voiceover": "A hot prospect entered your system Tuesday. Your team never called them. They bought from your competitor Friday. Meanwhile, you've been working unqualified leads all week.",
+        "music": "Regretful, downtempo music"
+      },
+      "textOnScreen": "3-day window. Missed. Deal went to competitor.",
+      "visualEmphasis": "Competitor wins, your company loses (clear contrast)",
+      "emotion": "Regret, lost revenue, competitive disadvantage"
+    },
+    {
+      "sceneNumber": 4,
+      "startTime": "23s",
+      "endTime": "30s",
+      "description": "Synthex AI Scoring",
+      "visuals": [
+        "Synthex lead scoring engine in action",
+        "Email arrives in inbox",
+        "AI analysis begins (showing thinking process visually)",
+        "Real-time scoring factors appear on screen with values: 'Budget mentioned: Yes (+25 points)', 'Timeline stated: This month (+30 points)', 'Authority: Decision-maker (+20 points)', 'Final score: 92/100 (HOT PROSPECT)' in large red text",
+        "Dashboard auto-sorts: Leads ranked by actual conversion likelihood",
+        "Top 3 hot leads displayed prominently",
+        "Salesperson sees top-ranked lead immediately",
+        "One click to call: Connected to hot prospect",
+        "Call interaction shows engagement",
+        "2-week fast-forward: Deal closes successfully",
+        "Success metrics displayed: 'Conversion rate improved 3% → 5%'",
+        "Sales rep celebrating (high five, success gesture)"
+      ],
+      "audio": {
+        "voiceover": "Synthex reads every lead. Analyzes urgency, authority, timeline. Puts your hottest prospects at the top. One team went from 3% to 5% conversion just by calling the right people first.",
+        "music": "Upbeat, confident music"
+      },
+      "textOnScreen": "Know which leads are actually hot. Try Synthex free.",
+      "visualEmphasis": "Clear AI advantage, efficiency gains shown",
+      "closing": "Synthex logo, 'Smart calls. Better closes.'",
+      "emotion": "Control, intelligence, winning"
+    }
+  ],
+  "watermark": {
+    "logo": "Synthex Logo",
+    "position": "bottom-right",
+    "size": "120px",
+    "opacity": "45%"
+  },
+  "exportSettings": {
+    "format": "MP4",
+    "videoCodec": "H.264",
+    "audioCodec": "AAC",
+    "bitrate": "30 Mbps",
+    "audioBitrate": "192 kbps",
+    "colorProfile": "Rec. 709",
+    "audioChannels": "Stereo"
+  }
+}

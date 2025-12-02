@@ -3,7 +3,7 @@
  * Phase 47: Manages client onboarding tasks and progress tracking
  */
 
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 
 export interface OnboardingTask {
   id: string;

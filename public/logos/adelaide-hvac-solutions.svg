@@ -1,0 +1,31 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Adelaide HVAC Solutions - Heating, ventilation, air conditioning -->
+  <circle cx="100" cy="100" r="85" fill="#3498DB" opacity="0.08"/>
+
+  <!-- Snowflake (cooling) on left -->
+  <g transform="translate(70, 100)">
+    <line x1="0" y1="-20" x2="0" y2="20" stroke="#3498DB" stroke-width="3"/>
+    <line x1="-20" y1="0" x2="20" y2="0" stroke="#3498DB" stroke-width="3"/>
+    <line x1="-14" y1="-14" x2="14" y2="14" stroke="#3498DB" stroke-width="3"/>
+    <line x1="-14" y1="14" x2="14" y2="-14" stroke="#3498DB" stroke-width="3"/>
+    <circle cx="0" cy="0" r="5" fill="#2980B9"/>
+  </g>
+
+  <!-- Flame (heating) on right -->
+  <g transform="translate(130, 100)">
+    <path d="M0 -15 C-5 -5 -8 5 -3 12 C-3 12 0 15 0 15 C0 15 3 12 3 12 C8 5 5 -5 0 -15 Z" fill="#E74C3C"/>
+    <path d="M0 -8 C-2 -3 -3 2 -1 6 C-1 6 0 8 0 8 C0 8 1 6 1 6 C3 2 2 -3 0 -8 Z" fill="#F39C12"/>
+  </g>
+
+  <!-- Air flow arrows (center) -->
+  <path d="M85 85 L95 95" stroke="#95A5A6" stroke-width="3" stroke-linecap="round"/>
+  <path d="M85 100 L95 100" stroke="#95A5A6" stroke-width="3" stroke-linecap="round"/>
+  <path d="M85 115 L95 105" stroke="#95A5A6" stroke-width="3" stroke-linecap="round"/>
+  <path d="M105 95 L115 85" stroke="#95A5A6" stroke-width="3" stroke-linecap="round"/>
+  <path d="M105 100 L115 100" stroke="#95A5A6" stroke-width="3" stroke-linecap="round"/>
+  <path d="M105 105 L115 115" stroke="#95A5A6" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Outer circle border -->
+  <circle cx="100" cy="100" r="85" stroke="#2C3E50" stroke-width="4" fill="none" opacity="0.3"/>
+  <circle cx="100" cy="100" r="75" stroke="#3498DB" stroke-width="2" fill="none" opacity="0.2"/>
+</svg>

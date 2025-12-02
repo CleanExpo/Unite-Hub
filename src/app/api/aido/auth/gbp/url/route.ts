@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getGBPAuthUrl } from '@/lib/integrations/google-business-profile';
+import { createClient } from '@/lib/supabase/server';
 
 /**
  * GET /api/aido/auth/gbp/url
@@ -14,6 +15,13 @@ import { getGBPAuthUrl } from '@/lib/integrations/google-business-profile';
  */
 export async function GET(req: NextRequest) {
   try {
+    // Session validation
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const { searchParams } = new URL(req.url);
     const workspaceId = searchParams.get('workspaceId');
 

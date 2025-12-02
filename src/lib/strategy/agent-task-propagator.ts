@@ -11,7 +11,7 @@
  * @module lib/strategy/agent-task-propagator
  */
 
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import type { AgentType, AgentTask } from './execution-engine';
 
 export interface L4Item {

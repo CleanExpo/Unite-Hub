@@ -1,0 +1,163 @@
+# API Routes That Need Authentication Added
+# Generated: 2025-12-02
+# Total: 65 routes requiring immediate attention
+
+# ===================================================================
+# PRIORITY 1: CRITICAL - User Data Routes (15 routes)
+# Risk: Data leakage, unauthorized access to sensitive information
+# Action: Add validateUserAndWorkspace() or validateUserAuth() IMMEDIATELY
+# ===================================================================
+
+src/app/api/client/vault/route.ts
+src/app/api/client/ideas/route.ts
+src/app/api/client/proposals/route.ts
+src/app/api/founder/business-vault/route.ts
+src/app/api/founder/business-vault/[businessKey]/channel/route.ts
+src/app/api/founder/business-vault/[businessKey]/snapshot/route.ts
+src/app/api/v1/contacts/route.ts
+src/app/api/v1/contacts/[id]/route.ts
+src/app/api/v1/campaigns/route.ts
+src/app/api/v1/emails/route.ts
+src/app/api/audits/route.ts
+src/app/api/staff/me/route.ts
+src/app/api/staff/projects/route.ts
+src/app/api/staff/tasks/route.ts
+src/app/api/staff/tasks/[id]/route.ts
+
+# ===================================================================
+# PRIORITY 2: HIGH - AI/Content Generation Routes (18 routes)
+# Risk: Credit abuse, unauthorized AI usage, cost escalation
+# Action: Add validateUserAuth() + implement rate limiting
+# ===================================================================
+
+src/app/api/ai/generate-proposal/route.ts
+src/app/api/ai/interpret-idea/route.ts
+src/app/api/synthex/video/generate/route.ts
+src/app/api/synthex/video/jobs/route.ts
+src/app/api/synthex/video/templates/route.ts
+src/app/api/synthex/visual/generate/route.ts
+src/app/api/synthex/visual/brand-kits/route.ts
+src/app/api/synthex/visual/capabilities/route.ts
+src/app/api/synthex/visual/jobs/route.ts
+src/app/api/synthex/seo/analyze/route.ts
+src/app/api/synthex/seo/analyses/route.ts
+src/app/api/managed/reports/generate/route.ts
+src/app/api/managed/reports/send/route.ts
+src/app/api/creative/insights/route.ts
+src/app/api/creative/quality/route.ts
+src/app/api/leviathan/orchestrate/route.ts
+src/app/api/visual/transformation/route.ts
+src/app/api/evolution/proposals/route.ts
+
+# ===================================================================
+# PRIORITY 3: MEDIUM - Staff/Admin Routes (5 routes)
+# Risk: Unauthorized access to internal operations
+# Action: Add getUser() + role verification (STAFF/ADMIN)
+# ===================================================================
+
+src/app/api/staff/activity/route.ts
+src/app/api/staff/me/route.ts
+src/app/api/staff/projects/route.ts
+src/app/api/staff/tasks/route.ts
+src/app/api/staff/tasks/[id]/route.ts
+
+# ===================================================================
+# PRIORITY 4: MEDIUM - Integration/OAuth Routes (8 routes)
+# Risk: Account hijacking, unauthorized integrations
+# Action: Add session validation + OAuth state verification
+# ===================================================================
+
+src/app/api/email/oauth/authorize/route.ts
+src/app/api/integrations/gmail/connect/route.ts
+src/app/api/integrations/gmail/connect-multi/route.ts
+src/app/api/integrations/gmail/callback-multi/route.ts
+src/app/api/integrations/outlook/connect/route.ts
+src/app/api/integrations/outlook/callback/route.ts
+src/app/api/connected-apps/callback/[provider]/route.ts
+src/app/api/trust/signature/callback/route.ts
+
+# ===================================================================
+# PRIORITY 5: LOW - Analytics/Reporting Routes (14 routes)
+# Risk: Business intelligence leakage
+# Action: Review each route - add auth OR make intentionally public with rate limiting
+# ===================================================================
+
+src/app/api/aido/auth/ga4/url/route.ts
+src/app/api/aido/auth/gbp/url/route.ts
+src/app/api/aido/auth/gsc/url/route.ts
+src/app/api/founder/synthex/setup-analytics/route.ts
+src/app/api/marketing/events/route.ts
+src/app/api/marketing/insights/route.ts
+src/app/api/director/alerts/route.ts
+src/app/api/director/insights/route.ts
+src/app/api/executive/briefing/route.ts
+src/app/api/executive/missions/route.ts
+src/app/api/reports/sample-by-persona/route.ts
+src/app/api/seo/competitive-benchmark/route.ts
+src/app/api/seo/keyword-gap/route.ts
+src/app/api/monitoring/metrics/route.ts
+
+# ===================================================================
+# PRIORITY 6: LOW - System/Operational Routes (5 routes)
+# Risk: System manipulation, unauthorized operations
+# Action: Add validateUserAuth() OR validateCronRequest() for automated tasks
+# ===================================================================
+
+src/app/api/posting/attempts/route.ts
+src/app/api/posting/scheduler/route.ts
+src/app/api/scaling-mode/health/route.ts
+src/app/api/scaling-mode/history/route.ts
+src/app/api/v1/agents/orchestrator/route.ts
+
+# ===================================================================
+# ADDITIONAL ROUTES TO REVIEW (may be intentionally public)
+# ===================================================================
+
+src/app/api/privacy/subject-access-request/route.ts  # GDPR - may need email verification
+src/app/api/synthex/offer/route.ts                   # Public offer page?
+src/app/api/enterprise/billing/plans/route.ts        # Public pricing?
+src/app/api/v1/auth/session/route.ts                 # Session check (may be public)
+
+# ===================================================================
+# IMPLEMENTATION GUIDE
+# ===================================================================
+
+# Pattern 1: User + Workspace (multi-tenant data)
+# Use: validateUserAndWorkspace(req, workspaceId)
+# Example: Contacts, campaigns, workspace-specific data
+
+# Pattern 2: User Only (no workspace context)
+# Use: validateUserAuth(req)
+# Example: AI generation, user profile, cross-workspace data
+
+# Pattern 3: Admin/Staff (role-based)
+# Use: getUser() + role check
+# Example: Staff operations, admin functions
+
+# Pattern 4: OAuth Callbacks (state validation)
+# Use: getSession() + state verification
+# Example: Integration callbacks
+
+# Pattern 5: Cron Jobs (scheduled tasks)
+# Use: validateCronRequest(req)
+# Example: Background jobs, automated tasks
+
+# ===================================================================
+# TESTING CHECKLIST (after adding auth)
+# ===================================================================
+
+# For each route:
+# [ ] Unauthenticated request returns 401
+# [ ] User from different workspace cannot access data (if workspace-scoped)
+# [ ] Valid user can access their own data
+# [ ] Rate limiting works correctly
+# [ ] Error messages don't leak sensitive information
+
+# ===================================================================
+# RE-RUN AUDIT AFTER FIXES
+# ===================================================================
+
+# Command: node scripts/audit-api-auth.mjs
+# Target: 100% authentication coverage (0 missing auth)
+
+# End of file

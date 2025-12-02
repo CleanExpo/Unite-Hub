@@ -9,7 +9,9 @@
 
 import { NextRequest } from 'next/server';
 import type { IWorkspaceValidationService, AuthenticatedUser } from './types';
-import { getSupabaseServer, getSupabaseAdmin, getSupabaseServerWithAuth } from '@/lib/supabase';
+import { getSupabaseServer } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
+import { getSupabaseServerWithAuth } from '@/lib/supabase';
 
 /**
  * Workspace Validation Service

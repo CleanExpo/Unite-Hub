@@ -36,12 +36,10 @@ import { Badge } from '@/components/ui/badge';
 import { AlertCircle, CheckCircle, Loader2, ChevronRight } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
-// Import pricing engine
+// Import pricing engine (client-safe exports only)
 import {
   PLANS,
   calculateEffectivePrice,
-  getCurrentOfferTier,
-  getOfferBanner,
   getAllIndustries,
   INDUSTRY_PRESETS,
 } from '@/lib/synthex/synthexOfferEngine';
@@ -109,9 +107,16 @@ export default function SynthexOnboarding() {
 
         setCurrentUser(user);
 
-        // Get current offer tier
-        const banner = getOfferBanner();
-        setOfferBanner(banner);
+        // Get current offer tier from API
+        try {
+          const response = await fetch('/api/synthex/offers');
+          if (response.ok) {
+            const data = await response.json();
+            setOfferBanner(data.banner);
+          }
+        } catch (offerErr) {
+          console.error('Error fetching offers:', offerErr);
+        }
       } catch (err) {
         console.error('Error fetching user:', err);
       }

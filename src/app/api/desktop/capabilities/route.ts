@@ -5,7 +5,8 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseServer, supabaseAdmin } from '@/lib/supabase';
+import { getSupabaseServer } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { apiRateLimit } from '@/lib/rate-limit';
 import { log } from '@/lib/logger';
 

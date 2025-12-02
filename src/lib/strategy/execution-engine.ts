@@ -12,7 +12,7 @@
  * @module lib/strategy/execution-engine
  */
 
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { AgentTaskPropagator } from './agent-task-propagator';
 import { ExecutionHealthMonitor } from './execution-health-monitor';
 import type { Database } from '@/lib/types/database';

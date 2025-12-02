@@ -91,6 +91,8 @@ const nextConfig = {
   ],
 
   // Security headers
+  // NOTE: CSP with nonces is handled by middleware.ts for per-request nonces
+  // These headers are fallback for static assets not passing through middleware
   headers: async () => [
     {
       source: '/:path*',
@@ -102,12 +104,14 @@ const nextConfig = {
         { key: 'X-XSS-Protection', value: '1; mode=block' },
         { key: 'Referrer-Policy', value: 'origin-when-cross-origin' },
         { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+        // CSP is set by middleware with per-request nonces - see src/middleware.ts
+        // This fallback CSP is for static assets that don't go through middleware
         {
           key: 'Content-Security-Policy',
           value: [
             "default-src 'self'",
-            "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://accounts.google.com https://unpkg.com",
-            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+            "script-src 'self' 'unsafe-eval' https://accounts.google.com https://unpkg.com",
+            "style-src 'self' https://fonts.googleapis.com",
             "img-src 'self' data: blob: https: http:",
             "font-src 'self' data: https://fonts.gstatic.com",
             "connect-src 'self' https://*.supabase.co https://api.anthropic.com https://accounts.google.com",

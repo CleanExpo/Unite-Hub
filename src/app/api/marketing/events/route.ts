@@ -6,9 +6,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { trackLeadEvent, type LeadEvent } from '@/lib/marketing/leadScoreEngine';
 import { trackRemarketingEvent } from '@/lib/marketing/remarketingListener';
+import { createClient } from '@/lib/supabase/server';
 
 export async function POST(req: NextRequest) {
   try {
+    // Session validation
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const body = await req.json();
     const { lead_id, event, metadata } = body;
 

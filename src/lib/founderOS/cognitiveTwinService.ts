@@ -8,7 +8,7 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk';
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { listBusinesses, getBusiness, type FounderBusiness } from './founderBusinessRegistryService';
 import { getSignals, type BusinessSignal } from './founderSignalInferenceService';
 import { getRecentEntriesForContext } from './founderJournalService';

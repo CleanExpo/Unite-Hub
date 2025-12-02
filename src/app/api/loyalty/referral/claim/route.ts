@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseAdmin } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { recordReferralEvent, createAttribution } from '@/lib/loyalty/referralEngine';
 import { issueCredits } from '@/lib/loyalty/loyaltyEngine';
 import { logReferralEvent, logLoyaltyEvent } from '@/lib/loyalty/loyaltyArchiveBridge';

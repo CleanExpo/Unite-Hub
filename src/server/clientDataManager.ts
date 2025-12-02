@@ -15,7 +15,7 @@
 
 import fs from "fs/promises";
 import path from "path";
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export interface ClientFolderStructure {
   clientId: string;

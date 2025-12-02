@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server';
 import { addBusinessChannel } from '@/lib/founder/businessVaultService';
 
 /**
@@ -19,6 +20,17 @@ export async function POST(
   { params }: { params: Promise<{ businessKey: string }> }
 ) {
   try {
+    // Authentication check
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     const { businessKey } = await params;
     const body = await req.json();
 

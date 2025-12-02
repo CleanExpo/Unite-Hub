@@ -11,6 +11,7 @@ import { createClient } from '@supabase/supabase-js';
 import Anthropic from '@anthropic-ai/sdk';
 import Stripe from 'stripe';
 import { logHealthCheck, logUptimeCheck } from '@/lib/monitoring/autonomous-monitor';
+import { validateCronRequest } from '@/lib/cron/auth';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60; // 60 seconds max
@@ -39,10 +40,10 @@ export async function GET(req: NextRequest) {
   const startTime = Date.now();
 
   try {
-    // Verify cron secret (Vercel Cron sends this)
-    const authHeader = req.headers.get('authorization');
-    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // SECURITY: Validate cron request with timestamp protection
+    const auth = validateCronRequest(req, { logPrefix: 'HealthCheck' });
+    if (!auth.valid) {
+      return auth.response;
     }
 
     const checks: Record<string, { status: string; details: string }> = {};

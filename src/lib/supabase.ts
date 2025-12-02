@@ -5,7 +5,9 @@ import type { Database } from '@/types/database.generated';
 // Get environment variables with proper fallbacks
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
+
+// SECURITY: Service role key has been moved to server-only module
+// Import from '@/lib/supabase/admin' instead for admin operations
 
 // Validate required environment variables
 if (!supabaseUrl || !supabaseAnonKey) {
@@ -140,35 +142,22 @@ export function getSupabaseServerWithAuth(token: string) {
   });
 }
 
-// Admin client (service role) - bypasses RLS, use for server-side operations
-// Lazy initialization to ensure environment variables are available
-let _supabaseAdmin: ReturnType<typeof createClient<Database>> | null = null;
+// =====================================================
+// ADMIN CLIENT - SERVER ONLY (SECURITY FIX)
+// =====================================================
+/**
+ * SECURITY: Admin client has been moved to a server-only module.
+ *
+ * For server-side admin operations, import from:
+ *   import { getSupabaseAdmin, supabaseAdmin } from '@/lib/supabase/admin';
+ *
+ * This prevents the service role key from being exposed in client bundles.
+ * The admin module uses 'server-only' to enforce this at build time.
+ */
 
-export function getSupabaseAdmin() {
-  if (!_supabaseAdmin) {
-    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-
-    if (!serviceRoleKey || !url) {
-      throw new Error('SUPABASE_SERVICE_ROLE_KEY or NEXT_PUBLIC_SUPABASE_URL not configured');
-    }
-
-    _supabaseAdmin = createClient<Database>(url, serviceRoleKey, {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false
-      }
-    });
-  }
-  return _supabaseAdmin;
-}
-
-// Export as proxy for direct method access (supabaseAdmin.rpc(), supabaseAdmin.from(), etc.)
-export const supabaseAdmin = new Proxy({} as ReturnType<typeof createClient<Database>>, {
-  get(target, prop) {
-    return getSupabaseAdmin()[prop as keyof ReturnType<typeof createClient<Database>>];
-  }
-});
+// NOTE: Admin client is NOT re-exported here to prevent client-side import errors.
+// For admin operations, import directly from the server-only module:
+//   import { getSupabaseAdmin, supabaseAdmin } from '@/lib/supabase/admin';
 
 // Types
 export interface Organization {

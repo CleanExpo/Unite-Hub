@@ -23,7 +23,7 @@ import { callAnthropicWithRetry, checkAnthropicAvailability } from "@/lib/anthro
 import { getAnthropicClient, isAnthropicAvailable } from '@/lib/anthropic/client';
 import { ANTHROPIC_MODELS } from '@/lib/anthropic/models';
 import OpenAI from 'openai';
-import { getSupabaseAdmin } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
 
 // OpenRouter client
 const openrouter = new OpenAI({

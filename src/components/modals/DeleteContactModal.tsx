@@ -12,7 +12,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { AlertTriangle } from "lucide-react";
-import { supabaseBrowser } from "@/lib/supabase";
 
 interface DeleteContactModalProps {
   isOpen: boolean;
@@ -39,16 +38,22 @@ export function DeleteContactModal({
     setError(null);
 
     try {
-      // Delete contact from database
-      const { error: deleteError } = await supabaseBrowser
-        .from("contacts")
-        .delete()
-        .eq("id", contactId)
-        .eq("workspace_id", workspaceId); // Additional security check
+      // Delete contact via API
+      const response = await fetch("/api/contacts/delete", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          contactId,
+        }),
+      });
 
-      if (deleteError) {
-        console.error("Error deleting contact:", deleteError);
-        setError(deleteError.message);
+      const result = await response.json();
+
+      if (!response.ok) {
+        console.error("Error deleting contact:", result.error);
+        setError(result.error || "Failed to delete contact");
         setLoading(false);
         return;
       }

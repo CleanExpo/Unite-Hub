@@ -7,7 +7,8 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseServer, supabaseAdmin } from '@/lib/supabase';
+import { getSupabaseServer } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { apiRateLimit } from '@/lib/rate-limit';
 import { validateCommand, requiresApproval, isApproved } from '@/lib/desktopAgent/commandValidator';
 import { createDesktopAgentClient } from '@/lib/desktopAgent/desktopAgentClient';

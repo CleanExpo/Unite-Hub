@@ -30,8 +30,10 @@ import { CaseStudyCard } from "@/components/landing/CaseStudyCard";
 import { IntegrationCard, GmailIcon, SlackIcon, ZapierIcon, HubSpotIcon, StripeIcon, SalesforceIcon, MailchimpIcon, PipedriveIcon } from "@/components/landing/IntegrationCard";
 import { FAQAccordion, FAQSchemaMarkup, faqData } from "@/components/landing/FAQAccordion";
 import { FeatureVideoCarousel } from "@/components/landing/FeatureVideoCarousel";
+import { VeoVideoShowcase } from "@/components/video/VeoVideoShowcase";
 import { caseStudies, integrations } from "@/data/landing-data";
 import { featureVideos } from "@/data/feature-videos-data";
+import { veoVideos, getFeaturedVideos } from "@/data/veo-videos-data";
 
 export default function Home() {
   const { user, loading } = useAuth();
@@ -1052,6 +1054,22 @@ export default function Home() {
           </div>
           <ScrollReveal delay={200}>
             <FeatureVideoCarousel videos={featureVideos} />
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* VEO Video Showcase Section - Professional 4K Marketing Videos */}
+      <section className="py-24 bg-gradient-to-b from-[#f4f7fa] to-white">
+        <div className="max-w-[1400px] mx-auto px-5">
+          <ScrollReveal>
+            <VeoVideoShowcase
+              videos={getFeaturedVideos()}
+              title="Real Problems. Real Solutions."
+              subtitle="Watch how Synthex solves the biggest marketing challenges facing small businesses today. Each video is 30 seconds."
+              defaultView="carousel"
+              showFilters={true}
+              autoPlay={false}
+            />
           </ScrollReveal>
         </div>
       </section>

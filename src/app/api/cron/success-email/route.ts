@@ -10,16 +10,14 @@ import { getClientSuccessScore, getEngagementHistory } from '@/lib/services/clie
 import { getClientInsights } from '@/lib/services/clientInsightsService';
 import { generateWeeklySuccessEmail } from '@/lib/templates/weeklySuccessEmail';
 import { sendEmail } from '@/lib/email/email-service';
-
-// Verify cron secret to prevent unauthorized access
-const CRON_SECRET = process.env.CRON_SECRET;
+import { validateCronRequest } from '@/lib/cron/auth';
 
 export async function GET(req: NextRequest) {
   try {
-    // Verify authorization
-    const authHeader = req.headers.get('authorization');
-    if (CRON_SECRET && authHeader !== `Bearer ${CRON_SECRET}`) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // SECURITY: Validate cron request with timestamp protection
+    const auth = validateCronRequest(req, { logPrefix: 'SuccessEmail' });
+    if (!auth.valid) {
+      return auth.response;
     }
 
     const supabase = await getSupabaseServer();

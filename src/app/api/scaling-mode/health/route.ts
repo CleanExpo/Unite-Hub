@@ -9,9 +9,17 @@ import {
   generateSnapshot,
   getLatestSnapshot,
 } from '@/lib/scalingMode';
+import { createClient } from '@/lib/supabase/server';
 
 export async function GET(req: NextRequest) {
   try {
+    // Session validation
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const environment = req.nextUrl.searchParams.get('environment') || 'production';
     const type = req.nextUrl.searchParams.get('type');
     const limit = parseInt(req.nextUrl.searchParams.get('limit') || '30');
@@ -66,6 +74,13 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    // Session validation
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const body = await req.json();
     const { environment = 'production' } = body;
 

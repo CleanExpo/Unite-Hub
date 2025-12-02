@@ -1,0 +1,500 @@
+[
+  {
+    "videoId": "video-scattered-leads",
+    "title": "Your Best Leads Are Hiding in 5 Different Places",
+    "duration": "30s",
+    "resolution": "4K (3840x2160)",
+    "frameRate": "30fps",
+    "codec": "H.264",
+    "productionNotes": "This video aims to highlight the pain points of scattered lead management and showcase Synthex as the solution. The video will utilize a combination of screen recordings, stock footage, motion graphics, and a professional voiceover to deliver a compelling message. Accurate timing and smooth transitions are crucial for maintaining viewer engagement.",
+    "scenes": [
+      {
+        "sceneNumber": 1,
+        "startTime": "0s",
+        "endTime": "4s",
+        "visualDescription": "Split-screen showing 5 different business tools simultaneously. Left side: Gmail inbox with 35 unread emails, chaotic notifications. Top-right corner: Facebook Messenger conversation thread. Bottom-right: Google Sheet with outdated contact list (timestamp '3 weeks ago'). Center overlay: Slack notification pinging. Bottom: Handwritten notepad with barely legible lead names.",
+        "voiceoverScript": "Your leads are everywhere. Gmail. Facebook. Text. Google Sheets. Your notebook. No one knows which lead is actually hot.",
+        "soundDesign": "Chaotic notification layer (email ping, message ding, slack bloop)",
+        "textOnScreen": [
+          "35 unread emails",
+          "5 tools",
+          "1 chance to respond"
+        ],
+        "emotion": "Chaos, overwhelm, helplessness"
+      },
+      {
+        "sceneNumber": 2,
+        "startTime": "5s",
+        "endTime": "10s",
+        "visualDescription": "Salesperson frantically searching through emails. Quick cuts: typing in Gmail search box, getting 47 results, scrolling endlessly. Corner timer display: '6:45 wasted looking for one lead'. Frustrated facial expression, sighing.",
+        "voiceoverScript": "You spend 6-8 hours per week just digging. And half the time? You still miss the hot ones.",
+        "soundDesign": "Typing sounds, frustrated sighs, clock ticking.",
+        "textOnScreen": [
+          "6-8 hours/week on email searches"
+        ],
+        "statsDisplay": "21x less likely to qualify a lead if you wait 30 min vs 5 min (MIT)",
+        "emotion": "Frustration, wasted time, futility"
+      },
+      {
+        "sceneNumber": 3,
+        "startTime": "11s",
+        "endTime": "20s",
+        "visualDescription": "Close-up of email from hot prospect. Subject: 'We'd love to learn more, we're ready to move forward this month'. This email gets buried in the 47 unread messages. Animation: Email sinking into inbox, disappearing. Cut to: Same prospect closing deal with competitor. On-screen notification appears: 'Your competitor just won this deal'. Timeline shows only 3 hours elapsed between inquiry and competitor close.",
+        "voiceoverScript": "That prospect waited 3 hours for a response. Your competitor responded in 15 minutes. They closed the deal.",
+        "soundDesign": "Email notification, whoosh sound effect for sinking email, deal closing sound, sad trombone sound effect",
+        "textOnScreen": [
+          "78% of customers buy from the FIRST company that responds"
+        ],
+        "visualStat": "3-hour delay = Lost deal",
+        "emotion": "Regret, lost revenue, competitive disadvantage"
+      },
+      {
+        "sceneNumber": 4,
+        "startTime": "21s",
+        "endTime": "30s",
+        "visualDescription": "Same 5 chaotic tools transition into ONE unified Synthex dashboard. Animation: All leads flowing and consolidating into single clean interface. Dashboard appears: Modern, professional, organized. All leads auto-organize by urgency color-coding (RED=hot, ORANGE=warm, GREEN=follow-up). Top lead highlighted in RED: High-intent prospect clearly marked. Salesperson finds the hot lead in 10 seconds (not 8 hours). One-click response interface appears with pre-written personalized suggestion. Message sends immediately. Green checkmark appears—deal closing notification. Money in account notification flashes briefly.",
+        "voiceoverScript": "Synthex pulls every lead into one place. It reads each one. Tells you which ones are actually ready to buy. You respond in minutes, not hours.",
+        "soundDesign": "Smooth transition sound effect, positive notification sounds, cash register sound.",
+        "textOnScreen": [
+          "Found in 10 seconds. Responded in 3 minutes. Deal closed."
+        ],
+        "ctaText": "Stop losing deals to disorganization. Try Synthex free.",
+        "emotion": "Relief, control, winning, momentum"
+      }
+    ],
+    "watermark": {
+      "logo": "Synthex Logo",
+      "position": "bottom-right",
+      "sizeMainScenes": "120px x 120px",
+      "sizeFinalFrame": "200px x 200px",
+      "opacity": "45%",
+      "style": "White logo with subtle glow effect",
+      "startTime": "21s",
+      "finalFrameHoldDuration": "3s"
+    },
+    "exportSettings": {
+      "format": "MP4",
+      "videoCodec": "H.264",
+      "audioCodec": "AAC",
+      "bitrate": "20 Mbps",
+      "audioBitrate": "192 kbps"
+    }
+  },
+  {
+    "videoId": "video-5-minute-rule",
+    "title": "The 5-Minute Conversion Rule Nobody Talks About",
+    "duration": "30s",
+    "resolution": "4K (3840x2160)",
+    "frameRate": "30fps",
+    "codec": "H.264",
+    "productionNotes": "Professional marketing video highlighting the importance of speed-to-lead using data, prospect perspective, financial impact, and a solution showcase.  Requires high-quality motion graphics, clear data visualization, compelling voiceover, and impactful sound design.",
+    "scenes": [
+      {
+        "sceneNumber": 1,
+        "duration": "0-5s",
+        "description": "The Research-Backed Rule",
+        "visuals": "Clean data visualization on white background. Professional timeline with milestone markers. At 5-minute mark: GREEN zone labeled \"30% conversion rate\" with upward arrow. At 30-minute mark: ORANGE zone labeled \"10% conversion rate\" with declining arrow. At 1-hour mark: RED zone labeled \"1% conversion rate\" with sharp drop. Graph overlays showing dramatic conversion cliff after 5-minute mark. MIT research citation displayed.",
+        "voiceover": "There's a rule in sales that MIT studied. Your window to convert a lead is 5 minutes. After that? Your odds drop 20 times.",
+        "textOnScreen": "MIT Lead Response Management Study, 21x more likely to qualify a lead in 5 min vs 30 min",
+        "audio": "Serious, authoritative background tone",
+        "emotion": "Urgency, high stakes"
+      },
+      {
+        "sceneNumber": 2,
+        "duration": "6-12s",
+        "description": "Why It Happens",
+        "visuals": "Prospect perspective—they submit inquiry form. Thought bubble: \"I hope they respond quickly?\". Animation: Clock ticking, 5 minutes pass visually. Prospect gets distracted: Opens competitor website in new tab. Competitor's chat appears: \"Hi! Thanks for reaching out. How can we help?\". YOUR response finally arrives (45 minutes later): \"Thanks for contacting us\". Prospect's reaction: \"Too late, I already talked to them\". Prospect closes your email, engages with competitor. \"First responder wins\" badge/emphasis",
+        "voiceover": "Your prospect just submitted their contact info. They're ready to talk. But if you're not there in 5 minutes? They move on. To your competitor.",
+        "textOnScreen": "78% of customers buy from the FIRST company that responds",
+        "audio": "Ambient sounds, ticking clock",
+        "emotion": "FOMO, competitive threat, inevitability"
+      },
+      {
+        "sceneNumber": 3,
+        "duration": "13-22s",
+        "description": "The Financial Cost",
+        "visuals": "Week-long calendar showing cascading losses. Monday: 5 leads missed (slow Friday responses). Tuesday: 3 leads missed. Wednesday: 4 leads missed. Thursday: 6 leads missed. Friday: 7 leads missed. Weekly loss total counter climbing: \"$47,000 in lost deals\". Real-time impact badge: \"1 lead lost every 2 hours\". Cumulative revenue loss chart trending downward. Crisis mode indicator (red warning). Dollar signs appearing and disappearing (wasted money)",
+        "voiceover": "One company was losing a lead every 2 hours. That's $47,000 per week in lost revenue. Just because they responded in 45 minutes instead of 5.",
+        "textOnScreen": "1 missed lead every 2 hours = $47K/week",
+        "audio": "Tension-building background music",
+        "emotion": "Financial pain, urgency, business crisis"
+      },
+      {
+        "sceneNumber": 4,
+        "duration": "23-30s",
+        "description": "Synthex Changes the Game",
+        "visuals": "Synthex dashboard in real-time action. Lead arrives: Email notification appears. AI analysis triggers: Immediate alert \"Hot prospect. Likelihood to buy: 92%\". Dashboard highlights prospect in RED (highest priority). One-click response interface appears with smart suggestion. Salesperson clicking \"respond\" button. Message sends in seconds. Timestamp display: \"Responded in 3 minutes\" (green checkmark). 2-week timeline jump to deal closure. Deal closing celebration: Success notification with deal value ($28,000). Upward-trending conversion graph appears. Clear success moment, celebration animation. Large Synthex logo, tagline \"Speed wins deals.\"",
+        "voiceover": "Synthex alerts you instantly. You respond in minutes, not hours. One client went from 12% to 25% conversion rate. Just by being faster.",
+        "textOnScreen": "Responded in 3 minutes. Deal closed in 2 weeks. Respond in 5 minutes. Close more deals. Try free for 14 days.",
+        "audio": "Upbeat, positive music",
+        "emotion": "Winning, confidence, momentum, relief"
+      }
+    ],
+    "watermark": {
+      "image": "synthex-logo.png",
+      "position": "bottom-right",
+      "size": "120px",
+      "opacity": "45%"
+    },
+    "exportSettings": {
+      "format": "MP4",
+      "videoCodec": "H.264",
+      "audioCodec": "AAC",
+      "bitrate": "20 Mbps",
+      "colorProfile": "Rec. 709",
+      "audioBitrate": "320kbps"
+    }
+  },
+  {
+    "videoId": "video-lead-scoring",
+    "title": "Why Your Salesperson Is Wasting 40+ Hours on Cold Leads",
+    "duration": "30s",
+    "resolution": "4K (3840x2160)",
+    "frameRate": "30fps",
+    "codec": "H.264",
+    "productionNotes": "Professional 4K marketing video, smooth transitions, focus on visual storytelling and clear messaging. Utilize motion graphics and text overlays to highlight key statistics and emotional impact. Sound design to enhance the emotional tone of each scene. Color grade for a modern, professional look.",
+    "scenes": [
+      {
+        "sceneNumber": 1,
+        "startTime": "0s",
+        "endTime": "5s",
+        "description": "The Reality Check",
+        "visuals": [
+          "Salesperson's calendar showing 12 scheduled calls",
+          "Quick montage of call interactions: Call 1: 'We're not ready yet' → Hangs up, call ends; Call 2: 'Still evaluating options' → Dead end; Call 3: 'Checking with the team' → No buying signal; Call 4-12: Similar rejections, dead ends",
+          "Time counter visible: '6 hours spent on non-deals'",
+          "Inbox showing unread emails (hot prospects in subject lines: 'We want to move forward THIS month', 'Budget approved', 'Decision made')",
+          "Hot prospects never get called—sitting ignored in inbox"
+        ],
+        "audio": {
+          "voiceover": "Your salesperson makes 12 calls today. 9 of them go nowhere. 6 hours wasted on leads that'll never buy. Meanwhile, the hot ones? Sitting in the inbox, untouched.",
+          "music": "Subtle, frustrating background music"
+        },
+        "textOnScreen": "9 cold calls. 0 conversions. 6 wasted hours.",
+        "emotion": "Frustration, wasted effort, demoralization"
+      },
+      {
+        "sceneNumber": 2,
+        "startTime": "6s",
+        "endTime": "13s",
+        "description": "The Qualification Gap",
+        "visuals": [
+          "Same inbox from salesperson view, All emails appear identical on surface",
+          "Quick interviews with different reps: Rep 1: 'I just call them in order'; Rep 2: 'I call the ones I remember'; Rep 3: Shrugs 'Honestly, I don't know'",
+          "Animation: Hot leads and cold leads mixed randomly, no way to distinguish",
+          "Chaos indicator (jumbled leads)"
+        ],
+        "audio": {
+          "voiceover": "Without scoring, it's just luck. You call them in order. Or the ones you remember. The actually hot leads? The ones ready to buy right now? You miss them.",
+          "music": "Slightly more upbeat but still uncertain music"
+        },
+        "textOnScreen": "26% conversion improvement with proper lead scoring (Gartner)",
+        "visualEmphasis": "\"Guessing doesn't work\"",
+        "emotion": "Helplessness, system failure"
+      },
+      {
+        "sceneNumber": 3,
+        "startTime": "14s",
+        "endTime": "22s",
+        "description": "The Cost of Guessing",
+        "visuals": [
+          "Deal opportunity timeline showing massive waste",
+          "Monday morning: Rep calls COLD lead (wasting time)",
+          "Hours shown ticking by: Rep on call with unqualified prospect",
+          "Meanwhile: HOT PROSPECT enters the system but never gets attention",
+          "Tuesday: Rep still working cold lead, zero progress",
+          "Wednesday: Hot prospect gets impatient, looks at competitors",
+          "Friday: Your competitor closes the deal with HOT PROSPECT",
+          "Notification appears: 'Competitor won: $45,000 deal'",
+          "Meanwhile: Rep's cold lead still hasn't moved or converted",
+          "Timestamp emphasis: 'Only 3-day window was open, opportunity missed'",
+          "Financial impact visualization: Revenue to competitor shown"
+        ],
+        "audio": {
+          "voiceover": "A hot prospect entered your system Tuesday. Your team never called them. They bought from your competitor Friday. Meanwhile, you've been working unqualified leads all week.",
+          "music": "Regretful, downtempo music"
+        },
+        "textOnScreen": "3-day window. Missed. Deal went to competitor.",
+        "visualEmphasis": "Competitor wins, your company loses (clear contrast)",
+        "emotion": "Regret, lost revenue, competitive disadvantage"
+      },
+      {
+        "sceneNumber": 4,
+        "startTime": "23s",
+        "endTime": "30s",
+        "description": "Synthex AI Scoring",
+        "visuals": [
+          "Synthex lead scoring engine in action",
+          "Email arrives in inbox",
+          "AI analysis begins (showing thinking process visually)",
+          "Real-time scoring factors appear on screen with values: 'Budget mentioned: Yes (+25 points)', 'Timeline stated: This month (+30 points)', 'Authority: Decision-maker (+20 points)', 'Final score: 92/100 (HOT PROSPECT)' in large red text",
+          "Dashboard auto-sorts: Leads ranked by actual conversion likelihood",
+          "Top 3 hot leads displayed prominently",
+          "Salesperson sees top-ranked lead immediately",
+          "One click to call: Connected to hot prospect",
+          "Call interaction shows engagement",
+          "2-week fast-forward: Deal closes successfully",
+          "Success metrics displayed: 'Conversion rate improved 3% → 5%'",
+          "Sales rep celebrating (high five, success gesture)"
+        ],
+        "audio": {
+          "voiceover": "Synthex reads every lead. Analyzes urgency, authority, timeline. Puts your hottest prospects at the top. One team went from 3% to 5% conversion just by calling the right people first.",
+          "music": "Upbeat, confident music"
+        },
+        "textOnScreen": "Know which leads are actually hot. Try Synthex free.",
+        "visualEmphasis": "Clear AI advantage, efficiency gains shown",
+        "closing": "Synthex logo, 'Smart calls. Better closes.'",
+        "emotion": "Control, intelligence, winning"
+      }
+    ],
+    "watermark": {
+      "logo": "Synthex Logo",
+      "position": "bottom-right",
+      "size": "120px",
+      "opacity": "45%"
+    },
+    "exportSettings": {
+      "format": "MP4",
+      "videoCodec": "H.264",
+      "audioCodec": "AAC",
+      "bitrate": "30 Mbps",
+      "audioBitrate": "192 kbps",
+      "colorProfile": "Rec. 709",
+      "audioChannels": "Stereo"
+    }
+  },
+  {
+    "videoId": "video-realtime-data",
+    "title": "The 48-Hour Information Problem",
+    "duration": "30s",
+    "resolution": "4K (3840x2160)",
+    "frameRate": "30fps",
+    "codec": "H.264",
+    "productionNotes": "Professional 4K marketing video, professional color grading, smooth animations, H.264. Ensure all text is legible and animations are clean and professional.",
+    "scenes": [
+      {
+        "sceneNumber": 1,
+        "startTime": "0s",
+        "endTime": "4s",
+        "visual": "Marketing manager staring at dashboard. Dashboard timestamp clearly visible: 'Updated Wednesday, 9am'. Current time on screen: 'Friday, 3pm' (48+ hours later). Campaign has been running for 48 hours straight. Manager's confused expression: 'Wait, is this working or not?'. Visual confusion indicator (question mark, uncertainty).",
+        "voiceover": "It's Friday. Your dashboard is showing Wednesday's data. You have no idea if your campaign is working or tanking.",
+        "textOnScreen": "Dashboard: Wednesday 9am. Now: Friday 3pm. Data age: 48 hours.",
+        "sound": "Slight tension, uncertainty music.",
+        "emotion": "Uncertainty, lack of control"
+      },
+      {
+        "sceneNumber": 2,
+        "startTime": "5s",
+        "endTime": "12s",
+        "visual": "Campaign performance graph showing hidden failure. Line shows normal Tuesday/Wednesday performance (upward). At Thursday 2pm: Line tanks sharply (campaign failure begins). But manager can't see this until Friday. Money counter running during 48-hour gap: '$3,200 wasted... $4,800... $5,200...'. Visual waste indicator (money burning animation). Manager finally sees problem Friday 3pm: 'Oh no, this is failing!'. But damage already done (large red X indicating missed opportunity).",
+        "voiceover": "Your campaign is hemorrhaging money Thursday. You find out Friday. You've already burned $3,200 on something that isn't working.",
+        "textOnScreen": "$3,200 wasted on a campaign you didn't know was failing",
+        "sound": "Serious, slight alarm tone.",
+        "emotion": "Financial pain, frustration, regret"
+      },
+      {
+        "sceneNumber": 3,
+        "startTime": "13s",
+        "endTime": "22s",
+        "visual": "Split-screen competitive comparison. Left side: Your company (Friday afternoon, realizing failure). Right side: Competitor's dashboard (Wednesday 2pm, sees performance drop). Competitor: Immediately pivots strategy (new audience, new message shown). Real-time decision making visible. By Friday: Competitor's updated campaign performing 40% better. Your company: Still running same failing campaign from Wednesday. Chart shows diverging results over 48 hours. Clear winner: Competitor (graph shoots up), Your company (graph flat/down). Competitor wins the engagement and customers (notifications appear).",
+        "voiceover": "Your competitor sees the problem in real-time. They pivot within 2 hours. You're still running the same failing campaign Friday.",
+        "textOnScreen": "Competitor: Real-time data. Your company: 48-hour delay.",
+        "sound": null,
+        "emotion": "Competitive anxiety, falling behind, pressure"
+      },
+      {
+        "sceneNumber": 4,
+        "startTime": "23s",
+        "endTime": "30s",
+        "visual": "Synthex live dashboard in action. Campaign launches Monday morning. Metrics updating visually in real-time (every minute shown with counter increment). Wednesday 2pm: Performance starts declining (manager sees immediately). Immediate alert notification pops: 'Campaign performance declining. Consider pausing or pivoting.' Manager makes decision same day (by 3pm). New audience/message deployed Wednesday evening. By Thursday morning: Revamped campaign is winning (graph shoots upward). Friday metrics: ROI recovered + 20% improvement shown. Success celebration (upward graph, positive indicators). Performance dashboard showing active monitoring.",
+        "voiceover": "Synthex updates every minute. You see problems immediately. Pivot the same day. One client doubled their ROI by stopping failing campaigns early and reallocating budget to winners.",
+        "textOnScreen": "Real-time update every minute. Decisions made today. ROI doubled.",
+        "sound": null,
+        "emotion": "Control, confidence, winning, empowerment",
+        "ctaText": "See what's actually happening. Make decisions TODAY. Try free for 14 days.",
+        "closing": "Synthex logo, 'Real-time. Real results.'"
+      }
+    ],
+    "watermark": {
+      "logo": "SynthexLogo.png",
+      "position": "bottom-right",
+      "size": "120px",
+      "opacity": "45%",
+      "glow": true
+    },
+    "exportSettings": {
+      "format": "MP4",
+      "videoCodec": "H.264",
+      "audioCodec": "AAC",
+      "resolution": "3840x2160",
+      "frameRate": "30fps",
+      "bitrate": "40Mbps",
+      "colorProfile": "Rec. 709"
+    }
+  },
+  {
+    "videoId": "video-approval-bottleneck",
+    "title": "Why Approval Processes Kill Your Best Ideas",
+    "duration": "30s",
+    "resolution": "4K (3840x2160)",
+    "frameRate": "30fps",
+    "codec": "H.264",
+    "productionNotes": "4K professional video with smooth transitions. Focus on clear visuals and concise voiceover. Utilize motion graphics to illustrate concepts like time pressure, engagement loss, and approval workflow. Sound design should enhance the emotion in each scene.",
+    "scenes": [
+      {
+        "sceneNumber": 1,
+        "duration": "0-7s",
+        "description": "THE APPROVAL NIGHTMARE",
+        "visuals": [
+          "Campaign creative ready for launch",
+          "Email notification appears: \"Campaign ready. Needs approval from 5 people\"",
+          "Each approver labeled with their availability: CEO (will check in 6 hours), Client (8 time zones away, checking tomorrow), Finance (checks email 2x per day), CMO (in meetings until 4pm), Legal (unresponsive)",
+          "Calendar showing Friday 5pm deadline ticking closer",
+          "Panic indicator (red alert) showing time pressure",
+          "Animation: approval request bouncing between people, getting lost"
+        ],
+        "voiceover": "Your campaign is ready. But you need approval from 5 people. Your CEO is busy. Your client is 8 time zones away. Finance checks email once. This campaign will be late.",
+        "emotion": "Dread, helplessness, frustration"
+      },
+      {
+        "sceneNumber": 2,
+        "duration": "8-16s",
+        "description": "EVERY HOUR DELAY = MISSED WINDOW",
+        "visuals": [
+          "Campaign deadline (Friday 5pm) getting closer",
+          "Animation: Days ticking down",
+          "Markings: \"Friday... [wait for approval]... Monday morning... [too late, trend ended]\"",
+          "Marketing trend visualization: Trend hot Monday-Wednesday, cooling by Friday",
+          "By Monday when campaign finally launches: Trend is dead (gray/cold indicator)",
+          "Engagement prediction chart: Shows 60% engagement loss from delayed launch"
+        ],
+        "voiceover": "Your deadline is Friday. It's now Thursday. You're still waiting on approval from 3 people. By Monday? Your campaign window is closed.",
+        "textOnScreen": "Trend window: Mon-Wed. Launch date: Following Monday. Engagement: Down 60%.",
+        "emotion": "Panic, pressure, inevitable failure"
+      },
+      {
+        "sceneNumber": 3,
+        "duration": "17-26s",
+        "description": "THE BACK-AND-FORTH EMAIL NIGHTMARE",
+        "visuals": [
+          "Email chain expanding rapidly",
+          "Subject: \"Campaign Creative - APPROVAL NEEDED\"",
+          "Shows 23 emails in expanding accordion",
+          "Quick cuts of different revision requests: Email 1: \"Looks good, one small change on the tagline\", Email 2: \"Wait, can we try a different color?\", Email 3: \"CEO wants to review before Friday\", Email 4: \"I didn't get the latest version, which one is final?\", Email 23: \"Can we re-review the tagline change from Email 5?\"",
+          "Timeline overlay: Monday send... Wednesday response... Friday another revision...",
+          "Visual chaos: Too many cooks, no single source of truth"
+        ],
+        "voiceover": "Revise. Send back. Revise again. By the time everyone approves, you've rewritten it 3 times and it's now off-brand.",
+        "textOnScreen": "23 emails. 5 revisions. 8 days elapsed. Still waiting.",
+        "emotion": "Exhaustion, futility, broken process"
+      },
+      {
+        "sceneNumber": 4,
+        "duration": "27-30s",
+        "description": "SYNTHEX ONE-PLACE APPROVALS",
+        "visuals": [
+          "Synthex approval interface (clean, modern)",
+          "Campaign appears in ONE unified place",
+          "All approvers get notification in THEIR preferred channel: CEO: Desktop notification + Asana integration, Client: Mobile notification + SMS alert, Finance: Email integration, CMO: Slack notification, Legal: Dashboard notification",
+          "Each approver sees same creative on their device of choice",
+          "Real-time approval tracking showing timestamps: CEO approves (2 min): ✓ Approved, Client approves (8 min): ✓ Approved, Finance approves (1 min): ✓ Approved, CMO approves (3 min): ✓ Approved, Legal approves (5 min): ✓ Approved",
+          "Total time: 5 minutes, all approvals done",
+          "Campaign auto-queues for launch immediately",
+          "Timeline shows: Friday 2pm approval, Friday 3pm launch",
+          "Campaign goes live while trend is hot (engagement metrics climbing)"
+        ],
+        "voiceover": "Synthex puts everything in one place. Approvers see it their way. Approvals come back in minutes. You launch the same day. One agency cut their campaign time from 8 days to 3 days.",
+        "visualsClosing": [
+          "Campaign going live, real-time engagement metrics climbing upward",
+          "Synthex logo with upward momentum, \"Approve fast. Launch faster.\""
+        ],
+        "textOnScreen": "Approval cycle: 5 minutes. Launch time: Same day. Trend captured: 100%",
+        "ctaText": "Launch campaigns without delays. Try free for 14 days.",
+        "emotion": "Relief, momentum, winning, empowerment"
+      }
+    ],
+    "watermark": {
+      "image": "synthex_logo.png",
+      "position": "bottom-right",
+      "size": "120px",
+      "opacity": "45%",
+      "effect": "subtle glow"
+    },
+    "exportSettings": {
+      "format": "MP4",
+      "videoCodec": "H.264",
+      "audioCodec": "AAC",
+      "bitrate": "30 Mbps",
+      "audioBitrate": "192 kbps",
+      "colorProfile": "Rec. 709",
+      "audioChannels": "Stereo"
+    }
+  },
+  {
+    "videoId": "video-setup-tax",
+    "title": "The Setup Tax That's Killing Your Growth",
+    "duration": "30s",
+    "resolution": "4K (3840x2160)",
+    "frameRate": "30fps",
+    "codec": "H.264",
+    "productionNotes": "Professional 4K marketing video. Fast-paced and energetic style. High-quality graphics and sound design are essential.",
+    "scenes": [
+      {
+        "sceneNumber": 1,
+        "startTime": "0s",
+        "endTime": "5s",
+        "visuals": "Founder excited about new tool. Monday: Founder purchases CRM, reads implementation guide. 247-page PDF appears on screen. Chapters visible: 'Infrastructure Setup', 'Data Migration', 'Custom Workflows', 'Security Config'. Developer looking horrified. Calendar: 6 weeks of implementation time blocked out (red). Dollar counter ticking: '$2,000... $6,000... $9,000... $12,000...'. Financial dread visualization.",
+        "voiceover": "You buy a new marketing tool Monday. Setup takes 6 weeks and a $12,000 developer bill. You're now 6 weeks behind your competition.",
+        "textOnScreen": "Setup time: 6 weeks. Developer cost: $12K. Opportunity cost: Priceless.",
+        "sound": "Dread-filled tone, ticking clock",
+        "emotion": "Dread, financial pain, helplessness"
+      },
+      {
+        "sceneNumber": 2,
+        "startTime": "6s",
+        "endTime": "13s",
+        "visuals": "Split-screen competitive comparison. Left side: Your company (waiting for 6-week setup). Week 1: In setup mode, no campaigns running. Week 3: Still waiting, competitors gaining advantage. Week 6: Finally ready, but market has moved on. Right side: Competitor (using simple tool). Day 1: Connected and running campaigns. Week 2: Generating qualified leads, building relationships. Week 6: Already has customer momentum and relationships. By week 12: Competitor is 3x ahead. Revenue comparison chart: Competitor line climbing, your line flat.",
+        "voiceover": "Your competitor picks a simpler tool. They're running campaigns while you're still in setup. By the time you launch? They already own the relationship.",
+        "textOnScreen": "Week 1: Competitor generating leads. Week 6: You're finally ready. Week 12: Competitor is 3x ahead.",
+        "sound": "Neutral background music",
+        "emotion": "Competitive disadvantage, regret, frustration"
+      },
+      {
+        "sceneNumber": 3,
+        "startTime": "14s",
+        "endTime": "21s",
+        "visuals": "Revenue impact graph showing opportunity loss. Competitor's revenue line: Growing steadily from week 1. Your revenue line: Flat for 6 weeks, then climbing (but behind). By week 12: Competitor's cumulative revenue = $180K. Your cumulative revenue = $45K. Counter highlighting: 'Competitors already captured $180K in leads you would've had'. Red zone emphasizing the opportunity loss. Failure visualization (gap widening).",
+        "voiceover": "You've lost $180,000 in leads just because setup took too long.",
+        "textOnScreen": "6-week delay = $180K in lost revenue",
+        "sound": "Serious, financial impact tone",
+        "emotion": "Financial pain, urgency, pressure"
+      },
+      {
+        "sceneNumber": 4,
+        "startTime": "22s",
+        "endTime": "30s",
+        "visuals": "Synthex rapid onboarding flow (bright, energetic). Founder signs up Monday morning. STEP 1: 'Connect your email' (2 clicks). Gmail authorization popup appears and is approved quickly. Checkmark: ✓ Done (timer: 30 seconds). STEP 2: 'Set your first automation' (template selection). Pre-built campaign templates appear (no coding needed). One-click template selection. Checkmark: ✓ Done (timer: 2 minutes). STEP 3: 'Launch your first campaign' (one-click send). Campaign preview appears (professional, ready to send). One button click: 'Send'. Checkmark: ✓ Done (timer: 5 minutes). Total timer corner: '18 minutes total setup'. By Tuesday morning: First leads arriving in inbox (notification shows). By Wednesday: First deals starting to close (success notifications). Manager celebrating the quick wins (happy expression, success gesture). Revenue already climbing (early results visible).",
+        "voiceover": "Synthex is 18 minutes setup. No developers. No consultants. No complexity. You're generating leads by tomorrow.",
+        "textOnScreen": "Setup: 18 minutes. First leads: Tomorrow. First deals: This week. Start generating leads in 18 minutes. No setup tax. Try free for 14 days.",
+        "sound": "Upbeat, positive music",
+        "emotion": "Relief, momentum, immediate wins, empowerment"
+      }
+    ],
+    "watermark": {
+      "logo": "Synthex logo",
+      "position": "bottom-right",
+      "size": "120px",
+      "opacity": "45%",
+      "animation": "Bounces slightly with energy"
+    },
+    "exportSettings": {
+      "format": "MP4",
+      "resolution": "3840x2160",
+      "frameRate": "30fps",
+      "codec": "H.264",
+      "bitrate": "40 Mbps",
+      "audioCodec": "AAC",
+      "audioBitrate": "192 kbps"
+    }
+  }
+]

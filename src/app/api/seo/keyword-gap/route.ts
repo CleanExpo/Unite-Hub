@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { keywordGapAnalysisService } from '@/lib/seo/keywordGapAnalysisService';
 import logger from '@/lib/logger';
+import { createClient } from '@/lib/supabase/server';
 
 interface KeywordGapRequest {
   clientId: string;
@@ -15,6 +16,13 @@ interface KeywordGapRequest {
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
+    // Session validation
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const body = (await request.json()) as KeywordGapRequest;
 
     const { clientId, clientDomain = 'example.com', competitors } = body;

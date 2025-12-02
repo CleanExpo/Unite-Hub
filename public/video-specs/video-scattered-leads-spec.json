@@ -1,0 +1,81 @@
+{
+  "videoId": "video-scattered-leads",
+  "title": "Your Best Leads Are Hiding in 5 Different Places",
+  "duration": "30s",
+  "resolution": "4K (3840x2160)",
+  "frameRate": "30fps",
+  "codec": "H.264",
+  "productionNotes": "This video aims to highlight the pain points of scattered lead management and showcase Synthex as the solution. The video will utilize a combination of screen recordings, stock footage, motion graphics, and a professional voiceover to deliver a compelling message. Accurate timing and smooth transitions are crucial for maintaining viewer engagement.",
+  "scenes": [
+    {
+      "sceneNumber": 1,
+      "startTime": "0s",
+      "endTime": "4s",
+      "visualDescription": "Split-screen showing 5 different business tools simultaneously. Left side: Gmail inbox with 35 unread emails, chaotic notifications. Top-right corner: Facebook Messenger conversation thread. Bottom-right: Google Sheet with outdated contact list (timestamp '3 weeks ago'). Center overlay: Slack notification pinging. Bottom: Handwritten notepad with barely legible lead names.",
+      "voiceoverScript": "Your leads are everywhere. Gmail. Facebook. Text. Google Sheets. Your notebook. No one knows which lead is actually hot.",
+      "soundDesign": "Chaotic notification layer (email ping, message ding, slack bloop)",
+      "textOnScreen": [
+        "35 unread emails",
+        "5 tools",
+        "1 chance to respond"
+      ],
+      "emotion": "Chaos, overwhelm, helplessness"
+    },
+    {
+      "sceneNumber": 2,
+      "startTime": "5s",
+      "endTime": "10s",
+      "visualDescription": "Salesperson frantically searching through emails. Quick cuts: typing in Gmail search box, getting 47 results, scrolling endlessly. Corner timer display: '6:45 wasted looking for one lead'. Frustrated facial expression, sighing.",
+      "voiceoverScript": "You spend 6-8 hours per week just digging. And half the time? You still miss the hot ones.",
+      "soundDesign": "Typing sounds, frustrated sighs, clock ticking.",
+      "textOnScreen": [
+        "6-8 hours/week on email searches"
+      ],
+      "statsDisplay": "21x less likely to qualify a lead if you wait 30 min vs 5 min (MIT)",
+      "emotion": "Frustration, wasted time, futility"
+    },
+    {
+      "sceneNumber": 3,
+      "startTime": "11s",
+      "endTime": "20s",
+      "visualDescription": "Close-up of email from hot prospect. Subject: 'We'd love to learn more, we're ready to move forward this month'. This email gets buried in the 47 unread messages. Animation: Email sinking into inbox, disappearing. Cut to: Same prospect closing deal with competitor. On-screen notification appears: 'Your competitor just won this deal'. Timeline shows only 3 hours elapsed between inquiry and competitor close.",
+      "voiceoverScript": "That prospect waited 3 hours for a response. Your competitor responded in 15 minutes. They closed the deal.",
+      "soundDesign": "Email notification, whoosh sound effect for sinking email, deal closing sound, sad trombone sound effect",
+      "textOnScreen": [
+        "78% of customers buy from the FIRST company that responds"
+      ],
+      "visualStat": "3-hour delay = Lost deal",
+      "emotion": "Regret, lost revenue, competitive disadvantage"
+    },
+    {
+      "sceneNumber": 4,
+      "startTime": "21s",
+      "endTime": "30s",
+      "visualDescription": "Same 5 chaotic tools transition into ONE unified Synthex dashboard. Animation: All leads flowing and consolidating into single clean interface. Dashboard appears: Modern, professional, organized. All leads auto-organize by urgency color-coding (RED=hot, ORANGE=warm, GREEN=follow-up). Top lead highlighted in RED: High-intent prospect clearly marked. Salesperson finds the hot lead in 10 seconds (not 8 hours). One-click response interface appears with pre-written personalized suggestion. Message sends immediately. Green checkmark appears—deal closing notification. Money in account notification flashes briefly.",
+      "voiceoverScript": "Synthex pulls every lead into one place. It reads each one. Tells you which ones are actually ready to buy. You respond in minutes, not hours.",
+      "soundDesign": "Smooth transition sound effect, positive notification sounds, cash register sound.",
+      "textOnScreen": [
+        "Found in 10 seconds. Responded in 3 minutes. Deal closed."
+      ],
+      "ctaText": "Stop losing deals to disorganization. Try Synthex free.",
+      "emotion": "Relief, control, winning, momentum"
+    }
+  ],
+  "watermark": {
+    "logo": "Synthex Logo",
+    "position": "bottom-right",
+    "sizeMainScenes": "120px x 120px",
+    "sizeFinalFrame": "200px x 200px",
+    "opacity": "45%",
+    "style": "White logo with subtle glow effect",
+    "startTime": "21s",
+    "finalFrameHoldDuration": "3s"
+  },
+  "exportSettings": {
+    "format": "MP4",
+    "videoCodec": "H.264",
+    "audioCodec": "AAC",
+    "bitrate": "20 Mbps",
+    "audioBitrate": "192 kbps"
+  }
+}

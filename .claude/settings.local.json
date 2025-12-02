@@ -6,6 +6,7 @@
       "Bash(npx vitest:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
+<<<<<<< Updated upstream
       "Bash(npm run test:verification:*)",
       "Bash(cat:*)",
       "Bash(find:*)",
@@ -26,6 +27,14 @@
       "Bash(git stash pop:*)",
       "Bash(git stash drop:*)",
       "Bash(findstr:*)"
+=======
+      "Bash(git -C \"d:\\Unite-Hub\" status)",
+      "Bash(git ls-tree:*)",
+      "Bash(npm run test:unit:*)",
+      "Bash(npm run test:integration:*)",
+      "Bash(npm run test:*)",
+      "Bash(npx vitest:*)"
+>>>>>>> Stashed changes
     ],
     "deny": [],
     "ask": []

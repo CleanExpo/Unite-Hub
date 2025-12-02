@@ -11,7 +11,7 @@
  * - ReportingAgent: Report generation
  */
 
-import { getSupabaseAdmin } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { createApiLogger } from '@/lib/logger';
 import Anthropic from '@anthropic-ai/sdk';
 

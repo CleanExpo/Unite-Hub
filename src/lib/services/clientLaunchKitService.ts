@@ -3,7 +3,7 @@
  * Phase 47: Generates and manages client welcome packs and launch materials
  */
 
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { generateWelcomePackMarkdown } from '@/lib/templates/welcomePackMarkdown';
 import { generateIntroVideoScript } from '@/lib/templates/introVideoScript';
 

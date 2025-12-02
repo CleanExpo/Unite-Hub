@@ -5,7 +5,8 @@
  * No external dependencies (Sentry, Datadog, etc.)
  */
 
-import { getSupabaseServer, supabaseAdmin } from '@/lib/supabase';
+import { getSupabaseServer } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { sendEmail } from '@/lib/email/email-service';
 import { log } from '@/lib/logger';
 

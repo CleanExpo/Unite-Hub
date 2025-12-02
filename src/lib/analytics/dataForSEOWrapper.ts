@@ -4,7 +4,7 @@
  * Implements 24-hour caching with brand-aware filtering
  */
 
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { createApiLogger } from '@/lib/logger';
 
 const logger = createApiLogger({ service: 'dataForSEOWrapper' });

@@ -12,7 +12,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { supabaseBrowser } from "@/lib/supabase";
 import { User, Mail, Building, Briefcase, Phone, Tag } from "lucide-react";
 import {
   Select,
@@ -93,32 +92,18 @@ export function EditContactModal({
         return;
       }
 
-      // Check if email changed and if it already exists
-      if (formData.email !== initialData.email) {
-        const { data: existing } = await supabaseBrowser
-          .from("contacts")
-          .select("id")
-          .eq("workspace_id", workspaceId)
-          .eq("email", formData.email)
-          .neq("id", contactId)
-          .single();
-
-        if (existing) {
-          setError("A contact with this email already exists");
-          setLoading(false);
-          return;
-        }
-      }
-
       // Parse tags
       const tagsArray = formData.tags
         ? formData.tags.split(",").map((tag) => tag.trim()).filter(Boolean)
         : [];
 
-      // Update contact
-      const { error: updateError } = await supabaseBrowser
-        .from("contacts")
-        .update({
+      // Update contact via API
+      const response = await fetch(`/api/contacts/${contactId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
           name: formData.name,
           email: formData.email,
           company: formData.company || null,
@@ -126,14 +111,13 @@ export function EditContactModal({
           phone: formData.phone || null,
           status: formData.status,
           tags: tagsArray,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", contactId)
-        .eq("workspace_id", workspaceId); // Security check
+        }),
+      });
 
-      if (updateError) {
-        console.error("Error updating contact:", updateError);
-        setError(updateError.message);
+      const result = await response.json();
+
+      if (!response.ok) {
+        setError(result.error || "Failed to update contact");
         setLoading(false);
         return;
       }

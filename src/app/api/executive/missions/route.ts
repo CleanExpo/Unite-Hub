@@ -6,9 +6,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { MissionPlanner } from '@/lib/executive/missionPlanner';
 import { ExecutiveBrain, DecisionTrigger } from '@/lib/executive/executiveBrain';
+import { createClient } from '@/lib/supabase/server';
 
 export async function GET(req: NextRequest) {
   try {
+    // Session validation
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const { searchParams } = new URL(req.url);
     const missionId = searchParams.get('id');
     const clientId = searchParams.get('client_id');
@@ -47,6 +55,13 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    // Session validation
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const body = await req.json();
     const { action, trigger, client_id, mission_type, priority, mission_id, step_number, result } = body;
 

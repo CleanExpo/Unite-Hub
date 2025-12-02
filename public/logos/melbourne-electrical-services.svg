@@ -1,0 +1,16 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Melbourne Electrical Services - Modern electrical contractor -->
+  <circle cx="100" cy="100" r="85" fill="#F39C12" opacity="0.1"/>
+
+  <!-- Lightning bolt in shield -->
+  <path d="M100 30 L130 80 L110 80 L120 120 L70 70 L90 70 Z" fill="#F39C12"/>
+
+  <!-- Shield outline -->
+  <path d="M65 55 L100 40 L135 55 L135 95 C135 120 100 140 100 140 C100 140 65 120 65 95 Z" stroke="#E67E22" stroke-width="4" fill="none"/>
+
+  <!-- Connection points (electrical terminals) -->
+  <circle cx="100" cy="155" r="8" fill="#E67E22"/>
+  <line x1="85" y1="155" x2="115" y2="155" stroke="#E67E22" stroke-width="3"/>
+  <circle cx="85" cy="155" r="4" fill="#F39C12"/>
+  <circle cx="115" cy="155" r="4" fill="#F39C12"/>
+</svg>

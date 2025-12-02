@@ -7,9 +7,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getLeadProfile, getFunnelSummary } from '@/lib/marketing/leadScoreEngine';
 import { getActivationInsights } from '@/lib/marketing/activationInsightsEngine';
 import { getRemarketingSummary } from '@/lib/marketing/remarketingListener';
+import { createClient } from '@/lib/supabase/server';
 
 export async function GET(req: NextRequest) {
   try {
+    // Session validation
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const { searchParams } = new URL(req.url);
     const type = searchParams.get('type');
     const id = searchParams.get('id');

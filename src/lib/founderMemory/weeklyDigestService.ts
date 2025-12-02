@@ -8,7 +8,7 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk';
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { momentumScoringService, type MomentumScore } from './momentumScoringService';
 import { patternExtractionService, type CrossClientPattern } from './patternExtractionService';
 import { opportunityConsolidationService } from './opportunityConsolidationService';

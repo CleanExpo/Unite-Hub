@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { competitiveBenchmarkService } from '@/lib/seo/competitiveBenchmarkService';
 import logger from '@/lib/logger';
+import { createClient } from '@/lib/supabase/server';
 
 interface CompetitiveBenchmarkRequest {
   clientDomain: string;
@@ -14,6 +15,13 @@ interface CompetitiveBenchmarkRequest {
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
+    // Session validation
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const body = (await request.json()) as CompetitiveBenchmarkRequest;
 
     const { clientDomain, competitors } = body;

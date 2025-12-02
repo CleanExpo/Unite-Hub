@@ -15,7 +15,7 @@
  */
 
 import { GoogleGenAI } from "@google/genai";
-import { getSupabaseAdmin } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
 
 // Initialize Gemini client with v1alpha for media_resolution support
 export const geminiClient = new GoogleGenAI({

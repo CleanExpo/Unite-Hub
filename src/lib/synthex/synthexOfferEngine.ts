@@ -7,10 +7,13 @@
  * - Growth Wave 25% Off (limited to 200 slots)
  * - Standard Full Price (unlimited)
  *
- * Integrates with synthex_offer_counters table to track usage and enforce limits.
+ * NOTE: Database operations (getCurrentOfferTier, isOfferAvailable, consumeOfferSlot, etc.)
+ * have been moved to synthexOfferEngine.server.ts to prevent server-only code from being
+ * bundled into client components.
+ *
+ * For server-side database operations, import from:
+ *   import { getCurrentOfferTier, isOfferAvailable } from '@/lib/synthex/synthexOfferEngine.server';
  */
-
-import { supabaseAdmin } from '@/lib/supabase';
 
 // ============================================================================
 // PLAN DEFINITIONS
@@ -311,103 +314,9 @@ export async function calculateEffectivePrice(
 // ============================================================================
 // OFFER TIER AVAILABILITY
 // ============================================================================
-
-/**
- * Get current available offer tier based on usage
- * Returns the best available tier (early_founders > growth_wave > standard)
- */
-export async function getCurrentOfferTier(): Promise<{
-  tier: string;
-  label: string;
-  available: boolean;
-  remaining: number; // Slots remaining (-1 if unlimited)
-}> {
-  const { data: counters, error } = await supabaseAdmin
-    .from('synthex_offer_counters')
-    .select('counter_key, label, tier, limit_count, consumed')
-    .order('tier', { ascending: false }); // Order: early_founders, growth_wave, standard
-
-  if (error || !counters) {
-    console.error('Error fetching offer counters:', error);
-    return {
-      tier: 'standard',
-      label: 'Standard Pricing',
-      available: true,
-      remaining: -1,
-    };
-  }
-
-  // Find best available tier
-  for (const counter of counters) {
-    const available = counter.limit_count === -1 || counter.consumed < counter.limit_count;
-    if (available) {
-      return {
-        tier: counter.tier,
-        label: counter.label,
-        available: true,
-        remaining: counter.limit_count === -1 ? -1 : counter.limit_count - counter.consumed,
-      };
-    }
-  }
-
-  // Fallback to standard
-  return {
-    tier: 'standard',
-    label: 'Standard Pricing',
-    available: true,
-    remaining: -1,
-  };
-}
-
-/**
- * Check if a specific offer tier is still available
- */
-export async function isOfferAvailable(offerTier: string): Promise<boolean> {
-  const offer = OFFER_TIERS[offerTier];
-  if (!offer) return false;
-
-  if (offer.limit === -1) return true; // Unlimited
-
-  const { data: counter, error } = await supabaseAdmin
-    .from('synthex_offer_counters')
-    .select('limit_count, consumed')
-    .eq('counter_key', offer.counterKey)
-    .single();
-
-  if (error || !counter) return false;
-
-  return counter.consumed < counter.limit_count;
-}
-
-/**
- * Consume an offer slot (increment counter)
- */
-export async function consumeOfferSlot(offerTier: string): Promise<boolean> {
-  const offer = OFFER_TIERS[offerTier];
-  if (!offer) return false;
-
-  if (offer.limit === -1) return true; // Unlimited, no need to increment
-
-  const { data: currentCounter } = await supabaseAdmin
-    .from('synthex_offer_counters')
-    .select('consumed, limit_count')
-    .eq('counter_key', offer.counterKey)
-    .single();
-
-  if (!currentCounter || currentCounter.consumed >= currentCounter.limit_count) {
-    return false; // No slots remaining
-  }
-
-  const { error } = await supabaseAdmin
-    .from('synthex_offer_counters')
-    .update({
-      consumed: currentCounter.consumed + 1,
-      updated_at: new Date().toISOString(),
-    })
-    .eq('counter_key', offer.counterKey);
-
-  return !error;
-}
+// NOTE: Database operations have been moved to synthexOfferEngine.server.ts
+// Import from there for server-side usage:
+//   import { getCurrentOfferTier, isOfferAvailable, consumeOfferSlot } from '@/lib/synthex/synthexOfferEngine.server';
 
 // ============================================================================
 // PLAN INFORMATION
@@ -461,76 +370,12 @@ export function formatPrice(price: number, currency: string = 'AUD'): string {
   return `$${price.toFixed(2)} ${currency}/month`;
 }
 
-/**
- * Get pricing summary for all plans with current best offer
- */
-export async function getPricingSummary(): Promise<
-  Array<{
-    planCode: string;
-    planName: string;
-    basePrice: number;
-    bestOfferPrice: number;
-    bestOfferDiscount: number;
-    bestOfferLabel: string;
-  }>
-> {
-  const { tier: bestOfferTier } = await getCurrentOfferTier();
-
-  const summary = [];
-  for (const [code, plan] of Object.entries(PLANS)) {
-    const pricing = await calculateEffectivePrice(code, bestOfferTier);
-    summary.push({
-      planCode: code,
-      planName: plan.name,
-      basePrice: pricing.basePrice,
-      bestOfferPrice: pricing.effectivePrice,
-      bestOfferDiscount: pricing.discountPercentage,
-      bestOfferLabel: pricing.offerLabel,
-    });
-  }
-
-  return summary;
-}
+// getPricingSummary has been moved to synthexOfferEngine.server.ts
 
 // ============================================================================
 // OFFER DISPLAY FOR UI
 // ============================================================================
-
-/**
- * Get offer banner data for UI display
- */
-export async function getOfferBanner(): Promise<{
-  show: boolean;
-  tier: string;
-  label: string;
-  discountPercentage: number;
-  remaining: number;
-  message: string;
-} | null> {
-  const current = await getCurrentOfferTier();
-
-  if (current.tier === 'standard') {
-    return null; // No special offer to show
-  }
-
-  const offer = OFFER_TIERS[current.tier];
-  let message = '';
-
-  if (current.tier === 'early_founders') {
-    message = `Limited to first 50 founders - Only ${current.remaining} slots remaining!`;
-  } else if (current.tier === 'growth_wave') {
-    message = `Early growth wave offer - ${current.remaining} slots available`;
-  }
-
-  return {
-    show: true,
-    tier: current.tier,
-    label: offer.label,
-    discountPercentage: offer.discountPercentage,
-    remaining: current.remaining,
-    message,
-  };
-}
+// getOfferBanner has been moved to synthexOfferEngine.server.ts
 
 // ============================================================================
 // VALIDATION & HELPERS
@@ -567,44 +412,7 @@ export async function calculateAnnualSavings(
   };
 }
 
-/**
- * Get offer stats for analytics
- */
-export async function getOfferStats(): Promise<{
-  earlyFoundersConsumed: number;
-  earlyFoundersRemaining: number;
-  growthWaveConsumed: number;
-  growthWaveRemaining: number;
-  standardConsumed: number;
-}> {
-  const { data: counters } = await supabaseAdmin
-    .from('synthex_offer_counters')
-    .select('tier, consumed, limit_count');
-
-  const stats = {
-    earlyFoundersConsumed: 0,
-    earlyFoundersRemaining: 0,
-    growthWaveConsumed: 0,
-    growthWaveRemaining: 0,
-    standardConsumed: 0,
-  };
-
-  if (counters) {
-    for (const counter of counters) {
-      if (counter.tier === 'early_founders') {
-        stats.earlyFoundersConsumed = counter.consumed;
-        stats.earlyFoundersRemaining = counter.limit_count - counter.consumed;
-      } else if (counter.tier === 'growth_wave') {
-        stats.growthWaveConsumed = counter.consumed;
-        stats.growthWaveRemaining = counter.limit_count - counter.consumed;
-      } else if (counter.tier === 'standard') {
-        stats.standardConsumed = counter.consumed;
-      }
-    }
-  }
-
-  return stats;
-}
+// getOfferStats has been moved to synthexOfferEngine.server.ts
 
 // ============================================================================
 // VISUAL GENERATION CAPABILITIES

@@ -7,7 +7,8 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseAdmin } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
+import { createClient } from '@/lib/supabase/server';
 import { createApiLogger } from '@/lib/logger';
 import { sendEmail } from '@/lib/email/email-service';
 
@@ -318,6 +319,14 @@ function buildReportText(report: any, project: any): string {
  * Send report via email
  */
 export async function POST(req: NextRequest) {
+  // Authentication check
+  const supabase = await createClient();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const body: SendReportRequest = await req.json();
     const { reportId, recipientEmail, projectId } = body;
@@ -328,10 +337,10 @@ export async function POST(req: NextRequest) {
 
     logger.info('📧 Sending report email', { reportId, recipientEmail });
 
-    const supabase = getSupabaseAdmin();
+    const supabaseAdmin = getSupabaseAdmin();
 
     // Fetch report
-    const { data: report, error: reportError } = await supabase
+    const { data: report, error: reportError } = await supabaseAdmin
       .from('managed_service_reports')
       .select('*')
       .eq('id', reportId)
@@ -345,7 +354,7 @@ export async function POST(req: NextRequest) {
     // Fetch project
     let project = null;
     if (projectId || report.project_id) {
-      const { data: projectData } = await supabase
+      const { data: projectData } = await supabaseAdmin
         .from('managed_service_projects')
         .select('*')
         .eq('id', projectId || report.project_id)
@@ -374,7 +383,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Update report status
-    await supabase
+    await supabaseAdmin
       .from('managed_service_reports')
       .update({
         status: 'sent',
@@ -384,7 +393,7 @@ export async function POST(req: NextRequest) {
       .eq('id', reportId);
 
     // Create notification record
-    await supabase
+    await supabaseAdmin
       .from('managed_service_notifications')
       .insert({
         project_id: report.project_id,

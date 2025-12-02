@@ -97,12 +97,16 @@ export const db = {
       if (error) throw error;
       return contact;
     },
-    update: async (id: string, data: any) => {
+    update: async (id: string, workspaceId: string, data: any) => {
+      if (!workspaceId) {
+        throw new Error('workspaceId is required for workspace isolation');
+      }
       const supabaseServer = await getSupabaseServer();
       const { data: contact, error } = await supabaseServer
         .from("contacts")
         .update(data)
         .eq("id", id)
+        .eq("workspace_id", workspaceId)
         .select()
         .single();
       if (error) throw error;
@@ -137,14 +141,18 @@ export const db = {
       if (error) throw error;
       return contact;
     },
-    getById: async (id: string) => {
+    getById: async (id: string, workspaceId: string) => {
+      if (!workspaceId) {
+        throw new Error('workspaceId is required for workspace isolation');
+      }
       const { data, error } = await supabase
         .from("contacts")
         .select("*")
         .eq("id", id)
+        .eq("workspace_id", workspaceId)
         .single();
-      if (error) throw error;
-      return data;
+      if (error && error.code !== "PGRST116") throw error;
+      return data || null;
     },
     listByWorkspace: async (workspaceId: string) => {
       const { data, error } = await supabase
@@ -155,18 +163,25 @@ export const db = {
       if (error) throw error;
       return data;
     },
-    updateScore: async (id: string, score: number) => {
+    updateScore: async (id: string, workspaceId: string, score: number) => {
+      if (!workspaceId) {
+        throw new Error('workspaceId is required for workspace isolation');
+      }
       const supabaseServer = await getSupabaseServer();
       const { data, error } = await supabaseServer
         .from("contacts")
         .update({ ai_score: score, updated_at: new Date() })
         .eq("id", id)
+        .eq("workspace_id", workspaceId)
         .select()
         .single();
       if (error) throw error;
       return data;
     },
-    updateIntelligence: async (id: string, intelligence: any) => {
+    updateIntelligence: async (id: string, workspaceId: string, intelligence: any) => {
+      if (!workspaceId) {
+        throw new Error('workspaceId is required for workspace isolation');
+      }
       const supabaseServer = await getSupabaseServer();
       const { data, error } = await supabaseServer
         .from("contacts")
@@ -176,14 +191,18 @@ export const db = {
           updated_at: new Date(),
         })
         .eq("id", id)
+        .eq("workspace_id", workspaceId)
         .select()
         .single();
       if (error) throw error;
       return data;
     },
-    getWithEmails: async (id: string) => {
-      const contact = await db.contacts.getById(id);
-      const emails = await db.emails.getByContact(id);
+    getWithEmails: async (id: string, workspaceId: string) => {
+      if (!workspaceId) {
+        throw new Error('workspaceId is required for workspace isolation');
+      }
+      const contact = await db.contacts.getById(id, workspaceId);
+      const emails = await db.emails.getByContact(id, workspaceId);
       return { ...contact, emails };
     },
     getHighestScored: async (workspaceId: string, limit = 10) => {
@@ -220,33 +239,45 @@ export const db = {
       if (error) throw error;
       return email;
     },
-    getByContact: async (contactId: string) => {
+    getByContact: async (contactId: string, workspaceId: string) => {
+      if (!workspaceId) {
+        throw new Error('workspaceId is required for workspace isolation');
+      }
       const { data, error } = await supabase
         .from("emails")
         .select("*")
         .eq("contact_id", contactId)
+        .eq("workspace_id", workspaceId)
         .order("received_at", { ascending: false });
       if (error) throw error;
       return data || [];
     },
-    listByContact: async (contactId: string, limit: number = 50) => {
+    listByContact: async (contactId: string, workspaceId: string, limit: number = 50) => {
+      if (!workspaceId) {
+        throw new Error('workspaceId is required for workspace isolation');
+      }
       const { data, error } = await supabase
         .from("emails")
         .select("*")
         .eq("contact_id", contactId)
+        .eq("workspace_id", workspaceId)
         .order("received_at", { ascending: false })
         .limit(limit);
       if (error) throw error;
       return data || [];
     },
-    getById: async (id: string) => {
+    getById: async (id: string, workspaceId: string) => {
+      if (!workspaceId) {
+        throw new Error('workspaceId is required for workspace isolation');
+      }
       const { data, error } = await supabase
         .from("emails")
         .select("*")
         .eq("id", id)
+        .eq("workspace_id", workspaceId)
         .single();
-      if (error) throw error;
-      return data;
+      if (error && error.code !== "PGRST116") throw error;
+      return data || null;
     },
     getUnprocessed: async (workspaceId: string) => {
       const { data, error } = await supabase

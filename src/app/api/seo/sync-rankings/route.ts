@@ -17,7 +17,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createSeoMonitor } from '@/lib/seo/providers';
-import { getSupabaseAdmin } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
 
 // Primary keywords tracked for Synthex.social
 const SYNTHEX_PRIMARY_KEYWORDS = [

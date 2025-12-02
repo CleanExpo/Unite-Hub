@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getGSCAuthUrl } from '@/lib/integrations/google-search-console';
+import { createClient } from '@/lib/supabase/server';
 
 /**
  * GET /api/aido/auth/gsc/url
@@ -14,6 +15,13 @@ import { getGSCAuthUrl } from '@/lib/integrations/google-search-console';
  */
 export async function GET(req: NextRequest) {
   try {
+    // Session validation
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const { searchParams } = new URL(req.url);
     const workspaceId = searchParams.get('workspaceId');
 
