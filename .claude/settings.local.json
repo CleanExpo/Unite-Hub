@@ -11,7 +11,14 @@
       "Bash(find:*)",
       "Bash(npm run test:integration:*)",
       "Bash(npm test:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(dir:*)",
+      "Bash(git checkout:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)",
+      "Bash(cross-env NODE_OPTIONS=--max-old-space-size=6144 next build:*)",
+      "Bash(npx next build:*)",
+      "Bash(gh pr create:*)"
     ],
     "deny": [],
     "ask": []
