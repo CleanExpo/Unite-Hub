@@ -103,7 +103,7 @@ See `docs/MULTI_PLATFORM_MARKETING_INTELLIGENCE.md`
 - **Agents**: Founder OS | AI Phill | Cognitive Twin | SEO Leak | Social Inbox | Search Suite | Boost Bump | Pre-Client Identity
 - **Tables**: founder_businesses | founder_business_vault_secrets | ai_phill_* | cognitive_twin_* | seo_leak_signal_profiles | social_inbox_* | search_keywords | boost_jobs | pre_clients
 - **Files**: `scripts/run-integrity-check.mjs` | `scripts/INTEGRITY_CHECK_README.md` | Migrations 300-305
-- **Troubleshoot**: Missing tables → Supabase migrations 300-305 | Missing routes → `src/app/api/founder/` | Missing services → `src/lib/founder/` | `src/lib/founderOps/`
+- **Troubleshoot**: Missing tables → migrations 300-305 | Missing routes → `src/app/api/founder/` | Missing services → `src/lib/founder/` or `src/lib/founderOps/`
 
 ## Environment & Config
 
@@ -138,7 +138,7 @@ See `docs/MULTI_PLATFORM_MARKETING_INTELLIGENCE.md`
 
 **Database**: `COMPLETE_DATABASE_SCHEMA.sql` | `supabase/migrations/`
 
-**Agents**: `.claude/agent.md` (CANONICAL) | `src/lib/agents/`
+**Agents**: `.claude/agent.md` (CANONICAL) | `.claude/AGENT_REFERENCE.md` (quick lookup) | `src/lib/agents/`
 
 **Components**: 7 Framer Motion components in `src/components/ui/` — Showcase: `/showcases/components`
 
@@ -165,3 +165,26 @@ See `docs/MULTI_PLATFORM_MARKETING_INTELLIGENCE.md`
 **Quick tip**: Load CLAUDE.md + only the 1-2 docs your task needs. Don't load full 1,430 lines.
 
 **Example**: Email task → CLAUDE.md + `EMAIL_SERVICE_COMPLETE.md` = 76% context saved
+
+---
+
+## Troubleshooting & Support
+
+**Quick fixes** (90% of issues): See `.claude/QUICK_FIX_GUIDE.md`
+
+- workspace_id undefined
+- supabase is not defined
+- Email agent low quality
+- Content generation slow
+- RLS policy errors
+- API 401 Unauthorized
+- And 10+ more common issues
+
+**Agent lookup & workflows**: See `.claude/AGENT_REFERENCE.md`
+
+- Quick agent lookup table
+- Input/output schemas
+- Common workflows
+- Model selection guide
+
+**For debugging**: Use `.claude/context-manifest.md` to find the right doc fast
