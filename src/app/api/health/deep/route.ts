@@ -34,27 +34,42 @@ interface DeepHealthResponse {
   };
 }
 
+async function withTimeout<T>(
+  promise: Promise<T>,
+  timeoutMs: number,
+  timeoutValue: T
+): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((resolve) => setTimeout(() => resolve(timeoutValue), timeoutMs)),
+  ]);
+}
+
 async function checkDatabase(): Promise<DependencyCheck> {
   const start = Date.now();
   try {
     const supabase = await getSupabaseServer();
-    const { error } = await supabase
-      .from('organizations')
-      .select('id')
-      .limit(1);
 
-    if (error) {
+    const result = await withTimeout(
+      supabase.from('organizations').select('id').limit(1),
+      5000,
+      { data: null, error: { message: 'Database check timed out after 5 seconds' } as any }
+    );
+
+    const latency = Date.now() - start;
+
+    if (result.error) {
       return {
-        status: 'unhealthy',
-        latency_ms: Date.now() - start,
-        error: error.message,
+        status: latency > 5000 ? 'degraded' : 'unhealthy',
+        latency_ms: latency,
+        error: result.error.message,
         timestamp: new Date().toISOString(),
       };
     }
 
     return {
       status: 'healthy',
-      latency_ms: Date.now() - start,
+      latency_ms: latency,
       timestamp: new Date().toISOString(),
     };
   } catch (error) {
@@ -71,11 +86,27 @@ async function checkCache(): Promise<DependencyCheck> {
   const start = Date.now();
   try {
     const redis = getRedisClient();
-    await redis.ping();
+
+    const result = await withTimeout(
+      redis.ping(),
+      5000,
+      'TIMEOUT'
+    );
+
+    const latency = Date.now() - start;
+
+    if (result === 'TIMEOUT') {
+      return {
+        status: 'degraded',
+        latency_ms: latency,
+        error: 'Redis ping timed out after 5 seconds',
+        timestamp: new Date().toISOString(),
+      };
+    }
 
     return {
       status: 'healthy',
-      latency_ms: Date.now() - start,
+      latency_ms: latency,
       timestamp: new Date().toISOString(),
     };
   } catch (error) {
@@ -103,12 +134,60 @@ async function checkAIServices(): Promise<DependencyCheck> {
       };
     }
 
-    // Could add actual API call here, but API key presence is sufficient for now
-    return {
-      status: 'healthy',
-      latency_ms: Date.now() - start,
-      timestamp: new Date().toISOString(),
-    };
+    // Perform lightweight API validation check
+    try {
+      const response = await withTimeout(
+        fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: {
+            'x-api-key': apiKey,
+            'anthropic-version': '2023-06-01',
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: 'claude-3-haiku-20240307',
+            max_tokens: 1,
+            messages: [{ role: 'user', content: 'ping' }],
+          }),
+        }),
+        5000,
+        null as any
+      );
+
+      const latency = Date.now() - start;
+
+      if (!response) {
+        return {
+          status: 'degraded',
+          latency_ms: latency,
+          error: 'Anthropic API check timed out after 5 seconds',
+          timestamp: new Date().toISOString(),
+        };
+      }
+
+      // 200 or 400 means API is reachable (400 expected for minimal request)
+      if (response.ok || response.status === 400) {
+        return {
+          status: 'healthy',
+          latency_ms: latency,
+          timestamp: new Date().toISOString(),
+        };
+      }
+
+      return {
+        status: 'degraded',
+        latency_ms: latency,
+        error: `Anthropic API returned status ${response.status}`,
+        timestamp: new Date().toISOString(),
+      };
+    } catch (fetchError) {
+      return {
+        status: 'degraded',
+        latency_ms: Date.now() - start,
+        error: fetchError instanceof Error ? fetchError.message : 'API check failed',
+        timestamp: new Date().toISOString(),
+      };
+    }
   } catch (error) {
     return {
       status: 'unhealthy',
@@ -123,14 +202,27 @@ async function checkExternalAPIs(): Promise<DependencyCheck> {
   const start = Date.now();
   try {
     // Check required environment variables for external services
-    const hasGmailConfig = process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET;
-    const hasStripeConfig = process.env.STRIPE_SECRET_KEY;
+    const hasGmailConfig = Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET);
+    const hasEmailConfig = Boolean(
+      process.env.SENDGRID_API_KEY ||
+      process.env.RESEND_API_KEY ||
+      (process.env.EMAIL_SERVER_HOST && process.env.EMAIL_SERVER_USER)
+    );
+    const hasSupabaseConfig = Boolean(
+      process.env.NEXT_PUBLIC_SUPABASE_URL &&
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    );
 
-    if (!hasGmailConfig || !hasStripeConfig) {
+    const missingServices: string[] = [];
+    if (!hasGmailConfig) missingServices.push('Gmail OAuth');
+    if (!hasEmailConfig) missingServices.push('Email service');
+    if (!hasSupabaseConfig) missingServices.push('Supabase');
+
+    if (missingServices.length > 0) {
       return {
-        status: 'degraded',
+        status: missingServices.includes('Supabase') ? 'unhealthy' : 'degraded',
         latency_ms: Date.now() - start,
-        error: 'Some external API credentials not configured',
+        error: `Missing configurations: ${missingServices.join(', ')}`,
         timestamp: new Date().toISOString(),
       };
     }

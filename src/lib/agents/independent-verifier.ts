@@ -12,6 +12,9 @@ import { promises as fs } from 'fs';
 import { execSync } from 'child_process';
 import { resolve } from 'path';
 import { createApiLogger } from '@/lib/logger';
+import * as evidenceCollector from './evidence-collector';
+import * as proofGenerator from './proof-generator';
+import * as evidenceStorage from './evidence-storage';
 
 const logger = createApiLogger({ context: 'IndependentVerifier' });
 
@@ -46,6 +49,11 @@ export interface VerificationResult {
   timestamp: string;
   task_id: string;
   summary: string;
+  evidence_package?: {                 // Cryptographic proof of verification
+    path: string;
+    checksum: string;
+    merkle_root: string;
+  };
 }
 
 // ============================================================================
@@ -433,6 +441,63 @@ export class IndependentVerifier {
     // CRITICAL: Only return verified=true if ALL evidence passes
     const verified = failures.length === 0 && evidence.length > 0;
 
+    // Collect evidence for audit trail
+    let evidencePackageInfo: { path: string; checksum: string; merkle_root: string } | undefined;
+    try {
+      // Capture execution log
+      await evidenceCollector.captureExecutionLog(request.task_id, evidence.map(e => ({
+        step_id: `verify-${e.criterion}`,
+        description: e.criterion,
+        status: e.result === 'pass' ? 'completed' : 'failed',
+        start_time: Date.now() - 1000,
+        end_time: Date.now(),
+        error: e.result === 'fail' ? e.proof : undefined,
+      })), this.verifier_id);
+
+      // Capture state snapshot
+      const stateSnapshot = await evidenceCollector.captureStateSnapshot(
+        request.task_id,
+        'after',
+        {
+          verified,
+          criteria_count: request.completion_criteria.length,
+          passed_count: evidence.filter(e => e.result === 'pass').length,
+          failed_count: failures.length,
+        },
+        this.verifier_id
+      );
+
+      // Get evidence package
+      const pkg = await evidenceCollector.getEvidencePackage(request.task_id);
+
+      // Generate cryptographic proof
+      const proof = await proofGenerator.generateProofPackage(request.task_id, pkg);
+
+      // Store evidence
+      await evidenceStorage.storeEvidence(request.task_id, pkg, {
+        verification_status: verified,
+        verifier_id: this.verifier_id,
+        proof_merkle_root: proof.merkle_root,
+      }, this.verifier_id);
+
+      evidencePackageInfo = {
+        path: stateSnapshot,
+        checksum: proof.checksums[stateSnapshot] || proof.hmac,
+        merkle_root: proof.merkle_root,
+      };
+
+      logger.info('Evidence collected and stored', {
+        task_id: request.task_id,
+        merkle_root: proof.merkle_root,
+      });
+    } catch (error) {
+      logger.warn('Failed to collect evidence', {
+        task_id: request.task_id,
+        error: error instanceof Error ? error.message : String(error),
+      });
+      // Continue - evidence collection failure shouldn't block verification result
+    }
+
     const result: VerificationResult = {
       verified,
       evidence,
@@ -443,6 +508,7 @@ export class IndependentVerifier {
       summary: verified
         ? `✓ Task ${request.task_id} VERIFIED - All ${evidence.length} criteria passed`
         : `✗ Task ${request.task_id} FAILED - ${failures.length} of ${evidence.length} criteria failed`,
+      evidence_package: evidencePackageInfo,
     };
 
     logger.info('Verification complete', {
@@ -450,6 +516,7 @@ export class IndependentVerifier {
       verified: result.verified,
       passed: evidence.filter(e => e.result === 'pass').length,
       failed: failures.length,
+      evidence_collected: !!evidencePackageInfo,
     });
 
     return result;

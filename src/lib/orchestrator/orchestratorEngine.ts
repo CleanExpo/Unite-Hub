@@ -519,11 +519,58 @@ export class OrchestratorEngine {
   /**
    * Verify a step execution using the Independent Verifier
    * CRITICAL: Task status CANNOT be marked 'completed' without verification=true
+   * TIMEOUT: Maximum 30 seconds per step verification
    */
   private async verifyStepExecution(
     step: ExecutionStep,
     output: Record<string, any>,
-    maxRetries: number = 3
+    maxRetries: number = 3,
+    timeoutMs: number = 30000
+  ): Promise<{
+    verified: boolean;
+    attempts: number;
+    evidence: Array<{
+      criterion: string;
+      result: 'pass' | 'fail';
+      proof: string;
+      checked_at: string;
+    }>;
+    error?: string;
+  }> {
+    let attempts = 0;
+    let lastError: string | undefined;
+
+    // Create timeout promise
+    const timeoutPromise = new Promise<never>((_, reject) => {
+      setTimeout(() => reject(new Error('Verification timeout after 30 seconds')), timeoutMs);
+    });
+
+    // Wrap verification in timeout race
+    try {
+      return await Promise.race([
+        this.performVerification(step, output, maxRetries),
+        timeoutPromise,
+      ]);
+    } catch (error) {
+      if (error instanceof Error && error.message.includes('timeout')) {
+        return {
+          verified: false,
+          attempts: 0,
+          evidence: [],
+          error: 'Verification timeout after 30 seconds',
+        };
+      }
+      throw error;
+    }
+  }
+
+  /**
+   * Perform verification with retry logic
+   */
+  private async performVerification(
+    step: ExecutionStep,
+    output: Record<string, any>,
+    maxRetries: number
   ): Promise<{
     verified: boolean;
     attempts: number;
@@ -610,8 +657,8 @@ export class OrchestratorEngine {
 
         // Don't retry if it's a permanent error (e.g., network issue)
         if (attempts < maxRetries) {
-          // Exponential backoff: 1s, 2s, 4s
-          const delay = Math.pow(2, attempts - 1) * 1000;
+          // Exponential backoff: 2s, 4s, 8s
+          const delay = Math.pow(2, attempts) * 1000;
           await new Promise((resolve) => setTimeout(resolve, delay));
         }
       }
@@ -622,6 +669,86 @@ export class OrchestratorEngine {
       attempts,
       evidence: [],
       error: lastError || 'Verification failed after all retry attempts',
+    };
+  }
+
+  /**
+   * Verify task completion - ALL steps must be verified before marking task complete
+   * CRITICAL: Task-level all-or-nothing verification gate
+   * Returns task_verified = false if ANY step failed verification
+   * Blocks task from marking complete until verified = true
+   *
+   * PUBLIC: Can be called to explicitly verify task completion
+   */
+  public async verifyTaskCompletion(
+    taskId: string,
+    steps: ExecutionStep[]
+  ): Promise<{
+    task_verified: boolean;
+    totalSteps: number;
+    verifiedSteps: number;
+    failedSteps: Array<{
+      stepIndex: number;
+      agent: string;
+      error: string;
+      evidenceCount: number;
+    }>;
+    evidenceReport: string;
+  }> {
+    const failedSteps: Array<{
+      stepIndex: number;
+      agent: string;
+      error: string;
+      evidenceCount: number;
+    }> = [];
+
+    let verifiedCount = 0;
+    let evidenceLinks: string[] = [];
+
+    for (const step of steps) {
+      if (step.verified) {
+        verifiedCount++;
+        if (step.verificationEvidence && step.verificationEvidence.length > 0) {
+          evidenceLinks.push(
+            `Step ${step.stepIndex} (${step.assignedAgent}): ${step.verificationEvidence.length} criteria verified`
+          );
+        }
+      } else {
+        failedSteps.push({
+          stepIndex: step.stepIndex,
+          agent: step.assignedAgent,
+          error: step.lastVerificationError || step.error || 'Unknown verification failure',
+          evidenceCount: step.verificationEvidence?.length || 0,
+        });
+      }
+    }
+
+    // Task is verified ONLY if ALL steps are verified
+    const taskVerified = failedSteps.length === 0 && verifiedCount === steps.length;
+
+    // Generate evidence report
+    const evidenceReport = `
+=== Task Verification Report ===
+Task ID: ${taskId}
+Total Steps: ${steps.length}
+Verified Steps: ${verifiedCount}
+Failed Steps: ${failedSteps.length}
+
+${evidenceLinks.length > 0 ? '--- Evidence Trail ---\n' + evidenceLinks.join('\n') : ''}
+
+${failedSteps.length > 0 ? '--- Failures ---\n' + failedSteps.map(f =>
+  `Step ${f.stepIndex} (${f.agent}): ${f.error}`
+).join('\n') : ''}
+
+Final Status: ${taskVerified ? '✓ VERIFIED' : '✗ FAILED'}
+`.trim();
+
+    return {
+      task_verified: taskVerified,
+      totalSteps: steps.length,
+      verifiedSteps: verifiedCount,
+      failedSteps,
+      evidenceReport,
     };
   }
 
