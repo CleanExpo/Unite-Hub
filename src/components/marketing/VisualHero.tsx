@@ -43,7 +43,7 @@ export function VisualHero({
   ctaSecondary,
   personaId,
   businessType,
-  energyLevel = "neutral",
+  energyLevel = "neutral", // eslint-disable-line @typescript-eslint/no-unused-vars
   visualMode = "image_only",
   heroImage,
   heroVideo,
@@ -67,6 +67,7 @@ export function VisualHero({
   const getBackgroundGradient = () => {
     if (!profile) return "radial-gradient(circle at center top, #0d2a5c 0%, #051224 70%)";
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const primary = profile.cssVariables["--primary"] || "#347bf7";
     const background = profile.cssVariables["--background"] || "#0a1e3b";
 
