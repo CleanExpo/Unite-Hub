@@ -9,7 +9,8 @@
 import Fastify from 'fastify';
 import FastifyRateLimit from '@fastify/rate-limit';
 import FastifyCors from '@fastify/cors';
-import fetch from 'node-fetch';
+
+// Use Node.js built-in fetch (available in Node 18+)
 
 const PORT = parseInt(process.env.MCP_GATEWAY_PORT || '3200');
 const LOG_LEVEL = process.env.MCP_LOG_LEVEL || 'info';

@@ -66,7 +66,7 @@ services:
   ############################################################################
 
   mcp-gateway:
-    image: node:22-alpine
+    image: node:20-alpine
     container_name: mcp-gateway
     working_dir: /app
     volumes:
@@ -100,7 +100,7 @@ services:
   ############################################################################
 
   filesystem-mcp:
-    image: node:22-alpine
+    image: node:20-alpine
     container_name: filesystem-mcp
     working_dir: /app
     volumes:
@@ -123,7 +123,7 @@ services:
       retries: 3
 
   process-mcp:
-    image: node:22-alpine
+    image: node:20-alpine
     container_name: process-mcp
     working_dir: /app
     volumes:
@@ -148,7 +148,7 @@ services:
       retries: 3
 
   database-mcp:
-    image: node:22-alpine
+    image: node:20-alpine
     container_name: database-mcp
     working_dir: /app
     volumes:
@@ -174,7 +174,7 @@ services:
       retries: 3
 
   git-mcp:
-    image: node:22-alpine
+    image: node:20-alpine
     container_name: git-mcp
     working_dir: /app
     volumes:
