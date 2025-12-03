@@ -15,7 +15,7 @@
  */
 
 import { DataForSEOClient } from "./dataforseoClient";
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import type { AuditResult, AuditConfig, AuditTier } from "@/lib/seo/auditTypes";
 
 export class AuditEngine {

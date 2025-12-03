@@ -6,9 +6,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { AIDirectorEngine } from '@/lib/director/aiDirectorEngine';
 import { AIDirectorRiskEngine } from '@/lib/director/aiDirectorRiskEngine';
+import { createClient } from '@/lib/supabase/server';
 
 export async function GET(req: NextRequest) {
   try {
+    // Session validation
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const { searchParams } = new URL(req.url);
     const severity = searchParams.get('severity');
     const category = searchParams.get('category');
@@ -59,6 +67,13 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    // Session validation
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const body = await req.json();
     const { client_id, action } = body;
 

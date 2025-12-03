@@ -9,7 +9,7 @@
  * - Rate limiting
  */
 
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { log } from '@/lib/logger';
 
 export interface ValidationResult {

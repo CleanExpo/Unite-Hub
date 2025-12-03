@@ -1,0 +1,23 @@
+{
+  "checkpointId": "test-checkpoint-1-checkpoint-0",
+  "stepIndex": 0,
+  "passed": true,
+  "criteriaResults": [
+    {
+      "criterionId": "file_exists",
+      "criterionType": "output_generated",
+      "description": "File exists and has content",
+      "passed": true,
+      "evidence": "File: D:\\Unite-Hub\\audit-reports-test\\test-output.json, Size: 20 bytes, Modified: 2025-12-03T00:15:25.260Z"
+    },
+    {
+      "criterionId": "no_placeholders",
+      "criterionType": "no_placeholders",
+      "description": "No placeholder text in file",
+      "passed": true,
+      "evidence": "No placeholders found in D:\\Unite-Hub\\audit-reports-test\\test-output.json"
+    }
+  ],
+  "failedCriteria": [],
+  "timestamp": 1764720925348
+}

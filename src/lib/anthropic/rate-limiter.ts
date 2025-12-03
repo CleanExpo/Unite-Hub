@@ -18,6 +18,7 @@ import {
   recordAnthropicFailure,
 } from './client';
 import { getModelPricing } from './models';
+import { sanitizeError } from '../ai/sanitize';
 
 export interface RetryOptions {
   maxRetries?: number;
@@ -169,10 +170,11 @@ export async function callAnthropicWithRetry<T>(
         // Record failure with circuit breaker
         recordAnthropicFailure(error);
 
-        // Log error
+        // Log error (sanitized to prevent API key leaks)
+        const sanitized = sanitizeError(error);
         console.error(
           `Anthropic API attempt ${attempt + 1}/${opts.maxRetries + 1} failed:`,
-          error instanceof Error ? error.message : error
+          sanitized instanceof Error ? sanitized.message : sanitized
         );
 
         // Check if it's a 500 error - trigger immediate fallback
@@ -213,7 +215,8 @@ export async function callAnthropicWithRetry<T>(
 
         // Non-retryable error or max retries exceeded
         if (!opts.enableOpenRouterFallback) {
-          throw error;
+          // Sanitize error before throwing
+          throw sanitizeError(error);
         }
         // If fallback is enabled, mark as failed and continue
         anthropicFailed = true;
@@ -233,13 +236,14 @@ export async function callAnthropicWithRetry<T>(
         totalTime: Date.now() - startTime,
       };
     } catch (fallbackError) {
-      console.error('❌ OpenRouter fallback also failed:', fallbackError);
-      throw lastError || fallbackError;
+      const sanitizedFallback = sanitizeError(fallbackError);
+      console.error('❌ OpenRouter fallback also failed:', sanitizedFallback);
+      throw sanitizeError(lastError || fallbackError);
     }
   }
 
   // Should never reach here, but TypeScript needs it
-  throw lastError;
+  throw sanitizeError(lastError);
 }
 
 /**

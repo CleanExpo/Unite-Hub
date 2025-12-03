@@ -1,0 +1,23 @@
+# MCP Gateway - Unified access point
+# Routes requests to MCP servers, handles auth and rate limiting
+FROM node:22-alpine
+
+WORKDIR /app
+
+# Install dependencies
+RUN apk add --no-cache wget
+
+# Install MCP SDK and dependencies
+RUN npm init -y && \
+    npm install @modelcontextprotocol/sdk@latest \
+                fastify @fastify/rate-limit @fastify/cors \
+                node-fetch --save
+
+# Copy gateway implementation
+COPY docker/mcp/servers/gateway-server.mjs ./server.mjs
+
+# Gateway port
+EXPOSE 3200
+
+# Run server
+CMD ["node", "server.mjs"]

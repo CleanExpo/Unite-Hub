@@ -1,0 +1,43 @@
+{
+  "taskId": "test-integration-workflow",
+  "decision": "approved",
+  "timestamp": 1764719561863,
+  "stepResults": [
+    {
+      "stepIndex": 0,
+      "stepName": "Integration Test Step",
+      "canComplete": true,
+      "passedCriteria": 2,
+      "totalCriteria": 2,
+      "blockingIssues": [],
+      "checkpointValidation": {
+        "checkpointId": "test-integration-workflow-checkpoint-0",
+        "stepIndex": 0,
+        "passed": true,
+        "criteriaResults": [
+          {
+            "criterionId": "file_exists",
+            "criterionType": "output_generated",
+            "description": "File exists and has content",
+            "passed": true,
+            "evidence": "File: D:\\Unite-Hub\\audit-reports-test\\integration-test.json, Size: 21 bytes, Modified: 2025-12-02T23:52:41.817Z"
+          },
+          {
+            "criterionId": "no_placeholders",
+            "criterionType": "no_placeholders",
+            "description": "No placeholder text in file",
+            "passed": true,
+            "evidence": "No placeholders found in D:\\Unite-Hub\\audit-reports-test\\integration-test.json"
+          }
+        ],
+        "failedCriteria": [],
+        "timestamp": 1764719561853,
+        "evidencePath": "D:\\Unite-Hub\\audit-reports\\checkpoints\\test-integration-workflow\\checkpoint-0-1764719561854.json"
+      },
+      "timestamp": 1764719561862
+    }
+  ],
+  "blockingIssues": [],
+  "decidedBy": "completion-gate-system",
+  "evidence_path": "D:\\Unite-Hub\\audit-reports\\gate-decisions\\test-integration-workflow"
+}

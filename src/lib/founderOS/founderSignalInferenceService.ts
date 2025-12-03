@@ -7,7 +7,7 @@
  * @module founderOS/founderSignalInferenceService
  */
 
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 
 // ============================================================================
 // Types

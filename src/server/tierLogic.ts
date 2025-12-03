@@ -12,7 +12,7 @@
  */
 
 import type { AuditTier, AuditAddon, AuditConfig } from "@/lib/seo/auditTypes";
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export interface TierConfig {
   tier: AuditTier;
