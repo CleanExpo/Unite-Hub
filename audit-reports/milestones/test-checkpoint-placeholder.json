@@ -1,0 +1,35 @@
+{
+  "taskId": "test-checkpoint-placeholder",
+  "totalSteps": 1,
+  "milestones": [
+    {
+      "milestoneId": "test-checkpoint-placeholder-step-0",
+      "taskId": "test-checkpoint-placeholder",
+      "stepIndex": 0,
+      "stepName": "Test Step",
+      "criteria": [
+        {
+          "id": "test-checkpoint-placeholder-step-0-criterion-1",
+          "type": "no_placeholders",
+          "description": "No placeholders",
+          "verificationMethod": "Regex scan",
+          "required": true,
+          "target": "D:\\Unite-Hub\\audit-reports-test\\test-placeholder.json"
+        }
+      ],
+      "requiredProofs": [
+        {
+          "proofType": "file_exists",
+          "location": "D:\\Unite-Hub\\audit-reports-test\\test-placeholder.json"
+        }
+      ],
+      "weightage": 100,
+      "createdAt": 1764721833939,
+      "createdBy": "test",
+      "locked": false
+    }
+  ],
+  "totalWeightage": 100,
+  "createdAt": 1764719560392,
+  "locked": false
+}

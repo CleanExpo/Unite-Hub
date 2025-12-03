@@ -16,7 +16,7 @@
  * - Transparent competitive analysis
  */
 
-import { getSupabaseAdmin } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { createApiLogger } from '@/lib/logger';
 
 const logger = createApiLogger({ context: 'NoBluffProtocolEngine' });

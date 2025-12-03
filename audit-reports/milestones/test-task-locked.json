@@ -1,0 +1,34 @@
+{
+  "taskId": "test-task-locked",
+  "totalSteps": 1,
+  "milestones": [
+    {
+      "milestoneId": "test-task-locked-step-0",
+      "taskId": "test-task-locked",
+      "stepIndex": 0,
+      "stepName": "Step 1",
+      "criteria": [
+        {
+          "id": "test-task-locked-step-0-criterion-1",
+          "type": "output_generated",
+          "description": "Test",
+          "verificationMethod": "Test",
+          "required": true
+        }
+      ],
+      "requiredProofs": [
+        {
+          "proofType": "file_exists",
+          "location": "/tmp/test.json"
+        }
+      ],
+      "weightage": 50,
+      "createdAt": 1764719560195,
+      "createdBy": "test",
+      "locked": true
+    }
+  ],
+  "totalWeightage": 50,
+  "createdAt": 1764719560197,
+  "locked": true
+}

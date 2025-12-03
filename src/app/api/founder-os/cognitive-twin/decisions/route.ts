@@ -8,7 +8,7 @@ import {
   type DecisionType,
   type DecisionScenario,
 } from '@/lib/founderOS/cognitiveTwinService';
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 
 /**
  * GET /api/founder-os/cognitive-twin/decisions

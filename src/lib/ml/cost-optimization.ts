@@ -5,7 +5,7 @@
  * Manages thinking token budgets, tracks costs, enforces limits, and optimizes spending
  */
 
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export interface CostTrackingRecord {
   id: string;

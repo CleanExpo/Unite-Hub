@@ -1,0 +1,26 @@
+{
+  "checkpointId": "test-gate-step-blocked-checkpoint-0",
+  "stepIndex": 0,
+  "passed": false,
+  "criteriaResults": [
+    {
+      "criterionId": "file_exists",
+      "criterionType": "output_generated",
+      "description": "File exists and has content",
+      "passed": true,
+      "evidence": "File: D:\\Unite-Hub\\audit-reports-test\\gate-test-blocked.json, Size: 19 bytes, Modified: 2025-12-03T00:16:17.570Z"
+    },
+    {
+      "criterionId": "no_placeholders",
+      "criterionType": "no_placeholders",
+      "description": "No placeholder text in file",
+      "passed": false,
+      "evidence": "Found 1 placeholder(s):\nLine 1: TODO: Complete this",
+      "error": "Placeholders detected: TODO"
+    }
+  ],
+  "failedCriteria": [
+    "test-gate-step-blocked-step-0-criterion-2"
+  ],
+  "timestamp": 1764720977678
+}

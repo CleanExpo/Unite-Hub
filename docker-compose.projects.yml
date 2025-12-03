@@ -1,0 +1,404 @@
+version: '3.8'
+
+# Multi-Project Docker Setup with MCP Integration
+# Projects: DR-New, Unite-Hub, Chimera, Unite-Group
+# All use existing local clones + shared MCP servers (Gateway, Filesystem, Process, Database, Git)
+#
+# Usage:
+#   docker-compose -f docker-compose.projects.yml up -d
+#
+# Architecture:
+#   All 4 projects → MCP Gateway (3200) → 5 MCP servers (3100-3103)
+#   All 28 MCP tools available to each container
+
+services:
+  ############################################################################
+  # UNITE-HUB (Main Project)
+  ############################################################################
+
+  unite-hub:
+    build:
+      context: ./unite-hub
+      dockerfile: Dockerfile
+    container_name: unite-hub-app
+    volumes:
+      # Source code (live editing)
+      - ./unite-hub/src:/app/src:cached
+      - ./unite-hub/public:/app/public:cached
+      - ./unite-hub/supabase:/app/supabase:cached
+
+      # Config files
+      - ./unite-hub/package.json:/app/package.json:ro
+      - ./unite-hub/tsconfig.json:/app/tsconfig.json:ro
+      - ./unite-hub/next.config.js:/app/next.config.js:ro
+
+      # Performance optimization
+      - unite_hub_node_modules:/app/node_modules
+      - unite_hub_cache:/app/.next
+
+    ports:
+      - "3008:3008"
+
+    environment:
+      - NODE_ENV=development
+      - NEXT_TELEMETRY_DISABLED=1
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+
+      # Supabase
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+
+      # Anthropic
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+
+      # MCP Gateway
+      - MCP_GATEWAY_URL=http://mcp-gateway:3200
+
+    command: npm run dev
+    depends_on:
+      - mcp-gateway
+    networks:
+      - mcp-network
+      - projects-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3008/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  ############################################################################
+  # DR-NEW (Disaster Recovery Project)
+  ############################################################################
+
+  dr-new:
+    build:
+      context: ./dr-new
+      dockerfile: Dockerfile
+    container_name: dr-new-app
+    volumes:
+      # Source code
+      - ./dr-new/src:/app/src:cached
+      - ./dr-new/public:/app/public:cached
+
+      # Config files
+      - ./dr-new/package.json:/app/package.json:ro
+      - ./dr-new/tsconfig.json:/app/tsconfig.json:ro
+
+      # Performance
+      - dr_new_node_modules:/app/node_modules
+      - dr_new_cache:/app/.next
+
+    ports:
+      - "3009:3008"
+
+    environment:
+      - NODE_ENV=development
+      - NEXT_TELEMETRY_DISABLED=1
+      - CHOKIDAR_USEPOLLING=true
+
+      # Supabase (if needed)
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+
+      # Anthropic
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+
+      # MCP Gateway
+      - MCP_GATEWAY_URL=http://mcp-gateway:3200
+
+    command: npm run dev
+    depends_on:
+      - mcp-gateway
+    networks:
+      - mcp-network
+      - projects-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3008/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  ############################################################################
+  # CHIMERA (Project)
+  ############################################################################
+
+  chimera:
+    build:
+      context: ./chimera
+      dockerfile: Dockerfile
+    container_name: chimera-app
+    volumes:
+      # Source code
+      - ./chimera/src:/app/src:cached
+      - ./chimera/public:/app/public:cached
+
+      # Config files
+      - ./chimera/package.json:/app/package.json:ro
+
+      # Performance
+      - chimera_node_modules:/app/node_modules
+      - chimera_cache:/app/.next
+
+    ports:
+      - "3010:3008"
+
+    environment:
+      - NODE_ENV=development
+      - NEXT_TELEMETRY_DISABLED=1
+      - CHOKIDAR_USEPOLLING=true
+
+      # Anthropic
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+
+      # MCP Gateway
+      - MCP_GATEWAY_URL=http://mcp-gateway:3200
+
+    command: npm run dev
+    depends_on:
+      - mcp-gateway
+    networks:
+      - mcp-network
+      - projects-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3008/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  ############################################################################
+  # UNITE-GROUP (Project)
+  ############################################################################
+
+  unite-group:
+    build:
+      context: ./unite-group
+      dockerfile: Dockerfile
+    container_name: unite-group-app
+    volumes:
+      # Source code
+      - ./unite-group/src:/app/src:cached
+      - ./unite-group/public:/app/public:cached
+
+      # Config files
+      - ./unite-group/package.json:/app/package.json:ro
+
+      # Performance
+      - unite_group_node_modules:/app/node_modules
+      - unite_group_cache:/app/.next
+
+    ports:
+      - "3011:3008"
+
+    environment:
+      - NODE_ENV=development
+      - NEXT_TELEMETRY_DISABLED=1
+      - CHOKIDAR_USEPOLLING=true
+
+      # Anthropic
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+
+      # MCP Gateway
+      - MCP_GATEWAY_URL=http://mcp-gateway:3200
+
+    command: npm run dev
+    depends_on:
+      - mcp-gateway
+    networks:
+      - mcp-network
+      - projects-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3008/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  ############################################################################
+  # MCP GATEWAY (Unified MCP Access Point)
+  ############################################################################
+
+  mcp-gateway:
+    image: node:22-alpine
+    container_name: mcp-gateway
+    working_dir: /app
+
+    # Use the MCP gateway server implementation
+    volumes:
+      - ./docker/mcp/servers:/app
+
+    environment:
+      # MCP Servers configuration (from existing setup)
+      - MCP_SERVERS=filesystem:localhost:3100,process:localhost:3101,database:localhost:3102,git:localhost:3103
+      - MCP_GATEWAY_PORT=3200
+      - MCP_LOG_LEVEL=info
+      - RATE_LIMIT_REQUESTS=2000
+      - RATE_LIMIT_WINDOW_MS=60000
+
+    entrypoint: sh -c "npm install 2>/dev/null && node gateway-server.mjs"
+
+    ports:
+      - "3200:3200"
+
+    networks:
+      - mcp-network
+
+    depends_on:
+      - filesystem-mcp
+      - process-mcp
+      - database-mcp
+      - git-mcp
+
+    restart: unless-stopped
+
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3200/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  ############################################################################
+  # MCP SERVERS (Filesystem, Process, Database, Git)
+  ############################################################################
+
+  filesystem-mcp:
+    image: node:22-alpine
+    container_name: filesystem-mcp
+    working_dir: /app
+    volumes:
+      - ./docker/mcp/servers:/app
+      - ./:/workspace:ro
+    environment:
+      - WORKSPACE_ROOT=/workspace
+      - MAX_FILE_SIZE_MB=100
+      - MCP_LOG_LEVEL=info
+    entrypoint: sh -c "npm install 2>/dev/null && node filesystem-server.mjs"
+    ports:
+      - "3100:3100"
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3100/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  process-mcp:
+    image: node:22-alpine
+    container_name: process-mcp
+    working_dir: /app
+    volumes:
+      - ./docker/mcp/servers:/app
+      - ./:/workspace:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WORKSPACE_ROOT=/workspace
+      - MAX_CONCURRENT_PROCESSES=10
+      - COMMAND_TIMEOUT_MS=300000
+      - MCP_LOG_LEVEL=info
+    entrypoint: sh -c "apk add --no-cache docker && npm install 2>/dev/null && node process-server.mjs"
+    ports:
+      - "3101:3101"
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3101/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  database-mcp:
+    image: node:22-alpine
+    container_name: database-mcp
+    working_dir: /app
+    volumes:
+      - ./docker/mcp/servers:/app
+      - ./:/workspace:ro
+    environment:
+      - WORKSPACE_ROOT=/workspace
+      - SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY}
+      - QUERY_TIMEOUT_MS=30000
+      - MAX_RESULT_ROWS=1000
+      - MCP_LOG_LEVEL=info
+    entrypoint: sh -c "npm install 2>/dev/null && node database-server.mjs"
+    ports:
+      - "3102:3102"
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3102/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  git-mcp:
+    image: node:22-alpine
+    container_name: git-mcp
+    working_dir: /app
+    volumes:
+      - ./docker/mcp/servers:/app
+      - ./:/workspace:ro
+    environment:
+      - WORKSPACE_ROOT=/workspace
+      - MCP_LOG_LEVEL=info
+    entrypoint: sh -c "apk add --no-cache git && npm install 2>/dev/null && node git-server.mjs"
+    ports:
+      - "3103:3103"
+    networks:
+      - mcp-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3103/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+################################################################################
+# VOLUMES
+################################################################################
+
+volumes:
+  # Unite-Hub
+  unite_hub_node_modules:
+  unite_hub_cache:
+
+  # DR-New
+  dr_new_node_modules:
+  dr_new_cache:
+
+  # Chimera
+  chimera_node_modules:
+  chimera_cache:
+
+  # Unite-Group
+  unite_group_node_modules:
+  unite_group_cache:
+
+################################################################################
+# NETWORKS
+################################################################################
+
+networks:
+  # MCP network (internal communication)
+  mcp-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+  # Projects network (inter-project communication)
+  projects-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.29.0.0/16

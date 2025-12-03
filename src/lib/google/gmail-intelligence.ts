@@ -17,7 +17,7 @@
 
 import { callGemini3, checkGeminiDailyBudget } from './gemini-client';
 import { syncGmailEmails } from '@/lib/integrations/gmail';
-import { getSupabaseAdmin } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
 
 export interface EmailIntelligence {
   intent: 'meeting_request' | 'question' | 'proposal' | 'followup' | 'introduction' | 'complaint' | 'other';
