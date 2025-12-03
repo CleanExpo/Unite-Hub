@@ -1,0 +1,235 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-12-02T09:30:00Z",
+  "description": "API Key Rotation Tracking for Unite-Hub - DO NOT COMMIT ACTUAL KEYS",
+  "keys": {
+    "ANTHROPIC_API_KEY": {
+      "lastRotated": "2025-09-03",
+      "nextRotation": "2025-12-02",
+      "rotationFrequencyDays": 90,
+      "riskLevel": "HIGH",
+      "provider": "Anthropic",
+      "rotationHistory": [
+        {
+          "date": "2025-09-03",
+          "rotatedBy": "security-team@unite-hub.com",
+          "reason": "scheduled",
+          "notes": "Quarterly rotation"
+        },
+        {
+          "date": "2025-06-04",
+          "rotatedBy": "security-team@unite-hub.com",
+          "reason": "scheduled",
+          "notes": "Quarterly rotation"
+        }
+      ]
+    },
+    "OPENROUTER_API_KEY": {
+      "lastRotated": "2025-09-03",
+      "nextRotation": "2025-12-02",
+      "rotationFrequencyDays": 90,
+      "riskLevel": "HIGH",
+      "provider": "OpenRouter",
+      "rotationHistory": [
+        {
+          "date": "2025-09-03",
+          "rotatedBy": "security-team@unite-hub.com",
+          "reason": "scheduled",
+          "notes": "Quarterly rotation"
+        }
+      ]
+    },
+    "GEMINI_API_KEY": {
+      "lastRotated": "2025-09-03",
+      "nextRotation": "2025-12-02",
+      "rotationFrequencyDays": 90,
+      "riskLevel": "MEDIUM",
+      "provider": "Google AI",
+      "rotationHistory": [
+        {
+          "date": "2025-09-03",
+          "rotatedBy": "security-team@unite-hub.com",
+          "reason": "scheduled",
+          "notes": "Quarterly rotation"
+        }
+      ]
+    },
+    "OPENAI_API_KEY": {
+      "lastRotated": "2025-09-03",
+      "nextRotation": "2025-12-02",
+      "rotationFrequencyDays": 90,
+      "riskLevel": "MEDIUM",
+      "provider": "OpenAI",
+      "rotationHistory": [
+        {
+          "date": "2025-09-03",
+          "rotatedBy": "security-team@unite-hub.com",
+          "reason": "scheduled",
+          "notes": "Quarterly rotation"
+        }
+      ]
+    },
+    "STRIPE_SECRET_KEY": {
+      "lastRotated": "2025-09-03",
+      "nextRotation": "2025-12-02",
+      "rotationFrequencyDays": 90,
+      "riskLevel": "CRITICAL",
+      "provider": "Stripe",
+      "rotationHistory": [
+        {
+          "date": "2025-09-03",
+          "rotatedBy": "security-team@unite-hub.com",
+          "reason": "scheduled",
+          "notes": "Quarterly rotation with webhook coordination"
+        }
+      ]
+    },
+    "STRIPE_WEBHOOK_SECRET": {
+      "lastRotated": "2025-09-03",
+      "nextRotation": "2025-12-02",
+      "rotationFrequencyDays": 90,
+      "riskLevel": "HIGH",
+      "provider": "Stripe",
+      "rotationHistory": [
+        {
+          "date": "2025-09-03",
+          "rotatedBy": "security-team@unite-hub.com",
+          "reason": "scheduled",
+          "notes": "Rotated 1 day before API key rotation"
+        }
+      ]
+    },
+    "RESEND_API_KEY": {
+      "lastRotated": "2025-09-03",
+      "nextRotation": "2025-12-02",
+      "rotationFrequencyDays": 90,
+      "riskLevel": "MEDIUM",
+      "provider": "Resend",
+      "rotationHistory": [
+        {
+          "date": "2025-09-03",
+          "rotatedBy": "security-team@unite-hub.com",
+          "reason": "scheduled",
+          "notes": "Primary email provider"
+        }
+      ]
+    },
+    "SENDGRID_API_KEY": {
+      "lastRotated": "2025-09-03",
+      "nextRotation": "2025-12-02",
+      "rotationFrequencyDays": 90,
+      "riskLevel": "MEDIUM",
+      "provider": "SendGrid",
+      "rotationHistory": [
+        {
+          "date": "2025-09-03",
+          "rotatedBy": "security-team@unite-hub.com",
+          "reason": "scheduled",
+          "notes": "Backup email provider"
+        }
+      ]
+    },
+    "PERPLEXITY_API_KEY": {
+      "lastRotated": "2025-09-03",
+      "nextRotation": "2025-12-02",
+      "rotationFrequencyDays": 90,
+      "riskLevel": "LOW",
+      "provider": "Perplexity",
+      "rotationHistory": [
+        {
+          "date": "2025-09-03",
+          "rotatedBy": "security-team@unite-hub.com",
+          "reason": "scheduled",
+          "notes": "SEO research tool"
+        }
+      ]
+    },
+    "SUPABASE_SERVICE_ROLE_KEY": {
+      "lastRotated": "2025-11-02",
+      "nextRotation": "2025-12-02",
+      "rotationFrequencyDays": 30,
+      "riskLevel": "CRITICAL",
+      "provider": "Supabase",
+      "rotationHistory": [
+        {
+          "date": "2025-11-02",
+          "rotatedBy": "security-team@unite-hub.com",
+          "reason": "scheduled",
+          "notes": "Monthly rotation - bypasses RLS"
+        },
+        {
+          "date": "2025-10-02",
+          "rotatedBy": "security-team@unite-hub.com",
+          "reason": "scheduled",
+          "notes": "Monthly rotation"
+        },
+        {
+          "date": "2025-09-02",
+          "rotatedBy": "security-team@unite-hub.com",
+          "reason": "scheduled",
+          "notes": "Monthly rotation"
+        }
+      ]
+    },
+    "SUPABASE_ANON_KEY": {
+      "lastRotated": "2025-06-01",
+      "nextRotation": "2026-12-01",
+      "rotationFrequencyDays": 180,
+      "riskLevel": "MEDIUM",
+      "provider": "Supabase",
+      "rotationHistory": [
+        {
+          "date": "2025-06-01",
+          "rotatedBy": "security-team@unite-hub.com",
+          "reason": "scheduled",
+          "notes": "Semi-annual rotation - requires all clients update"
+        }
+      ]
+    },
+    "CRON_SECRET": {
+      "lastRotated": "2025-09-03",
+      "nextRotation": "2025-12-02",
+      "rotationFrequencyDays": 90,
+      "riskLevel": "HIGH",
+      "provider": "Vercel",
+      "rotationHistory": [
+        {
+          "date": "2025-09-03",
+          "rotatedBy": "security-team@unite-hub.com",
+          "reason": "scheduled",
+          "notes": "Quarterly rotation"
+        }
+      ]
+    },
+    "NEXTAUTH_SECRET": {
+      "lastRotated": "2025-09-03",
+      "nextRotation": "2025-12-02",
+      "rotationFrequencyDays": 90,
+      "riskLevel": "CRITICAL",
+      "provider": "NextAuth",
+      "rotationHistory": [
+        {
+          "date": "2025-09-03",
+          "rotatedBy": "security-team@unite-hub.com",
+          "reason": "scheduled",
+          "notes": "Quarterly rotation - invalidates all sessions"
+        }
+      ]
+    },
+    "GOOGLE_CLIENT_SECRET": {
+      "lastRotated": "2025-06-01",
+      "nextRotation": "2025-12-01",
+      "rotationFrequencyDays": 180,
+      "riskLevel": "HIGH",
+      "provider": "Google Cloud",
+      "rotationHistory": [
+        {
+          "date": "2025-06-01",
+          "rotatedBy": "security-team@unite-hub.com",
+          "reason": "scheduled",
+          "notes": "Semi-annual rotation - requires user re-authentication"
+        }
+      ]
+    }
+  }
+}

@@ -12,7 +12,7 @@
  * - Brand kit generation (colors, typography, guidelines)
  */
 
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import {
   getVisualCapabilities,
   supportsVisualModel,

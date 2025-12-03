@@ -1,0 +1,43 @@
+{
+  "taskId": "test-task-1",
+  "totalSteps": 1,
+  "milestones": [
+    {
+      "milestoneId": "test-task-1-step-0",
+      "taskId": "test-task-1",
+      "stepIndex": 0,
+      "stepName": "Test Step",
+      "criteria": [
+        {
+          "id": "test-task-1-step-0-criterion-1",
+          "type": "output_generated",
+          "description": "Output file created",
+          "verificationMethod": "Check file exists",
+          "required": true,
+          "target": "/tmp/test-output.json"
+        },
+        {
+          "id": "test-task-1-step-0-criterion-2",
+          "type": "no_placeholders",
+          "description": "No placeholder markers",
+          "verificationMethod": "Scan for TODO/TBD",
+          "required": true,
+          "target": "/tmp/test-output.json"
+        }
+      ],
+      "requiredProofs": [
+        {
+          "proofType": "file_exists",
+          "location": "/tmp/test-output.json"
+        }
+      ],
+      "weightage": 50,
+      "createdAt": 1764721833690,
+      "createdBy": "test-agent",
+      "locked": false
+    }
+  ],
+  "totalWeightage": 50,
+  "createdAt": 1764719560002,
+  "locked": false
+}

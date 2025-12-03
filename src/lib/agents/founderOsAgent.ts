@@ -16,7 +16,7 @@
 
 import Anthropic from '@anthropic-ai/sdk';
 import { callAnthropicWithRetry } from '@/lib/anthropic/rate-limiter';
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 
 // ============================================================================
 // Import FounderOS Services

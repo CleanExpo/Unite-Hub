@@ -1,0 +1,39 @@
+{
+  "taskId": "test-blocking-issues",
+  "decision": "blocked",
+  "timestamp": 1764721755652,
+  "stepResults": [
+    {
+      "stepIndex": 0,
+      "stepName": "Test Step",
+      "canComplete": false,
+      "passedCriteria": 0,
+      "totalCriteria": 1,
+      "blockingIssues": [],
+      "checkpointValidation": {
+        "checkpointId": "test-blocking-issues-checkpoint-0",
+        "stepIndex": 0,
+        "passed": false,
+        "criteriaResults": [
+          {
+            "criterionId": "file_exists",
+            "criterionType": "output_generated",
+            "description": "File exists and has content",
+            "passed": false,
+            "evidence": "File not found",
+            "error": "ENOENT: no such file or directory, stat 'D:\\Unite-Hub\\audit-reports-test\\non-existent.json'"
+          }
+        ],
+        "failedCriteria": [
+          "test-blocking-issues-step-0-criterion-1"
+        ],
+        "timestamp": 1764721755628,
+        "evidencePath": "D:\\Unite-Hub\\audit-reports\\checkpoints\\test-blocking-issues\\checkpoint-0-1764721755629.json"
+      },
+      "timestamp": 1764721755651
+    }
+  ],
+  "blockingIssues": [],
+  "decidedBy": "completion-gate-system",
+  "evidence_path": "D:\\Unite-Hub\\audit-reports\\gate-decisions\\test-blocking-issues"
+}

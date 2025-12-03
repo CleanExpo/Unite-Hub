@@ -1,0 +1,15 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Brisbane Water Restoration - Water damage restoration company -->
+  <circle cx="100" cy="100" r="90" fill="#0B7BA5" opacity="0.1"/>
+  <circle cx="100" cy="100" r="75" fill="#0B7BA5" opacity="0.15"/>
+
+  <!-- Water droplet icon -->
+  <path d="M100 45C90 60 75 80 75 95C75 109.33 86.67 121 101 121C115.33 121 127 109.33 127 95C127 80 112 60 100 45Z" fill="#0B7BA5"/>
+
+  <!-- Restoration wrench symbol -->
+  <rect x="85" y="130" width="30" height="5" rx="2" fill="#2B4C7E" transform="rotate(-45 100 132.5)"/>
+  <circle cx="90" cy="140" r="6" fill="#2B4C7E" opacity="0.8"/>
+
+  <!-- Circular badge outline -->
+  <circle cx="100" cy="100" r="90" stroke="#0B7BA5" stroke-width="3" fill="none" opacity="0.3"/>
+</svg>

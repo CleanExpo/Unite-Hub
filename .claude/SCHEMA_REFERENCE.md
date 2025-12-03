@@ -78,6 +78,9 @@ description TEXT
 - `drip_campaigns` - workspace_id UUID REFERENCES workspaces(id)
 - `generated_content` - workspace_id UUID REFERENCES workspaces(id) (snake_case!)
 - `email_integrations` - workspace_id UUID REFERENCES workspaces(id)
+- `campaign_steps` - workspace_id UUID (added migration 079, FK in 080)
+- `campaign_enrollments` - workspace_id UUID (added migration 079, FK in 080)
+- `campaign_execution_logs` - workspace_id UUID (added migration 079)
 
 ### UUID only (no FK, may be org_id):
 - `leads` - workspace_id UUID NOT NULL (migration 312)
@@ -246,7 +249,10 @@ created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()  -- NOT "timestamp"
 | 001 | Initial schema (organizations, workspaces, contacts, emails, campaigns, generated_content) |
 | 003 | user_profiles, user_organizations |
 | 004 | email_integrations |
-| 008 | drip_campaigns |
+| 008 | drip_campaigns, campaign_steps, campaign_enrollments, campaign_execution_logs |
+| 079 | Add workspace_id to campaign_steps, campaign_enrollments, campaign_execution_logs |
+| 080 | Workspace isolation constraints (NOT NULL, CHECK, FK, indexes) |
+| 090 | Enhanced audit logs |
 | 255 | profiles table with role, admin_approvals, admin_trusted_devices |
 | 308 | user_role ENUM type, profiles.role migration |
 | 309 | Seed FOUNDER/STAFF roles |
@@ -270,4 +276,4 @@ If 314b encounters a deadlock on a specific table:
 
 ---
 
-**Last Updated**: 2025-11-28
+**Last Updated**: 2025-12-03

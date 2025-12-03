@@ -8,7 +8,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabase';
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { createJob, routeJobToAgent } from '@/lib/synthex/synthexJobRouter';
 import { routeAndExecuteJob } from '@/lib/synthex/synthexAgiBridge';
 

@@ -12,7 +12,7 @@
  * @module lib/strategy/execution-health-monitor
  */
 
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 
 export interface HealthMetrics {
   score: number; // 0-100 health score

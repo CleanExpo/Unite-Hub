@@ -6,6 +6,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -19,11 +20,11 @@ import {
   Clock,
   CheckCircle,
   AlertTriangle,
+  Loader2,
 } from 'lucide-react';
 import { CombatRoundsTable } from '@/components/creativeCombat/CombatRoundsTable';
 import { CombatResultCard } from '@/components/creativeCombat/CombatResultCard';
-
-const WORKSPACE_ID = process.env.NEXT_PUBLIC_DEFAULT_WORKSPACE_ID || 'default';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface CombatStats {
   totalRounds: number;
@@ -40,6 +41,10 @@ interface IntegrationStats {
 }
 
 export default function FounderCombatPage() {
+  const { currentOrganization, loading: authLoading } = useAuth();
+  const router = useRouter();
+  const workspaceId = currentOrganization?.org_id;
+
   const [stats, setStats] = useState<CombatStats | null>(null);
   const [integrationStats, setIntegrationStats] = useState<IntegrationStats | null>(null);
   const [rounds, setRounds] = useState<any[]>([]);
@@ -47,18 +52,28 @@ export default function FounderCombatPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isRunningCycle, setIsRunningCycle] = useState(false);
 
+  // Redirect to login if no workspace after auth loads
   useEffect(() => {
-    loadDashboardData();
-  }, []);
+    if (!authLoading && !workspaceId) {
+      router.push('/login');
+    }
+  }, [authLoading, workspaceId, router]);
+
+  useEffect(() => {
+    if (workspaceId) {
+      loadDashboardData();
+    }
+  }, [workspaceId]);
 
   const loadDashboardData = async () => {
+    if (!workspaceId) return;
     setIsLoading(true);
     try {
       const [statsRes, integrationsRes, roundsRes, resultsRes] = await Promise.all([
-        fetch(`/api/combat/rounds?workspaceId=${WORKSPACE_ID}&type=stats`),
-        fetch(`/api/combat/results?workspaceId=${WORKSPACE_ID}&type=integrations`),
-        fetch(`/api/combat/rounds?workspaceId=${WORKSPACE_ID}&limit=20`),
-        fetch(`/api/combat/results?workspaceId=${WORKSPACE_ID}&limit=10`),
+        fetch(`/api/combat/rounds?workspaceId=${workspaceId}&type=stats`),
+        fetch(`/api/combat/results?workspaceId=${workspaceId}&type=integrations`),
+        fetch(`/api/combat/rounds?workspaceId=${workspaceId}&limit=20`),
+        fetch(`/api/combat/results?workspaceId=${workspaceId}&limit=10`),
       ]);
 
       if (statsRes.ok) {
@@ -88,6 +103,7 @@ export default function FounderCombatPage() {
   };
 
   const runCombatCycle = async () => {
+    if (!workspaceId) return;
     setIsRunningCycle(true);
     try {
       const res = await fetch('/api/combat/results', {
@@ -95,7 +111,7 @@ export default function FounderCombatPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'run_cycle',
-          workspaceId: WORKSPACE_ID,
+          workspaceId,
         }),
       });
 
@@ -124,6 +140,15 @@ export default function FounderCombatPage() {
       console.error('Failed to start round:', error);
     }
   };
+
+  // Show loading while auth is being determined
+  if (authLoading || !workspaceId) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 space-y-6">

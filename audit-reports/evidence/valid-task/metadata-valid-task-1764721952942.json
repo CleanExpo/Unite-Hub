@@ -1,0 +1,16 @@
+{
+  "id": "valid-task-1764721952942",
+  "taskId": "valid-task",
+  "stored_at": 1764721952942,
+  "evidence_path": "D:\\Unite-Hub\\audit-reports\\evidence\\valid-task",
+  "collector_id": "independent-verifier-1",
+  "evidence_type": "package",
+  "status": "stored",
+  "metadata": {
+    "verification_status": true,
+    "verifier_id": "independent-verifier-1",
+    "proof_merkle_root": "5fa6a7e7af7678b2c3d8ddef79582c18aaddc24b9c7f51f518a5a0b43712d839"
+  },
+  "retention_days": 90,
+  "expires_at": 1772497952942
+}

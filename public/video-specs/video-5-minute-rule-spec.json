@@ -1,0 +1,65 @@
+{
+  "videoId": "video-5-minute-rule",
+  "title": "The 5-Minute Conversion Rule Nobody Talks About",
+  "duration": "30s",
+  "resolution": "4K (3840x2160)",
+  "frameRate": "30fps",
+  "codec": "H.264",
+  "productionNotes": "Professional marketing video highlighting the importance of speed-to-lead using data, prospect perspective, financial impact, and a solution showcase.  Requires high-quality motion graphics, clear data visualization, compelling voiceover, and impactful sound design.",
+  "scenes": [
+    {
+      "sceneNumber": 1,
+      "duration": "0-5s",
+      "description": "The Research-Backed Rule",
+      "visuals": "Clean data visualization on white background. Professional timeline with milestone markers. At 5-minute mark: GREEN zone labeled \"30% conversion rate\" with upward arrow. At 30-minute mark: ORANGE zone labeled \"10% conversion rate\" with declining arrow. At 1-hour mark: RED zone labeled \"1% conversion rate\" with sharp drop. Graph overlays showing dramatic conversion cliff after 5-minute mark. MIT research citation displayed.",
+      "voiceover": "There's a rule in sales that MIT studied. Your window to convert a lead is 5 minutes. After that? Your odds drop 20 times.",
+      "textOnScreen": "MIT Lead Response Management Study, 21x more likely to qualify a lead in 5 min vs 30 min",
+      "audio": "Serious, authoritative background tone",
+      "emotion": "Urgency, high stakes"
+    },
+    {
+      "sceneNumber": 2,
+      "duration": "6-12s",
+      "description": "Why It Happens",
+      "visuals": "Prospect perspective—they submit inquiry form. Thought bubble: \"I hope they respond quickly?\". Animation: Clock ticking, 5 minutes pass visually. Prospect gets distracted: Opens competitor website in new tab. Competitor's chat appears: \"Hi! Thanks for reaching out. How can we help?\". YOUR response finally arrives (45 minutes later): \"Thanks for contacting us\". Prospect's reaction: \"Too late, I already talked to them\". Prospect closes your email, engages with competitor. \"First responder wins\" badge/emphasis",
+      "voiceover": "Your prospect just submitted their contact info. They're ready to talk. But if you're not there in 5 minutes? They move on. To your competitor.",
+      "textOnScreen": "78% of customers buy from the FIRST company that responds",
+      "audio": "Ambient sounds, ticking clock",
+      "emotion": "FOMO, competitive threat, inevitability"
+    },
+    {
+      "sceneNumber": 3,
+      "duration": "13-22s",
+      "description": "The Financial Cost",
+      "visuals": "Week-long calendar showing cascading losses. Monday: 5 leads missed (slow Friday responses). Tuesday: 3 leads missed. Wednesday: 4 leads missed. Thursday: 6 leads missed. Friday: 7 leads missed. Weekly loss total counter climbing: \"$47,000 in lost deals\". Real-time impact badge: \"1 lead lost every 2 hours\". Cumulative revenue loss chart trending downward. Crisis mode indicator (red warning). Dollar signs appearing and disappearing (wasted money)",
+      "voiceover": "One company was losing a lead every 2 hours. That's $47,000 per week in lost revenue. Just because they responded in 45 minutes instead of 5.",
+      "textOnScreen": "1 missed lead every 2 hours = $47K/week",
+      "audio": "Tension-building background music",
+      "emotion": "Financial pain, urgency, business crisis"
+    },
+    {
+      "sceneNumber": 4,
+      "duration": "23-30s",
+      "description": "Synthex Changes the Game",
+      "visuals": "Synthex dashboard in real-time action. Lead arrives: Email notification appears. AI analysis triggers: Immediate alert \"Hot prospect. Likelihood to buy: 92%\". Dashboard highlights prospect in RED (highest priority). One-click response interface appears with smart suggestion. Salesperson clicking \"respond\" button. Message sends in seconds. Timestamp display: \"Responded in 3 minutes\" (green checkmark). 2-week timeline jump to deal closure. Deal closing celebration: Success notification with deal value ($28,000). Upward-trending conversion graph appears. Clear success moment, celebration animation. Large Synthex logo, tagline \"Speed wins deals.\"",
+      "voiceover": "Synthex alerts you instantly. You respond in minutes, not hours. One client went from 12% to 25% conversion rate. Just by being faster.",
+      "textOnScreen": "Responded in 3 minutes. Deal closed in 2 weeks. Respond in 5 minutes. Close more deals. Try free for 14 days.",
+      "audio": "Upbeat, positive music",
+      "emotion": "Winning, confidence, momentum, relief"
+    }
+  ],
+  "watermark": {
+    "image": "synthex-logo.png",
+    "position": "bottom-right",
+    "size": "120px",
+    "opacity": "45%"
+  },
+  "exportSettings": {
+    "format": "MP4",
+    "videoCodec": "H.264",
+    "audioCodec": "AAC",
+    "bitrate": "20 Mbps",
+    "colorProfile": "Rec. 709",
+    "audioBitrate": "320kbps"
+  }
+}

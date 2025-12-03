@@ -12,6 +12,7 @@ import { getRedisClient } from "@/lib/redis";
 import { getSupabaseServer } from "@/lib/supabase";
 import { getPoolStats } from "@/lib/db/connection-pool";
 import { healthTracker } from "@/lib/deployment/health-tracker";
+import { getPoolingConfig } from "@/lib/supabase/pooling-config";
 
 type HealthStatus = "healthy" | "degraded" | "unhealthy";
 
@@ -43,6 +44,11 @@ interface HealthResponse {
     successRate: string;
     averageResponseTime: number;
     circuitState: string;
+  };
+  pooling: {
+    enabled: boolean;
+    mode: string;
+    isPooled: boolean;
   };
 }
 
@@ -132,6 +138,9 @@ export async function GET(request: NextRequest) {
       ? ((poolStats.successfulRequests / poolStats.totalRequests) * 100).toFixed(2)
       : '100.00';
 
+    // Get pooling configuration
+    const poolingConfig = getPoolingConfig();
+
     // Get deployment environment and graceful shutdown status
     const deploymentEnv = process.env.DEPLOYMENT_ENV || 'unknown';
     const healthStatus = healthTracker.getStatus();
@@ -160,6 +169,11 @@ export async function GET(request: NextRequest) {
         successRate,
         averageResponseTime: Math.round(poolStats.averageResponseTime),
         circuitState: poolStats.circuitState,
+      },
+      pooling: {
+        enabled: poolingConfig.enabled,
+        mode: poolingConfig.mode,
+        isPooled: poolingConfig.isPooled,
       },
     };
 

@@ -14,7 +14,7 @@
  * - email_sequence: Email campaign sequence
  */
 
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import type { Database } from '@/lib/supabase.types';
 
 type SynthexProjectJob = Database['public']['Tables']['synthex_project_jobs']['Row'];

@@ -19,7 +19,7 @@ Your Supabase database schema cache is **severely out of sync** with your migrat
    You're at: `https://unite-hub.vercel.app/dashboard/overview`
 
 2. **Fix the "No Workspace" Error First:**
-   The workspace already exists (ID: `5a92c7af-5aca-49a7-8866-3bfaa1d04532`)
+   The workspace already exists (ID: `YOUR_WORKSPACE_ID`)
    Just refresh your browser - it should appear now.
 
 3. **Navigate to Projects:**

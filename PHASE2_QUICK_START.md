@@ -347,7 +347,7 @@ SELECT
   progress,
   created_at
 FROM media_files
-WHERE workspace_id = '5a92c7af-5aca-49a7-8866-3bfaa1d04532'
+WHERE workspace_id = 'YOUR_WORKSPACE_ID'
 ORDER BY created_at DESC;
 ```
 
@@ -359,7 +359,7 @@ SELECT
   transcript->>'language' as language,
   transcribed_at
 FROM media_files
-WHERE workspace_id = '5a92c7af-5aca-49a7-8866-3bfaa1d04532'
+WHERE workspace_id = 'YOUR_WORKSPACE_ID'
   AND transcript IS NOT NULL
 ORDER BY transcribed_at DESC;
 ```
@@ -373,7 +373,7 @@ SELECT
   ai_analysis->>'sentiment' as sentiment,
   ai_analyzed_at
 FROM media_files
-WHERE workspace_id = '5a92c7af-5aca-49a7-8866-3bfaa1d04532'
+WHERE workspace_id = 'YOUR_WORKSPACE_ID'
   AND ai_analysis IS NOT NULL
 ORDER BY ai_analyzed_at DESC;
 ```
@@ -385,7 +385,7 @@ SELECT
   file_type,
   ts_rank(full_text_search, websearch_to_tsquery('english', 'meeting')) as rank
 FROM media_files
-WHERE workspace_id = '5a92c7af-5aca-49a7-8866-3bfaa1d04532'
+WHERE workspace_id = 'YOUR_WORKSPACE_ID'
   AND full_text_search @@ websearch_to_tsquery('english', 'meeting')
 ORDER BY rank DESC;
 ```

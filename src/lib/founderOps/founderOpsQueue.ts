@@ -15,7 +15,7 @@
  */
 
 import { createApiLogger } from '@/lib/logger';
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import type { FounderTask } from './founderOpsTaskLibrary';
 import type { DailyQueue, ScheduledTask } from './founderOpsScheduler';
 

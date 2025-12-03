@@ -84,6 +84,15 @@ See `docs/ANTHROPIC_PRODUCTION_PATTERNS.md`
 - **⚠️ BEFORE RLS**: Run `\i scripts/rls-diagnostics.sql` in Supabase SQL Editor
 - **Common schema**: `organizations`, `user_profiles`, `user_organizations`, `contacts`, `workspaces`
 
+### 5.5. Connection Pooling (P0 Production)
+
+60-80% latency reduction via Supabase connection pooler. See `docs/CONNECTION_POOLING_SETUP.md`
+
+- **Enable**: Add `SUPABASE_POOLER_URL` from Supabase Dashboard > Settings > Database > Connection Pooler
+- **Mode**: `SUPABASE_POOL_MODE=session` (default) or `transaction`
+- **Verify**: Check `/api/health` for `pooling: { enabled: true }`
+- **Files**: `src/lib/supabase/pooling-config.ts` | `src/lib/db/pool.ts` | `src/lib/db/connection-pool.ts`
+
 ### 6. OpenRouter Multi-Model Routing
 
 `src/lib/ai/openrouter-intelligence.ts`: Claude 3.5 Sonnet | GPT-4 Turbo | Gemini Pro 1.5 | Llama 3 70B

@@ -1,0 +1,24 @@
+# Database MCP Server
+# PostgreSQL/Supabase query execution and migrations
+FROM node:22-alpine
+
+WORKDIR /app
+
+# Install PostgreSQL client
+RUN apk add --no-cache postgresql-client wget
+
+# Install MCP SDK and dependencies
+RUN npm init -y && \
+    npm install @modelcontextprotocol/sdk@latest \
+                pg @supabase/supabase-js \
+                sql-formatter \
+                express cors body-parser --save
+
+# Copy server implementation
+COPY docker/mcp/servers/database-server.mjs ./server.mjs
+
+# Health check port
+EXPOSE 3102
+
+# Run server
+CMD ["node", "server.mjs"]

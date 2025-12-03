@@ -1,0 +1,67 @@
+{
+  "videoId": "video-setup-tax",
+  "title": "The Setup Tax That's Killing Your Growth",
+  "duration": "30s",
+  "resolution": "4K (3840x2160)",
+  "frameRate": "30fps",
+  "codec": "H.264",
+  "productionNotes": "Professional 4K marketing video. Fast-paced and energetic style. High-quality graphics and sound design are essential.",
+  "scenes": [
+    {
+      "sceneNumber": 1,
+      "startTime": "0s",
+      "endTime": "5s",
+      "visuals": "Founder excited about new tool. Monday: Founder purchases CRM, reads implementation guide. 247-page PDF appears on screen. Chapters visible: 'Infrastructure Setup', 'Data Migration', 'Custom Workflows', 'Security Config'. Developer looking horrified. Calendar: 6 weeks of implementation time blocked out (red). Dollar counter ticking: '$2,000... $6,000... $9,000... $12,000...'. Financial dread visualization.",
+      "voiceover": "You buy a new marketing tool Monday. Setup takes 6 weeks and a $12,000 developer bill. You're now 6 weeks behind your competition.",
+      "textOnScreen": "Setup time: 6 weeks. Developer cost: $12K. Opportunity cost: Priceless.",
+      "sound": "Dread-filled tone, ticking clock",
+      "emotion": "Dread, financial pain, helplessness"
+    },
+    {
+      "sceneNumber": 2,
+      "startTime": "6s",
+      "endTime": "13s",
+      "visuals": "Split-screen competitive comparison. Left side: Your company (waiting for 6-week setup). Week 1: In setup mode, no campaigns running. Week 3: Still waiting, competitors gaining advantage. Week 6: Finally ready, but market has moved on. Right side: Competitor (using simple tool). Day 1: Connected and running campaigns. Week 2: Generating qualified leads, building relationships. Week 6: Already has customer momentum and relationships. By week 12: Competitor is 3x ahead. Revenue comparison chart: Competitor line climbing, your line flat.",
+      "voiceover": "Your competitor picks a simpler tool. They're running campaigns while you're still in setup. By the time you launch? They already own the relationship.",
+      "textOnScreen": "Week 1: Competitor generating leads. Week 6: You're finally ready. Week 12: Competitor is 3x ahead.",
+      "sound": "Neutral background music",
+      "emotion": "Competitive disadvantage, regret, frustration"
+    },
+    {
+      "sceneNumber": 3,
+      "startTime": "14s",
+      "endTime": "21s",
+      "visuals": "Revenue impact graph showing opportunity loss. Competitor's revenue line: Growing steadily from week 1. Your revenue line: Flat for 6 weeks, then climbing (but behind). By week 12: Competitor's cumulative revenue = $180K. Your cumulative revenue = $45K. Counter highlighting: 'Competitors already captured $180K in leads you would've had'. Red zone emphasizing the opportunity loss. Failure visualization (gap widening).",
+      "voiceover": "You've lost $180,000 in leads just because setup took too long.",
+      "textOnScreen": "6-week delay = $180K in lost revenue",
+      "sound": "Serious, financial impact tone",
+      "emotion": "Financial pain, urgency, pressure"
+    },
+    {
+      "sceneNumber": 4,
+      "startTime": "22s",
+      "endTime": "30s",
+      "visuals": "Synthex rapid onboarding flow (bright, energetic). Founder signs up Monday morning. STEP 1: 'Connect your email' (2 clicks). Gmail authorization popup appears and is approved quickly. Checkmark: ✓ Done (timer: 30 seconds). STEP 2: 'Set your first automation' (template selection). Pre-built campaign templates appear (no coding needed). One-click template selection. Checkmark: ✓ Done (timer: 2 minutes). STEP 3: 'Launch your first campaign' (one-click send). Campaign preview appears (professional, ready to send). One button click: 'Send'. Checkmark: ✓ Done (timer: 5 minutes). Total timer corner: '18 minutes total setup'. By Tuesday morning: First leads arriving in inbox (notification shows). By Wednesday: First deals starting to close (success notifications). Manager celebrating the quick wins (happy expression, success gesture). Revenue already climbing (early results visible).",
+      "voiceover": "Synthex is 18 minutes setup. No developers. No consultants. No complexity. You're generating leads by tomorrow.",
+      "textOnScreen": "Setup: 18 minutes. First leads: Tomorrow. First deals: This week. Start generating leads in 18 minutes. No setup tax. Try free for 14 days.",
+      "sound": "Upbeat, positive music",
+      "emotion": "Relief, momentum, immediate wins, empowerment"
+    }
+  ],
+  "watermark": {
+    "logo": "Synthex logo",
+    "position": "bottom-right",
+    "size": "120px",
+    "opacity": "45%",
+    "animation": "Bounces slightly with energy"
+  },
+  "exportSettings": {
+    "format": "MP4",
+    "resolution": "3840x2160",
+    "frameRate": "30fps",
+    "codec": "H.264",
+    "bitrate": "40 Mbps",
+    "audioCodec": "AAC",
+    "audioBitrate": "192 kbps"
+  }
+}
