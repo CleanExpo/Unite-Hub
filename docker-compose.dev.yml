@@ -49,8 +49,7 @@ services:
 
     command: npm run dev
     depends_on:
-      mcp-gateway:
-        condition: service_healthy
+      - mcp-gateway
     networks:
       - mcp-network
     restart: unless-stopped
@@ -82,11 +81,6 @@ services:
       - "3200:3200"
     networks:
       - mcp-network
-    depends_on:
-      - filesystem-mcp
-      - process-mcp
-      - database-mcp
-      - git-mcp
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3200/health"]
