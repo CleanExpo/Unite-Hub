@@ -43,6 +43,18 @@ dev-output.log
 .env.development
 .env.test
 
+# DigitalOcean app config (contains secrets)
+.do/
+.do/app.yaml
+
+# Files with exposed secrets - NEVER COMMIT
+secrets-to-remove.txt
+DUAL_DEPLOYMENT_STRATEGY.md
+EMAIL_SERVICE_IMPLEMENTATION_SUMMARY.md
+GMAIL_SMTP_FINAL_RESOLUTION.md
+START_AGENTS_NOW.md
+VULNERABILITIES_ELIMINATED.md
+
 # Vercel
 .vercel
 
