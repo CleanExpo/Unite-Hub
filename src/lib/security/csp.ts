@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /**
  * Content Security Policy (CSP) Utilities with Nonce Support
  *
@@ -16,20 +17,26 @@
  * - OWASP CSP Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/Content_Security_Policy_Cheat_Sheet.html
  */
 
-import { randomBytes } from 'crypto';
+// NOTE: Using Web Crypto API instead of Node.js crypto for Edge Runtime compatibility
+// Vercel middleware runs on Edge Runtime which doesn't support Node.js built-in modules
+// The globals (crypto, btoa, Headers, process) are available in Edge Runtime but ESLint doesn't know them
 
 /**
  * Generate a cryptographically secure nonce
  *
- * Uses Node.js crypto.randomBytes() which is backed by:
- * - /dev/urandom on Unix
- * - CryptGenRandom() on Windows
+ * Uses Web Crypto API (crypto.getRandomValues) which is available in:
+ * - Edge Runtime (Vercel middleware)
+ * - Node.js (via globalThis.crypto)
+ * - All modern browsers
  *
  * @param length - Number of random bytes (default: 16)
  * @returns Base64-encoded nonce string
  */
 export function generateNonce(length: number = 16): string {
-  return randomBytes(length).toString('base64');
+  const bytes = new Uint8Array(length);
+  crypto.getRandomValues(bytes);
+  // Convert to base64 using btoa (available in Edge Runtime)
+  return btoa(String.fromCharCode(...bytes));
 }
 
 /**
