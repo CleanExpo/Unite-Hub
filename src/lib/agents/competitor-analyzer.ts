@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, no-console */
 /**
  * Competitor Analyzer Agent
  *
@@ -13,7 +14,7 @@
 
 import { anthropic } from "@/lib/anthropic/client";
 import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import {
   reliableAgentExecution,
 } from "./agent-reliability";

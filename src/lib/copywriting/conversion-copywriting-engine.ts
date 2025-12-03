@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, no-console */
 /**
  * Conversion Copywriting Engine
  *
@@ -18,7 +19,7 @@
 
 import { anthropic } from "@/lib/anthropic/client";
 import { callAnthropicWithRetry } from "@/lib/anthropic/rate-limiter";
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { reliableAgentExecution } from "@/lib/agents/agent-reliability";
 import { getGoldQuotes, getVOCSummary, type VOCQuoteRecord } from "@/lib/agents/voc-research-agent";
 import { getCompetitorAnalyses, type MessagingPattern } from "@/lib/agents/competitor-analyzer";

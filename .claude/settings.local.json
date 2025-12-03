@@ -1,27 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Bash(ls:*)",
-      "Bash(npm test:*)",
-      "Bash(git checkout:*)",
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(git -C \"d:\\Unite-Hub\" status)",
-      "Bash(git ls-tree:*)",
-      "Bash(npm run test:unit:*)",
-      "Bash(npm run test:integration:*)",
-      "Bash(npm run test:*)",
-      "Bash(npx vitest:*)",
-      "Bash(git commit -m \"$(cat <<''EOF''\nfeat: Docker MCP integration with focused Unite-Hub development setup\n\nComplete Docker + MCP system to offload resource-intensive operations from VS Code terminal:\n\n**New Docker Compose Files:**\n- docker-compose.dev.yml: Single-project Unite-Hub setup with all 28 MCP tools\n- docker-compose.projects.yml: Multi-project setup (for future use)\n\n**New Documentation:**\n- UNITE_HUB_DEV_SETUP.md: Comprehensive guide for Unite-Hub development workflow\n- MULTI_PROJECT_MCP_SETUP.md: Guide for managing multiple projects with MCP\n\n**Features:**\n- 5 MCP servers (Filesystem, Process, Database, Git, Gateway)\n- 28 total tools across all servers\n- Auto-pull Docker images via startup scripts\n- Health checks on all services\n- Live code editing with hot reload\n- Performance: 70-80% faster operations, zero terminal memory impact\n- Cross-platform support (Windows/Linux/WSL)\n\n**Performance Gains:**\n- File searches: 6.2x faster (ripgrep via Filesystem MCP)\n- Large file reads: 3.3x faster\n- Terminal memory impact: -100% (zero growth)\n- Process execution: Non-blocking\n\nThis solves the terminal memory compaction issue by offloading all resource-intensive operations to isolated Docker containers.\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
-      "Bash(./start-mcps.ps1)",
-      "Bash(docker-compose:*)",
-      "Bash(docker ps:*)",
-      "Bash(docker rm:*)",
-      "Bash(docker image prune:*)",
-      "Bash(git commit -m \"$(cat <<''EOF''\nfix: Resolve Docker MCP services startup issues - Node compatibility, package versioning\n\n**Problems Fixed:**\n1. Node 22 incompatibility with Fastify/pino dependency tree\n2. MCP SDK \"latest\" version not resolving in Docker Alpine\n3. node-fetch v2 not compatible with ES modules in strict Node environments\n4. Docker image caching preventing fresh npm installs\n\n**Solutions Implemented:**\n1. Downgraded MCP servers from Node 22 to Node 20 (better Alpine compatibility)\n2. Pinned @modelcontextprotocol/sdk to ^1.5.0 (was \"latest\")\n3. Replaced node-fetch with native Node.js fetch API (built-in since Node 18)\n4. Removed node-fetch from package.json entirely\n5. Updated gateway-server.mjs to use global fetch\n6. Updated docker-compose.dev.yml to use node:20-alpine for all MCP services\n\n**Testing:**\n- All 5 MCP servers now initialize cleanly in Docker\n- npm install completes without dependency errors\n- Health checks passing on MCP gateway and servers\n\n**Files Modified:**\n- docker-compose.dev.yml: Node version + typo fix in healthcheck test\n- docker/mcp/servers/package.json: MCP SDK pinned, node-fetch removed\n- docker/mcp/servers/gateway-server.mjs: Use native fetch\n- Dockerfile: Added missing NextAuth/Google OAuth env vars for build\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
-      "Bash(git push:*)",
-      "Bash(git commit -m \"$(cat <<''EOF''\nfix: Resolve Docker Alpine entrypoint shell errors - use semicolons instead of && for error handling\n\n**Problem:**\nExit code 217 (permission denied) when Alpine containers start - caused by shell command chaining failures in entrypoints when apk or npm commands fail silently with &&\n\n**Solution:**\nReplace && with ; in all entrypoints to allow each command to complete independently:\n- apk add commands can fail without blocking npm install\n- npm install can fail without blocking node execution\n- Better debugging - each step outputs visible errors instead of silent failures\n\n**Changes:**\n- filesystem-mcp: Use ; for apk + npm + node chaining\n- process-mcp: Use ; for apk + npm + node chaining  \n- database-mcp: Use ; for npm + node chaining\n- git-mcp: Use ; for apk + npm + node chaining\n- mcp-gateway: Use ; for npm + node chaining\n\n**Testing:**\n- All entrypoints will execute sequentially with visible error output\n- Containers will exit with actual error code from node process, not from failed preceding commands\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
-      "Bash(docker logs:*)"
+      "Bash(git rm:*)"
     ],
     "deny": [],
     "ask": []
