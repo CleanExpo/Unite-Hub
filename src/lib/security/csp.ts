@@ -91,11 +91,10 @@ export function buildCSPHeader(nonce: string, config: CSPConfig = {}): string {
     'default-src': ["'self'"],
 
     // Scripts: Allow unsafe-inline for Next.js compatibility
-    // TODO: Implement proper nonce passing to Next.js Script components
+    // NOTE: Do NOT include nonce with unsafe-inline - CSP Level 2+ ignores unsafe-inline when nonce is present
     'script-src': [
       "'self'",
       "'unsafe-inline'", // Required for Next.js inline scripts
-      `'nonce-${nonce}'`,
       ...(allowUnsafeEval ? ["'unsafe-eval'"] : []),
       'https://accounts.google.com', // Google OAuth
       'https://unpkg.com', // CDN for libraries (if needed)
@@ -103,11 +102,10 @@ export function buildCSPHeader(nonce: string, config: CSPConfig = {}): string {
     ],
 
     // Styles: Allow unsafe-inline for Tailwind CSS and Next.js
-    // TODO: Implement proper nonce passing for styled-jsx
+    // NOTE: Do NOT include nonce with unsafe-inline - CSP Level 2+ ignores unsafe-inline when nonce is present
     'style-src': [
       "'self'",
       "'unsafe-inline'", // Required for Tailwind CSS and dynamic styles
-      `'nonce-${nonce}'`,
       'https://fonts.googleapis.com', // Google Fonts
       ...styleSrcDomains,
     ],
