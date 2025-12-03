@@ -1,6 +1,7 @@
 import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import path from 'path';
+import { sanitizeFormat } from './logging/sanitize';
 
 // Define log levels
 const levels = {
@@ -22,9 +23,10 @@ const colors = {
 
 winston.addColors(colors);
 
-// Log format
+// Log format with automatic sanitization
 const format = winston.format.combine(
   winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
+  sanitizeFormat(), // ✅ Sanitize all logs to prevent sensitive data leakage
   winston.format.colorize({ all: true }),
   winston.format.printf((info) => {
     const { timestamp, level, message, ...meta } = info;
@@ -60,7 +62,7 @@ if (process.env.NODE_ENV === 'production' || process.env.ENABLE_DB_LOGGING === '
 if (process.env.NODE_ENV === 'production' || process.env.LOG_TO_FILE === 'true') {
   const logDir = process.env.LOG_DIR || path.join(process.cwd(), 'logs');
 
-  // Error log
+  // Error log with sanitization
   transports.push(
     new DailyRotateFile({
       filename: path.join(logDir, 'error-%DATE%.log'),
@@ -70,12 +72,13 @@ if (process.env.NODE_ENV === 'production' || process.env.LOG_TO_FILE === 'true')
       maxFiles: '14d',
       format: winston.format.combine(
         winston.format.timestamp(),
+        sanitizeFormat(), // ✅ Sanitize file logs too
         winston.format.json()
       ),
     })
   );
 
-  // Combined log
+  // Combined log with sanitization
   transports.push(
     new DailyRotateFile({
       filename: path.join(logDir, 'combined-%DATE%.log'),
@@ -84,6 +87,7 @@ if (process.env.NODE_ENV === 'production' || process.env.LOG_TO_FILE === 'true')
       maxFiles: '14d',
       format: winston.format.combine(
         winston.format.timestamp(),
+        sanitizeFormat(), // ✅ Sanitize file logs too
         winston.format.json()
       ),
     })

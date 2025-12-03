@@ -10,7 +10,7 @@
  * - Gap suburb identification for expansion
  */
 
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export type BusinessType =
   | "coffee_shop"

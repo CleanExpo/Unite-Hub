@@ -1,0 +1,69 @@
+{
+  "videoId": "video-realtime-data",
+  "title": "The 48-Hour Information Problem",
+  "duration": "30s",
+  "resolution": "4K (3840x2160)",
+  "frameRate": "30fps",
+  "codec": "H.264",
+  "productionNotes": "Professional 4K marketing video, professional color grading, smooth animations, H.264. Ensure all text is legible and animations are clean and professional.",
+  "scenes": [
+    {
+      "sceneNumber": 1,
+      "startTime": "0s",
+      "endTime": "4s",
+      "visual": "Marketing manager staring at dashboard. Dashboard timestamp clearly visible: 'Updated Wednesday, 9am'. Current time on screen: 'Friday, 3pm' (48+ hours later). Campaign has been running for 48 hours straight. Manager's confused expression: 'Wait, is this working or not?'. Visual confusion indicator (question mark, uncertainty).",
+      "voiceover": "It's Friday. Your dashboard is showing Wednesday's data. You have no idea if your campaign is working or tanking.",
+      "textOnScreen": "Dashboard: Wednesday 9am. Now: Friday 3pm. Data age: 48 hours.",
+      "sound": "Slight tension, uncertainty music.",
+      "emotion": "Uncertainty, lack of control"
+    },
+    {
+      "sceneNumber": 2,
+      "startTime": "5s",
+      "endTime": "12s",
+      "visual": "Campaign performance graph showing hidden failure. Line shows normal Tuesday/Wednesday performance (upward). At Thursday 2pm: Line tanks sharply (campaign failure begins). But manager can't see this until Friday. Money counter running during 48-hour gap: '$3,200 wasted... $4,800... $5,200...'. Visual waste indicator (money burning animation). Manager finally sees problem Friday 3pm: 'Oh no, this is failing!'. But damage already done (large red X indicating missed opportunity).",
+      "voiceover": "Your campaign is hemorrhaging money Thursday. You find out Friday. You've already burned $3,200 on something that isn't working.",
+      "textOnScreen": "$3,200 wasted on a campaign you didn't know was failing",
+      "sound": "Serious, slight alarm tone.",
+      "emotion": "Financial pain, frustration, regret"
+    },
+    {
+      "sceneNumber": 3,
+      "startTime": "13s",
+      "endTime": "22s",
+      "visual": "Split-screen competitive comparison. Left side: Your company (Friday afternoon, realizing failure). Right side: Competitor's dashboard (Wednesday 2pm, sees performance drop). Competitor: Immediately pivots strategy (new audience, new message shown). Real-time decision making visible. By Friday: Competitor's updated campaign performing 40% better. Your company: Still running same failing campaign from Wednesday. Chart shows diverging results over 48 hours. Clear winner: Competitor (graph shoots up), Your company (graph flat/down). Competitor wins the engagement and customers (notifications appear).",
+      "voiceover": "Your competitor sees the problem in real-time. They pivot within 2 hours. You're still running the same failing campaign Friday.",
+      "textOnScreen": "Competitor: Real-time data. Your company: 48-hour delay.",
+      "sound": null,
+      "emotion": "Competitive anxiety, falling behind, pressure"
+    },
+    {
+      "sceneNumber": 4,
+      "startTime": "23s",
+      "endTime": "30s",
+      "visual": "Synthex live dashboard in action. Campaign launches Monday morning. Metrics updating visually in real-time (every minute shown with counter increment). Wednesday 2pm: Performance starts declining (manager sees immediately). Immediate alert notification pops: 'Campaign performance declining. Consider pausing or pivoting.' Manager makes decision same day (by 3pm). New audience/message deployed Wednesday evening. By Thursday morning: Revamped campaign is winning (graph shoots upward). Friday metrics: ROI recovered + 20% improvement shown. Success celebration (upward graph, positive indicators). Performance dashboard showing active monitoring.",
+      "voiceover": "Synthex updates every minute. You see problems immediately. Pivot the same day. One client doubled their ROI by stopping failing campaigns early and reallocating budget to winners.",
+      "textOnScreen": "Real-time update every minute. Decisions made today. ROI doubled.",
+      "sound": null,
+      "emotion": "Control, confidence, winning, empowerment",
+      "ctaText": "See what's actually happening. Make decisions TODAY. Try free for 14 days.",
+      "closing": "Synthex logo, 'Real-time. Real results.'"
+    }
+  ],
+  "watermark": {
+    "logo": "SynthexLogo.png",
+    "position": "bottom-right",
+    "size": "120px",
+    "opacity": "45%",
+    "glow": true
+  },
+  "exportSettings": {
+    "format": "MP4",
+    "videoCodec": "H.264",
+    "audioCodec": "AAC",
+    "resolution": "3840x2160",
+    "frameRate": "30fps",
+    "bitrate": "40Mbps",
+    "colorProfile": "Rec. 709"
+  }
+}

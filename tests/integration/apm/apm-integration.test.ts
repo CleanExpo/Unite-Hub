@@ -30,7 +30,7 @@ describe('APM Integration', () => {
 
   describe('Configuration', () => {
     it('should load APM configuration', () => {
-      getAPMConfig();
+      const config = getAPMConfig();
 
       expect(config).toBeDefined();
       expect(config).toHaveProperty('enabled');
@@ -45,7 +45,7 @@ describe('APM Integration', () => {
     });
 
     it('should validate APM configuration', () => {
-      getAPMConfig();
+      const config = getAPMConfig();
       const validation = validateAPMConfig(config);
 
       expect(validation).toHaveProperty('valid');
@@ -56,7 +56,7 @@ describe('APM Integration', () => {
     });
 
     it('should have correct environment detection', () => {
-      getAPMConfig();
+      const config = getAPMConfig();
 
       expect(['development', 'staging', 'production', 'test']).toContain(
         config.environment
@@ -64,7 +64,7 @@ describe('APM Integration', () => {
     });
 
     it('should have appropriate sampling rates for test environment', () => {
-      getAPMConfig();
+      const config = getAPMConfig();
 
       if (config.environment === 'test') {
         expect(config.sampling.traces).toBe(0);
@@ -74,7 +74,7 @@ describe('APM Integration', () => {
     });
 
     it('should include required service tags', () => {
-      getAPMConfig();
+      const config = getAPMConfig();
 
       expect(config.tags).toHaveProperty('service');
       expect(config.tags).toHaveProperty('environment');
@@ -349,13 +349,15 @@ describe('APM Integration', () => {
     });
 
     it('should have consistent configuration across modules', () => {
-      getAPMConfig();
-      datadogIntegration.getConfig();
-      sentryIntegration.getConfig();
+      const config = getAPMConfig();
+      const datadogConfig = datadogIntegration.getConfig();
+      const sentryConfig = sentryIntegration.getConfig();
 
       // All configs should be accessible (even if null)
       expect(config).toBeDefined();
       // datadogConfig and sentryConfig may be null if not initialized
+      expect(datadogConfig !== undefined || datadogConfig === null).toBe(true);
+      expect(sentryConfig !== undefined || sentryConfig === null).toBe(true);
     });
   });
 

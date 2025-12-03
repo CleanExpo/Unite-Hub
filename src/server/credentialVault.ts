@@ -19,7 +19,7 @@
  */
 
 import crypto from "crypto";
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 const ENCRYPTION_ALGORITHM = "aes-256-gcm";
 const IV_LENGTH = 16; // 128-bit IV for GCM

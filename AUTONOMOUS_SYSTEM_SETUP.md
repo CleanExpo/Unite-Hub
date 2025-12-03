@@ -176,7 +176,7 @@ SELECT
 FROM email_intelligence ei
 JOIN contacts c ON ei.contact_id = c.id
 JOIN client_emails ce ON ei.email_id = ce.id
-WHERE ei.workspace_id = '5a92c7af-5aca-49a7-8866-3bfaa1d04532'
+WHERE ei.workspace_id = 'YOUR_WORKSPACE_ID'
 ORDER BY ei.analyzed_at DESC
 LIMIT 10;
 ```

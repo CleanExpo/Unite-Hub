@@ -9,7 +9,7 @@
  * @module founderOS/founderJournalService
  */
 
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 
 // ============================================================================
 // Types

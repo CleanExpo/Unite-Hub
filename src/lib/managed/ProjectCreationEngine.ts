@@ -8,7 +8,7 @@
  * 4. Set up reporting schedules
  */
 
-import { getSupabaseAdmin } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { createApiLogger } from '@/lib/logger';
 
 const logger = createApiLogger({ context: 'ProjectCreationEngine' });

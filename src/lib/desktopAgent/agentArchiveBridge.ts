@@ -5,7 +5,7 @@
  * for complete audit trail and compliance tracking.
  */
 
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { log } from '@/lib/logger';
 
 export interface AgentEventLog {

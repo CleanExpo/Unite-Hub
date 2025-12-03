@@ -5,7 +5,7 @@
  * Truth Layer: All blocking, warnings, and prompts must be honest and logged
  */
 
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { createApiLogger } from '@/lib/logger';
 import {
   DEFAULT_TRIAL_PROFILE,

@@ -1,0 +1,34 @@
+{
+  "taskId": "test-progress-format",
+  "totalSteps": 1,
+  "milestones": [
+    {
+      "milestoneId": "test-progress-format-step-0",
+      "taskId": "test-progress-format",
+      "stepIndex": 0,
+      "stepName": "Test Step",
+      "criteria": [
+        {
+          "id": "test-progress-format-step-0-criterion-1",
+          "type": "output_generated",
+          "description": "Test",
+          "verificationMethod": "Test",
+          "required": true
+        }
+      ],
+      "requiredProofs": [
+        {
+          "proofType": "file_exists",
+          "location": "/tmp/test.json"
+        }
+      ],
+      "weightage": 100,
+      "createdAt": 1764721835291,
+      "createdBy": "test",
+      "locked": false
+    }
+  ],
+  "totalWeightage": 100,
+  "createdAt": 1764719561747,
+  "locked": false
+}

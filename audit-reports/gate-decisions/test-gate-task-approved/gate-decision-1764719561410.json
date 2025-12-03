@@ -1,0 +1,76 @@
+{
+  "taskId": "test-gate-task-approved",
+  "decision": "approved",
+  "timestamp": 1764719561406,
+  "stepResults": [
+    {
+      "stepIndex": 0,
+      "stepName": "Step 0",
+      "canComplete": true,
+      "passedCriteria": 2,
+      "totalCriteria": 2,
+      "blockingIssues": [],
+      "checkpointValidation": {
+        "checkpointId": "test-gate-task-approved-checkpoint-0",
+        "stepIndex": 0,
+        "passed": true,
+        "criteriaResults": [
+          {
+            "criterionId": "file_exists",
+            "criterionType": "output_generated",
+            "description": "File exists and has content",
+            "passed": true,
+            "evidence": "File: D:\\Unite-Hub\\audit-reports-test\\approved-step-0.json, Size: 26 bytes, Modified: 2025-12-02T23:52:41.231Z"
+          },
+          {
+            "criterionId": "no_placeholders",
+            "criterionType": "no_placeholders",
+            "description": "No placeholder text in file",
+            "passed": true,
+            "evidence": "No placeholders found in D:\\Unite-Hub\\audit-reports-test\\approved-step-0.json"
+          }
+        ],
+        "failedCriteria": [],
+        "timestamp": 1764719561297,
+        "evidencePath": "D:\\Unite-Hub\\audit-reports\\checkpoints\\test-gate-task-approved\\checkpoint-0-1764719561298.json"
+      },
+      "timestamp": 1764719561345
+    },
+    {
+      "stepIndex": 1,
+      "stepName": "Step 1",
+      "canComplete": true,
+      "passedCriteria": 2,
+      "totalCriteria": 2,
+      "blockingIssues": [],
+      "checkpointValidation": {
+        "checkpointId": "test-gate-task-approved-checkpoint-1",
+        "stepIndex": 1,
+        "passed": true,
+        "criteriaResults": [
+          {
+            "criterionId": "file_exists",
+            "criterionType": "output_generated",
+            "description": "File exists and has content",
+            "passed": true,
+            "evidence": "File: D:\\Unite-Hub\\audit-reports-test\\approved-step-1.json, Size: 26 bytes, Modified: 2025-12-02T23:52:41.244Z"
+          },
+          {
+            "criterionId": "no_placeholders",
+            "criterionType": "no_placeholders",
+            "description": "No placeholder text in file",
+            "passed": true,
+            "evidence": "No placeholders found in D:\\Unite-Hub\\audit-reports-test\\approved-step-1.json"
+          }
+        ],
+        "failedCriteria": [],
+        "timestamp": 1764719561347,
+        "evidencePath": "D:\\Unite-Hub\\audit-reports\\checkpoints\\test-gate-task-approved\\checkpoint-1-1764719561347.json"
+      },
+      "timestamp": 1764719561405
+    }
+  ],
+  "blockingIssues": [],
+  "decidedBy": "completion-gate-system",
+  "evidence_path": "D:\\Unite-Hub\\audit-reports\\gate-decisions\\test-gate-task-approved"
+}

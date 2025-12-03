@@ -6,7 +6,8 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { getSupabaseServer, getSupabaseAdmin } from "@/lib/supabase";
+import { getSupabaseServer } from "@/lib/supabase";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import crypto from "crypto";
 
 // Unsubscribe token configuration

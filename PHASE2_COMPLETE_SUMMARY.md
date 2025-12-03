@@ -69,7 +69,7 @@ Your system verification on 2025-01-17 showed:
 ✅ Found organization: Phill McGurk's Organization
 
 📋 Test Credentials:
-   workspace_id: 5a92c7af-5aca-49a7-8866-3bfaa1d04532
+   workspace_id: YOUR_WORKSPACE_ID
    org_id: adedf006-ca69-47d4-adbf-fc91bd7f225d
 ```
 
@@ -92,7 +92,7 @@ http://localhost:3008/test-media-upload.html
 ### **3. Upload Your First File**
 
 Use these credentials:
-- **Workspace ID**: `5a92c7af-5aca-49a7-8866-3bfaa1d04532`
+- **Workspace ID**: `YOUR_WORKSPACE_ID`
 - **Org ID**: `adedf006-ca69-47d4-adbf-fc91bd7f225d`
 - **File**: Any video/audio/image under 100MB
 - **File Type**: Auto-detected from MIME type

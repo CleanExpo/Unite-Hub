@@ -7,7 +7,8 @@
  * @module founderOS/founderBusinessRegistryService
  */
 
-import { getSupabaseServer, supabaseAdmin } from '@/lib/supabase';
+import { getSupabaseServer } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 
 // ============================================================================
 // Types

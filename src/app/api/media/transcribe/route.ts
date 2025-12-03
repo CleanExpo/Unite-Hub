@@ -4,7 +4,8 @@
 // UPDATED: 2025-01-17 - Fixed to match Unite-Hub patterns and media_files schema
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseServer, getSupabaseAdmin } from '@/lib/supabase';
+import { getSupabaseServer } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import OpenAI from 'openai';
 
 // Validate OpenAI API key

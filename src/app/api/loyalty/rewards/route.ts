@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseAdmin } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { getAvailableRewards, submitRedemptionRequest, getPendingRedemptionRequests } from '@/lib/loyalty/rewardCatalog';
 import { getBalance } from '@/lib/loyalty/loyaltyEngine';
 import { strictRateLimit } from '@/lib/rate-limit';

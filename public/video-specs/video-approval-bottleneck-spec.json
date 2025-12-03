@@ -1,0 +1,98 @@
+{
+  "videoId": "video-approval-bottleneck",
+  "title": "Why Approval Processes Kill Your Best Ideas",
+  "duration": "30s",
+  "resolution": "4K (3840x2160)",
+  "frameRate": "30fps",
+  "codec": "H.264",
+  "productionNotes": "4K professional video with smooth transitions. Focus on clear visuals and concise voiceover. Utilize motion graphics to illustrate concepts like time pressure, engagement loss, and approval workflow. Sound design should enhance the emotion in each scene.",
+  "scenes": [
+    {
+      "sceneNumber": 1,
+      "duration": "0-7s",
+      "description": "THE APPROVAL NIGHTMARE",
+      "visuals": [
+        "Campaign creative ready for launch",
+        "Email notification appears: \"Campaign ready. Needs approval from 5 people\"",
+        "Each approver labeled with their availability: CEO (will check in 6 hours), Client (8 time zones away, checking tomorrow), Finance (checks email 2x per day), CMO (in meetings until 4pm), Legal (unresponsive)",
+        "Calendar showing Friday 5pm deadline ticking closer",
+        "Panic indicator (red alert) showing time pressure",
+        "Animation: approval request bouncing between people, getting lost"
+      ],
+      "voiceover": "Your campaign is ready. But you need approval from 5 people. Your CEO is busy. Your client is 8 time zones away. Finance checks email once. This campaign will be late.",
+      "emotion": "Dread, helplessness, frustration"
+    },
+    {
+      "sceneNumber": 2,
+      "duration": "8-16s",
+      "description": "EVERY HOUR DELAY = MISSED WINDOW",
+      "visuals": [
+        "Campaign deadline (Friday 5pm) getting closer",
+        "Animation: Days ticking down",
+        "Markings: \"Friday... [wait for approval]... Monday morning... [too late, trend ended]\"",
+        "Marketing trend visualization: Trend hot Monday-Wednesday, cooling by Friday",
+        "By Monday when campaign finally launches: Trend is dead (gray/cold indicator)",
+        "Engagement prediction chart: Shows 60% engagement loss from delayed launch"
+      ],
+      "voiceover": "Your deadline is Friday. It's now Thursday. You're still waiting on approval from 3 people. By Monday? Your campaign window is closed.",
+      "textOnScreen": "Trend window: Mon-Wed. Launch date: Following Monday. Engagement: Down 60%.",
+      "emotion": "Panic, pressure, inevitable failure"
+    },
+    {
+      "sceneNumber": 3,
+      "duration": "17-26s",
+      "description": "THE BACK-AND-FORTH EMAIL NIGHTMARE",
+      "visuals": [
+        "Email chain expanding rapidly",
+        "Subject: \"Campaign Creative - APPROVAL NEEDED\"",
+        "Shows 23 emails in expanding accordion",
+        "Quick cuts of different revision requests: Email 1: \"Looks good, one small change on the tagline\", Email 2: \"Wait, can we try a different color?\", Email 3: \"CEO wants to review before Friday\", Email 4: \"I didn't get the latest version, which one is final?\", Email 23: \"Can we re-review the tagline change from Email 5?\"",
+        "Timeline overlay: Monday send... Wednesday response... Friday another revision...",
+        "Visual chaos: Too many cooks, no single source of truth"
+      ],
+      "voiceover": "Revise. Send back. Revise again. By the time everyone approves, you've rewritten it 3 times and it's now off-brand.",
+      "textOnScreen": "23 emails. 5 revisions. 8 days elapsed. Still waiting.",
+      "emotion": "Exhaustion, futility, broken process"
+    },
+    {
+      "sceneNumber": 4,
+      "duration": "27-30s",
+      "description": "SYNTHEX ONE-PLACE APPROVALS",
+      "visuals": [
+        "Synthex approval interface (clean, modern)",
+        "Campaign appears in ONE unified place",
+        "All approvers get notification in THEIR preferred channel: CEO: Desktop notification + Asana integration, Client: Mobile notification + SMS alert, Finance: Email integration, CMO: Slack notification, Legal: Dashboard notification",
+        "Each approver sees same creative on their device of choice",
+        "Real-time approval tracking showing timestamps: CEO approves (2 min): ✓ Approved, Client approves (8 min): ✓ Approved, Finance approves (1 min): ✓ Approved, CMO approves (3 min): ✓ Approved, Legal approves (5 min): ✓ Approved",
+        "Total time: 5 minutes, all approvals done",
+        "Campaign auto-queues for launch immediately",
+        "Timeline shows: Friday 2pm approval, Friday 3pm launch",
+        "Campaign goes live while trend is hot (engagement metrics climbing)"
+      ],
+      "voiceover": "Synthex puts everything in one place. Approvers see it their way. Approvals come back in minutes. You launch the same day. One agency cut their campaign time from 8 days to 3 days.",
+      "visualsClosing": [
+        "Campaign going live, real-time engagement metrics climbing upward",
+        "Synthex logo with upward momentum, \"Approve fast. Launch faster.\""
+      ],
+      "textOnScreen": "Approval cycle: 5 minutes. Launch time: Same day. Trend captured: 100%",
+      "ctaText": "Launch campaigns without delays. Try free for 14 days.",
+      "emotion": "Relief, momentum, winning, empowerment"
+    }
+  ],
+  "watermark": {
+    "image": "synthex_logo.png",
+    "position": "bottom-right",
+    "size": "120px",
+    "opacity": "45%",
+    "effect": "subtle glow"
+  },
+  "exportSettings": {
+    "format": "MP4",
+    "videoCodec": "H.264",
+    "audioCodec": "AAC",
+    "bitrate": "30 Mbps",
+    "audioBitrate": "192 kbps",
+    "colorProfile": "Rec. 709",
+    "audioChannels": "Stereo"
+  }
+}

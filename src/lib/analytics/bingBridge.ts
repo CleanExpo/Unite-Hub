@@ -4,7 +4,7 @@
  * Provides additional Bing endpoints beyond basic query stats
  */
 
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { createApiLogger } from '@/lib/logger';
 
 const logger = createApiLogger({ service: 'bingBridge' });

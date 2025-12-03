@@ -1,0 +1,15 @@
+{
+  "taskId": "fake-file-task",
+  "captured_at": 1764721555407,
+  "steps": [
+    {
+      "step_id": "verify-file_exists: /path/that/does/not/exist.ts",
+      "description": "file_exists: /path/that/does/not/exist.ts",
+      "status": "failed",
+      "start_time": 1764721554406,
+      "end_time": 1764721555406,
+      "error": "File not found or not accessible: ENOENT: no such file or directory, stat 'D:\\path\\that\\does\\not\\exist.ts'",
+      "duration_ms": 1000
+    }
+  ]
+}
