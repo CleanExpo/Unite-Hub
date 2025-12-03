@@ -12,7 +12,7 @@ services:
   unite-hub:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: unite-hub-dev
     volumes:
       # Source code (live editing)

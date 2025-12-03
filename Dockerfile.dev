@@ -1,33 +1,44 @@
 # ==================================================
 # Development Dockerfile for Unite-Hub
-# Optimized for hot reload and debugging
+# Lightweight image with node_modules included
 # ==================================================
 
-FROM node:20-alpine AS development
+FROM node:20-alpine
 
-# Install dependencies
+LABEL maintainer="Unite-Hub Team"
+LABEL version="1.0.0-dev"
+
+# Install security updates and dependencies
 RUN apk add --no-cache \
     libc6-compat \
     ca-certificates \
-    git
+    && apk upgrade --no-cache
 
 WORKDIR /app
+
+# Set environment variables
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NPM_CONFIG_LOGLEVEL=warn
 
 # Copy package files
 COPY package.json package-lock.json* ./
 
-# Install all dependencies (including dev)
-RUN npm ci
+# Install dependencies (including devDependencies needed for development)
+RUN npm install --legacy-peer-deps
 
 # Copy application code
 COPY . .
 
-# Expose ports
-EXPOSE 3008 9229
+# Create .env file for build (will be overridden by docker-compose volumes)
+RUN touch .env.local
 
-# Set environment
-ENV NODE_ENV=development
-ENV NEXT_TELEMETRY_DISABLED=1
+# Expose port 3008
+EXPOSE 3008
 
-# Start development server
+# Set port environment variable
+ENV PORT=3008
+ENV HOSTNAME="0.0.0.0"
+
+# Start dev server
 CMD ["npm", "run", "dev"]
