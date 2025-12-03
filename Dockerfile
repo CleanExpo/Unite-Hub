@@ -52,7 +52,7 @@ COPY package.json package-lock.json* ./
 # NODE_ENV=development ensures devDependencies are installed
 # Using --legacy-peer-deps for compatibility with older packages
 ENV NODE_ENV=development
-RUN npm install --legacy-peer-deps --ignore-scripts
+RUN npm install --legacy-peer-deps
 ENV NODE_ENV=production
 
 # ==================================================
