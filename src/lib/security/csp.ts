@@ -90,9 +90,11 @@ export function buildCSPHeader(nonce: string, config: CSPConfig = {}): string {
   const directives: Record<string, string[]> = {
     'default-src': ["'self'"],
 
-    // Scripts: Remove unsafe-inline, add nonce
+    // Scripts: Allow unsafe-inline for Next.js compatibility
+    // TODO: Implement proper nonce passing to Next.js Script components
     'script-src': [
       "'self'",
+      "'unsafe-inline'", // Required for Next.js inline scripts
       `'nonce-${nonce}'`,
       ...(allowUnsafeEval ? ["'unsafe-eval'"] : []),
       'https://accounts.google.com', // Google OAuth
@@ -100,9 +102,11 @@ export function buildCSPHeader(nonce: string, config: CSPConfig = {}): string {
       ...scriptSrcDomains,
     ],
 
-    // Styles: Remove unsafe-inline, add nonce
+    // Styles: Allow unsafe-inline for Tailwind CSS and Next.js
+    // TODO: Implement proper nonce passing for styled-jsx
     'style-src': [
       "'self'",
+      "'unsafe-inline'", // Required for Tailwind CSS and dynamic styles
       `'nonce-${nonce}'`,
       'https://fonts.googleapis.com', // Google Fonts
       ...styleSrcDomains,
