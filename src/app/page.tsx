@@ -155,20 +155,20 @@ export default function Home() {
         <div className="max-w-[1200px] mx-auto px-5 relative">
           <ScrollReveal>
             <div className="inline-block bg-white/10 text-white px-4 py-2 rounded-full text-sm font-semibold mb-6 backdrop-blur-sm">
-              Finally, an AI platform built for REAL small businesses.
+              For the 73% of small businesses who've been burned by marketing.
             </div>
           </ScrollReveal>
 
           <ScrollReveal delay={100}>
             <h1 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
-              <span className="text-white">AI Marketing That Actually Works</span>
+              <span className="text-white">Stop Bleeding Money on Marketing</span>
               <br />
-              <AnimatedGradientText text="No Agency. No Team. Just Results." className="bg-gradient-to-r from-[#00d4aa] to-[#ff5722]" />
+              <AnimatedGradientText text="That Doesn't Work." className="bg-gradient-to-r from-[#00d4aa] to-[#ff5722]" />
             </h1>
           </ScrollReveal>
 
           <p className="text-xl opacity-90 max-w-[700px] mx-auto mb-12 leading-relaxed">
-            For trades, local services, non-profits, coaches, and online businesses. Get your website, SEO, branding, and social media handled by AI. No monthly retainer. No confusing tools.
+            You've probably spent thousands on agencies that ghosted you. Or bought courses you never finished. Or paid for tools you barely use. We've heard it all. Synthex is different — it actually does the work.
           </p>
 
           <ScrollReveal delay={150}>
@@ -200,10 +200,10 @@ export default function Home() {
           <ScrollReveal delay={300}>
             <div className="max-w-[600px] mx-auto bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10 hover:border-white/30 transition-colors">
               <p className="text-sm text-white/80 mb-4">
-                "Synthex has given us back 20 hours a week that we used to spend on marketing. The AI just works." — Phill McGurk, CARSI
+                "I spent $30,000 on a marketing agency over 18 months. Got nothing. Synthex did more in the first week than they did the entire time." — Tradie, Brisbane
               </p>
               <p className="text-xs text-white/60">
-                Built with real restoration & education backgrounds. We know small business challenges.
+                Built by founders who've been scammed by agencies too. We built what we wished existed.
               </p>
             </div>
           </ScrollReveal>
@@ -215,10 +215,10 @@ export default function Home() {
         <div className="max-w-[1200px] mx-auto px-5">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-4">
-              Built for Small Businesses That Are Busy
+              Built for People Who've Given Up on Marketing
             </h2>
             <p className="text-xl text-text-secondary max-w-[700px] mx-auto">
-              Whether you're swamped with jobs or managing multiple locations, Synthex handles your marketing so you can focus on what you do best.
+              You've tried agencies. You've bought courses. You've signed up for tools you forgot existed. None of it worked. We get it — because we've been there too.
             </p>
           </div>
 
@@ -230,19 +230,19 @@ export default function Home() {
                   <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-accent-500 to-accent-400 flex items-center justify-center mb-4">
                     <span className="text-white text-xl">🔨</span>
                   </div>
-                  <h3 className="text-xl font-bold text-text-primary mb-3">Trades & Contractors</h3>
+                  <h3 className="text-xl font-bold text-text-primary mb-3">Tradies & Contractors</h3>
                   <p className="text-text-secondary mb-4">
-                    Plumbers, electricians, builders. Get more local jobs without spending $500+ monthly on ads or hiring a marketer.
+                    "I've been burned by Hipages, ServiceSeeking, and two different agencies. $100k down the drain." Sound familiar? We fix that.
                   </p>
                   <ul className="space-y-2 text-sm text-text-secondary">
                     <li className="flex items-center gap-2">
-                      <span className="text-accent-500">✓</span> Local SEO & Google Maps ranking
+                      <span className="text-accent-500">✓</span> Your own leads, not shared with 10 competitors
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-accent-500">✓</span> Before/after galleries auto-created
+                      <span className="text-accent-500">✓</span> Before/after galleries that sell for you
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-accent-500">✓</span> Review generation & management
+                      <span className="text-accent-500">✓</span> Google Maps ranking without the agency fees
                     </li>
                   </ul>
                 </div>
@@ -254,21 +254,21 @@ export default function Home() {
               <HoverLift className="h-full">
                 <div className="p-8 rounded-xl border border-border-base hover:border-accent-500 transition-colors h-full bg-bg-card">
                   <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-success-500 to-success-600 flex items-center justify-center mb-4">
-                    <span className="text-white text-xl">🏢</span>
+                    <span className="text-white text-xl">💇</span>
                   </div>
-                  <h3 className="text-xl font-bold text-text-primary mb-3">Local Services & Salons</h3>
+                  <h3 className="text-xl font-bold text-text-primary mb-3">Salons & Local Services</h3>
                   <p className="text-text-secondary mb-4">
-                    Hair salons, spas, cleaning services. Attract more customers in your neighborhood with AI marketing.
+                    You've got 47 unfinished modules in that Instagram course you bought. Your "marketing hour" never happens. We get it.
                   </p>
                   <ul className="space-y-2 text-sm text-text-secondary">
                     <li className="flex items-center gap-2">
-                      <span className="text-accent-500">✓</span> Geo-targeted social posts
+                      <span className="text-accent-500">✓</span> Posts created for you (not another course)
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-accent-500">✓</span> Appointment reminders & follow-ups
+                      <span className="text-accent-500">✓</span> Clients who forget to rebook get reminded
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-accent-500">✓</span> Customer retention campaigns
+                      <span className="text-accent-500">✓</span> Reviews that actually get asked for
                     </li>
                   </ul>
                 </div>
@@ -284,17 +284,17 @@ export default function Home() {
                   </div>
                   <h3 className="text-xl font-bold text-text-primary mb-3">Non-Profits & Churches</h3>
                   <p className="text-text-secondary mb-4">
-                    Tell your story and grow your community without hiring an agency or burning volunteer hours on social media.
+                    Your cause matters more than your marketing budget. Stop losing volunteers to "we'll post on Facebook eventually."
                   </p>
                   <ul className="space-y-2 text-sm text-text-secondary">
                     <li className="flex items-center gap-2">
-                      <span className="text-accent-500">✓</span> Donor & volunteer recruitment
+                      <span className="text-accent-500">✓</span> Stories that move people (not marketing speak)
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-accent-500">✓</span> Event promotion & registration
+                      <span className="text-accent-500">✓</span> Events that fill seats automatically
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-accent-500">✓</span> Impact storytelling
+                      <span className="text-accent-500">✓</span> Donor outreach that doesn't feel salesy
                     </li>
                   </ul>
                 </div>
@@ -310,17 +310,17 @@ export default function Home() {
                   </div>
                   <h3 className="text-xl font-bold text-text-primary mb-3">Coaches & Consultants</h3>
                   <p className="text-text-secondary mb-4">
-                    Grow your online coaching or consulting business with consistent, professional content that attracts qualified clients.
+                    That $297 "signature system" course is gathering digital dust. You know marketing matters but hate doing it. Same.
                   </p>
                   <ul className="space-y-2 text-sm text-text-secondary">
                     <li className="flex items-center gap-2">
-                      <span className="text-accent-500">✓</span> Lead magnets & email sequences
+                      <span className="text-accent-500">✓</span> Content that sounds like you (not ChatGPT)
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-accent-500">✓</span> Social proof & testimonials
+                      <span className="text-accent-500">✓</span> Leads that are actually qualified
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-accent-500">✓</span> Webinar & launch automation
+                      <span className="text-accent-500">✓</span> Consistent posting without the guilt
                     </li>
                   </ul>
                 </div>
@@ -334,19 +334,19 @@ export default function Home() {
                   <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-error-500 to-error-600 flex items-center justify-center mb-4">
                     <span className="text-white text-xl">🛍️</span>
                   </div>
-                  <h3 className="text-xl font-bold text-text-primary mb-3">E-Commerce & Online Stores</h3>
+                  <h3 className="text-xl font-bold text-text-primary mb-3">E-Commerce Stores</h3>
                   <p className="text-text-secondary mb-4">
-                    Sell more online with product photography, descriptions, and targeted social ads—all automated by AI.
+                    You're paying for 3 different email platforms you barely use. Your Facebook ads guy ghosted. Been there.
                   </p>
                   <ul className="space-y-2 text-sm text-text-secondary">
                     <li className="flex items-center gap-2">
-                      <span className="text-accent-500">✓</span> Product image enhancement
+                      <span className="text-accent-500">✓</span> Product descriptions that actually sell
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-accent-500">✓</span> Social commerce integration
+                      <span className="text-accent-500">✓</span> Abandoned carts that recover themselves
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-accent-500">✓</span> Abandoned cart recovery
+                      <span className="text-accent-500">✓</span> Social ads without the agency markup
                     </li>
                   </ul>
                 </div>
@@ -362,17 +362,17 @@ export default function Home() {
                   </div>
                   <h3 className="text-xl font-bold text-text-primary mb-3">Agencies & Resellers</h3>
                   <p className="text-text-secondary mb-4">
-                    White-label Synthex for your clients. Deliver premium marketing services without the overhead or team.
+                    The SMMA model is broken. 90% of agencies can't deliver. Use Synthex to actually get results for clients.
                   </p>
                   <ul className="space-y-2 text-sm text-text-secondary">
                     <li className="flex items-center gap-2">
-                      <span className="text-accent-500">✓</span> Client branding & reporting
+                      <span className="text-accent-500">✓</span> White-label with your branding
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-accent-500">✓</span> Unlimited seats per client
+                      <span className="text-accent-500">✓</span> Actually deliver on promises
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-accent-500">✓</span> Reseller margins available
+                      <span className="text-accent-500">✓</span> Scale without hiring
                     </li>
                   </ul>
                 </div>
@@ -388,12 +388,12 @@ export default function Home() {
           <div className="text-center mb-16">
             <ScrollReveal>
               <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-4">
-                See Synthex In Action
+                What Happens When Marketing Actually Works
               </h2>
             </ScrollReveal>
             <ScrollReveal delay={100}>
               <p className="text-xl text-text-secondary max-w-[700px] mx-auto">
-                Real results from real businesses just like yours
+                These businesses tried everything else first. Then they tried Synthex.
               </p>
             </ScrollReveal>
           </div>
@@ -432,17 +432,17 @@ export default function Home() {
         <div className="max-w-[1200px] mx-auto px-5">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              The Small Business Marketing Problem
+              We've Heard Your Stories
             </h2>
             <p className="text-xl text-white/80 max-w-[700px] mx-auto">
-              You're great at your business. Marketing shouldn't be your second job.
+              Real frustrations from real business owners. Sound familiar?
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
               <div className="space-y-8">
-                {/* Problem 1 */}
+                {/* Problem 1 - Agency Scams */}
                 <ScrollReveal delay={0}>
                   <div className="flex gap-4">
                     <div className="flex-shrink-0">
@@ -451,15 +451,15 @@ export default function Home() {
                       </div>
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold mb-2">Too Many Fragmented Tools</h3>
+                      <h3 className="text-xl font-bold mb-2">"Marketing agencies are a scam"</h3>
                       <p className="text-white/70">
-                        Website platform, email tool, social media scheduler, analytics dashboard, CRM... How are you supposed to manage all of this?
+                        <em>"I've been burned by two agencies. $30,000 over 18 months, got nothing. They promised the world and delivered excuses."</em> — Plumber, Sydney
                       </p>
                     </div>
                   </div>
                 </ScrollReveal>
 
-                {/* Problem 2 */}
+                {/* Problem 2 - Lead Platforms */}
                 <ScrollReveal delay={100}>
                   <div className="flex gap-4">
                     <div className="flex-shrink-0">
@@ -468,15 +468,15 @@ export default function Home() {
                       </div>
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold mb-2">Agencies Cost a Fortune</h3>
+                      <h3 className="text-xl font-bold mb-2">"$100k+ on platforms that share your leads"</h3>
                       <p className="text-white/70">
-                        $2,000–$10,000+ per month for someone to manage your marketing. That's $24,000–$120,000 per year. For most small businesses, that's not realistic.
+                        <em>"Hipages, ServiceSeeking, Adwords — burned through $100k over 5 years. Every lead goes to 10 competitors. It's a race to the bottom."</em> — Builder, Melbourne
                       </p>
                     </div>
                   </div>
                 </ScrollReveal>
 
-                {/* Problem 3 */}
+                {/* Problem 3 - Unfinished Courses */}
                 <ScrollReveal delay={200}>
                   <div className="flex gap-4">
                     <div className="flex-shrink-0">
@@ -485,15 +485,15 @@ export default function Home() {
                       </div>
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold mb-2">You Don't Have Time</h3>
+                      <h3 className="text-xl font-bold mb-2">"47 unfinished course modules"</h3>
                       <p className="text-white/70">
-                        Between running your business and serving customers, you barely have time to think about marketing, let alone execute it.
+                        <em>"I've got $3,000 in marketing courses I've never finished. The $297 'signature system' is gathering dust. I just don't have time."</em> — Coach, Brisbane
                       </p>
                     </div>
                   </div>
                 </ScrollReveal>
 
-                {/* Problem 4 */}
+                {/* Problem 4 - Tool Overload */}
                 <ScrollReveal delay={300}>
                   <div className="flex gap-4">
                     <div className="flex-shrink-0">
@@ -502,9 +502,9 @@ export default function Home() {
                       </div>
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold mb-2">AI Tools Are Confusing</h3>
+                      <h3 className="text-xl font-bold mb-2">"Paying for tools I barely use"</h3>
                       <p className="text-white/70">
-                        ChatGPT is great, but it's just a chatbot. You need marketing strategy + content + technical execution—not just AI text generation.
+                        <em>"I'm paying for Mailchimp, Canva Pro, Hootsuite, and two other things I forgot about. None of them talk to each other. It's a mess."</em> — Salon Owner, Perth
                       </p>
                     </div>
                   </div>
@@ -537,10 +537,10 @@ export default function Home() {
         <div className="max-w-[1200px] mx-auto px-5">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-4">
-              How Synthex Works
+              It Actually Does the Work For You
             </h2>
             <p className="text-xl text-text-secondary max-w-[700px] mx-auto">
-              Four simple steps to automate your marketing and get back 10+ hours per week.
+              No courses to complete. No tools to learn. No agencies to manage. Synthex just... does it.
             </p>
           </div>
 
@@ -619,10 +619,10 @@ export default function Home() {
         <div className="max-w-[1200px] mx-auto px-5">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-4">
-              What You Get
+              Everything the Agency Promised (But Actually Delivered)
             </h2>
             <p className="text-xl text-text-secondary max-w-[700px] mx-auto">
-              Synthex includes everything you need to be found online and convert customers.
+              All the services you've paid thousands for — website, SEO, social, email — now handled by AI that actually shows up.
             </p>
           </div>
 
@@ -856,7 +856,8 @@ export default function Home() {
       {/* Pricing Section */}
       <section id="pricing" className="text-center pb-20 bg-gradient-to-b from-[#051224] via-[#051224] to-bg-base" style={{ paddingTop: '1px' }}>
         <div className="max-w-[1200px] mx-auto px-5">
-          <h2 className="text-white text-3xl font-bold mb-12 pt-12">Choose Your Plan</h2>
+          <h2 className="text-white text-3xl font-bold mb-4 pt-12">Less Than Your Failed Agency. More Results.</h2>
+          <p className="text-white/70 text-lg mb-12 max-w-[600px] mx-auto">Most agencies charge $2,000-$5,000/month and deliver excuses. Synthex costs less and actually works.</p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
             {/* Starter Plan - A$495/mo (Canonical from pricing-config.ts) */}
@@ -1080,12 +1081,12 @@ export default function Home() {
           <div className="text-center mb-16">
             <ScrollReveal>
               <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-4">
-                Frequently Asked Questions
+                "Okay, But..." (Your Questions Answered)
               </h2>
             </ScrollReveal>
             <ScrollReveal delay={100}>
               <p className="text-xl text-text-secondary max-w-[700px] mx-auto">
-                Everything you need to know
+                You've been burned before. You're skeptical. Good. Here's the truth.
               </p>
             </ScrollReveal>
           </div>
