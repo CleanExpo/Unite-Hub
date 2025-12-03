@@ -7,7 +7,7 @@
  * Part of the Founder Cognitive Twin Engine.
  */
 
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 
 // Types
 export type OverloadSeverity = 'low' | 'moderate' | 'high' | 'critical';

@@ -1,0 +1,87 @@
+{
+  "taskId": "test-checkpoint-chain",
+  "totalSteps": 3,
+  "milestones": [
+    {
+      "milestoneId": "test-checkpoint-chain-step-0",
+      "taskId": "test-checkpoint-chain",
+      "stepIndex": 0,
+      "stepName": "Step 0",
+      "criteria": [
+        {
+          "id": "test-checkpoint-chain-step-0-criterion-1",
+          "type": "output_generated",
+          "description": "Output exists",
+          "verificationMethod": "fs.stat",
+          "required": true,
+          "target": "D:\\Unite-Hub\\audit-reports-test\\step-0.json"
+        }
+      ],
+      "requiredProofs": [
+        {
+          "proofType": "file_exists",
+          "location": "D:\\Unite-Hub\\audit-reports-test\\step-0.json"
+        }
+      ],
+      "weightage": 33,
+      "createdAt": 1764721834056,
+      "createdBy": "test",
+      "locked": false
+    },
+    {
+      "milestoneId": "test-checkpoint-chain-step-1",
+      "taskId": "test-checkpoint-chain",
+      "stepIndex": 1,
+      "stepName": "Step 1",
+      "criteria": [
+        {
+          "id": "test-checkpoint-chain-step-1-criterion-1",
+          "type": "output_generated",
+          "description": "Output exists",
+          "verificationMethod": "fs.stat",
+          "required": true,
+          "target": "D:\\Unite-Hub\\audit-reports-test\\step-1.json"
+        }
+      ],
+      "requiredProofs": [
+        {
+          "proofType": "file_exists",
+          "location": "D:\\Unite-Hub\\audit-reports-test\\step-1.json"
+        }
+      ],
+      "weightage": 33,
+      "createdAt": 1764721834090,
+      "createdBy": "test",
+      "locked": false
+    },
+    {
+      "milestoneId": "test-checkpoint-chain-step-2",
+      "taskId": "test-checkpoint-chain",
+      "stepIndex": 2,
+      "stepName": "Step 2",
+      "criteria": [
+        {
+          "id": "test-checkpoint-chain-step-2-criterion-1",
+          "type": "output_generated",
+          "description": "Output exists",
+          "verificationMethod": "fs.stat",
+          "required": true,
+          "target": "D:\\Unite-Hub\\audit-reports-test\\step-2.json"
+        }
+      ],
+      "requiredProofs": [
+        {
+          "proofType": "file_exists",
+          "location": "D:\\Unite-Hub\\audit-reports-test\\step-2.json"
+        }
+      ],
+      "weightage": 33,
+      "createdAt": 1764721834122,
+      "createdBy": "test",
+      "locked": false
+    }
+  ],
+  "totalWeightage": 99,
+  "createdAt": 1764719560445,
+  "locked": false
+}

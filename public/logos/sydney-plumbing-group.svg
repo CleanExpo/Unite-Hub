@@ -1,0 +1,16 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Sydney Plumbing Group - Professional plumbing services -->
+  <rect x="30" y="30" width="140" height="140" rx="20" fill="#E74C3C" opacity="0.1"/>
+
+  <!-- Pipe system forming SPG letters -->
+  <path d="M60 80 L60 120 L80 120 L80 100 L100 100" stroke="#C0392B" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M105 80 L105 120 L125 100" stroke="#C0392B" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <path d="M130 90 L130 120 M130 80 L150 80 M130 100 L145 100" stroke="#C0392B" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  <!-- Water drop accent -->
+  <circle cx="75" cy="65" r="4" fill="#3498DB"/>
+  <circle cx="115" cy="70" r="3" fill="#3498DB" opacity="0.7"/>
+
+  <!-- Border frame -->
+  <rect x="30" y="30" width="140" height="140" rx="20" stroke="#C0392B" stroke-width="4" fill="none"/>
+</svg>

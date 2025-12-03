@@ -54,14 +54,14 @@
 3. ✅ **Dashboard Loads**: UI renders completely
 4. ✅ **No RLS Errors**: No "new row violates row-level security policy" errors
 5. ✅ **Organization Created**: "Phill McGurk's Organization"
-6. ✅ **Workspace Created**: `5a92c7af-5aca-49a7-8866-3bfaa1d04532`
+6. ✅ **Workspace Created**: `YOUR_WORKSPACE_ID`
 
 **Console Output**:
 ```
 [AuthContext] User initialized successfully
 [AuthContext] Organizations fetched: 1
 [AuthContext] Current org set to: Phill McGurk's Organization
-[useWorkspace] Workspace fetched: 5a92c7af-5aca-49a7-8866-3bfaa1d04532
+[useWorkspace] Workspace fetched: YOUR_WORKSPACE_ID
 ```
 
 ---
@@ -121,7 +121,7 @@ Failed to load hot leads: 403
 **Investigation Needed**:
 1. Check if workspace query is succeeding:
    ```sql
-   SELECT * FROM workspaces WHERE id = '5a92c7af-5aca-49a7-8866-3bfaa1d04532';
+   SELECT * FROM workspaces WHERE id = 'YOUR_WORKSPACE_ID';
    ```
 2. Check RLS policies allow reads for this user
 3. Verify org_id matches between workspace and user_organizations
@@ -137,7 +137,7 @@ await validateWorkspaceAccess(workspaceId, user.orgId); // ❌ Throwing 403
 
 **Error**:
 ```
-GET /api/calendar/events?workspaceId=5a92c7af-5aca-49a7-8866-3bfaa1d04532 => 403
+GET /api/calendar/events?workspaceId=YOUR_WORKSPACE_ID => 403
 ```
 
 **Root Cause**: Likely same as Contact Intelligence - workspace validation failing
@@ -177,7 +177,7 @@ SELECT
 FROM workspaces w
 JOIN user_organizations uo ON w.org_id = uo.org_id
 JOIN organizations o ON w.org_id = o.id
-WHERE w.id = '5a92c7af-5aca-49a7-8866-3bfaa1d04532'
+WHERE w.id = 'YOUR_WORKSPACE_ID'
   AND uo.user_id = '0082768b-c40a-4c4e-8150-84a3dd406cbc';
 ```
 

@@ -1,0 +1,43 @@
+{
+  "taskId": "test-checkpoint-1",
+  "totalSteps": 1,
+  "milestones": [
+    {
+      "milestoneId": "test-checkpoint-1-step-0",
+      "taskId": "test-checkpoint-1",
+      "stepIndex": 0,
+      "stepName": "Test Step",
+      "criteria": [
+        {
+          "id": "test-checkpoint-1-step-0-criterion-1",
+          "type": "output_generated",
+          "description": "Output file exists",
+          "verificationMethod": "fs.stat",
+          "required": true,
+          "target": "D:\\Unite-Hub\\audit-reports-test\\test-output.json"
+        },
+        {
+          "id": "test-checkpoint-1-step-0-criterion-2",
+          "type": "no_placeholders",
+          "description": "No placeholders",
+          "verificationMethod": "Regex scan",
+          "required": true,
+          "target": "D:\\Unite-Hub\\audit-reports-test\\test-output.json"
+        }
+      ],
+      "requiredProofs": [
+        {
+          "proofType": "file_exists",
+          "location": "D:\\Unite-Hub\\audit-reports-test\\test-output.json"
+        }
+      ],
+      "weightage": 100,
+      "createdAt": 1764721833859,
+      "createdBy": "test",
+      "locked": false
+    }
+  ],
+  "totalWeightage": 100,
+  "createdAt": 1764719560269,
+  "locked": false
+}

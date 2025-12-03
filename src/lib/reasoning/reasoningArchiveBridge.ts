@@ -8,6 +8,7 @@
  */
 
 import { getSupabaseServer } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { MemoryStore } from '@/lib/memory';
 
 export interface ArchiveRequest {
@@ -287,6 +288,3 @@ export function createReasoningArchiveBridge(memoryStore?: MemoryStore): Reasoni
  * Singleton instance for direct imports
  */
 export const reasoningArchiveBridge = createReasoningArchiveBridge();
-
-// Import supabaseAdmin for the archive function
-import { supabaseAdmin } from '@/lib/supabase';

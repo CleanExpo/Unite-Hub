@@ -5,7 +5,7 @@
  * Only accessible to admins: phill.mcgurk@gmail.com, ranamuzamil1199@gmail.com
  */
 
-import { getSupabaseAdmin } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { createApiLogger } from '@/lib/logger';
 
 const logger = createApiLogger({ context: 'PlatformMode' });

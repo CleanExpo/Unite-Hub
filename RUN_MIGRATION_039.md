@@ -10,7 +10,7 @@
 ## Pre-Flight Checks ✅
 
 - ✅ Production user initialized (phill.mcgurk@gmail.com)
-- ✅ Workspace exists (5a92c7af-5aca-49a7-8866-3bfaa1d04532)
+- ✅ Workspace exists (YOUR_WORKSPACE_ID)
 - ✅ Referenced tables exist (client_emails, contacts, workspaces)
 - ✅ Migration follows existing patterns from 001_initial_schema.sql
 - ✅ Migration is idempotent (safe to re-run)
@@ -111,7 +111,7 @@ node scripts/test-email-intelligence.mjs
 ```
 🧪 Testing Email Intelligence Extraction
 
-Workspace: 5a92c7af-5aca-49a7-8866-3bfaa1d04532
+Workspace: YOUR_WORKSPACE_ID
 
 ✅ Found 5 emails to analyze
 

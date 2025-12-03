@@ -164,7 +164,7 @@ Files are stored with this path format:
 
 **Example**:
 ```
-5a92c7af-5aca-49a7-8866-3bfaa1d04532/
+YOUR_WORKSPACE_ID/
   └── 8f3e9b2a-4c1d-4e5f-9a8b-7c6d5e4f3a2b/
       └── video.mp4
 ```

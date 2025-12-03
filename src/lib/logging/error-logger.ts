@@ -13,6 +13,7 @@
 /* eslint-disable no-undef, @typescript-eslint/no-explicit-any */
 import winston from 'winston';
 import path from 'path';
+import { sanitizeFormat } from './sanitize';
 
 const LOG_DIR = process.env.LOG_DIR || 'logs';
 
@@ -39,7 +40,7 @@ const customLevels = {
 };
 
 /**
- * Create error logger instance
+ * Create error logger instance with automatic sanitization
  */
 const errorLogger = winston.createLogger({
   levels: customLevels.levels,
@@ -47,6 +48,7 @@ const errorLogger = winston.createLogger({
   format: winston.format.combine(
     winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
     winston.format.errors({ stack: true }),
+    sanitizeFormat(), // ✅ Sanitize all error logs
     winston.format.splat(),
     winston.format.json()
   ),

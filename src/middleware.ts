@@ -13,6 +13,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import type { UserRole } from "./lib/auth/userTypes";
+import { generateNonce, getEnvironmentCSP, NONCE_HEADER } from "./lib/security/csp";
 
 /**
  * Normalize legacy role names to new UserRole enum
@@ -40,11 +41,17 @@ function getDefaultDashboard(role: UserRole): string {
 }
 
 export async function middleware(req: NextRequest) {
+  // Generate cryptographically secure nonce for CSP
+  const nonce = generateNonce();
+
   let response = NextResponse.next({
     request: {
       headers: req.headers,
     },
   });
+
+  // Store nonce in custom header for Server Components to access
+  response.headers.set(NONCE_HEADER, nonce);
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -117,12 +124,12 @@ export async function middleware(req: NextRequest) {
 
   // Allow public paths for guests
   if (isPublicPath && !isAuthenticated) {
-    return addSecurityHeaders(response);
+    return addSecurityHeaders(response, nonce);
   }
 
   // Allow auth paths for guests (prevent redirect loop)
   if (isAuthPath && !isAuthenticated) {
-    return addSecurityHeaders(response);
+    return addSecurityHeaders(response, nonce);
   }
 
   // If not authenticated and trying to access protected path, redirect to login
@@ -203,18 +210,23 @@ export async function middleware(req: NextRequest) {
 
     } catch (error) {
       console.error('Error in RBAC middleware:', error);
-      // On error, continue to destination (fail open)
-      return addSecurityHeaders(response);
+      // SECURITY FIX: Fail closed - redirect to error page instead of continuing
+      // This prevents unauthenticated access during database outages
+      const errorUrl = req.nextUrl.clone();
+      errorUrl.pathname = '/error';
+      errorUrl.searchParams.set('code', 'auth_error');
+      errorUrl.searchParams.set('message', 'Authentication service temporarily unavailable');
+      return NextResponse.redirect(errorUrl);
     }
   }
 
-  return addSecurityHeaders(response);
+  return addSecurityHeaders(response, nonce);
 }
 
 /**
  * Add security headers to response
  */
-function addSecurityHeaders(response: NextResponse): NextResponse {
+function addSecurityHeaders(response: NextResponse, nonce: string): NextResponse {
   response.headers.set('X-Frame-Options', 'DENY');
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('X-XSS-Protection', '1; mode=block');
@@ -228,20 +240,8 @@ function addSecurityHeaders(response: NextResponse): NextResponse {
     );
   }
 
-  // Content Security Policy
-  const cspHeader = `
-    default-src 'self';
-    script-src 'self' 'unsafe-eval' 'unsafe-inline' https://apis.google.com https://accounts.google.com;
-    style-src 'self' 'unsafe-inline';
-    img-src 'self' blob: data: https:;
-    font-src 'self' data:;
-    connect-src 'self' https://*.supabase.co https://api.anthropic.com https://apis.google.com;
-    object-src 'none';
-    base-uri 'self';
-    form-action 'self';
-    frame-ancestors 'none';
-  `.replace(/\s{2,}/g, ' ').trim();
-
+  // Content Security Policy with nonce (removes unsafe-inline)
+  const cspHeader = getEnvironmentCSP(nonce);
   response.headers.set('Content-Security-Policy', cspHeader);
 
   // Permissions Policy

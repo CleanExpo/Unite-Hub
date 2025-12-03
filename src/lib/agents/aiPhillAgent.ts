@@ -21,7 +21,7 @@ import * as aiPhillAdvisorService from '@/lib/founderOS/aiPhillAdvisorService';
 import * as founderJournalService from '@/lib/founderOS/founderJournalService';
 import * as founderBusinessRegistryService from '@/lib/founderOS/founderBusinessRegistryService';
 import * as founderSignalInferenceService from '@/lib/founderOS/founderSignalInferenceService';
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 
 // ============================================================================
 // Types

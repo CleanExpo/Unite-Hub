@@ -20,7 +20,7 @@
 
 import { Queue, Worker, QueueEvents } from "bullmq";
 import { Redis } from "ioredis";
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import AuditEngine from "./auditEngine";
 import TierLogic from "./tierLogic";
 import ClientDataManager from "./clientDataManager";

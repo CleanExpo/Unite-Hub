@@ -23,7 +23,7 @@
  * - Calls: AGI agents via Anthropic API
  */
 
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import type { Database } from '@/lib/supabase.types';
 import {
   routeJobToAgent,

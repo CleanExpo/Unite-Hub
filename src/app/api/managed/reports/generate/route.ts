@@ -7,7 +7,8 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabaseAdmin } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase/admin';
+import { createClient } from '@/lib/supabase/server';
 import { createApiLogger } from '@/lib/logger';
 import { generateWeeklyReport } from '@/lib/managed/ReportGenerationEngine';
 
@@ -25,8 +26,16 @@ interface GenerateReportRequest {
  * Otherwise, generate for all active projects
  */
 export async function POST(req: NextRequest) {
+  // Authentication check
+  const supabase = await createClient();
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
-    const supabase = getSupabaseAdmin();
+    const supabaseAdmin = getSupabaseAdmin();
     const body: GenerateReportRequest = await req.json();
 
     logger.info('📊 Generating weekly reports', {
@@ -38,7 +47,7 @@ export async function POST(req: NextRequest) {
 
     if (body.projectId) {
       // Generate for specific project
-      const { data: project, error } = await supabase
+      const { data: project, error } = await supabaseAdmin
         .from('managed_service_projects')
         .select('*')
         .eq('id', body.projectId)
@@ -52,7 +61,7 @@ export async function POST(req: NextRequest) {
       projects = [project];
     } else {
       // Generate for all active projects
-      const { data: activeProjects, error } = await supabase
+      const { data: activeProjects, error } = await supabaseAdmin
         .from('managed_service_projects')
         .select('*')
         .eq('status', 'active');
