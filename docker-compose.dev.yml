@@ -85,9 +85,9 @@ services:
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3200/health"]
       interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 45s
 
   ############################################################################
   # MCP SERVERS
@@ -113,8 +113,9 @@ services:
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3100/health"]
       interval: 10s
-      timeout: 5s
-      retries: 3
+      timeout: 10s
+      retries: 5
+      start_period: 40s
 
   process-mcp:
     image: node:20-alpine
@@ -138,8 +139,9 @@ services:
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3101/health"]
       interval: 10s
-      timeout: 5s
-      retries: 3
+      timeout: 10s
+      retries: 5
+      start_period: 40s
 
   database-mcp:
     image: node:20-alpine
@@ -164,8 +166,9 @@ services:
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3102/health"]
       interval: 10s
-      timeout: 5s
-      retries: 3
+      timeout: 10s
+      retries: 5
+      start_period: 40s
 
   git-mcp:
     image: node:20-alpine
@@ -186,8 +189,9 @@ services:
     healthcheck:
       test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3103/health"]
       interval: 10s
-      timeout: 5s
-      retries: 3
+      timeout: 10s
+      retries: 5
+      start_period: 40s
 
 volumes:
   node_modules:
