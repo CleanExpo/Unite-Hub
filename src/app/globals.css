@@ -218,6 +218,7 @@
   --color-error-500: #ef4444;
 
   /* Border Colors */
+  --color-border-base: rgba(255, 255, 255, 0.1);
   --color-border-subtle: rgba(255, 255, 255, 0.08);
   --color-border-medium: rgba(255, 255, 255, 0.14);
 
