@@ -19,7 +19,6 @@ services:
       - ./src:/app/src:cached
       - ./public:/app/public:cached
       - ./supabase:/app/supabase:cached
-      - ./pages:/app/pages:cached
       - ./components:/app/components:cached
       - ./lib:/app/lib:cached
 
