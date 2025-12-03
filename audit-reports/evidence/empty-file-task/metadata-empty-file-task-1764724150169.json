@@ -1,0 +1,16 @@
+{
+  "id": "empty-file-task-1764724150169",
+  "taskId": "empty-file-task",
+  "stored_at": 1764724150170,
+  "evidence_path": "D:\\Unite-Hub\\audit-reports\\evidence\\empty-file-task",
+  "collector_id": "independent-verifier-1",
+  "evidence_type": "package",
+  "status": "stored",
+  "metadata": {
+    "verification_status": false,
+    "verifier_id": "independent-verifier-1",
+    "proof_merkle_root": "8e5d115141be355f6a870d7ccac0ad1ed8f456ed081961fab0b29bdc184692eb"
+  },
+  "retention_days": 90,
+  "expires_at": 1772500150170
+}

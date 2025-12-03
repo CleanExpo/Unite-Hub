@@ -1,0 +1,14 @@
+{
+  "taskId": "size-task",
+  "captured_at": 1764723951448,
+  "steps": [
+    {
+      "step_id": "verify-file_exists: D:\\Unite-Hub\\.test-verification\\size-test.ts",
+      "description": "file_exists: D:\\Unite-Hub\\.test-verification\\size-test.ts",
+      "status": "completed",
+      "start_time": 1764723950447,
+      "end_time": 1764723951447,
+      "duration_ms": 1000
+    }
+  ]
+}

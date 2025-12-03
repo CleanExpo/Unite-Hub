@@ -104,10 +104,6 @@ export default defineConfig({
       // Need to update tests to match real API responses
       '**/tests/integration/api/auth.test.ts',
       '**/tests/integration/api/content.test.ts',
-      // Cloud provider tests require AWS/GCS/Azure SDK mocking
-      // Run separately with proper cloud SDK mocks
-      '**/src/lib/services/leviathan/__tests__/quad-cloud-engine.test.ts',
-      '**/src/lib/services/leviathan/__tests__/social-stack.test.ts',
     ],
     coverage: {
       provider: 'v8',

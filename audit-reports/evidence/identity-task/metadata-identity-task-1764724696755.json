@@ -1,0 +1,16 @@
+{
+  "id": "identity-task-1764724696755",
+  "taskId": "identity-task",
+  "stored_at": 1764724696755,
+  "evidence_path": "D:\\Unite-Hub\\audit-reports\\evidence\\identity-task",
+  "collector_id": "independent-verifier-1",
+  "evidence_type": "package",
+  "status": "stored",
+  "metadata": {
+    "verification_status": false,
+    "verifier_id": "independent-verifier-1",
+    "proof_merkle_root": "1def03f41039ce29917e67e4c502907d150544780817afc1b59daa9263081f39"
+  },
+  "retention_days": 90,
+  "expires_at": 1772500696755
+}

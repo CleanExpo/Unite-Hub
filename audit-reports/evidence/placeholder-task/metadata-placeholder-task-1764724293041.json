@@ -1,0 +1,16 @@
+{
+  "id": "placeholder-task-1764724293041",
+  "taskId": "placeholder-task",
+  "stored_at": 1764724293044,
+  "evidence_path": "D:\\Unite-Hub\\audit-reports\\evidence\\placeholder-task",
+  "collector_id": "independent-verifier-1",
+  "evidence_type": "package",
+  "status": "stored",
+  "metadata": {
+    "verification_status": false,
+    "verifier_id": "independent-verifier-1",
+    "proof_merkle_root": "ffa5e734aff8804971731f19f83a7008163167a9bb5a12132be017022ecd632f"
+  },
+  "retention_days": 90,
+  "expires_at": 1772500293044
+}

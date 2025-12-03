@@ -194,3 +194,123 @@ window.scrollTo = vi.fn();
 
 // Mock console.error to reduce test noise (optional - comment out if you want to see errors)
 // vi.spyOn(console, 'error').mockImplementation(() => {});
+
+// ============================================
+// AWS SDK MOCKING
+// Mock AWS SDK v3 clients for cloud provider tests
+// ============================================
+
+// Mock S3 Client
+vi.mock('@aws-sdk/client-s3', () => ({
+  S3Client: vi.fn().mockImplementation(() => ({
+    send: vi.fn().mockResolvedValue({}),
+  })),
+  PutObjectCommand: vi.fn(),
+  GetObjectCommand: vi.fn(),
+  CreateBucketCommand: vi.fn(),
+  PutBucketWebsiteCommand: vi.fn(),
+  PutBucketPolicyCommand: vi.fn(),
+  HeadBucketCommand: vi.fn(),
+}));
+
+// Mock CloudFront Client
+vi.mock('@aws-sdk/client-cloudfront', () => ({
+  CloudFrontClient: vi.fn().mockImplementation(() => ({
+    send: vi.fn().mockResolvedValue({}),
+  })),
+  CreateDistributionCommand: vi.fn(),
+  CreateInvalidationCommand: vi.fn(),
+}));
+
+// ============================================
+// GOOGLE APIS MOCKING
+// Mock googleapis for Blogger and other Google services
+// ============================================
+
+vi.mock('googleapis', () => {
+  const mockOAuth2Client = {
+    setCredentials: vi.fn(),
+    getAccessToken: vi.fn().mockResolvedValue({ token: 'mock-token' }),
+  };
+
+  const mockBlogger = {
+    blogs: {
+      listByUser: vi.fn().mockResolvedValue({ data: { items: [] } }),
+      get: vi.fn().mockResolvedValue({ data: { id: 'blog-1', name: 'Test Blog' } }),
+    },
+    posts: {
+      insert: vi.fn().mockResolvedValue({ data: { id: 'post-1', url: 'https://test.blogspot.com/post-1' } }),
+      list: vi.fn().mockResolvedValue({ data: { items: [] } }),
+      get: vi.fn().mockResolvedValue({ data: { id: 'post-1' } }),
+      update: vi.fn().mockResolvedValue({ data: { id: 'post-1' } }),
+      delete: vi.fn().mockResolvedValue({}),
+    },
+  };
+
+  const mockSites = {
+    sites: {
+      list: vi.fn().mockResolvedValue({ data: { entry: [] } }),
+    },
+  };
+
+  return {
+    google: {
+      auth: {
+        OAuth2: vi.fn().mockImplementation(() => mockOAuth2Client),
+      },
+      blogger: vi.fn().mockReturnValue(mockBlogger),
+      sites: vi.fn().mockReturnValue(mockSites),
+    },
+  };
+});
+
+// ============================================
+// AZURE SDK MOCKING
+// Mock Azure SDK for cloud provider tests
+// ============================================
+
+vi.mock('@azure/storage-blob', () => ({
+  BlobServiceClient: vi.fn().mockImplementation(() => ({
+    getContainerClient: vi.fn().mockReturnValue({
+      createIfNotExists: vi.fn().mockResolvedValue({}),
+      getBlockBlobClient: vi.fn().mockReturnValue({
+        upload: vi.fn().mockResolvedValue({}),
+        url: 'https://test.blob.core.windows.net/container/blob',
+      }),
+    }),
+  })),
+  StorageSharedKeyCredential: vi.fn(),
+}));
+
+// ============================================
+// GOOGLE CLOUD STORAGE MOCKING
+// Mock GCS for cloud provider tests
+// ============================================
+
+vi.mock('@google-cloud/storage', () => ({
+  Storage: vi.fn().mockImplementation(() => ({
+    bucket: vi.fn().mockReturnValue({
+      file: vi.fn().mockReturnValue({
+        save: vi.fn().mockResolvedValue({}),
+        makePublic: vi.fn().mockResolvedValue({}),
+        publicUrl: vi.fn().mockReturnValue('https://storage.googleapis.com/bucket/file'),
+      }),
+      create: vi.fn().mockResolvedValue([{}]),
+      exists: vi.fn().mockResolvedValue([true]),
+    }),
+  })),
+}));
+
+// ============================================
+// NETLIFY SDK MOCKING
+// Mock Netlify API for deployment tests
+// ============================================
+
+vi.mock('netlify', () => ({
+  NetlifyAPI: vi.fn().mockImplementation(() => ({
+    createSite: vi.fn().mockResolvedValue({ id: 'site-123', ssl_url: 'https://test.netlify.app' }),
+    createSiteDeploy: vi.fn().mockResolvedValue({ id: 'deploy-123', state: 'ready' }),
+    getSiteDeploy: vi.fn().mockResolvedValue({ id: 'deploy-123', state: 'ready' }),
+    listSites: vi.fn().mockResolvedValue([]),
+  })),
+}));
