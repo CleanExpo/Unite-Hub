@@ -33,7 +33,7 @@ import { FeatureVideoCarousel } from "@/components/landing/FeatureVideoCarousel"
 import { VeoVideoShowcase } from "@/components/video/VeoVideoShowcase";
 import { caseStudies, integrations } from "@/data/landing-data";
 import { featureVideos } from "@/data/feature-videos-data";
-import { veoVideos, getFeaturedVideos } from "@/data/veo-videos-data";
+import { getFeaturedVideos } from "@/data/veo-videos-data";
 
 export default function Home() {
   const { user, loading } = useAuth();
@@ -71,7 +71,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#f4f7fa] overflow-x-hidden">
+    <div className="min-h-screen bg-bg-base overflow-x-hidden">
       {/* Header / Navbar */}
       <header className="absolute top-0 left-0 w-full z-50 py-5 bg-transparent">
         <div className="max-w-[1200px] mx-auto px-5 flex justify-between items-center">
@@ -211,13 +211,13 @@ export default function Home() {
       </section>
 
       {/* Who We Help Section */}
-      <section id="who-we-help" className="py-20 bg-white">
+      <section id="who-we-help" className="py-20 bg-bg-raised">
         <div className="max-w-[1200px] mx-auto px-5">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-4">
               Built for Small Businesses That Are Busy
             </h2>
-            <p className="text-xl text-[#666] max-w-[700px] mx-auto">
+            <p className="text-xl text-text-secondary max-w-[700px] mx-auto">
               Whether you're swamped with jobs or managing multiple locations, Synthex handles your marketing so you can focus on what you do best.
             </p>
           </div>
@@ -226,23 +226,23 @@ export default function Home() {
             {/* Trades & Contractors */}
             <ScrollReveal delay={0}>
               <HoverLift className="h-full">
-                <div className="p-8 rounded-xl border border-[#e0e5ec] hover:border-[#347bf7] transition-colors h-full bg-white">
-                  <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-[#ff5722] to-[#ff784e] flex items-center justify-center mb-4">
+                <div className="p-8 rounded-xl border border-border-base hover:border-accent-500 transition-colors h-full bg-bg-card">
+                  <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-accent-500 to-accent-400 flex items-center justify-center mb-4">
                     <span className="text-white text-xl">🔨</span>
                   </div>
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-3">Trades & Contractors</h3>
-                  <p className="text-[#666] mb-4">
+                  <h3 className="text-xl font-bold text-text-primary mb-3">Trades & Contractors</h3>
+                  <p className="text-text-secondary mb-4">
                     Plumbers, electricians, builders. Get more local jobs without spending $500+ monthly on ads or hiring a marketer.
                   </p>
-                  <ul className="space-y-2 text-sm text-[#666]">
+                  <ul className="space-y-2 text-sm text-text-secondary">
                     <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Local SEO & Google Maps ranking
+                      <span className="text-accent-500">✓</span> Local SEO & Google Maps ranking
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Before/after galleries auto-created
+                      <span className="text-accent-500">✓</span> Before/after galleries auto-created
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Review generation & management
+                      <span className="text-accent-500">✓</span> Review generation & management
                     </li>
                   </ul>
                 </div>
@@ -252,23 +252,23 @@ export default function Home() {
             {/* Local Services */}
             <ScrollReveal delay={100}>
               <HoverLift className="h-full">
-                <div className="p-8 rounded-xl border border-[#e0e5ec] hover:border-[#347bf7] transition-colors h-full bg-white">
-                  <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-[#00d4aa] to-[#00b386] flex items-center justify-center mb-4">
+                <div className="p-8 rounded-xl border border-border-base hover:border-accent-500 transition-colors h-full bg-bg-card">
+                  <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-success-500 to-success-600 flex items-center justify-center mb-4">
                     <span className="text-white text-xl">🏢</span>
                   </div>
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-3">Local Services & Salons</h3>
-                  <p className="text-[#666] mb-4">
+                  <h3 className="text-xl font-bold text-text-primary mb-3">Local Services & Salons</h3>
+                  <p className="text-text-secondary mb-4">
                     Hair salons, spas, cleaning services. Attract more customers in your neighborhood with AI marketing.
                   </p>
-                  <ul className="space-y-2 text-sm text-[#666]">
+                  <ul className="space-y-2 text-sm text-text-secondary">
                     <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Geo-targeted social posts
+                      <span className="text-accent-500">✓</span> Geo-targeted social posts
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Appointment reminders & follow-ups
+                      <span className="text-accent-500">✓</span> Appointment reminders & follow-ups
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Customer retention campaigns
+                      <span className="text-accent-500">✓</span> Customer retention campaigns
                     </li>
                   </ul>
                 </div>
@@ -278,23 +278,23 @@ export default function Home() {
             {/* Non-Profits */}
             <ScrollReveal delay={200}>
               <HoverLift className="h-full">
-                <div className="p-8 rounded-xl border border-[#e0e5ec] hover:border-[#347bf7] transition-colors h-full bg-white">
-                  <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-[#a78bfa] to-[#8b5cf6] flex items-center justify-center mb-4">
+                <div className="p-8 rounded-xl border border-border-base hover:border-accent-500 transition-colors h-full bg-bg-card">
+                  <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center mb-4">
                     <span className="text-white text-xl">❤️</span>
                   </div>
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-3">Non-Profits & Churches</h3>
-                  <p className="text-[#666] mb-4">
+                  <h3 className="text-xl font-bold text-text-primary mb-3">Non-Profits & Churches</h3>
+                  <p className="text-text-secondary mb-4">
                     Tell your story and grow your community without hiring an agency or burning volunteer hours on social media.
                   </p>
-                  <ul className="space-y-2 text-sm text-[#666]">
+                  <ul className="space-y-2 text-sm text-text-secondary">
                     <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Donor & volunteer recruitment
+                      <span className="text-accent-500">✓</span> Donor & volunteer recruitment
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Event promotion & registration
+                      <span className="text-accent-500">✓</span> Event promotion & registration
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Impact storytelling
+                      <span className="text-accent-500">✓</span> Impact storytelling
                     </li>
                   </ul>
                 </div>
@@ -304,23 +304,23 @@ export default function Home() {
             {/* Coaches & Consultants */}
             <ScrollReveal delay={300}>
               <HoverLift className="h-full">
-                <div className="p-8 rounded-xl border border-[#e0e5ec] hover:border-[#347bf7] transition-colors h-full bg-white">
-                  <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-[#fbbf24] to-[#f59e0b] flex items-center justify-center mb-4">
+                <div className="p-8 rounded-xl border border-border-base hover:border-accent-500 transition-colors h-full bg-bg-card">
+                  <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-warning-500 to-warning-600 flex items-center justify-center mb-4">
                     <span className="text-white text-xl">🎓</span>
                   </div>
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-3">Coaches & Consultants</h3>
-                  <p className="text-[#666] mb-4">
+                  <h3 className="text-xl font-bold text-text-primary mb-3">Coaches & Consultants</h3>
+                  <p className="text-text-secondary mb-4">
                     Grow your online coaching or consulting business with consistent, professional content that attracts qualified clients.
                   </p>
-                  <ul className="space-y-2 text-sm text-[#666]">
+                  <ul className="space-y-2 text-sm text-text-secondary">
                     <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Lead magnets & email sequences
+                      <span className="text-accent-500">✓</span> Lead magnets & email sequences
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Social proof & testimonials
+                      <span className="text-accent-500">✓</span> Social proof & testimonials
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Webinar & launch automation
+                      <span className="text-accent-500">✓</span> Webinar & launch automation
                     </li>
                   </ul>
                 </div>
@@ -330,23 +330,23 @@ export default function Home() {
             {/* E-Commerce */}
             <ScrollReveal delay={400}>
               <HoverLift className="h-full">
-                <div className="p-8 rounded-xl border border-[#e0e5ec] hover:border-[#347bf7] transition-colors h-full bg-white">
-                  <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-[#ef4444] to-[#dc2626] flex items-center justify-center mb-4">
+                <div className="p-8 rounded-xl border border-border-base hover:border-accent-500 transition-colors h-full bg-bg-card">
+                  <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-error-500 to-error-600 flex items-center justify-center mb-4">
                     <span className="text-white text-xl">🛍️</span>
                   </div>
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-3">E-Commerce & Online Stores</h3>
-                  <p className="text-[#666] mb-4">
+                  <h3 className="text-xl font-bold text-text-primary mb-3">E-Commerce & Online Stores</h3>
+                  <p className="text-text-secondary mb-4">
                     Sell more online with product photography, descriptions, and targeted social ads—all automated by AI.
                   </p>
-                  <ul className="space-y-2 text-sm text-[#666]">
+                  <ul className="space-y-2 text-sm text-text-secondary">
                     <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Product image enhancement
+                      <span className="text-accent-500">✓</span> Product image enhancement
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Social commerce integration
+                      <span className="text-accent-500">✓</span> Social commerce integration
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Abandoned cart recovery
+                      <span className="text-accent-500">✓</span> Abandoned cart recovery
                     </li>
                   </ul>
                 </div>
@@ -356,23 +356,23 @@ export default function Home() {
             {/* Agencies & Resellers */}
             <ScrollReveal delay={500}>
               <HoverLift className="h-full">
-                <div className="p-8 rounded-xl border border-[#e0e5ec] hover:border-[#347bf7] transition-colors h-full bg-white">
-                  <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-[#06b6d4] to-[#0891b2] flex items-center justify-center mb-4">
+                <div className="p-8 rounded-xl border border-border-base hover:border-accent-500 transition-colors h-full bg-bg-card">
+                  <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-info-500 to-info-600 flex items-center justify-center mb-4">
                     <span className="text-white text-xl">🚀</span>
                   </div>
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-3">Agencies & Resellers</h3>
-                  <p className="text-[#666] mb-4">
+                  <h3 className="text-xl font-bold text-text-primary mb-3">Agencies & Resellers</h3>
+                  <p className="text-text-secondary mb-4">
                     White-label Synthex for your clients. Deliver premium marketing services without the overhead or team.
                   </p>
-                  <ul className="space-y-2 text-sm text-[#666]">
+                  <ul className="space-y-2 text-sm text-text-secondary">
                     <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Client branding & reporting
+                      <span className="text-accent-500">✓</span> Client branding & reporting
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Unlimited seats per client
+                      <span className="text-accent-500">✓</span> Unlimited seats per client
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Reseller margins available
+                      <span className="text-accent-500">✓</span> Reseller margins available
                     </li>
                   </ul>
                 </div>
@@ -383,16 +383,16 @@ export default function Home() {
       </section>
 
       {/* Case Studies Section */}
-      <section className="py-20 bg-gradient-to-br from-[#f9fafb] to-[#f4f7fa]">
+      <section className="py-20 bg-bg-base">
         <div className="max-w-[1200px] mx-auto px-5">
           <div className="text-center mb-16">
             <ScrollReveal>
-              <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
+              <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-4">
                 See Synthex In Action
               </h2>
             </ScrollReveal>
             <ScrollReveal delay={100}>
-              <p className="text-xl text-[#666] max-w-[700px] mx-auto">
+              <p className="text-xl text-text-secondary max-w-[700px] mx-auto">
                 Real results from real businesses just like yours
               </p>
             </ScrollReveal>
@@ -409,20 +409,20 @@ export default function Home() {
       </section>
 
       {/* Trusted By Section */}
-      <section className="py-16 bg-gradient-to-r from-gray-50 to-gray-100 border-y border-gray-200">
+      <section className="py-16 bg-bg-raised border-y border-border-base">
         <div className="max-w-[1200px] mx-auto px-5">
           <div className="text-center mb-8">
-            <p className="text-sm font-semibold text-gray-600 uppercase tracking-wider">Trusted by Businesses Across Industries</p>
+            <p className="text-sm font-semibold text-text-secondary uppercase tracking-wider">Trusted by Businesses Across Industries</p>
           </div>
           <InfiniteSlider gap={40} duration={25} pauseOnHover>
-            <div className="flex items-center justify-center h-12 px-4 text-gray-600 font-semibold whitespace-nowrap">🏗️ Construction</div>
-            <div className="flex items-center justify-center h-12 px-4 text-gray-600 font-semibold whitespace-nowrap">💇 Hair & Beauty</div>
-            <div className="flex items-center justify-center h-12 px-4 text-gray-600 font-semibold whitespace-nowrap">🔧 Trades</div>
-            <div className="flex items-center justify-center h-12 px-4 text-gray-600 font-semibold whitespace-nowrap">🏥 Healthcare</div>
-            <div className="flex items-center justify-center h-12 px-4 text-gray-600 font-semibold whitespace-nowrap">📚 Education</div>
-            <div className="flex items-center justify-center h-12 px-4 text-gray-600 font-semibold whitespace-nowrap">🛍️ Retail</div>
-            <div className="flex items-center justify-center h-12 px-4 text-gray-600 font-semibold whitespace-nowrap">❤️ Non-Profit</div>
-            <div className="flex items-center justify-center h-12 px-4 text-gray-600 font-semibold whitespace-nowrap">🎓 Coaching</div>
+            <div className="flex items-center justify-center h-12 px-4 text-text-secondary font-semibold whitespace-nowrap">🏗️ Construction</div>
+            <div className="flex items-center justify-center h-12 px-4 text-text-secondary font-semibold whitespace-nowrap">💇 Hair & Beauty</div>
+            <div className="flex items-center justify-center h-12 px-4 text-text-secondary font-semibold whitespace-nowrap">🔧 Trades</div>
+            <div className="flex items-center justify-center h-12 px-4 text-text-secondary font-semibold whitespace-nowrap">🏥 Healthcare</div>
+            <div className="flex items-center justify-center h-12 px-4 text-text-secondary font-semibold whitespace-nowrap">📚 Education</div>
+            <div className="flex items-center justify-center h-12 px-4 text-text-secondary font-semibold whitespace-nowrap">🛍️ Retail</div>
+            <div className="flex items-center justify-center h-12 px-4 text-text-secondary font-semibold whitespace-nowrap">❤️ Non-Profit</div>
+            <div className="flex items-center justify-center h-12 px-4 text-text-secondary font-semibold whitespace-nowrap">🎓 Coaching</div>
           </InfiniteSlider>
         </div>
       </section>
@@ -533,13 +533,13 @@ export default function Home() {
       </section>
 
       {/* How Synthex Works Section */}
-      <section id="how-it-works" className="py-20 bg-white">
+      <section id="how-it-works" className="py-20 bg-bg-card">
         <div className="max-w-[1200px] mx-auto px-5">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-4">
               How Synthex Works
             </h2>
-            <p className="text-xl text-[#666] max-w-[700px] mx-auto">
+            <p className="text-xl text-text-secondary max-w-[700px] mx-auto">
               Four simple steps to automate your marketing and get back 10+ hours per week.
             </p>
           </div>
@@ -552,8 +552,8 @@ export default function Home() {
                   <div className="h-16 w-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#347bf7] to-[#5a9dff] flex items-center justify-center text-white font-bold text-2xl">
                     <AnimatedCounter end={1} duration={800} />
                   </div>
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-3">Connect Your Business</h3>
-                  <p className="text-[#666] mb-6">
+                  <h3 className="text-xl font-bold text-text-primary mb-3">Connect Your Business</h3>
+                  <p className="text-text-secondary mb-6">
                     Link your website, social media, Google Analytics, and email. Takes 5 minutes.
                   </p>
                 </div>
@@ -569,8 +569,8 @@ export default function Home() {
                   <div className="h-16 w-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#347bf7] to-[#5a9dff] flex items-center justify-center text-white font-bold text-2xl">
                     <AnimatedCounter end={2} duration={800} />
                   </div>
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-3">Synthex Diagnoses Your Business</h3>
-                  <p className="text-[#666] mb-6">
+                  <h3 className="text-xl font-bold text-text-primary mb-3">Synthex Diagnoses Your Business</h3>
+                  <p className="text-text-secondary mb-6">
                     AI analyzes your website, competition, and market. Identifies your biggest opportunities.
                   </p>
                 </div>
@@ -586,8 +586,8 @@ export default function Home() {
                   <div className="h-16 w-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#347bf7] to-[#5a9dff] flex items-center justify-center text-white font-bold text-2xl">
                     <AnimatedCounter end={3} duration={800} />
                   </div>
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-3">AI Generates Your Strategy</h3>
-                  <p className="text-[#666] mb-6">
+                  <h3 className="text-xl font-bold text-text-primary mb-3">AI Generates Your Strategy</h3>
+                  <p className="text-text-secondary mb-6">
                     Website copy, blog posts, social content, email sequences, ad graphics—AI writes it all, on brand.
                   </p>
                 </div>
@@ -603,8 +603,8 @@ export default function Home() {
                   <div className="h-16 w-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#347bf7] to-[#5a9dff] flex items-center justify-center text-white font-bold text-2xl">
                     <AnimatedCounter end={4} duration={800} />
                   </div>
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-3">Launch & Monitor</h3>
-                  <p className="text-[#666] mb-6">
+                  <h3 className="text-xl font-bold text-text-primary mb-3">Launch & Monitor</h3>
+                  <p className="text-text-secondary mb-6">
                     Approve, schedule, and publish. Watch real-time analytics and A/B test everything.
                   </p>
                 </div>
@@ -615,13 +615,13 @@ export default function Home() {
       </section>
 
       {/* What You Get Section */}
-      <section className="py-20 bg-gradient-to-b from-[#f4f7fa] to-[#e8ecf1]">
+      <section className="py-20 bg-bg-raised">
         <div className="max-w-[1200px] mx-auto px-5">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-4">
               What You Get
             </h2>
-            <p className="text-xl text-[#666] max-w-[700px] mx-auto">
+            <p className="text-xl text-text-secondary max-w-[700px] mx-auto">
               Synthex includes everything you need to be found online and convert customers.
             </p>
           </div>
@@ -630,26 +630,26 @@ export default function Home() {
             {/* Website Enhancements */}
             <ScrollReveal delay={0}>
               <HoverLift className="h-full">
-                <div className="bg-white rounded-xl p-8 shadow-sm hover:shadow-lg transition-shadow h-full">
-                  <div className="h-12 w-12 rounded-lg bg-[#347bf7]/10 flex items-center justify-center mb-5">
+                <div className="bg-bg-card rounded-xl p-8 shadow-sm hover:shadow-lg transition-shadow h-full border border-border-base">
+                  <div className="h-12 w-12 rounded-lg bg-accent-500/10 flex items-center justify-center mb-5">
                     <span className="text-2xl">🌐</span>
                   </div>
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-4">Website Optimization</h3>
-                  <ul className="space-y-3 text-[#666]">
+                  <h3 className="text-xl font-bold text-text-primary mb-4">Website Optimization</h3>
+                  <ul className="space-y-3 text-text-secondary">
                     <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
+                      <span className="text-accent-500 font-bold mt-1">✓</span>
                       <span>SEO-optimized homepage copy</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
+                      <span className="text-accent-500 font-bold mt-1">✓</span>
                       <span>Service/product page generation</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
+                      <span className="text-accent-500 font-bold mt-1">✓</span>
                       <span>Trust signals & testimonials</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
+                      <span className="text-accent-500 font-bold mt-1">✓</span>
                       <span>CTA optimization</span>
                     </li>
                   </ul>
@@ -660,26 +660,26 @@ export default function Home() {
             {/* SEO & Geo Strategy */}
             <ScrollReveal delay={100}>
               <HoverLift className="h-full">
-                <div className="bg-white rounded-xl p-8 shadow-sm hover:shadow-lg transition-shadow h-full">
-                  <div className="h-12 w-12 rounded-lg bg-[#00d4aa]/10 flex items-center justify-center mb-5">
+                <div className="bg-bg-card rounded-xl p-8 shadow-sm hover:shadow-lg transition-shadow h-full border border-border-base">
+                  <div className="h-12 w-12 rounded-lg bg-success-500/10 flex items-center justify-center mb-5">
                     <span className="text-2xl">📍</span>
                   </div>
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-4">SEO & Local Dominance</h3>
-                  <ul className="space-y-3 text-[#666]">
+                  <h3 className="text-xl font-bold text-text-primary mb-4">SEO & Local Dominance</h3>
+                  <ul className="space-y-3 text-text-secondary">
                     <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
+                      <span className="text-accent-500 font-bold mt-1">✓</span>
                       <span>Local SEO setup & optimization</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
+                      <span className="text-accent-500 font-bold mt-1">✓</span>
                       <span>Google Business Profile management</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
+                      <span className="text-accent-500 font-bold mt-1">✓</span>
                       <span>Geo-targeted keyword research</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
+                      <span className="text-accent-500 font-bold mt-1">✓</span>
                       <span>Monthly ranking tracking</span>
                     </li>
                   </ul>
@@ -690,26 +690,26 @@ export default function Home() {
             {/* Social Content Generation */}
             <ScrollReveal delay={200}>
               <HoverLift className="h-full">
-                <div className="bg-white rounded-xl p-8 shadow-sm hover:shadow-lg transition-shadow h-full">
-                  <div className="h-12 w-12 rounded-lg bg-[#ff5722]/10 flex items-center justify-center mb-5">
+                <div className="bg-bg-card rounded-xl p-8 shadow-sm hover:shadow-lg transition-shadow h-full border border-border-base">
+                  <div className="h-12 w-12 rounded-lg bg-accent-500/10 flex items-center justify-center mb-5">
                     <span className="text-2xl">📱</span>
                   </div>
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-4">Social Media Automation</h3>
-                  <ul className="space-y-3 text-[#666]">
+                  <h3 className="text-xl font-bold text-text-primary mb-4">Social Media Automation</h3>
+                  <ul className="space-y-3 text-text-secondary">
                     <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
+                      <span className="text-accent-500 font-bold mt-1">✓</span>
                       <span>Platform-specific content (8+ platforms)</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
+                      <span className="text-accent-500 font-bold mt-1">✓</span>
                       <span>AI-generated graphics & videos</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
+                      <span className="text-accent-500 font-bold mt-1">✓</span>
                       <span>Auto-scheduler (optimal posting times)</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
+                      <span className="text-accent-500 font-bold mt-1">✓</span>
                       <span>Engagement monitoring</span>
                     </li>
                   </ul>
@@ -720,26 +720,26 @@ export default function Home() {
             {/* Email Marketing */}
             <ScrollReveal delay={300}>
               <HoverLift className="h-full">
-                <div className="bg-white rounded-xl p-8 shadow-sm hover:shadow-lg transition-shadow h-full">
-                  <div className="h-12 w-12 rounded-lg bg-[#a78bfa]/10 flex items-center justify-center mb-5">
+                <div className="bg-bg-card rounded-xl p-8 shadow-sm hover:shadow-lg transition-shadow h-full border border-border-base">
+                  <div className="h-12 w-12 rounded-lg bg-purple-500/10 flex items-center justify-center mb-5">
                     <span className="text-2xl">✉️</span>
                   </div>
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-4">Email & Automation</h3>
-                  <ul className="space-y-3 text-[#666]">
+                  <h3 className="text-xl font-bold text-text-primary mb-4">Email & Automation</h3>
+                  <ul className="space-y-3 text-text-secondary">
                     <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
+                      <span className="text-accent-500 font-bold mt-1">✓</span>
                       <span>Drip campaign templates</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
+                      <span className="text-accent-500 font-bold mt-1">✓</span>
                       <span>Lead nurture sequences</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
+                      <span className="text-accent-500 font-bold mt-1">✓</span>
                       <span>A/B testing & optimization</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
+                      <span className="text-accent-500 font-bold mt-1">✓</span>
                       <span>Performance tracking</span>
                     </li>
                   </ul>
@@ -750,26 +750,26 @@ export default function Home() {
             {/* AI Marketing Assistants */}
             <ScrollReveal delay={400}>
               <HoverLift className="h-full">
-                <div className="bg-white rounded-xl p-8 shadow-sm hover:shadow-lg transition-shadow h-full">
-                  <div className="h-12 w-12 rounded-lg bg-[#fbbf24]/10 flex items-center justify-center mb-5">
+                <div className="bg-bg-card rounded-xl p-8 shadow-sm hover:shadow-lg transition-shadow h-full border border-border-base">
+                  <div className="h-12 w-12 rounded-lg bg-warning-500/10 flex items-center justify-center mb-5">
                     <span className="text-2xl">🤖</span>
                   </div>
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-4">AI Marketing Assistants</h3>
-                  <ul className="space-y-3 text-[#666]">
+                  <h3 className="text-xl font-bold text-text-primary mb-4">AI Marketing Assistants</h3>
+                  <ul className="space-y-3 text-text-secondary">
                     <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
+                      <span className="text-accent-500 font-bold mt-1">✓</span>
                       <span>AI copywriter (unlimited content)</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
+                      <span className="text-accent-500 font-bold mt-1">✓</span>
                       <span>Graphic designer (images & videos)</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
+                      <span className="text-accent-500 font-bold mt-1">✓</span>
                       <span>Content strategist (planning)</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
+                      <span className="text-accent-500 font-bold mt-1">✓</span>
                       <span>Data analyst (insights & reporting)</span>
                     </li>
                   </ul>
@@ -780,26 +780,26 @@ export default function Home() {
             {/* Reporting & Analytics */}
             <ScrollReveal delay={500}>
               <HoverLift className="h-full">
-                <div className="bg-white rounded-xl p-8 shadow-sm hover:shadow-lg transition-shadow h-full">
-                  <div className="h-12 w-12 rounded-lg bg-[#ef4444]/10 flex items-center justify-center mb-5">
+                <div className="bg-bg-card rounded-xl p-8 shadow-sm hover:shadow-lg transition-shadow h-full border border-border-base">
+                  <div className="h-12 w-12 rounded-lg bg-error-500/10 flex items-center justify-center mb-5">
                     <span className="text-2xl">📊</span>
                   </div>
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-4">Monthly Reporting</h3>
-                  <ul className="space-y-3 text-[#666]">
+                  <h3 className="text-xl font-bold text-text-primary mb-4">Monthly Reporting</h3>
+                  <ul className="space-y-3 text-text-secondary">
                     <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
+                      <span className="text-accent-500 font-bold mt-1">✓</span>
                       <span>Custom performance dashboards</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
+                      <span className="text-accent-500 font-bold mt-1">✓</span>
                       <span>ROI tracking & attribution</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
+                      <span className="text-accent-500 font-bold mt-1">✓</span>
                       <span>Competitor benchmarking</span>
                     </li>
                     <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
+                      <span className="text-accent-500 font-bold mt-1">✓</span>
                       <span>Monthly strategy updates</span>
                     </li>
                   </ul>
@@ -811,16 +811,16 @@ export default function Home() {
       </section>
 
       {/* Integrations Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-bg-card">
         <div className="max-w-[1200px] mx-auto px-5">
           <div className="text-center mb-16">
             <ScrollReveal>
-              <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
+              <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-4">
                 Works With Your Stack
               </h2>
             </ScrollReveal>
             <ScrollReveal delay={100}>
-              <p className="text-xl text-[#666] max-w-[700px] mx-auto">
+              <p className="text-xl text-text-secondary max-w-[700px] mx-auto">
                 Connect the tools you already use
               </p>
             </ScrollReveal>
@@ -854,7 +854,7 @@ export default function Home() {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="text-center pb-20 bg-gradient-to-b from-[#051224] via-[#051224] to-[#f4f7fa]" style={{ paddingTop: '1px' }}>
+      <section id="pricing" className="text-center pb-20 bg-gradient-to-b from-[#051224] via-[#051224] to-bg-base" style={{ paddingTop: '1px' }}>
         <div className="max-w-[1200px] mx-auto px-5">
           <h2 className="text-white text-3xl font-bold mb-12 pt-12">Choose Your Plan</h2>
 
@@ -862,36 +862,36 @@ export default function Home() {
             {/* Starter Plan - A$495/mo (Canonical from pricing-config.ts) */}
             <ScrollReveal delay={0}>
               <HoverLift className="h-full">
-                <div className="bg-white rounded-[20px] p-10 text-center shadow-[0_10px_30px_rgba(0,0,0,0.08)] transition-shadow hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)] h-full">
-                  <div className="h-20 w-20 mx-auto mb-5 rounded-full bg-gradient-to-br from-[#347bf7] to-[#5a9dff] flex items-center justify-center">
+                <div className="bg-bg-card rounded-[20px] p-10 text-center shadow-[0_10px_30px_rgba(0,0,0,0.3)] transition-shadow hover:shadow-[0_20px_40px_rgba(0,0,0,0.5)] h-full border border-border-base">
+                  <div className="h-20 w-20 mx-auto mb-5 rounded-full bg-gradient-to-br from-accent-500 to-accent-400 flex items-center justify-center">
                     <span className="text-white font-bold text-lg">📱</span>
                   </div>
-                  <h3 className="text-2xl font-bold mb-4 text-[#1a1a1a]">Starter</h3>
-                  <div className="text-[42px] font-extrabold text-[#1a1a1a] mb-2">
-                    A$495<span className="text-base text-[#666] font-medium">/mo</span>
+                  <h3 className="text-2xl font-bold mb-4 text-text-primary">Starter</h3>
+                  <div className="text-[42px] font-extrabold text-text-primary mb-2">
+                    A$495<span className="text-base text-text-secondary font-medium">/mo</span>
                   </div>
-                  <p className="text-sm text-[#999] mb-8">GST inclusive • 14-day free trial</p>
+                  <p className="text-sm text-text-muted mb-8">GST inclusive • 14-day free trial</p>
                   <ul className="text-left inline-block mb-9 space-y-3">
-                    <li className="text-[#666] flex items-center">
-                      <span className="text-[#347bf7] text-xl mr-2.5">✓</span>
+                    <li className="text-text-secondary flex items-center">
+                      <span className="text-accent-500 text-xl mr-2.5">✓</span>
                       500 contacts
                     </li>
-                    <li className="text-[#666] flex items-center">
-                      <span className="text-[#347bf7] text-xl mr-2.5">✓</span>
+                    <li className="text-text-secondary flex items-center">
+                      <span className="text-accent-500 text-xl mr-2.5">✓</span>
                       20,000 AI tokens/month
                     </li>
-                    <li className="text-[#666] flex items-center">
-                      <span className="text-[#347bf7] text-xl mr-2.5">✓</span>
+                    <li className="text-text-secondary flex items-center">
+                      <span className="text-accent-500 text-xl mr-2.5">✓</span>
                       2 website audits/month
                     </li>
-                    <li className="text-[#666] flex items-center">
-                      <span className="text-[#347bf7] text-xl mr-2.5">✓</span>
+                    <li className="text-text-secondary flex items-center">
+                      <span className="text-accent-500 text-xl mr-2.5">✓</span>
                       Email support
                     </li>
                   </ul>
                   <Link
                     href="/login"
-                    className="inline-block w-4/5 py-3 px-8 rounded-md font-semibold bg-transparent border-2 border-[#1a1a1a] text-[#1a1a1a] hover:bg-[#1a1a1a] hover:text-white transition-all"
+                    className="inline-block w-4/5 py-3 px-8 rounded-md font-semibold bg-transparent border-2 border-text-primary text-text-primary hover:bg-accent-500 hover:border-accent-500 hover:text-white transition-all"
                   >
                     Start Free Trial
                   </Link>
@@ -947,40 +947,40 @@ export default function Home() {
             {/* Elite Plan - A$1,295/mo (Canonical from pricing-config.ts) */}
             <ScrollReveal delay={200}>
               <HoverLift className="h-full">
-                <div className="bg-white rounded-[20px] p-10 text-center shadow-[0_10px_30px_rgba(0,0,0,0.08)] transition-shadow hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)] h-full">
-                  <div className="h-20 w-20 mx-auto mb-5 rounded-full bg-gradient-to-br from-[#347bf7] to-[#5a9dff] flex items-center justify-center">
+                <div className="bg-bg-card rounded-[20px] p-10 text-center shadow-[0_10px_30px_rgba(0,0,0,0.3)] transition-shadow hover:shadow-[0_20px_40px_rgba(0,0,0,0.5)] h-full border border-border-base">
+                  <div className="h-20 w-20 mx-auto mb-5 rounded-full bg-gradient-to-br from-accent-500 to-accent-400 flex items-center justify-center">
                     <span className="text-white font-bold text-lg">⭐</span>
                   </div>
-                  <h3 className="text-2xl font-bold mb-4 text-[#1a1a1a]">Elite</h3>
-                  <div className="text-[42px] font-extrabold text-[#1a1a1a] mb-2">
-                    A$1,295<span className="text-base text-[#666] font-medium">/mo</span>
+                  <h3 className="text-2xl font-bold mb-4 text-text-primary">Elite</h3>
+                  <div className="text-[42px] font-extrabold text-text-primary mb-2">
+                    A$1,295<span className="text-base text-text-secondary font-medium">/mo</span>
                   </div>
-                  <p className="text-sm text-[#999] mb-8">GST inclusive • For agencies & scale</p>
+                  <p className="text-sm text-text-muted mb-8">GST inclusive • For agencies & scale</p>
                   <ul className="text-left inline-block mb-9 space-y-3">
-                    <li className="text-[#666] flex items-center">
-                      <span className="text-[#347bf7] text-xl mr-2.5">✓</span>
+                    <li className="text-text-secondary flex items-center">
+                      <span className="text-accent-500 text-xl mr-2.5">✓</span>
                       Unlimited contacts
                     </li>
-                    <li className="text-[#666] flex items-center">
-                      <span className="text-[#347bf7] text-xl mr-2.5">✓</span>
+                    <li className="text-text-secondary flex items-center">
+                      <span className="text-accent-500 text-xl mr-2.5">✓</span>
                       2,000,000 AI tokens/month
                     </li>
-                    <li className="text-[#666] flex items-center">
-                      <span className="text-[#347bf7] text-xl mr-2.5">✓</span>
+                    <li className="text-text-secondary flex items-center">
+                      <span className="text-accent-500 text-xl mr-2.5">✓</span>
                       100 website audits/month
                     </li>
-                    <li className="text-[#666] flex items-center">
-                      <span className="text-[#347bf7] text-xl mr-2.5">✓</span>
+                    <li className="text-text-secondary flex items-center">
+                      <span className="text-accent-500 text-xl mr-2.5">✓</span>
                       White label + custom branding
                     </li>
-                    <li className="text-[#666] flex items-center">
-                      <span className="text-[#347bf7] text-xl mr-2.5">✓</span>
+                    <li className="text-text-secondary flex items-center">
+                      <span className="text-accent-500 text-xl mr-2.5">✓</span>
                       10 team seats + agency tools
                     </li>
                   </ul>
                   <Link
                     href="/contact"
-                    className="inline-block w-4/5 py-3 px-8 rounded-md font-semibold bg-transparent border-2 border-[#1a1a1a] text-[#1a1a1a] hover:bg-[#1a1a1a] hover:text-white transition-all"
+                    className="inline-block w-4/5 py-3 px-8 rounded-md font-semibold bg-transparent border-2 border-text-primary text-text-primary hover:bg-accent-500 hover:border-accent-500 hover:text-white transition-all"
                   >
                     Contact Sales
                   </Link>
@@ -992,13 +992,13 @@ export default function Home() {
       </section>
 
       {/* Synthex Features - 3D Carousel */}
-      <section className="py-20 bg-white overflow-hidden">
+      <section className="py-20 bg-bg-raised overflow-hidden">
         <div className="max-w-[1200px] mx-auto px-5">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-4">
               Synthex in Action
             </h2>
-            <p className="text-xl text-[#666] max-w-[700px] mx-auto">
+            <p className="text-xl text-text-secondary max-w-[700px] mx-auto">
               See how Synthex transforms small businesses with real results.
             </p>
           </div>
@@ -1038,16 +1038,16 @@ export default function Home() {
       </section>
 
       {/* Feature Video Carousel Section */}
-      <section className="py-24 bg-gradient-to-b from-white to-[#f4f7fa]">
+      <section className="py-24 bg-bg-base">
         <div className="max-w-[1400px] mx-auto px-5">
           <div className="text-center mb-16">
             <ScrollReveal>
-              <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
+              <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-4">
                 See Features in Action
               </h2>
             </ScrollReveal>
             <ScrollReveal delay={100}>
-              <p className="text-xl text-[#404040] max-w-[700px] mx-auto">
+              <p className="text-xl text-text-secondary max-w-[700px] mx-auto">
                 30-second walkthroughs of Synthex's most powerful features
               </p>
             </ScrollReveal>
@@ -1059,7 +1059,7 @@ export default function Home() {
       </section>
 
       {/* VEO Video Showcase Section - Professional 4K Marketing Videos */}
-      <section className="py-24 bg-gradient-to-b from-[#f4f7fa] to-white">
+      <section className="py-24 bg-bg-card">
         <div className="max-w-[1400px] mx-auto px-5">
           <ScrollReveal>
             <VeoVideoShowcase
@@ -1075,16 +1075,16 @@ export default function Home() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 bg-gradient-to-b from-white to-[#f4f7fa]">
+      <section className="py-20 bg-bg-raised">
         <div className="max-w-[1200px] mx-auto px-5">
           <div className="text-center mb-16">
             <ScrollReveal>
-              <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
+              <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-4">
                 Frequently Asked Questions
               </h2>
             </ScrollReveal>
             <ScrollReveal delay={100}>
-              <p className="text-xl text-[#666] max-w-[700px] mx-auto">
+              <p className="text-xl text-text-secondary max-w-[700px] mx-auto">
                 Everything you need to know
               </p>
             </ScrollReveal>
