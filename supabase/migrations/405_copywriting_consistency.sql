@@ -4,10 +4,20 @@
 -- Note: client_id columns are UUIDs without FK constraint for flexibility
 --       (client_profiles table may be created in a different migration)
 
+-- Drop existing tables if they exist (clean slate for this migration)
+-- This is safe because these are new tables being introduced
+DROP TABLE IF EXISTS consistency_audit_log CASCADE;
+DROP TABLE IF EXISTS citation_listings CASCADE;
+DROP TABLE IF EXISTS business_consistency_master CASCADE;
+DROP TABLE IF EXISTS generated_page_copy CASCADE;
+DROP TABLE IF EXISTS page_copy_templates CASCADE;
+DROP TABLE IF EXISTS competitor_analysis CASCADE;
+DROP TABLE IF EXISTS voc_research CASCADE;
+
 -- ============================================
 -- 1. VOC Research - Customer quotes and insights
 -- ============================================
-CREATE TABLE IF NOT EXISTS voc_research (
+CREATE TABLE voc_research (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   workspace_id UUID NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
   client_id UUID, -- References client_profiles if exists
@@ -37,15 +47,15 @@ CREATE TABLE IF NOT EXISTS voc_research (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX IF NOT EXISTS idx_voc_research_workspace ON voc_research(workspace_id);
-CREATE INDEX IF NOT EXISTS idx_voc_research_client ON voc_research(client_id);
-CREATE INDEX IF NOT EXISTS idx_voc_research_category ON voc_research(category);
-CREATE INDEX IF NOT EXISTS idx_voc_research_gold ON voc_research(is_gold) WHERE is_gold = TRUE;
+CREATE INDEX idx_voc_research_workspace ON voc_research(workspace_id);
+CREATE INDEX idx_voc_research_client ON voc_research(client_id);
+CREATE INDEX idx_voc_research_category ON voc_research(category);
+CREATE INDEX idx_voc_research_gold ON voc_research(is_gold) WHERE is_gold = TRUE;
 
 -- ============================================
 -- 2. Competitor Analysis - Website structures
 -- ============================================
-CREATE TABLE IF NOT EXISTS competitor_analysis (
+CREATE TABLE competitor_analysis (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   workspace_id UUID NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
   client_id UUID, -- References client_profiles if exists
@@ -66,13 +76,13 @@ CREATE TABLE IF NOT EXISTS competitor_analysis (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX IF NOT EXISTS idx_competitor_analysis_workspace ON competitor_analysis(workspace_id);
-CREATE INDEX IF NOT EXISTS idx_competitor_analysis_client ON competitor_analysis(client_id);
+CREATE INDEX idx_competitor_analysis_workspace ON competitor_analysis(workspace_id);
+CREATE INDEX idx_competitor_analysis_client ON competitor_analysis(client_id);
 
 -- ============================================
 -- 3. Page Copy Templates - Conversion structures
 -- ============================================
-CREATE TABLE IF NOT EXISTS page_copy_templates (
+CREATE TABLE page_copy_templates (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   workspace_id UUID REFERENCES workspaces(id) ON DELETE CASCADE, -- NULL for global templates
 
@@ -94,14 +104,14 @@ CREATE TABLE IF NOT EXISTS page_copy_templates (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX IF NOT EXISTS idx_page_copy_templates_workspace ON page_copy_templates(workspace_id);
-CREATE INDEX IF NOT EXISTS idx_page_copy_templates_type ON page_copy_templates(page_type);
-CREATE INDEX IF NOT EXISTS idx_page_copy_templates_industry ON page_copy_templates(industry);
+CREATE INDEX idx_page_copy_templates_workspace ON page_copy_templates(workspace_id);
+CREATE INDEX idx_page_copy_templates_type ON page_copy_templates(page_type);
+CREATE INDEX idx_page_copy_templates_industry ON page_copy_templates(industry);
 
 -- ============================================
 -- 4. Generated Page Copy - Actual copy outputs
 -- ============================================
-CREATE TABLE IF NOT EXISTS generated_page_copy (
+CREATE TABLE generated_page_copy (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   workspace_id UUID NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
   client_id UUID, -- References client_profiles if exists
@@ -130,14 +140,14 @@ CREATE TABLE IF NOT EXISTS generated_page_copy (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX IF NOT EXISTS idx_generated_page_copy_workspace ON generated_page_copy(workspace_id);
-CREATE INDEX IF NOT EXISTS idx_generated_page_copy_client ON generated_page_copy(client_id);
-CREATE INDEX IF NOT EXISTS idx_generated_page_copy_status ON generated_page_copy(status);
+CREATE INDEX idx_generated_page_copy_workspace ON generated_page_copy(workspace_id);
+CREATE INDEX idx_generated_page_copy_client ON generated_page_copy(client_id);
+CREATE INDEX idx_generated_page_copy_status ON generated_page_copy(status);
 
 -- ============================================
 -- 5. Business Consistency Master - Single source of truth
 -- ============================================
-CREATE TABLE IF NOT EXISTS business_consistency_master (
+CREATE TABLE business_consistency_master (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   workspace_id UUID NOT NULL REFERENCES workspaces(id) ON DELETE CASCADE,
   client_id UUID, -- References client_profiles if exists
@@ -189,13 +199,13 @@ CREATE TABLE IF NOT EXISTS business_consistency_master (
   UNIQUE(workspace_id, client_id)
 );
 
-CREATE INDEX IF NOT EXISTS idx_business_consistency_workspace ON business_consistency_master(workspace_id);
-CREATE INDEX IF NOT EXISTS idx_business_consistency_client ON business_consistency_master(client_id);
+CREATE INDEX idx_business_consistency_workspace ON business_consistency_master(workspace_id);
+CREATE INDEX idx_business_consistency_client ON business_consistency_master(client_id);
 
 -- ============================================
 -- 6. Citation Listings - Track platform consistency
 -- ============================================
-CREATE TABLE IF NOT EXISTS citation_listings (
+CREATE TABLE citation_listings (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   consistency_master_id UUID NOT NULL REFERENCES business_consistency_master(id) ON DELETE CASCADE,
 
@@ -219,15 +229,15 @@ CREATE TABLE IF NOT EXISTS citation_listings (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX IF NOT EXISTS idx_citation_listings_master ON citation_listings(consistency_master_id);
-CREATE INDEX IF NOT EXISTS idx_citation_listings_platform ON citation_listings(platform_name);
-CREATE INDEX IF NOT EXISTS idx_citation_listings_tier ON citation_listings(platform_tier);
-CREATE INDEX IF NOT EXISTS idx_citation_listings_consistent ON citation_listings(is_consistent);
+CREATE INDEX idx_citation_listings_master ON citation_listings(consistency_master_id);
+CREATE INDEX idx_citation_listings_platform ON citation_listings(platform_name);
+CREATE INDEX idx_citation_listings_tier ON citation_listings(platform_tier);
+CREATE INDEX idx_citation_listings_consistent ON citation_listings(is_consistent);
 
 -- ============================================
 -- 7. Consistency Audit Log
 -- ============================================
-CREATE TABLE IF NOT EXISTS consistency_audit_log (
+CREATE TABLE consistency_audit_log (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   consistency_master_id UUID NOT NULL REFERENCES business_consistency_master(id) ON DELETE CASCADE,
 
@@ -248,8 +258,8 @@ CREATE TABLE IF NOT EXISTS consistency_audit_log (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX IF NOT EXISTS idx_consistency_audit_master ON consistency_audit_log(consistency_master_id);
-CREATE INDEX IF NOT EXISTS idx_consistency_audit_date ON consistency_audit_log(created_at DESC);
+CREATE INDEX idx_consistency_audit_master ON consistency_audit_log(consistency_master_id);
+CREATE INDEX idx_consistency_audit_date ON consistency_audit_log(created_at DESC);
 
 -- ============================================
 -- RLS Policies
