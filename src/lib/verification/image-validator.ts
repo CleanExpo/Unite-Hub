@@ -13,7 +13,7 @@
  * - Is it safe (no inappropriate content)?
  */
 
-import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from '@google/genai';
+import { GoogleGenAI, HarmCategory, HarmBlockThreshold } from '@google/genai';
 import {
   VerificationResult,
   ImageValidationResult,
@@ -23,7 +23,7 @@ import {
 } from './types';
 
 // Initialize Gemini client
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+const genAI = new GoogleGenAI(process.env.GEMINI_API_KEY || '');
 
 // Validation thresholds
 const CONFIDENCE_THRESHOLD = 0.7;
