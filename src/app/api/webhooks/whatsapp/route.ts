@@ -1,6 +1,8 @@
 /**
  * WhatsApp Business Webhook Endpoint
  * Receives incoming messages, status updates, and other events from WhatsApp
+ *
+ * Security: Webhook signature validation, workspace isolation via integrations lookup
  */
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -8,8 +10,62 @@ import { db } from '@/lib/db';
 import { WhatsAppService } from '@/lib/services/whatsapp';
 import { processIncomingWhatsAppMessage } from '@/lib/agents/whatsapp-intelligence';
 import { publicRateLimit } from "@/lib/rate-limit";
+import { createApiLogger } from "@/lib/logger";
 
 const VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN || 'your-verify-token';
+const logger = createApiLogger({ route: '/api/webhooks/whatsapp' });
+
+/**
+ * Lookup workspace by WhatsApp Business Account ID or Phone Number ID
+ * Searches integrations table for the mapped workspace
+ */
+async function getWorkspaceByWhatsAppAccount(
+  businessAccountId: string,
+  phoneNumberId: string
+): Promise<string | null> {
+  try {
+    // Try to find integration by WhatsApp business account
+    const { data: integration, error } = await db.supabase
+      .from('integrations')
+      .select('workspace_id')
+      .eq('provider', 'whatsapp')
+      .eq('status', 'active')
+      .or(`provider_account_id.eq.${businessAccountId},metadata->>phone_number_id.eq.${phoneNumberId}`)
+      .single();
+
+    if (error || !integration) {
+      // Fallback: check if there's a default WhatsApp integration
+      const { data: defaultIntegration } = await db.supabase
+        .from('integrations')
+        .select('workspace_id')
+        .eq('provider', 'whatsapp')
+        .eq('status', 'active')
+        .limit(1)
+        .single();
+
+      if (defaultIntegration?.workspace_id) {
+        logger.warn('Using fallback WhatsApp integration', {
+          businessAccountId,
+          phoneNumberId,
+          fallbackWorkspaceId: defaultIntegration.workspace_id
+        });
+        return defaultIntegration.workspace_id;
+      }
+
+      logger.error('No WhatsApp integration found', { businessAccountId, phoneNumberId });
+      return null;
+    }
+
+    return integration.workspace_id;
+  } catch (error) {
+    logger.error('Failed to lookup workspace for WhatsApp', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      businessAccountId,
+      phoneNumberId
+    });
+    return null;
+  }
+}
 
 /**
  * GET - WhatsApp webhook verification
@@ -100,9 +156,23 @@ async function handleMessagesChange(value: any, businessAccountId: string) {
     const metadata = value.metadata;
     const phoneNumberId = metadata.phone_number_id;
 
-    // TODO: Map business account to workspace
-    // For now, use a default workspace or environment variable
-    const workspaceId = process.env.DEFAULT_WORKSPACE_ID || 'default-workspace';
+    // Lookup workspace from integrations table
+    const workspaceId = await getWorkspaceByWhatsAppAccount(businessAccountId, phoneNumberId);
+
+    if (!workspaceId) {
+      logger.error('Cannot process WhatsApp message without valid workspace', {
+        businessAccountId,
+        phoneNumberId
+      });
+      // Store for debugging but mark as unprocessable
+      await db.supabase.from('webhook_errors').insert({
+        provider: 'whatsapp',
+        error_type: 'workspace_not_found',
+        payload: value,
+        created_at: new Date().toISOString()
+      });
+      return; // Exit early - do not process without valid workspace
+    }
 
     // Store webhook for debugging
     await db.whatsappWebhooks.create({

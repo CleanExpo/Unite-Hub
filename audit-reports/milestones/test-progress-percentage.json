@@ -1,0 +1,84 @@
+{
+  "taskId": "test-progress-percentage",
+  "totalSteps": 3,
+  "milestones": [
+    {
+      "milestoneId": "test-progress-percentage-step-0",
+      "taskId": "test-progress-percentage",
+      "stepIndex": 0,
+      "stepName": "Step 0",
+      "criteria": [
+        {
+          "id": "test-progress-percentage-step-0-criterion-1",
+          "type": "output_generated",
+          "description": "Test",
+          "verificationMethod": "Test",
+          "required": true
+        }
+      ],
+      "requiredProofs": [
+        {
+          "proofType": "file_exists",
+          "location": "/tmp/test.json"
+        }
+      ],
+      "weightage": 50,
+      "createdAt": 1764721834868,
+      "createdBy": "test",
+      "locked": false
+    },
+    {
+      "milestoneId": "test-progress-percentage-step-1",
+      "taskId": "test-progress-percentage",
+      "stepIndex": 1,
+      "stepName": "Step 1",
+      "criteria": [
+        {
+          "id": "test-progress-percentage-step-1-criterion-1",
+          "type": "output_generated",
+          "description": "Test",
+          "verificationMethod": "Test",
+          "required": true
+        }
+      ],
+      "requiredProofs": [
+        {
+          "proofType": "file_exists",
+          "location": "/tmp/test.json"
+        }
+      ],
+      "weightage": 30,
+      "createdAt": 1764721834883,
+      "createdBy": "test",
+      "locked": false
+    },
+    {
+      "milestoneId": "test-progress-percentage-step-2",
+      "taskId": "test-progress-percentage",
+      "stepIndex": 2,
+      "stepName": "Step 2",
+      "criteria": [
+        {
+          "id": "test-progress-percentage-step-2-criterion-1",
+          "type": "output_generated",
+          "description": "Test",
+          "verificationMethod": "Test",
+          "required": true
+        }
+      ],
+      "requiredProofs": [
+        {
+          "proofType": "file_exists",
+          "location": "/tmp/test.json"
+        }
+      ],
+      "weightage": 20,
+      "createdAt": 1764721834928,
+      "createdBy": "test",
+      "locked": false
+    }
+  ],
+  "totalWeightage": 100,
+  "createdAt": 1764719561537,
+  "locked": false
+}

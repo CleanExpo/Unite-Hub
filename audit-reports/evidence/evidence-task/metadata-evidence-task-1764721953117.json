@@ -1,0 +1,16 @@
+{
+  "id": "evidence-task-1764721953117",
+  "taskId": "evidence-task",
+  "stored_at": 1764721953118,
+  "evidence_path": "D:\\Unite-Hub\\audit-reports\\evidence\\evidence-task",
+  "collector_id": "independent-verifier-1",
+  "evidence_type": "package",
+  "status": "stored",
+  "metadata": {
+    "verification_status": true,
+    "verifier_id": "independent-verifier-1",
+    "proof_merkle_root": "2c4c79f53878680a308a96f2af37a6009b962deed278b3560e8198d84a81a19d"
+  },
+  "retention_days": 90,
+  "expires_at": 1772497953118
+}

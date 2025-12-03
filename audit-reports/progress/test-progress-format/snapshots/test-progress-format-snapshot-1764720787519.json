@@ -1,0 +1,12 @@
+{
+  "taskId": "test-progress-format",
+  "snapshotId": "test-progress-format-snapshot-1764720787519",
+  "timestamp": 1764720787516,
+  "currentStep": 0,
+  "totalSteps": 1,
+  "completionPercentage": 0,
+  "status": "not_started",
+  "checkpointStatus": {
+    "0": "pending"
+  }
+}

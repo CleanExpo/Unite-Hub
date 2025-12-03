@@ -1,0 +1,15 @@
+{
+  "taskId": "empty-file-task",
+  "captured_at": 1764720793382,
+  "steps": [
+    {
+      "step_id": "verify-file_exists: D:\\Unite-Hub\\.test-verification\\empty.ts",
+      "description": "file_exists: D:\\Unite-Hub\\.test-verification\\empty.ts",
+      "status": "failed",
+      "start_time": 1764720792381,
+      "end_time": 1764720793381,
+      "error": "File exists but is empty (0 bytes)",
+      "duration_ms": 1000
+    }
+  ]
+}

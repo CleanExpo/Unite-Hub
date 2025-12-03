@@ -1,0 +1,35 @@
+{
+  "taskId": "test-checkpoint-status",
+  "totalSteps": 1,
+  "milestones": [
+    {
+      "milestoneId": "test-checkpoint-status-step-0",
+      "taskId": "test-checkpoint-status",
+      "stepIndex": 0,
+      "stepName": "Test Step",
+      "criteria": [
+        {
+          "id": "test-checkpoint-status-step-0-criterion-1",
+          "type": "output_generated",
+          "description": "Output exists",
+          "verificationMethod": "fs.stat",
+          "required": true,
+          "target": "D:\\Unite-Hub\\audit-reports-test\\test-status.json"
+        }
+      ],
+      "requiredProofs": [
+        {
+          "proofType": "file_exists",
+          "location": "D:\\Unite-Hub\\audit-reports-test\\test-status.json"
+        }
+      ],
+      "weightage": 100,
+      "createdAt": 1764719560604,
+      "createdBy": "test",
+      "locked": false
+    }
+  ],
+  "totalWeightage": 100,
+  "createdAt": 1764719560611,
+  "locked": false
+}

@@ -61,14 +61,5 @@ export const DynamicSEOHealthTrendChart = dynamic(
   }
 );
 
-// Dynamically import FrameworkAnalyticsAdvanced
-export const DynamicFrameworkAnalytics = dynamic(
-  () => import("@/components/convex/FrameworkAnalyticsAdvanced").then((mod) => mod.default || mod),
-  {
-    loading: () => <ChartSkeleton height={500} />,
-    ssr: false,
-  }
-);
-
 // Export skeleton for custom usage
 export { ChartSkeleton };

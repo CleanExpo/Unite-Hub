@@ -215,7 +215,7 @@ ORDER BY created_at DESC;
 
 ## 🔑 Key Credentials (Testing)
 
-**Workspace ID**: `5a92c7af-5aca-49a7-8866-3bfaa1d04532`
+**Workspace ID**: `YOUR_WORKSPACE_ID`
 **Organization ID**: `adedf006-ca69-47d4-adbf-fc91bd7f225d`
 
 Use these IDs when testing with `test-media-upload.html`

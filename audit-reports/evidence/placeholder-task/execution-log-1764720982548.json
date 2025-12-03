@@ -1,0 +1,15 @@
+{
+  "taskId": "placeholder-task",
+  "captured_at": 1764720982548,
+  "steps": [
+    {
+      "step_id": "verify-no_placeholders: D:\\Unite-Hub\\.test-verification\\incomplete.ts",
+      "description": "no_placeholders: D:\\Unite-Hub\\.test-verification\\incomplete.ts",
+      "status": "failed",
+      "start_time": 1764720981548,
+      "end_time": 1764720982548,
+      "error": "Found 1 placeholder(s):\nLine 3: // TODO: implement this",
+      "duration_ms": 1000
+    }
+  ]
+}

@@ -15,7 +15,7 @@ const supabase = createClient(
 
 const USER_ID = '0082768b-c40a-4c4e-8150-84a3dd406cbc';
 const ORG_ID = 'adedf006-ca69-47d4-adbf-fc91bd7f225d';
-const WORKSPACE_ID = '5a92c7af-5aca-49a7-8866-3bfaa1d04532';
+const WORKSPACE_ID = 'process.env.TEST_WORKSPACE_ID || "YOUR_WORKSPACE_ID"';
 
 console.log('\n🎨 Creating Mindmap for Existing Project\n');
 console.log('='.repeat(60));

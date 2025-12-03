@@ -1,0 +1,43 @@
+{
+  "taskId": "test-integration-workflow",
+  "totalSteps": 1,
+  "milestones": [
+    {
+      "milestoneId": "test-integration-workflow-step-0",
+      "taskId": "test-integration-workflow",
+      "stepIndex": 0,
+      "stepName": "Integration Test Step",
+      "criteria": [
+        {
+          "id": "test-integration-workflow-step-0-criterion-1",
+          "type": "output_generated",
+          "description": "Output exists",
+          "verificationMethod": "fs.stat",
+          "required": true,
+          "target": "D:\\Unite-Hub\\audit-reports-test\\integration-test.json"
+        },
+        {
+          "id": "test-integration-workflow-step-0-criterion-2",
+          "type": "no_placeholders",
+          "description": "No placeholders",
+          "verificationMethod": "Regex scan",
+          "required": true,
+          "target": "D:\\Unite-Hub\\audit-reports-test\\integration-test.json"
+        }
+      ],
+      "requiredProofs": [
+        {
+          "proofType": "file_exists",
+          "location": "D:\\Unite-Hub\\audit-reports-test\\integration-test.json"
+        }
+      ],
+      "weightage": 100,
+      "createdAt": 1764719561824,
+      "createdBy": "integration-test",
+      "locked": true
+    }
+  ],
+  "totalWeightage": 100,
+  "createdAt": 1764719561825,
+  "locked": true
+}

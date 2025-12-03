@@ -1,0 +1,6 @@
+{
+  "eventId": "test-progress-events-event-1764721835400",
+  "timestamp": 1764721835400,
+  "eventType": "task_started",
+  "description": "Task execution started"
+}

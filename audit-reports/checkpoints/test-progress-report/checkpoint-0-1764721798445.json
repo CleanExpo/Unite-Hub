@@ -1,0 +1,16 @@
+{
+  "checkpointId": "test-progress-report-checkpoint-0",
+  "stepIndex": 0,
+  "passed": true,
+  "criteriaResults": [
+    {
+      "criterionId": "file_exists",
+      "criterionType": "output_generated",
+      "description": "File exists and has content",
+      "passed": true,
+      "evidence": "File: D:\\Unite-Hub\\audit-reports-test\\report-step-0.json, Size: 10 bytes, Modified: 2025-12-03T00:29:58.346Z"
+    }
+  ],
+  "failedCriteria": [],
+  "timestamp": 1764721798445
+}

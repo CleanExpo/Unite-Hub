@@ -2,39 +2,16 @@
   "permissions": {
     "allow": [
       "Bash(ls:*)",
-      "Bash(git reset:*)",
-      "Bash(npx vitest:*)",
+      "Bash(npm test:*)",
+      "Bash(git checkout:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-<<<<<<< Updated upstream
-      "Bash(npm run test:verification:*)",
-      "Bash(cat:*)",
-      "Bash(find:*)",
-      "Bash(npm run test:integration:*)",
-      "Bash(npm test:*)",
-      "Bash(git push:*)",
-      "Bash(dir:*)",
-      "Bash(git checkout:*)",
-      "Bash(npm install:*)",
-      "Bash(npm run build:*)",
-      "Bash(cross-env NODE_OPTIONS=--max-old-space-size=6144 next build:*)",
-      "Bash(npx next build:*)",
-      "Bash(gh pr create:*)",
-      "Bash(npm run lint:*)",
-      "Bash(npx tsc:*)",
-      "Bash(npx eslint:*)",
-      "Bash(npm run typecheck:*)",
-      "Bash(git stash pop:*)",
-      "Bash(git stash drop:*)",
-      "Bash(findstr:*)"
-=======
       "Bash(git -C \"d:\\Unite-Hub\" status)",
       "Bash(git ls-tree:*)",
       "Bash(npm run test:unit:*)",
       "Bash(npm run test:integration:*)",
       "Bash(npm run test:*)",
       "Bash(npx vitest:*)"
->>>>>>> Stashed changes
     ],
     "deny": [],
     "ask": []

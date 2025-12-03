@@ -1,0 +1,16 @@
+{
+  "id": "mixed-task-1764721952766",
+  "taskId": "mixed-task",
+  "stored_at": 1764721952766,
+  "evidence_path": "D:\\Unite-Hub\\audit-reports\\evidence\\mixed-task",
+  "collector_id": "independent-verifier-1",
+  "evidence_type": "package",
+  "status": "stored",
+  "metadata": {
+    "verification_status": false,
+    "verifier_id": "independent-verifier-1",
+    "proof_merkle_root": "f19ff86b2af6fa25f22a1e75fdb1eca9190a03ea33f5e4dbafa8bb3efac38298"
+  },
+  "retention_days": 90,
+  "expires_at": 1772497952766
+}

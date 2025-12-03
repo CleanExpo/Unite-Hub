@@ -69,7 +69,7 @@
 
 ### Workspace (1/1)
 - ✅ Phill McGurk's Organization
-  - workspace_id: `5a92c7af-5aca-49a7-8866-3bfaa1d04532`
+  - workspace_id: `YOUR_WORKSPACE_ID`
   - org_id: `adedf006-ca69-47d4-adbf-fc91bd7f225d`
 
 ### API Routes (4/4)
@@ -185,7 +185,7 @@ npm run dev
 # http://localhost:3008/test-media-upload.html
 
 # 4. Upload test file
-# - Use workspace_id: 5a92c7af-5aca-49a7-8866-3bfaa1d04532
+# - Use workspace_id: YOUR_WORKSPACE_ID
 # - Use org_id: adedf006-ca69-47d4-adbf-fc91bd7f225d
 # - Select a short video/audio file (<30 seconds)
 # - Monitor response JSON for status updates

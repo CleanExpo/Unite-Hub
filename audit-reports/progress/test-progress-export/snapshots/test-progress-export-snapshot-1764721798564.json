@@ -1,0 +1,12 @@
+{
+  "taskId": "test-progress-export",
+  "snapshotId": "test-progress-export-snapshot-1764721798564",
+  "timestamp": 1764721798563,
+  "currentStep": 0,
+  "totalSteps": 1,
+  "completionPercentage": 0,
+  "status": "not_started",
+  "checkpointStatus": {
+    "0": "pending"
+  }
+}

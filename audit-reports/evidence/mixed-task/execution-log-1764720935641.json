@@ -1,0 +1,39 @@
+{
+  "taskId": "mixed-task",
+  "captured_at": 1764720935640,
+  "steps": [
+    {
+      "step_id": "verify-file_exists: D:\\Unite-Hub\\.test-verification\\good.ts",
+      "description": "file_exists: D:\\Unite-Hub\\.test-verification\\good.ts",
+      "status": "completed",
+      "start_time": 1764720934638,
+      "end_time": 1764720935638,
+      "duration_ms": 1000
+    },
+    {
+      "step_id": "verify-no_placeholders: D:\\Unite-Hub\\.test-verification\\good.ts",
+      "description": "no_placeholders: D:\\Unite-Hub\\.test-verification\\good.ts",
+      "status": "completed",
+      "start_time": 1764720934638,
+      "end_time": 1764720935638,
+      "duration_ms": 1000
+    },
+    {
+      "step_id": "verify-file_exists: D:\\Unite-Hub\\.test-verification\\bad-with-todo.ts",
+      "description": "file_exists: D:\\Unite-Hub\\.test-verification\\bad-with-todo.ts",
+      "status": "completed",
+      "start_time": 1764720934638,
+      "end_time": 1764720935638,
+      "duration_ms": 1000
+    },
+    {
+      "step_id": "verify-no_placeholders: D:\\Unite-Hub\\.test-verification\\bad-with-todo.ts",
+      "description": "no_placeholders: D:\\Unite-Hub\\.test-verification\\bad-with-todo.ts",
+      "status": "failed",
+      "start_time": 1764720934638,
+      "end_time": 1764720935638,
+      "error": "Found 1 placeholder(s):\nLine 1: export const y = 1; // TODO",
+      "duration_ms": 1000
+    }
+  ]
+}

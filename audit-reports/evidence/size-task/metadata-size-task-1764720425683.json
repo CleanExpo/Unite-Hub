@@ -1,0 +1,16 @@
+{
+  "id": "size-task-1764720425683",
+  "taskId": "size-task",
+  "stored_at": 1764720425685,
+  "evidence_path": "D:\\Unite-Hub\\audit-reports\\evidence\\size-task",
+  "collector_id": "independent-verifier-1",
+  "evidence_type": "package",
+  "status": "stored",
+  "metadata": {
+    "verification_status": true,
+    "verifier_id": "independent-verifier-1",
+    "proof_merkle_root": "59f230e3db14ebb84a090d146e448d26f9278594f80c49fb5c488f57647e5e69"
+  },
+  "retention_days": 90,
+  "expires_at": 1772496425685
+}

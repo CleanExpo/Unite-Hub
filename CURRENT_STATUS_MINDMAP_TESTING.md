@@ -9,7 +9,7 @@
 
 1. **Mindmap Feature Code**: 100% complete and building successfully
 2. **User Authentication**: Logged in on Vercel production (phill.mcgurk@gmail.com)
-3. **Workspace Access**: RLS policies fixed, workspace loading correctly (`5a92c7af-5aca-49a7-8866-3bfaa1d04532`)
+3. **Workspace Access**: RLS policies fixed, workspace loading correctly (`YOUR_WORKSPACE_ID`)
 4. **Dashboard**: Projects page loads and displays correctly
 5. **API Routes**: All 8 mindmap routes updated for Next.js 16 and ready
 
@@ -148,7 +148,7 @@ ERROR: 42703: column "created_by" of relation "projects" does not exist
      .from('projects')
      .insert({
        org_id: 'adedf006-ca69-47d4-adbf-fc91bd7f225d',
-       workspace_id: '5a92c7af-5aca-49a7-8866-3bfaa1d04532'
+       workspace_id: 'YOUR_WORKSPACE_ID'
      })
      .select()
      .single();

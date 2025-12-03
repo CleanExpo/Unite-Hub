@@ -1,0 +1,112 @@
+{
+  "taskId": "test-gate-task-all-or-nothing",
+  "decision": "blocked",
+  "timestamp": 1764721208165,
+  "stepResults": [
+    {
+      "stepIndex": 0,
+      "stepName": "Step 0",
+      "canComplete": true,
+      "passedCriteria": 2,
+      "totalCriteria": 2,
+      "blockingIssues": [],
+      "checkpointValidation": {
+        "checkpointId": "test-gate-task-all-or-nothing-checkpoint-0",
+        "stepIndex": 0,
+        "passed": true,
+        "criteriaResults": [
+          {
+            "criterionId": "file_exists",
+            "criterionType": "output_generated",
+            "description": "File exists and has content",
+            "passed": true,
+            "evidence": "File: D:\\Unite-Hub\\audit-reports-test\\task-step-0.json, Size: 10 bytes, Modified: 2025-12-03T00:20:07.950Z"
+          },
+          {
+            "criterionId": "no_placeholders",
+            "criterionType": "no_placeholders",
+            "description": "No placeholder text in file",
+            "passed": true,
+            "evidence": "No placeholders found in D:\\Unite-Hub\\audit-reports-test\\task-step-0.json"
+          }
+        ],
+        "failedCriteria": [],
+        "timestamp": 1764721208050,
+        "evidencePath": "D:\\Unite-Hub\\audit-reports\\checkpoints\\test-gate-task-all-or-nothing\\checkpoint-0-1764721208050.json"
+      },
+      "timestamp": 1764721208077
+    },
+    {
+      "stepIndex": 1,
+      "stepName": "Step 1",
+      "canComplete": false,
+      "passedCriteria": 1,
+      "totalCriteria": 2,
+      "blockingIssues": [],
+      "checkpointValidation": {
+        "checkpointId": "test-gate-task-all-or-nothing-checkpoint-1",
+        "stepIndex": 1,
+        "passed": false,
+        "criteriaResults": [
+          {
+            "criterionId": "file_exists",
+            "criterionType": "output_generated",
+            "description": "File exists and has content",
+            "passed": true,
+            "evidence": "File: D:\\Unite-Hub\\audit-reports-test\\task-step-1.json, Size: 22 bytes, Modified: 2025-12-03T00:20:07.958Z"
+          },
+          {
+            "criterionId": "no_placeholders",
+            "criterionType": "no_placeholders",
+            "description": "No placeholder text in file",
+            "passed": false,
+            "evidence": "Found 1 placeholder(s):\nLine 1: TODO: Implement step 1",
+            "error": "Placeholders detected: TODO"
+          }
+        ],
+        "failedCriteria": [
+          "test-gate-task-all-or-nothing-step-1-criterion-2"
+        ],
+        "timestamp": 1764721208080,
+        "evidencePath": "D:\\Unite-Hub\\audit-reports\\checkpoints\\test-gate-task-all-or-nothing\\checkpoint-1-1764721208081.json"
+      },
+      "timestamp": 1764721208130
+    },
+    {
+      "stepIndex": 2,
+      "stepName": "Step 2",
+      "canComplete": true,
+      "passedCriteria": 2,
+      "totalCriteria": 2,
+      "blockingIssues": [],
+      "checkpointValidation": {
+        "checkpointId": "test-gate-task-all-or-nothing-checkpoint-2",
+        "stepIndex": 2,
+        "passed": true,
+        "criteriaResults": [
+          {
+            "criterionId": "file_exists",
+            "criterionType": "output_generated",
+            "description": "File exists and has content",
+            "passed": true,
+            "evidence": "File: D:\\Unite-Hub\\audit-reports-test\\task-step-2.json, Size: 10 bytes, Modified: 2025-12-03T00:20:07.969Z"
+          },
+          {
+            "criterionId": "no_placeholders",
+            "criterionType": "no_placeholders",
+            "description": "No placeholder text in file",
+            "passed": true,
+            "evidence": "No placeholders found in D:\\Unite-Hub\\audit-reports-test\\task-step-2.json"
+          }
+        ],
+        "failedCriteria": [],
+        "timestamp": 1764721208134,
+        "evidencePath": "D:\\Unite-Hub\\audit-reports\\checkpoints\\test-gate-task-all-or-nothing\\checkpoint-2-1764721208135.json"
+      },
+      "timestamp": 1764721208165
+    }
+  ],
+  "blockingIssues": [],
+  "decidedBy": "completion-gate-system",
+  "evidence_path": "D:\\Unite-Hub\\audit-reports\\gate-decisions\\test-gate-task-all-or-nothing"
+}

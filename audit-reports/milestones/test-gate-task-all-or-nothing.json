@@ -1,0 +1,111 @@
+{
+  "taskId": "test-gate-task-all-or-nothing",
+  "totalSteps": 3,
+  "milestones": [
+    {
+      "milestoneId": "test-gate-task-all-or-nothing-step-0",
+      "taskId": "test-gate-task-all-or-nothing",
+      "stepIndex": 0,
+      "stepName": "Step 0",
+      "criteria": [
+        {
+          "id": "test-gate-task-all-or-nothing-step-0-criterion-1",
+          "type": "output_generated",
+          "description": "Output exists",
+          "verificationMethod": "fs.stat",
+          "required": true,
+          "target": "D:\\Unite-Hub\\audit-reports-test\\task-step-0.json"
+        },
+        {
+          "id": "test-gate-task-all-or-nothing-step-0-criterion-2",
+          "type": "no_placeholders",
+          "description": "No placeholders",
+          "verificationMethod": "Regex scan",
+          "required": true,
+          "target": "D:\\Unite-Hub\\audit-reports-test\\task-step-0.json"
+        }
+      ],
+      "requiredProofs": [
+        {
+          "proofType": "file_exists",
+          "location": "D:\\Unite-Hub\\audit-reports-test\\task-step-0.json"
+        }
+      ],
+      "weightage": 33,
+      "createdAt": 1764721834432,
+      "createdBy": "test",
+      "locked": false
+    },
+    {
+      "milestoneId": "test-gate-task-all-or-nothing-step-1",
+      "taskId": "test-gate-task-all-or-nothing",
+      "stepIndex": 1,
+      "stepName": "Step 1",
+      "criteria": [
+        {
+          "id": "test-gate-task-all-or-nothing-step-1-criterion-1",
+          "type": "output_generated",
+          "description": "Output exists",
+          "verificationMethod": "fs.stat",
+          "required": true,
+          "target": "D:\\Unite-Hub\\audit-reports-test\\task-step-1.json"
+        },
+        {
+          "id": "test-gate-task-all-or-nothing-step-1-criterion-2",
+          "type": "no_placeholders",
+          "description": "No placeholders",
+          "verificationMethod": "Regex scan",
+          "required": true,
+          "target": "D:\\Unite-Hub\\audit-reports-test\\task-step-1.json"
+        }
+      ],
+      "requiredProofs": [
+        {
+          "proofType": "file_exists",
+          "location": "D:\\Unite-Hub\\audit-reports-test\\task-step-1.json"
+        }
+      ],
+      "weightage": 33,
+      "createdAt": 1764721834448,
+      "createdBy": "test",
+      "locked": false
+    },
+    {
+      "milestoneId": "test-gate-task-all-or-nothing-step-2",
+      "taskId": "test-gate-task-all-or-nothing",
+      "stepIndex": 2,
+      "stepName": "Step 2",
+      "criteria": [
+        {
+          "id": "test-gate-task-all-or-nothing-step-2-criterion-1",
+          "type": "output_generated",
+          "description": "Output exists",
+          "verificationMethod": "fs.stat",
+          "required": true,
+          "target": "D:\\Unite-Hub\\audit-reports-test\\task-step-2.json"
+        },
+        {
+          "id": "test-gate-task-all-or-nothing-step-2-criterion-2",
+          "type": "no_placeholders",
+          "description": "No placeholders",
+          "verificationMethod": "Regex scan",
+          "required": true,
+          "target": "D:\\Unite-Hub\\audit-reports-test\\task-step-2.json"
+        }
+      ],
+      "requiredProofs": [
+        {
+          "proofType": "file_exists",
+          "location": "D:\\Unite-Hub\\audit-reports-test\\task-step-2.json"
+        }
+      ],
+      "weightage": 33,
+      "createdAt": 1764721834464,
+      "createdBy": "test",
+      "locked": false
+    }
+  ],
+  "totalWeightage": 99,
+  "createdAt": 1764719560982,
+  "locked": false
+}

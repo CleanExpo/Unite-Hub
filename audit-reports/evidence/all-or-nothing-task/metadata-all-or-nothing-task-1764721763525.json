@@ -1,0 +1,16 @@
+{
+  "id": "all-or-nothing-task-1764721763525",
+  "taskId": "all-or-nothing-task",
+  "stored_at": 1764721763525,
+  "evidence_path": "D:\\Unite-Hub\\audit-reports\\evidence\\all-or-nothing-task",
+  "collector_id": "independent-verifier-1",
+  "evidence_type": "package",
+  "status": "stored",
+  "metadata": {
+    "verification_status": false,
+    "verifier_id": "independent-verifier-1",
+    "proof_merkle_root": "58ce4b1e5194ef2bae1cd471661afbe347d77ae089d156250ac36989494be850"
+  },
+  "retention_days": 90,
+  "expires_at": 1772497763525
+}

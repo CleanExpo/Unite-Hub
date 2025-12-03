@@ -1,0 +1,77 @@
+{
+  "taskId": "test-gate-task-approved",
+  "totalSteps": 2,
+  "milestones": [
+    {
+      "milestoneId": "test-gate-task-approved-step-0",
+      "taskId": "test-gate-task-approved",
+      "stepIndex": 0,
+      "stepName": "Step 0",
+      "criteria": [
+        {
+          "id": "test-gate-task-approved-step-0-criterion-1",
+          "type": "output_generated",
+          "description": "Output exists",
+          "verificationMethod": "fs.stat",
+          "required": true,
+          "target": "D:\\Unite-Hub\\audit-reports-test\\approved-step-0.json"
+        },
+        {
+          "id": "test-gate-task-approved-step-0-criterion-2",
+          "type": "no_placeholders",
+          "description": "No placeholders",
+          "verificationMethod": "Regex scan",
+          "required": true,
+          "target": "D:\\Unite-Hub\\audit-reports-test\\approved-step-0.json"
+        }
+      ],
+      "requiredProofs": [
+        {
+          "proofType": "file_exists",
+          "location": "D:\\Unite-Hub\\audit-reports-test\\approved-step-0.json"
+        }
+      ],
+      "weightage": 50,
+      "createdAt": 1764721834610,
+      "createdBy": "test",
+      "locked": false
+    },
+    {
+      "milestoneId": "test-gate-task-approved-step-1",
+      "taskId": "test-gate-task-approved",
+      "stepIndex": 1,
+      "stepName": "Step 1",
+      "criteria": [
+        {
+          "id": "test-gate-task-approved-step-1-criterion-1",
+          "type": "output_generated",
+          "description": "Output exists",
+          "verificationMethod": "fs.stat",
+          "required": true,
+          "target": "D:\\Unite-Hub\\audit-reports-test\\approved-step-1.json"
+        },
+        {
+          "id": "test-gate-task-approved-step-1-criterion-2",
+          "type": "no_placeholders",
+          "description": "No placeholders",
+          "verificationMethod": "Regex scan",
+          "required": true,
+          "target": "D:\\Unite-Hub\\audit-reports-test\\approved-step-1.json"
+        }
+      ],
+      "requiredProofs": [
+        {
+          "proofType": "file_exists",
+          "location": "D:\\Unite-Hub\\audit-reports-test\\approved-step-1.json"
+        }
+      ],
+      "weightage": 50,
+      "createdAt": 1764721834639,
+      "createdBy": "test",
+      "locked": false
+    }
+  ],
+  "totalWeightage": 100,
+  "createdAt": 1764719561254,
+  "locked": false
+}

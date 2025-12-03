@@ -1,0 +1,12 @@
+{
+  "taskId": "test-integration-workflow",
+  "snapshotId": "test-integration-workflow-snapshot-1764719561885",
+  "timestamp": 1764719561883,
+  "currentStep": 0,
+  "totalSteps": 1,
+  "completionPercentage": 100,
+  "status": "completed",
+  "checkpointStatus": {
+    "0": "validated"
+  }
+}

@@ -7,7 +7,7 @@
 
   ✅ Production user initialized (phill.mcgurk@gmail.com)
   ✅ User organization link verified
-  ✅ Workspace created (5a92c7af-5aca-49a7-8866-3bfaa1d04532)
+  ✅ Workspace created (YOUR_WORKSPACE_ID)
   ✅ Required tables exist (client_emails, contacts, workspaces)
   ✅ Migration follows existing patterns
   ✅ Migration is idempotent (safe to re-run)

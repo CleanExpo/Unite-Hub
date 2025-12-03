@@ -1,0 +1,16 @@
+{
+  "checkpointId": "test-gate-step-pass-checkpoint-0",
+  "stepIndex": 0,
+  "passed": true,
+  "criteriaResults": [
+    {
+      "criterionId": "file_exists",
+      "criterionType": "output_generated",
+      "description": "File exists and has content",
+      "passed": true,
+      "evidence": "File: D:\\Unite-Hub\\audit-reports-test\\gate-test-pass.json, Size: 22 bytes, Modified: 2025-12-02T23:52:40.713Z"
+    }
+  ],
+  "failedCriteria": [],
+  "timestamp": 1764719560756
+}

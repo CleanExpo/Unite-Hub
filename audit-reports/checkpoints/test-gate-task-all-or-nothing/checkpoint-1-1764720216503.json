@@ -1,0 +1,26 @@
+{
+  "checkpointId": "test-gate-task-all-or-nothing-checkpoint-1",
+  "stepIndex": 1,
+  "passed": false,
+  "criteriaResults": [
+    {
+      "criterionId": "file_exists",
+      "criterionType": "output_generated",
+      "description": "File exists and has content",
+      "passed": true,
+      "evidence": "File: D:\\Unite-Hub\\audit-reports-test\\task-step-1.json, Size: 22 bytes, Modified: 2025-12-03T00:03:36.257Z"
+    },
+    {
+      "criterionId": "no_placeholders",
+      "criterionType": "no_placeholders",
+      "description": "No placeholder text in file",
+      "passed": false,
+      "evidence": "Found 1 placeholder(s):\nLine 1: TODO: Implement step 1",
+      "error": "Placeholders detected: TODO"
+    }
+  ],
+  "failedCriteria": [
+    "test-gate-task-all-or-nothing-step-1-criterion-2"
+  ],
+  "timestamp": 1764720216503
+}

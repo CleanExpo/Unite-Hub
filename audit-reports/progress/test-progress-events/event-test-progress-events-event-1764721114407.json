@@ -1,0 +1,8 @@
+{
+  "eventId": "test-progress-events-event-1764721114407",
+  "timestamp": 1764721114406,
+  "eventType": "milestone_completed",
+  "stepIndex": 0,
+  "stepName": "Test Step",
+  "description": "Step 0 completed"
+}

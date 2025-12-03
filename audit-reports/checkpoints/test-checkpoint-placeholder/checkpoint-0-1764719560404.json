@@ -1,0 +1,19 @@
+{
+  "checkpointId": "test-checkpoint-placeholder-checkpoint-0",
+  "stepIndex": 0,
+  "passed": false,
+  "criteriaResults": [
+    {
+      "criterionId": "no_placeholders",
+      "criterionType": "no_placeholders",
+      "description": "No placeholder text in file",
+      "passed": false,
+      "evidence": "Found 2 placeholder(s):\nLine 1: TODO: Implement this\nLine 2: TBD: Add details",
+      "error": "Placeholders detected: TODO, TBD"
+    }
+  ],
+  "failedCriteria": [
+    "test-checkpoint-placeholder-step-0-criterion-1"
+  ],
+  "timestamp": 1764719560403
+}

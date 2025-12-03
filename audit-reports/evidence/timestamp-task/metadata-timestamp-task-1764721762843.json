@@ -1,0 +1,16 @@
+{
+  "id": "timestamp-task-1764721762843",
+  "taskId": "timestamp-task",
+  "stored_at": 1764721762843,
+  "evidence_path": "D:\\Unite-Hub\\audit-reports\\evidence\\timestamp-task",
+  "collector_id": "independent-verifier-1",
+  "evidence_type": "package",
+  "status": "stored",
+  "metadata": {
+    "verification_status": true,
+    "verifier_id": "independent-verifier-1",
+    "proof_merkle_root": "ac06b3f02fcb914768c0211cf5fcbeeb40957441dd8d10ef2e00bd73840a39f5"
+  },
+  "retention_days": 90,
+  "expires_at": 1772497762843
+}

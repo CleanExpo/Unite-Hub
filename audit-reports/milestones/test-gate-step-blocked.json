@@ -1,0 +1,43 @@
+{
+  "taskId": "test-gate-step-blocked",
+  "totalSteps": 1,
+  "milestones": [
+    {
+      "milestoneId": "test-gate-step-blocked-step-0",
+      "taskId": "test-gate-step-blocked",
+      "stepIndex": 0,
+      "stepName": "Test Step",
+      "criteria": [
+        {
+          "id": "test-gate-step-blocked-step-0-criterion-1",
+          "type": "output_generated",
+          "description": "Output exists",
+          "verificationMethod": "fs.stat",
+          "required": true,
+          "target": "D:\\Unite-Hub\\audit-reports-test\\gate-test-blocked.json"
+        },
+        {
+          "id": "test-gate-step-blocked-step-0-criterion-2",
+          "type": "no_placeholders",
+          "description": "No placeholders",
+          "verificationMethod": "Regex scan",
+          "required": true,
+          "target": "D:\\Unite-Hub\\audit-reports-test\\gate-test-blocked.json"
+        }
+      ],
+      "requiredProofs": [
+        {
+          "proofType": "file_exists",
+          "location": "D:\\Unite-Hub\\audit-reports-test\\gate-test-blocked.json"
+        }
+      ],
+      "weightage": 100,
+      "createdAt": 1764721834360,
+      "createdBy": "test",
+      "locked": false
+    }
+  ],
+  "totalWeightage": 100,
+  "createdAt": 1764719560886,
+  "locked": false
+}

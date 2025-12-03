@@ -1,0 +1,23 @@
+{
+  "taskId": "all-or-nothing-task",
+  "captured_at": 1764721953387,
+  "steps": [
+    {
+      "step_id": "verify-file_exists: D:\\Unite-Hub\\.test-verification\\file1.ts",
+      "description": "file_exists: D:\\Unite-Hub\\.test-verification\\file1.ts",
+      "status": "completed",
+      "start_time": 1764721952387,
+      "end_time": 1764721953387,
+      "duration_ms": 1000
+    },
+    {
+      "step_id": "verify-file_exists: D:\\Unite-Hub\\.test-verification\\file2.ts",
+      "description": "file_exists: D:\\Unite-Hub\\.test-verification\\file2.ts",
+      "status": "failed",
+      "start_time": 1764721952387,
+      "end_time": 1764721953387,
+      "error": "File not found or not accessible: ENOENT: no such file or directory, stat 'D:\\Unite-Hub\\.test-verification\\file2.ts'",
+      "duration_ms": 1000
+    }
+  ]
+}

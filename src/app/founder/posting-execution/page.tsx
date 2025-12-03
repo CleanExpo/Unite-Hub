@@ -6,6 +6,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -20,12 +21,12 @@ import {
   XCircle,
   AlertTriangle,
   TrendingUp,
+  Loader2,
 } from 'lucide-react';
 import { PreflightTable } from '@/components/postingExecution/PreflightTable';
 import { ExecutionHistoryTable } from '@/components/postingExecution/ExecutionHistoryTable';
 import { RollbackTable } from '@/components/postingExecution/RollbackTable';
-
-const WORKSPACE_ID = process.env.NEXT_PUBLIC_DEFAULT_WORKSPACE_ID || 'default';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface ExecutionStats {
   total: number;
@@ -44,6 +45,10 @@ interface SchedulerStatus {
 }
 
 export default function FounderPostingExecutionPage() {
+  const { currentOrganization, loading: authLoading } = useAuth();
+  const router = useRouter();
+  const workspaceId = currentOrganization?.org_id;
+
   const [stats, setStats] = useState<ExecutionStats | null>(null);
   const [schedulerStatus, setSchedulerStatus] = useState<SchedulerStatus | null>(null);
   const [preflights, setPreflights] = useState<any[]>([]);
@@ -52,19 +57,29 @@ export default function FounderPostingExecutionPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
 
+  // Redirect to login if no workspace after auth loads
   useEffect(() => {
-    loadDashboardData();
-  }, []);
+    if (!authLoading && !workspaceId) {
+      router.push('/login');
+    }
+  }, [authLoading, workspaceId, router]);
+
+  useEffect(() => {
+    if (workspaceId) {
+      loadDashboardData();
+    }
+  }, [workspaceId]);
 
   const loadDashboardData = async () => {
+    if (!workspaceId) return;
     setIsLoading(true);
     try {
       const [statsRes, schedulerRes, preflightsRes, executionsRes, rollbacksRes] = await Promise.all([
-        fetch(`/api/posting-execution/execute?workspaceId=${WORKSPACE_ID}&type=stats`),
-        fetch(`/api/posting-execution/scheduler?workspaceId=${WORKSPACE_ID}&type=status`),
-        fetch(`/api/posting-execution/preflight?workspaceId=${WORKSPACE_ID}&limit=20`),
-        fetch(`/api/posting-execution/execute?workspaceId=${WORKSPACE_ID}&limit=20`),
-        fetch(`/api/posting-execution/rollback?workspaceId=${WORKSPACE_ID}&limit=20`),
+        fetch(`/api/posting-execution/execute?workspaceId=${workspaceId}&type=stats`),
+        fetch(`/api/posting-execution/scheduler?workspaceId=${workspaceId}&type=status`),
+        fetch(`/api/posting-execution/preflight?workspaceId=${workspaceId}&limit=20`),
+        fetch(`/api/posting-execution/execute?workspaceId=${workspaceId}&limit=20`),
+        fetch(`/api/posting-execution/rollback?workspaceId=${workspaceId}&limit=20`),
       ]);
 
       if (statsRes.ok) {
@@ -99,6 +114,7 @@ export default function FounderPostingExecutionPage() {
   };
 
   const processSchedules = async () => {
+    if (!workspaceId) return;
     setIsProcessing(true);
     try {
       const res = await fetch('/api/posting-execution/scheduler', {
@@ -106,7 +122,7 @@ export default function FounderPostingExecutionPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'process',
-          workspaceId: WORKSPACE_ID,
+          workspaceId,
         }),
       });
 
@@ -154,6 +170,15 @@ export default function FounderPostingExecutionPage() {
       console.error('Rollback failed:', error);
     }
   };
+
+  // Show loading while auth is being determined
+  if (authLoading || !workspaceId) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 space-y-6">

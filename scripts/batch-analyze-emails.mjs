@@ -23,7 +23,7 @@ const anthropic = new Anthropic({
 });
 
 // Configuration
-const WORKSPACE_ID = process.argv[2] || "5a92c7af-5aca-49a7-8866-3bfaa1d04532";
+const WORKSPACE_ID = process.argv[2] || "process.env.TEST_WORKSPACE_ID || "YOUR_WORKSPACE_ID"";
 const BATCH_SIZE = 10; // Process 10 emails at a time
 const DELAY_BETWEEN_BATCHES = 2000; // 2 seconds between batches
 const DELAY_BETWEEN_EMAILS = 500; // 0.5 seconds between individual emails

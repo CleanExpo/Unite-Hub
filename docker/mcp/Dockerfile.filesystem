@@ -1,0 +1,23 @@
+# Filesystem MCP Server
+# Offloads file operations: read, write, search, watch
+FROM node:22-alpine
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apk add --no-cache ripgrep fd inotify-tools wget
+
+# Install MCP SDK and dependencies
+RUN npm init -y && \
+    npm install @modelcontextprotocol/sdk@latest \
+                glob chokidar fast-glob micromatch \
+                express cors body-parser --save
+
+# Copy server implementation
+COPY docker/mcp/servers/filesystem-server.mjs ./server.mjs
+
+# Health check port
+EXPOSE 3100
+
+# Run server
+CMD ["node", "server.mjs"]

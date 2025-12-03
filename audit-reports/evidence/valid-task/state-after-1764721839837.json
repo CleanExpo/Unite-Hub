@@ -1,0 +1,10 @@
+{
+  "timestamp": 1764721839837,
+  "type": "after",
+  "state": {
+    "verified": true,
+    "criteria_count": 2,
+    "passed_count": 2,
+    "failed_count": 0
+  }
+}

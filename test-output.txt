@@ -1,0 +1,2749 @@
+
+> unite-hub@1.0.0 test
+> vitest run
+
+
+[7m[1m[36m RUN [39m[22m[27m [36mv1.6.1[39m [90mD:/Unite-Hub[39m
+
+ [32m✓[39m tests/integration/seo-leak.test.ts [2m ([22m[2m32 tests[22m[2m)[22m[90m 11[2mms[22m[39m
+ [32m✓[39m tests/integration/ai-phill.test.ts [2m ([22m[2m28 tests[22m[2m)[22m[90m 13[2mms[22m[39m
+ [32m✓[39m src/lib/__tests__/billing.test.ts [2m ([22m[2m31 tests[22m[2m)[22m[90m 13[2mms[22m[39m
+ [32m✓[39m tests/integration/cognitive-twin.test.ts [2m ([22m[2m31 tests[22m[2m)[22m[90m 13[2mms[22m[39m
+ [32m✓[39m src/lib/__tests__/financial-reporting.test.ts [2m ([22m[2m40 tests[22m[2m)[22m[90m 11[2mms[22m[39m
+ [32m✓[39m tests/integration/framework-alerts.test.ts [2m ([22m[2m57 tests[22m[2m)[22m[90m 18[2mms[22m[39m
+[90mstdout[2m | src/lib/__tests__/backlinkEngine.test.ts[2m > [22m[2mBacklinkEngine[2m > [22m[2mbuildProfile[2m > [22m[2mshould create a basic profile with all required fields[22m[39m
+[BacklinkEngine] Building profile for target.com...
+
+[90mstdout[2m | src/lib/__tests__/backlinkEngine.test.ts[2m > [22m[2mBacklinkEngine[2m > [22m[2mbuildProfile[2m > [22m[2mshould calculate correct dofollow ratio[22m[39m
+[BacklinkEngine] Building profile for test.com...
+
+[90mstdout[2m | src/lib/__tests__/backlinkEngine.test.ts[2m > [22m[2mBacklinkEngine[2m > [22m[2mAuthority Score Calculation[2m > [22m[2mshould calculate high authority for high-rank domains[22m[39m
+[BacklinkEngine] Building profile for test.com...
+
+[90mstdout[2m | src/lib/__tests__/backlinkEngine.test.ts[2m > [22m[2mBacklinkEngine[2m > [22m[2mAuthority Score Calculation[2m > [22m[2mshould calculate low authority for low-rank domains[22m[39m
+[BacklinkEngine] Building profile for test.com...
+
+[90mstdout[2m | src/lib/__tests__/backlinkEngine.test.ts[2m > [22m[2mBacklinkEngine[2m > [22m[2mToxic Score Calculation[2m > [22m[2mshould detect high toxic score when many spammy domains[22m[39m
+[BacklinkEngine] Building profile for test.com...
+
+[90mstdout[2m | src/lib/__tests__/backlinkEngine.test.ts[2m > [22m[2mBacklinkEngine[2m > [22m[2mToxic Score Calculation[2m > [22m[2mshould detect low toxic score when domains are clean[22m[39m
+[BacklinkEngine] Building profile for test.com...
+
+[90mstdout[2m | src/lib/__tests__/backlinkEngine.test.ts[2m > [22m[2mBacklinkEngine[2m > [22m[2mAnchor Diversity Score[2m > [22m[2mshould penalize over-optimized anchors[22m[39m
+[BacklinkEngine] Building profile for test.com...
+
+[90mstdout[2m | src/lib/__tests__/backlinkEngine.test.ts[2m > [22m[2mBacklinkEngine[2m > [22m[2mAnchor Diversity Score[2m > [22m[2mshould reward diverse anchor distribution[22m[39m
+[BacklinkEngine] Building profile for test.com...
+
+[90mstdout[2m | src/lib/__tests__/backlinkEngine.test.ts[2m > [22m[2mBacklinkEngine[2m > [22m[2mVelocity Trend Detection[2m > [22m[2mshould detect GROWING trend when backlinks increase[22m[39m
+[BacklinkEngine] Building profile for test.com...
+
+[90mstdout[2m | src/lib/__tests__/backlinkEngine.test.ts[2m > [22m[2mBacklinkEngine[2m > [22m[2mVelocity Trend Detection[2m > [22m[2mshould detect DECLINING trend when backlinks decrease[22m[39m
+[BacklinkEngine] Building profile for test.com...
+
+[90mstdout[2m | src/lib/__tests__/backlinkEngine.test.ts[2m > [22m[2mBacklinkEngine[2m > [22m[2mVelocity Trend Detection[2m > [22m[2mshould detect STABLE trend when minimal change[22m[39m
+[BacklinkEngine] Building profile for test.com...
+
+[90mstdout[2m | src/lib/__tests__/backlinkEngine.test.ts[2m > [22m[2mBacklinkEngine[2m > [22m[2mCountry Breakdown[2m > [22m[2mshould correctly aggregate countries[22m[39m
+[BacklinkEngine] Building profile for test.com...
+
+[90mstdout[2m | src/lib/__tests__/backlinkEngine.test.ts[2m > [22m[2mBacklinkEngine[2m > [22m[2mEdge Cases[2m > [22m[2mshould handle empty backlinks gracefully[22m[39m
+[BacklinkEngine] Building profile for new-domain.com...
+
+[90mstdout[2m | src/lib/__tests__/backlinkEngine.test.ts[2m > [22m[2mBacklinkEngine[2m > [22m[2mEdge Cases[2m > [22m[2mshould handle missing history data[22m[39m
+[BacklinkEngine] Building profile for test.com...
+
+[90mstdout[2m | src/lib/__tests__/backlinkEngine.test.ts[2m > [22m[2mBacklinkEngine[2m > [22m[2mEdge Cases[2m > [22m[2mshould cap backlink score at 100[22m[39m
+[BacklinkEngine] Building profile for super-domain.com...
+
+ [32m✓[39m src/lib/__tests__/backlinkEngine.test.ts [2m ([22m[2m15 tests[22m[2m)[22m[90m 17[2mms[22m[39m
+ [32m✓[39m tests/integration/orchestrator-routing.test.ts [2m ([22m[2m39 tests[22m[2m)[22m[90m 22[2mms[22m[39m
+ [33m❯[39m tests/integration/framework-templates.test.ts [2m ([22m[2m44 tests[22m [2m|[22m [31m1 failed[39m[2m)[22m[90m 27[2mms[22m[39m
+[31m   [33m❯[31m tests/integration/framework-templates.test.ts[2m > [22mFramework Template Library[2m > [22mTemplate Rating[2m > [22mshould validate rating range (1-5)[39m
+[31m     → expected true to be false // Object.is equality[39m
+ [32m✓[39m tests/integration/multi-channel.test.ts [2m ([22m[2m42 tests[22m[2m)[22m[90m 24[2mms[22m[39m
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mMilestone Definition System[2m > [22m[2mshould define a valid milestone[22m[39m
+2025-12-03 10:25:49:2549 [[32minfo[39m]: [32mMilestone updated for step 0[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-task-1",
+  "milestoneId": "test-task-1-step-0"
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mMilestone Definition System[2m > [22m[2mshould define a valid milestone[22m[39m
+2025-12-03 10:25:49:2549 [[32minfo[39m]: [32mMilestone defined successfully[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-task-1",
+  "stepIndex": 0,
+  "milestoneId": "test-task-1-step-0",
+  "criteriaCount": 2,
+  "weightage": 50
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mMilestone Definition System[2m > [22m[2mshould lock milestones after definition[22m[39m
+2025-12-03 10:25:49:2549 [[31merror[39m]: [31mFailed to define milestone[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-task-lock",
+  "stepIndex": 0,
+  "error": "Cannot add milestone - task test-task-lock is locked (execution started)"
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mMilestone Definition System[2m > [22m[2mshould prevent adding milestones after lock[22m[39m
+2025-12-03 10:25:49:2549 [[31merror[39m]: [31mFailed to define milestone[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-task-locked",
+  "stepIndex": 0,
+  "error": "Cannot add milestone - task test-task-locked is locked (execution started)"
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Client[2m > [22m[2mshould initialize with correct configuration[22m[39m
+2025-12-03 10:25:49:2549 [[32minfo[39m]: [32mDatadog client initialized[39m {
+  "context": "DatadogClient",
+  "service": "unite-hub-test",
+  "version": "1.0.0",
+  "environment": "test"
+}
+2025-12-03 10:25:49:2549 [[32minfo[39m]: [32mDatadog client shutdown complete[39m {
+  "context": "DatadogClient"
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Client[2m > [22m[2mshould queue metrics for batch sending[22m[39m
+2025-12-03 10:25:49:2549 [[32minfo[39m]: [32mDatadog client initialized[39m {
+  "context": "DatadogClient",
+  "service": "unite-hub-test",
+  "version": "1.0.0",
+  "environment": "test"
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCheckpoint Validators[2m > [22m[2mshould validate checkpoint with passing criteria[22m[39m
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mMilestone updated for step 0[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-checkpoint-1",
+  "milestoneId": "test-checkpoint-1-step-0"
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCheckpoint Validators[2m > [22m[2mshould validate checkpoint with passing criteria[22m[39m
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mMilestone defined successfully[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-checkpoint-1",
+  "stepIndex": 0,
+  "milestoneId": "test-checkpoint-1-step-0",
+  "criteriaCount": 2,
+  "weightage": 100
+}
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mValidating checkpoint[39m {
+  "route": "CheckpointValidators",
+  "checkpointId": "test-checkpoint-1-checkpoint-0",
+  "criteriaCount": 2
+}
+
+ [32m✓[39m tests/unit/extended-thinking-engine.test.ts [2m ([22m[2m53 tests[22m[2m)[22m[90m 32[2mms[22m[39m
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCheckpoint Validators[2m > [22m[2mshould validate checkpoint with passing criteria[22m[39m
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mCheckpoint validation complete[39m {
+  "route": "CheckpointValidators",
+  "checkpointId": "test-checkpoint-1-checkpoint-0",
+  "passed": true,
+  "failedCount": 0
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCheckpoint Validators[2m > [22m[2mshould fail checkpoint with placeholder markers[22m[39m
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mMilestone updated for step 0[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-checkpoint-placeholder",
+  "milestoneId": "test-checkpoint-placeholder-step-0"
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCheckpoint Validators[2m > [22m[2mshould fail checkpoint with placeholder markers[22m[39m
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mMilestone defined successfully[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-checkpoint-placeholder",
+  "stepIndex": 0,
+  "milestoneId": "test-checkpoint-placeholder-step-0",
+  "criteriaCount": 1,
+  "weightage": 100
+}
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mValidating checkpoint[39m {
+  "route": "CheckpointValidators",
+  "checkpointId": "test-checkpoint-placeholder-checkpoint-0",
+  "criteriaCount": 1
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCheckpoint Validators[2m > [22m[2mshould fail checkpoint with placeholder markers[22m[39m
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mCheckpoint validation complete[39m {
+  "route": "CheckpointValidators",
+  "checkpointId": "test-checkpoint-placeholder-checkpoint-0",
+  "passed": false,
+  "failedCount": 1
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCheckpoint Validators[2m > [22m[2mshould validate checkpoint chain sequentially[22m[39m
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mMilestone updated for step 0[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-checkpoint-chain",
+  "milestoneId": "test-checkpoint-chain-step-0"
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCheckpoint Validators[2m > [22m[2mshould validate checkpoint chain sequentially[22m[39m
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mMilestone defined successfully[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-checkpoint-chain",
+  "stepIndex": 0,
+  "milestoneId": "test-checkpoint-chain-step-0",
+  "criteriaCount": 1,
+  "weightage": 33
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCheckpoint Validators[2m > [22m[2mshould validate checkpoint chain sequentially[22m[39m
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mMilestone updated for step 1[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-checkpoint-chain",
+  "milestoneId": "test-checkpoint-chain-step-1"
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCheckpoint Validators[2m > [22m[2mshould validate checkpoint chain sequentially[22m[39m
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mMilestone defined successfully[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-checkpoint-chain",
+  "stepIndex": 1,
+  "milestoneId": "test-checkpoint-chain-step-1",
+  "criteriaCount": 1,
+  "weightage": 33
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCheckpoint Validators[2m > [22m[2mshould validate checkpoint chain sequentially[22m[39m
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mMilestone updated for step 2[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-checkpoint-chain",
+  "milestoneId": "test-checkpoint-chain-step-2"
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCheckpoint Validators[2m > [22m[2mshould validate checkpoint chain sequentially[22m[39m
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mMilestone defined successfully[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-checkpoint-chain",
+  "stepIndex": 2,
+  "milestoneId": "test-checkpoint-chain-step-2",
+  "criteriaCount": 1,
+  "weightage": 33
+}
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mValidating checkpoint chain[39m {
+  "route": "CheckpointValidators",
+  "taskId": "test-checkpoint-chain",
+  "totalCheckpoints": 3
+}
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mValidating checkpoint[39m {
+  "route": "CheckpointValidators",
+  "checkpointId": "test-checkpoint-chain-checkpoint-0",
+  "criteriaCount": 1
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCheckpoint Validators[2m > [22m[2mshould validate checkpoint chain sequentially[22m[39m
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mCheckpoint validation complete[39m {
+  "route": "CheckpointValidators",
+  "checkpointId": "test-checkpoint-chain-checkpoint-0",
+  "passed": true,
+  "failedCount": 0
+}
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mValidating checkpoint[39m {
+  "route": "CheckpointValidators",
+  "checkpointId": "test-checkpoint-chain-checkpoint-1",
+  "criteriaCount": 1
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCheckpoint Validators[2m > [22m[2mshould validate checkpoint chain sequentially[22m[39m
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mCheckpoint validation complete[39m {
+  "route": "CheckpointValidators",
+  "checkpointId": "test-checkpoint-chain-checkpoint-1",
+  "passed": true,
+  "failedCount": 0
+}
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mValidating checkpoint[39m {
+  "route": "CheckpointValidators",
+  "checkpointId": "test-checkpoint-chain-checkpoint-2",
+  "criteriaCount": 1
+}
+
+ [32m✓[39m tests/integration/tracing/database-client.test.ts [2m ([22m[2m31 tests[22m[2m)[22m[90m 288[2mms[22m[39m
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCheckpoint Validators[2m > [22m[2mshould validate checkpoint chain sequentially[22m[39m
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mCheckpoint validation complete[39m {
+  "route": "CheckpointValidators",
+  "checkpointId": "test-checkpoint-chain-checkpoint-2",
+  "passed": false,
+  "failedCount": 1
+}
+2025-12-03 10:25:50:2550 [[33mwarn[39m]: [33mCheckpoint chain broken at step[39m {
+  "route": "CheckpointValidators",
+  "taskId": "test-checkpoint-chain",
+  "stepIndex": 2,
+  "failedCriteria": [
+    "test-checkpoint-chain-step-2-criterion-1"
+  ]
+}
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mCheckpoint chain validation complete[39m {
+  "route": "CheckpointValidators",
+  "taskId": "test-checkpoint-chain",
+  "totalValidated": 3,
+  "allPassed": false,
+  "firstFailureAt": 2
+}
+
+ [33m❯[39m tests/integration/framework-insights.test.ts [2m ([22m[2m54 tests[22m [2m|[22m [31m8 failed[39m[2m)[22m[90m 25[2mms[22m[39m
+[31m   [33m❯[31m tests/integration/framework-insights.test.ts[2m > [22mFramework Insights & Recommendations[2m > [22mInsight Generation[2m > [22mshould forecast trends accurately[39m
+[31m     → expected undefined not to be undefined[39m
+[31m   [33m❯[31m tests/integration/framework-insights.test.ts[2m > [22mFramework Insights & Recommendations[2m > [22mInsight Generation[2m > [22mshould identify optimization opportunities[39m
+[31m     → expected undefined not to be undefined[39m
+[31m   [33m❯[31m tests/integration/framework-insights.test.ts[2m > [22mFramework Insights & Recommendations[2m > [22mInsight Metrics & Data[2m > [22mshould include related data context[39m
+[31m     → expected undefined not to be undefined[39m
+[31m   [33m❯[31m tests/integration/framework-insights.test.ts[2m > [22mFramework Insights & Recommendations[2m > [22mRecommendation Generation[2m > [22mshould include action items[39m
+[31m     → expected undefined not to be undefined[39m
+[31m   [33m❯[31m tests/integration/framework-insights.test.ts[2m > [22mFramework Insights & Recommendations[2m > [22mRecommendation Generation[2m > [22mshould define success metrics[39m
+[31m     → expected undefined not to be undefined[39m
+[31m   [33m❯[31m tests/integration/framework-insights.test.ts[2m > [22mFramework Insights & Recommendations[2m > [22mInsight & Recommendation Linking[2m > [22mshould link insights to recommendations[39m
+[31m     → expected undefined not to be undefined[39m
+[31m   [33m❯[31m tests/integration/framework-insights.test.ts[2m > [22mFramework Insights & Recommendations[2m > [22mInsight & Recommendation Linking[2m > [22mshould reference related insights[39m
+[31m     → expected undefined to be an instance of Array[39m
+[31m   [33m❯[31m tests/integration/framework-insights.test.ts[2m > [22mFramework Insights & Recommendations[2m > [22mInsight & Recommendation Linking[2m > [22mshould maintain referential integrity[39m
+[31m     → Cannot read properties of undefined (reading 'length')[39m
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould allow step completion when all criteria pass[22m[39m
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mMilestone updated for step 0[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-gate-step-pass",
+  "milestoneId": "test-gate-step-pass-step-0"
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould allow step completion when all criteria pass[22m[39m
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mMilestone defined successfully[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-gate-step-pass",
+  "stepIndex": 0,
+  "milestoneId": "test-gate-step-pass-step-0",
+  "criteriaCount": 1,
+  "weightage": 100
+}
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mChecking step completion gate[39m {
+  "route": "CompletionGates",
+  "taskId": "test-gate-step-pass",
+  "stepIndex": 0,
+  "stepName": "Test Step"
+}
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mValidating checkpoint[39m {
+  "route": "CheckpointValidators",
+  "checkpointId": "test-gate-step-pass-checkpoint-0",
+  "criteriaCount": 1
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould allow step completion when all criteria pass[22m[39m
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mCheckpoint validation complete[39m {
+  "route": "CheckpointValidators",
+  "checkpointId": "test-gate-step-pass-checkpoint-0",
+  "passed": true,
+  "failedCount": 0
+}
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mStep completion gate result[39m {
+  "route": "CompletionGates",
+  "taskId": "test-gate-step-pass",
+  "stepIndex": 0,
+  "canComplete": true,
+  "blockingIssuesCount": 0
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould block step completion when required criteria fail[22m[39m
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mMilestone updated for step 0[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-gate-step-blocked",
+  "milestoneId": "test-gate-step-blocked-step-0"
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould block step completion when required criteria fail[22m[39m
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mMilestone defined successfully[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-gate-step-blocked",
+  "stepIndex": 0,
+  "milestoneId": "test-gate-step-blocked-step-0",
+  "criteriaCount": 2,
+  "weightage": 100
+}
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mChecking step completion gate[39m {
+  "route": "CompletionGates",
+  "taskId": "test-gate-step-blocked",
+  "stepIndex": 0,
+  "stepName": "Test Step"
+}
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mValidating checkpoint[39m {
+  "route": "CheckpointValidators",
+  "checkpointId": "test-gate-step-blocked-checkpoint-0",
+  "criteriaCount": 2
+}
+
+ [33m❯[39m tests/integration/autonomy-lifecycle.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould block step completion when required criteria fail[22m[39m
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mCheckpoint validation complete[39m {
+  "route": "CheckpointValidators",
+  "checkpointId": "test-gate-step-blocked-checkpoint-0",
+  "passed": false,
+  "failedCount": 1
+}
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mStep completion gate result[39m {
+  "route": "CompletionGates",
+  "taskId": "test-gate-step-blocked",
+  "stepIndex": 0,
+  "canComplete": false,
+  "blockingIssuesCount": 0
+}
+
+ [32m✓[39m src/lib/__tests__/enterpriseTeams.test.ts [2m ([22m[2m24 tests[22m[2m)[22m[90m 14[2mms[22m[39m
+ [32m✓[39m src/lib/__tests__/enterprise-integration.test.ts [2m ([22m[2m32 tests[22m[2m)[22m[90m 11[2mms[22m[39m
+ [32m✓[39m tests/integration/tracing/performance-metrics.test.ts [2m ([22m[2m32 tests[22m[2m)[22m[33m 2208[2mms[22m[39m
+ [33m❯[39m tests/integration/founder-os.test.ts [2m ([22m[2m28 tests[22m [2m|[22m [31m1 failed[39m[2m)[22m[90m 20[2mms[22m[39m
+[31m   [33m❯[31m tests/integration/founder-os.test.ts[2m > [22mFounder OS Integration[2m > [22mBusiness Intelligence[2m > [22mshould calculate business health score[39m
+[31m     → expected 69.25 to be greater than 70[39m
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould enforce all-or-nothing task completion[22m[39m
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mMilestone updated for step 0[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-gate-task-all-or-nothing",
+  "milestoneId": "test-gate-task-all-or-nothing-step-0"
+}
+
+ [32m✓[39m tests/integration/framework-analytics.test.ts [2m ([22m[2m54 tests[22m[2m)[22m[90m 19[2mms[22m[39m
+ [32m✓[39m tests/integration/framework-versioning.test.ts [2m ([22m[2m56 tests[22m[2m)[22m[90m 16[2mms[22m[39m
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould enforce all-or-nothing task completion[22m[39m
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mMilestone defined successfully[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-gate-task-all-or-nothing",
+  "stepIndex": 0,
+  "milestoneId": "test-gate-task-all-or-nothing-step-0",
+  "criteriaCount": 2,
+  "weightage": 33
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould enforce all-or-nothing task completion[22m[39m
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mMilestone updated for step 1[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-gate-task-all-or-nothing",
+  "milestoneId": "test-gate-task-all-or-nothing-step-1"
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould enforce all-or-nothing task completion[22m[39m
+2025-12-03 10:25:50:2550 [[32minfo[39m]: [32mMilestone defined successfully[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-gate-task-all-or-nothing",
+  "stepIndex": 1,
+  "milestoneId": "test-gate-task-all-or-nothing-step-1",
+  "criteriaCount": 2,
+  "weightage": 33
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould enforce all-or-nothing task completion[22m[39m
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mMilestone updated for step 2[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-gate-task-all-or-nothing",
+  "milestoneId": "test-gate-task-all-or-nothing-step-2"
+}
+
+ [32m✓[39m tests/integration/framework-alert-analytics.test.ts [2m ([22m[2m52 tests[22m[2m)[22m[90m 16[2mms[22m[39m
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould enforce all-or-nothing task completion[22m[39m
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mMilestone defined successfully[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-gate-task-all-or-nothing",
+  "stepIndex": 2,
+  "milestoneId": "test-gate-task-all-or-nothing-step-2",
+  "criteriaCount": 2,
+  "weightage": 33
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould enforce all-or-nothing task completion[22m[39m
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mChecking task completion gate[39m {
+  "route": "CompletionGates",
+  "taskId": "test-gate-task-all-or-nothing",
+  "totalSteps": 3
+}
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mChecking step completion gate[39m {
+  "route": "CompletionGates",
+  "taskId": "test-gate-task-all-or-nothing",
+  "stepIndex": 0,
+  "stepName": "Step 0"
+}
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mValidating checkpoint[39m {
+  "route": "CheckpointValidators",
+  "checkpointId": "test-gate-task-all-or-nothing-checkpoint-0",
+  "criteriaCount": 2
+}
+
+ [33m❯[39m tests/unit/cost-optimization.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould enforce all-or-nothing task completion[22m[39m
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mCheckpoint validation complete[39m {
+  "route": "CheckpointValidators",
+  "checkpointId": "test-gate-task-all-or-nothing-checkpoint-0",
+  "passed": true,
+  "failedCount": 0
+}
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mStep completion gate result[39m {
+  "route": "CompletionGates",
+  "taskId": "test-gate-task-all-or-nothing",
+  "stepIndex": 0,
+  "canComplete": true,
+  "blockingIssuesCount": 0
+}
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mChecking step completion gate[39m {
+  "route": "CompletionGates",
+  "taskId": "test-gate-task-all-or-nothing",
+  "stepIndex": 1,
+  "stepName": "Step 1"
+}
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mValidating checkpoint[39m {
+  "route": "CheckpointValidators",
+  "checkpointId": "test-gate-task-all-or-nothing-checkpoint-1",
+  "criteriaCount": 2
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould enforce all-or-nothing task completion[22m[39m
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mCheckpoint validation complete[39m {
+  "route": "CheckpointValidators",
+  "checkpointId": "test-gate-task-all-or-nothing-checkpoint-1",
+  "passed": false,
+  "failedCount": 1
+}
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mStep completion gate result[39m {
+  "route": "CompletionGates",
+  "taskId": "test-gate-task-all-or-nothing",
+  "stepIndex": 1,
+  "canComplete": false,
+  "blockingIssuesCount": 0
+}
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mChecking step completion gate[39m {
+  "route": "CompletionGates",
+  "taskId": "test-gate-task-all-or-nothing",
+  "stepIndex": 2,
+  "stepName": "Step 2"
+}
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mValidating checkpoint[39m {
+  "route": "CheckpointValidators",
+  "checkpointId": "test-gate-task-all-or-nothing-checkpoint-2",
+  "criteriaCount": 2
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould enforce all-or-nothing task completion[22m[39m
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mCheckpoint validation complete[39m {
+  "route": "CheckpointValidators",
+  "checkpointId": "test-gate-task-all-or-nothing-checkpoint-2",
+  "passed": true,
+  "failedCount": 0
+}
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mStep completion gate result[39m {
+  "route": "CompletionGates",
+  "taskId": "test-gate-task-all-or-nothing",
+  "stepIndex": 2,
+  "canComplete": true,
+  "blockingIssuesCount": 0
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould enforce all-or-nothing task completion[22m[39m
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mGate decision logged[39m {
+  "route": "CompletionGates",
+  "taskId": "test-gate-task-all-or-nothing",
+  "decision": "blocked",
+  "logFile": "D:\\Unite-Hub\\audit-reports\\gate-decisions\\test-gate-task-all-or-nothing\\gate-decision-1764721551158.json"
+}
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mTask completion gate result[39m {
+  "route": "CompletionGates",
+  "taskId": "test-gate-task-all-or-nothing",
+  "decision": "blocked",
+  "completedSteps": 2,
+  "blockedSteps": 1,
+  "blockingIssuesCount": 0
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Client[2m > [22m[2mshould queue metrics for batch sending[22m[39m
+2025-12-03 10:25:51:2551 [[33mwarn[39m]: [33mRetrying Datadog API call[39m {
+  "context": "DatadogClient",
+  "attempt": 1,
+  "delay": 1000
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould approve task completion when all steps pass[22m[39m
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mMilestone updated for step 0[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-gate-task-approved",
+  "milestoneId": "test-gate-task-approved-step-0"
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould approve task completion when all steps pass[22m[39m
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mMilestone defined successfully[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-gate-task-approved",
+  "stepIndex": 0,
+  "milestoneId": "test-gate-task-approved-step-0",
+  "criteriaCount": 2,
+  "weightage": 50
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould approve task completion when all steps pass[22m[39m
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mMilestone updated for step 1[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-gate-task-approved",
+  "milestoneId": "test-gate-task-approved-step-1"
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould approve task completion when all steps pass[22m[39m
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mMilestone defined successfully[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-gate-task-approved",
+  "stepIndex": 1,
+  "milestoneId": "test-gate-task-approved-step-1",
+  "criteriaCount": 2,
+  "weightage": 50
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould approve task completion when all steps pass[22m[39m
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mChecking task completion gate[39m {
+  "route": "CompletionGates",
+  "taskId": "test-gate-task-approved",
+  "totalSteps": 2
+}
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mChecking step completion gate[39m {
+  "route": "CompletionGates",
+  "taskId": "test-gate-task-approved",
+  "stepIndex": 0,
+  "stepName": "Step 0"
+}
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mValidating checkpoint[39m {
+  "route": "CheckpointValidators",
+  "checkpointId": "test-gate-task-approved-checkpoint-0",
+  "criteriaCount": 2
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould approve task completion when all steps pass[22m[39m
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mCheckpoint validation complete[39m {
+  "route": "CheckpointValidators",
+  "checkpointId": "test-gate-task-approved-checkpoint-0",
+  "passed": true,
+  "failedCount": 0
+}
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mStep completion gate result[39m {
+  "route": "CompletionGates",
+  "taskId": "test-gate-task-approved",
+  "stepIndex": 0,
+  "canComplete": true,
+  "blockingIssuesCount": 0
+}
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mChecking step completion gate[39m {
+  "route": "CompletionGates",
+  "taskId": "test-gate-task-approved",
+  "stepIndex": 1,
+  "stepName": "Step 1"
+}
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mValidating checkpoint[39m {
+  "route": "CheckpointValidators",
+  "checkpointId": "test-gate-task-approved-checkpoint-1",
+  "criteriaCount": 2
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould approve task completion when all steps pass[22m[39m
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mCheckpoint validation complete[39m {
+  "route": "CheckpointValidators",
+  "checkpointId": "test-gate-task-approved-checkpoint-1",
+  "passed": true,
+  "failedCount": 0
+}
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mStep completion gate result[39m {
+  "route": "CompletionGates",
+  "taskId": "test-gate-task-approved",
+  "stepIndex": 1,
+  "canComplete": true,
+  "blockingIssuesCount": 0
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould approve task completion when all steps pass[22m[39m
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mGate decision logged[39m {
+  "route": "CompletionGates",
+  "taskId": "test-gate-task-approved",
+  "decision": "approved",
+  "logFile": "D:\\Unite-Hub\\audit-reports\\gate-decisions\\test-gate-task-approved\\gate-decision-1764721551539.json"
+}
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mTask completion gate result[39m {
+  "route": "CompletionGates",
+  "taskId": "test-gate-task-approved",
+  "decision": "approved",
+  "completedSteps": 2,
+  "blockedSteps": 0,
+  "blockingIssuesCount": 0
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould get blocking issues grouped by severity[22m[39m
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mMilestone updated for step 0[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-blocking-issues",
+  "milestoneId": "test-blocking-issues-step-0"
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould get blocking issues grouped by severity[22m[39m
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mMilestone defined successfully[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-blocking-issues",
+  "stepIndex": 0,
+  "milestoneId": "test-blocking-issues-step-0",
+  "criteriaCount": 1,
+  "weightage": 100
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould get blocking issues grouped by severity[22m[39m
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mChecking task completion gate[39m {
+  "route": "CompletionGates",
+  "taskId": "test-blocking-issues",
+  "totalSteps": 1
+}
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mChecking step completion gate[39m {
+  "route": "CompletionGates",
+  "taskId": "test-blocking-issues",
+  "stepIndex": 0,
+  "stepName": "Test Step"
+}
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mValidating checkpoint[39m {
+  "route": "CheckpointValidators",
+  "checkpointId": "test-blocking-issues-checkpoint-0",
+  "criteriaCount": 1
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould get blocking issues grouped by severity[22m[39m
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mCheckpoint validation complete[39m {
+  "route": "CheckpointValidators",
+  "checkpointId": "test-blocking-issues-checkpoint-0",
+  "passed": false,
+  "failedCount": 1
+}
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mStep completion gate result[39m {
+  "route": "CompletionGates",
+  "taskId": "test-blocking-issues",
+  "stepIndex": 0,
+  "canComplete": false,
+  "blockingIssuesCount": 0
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Gates[2m > [22m[2mshould get blocking issues grouped by severity[22m[39m
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mGate decision logged[39m {
+  "route": "CompletionGates",
+  "taskId": "test-blocking-issues",
+  "decision": "blocked",
+  "logFile": "D:\\Unite-Hub\\audit-reports\\gate-decisions\\test-blocking-issues\\gate-decision-1764721551752.json"
+}
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mTask completion gate result[39m {
+  "route": "CompletionGates",
+  "taskId": "test-blocking-issues",
+  "decision": "blocked",
+  "completedSteps": 0,
+  "blockedSteps": 1,
+  "blockingIssuesCount": 0
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mProgress Reporter[2m > [22m[2mshould calculate completion percentage based on weightage[22m[39m
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mMilestone updated for step 0[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-progress-percentage",
+  "milestoneId": "test-progress-percentage-step-0"
+}
+
+ [32m✓[39m src/lib/services/leviathan/__tests__/quad-cloud-engine.test.ts [2m ([22m[2m29 tests[22m[2m)[22m[33m 2104[2mms[22m[39m
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mProgress Reporter[2m > [22m[2mshould calculate completion percentage based on weightage[22m[39m
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mMilestone defined successfully[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-progress-percentage",
+  "stepIndex": 0,
+  "milestoneId": "test-progress-percentage-step-0",
+  "criteriaCount": 1,
+  "weightage": 50
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mProgress Reporter[2m > [22m[2mshould calculate completion percentage based on weightage[22m[39m
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mMilestone updated for step 1[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-progress-percentage",
+  "milestoneId": "test-progress-percentage-step-1"
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mProgress Reporter[2m > [22m[2mshould calculate completion percentage based on weightage[22m[39m
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mMilestone defined successfully[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-progress-percentage",
+  "stepIndex": 1,
+  "milestoneId": "test-progress-percentage-step-1",
+  "criteriaCount": 1,
+  "weightage": 30
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mProgress Reporter[2m > [22m[2mshould calculate completion percentage based on weightage[22m[39m
+2025-12-03 10:25:51:2551 [[32minfo[39m]: [32mMilestone updated for step 2[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-progress-percentage",
+  "milestoneId": "test-progress-percentage-step-2"
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mProgress Reporter[2m > [22m[2mshould calculate completion percentage based on weightage[22m[39m
+2025-12-03 10:25:52:2552 [[32minfo[39m]: [32mMilestone defined successfully[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-progress-percentage",
+  "stepIndex": 2,
+  "milestoneId": "test-progress-percentage-step-2",
+  "criteriaCount": 1,
+  "weightage": 20
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mProgress Reporter[2m > [22m[2mshould generate comprehensive progress report[22m[39m
+2025-12-03 10:25:52:2552 [[32minfo[39m]: [32mMilestone updated for step 0[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-progress-report",
+  "milestoneId": "test-progress-report-step-0"
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mProgress Reporter[2m > [22m[2mshould generate comprehensive progress report[22m[39m
+2025-12-03 10:25:52:2552 [[32minfo[39m]: [32mMilestone defined successfully[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-progress-report",
+  "stepIndex": 0,
+  "milestoneId": "test-progress-report-step-0",
+  "criteriaCount": 1,
+  "weightage": 50
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mProgress Reporter[2m > [22m[2mshould generate comprehensive progress report[22m[39m
+2025-12-03 10:25:52:2552 [[32minfo[39m]: [32mMilestone updated for step 1[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-progress-report",
+  "milestoneId": "test-progress-report-step-1"
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mProgress Reporter[2m > [22m[2mshould generate comprehensive progress report[22m[39m
+2025-12-03 10:25:52:2552 [[32minfo[39m]: [32mMilestone defined successfully[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-progress-report",
+  "stepIndex": 1,
+  "milestoneId": "test-progress-report-step-1",
+  "criteriaCount": 1,
+  "weightage": 50
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mProgress Reporter[2m > [22m[2mshould generate comprehensive progress report[22m[39m
+2025-12-03 10:25:52:2552 [[32minfo[39m]: [32mValidating checkpoint[39m {
+  "route": "CheckpointValidators",
+  "checkpointId": "test-progress-report-checkpoint-0",
+  "criteriaCount": 1
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mProgress Reporter[2m > [22m[2mshould generate comprehensive progress report[22m[39m
+2025-12-03 10:25:52:2552 [[32minfo[39m]: [32mCheckpoint validation complete[39m {
+  "route": "CheckpointValidators",
+  "checkpointId": "test-progress-report-checkpoint-0",
+  "passed": true,
+  "failedCount": 0
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mProgress Reporter[2m > [22m[2mshould generate comprehensive progress report[22m[39m
+2025-12-03 10:25:52:2552 [[32minfo[39m]: [32mGenerating progress report[39m {
+  "route": "ProgressReporter",
+  "taskId": "test-progress-report",
+  "currentStep": 0,
+  "totalSteps": 2
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mProgress Reporter[2m > [22m[2mshould generate comprehensive progress report[22m[39m
+2025-12-03 10:25:52:2552 [[32minfo[39m]: [32mProgress snapshot stored[39m {
+  "route": "ProgressReporter",
+  "taskId": "test-progress-report",
+  "snapshotId": "test-progress-report-snapshot-1764721552249",
+  "completionPercentage": 50
+}
+2025-12-03 10:25:52:2552 [[32minfo[39m]: [32mProgress report generated[39m {
+  "route": "ProgressReporter",
+  "taskId": "test-progress-report",
+  "status": "in_progress",
+  "completionPercentage": 50,
+  "completedSteps": 1,
+  "totalSteps": 2
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mProgress Reporter[2m > [22m[2mshould export progress report as JSON[22m[39m
+2025-12-03 10:25:52:2552 [[32minfo[39m]: [32mMilestone updated for step 0[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-progress-export",
+  "milestoneId": "test-progress-export-step-0"
+}
+
+[90mstdout[2m | src/lib/services/leviathan/__tests__/orchestrator.test.ts[2m > [22m[2mLeviathanOrchestratorService[2m > [22m[2morchestrate[2m > [22m[2mshould execute full orchestration run[22m[39m
+Rolling back step: Cloud Deployment
+
+[90mstdout[2m | src/lib/services/leviathan/__tests__/orchestrator.test.ts[2m > [22m[2mLeviathanOrchestratorService[2m > [22m[2morchestrate[2m > [22m[2mshould execute deployment-only run[22m[39m
+Rolling back step: Cloud Deployment
+
+[90mstdout[2m | src/lib/services/leviathan/__tests__/orchestrator.test.ts[2m > [22m[2mLeviathanOrchestratorService[2m > [22m[2morchestrate[2m > [22m[2mshould include deployed URLs in result[22m[39m
+Rolling back step: Cloud Deployment
+
+[90mstdout[2m | src/lib/services/leviathan/__tests__/orchestrator.test.ts[2m > [22m[2mLeviathanOrchestratorService[2m > [22m[2morchestrate[2m > [22m[2mshould skip steps without config[22m[39m
+Rolling back step: Cloud Deployment
+
+[90mstdout[2m | src/lib/services/leviathan/__tests__/orchestrator.test.ts[2m > [22m[2mIntegration: Orchestrator with Audit[2m > [22m[2mshould audit all orchestration steps[22m[39m
+Rolling back step: Cloud Deployment
+
+[90mstdout[2m | src/lib/services/leviathan/__tests__/orchestrator.test.ts[2m > [22m[2mIntegration: Health Check with Orchestration[2m > [22m[2mshould perform health check on deployed URLs[22m[39m
+Rolling back step: Cloud Deployment
+
+ [32m✓[39m src/lib/services/leviathan/__tests__/orchestrator.test.ts [2m ([22m[2m42 tests[22m[2m)[22m[90m 40[2mms[22m[39m
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mProgress Reporter[2m > [22m[2mshould export progress report as JSON[22m[39m
+2025-12-03 10:25:52:2552 [[32minfo[39m]: [32mMilestone defined successfully[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-progress-export",
+  "stepIndex": 0,
+  "milestoneId": "test-progress-export-step-0",
+  "criteriaCount": 1,
+  "weightage": 100
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mProgress Reporter[2m > [22m[2mshould export progress report as JSON[22m[39m
+2025-12-03 10:25:52:2552 [[32minfo[39m]: [32mGenerating progress report[39m {
+  "route": "ProgressReporter",
+  "taskId": "test-progress-export",
+  "currentStep": 0,
+  "totalSteps": 1
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mProgress Reporter[2m > [22m[2mshould export progress report as JSON[22m[39m
+2025-12-03 10:25:52:2552 [[32minfo[39m]: [32mProgress snapshot stored[39m {
+  "route": "ProgressReporter",
+  "taskId": "test-progress-export",
+  "snapshotId": "test-progress-export-snapshot-1764721552352",
+  "completionPercentage": 0
+}
+2025-12-03 10:25:52:2552 [[32minfo[39m]: [32mProgress report generated[39m {
+  "route": "ProgressReporter",
+  "taskId": "test-progress-export",
+  "status": "not_started",
+  "completionPercentage": 0,
+  "completedSteps": 0,
+  "totalSteps": 1
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mProgress Reporter[2m > [22m[2mshould format progress report as human-readable text[22m[39m
+2025-12-03 10:25:52:2552 [[32minfo[39m]: [32mMilestone updated for step 0[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-progress-format",
+  "milestoneId": "test-progress-format-step-0"
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mProgress Reporter[2m > [22m[2mshould format progress report as human-readable text[22m[39m
+2025-12-03 10:25:52:2552 [[32minfo[39m]: [32mMilestone defined successfully[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-progress-format",
+  "stepIndex": 0,
+  "milestoneId": "test-progress-format-step-0",
+  "criteriaCount": 1,
+  "weightage": 100
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mProgress Reporter[2m > [22m[2mshould format progress report as human-readable text[22m[39m
+2025-12-03 10:25:52:2552 [[32minfo[39m]: [32mGenerating progress report[39m {
+  "route": "ProgressReporter",
+  "taskId": "test-progress-format",
+  "currentStep": 0,
+  "totalSteps": 1
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Client[2m > [22m[2mshould queue metrics for batch sending[22m[39m
+2025-12-03 10:25:52:2552 [[33mwarn[39m]: [33mRetrying Datadog API call[39m {
+  "context": "DatadogClient",
+  "attempt": 2,
+  "delay": 2000
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mProgress Reporter[2m > [22m[2mshould format progress report as human-readable text[22m[39m
+2025-12-03 10:25:52:2552 [[32minfo[39m]: [32mProgress snapshot stored[39m {
+  "route": "ProgressReporter",
+  "taskId": "test-progress-format",
+  "snapshotId": "test-progress-format-snapshot-1764721552441",
+  "completionPercentage": 0
+}
+2025-12-03 10:25:52:2552 [[32minfo[39m]: [32mProgress report generated[39m {
+  "route": "ProgressReporter",
+  "taskId": "test-progress-format",
+  "status": "not_started",
+  "completionPercentage": 0,
+  "completedSteps": 0,
+  "totalSteps": 1
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mProgress Reporter[2m > [22m[2mshould record and retrieve progress events[22m[39m
+2025-12-03 10:25:52:2552 [[32minfo[39m]: [32mProgress event recorded[39m {
+  "route": "ProgressReporter",
+  "taskId": "test-progress-events",
+  "eventType": "task_started",
+  "eventId": "test-progress-events-event-1764721552494"
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mProgress Reporter[2m > [22m[2mshould record and retrieve progress events[22m[39m
+2025-12-03 10:25:52:2552 [[32minfo[39m]: [32mProgress event recorded[39m {
+  "route": "ProgressReporter",
+  "taskId": "test-progress-events",
+  "eventType": "milestone_completed",
+  "eventId": "test-progress-events-event-1764721552559"
+}
+
+[90mstdout[2m | tests/integrity/completion-integrity.test.ts[2m > [22m[2mCompletion Integrity Integration[2m > [22m[2mshould enforce complete workflow from definition to gate[22m[39m
+2025-12-03 10:25:52:2552 [[31merror[39m]: [31mFailed to define milestone[39m {
+  "route": "MilestoneDefinitions",
+  "taskId": "test-integration-workflow",
+  "stepIndex": 0,
+  "error": "Cannot add milestone - task test-integration-workflow is locked (execution started)"
+}
+
+ [33m❯[39m tests/integrity/completion-integrity.test.ts [2m ([22m[2m21 tests[22m [2m|[22m [31m8 failed[39m[2m)[22m[33m 2962[2mms[22m[39m
+[31m   [33m❯[31m tests/integrity/completion-integrity.test.ts[2m > [22mMilestone Definition System[2m > [22mshould lock milestones after definition[39m
+[31m     → Cannot add milestone - task test-task-lock is locked (execution started)[39m
+[31m   [33m❯[31m tests/integrity/completion-integrity.test.ts[2m > [22mMilestone Definition System[2m > [22mshould prevent adding milestones after lock[39m
+[31m     → Cannot add milestone - task test-task-locked is locked (execution started)[39m
+[31m   [33m❯[31m tests/integrity/completion-integrity.test.ts[2m > [22mCheckpoint Validators[2m > [22mshould get checkpoint status[39m
+[31m     → expected 'validated' to be 'pending' // Object.is equality[39m
+[31m   [33m❯[31m tests/integrity/completion-integrity.test.ts[2m > [22mCompletion Gates[2m > [22mshould block step completion when required criteria fail[39m
+[31m     → expected 0 to be greater than 0[39m
+[31m   [33m❯[31m tests/integrity/completion-integrity.test.ts[2m > [22mCompletion Gates[2m > [22mshould enforce all-or-nothing task completion[39m
+[31m     → expected 0 to be greater than 0[39m
+[31m   [33m❯[31m tests/integrity/completion-integrity.test.ts[2m > [22mCompletion Gates[2m > [22mshould get blocking issues grouped by severity[39m
+[31m     → expected 0 to be greater than 0[39m
+[31m   [33m❯[31m tests/integrity/completion-integrity.test.ts[2m > [22mProgress Reporter[2m > [22mshould record and retrieve progress events[39m
+[31m     → expected [ { …(4) }, { …(6) }, { …(4) }, …(27) ] to have a length of 2 but got 30[39m
+[31m   [33m❯[31m tests/integrity/completion-integrity.test.ts[2m > [22mCompletion Integrity Integration[2m > [22mshould enforce complete workflow from definition to gate[39m
+[31m     → Cannot add milestone - task test-integration-workflow is locked (execution started)[39m
+ [33m❯[39m tests/integration/blue-green-deployment.test.ts [2m ([22m[2m15 tests[22m [2m|[22m [31m12 failed[39m[2m)[22m[33m 3213[2mms[22m[39m
+[31m   [33m❯[31m tests/integration/blue-green-deployment.test.ts[2m > [22mBlue-Green Deployment Integration Tests[2m > [22mHealth Check Endpoint[2m > [22mshould respond with status 200 and deployment information[39m
+[31m     → Server failed to start: file:///D:/Unite-Hub/tests/integration/mock-server.js:2
+const http = require('http');
+             ^
+
+ReferenceError: require is not defined in ES module scope, you can use import instead
+This file is being treated as an ES module because it has a '.js' file extension and 'D:\Unite-Hub\package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+    at file:///D:/Unite-Hub/tests/integration/mock-server.js:2:14
+    at ModuleJob.run (node:internal/modules/esm/module_job:377:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:691:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.11.0
+[39m
+[31m   [33m❯[31m tests/integration/blue-green-deployment.test.ts[2m > [22mBlue-Green Deployment Integration Tests[2m > [22mHealth Check Endpoint[2m > [22mshould include all required health check fields[39m
+[31m     → Server failed to start: file:///D:/Unite-Hub/tests/integration/mock-server.js:2
+const http = require('http');
+             ^
+
+ReferenceError: require is not defined in ES module scope, you can use import instead
+This file is being treated as an ES module because it has a '.js' file extension and 'D:\Unite-Hub\package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+    at file:///D:/Unite-Hub/tests/integration/mock-server.js:2:14
+    at ModuleJob.run (node:internal/modules/esm/module_job:377:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:691:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.11.0
+[39m
+[31m   [33m❯[31m tests/integration/blue-green-deployment.test.ts[2m > [22mBlue-Green Deployment Integration Tests[2m > [22mHealth Check Endpoint[2m > [22mshould differentiate between blue and green deployments[39m
+[31m     → Server failed to start: file:///D:/Unite-Hub/tests/integration/mock-server.js:2
+const http = require('http');
+             ^
+
+ReferenceError: require is not defined in ES module scope, you can use import instead
+This file is being treated as an ES module because it has a '.js' file extension and 'D:\Unite-Hub\package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+    at file:///D:/Unite-Hub/tests/integration/mock-server.js:2:14
+    at ModuleJob.run (node:internal/modules/esm/module_job:377:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:691:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.11.0
+[39m
+[31m   [33m❯[31m tests/integration/blue-green-deployment.test.ts[2m > [22mBlue-Green Deployment Integration Tests[2m > [22mGraceful Shutdown and Connection Draining[2m > [22mshould drain active connections to zero during shutdown[39m
+[31m     → Server failed to start: file:///D:/Unite-Hub/tests/integration/mock-server.js:2
+const http = require('http');
+             ^
+
+ReferenceError: require is not defined in ES module scope, you can use import instead
+This file is being treated as an ES module because it has a '.js' file extension and 'D:\Unite-Hub\package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+    at file:///D:/Unite-Hub/tests/integration/mock-server.js:2:14
+    at ModuleJob.run (node:internal/modules/esm/module_job:377:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:691:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.11.0
+[39m
+[31m   [33m❯[31m tests/integration/blue-green-deployment.test.ts[2m > [22mBlue-Green Deployment Integration Tests[2m > [22mGraceful Shutdown and Connection Draining[2m > [22mshould wait for in-flight requests to complete[39m
+[31m     → Server failed to start: file:///D:/Unite-Hub/tests/integration/mock-server.js:2
+const http = require('http');
+             ^
+
+ReferenceError: require is not defined in ES module scope, you can use import instead
+This file is being treated as an ES module because it has a '.js' file extension and 'D:\Unite-Hub\package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+    at file:///D:/Unite-Hub/tests/integration/mock-server.js:2:14
+    at ModuleJob.run (node:internal/modules/esm/module_job:377:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:691:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.11.0
+[39m
+[31m   [33m❯[31m tests/integration/blue-green-deployment.test.ts[2m > [22mBlue-Green Deployment Integration Tests[2m > [22mGraceful Shutdown and Connection Draining[2m > [22mshould reject new connections during shutdown[39m
+[31m     → Server failed to start: file:///D:/Unite-Hub/tests/integration/mock-server.js:2
+const http = require('http');
+             ^
+
+ReferenceError: require is not defined in ES module scope, you can use import instead
+This file is being treated as an ES module because it has a '.js' file extension and 'D:\Unite-Hub\package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+    at file:///D:/Unite-Hub/tests/integration/mock-server.js:2:14
+    at ModuleJob.run (node:internal/modules/esm/module_job:377:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:691:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.11.0
+[39m
+[31m   [33m❯[31m tests/integration/blue-green-deployment.test.ts[2m > [22mBlue-Green Deployment Integration Tests[2m > [22mZero-Downtime Deployment[2m > [22mshould serve requests during deployment switch[39m
+[31m     → Server failed to start: file:///D:/Unite-Hub/tests/integration/mock-server.js:2
+const http = require('http');
+             ^
+
+ReferenceError: require is not defined in ES module scope, you can use import instead
+This file is being treated as an ES module because it has a '.js' file extension and 'D:\Unite-Hub\package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+    at file:///D:/Unite-Hub/tests/integration/mock-server.js:2:14
+    at ModuleJob.run (node:internal/modules/esm/module_job:377:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:691:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.11.0
+[39m
+[31m   [33m❯[31m tests/integration/blue-green-deployment.test.ts[2m > [22mBlue-Green Deployment Integration Tests[2m > [22mZero-Downtime Deployment[2m > [22mshould not return errors during traffic switch[39m
+[31m     → Server failed to start: file:///D:/Unite-Hub/tests/integration/mock-server.js:2
+const http = require('http');
+             ^
+
+ReferenceError: require is not defined in ES module scope, you can use import instead
+This file is being treated as an ES module because it has a '.js' file extension and 'D:\Unite-Hub\package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+    at file:///D:/Unite-Hub/tests/integration/mock-server.js:2:14
+    at ModuleJob.run (node:internal/modules/esm/module_job:377:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:691:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.11.0
+[39m
+[31m   [33m❯[31m tests/integration/blue-green-deployment.test.ts[2m > [22mBlue-Green Deployment Integration Tests[2m > [22mZero-Downtime Deployment[2m > [22mshould maintain session consistency during switch[39m
+[31m     → Server failed to start: file:///D:/Unite-Hub/tests/integration/mock-server.js:2
+const http = require('http');
+             ^
+
+ReferenceError: require is not defined in ES module scope, you can use import instead
+This file is being treated as an ES module because it has a '.js' file extension and 'D:\Unite-Hub\package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+    at file:///D:/Unite-Hub/tests/integration/mock-server.js:2:14
+    at ModuleJob.run (node:internal/modules/esm/module_job:377:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:691:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.11.0
+[39m
+[31m   [33m❯[31m tests/integration/blue-green-deployment.test.ts[2m > [22mBlue-Green Deployment Integration Tests[2m > [22mRollback Capability[2m > [22mshould switch back to previous deployment[39m
+[31m     → Server failed to start: file:///D:/Unite-Hub/tests/integration/mock-server.js:2
+const http = require('http');
+             ^
+
+ReferenceError: require is not defined in ES module scope, you can use import instead
+This file is being treated as an ES module because it has a '.js' file extension and 'D:\Unite-Hub\package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+    at file:///D:/Unite-Hub/tests/integration/mock-server.js:2:14
+    at ModuleJob.run (node:internal/modules/esm/module_job:377:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:691:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.11.0
+[39m
+[31m   [33m❯[31m tests/integration/blue-green-deployment.test.ts[2m > [22mBlue-Green Deployment Integration Tests[2m > [22mRollback Capability[2m > [22mshould perform instant rollback without downtime[39m
+[31m     → Server failed to start: file:///D:/Unite-Hub/tests/integration/mock-server.js:2
+const http = require('http');
+             ^
+
+ReferenceError: require is not defined in ES module scope, you can use import instead
+This file is being treated as an ES module because it has a '.js' file extension and 'D:\Unite-Hub\package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+    at file:///D:/Unite-Hub/tests/integration/mock-server.js:2:14
+    at ModuleJob.run (node:internal/modules/esm/module_job:377:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:691:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.11.0
+[39m
+[31m   [33m❯[31m tests/integration/blue-green-deployment.test.ts[2m > [22mBlue-Green Deployment Integration Tests[2m > [22mRollback Capability[2m > [22mshould preserve previous deployment during rollback[39m
+[31m     → Server failed to start: file:///D:/Unite-Hub/tests/integration/mock-server.js:2
+const http = require('http');
+             ^
+
+ReferenceError: require is not defined in ES module scope, you can use import instead
+This file is being treated as an ES module because it has a '.js' file extension and 'D:\Unite-Hub\package.json' contains "type": "module". To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+    at file:///D:/Unite-Hub/tests/integration/mock-server.js:2:14
+    at ModuleJob.run (node:internal/modules/esm/module_job:377:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:691:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.11.0
+[39m
+ [32m✓[39m src/lib/__tests__/enterpriseFoundation.test.ts [2m ([22m[2m25 tests[22m[2m)[22m[90m 11[2mms[22m[39m
+ [32m✓[39m src/lib/__tests__/proposalService.test.ts [2m ([22m[2m15 tests[22m[2m)[22m[90m 22[2mms[22m[39m
+ [32m✓[39m tests/unit/ml-engines.test.ts [2m ([22m[2m30 tests[22m[2m)[22m[90m 23[2mms[22m[39m
+[90mstdout[2m | tests/verification/evidence-collection.test.ts[2m > [22m[2mEvidence Collection System[2m > [22m[2mEvidence Capture[2m > [22m[2mshould capture execution logs[22m[39m
+2025-12-03 10:25:53:2553 [[32minfo[39m]: [32m[Evidence] Execution log captured for task test-evidence-1764721553222[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\test-evidence-1764721553222\\execution-log-1764721553227.json",
+  "steps": 2
+}
+
+ [32m✓[39m src/lib/__tests__/mvp-dashboard.test.ts [2m ([22m[2m21 tests[22m[2m)[22m[90m 25[2mms[22m[39m
+[90mstdout[2m | tests/verification/evidence-collection.test.ts[2m > [22m[2mEvidence Collection System[2m > [22m[2mEvidence Capture[2m > [22m[2mshould capture state snapshots[22m[39m
+2025-12-03 10:25:53:2553 [[32minfo[39m]: [32m[Evidence] State snapshot captured for task test-evidence-1764721553222[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\test-evidence-1764721553222\\state-before-1764721553263.json",
+  "type": "before",
+  "keys": 4
+}
+
+[90mstdout[2m | tests/verification/evidence-collection.test.ts[2m > [22m[2mEvidence Collection System[2m > [22m[2mEvidence Capture[2m > [22m[2mshould capture error evidence[22m[39m
+2025-12-03 10:25:53:2553 [[32minfo[39m]: [32m[Evidence] Error evidence captured for task test-evidence-1764721553222[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\test-evidence-1764721553222\\error-1764721553304.json"
+}
+
+ [32m✓[39m src/lib/services/leviathan/__tests__/social-stack.test.ts [2m ([22m[2m27 tests[22m[2m)[22m[33m 2177[2mms[22m[39m
+[90mstdout[2m | tests/verification/evidence-collection.test.ts[2m > [22m[2mEvidence Collection System[2m > [22m[2mEvidence Capture[2m > [22m[2mshould aggregate evidence into package[22m[39m
+2025-12-03 10:25:53:2553 [[32minfo[39m]: [32m[Evidence] Execution log captured for task test-evidence-1764721553222[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\test-evidence-1764721553222\\execution-log-1764721553358.json",
+  "steps": 1
+}
+
+ [32m✓[39m src/lib/__tests__/seoCore.test.ts [2m ([22m[2m41 tests[22m[2m)[22m[90m 15[2mms[22m[39m
+[90mstdout[2m | tests/verification/evidence-collection.test.ts[2m > [22m[2mEvidence Collection System[2m > [22m[2mEvidence Capture[2m > [22m[2mshould aggregate evidence into package[22m[39m
+2025-12-03 10:25:53:2553 [[32minfo[39m]: [32m[Evidence] State snapshot captured for task test-evidence-1764721553222[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\test-evidence-1764721553222\\state-after-1764721553380.json",
+  "type": "after",
+  "keys": 1
+}
+
+ [32m✓[39m tests/integration/tracing/http-middleware.test.ts [2m ([22m[2m21 tests[22m[2m)[22m[90m 54[2mms[22m[39m
+[90mstdout[2m | tests/verification/evidence-collection.test.ts[2m > [22m[2mEvidence Collection System[2m > [22m[2mEvidence Storage[2m > [22m[2mshould store evidence with retention policy[22m[39m
+2025-12-03 10:25:53:2553 [[32minfo[39m]: [32m[Evidence] Execution log captured for task test-evidence-1764721553222[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\test-evidence-1764721553222\\execution-log-1764721553429.json",
+  "steps": 1
+}
+
+[90mstdout[2m | tests/verification/evidence-collection.test.ts[2m > [22m[2mEvidence Collection System[2m > [22m[2mEvidence Storage[2m > [22m[2mshould store evidence with retention policy[22m[39m
+2025-12-03 10:25:53:2553 [[32minfo[39m]: [32m[EvidenceStorage] Stored evidence for task test-evidence-1764721553222[39m {
+  "route": "EvidenceStorage",
+  "evidenceId": "test-evidence-1764721553222-1764721553451",
+  "files": 1,
+  "expiresAt": "2026-03-03T00:25:53.451Z"
+}
+
+[90mstdout[2m | tests/verification/evidence-collection.test.ts[2m > [22m[2mEvidence Collection System[2m > [22m[2mEvidence Storage[2m > [22m[2mshould retrieve stored evidence[22m[39m
+2025-12-03 10:25:53:2553 [[32minfo[39m]: [32m[Evidence] Execution log captured for task test-evidence-1764721553222[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\test-evidence-1764721553222\\execution-log-1764721553474.json",
+  "steps": 1
+}
+
+ [33m❯[39m tests/lib/auth/session-timeout.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | tests/verification/evidence-collection.test.ts[2m > [22m[2mEvidence Collection System[2m > [22m[2mEvidence Storage[2m > [22m[2mshould retrieve stored evidence[22m[39m
+2025-12-03 10:25:53:2553 [[32minfo[39m]: [32m[EvidenceStorage] Stored evidence for task test-evidence-1764721553222[39m {
+  "route": "EvidenceStorage",
+  "evidenceId": "test-evidence-1764721553222-1764721553511",
+  "files": 1,
+  "expiresAt": "2026-03-03T00:25:53.514Z"
+}
+
+[90mstdout[2m | tests/verification/evidence-collection.test.ts[2m > [22m[2mEvidence Collection System[2m > [22m[2mEvidence Storage[2m > [22m[2mshould validate evidence integrity[22m[39m
+2025-12-03 10:25:53:2553 [[32minfo[39m]: [32m[Evidence] Execution log captured for task test-evidence-1764721553222[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\test-evidence-1764721553222\\execution-log-1764721553544.json",
+  "steps": 1
+}
+
+[90mstdout[2m | tests/verification/evidence-collection.test.ts[2m > [22m[2mEvidence Collection System[2m > [22m[2mProof Generation[2m > [22m[2mshould generate complete proof package[22m[39m
+2025-12-03 10:25:53:2553 [[32minfo[39m]: [32m[Evidence] Execution log captured for task test-evidence-1764721553222[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\test-evidence-1764721553222\\execution-log-1764721553620.json",
+  "steps": 1
+}
+
+[90mstdout[2m | tests/verification/evidence-collection.test.ts[2m > [22m[2mEvidence Collection System[2m > [22m[2mProof Generation[2m > [22m[2mshould generate complete proof package[22m[39m
+2025-12-03 10:25:53:2553 [[32minfo[39m]: [32m[ProofGenerator] Generated proof package[39m {
+  "route": "ProofGenerator",
+  "evidenceId": "test-evidence-1764721553222",
+  "files": 1,
+  "merkleRoot": "28d4014b26e756a65fdc58007f58f0bef33829b4f7de87cf0a3e14a9cb00b7b9"
+}
+
+[90mstdout[2m | tests/verification/evidence-collection.test.ts[2m > [22m[2mEvidence Collection System[2m > [22m[2mProof Generation[2m > [22m[2mshould verify proof package[22m[39m
+2025-12-03 10:25:53:2553 [[32minfo[39m]: [32m[Evidence] Execution log captured for task test-evidence-1764721553222[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\test-evidence-1764721553222\\execution-log-1764721553659.json",
+  "steps": 1
+}
+
+ [32m✓[39m src/lib/__tests__/entityEngine.test.ts [2m ([22m[2m12 tests[22m[2m)[22m[90m 15[2mms[22m[39m
+[90mstdout[2m | src/lib/__tests__/entityEngine.test.ts[2m > [22m[2mEntityEngine[2m > [22m[2mbuildProfile[2m > [22m[2mshould create a basic profile with all required fields[22m[39m
+[EntityEngine] Building profile for plumber-brisbane.com.au...
+
+[90mstdout[2m | src/lib/__tests__/entityEngine.test.ts[2m > [22m[2mEntityEngine[2m > [22m[2mIntent Distribution[2m > [22m[2mshould calculate correct intent percentages[22m[39m
+[EntityEngine] Building profile for test.com...
+
+[90mstdout[2m | src/lib/__tests__/entityEngine.test.ts[2m > [22m[2mEntityEngine[2m > [22m[2mIntent Distribution[2m > [22m[2mshould handle empty keywords[22m[39m
+[EntityEngine] Building profile for empty.com...
+
+[90mstdout[2m | src/lib/__tests__/entityEngine.test.ts[2m > [22m[2mEntityEngine[2m > [22m[2mEntity Scoring[2m > [22m[2mshould boost entities matching categories[22m[39m
+[EntityEngine] Building profile for test.com...
+
+[90mstdout[2m | src/lib/__tests__/entityEngine.test.ts[2m > [22m[2mEntityEngine[2m > [22m[2mEntity Scoring[2m > [22m[2mshould assign correct topical fit levels[22m[39m
+[EntityEngine] Building profile for tech.com...
+
+[90mstdout[2m | src/lib/__tests__/entityEngine.test.ts[2m > [22m[2mEntityEngine[2m > [22m[2mSentiment Distribution[2m > [22m[2mshould calculate correct sentiment percentages[22m[39m
+[EntityEngine] Building profile for test.com...
+
+[90mstdout[2m | src/lib/__tests__/entityEngine.test.ts[2m > [22m[2mEntityEngine[2m > [22m[2mEntity Clusters[2m > [22m[2mshould group entities by type[22m[39m
+[EntityEngine] Building profile for test.com...
+
+[90mstdout[2m | src/lib/__tests__/entityEngine.test.ts[2m > [22m[2mEntityEngine[2m > [22m[2mSERP Features[2m > [22m[2mshould count featured snippets and knowledge panels[22m[39m
+[EntityEngine] Building profile for test.com...
+
+[90mstdout[2m | src/lib/__tests__/entityEngine.test.ts[2m > [22m[2mEntityEngine[2m > [22m[2mTopical Gap Analysis[2m > [22m[2mshould identify missing entities for plumbing topic[22m[39m
+[EntityEngine] Building profile for test.com...
+
+[90mstdout[2m | src/lib/__tests__/entityEngine.test.ts[2m > [22m[2mEntityEngine[2m > [22m[2mEdge Cases[2m > [22m[2mshould handle empty entities gracefully[22m[39m
+[EntityEngine] Building profile for empty.com...
+
+[90mstdout[2m | src/lib/__tests__/entityEngine.test.ts[2m > [22m[2mEntityEngine[2m > [22m[2mEdge Cases[2m > [22m[2mshould deduplicate entities by name[22m[39m
+[EntityEngine] Building profile for test.com...
+
+[90mstdout[2m | src/lib/__tests__/entityEngine.test.ts[2m > [22m[2mEntityEngine[2m > [22m[2mEdge Cases[2m > [22m[2mshould limit top keywords to specified count[22m[39m
+[EntityEngine] Building profile for test.com...
+
+[90mstdout[2m | tests/verification/evidence-collection.test.ts[2m > [22m[2mEvidence Collection System[2m > [22m[2mProof Generation[2m > [22m[2mshould verify proof package[22m[39m
+2025-12-03 10:25:53:2553 [[32minfo[39m]: [32m[ProofGenerator] Generated proof package[39m {
+  "route": "ProofGenerator",
+  "evidenceId": "test-evidence-1764721553222",
+  "files": 1,
+  "merkleRoot": "a90f411414438867d2c8e0be660c3d8e48ce4457033c7e3f93055d3a7d71c63a"
+}
+
+[90mstdout[2m | tests/verification/evidence-collection.test.ts[2m > [22m[2mEvidence Collection System[2m > [22m[2mProof Generation[2m > [22m[2mshould verify proof package[22m[39m
+2025-12-03 10:25:53:2553 [[32minfo[39m]: [32m[ProofGenerator] Proof verification passed[39m {
+  "route": "ProofGenerator",
+  "evidenceId": "test-evidence-1764721553222"
+}
+
+[90mstdout[2m | tests/verification/evidence-collection.test.ts[2m > [22m[2mEvidence Collection System[2m > [22m[2mProof Generation[2m > [22m[2mshould export and import proofs[22m[39m
+2025-12-03 10:25:53:2553 [[32minfo[39m]: [32m[Evidence] Execution log captured for task test-evidence-1764721553222[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\test-evidence-1764721553222\\execution-log-1764721553708.json",
+  "steps": 1
+}
+
+[90mstdout[2m | tests/verification/evidence-collection.test.ts[2m > [22m[2mEvidence Collection System[2m > [22m[2mProof Generation[2m > [22m[2mshould export and import proofs[22m[39m
+2025-12-03 10:25:53:2553 [[32minfo[39m]: [32m[ProofGenerator] Generated proof package[39m {
+  "route": "ProofGenerator",
+  "evidenceId": "test-evidence-1764721553222",
+  "files": 1,
+  "merkleRoot": "07a521a89cc3ecd1696fc62db66cc128bd8d52759055bab3466d5f362e31599a"
+}
+
+[90mstdout[2m | tests/verification/evidence-collection.test.ts[2m > [22m[2mEvidence Collection System[2m > [22m[2mIntegration[2m > [22m[2mshould complete full evidence workflow[22m[39m
+2025-12-03 10:25:53:2553 [[32minfo[39m]: [32m[Evidence] Execution log captured for task test-evidence-1764721553222[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\test-evidence-1764721553222\\execution-log-1764721553774.json",
+  "steps": 2
+}
+
+[90mstdout[2m | tests/verification/evidence-collection.test.ts[2m > [22m[2mEvidence Collection System[2m > [22m[2mIntegration[2m > [22m[2mshould complete full evidence workflow[22m[39m
+2025-12-03 10:25:53:2553 [[32minfo[39m]: [32m[Evidence] State snapshot captured for task test-evidence-1764721553222[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\test-evidence-1764721553222\\state-after-1764721553869.json",
+  "type": "after",
+  "keys": 1
+}
+
+[90mstdout[2m | tests/verification/evidence-collection.test.ts[2m > [22m[2mEvidence Collection System[2m > [22m[2mIntegration[2m > [22m[2mshould complete full evidence workflow[22m[39m
+2025-12-03 10:25:53:2553 [[32minfo[39m]: [32m[ProofGenerator] Generated proof package[39m {
+  "route": "ProofGenerator",
+  "evidenceId": "test-evidence-1764721553222",
+  "files": 2,
+  "merkleRoot": "df73729e2544487a04471c02e040a204e1cd3ede28bece24a45d4c496fe9f144"
+}
+
+[90mstdout[2m | tests/verification/evidence-collection.test.ts[2m > [22m[2mEvidence Collection System[2m > [22m[2mIntegration[2m > [22m[2mshould complete full evidence workflow[22m[39m
+2025-12-03 10:25:54:2554 [[32minfo[39m]: [32m[EvidenceStorage] Stored evidence for task test-evidence-1764721553222[39m {
+  "route": "EvidenceStorage",
+  "evidenceId": "test-evidence-1764721553222-1764721553929",
+  "files": 2,
+  "expiresAt": "2026-03-03T00:25:53.929Z"
+}
+
+[90mstdout[2m | tests/verification/evidence-collection.test.ts[2m > [22m[2mEvidence Collection System[2m > [22m[2mIntegration[2m > [22m[2mshould complete full evidence workflow[22m[39m
+2025-12-03 10:25:54:2554 [[32minfo[39m]: [32m[ProofGenerator] Proof verification passed[39m {
+  "route": "ProofGenerator",
+  "evidenceId": "test-evidence-1764721553222"
+}
+
+ [32m✓[39m tests/verification/evidence-collection.test.ts [2m ([22m[2m15 tests[22m[2m)[22m[33m 803[2mms[22m[39m
+[90mstdout[2m | tests/integration/api/media-pipeline.test.ts[2m > [22m[2mMedia Pipeline Integration Tests[22m[39m
+✓ Test environment cleaned up
+
+ [33m❯[39m tests/integration/api/media-pipeline.test.ts [2m ([22m[2m2 tests[22m[2m)[22m[90m 298[2mms[22m[39m
+ [32m✓[39m src/lib/db/__tests__/connection-pool.test.ts [2m ([22m[2m21 tests[22m[2m)[22m[33m 1395[2mms[22m[39m
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Client[2m > [22m[2mshould queue metrics for batch sending[22m[39m
+2025-12-03 10:25:54:2554 [[31merror[39m]: [31mMax retry attempts reached[39m {
+  "context": "DatadogClient",
+  "attempt": 3,
+  "error": {
+    "name": "Error"
+  }
+}
+2025-12-03 10:25:54:2554 [[31merror[39m]: [31mFailed to flush metrics batch[39m {
+  "context": "DatadogClient",
+  "count": 1,
+  "error": "Error: Datadog metrics submission failed: Invalid API Key"
+}
+2025-12-03 10:25:54:2554 [[32minfo[39m]: [32mDatadog client shutdown complete[39m {
+  "context": "DatadogClient"
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Client[2m > [22m[2mshould normalize tags correctly[22m[39m
+2025-12-03 10:25:54:2554 [[32minfo[39m]: [32mDatadog client initialized[39m {
+  "context": "DatadogClient",
+  "service": "unite-hub-test",
+  "version": "1.0.0",
+  "environment": "test"
+}
+
+ [32m✓[39m tests/unit/prediction-engines.test.ts [2m ([22m[2m21 tests[22m[2m)[22m[90m 12[2mms[22m[39m
+ [32m✓[39m tests/integration/tracing/trace-context.test.ts [2m ([22m[2m22 tests[22m[2m)[22m[90m 53[2mms[22m[39m
+ [32m✓[39m tests/integration/operator-lifecycle.test.ts [2m ([22m[2m33 tests[22m[2m)[22m[90m 11[2mms[22m[39m
+ [32m✓[39m src/lib/__tests__/braveClient.test.ts [2m ([22m[2m26 tests[22m[2m)[22m[90m 11[2mms[22m[39m
+ [32m✓[39m tests/integration/api/contacts.test.ts [2m ([22m[2m14 tests[22m[2m)[22m[90m 34[2mms[22m[39m
+ [33m❯[39m tests/integration/apm/apm-integration.test.ts [2m ([22m[2m36 tests[22m [2m|[22m [31m6 failed[39m[2m)[22m[90m 233[2mms[22m[39m
+[31m   [33m❯[31m tests/integration/apm/apm-integration.test.ts[2m > [22mAPM Integration[2m > [22mConfiguration[2m > [22mshould load APM configuration[39m
+[31m     → config is not defined[39m
+[31m   [33m❯[31m tests/integration/apm/apm-integration.test.ts[2m > [22mAPM Integration[2m > [22mConfiguration[2m > [22mshould validate APM configuration[39m
+[31m     → config is not defined[39m
+[31m   [33m❯[31m tests/integration/apm/apm-integration.test.ts[2m > [22mAPM Integration[2m > [22mConfiguration[2m > [22mshould have correct environment detection[39m
+[31m     → config is not defined[39m
+[31m   [33m❯[31m tests/integration/apm/apm-integration.test.ts[2m > [22mAPM Integration[2m > [22mConfiguration[2m > [22mshould have appropriate sampling rates for test environment[39m
+[31m     → config is not defined[39m
+[31m   [33m❯[31m tests/integration/apm/apm-integration.test.ts[2m > [22mAPM Integration[2m > [22mConfiguration[2m > [22mshould include required service tags[39m
+[31m     → config is not defined[39m
+[31m   [33m❯[31m tests/integration/apm/apm-integration.test.ts[2m > [22mAPM Integration[2m > [22mIntegration[2m > [22mshould have consistent configuration across modules[39m
+[31m     → config is not defined[39m
+ [33m❯[39m tests/integration/api/content.test.ts [2m ([22m[2m15 tests[22m [2m|[22m [31m6 failed[39m[2m)[22m[90m 273[2mms[22m[39m
+[31m   [33m❯[31m tests/integration/api/content.test.ts[2m > [22mContent API - GET /api/content[2m > [22mshould return 401 when not authenticated[39m
+[31m     → expected 400 to be 401 // Object.is equality[39m
+[31m   [33m❯[31m tests/integration/api/content.test.ts[2m > [22mContent API - GET /api/content[2m > [22mshould return content list for authenticated user[39m
+[31m     → expected 400 to be 200 // Object.is equality[39m
+[31m   [33m❯[31m tests/integration/api/content.test.ts[2m > [22mContent API - GET /api/content[2m > [22mshould filter content by workspace ID[39m
+[31m     → expected 400 to be 200 // Object.is equality[39m
+[31m   [33m❯[31m tests/integration/api/content.test.ts[2m > [22mContent API - POST /api/content[2m > [22mshould return 401 when not authenticated[39m
+[31m     → expected 400 to be 401 // Object.is equality[39m
+[31m   [33m❯[31m tests/integration/api/content.test.ts[2m > [22mContent API - POST /api/content[2m > [22mshould create new content when authenticated[39m
+[31m     → expected [ 200, 201 ] to include 400[39m
+[31m   [33m❯[31m tests/integration/api/content.test.ts[2m > [22mContent API - Error Handling[2m > [22mshould handle database errors gracefully[39m
+[31m     → expected [ 500, 200 ] to include 400[39m
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mFake Completion Claims (MUST FAIL)[2m > [22m[2mshould REJECT claim of file creation when file does not exist[22m[39m
+2025-12-03 10:25:55:2555 [[32minfo[39m]: [32mVerification request received[39m {
+  "context": "IndependentVerifier",
+  "task_id": "fake-file-task",
+  "criteria_count": 1,
+  "output_count": 1,
+  "requesting_agent": "some-agent"
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mFake Completion Claims (MUST FAIL)[2m > [22m[2mshould REJECT claim of file creation when file does not exist[22m[39m
+2025-12-03 10:25:55:2555 [[32minfo[39m]: [32m[Evidence] Execution log captured for task fake-file-task[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\fake-file-task\\execution-log-1764721555407.json",
+  "steps": 1
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mFake Completion Claims (MUST FAIL)[2m > [22m[2mshould REJECT claim of file creation when file does not exist[22m[39m
+2025-12-03 10:25:55:2555 [[32minfo[39m]: [32m[Evidence] State snapshot captured for task fake-file-task[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\fake-file-task\\state-after-1764721555425.json",
+  "type": "after",
+  "keys": 4
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mFake Completion Claims (MUST FAIL)[2m > [22m[2mshould REJECT claim of file creation when file does not exist[22m[39m
+2025-12-03 10:25:55:2555 [[32minfo[39m]: [32m[ProofGenerator] Generated proof package[39m {
+  "route": "ProofGenerator",
+  "evidenceId": "fake-file-task",
+  "files": 44,
+  "merkleRoot": "6440fb0e6b49d5018415116a65168e35634a8dc9d82fc4f270fb0b4a356ea54b"
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Client[2m > [22m[2mshould normalize tags correctly[22m[39m
+2025-12-03 10:25:55:2555 [[33mwarn[39m]: [33mRetrying Datadog API call[39m {
+  "context": "DatadogClient",
+  "attempt": 1,
+  "delay": 1000
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mFake Completion Claims (MUST FAIL)[2m > [22m[2mshould REJECT claim of file creation when file does not exist[22m[39m
+2025-12-03 10:25:55:2555 [[32minfo[39m]: [32m[EvidenceStorage] Stored evidence for task fake-file-task[39m {
+  "route": "EvidenceStorage",
+  "evidenceId": "fake-file-task-1764721555600",
+  "files": 44,
+  "expiresAt": "2026-03-03T00:25:55.601Z"
+}
+2025-12-03 10:25:55:2555 [[32minfo[39m]: [32mEvidence collected and stored[39m {
+  "context": "IndependentVerifier",
+  "task_id": "fake-file-task",
+  "merkle_root": "6440fb0e6b49d5018415116a65168e35634a8dc9d82fc4f270fb0b4a356ea54b"
+}
+2025-12-03 10:25:55:2555 [[32minfo[39m]: [32mVerification complete[39m {
+  "context": "IndependentVerifier",
+  "task_id": "fake-file-task",
+  "verified": false,
+  "passed": 0,
+  "failed": 1,
+  "evidence_collected": true
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mFake Completion Claims (MUST FAIL)[2m > [22m[2mshould REJECT claim when file is empty (0 bytes)[22m[39m
+2025-12-03 10:25:55:2555 [[32minfo[39m]: [32mVerification request received[39m {
+  "context": "IndependentVerifier",
+  "task_id": "empty-file-task",
+  "criteria_count": 1,
+  "output_count": 1,
+  "requesting_agent": "some-agent"
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mFake Completion Claims (MUST FAIL)[2m > [22m[2mshould REJECT claim when file is empty (0 bytes)[22m[39m
+2025-12-03 10:25:55:2555 [[32minfo[39m]: [32m[Evidence] Execution log captured for task empty-file-task[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\empty-file-task\\execution-log-1764721555638.json",
+  "steps": 1
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mFake Completion Claims (MUST FAIL)[2m > [22m[2mshould REJECT claim when file is empty (0 bytes)[22m[39m
+2025-12-03 10:25:55:2555 [[32minfo[39m]: [32m[Evidence] State snapshot captured for task empty-file-task[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\empty-file-task\\state-after-1764721555674.json",
+  "type": "after",
+  "keys": 4
+}
+
+ [32m✓[39m src/lib/__tests__/strategyIntegration.test.ts [2m ([22m[2m22 tests[22m[2m)[22m[90m 10[2mms[22m[39m
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mFake Completion Claims (MUST FAIL)[2m > [22m[2mshould REJECT claim when file is empty (0 bytes)[22m[39m
+2025-12-03 10:25:55:2555 [[32minfo[39m]: [32m[ProofGenerator] Generated proof package[39m {
+  "route": "ProofGenerator",
+  "evidenceId": "empty-file-task",
+  "files": 44,
+  "merkleRoot": "2f5727c163f1fd6b9d7497817aa7d9d11a1468efbf2d2ea4fd184b815b4c9ec8"
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mFake Completion Claims (MUST FAIL)[2m > [22m[2mshould REJECT claim when file is empty (0 bytes)[22m[39m
+2025-12-03 10:25:55:2555 [[32minfo[39m]: [32m[EvidenceStorage] Stored evidence for task empty-file-task[39m {
+  "route": "EvidenceStorage",
+  "evidenceId": "empty-file-task-1764721555942",
+  "files": 44,
+  "expiresAt": "2026-03-03T00:25:55.942Z"
+}
+2025-12-03 10:25:55:2555 [[32minfo[39m]: [32mEvidence collected and stored[39m {
+  "context": "IndependentVerifier",
+  "task_id": "empty-file-task",
+  "merkle_root": "2f5727c163f1fd6b9d7497817aa7d9d11a1468efbf2d2ea4fd184b815b4c9ec8"
+}
+2025-12-03 10:25:55:2555 [[32minfo[39m]: [32mVerification complete[39m {
+  "context": "IndependentVerifier",
+  "task_id": "empty-file-task",
+  "verified": false,
+  "passed": 0,
+  "failed": 1,
+  "evidence_collected": true
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mFake Completion Claims (MUST FAIL)[2m > [22m[2mshould REJECT claim when placeholders are found[22m[39m
+2025-12-03 10:25:55:2555 [[32minfo[39m]: [32mVerification request received[39m {
+  "context": "IndependentVerifier",
+  "task_id": "placeholder-task",
+  "criteria_count": 1,
+  "output_count": 1,
+  "requesting_agent": "some-agent"
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mFake Completion Claims (MUST FAIL)[2m > [22m[2mshould REJECT claim when placeholders are found[22m[39m
+2025-12-03 10:25:56:2556 [[32minfo[39m]: [32m[Evidence] Execution log captured for task placeholder-task[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\placeholder-task\\execution-log-1764721555993.json",
+  "steps": 1
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mFake Completion Claims (MUST FAIL)[2m > [22m[2mshould REJECT claim when placeholders are found[22m[39m
+2025-12-03 10:25:56:2556 [[32minfo[39m]: [32m[Evidence] State snapshot captured for task placeholder-task[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\placeholder-task\\state-after-1764721556047.json",
+  "type": "after",
+  "keys": 4
+}
+
+ [32m✓[39m tests/unit/lib/autoAction/criticalPointGuard.test.ts [2m ([22m[2m14 tests[22m[2m)[22m[90m 10[2mms[22m[39m
+ [32m✓[39m src/lib/rbac/__tests__/permissions.test.ts [2m ([22m[2m33 tests[22m[2m)[22m[90m 21[2mms[22m[39m
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mFake Completion Claims (MUST FAIL)[2m > [22m[2mshould REJECT claim when placeholders are found[22m[39m
+2025-12-03 10:25:56:2556 [[32minfo[39m]: [32m[ProofGenerator] Generated proof package[39m {
+  "route": "ProofGenerator",
+  "evidenceId": "placeholder-task",
+  "files": 44,
+  "merkleRoot": "ce5eef89763a0f6d214a11dc0730a476a7ed7c29fa580598d8b3e8231c28a837"
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mFake Completion Claims (MUST FAIL)[2m > [22m[2mshould REJECT claim when placeholders are found[22m[39m
+2025-12-03 10:25:56:2556 [[32minfo[39m]: [32m[EvidenceStorage] Stored evidence for task placeholder-task[39m {
+  "route": "EvidenceStorage",
+  "evidenceId": "placeholder-task-1764721556394",
+  "files": 44,
+  "expiresAt": "2026-03-03T00:25:56.397Z"
+}
+2025-12-03 10:25:56:2556 [[32minfo[39m]: [32mEvidence collected and stored[39m {
+  "context": "IndependentVerifier",
+  "task_id": "placeholder-task",
+  "merkle_root": "ce5eef89763a0f6d214a11dc0730a476a7ed7c29fa580598d8b3e8231c28a837"
+}
+2025-12-03 10:25:56:2556 [[32minfo[39m]: [32mVerification complete[39m {
+  "context": "IndependentVerifier",
+  "task_id": "placeholder-task",
+  "verified": false,
+  "passed": 0,
+  "failed": 1,
+  "evidence_collected": true
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mFake Completion Claims (MUST FAIL)[2m > [22m[2mshould REJECT when ANY criterion fails[22m[39m
+2025-12-03 10:25:56:2556 [[32minfo[39m]: [32mVerification request received[39m {
+  "context": "IndependentVerifier",
+  "task_id": "mixed-task",
+  "criteria_count": 4,
+  "output_count": 2,
+  "requesting_agent": "some-agent"
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mFake Completion Claims (MUST FAIL)[2m > [22m[2mshould REJECT when ANY criterion fails[22m[39m
+2025-12-03 10:25:56:2556 [[32minfo[39m]: [32m[Evidence] Execution log captured for task mixed-task[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\mixed-task\\execution-log-1764721556458.json",
+  "steps": 4
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mFake Completion Claims (MUST FAIL)[2m > [22m[2mshould REJECT when ANY criterion fails[22m[39m
+2025-12-03 10:25:56:2556 [[32minfo[39m]: [32m[Evidence] State snapshot captured for task mixed-task[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\mixed-task\\state-after-1764721556464.json",
+  "type": "after",
+  "keys": 4
+}
+
+ [32m✓[39m src/lib/__tests__/gscClient.test.ts [2m ([22m[2m15 tests[22m[2m)[22m[90m 18[2mms[22m[39m
+ [32m✓[39m src/lib/__tests__/bingClient.test.ts [2m ([22m[2m27 tests[22m[2m)[22m[90m 18[2mms[22m[39m
+ [32m✓[39m src/lib/__tests__/anomalyDetector.test.ts [2m ([22m[2m22 tests[22m[2m)[22m[90m 14[2mms[22m[39m
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mFake Completion Claims (MUST FAIL)[2m > [22m[2mshould REJECT when ANY criterion fails[22m[39m
+2025-12-03 10:25:56:2556 [[32minfo[39m]: [32m[ProofGenerator] Generated proof package[39m {
+  "route": "ProofGenerator",
+  "evidenceId": "mixed-task",
+  "files": 44,
+  "merkleRoot": "f9b02fc6d807ff6c5e75d661f7bea009216137043ac0b3dfcd1ce389bfaaf55d"
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mFake Completion Claims (MUST FAIL)[2m > [22m[2mshould REJECT when ANY criterion fails[22m[39m
+2025-12-03 10:25:56:2556 [[32minfo[39m]: [32m[EvidenceStorage] Stored evidence for task mixed-task[39m {
+  "route": "EvidenceStorage",
+  "evidenceId": "mixed-task-1764721556727",
+  "files": 44,
+  "expiresAt": "2026-03-03T00:25:56.732Z"
+}
+2025-12-03 10:25:56:2556 [[32minfo[39m]: [32mEvidence collected and stored[39m {
+  "context": "IndependentVerifier",
+  "task_id": "mixed-task",
+  "merkle_root": "f9b02fc6d807ff6c5e75d661f7bea009216137043ac0b3dfcd1ce389bfaaf55d"
+}
+2025-12-03 10:25:56:2556 [[32minfo[39m]: [32mVerification complete[39m {
+  "context": "IndependentVerifier",
+  "task_id": "mixed-task",
+  "verified": false,
+  "passed": 3,
+  "failed": 1,
+  "evidence_collected": true
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mReal Completion Claims (MUST PASS)[2m > [22m[2mshould ACCEPT valid file with all criteria met[22m[39m
+2025-12-03 10:25:56:2556 [[32minfo[39m]: [32mVerification request received[39m {
+  "context": "IndependentVerifier",
+  "task_id": "valid-task",
+  "criteria_count": 2,
+  "output_count": 1,
+  "requesting_agent": "some-agent"
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mReal Completion Claims (MUST PASS)[2m > [22m[2mshould ACCEPT valid file with all criteria met[22m[39m
+2025-12-03 10:25:56:2556 [[32minfo[39m]: [32m[Evidence] Execution log captured for task valid-task[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\valid-task\\execution-log-1764721556780.json",
+  "steps": 2
+}
+
+[90mstdout[2m | AnthropicClientManager.initialize (D:\Unite-Hub\src\lib\anthropic\client.ts:83:15)[22m[39m
+✅ Anthropic client initialized successfully
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mReal Completion Claims (MUST PASS)[2m > [22m[2mshould ACCEPT valid file with all criteria met[22m[39m
+2025-12-03 10:25:56:2556 [[32minfo[39m]: [32m[Evidence] State snapshot captured for task valid-task[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\valid-task\\state-after-1764721556797.json",
+  "type": "after",
+  "keys": 4
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Client[2m > [22m[2mshould normalize tags correctly[22m[39m
+2025-12-03 10:25:56:2556 [[33mwarn[39m]: [33mRetrying Datadog API call[39m {
+  "context": "DatadogClient",
+  "attempt": 2,
+  "delay": 2000
+}
+
+ [32m✓[39m tests/unit/lib/autoAction/sandboxConfig.test.ts [2m ([22m[2m19 tests[22m[2m)[22m[90m 14[2mms[22m[39m
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mReal Completion Claims (MUST PASS)[2m > [22m[2mshould ACCEPT valid file with all criteria met[22m[39m
+2025-12-03 10:25:57:2557 [[32minfo[39m]: [32m[ProofGenerator] Generated proof package[39m {
+  "route": "ProofGenerator",
+  "evidenceId": "valid-task",
+  "files": 44,
+  "merkleRoot": "67762ac4c80fdab5961212b07994c365963c584854b014077a797978e3607be9"
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mReal Completion Claims (MUST PASS)[2m > [22m[2mshould ACCEPT valid file with all criteria met[22m[39m
+2025-12-03 10:25:57:2557 [[32minfo[39m]: [32m[EvidenceStorage] Stored evidence for task valid-task[39m {
+  "route": "EvidenceStorage",
+  "evidenceId": "valid-task-1764721557107",
+  "files": 44,
+  "expiresAt": "2026-03-03T00:25:57.108Z"
+}
+2025-12-03 10:25:57:2557 [[32minfo[39m]: [32mEvidence collected and stored[39m {
+  "context": "IndependentVerifier",
+  "task_id": "valid-task",
+  "merkle_root": "67762ac4c80fdab5961212b07994c365963c584854b014077a797978e3607be9"
+}
+2025-12-03 10:25:57:2557 [[32minfo[39m]: [32mVerification complete[39m {
+  "context": "IndependentVerifier",
+  "task_id": "valid-task",
+  "verified": true,
+  "passed": 2,
+  "failed": 0,
+  "evidence_collected": true
+}
+
+ [32m✓[39m src/lib/services/engines/__tests__/engines.test.ts [2m ([22m[2m14 tests[22m[2m)[22m[33m 416[2mms[22m[39m
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mReal Completion Claims (MUST PASS)[2m > [22m[2mshould provide EVIDENCE for every passing criterion[22m[39m
+2025-12-03 10:25:57:2557 [[32minfo[39m]: [32mVerification request received[39m {
+  "context": "IndependentVerifier",
+  "task_id": "evidence-task",
+  "criteria_count": 2,
+  "output_count": 1,
+  "requesting_agent": "some-agent"
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mReal Completion Claims (MUST PASS)[2m > [22m[2mshould provide EVIDENCE for every passing criterion[22m[39m
+2025-12-03 10:25:57:2557 [[32minfo[39m]: [32m[Evidence] Execution log captured for task evidence-task[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\evidence-task\\execution-log-1764721557184.json",
+  "steps": 2
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mReal Completion Claims (MUST PASS)[2m > [22m[2mshould provide EVIDENCE for every passing criterion[22m[39m
+2025-12-03 10:25:57:2557 [[32minfo[39m]: [32m[Evidence] State snapshot captured for task evidence-task[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\evidence-task\\state-after-1764721557218.json",
+  "type": "after",
+  "keys": 4
+}
+
+[90mstdout[2m | tests/unit/agents/contact-intelligence.test.ts[2m > [22m[2mContact Intelligence Agent[2m > [22m[2mshould analyze contact and return intelligence data[22m[39m
+Contact Intelligence - Cache Stats: {
+  input_tokens: [33m1000[39m,
+  cache_creation_tokens: [33m0[39m,
+  cache_read_tokens: [33m0[39m,
+  output_tokens: [33m200[39m,
+  cache_hit: [33mfalse[39m
+}
+
+[90mstdout[2m | tests/unit/agents/contact-intelligence.test.ts[2m > [22m[2mContact Intelligence Agent[2m > [22m[2mshould call Anthropic API with correct parameters[22m[39m
+Contact Intelligence - Cache Stats: {
+  input_tokens: [33m1000[39m,
+  cache_creation_tokens: [33m0[39m,
+  cache_read_tokens: [33m0[39m,
+  output_tokens: [33m200[39m,
+  cache_hit: [33mfalse[39m
+}
+
+[90mstdout[2m | tests/unit/agents/contact-intelligence.test.ts[2m > [22m[2mContact Intelligence Agent[2m > [22m[2mshould use prompt caching for system instructions[22m[39m
+Contact Intelligence - Cache Stats: {
+  input_tokens: [33m1000[39m,
+  cache_creation_tokens: [33m0[39m,
+  cache_read_tokens: [33m0[39m,
+  output_tokens: [33m200[39m,
+  cache_hit: [33mfalse[39m
+}
+
+[90mstdout[2m | tests/unit/agents/contact-intelligence.test.ts[2m > [22m[2mContact Intelligence Agent[2m > [22m[2mshould handle contact with no emails[22m[39m
+Contact Intelligence - Cache Stats: {
+  input_tokens: [33m1000[39m,
+  cache_creation_tokens: [33m0[39m,
+  cache_read_tokens: [33m0[39m,
+  output_tokens: [33m200[39m,
+  cache_hit: [33mfalse[39m
+}
+
+[90mstdout[2m | tests/unit/agents/contact-intelligence.test.ts[2m > [22m[2mContact Intelligence Agent[2m > [22m[2mshould calculate engagement velocity correctly[22m[39m
+Contact Intelligence - Cache Stats: {
+  input_tokens: [33m1000[39m,
+  cache_creation_tokens: [33m0[39m,
+  cache_read_tokens: [33m0[39m,
+  output_tokens: [33m200[39m,
+  cache_hit: [33mfalse[39m
+}
+
+[90mstdout[2m | tests/unit/agents/contact-intelligence.test.ts[2m > [22m[2mContact Intelligence Agent[2m > [22m[2mshould parse JSON response from Claude correctly[22m[39m
+Contact Intelligence - Cache Stats: {
+  input_tokens: [33m1000[39m,
+  cache_creation_tokens: [33m0[39m,
+  cache_read_tokens: [33m0[39m,
+  output_tokens: [33m200[39m,
+  cache_hit: [33mfalse[39m
+}
+
+[90mstdout[2m | tests/unit/agents/contact-intelligence.test.ts[2m > [22m[2mContact Intelligence Agent[2m > [22m[2mshould include recent email history in analysis[22m[39m
+Contact Intelligence - Cache Stats: {
+  input_tokens: [33m1000[39m,
+  cache_creation_tokens: [33m0[39m,
+  cache_read_tokens: [33m0[39m,
+  output_tokens: [33m200[39m,
+  cache_hit: [33mfalse[39m
+}
+
+[90mstdout[2m | tests/unit/agents/contact-intelligence.test.ts[2m > [22m[2mContact Intelligence Agent[2m > [22m[2mshould respect workspace isolation[22m[39m
+Contact Intelligence - Cache Stats: {
+  input_tokens: [33m1000[39m,
+  cache_creation_tokens: [33m0[39m,
+  cache_read_tokens: [33m0[39m,
+  output_tokens: [33m200[39m,
+  cache_hit: [33mfalse[39m
+}
+
+ [32m✓[39m tests/unit/agents/contact-intelligence.test.ts [2m ([22m[2m10 tests[22m[2m)[22m[90m 34[2mms[22m[39m
+ [33m❯[39m tests/integration/api/auth.test.ts [2m ([22m[2m9 tests[22m [2m|[22m [31m2 failed[39m [2m|[22m [33m5 skipped[39m[2m)[22m[33m 345[2mms[22m[39m
+[31m   [33m❯[31m tests/integration/api/auth.test.ts[2m > [22mAuthentication API Integration Tests[2m > [22mPOST /api/auth/initialize-user[2m > [22mshould return 200 and skip initialization without authentication[39m
+[31m     → expected 500 to be 200 // Object.is equality[39m
+[31m   [33m❯[31m tests/integration/api/auth.test.ts[2m > [22mAuthentication API Integration Tests[2m > [22mError Handling[2m > [22mshould return JSON response when not authenticated[39m
+[31m     → expected { success: false, error: { …(3) } } to have property "message"[39m
+ [32m✓[39m tests/integration/tracing/instrumentation-utilities.test.ts [2m ([22m[2m19 tests[22m[2m)[22m[90m 25[2mms[22m[39m
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mReal Completion Claims (MUST PASS)[2m > [22m[2mshould provide EVIDENCE for every passing criterion[22m[39m
+2025-12-03 10:25:57:2557 [[32minfo[39m]: [32m[ProofGenerator] Generated proof package[39m {
+  "route": "ProofGenerator",
+  "evidenceId": "evidence-task",
+  "files": 44,
+  "merkleRoot": "7982fd1113eceb669e3f61ab25469cf975575388b28fc334a8e169201055d68c"
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mReal Completion Claims (MUST PASS)[2m > [22m[2mshould provide EVIDENCE for every passing criterion[22m[39m
+2025-12-03 10:25:57:2557 [[32minfo[39m]: [32m[EvidenceStorage] Stored evidence for task evidence-task[39m {
+  "route": "EvidenceStorage",
+  "evidenceId": "evidence-task-1764721557537",
+  "files": 44,
+  "expiresAt": "2026-03-03T00:25:57.538Z"
+}
+2025-12-03 10:25:57:2557 [[32minfo[39m]: [32mEvidence collected and stored[39m {
+  "context": "IndependentVerifier",
+  "task_id": "evidence-task",
+  "merkle_root": "7982fd1113eceb669e3f61ab25469cf975575388b28fc334a8e169201055d68c"
+}
+2025-12-03 10:25:57:2557 [[32minfo[39m]: [32mVerification complete[39m {
+  "context": "IndependentVerifier",
+  "task_id": "evidence-task",
+  "verified": true,
+  "passed": 2,
+  "failed": 0,
+  "evidence_collected": true
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mEvidence Collection[2m > [22m[2mshould include file size in file evidence[22m[39m
+2025-12-03 10:25:57:2557 [[32minfo[39m]: [32mVerification request received[39m {
+  "context": "IndependentVerifier",
+  "task_id": "size-task",
+  "criteria_count": 1,
+  "output_count": 1,
+  "requesting_agent": "some-agent"
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mEvidence Collection[2m > [22m[2mshould include file size in file evidence[22m[39m
+2025-12-03 10:25:57:2557 [[32minfo[39m]: [32m[Evidence] Execution log captured for task size-task[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\size-task\\execution-log-1764721557607.json",
+  "steps": 1
+}
+
+ [33m❯[39m tests/integration/features/workspace-isolation.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mEvidence Collection[2m > [22m[2mshould include file size in file evidence[22m[39m
+2025-12-03 10:25:57:2557 [[32minfo[39m]: [32m[Evidence] State snapshot captured for task size-task[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\size-task\\state-after-1764721557622.json",
+  "type": "after",
+  "keys": 4
+}
+
+ [32m✓[39m tests/unit/lib/rate-limit.test.ts [2m ([22m[2m12 tests[22m[2m)[22m[90m 51[2mms[22m[39m
+ [33m❯[39m src/lib/security/csp.test.ts [2m ([22m[2m0 test[22m[2m)[22m
+ [32m✓[39m tests/unit/selfHealing/errorClassifier.test.ts [2m ([22m[2m18 tests[22m[2m)[22m[90m 16[2mms[22m[39m
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mEvidence Collection[2m > [22m[2mshould include file size in file evidence[22m[39m
+2025-12-03 10:25:57:2557 [[32minfo[39m]: [32m[ProofGenerator] Generated proof package[39m {
+  "route": "ProofGenerator",
+  "evidenceId": "size-task",
+  "files": 44,
+  "merkleRoot": "3a00fc9cf36a3afb89c01bf3abd5824e86d2ffe25c4527a31d3462154117864c"
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mEvidence Collection[2m > [22m[2mshould include file size in file evidence[22m[39m
+2025-12-03 10:25:57:2557 [[32minfo[39m]: [32m[EvidenceStorage] Stored evidence for task size-task[39m {
+  "route": "EvidenceStorage",
+  "evidenceId": "size-task-1764721557876",
+  "files": 44,
+  "expiresAt": "2026-03-03T00:25:57.877Z"
+}
+2025-12-03 10:25:57:2557 [[32minfo[39m]: [32mEvidence collected and stored[39m {
+  "context": "IndependentVerifier",
+  "task_id": "size-task",
+  "merkle_root": "3a00fc9cf36a3afb89c01bf3abd5824e86d2ffe25c4527a31d3462154117864c"
+}
+2025-12-03 10:25:57:2557 [[32minfo[39m]: [32mVerification complete[39m {
+  "context": "IndependentVerifier",
+  "task_id": "size-task",
+  "verified": true,
+  "passed": 1,
+  "failed": 0,
+  "evidence_collected": true
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mEvidence Collection[2m > [22m[2mshould include timestamp in all evidence[22m[39m
+2025-12-03 10:25:57:2557 [[32minfo[39m]: [32mVerification request received[39m {
+  "context": "IndependentVerifier",
+  "task_id": "timestamp-task",
+  "criteria_count": 1,
+  "output_count": 1,
+  "requesting_agent": "some-agent"
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mEvidence Collection[2m > [22m[2mshould include timestamp in all evidence[22m[39m
+2025-12-03 10:25:58:2558 [[32minfo[39m]: [32m[Evidence] Execution log captured for task timestamp-task[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\timestamp-task\\execution-log-1764721557948.json",
+  "steps": 1
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mEvidence Collection[2m > [22m[2mshould include timestamp in all evidence[22m[39m
+2025-12-03 10:25:58:2558 [[32minfo[39m]: [32m[Evidence] State snapshot captured for task timestamp-task[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\timestamp-task\\state-after-1764721558007.json",
+  "type": "after",
+  "keys": 4
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mEvidence Collection[2m > [22m[2mshould include timestamp in all evidence[22m[39m
+2025-12-03 10:25:58:2558 [[32minfo[39m]: [32m[ProofGenerator] Generated proof package[39m {
+  "route": "ProofGenerator",
+  "evidenceId": "timestamp-task",
+  "files": 44,
+  "merkleRoot": "b429e5fdd27ce6c4af7bc818a483c0edb66944fcf4fe9cdb3d506f7c27a3e7cc"
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mEvidence Collection[2m > [22m[2mshould include timestamp in all evidence[22m[39m
+2025-12-03 10:25:58:2558 [[32minfo[39m]: [32m[EvidenceStorage] Stored evidence for task timestamp-task[39m {
+  "route": "EvidenceStorage",
+  "evidenceId": "timestamp-task-1764721558124",
+  "files": 44,
+  "expiresAt": "2026-03-03T00:25:58.125Z"
+}
+2025-12-03 10:25:58:2558 [[32minfo[39m]: [32mEvidence collected and stored[39m {
+  "context": "IndependentVerifier",
+  "task_id": "timestamp-task",
+  "merkle_root": "b429e5fdd27ce6c4af7bc818a483c0edb66944fcf4fe9cdb3d506f7c27a3e7cc"
+}
+2025-12-03 10:25:58:2558 [[32minfo[39m]: [32mVerification complete[39m {
+  "context": "IndependentVerifier",
+  "task_id": "timestamp-task",
+  "verified": true,
+  "passed": 1,
+  "failed": 0,
+  "evidence_collected": true
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mVerifier Identity[2m > [22m[2mshould include verifier_agent_id in result[22m[39m
+2025-12-03 10:25:58:2558 [[32minfo[39m]: [32mVerification request received[39m {
+  "context": "IndependentVerifier",
+  "task_id": "identity-task",
+  "criteria_count": 0,
+  "output_count": 0,
+  "requesting_agent": "some-agent"
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mVerifier Identity[2m > [22m[2mshould include verifier_agent_id in result[22m[39m
+2025-12-03 10:25:58:2558 [[32minfo[39m]: [32m[Evidence] Execution log captured for task identity-task[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\identity-task\\execution-log-1764721558201.json",
+  "steps": 0
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mVerifier Identity[2m > [22m[2mshould include verifier_agent_id in result[22m[39m
+2025-12-03 10:25:58:2558 [[32minfo[39m]: [32m[Evidence] State snapshot captured for task identity-task[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\identity-task\\state-after-1764721558286.json",
+  "type": "after",
+  "keys": 4
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mVerifier Identity[2m > [22m[2mshould include verifier_agent_id in result[22m[39m
+2025-12-03 10:25:58:2558 [[32minfo[39m]: [32m[ProofGenerator] Generated proof package[39m {
+  "route": "ProofGenerator",
+  "evidenceId": "identity-task",
+  "files": 44,
+  "merkleRoot": "15170b8bcc8aef9598654c516fe211424862433365dc59bb821b0de7ceb7693d"
+}
+
+ [32m✓[39m tests/integration/auth/roleRouting.test.ts [2m ([22m[2m27 tests[22m[2m)[22m[90m 9[2mms[22m[39m
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mVerifier Identity[2m > [22m[2mshould include verifier_agent_id in result[22m[39m
+2025-12-03 10:25:58:2558 [[32minfo[39m]: [32m[EvidenceStorage] Stored evidence for task identity-task[39m {
+  "route": "EvidenceStorage",
+  "evidenceId": "identity-task-1764721558392",
+  "files": 44,
+  "expiresAt": "2026-03-03T00:25:58.392Z"
+}
+2025-12-03 10:25:58:2558 [[32minfo[39m]: [32mEvidence collected and stored[39m {
+  "context": "IndependentVerifier",
+  "task_id": "identity-task",
+  "merkle_root": "15170b8bcc8aef9598654c516fe211424862433365dc59bb821b0de7ceb7693d"
+}
+2025-12-03 10:25:58:2558 [[32minfo[39m]: [32mVerification complete[39m {
+  "context": "IndependentVerifier",
+  "task_id": "identity-task",
+  "verified": false,
+  "passed": 0,
+  "failed": 0,
+  "evidence_collected": true
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mAll-Or-Nothing Verification[2m > [22m[2mshould require ALL criteria to pass (not just majority)[22m[39m
+2025-12-03 10:25:58:2558 [[32minfo[39m]: [32mVerification request received[39m {
+  "context": "IndependentVerifier",
+  "task_id": "all-or-nothing-task",
+  "criteria_count": 2,
+  "output_count": 2,
+  "requesting_agent": "some-agent"
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mAll-Or-Nothing Verification[2m > [22m[2mshould require ALL criteria to pass (not just majority)[22m[39m
+2025-12-03 10:25:58:2558 [[32minfo[39m]: [32m[Evidence] Execution log captured for task all-or-nothing-task[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\all-or-nothing-task\\execution-log-1764721558523.json",
+  "steps": 2
+}
+
+ [32m✓[39m src/lib/__tests__/xero-invoicing.test.ts [2m ([22m[2m11 tests[22m[2m)[22m[90m 11[2mms[22m[39m
+[90mstdout[2m | src/lib/__tests__/xero-invoicing.test.ts[2m > [22m[2mxero-invoicing (Phase 3 stub)[2m > [22m[2mcreateProjectInvoice[2m > [22m[2mreturns a stub result for project invoices[22m[39m
+[STUB] Creating project invoice: {
+  organizationId: [32m'org-test-123'[39m,
+  clientId: [32m'client-test-456'[39m,
+  projectId: [32m'project-test-789'[39m,
+  xeroTenantId: [32m'tenant-test-abc'[39m
+}
+
+[90mstdout[2m | src/lib/__tests__/xero-invoicing.test.ts[2m > [22m[2mxero-invoicing (Phase 3 stub)[2m > [22m[2mcreateProjectInvoice[2m > [22m[2maccepts context without optional fields[22m[39m
+[STUB] Creating project invoice: {
+  organizationId: [32m'org-test'[39m,
+  clientId: [32m'client-test'[39m,
+  projectId: [90mundefined[39m,
+  xeroTenantId: [32m'tenant-test'[39m
+}
+
+[90mstdout[2m | src/lib/__tests__/xero-invoicing.test.ts[2m > [22m[2mxero-invoicing (Phase 3 stub)[2m > [22m[2mcreateProjectInvoice[2m > [22m[2mreturns a result object with required fields[22m[39m
+[STUB] Creating project invoice: {
+  organizationId: [32m'org-test-123'[39m,
+  clientId: [32m'client-test-456'[39m,
+  projectId: [32m'project-test-789'[39m,
+  xeroTenantId: [32m'tenant-test-abc'[39m
+}
+
+[90mstdout[2m | src/lib/__tests__/xero-invoicing.test.ts[2m > [22m[2mxero-invoicing (Phase 3 stub)[2m > [22m[2mcreateSubscriptionInvoice[2m > [22m[2mreturns a stub result for subscription invoices[22m[39m
+[STUB] Creating subscription invoice: {
+  organizationId: [32m'org-test-123'[39m,
+  clientId: [32m'client-test-456'[39m,
+  xeroTenantId: [32m'tenant-test-abc'[39m
+}
+
+[90mstdout[2m | src/lib/__tests__/xero-invoicing.test.ts[2m > [22m[2mxero-invoicing (Phase 3 stub)[2m > [22m[2mcreateSubscriptionInvoice[2m > [22m[2mreturns consistent structure with createProjectInvoice[22m[39m
+[STUB] Creating subscription invoice: {
+  organizationId: [32m'org-test-123'[39m,
+  clientId: [32m'client-test-456'[39m,
+  xeroTenantId: [32m'tenant-test-abc'[39m
+}
+[STUB] Creating project invoice: {
+  organizationId: [32m'org-test-123'[39m,
+  clientId: [32m'client-test-456'[39m,
+  projectId: [32m'project-test-789'[39m,
+  xeroTenantId: [32m'tenant-test-abc'[39m
+}
+
+[90mstdout[2m | src/lib/__tests__/xero-invoicing.test.ts[2m > [22m[2mxero-invoicing (Phase 3 stub)[2m > [22m[2msyncUnbilledExpenses[2m > [22m[2mreturns a stub result for unbilled expense sync[22m[39m
+[STUB] Syncing unbilled expenses for org: org-test-123
+
+[90mstdout[2m | src/lib/__tests__/xero-invoicing.test.ts[2m > [22m[2mxero-invoicing (Phase 3 stub)[2m > [22m[2msyncUnbilledExpenses[2m > [22m[2mreturns expense count in result[22m[39m
+[STUB] Syncing unbilled expenses for org: org-test
+
+[90mstdout[2m | src/lib/__tests__/xero-invoicing.test.ts[2m > [22m[2mxero-invoicing (Phase 3 stub)[2m > [22m[2msyncUnbilledExpenses[2m > [22m[2mhandles different organization IDs[22m[39m
+[STUB] Syncing unbilled expenses for org: org-1
+[STUB] Syncing unbilled expenses for org: org-2
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mAll-Or-Nothing Verification[2m > [22m[2mshould require ALL criteria to pass (not just majority)[22m[39m
+2025-12-03 10:25:58:2558 [[32minfo[39m]: [32m[Evidence] State snapshot captured for task all-or-nothing-task[39m {
+  "route": "EvidenceCollector",
+  "file": "D:\\Unite-Hub\\audit-reports\\evidence\\all-or-nothing-task\\state-after-1764721558607.json",
+  "type": "after",
+  "keys": 4
+}
+
+ [32m✓[39m src/lib/__tests__/seoCredentialService.test.ts [2m ([22m[2m8 tests[22m[2m)[22m[90m 4[2mms[22m[39m
+ [32m✓[39m src/lib/__tests__/pnlGenerator.test.ts [2m ([22m[2m10 tests[22m[2m)[22m[90m 29[2mms[22m[39m
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mAll-Or-Nothing Verification[2m > [22m[2mshould require ALL criteria to pass (not just majority)[22m[39m
+2025-12-03 10:25:58:2558 [[32minfo[39m]: [32m[ProofGenerator] Generated proof package[39m {
+  "route": "ProofGenerator",
+  "evidenceId": "all-or-nothing-task",
+  "files": 44,
+  "merkleRoot": "dbb5f06be65c5b1959ca98beb27561299cb5242e153f8fb6b89f8dc56c647fd9"
+}
+
+[90mstdout[2m | tests/verification/independent-verifier.test.ts[2m > [22m[2mIndependent Verifier Agent[2m > [22m[2mAll-Or-Nothing Verification[2m > [22m[2mshould require ALL criteria to pass (not just majority)[22m[39m
+2025-12-03 10:25:58:2558 [[32minfo[39m]: [32m[EvidenceStorage] Stored evidence for task all-or-nothing-task[39m {
+  "route": "EvidenceStorage",
+  "evidenceId": "all-or-nothing-task-1764721558778",
+  "files": 44,
+  "expiresAt": "2026-03-03T00:25:58.779Z"
+}
+2025-12-03 10:25:58:2558 [[32minfo[39m]: [32mEvidence collected and stored[39m {
+  "context": "IndependentVerifier",
+  "task_id": "all-or-nothing-task",
+  "merkle_root": "dbb5f06be65c5b1959ca98beb27561299cb5242e153f8fb6b89f8dc56c647fd9"
+}
+2025-12-03 10:25:58:2558 [[32minfo[39m]: [32mVerification complete[39m {
+  "context": "IndependentVerifier",
+  "task_id": "all-or-nothing-task",
+  "verified": false,
+  "passed": 1,
+  "failed": 1,
+  "evidence_collected": true
+}
+
+ [32m✓[39m tests/verification/independent-verifier.test.ts [2m ([22m[2m11 tests[22m[2m)[22m[33m 3446[2mms[22m[39m
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Client[2m > [22m[2mshould normalize tags correctly[22m[39m
+2025-12-03 10:25:59:2559 [[31merror[39m]: [31mMax retry attempts reached[39m {
+  "context": "DatadogClient",
+  "attempt": 3,
+  "error": {
+    "name": "Error"
+  }
+}
+2025-12-03 10:25:59:2559 [[31merror[39m]: [31mFailed to flush metrics batch[39m {
+  "context": "DatadogClient",
+  "count": 1,
+  "error": "Error: Datadog metrics submission failed: Invalid API Key"
+}
+2025-12-03 10:25:59:2559 [[32minfo[39m]: [32mDatadog client shutdown complete[39m {
+  "context": "DatadogClient"
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Client[2m > [22m[2mshould auto-flush when batch is full[22m[39m
+2025-12-03 10:25:59:2559 [[32minfo[39m]: [32mDatadog client initialized[39m {
+  "context": "DatadogClient",
+  "service": "unite-hub-test",
+  "version": "1.0.0",
+  "environment": "test"
+}
+
+ [32m✓[39m tests/integration/orchestrator-verification.test.ts [2m ([22m[2m10 tests[22m[2m)[22m[90m 10[2mms[22m[39m
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Client[2m > [22m[2mshould auto-flush when batch is full[22m[39m
+2025-12-03 10:25:59:2559 [[33mwarn[39m]: [33mRetrying Datadog API call[39m {
+  "context": "DatadogClient",
+  "attempt": 1,
+  "delay": 1000
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Client[2m > [22m[2mshould auto-flush when batch is full[22m[39m
+2025-12-03 10:25:59:2559 [[33mwarn[39m]: [33mRetrying Datadog API call[39m {
+  "context": "DatadogClient",
+  "attempt": 1,
+  "delay": 1000
+}
+
+ [32m✓[39m src/lib/__tests__/paymentService.test.ts [2m ([22m[2m4 tests[22m[2m)[22m[90m 4[2mms[22m[39m
+ [32m✓[39m tests/rls/xero-multi-tenant.rls.test.ts [2m ([22m[2m1 test[22m[2m)[22m[90m 2[2mms[22m[39m
+ [32m✓[39m tests/rls/client-ownership.rls.test.ts [2m ([22m[2m1 test[22m[2m)[22m[90m 2[2mms[22m[39m
+ [32m✓[39m tests/integration/health-checks.test.ts [2m ([22m[2m2 tests[22m[2m)[22m[90m 6[2mms[22m[39m
+ [32m✓[39m tests/phase2/client-auth.test.ts [2m ([22m[2m11 tests[22m[2m)[22m[90m 7[2mms[22m[39m
+ [32m✓[39m src/components/__tests__/ToastContext.test.tsx [2m ([22m[2m1 test[22m[2m)[22m[90m 4[2mms[22m[39m
+ [32m✓[39m tests/routing/layouts.test.ts [2m ([22m[2m16 tests[22m[2m)[22m[90m 7[2mms[22m[39m
+ [32m✓[39m src/components/seo/__tests__/SeoDashboardShell.test.tsx [2m ([22m[2m9 tests[22m[2m)[22m[33m 853[2mms[22m[39m
+ [32m✓[39m src/lib/__tests__/scope-planner.test.ts [2m ([22m[2m10 tests[22m[2m)[22m[90m 8[2mms[22m[39m
+ [32m✓[39m src/components/__tests__/ErrorBoundary.test.tsx [2m ([22m[2m1 test[22m[2m)[22m[90m 2[2mms[22m[39m
+ [32m✓[39m src/components/seo/__tests__/SeoModeToggle.test.tsx [2m ([22m[2m7 tests[22m[2m)[22m[90m 272[2mms[22m[39m
+ [32m✓[39m src/lib/__tests__/staffService.test.ts [2m ([22m[2m1 test[22m[2m)[22m[90m 3[2mms[22m[39m
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Client[2m > [22m[2mshould auto-flush when batch is full[22m[39m
+2025-12-03 10:26:00:260 [[33mwarn[39m]: [33mRetrying Datadog API call[39m {
+  "context": "DatadogClient",
+  "attempt": 2,
+  "delay": 2000
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Client[2m > [22m[2mshould auto-flush when batch is full[22m[39m
+2025-12-03 10:26:00:260 [[33mwarn[39m]: [33mRetrying Datadog API call[39m {
+  "context": "DatadogClient",
+  "attempt": 2,
+  "delay": 2000
+}
+
+ [32m✓[39m src/lib/__tests__/clientService.test.ts [2m ([22m[2m1 test[22m[2m)[22m[90m 3[2mms[22m[39m
+ [32m✓[39m tests/integration/tracing/setup.test.ts [2m ([22m[2m12 tests[22m[2m)[22m[90m 146[2mms[22m[39m
+[90mstdout[2m | tests/integration/tracing/setup.test.ts[2m > [22m[2mOpenTelemetry Setup - Phase 6.8 Step 1[2m > [22m[2mQUALITY GATE 1: SDK Initialization[2m > [22m[2mshould initialize OpenTelemetry SDK without errors[22m[39m
+[OpenTelemetry] Initializing with service: unite-hub-test
+[OpenTelemetry] Resource created with service metadata
+[OpenTelemetry] OTLP exporter configured: http://localhost:4318
+[OpenTelemetry] Auto-instrumentations configured (39 active)
+[OpenTelemetry] SDK started successfully
+
+[90mstdout[2m | tests/integration/tracing/setup.test.ts[2m > [22m[2mOpenTelemetry Setup - Phase 6.8 Step 1[2m > [22m[2mQUALITY GATE 4: Singleton Pattern[2m > [22m[2mshould maintain singleton instance across multiple calls[22m[39m
+[OpenTelemetry] Initializing with service: unite-hub-test
+[OpenTelemetry] Resource created with service metadata
+[OpenTelemetry] OTLP exporter configured: http://localhost:4318
+[OpenTelemetry] Auto-instrumentations configured (39 active)
+[OpenTelemetry] SDK started successfully
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Client[2m > [22m[2mshould auto-flush when batch is full[22m[39m
+2025-12-03 10:26:02:262 [[31merror[39m]: [31mMax retry attempts reached[39m {
+  "context": "DatadogClient",
+  "attempt": 3,
+  "error": {
+    "name": "Error"
+  }
+}
+2025-12-03 10:26:02:262 [[31merror[39m]: [31mFailed to flush metrics batch[39m {
+  "context": "DatadogClient",
+  "count": 100,
+  "error": "Error: Datadog metrics submission failed: Invalid API Key"
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Client[2m > [22m[2mshould auto-flush when batch is full[22m[39m
+2025-12-03 10:26:02:262 [[31merror[39m]: [31mMax retry attempts reached[39m {
+  "context": "DatadogClient",
+  "attempt": 3,
+  "error": {
+    "name": "Error"
+  }
+}
+2025-12-03 10:26:02:262 [[31merror[39m]: [31mFailed to flush metrics batch[39m {
+  "context": "DatadogClient",
+  "count": 1,
+  "error": "Error: Datadog metrics submission failed: Invalid API Key"
+}
+2025-12-03 10:26:02:262 [[32minfo[39m]: [32mDatadog client shutdown complete[39m {
+  "context": "DatadogClient"
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Client[2m > [22m[2mshould handle metric sending errors gracefully[22m[39m
+2025-12-03 10:26:02:262 [[32minfo[39m]: [32mDatadog client initialized[39m {
+  "context": "DatadogClient",
+  "service": "unite-hub-test",
+  "version": "1.0.0",
+  "environment": "test"
+}
+2025-12-03 10:26:02:262 [[33mwarn[39m]: [33mRetrying Datadog API call[39m {
+  "context": "DatadogClient",
+  "attempt": 1,
+  "delay": 1000
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Client[2m > [22m[2mshould handle metric sending errors gracefully[22m[39m
+2025-12-03 10:26:03:263 [[33mwarn[39m]: [33mRetrying Datadog API call[39m {
+  "context": "DatadogClient",
+  "attempt": 2,
+  "delay": 2000
+}
+
+ [32m✓[39m tests/integration/datadog-integration.test.ts [2m ([22m[2m30 tests[22m[2m)[22m[33m 16077[2mms[22m[39m
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Client[2m > [22m[2mshould handle metric sending errors gracefully[22m[39m
+2025-12-03 10:26:05:265 [[31merror[39m]: [31mMax retry attempts reached[39m {
+  "context": "DatadogClient",
+  "attempt": 3,
+  "error": {
+    "name": "Error"
+  }
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client shutdown complete[39m {
+  "context": "DatadogClient"
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Client[2m > [22m[2mshould create events in Datadog timeline[22m[39m
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client initialized[39m {
+  "context": "DatadogClient",
+  "service": "unite-hub-test",
+  "version": "1.0.0",
+  "environment": "test"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mEvent created in Datadog[39m {
+  "context": "DatadogClient",
+  "title": "Test Event",
+  "alertType": "info"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client shutdown complete[39m {
+  "context": "DatadogClient"
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mHealth Metrics Exporter[2m > [22m[2mshould export health snapshot to Datadog[22m[39m
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client initialized[39m {
+  "context": "DatadogClient",
+  "service": "unite-hub",
+  "version": "1.0.0",
+  "environment": "test"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mHealth metrics exported to Datadog[39m {
+  "context": "HealthMetricsExporter",
+  "status": "healthy"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client shutdown complete[39m {
+  "context": "DatadogClient"
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mHealth Metrics Exporter[2m > [22m[2mshould export route health metrics[22m[39m
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client initialized[39m {
+  "context": "DatadogClient",
+  "service": "unite-hub",
+  "version": "1.0.0",
+  "environment": "test"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mRoute health metrics exported to Datadog[39m {
+  "context": "HealthMetricsExporter",
+  "total": 672,
+  "healthy": 48,
+  "unhealthy": 2
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client shutdown complete[39m {
+  "context": "DatadogClient"
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mHealth Metrics Exporter[2m > [22m[2mshould export verification metrics[22m[39m
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client initialized[39m {
+  "context": "DatadogClient",
+  "service": "unite-hub",
+  "version": "1.0.0",
+  "environment": "test"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client shutdown complete[39m {
+  "context": "DatadogClient"
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mHealth Metrics Exporter[2m > [22m[2mshould export cache metrics[22m[39m
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client initialized[39m {
+  "context": "DatadogClient",
+  "service": "unite-hub",
+  "version": "1.0.0",
+  "environment": "test"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client shutdown complete[39m {
+  "context": "DatadogClient"
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mHealth Metrics Exporter[2m > [22m[2mshould handle export errors gracefully[22m[39m
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client initialized[39m {
+  "context": "DatadogClient",
+  "service": "unite-hub",
+  "version": "1.0.0",
+  "environment": "test"
+}
+2025-12-03 10:26:05:265 [[31merror[39m]: [31mFailed to export health metrics[39m {
+  "context": "HealthMetricsExporter",
+  "error": {
+    "name": "TypeError"
+  }
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client shutdown complete[39m {
+  "context": "DatadogClient"
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Alerts[2m > [22m[2mshould create alert rule[22m[39m
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mAlert rule created[39m {
+  "context": "DatadogAlerts",
+  "name": "Test Alert",
+  "ruleId": 12345
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Alerts[2m > [22m[2mshould update alert rule[22m[39m
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mAlert rule updated[39m {
+  "context": "DatadogAlerts",
+  "ruleId": "12345"
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Alerts[2m > [22m[2mshould delete alert rule[22m[39m
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mAlert rule deleted[39m {
+  "context": "DatadogAlerts",
+  "ruleId": "12345"
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Alerts[2m > [22m[2mshould create pre-configured health check alerts[22m[39m
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mAlert rule created[39m {
+  "context": "DatadogAlerts",
+  "name": "Health Check Latency Critical",
+  "ruleId": 3782
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mAlert rule created[39m {
+  "context": "DatadogAlerts",
+  "name": "Health Check Latency Warning",
+  "ruleId": 6502
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mAlert rule created[39m {
+  "context": "DatadogAlerts",
+  "name": "Route Success Rate Critical",
+  "ruleId": 1426
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mAlert rule created[39m {
+  "context": "DatadogAlerts",
+  "name": "Database Latency Warning",
+  "ruleId": 8146
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mAlert rule created[39m {
+  "context": "DatadogAlerts",
+  "name": "Cache Hit Rate Low",
+  "ruleId": 5274
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mAlert rule created[39m {
+  "context": "DatadogAlerts",
+  "name": "Dependency Health Degraded",
+  "ruleId": 8287
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mHealth check alerts created[39m {
+  "context": "DatadogAlerts",
+  "count": 6
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Alerts[2m > [22m[2mshould handle API errors gracefully[22m[39m
+2025-12-03 10:26:05:265 [[31merror[39m]: [31mFailed to create alert rule[39m {
+  "context": "DatadogAlerts",
+  "name": "Test",
+  "error": {
+    "name": "Error"
+  }
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Trending[2m > [22m[2mshould calculate trend direction[22m[39m
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client initialized[39m {
+  "context": "DatadogClient",
+  "service": "unite-hub",
+  "version": "1.0.0",
+  "environment": "test"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client shutdown complete[39m {
+  "context": "DatadogClient"
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Trending[2m > [22m[2mshould get metric baseline[22m[39m
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client initialized[39m {
+  "context": "DatadogClient",
+  "service": "unite-hub",
+  "version": "1.0.0",
+  "environment": "test"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client shutdown complete[39m {
+  "context": "DatadogClient"
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Trending[2m > [22m[2mshould detect anomalies[22m[39m
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client initialized[39m {
+  "context": "DatadogClient",
+  "service": "unite-hub",
+  "version": "1.0.0",
+  "environment": "test"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client shutdown complete[39m {
+  "context": "DatadogClient"
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Trending[2m > [22m[2mshould generate trend report[22m[39m
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client initialized[39m {
+  "context": "DatadogClient",
+  "service": "unite-hub",
+  "version": "1.0.0",
+  "environment": "test"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mTrend report generated[39m {
+  "context": "DatadogTrending",
+  "metrics": 3,
+  "reports": 3
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client shutdown complete[39m {
+  "context": "DatadogClient"
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mSLA Monitor[2m > [22m[2mshould define custom SLA[22m[39m
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client initialized[39m {
+  "context": "DatadogClient",
+  "service": "unite-hub",
+  "version": "1.0.0",
+  "environment": "test"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mSLA defined[39m {
+  "context": "SLAMonitor",
+  "id": "uptime_monthly",
+  "name": "System Uptime (Monthly)",
+  "target": "99.9%",
+  "window": "720h"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mSLA defined[39m {
+  "context": "SLAMonitor",
+  "id": "health_latency_p95",
+  "name": "Health Check Latency (P95)",
+  "target": "95%",
+  "window": "168h"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mSLA defined[39m {
+  "context": "SLAMonitor",
+  "id": "route_success_daily",
+  "name": "Route Success Rate (Daily)",
+  "target": "99.5%",
+  "window": "24h"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mSLA defined[39m {
+  "context": "SLAMonitor",
+  "id": "verification_success_daily",
+  "name": "Verification Success Rate (Daily)",
+  "target": "99.9%",
+  "window": "24h"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDefault SLAs initialized[39m {
+  "context": "SLAMonitor",
+  "count": 4
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mSLA defined[39m {
+  "context": "SLAMonitor",
+  "id": "custom-sla",
+  "name": "Custom SLA",
+  "target": "99.5%",
+  "window": "720h"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client shutdown complete[39m {
+  "context": "DatadogClient"
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mSLA Monitor[2m > [22m[2mshould check SLA compliance[22m[39m
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client initialized[39m {
+  "context": "DatadogClient",
+  "service": "unite-hub",
+  "version": "1.0.0",
+  "environment": "test"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mSLA defined[39m {
+  "context": "SLAMonitor",
+  "id": "uptime_monthly",
+  "name": "System Uptime (Monthly)",
+  "target": "99.9%",
+  "window": "720h"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mSLA defined[39m {
+  "context": "SLAMonitor",
+  "id": "health_latency_p95",
+  "name": "Health Check Latency (P95)",
+  "target": "95%",
+  "window": "168h"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mSLA defined[39m {
+  "context": "SLAMonitor",
+  "id": "route_success_daily",
+  "name": "Route Success Rate (Daily)",
+  "target": "99.5%",
+  "window": "24h"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mSLA defined[39m {
+  "context": "SLAMonitor",
+  "id": "verification_success_daily",
+  "name": "Verification Success Rate (Daily)",
+  "target": "99.9%",
+  "window": "24h"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDefault SLAs initialized[39m {
+  "context": "SLAMonitor",
+  "count": 4
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client shutdown complete[39m {
+  "context": "DatadogClient"
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mSLA Monitor[2m > [22m[2mshould calculate error budget[22m[39m
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client initialized[39m {
+  "context": "DatadogClient",
+  "service": "unite-hub",
+  "version": "1.0.0",
+  "environment": "test"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mSLA defined[39m {
+  "context": "SLAMonitor",
+  "id": "uptime_monthly",
+  "name": "System Uptime (Monthly)",
+  "target": "99.9%",
+  "window": "720h"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mSLA defined[39m {
+  "context": "SLAMonitor",
+  "id": "health_latency_p95",
+  "name": "Health Check Latency (P95)",
+  "target": "95%",
+  "window": "168h"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mSLA defined[39m {
+  "context": "SLAMonitor",
+  "id": "route_success_daily",
+  "name": "Route Success Rate (Daily)",
+  "target": "99.5%",
+  "window": "24h"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mSLA defined[39m {
+  "context": "SLAMonitor",
+  "id": "verification_success_daily",
+  "name": "Verification Success Rate (Daily)",
+  "target": "99.9%",
+  "window": "24h"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDefault SLAs initialized[39m {
+  "context": "SLAMonitor",
+  "count": 4
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client shutdown complete[39m {
+  "context": "DatadogClient"
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mSLA Monitor[2m > [22m[2mshould generate SLA report[22m[39m
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client initialized[39m {
+  "context": "DatadogClient",
+  "service": "unite-hub",
+  "version": "1.0.0",
+  "environment": "test"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mSLA defined[39m {
+  "context": "SLAMonitor",
+  "id": "uptime_monthly",
+  "name": "System Uptime (Monthly)",
+  "target": "99.9%",
+  "window": "720h"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mSLA defined[39m {
+  "context": "SLAMonitor",
+  "id": "health_latency_p95",
+  "name": "Health Check Latency (P95)",
+  "target": "95%",
+  "window": "168h"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mSLA defined[39m {
+  "context": "SLAMonitor",
+  "id": "route_success_daily",
+  "name": "Route Success Rate (Daily)",
+  "target": "99.5%",
+  "window": "24h"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mSLA defined[39m {
+  "context": "SLAMonitor",
+  "id": "verification_success_daily",
+  "name": "Verification Success Rate (Daily)",
+  "target": "99.9%",
+  "window": "24h"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDefault SLAs initialized[39m {
+  "context": "SLAMonitor",
+  "count": 4
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mSLA report generated[39m {
+  "context": "SLAMonitor",
+  "period": "30 days",
+  "compliant": 2,
+  "nonCompliant": 2,
+  "health": "breached"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client shutdown complete[39m {
+  "context": "DatadogClient"
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mSLA Monitor[2m > [22m[2mshould detect SLA violations[22m[39m
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client initialized[39m {
+  "context": "DatadogClient",
+  "service": "unite-hub",
+  "version": "1.0.0",
+  "environment": "test"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mSLA defined[39m {
+  "context": "SLAMonitor",
+  "id": "uptime_monthly",
+  "name": "System Uptime (Monthly)",
+  "target": "99.9%",
+  "window": "720h"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mSLA defined[39m {
+  "context": "SLAMonitor",
+  "id": "health_latency_p95",
+  "name": "Health Check Latency (P95)",
+  "target": "95%",
+  "window": "168h"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mSLA defined[39m {
+  "context": "SLAMonitor",
+  "id": "route_success_daily",
+  "name": "Route Success Rate (Daily)",
+  "target": "99.5%",
+  "window": "24h"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mSLA defined[39m {
+  "context": "SLAMonitor",
+  "id": "verification_success_daily",
+  "name": "Verification Success Rate (Daily)",
+  "target": "99.9%",
+  "window": "24h"
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDefault SLAs initialized[39m {
+  "context": "SLAMonitor",
+  "count": 4
+}
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDatadog client shutdown complete[39m {
+  "context": "DatadogClient"
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Dashboard Config[2m > [22m[2mshould create health monitoring dashboard[22m[39m
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDashboard created[39m {
+  "context": "DatadogDashboard",
+  "title": "Unite-Hub Health Monitoring",
+  "id": "dash-12345"
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Dashboard Config[2m > [22m[2mshould create verification dashboard[22m[39m
+2025-12-03 10:26:05:265 [[32minfo[39m]: [32mDashboard created[39m {
+  "context": "DatadogDashboard",
+  "title": "Unite-Hub Verification System",
+  "id": "dash-67890"
+}
+
+[90mstdout[2m | tests/integration/datadog-integration.test.ts[2m > [22m[2mDatadog Dashboard Config[2m > [22m[2mshould handle dashboard creation errors[22m[39m
+2025-12-03 10:26:05:265 [[31merror[39m]: [31mFailed to create dashboard[39m {
+  "context": "DatadogDashboard",
+  "title": "Unite-Hub Health Monitoring",
+  "error": {
+    "name": "Error"
+  }
+}
+
+ [32m✓[39m src/lib/services/system/__tests__/finalization.test.ts [2m ([22m[2m50 tests[22m[2m)[22m[33m 25635[2mms[22m[39m
+
+[2m Test Files [22m [1m[31m14 failed[39m[22m[2m | [22m[1m[32m68 passed[39m[22m[90m (82)[39m
+[2m      Tests [22m [1m[31m44 failed[39m[22m[2m | [22m[1m[32m1696 passed[39m[22m[2m | [22m[33m5 skipped[39m[90m (1747)[39m
+[2m   Start at [22m 10:25:45
+[2m   Duration [22m 28.94s[2m (transform 8.98s, setup 20.02s, collect 28.71s, tests 64.13s, environment 117.46s, prepare 22.81s)[22m
+

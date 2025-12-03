@@ -1,0 +1,57 @@
+{
+  "mcpServers": {
+    "unite-hub-filesystem": {
+      "type": "sse",
+      "url": "http://localhost:3200/mcp/filesystem",
+      "description": "Filesystem operations - file read/write, search, watch (CRITICAL TIER 1)"
+    },
+    "unite-hub-process": {
+      "type": "sse",
+      "url": "http://localhost:3200/mcp/process",
+      "description": "Process execution - bash commands, npm, docker control (CRITICAL TIER 1)"
+    },
+    "unite-hub-database": {
+      "type": "sse",
+      "url": "http://localhost:3200/mcp/database",
+      "description": "Database operations - queries, migrations, schema inspection (HIGH VALUE TIER 2)"
+    },
+    "unite-hub-git": {
+      "type": "sse",
+      "url": "http://localhost:3200/mcp/git",
+      "description": "Git operations - commits, branches, PRs, diffs (HIGH VALUE TIER 2)"
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"],
+      "env": {
+        "PLAYWRIGHT_BROWSER": "chromium",
+        "PLAYWRIGHT_HEADLESS": "true"
+      }
+    },
+    "stripe": {
+      "command": "npx",
+      "args": ["-y", "@stripe/mcp", "--tools=all"],
+      "env": {
+        "STRIPE_SECRET_KEY": "${STRIPE_SECRET_KEY}"
+      },
+      "description": "Stripe MCP - payments and subscriptions"
+    },
+    "digitalocean": {
+      "command": "npx",
+      "args": ["-y", "@digitalocean/mcp", "--services", "apps"],
+      "env": {
+        "DIGITALOCEAN_API_TOKEN": "${DIGITALOCEAN_API_TOKEN}"
+      },
+      "description": "DigitalOcean MCP - infrastructure management"
+    },
+    "dataforseo": {
+      "command": "npx",
+      "args": ["dataforseo-mcp-server"],
+      "env": {
+        "DATAFORSEO_API_LOGIN": "${DATAFORSEO_API_LOGIN}",
+        "DATAFORSEO_API_PASSWORD": "${DATAFORSEO_API_PASSWORD}"
+      },
+      "description": "DataForSEO API - SEO intelligence"
+    }
+  }
+}

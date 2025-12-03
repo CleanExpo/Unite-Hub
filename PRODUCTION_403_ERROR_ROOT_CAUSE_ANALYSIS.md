@@ -146,7 +146,7 @@ Failed to load hot leads: Error: Failed to load hot leads: 403
 
 ### Log 4: Calendar Events 403
 ```
-/api/calendar/events?workspaceId=5a92c7af-5aca-49a7-8866-3bfaa1d04532&timeMin=2025-11-18T08:43:58.235Z:1
+/api/calendar/events?workspaceId=YOUR_WORKSPACE_ID&timeMin=2025-11-18T08:43:58.235Z:1
 Failed to load resource: the server responded with a status of 403
 ```
 

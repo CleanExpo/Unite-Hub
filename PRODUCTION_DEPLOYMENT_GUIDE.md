@@ -107,7 +107,7 @@ node scripts/batch-analyze-emails.mjs
 Check the dashboard API:
 
 ```bash
-curl "http://localhost:3008/api/intelligence/dashboard?workspaceId=5a92c7af-5aca-49a7-8866-3bfaa1d04532" \
+curl "http://localhost:3008/api/intelligence/dashboard?workspaceId=YOUR_WORKSPACE_ID" \
   -H "Authorization: Bearer YOUR_TOKEN"
 ```
 

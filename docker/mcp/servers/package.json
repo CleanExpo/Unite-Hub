@@ -1,0 +1,28 @@
+{
+  "name": "unite-hub-mcp-servers",
+  "version": "1.0.0",
+  "description": "MCP servers for Unite-Hub - filesystem, process, database, git operations",
+  "type": "module",
+  "main": "gateway-server.mjs",
+  "scripts": {
+    "start:gateway": "node gateway-server.mjs",
+    "start:filesystem": "node filesystem-server.mjs",
+    "start:process": "node process-server.mjs",
+    "start:database": "node database-server.mjs",
+    "start:git": "node git-server.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "latest",
+    "@supabase/supabase-js": "^2.38.0",
+    "fastify": "^4.25.1",
+    "@fastify/rate-limit": "^9.0.1",
+    "@fastify/cors": "^8.4.2",
+    "node-fetch": "^2.7.0"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "Unite-Hub Team",
+  "license": "MIT"
+}
