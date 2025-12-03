@@ -109,7 +109,7 @@ The server provides three tools that can be called by MCP clients:
   "arguments": {
     "filepath": "/path/to/image.jpg",
     "prompt": "Describe this image in detail",
-    "modelname": "gemini-2.0-flash"
+    "modelname": "gemini-2.5-flash"
   }
 }
 ```
@@ -122,7 +122,7 @@ The server provides three tools that can be called by MCP clients:
   "arguments": {
     "filepath": "/path/to/audio.mp3",
     "prompt": "Transcribe this audio",
-    "modelname": "gemini-2.0-flash"
+    "modelname": "gemini-2.5-flash"
   }
 }
 ```
@@ -135,7 +135,7 @@ The server provides three tools that can be called by MCP clients:
   "arguments": {
     "filepath": "/path/to/video.mp4",
     "prompt": "Describe what happens in this video",
-    "modelname": "gemini-2.0-flash"
+    "modelname": "gemini-2.5-flash"
   }
 }
 ```
@@ -146,7 +146,7 @@ All tools accept the following parameters:
 
 - `filepath` (required): Path to the media file to analyze
 - `prompt` (optional): Custom prompt for the recognition (defaults to "Describe this content")
-- `modelname` (optional): Gemini model to use for recognition (defaults to "gemini-2.0-flash")
+- `modelname` (optional): Gemini model to use for recognition (defaults to "gemini-2.5-flash")
 
 ## Development
 

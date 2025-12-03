@@ -1,7 +1,28 @@
 import OpenAI from "openai";
 
 /**
+ * @deprecated This DALL-E client has been replaced with Gemini Image Generation.
+ * Use `@/lib/gemini/image-client` instead for:
+ * - Better text rendering in images
+ * - Google Search grounding for factual accuracy
+ * - Higher resolution output (up to 4K)
+ * - Multi-turn image editing
+ *
+ * Migration guide:
+ * - generateImage() → import { generateImage } from "@/lib/gemini/image-client"
+ * - generateImageVariations() → Use generateImage() with loop
+ * - calculateImageCost() → import { calculateImageCost } from "@/lib/gemini/image-client"
+ * - validatePrompt() → import { validatePrompt } from "@/lib/gemini/image-client"
+ *
+ * This file is kept for backward compatibility with existing code that may
+ * still reference it. New code should use the Gemini image client.
+ *
+ * @see src/lib/gemini/image-client.ts
+ */
+
+/**
  * DALL-E 3 Client for Unite-Hub
+ * @deprecated Use @/lib/gemini/image-client instead
  *
  * Manages OpenAI DALL-E API integration for generating
  * marketing images, social media visuals, and brand concepts.

@@ -66,7 +66,7 @@ export default function DemoWorkspacePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#071318] relative overflow-hidden">
+    <div className="min-h-screen bg-bg-base relative overflow-hidden">
       {/* Background gradient */}
       <div
         className="absolute inset-0"
@@ -93,13 +93,13 @@ export default function DemoWorkspacePage() {
       />
 
       {/* Main container */}
-      <div className="relative z-10 h-screen p-4 flex justify-center items-center">
-        <div className="w-full max-w-[1600px] h-[calc(100vh-32px)] bg-[#0a1f2e]/40 backdrop-blur-xl rounded-2xl shadow-2xl flex overflow-hidden border border-cyan-800/20">
+      <div className="relative z-10 min-h-screen lg:h-screen p-2 sm:p-4 flex justify-center items-start lg:items-center">
+        <div className="w-full max-w-[1600px] min-h-[calc(100vh-16px)] lg:h-[calc(100vh-32px)] bg-bg-raised/40 backdrop-blur-xl rounded-xl sm:rounded-2xl shadow-2xl flex flex-col lg:flex-row overflow-hidden border border-cyan-800/20">
           {/* Left Sidebar */}
           <WorkspaceSidebar />
 
           {/* Main Content */}
-          <main className="flex-1 p-6 overflow-y-auto">
+          <main className="flex-1 p-4 sm:p-6 overflow-y-auto">
             {/* Header */}
             <header className="flex justify-between items-center mb-8">
               <div>
@@ -119,7 +119,7 @@ export default function DemoWorkspacePage() {
                   <Bell className="w-5 h-5" />
                   <span className="absolute top-1 right-1 w-2 h-2 bg-orange-500 rounded-full" />
                 </button>
-                <div className="flex items-center gap-3 bg-[#0d2137]/60 backdrop-blur-sm rounded-lg px-3 py-2 border border-cyan-900/30">
+                <div className="flex items-center gap-3 bg-bg-card/60 backdrop-blur-sm rounded-lg px-3 py-2 border border-cyan-900/30">
                   <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-teal-500 rounded-lg shadow-lg shadow-cyan-500/20" />
                   <div>
                     <span className="text-sm font-medium text-white block">
@@ -135,11 +135,11 @@ export default function DemoWorkspacePage() {
 
             {/* Content Section */}
             <section>
-              <div className="flex items-center justify-between mb-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6">
                 <h2 className="text-lg font-semibold text-white">
                   Ready for Approval
                 </h2>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   <span className="bg-cyan-500/20 text-cyan-400 text-xs px-3 py-1.5 rounded-full font-medium border border-cyan-500/30">
                     3 Pending
                   </span>
@@ -170,8 +170,8 @@ export default function DemoWorkspacePage() {
             </section>
           </main>
 
-          {/* Right Sidebar */}
-          <aside className="w-[320px] bg-[#0a1f2e]/60 backdrop-blur-sm border-l border-cyan-900/30 flex flex-col">
+          {/* Right Sidebar - Hidden on mobile/tablet */}
+          <aside className="hidden xl:flex w-[320px] bg-bg-raised/60 backdrop-blur-sm border-l border-cyan-900/30 flex-col">
             <NexusAssistant workspaceId="demo" />
             <ExecutionTicker workspaceId="demo" />
           </aside>

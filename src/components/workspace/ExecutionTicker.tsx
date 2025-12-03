@@ -112,9 +112,9 @@ export function ExecutionTicker({ workspaceId }: ExecutionTickerProps) {
   }, [workspaceId]);
 
   return (
-    <section className="flex-1 flex flex-col bg-[#081624]/50">
+    <section className="flex-1 flex flex-col bg-bg-base/50">
       {/* Header */}
-      <div className="px-4 py-3 flex justify-between items-center border-b border-cyan-900/30 bg-[#0d2137]/50">
+      <div className="px-4 py-3 flex justify-between items-center border-b border-cyan-900/30 bg-bg-card/50">
         <div className="flex items-center font-semibold text-sm text-white gap-2">
           <Activity className="w-4 h-4 text-cyan-400" />
           Live Execution Ticker

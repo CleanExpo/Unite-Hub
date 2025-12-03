@@ -121,7 +121,7 @@ export async function callGemini3(options: GeminiOptions): Promise<GeminiRespons
   try {
     // Generate content with Gemini 3 Pro
     const response = await geminiClient.models.generateContent({
-      model: "gemini-3-pro-preview",
+      model: "gemini-3-pro",
       contents: [{
         parts
       }],
@@ -150,7 +150,7 @@ export async function callGemini3(options: GeminiOptions): Promise<GeminiRespons
     // Track usage in database
     await trackGeminiUsage({
       provider: 'google_gemini',
-      model: 'gemini-3-pro-preview',
+      model: 'gemini-3-pro',
       workspaceId,
       thinkingLevel,
       mediaResolution,
@@ -166,13 +166,13 @@ export async function callGemini3(options: GeminiOptions): Promise<GeminiRespons
       usage,
       cost,
       thinkingLevel,
-      modelId: 'gemini-3-pro-preview'
+      modelId: 'gemini-3-pro'
     };
   } catch (error: any) {
     // Track failed request
     await trackGeminiUsage({
       provider: 'google_gemini',
-      model: 'gemini-3-pro-preview',
+      model: 'gemini-3-pro',
       workspaceId,
       thinkingLevel,
       mediaResolution,

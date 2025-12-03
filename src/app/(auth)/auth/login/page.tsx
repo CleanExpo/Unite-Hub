@@ -1,5 +1,5 @@
 /**
- * Staff Login Page - Phase 1 New UI
+ * Staff Login Page
  * Supabase email/password authentication for staff
  */
 
@@ -29,8 +29,8 @@ export default function StaffLoginPage() {
       return;
     }
 
-    // Success - redirect to staff dashboard
-    router.push('/next/app/staff/dashboard');
+    // Success - redirect to CRM dashboard
+    router.push('/crm/dashboard');
   }
 
   return (
@@ -59,7 +59,7 @@ export default function StaffLoginPage() {
               Staff Login
             </h1>
             <p className="text-gray-600 text-sm">
-              Phase 1 - New Supabase Authentication
+              Sign in to access the CRM
             </p>
           </div>
 
@@ -156,19 +156,7 @@ export default function StaffLoginPage() {
             </button>
           </div>
 
-          {/* Info Banner */}
-          <div className="mt-6 bg-blue-50 rounded-lg p-4">
-            <p className="text-xs text-blue-800">
-              <strong>Phase 1 Testing:</strong> This is the new staff authentication
-              system. The old system at /login continues to work independently.
-            </p>
-          </div>
         </div>
-
-        {/* Footer Note */}
-        <p className="text-center text-sm text-gray-400 mt-6">
-          Feature-flagged deployment • Safe parallel architecture
-        </p>
       </div>
     </div>
   );

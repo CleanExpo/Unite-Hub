@@ -1,0 +1,23 @@
+# docker-compose.override.yml
+# Add this to your Unite-Hub folder alongside existing docker-compose.yml
+# Or merge into your existing docker-compose.yml
+
+services:
+  file-mcp:
+    build: 
+      context: ./mcp/file-mcp
+      dockerfile: Dockerfile
+    container_name: file-mcp
+    ports:
+      - "3104:3104"
+    volumes:
+      - .:/repo:ro
+    environment:
+      - PORT=3104
+      - REPO_ROOT=/repo
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3104/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

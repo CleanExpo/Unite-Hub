@@ -116,7 +116,7 @@ export function NexusAssistant({ workspaceId }: NexusAssistantProps) {
   return (
     <section className="flex-[2] flex flex-col border-b border-cyan-900/30">
       {/* Header */}
-      <div className="px-4 py-3 flex justify-between items-center border-b border-cyan-900/30 bg-[#0d2137]/50">
+      <div className="px-4 py-3 flex justify-between items-center border-b border-cyan-900/30 bg-bg-card/50">
         <div className="flex items-center font-semibold gap-2 text-white text-sm">
           <div className="w-6 h-6 bg-gradient-to-br from-cyan-400 to-teal-500 rounded-md flex justify-center items-center shadow-lg shadow-cyan-500/20">
             <Sparkles className="w-3.5 h-3.5 text-white" />
@@ -129,14 +129,14 @@ export function NexusAssistant({ workspaceId }: NexusAssistantProps) {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 p-3 overflow-y-auto flex flex-col gap-3 bg-[#081624]/50">
+      <div className="flex-1 p-3 overflow-y-auto flex flex-col gap-3 bg-bg-base/50">
         {messages.map((message) => (
           <div
             key={message.id}
             className={`max-w-[90%] p-3 rounded-xl text-xs leading-relaxed ${
               message.role === "user"
                 ? "self-end bg-cyan-500/20 text-cyan-100 rounded-br-sm border border-cyan-500/30"
-                : "self-start bg-[#0d2137]/80 border border-cyan-900/30 text-gray-300 rounded-tl-sm"
+                : "self-start bg-bg-card/80 border border-cyan-900/30 text-gray-300 rounded-tl-sm"
             }`}
           >
             {message.role === "assistant" && (
@@ -151,7 +151,7 @@ export function NexusAssistant({ workspaceId }: NexusAssistantProps) {
           </div>
         ))}
         {isLoading && (
-          <div className="self-start bg-[#0d2137]/80 border border-cyan-900/30 text-gray-300 rounded-xl rounded-tl-sm p-3">
+          <div className="self-start bg-bg-card/80 border border-cyan-900/30 text-gray-300 rounded-xl rounded-tl-sm p-3">
             <div className="flex items-center gap-2 mb-2 pb-2 border-b border-cyan-900/30">
               <div className="w-4 h-4 bg-gradient-to-br from-cyan-400 to-teal-500 rounded flex items-center justify-center">
                 <Bot className="w-2.5 h-2.5 text-white" />
@@ -169,14 +169,14 @@ export function NexusAssistant({ workspaceId }: NexusAssistantProps) {
       </div>
 
       {/* Input */}
-      <div className="p-3 bg-[#0d2137]/50 border-t border-cyan-900/30 relative">
+      <div className="p-3 bg-bg-card/50 border-t border-cyan-900/30 relative">
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyPress={handleKeyPress}
           placeholder="Type a message..."
-          className="w-full bg-[#081624] border border-cyan-900/30 py-2.5 px-4 pr-10 rounded-lg outline-none text-xs text-white placeholder-gray-500 focus:border-cyan-600/50 focus:ring-1 focus:ring-cyan-600/30 transition-all"
+          className="w-full bg-bg-base border border-cyan-900/30 py-2.5 px-4 pr-10 rounded-lg outline-none text-xs text-white placeholder-gray-500 focus:border-cyan-600/50 focus:ring-1 focus:ring-cyan-600/30 transition-all"
         />
         <button
           onClick={sendMessage}

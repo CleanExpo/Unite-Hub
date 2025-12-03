@@ -18,7 +18,8 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!authLoading && user) {
-      router.push('/dashboard/overview');
+      // Redirect to root - middleware will route based on user role
+      router.push('/');
     }
   }, [user, authLoading, router]);
 
@@ -36,8 +37,9 @@ export default function LoginPage() {
         return;
       }
 
-      router.push("/dashboard/overview");
-    } catch (err) {
+      // Redirect to root - middleware will route based on user role
+      router.push("/");
+    } catch {
       setError("An unexpected error occurred");
       setLoading(false);
     }
@@ -55,48 +57,36 @@ export default function LoginPage() {
         setGoogleLoading(false);
         return;
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred");
       setGoogleLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
-      {/* Background */}
-      <div
-        className="absolute inset-0 -z-20"
-        style={{
-          background: 'radial-gradient(circle at center top, #0d2a5c 0%, #051224 80%)'
-        }}
-      />
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gray-950">
+      {/* Background gradient */}
+      <div className="absolute inset-0 -z-20 bg-gradient-to-b from-gray-900 via-gray-900 to-gray-950" />
 
-      {/* Wave pattern overlay */}
+      {/* Subtle pattern overlay */}
       <div
-        className="absolute inset-0 pointer-events-none -z-10"
+        className="absolute inset-0 pointer-events-none -z-10 opacity-30"
         style={{
           backgroundImage: 'repeating-linear-gradient(45deg, rgba(255,255,255,0.02) 0px, transparent 2px, transparent 100px)'
         }}
       />
 
       <div className="w-full max-w-[480px] px-5">
-        <div
-          className="p-10 rounded-[20px] text-center border border-[rgba(52,123,247,0.1)]"
-          style={{
-            background: 'rgba(10, 30, 59, 0.95)',
-            backdropFilter: 'blur(10px)',
-            boxShadow: '0 15px 35px rgba(0,0,0,0.2), 0 0 20px rgba(52, 123, 247, 0.1)'
-          }}
-        >
+        <div className="p-10 rounded-2xl text-center border border-gray-800 bg-gray-900/95 backdrop-blur-sm shadow-2xl">
           {/* Logo */}
           <div className="mb-5">
-            <div className="h-[60px] w-[60px] mx-auto rounded-full bg-[#0a1e3b] border-2 border-[#ff5722] flex items-center justify-center">
-              <span className="text-[#ff5722] font-bold text-xl">UH</span>
+            <div className="h-[60px] w-[60px] mx-auto rounded-full bg-gray-800 border-2 border-accent-500 flex items-center justify-center">
+              <span className="text-accent-500 font-bold text-xl">UH</span>
             </div>
           </div>
 
           <h2 className="text-white text-[28px] font-bold mb-2.5">Sign In to Your Hub</h2>
-          <p className="text-[#a0aec0] mb-8 text-[15px]">Welcome back! Please enter your details.</p>
+          <p className="text-gray-400 mb-8 text-[15px]">Welcome back! Please enter your details.</p>
 
           {/* Error Message */}
           {error && (
@@ -113,7 +103,7 @@ export default function LoginPage() {
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#a0aec0]" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input
                   id="email"
                   type="email"
@@ -123,7 +113,7 @@ export default function LoginPage() {
                   required
                   disabled={loading}
                   autoComplete="email"
-                  className="w-full py-3.5 pl-11 pr-4 bg-[#0d2a5c] border border-[#1e3a6d] rounded-lg text-white text-[15px] placeholder-[rgba(160,174,192,0.6)] focus:outline-none focus:border-[#347bf7] focus:shadow-[0_0_0_3px_rgba(52,123,247,0.2)] transition-all"
+                  className="w-full py-3.5 pl-11 pr-4 bg-gray-800 border border-gray-700 rounded-lg text-white text-[15px] placeholder-gray-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
                 />
               </div>
             </div>
@@ -134,7 +124,7 @@ export default function LoginPage() {
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-[#a0aec0]" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input
                   id="password"
                   type={showPassword ? "text" : "password"}
@@ -144,12 +134,12 @@ export default function LoginPage() {
                   required
                   disabled={loading}
                   autoComplete="current-password"
-                  className="w-full py-3.5 pl-11 pr-11 bg-[#0d2a5c] border border-[#1e3a6d] rounded-lg text-white text-[15px] placeholder-[rgba(160,174,192,0.6)] focus:outline-none focus:border-[#347bf7] focus:shadow-[0_0_0_3px_rgba(52,123,247,0.2)] transition-all"
+                  className="w-full py-3.5 pl-11 pr-11 bg-gray-800 border border-gray-700 rounded-lg text-white text-[15px] placeholder-gray-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#a0aec0] hover:text-white transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -158,14 +148,14 @@ export default function LoginPage() {
 
             {/* Actions */}
             <div className="flex justify-between items-center mb-6 text-sm">
-              <label className="flex items-center text-[#a0aec0] cursor-pointer">
+              <label className="flex items-center text-gray-400 cursor-pointer">
                 <input
                   type="checkbox"
-                  className="mr-2 accent-[#347bf7]"
+                  className="mr-2 accent-primary-500"
                 />
                 Remember me
               </label>
-              <Link href="/forgot-password" className="text-[#347bf7] font-medium hover:opacity-80 transition-opacity">
+              <Link href="/forgot-password" className="text-primary-500 font-medium hover:text-primary-400 transition-colors">
                 Forgot Password?
               </Link>
             </div>
@@ -174,7 +164,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 bg-gradient-to-r from-[#347bf7] to-[#5a9dff] text-white border-none rounded-lg text-base font-semibold cursor-pointer hover:-translate-y-0.5 transition-transform shadow-[0_4px_15px_rgba(52,123,247,0.3)] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              className="w-full py-3.5 bg-primary-500 hover:bg-primary-600 text-white border-none rounded-lg text-base font-semibold cursor-pointer hover:-translate-y-0.5 transition-all shadow-lg shadow-primary-500/25 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -187,13 +177,13 @@ export default function LoginPage() {
             </button>
 
             {/* Divider */}
-            <div className="relative my-6 text-center text-[#a0aec0] text-sm">
+            <div className="relative my-6 text-center text-gray-400 text-sm">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-[45%] h-px bg-[#1e3a6d]" />
+                <div className="w-[45%] h-px bg-gray-700" />
                 <div className="flex-1" />
-                <div className="w-[45%] h-px bg-[#1e3a6d]" />
+                <div className="w-[45%] h-px bg-gray-700" />
               </div>
-              <span className="relative px-4 bg-[#0a1e3b]">or continue with</span>
+              <span className="relative px-4 bg-gray-900">or continue with</span>
             </div>
 
             {/* Google Login Button */}
@@ -201,7 +191,7 @@ export default function LoginPage() {
               type="button"
               onClick={handleGoogleSignIn}
               disabled={googleLoading || loading}
-              className="w-full py-3 bg-white text-[#333] border-none rounded-lg text-base font-medium cursor-pointer flex items-center justify-center gap-2.5 hover:bg-[#f0f0f0] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3 bg-white text-gray-900 border-none rounded-lg text-base font-medium cursor-pointer flex items-center justify-center gap-2.5 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {googleLoading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -234,9 +224,9 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="mt-8 text-[#a0aec0] text-sm">
+          <div className="mt-8 text-gray-400 text-sm">
             Don&apos;t have an account?{" "}
-            <Link href="/register" className="text-[#347bf7] font-semibold hover:opacity-80 transition-opacity">
+            <Link href="/register" className="text-primary-500 font-semibold hover:text-primary-400 transition-colors">
               Sign Up Now
             </Link>
           </div>

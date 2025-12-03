@@ -161,7 +161,7 @@ return heroImageAlt;
             {ctaPrimary && (
               <a
                 href={ctaPrimary.href}
-                className="px-8 py-4 rounded-md font-bold text-lg bg-[#007bff] text-white hover:-translate-y-1 hover:shadow-xl transition-all"
+                className="px-8 py-4 rounded-md font-bold text-lg bg-secondary-500 text-white hover:-translate-y-1 hover:shadow-xl transition-all"
                 style={{ borderRadius: profile?.borderRadius || "8px" }}
               >
                 {ctaPrimary.text}

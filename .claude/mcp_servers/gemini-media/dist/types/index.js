@@ -8,7 +8,7 @@ import { z } from 'zod';
 export const RecognitionParamsSchema = z.object({
     filepath: z.string().describe('Path to the media file to analyze'),
     prompt: z.string().default('Describe this content').describe('Custom prompt for the recognition'),
-    modelname: z.string().default('gemini-2.0-flash').describe('Gemini model to use for recognition')
+    modelname: z.string().default('gemini-2.5-flash').describe('Gemini model to use for recognition')
 });
 /**
  * Video recognition specific types

@@ -61,7 +61,7 @@ export default function VaultPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#071318] relative overflow-hidden">
+    <div className="min-h-screen bg-bg-base relative overflow-hidden">
       {/* Background gradient */}
       <div
         className="absolute inset-0"
@@ -76,7 +76,7 @@ export default function VaultPage() {
 
       {/* Main container */}
       <div className="relative z-10 h-screen p-4 flex justify-center items-center">
-        <div className="w-full max-w-[1600px] h-[calc(100vh-32px)] bg-[#0a1f2e]/40 backdrop-blur-xl rounded-2xl shadow-2xl flex overflow-hidden border border-cyan-800/20">
+        <div className="w-full max-w-[1600px] h-[calc(100vh-32px)] bg-bg-raised/40 backdrop-blur-xl rounded-2xl shadow-2xl flex overflow-hidden border border-cyan-800/20">
           {/* Left Sidebar */}
           <WorkspaceSidebar />
 
@@ -108,7 +108,7 @@ export default function VaultPage() {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <Input
                   placeholder="Search deployed content..."
-                  className="pl-10 bg-[#0d2137]/60 border-cyan-900/30 text-white placeholder:text-gray-500"
+                  className="pl-10 bg-bg-card/60 border-cyan-900/30 text-white placeholder:text-gray-500"
                 />
               </div>
               <Button variant="outline" className="border-cyan-900/50 text-gray-400 hover:text-white">
@@ -119,7 +119,7 @@ export default function VaultPage() {
             {/* Vault Grid */}
             <div className="grid grid-cols-2 gap-4">
               {vaultItems.map((item) => (
-                <Card key={item.id} className="bg-[#0d2137]/60 border-cyan-900/30 hover:border-cyan-500/30 transition-colors overflow-hidden">
+                <Card key={item.id} className="bg-bg-card/60 border-cyan-900/30 hover:border-cyan-500/30 transition-colors overflow-hidden">
                   <div className="relative h-40">
                     <img
                       src={item.thumbnailUrl}

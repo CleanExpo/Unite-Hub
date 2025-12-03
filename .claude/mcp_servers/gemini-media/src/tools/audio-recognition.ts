@@ -36,7 +36,7 @@ export const createAudioRecognitionTool = (geminiService: GeminiService) => {
         
         // Default prompt if not provided
         const prompt = args.prompt || 'Describe this audio';
-        const modelName = args.modelname || 'gemini-2.0-flash';
+        const modelName = args.modelname || 'gemini-2.5-flash';
         
         // Upload the file
         log.info('Uploading audio file...');

@@ -85,6 +85,23 @@ export default function CampaignsPage() {
 
   const CampaignTable = ({ campaigns }: { campaigns: typeof SAMPLE_CAMPAIGNS }) => (
     <div className="overflow-x-auto">
+      {campaigns.length === 0 ? (
+        <div className="text-center py-12">
+          <Mail className="w-12 h-12 mx-auto text-text-muted mb-4" />
+          <h3 className="text-lg font-semibold text-text-primary mb-2">
+            {searchTerm ? "No campaigns found" : "No campaigns yet"}
+          </h3>
+          <p className="text-text-secondary mb-4">
+            {searchTerm ? "Try adjusting your search term" : "Create your first campaign to get started"}
+          </p>
+          {!searchTerm && (
+            <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 gap-2">
+              <Plus className="w-4 h-4" />
+              New Campaign
+            </Button>
+          )}
+        </div>
+      ) : (
       <Table>
         <TableHeader>
           <TableRow className="border-border-subtle hover:bg-bg-card/50">
@@ -156,6 +173,7 @@ export default function CampaignsPage() {
           ))}
         </TableBody>
       </Table>
+      )}
     </div>
   );
 

@@ -209,7 +209,7 @@ export default function GenerativeWorkspacePage() {
 
   return (
     <div
-      className="min-h-screen bg-[#0a1628] p-5 flex justify-center items-center"
+      className="min-h-screen bg-bg-base p-5 flex justify-center items-center"
       style={{
         backgroundImage: `
           radial-gradient(circle at 10% 20%, rgba(182, 242, 50, 0.05) 0%, transparent 30%),
@@ -218,7 +218,7 @@ export default function GenerativeWorkspacePage() {
         `,
       }}
     >
-      <div className="w-full max-w-[1400px] h-[95vh] bg-[#0f1f35]/90 rounded-2xl shadow-2xl flex overflow-hidden border border-[#1e3a5f]/50 backdrop-blur-sm">
+      <div className="w-full max-w-[1400px] h-[95vh] bg-bg-raised/90 rounded-2xl shadow-2xl flex overflow-hidden border border-border-base/50 backdrop-blur-sm">
         {/* Left Sidebar */}
         <WorkspaceSidebar />
 
@@ -279,7 +279,7 @@ export default function GenerativeWorkspacePage() {
         </main>
 
         {/* Right Sidebar */}
-        <aside className="w-[300px] bg-[#0a1628]/80 border-l border-[#1e3a5f]/50 flex flex-col">
+        <aside className="w-[300px] bg-bg-base/80 border-l border-border-base/50 flex flex-col">
           <NexusAssistant workspaceId={workspaceId} />
           <ExecutionTicker workspaceId={workspaceId} />
         </aside>

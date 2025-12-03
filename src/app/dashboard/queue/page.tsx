@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { ListFilter, Clock, CheckCircle, XCircle, RotateCcw } from "lucide-react";
+import { ListFilter, Clock, CheckCircle, XCircle, RotateCcw, AlertCircle, RefreshCw } from "lucide-react";
 import { WorkspaceSidebar } from "@/components/workspace/WorkspaceSidebar";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
@@ -20,32 +20,38 @@ export default function ReviewQueuePage() {
   const { user, currentOrganization } = useAuth();
   const [items, setItems] = useState<QueueItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<"all" | "pending" | "approved" | "rejected">("all");
 
   const workspaceId = currentOrganization?.org_id || "demo";
 
-  useEffect(() => {
-    const fetchQueue = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
+  const fetchQueue = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const { data: { session } } = await supabase.auth.getSession();
 
-        const response = await fetch(`/api/content/pending?workspaceId=${workspaceId}`, {
-          headers: {
-            ...(session && { Authorization: `Bearer ${session.access_token}` }),
-          },
-        });
+      const response = await fetch(`/api/content/pending?workspaceId=${workspaceId}`, {
+        headers: {
+          ...(session && { Authorization: `Bearer ${session.access_token}` }),
+        },
+      });
 
-        if (response.ok) {
-          const data = await response.json();
-          setItems(data.content || []);
-        }
-      } catch (error) {
-        console.error("Error fetching queue:", error);
-      } finally {
-        setLoading(false);
+      if (!response.ok) {
+        throw new Error("Failed to fetch queue");
       }
-    };
 
+      const data = await response.json();
+      setItems(data.content || []);
+    } catch (err) {
+      console.error("Error fetching queue:", err);
+      setError(err instanceof Error ? err.message : "Failed to load queue");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchQueue();
   }, [workspaceId]);
 
@@ -75,7 +81,7 @@ export default function ReviewQueuePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#071318] relative overflow-hidden">
+    <div className="min-h-screen bg-bg-base relative overflow-hidden">
       {/* Background gradient */}
       <div
         className="absolute inset-0"
@@ -103,7 +109,7 @@ export default function ReviewQueuePage() {
 
       {/* Main container */}
       <div className="relative z-10 h-screen p-4 flex justify-center items-center">
-        <div className="w-full max-w-[1600px] h-[calc(100vh-32px)] bg-[#0a1f2e]/40 backdrop-blur-xl rounded-2xl shadow-2xl flex overflow-hidden border border-cyan-800/20">
+        <div className="w-full max-w-[1600px] h-[calc(100vh-32px)] bg-bg-raised/40 backdrop-blur-xl rounded-2xl shadow-2xl flex overflow-hidden border border-cyan-800/20">
           {/* Left Sidebar */}
           <WorkspaceSidebar />
 
@@ -131,7 +137,7 @@ export default function ReviewQueuePage() {
                     className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                       filter === f
                         ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
-                        : "text-gray-400 hover:text-white hover:bg-[#0d2137]/60"
+                        : "text-gray-400 hover:text-white hover:bg-bg-card/60"
                     }`}
                   >
                     {f.charAt(0).toUpperCase() + f.slice(1)}
@@ -145,6 +151,22 @@ export default function ReviewQueuePage() {
               <div className="flex justify-center items-center h-64">
                 <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
               </div>
+            ) : error ? (
+              <div className="flex flex-col items-center justify-center h-64 text-center">
+                <div className="w-14 h-14 rounded-full bg-red-500/20 flex items-center justify-center mb-4">
+                  <AlertCircle className="w-7 h-7 text-red-400" />
+                </div>
+                <p className="text-lg text-white font-medium mb-2">Failed to load queue</p>
+                <p className="text-sm text-gray-400 mb-4">{error}</p>
+                <button
+                  type="button"
+                  onClick={fetchQueue}
+                  className="flex items-center gap-2 px-4 py-2 bg-cyan-500/20 text-cyan-400 rounded-lg hover:bg-cyan-500/30 transition-colors"
+                >
+                  <RefreshCw className="w-4 h-4" />
+                  Try Again
+                </button>
+              </div>
             ) : filteredItems.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-64 text-gray-400">
                 <ListFilter className="w-12 h-12 mb-4 opacity-50" />
@@ -156,11 +178,11 @@ export default function ReviewQueuePage() {
                 {filteredItems.map((item) => (
                   <div
                     key={item.id}
-                    className="bg-[#0d2137]/40 border border-cyan-900/20 rounded-xl p-4 flex items-center gap-4 hover:bg-[#0d2137]/60 transition-colors"
+                    className="bg-bg-card/40 border border-cyan-900/20 rounded-xl p-4 flex items-center gap-4 hover:bg-bg-card/60 transition-colors"
                   >
                     {/* Thumbnail */}
                     {item.thumbnailUrl && (
-                      <div className="w-16 h-16 rounded-lg overflow-hidden bg-[#071318] flex-shrink-0">
+                      <div className="w-16 h-16 rounded-lg overflow-hidden bg-bg-base flex-shrink-0">
                         <img
                           src={item.thumbnailUrl}
                           alt={item.title}

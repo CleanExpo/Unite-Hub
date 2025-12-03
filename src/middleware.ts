@@ -1,12 +1,15 @@
 /**
- * Unite-Hub Middleware - PKCE Flow
+ * Unite-Hub Middleware - Dual Portal Access Control
  *
  * This middleware handles:
  * 1. Session validation (PKCE sessions are in cookies, accessible server-side)
- * 2. Role-based access control (RBAC)
+ * 2. Staff vs Client routing (Unite-Hub CRM vs Synthex Client Portal)
  * 3. Security headers
  *
- * With PKCE, we can now properly protect routes server-side.
+ * Access Control:
+ * - Staff (owner/admin/developer) → /crm/* (Unite-Hub CRM)
+ * - Clients → /synthex/* or /client/* (Synthex Client Portal)
+ * - Pending staff → /auth/await-approval
  */
 
 import { createServerClient } from "@supabase/ssr";
@@ -14,6 +17,15 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import type { UserRole } from "./lib/auth/userTypes";
 import { generateNonce, getEnvironmentCSP, NONCE_HEADER } from "./lib/security/csp";
+
+// Staff role type from staff_users table
+type StaffRole = 'owner' | 'admin' | 'developer';
+type StaffStatus = 'active' | 'pending' | 'disabled';
+
+interface StaffUser {
+  role: StaffRole;
+  status: StaffStatus;
+}
 
 /**
  * Normalize legacy role names to new UserRole enum
@@ -28,15 +40,31 @@ function normalizeRole(role: string | null | undefined): UserRole {
 }
 
 /**
+ * Map staff role to UserRole for backwards compatibility
+ */
+function staffRoleToUserRole(staffRole: StaffRole | null): UserRole {
+  if (!staffRole) return 'CLIENT';
+  switch (staffRole) {
+    case 'owner': return 'FOUNDER';
+    case 'admin': return 'ADMIN';
+    case 'developer': return 'STAFF';
+    default: return 'CLIENT';
+  }
+}
+
+/**
  * Get the default dashboard for a role
  */
-function getDefaultDashboard(role: UserRole): string {
+function getDefaultDashboard(role: UserRole, isStaff: boolean): string {
+  if (isStaff) {
+    return '/crm/dashboard';
+  }
   switch (role) {
-    case 'FOUNDER': return '/founder';
-    case 'STAFF': return '/staff/dashboard';
-    case 'ADMIN': return '/founder'; // Admin gets founder access
+    case 'FOUNDER': return '/crm/dashboard';
+    case 'STAFF': return '/crm/dashboard';
+    case 'ADMIN': return '/crm/dashboard';
     case 'CLIENT':
-    default: return '/client';
+    default: return '/synthex/dashboard';
   }
 }
 
@@ -140,71 +168,117 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  // Get user profile and role for authenticated users
+  // Get user role for authenticated users - check staff_users first, then profiles
   if (isAuthenticated) {
     try {
+      // 1. Check if user is in staff_users table (Unite-Hub CRM access)
+      const { data: staffUser } = await supabase
+        .from('staff_users')
+        .select('role, status')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      const isActiveStaff = staffUser?.status === 'active';
+      const isPendingStaff = staffUser?.status === 'pending';
+      const isDisabledStaff = staffUser?.status === 'disabled';
+
+      // 2. Handle pending staff - redirect to await-approval page
+      if (isPendingStaff) {
+        if (pathname !== '/auth/await-approval') {
+          const redirectUrl = req.nextUrl.clone();
+          redirectUrl.pathname = '/auth/await-approval';
+          return NextResponse.redirect(redirectUrl);
+        }
+        return addSecurityHeaders(response, nonce);
+      }
+
+      // 3. Handle disabled staff - treat as client
+      if (isDisabledStaff) {
+        // Fall through to client handling
+      }
+
+      // 4. Active staff - route to CRM
+      if (isActiveStaff) {
+        const userRole = staffRoleToUserRole(staffUser.role as StaffRole);
+
+        // Redirect from marketing pages to CRM dashboard
+        if (isMarketingPath) {
+          const redirectUrl = req.nextUrl.clone();
+          redirectUrl.pathname = '/crm/dashboard';
+          return NextResponse.redirect(redirectUrl);
+        }
+
+        // Redirect from Synthex (client portal) to CRM
+        if (pathname.startsWith('/synthex') || pathname.startsWith('/client')) {
+          const redirectUrl = req.nextUrl.clone();
+          redirectUrl.pathname = '/crm/dashboard';
+          return NextResponse.redirect(redirectUrl);
+        }
+
+        // Redirect from old routes to CRM
+        if (pathname.startsWith('/founder') || pathname.startsWith('/staff')) {
+          const redirectUrl = req.nextUrl.clone();
+          redirectUrl.pathname = '/crm/dashboard';
+          return NextResponse.redirect(redirectUrl);
+        }
+
+        // Allow CRM access
+        if (pathname.startsWith('/crm')) {
+          // Owner-only routes
+          if (pathname.startsWith('/crm/staff') && staffUser.role !== 'owner') {
+            const redirectUrl = req.nextUrl.clone();
+            redirectUrl.pathname = '/crm/dashboard';
+            return NextResponse.redirect(redirectUrl);
+          }
+          return addSecurityHeaders(response, nonce);
+        }
+
+        // Redirect to CRM dashboard if accessing auth pages while authenticated
+        if (isAuthPath) {
+          const redirectUrl = req.nextUrl.clone();
+          redirectUrl.pathname = getDefaultDashboard(userRole, true);
+          return NextResponse.redirect(redirectUrl);
+        }
+
+        return addSecurityHeaders(response, nonce);
+      }
+
+      // 5. Not staff - check profiles table for legacy role support
       const { data: profile } = await supabase
         .from('profiles')
         .select('role')
         .eq('id', user.id)
-        .maybeSingle(); // Use maybeSingle to gracefully handle missing profiles
+        .maybeSingle();
 
-      const userRole = normalizeRole(profile?.role); // Defaults to 'CLIENT' if no profile
+      const userRole = normalizeRole(profile?.role);
 
-      // FOUNDER/ADMIN: Bypass marketing pages, go to founder dashboard
-      if (userRole === 'FOUNDER' || userRole === 'ADMIN') {
-        // Redirect from marketing/pricing to founder dashboard
-        if (isMarketingPath) {
-          const redirectUrl = req.nextUrl.clone();
-          redirectUrl.pathname = '/founder';
-          return NextResponse.redirect(redirectUrl);
-        }
-
-        // Redirect from synthex (client dashboard) to founder
-        if (pathname.startsWith('/synthex')) {
-          const redirectUrl = req.nextUrl.clone();
-          redirectUrl.pathname = '/founder';
-          return NextResponse.redirect(redirectUrl);
-        }
+      // 6. CLIENT routing - block from CRM, route to Synthex
+      // Block from CRM and staff areas
+      if (pathname.startsWith('/crm') || pathname.startsWith('/founder') ||
+          pathname.startsWith('/staff') || pathname === '/auth/await-approval') {
+        const redirectUrl = req.nextUrl.clone();
+        redirectUrl.pathname = '/synthex/dashboard';
+        return NextResponse.redirect(redirectUrl);
       }
 
-      // STAFF: Bypass marketing pages, go to staff dashboard
-      if (userRole === 'STAFF') {
-        if (isMarketingPath) {
-          const redirectUrl = req.nextUrl.clone();
-          redirectUrl.pathname = '/staff/dashboard';
-          return NextResponse.redirect(redirectUrl);
-        }
-
-        // Block staff from founder-only areas
-        if (pathname.startsWith('/founder')) {
-          const redirectUrl = req.nextUrl.clone();
-          redirectUrl.pathname = '/staff/dashboard';
-          return NextResponse.redirect(redirectUrl);
-        }
+      // Redirect from marketing to Synthex client dashboard
+      if (isMarketingPath) {
+        const redirectUrl = req.nextUrl.clone();
+        redirectUrl.pathname = '/synthex/dashboard';
+        return NextResponse.redirect(redirectUrl);
       }
 
-      // CLIENT: Restrict from founder/staff areas
-      if (userRole === 'CLIENT') {
-        if (pathname.startsWith('/founder') || pathname.startsWith('/staff') ||
-            pathname.startsWith('/crm') || pathname === '/auth/await-approval') {
-          const redirectUrl = req.nextUrl.clone();
-          redirectUrl.pathname = '/client';
-          return NextResponse.redirect(redirectUrl);
-        }
-
-        // Redirect from marketing to client dashboard
-        if (isMarketingPath) {
-          const redirectUrl = req.nextUrl.clone();
-          redirectUrl.pathname = '/client';
-          return NextResponse.redirect(redirectUrl);
-        }
+      // Redirect old /client routes to /synthex
+      if (pathname.startsWith('/client')) {
+        const redirectUrl = req.nextUrl.clone();
+        redirectUrl.pathname = pathname.replace('/client', '/synthex');
+        return NextResponse.redirect(redirectUrl);
       }
 
-      // Redirect to role-appropriate dashboard if accessing auth pages while authenticated
+      // Redirect to Synthex dashboard if accessing auth pages while authenticated
       if (isAuthPath) {
         const redirectUrl = req.nextUrl.clone();
-        redirectUrl.pathname = getDefaultDashboard(userRole);
+        redirectUrl.pathname = getDefaultDashboard(userRole, false);
         return NextResponse.redirect(redirectUrl);
       }
 

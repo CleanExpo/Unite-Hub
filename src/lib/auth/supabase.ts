@@ -5,7 +5,7 @@
  * This runs parallel to existing authentication without breaking current flows
  */
 
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
 import { Database } from './database.types';
 
 // Ensure environment variables are loaded
@@ -49,11 +49,11 @@ export async function staffLogin(email: string, password: string) {
     return { success: false, error: 'No user data returned' };
   }
 
-  // Verify user is actually staff
+  // Verify user is actually staff by checking staff_users table
   const { data: staffData, error: staffError } = await supabaseStaff
     .from('staff_users')
-    .select('id, role, active')
-    .eq('id', data.user.id)
+    .select('id, role, status')
+    .eq('user_id', data.user.id)
     .single();
 
   if (staffError || !staffData) {
@@ -61,8 +61,11 @@ export async function staffLogin(email: string, password: string) {
     return { success: false, error: 'User is not authorized as staff' };
   }
 
-  if (!staffData.active) {
+  if (staffData.status !== 'active') {
     await supabaseStaff.auth.signOut();
+    if (staffData.status === 'pending') {
+      return { success: false, error: 'Staff account is pending approval' };
+    }
     return { success: false, error: 'Staff account is inactive' };
   }
 
@@ -131,7 +134,7 @@ export async function getStaffUser() {
 export async function logStaffActivity(
   staffId: string,
   action: string,
-  metadata: Record<string, any> = {}
+  metadata: Record<string, unknown> = {}
 ) {
   try {
     await supabaseStaff.from('staff_activity_logs').insert({

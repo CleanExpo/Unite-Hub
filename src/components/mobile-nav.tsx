@@ -22,7 +22,7 @@ export function MobileNav({ user, loading }: { user?: { id: string; email?: stri
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="absolute top-20 left-0 right-0 bg-[#051224]/95 backdrop-blur-sm border-b border-white/10 z-40 shadow-lg">
+        <div className="absolute top-20 left-0 right-0 bg-bg-base/95 backdrop-blur-sm border-b border-white/10 z-40 shadow-lg">
           <nav className="flex flex-col space-y-1 p-4">
             <a
               href="#how-it-works"
@@ -55,7 +55,7 @@ export function MobileNav({ user, loading }: { user?: { id: string; email?: stri
             ) : user ? (
               <Link
                 href="/synthex/dashboard"
-                className="block px-3 py-2 rounded font-semibold text-sm bg-[#347bf7] text-white hover:bg-blue-700 transition-colors text-center"
+                className="block px-3 py-2 rounded font-semibold text-sm bg-secondary-500 text-white hover:bg-blue-700 transition-colors text-center"
                 onClick={() => setIsOpen(false)}
               >
                 Dashboard
@@ -71,7 +71,7 @@ export function MobileNav({ user, loading }: { user?: { id: string; email?: stri
                 </Link>
                 <Link
                   href="/login"
-                  className="block px-3 py-2 rounded font-semibold text-sm bg-[#347bf7] text-white hover:bg-blue-700 transition-colors text-center"
+                  className="block px-3 py-2 rounded font-semibold text-sm bg-secondary-500 text-white hover:bg-blue-700 transition-colors text-center"
                   onClick={() => setIsOpen(false)}
                 >
                   Start Trial

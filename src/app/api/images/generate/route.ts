@@ -1,9 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import { aiAgentRateLimit } from "@/lib/rate-limit";
-import { validateUserAuth, validateUserAndWorkspace } from "@/lib/workspace-validation";
 import { UUIDSchema } from "@/lib/validation/schemas";
-import { generateImage, calculateImageCost, validatePrompt } from "@/lib/dalle/client";
+import {
+  generateImage,
+  calculateImageCost,
+  validatePrompt,
+  convertDalleSizeToAspectRatio,
+  getResolutionDimensions,
+  type GeminiImageModel,
+  type AspectRatio,
+  type ImageSize,
+} from "@/lib/gemini/image-client";
 import {
   engineerPrompt,
   PromptContext,
@@ -20,14 +28,29 @@ export interface GenerateImageRequest {
   platform?: "facebook" | "instagram" | "tiktok" | "linkedin" | "general";
   customPrompt?: string;
   style?: string;
+  /** Legacy DALL-E size - converted to aspectRatio */
   size?: "1024x1024" | "1792x1024" | "1024x1792";
+  /** New: Gemini aspect ratio */
+  aspectRatio?: AspectRatio;
+  /** New: Gemini image size (1K, 2K, 4K) */
+  imageSize?: ImageSize;
+  /** New: Use professional model with grounding */
+  professional?: boolean;
+  /** Legacy - ignored (Gemini doesn't have quality setting) */
   quality?: "standard" | "hd";
   variationCount?: number; // 3 for Starter, 5 for Professional
 }
 
 /**
  * POST /api/images/generate
- * Generate DALL-E image concepts for a contact
+ * Generate Gemini image concepts for a contact
+ *
+ * @description Replaced DALL-E with Gemini image models for better text rendering,
+ * grounding, and higher resolution output.
+ *
+ * Models used:
+ * - gemini-2.5-flash-image: Fast, high-volume generation
+ * - gemini-3-pro-image-preview: Professional quality with grounding
  */
 export async function POST(request: NextRequest) {
   try {
@@ -48,7 +71,9 @@ export async function POST(request: NextRequest) {
       customPrompt,
       style,
       size = "1024x1024",
-      quality = "standard",
+      aspectRatio: requestedAspectRatio,
+      imageSize = "1K",
+      professional = false,
       variationCount = 1,
     } = body;
 
@@ -146,10 +171,13 @@ export async function POST(request: NextRequest) {
     // Determine style
     const recommendedStyle = style || recommendStyleForIndustry(contact.notes || "general").name;
 
+    // Determine aspect ratio (prefer new format, fallback to legacy size conversion)
+    const aspectRatio: AspectRatio = requestedAspectRatio || convertDalleSizeToAspectRatio(size);
+
     // Build platform specs
     const platformSpecs: PlatformSpecs = {
       platform,
-      aspectRatio: getAspectRatioFromSize(size),
+      aspectRatio: aspectRatio as "1:1" | "4:5" | "9:16" | "16:9",
       style: recommendedStyle,
     };
 
@@ -169,6 +197,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Select model based on request
+    const model: GeminiImageModel = professional
+      ? "gemini-3-pro-image-preview"
+      : "gemini-2.5-flash-image";
+
+    // Get resolution dimensions for database storage
+    const dimensions = getResolutionDimensions(aspectRatio, imageSize);
+
     // Generate images
     const generatedImages = [];
     const errors = [];
@@ -177,13 +213,16 @@ export async function POST(request: NextRequest) {
       try {
         const variation = i === 0 ? engineeredPrompt : `${engineeredPrompt}, variation ${i + 1}`;
 
-        const result = await generateImage({
-          prompt: variation,
-          size,
-          quality,
-          style: "vivid",
-          model: "dall-e-3",
+        const result = await generateImage(variation, {
+          model,
+          aspectRatio,
+          imageSize: model === "gemini-3-pro-image-preview" ? imageSize : undefined,
+          enableGrounding: professional,
         });
+
+        // Convert image buffer to base64 data URL for storage
+        const base64Image = result.image.toString("base64");
+        const dataUrl = `data:${result.mimeType};base64,${base64Image}`;
 
         // Store image in Supabase
         const { data: savedImage, error: saveError } = await supabase
@@ -192,20 +231,23 @@ export async function POST(request: NextRequest) {
             workspace_id: workspace.id,
             contact_id: finalContactId,
             prompt: engineeredPrompt,
-            image_url: result.url,
-            provider: "dall-e",
-            model: "dall-e-3",
-            size,
-            quality,
-            style: "vivid",
+            image_url: dataUrl,
+            provider: "gemini",
+            model: model,
+            size: `${dimensions.width}x${dimensions.height}`,
+            quality: professional ? "professional" : "standard",
+            style: recommendedStyle,
             brand_colors: brandColors,
             additional_params: {
               conceptType,
               platform,
-              revisedPrompt: result.revisedPrompt,
+              aspectRatio,
+              imageSize,
+              revisedPrompt: result.text,
               variationNumber: i + 1,
+              groundingMetadata: result.groundingMetadata,
             },
-            generation_cost: calculateImageCost(1, size, quality),
+            generation_cost: calculateImageCost(1, model, imageSize),
             revision_number: 1,
             status: "completed",
           })
@@ -220,25 +262,28 @@ export async function POST(request: NextRequest) {
 
         generatedImages.push({
           id: savedImage.id,
-          url: result.url,
-          revisedPrompt: result.revisedPrompt,
+          url: dataUrl,
+          revisedPrompt: result.text,
+          mimeType: result.mimeType,
+          dimensions,
         });
-      } catch (error: any) {
-    if (error instanceof Error) {
-      if (error.message.includes("Unauthorized")) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-      if (error.message.includes("Forbidden")) {
-        return NextResponse.json({ error: "Access denied" }, { status: 403 });
-      }
-    }
-    console.error(`Failed to generate variation ${i + 1}:`, error);
-        errors.push({ variation: i + 1, error: error.message });
+      } catch (error: unknown) {
+        const errorMessage = error instanceof Error ? error.message : String(error);
+
+        if (errorMessage.includes("Unauthorized")) {
+          return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+        }
+        if (errorMessage.includes("Forbidden")) {
+          return NextResponse.json({ error: "Access denied" }, { status: 403 });
+        }
+
+        console.error(`Failed to generate variation ${i + 1}:`, error);
+        errors.push({ variation: i + 1, error: errorMessage });
       }
     }
 
     // Calculate total cost
-    const totalCost = calculateImageCost(generatedImages.length, size, quality);
+    const totalCost = calculateImageCost(generatedImages.length, model, imageSize);
 
     // Track usage in organization metadata
     await trackImageGeneration(supabase, organization.id, generatedImages.length, totalCost);
@@ -252,19 +297,23 @@ export async function POST(request: NextRequest) {
       cost: totalCost,
       prompt: engineeredPrompt,
       style: recommendedStyle,
+      model,
+      aspectRatio,
+      imageSize: model === "gemini-3-pro-image-preview" ? imageSize : "1K",
     });
-  } catch (error: any) {
-    if (error instanceof Error) {
-      if (error.message.includes("Unauthorized")) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-      if (error.message.includes("Forbidden")) {
-        return NextResponse.json({ error: "Access denied" }, { status: 403 });
-      }
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+
+    if (errorMessage.includes("Unauthorized")) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    if (errorMessage.includes("Forbidden")) {
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
+    }
+
     console.error("Image generation error:", error);
     return NextResponse.json(
-      { error: error.message || "Failed to generate images" },
+      { error: errorMessage || "Failed to generate images" },
       { status: 500 }
     );
   }
@@ -273,31 +322,23 @@ export async function POST(request: NextRequest) {
 /**
  * Extract brand colors from contact custom fields
  */
-function extractBrandColors(customFields: any): string[] {
+function extractBrandColors(customFields: unknown): string[] {
+  const fields = customFields as { brandColors?: string[] } | null;
+
   // Check if custom fields contain brand colors
-  if (customFields && customFields.brandColors && Array.isArray(customFields.brandColors)) {
-    return customFields.brandColors;
+  if (fields && fields.brandColors && Array.isArray(fields.brandColors)) {
+    return fields.brandColors;
   }
 
-  // Default brand colors
-  return ["#2563EB", "#3B82F6", "#60A5FA"];
-}
-
-/**
- * Get aspect ratio from size string
- */
-function getAspectRatioFromSize(size: string): "1:1" | "4:5" | "9:16" | "16:9" {
-  if (size === "1024x1024") return "1:1";
-  if (size === "1024x1792") return "9:16";
-  if (size === "1792x1024") return "16:9";
-  return "1:1";
+  // Default brand colors (Unite-Hub accent colors)
+  return ["#ff6b35", "#2563EB", "#3B82F6"];
 }
 
 /**
  * Check usage limits for organization
  */
 async function checkUsageLimits(
-  supabase: any,
+  supabase: ReturnType<typeof getSupabaseServer> extends Promise<infer T> ? T : never,
   orgId: string,
   plan: string,
   requestedCount: number
@@ -339,11 +380,11 @@ async function checkUsageLimits(
 
     const currentUsage = count || 0;
 
-    // Define limits based on tier
+    // Define limits based on tier (increased for Gemini efficiency)
     const limits: Record<string, number> = {
-      starter: 50, // 50 images per month
-      professional: 200, // 200 images per month
-      enterprise: 1000, // 1000 images per month
+      starter: 100, // 100 images per month (Gemini is cheaper)
+      professional: 500, // 500 images per month
+      enterprise: 2000, // 2000 images per month
     };
 
     const limit = limits[plan] || limits.starter;
@@ -356,15 +397,16 @@ async function checkUsageLimits(
     }
 
     return { allowed: true };
-  } catch (error: any) {
-    if (error instanceof Error) {
-      if (error.message.includes("Unauthorized")) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-      if (error.message.includes("Forbidden")) {
-        return NextResponse.json({ error: "Access denied" }, { status: 403 });
-      }
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+
+    if (errorMessage.includes("Unauthorized")) {
+      throw new Error("Unauthorized");
     }
+    if (errorMessage.includes("Forbidden")) {
+      throw new Error("Forbidden");
+    }
+
     console.error("Error checking usage limits:", error);
     // Allow on error to prevent blocking (fail open)
     return { allowed: true };
@@ -375,7 +417,7 @@ async function checkUsageLimits(
  * Track image generation for cost analytics
  */
 async function trackImageGeneration(
-  supabase: any,
+  supabase: ReturnType<typeof getSupabaseServer> extends Promise<infer T> ? T : never,
   orgId: string,
   count: number,
   cost: number
@@ -391,8 +433,8 @@ async function trackImageGeneration(
       .single();
 
     if (org) {
-      const customFields = org.custom_fields || {};
-      const usageTracking = customFields.usageTracking || {};
+      const customFields = (org.custom_fields as Record<string, unknown>) || {};
+      const usageTracking = (customFields.usageTracking as Record<string, { imagesGenerated?: number; imageCost?: number }>) || {};
 
       // Track monthly usage
       const monthKey = new Date().toISOString().slice(0, 7); // YYYY-MM
@@ -408,15 +450,8 @@ async function trackImageGeneration(
         .update({ custom_fields: customFields })
         .eq("id", orgId);
     }
-  } catch (error: any) {
-    if (error instanceof Error) {
-      if (error.message.includes("Unauthorized")) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-      if (error.message.includes("Forbidden")) {
-        return NextResponse.json({ error: "Access denied" }, { status: 403 });
-      }
-    }
-    console.error("Error tracking image generation:", error);
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("Error tracking image generation:", errorMessage);
   }
 }

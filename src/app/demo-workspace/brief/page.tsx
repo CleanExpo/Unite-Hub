@@ -29,7 +29,7 @@ export default function SmartBriefPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#071318] relative overflow-hidden">
+    <div className="min-h-screen bg-bg-base relative overflow-hidden">
       {/* Background gradient */}
       <div
         className="absolute inset-0"
@@ -44,7 +44,7 @@ export default function SmartBriefPage() {
 
       {/* Main container */}
       <div className="relative z-10 h-screen p-4 flex justify-center items-center">
-        <div className="w-full max-w-[1600px] h-[calc(100vh-32px)] bg-[#0a1f2e]/40 backdrop-blur-xl rounded-2xl shadow-2xl flex overflow-hidden border border-cyan-800/20">
+        <div className="w-full max-w-[1600px] h-[calc(100vh-32px)] bg-bg-raised/40 backdrop-blur-xl rounded-2xl shadow-2xl flex overflow-hidden border border-cyan-800/20">
           {/* Left Sidebar */}
           <WorkspaceSidebar />
 
@@ -89,7 +89,7 @@ export default function SmartBriefPage() {
             <h2 className="text-lg font-semibold text-white mb-4">Your Briefs</h2>
             <div className="grid gap-4">
               {briefs.map((brief) => (
-                <Card key={brief.id} className="bg-[#0d2137]/60 border-cyan-900/30 hover:border-cyan-500/30 transition-colors">
+                <Card key={brief.id} className="bg-bg-card/60 border-cyan-900/30 hover:border-cyan-500/30 transition-colors">
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
                       <div>

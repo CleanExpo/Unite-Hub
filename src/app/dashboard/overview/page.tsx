@@ -168,7 +168,7 @@ export default function DashboardOverviewPage() {
   const pendingCount = content.filter(item => item.status === "pending").length;
 
   return (
-    <div className="min-h-screen bg-[#071318] relative overflow-hidden">
+    <div className="min-h-screen bg-bg-base relative overflow-hidden">
       {/* Background gradient */}
       <div
         className="absolute inset-0"
@@ -196,7 +196,7 @@ export default function DashboardOverviewPage() {
 
       {/* Main container */}
       <div className="relative z-10 h-screen p-4 flex justify-center items-center">
-        <div className="w-full max-w-[1600px] h-[calc(100vh-32px)] bg-[#0a1f2e]/40 backdrop-blur-xl rounded-2xl shadow-2xl flex overflow-hidden border border-cyan-800/20">
+        <div className="w-full max-w-[1600px] h-[calc(100vh-32px)] bg-bg-raised/40 backdrop-blur-xl rounded-2xl shadow-2xl flex overflow-hidden border border-cyan-800/20">
           {/* Left Sidebar */}
           <WorkspaceSidebar />
 
@@ -221,7 +221,7 @@ export default function DashboardOverviewPage() {
                   <Bell className="w-5 h-5" />
                   <span className="absolute top-1 right-1 w-2 h-2 bg-orange-500 rounded-full" />
                 </button>
-                <div className="flex items-center gap-3 bg-[#0d2137]/60 backdrop-blur-sm rounded-lg px-3 py-2 border border-cyan-900/30">
+                <div className="flex items-center gap-3 bg-bg-card/60 backdrop-blur-sm rounded-lg px-3 py-2 border border-cyan-900/30">
                   <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-teal-500 rounded-lg shadow-lg shadow-cyan-500/20" />
                   <div>
                     <span className="text-sm font-medium text-white block">
@@ -284,7 +284,7 @@ export default function DashboardOverviewPage() {
           </main>
 
           {/* Right Sidebar */}
-          <aside className="w-[320px] bg-[#0a1f2e]/60 backdrop-blur-sm border-l border-cyan-900/30 flex flex-col">
+          <aside className="w-[320px] bg-bg-raised/60 backdrop-blur-sm border-l border-cyan-900/30 flex flex-col">
             <NexusAssistant workspaceId={workspaceId || ""} />
             <ExecutionTicker workspaceId={workspaceId || ""} />
           </aside>

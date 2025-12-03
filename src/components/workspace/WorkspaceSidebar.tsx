@@ -52,7 +52,7 @@ export function WorkspaceSidebar() {
   ];
 
   return (
-    <aside className="w-[220px] bg-[#0d2137]/80 backdrop-blur-sm p-6 border-r border-cyan-900/30 flex flex-col justify-between">
+    <aside className="hidden lg:flex w-[220px] bg-bg-card/80 backdrop-blur-sm p-6 border-r border-cyan-900/30 flex-col justify-between">
       <div>
         {/* Logo */}
         <div className="font-bold text-lg text-white mb-10 flex items-center gap-2.5">

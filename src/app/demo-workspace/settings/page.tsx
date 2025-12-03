@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 
 export default function SettingsPage() {
   return (
-    <div className="min-h-screen bg-[#071318] relative overflow-hidden">
+    <div className="min-h-screen bg-bg-base relative overflow-hidden">
       {/* Background gradient */}
       <div
         className="absolute inset-0"
@@ -26,7 +26,7 @@ export default function SettingsPage() {
 
       {/* Main container */}
       <div className="relative z-10 h-screen p-4 flex justify-center items-center">
-        <div className="w-full max-w-[1600px] h-[calc(100vh-32px)] bg-[#0a1f2e]/40 backdrop-blur-xl rounded-2xl shadow-2xl flex overflow-hidden border border-cyan-800/20">
+        <div className="w-full max-w-[1600px] h-[calc(100vh-32px)] bg-bg-raised/40 backdrop-blur-xl rounded-2xl shadow-2xl flex overflow-hidden border border-cyan-800/20">
           {/* Left Sidebar */}
           <WorkspaceSidebar />
 
@@ -48,7 +48,7 @@ export default function SettingsPage() {
             {/* Settings Sections */}
             <div className="space-y-6">
               {/* Profile Settings */}
-              <Card className="bg-[#0d2137]/60 border-cyan-900/30">
+              <Card className="bg-bg-card/60 border-cyan-900/30">
                 <CardHeader>
                   <div className="flex items-center gap-2">
                     <User className="w-4 h-4 text-cyan-400" />
@@ -64,14 +64,14 @@ export default function SettingsPage() {
                       <Label className="text-gray-400 text-sm">Display Name</Label>
                       <Input
                         defaultValue="Demo User"
-                        className="mt-1 bg-[#071318] border-cyan-900/30 text-white"
+                        className="mt-1 bg-bg-base border-cyan-900/30 text-white"
                       />
                     </div>
                     <div>
                       <Label className="text-gray-400 text-sm">Email</Label>
                       <Input
                         defaultValue="demo@unite-hub.com"
-                        className="mt-1 bg-[#071318] border-cyan-900/30 text-white"
+                        className="mt-1 bg-bg-base border-cyan-900/30 text-white"
                       />
                     </div>
                   </div>
@@ -79,7 +79,7 @@ export default function SettingsPage() {
               </Card>
 
               {/* Notifications */}
-              <Card className="bg-[#0d2137]/60 border-cyan-900/30">
+              <Card className="bg-bg-card/60 border-cyan-900/30">
                 <CardHeader>
                   <div className="flex items-center gap-2">
                     <Bell className="w-4 h-4 text-cyan-400" />
@@ -115,7 +115,7 @@ export default function SettingsPage() {
               </Card>
 
               {/* AI Preferences */}
-              <Card className="bg-[#0d2137]/60 border-cyan-900/30">
+              <Card className="bg-bg-card/60 border-cyan-900/30">
                 <CardHeader>
                   <div className="flex items-center gap-2">
                     <Zap className="w-4 h-4 text-cyan-400" />

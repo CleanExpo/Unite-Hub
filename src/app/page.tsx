@@ -99,7 +99,7 @@ export default function Home() {
             ) : user ? (
               <Link
                 href="/synthex/dashboard"
-                className="px-6 py-2.5 rounded-md font-semibold text-sm bg-[#007bff] border border-[#007bff] text-white hover:-translate-y-0.5 transition-transform"
+                className="px-6 py-2.5 rounded-md font-semibold text-sm bg-secondary-500 border border-secondary-500 text-white hover:-translate-y-0.5 transition-transform"
               >
                 Dashboard
               </Link>
@@ -113,7 +113,7 @@ export default function Home() {
                 </Link>
                 <Link
                   href="/login"
-                  className="px-6 py-2.5 rounded-md font-semibold text-sm bg-[#007bff] border border-[#007bff] text-white hover:-translate-y-0.5 transition-transform"
+                  className="px-6 py-2.5 rounded-md font-semibold text-sm bg-secondary-500 border border-secondary-500 text-white hover:-translate-y-0.5 transition-transform"
                 >
                   Start Trial
                 </Link>
@@ -125,7 +125,7 @@ export default function Home() {
 
       {/* Discount Banner */}
       {discountSlotsLeft > 0 && !isDismissed && (
-        <div className="fixed top-20 right-5 z-40 hidden md:block bg-gradient-to-r from-[#ff5722] to-[#ff784e] text-white rounded-lg p-4 shadow-lg max-w-xs">
+        <div className="fixed top-20 right-5 z-40 hidden md:block bg-gradient-to-r from-accent-500 to-accent-400 text-white rounded-lg p-4 shadow-lg max-w-xs">
           <button
             onClick={() => setIsDismissed(true)}
             className="absolute top-2 right-2 text-white/70 hover:text-white text-xl leading-none"
@@ -163,7 +163,7 @@ export default function Home() {
             <h1 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
               <span className="text-white">Stop Bleeding Money on Marketing</span>
               <br />
-              <AnimatedGradientText text="That Doesn't Work." className="bg-gradient-to-r from-[#00d4aa] to-[#ff5722]" />
+              <AnimatedGradientText text="That Doesn't Work." className="bg-gradient-to-r from-success-500 to-accent-500" />
             </h1>
           </ScrollReveal>
 
@@ -180,7 +180,7 @@ export default function Home() {
               <HoverLift className="w-full md:w-auto">
                 <Link
                   href="/login"
-                  className="block bg-gradient-to-r from-[#347bf7] to-[#5a9dff] text-white py-4 px-8 rounded-lg text-base font-semibold border-none shadow-[0_4px_15px_rgba(52,123,247,0.4)] hover:shadow-[0_6px_20px_rgba(52,123,247,0.6)] transition-all"
+                  className="block bg-gradient-to-r from-secondary-500 to-secondary-400 text-white py-4 px-8 rounded-lg text-base font-semibold border-none shadow-[0_4px_15px_rgba(37,99,235,0.4)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.6)] transition-all"
                 >
                   Start Free Trial
                 </Link>
@@ -428,7 +428,7 @@ export default function Home() {
       </section>
 
       {/* The Problem Section */}
-      <section className="py-20 bg-gradient-to-br from-[#051224] to-[#0a1e3b] text-white">
+      <section className="py-20 bg-gradient-to-br from-bg-base to-bg-raised text-white">
         <div className="max-w-[1200px] mx-auto px-5">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
@@ -446,8 +446,8 @@ export default function Home() {
                 <ScrollReveal delay={0}>
                   <div className="flex gap-4">
                     <div className="flex-shrink-0">
-                      <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-[#ff5722]/20">
-                        <span className="text-[#ff5722] text-xl">✕</span>
+                      <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-accent-500/20">
+                        <span className="text-accent-500 text-xl">✕</span>
                       </div>
                     </div>
                     <div>
@@ -463,8 +463,8 @@ export default function Home() {
                 <ScrollReveal delay={100}>
                   <div className="flex gap-4">
                     <div className="flex-shrink-0">
-                      <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-[#ff5722]/20">
-                        <span className="text-[#ff5722] text-xl">✕</span>
+                      <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-accent-500/20">
+                        <span className="text-accent-500 text-xl">✕</span>
                       </div>
                     </div>
                     <div>
@@ -480,8 +480,8 @@ export default function Home() {
                 <ScrollReveal delay={200}>
                   <div className="flex gap-4">
                     <div className="flex-shrink-0">
-                      <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-[#ff5722]/20">
-                        <span className="text-[#ff5722] text-xl">✕</span>
+                      <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-accent-500/20">
+                        <span className="text-accent-500 text-xl">✕</span>
                       </div>
                     </div>
                     <div>
@@ -497,8 +497,8 @@ export default function Home() {
                 <ScrollReveal delay={300}>
                   <div className="flex gap-4">
                     <div className="flex-shrink-0">
-                      <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-[#ff5722]/20">
-                        <span className="text-[#ff5722] text-xl">✕</span>
+                      <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-accent-500/20">
+                        <span className="text-accent-500 text-xl">✕</span>
                       </div>
                     </div>
                     <div>
@@ -549,7 +549,7 @@ export default function Home() {
             <ScrollReveal delay={0}>
               <div className="relative">
                 <div className="text-center">
-                  <div className="h-16 w-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#347bf7] to-[#5a9dff] flex items-center justify-center text-white font-bold text-2xl">
+                  <div className="h-16 w-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-secondary-500 to-secondary-400 flex items-center justify-center text-white font-bold text-2xl">
                     <AnimatedCounter end={1} duration={800} />
                   </div>
                   <h3 className="text-xl font-bold text-text-primary mb-3">Connect Your Business</h3>
@@ -558,7 +558,7 @@ export default function Home() {
                   </p>
                 </div>
                 {/* Connector Line */}
-                <div className="hidden md:block absolute top-8 left-[calc(50%+30px)] w-[calc(100%-60px)] h-0.5 bg-gradient-to-r from-[#347bf7] to-transparent"></div>
+                <div className="hidden md:block absolute top-8 left-[calc(50%+30px)] w-[calc(100%-60px)] h-0.5 bg-gradient-to-r from-secondary-500 to-transparent"></div>
               </div>
             </ScrollReveal>
 
@@ -566,7 +566,7 @@ export default function Home() {
             <ScrollReveal delay={100}>
               <div className="relative">
                 <div className="text-center">
-                  <div className="h-16 w-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#347bf7] to-[#5a9dff] flex items-center justify-center text-white font-bold text-2xl">
+                  <div className="h-16 w-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-secondary-500 to-secondary-400 flex items-center justify-center text-white font-bold text-2xl">
                     <AnimatedCounter end={2} duration={800} />
                   </div>
                   <h3 className="text-xl font-bold text-text-primary mb-3">Synthex Diagnoses Your Business</h3>
@@ -575,7 +575,7 @@ export default function Home() {
                   </p>
                 </div>
                 {/* Connector Line */}
-                <div className="hidden md:block absolute top-8 left-[calc(50%+30px)] w-[calc(100%-60px)] h-0.5 bg-gradient-to-r from-[#347bf7] to-transparent"></div>
+                <div className="hidden md:block absolute top-8 left-[calc(50%+30px)] w-[calc(100%-60px)] h-0.5 bg-gradient-to-r from-secondary-500 to-transparent"></div>
               </div>
             </ScrollReveal>
 
@@ -583,7 +583,7 @@ export default function Home() {
             <ScrollReveal delay={200}>
               <div className="relative">
                 <div className="text-center">
-                  <div className="h-16 w-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#347bf7] to-[#5a9dff] flex items-center justify-center text-white font-bold text-2xl">
+                  <div className="h-16 w-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-secondary-500 to-secondary-400 flex items-center justify-center text-white font-bold text-2xl">
                     <AnimatedCounter end={3} duration={800} />
                   </div>
                   <h3 className="text-xl font-bold text-text-primary mb-3">AI Generates Your Strategy</h3>
@@ -592,7 +592,7 @@ export default function Home() {
                   </p>
                 </div>
                 {/* Connector Line */}
-                <div className="hidden md:block absolute top-8 left-[calc(50%+30px)] w-[calc(100%-60px)] h-0.5 bg-gradient-to-r from-[#347bf7] to-transparent"></div>
+                <div className="hidden md:block absolute top-8 left-[calc(50%+30px)] w-[calc(100%-60px)] h-0.5 bg-gradient-to-r from-secondary-500 to-transparent"></div>
               </div>
             </ScrollReveal>
 
@@ -600,7 +600,7 @@ export default function Home() {
             <ScrollReveal delay={300}>
               <div className="relative">
                 <div className="text-center">
-                  <div className="h-16 w-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#347bf7] to-[#5a9dff] flex items-center justify-center text-white font-bold text-2xl">
+                  <div className="h-16 w-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-secondary-500 to-secondary-400 flex items-center justify-center text-white font-bold text-2xl">
                     <AnimatedCounter end={4} duration={800} />
                   </div>
                   <h3 className="text-xl font-bold text-text-primary mb-3">Launch & Monitor</h3>
@@ -854,7 +854,7 @@ export default function Home() {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="text-center pb-20 bg-gradient-to-b from-[#051224] via-[#051224] to-bg-base" style={{ paddingTop: '1px' }}>
+      <section id="pricing" className="text-center pb-20 bg-gradient-to-b from-bg-base via-bg-base to-bg-raised" style={{ paddingTop: '1px' }}>
         <div className="max-w-[1200px] mx-auto px-5">
           <h2 className="text-white text-3xl font-bold mb-4 pt-12">Less Than Your Failed Agency. More Results.</h2>
           <p className="text-white/70 text-lg mb-12 max-w-[600px] mx-auto">Most agencies charge $2,000-$5,000/month and deliver excuses. Synthex costs less and actually works.</p>
@@ -903,41 +903,41 @@ export default function Home() {
             {/* Pro Plan (Highlighted) - A$895/mo (Canonical from pricing-config.ts) */}
             <ScrollReveal delay={100}>
               <HoverLift className="h-full">
-                <div className="bg-[#0a1e3b] rounded-[20px] p-10 text-center text-white scale-100 md:scale-105 border-2 border-[#ff5722] shadow-[0_0_30px_rgba(255,87,34,0.3)] hover:shadow-[0_0_50px_rgba(255,87,34,0.5)] z-10 h-full transition-shadow">
-                  <div className="h-20 w-20 mx-auto mb-5 rounded-full bg-[#0a1e3b] border-2 border-[#ff5722] flex items-center justify-center">
-                    <span className="text-[#ff5722] font-bold text-lg">🚀</span>
+                <div className="bg-bg-card rounded-[20px] p-10 text-center text-white scale-100 md:scale-105 border-2 border-accent-500 shadow-[0_0_30px_rgba(255,107,53,0.3)] hover:shadow-[0_0_50px_rgba(255,107,53,0.5)] z-10 h-full transition-shadow">
+                  <div className="h-20 w-20 mx-auto mb-5 rounded-full bg-bg-card border-2 border-accent-500 flex items-center justify-center">
+                    <span className="text-accent-500 font-bold text-lg">🚀</span>
                   </div>
                   <h3 className="text-2xl font-bold mb-4">Pro</h3>
                   <div className="text-[42px] font-extrabold mb-2">
                     A$895<span className="text-base text-white/70 font-medium">/mo</span>
                   </div>
                   <p className="text-sm text-white/70 mb-8">GST inclusive • 14-day free trial</p>
-                  <div className="inline-block bg-[#ff5722] text-white px-3 py-1 rounded-full text-xs font-bold mb-4">MOST POPULAR</div>
+                  <div className="inline-block bg-accent-500 text-white px-3 py-1 rounded-full text-xs font-bold mb-4">MOST POPULAR</div>
                   <ul className="text-left inline-block mb-9 space-y-3">
                     <li className="text-white/90 flex items-center">
-                      <span className="text-[#ff5722] text-xl mr-2.5">✓</span>
+                      <span className="text-accent-500 text-xl mr-2.5">✓</span>
                       5,000 contacts
                     </li>
                     <li className="text-white/90 flex items-center">
-                      <span className="text-[#ff5722] text-xl mr-2.5">✓</span>
+                      <span className="text-accent-500 text-xl mr-2.5">✓</span>
                       250,000 AI tokens/month
                     </li>
                     <li className="text-white/90 flex items-center">
-                      <span className="text-[#ff5722] text-xl mr-2.5">✓</span>
+                      <span className="text-accent-500 text-xl mr-2.5">✓</span>
                       20 website audits/month
                     </li>
                     <li className="text-white/90 flex items-center">
-                      <span className="text-[#ff5722] text-xl mr-2.5">✓</span>
+                      <span className="text-accent-500 text-xl mr-2.5">✓</span>
                       Unlimited campaigns
                     </li>
                     <li className="text-white/90 flex items-center">
-                      <span className="text-[#ff5722] text-xl mr-2.5">✓</span>
+                      <span className="text-accent-500 text-xl mr-2.5">✓</span>
                       Priority support + API access
                     </li>
                   </ul>
                   <Link
                     href="/login"
-                    className="inline-block w-4/5 py-3 px-8 rounded-md font-semibold bg-gradient-to-r from-[#ff5722] to-[#ff784e] text-white border-none shadow-[0_4px_15px_rgba(255,87,34,0.4)] hover:shadow-[0_6px_20px_rgba(255,87,34,0.6)] transition-all"
+                    className="inline-block w-4/5 py-3 px-8 rounded-md font-semibold bg-gradient-to-r from-accent-500 to-accent-400 text-white border-none shadow-[0_4px_15px_rgba(255,107,53,0.4)] hover:shadow-[0_6px_20px_rgba(255,107,53,0.6)] transition-all"
                   >
                     Start Free Trial
                   </Link>
@@ -1101,7 +1101,7 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="py-12 bg-[#051224] text-white">
+      <footer className="py-12 bg-bg-base text-white">
         <div className="max-w-[1200px] mx-auto px-5">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
             {/* Brand */}

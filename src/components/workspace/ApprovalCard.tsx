@@ -43,7 +43,7 @@ export function ApprovalCard({
 
   return (
     <article
-      className={`min-w-[300px] max-w-[300px] bg-[#0d2137]/60 backdrop-blur-md border rounded-2xl p-4 flex flex-col transition-all duration-300 hover:bg-[#0d2137]/80 ${
+      className={`min-w-[300px] max-w-[300px] bg-bg-card/60 backdrop-blur-md border rounded-2xl p-4 flex flex-col transition-all duration-300 hover:bg-bg-card/80 ${
         isHighlighted
           ? "border-cyan-400/50 shadow-[0_0_30px_rgba(34,211,238,0.15)]"
           : "border-cyan-900/30 hover:border-cyan-700/50"
@@ -128,7 +128,7 @@ export function ApprovalCard({
         )}
 
         {type === "blog" && (
-          <div className="w-full h-full bg-[#0f2847] border border-cyan-900/30 p-4 flex flex-col gap-3 rounded-xl">
+          <div className="w-full h-full bg-bg-card border border-cyan-900/30 p-4 flex flex-col gap-3 rounded-xl">
             {/* Blog header image */}
             <div
               className="w-full h-24 bg-gradient-to-br from-cyan-900/50 to-[#0d2137] rounded-lg flex items-center justify-center"

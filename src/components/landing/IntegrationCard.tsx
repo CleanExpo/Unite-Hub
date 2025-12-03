@@ -28,7 +28,7 @@ export function IntegrationCard({
 
   return (
     <div
-      className="group relative bg-gradient-to-br from-white to-blue-50/30 rounded-xl p-6 border border-[#e0e5ec] hover:border-[#347bf7] transition-all duration-300 h-full cursor-pointer"
+      className="group relative bg-gradient-to-br from-bg-card to-secondary-500/5 rounded-xl p-6 border border-border-base hover:border-secondary-500 transition-all duration-300 h-full cursor-pointer"
       onMouseEnter={() => {
         setIsHovered(true);
         setDisplayDescription('Learn more →');
@@ -47,7 +47,7 @@ export function IntegrationCard({
       {/* Badge */}
       {badgeText && (
         <div className="absolute top-4 right-4">
-          <span className="inline-block px-2 py-1 rounded-full bg-gradient-to-r from-[#ff5722] to-[#ff784e] text-white text-[10px] font-bold uppercase tracking-wide">
+          <span className="inline-block px-2 py-1 rounded-full bg-gradient-to-r from-accent-500 to-accent-400 text-white text-[10px] font-bold uppercase tracking-wide">
             {badgeText}
           </span>
         </div>
@@ -61,17 +61,17 @@ export function IntegrationCard({
       {/* Name & Status */}
       <div className="mb-3">
         <div className="flex items-center gap-2 mb-2">
-          <h3 className="text-lg font-bold text-[#1a1a1a]">{name}</h3>
+          <h3 className="text-lg font-bold text-text-primary">{name}</h3>
           {status === 'Connected' && <PulsingDot className="scale-75" />}
         </div>
         <div className="flex items-center gap-2">
           <span
             className={`text-[10px] font-semibold uppercase tracking-wider ${
               status === 'Connected'
-                ? 'text-[#00d4aa]'
+                ? 'text-success-500'
                 : status === 'Coming Soon'
-                ? 'text-[#ff5722]'
-                : 'text-[#666]'
+                ? 'text-accent-500'
+                : 'text-text-secondary'
             }`}
           >
             {status}
@@ -82,7 +82,7 @@ export function IntegrationCard({
       {/* Description */}
       <p
         className={`text-sm mb-4 transition-all duration-300 ${
-          isHovered ? 'text-[#347bf7] font-semibold' : 'text-[#666]'
+          isHovered ? 'text-secondary-500 font-semibold' : 'text-text-secondary'
         }`}
       >
         {displayDescription}
@@ -95,7 +95,7 @@ export function IntegrationCard({
           style={{ opacity: isHovered ? 1 : 0.5 }}
         >
           <button
-            className="text-xs font-semibold text-[#347bf7] hover:text-[#5a9dff] transition-colors"
+            className="text-xs font-semibold text-secondary-500 hover:text-secondary-400 transition-colors"
             onClick={(e) => {
               e.stopPropagation();
               // Add integration configuration logic here

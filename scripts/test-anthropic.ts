@@ -17,7 +17,7 @@ async function test() {
   try {
     console.log('\n--- Testing API Connection ---')
     const response = await client.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-haiku-4-5-20251001',
       max_tokens: 10,
       messages: [{ role: 'user', content: 'Say OK' }]
     })

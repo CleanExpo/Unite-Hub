@@ -26,7 +26,7 @@ export const createVideoRecognitionTool = (geminiService) => {
                 }
                 // Default prompt if not provided
                 const prompt = args.prompt || 'Describe this video';
-                const modelName = args.modelname || 'gemini-2.0-flash';
+                const modelName = args.modelname || 'gemini-2.5-flash';
                 // Upload the file - this will handle waiting for video processing
                 log.info('Uploading and processing video file...');
                 const file = await geminiService.uploadFile(args.filepath);

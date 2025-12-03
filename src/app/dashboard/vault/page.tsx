@@ -82,7 +82,7 @@ export default function VaultPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#071318] relative overflow-hidden">
+    <div className="min-h-screen bg-bg-base relative overflow-hidden">
       {/* Background gradient */}
       <div
         className="absolute inset-0"
@@ -110,7 +110,7 @@ export default function VaultPage() {
 
       {/* Main container */}
       <div className="relative z-10 h-screen p-4 flex justify-center items-center">
-        <div className="w-full max-w-[1600px] h-[calc(100vh-32px)] bg-[#0a1f2e]/40 backdrop-blur-xl rounded-2xl shadow-2xl flex overflow-hidden border border-cyan-800/20">
+        <div className="w-full max-w-[1600px] h-[calc(100vh-32px)] bg-bg-raised/40 backdrop-blur-xl rounded-2xl shadow-2xl flex overflow-hidden border border-cyan-800/20">
           {/* Left Sidebar */}
           <WorkspaceSidebar />
 
@@ -164,13 +164,13 @@ export default function VaultPage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search vault..."
-                  className="w-full bg-[#0d2137]/60 border border-cyan-900/30 rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500/50 transition-colors"
+                  className="w-full bg-bg-card/60 border border-cyan-900/30 rounded-lg pl-10 pr-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500/50 transition-colors"
                 />
               </div>
               <select
                 value={typeFilter}
                 onChange={(e) => setTypeFilter(e.target.value)}
-                className="bg-[#0d2137]/60 border border-cyan-900/30 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-500/50 transition-colors"
+                className="bg-bg-card/60 border border-cyan-900/30 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan-500/50 transition-colors"
               >
                 <option value="all">All Types</option>
                 <option value="video">Videos</option>
@@ -192,7 +192,7 @@ export default function VaultPage() {
                 {filteredItems.map((item) => (
                   <div
                     key={item.id}
-                    className="bg-[#0d2137]/40 border border-cyan-900/20 rounded-xl overflow-hidden hover:border-cyan-500/30 transition-colors cursor-pointer group"
+                    className="bg-bg-card/40 border border-cyan-900/20 rounded-xl overflow-hidden hover:border-cyan-500/30 transition-colors cursor-pointer group"
                   >
                     <div className="aspect-square relative overflow-hidden">
                       <img
@@ -216,7 +216,7 @@ export default function VaultPage() {
                 {filteredItems.map((item) => (
                   <div
                     key={item.id}
-                    className="bg-[#0d2137]/40 border border-cyan-900/20 rounded-xl p-4 flex items-center gap-4 hover:border-cyan-500/30 transition-colors cursor-pointer"
+                    className="bg-bg-card/40 border border-cyan-900/20 rounded-xl p-4 flex items-center gap-4 hover:border-cyan-500/30 transition-colors cursor-pointer"
                   >
                     <div className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
                       <img

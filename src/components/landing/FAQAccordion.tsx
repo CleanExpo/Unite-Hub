@@ -38,7 +38,7 @@ export function FAQAccordion({ items, categories }: FAQAccordionProps) {
       {groupedItems.map((group) => (
         <div key={group.category} className="space-y-4">
           {/* Category Header */}
-          <h3 className="text-lg font-bold text-[#347bf7] uppercase tracking-wider mb-4">
+          <h3 className="text-lg font-bold text-secondary-500 uppercase tracking-wider mb-4">
             {group.category}
           </h3>
 
@@ -55,8 +55,8 @@ export function FAQAccordion({ items, categories }: FAQAccordionProps) {
                   key={itemIdx}
                   className={`border rounded-lg overflow-hidden transition-all duration-300 ${
                     isOpen
-                      ? 'border-[#347bf7] shadow-sm'
-                      : 'border-[#e0e5ec] hover:border-[#347bf7]/50'
+                      ? 'border-secondary-500 shadow-sm'
+                      : 'border-border-base hover:border-secondary-500/50'
                   }`}
                 >
                   {/* Question */}
@@ -68,13 +68,13 @@ export function FAQAccordion({ items, categories }: FAQAccordionProps) {
                   >
                     <span
                       className={`font-semibold text-base transition-colors ${
-                        isOpen ? 'text-[#347bf7]' : 'text-[#1a1a1a]'
+                        isOpen ? 'text-secondary-500' : 'text-text-primary'
                       }`}
                     >
                       {item.question}
                     </span>
                     <span
-                      className={`text-[#347bf7] text-2xl font-light transition-transform duration-300 ${
+                      className={`text-secondary-500 text-2xl font-light transition-transform duration-300 ${
                         isOpen ? 'rotate-180' : 'rotate-0'
                       }`}
                     >
@@ -91,7 +91,7 @@ export function FAQAccordion({ items, categories }: FAQAccordionProps) {
                       opacity: isOpen ? 1 : 0,
                     }}
                   >
-                    <div className="p-4 pt-0 text-[#666] text-sm leading-relaxed">
+                    <div className="p-4 pt-0 text-text-secondary text-sm leading-relaxed">
                       {item.answer}
                     </div>
                   </div>

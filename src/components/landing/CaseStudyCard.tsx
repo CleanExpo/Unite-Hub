@@ -33,7 +33,7 @@ export function CaseStudyCard({
 
   return (
     <div
-      className="group relative bg-white rounded-2xl p-8 border border-[#e0e5ec] hover:border-[#347bf7] transition-all duration-300 h-full"
+      className="group relative bg-bg-card rounded-2xl p-8 border border-border-base hover:border-secondary-500 transition-all duration-300 h-full"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{
@@ -46,10 +46,10 @@ export function CaseStudyCard({
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-2xl font-bold text-[#1a1a1a]">{company}</h3>
+          <h3 className="text-2xl font-bold text-text-primary">{company}</h3>
           <div className="text-2xl">📊</div>
         </div>
-        <div className="inline-block px-3 py-1 rounded-full bg-[#347bf7]/10 text-[#347bf7] text-xs font-semibold">
+        <div className="inline-block px-3 py-1 rounded-full bg-secondary-500/10 text-secondary-500 text-xs font-semibold">
           {industry}
         </div>
       </div>
@@ -58,35 +58,35 @@ export function CaseStudyCard({
       <div className="mb-6 space-y-4">
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-[#ff5722] text-lg">⚠️</span>
-            <h4 className="text-sm font-bold text-[#666] uppercase tracking-wider">Challenge</h4>
+            <span className="text-accent-500 text-lg">⚠️</span>
+            <h4 className="text-sm font-bold text-text-secondary uppercase tracking-wider">Challenge</h4>
           </div>
-          <p className="text-[#666] text-sm leading-relaxed">{challenge}</p>
+          <p className="text-text-secondary text-sm leading-relaxed">{challenge}</p>
         </div>
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-[#00d4aa] text-lg">✓</span>
-            <h4 className="text-sm font-bold text-[#666] uppercase tracking-wider">Solution</h4>
+            <span className="text-success-500 text-lg">✓</span>
+            <h4 className="text-sm font-bold text-text-secondary uppercase tracking-wider">Solution</h4>
           </div>
-          <p className="text-[#666] text-sm leading-relaxed">{solution}</p>
+          <p className="text-text-secondary text-sm leading-relaxed">{solution}</p>
         </div>
       </div>
 
       {/* Metrics - Before/After */}
       <div className="mb-6 space-y-4">
-        <h4 className="text-sm font-bold text-[#1a1a1a] uppercase tracking-wider mb-4">Results</h4>
+        <h4 className="text-sm font-bold text-text-primary uppercase tracking-wider mb-4">Results</h4>
         {metrics.map((metric, idx) => (
           <div key={idx} className="space-y-2">
-            <p className="text-xs font-semibold text-[#666] uppercase">{metric.label}</p>
+            <p className="text-xs font-semibold text-text-secondary uppercase">{metric.label}</p>
             <div className="flex items-center gap-3">
               <div className="flex-1">
-                <div className="text-sm text-[#ff5722] font-medium line-through opacity-70">
+                <div className="text-sm text-accent-500 font-medium line-through opacity-70">
                   {metric.before}
                 </div>
               </div>
-              <div className="text-[#00d4aa] text-sm">→</div>
+              <div className="text-success-500 text-sm">→</div>
               <div className="flex-1">
-                <div className="text-lg text-[#00d4aa] font-bold">{metric.after}</div>
+                <div className="text-lg text-success-500 font-bold">{metric.after}</div>
               </div>
             </div>
           </div>
@@ -94,11 +94,11 @@ export function CaseStudyCard({
       </div>
 
       {/* Testimonial */}
-      <div className="pt-6 border-t border-[#e0e5ec]">
-        <blockquote className="text-[#666] text-sm italic leading-relaxed mb-3">
+      <div className="pt-6 border-t border-border-base">
+        <blockquote className="text-text-secondary text-sm italic leading-relaxed mb-3">
           "{testimonial}"
         </blockquote>
-        <p className="text-xs font-semibold text-[#1a1a1a]">{testimonialAuthor}</p>
+        <p className="text-xs font-semibold text-text-primary">{testimonialAuthor}</p>
       </div>
 
       {/* Hover CTA */}
@@ -106,7 +106,7 @@ export function CaseStudyCard({
         className="absolute bottom-8 right-8 transition-opacity duration-300"
         style={{ opacity: isHovered ? 1 : 0 }}
       >
-        <div className="flex items-center gap-2 text-[#347bf7] text-sm font-semibold">
+        <div className="flex items-center gap-2 text-secondary-500 text-sm font-semibold">
           <span>Read Full Case Study</span>
           <span>→</span>
         </div>
