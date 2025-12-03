@@ -193,7 +193,7 @@ export function ConvexSEOScoringOverlay({
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
       <Card className="w-full max-w-4xl max-h-[90vh] overflow-y-auto dark:bg-gray-900 dark:border-gray-800">
-        <CardHeader className="sticky top-0 bg-white dark:bg-gray-900 z-10 border-b dark:border-gray-800">
+        <CardHeader className="sticky top-0 bg-bg-card z-10 border-b dark:border-gray-800">
           <div className="flex justify-between items-start">
             <div>
               <CardTitle>CONVEX SEO Score Analysis</CardTitle>
@@ -247,7 +247,7 @@ export function ConvexSEOScoringOverlay({
                     <div className={`text-3xl font-bold ${getScoreColor(result.overallScore)}`}>
                       {result.overallScore}
                     </div>
-                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">Overall Score</div>
+                    <div className="text-xs text-text-secondary mt-1">Overall Score</div>
                   </CardContent>
                 </Card>
 
@@ -256,7 +256,7 @@ export function ConvexSEOScoringOverlay({
                     <div className={`text-3xl font-bold ${getScoreColor(result.technical.overallTechnical)}`}>
                       {result.technical.overallTechnical}
                     </div>
-                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">Technical (35%)</div>
+                    <div className="text-xs text-text-secondary mt-1">Technical (35%)</div>
                   </CardContent>
                 </Card>
 
@@ -265,7 +265,7 @@ export function ConvexSEOScoringOverlay({
                     <div className={`text-3xl font-bold ${getScoreColor(result.topical.overallTopical)}`}>
                       {result.topical.overallTopical}
                     </div>
-                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">Topical (40%)</div>
+                    <div className="text-xs text-text-secondary mt-1">Topical (40%)</div>
                   </CardContent>
                 </Card>
 
@@ -274,7 +274,7 @@ export function ConvexSEOScoringOverlay({
                     <div className={`text-3xl font-bold ${getScoreColor(result.authority.overallAuthority)}`}>
                       {result.authority.overallAuthority}
                     </div>
-                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">Authority (25%)</div>
+                    <div className="text-xs text-text-secondary mt-1">Authority (25%)</div>
                   </CardContent>
                 </Card>
               </div>
@@ -296,7 +296,7 @@ export function ConvexSEOScoringOverlay({
                         <span className="text-sm font-bold">{result.technical.overallTechnical}/100</span>
                       </div>
                       <Progress value={result.technical.overallTechnical} className="h-2" />
-                      <div className="grid grid-cols-2 gap-2 text-xs text-gray-600 dark:text-gray-400 mt-2">
+                      <div className="grid grid-cols-2 gap-2 text-xs text-text-secondary mt-2">
                         <div>Core Web Vitals: {result.technical.coreWebVitals}</div>
                         <div>Mobile: {result.technical.mobileOptimization}</div>
                         <div>Site Structure: {result.technical.siteStructure}</div>
@@ -311,7 +311,7 @@ export function ConvexSEOScoringOverlay({
                         <span className="text-sm font-bold">{result.topical.overallTopical}/100</span>
                       </div>
                       <Progress value={result.topical.overallTopical} className="h-2" />
-                      <div className="grid grid-cols-2 gap-2 text-xs text-gray-600 dark:text-gray-400 mt-2">
+                      <div className="grid grid-cols-2 gap-2 text-xs text-text-secondary mt-2">
                         <div>Content Depth: {result.topical.contentDepth}</div>
                         <div>Keyword Coverage: {result.topical.keywordCoverage}</div>
                         <div>Subtopic Completeness: {result.topical.subtopicCompleteness}</div>
@@ -326,7 +326,7 @@ export function ConvexSEOScoringOverlay({
                         <span className="text-sm font-bold">{result.authority.overallAuthority}/100</span>
                       </div>
                       <Progress value={result.authority.overallAuthority} className="h-2" />
-                      <div className="grid grid-cols-2 gap-2 text-xs text-gray-600 dark:text-gray-400 mt-2">
+                      <div className="grid grid-cols-2 gap-2 text-xs text-text-secondary mt-2">
                         <div>Backlinks: {result.authority.backlinks}</div>
                         <div>Domain Age: {result.authority.domainAge}</div>
                         <div>Brand Mentions: {result.authority.brandMentions}</div>
@@ -362,7 +362,7 @@ export function ConvexSEOScoringOverlay({
                               <Badge variant="destructive">Content Gap</Badge>
                             )}
                           </div>
-                          <span className="text-xs text-gray-600 dark:text-gray-400">
+                          <span className="text-xs text-text-secondary">
                             {cluster.opportunity} opportunity
                           </span>
                         </div>
@@ -370,7 +370,7 @@ export function ConvexSEOScoringOverlay({
                           {cluster.keywords.map((keyword, kidx) => (
                             <span
                               key={kidx}
-                              className="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded"
+                              className="text-xs bg-bg-hover px-2 py-1 rounded"
                             >
                               {keyword}
                             </span>
@@ -394,7 +394,7 @@ export function ConvexSEOScoringOverlay({
                   <CardContent>
                     <ul className="space-y-2">
                       {result.contentGaps.map((gap, idx) => (
-                        <li key={idx} className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300">
+                        <li key={idx} className="flex items-start gap-3 text-sm text-text-secondary">
                           <ArrowRight className="h-4 w-4 text-orange-600 mt-0.5 flex-shrink-0" />
                           {gap}
                         </li>
@@ -440,20 +440,20 @@ export function ConvexSEOScoringOverlay({
                 <CardContent className="space-y-3">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">Predicted Position</div>
+                      <div className="text-sm text-text-secondary">Predicted Position</div>
                       <div className="text-2xl font-bold text-blue-600">
                         #{result.rankingPrediction.position}
                       </div>
                     </div>
                     <div>
-                      <div className="text-sm text-gray-600 dark:text-gray-400">Confidence</div>
+                      <div className="text-sm text-text-secondary">Confidence</div>
                       <div className="text-2xl font-bold text-green-600">
                         {result.rankingPrediction.confidence}%
                       </div>
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">Timeframe</div>
+                    <div className="text-sm text-text-secondary mb-2">Timeframe</div>
                     <Badge>{result.rankingPrediction.timeframe}</Badge>
                   </div>
                   {result.rankingPrediction.requiredActions.length > 0 && (
@@ -461,7 +461,7 @@ export function ConvexSEOScoringOverlay({
                       <div className="text-sm font-semibold mb-2">Required Actions:</div>
                       <ul className="space-y-1">
                         {result.rankingPrediction.requiredActions.map((action, idx) => (
-                          <li key={idx} className="text-sm text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                          <li key={idx} className="text-sm text-text-secondary flex items-center gap-2">
                             <div className="h-1.5 w-1.5 bg-blue-600 rounded-full" />
                             {action}
                           </li>
@@ -481,7 +481,7 @@ export function ConvexSEOScoringOverlay({
                   <CardContent>
                     <ul className="space-y-2">
                       {result.recommendations.map((rec, idx) => (
-                        <li key={idx} className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300">
+                        <li key={idx} className="flex items-start gap-3 text-sm text-text-secondary">
                           <div className="h-2 w-2 bg-blue-600 rounded-full mt-1.5 flex-shrink-0" />
                           {rec}
                         </li>

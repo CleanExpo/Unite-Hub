@@ -52,7 +52,7 @@ export function PageHeader({
                   {item.label}
                 </Link>
               ) : (
-                <span className="ml-1 text-gray-900 dark:text-white font-medium">
+                <span className="ml-1 text-text-primary font-medium">
                   {item.label}
                 </span>
               )}
@@ -64,7 +64,7 @@ export function PageHeader({
       {/* Header Content */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-3xl">
+          <h1 className="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
             {title}
           </h1>
           {description && (

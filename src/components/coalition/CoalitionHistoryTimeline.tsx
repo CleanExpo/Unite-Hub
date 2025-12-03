@@ -49,7 +49,7 @@ export function CoalitionHistoryTimeline({ workspaceId }: CoalitionHistoryTimeli
       <div className="border-b border-gray-200 bg-gray-50 px-6 py-4 dark:border-gray-700 dark:bg-gray-800">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <History className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+            <History className="h-5 w-5 text-text-secondary" />
             <h3 className="text-lg font-semibold">Coalition History</h3>
           </div>
           <div className="flex items-center gap-2">
@@ -57,7 +57,7 @@ export function CoalitionHistoryTimeline({ workspaceId }: CoalitionHistoryTimeli
             <select
               value={filterType}
               onChange={(e) => setFilterType(e.target.value as FilterType)}
-              className="text-sm px-3 py-1 rounded border border-gray-300 bg-white dark:bg-gray-800 dark:border-gray-600"
+              className="text-sm px-3 py-1 rounded border border-gray-300 bg-bg-card dark:border-gray-600"
             >
               <option value="all">All</option>
               <option value="success">Success</option>
@@ -69,10 +69,10 @@ export function CoalitionHistoryTimeline({ workspaceId }: CoalitionHistoryTimeli
       </div>
 
       {/* Timeline */}
-      <div className="divide-y divide-gray-200 dark:divide-gray-700">
+      <div className="divide-y divide-border-subtle">
         {filteredCoalitions.length === 0 ? (
           <div className="px-6 py-8 text-center">
-            <p className="text-gray-500 dark:text-gray-400">
+            <p className="text-text-secondary">
               {historicalCoalitions.length === 0
                 ? 'No coalition history yet'
                 : 'No coalitions match the selected filter'}
@@ -95,14 +95,14 @@ export function CoalitionHistoryTimeline({ workspaceId }: CoalitionHistoryTimeli
         <div className="border-t border-gray-200 bg-gray-50 px-6 py-3 dark:border-gray-700 dark:bg-gray-800">
           <div className="grid grid-cols-4 gap-4 text-center text-sm">
             <div>
-              <p className="text-gray-600 dark:text-gray-400">Total</p>
-              <p className="font-semibold text-gray-900 dark:text-white">
+              <p className="text-text-secondary">Total</p>
+              <p className="font-semibold text-text-primary">
                 {filteredCoalitions.length}
               </p>
             </div>
             <div>
-              <p className="text-gray-600 dark:text-gray-400">Avg Synergy</p>
-              <p className="font-semibold text-gray-900 dark:text-white">
+              <p className="text-text-secondary">Avg Synergy</p>
+              <p className="font-semibold text-text-primary">
                 {formatPercentage(
                   filteredCoalitions.reduce((sum, c) => sum + c.synergyScore, 0) /
                     filteredCoalitions.length
@@ -110,7 +110,7 @@ export function CoalitionHistoryTimeline({ workspaceId }: CoalitionHistoryTimeli
               </p>
             </div>
             <div>
-              <p className="text-gray-600 dark:text-gray-400">Success Rate</p>
+              <p className="text-text-secondary">Success Rate</p>
               <p className="font-semibold text-emerald-600 dark:text-emerald-400">
                 {formatPercentage(
                   (filteredCoalitions.filter((c) => c.outcome === 'success').length /
@@ -120,8 +120,8 @@ export function CoalitionHistoryTimeline({ workspaceId }: CoalitionHistoryTimeli
               </p>
             </div>
             <div>
-              <p className="text-gray-600 dark:text-gray-400">Avg Agents</p>
-              <p className="font-semibold text-gray-900 dark:text-white">
+              <p className="text-text-secondary">Avg Agents</p>
+              <p className="font-semibold text-text-primary">
                 {(
                   filteredCoalitions.reduce((sum, c) => sum + c.agentCount, 0) /
                   filteredCoalitions.length
@@ -148,7 +148,7 @@ function CoalitionTimelineEntry({
     <div>
       <button
         onClick={onToggle}
-        className="w-full px-6 py-4 text-left hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        className="w-full px-6 py-4 text-left hover:bg-bg-hover transition-colors"
       >
         <div className="flex items-start justify-between gap-4">
           <div className="flex items-start gap-4 flex-1 min-w-0">
@@ -158,7 +158,7 @@ function CoalitionTimelineEntry({
 
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <h4 className="font-medium text-gray-900 dark:text-white truncate">
+                <h4 className="font-medium text-text-primary truncate">
                   {coalition.taskId}
                 </h4>
                 <Badge className={getOutcomeColor(coalition.outcome)}>
@@ -166,7 +166,7 @@ function CoalitionTimelineEntry({
                 </Badge>
               </div>
 
-              <div className="flex flex-wrap items-center gap-2 text-xs text-gray-600 dark:text-gray-400">
+              <div className="flex flex-wrap items-center gap-2 text-xs text-text-secondary">
                 <span>{coalition.agentCount} agents</span>
                 <span>•</span>
                 <span>Synergy: {formatSynergyScore(coalition.synergyScore)}</span>
@@ -185,27 +185,27 @@ function CoalitionTimelineEntry({
       </button>
 
       {isExpanded && (
-        <div className="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 px-6 py-4">
+        <div className="border-t border-border-subtle bg-bg-raised/50 px-6 py-4">
           <div className="space-y-3 text-sm">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-gray-600 dark:text-gray-400">Task ID</p>
-                <p className="font-medium text-gray-900 dark:text-white break-all">{coalition.taskId}</p>
+                <p className="text-text-secondary">Task ID</p>
+                <p className="font-medium text-text-primary break-all">{coalition.taskId}</p>
               </div>
               <div>
-                <p className="text-gray-600 dark:text-gray-400">Completed</p>
-                <p className="font-medium text-gray-900 dark:text-white">
+                <p className="text-text-secondary">Completed</p>
+                <p className="font-medium text-text-primary">
                   {formatTimestamp(coalition.completedAt)}
                 </p>
               </div>
               <div>
-                <p className="text-gray-600 dark:text-gray-400">Synergy Score</p>
-                <p className="font-medium text-gray-900 dark:text-white">
+                <p className="text-text-secondary">Synergy Score</p>
+                <p className="font-medium text-text-primary">
                   {formatSynergyScore(coalition.synergyScore)}
                 </p>
               </div>
               <div>
-                <p className="text-gray-600 dark:text-gray-400">Outcome</p>
+                <p className="text-text-secondary">Outcome</p>
                 <Badge className={getOutcomeColor(coalition.outcome)}>
                   {formatOutcome(coalition.outcome)}
                 </Badge>
@@ -213,7 +213,7 @@ function CoalitionTimelineEntry({
             </div>
             {coalition.patternType && (
               <div>
-                <p className="text-gray-600 dark:text-gray-400 mb-1">Detected Pattern</p>
+                <p className="text-text-secondary mb-1">Detected Pattern</p>
                 <Badge variant="outline">{coalition.patternType}</Badge>
               </div>
             )}

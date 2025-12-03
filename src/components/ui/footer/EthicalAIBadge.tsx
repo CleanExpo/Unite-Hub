@@ -73,7 +73,7 @@ export function EthicalAIFooterBadge({ className = "" }: { className?: string })
   return (
     <div className={`flex items-center gap-2 ${className}`}>
       <Shield className="w-3 h-3 text-teal-600 dark:text-teal-400" />
-      <span className="text-xs text-gray-500 dark:text-gray-400">
+      <span className="text-xs text-text-secondary">
         Governed by our{" "}
         <Link
           href="/client/dashboard/settings/ethical-ai"

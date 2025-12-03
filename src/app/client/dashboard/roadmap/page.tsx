@@ -71,17 +71,17 @@ export default function RoadmapPage() {
   })).filter((p) => p.tasks.length > 0 || filter === "all");
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-bg-raised">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
             <Calendar className="w-8 h-8 text-teal-600" />
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-2xl font-bold text-text-primary">
               Your Roadmap
             </h1>
           </div>
-          <p className="text-gray-500 dark:text-gray-400">
+          <p className="text-text-secondary">
             Track planned and in-progress work
           </p>
         </div>
@@ -102,7 +102,7 @@ export default function RoadmapPage() {
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value as TaskStatus | "all")}
-            className="text-sm border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-1.5 bg-white dark:bg-gray-800"
+            className="text-sm border border-border-subtle rounded-lg px-3 py-1.5 bg-bg-card"
           >
             <option value="all">All Tasks</option>
             <option value="planned">Planned</option>
@@ -117,14 +117,14 @@ export default function RoadmapPage() {
           {filteredProjects.map((project) => (
             <div
               key={project.id}
-              className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
+              className="bg-bg-card rounded-lg border border-border-subtle"
             >
-              <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-                <h2 className="font-semibold text-gray-900 dark:text-white">
+              <div className="p-4 border-b border-border-subtle">
+                <h2 className="font-semibold text-text-primary">
                   {project.name}
                 </h2>
                 {project.description && (
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                  <p className="text-sm text-text-secondary">
                     {project.description}
                   </p>
                 )}
@@ -140,7 +140,7 @@ export default function RoadmapPage() {
                     >
                       <div className={`w-3 h-3 rounded-full ${config.bg}`} />
                       <div className="flex-1">
-                        <p className="text-sm text-gray-900 dark:text-white">
+                        <p className="text-sm text-text-primary">
                           {task.name}
                         </p>
                         <div className="flex items-center gap-2 text-xs text-gray-500">

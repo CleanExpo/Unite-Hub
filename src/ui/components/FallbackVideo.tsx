@@ -62,7 +62,7 @@ export function FallbackVideo({
       {/* Disclaimer */}
       <div className="flex items-center gap-2 mt-2 px-1">
         <AlertTriangle className="w-3 h-3 text-amber-500" />
-        <p className="text-xs text-gray-500 dark:text-gray-400">
+        <p className="text-xs text-text-secondary">
           Video generation may have failed or timed out
         </p>
       </div>

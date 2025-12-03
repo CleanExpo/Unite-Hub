@@ -142,13 +142,13 @@ export default function PlaybooksListPage() {
                   placeholder="Search playbooks..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2 text-sm border border-border-subtle rounded-lg bg-bg-card focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                 />
               </div>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800"
+                className="px-3 py-2 text-sm border border-border-subtle rounded-lg bg-bg-card"
               >
                 <option value="all">All Status</option>
                 <option value="active">Active</option>
@@ -176,7 +176,7 @@ export default function PlaybooksListPage() {
             <Card>
               <CardContent className="py-12 text-center">
                 <BookOpen className="w-12 h-12 mx-auto text-gray-300 mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg font-medium text-text-primary mb-2">
                   No playbooks found
                 </h3>
                 <p className="text-sm text-gray-500 mb-4">
@@ -237,29 +237,29 @@ function PlaybookCard({ playbook, onStatusChange }: PlaybookCardProps) {
           <div className="relative">
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
+              className="p-1 rounded hover:bg-bg-hover"
             >
               <MoreVertical className="w-4 h-4 text-gray-400" />
             </button>
             {menuOpen && (
-              <div className="absolute right-0 top-8 w-40 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-10">
+              <div className="absolute right-0 top-8 w-40 bg-bg-card rounded-lg shadow-lg border border-border-subtle py-1 z-10">
                 <Link
                   href={`/founder/marketing/playbooks/${playbook.id}`}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-text-secondary hover:bg-bg-hover"
                 >
                   <Edit className="w-4 h-4" /> Edit
                 </Link>
                 {playbook.status === "active" ? (
                   <button
                     onClick={() => onStatusChange(playbook.id, "archived")}
-                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-text-secondary hover:bg-bg-hover"
                   >
                     <Archive className="w-4 h-4" /> Archive
                   </button>
                 ) : (
                   <button
                     onClick={() => onStatusChange(playbook.id, "active")}
-                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    className="w-full flex items-center gap-2 px-3 py-2 text-sm text-text-secondary hover:bg-bg-hover"
                   >
                     <Play className="w-4 h-4" /> Activate
                   </button>
@@ -270,11 +270,11 @@ function PlaybookCard({ playbook, onStatusChange }: PlaybookCardProps) {
         </div>
 
         <Link href={`/founder/marketing/playbooks/${playbook.id}`}>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-teal-600 transition-colors">
+          <h3 className="text-lg font-semibold text-text-primary mb-2 group-hover:text-teal-600 transition-colors">
             {playbook.name}
           </h3>
         </Link>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 line-clamp-2">
+        <p className="text-sm text-text-secondary mb-4 line-clamp-2">
           {playbook.description || "No description"}
         </p>
 
@@ -285,10 +285,10 @@ function PlaybookCard({ playbook, onStatusChange }: PlaybookCardProps) {
             return (
               <div
                 key={platform}
-                className="p-1.5 rounded bg-gray-100 dark:bg-gray-700"
+                className="p-1.5 rounded bg-bg-hover"
                 title={platform}
               >
-                <Icon className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                <Icon className="w-4 h-4 text-text-secondary" />
               </div>
             );
           })}
@@ -356,9 +356,9 @@ function CreatePlaybookModal({ onClose, onCreated }: CreatePlaybookModalProps) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md">
-        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+      <div className="bg-bg-card rounded-xl shadow-xl w-full max-w-md">
+        <div className="p-6 border-b border-border-subtle">
+          <h2 className="text-xl font-semibold text-text-primary">
             Create Social Playbook
           </h2>
           <p className="text-sm text-gray-500 mt-1">
@@ -367,7 +367,7 @@ function CreatePlaybookModal({ onClose, onCreated }: CreatePlaybookModalProps) {
         </div>
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm font-medium text-text-secondary mb-1">
               Playbook Name
             </label>
             <input
@@ -375,30 +375,30 @@ function CreatePlaybookModal({ onClose, onCreated }: CreatePlaybookModalProps) {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900"
+              className="w-full px-3 py-2 border border-border-subtle rounded-lg bg-bg-card"
               placeholder="Q1 LinkedIn Campaign"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm font-medium text-text-secondary mb-1">
               Description
             </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900"
+              className="w-full px-3 py-2 border border-border-subtle rounded-lg bg-bg-card"
               placeholder="Describe the strategy focus..."
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm font-medium text-text-secondary mb-1">
               Primary Goal
             </label>
             <select
               value={primaryGoal}
               onChange={(e) => setPrimaryGoal(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900"
+              className="w-full px-3 py-2 border border-border-subtle rounded-lg bg-bg-card"
             >
               <option value="">Select a goal</option>
               <option value="Lead Generation">Lead Generation</option>
@@ -409,7 +409,7 @@ function CreatePlaybookModal({ onClose, onCreated }: CreatePlaybookModalProps) {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-text-secondary mb-2">
               Platforms
             </label>
             <div className="flex flex-wrap gap-2">
@@ -421,7 +421,7 @@ function CreatePlaybookModal({ onClose, onCreated }: CreatePlaybookModalProps) {
                   className={`flex items-center gap-2 px-3 py-2 rounded-lg border transition-colors ${
                     platforms.includes(platform.id)
                       ? "border-teal-500 bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400"
-                      : "border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400"
+                      : "border-border-subtle text-text-secondary"
                   }`}
                 >
                   <platform.icon className="w-4 h-4" />
@@ -434,7 +434,7 @@ function CreatePlaybookModal({ onClose, onCreated }: CreatePlaybookModalProps) {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
+              className="px-4 py-2 text-sm text-text-secondary hover:bg-bg-hover rounded-lg"
             >
               Cancel
             </button>

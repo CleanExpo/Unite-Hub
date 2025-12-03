@@ -29,9 +29,9 @@ export default function TransparencyFooter({
   if (compact) {
     return (
       <div
-        className={`border-t border-gray-200 dark:border-gray-700 py-4 px-6 ${className}`}
+        className={`border-t border-border-subtle py-4 px-6 ${className}`}
       >
-        <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+        <div className="flex items-center gap-2 text-xs text-text-secondary">
           <Shield className="w-3 h-3" />
           <span>
             AI-generated concepts only • No fake results • Your approval required
@@ -43,12 +43,12 @@ export default function TransparencyFooter({
 
   return (
     <div
-      className={`border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 py-6 px-6 ${className}`}
+      className={`border-t border-border-subtle bg-bg-raised/50 py-6 px-6 ${className}`}
     >
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center gap-2 mb-4">
           <Shield className="w-4 h-4 text-teal-600" />
-          <h4 className="text-sm font-semibold text-gray-900 dark:text-white">
+          <h4 className="text-sm font-semibold text-text-primary">
             Our Transparency Commitment
           </h4>
         </div>
@@ -57,7 +57,7 @@ export default function TransparencyFooter({
           {TRANSPARENCY_STATEMENTS.map((statement, index) => (
             <div key={index} className="flex items-start gap-2">
               <CheckCircle className="w-3 h-3 text-green-500 flex-shrink-0 mt-0.5" />
-              <p className="text-xs text-gray-600 dark:text-gray-400">
+              <p className="text-xs text-text-secondary">
                 {statement}
               </p>
             </div>
@@ -79,7 +79,7 @@ export function TransparencyStatement({
   return (
     <div className={`flex items-center gap-2 ${className}`}>
       <Shield className="w-3 h-3 text-teal-600 flex-shrink-0" />
-      <p className="text-xs text-gray-500 dark:text-gray-400">{statement}</p>
+      <p className="text-xs text-text-secondary">{statement}</p>
     </div>
   );
 }

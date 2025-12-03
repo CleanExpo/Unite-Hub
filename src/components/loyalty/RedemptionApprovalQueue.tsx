@@ -143,11 +143,11 @@ export function RedemptionApprovalQueue({
             {requests.map((request) => (
               <div
                 key={request.id}
-                className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                className="border border-border-subtle rounded-lg p-4 hover:bg-bg-hover/50 transition-colors"
               >
                 <div className="flex justify-between items-start mb-3">
                   <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900 dark:text-white">
+                    <h3 className="font-semibold text-text-primary">
                       {request.rewardName}
                     </h3>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
@@ -173,7 +173,7 @@ export function RedemptionApprovalQueue({
                 {request.founderNotes && (
                   <div className="bg-gray-50 dark:bg-gray-700/50 rounded p-2 mb-4 text-sm">
                     <p className="font-semibold text-xs text-muted-foreground mb-1">Notes</p>
-                    <p className="text-gray-700 dark:text-gray-300">{request.founderNotes}</p>
+                    <p className="text-text-secondary">{request.founderNotes}</p>
                   </div>
                 )}
 

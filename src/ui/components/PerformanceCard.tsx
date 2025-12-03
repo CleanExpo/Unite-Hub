@@ -92,8 +92,8 @@ export function PerformanceCard({ report, onRefresh, onApprove, className = "" }
 
         {/* Narrative Summary */}
         {report.narrative && (
-          <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
-            <p className={`text-sm text-gray-600 dark:text-gray-400 ${!isExpanded && "line-clamp-3"}`}>
+          <div className="pt-3 border-t border-border-subtle">
+            <p className={`text-sm text-text-secondary ${!isExpanded && "line-clamp-3"}`}>
               {report.narrative}
             </p>
             {report.narrative.length > 200 && (
@@ -109,18 +109,18 @@ export function PerformanceCard({ report, onRefresh, onApprove, className = "" }
         )}
 
         {/* Data Sources */}
-        <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-500">
+        <div className="flex items-center gap-1 text-xs text-text-muted">
           <Database className="w-3 h-3" />
           <span>{report.data_sources.length} data source{report.data_sources.length !== 1 ? "s" : ""}</span>
         </div>
       </CardContent>
 
-      <CardFooter className="flex gap-2 pt-3 border-t border-gray-200 dark:border-gray-700">
+      <CardFooter className="flex gap-2 pt-3 border-t border-border-subtle">
         {onRefresh && (
           <button
             type="button"
             onClick={onRefresh}
-            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-gray-600 bg-gray-100 rounded hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-gray-600 bg-gray-100 rounded hover:bg-bg-hover dark:text-gray-300 dark:hover:bg-gray-700"
           >
             <RefreshCw className="w-3 h-3" />
             Refresh
@@ -153,10 +153,10 @@ function MetricBox({ label, value, total, type, trend }: MetricBoxProps) {
   const trendColor = trend === "up" ? "text-green-500" : trend === "down" ? "text-red-500" : "text-gray-400";
 
   return (
-    <div className="p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
-      <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">{label}</div>
+    <div className="p-3 bg-bg-raised/50 rounded-lg">
+      <div className="text-xs text-text-secondary mb-1">{label}</div>
       <div className="flex items-baseline gap-1">
-        <span className="text-lg font-semibold text-gray-900 dark:text-white">{value}</span>
+        <span className="text-lg font-semibold text-text-primary">{value}</span>
         {type === "progress" && total !== undefined && (
           <span className="text-xs text-gray-500">/ {total}</span>
         )}
@@ -165,7 +165,7 @@ function MetricBox({ label, value, total, type, trend }: MetricBoxProps) {
         )}
       </div>
       {type === "progress" && total !== undefined && total > 0 && (
-        <div className="mt-2 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+        <div className="mt-2 h-1.5 bg-bg-hover rounded-full overflow-hidden">
           <div
             className="h-full bg-teal-500 rounded-full transition-all duration-300"
             style={{ width: `${Math.min((value / total) * 100, 100)}%` }}

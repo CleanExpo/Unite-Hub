@@ -72,10 +72,10 @@ export default function AgencyActivityFeed() {
   ];
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+    <div className="bg-bg-card rounded-lg border border-border-subtle p-6">
       <div className="flex items-center gap-2 mb-4">
         <Activity className="w-5 h-5 text-teal-600" />
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+        <h3 className="text-lg font-semibold text-text-primary">
           Recent Activity
         </h3>
       </div>
@@ -84,14 +84,14 @@ export default function AgencyActivityFeed() {
         {activities.map((activity) => (
           <div
             key={activity.id}
-            className="flex items-start gap-3 pb-4 border-b border-gray-100 dark:border-gray-700 last:border-0 last:pb-0"
+            className="flex items-start gap-3 pb-4 border-b border-border-subtle last:border-0 last:pb-0"
           >
-            <div className="flex-shrink-0 p-2 bg-gray-100 dark:bg-gray-700 rounded-lg text-gray-600 dark:text-gray-300">
+            <div className="flex-shrink-0 p-2 bg-bg-hover rounded-lg text-gray-600 dark:text-gray-300">
               {activity.icon}
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <span className="font-medium text-gray-900 dark:text-white">
+                <span className="font-medium text-text-primary">
                   {activity.title}
                 </span>
                 <span
@@ -113,7 +113,7 @@ export default function AgencyActivityFeed() {
       </div>
 
       {activities.length === 0 && (
-        <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
+        <p className="text-sm text-text-secondary text-center py-4">
           No recent activity yet. Check back soon!
         </p>
       )}

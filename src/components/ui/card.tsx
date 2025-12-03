@@ -100,7 +100,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
       gradient: 'bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10',
       warning: 'bg-yellow-500/10 border-yellow-500/30',
       bordered: 'border-2',
-      flat: 'bg-gray-50 dark:bg-gray-900 shadow-none',
+      flat: 'bg-bg-raised shadow-none',
       elevated: 'shadow-xl',
     };
 

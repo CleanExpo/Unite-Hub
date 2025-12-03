@@ -17,11 +17,11 @@ function ChartSkeleton({ height = 400 }: { height?: number }) {
   return (
     <Card>
       <CardHeader>
-        <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-1/3 animate-pulse" />
+        <div className="h-6 bg-bg-hover rounded w-1/3 animate-pulse" />
       </CardHeader>
       <CardContent>
         <div
-          className="bg-gray-100 dark:bg-gray-800 rounded flex items-center justify-center animate-pulse"
+          className="bg-bg-hover rounded flex items-center justify-center animate-pulse"
           style={{ height }}
         >
           <div className="text-center">

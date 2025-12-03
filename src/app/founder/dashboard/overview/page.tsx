@@ -185,7 +185,7 @@ export default function FounderOverviewPage() {
                 <Card>
                   <CardContent className="pt-4">
                     <div className="text-sm text-gray-500">Top Category</div>
-                    <div className="text-xl font-semibold text-gray-900 dark:text-white capitalize">
+                    <div className="text-xl font-semibold text-text-primary capitalize">
                       {time?.topCategory || "N/A"}
                     </div>
                   </CardContent>
@@ -249,10 +249,10 @@ export default function FounderOverviewPage() {
                       <Users className="w-6 h-6" />
                     </div>
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">
+                      <p className="text-sm font-medium text-text-primary">
                         First Client Journeys
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                      <p className="text-xs text-text-secondary">
                         Track soft-launch client progress through 90-day onboarding
                       </p>
                     </div>
@@ -280,8 +280,8 @@ export default function FounderOverviewPage() {
 
             {/* Data Notice */}
             <Section className="mt-8">
-              <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
-                <p className="text-xs text-gray-500 dark:text-gray-400">
+              <div className="p-4 bg-bg-raised/50 rounded-lg">
+                <p className="text-xs text-text-secondary">
                   <strong>Founder-Only:</strong> All data shown is real and sourced from existing services.
                   No synthetic metrics or projections beyond historical averages.
                 </p>
@@ -318,7 +318,7 @@ function MetricCard({ icon: Icon, label, value, color }: MetricCardProps) {
           </div>
           <div>
             <p className="text-sm text-gray-500">{label}</p>
-            <p className="text-xl font-semibold text-gray-900 dark:text-white">{value}</p>
+            <p className="text-xl font-semibold text-text-primary">{value}</p>
           </div>
         </div>
       </CardContent>
@@ -335,9 +335,9 @@ function QuickLink({ href, label }: QuickLinkProps) {
   return (
     <Link
       href={href}
-      className="flex items-center justify-between p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-teal-500 transition-colors"
+      className="flex items-center justify-between p-3 bg-bg-card border border-border-subtle rounded-lg hover:border-teal-500 transition-colors"
     >
-      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{label}</span>
+      <span className="text-sm font-medium text-text-secondary">{label}</span>
       <ArrowRight className="w-4 h-4 text-gray-400" />
     </Link>
   );

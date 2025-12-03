@@ -115,7 +115,7 @@ export default function ManagedServiceProjectsPage() {
       case 'cancelled':
         return 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300';
       default:
-        return 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300';
+        return 'bg-bg-hover text-text-secondary';
     }
   };
 
@@ -143,7 +143,7 @@ export default function ManagedServiceProjectsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <p className="text-gray-600 dark:text-gray-400">Loading projects...</p>
+        <p className="text-text-secondary">Loading projects...</p>
       </div>
     );
   }
@@ -153,8 +153,8 @@ export default function ManagedServiceProjectsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Managed Service Projects</h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">Track and manage all your active service projects</p>
+          <h1 className="text-3xl font-bold text-text-primary">Managed Service Projects</h1>
+          <p className="text-text-secondary mt-1">Track and manage all your active service projects</p>
         </div>
         <button
           onClick={() => router.push('/founder/synthex/projects/new')}
@@ -167,40 +167,40 @@ export default function ManagedServiceProjectsPage() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+        <div className="bg-bg-card rounded-lg p-4 border border-border-subtle">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Total Projects</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{stats.totalProjects}</p>
+              <p className="text-sm text-text-secondary">Total Projects</p>
+              <p className="text-2xl font-bold text-text-primary mt-1">{stats.totalProjects}</p>
             </div>
             <TrendingUp className="w-8 h-8 text-blue-500" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+        <div className="bg-bg-card rounded-lg p-4 border border-border-subtle">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Active Projects</p>
+              <p className="text-sm text-text-secondary">Active Projects</p>
               <p className="text-2xl font-bold text-green-600 dark:text-green-400 mt-1">{stats.activeProjects}</p>
             </div>
             <CheckCircle className="w-8 h-8 text-green-500" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+        <div className="bg-bg-card rounded-lg p-4 border border-border-subtle">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Completed Projects</p>
+              <p className="text-sm text-text-secondary">Completed Projects</p>
               <p className="text-2xl font-bold text-purple-600 dark:text-purple-400 mt-1">{stats.completedProjects}</p>
             </div>
             <TrendingUp className="w-8 h-8 text-purple-500" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+        <div className="bg-bg-card rounded-lg p-4 border border-border-subtle">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Total Hours/Month</p>
+              <p className="text-sm text-text-secondary">Total Hours/Month</p>
               <p className="text-2xl font-bold text-orange-600 dark:text-orange-400 mt-1">{stats.totalHoursAllocated}</p>
             </div>
             <Clock className="w-8 h-8 text-orange-500" />
@@ -216,11 +216,11 @@ export default function ManagedServiceProjectsPage() {
       )}
 
       {/* Projects List */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div className="bg-bg-card rounded-lg border border-border-subtle overflow-hidden">
         {projects.length === 0 ? (
           <div className="p-12 text-center">
             <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600 dark:text-gray-400 mb-4">No projects yet</p>
+            <p className="text-text-secondary mb-4">No projects yet</p>
             <button
               onClick={() => router.push('/founder/synthex/projects/new')}
               className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
@@ -229,17 +229,17 @@ export default function ManagedServiceProjectsPage() {
             </button>
           </div>
         ) : (
-          <div className="divide-y divide-gray-200 dark:divide-gray-700">
+          <div className="divide-y divide-border-subtle">
             {projects.map((project) => (
               <div
                 key={project.id}
                 onClick={() => router.push(`/founder/synthex/projects/${project.id}`)}
-                className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer transition-colors"
+                className="p-4 hover:bg-bg-hover cursor-pointer transition-colors"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                      <h3 className="text-lg font-semibold text-text-primary">
                         {project.project_name}
                       </h3>
                       <span
@@ -252,39 +252,39 @@ export default function ManagedServiceProjectsPage() {
                       </span>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-3 text-sm text-gray-600 dark:text-gray-400">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-3 text-sm text-text-secondary">
                       <div>
-                        <p className="text-xs text-gray-500 dark:text-gray-500">Client</p>
-                        <p className="font-medium text-gray-900 dark:text-white">{project.client_name}</p>
+                        <p className="text-xs text-text-muted">Client</p>
+                        <p className="font-medium text-text-primary">{project.client_name}</p>
                       </div>
                       <div>
-                        <p className="text-xs text-gray-500 dark:text-gray-500">Service Type</p>
-                        <p className="font-medium text-gray-900 dark:text-white">
+                        <p className="text-xs text-text-muted">Service Type</p>
+                        <p className="font-medium text-text-primary">
                           {project.service_type.replace(/_/g, ' ').toUpperCase()}
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs text-gray-500 dark:text-gray-500">Tier</p>
-                        <p className="font-medium text-gray-900 dark:text-white">
+                        <p className="text-xs text-text-muted">Tier</p>
+                        <p className="font-medium text-text-primary">
                           {project.service_tier.charAt(0).toUpperCase() + project.service_tier.slice(1)}
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs text-gray-500 dark:text-gray-500">Start Date</p>
-                        <p className="font-medium text-gray-900 dark:text-white flex items-center gap-1">
+                        <p className="text-xs text-text-muted">Start Date</p>
+                        <p className="font-medium text-text-primary flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
                           {formatDate(project.start_date)}
                         </p>
                       </div>
                     </div>
 
-                    <div className="mt-3 text-sm text-gray-600 dark:text-gray-400">
+                    <div className="mt-3 text-sm text-text-secondary">
                       <p>{project.monthly_hours} hours/month allocated</p>
                     </div>
                   </div>
 
                   <div className="text-right">
-                    <p className="text-xs text-gray-500 dark:text-gray-500 mb-1">Hours/Month</p>
+                    <p className="text-xs text-text-muted mb-1">Hours/Month</p>
                     <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{project.monthly_hours}</p>
                   </div>
                 </div>

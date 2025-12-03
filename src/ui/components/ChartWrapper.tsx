@@ -38,12 +38,12 @@ export function ChartWrapper({
       {(title || description) && (
         <div className="mb-4">
           {title && (
-            <h3 className="text-sm font-medium text-gray-900 dark:text-white">
+            <h3 className="text-sm font-medium text-text-primary">
               {title}
             </h3>
           )}
           {description && (
-            <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
+            <p className="mt-0.5 text-xs text-text-secondary">
               {description}
             </p>
           )}
@@ -74,12 +74,12 @@ function ChartSkeleton() {
           {[40, 65, 45, 80, 55, 70, 50].map((h, i) => (
             <div
               key={i}
-              className="flex-1 bg-gray-200 dark:bg-gray-700 rounded"
+              className="flex-1 bg-bg-hover rounded"
               style={{ height: `${h}%` }}
             />
           ))}
         </div>
-        <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded w-3/4" />
+        <div className="h-2 bg-bg-hover rounded w-3/4" />
       </div>
     </div>
   );
@@ -88,8 +88,8 @@ function ChartSkeleton() {
 function ChartEmpty({ message }: { message: string }) {
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-center">
-      <BarChart3 className="w-10 h-10 text-gray-300 dark:text-gray-600 mb-2" />
-      <p className="text-sm text-gray-500 dark:text-gray-400">{message}</p>
+      <BarChart3 className="w-10 h-10 text-text-muted mb-2" />
+      <p className="text-sm text-text-secondary">{message}</p>
     </div>
   );
 }
@@ -110,18 +110,18 @@ export function StatCard({
   const changeColor = {
     positive: "text-green-600 dark:text-green-400",
     negative: "text-red-600 dark:text-red-400",
-    neutral: "text-gray-500 dark:text-gray-400",
+    neutral: "text-text-secondary",
   }[changeType || "neutral"];
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+    <div className="bg-bg-card rounded-lg border border-border-subtle p-4">
       <div className="flex items-center justify-between">
-        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
+        <p className="text-sm font-medium text-text-secondary">
           {label}
         </p>
         {Icon && <Icon className="w-4 h-4 text-gray-400" />}
       </div>
-      <p className="mt-2 text-2xl font-semibold text-gray-900 dark:text-white">
+      <p className="mt-2 text-2xl font-semibold text-text-primary">
         {value}
       </p>
       {change && (

@@ -134,7 +134,7 @@ export function AgentCommandPanel({
                   onChange={(e) =>
                     setParameters({ ...parameters, [param]: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-900 text-sm"
+                  className="w-full px-3 py-2 border border-border-base rounded bg-bg-card text-sm"
                 />
               ))}
             </div>

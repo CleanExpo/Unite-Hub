@@ -71,7 +71,7 @@ export default function KeywordMovementChart({
     if (active && payload && payload.length) {
       const point = payload[0].payload;
       return (
-        <div className="bg-white dark:bg-gray-800 p-3 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+        <div className="bg-bg-card p-3 rounded-lg shadow-lg border border-border-subtle">
           <p className="text-sm text-gray-500 mb-2">{point.fullDate}</p>
           <div className="space-y-1 text-sm">
             <p className="text-green-500">
@@ -154,7 +154,7 @@ export default function KeywordMovementChart({
           </BarChart>
         </ResponsiveContainer>
 
-        <div className="grid grid-cols-4 gap-2 mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+        <div className="grid grid-cols-4 gap-2 mt-4 pt-4 border-t border-border-subtle">
           <div className="text-center">
             <div className="text-xs text-gray-500">Improved</div>
             <div className="font-semibold text-green-500">+{totals.improved}</div>

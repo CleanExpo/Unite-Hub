@@ -165,7 +165,7 @@ export default function AIDOContentPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Content Assets Manager</h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">
+          <p className="text-text-secondary mt-1">
             Algorithmic immunity content optimized for AI citation
           </p>
         </div>
@@ -440,11 +440,11 @@ export default function AIDOContentPage() {
 
                     {/* QA Blocks Preview */}
                     {asset.qaBlocks && asset.qaBlocks.length > 0 && (
-                      <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                      <div className="mt-4 pt-4 border-t border-border-subtle">
                         <p className="text-xs text-gray-500 mb-2">
                           {asset.qaBlocks.length} Q&A Blocks
                         </p>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-1">
+                        <p className="text-sm text-text-secondary line-clamp-1">
                           {asset.qaBlocks[0].question}
                         </p>
                       </div>

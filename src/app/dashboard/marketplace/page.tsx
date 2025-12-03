@@ -147,7 +147,7 @@ export default function MarketplacePage() {
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="rounded-lg border border-gray-200 bg-white p-8 dark:border-gray-700 dark:bg-gray-900">
-          <p className="text-gray-600 dark:text-gray-400">Loading workspace information...</p>
+          <p className="text-text-secondary">Loading workspace information...</p>
         </div>
       </div>
     );
@@ -159,10 +159,10 @@ export default function MarketplacePage() {
       <div className="border-b border-gray-200 bg-white px-6 py-4 dark:border-gray-700 dark:bg-gray-900">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-2xl font-bold text-text-primary">
               Task Marketplace
             </h1>
-            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+            <p className="mt-1 text-sm text-text-secondary">
               Multi-agent auction system for task assignment and resource allocation
             </p>
           </div>

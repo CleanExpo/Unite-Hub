@@ -109,7 +109,7 @@ export default function CoalitionPage() {
   if (!workspaceId) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <p className="text-gray-600 dark:text-gray-400">Loading...</p>
+        <p className="text-text-secondary">Loading...</p>
       </div>
     );
   }
@@ -124,11 +124,11 @@ export default function CoalitionPage() {
           <div>
             <div className="flex items-center gap-2">
               <Shield className="h-6 w-6 text-blue-600" />
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+              <h1 className="text-2xl font-bold text-text-primary">
                 Coalition Formation
               </h1>
             </div>
-            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+            <p className="mt-1 text-sm text-text-secondary">
               Multi-agent coalition management and real-time monitoring
             </p>
           </div>
@@ -148,11 +148,11 @@ export default function CoalitionPage() {
       <div className="border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-3 dark:border-gray-700 dark:from-blue-900/20 dark:to-indigo-900/20">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm font-medium text-gray-900 dark:text-white">
+            <p className="text-sm font-medium text-text-primary">
               {coalitionActive ? '✓ Coalition Active' : '○ No Active Coalition'}
             </p>
           </div>
-          <div className="flex items-center gap-4 text-xs text-gray-600 dark:text-gray-400">
+          <div className="flex items-center gap-4 text-xs text-text-secondary">
             <span>Real-time polling: {pollingInterval}ms</span>
           </div>
         </div>

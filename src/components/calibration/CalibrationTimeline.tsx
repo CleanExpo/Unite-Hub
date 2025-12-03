@@ -21,30 +21,30 @@ export const CalibrationTimeline: React.FC<CalibrationTimelineProps> = ({ cycles
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <Clock className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-        <h3 className="font-semibold text-gray-900 dark:text-white">Calibration History</h3>
+        <Clock className="w-5 h-5 text-text-secondary" />
+        <h3 className="font-semibold text-text-primary">Calibration History</h3>
       </div>
 
       <div className="space-y-2">
         {cycles.map((cycle, idx) => (
-          <div key={idx} className="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+          <div key={idx} className="flex items-center gap-3 p-3 bg-bg-card rounded-lg border border-border-subtle">
             <div className="flex-shrink-0 w-2 h-2 rounded-full bg-blue-500" />
             <div className="flex-1">
-              <p className="text-sm font-medium text-gray-900 dark:text-white">
+              <p className="text-sm font-medium text-text-primary">
                 Cycle #{cycle.cycleNumber}
               </p>
-              <p className="text-xs text-gray-600 dark:text-gray-400">
+              <p className="text-xs text-text-secondary">
                 {new Date(cycle.timestamp).toLocaleString()}
               </p>
             </div>
             <div className="text-right">
               <div className="flex items-center gap-1">
                 <TrendingUp className="w-4 h-4 text-green-600" />
-                <span className="text-sm font-bold text-gray-900 dark:text-white">
+                <span className="text-sm font-bold text-text-primary">
                   {cycle.improvement > 0 ? '+' : ''}{cycle.improvement.toFixed(1)}%
                 </span>
               </div>
-              <p className="text-xs text-gray-600 dark:text-gray-400">
+              <p className="text-xs text-text-secondary">
                 {cycle.changeCount} changes, {cycle.confidence}% confidence
               </p>
             </div>
@@ -53,7 +53,7 @@ export const CalibrationTimeline: React.FC<CalibrationTimelineProps> = ({ cycles
       </div>
 
       {cycles.length === 0 && (
-        <p className="text-center text-sm text-gray-600 dark:text-gray-400 py-4">
+        <p className="text-center text-sm text-text-secondary py-4">
           No calibration cycles yet
         </p>
       )}

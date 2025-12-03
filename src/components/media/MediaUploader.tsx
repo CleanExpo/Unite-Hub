@@ -243,17 +243,17 @@ export function MediaUploader({
         className={`border-2 border-dashed rounded-lg p-8 text-center transition-all ${
           isDragging
             ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-            : "border-gray-300 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-600"
+            : "border-border-base hover:border-gray-400 dark:hover:border-gray-600"
         }`}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
       >
-        <Upload className="h-12 w-12 mx-auto text-gray-400 dark:text-gray-600 mb-4" />
-        <p className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
+        <Upload className="h-12 w-12 mx-auto text-text-muted mb-4" />
+        <p className="text-lg font-medium text-text-secondary mb-2">
           Drag and drop files here
         </p>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+        <p className="text-sm text-text-secondary mb-4">
           or click to browse (max {maxSizeMB}MB)
         </p>
         <input
@@ -273,7 +273,7 @@ export function MediaUploader({
 
       {/* Tags Input */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <label className="text-sm font-medium text-text-secondary">
           Tags (optional)
         </label>
         <div className="flex gap-2">
@@ -283,11 +283,11 @@ export function MediaUploader({
             onChange={(e) => setTagInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && addTag()}
             placeholder="Add tags..."
-            className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+            className="flex-1 px-3 py-2 border border-border-base rounded-lg bg-bg-card text-gray-900 dark:text-gray-100"
           />
           <button
             onClick={addTag}
-            className="px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg"
+            className="px-4 py-2 bg-bg-hover hover:bg-bg-hover rounded-lg"
           >
             Add
           </button>
@@ -312,13 +312,13 @@ export function MediaUploader({
       {/* Upload Progress */}
       {uploads.length > 0 && (
         <div className="space-y-2">
-          <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          <h3 className="text-sm font-medium text-text-secondary">
             Uploads ({uploads.length})
           </h3>
           {uploads.map((upload, index) => (
             <div
               key={index}
-              className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"
+              className="flex items-center gap-3 p-3 bg-bg-raised rounded-lg"
             >
               {getFileIcon(detectFileType(upload.file) || "")}
               <div className="flex-1 min-w-0">
@@ -326,7 +326,7 @@ export function MediaUploader({
                   {upload.file.name}
                 </p>
                 <div className="flex items-center gap-2 mt-1">
-                  <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                  <div className="flex-1 bg-bg-hover rounded-full h-2">
                     <div
                       className={`h-2 rounded-full transition-all ${
                         upload.status === "failed"
@@ -338,7 +338,7 @@ export function MediaUploader({
                       style={{ width: `${upload.progress}%` }}
                     />
                   </div>
-                  <span className="text-xs text-gray-500 dark:text-gray-400 capitalize">
+                  <span className="text-xs text-text-secondary capitalize">
                     {upload.status}
                   </span>
                 </div>

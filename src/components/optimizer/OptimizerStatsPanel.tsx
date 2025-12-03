@@ -39,8 +39,8 @@ export const OptimizerStatsPanel: React.FC<OptimizerStatsPanelProps> = ({
   if (loading) {
     return (
       <div className="space-y-3">
-        <h3 className="font-semibold text-gray-900 dark:text-white">Statistics & Patterns</h3>
-        <div className="text-sm text-gray-600 dark:text-gray-400">Loading stats...</div>
+        <h3 className="font-semibold text-text-primary">Statistics & Patterns</h3>
+        <div className="text-sm text-text-secondary">Loading stats...</div>
       </div>
     );
   }
@@ -61,20 +61,20 @@ export const OptimizerStatsPanel: React.FC<OptimizerStatsPanelProps> = ({
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <BarChart3 className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-        <h3 className="font-semibold text-gray-900 dark:text-white">Statistics & Patterns</h3>
+        <BarChart3 className="w-5 h-5 text-text-secondary" />
+        <h3 className="font-semibold text-text-primary">Statistics & Patterns</h3>
       </div>
 
       {/* Summary Stats */}
-      <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+      <div className="p-4 bg-bg-raised rounded-lg border border-border-subtle">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Total Optimizations</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">{totalOptimizations}</p>
+            <p className="text-xs font-medium text-text-secondary">Total Optimizations</p>
+            <p className="text-2xl font-bold text-text-primary">{totalOptimizations}</p>
           </div>
           <div>
-            <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Patterns Detected</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">{patterns.length}</p>
+            <p className="text-xs font-medium text-text-secondary">Patterns Detected</p>
+            <p className="text-2xl font-bold text-text-primary">{patterns.length}</p>
           </div>
         </div>
       </div>
@@ -82,21 +82,21 @@ export const OptimizerStatsPanel: React.FC<OptimizerStatsPanelProps> = ({
       {/* Detected Patterns */}
       {patterns.length > 0 && (
         <div className="space-y-2">
-          <h4 className="text-sm font-medium text-gray-900 dark:text-white">Detected Patterns</h4>
+          <h4 className="text-sm font-medium text-text-primary">Detected Patterns</h4>
           <div className="space-y-2 max-h-64 overflow-y-auto">
             {patterns.map((pattern) => (
               <div
                 key={pattern.patternType}
-                className="p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                className="p-3 rounded-lg border border-border-subtle bg-bg-card hover:bg-bg-hover/50 transition-colors"
               >
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <span className="text-lg">{getPatternIcon(pattern.patternType)}</span>
                     <div>
-                      <p className="text-xs font-semibold text-gray-900 dark:text-white capitalize">
+                      <p className="text-xs font-semibold text-text-primary capitalize">
                         {pattern.patternType.replace(/_/g, ' ')}
                       </p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">
+                      <p className="text-xs text-text-secondary">
                         Detected {pattern.occurrences} time{pattern.occurrences !== 1 ? 's' : ''}
                       </p>
                     </div>
@@ -105,12 +105,12 @@ export const OptimizerStatsPanel: React.FC<OptimizerStatsPanelProps> = ({
                     <p className="text-xs font-semibold text-green-600 dark:text-green-400">
                       +{pattern.avgEfficiencyGain.toFixed(1)}%
                     </p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">
+                    <p className="text-xs text-text-secondary">
                       {(pattern.successRate * 100).toFixed(0)}% success
                     </p>
                   </div>
                 </div>
-                <div className="text-xs text-gray-600 dark:text-gray-400 space-y-0.5">
+                <div className="text-xs text-text-secondary space-y-0.5">
                   <p>First applied: {new Date(pattern.firstAppliedAt).toLocaleDateString()}</p>
                   <p>Last applied: {new Date(pattern.lastAppliedAt).toLocaleDateString()}</p>
                 </div>
@@ -124,15 +124,15 @@ export const OptimizerStatsPanel: React.FC<OptimizerStatsPanelProps> = ({
       {dailyTrends.length > 0 && (
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <TrendingUp className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-            <h4 className="text-sm font-medium text-gray-900 dark:text-white">7-Day Trend</h4>
+            <TrendingUp className="w-4 h-4 text-text-secondary" />
+            <h4 className="text-sm font-medium text-text-primary">7-Day Trend</h4>
           </div>
           <div className="space-y-1.5">
             {dailyTrends.map((metric) => (
-              <div key={metric.day} className="p-2 bg-gray-50 dark:bg-gray-800 rounded text-xs">
+              <div key={metric.day} className="p-2 bg-bg-raised rounded text-xs">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="font-medium text-gray-900 dark:text-white">{metric.day}</span>
-                  <span className="text-gray-600 dark:text-gray-400">{metric.optimizations} ops</span>
+                  <span className="font-medium text-text-primary">{metric.day}</span>
+                  <span className="text-text-secondary">{metric.optimizations} ops</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex-1 mr-2">
@@ -144,7 +144,7 @@ export const OptimizerStatsPanel: React.FC<OptimizerStatsPanelProps> = ({
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-gray-600 dark:text-gray-400">
+                    <p className="text-text-secondary">
                       {metric.successRate.toFixed(0)}% success
                     </p>
                     <p className="text-green-600 dark:text-green-400 font-semibold">
@@ -159,7 +159,7 @@ export const OptimizerStatsPanel: React.FC<OptimizerStatsPanelProps> = ({
       )}
 
       {patterns.length === 0 && dailyTrends.length === 0 && (
-        <div className="text-center py-4 text-sm text-gray-600 dark:text-gray-400">
+        <div className="text-center py-4 text-sm text-text-secondary">
           <AlertCircle className="w-4 h-4 inline mr-2" />
           No pattern data available yet
         </div>

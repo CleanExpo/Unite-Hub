@@ -73,14 +73,14 @@ export default function EnhancementsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-bg-raised">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-3">
               <Lightbulb className="w-8 h-8 text-teal-600" />
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+              <h1 className="text-2xl font-bold text-text-primary">
                 Enhancement Suggestions
               </h1>
             </div>
@@ -93,7 +93,7 @@ export default function EnhancementsPage() {
               {scanning ? "Scanning..." : "Run Scan"}
             </button>
           </div>
-          <p className="text-gray-500 dark:text-gray-400">
+          <p className="text-text-secondary">
             AI-powered suggestions based on your audits and activity
           </p>
           {lastScanned && (
@@ -123,10 +123,10 @@ export default function EnhancementsPage() {
             return (
               <div
                 key={suggestion.id}
-                className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4"
+                className="bg-bg-card rounded-lg border border-border-subtle p-4"
               >
                 <div className="flex items-start justify-between mb-3">
-                  <h3 className="font-medium text-gray-900 dark:text-white">
+                  <h3 className="font-medium text-text-primary">
                     {suggestion.title}
                   </h3>
                   <AIModelBadge model={suggestion.model_used as AIModel} />
@@ -160,9 +160,9 @@ export default function EnhancementsPage() {
         </div>
 
         {suggestions.length === 0 && (
-          <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-            <Lightbulb className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-500 dark:text-gray-400">
+          <div className="text-center py-12 bg-bg-card rounded-lg border border-border-subtle">
+            <Lightbulb className="w-12 h-12 text-text-muted mx-auto mb-4" />
+            <p className="text-text-secondary">
               No suggestions yet. Click &quot;Run Scan&quot; to analyze your data.
             </p>
           </div>

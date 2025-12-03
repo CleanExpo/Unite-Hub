@@ -154,11 +154,11 @@ export function VoiceNavButton({ userRole, onResult }: VoiceNavButtonProps) {
 
       {/* Hints dropdown */}
       {showHints && !isListening && !isProcessing && (
-        <div className="absolute right-0 top-full mt-2 w-64 p-3 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
+        <div className="absolute right-0 top-full mt-2 w-64 p-3 bg-bg-card rounded-lg shadow-lg border border-border-subtle z-50">
           <p className="text-xs font-medium text-gray-500 mb-2">Try saying:</p>
           <ul className="space-y-1">
             {suggestions.slice(0, 5).map((suggestion, i) => (
-              <li key={i} className="text-xs text-gray-600 dark:text-gray-400">
+              <li key={i} className="text-xs text-text-secondary">
                 {suggestion}
               </li>
             ))}

@@ -29,8 +29,8 @@ export const ParameterInspector: React.FC<ParameterInspectorProps> = ({
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <Settings className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-        <h3 className="font-semibold text-gray-900 dark:text-white">Parameter Inspector</h3>
+        <Settings className="w-5 h-5 text-text-secondary" />
+        <h3 className="font-semibold text-text-primary">Parameter Inspector</h3>
       </div>
 
       <div className="space-y-2">
@@ -41,47 +41,47 @@ export const ParameterInspector: React.FC<ParameterInspectorProps> = ({
           return (
             <div
               key={category.key}
-              className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden"
+              className="border border-border-subtle rounded-lg overflow-hidden"
             >
               {/* Category Header */}
               <button
                 onClick={() => setExpandedParam(expandedParam === category.key ? null : category.key)}
-                className="w-full flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                className="w-full flex items-center gap-3 p-3 bg-bg-raised hover:bg-bg-hover transition-colors"
               >
                 <span className="text-lg">{category.icon}</span>
                 <div className="flex-1 text-left">
-                  <p className="font-medium text-gray-900 dark:text-white">{category.label}</p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">{paramCount} parameters</p>
+                  <p className="font-medium text-text-primary">{category.label}</p>
+                  <p className="text-xs text-text-secondary">{paramCount} parameters</p>
                 </div>
-                <span className={`text-gray-600 dark:text-gray-400 transition-transform ${expandedParam === category.key ? 'rotate-180' : ''}`}>
+                <span className={`text-text-secondary transition-transform ${expandedParam === category.key ? 'rotate-180' : ''}`}>
                   ▼
                 </span>
               </button>
 
               {/* Category Details */}
               {expandedParam === category.key && (
-                <div className="border-t border-gray-200 dark:border-gray-700 p-3 space-y-2 bg-white dark:bg-gray-800">
+                <div className="border-t border-border-subtle p-3 space-y-2 bg-bg-card">
                   {paramCount === 0 ? (
-                    <p className="text-xs text-gray-600 dark:text-gray-400">No parameters</p>
+                    <p className="text-xs text-text-secondary">No parameters</p>
                   ) : (
                     Object.entries(params).map(([paramName, paramData]: [string, any]) => (
-                      <div key={paramName} className="p-2 bg-gray-50 dark:bg-gray-900 rounded text-xs">
+                      <div key={paramName} className="p-2 bg-bg-raised rounded text-xs">
                         <div className="flex items-center justify-between mb-1">
-                          <p className="font-medium text-gray-900 dark:text-white">
+                          <p className="font-medium text-text-primary">
                             {paramName.replace(/_/g, ' ')}
                           </p>
                           {paramData.confidence && (
-                            <span className="text-gray-600 dark:text-gray-400">
+                            <span className="text-text-secondary">
                               {paramData.confidence}% confidence
                             </span>
                           )}
                         </div>
-                        <div className="flex items-center justify-between text-gray-600 dark:text-gray-400">
+                        <div className="flex items-center justify-between text-text-secondary">
                           <span>Current: {paramData.value?.toFixed(2) || 'N/A'}</span>
                           <span>Baseline: {paramData.baseline?.toFixed(2) || 'N/A'}</span>
                         </div>
                         {paramData.minValue && paramData.maxValue && (
-                          <div className="mt-1 text-gray-600 dark:text-gray-400">
+                          <div className="mt-1 text-text-secondary">
                             Range: [{paramData.minValue?.toFixed(2)}, {paramData.maxValue?.toFixed(2)}]
                           </div>
                         )}
@@ -97,22 +97,22 @@ export const ParameterInspector: React.FC<ParameterInspectorProps> = ({
 
       {/* History Section */}
       {Object.keys(parameterHistory).length > 0 && (
-        <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700 space-y-4">
+        <div className="mt-6 pt-6 border-t border-border-subtle space-y-4">
           <div className="flex items-center gap-2">
-            <History className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-            <p className="text-sm font-medium text-gray-900 dark:text-white">Recent Changes</p>
+            <History className="w-4 h-4 text-text-secondary" />
+            <p className="text-sm font-medium text-text-primary">Recent Changes</p>
           </div>
 
           <div className="space-y-2 max-h-48 overflow-y-auto">
             {Object.entries(parameterHistory)
               .slice(0, 5)
               .map(([param, history]: [string, any]) => (
-                <div key={param} className="text-xs p-2 bg-gray-50 dark:bg-gray-900 rounded">
-                  <p className="font-medium text-gray-900 dark:text-white mb-1">
+                <div key={param} className="text-xs p-2 bg-bg-raised rounded">
+                  <p className="font-medium text-text-primary mb-1">
                     {param.replace(/_/g, ' ')}
                   </p>
                   {Array.isArray(history) && history[0] && (
-                    <p className="text-gray-600 dark:text-gray-400">
+                    <p className="text-text-secondary">
                       Last: {history[0].value?.toFixed(2)} (applied {new Date(history[0].appliedAt).toLocaleDateString()})
                     </p>
                   )}

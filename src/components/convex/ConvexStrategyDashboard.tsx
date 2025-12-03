@@ -217,10 +217,10 @@ export function ConvexStrategyDashboard() {
     <div className="w-full max-w-6xl mx-auto space-y-8 p-6">
       {/* Header */}
       <div className="space-y-2">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
+        <h1 className="text-4xl font-bold text-text-primary">
           CONVEX Strategy Generator
         </h1>
-        <p className="text-lg text-gray-600 dark:text-gray-400">
+        <p className="text-lg text-text-secondary">
           Generate high-conversion marketing strategies using CONVEX frameworks
         </p>
       </div>
@@ -245,7 +245,7 @@ export function ConvexStrategyDashboard() {
           <CardContent className="space-y-6">
             {/* Framework Selection */}
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+              <label className="text-sm font-semibold text-text-secondary">
                 CONVEX Framework
               </label>
               <Select
@@ -267,7 +267,7 @@ export function ConvexStrategyDashboard() {
 
             {/* Business Name */}
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+              <label className="text-sm font-semibold text-text-secondary">
                 Business Name *
               </label>
               <Input
@@ -281,7 +281,7 @@ export function ConvexStrategyDashboard() {
             {/* Industry & Audience Row */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                <label className="text-sm font-semibold text-text-secondary">
                   Industry *
                 </label>
                 <Input
@@ -292,7 +292,7 @@ export function ConvexStrategyDashboard() {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                <label className="text-sm font-semibold text-text-secondary">
                   Target Audience *
                 </label>
                 <Input
@@ -306,7 +306,7 @@ export function ConvexStrategyDashboard() {
 
             {/* Current Challenges */}
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+              <label className="text-sm font-semibold text-text-secondary">
                 Current Challenges
               </label>
               <Textarea
@@ -320,7 +320,7 @@ export function ConvexStrategyDashboard() {
 
             {/* Existing Competitors */}
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+              <label className="text-sm font-semibold text-text-secondary">
                 Existing Competitors
               </label>
               <Textarea
@@ -334,7 +334,7 @@ export function ConvexStrategyDashboard() {
 
             {/* Desired Outcome */}
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+              <label className="text-sm font-semibold text-text-secondary">
                 Desired Outcome *
               </label>
               <Textarea
@@ -394,7 +394,7 @@ export function ConvexStrategyDashboard() {
                   <div className={`text-4xl font-bold ${getScoreColor(result.score.overallScore)}`}>
                     {result.score.overallScore}
                   </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">/100</div>
+                  <div className="text-sm text-text-secondary">/100</div>
                 </div>
               </div>
             </CardHeader>
@@ -402,37 +402,37 @@ export function ConvexStrategyDashboard() {
               {/* Score Breakdown */}
               <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-1">
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Clarity</div>
+                  <div className="text-sm text-text-secondary">Clarity</div>
                   <Badge variant={getScoreBadgeVariant(result.score.clarity)}>
                     {result.score.clarity}
                   </Badge>
                 </div>
                 <div className="space-y-1">
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Specificity</div>
+                  <div className="text-sm text-text-secondary">Specificity</div>
                   <Badge variant={getScoreBadgeVariant(result.score.specificity)}>
                     {result.score.specificity}
                   </Badge>
                 </div>
                 <div className="space-y-1">
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Outcome Focus</div>
+                  <div className="text-sm text-text-secondary">Outcome Focus</div>
                   <Badge variant={getScoreBadgeVariant(result.score.outcomeFocus)}>
                     {result.score.outcomeFocus}
                   </Badge>
                 </div>
                 <div className="space-y-1">
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Proof</div>
+                  <div className="text-sm text-text-secondary">Proof</div>
                   <Badge variant={getScoreBadgeVariant(result.score.proof)}>
                     {result.score.proof}
                   </Badge>
                 </div>
                 <div className="space-y-1">
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Risk Removal</div>
+                  <div className="text-sm text-text-secondary">Risk Removal</div>
                   <Badge variant={getScoreBadgeVariant(result.score.riskRemoval)}>
                     {result.score.riskRemoval}
                   </Badge>
                 </div>
                 <div className="space-y-1">
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Compliance</div>
+                  <div className="text-sm text-text-secondary">Compliance</div>
                   <Badge
                     variant={
                       result.score.compliance === 'pass'
@@ -456,7 +456,7 @@ export function ConvexStrategyDashboard() {
               <CardDescription>CONVEX-based market positioning</CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+              <p className="text-text-secondary whitespace-pre-wrap">
                 {result.strategy}
               </p>
             </CardContent>
@@ -471,7 +471,7 @@ export function ConvexStrategyDashboard() {
               <CardContent>
                 <ul className="space-y-2">
                   {result.executionPlan.map((item, idx) => (
-                    <li key={idx} className="flex items-start gap-3 text-gray-700 dark:text-gray-300">
+                    <li key={idx} className="flex items-start gap-3 text-text-secondary">
                       <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
                       <span>{item}</span>
                     </li>
@@ -490,7 +490,7 @@ export function ConvexStrategyDashboard() {
               <CardContent>
                 <ul className="space-y-2">
                   {result.successMetrics.map((metric, idx) => (
-                    <li key={idx} className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                    <li key={idx} className="flex items-center gap-2 text-text-secondary">
                       <div className="h-2 w-2 bg-blue-600 rounded-full" />
                       {metric}
                     </li>

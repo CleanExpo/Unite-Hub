@@ -318,7 +318,7 @@ export default function PricingPage() {
 
           <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
             {/* Trial Limits */}
-            <Card className="bg-white dark:bg-gray-800">
+            <Card className="bg-bg-card">
               <CardHeader>
                 <CardTitle className="text-lg">Trial Limits (25% Capacity)</CardTitle>
                 <CardDescription>Conservative limits for testing</CardDescription>
@@ -350,7 +350,7 @@ export default function PricingPage() {
             </Card>
 
             {/* What You Get */}
-            <Card className="bg-white dark:bg-gray-800">
+            <Card className="bg-bg-card">
               <CardHeader>
                 <CardTitle className="text-lg">Still Included in Trial</CardTitle>
                 <CardDescription>Full access to core tools</CardDescription>
@@ -382,7 +382,7 @@ export default function PricingPage() {
             </Card>
           </div>
 
-          <div className="mt-8 p-4 bg-white dark:bg-gray-800 rounded border border-blue-200 dark:border-blue-900">
+          <div className="mt-8 p-4 bg-bg-card rounded border border-blue-200 dark:border-blue-900">
             <p className="text-xs text-muted-foreground text-center">
               <strong>Our Honest Promise:</strong> We show upgrade prompts when you hit limits, but never nag. No surprise charges.
               Trial period lasts exactly 14 days. You choose if/when to upgrade. All limits are displayed in your dashboard.

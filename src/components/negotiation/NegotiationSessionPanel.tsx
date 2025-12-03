@@ -39,7 +39,7 @@ export const NegotiationSessionPanel: React.FC<NegotiationSessionPanelProps> = (
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="font-semibold text-gray-900 dark:text-white">Negotiation Sessions</h3>
+        <h3 className="font-semibold text-text-primary">Negotiation Sessions</h3>
         {onRefresh && (
           <button
             onClick={onRefresh}
@@ -50,10 +50,10 @@ export const NegotiationSessionPanel: React.FC<NegotiationSessionPanelProps> = (
         )}
       </div>
 
-      {loading && <p className="text-sm text-gray-600 dark:text-gray-400">Loading sessions...</p>}
+      {loading && <p className="text-sm text-text-secondary">Loading sessions...</p>}
 
       {!loading && sessions.length === 0 && (
-        <p className="text-sm text-gray-600 dark:text-gray-400">No sessions found</p>
+        <p className="text-sm text-text-secondary">No sessions found</p>
       )}
 
       {!loading && sessions.length > 0 && (
@@ -65,11 +65,11 @@ export const NegotiationSessionPanel: React.FC<NegotiationSessionPanelProps> = (
               className={`p-3 rounded-lg border cursor-pointer transition-all ${
                 selectedSessionId === session.sessionId
                   ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-700'
-                  : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-gray-300'
+                  : 'bg-bg-card border-border-subtle hover:border-gray-300'
               }`}
             >
               <div className="flex items-center justify-between mb-2">
-                <p className="font-medium text-gray-900 dark:text-white text-sm">{session.objective}</p>
+                <p className="font-medium text-text-primary text-sm">{session.objective}</p>
                 <span className={`flex items-center gap-1 px-2 py-1 rounded text-xs font-semibold ${getStatusColor(session.status)}`}>
                   {getStatusIcon(session.status)}
                   {session.status.toUpperCase()}
@@ -77,14 +77,14 @@ export const NegotiationSessionPanel: React.FC<NegotiationSessionPanelProps> = (
               </div>
 
               <div className="grid grid-cols-3 gap-2 text-xs">
-                <div className="flex items-center gap-1 text-gray-600 dark:text-gray-400">
+                <div className="flex items-center gap-1 text-text-secondary">
                   <Users className="w-3 h-3" />
                   <span>{session.participatingAgents.length} agents</span>
                 </div>
-                <div className="text-gray-600 dark:text-gray-400">
+                <div className="text-text-secondary">
                   Consensus: {session.overallConsensus.toFixed(0)}%
                 </div>
-                <div className="flex items-center gap-1 text-gray-600 dark:text-gray-400">
+                <div className="flex items-center gap-1 text-text-secondary">
                   <Clock className="w-3 h-3" />
                   <span>{new Date(session.createdAt).toLocaleTimeString()}</span>
                 </div>

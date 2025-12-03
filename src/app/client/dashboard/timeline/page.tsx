@@ -105,17 +105,17 @@ export default function TimelinePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-bg-raised">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
             <Clock className="w-8 h-8 text-teal-600" />
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-2xl font-bold text-text-primary">
               AI Event Timeline
             </h1>
           </div>
-          <p className="text-gray-500 dark:text-gray-400">
+          <p className="text-text-secondary">
             Complete transparency of all AI-generated content and actions
           </p>
         </div>
@@ -127,7 +127,7 @@ export default function TimelinePage() {
             <select
               value={filterModel}
               onChange={(e) => setFilterModel(e.target.value)}
-              className="text-sm border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-1.5 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+              className="text-sm border border-border-subtle rounded-lg px-3 py-1.5 bg-bg-card text-text-secondary"
             >
               <option value="all">All Models</option>
               {uniqueModels.map((model) => (
@@ -140,7 +140,7 @@ export default function TimelinePage() {
           <select
             value={filterType}
             onChange={(e) => setFilterType(e.target.value)}
-            className="text-sm border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-1.5 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+            className="text-sm border border-border-subtle rounded-lg px-3 py-1.5 bg-bg-card text-text-secondary"
           >
             <option value="all">All Events</option>
             {uniqueTypes.map((type) => (
@@ -157,16 +157,16 @@ export default function TimelinePage() {
             <p className="text-gray-500">Loading timeline...</p>
           </div>
         ) : filteredEvents.length === 0 ? (
-          <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-            <Cpu className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-500 dark:text-gray-400">No events found</p>
+          <div className="text-center py-12 bg-bg-card rounded-lg border border-border-subtle">
+            <Cpu className="w-12 h-12 text-text-muted mx-auto mb-4" />
+            <p className="text-text-secondary">No events found</p>
           </div>
         ) : (
           <div className="space-y-4">
             {filteredEvents.map((event) => (
               <div
                 key={event.id}
-                className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
+                className="bg-bg-card rounded-lg border border-border-subtle"
               >
                 <div
                   className="p-4 cursor-pointer"
@@ -177,14 +177,14 @@ export default function TimelinePage() {
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="text-xs px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded">
+                        <span className="text-xs px-2 py-0.5 bg-bg-hover text-gray-600 dark:text-gray-300 rounded">
                           {EVENT_TYPE_LABELS[event.event_type] || event.event_type}
                         </span>
                         <span className="text-xs text-gray-400">
                           {formatDate(event.created_at)}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-900 dark:text-white">
+                      <p className="text-sm text-text-primary">
                         {event.description}
                       </p>
                     </div>
@@ -201,8 +201,8 @@ export default function TimelinePage() {
 
                 {/* Expanded metadata */}
                 {expandedId === event.id && (
-                  <div className="px-4 pb-4 border-t border-gray-100 dark:border-gray-700 pt-3">
-                    <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">
+                  <div className="px-4 pb-4 border-t border-border-subtle pt-3">
+                    <p className="text-xs font-medium text-text-secondary mb-2">
                       Event Details
                     </p>
                     <pre className="text-xs bg-gray-50 dark:bg-gray-700/50 p-3 rounded overflow-x-auto">

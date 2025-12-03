@@ -29,7 +29,7 @@ export default function VisualPlaygroundPage() {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
+    <div className="min-h-screen bg-bg-raised flex flex-col">
       {/* Onboarding Modal */}
       <CreativeLabIntroModal userId="current-user" />
 
@@ -45,7 +45,7 @@ export default function VisualPlaygroundPage() {
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-3">
               <Sparkles className="w-8 h-8 text-teal-600" />
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+              <h1 className="text-2xl font-bold text-text-primary">
                 Your Creative Lab
               </h1>
             </div>
@@ -55,7 +55,7 @@ export default function VisualPlaygroundPage() {
           <p className="text-teal-600 dark:text-teal-400 font-medium mb-2">
             This is your Creative Lab — everything you see is generated in real time based on your inputs.
           </p>
-          <p className="text-gray-500 dark:text-gray-400 text-sm">
+          <p className="text-text-secondary text-sm">
             Explore AI-generated concept previews across different content areas
           </p>
         </div>
@@ -81,7 +81,7 @@ export default function VisualPlaygroundPage() {
           {pillars.map((pillar) => (
             <div
               key={pillar.id}
-              className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 hover:border-teal-500 dark:hover:border-teal-500 transition-colors cursor-pointer"
+              className="bg-bg-card rounded-lg border border-border-subtle p-6 hover:border-teal-500 dark:hover:border-teal-500 transition-colors cursor-pointer"
               onClick={() =>
                 router.push(`/client/dashboard/visual-playground/${pillar.id}`)
               }
@@ -91,17 +91,17 @@ export default function VisualPlaygroundPage() {
                   {ICON_MAP[pillar.icon] || <Sparkles className="w-6 h-6" />}
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                  <h3 className="text-lg font-semibold text-text-primary mb-1">
                     {pillar.title}
                   </h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+                  <p className="text-sm text-text-secondary mb-3">
                     {pillar.description}
                   </p>
                   <div className="flex flex-wrap gap-2">
                     {pillar.subPillars.slice(0, 3).map((sp) => (
                       <span
                         key={sp.id}
-                        className="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded"
+                        className="text-xs px-2 py-1 bg-bg-hover text-gray-600 dark:text-gray-300 rounded"
                       >
                         {sp.title}
                       </span>
@@ -119,8 +119,8 @@ export default function VisualPlaygroundPage() {
         </div>
 
         {/* What This Is Not */}
-        <div className="mt-8 bg-gray-100 dark:bg-gray-800 rounded-lg p-6">
-          <h3 className="font-semibold text-gray-900 dark:text-white mb-3">
+        <div className="mt-8 bg-bg-hover rounded-lg p-6">
+          <h3 className="font-semibold text-text-primary mb-3">
             What This Is &amp; Isn&apos;t
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

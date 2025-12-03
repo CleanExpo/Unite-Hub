@@ -161,13 +161,13 @@ export default function DecisionMapsPage() {
                   placeholder="Search maps..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2 text-sm border border-border-subtle rounded-lg bg-bg-card focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                 />
               </div>
               <select
                 value={stageFilter}
                 onChange={(e) => setStageFilter(e.target.value)}
-                className="px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800"
+                className="px-3 py-2 text-sm border border-border-subtle rounded-lg bg-bg-card"
               >
                 <option value="all">All Stages</option>
                 <option value="full">Full Funnel</option>
@@ -199,13 +199,13 @@ export default function DecisionMapsPage() {
                   className={`p-4 rounded-lg border transition-all ${
                     stageFilter === stage
                       ? "border-teal-500 bg-teal-50 dark:bg-teal-900/20"
-                      : "border-gray-200 dark:border-gray-700 hover:border-gray-300"
+                      : "border-border-subtle hover:border-gray-300"
                   }`}
                 >
                   <div className={`w-10 h-10 rounded-lg ${config.color} flex items-center justify-center mx-auto mb-2`}>
                     <config.icon className="w-5 h-5" />
                   </div>
-                  <p className="text-lg font-bold text-gray-900 dark:text-white">{count}</p>
+                  <p className="text-lg font-bold text-text-primary">{count}</p>
                   <p className="text-xs text-gray-500">{config.label}</p>
                 </button>
               );
@@ -223,7 +223,7 @@ export default function DecisionMapsPage() {
             <Card>
               <CardContent className="py-12 text-center">
                 <Map className="w-12 h-12 mx-auto text-gray-300 mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg font-medium text-text-primary mb-2">
                   No decision maps found
                 </h3>
                 <p className="text-sm text-gray-500 mb-4">
@@ -275,25 +275,25 @@ function DecisionMapCard({ map, onDuplicate }: DecisionMapCardProps) {
           <div className="relative">
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="p-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
+              className="p-1 rounded hover:bg-bg-hover"
             >
               <MoreVertical className="w-4 h-4 text-gray-400" />
             </button>
             {menuOpen && (
-              <div className="absolute right-0 top-8 w-40 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-10">
+              <div className="absolute right-0 top-8 w-40 bg-bg-card rounded-lg shadow-lg border border-border-subtle py-1 z-10">
                 <Link
                   href={`/founder/marketing/decision-maps/${map.id}`}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-text-secondary hover:bg-bg-hover"
                 >
                   <Edit className="w-4 h-4" /> Edit
                 </Link>
                 <button
                   onClick={() => onDuplicate(map.id)}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  className="w-full flex items-center gap-2 px-3 py-2 text-sm text-text-secondary hover:bg-bg-hover"
                 >
                   <Copy className="w-4 h-4" /> Duplicate
                 </button>
-                <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700">
+                <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-bg-hover">
                   <Trash2 className="w-4 h-4" /> Delete
                 </button>
               </div>
@@ -302,15 +302,15 @@ function DecisionMapCard({ map, onDuplicate }: DecisionMapCardProps) {
         </div>
 
         <Link href={`/founder/marketing/decision-maps/${map.id}`}>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-teal-600 transition-colors">
+          <h3 className="text-lg font-semibold text-text-primary mb-2 group-hover:text-teal-600 transition-colors">
             {map.name}
           </h3>
         </Link>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 line-clamp-2">
+        <p className="text-sm text-text-secondary mb-4 line-clamp-2">
           {map.description || "No description"}
         </p>
 
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-700">
+        <div className="flex items-center justify-between pt-4 border-t border-border-subtle">
           <div className="flex items-center gap-3">
             <span className={`px-2 py-1 text-xs font-medium rounded ${stageConfig.color}`}>
               {stageConfig.label}
@@ -368,9 +368,9 @@ function CreateMapModal({ onClose, onCreated }: CreateMapModalProps) {
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md">
-        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+      <div className="bg-bg-card rounded-xl shadow-xl w-full max-w-md">
+        <div className="p-6 border-b border-border-subtle">
+          <h2 className="text-xl font-semibold text-text-primary">
             Create Decision Map
           </h2>
           <p className="text-sm text-gray-500 mt-1">
@@ -379,7 +379,7 @@ function CreateMapModal({ onClose, onCreated }: CreateMapModalProps) {
         </div>
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm font-medium text-text-secondary mb-1">
               Map Name
             </label>
             <input
@@ -387,24 +387,24 @@ function CreateMapModal({ onClose, onCreated }: CreateMapModalProps) {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900"
+              className="w-full px-3 py-2 border border-border-subtle rounded-lg bg-bg-card"
               placeholder="SaaS Trial Conversion Journey"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm font-medium text-text-secondary mb-1">
               Description
             </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900"
+              className="w-full px-3 py-2 border border-border-subtle rounded-lg bg-bg-card"
               placeholder="Describe the journey being mapped..."
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-text-secondary mb-2">
               Funnel Stage
             </label>
             <div className="grid grid-cols-2 gap-2">
@@ -416,7 +416,7 @@ function CreateMapModal({ onClose, onCreated }: CreateMapModalProps) {
                   className={`flex items-center gap-2 px-3 py-2 rounded-lg border transition-colors ${
                     funnelStage === stage
                       ? "border-teal-500 bg-teal-50 dark:bg-teal-900/30"
-                      : "border-gray-200 dark:border-gray-700"
+                      : "border-border-subtle"
                   }`}
                 >
                   <div className={`p-1 rounded ${config.color}`}>
@@ -431,7 +431,7 @@ function CreateMapModal({ onClose, onCreated }: CreateMapModalProps) {
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
+              className="px-4 py-2 text-sm text-text-secondary hover:bg-bg-hover rounded-lg"
             >
               Cancel
             </button>

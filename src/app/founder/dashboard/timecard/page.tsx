@@ -209,7 +209,7 @@ export default function FounderTimecardPage() {
               <div className="flex flex-col sm:flex-row items-center gap-6">
                 {/* Timer Display */}
                 <div className="text-center">
-                  <div className="text-4xl font-mono font-bold text-gray-900 dark:text-white">
+                  <div className="text-4xl font-mono font-bold text-text-primary">
                     {runningTimer ? formatTime(timerElapsed) : "00:00:00"}
                   </div>
                   {runningTimer && (
@@ -226,7 +226,7 @@ export default function FounderTimecardPage() {
                       <select
                         value={selectedCategory}
                         onChange={(e) => setSelectedCategory(e.target.value as Category)}
-                        className="w-40 px-3 py-2 text-sm border rounded-lg bg-white dark:bg-gray-800"
+                        className="w-40 px-3 py-2 text-sm border rounded-lg bg-bg-card"
                       >
                         {CATEGORIES.map((cat) => (
                           <option key={cat} value={cat}>
@@ -261,7 +261,7 @@ export default function FounderTimecardPage() {
 
         {/* Period Selector */}
         <Section className="mt-6">
-          <div className="flex gap-2 p-1 bg-gray-100 dark:bg-gray-800 rounded-lg w-fit">
+          <div className="flex gap-2 p-1 bg-bg-hover rounded-lg w-fit">
             {(["daily", "weekly", "monthly"] as Period[]).map((p) => (
               <button
                 key={p}
@@ -269,8 +269,8 @@ export default function FounderTimecardPage() {
                 onClick={() => setPeriod(p)}
                 className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition-colors ${
                   period === p
-                    ? "bg-white dark:bg-gray-700 text-teal-600 shadow-sm"
-                    : "text-gray-600 dark:text-gray-400 hover:text-gray-900"
+                    ? "bg-bg-input text-teal-600 shadow-sm"
+                    : "text-text-secondary hover:text-gray-900"
                 }`}
               >
                 <Calendar className="w-4 h-4" />
@@ -295,7 +295,7 @@ export default function FounderTimecardPage() {
                   <Card>
                     <CardContent className="pt-4">
                       <div className="text-sm text-gray-500">Total Hours</div>
-                      <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                      <div className="text-2xl font-bold text-text-primary">
                         {summary.totalHours.toFixed(1)}h
                       </div>
                       <div className="text-xs text-gray-400 mt-1">
@@ -307,7 +307,7 @@ export default function FounderTimecardPage() {
                   <Card>
                     <CardContent className="pt-4">
                       <div className="text-sm text-gray-500">Top Category</div>
-                      <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                      <div className="text-2xl font-bold text-text-primary">
                         {Object.entries(summary.byCategory).sort(([, a], [, b]) => b - a)[0]?.[0] || "N/A"}
                       </div>
                       <div className="text-xs text-gray-400 mt-1">
@@ -319,7 +319,7 @@ export default function FounderTimecardPage() {
                   <Card>
                     <CardContent className="pt-4">
                       <div className="text-sm text-gray-500">Categories</div>
-                      <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                      <div className="text-2xl font-bold text-text-primary">
                         {Object.keys(summary.byCategory).length}
                       </div>
                       <div className="text-xs text-gray-400 mt-1">
@@ -353,7 +353,7 @@ export default function FounderTimecardPage() {
                             <div key={category} className="flex items-center gap-3">
                               <div className={`w-3 h-3 rounded-full ${CATEGORY_COLORS[category as Category] || "bg-gray-500"}`} />
                               <span className="text-sm w-24 capitalize">{category}</span>
-                              <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                              <div className="flex-1 h-2 bg-bg-hover rounded-full overflow-hidden">
                                 <div
                                   className={`h-full ${CATEGORY_COLORS[category as Category] || "bg-gray-500"} rounded-full`}
                                   style={{ width: `${percentage}%` }}
@@ -387,8 +387,8 @@ export default function FounderTimecardPage() {
                   <CardContent>
                     {burnout.factors.length > 0 && (
                       <div className="mb-4">
-                        <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Factors:</div>
-                        <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                        <div className="text-sm font-medium text-text-secondary mb-2">Factors:</div>
+                        <ul className="text-sm text-text-secondary space-y-1">
                           {burnout.factors.map((f, i) => (
                             <li key={i}>• {f}</li>
                           ))}
@@ -397,8 +397,8 @@ export default function FounderTimecardPage() {
                     )}
                     {burnout.recommendations.length > 0 && (
                       <div>
-                        <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Recommendations:</div>
-                        <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                        <div className="text-sm font-medium text-text-secondary mb-2">Recommendations:</div>
+                        <ul className="text-sm text-text-secondary space-y-1">
                           {burnout.recommendations.map((r, i) => (
                             <li key={i}>✓ {r}</li>
                           ))}
@@ -414,8 +414,8 @@ export default function FounderTimecardPage() {
 
         {/* Founder Notice */}
         <Section className="mt-8">
-          <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+          <div className="p-4 bg-bg-raised/50 rounded-lg">
+            <p className="text-xs text-text-secondary">
               <strong>Founder-Only:</strong> This time tracker is private and not visible to clients.
               Data can be exported for Xero integration. Burnout detection uses real data patterns only.
             </p>

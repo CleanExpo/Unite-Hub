@@ -28,7 +28,7 @@ export function StrategySynergyBreakdown({
       <div className="space-y-4 p-6">
         {[1, 2, 3].map((idx) => (
           <div key={idx} className="space-y-2">
-            <div className="h-24 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+            <div className="h-24 bg-bg-hover rounded-lg animate-pulse" />
           </div>
         ))}
       </div>
@@ -37,12 +37,12 @@ export function StrategySynergyBreakdown({
 
   if (!metrics) {
     return (
-      <div className="bg-gray-50 dark:bg-gray-900/30 border border-gray-200 dark:border-gray-700 rounded-lg p-8 text-center">
-        <BarChart3 className="w-12 h-12 text-gray-400 dark:text-gray-600 mx-auto mb-3" />
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+      <div className="bg-bg-raised border border-border-subtle rounded-lg p-8 text-center">
+        <BarChart3 className="w-12 h-12 text-text-muted mx-auto mb-3" />
+        <h3 className="text-lg font-semibold text-text-primary mb-1">
           No Metrics Available
         </h3>
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className="text-text-secondary">
           Generate or analyze a strategy to view decomposition metrics.
         </p>
       </div>
@@ -112,7 +112,7 @@ export function StrategySynergyBreakdown({
         animate={{ opacity: 1, scale: 1 }}
         className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950/30 dark:to-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg p-8 text-center"
       >
-        <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+        <div className="text-sm text-text-secondary mb-2">
           Overall Decomposition Quality
         </div>
 
@@ -134,7 +134,7 @@ export function StrategySynergyBreakdown({
           </div>
         </div>
 
-        <div className="w-full h-2 bg-white dark:bg-gray-800 rounded-full overflow-hidden">
+        <div className="w-full h-2 bg-bg-card rounded-full overflow-hidden">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${metrics.overall}%` }}
@@ -143,7 +143,7 @@ export function StrategySynergyBreakdown({
           />
         </div>
 
-        <div className="mt-4 text-xs text-gray-600 dark:text-gray-400">
+        <div className="mt-4 text-xs text-text-secondary">
           {metrics.overall >= 85 ? (
             <span>⭐ Excellent decomposition structure</span>
           ) : metrics.overall >= 70 ? (
@@ -158,7 +158,7 @@ export function StrategySynergyBreakdown({
 
       {/* Individual Metrics */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+        <h3 className="text-lg font-semibold text-text-primary flex items-center gap-2">
           <TrendingUp className="w-5 h-5 text-blue-600 dark:text-blue-400" />
           Quality Dimensions
         </h3>
@@ -180,7 +180,7 @@ export function StrategySynergyBreakdown({
                 className="relative"
               >
                 <div
-                  className="rounded-lg p-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 cursor-help transition-all hover:shadow-md"
+                  className="rounded-lg p-5 bg-bg-card border border-border-subtle cursor-help transition-all hover:shadow-md"
                   style={
                     isHovered
                       ? {
@@ -194,7 +194,7 @@ export function StrategySynergyBreakdown({
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
                       <span className="text-lg">{metric.icon}</span>
-                      <h4 className="font-semibold text-gray-900 dark:text-white">
+                      <h4 className="font-semibold text-text-primary">
                         {metric.label}
                       </h4>
                     </div>
@@ -207,7 +207,7 @@ export function StrategySynergyBreakdown({
                   </div>
 
                   {/* Progress Bar */}
-                  <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mb-3">
+                  <div className="h-2 bg-bg-hover rounded-full overflow-hidden mb-3">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${metric.value}%` }}
@@ -227,7 +227,7 @@ export function StrategySynergyBreakdown({
                     transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
-                    <p className="text-xs text-gray-600 dark:text-gray-400 pt-2 border-t border-gray-200 dark:border-gray-700">
+                    <p className="text-xs text-text-secondary pt-2 border-t border-border-subtle">
                       {metric.description}
                     </p>
                   </motion.div>
@@ -259,7 +259,7 @@ export function StrategySynergyBreakdown({
 
       {/* Insights Section */}
       <div className="space-y-3">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+        <h3 className="text-lg font-semibold text-text-primary flex items-center gap-2">
           <Info className="w-5 h-5 text-blue-600 dark:text-blue-400" />
           Quality Insights
         </h3>

@@ -47,8 +47,8 @@ export function Card({
   return (
     <div
       className={`
-        bg-white dark:bg-gray-800
-        border border-gray-200 dark:border-gray-700
+        bg-bg-card
+        border border-border-subtle
         rounded-lg shadow-sm
         ${paddingClasses[padding]}
         ${hoverClass}
@@ -73,7 +73,7 @@ export function CardHeader({
       className={`
         flex items-center justify-between
         pb-4 mb-4
-        border-b border-gray-100 dark:border-gray-700
+        border-b border-border-subtle
         ${className}
       `}
     >
@@ -92,7 +92,7 @@ export function CardTitle({
 }) {
   return (
     <h3
-      className={`text-lg font-semibold text-gray-900 dark:text-white ${className}`}
+      className={`text-lg font-semibold text-text-primary ${className}`}
     >
       {children}
     </h3>
@@ -107,7 +107,7 @@ export function CardDescription({
   className?: string;
 }) {
   return (
-    <p className={`text-sm text-gray-500 dark:text-gray-400 mt-1 ${className}`}>
+    <p className={`text-sm text-text-secondary mt-1 ${className}`}>
       {children}
     </p>
   );
@@ -129,7 +129,7 @@ export function CardFooter({ children, className = "" }: CardFooterProps) {
       className={`
         flex items-center justify-end gap-2
         pt-4 mt-4
-        border-t border-gray-100 dark:border-gray-700
+        border-t border-border-subtle
         ${className}
       `}
     >

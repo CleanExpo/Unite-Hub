@@ -92,7 +92,7 @@ export default function AIDOOverviewPage() {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold">AIDO 2026 Overview</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-1">
+        <p className="text-text-secondary mt-1">
           AI Discovery Optimization - Position your brand as the source AI systems cite
         </p>
       </div>
@@ -181,7 +181,7 @@ export default function AIDOOverviewPage() {
             <div className={`text-4xl font-bold mb-2 ${getScoreColor(metrics.averageAuthority)}`}>
               {(metrics.averageAuthority * 100).toFixed(0)}%
             </div>
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-3">
+            <div className="w-full bg-bg-hover rounded-full h-2 mb-3">
               <div
                 className={`h-2 rounded-full ${metrics.averageAuthority >= 0.8 ? 'bg-green-600' : metrics.averageAuthority >= 0.6 ? 'bg-yellow-600' : 'bg-red-600'}`}
                 style={{ width: `${metrics.averageAuthority * 100}%` }}
@@ -204,7 +204,7 @@ export default function AIDOOverviewPage() {
             <div className={`text-4xl font-bold mb-2 ${getScoreColor(metrics.averageEvergreen)}`}>
               {(metrics.averageEvergreen * 100).toFixed(0)}%
             </div>
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-3">
+            <div className="w-full bg-bg-hover rounded-full h-2 mb-3">
               <div
                 className={`h-2 rounded-full ${metrics.averageEvergreen >= 0.7 ? 'bg-green-600' : metrics.averageEvergreen >= 0.5 ? 'bg-yellow-600' : 'bg-red-600'}`}
                 style={{ width: `${metrics.averageEvergreen * 100}%` }}
@@ -227,7 +227,7 @@ export default function AIDOOverviewPage() {
             <div className={`text-4xl font-bold mb-2 ${getScoreColor(metrics.averageAISource)}`}>
               {(metrics.averageAISource * 100).toFixed(0)}%
             </div>
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-3">
+            <div className="w-full bg-bg-hover rounded-full h-2 mb-3">
               <div
                 className={`h-2 rounded-full ${metrics.averageAISource >= 0.8 ? 'bg-green-600' : metrics.averageAISource >= 0.6 ? 'bg-yellow-600' : 'bg-red-600'}`}
                 style={{ width: `${metrics.averageAISource * 100}%` }}
@@ -299,11 +299,11 @@ export default function AIDOOverviewPage() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="flex items-start gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
+            <div className="flex items-start gap-3 p-3 border border-border-subtle rounded-lg">
               <Zap className="w-6 h-6 text-blue-600 mt-1" />
               <div className="flex-1">
                 <h4 className="font-semibold">AI Discovery Optimization (AIDO)</h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                <p className="text-sm text-text-secondary mt-1">
                   Make your brand the primary data source AI systems cite
                 </p>
                 <div className="mt-2">
@@ -314,11 +314,11 @@ export default function AIDOOverviewPage() {
               </div>
             </div>
 
-            <div className="flex items-start gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
+            <div className="flex items-start gap-3 p-3 border border-border-subtle rounded-lg">
               <CheckCircle className="w-6 h-6 text-green-600 mt-1" />
               <div className="flex-1">
                 <h4 className="font-semibold">Algorithmic Immunity Content</h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                <p className="text-sm text-text-secondary mt-1">
                   Deep evergreen content that survives algorithm changes
                 </p>
                 <div className="mt-2">
@@ -329,11 +329,11 @@ export default function AIDOOverviewPage() {
               </div>
             </div>
 
-            <div className="flex items-start gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
+            <div className="flex items-start gap-3 p-3 border border-border-subtle rounded-lg">
               <Clock className="w-6 h-6 text-purple-600 mt-1" />
               <div className="flex-1">
                 <h4 className="font-semibold">Reality-Loop Marketing</h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                <p className="text-sm text-text-secondary mt-1">
                   Convert real-world events into content automatically
                 </p>
                 <Link href="/dashboard/aido/reality-loop">
@@ -344,11 +344,11 @@ export default function AIDOOverviewPage() {
               </div>
             </div>
 
-            <div className="flex items-start gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
+            <div className="flex items-start gap-3 p-3 border border-border-subtle rounded-lg">
               <BarChart3 className="w-6 h-6 text-yellow-600 mt-1" />
               <div className="flex-1">
                 <h4 className="font-semibold">Conversational SEO Stacks</h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                <p className="text-sm text-text-secondary mt-1">
                   Align with how AI systems answer questions
                 </p>
                 <div className="mt-2">
@@ -359,11 +359,11 @@ export default function AIDOOverviewPage() {
               </div>
             </div>
 
-            <div className="flex items-start gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
+            <div className="flex items-start gap-3 p-3 border border-border-subtle rounded-lg">
               <TrendingUp className="w-6 h-6 text-red-600 mt-1" />
               <div className="flex-1">
                 <h4 className="font-semibold">Google-Curve Anticipation Engine</h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                <p className="text-sm text-text-secondary mt-1">
                   Detect algorithm shifts 5-10 days before competitors
                 </p>
                 <div className="mt-2 flex gap-2">

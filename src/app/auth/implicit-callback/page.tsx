@@ -65,10 +65,10 @@ export default function ImplicitCallbackPage() {
   }, []);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen flex items-center justify-center bg-bg-raised">
       <div className="text-center max-w-md px-6">
         <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mb-6"></div>
-        <p className="text-lg text-gray-700 dark:text-gray-300">{status}</p>
+        <p className="text-lg text-text-secondary">{status}</p>
       </div>
     </div>
   );

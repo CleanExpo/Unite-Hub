@@ -104,7 +104,7 @@ export function FraudAlertDashboard({
 
       <CardContent className="space-y-4">
         {/* Filter Tabs */}
-        <div className="flex gap-2 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex gap-2 border-b border-border-subtle">
           {(['all', 'high', 'critical'] as const).map((level) => (
             <button
               key={level}
@@ -141,12 +141,12 @@ export function FraudAlertDashboard({
                 key={alert.id}
                 className={`border-l-4 ${
                   alert.fraudScore >= 80 ? 'border-red-500' : 'border-yellow-500'
-                } bg-gray-50 dark:bg-gray-800 rounded-lg p-4`}
+                } bg-bg-raised rounded-lg p-4`}
               >
                 <div className="flex justify-between items-start mb-2">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-semibold text-gray-900 dark:text-white">
+                      <h3 className="font-semibold text-text-primary">
                         {alert.referrerEmail || alert.referrerId}
                       </h3>
                       <Badge className={`${getFraudLevelColor(alert.fraudScore)}`}>

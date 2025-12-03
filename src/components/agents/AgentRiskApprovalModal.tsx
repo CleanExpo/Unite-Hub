@@ -128,13 +128,13 @@ export function AgentRiskApprovalModal({
                 <p className={`text-4xl font-bold ${getRiskColorClass(riskAssessment.risk_score)}`}>
                   {riskAssessment.risk_score}
                 </p>
-                <p className="text-xs text-gray-600 dark:text-gray-400">/100</p>
+                <p className="text-xs text-text-secondary">/100</p>
               </div>
               <div>
                 <p className={`text-lg font-semibold ${getRiskColorClass(riskAssessment.risk_score)}`}>
                   {getRiskLevelText(riskAssessment.risk_score)}
                 </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className="text-sm text-text-secondary">
                   {riskAssessment.risk_summary}
                 </p>
               </div>
@@ -151,7 +151,7 @@ export function AgentRiskApprovalModal({
                 {riskAssessment.risk_factors.map((factor, i) => (
                   <li
                     key={i}
-                    className="text-sm text-gray-700 dark:text-gray-300 flex items-start"
+                    className="text-sm text-text-secondary flex items-start"
                   >
                     <span className="w-2 h-2 bg-yellow-600 rounded-full mr-2 mt-1 flex-shrink-0"></span>
                     <span>{factor}</span>
@@ -171,7 +171,7 @@ export function AgentRiskApprovalModal({
             value={approvalReason}
             onChange={(e) => setApprovalReason(e.target.value)}
             placeholder="Explain your decision to approve or reject this plan..."
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-border-base rounded-md bg-bg-card text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             rows={3}
             disabled={isSubmitting}
           />

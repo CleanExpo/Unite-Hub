@@ -37,8 +37,8 @@ const variantStyles = {
     icon: "text-blue-600 dark:text-blue-400",
   },
   neutral: {
-    bg: "bg-gray-100 dark:bg-gray-800",
-    icon: "text-gray-600 dark:text-gray-400",
+    bg: "bg-bg-hover",
+    icon: "text-text-secondary",
   },
 };
 

@@ -132,16 +132,16 @@ export const ManualOverrideConsole: React.FC<ManualOverrideConsoleProps> = ({
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <Terminal className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-        <h3 className="font-semibold text-gray-900 dark:text-white">Manual Override Console</h3>
-        <span className="ml-auto text-xs text-gray-600 dark:text-gray-400 flex items-center gap-1">
+        <Terminal className="w-5 h-5 text-text-secondary" />
+        <h3 className="font-semibold text-text-primary">Manual Override Console</h3>
+        <span className="ml-auto text-xs text-text-secondary flex items-center gap-1">
           <Lock className="w-4 h-4" />
           Founder Only
         </span>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 space-y-3">
-        <p className="text-sm text-gray-600 dark:text-gray-400">
+      <div className="bg-bg-card rounded-lg border border-border-subtle p-4 space-y-3">
+        <p className="text-sm text-text-secondary">
           Use these override controls only when necessary. All actions are logged for audit purposes.
         </p>
 
@@ -157,14 +157,14 @@ export const ManualOverrideConsole: React.FC<ManualOverrideConsoleProps> = ({
               className={`p-3 rounded-lg border-2 transition-all hover:shadow-md text-left ${
                 selectedAction?.type === action.type
                   ? getSeverityColor(action.severity) + ' border-current'
-                  : 'bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                  : 'bg-bg-raised border-border-subtle hover:border-gray-300 dark:hover:border-gray-600'
               }`}
             >
               <div className="flex items-start gap-2">
                 <Zap className="w-4 h-4 flex-shrink-0 mt-0.5" />
                 <div className="flex-1">
                   <p className="font-medium text-sm">{action.label}</p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                  <p className="text-xs text-text-secondary mt-1">
                     {action.description}
                   </p>
                 </div>
@@ -177,10 +177,10 @@ export const ManualOverrideConsole: React.FC<ManualOverrideConsoleProps> = ({
       {/* Override Confirmation Dialog */}
       {showConfirmation && selectedAction && (
         <div className="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 max-w-md w-full p-6 space-y-4">
+          <div className="bg-bg-card rounded-lg border border-border-subtle max-w-md w-full p-6 space-y-4">
             <div className="flex items-center gap-3">
               <AlertTriangle className="w-6 h-6 text-orange-600 dark:text-orange-400 flex-shrink-0" />
-              <h2 className="text-lg font-bold text-gray-900 dark:text-white">
+              <h2 className="text-lg font-bold text-text-primary">
                 Confirm Override
               </h2>
             </div>
@@ -212,7 +212,7 @@ export const ManualOverrideConsole: React.FC<ManualOverrideConsoleProps> = ({
 
                 {selectedAction.requiresTarget && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                    <label className="block text-sm font-medium text-text-primary mb-2">
                       Target Agent
                     </label>
                     <input
@@ -220,24 +220,24 @@ export const ManualOverrideConsole: React.FC<ManualOverrideConsoleProps> = ({
                       placeholder="e.g., orchestrator, reasoning-engine"
                       value={targetAgent}
                       onChange={(e) => setTargetAgent(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                      className="w-full px-3 py-2 border border-border-base rounded-lg bg-bg-input text-text-primary placeholder-gray-400 dark:placeholder-gray-500"
                     />
                   </div>
                 )}
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+                  <label className="block text-sm font-medium text-text-primary mb-2">
                     Reason for Override
                   </label>
                   <textarea
                     placeholder="Explain why this override is necessary..."
                     value={reason}
                     onChange={(e) => setReason(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 h-24 resize-none"
+                    className="w-full px-3 py-2 border border-border-base rounded-lg bg-bg-input text-text-primary placeholder-gray-400 dark:placeholder-gray-500 h-24 resize-none"
                   />
                 </div>
 
-                <div className="bg-gray-50 dark:bg-gray-900 p-3 rounded-lg text-xs text-gray-600 dark:text-gray-400">
+                <div className="bg-bg-raised p-3 rounded-lg text-xs text-text-secondary">
                   <p className="font-semibold mb-1">⚠️ Important:</p>
                   <ul className="space-y-1 list-disc list-inside">
                     <li>All overrides are logged for audit purposes</li>
@@ -253,7 +253,7 @@ export const ManualOverrideConsole: React.FC<ManualOverrideConsoleProps> = ({
                       setExecutionResult(null);
                     }}
                     disabled={executionInProgress}
-                    className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50"
+                    className="flex-1 px-4 py-2 border border-border-base rounded-lg text-text-primary hover:bg-bg-hover transition-colors disabled:opacity-50"
                   >
                     Cancel
                   </button>

@@ -35,7 +35,7 @@ export function AuctionWinnerPanel({ workspaceId }: AuctionWinnerPanelProps) {
       <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-900">
         <div className="text-center py-8">
           <Award className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-          <p className="text-gray-500 dark:text-gray-400">
+          <p className="text-text-secondary">
             Auction winner will be displayed here once evaluation is complete.
           </p>
         </div>
@@ -49,7 +49,7 @@ export function AuctionWinnerPanel({ workspaceId }: AuctionWinnerPanelProps) {
       <div className="border-b border-gray-200 bg-gradient-to-r from-amber-50 to-orange-50 px-6 py-4 dark:border-gray-700 dark:bg-gradient-to-r dark:from-amber-900/20 dark:to-orange-900/20">
         <div className="flex items-center gap-2">
           <Award className="h-5 w-5 text-amber-600 dark:text-amber-400" />
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          <h3 className="text-lg font-semibold text-text-primary">
             Auction Winner
           </h3>
         </div>
@@ -58,9 +58,9 @@ export function AuctionWinnerPanel({ workspaceId }: AuctionWinnerPanelProps) {
       <div className="p-6 space-y-6">
         {/* Winner Agent */}
         <div className="rounded-lg bg-amber-50 p-4 dark:bg-amber-900/20">
-          <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Selected Agent</p>
+          <p className="text-xs text-text-secondary mb-1">Selected Agent</p>
           <div className="flex items-center justify-between">
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">
+            <p className="text-2xl font-bold text-text-primary">
               {currentWinner.selectedAgent}
             </p>
             <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-100">
@@ -71,8 +71,8 @@ export function AuctionWinnerPanel({ workspaceId }: AuctionWinnerPanelProps) {
 
         {/* Selected Action */}
         <div>
-          <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Selected Action</p>
-          <p className="text-sm font-medium text-gray-900 dark:text-white">
+          <p className="text-xs text-text-secondary mb-1">Selected Action</p>
+          <p className="text-sm font-medium text-text-primary">
             {currentWinner.selectedAction}
           </p>
         </div>
@@ -80,7 +80,7 @@ export function AuctionWinnerPanel({ workspaceId }: AuctionWinnerPanelProps) {
         {/* Decision Metrics */}
         <div className="grid grid-cols-2 gap-4">
           <div className="rounded-lg border border-gray-200 p-3 dark:border-gray-700">
-            <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">Confidence Score</p>
+            <p className="text-xs text-text-secondary mb-2">Confidence Score</p>
             <p className={`text-lg font-bold ${getScoreColor(currentWinner.confidenceScore).split(' ')[1]}`}>
               {currentWinner.confidenceScore.toFixed(1)}%
             </p>
@@ -90,8 +90,8 @@ export function AuctionWinnerPanel({ workspaceId }: AuctionWinnerPanelProps) {
             />
           </div>
           <div className="rounded-lg border border-gray-200 p-3 dark:border-gray-700">
-            <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">Risk Score</p>
-            <p className="text-lg font-bold text-gray-900 dark:text-white">
+            <p className="text-xs text-text-secondary mb-2">Risk Score</p>
+            <p className="text-lg font-bold text-text-primary">
               {currentWinner.riskScore.toFixed(1)}%
             </p>
             <Progress
@@ -103,12 +103,12 @@ export function AuctionWinnerPanel({ workspaceId }: AuctionWinnerPanelProps) {
 
         {/* Consensus */}
         <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
-          <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">Consensus Percentage</p>
+          <p className="text-xs text-text-secondary mb-2">Consensus Percentage</p>
           <div className="flex items-baseline gap-2">
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">
+            <p className="text-2xl font-bold text-text-primary">
               {currentWinner.consensusPercentage.toFixed(0)}%
             </p>
-            <span className="text-xs text-gray-500 dark:text-gray-400">agent agreement</span>
+            <span className="text-xs text-text-secondary">agent agreement</span>
           </div>
           <Progress
             value={currentWinner.consensusPercentage}
@@ -118,8 +118,8 @@ export function AuctionWinnerPanel({ workspaceId }: AuctionWinnerPanelProps) {
 
         {/* Rationale */}
         <div>
-          <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">Decision Rationale</p>
-          <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+          <p className="text-xs text-text-secondary mb-2">Decision Rationale</p>
+          <p className="text-sm text-text-secondary leading-relaxed">
             {currentWinner.rationale}
           </p>
         </div>
@@ -127,26 +127,26 @@ export function AuctionWinnerPanel({ workspaceId }: AuctionWinnerPanelProps) {
         {/* Alternative Actions */}
         {currentWinner.alternativeActions && currentWinner.alternativeActions.length > 0 && (
           <div>
-            <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
+            <h4 className="text-sm font-semibold text-text-primary mb-3">
               Alternatives Considered
             </h4>
             <div className="space-y-2">
               {currentWinner.alternativeActions.map((alt, idx) => (
                 <div
                   key={idx}
-                  className="flex items-start justify-between p-3 rounded-lg border border-gray-200 dark:border-gray-700"
+                  className="flex items-start justify-between p-3 rounded-lg border border-border-subtle"
                 >
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                    <p className="text-sm font-medium text-text-primary">
                       {alt.agentId}
                     </p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                    <p className="text-xs text-text-secondary mt-1">
                       {alt.reason}
                     </p>
                   </div>
                   <div className="text-right shrink-0 ml-3">
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Bid</p>
-                    <p className="font-medium text-gray-900 dark:text-white">
+                    <p className="text-xs text-text-secondary">Bid</p>
+                    <p className="font-medium text-text-primary">
                       {formatBid(alt.bid)}
                     </p>
                     {alt.margin > 0 && (

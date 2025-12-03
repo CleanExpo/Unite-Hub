@@ -122,7 +122,7 @@ export default function FounderFinancialsPage() {
 
         {/* Period Selector */}
         <Section className="mt-6">
-          <div className="flex gap-2 p-1 bg-gray-100 dark:bg-gray-800 rounded-lg w-fit">
+          <div className="flex gap-2 p-1 bg-bg-hover rounded-lg w-fit">
             <PeriodButton
               active={period === "quarterly"}
               onClick={() => setPeriod("quarterly")}
@@ -194,10 +194,10 @@ export default function FounderFinancialsPage() {
                       <div className="flex-1 space-y-2">
                         {healthScore.factors.map((factor) => (
                           <div key={factor.name} className="flex items-center gap-2">
-                            <span className="text-sm text-gray-600 dark:text-gray-400 w-40">
+                            <span className="text-sm text-text-secondary w-40">
                               {factor.name}
                             </span>
-                            <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                            <div className="flex-1 h-2 bg-bg-hover rounded-full overflow-hidden">
                               <div
                                 className="h-full bg-teal-500 rounded-full"
                                 style={{ width: `${factor.score}%` }}
@@ -234,10 +234,10 @@ export default function FounderFinancialsPage() {
                             : 0;
                           return (
                             <div key={category} className="flex items-center gap-3">
-                              <span className="text-sm text-gray-600 dark:text-gray-400 w-40 truncate">
+                              <span className="text-sm text-text-secondary w-40 truncate">
                                 {category}
                               </span>
-                              <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                              <div className="flex-1 h-2 bg-bg-hover rounded-full overflow-hidden">
                                 <div
                                   className="h-full bg-blue-500 rounded-full"
                                   style={{ width: `${percentage}%` }}
@@ -297,8 +297,8 @@ function PeriodButton({ active, onClick, label }: PeriodButtonProps) {
       onClick={onClick}
       className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition-colors ${
         active
-          ? "bg-white dark:bg-gray-700 text-teal-600 dark:text-teal-400 shadow-sm"
-          : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+          ? "bg-bg-input text-teal-600 dark:text-teal-400 shadow-sm"
+          : "text-text-secondary hover:text-gray-900 dark:hover:text-white"
       }`}
     >
       <Calendar className="w-4 h-4" />
@@ -330,8 +330,8 @@ function MetricCard({ icon: Icon, label, value, color }: MetricCardProps) {
             <Icon className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">{label}</p>
-            <p className="text-xl font-semibold text-gray-900 dark:text-white">
+            <p className="text-sm text-text-secondary">{label}</p>
+            <p className="text-xl font-semibold text-text-primary">
               {value}
             </p>
           </div>

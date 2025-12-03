@@ -195,7 +195,7 @@ export default function IntentClustersPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Intent Clusters Manager</h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">
+          <p className="text-text-secondary mt-1">
             Question-based clusters that users actually ask AI systems
           </p>
         </div>
@@ -396,7 +396,7 @@ export default function IntentClustersPage() {
                               {cluster.questions?.length || 0} questions
                             </Badge>
                           </div>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                          <p className="text-sm text-text-secondary mb-3">
                             <strong>Searcher Mindset:</strong> {cluster.searcherMindset}
                           </p>
                         </div>
@@ -481,25 +481,25 @@ export default function IntentClustersPage() {
 
                       {/* Insights */}
                       {(cluster.competitiveGap || cluster.contentOpportunity) && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-3 border-t border-gray-200 dark:border-gray-700">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-3 border-t border-border-subtle">
                           {cluster.competitiveGap && (
                             <div>
-                              <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1 flex items-center">
+                              <p className="text-xs font-semibold text-text-secondary mb-1 flex items-center">
                                 <AlertCircle className="w-3 h-3 mr-1" />
                                 Competitive Gap
                               </p>
-                              <p className="text-sm text-gray-700 dark:text-gray-300">
+                              <p className="text-sm text-text-secondary">
                                 {cluster.competitiveGap}
                               </p>
                             </div>
                           )}
                           {cluster.contentOpportunity && (
                             <div>
-                              <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1 flex items-center">
+                              <p className="text-xs font-semibold text-text-secondary mb-1 flex items-center">
                                 <Zap className="w-3 h-3 mr-1" />
                                 Content Opportunity
                               </p>
-                              <p className="text-sm text-gray-700 dark:text-gray-300">
+                              <p className="text-sm text-text-secondary">
                                 {cluster.contentOpportunity}
                               </p>
                             </div>
@@ -509,9 +509,9 @@ export default function IntentClustersPage() {
 
                       {/* Questions Preview */}
                       {cluster.questions && cluster.questions.length > 0 && (
-                        <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
+                        <div className="pt-3 border-t border-border-subtle">
                           <div className="flex items-center justify-between mb-2">
-                            <p className="text-xs font-semibold text-gray-600 dark:text-gray-400">
+                            <p className="text-xs font-semibold text-text-secondary">
                               Questions (H2-Ready)
                             </p>
                             <Badge variant="outline" className="text-xs">
@@ -524,7 +524,7 @@ export default function IntentClustersPage() {
                                 <span className="text-blue-600 dark:text-blue-400 font-medium min-w-[24px]">
                                   Q{idx + 1}:
                                 </span>
-                                <span className="text-gray-700 dark:text-gray-300">
+                                <span className="text-text-secondary">
                                   {q.question}
                                 </span>
                                 {q.searchVolume && (
@@ -544,7 +544,7 @@ export default function IntentClustersPage() {
                       )}
 
                       {/* Actions */}
-                      <div className="flex gap-2 pt-3 border-t border-gray-200 dark:border-gray-700">
+                      <div className="flex gap-2 pt-3 border-t border-border-subtle">
                         <Button variant="outline" size="sm">
                           <Eye className="w-4 h-4 mr-2" />
                           View All Questions

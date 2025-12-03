@@ -223,7 +223,7 @@ export default function ComponentLibraryPage() {
     return (
       <div className="flex h-screen items-center justify-center">
         <Card className="p-8">
-          <p className="text-gray-600 dark:text-gray-400">Loading workspace...</p>
+          <p className="text-text-secondary">Loading workspace...</p>
         </Card>
       </div>
     );
@@ -234,10 +234,10 @@ export default function ComponentLibraryPage() {
       {/* Header */}
       <div className="border-b border-gray-200 bg-white px-6 py-4 dark:border-gray-700 dark:bg-gray-900">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-2xl font-bold text-text-primary">
             Component Library
           </h1>
-          <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+          <p className="mt-1 text-sm text-text-secondary">
             Browse and integrate pre-built, production-ready components into your projects
           </p>
         </div>
@@ -267,7 +267,7 @@ export default function ComponentLibraryPage() {
         {/* Loading */}
         {loading && (
           <div className="flex justify-center py-12">
-            <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+            <div className="flex items-center gap-2 text-text-secondary">
               <Loader2 className="w-5 h-5 animate-spin" />
               <span>Loading components...</span>
             </div>
@@ -277,7 +277,7 @@ export default function ComponentLibraryPage() {
         {/* No Results */}
         {!loading && components.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-600 dark:text-gray-400 mb-4">No components found</p>
+            <p className="text-text-secondary mb-4">No components found</p>
             <Button variant="outline" onClick={handleClearFilters}>
               Clear Filters
             </Button>

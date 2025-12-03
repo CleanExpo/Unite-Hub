@@ -250,7 +250,7 @@ function StatCard({ icon: Icon, label, value, subtext, color }: StatCardProps) {
           </div>
           <div>
             <p className="text-sm text-gray-500">{label}</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">{value}</p>
+            <p className="text-2xl font-bold text-text-primary">{value}</p>
             <p className="text-xs text-gray-400">{subtext}</p>
           </div>
         </div>
@@ -288,12 +288,12 @@ function ModuleCard({ href, icon: Icon, title, description, stats, color }: Modu
           <div className={`w-12 h-12 rounded-lg ${colors[color]} flex items-center justify-center mb-4`}>
             <Icon className="w-6 h-6" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">{title}</h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{description}</p>
+          <h3 className="text-lg font-semibold text-text-primary mb-2">{title}</h3>
+          <p className="text-sm text-text-secondary mb-4">{description}</p>
           <div className="flex gap-4">
             {stats.map((stat) => (
               <div key={stat.label}>
-                <p className="text-lg font-bold text-gray-900 dark:text-white">{stat.value}</p>
+                <p className="text-lg font-bold text-text-primary">{stat.value}</p>
                 <p className="text-xs text-gray-400">{stat.label}</p>
               </div>
             ))}
@@ -317,12 +317,12 @@ function QuickAction({ href, icon: Icon, label }: QuickActionProps) {
   return (
     <Link
       href={href}
-      className="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-teal-500 transition-colors"
+      className="flex items-center gap-3 p-3 bg-bg-card border border-border-subtle rounded-lg hover:border-teal-500 transition-colors"
     >
       <div className="p-2 rounded-lg bg-teal-100 dark:bg-teal-900/30 text-teal-600">
         <Icon className="w-4 h-4" />
       </div>
-      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{label}</span>
+      <span className="text-sm font-medium text-text-secondary">{label}</span>
     </Link>
   );
 }
@@ -336,12 +336,12 @@ interface ActivityItemProps {
 
 function ActivityItem({ icon: Icon, title, description, time }: ActivityItemProps) {
   return (
-    <div className="flex items-start gap-3 py-2 border-b border-gray-100 dark:border-gray-700 last:border-0">
-      <div className="p-1.5 rounded bg-gray-100 dark:bg-gray-700 text-gray-500">
+    <div className="flex items-start gap-3 py-2 border-b border-border-subtle last:border-0">
+      <div className="p-1.5 rounded bg-bg-hover text-gray-500">
         <Icon className="w-4 h-4" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-gray-900 dark:text-white">{title}</p>
+        <p className="text-sm font-medium text-text-primary">{title}</p>
         <p className="text-xs text-gray-500 truncate">{description}</p>
       </div>
       <span className="text-xs text-gray-400 whitespace-nowrap">{time}</span>

@@ -44,7 +44,7 @@ const getRelationshipColor = (type: string) => {
     part_of: 'text-violet-600 dark:text-violet-400',
     contradicts: 'text-orange-600 dark:text-orange-400',
   };
-  return colors[type] || 'text-gray-600 dark:text-gray-400';
+  return colors[type] || 'text-text-secondary';
 };
 
 export function MemoryGraphView({
@@ -114,7 +114,7 @@ export function MemoryGraphView({
                 disabled={isLoading}
                 className="w-full"
               />
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+              <p className="text-xs text-text-secondary mt-1">
                 How many relationship levels to explore
               </p>
             </div>
@@ -169,14 +169,14 @@ export function MemoryGraphView({
                       <div
                         key={memory.id}
                         onClick={() => setSelectedRelationship(memory)}
-                        className="p-3 border border-gray-200 dark:border-gray-700 rounded cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition"
+                        className="p-3 border border-border-subtle rounded cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition"
                       >
                         <div className="flex items-start justify-between mb-2">
                           <div>
                             <p className={`text-sm font-semibold ${getRelationshipColor(memory.relationshipType)}`}>
                               {memory.relationshipType.replace(/_/g, ' ')}
                             </p>
-                            <p className="text-xs text-gray-600 dark:text-gray-400">
+                            <p className="text-xs text-text-secondary">
                               Strength: {memory.relationshipStrength}%
                             </p>
                           </div>
@@ -185,15 +185,15 @@ export function MemoryGraphView({
                           </Badge>
                         </div>
 
-                        <p className="text-sm text-gray-700 dark:text-gray-300 truncate">
+                        <p className="text-sm text-text-secondary truncate">
                           {memory.content.description || 'No description'}
                         </p>
 
                         <div className="mt-2 flex justify-between">
-                          <span className="text-xs text-gray-600 dark:text-gray-400">
+                          <span className="text-xs text-text-secondary">
                             Relevance: {memory.relevanceScore.toFixed(0)}/100
                           </span>
-                          <span className="text-xs text-gray-600 dark:text-gray-400">
+                          <span className="text-xs text-text-secondary">
                             ID: {memory.id.substring(0, 8)}...
                           </span>
                         </div>
@@ -228,26 +228,26 @@ export function MemoryGraphView({
           <CardContent className="space-y-3">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <div>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Relationship Strength</p>
+                <p className="text-xs text-text-secondary">Relationship Strength</p>
                 <p className="text-lg font-bold text-purple-600">
                   {selectedRelationship.relationshipStrength}%
                 </p>
               </div>
               <div>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Memory Type</p>
+                <p className="text-xs text-text-secondary">Memory Type</p>
                 <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                   {selectedRelationship.memoryType}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Relevance Score</p>
+                <p className="text-xs text-text-secondary">Relevance Score</p>
                 <p className="text-lg font-bold text-blue-600">
                   {selectedRelationship.relevanceScore.toFixed(0)}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Memory ID</p>
-                <p className="text-xs font-mono text-gray-600 dark:text-gray-400">
+                <p className="text-xs text-text-secondary">Memory ID</p>
+                <p className="text-xs font-mono text-text-secondary">
                   {selectedRelationship.id.substring(0, 12)}...
                 </p>
               </div>
@@ -257,7 +257,7 @@ export function MemoryGraphView({
               <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
                 Content
               </p>
-              <pre className="text-xs bg-gray-100 dark:bg-gray-900 p-2 rounded overflow-auto max-h-48">
+              <pre className="text-xs bg-bg-raised p-2 rounded overflow-auto max-h-48">
                 {JSON.stringify(selectedRelationship.content, null, 2)}
               </pre>
             </div>

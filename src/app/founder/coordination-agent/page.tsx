@@ -131,7 +131,7 @@ export default function CoordinationAgentDemo() {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Coordination Agent</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2">
+        <p className="text-text-secondary mt-2">
           Orchestrate multi-agent workflows: decompose objectives, sequence tasks, manage dependencies, and execute with founder oversight
         </p>
       </div>
@@ -304,27 +304,27 @@ export default function CoordinationAgentDemo() {
         <CardContent className="space-y-3 text-sm">
           <div>
             <p className="font-medium text-blue-900 dark:text-blue-200">1. Objective Decomposition</p>
-            <p className="text-gray-700 dark:text-gray-300">High-level objective is decomposed into concrete agent tasks using template matching.</p>
+            <p className="text-text-secondary">High-level objective is decomposed into concrete agent tasks using template matching.</p>
           </div>
           <div>
             <p className="font-medium text-blue-900 dark:text-blue-200">2. Dependency Resolution</p>
-            <p className="text-gray-700 dark:text-gray-300">Tasks are sequenced respecting dependencies and calculating critical path.</p>
+            <p className="text-text-secondary">Tasks are sequenced respecting dependencies and calculating critical path.</p>
           </div>
           <div>
             <p className="font-medium text-blue-900 dark:text-blue-200">3. Agent Routing</p>
-            <p className="text-gray-700 dark:text-gray-300">Each task is routed to the appropriate specialist agent (Email, Research, Content, Scheduling, Analysis).</p>
+            <p className="text-text-secondary">Each task is routed to the appropriate specialist agent (Email, Research, Content, Scheduling, Analysis).</p>
           </div>
           <div>
             <p className="font-medium text-blue-900 dark:text-blue-200">4. Execution Monitoring</p>
-            <p className="text-gray-700 dark:text-gray-300">Tasks execute with retry logic, dependency tracking, and real-time progress monitoring.</p>
+            <p className="text-text-secondary">Tasks execute with retry logic, dependency tracking, and real-time progress monitoring.</p>
           </div>
           <div>
             <p className="font-medium text-blue-900 dark:text-blue-200">5. Result Aggregation</p>
-            <p className="text-gray-700 dark:text-gray-300">Insights from all agents are aggregated and ranked by priority.</p>
+            <p className="text-text-secondary">Insights from all agents are aggregated and ranked by priority.</p>
           </div>
           <div>
             <p className="font-medium text-blue-900 dark:text-blue-200">6. Founder Governance</p>
-            <p className="text-gray-700 dark:text-gray-300">High-risk workflows require founder approval before execution.</p>
+            <p className="text-text-secondary">High-risk workflows require founder approval before execution.</p>
           </div>
         </CardContent>
       </Card>

@@ -24,9 +24,9 @@ export const SafetyStatusBeacon: React.FC = () => {
 
   if (!status) {
     return (
-      <div className="flex items-center justify-center p-4 rounded-lg bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-700">
+      <div className="flex items-center justify-center p-4 rounded-lg bg-bg-raised border border-border-base">
         <div className="text-center">
-          <p className="text-sm text-gray-600 dark:text-gray-400">Loading safety status...</p>
+          <p className="text-sm text-text-secondary">Loading safety status...</p>
         </div>
       </div>
     );
@@ -89,10 +89,10 @@ export const SafetyStatusBeacon: React.FC = () => {
         <div className="flex items-center gap-4">
           {getStatusIcon()}
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+            <h3 className="text-lg font-semibold text-text-primary">
               {getStatusText()}
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-text-secondary">
               Overall Risk: <span className="font-medium">{status.overallRiskScore}%</span>
             </p>
           </div>
@@ -105,34 +105,34 @@ export const SafetyStatusBeacon: React.FC = () => {
               <span className="text-xs text-blue-600 dark:text-blue-400">Live</span>
             </div>
           )}
-          <p className="text-xs text-gray-500 dark:text-gray-400">
+          <p className="text-xs text-text-secondary">
             Updated {updateText}
           </p>
         </div>
       </div>
 
       <div className="mt-4 grid grid-cols-2 gap-3">
-        <div className="bg-white dark:bg-gray-800 rounded p-2">
-          <p className="text-xs text-gray-600 dark:text-gray-400">Cascade Risk</p>
-          <p className="text-lg font-bold text-gray-900 dark:text-white">
+        <div className="bg-bg-card rounded p-2">
+          <p className="text-xs text-text-secondary">Cascade Risk</p>
+          <p className="text-lg font-bold text-text-primary">
             {status.cascadeRiskScore}%
           </p>
         </div>
-        <div className="bg-white dark:bg-gray-800 rounded p-2">
-          <p className="text-xs text-gray-600 dark:text-gray-400">Deadlock Risk</p>
-          <p className="text-lg font-bold text-gray-900 dark:text-white">
+        <div className="bg-bg-card rounded p-2">
+          <p className="text-xs text-text-secondary">Deadlock Risk</p>
+          <p className="text-lg font-bold text-text-primary">
             {status.deadlockRiskScore}%
           </p>
         </div>
-        <div className="bg-white dark:bg-gray-800 rounded p-2">
-          <p className="text-xs text-gray-600 dark:text-gray-400">Memory Corruption</p>
-          <p className="text-lg font-bold text-gray-900 dark:text-white">
+        <div className="bg-bg-card rounded p-2">
+          <p className="text-xs text-text-secondary">Memory Corruption</p>
+          <p className="text-lg font-bold text-text-primary">
             {status.memoryCorruptionScore}%
           </p>
         </div>
-        <div className="bg-white dark:bg-gray-800 rounded p-2">
-          <p className="text-xs text-gray-600 dark:text-gray-400">Orchestration</p>
-          <p className="text-lg font-bold text-gray-900 dark:text-white">
+        <div className="bg-bg-card rounded p-2">
+          <p className="text-xs text-text-secondary">Orchestration</p>
+          <p className="text-lg font-bold text-text-primary">
             {status.orchestrationComplexityScore}%
           </p>
         </div>

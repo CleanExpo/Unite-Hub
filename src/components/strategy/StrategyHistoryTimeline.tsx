@@ -68,7 +68,7 @@ export function StrategyHistoryTimeline({
       <div className="space-y-4 p-6">
         {[1, 2, 3].map((idx) => (
           <div key={idx} className="space-y-2">
-            <div className="h-20 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+            <div className="h-20 bg-bg-hover rounded-lg animate-pulse" />
           </div>
         ))}
       </div>
@@ -77,12 +77,12 @@ export function StrategyHistoryTimeline({
 
   if (strategies.length === 0) {
     return (
-      <div className="bg-gray-50 dark:bg-gray-900/30 border border-gray-200 dark:border-gray-700 rounded-lg p-8 text-center">
-        <Calendar className="w-12 h-12 text-gray-400 dark:text-gray-600 mx-auto mb-3" />
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+      <div className="bg-bg-raised border border-border-subtle rounded-lg p-8 text-center">
+        <Calendar className="w-12 h-12 text-text-muted mx-auto mb-3" />
+        <h3 className="text-lg font-semibold text-text-primary mb-1">
           No History Yet
         </h3>
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className="text-text-secondary">
           Completed strategies will appear here for review and learning.
         </p>
       </div>
@@ -102,14 +102,14 @@ export function StrategyHistoryTimeline({
     <div className="space-y-6">
       {/* Filters and Sorting */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-          <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 block mb-2">
+        <div className="bg-bg-card rounded-lg border border-border-subtle p-4">
+          <label className="text-sm font-semibold text-text-secondary block mb-2">
             Filter by Outcome
           </label>
           <select
             value={filterOutcome}
             onChange={(e) => setFilterOutcome(e.target.value as any)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+            className="w-full px-3 py-2 border border-border-base rounded-lg bg-bg-input text-text-primary text-sm"
           >
             <option value="all">All Outcomes</option>
             <option value="successful">Successful</option>
@@ -118,14 +118,14 @@ export function StrategyHistoryTimeline({
           </select>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-          <label className="text-sm font-semibold text-gray-700 dark:text-gray-300 block mb-2">
+        <div className="bg-bg-card rounded-lg border border-border-subtle p-4">
+          <label className="text-sm font-semibold text-text-secondary block mb-2">
             Sort By
           </label>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as any)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
+            className="w-full px-3 py-2 border border-border-base rounded-lg bg-bg-input text-text-primary text-sm"
           >
             <option value="recent">Most Recent</option>
             <option value="completion">Highest Completion</option>
@@ -161,14 +161,14 @@ export function StrategyHistoryTimeline({
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: idx * 0.05 }}
-              className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-shadow"
+              className="bg-bg-card rounded-lg border border-border-subtle overflow-hidden hover:shadow-md transition-shadow"
             >
               {/* Timeline Item Header */}
               <button
                 onClick={() =>
                   setExpandedStrategy(isExpanded ? null : strategy.id)
                 }
-                className="w-full px-6 py-4 flex items-start gap-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                className="w-full px-6 py-4 flex items-start gap-4 hover:bg-bg-hover transition-colors"
               >
                 {/* Timeline Dot and Line */}
                 <div className="flex flex-col items-center gap-2 mt-1 flex-shrink-0">
@@ -192,7 +192,7 @@ export function StrategyHistoryTimeline({
                 {/* Content */}
                 <div className="flex-1 text-left">
                   <div className="flex items-center gap-3 mb-2">
-                    <h3 className="font-semibold text-gray-900 dark:text-white">
+                    <h3 className="font-semibold text-text-primary">
                       Strategy {strategy.id.slice(0, 8)}
                     </h3>
                     <span
@@ -208,7 +208,7 @@ export function StrategyHistoryTimeline({
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                     <div>
-                      <div className="text-gray-600 dark:text-gray-400 text-xs">Completion</div>
+                      <div className="text-text-secondary text-xs">Completion</div>
                       <div
                         className="font-semibold"
                         style={{ color: completion.color }}
@@ -218,7 +218,7 @@ export function StrategyHistoryTimeline({
                     </div>
 
                     <div>
-                      <div className="text-gray-600 dark:text-gray-400 text-xs">Time Efficiency</div>
+                      <div className="text-text-secondary text-xs">Time Efficiency</div>
                       <div
                         className="font-semibold"
                         style={{ color: timeEff.color }}
@@ -228,7 +228,7 @@ export function StrategyHistoryTimeline({
                     </div>
 
                     <div>
-                      <div className="text-gray-600 dark:text-gray-400 text-xs">Cost Efficiency</div>
+                      <div className="text-text-secondary text-xs">Cost Efficiency</div>
                       <div
                         className="font-semibold"
                         style={{ color: costEff.color }}
@@ -238,7 +238,7 @@ export function StrategyHistoryTimeline({
                     </div>
                   </div>
 
-                  <div className="text-xs text-gray-500 dark:text-gray-500 mt-2">
+                  <div className="text-xs text-text-muted mt-2">
                     Archived {formatTimestamp(strategy.archivedAt)}
                   </div>
                 </div>
@@ -260,19 +260,19 @@ export function StrategyHistoryTimeline({
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.2 }}
-                    className="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/30"
+                    className="border-t border-border-subtle bg-bg-raised"
                   >
                     <div className="p-6 space-y-4">
                       {/* Metrics Grid */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-                          <div className="text-xs text-gray-600 dark:text-gray-400 font-semibold mb-2">
+                        <div className="bg-bg-card rounded-lg border border-border-subtle p-4">
+                          <div className="text-xs text-text-secondary font-semibold mb-2">
                             Completion Rate
                           </div>
                           <div className="flex items-center gap-3">
                             <div className="flex-1">
                               <div
-                                className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden"
+                                className="h-2 bg-bg-hover rounded-full overflow-hidden"
                               >
                                 <motion.div
                                   initial={{ width: 0 }}
@@ -285,20 +285,20 @@ export function StrategyHistoryTimeline({
                                 />
                               </div>
                             </div>
-                            <span className="text-lg font-bold text-gray-900 dark:text-white">
+                            <span className="text-lg font-bold text-text-primary">
                               {strategy.completionRate.toFixed(0)}%
                             </span>
                           </div>
                         </div>
 
-                        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-                          <div className="text-xs text-gray-600 dark:text-gray-400 font-semibold mb-2">
+                        <div className="bg-bg-card rounded-lg border border-border-subtle p-4">
+                          <div className="text-xs text-text-secondary font-semibold mb-2">
                             Efficiency Score
                           </div>
                           <div className="flex items-center gap-3">
                             <div className="flex-1">
                               <div
-                                className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden"
+                                className="h-2 bg-bg-hover rounded-full overflow-hidden"
                               >
                                 <motion.div
                                   initial={{ width: 0 }}
@@ -310,7 +310,7 @@ export function StrategyHistoryTimeline({
                                 />
                               </div>
                             </div>
-                            <span className="text-lg font-bold text-gray-900 dark:text-white">
+                            <span className="text-lg font-bold text-text-primary">
                               {(
                                 (strategy.timeEfficiency + strategy.costEfficiency) /
                                 2
@@ -322,8 +322,8 @@ export function StrategyHistoryTimeline({
 
                       {/* Patterns */}
                       {strategy.patterns && strategy.patterns.length > 0 && (
-                        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-                          <h4 className="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                        <div className="bg-bg-card rounded-lg border border-border-subtle p-4">
+                          <h4 className="font-semibold text-text-primary mb-3 flex items-center gap-2">
                             <Award className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                             Detected Patterns
                           </h4>
@@ -361,9 +361,9 @@ export function StrategyHistoryTimeline({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6"
+          className="bg-bg-card rounded-lg border border-border-subtle p-6"
         >
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-text-primary mb-4 flex items-center gap-2">
             <TrendingUp className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             Pattern Library ({patterns.length})
           </h3>
@@ -388,10 +388,10 @@ export function StrategyHistoryTimeline({
                   <div className="flex items-start gap-3 mb-3">
                     <span className="text-lg">{patternInfo.icon}</span>
                     <div>
-                      <h4 className="font-semibold text-gray-900 dark:text-white">
+                      <h4 className="font-semibold text-text-primary">
                         {pattern.type.replace(/_/g, ' ')}
                       </h4>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                      <p className="text-sm text-text-secondary">
                         {pattern.description}
                       </p>
                     </div>
@@ -399,19 +399,19 @@ export function StrategyHistoryTimeline({
 
                   <div className="grid grid-cols-3 gap-2">
                     <div>
-                      <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">Frequency</div>
-                      <div className="text-lg font-bold text-gray-900 dark:text-white">
+                      <div className="text-xs text-text-secondary mb-1">Frequency</div>
+                      <div className="text-lg font-bold text-text-primary">
                         {pattern.frequency}x
                       </div>
                     </div>
                     <div>
-                      <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">Success</div>
+                      <div className="text-xs text-text-secondary mb-1">Success</div>
                       <div className="text-lg font-bold text-green-600 dark:text-green-400">
                         {pattern.successRate.toFixed(0)}%
                       </div>
                     </div>
                     <div>
-                      <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">Efficacy</div>
+                      <div className="text-xs text-text-secondary mb-1">Efficacy</div>
                       <div className="text-lg font-bold text-blue-600 dark:text-blue-400">
                         {pattern.efficacy.toFixed(0)}%
                       </div>

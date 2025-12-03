@@ -158,7 +158,7 @@ export default function AnalysisAgentDemo() {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Analysis Agent</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2">
+        <p className="text-text-secondary mt-2">
           Business intelligence, KPI analysis, anomaly detection, forecasting, and insights
         </p>
       </div>
@@ -344,7 +344,7 @@ export default function AnalysisAgentDemo() {
                       <div className="flex justify-between items-start gap-4">
                         <div className="flex-1">
                           <p className="font-medium">{anomaly.description}</p>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                          <p className="text-sm text-text-secondary mt-1">
                             Source: {anomaly.source} | Type: {anomaly.type}
                           </p>
                         </div>
@@ -372,7 +372,7 @@ export default function AnalysisAgentDemo() {
             {result.insights.length === 0 ? (
               <Card>
                 <CardContent className="pt-6">
-                  <p className="text-gray-600 dark:text-gray-400">No insights generated yet.</p>
+                  <p className="text-text-secondary">No insights generated yet.</p>
                 </CardContent>
               </Card>
             ) : (
@@ -398,7 +398,7 @@ export default function AnalysisAgentDemo() {
                           </Badge>
                         </div>
                       </div>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                      <p className="text-sm text-text-secondary">
                         {insight.description}
                       </p>
                     </CardContent>
@@ -484,37 +484,37 @@ export default function AnalysisAgentDemo() {
         <CardContent className="space-y-3 text-sm">
           <div>
             <p className="font-medium text-blue-900 dark:text-blue-200">1. Data Collection</p>
-            <p className="text-gray-700 dark:text-gray-300">
+            <p className="text-text-secondary">
               Aggregates data from email, research, content, scheduling, staff, and financial systems.
             </p>
           </div>
           <div>
             <p className="font-medium text-blue-900 dark:text-blue-200">2. KPI Extraction</p>
-            <p className="text-gray-700 dark:text-gray-300">
+            <p className="text-text-secondary">
               Calculates 15+ key performance indicators across all business dimensions.
             </p>
           </div>
           <div>
             <p className="font-medium text-blue-900 dark:text-blue-200">3. Anomaly Detection</p>
-            <p className="text-gray-700 dark:text-gray-300">
+            <p className="text-text-secondary">
               Identifies statistical outliers, spikes, drops, and pattern breaks using z-score analysis.
             </p>
           </div>
           <div>
             <p className="font-medium text-blue-900 dark:text-blue-200">4. Forecasting</p>
-            <p className="text-gray-700 dark:text-gray-300">
+            <p className="text-text-secondary">
               Projects future metrics using exponential smoothing and trend extrapolation.
             </p>
           </div>
           <div>
             <p className="font-medium text-blue-900 dark:text-blue-200">5. Insight Generation</p>
-            <p className="text-gray-700 dark:text-gray-300">
+            <p className="text-text-secondary">
               Derives 50+ business insights with action items and priority levels.
             </p>
           </div>
           <div>
             <p className="font-medium text-blue-900 dark:text-blue-200">6. Founder Review</p>
-            <p className="text-gray-700 dark:text-gray-300">
+            <p className="text-text-secondary">
               Routes high-risk reports to founder with full context for decision-making.
             </p>
           </div>

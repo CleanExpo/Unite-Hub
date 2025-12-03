@@ -82,7 +82,7 @@ export const LiveEnforcementLogPanel: React.FC<LiveEnforcementLogPanelProps> = (
       case 'require_approval':
         return 'text-blue-600 dark:text-blue-400';
       default:
-        return 'text-gray-600 dark:text-gray-400';
+        return 'text-text-secondary';
     }
   };
 
@@ -94,24 +94,24 @@ export const LiveEnforcementLogPanel: React.FC<LiveEnforcementLogPanelProps> = (
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <Activity className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-        <h3 className="font-semibold text-gray-900 dark:text-white">Live Enforcement Log</h3>
-        <span className="ml-auto text-sm text-gray-600 dark:text-gray-400">
+        <Activity className="w-5 h-5 text-text-secondary" />
+        <h3 className="font-semibold text-text-primary">Live Enforcement Log</h3>
+        <span className="ml-auto text-sm text-text-secondary">
           {filteredEvents.length} event{filteredEvents.length !== 1 ? 's' : ''}
         </span>
       </div>
 
       {/* Filters */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 space-y-3">
+      <div className="bg-bg-card rounded-lg border border-border-subtle p-4 space-y-3">
         <div className="flex items-center gap-2">
-          <Filter className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Filters</span>
+          <Filter className="w-4 h-4 text-text-secondary" />
+          <span className="text-sm font-medium text-text-secondary">Filters</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {/* Severity filter */}
           <div>
-            <label className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase block mb-2">
+            <label className="text-xs font-semibold text-text-secondary uppercase block mb-2">
               Severity
             </label>
             <div className="flex gap-2">
@@ -122,7 +122,7 @@ export const LiveEnforcementLogPanel: React.FC<LiveEnforcementLogPanelProps> = (
                   className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
                     filterSeverity === sev
                       ? getSeverityBadge(sev)
-                      : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+                      : 'bg-bg-hover text-text-secondary hover:bg-gray-300 dark:hover:bg-gray-600'
                   }`}
                 >
                   {sev}
@@ -131,7 +131,7 @@ export const LiveEnforcementLogPanel: React.FC<LiveEnforcementLogPanelProps> = (
               {filterSeverity !== null && (
                 <button
                   onClick={() => setFilterSeverity(null)}
-                  className="px-2 py-1 rounded text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                  className="px-2 py-1 rounded text-xs text-text-secondary hover:text-gray-700 dark:hover:text-gray-300"
                 >
                   Clear
                 </button>
@@ -141,13 +141,13 @@ export const LiveEnforcementLogPanel: React.FC<LiveEnforcementLogPanelProps> = (
 
           {/* Action filter */}
           <div>
-            <label className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase block mb-2">
+            <label className="text-xs font-semibold text-text-secondary uppercase block mb-2">
               Action
             </label>
             <select
               value={filterAction || ''}
               onChange={(e) => setFilterAction(e.target.value || null)}
-              className="w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              className="w-full px-2 py-1 text-xs border border-border-base rounded bg-bg-input text-text-primary"
             >
               <option value="">All Actions</option>
               <option value="halt_autonomy">Halt Autonomy</option>
@@ -160,7 +160,7 @@ export const LiveEnforcementLogPanel: React.FC<LiveEnforcementLogPanelProps> = (
 
           {/* Agent search */}
           <div>
-            <label className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase block mb-2">
+            <label className="text-xs font-semibold text-text-secondary uppercase block mb-2">
               Search Agent
             </label>
             <div className="relative">
@@ -169,7 +169,7 @@ export const LiveEnforcementLogPanel: React.FC<LiveEnforcementLogPanelProps> = (
                 placeholder="Filter by agent..."
                 value={searchAgent}
                 onChange={(e) => setSearchAgent(e.target.value)}
-                className="w-full px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
+                className="w-full px-2 py-1 text-xs border border-border-base rounded bg-bg-input text-text-primary placeholder-gray-400 dark:placeholder-gray-500"
               />
               {searchAgent && (
                 <button
@@ -187,7 +187,7 @@ export const LiveEnforcementLogPanel: React.FC<LiveEnforcementLogPanelProps> = (
       {/* Events log */}
       {isLoading && filteredEvents.length === 0 ? (
         <div className="flex items-center justify-center p-8">
-          <p className="text-sm text-gray-600 dark:text-gray-400">Loading events...</p>
+          <p className="text-sm text-text-secondary">Loading events...</p>
         </div>
       ) : filteredEvents.length === 0 ? (
         <div className="flex items-center justify-center p-8 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
@@ -214,7 +214,7 @@ export const LiveEnforcementLogPanel: React.FC<LiveEnforcementLogPanelProps> = (
                     <p className={`font-medium ${getActionColor(event.action)}`}>
                       {event.action.replace(/_/g, ' ').toUpperCase()}
                     </p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">
+                    <p className="text-xs text-text-secondary">
                       {event.affectedSystems.join(', ')} • {formatTime(event.timestamp)}
                     </p>
                   </div>
@@ -226,26 +226,26 @@ export const LiveEnforcementLogPanel: React.FC<LiveEnforcementLogPanelProps> = (
 
                 {/* Details */}
                 {isExpanded && (
-                  <div className="border-t border-opacity-30 border-gray-300 dark:border-gray-600 p-3 bg-white/50 dark:bg-gray-800/50 space-y-2">
+                  <div className="border-t border-opacity-30 border-border-base p-3 bg-white/50 dark:bg-gray-800/50 space-y-2">
                     <div>
-                      <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase mb-1">
+                      <p className="text-xs font-semibold text-text-secondary uppercase mb-1">
                         Reason
                       </p>
-                      <p className="text-sm text-gray-700 dark:text-gray-300">{event.reason}</p>
+                      <p className="text-sm text-text-secondary">{event.reason}</p>
                     </div>
 
                     {event.metadata && Object.keys(event.metadata).length > 0 && (
                       <div>
-                        <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase mb-1">
+                        <p className="text-xs font-semibold text-text-secondary uppercase mb-1">
                           Metadata
                         </p>
-                        <pre className="text-xs bg-white/50 dark:bg-gray-900/50 p-2 rounded text-gray-700 dark:text-gray-300 overflow-x-auto">
+                        <pre className="text-xs bg-white/50 dark:bg-gray-900/50 p-2 rounded text-text-secondary overflow-x-auto">
                           {JSON.stringify(event.metadata, null, 2)}
                         </pre>
                       </div>
                     )}
 
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                    <p className="text-xs text-text-secondary">
                       Event ID: {event.id}
                     </p>
                   </div>

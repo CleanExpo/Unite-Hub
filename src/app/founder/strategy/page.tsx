@@ -298,8 +298,8 @@ export default function StrategyPage() {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center">
-          <div className="h-12 w-12 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse mx-auto mb-4" />
-          <p className="text-gray-600 dark:text-gray-400">Loading workspace...</p>
+          <div className="h-12 w-12 bg-bg-hover rounded-lg animate-pulse mx-auto mb-4" />
+          <p className="text-text-secondary">Loading workspace...</p>
         </div>
       </div>
     );
@@ -316,10 +316,10 @@ export default function StrategyPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-3xl font-bold text-text-primary">
             Strategy Planning
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">
+          <p className="text-text-secondary mt-1">
             Build, validate, and execute hierarchical strategies with multi-agent coordination
           </p>
         </div>
@@ -336,7 +336,7 @@ export default function StrategyPage() {
           <button
             onClick={handleRefreshAll}
             disabled={isLoadingStrategy || isLoadingValidation || isLoadingHistory}
-            className="bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-50 text-gray-700 dark:text-gray-300 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors"
+            className="bg-bg-hover hover:bg-bg-hover disabled:opacity-50 text-text-secondary px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors"
             title="Manually refresh all data"
           >
             <RefreshCw
@@ -350,7 +350,7 @@ export default function StrategyPage() {
             className={`px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors ${
               pollingActive
                 ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300'
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                : 'bg-bg-hover text-text-secondary'
             }`}
             title={pollingActive ? 'Polling is enabled' : 'Polling is disabled'}
           >
@@ -373,15 +373,15 @@ export default function StrategyPage() {
 
       {/* Create Strategy Form */}
       {showCreateForm && (
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+        <div className="bg-bg-card rounded-lg border border-border-subtle p-6">
+          <h2 className="text-xl font-semibold text-text-primary mb-4">
             Create New Strategy
           </h2>
 
           <form onSubmit={handleCreateStrategy} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-text-secondary mb-1">
                   Objective Title *
                 </label>
                 <input
@@ -394,13 +394,13 @@ export default function StrategyPage() {
                       objectiveTitle: e.target.value,
                     }))
                   }
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-3 py-2 border border-border-base rounded-lg bg-bg-input text-text-primary"
                   placeholder="e.g., Launch Q4 Marketing Campaign"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-text-secondary mb-1">
                   Coalition ID *
                 </label>
                 <input
@@ -413,14 +413,14 @@ export default function StrategyPage() {
                       coalitionId: e.target.value,
                     }))
                   }
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-3 py-2 border border-border-base rounded-lg bg-bg-input text-text-primary"
                   placeholder="Enter coalition ID"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label className="block text-sm font-medium text-text-secondary mb-1">
                 Description
               </label>
               <textarea
@@ -431,7 +431,7 @@ export default function StrategyPage() {
                     objectiveDescription: e.target.value,
                   }))
                 }
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full px-3 py-2 border border-border-base rounded-lg bg-bg-input text-text-primary"
                 placeholder="Describe the objective..."
                 rows={3}
               />
@@ -439,7 +439,7 @@ export default function StrategyPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-text-secondary mb-1">
                   Context
                 </label>
                 <input
@@ -451,13 +451,13 @@ export default function StrategyPage() {
                       context: e.target.value,
                     }))
                   }
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-3 py-2 border border-border-base rounded-lg bg-bg-input text-text-primary"
                   placeholder="Add context..."
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="block text-sm font-medium text-text-secondary mb-1">
                   Priority
                 </label>
                 <select
@@ -468,7 +468,7 @@ export default function StrategyPage() {
                       priority: e.target.value as any,
                     }))
                   }
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                  className="w-full px-3 py-2 border border-border-base rounded-lg bg-bg-input text-text-primary"
                 >
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
@@ -496,7 +496,7 @@ export default function StrategyPage() {
               <button
                 type="button"
                 onClick={() => setShowCreateForm(false)}
-                className="px-6 py-2 border border-gray-300 dark:border-gray-600 rounded-lg font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                className="px-6 py-2 border border-border-base rounded-lg font-medium text-text-secondary hover:bg-bg-hover transition-colors"
               >
                 Cancel
               </button>
@@ -508,10 +508,10 @@ export default function StrategyPage() {
       {/* Active Strategy Overview */}
       {activeStrategy && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+          <div className="bg-bg-card rounded-lg border border-border-subtle p-4">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                <div className="text-sm text-text-secondary mb-1">
                   Hierarchy Health
                 </div>
                 <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
@@ -522,10 +522,10 @@ export default function StrategyPage() {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+          <div className="bg-bg-card rounded-lg border border-border-subtle p-4">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                <div className="text-sm text-text-secondary mb-1">
                   Total Items
                 </div>
                 <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">
@@ -536,10 +536,10 @@ export default function StrategyPage() {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+          <div className="bg-bg-card rounded-lg border border-border-subtle p-4">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                <div className="text-sm text-text-secondary mb-1">
                   Critical Items
                 </div>
                 <div className="text-2xl font-bold text-red-600 dark:text-red-400">
@@ -550,10 +550,10 @@ export default function StrategyPage() {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+          <div className="bg-bg-card rounded-lg border border-border-subtle p-4">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                <div className="text-sm text-text-secondary mb-1">
                   Decomposition Quality
                 </div>
                 <div className="text-2xl font-bold text-green-600 dark:text-green-400 capitalize">
@@ -585,12 +585,12 @@ export default function StrategyPage() {
               />
             </>
           ) : (
-            <div className="bg-gray-50 dark:bg-gray-900/30 border border-gray-200 dark:border-gray-700 rounded-lg p-8 text-center">
-              <Target className="w-12 h-12 text-gray-400 dark:text-gray-600 mx-auto mb-3" />
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+            <div className="bg-bg-raised border border-border-subtle rounded-lg p-8 text-center">
+              <Target className="w-12 h-12 text-text-muted mx-auto mb-3" />
+              <h3 className="text-lg font-semibold text-text-primary mb-1">
                 No Active Strategy
               </h3>
-              <p className="text-gray-600 dark:text-gray-400">
+              <p className="text-text-secondary">
                 Create a new strategy to get started with hierarchical planning.
               </p>
             </div>
@@ -605,12 +605,12 @@ export default function StrategyPage() {
               isLoading={isLoadingStrategy}
             />
           ) : (
-            <div className="bg-gray-50 dark:bg-gray-900/30 border border-gray-200 dark:border-gray-700 rounded-lg p-8 text-center">
-              <Target className="w-12 h-12 text-gray-400 dark:text-gray-600 mx-auto mb-3" />
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+            <div className="bg-bg-raised border border-border-subtle rounded-lg p-8 text-center">
+              <Target className="w-12 h-12 text-text-muted mx-auto mb-3" />
+              <h3 className="text-lg font-semibold text-text-primary mb-1">
                 No Active Strategy
               </h3>
-              <p className="text-gray-600 dark:text-gray-400">
+              <p className="text-text-secondary">
                 Create a new strategy to view its hierarchical decomposition.
               </p>
             </div>

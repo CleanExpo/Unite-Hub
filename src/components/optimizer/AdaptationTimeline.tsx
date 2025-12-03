@@ -28,8 +28,8 @@ export const AdaptationTimeline: React.FC<AdaptationTimelineProps> = ({
   if (loading) {
     return (
       <div className="space-y-3">
-        <h3 className="font-semibold text-gray-900 dark:text-white">Profile History</h3>
-        <div className="text-sm text-gray-600 dark:text-gray-400">Loading...</div>
+        <h3 className="font-semibold text-text-primary">Profile History</h3>
+        <div className="text-sm text-text-secondary">Loading...</div>
       </div>
     );
   }
@@ -37,8 +37,8 @@ export const AdaptationTimeline: React.FC<AdaptationTimelineProps> = ({
   if (history.length === 0) {
     return (
       <div className="space-y-3">
-        <h3 className="font-semibold text-gray-900 dark:text-white">Profile History</h3>
-        <div className="text-sm text-gray-600 dark:text-gray-400">No profile history available</div>
+        <h3 className="font-semibold text-text-primary">Profile History</h3>
+        <div className="text-sm text-text-secondary">No profile history available</div>
       </div>
     );
   }
@@ -53,8 +53,8 @@ export const AdaptationTimeline: React.FC<AdaptationTimelineProps> = ({
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <TrendingUp className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-        <h3 className="font-semibold text-gray-900 dark:text-white">Profile History</h3>
+        <TrendingUp className="w-5 h-5 text-text-secondary" />
+        <h3 className="font-semibold text-text-primary">Profile History</h3>
       </div>
 
       <div className="space-y-2">
@@ -66,7 +66,7 @@ export const AdaptationTimeline: React.FC<AdaptationTimelineProps> = ({
           return (
             <div
               key={item.profileId}
-              className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+              className="border border-border-subtle rounded-lg p-3 hover:bg-bg-hover/50 transition-colors"
             >
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
@@ -80,10 +80,10 @@ export const AdaptationTimeline: React.FC<AdaptationTimelineProps> = ({
 
                   {/* Profile info */}
                   <div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                    <p className="text-sm font-medium text-text-primary">
                       {item.profileName}
                     </p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">
+                    <p className="text-xs text-text-secondary">
                       {new Date(item.createdAt).toLocaleString()}
                     </p>
                   </div>
@@ -110,8 +110,8 @@ export const AdaptationTimeline: React.FC<AdaptationTimelineProps> = ({
                     )}
                     {trend === 'stable' && (
                       <>
-                        <Minus className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-                        <span className="text-xs font-semibold text-gray-600 dark:text-gray-400">
+                        <Minus className="w-4 h-4 text-text-secondary" />
+                        <span className="text-xs font-semibold text-text-secondary">
                           No change
                         </span>
                       </>
@@ -122,21 +122,21 @@ export const AdaptationTimeline: React.FC<AdaptationTimelineProps> = ({
 
               {/* Metrics */}
               <div className="grid grid-cols-3 gap-2 ml-7 text-xs">
-                <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded">
-                  <p className="text-gray-600 dark:text-gray-400">Score</p>
-                  <p className="font-semibold text-gray-900 dark:text-white">
+                <div className="p-2 bg-bg-raised rounded">
+                  <p className="text-text-secondary">Score</p>
+                  <p className="font-semibold text-text-primary">
                     {item.adaptationScore}
                   </p>
                 </div>
-                <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded">
-                  <p className="text-gray-600 dark:text-gray-400">Cost Est.</p>
-                  <p className="font-semibold text-gray-900 dark:text-white">
+                <div className="p-2 bg-bg-raised rounded">
+                  <p className="text-text-secondary">Cost Est.</p>
+                  <p className="font-semibold text-text-primary">
                     ${item.resourceCostEstimate.toFixed(4)}
                   </p>
                 </div>
-                <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded">
-                  <p className="text-gray-600 dark:text-gray-400">Duration</p>
-                  <p className="font-semibold text-gray-900 dark:text-white">
+                <div className="p-2 bg-bg-raised rounded">
+                  <p className="text-text-secondary">Duration</p>
+                  <p className="font-semibold text-text-primary">
                     {Math.round(item.resourceDurationEstimate)}ms
                   </p>
                 </div>

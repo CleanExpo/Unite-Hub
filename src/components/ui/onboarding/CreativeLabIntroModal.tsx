@@ -66,12 +66,12 @@ export default function CreativeLabIntroModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="relative w-full max-w-lg mx-4 bg-white dark:bg-gray-900 rounded-xl shadow-2xl">
+      <div className="relative w-full max-w-lg mx-4 bg-bg-card rounded-xl shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-between p-6 border-b border-border-subtle">
           <div className="flex items-center gap-3">
             <Sparkles className="w-6 h-6 text-teal-600" />
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+            <h2 className="text-xl font-bold text-text-primary">
               Welcome to Your Creative Lab
             </h2>
           </div>
@@ -125,7 +125,7 @@ export default function CreativeLabIntroModal({
         </div>
 
         {/* Footer */}
-        <div className="p-6 border-t border-gray-200 dark:border-gray-700">
+        <div className="p-6 border-t border-border-subtle">
           <button
             onClick={handleDismiss}
             className="w-full px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 font-medium"

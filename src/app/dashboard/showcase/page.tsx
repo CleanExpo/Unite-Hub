@@ -172,10 +172,10 @@ export default function ShowcasePage() {
               New Features
             </Badge>
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          <h1 className="text-4xl font-bold text-text-primary mb-4">
             Component Marketplace Showcase
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl">
+          <p className="text-lg text-text-secondary max-w-2xl">
             Discover our new component library with AI-powered variant generation, multiple export formats, and beautiful
             preview interface. Everything you need to build faster.
           </p>
@@ -191,10 +191,10 @@ export default function ShowcasePage() {
                 <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">
                   {stat.value}
                 </div>
-                <div className="font-semibold text-gray-900 dark:text-white mb-1">
+                <div className="font-semibold text-text-primary mb-1">
                   {stat.label}
                 </div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className="text-sm text-text-secondary">
                   {stat.description}
                 </p>
               </CardContent>
@@ -231,7 +231,7 @@ export default function ShowcasePage() {
                   {/* Details List */}
                   <ul className="space-y-2">
                     {feature.details.map((detail, idx) => (
-                      <li key={idx} className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
+                      <li key={idx} className="flex items-start gap-2 text-sm text-text-secondary">
                         <span className="text-blue-600 dark:text-blue-400 font-bold">•</span>
                         <span>{detail}</span>
                       </li>
@@ -294,10 +294,10 @@ export default function ShowcasePage() {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
-                <h4 className="font-semibold text-gray-900 dark:text-white mb-3">
+                <h4 className="font-semibold text-text-primary mb-3">
                   Database
                 </h4>
-                <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                <ul className="space-y-2 text-sm text-text-secondary">
                   <li>✓ 5 tables with full RLS</li>
                   <li>✓ 14 production indexes</li>
                   <li>✓ Workspace isolation</li>
@@ -305,10 +305,10 @@ export default function ShowcasePage() {
                 </ul>
               </div>
               <div>
-                <h4 className="font-semibold text-gray-900 dark:text-white mb-3">
+                <h4 className="font-semibold text-text-primary mb-3">
                   APIs
                 </h4>
-                <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                <ul className="space-y-2 text-sm text-text-secondary">
                   <li>✓ 7 REST endpoints</li>
                   <li>✓ Rate limiting</li>
                   <li>✓ Error handling</li>
@@ -316,10 +316,10 @@ export default function ShowcasePage() {
                 </ul>
               </div>
               <div>
-                <h4 className="font-semibold text-gray-900 dark:text-white mb-3">
+                <h4 className="font-semibold text-text-primary mb-3">
                   Frontend
                 </h4>
-                <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+                <ul className="space-y-2 text-sm text-text-secondary">
                   <li>✓ React 19 components</li>
                   <li>✓ Framer Motion</li>
                   <li>✓ Dark theme</li>

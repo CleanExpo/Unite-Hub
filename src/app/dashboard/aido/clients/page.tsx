@@ -87,7 +87,7 @@ export default function AIDOClientsPage() {
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-green-600 dark:text-green-400';
     if (score >= 60) return 'text-yellow-600 dark:text-yellow-400';
-    return 'text-gray-600 dark:text-gray-400';
+    return 'text-text-secondary';
   };
 
   const getStatusBadge = (status: string) => {
@@ -108,7 +108,7 @@ export default function AIDOClientsPage() {
           <Users className="w-8 h-8 text-blue-600 dark:text-blue-400" />
           <h1 className="text-3xl font-bold">Client Profiles</h1>
         </div>
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className="text-text-secondary">
           AI-powered client intelligence and relationship management
         </p>
       </div>
@@ -168,7 +168,7 @@ export default function AIDOClientsPage() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Total Clients</p>
+                <p className="text-sm text-text-secondary">Total Clients</p>
                 <p className="text-2xl font-bold">{clients.length}</p>
               </div>
               <Users className="w-8 h-8 text-blue-500" />
@@ -179,7 +179,7 @@ export default function AIDOClientsPage() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Prospects</p>
+                <p className="text-sm text-text-secondary">Prospects</p>
                 <p className="text-2xl font-bold">{clients.filter(c => c.status === 'prospect').length}</p>
               </div>
               <TrendingUp className="w-8 h-8 text-blue-500" />
@@ -190,7 +190,7 @@ export default function AIDOClientsPage() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Leads</p>
+                <p className="text-sm text-text-secondary">Leads</p>
                 <p className="text-2xl font-bold">{clients.filter(c => c.status === 'lead').length}</p>
               </div>
               <TrendingUp className="w-8 h-8 text-yellow-500" />
@@ -201,7 +201,7 @@ export default function AIDOClientsPage() {
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Customers</p>
+                <p className="text-sm text-text-secondary">Customers</p>
                 <p className="text-2xl font-bold">{clients.filter(c => c.status === 'customer').length}</p>
               </div>
               <TrendingUp className="w-8 h-8 text-green-500" />
@@ -257,7 +257,7 @@ export default function AIDOClientsPage() {
                 <div className="space-y-2">
                   {/* AI Score */}
                   <div className="flex items-center justify-between pb-2 border-b">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">AI Score</span>
+                    <span className="text-sm text-text-secondary">AI Score</span>
                     <span className={`text-lg font-bold ${getScoreColor(client.ai_score)}`}>
                       {client.ai_score}/100
                     </span>
@@ -265,18 +265,18 @@ export default function AIDOClientsPage() {
 
                   {/* Contact Info */}
                   <div className="space-y-1">
-                    <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                    <div className="flex items-center gap-2 text-sm text-text-secondary">
                       <Mail className="w-4 h-4" />
                       <span className="truncate">{client.email}</span>
                     </div>
                     {client.phone && (
-                      <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                      <div className="flex items-center gap-2 text-sm text-text-secondary">
                         <Phone className="w-4 h-4" />
                         <span>{client.phone}</span>
                       </div>
                     )}
                     {client.location && (
-                      <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                      <div className="flex items-center gap-2 text-sm text-text-secondary">
                         <MapPin className="w-4 h-4" />
                         <span>{client.location}</span>
                       </div>

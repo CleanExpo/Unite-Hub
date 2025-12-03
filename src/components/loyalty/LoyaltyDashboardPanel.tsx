@@ -130,7 +130,7 @@ export function LoyaltyDashboardPanel({
         {/* Main Stats Grid */}
         <div className="grid grid-cols-2 gap-4">
           {/* Current Balance */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+          <div className="bg-bg-card rounded-lg p-4 border border-border-subtle">
             <p className="text-xs font-semibold text-muted-foreground mb-2">Current Balance</p>
             <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">
               {stats.currentBalance}
@@ -139,7 +139,7 @@ export function LoyaltyDashboardPanel({
           </div>
 
           {/* Monthly Remaining */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+          <div className="bg-bg-card rounded-lg p-4 border border-border-subtle">
             <p className="text-xs font-semibold text-muted-foreground mb-2">Monthly Remaining</p>
             <p className={`text-2xl font-bold ${
               stats.canEarnMore
@@ -159,7 +159,7 @@ export function LoyaltyDashboardPanel({
             <p className="text-xs text-muted-foreground">{stats.monthlyProgress}%</p>
           </div>
           <div
-            className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 overflow-hidden"
+            className="w-full bg-bg-hover rounded-full h-2.5 overflow-hidden"
             role="progressbar"
             aria-label="Monthly credit earning progress"
             aria-valuenow="50"
@@ -184,11 +184,11 @@ export function LoyaltyDashboardPanel({
 
         {/* Lifetime Stats */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
+          <div className="bg-bg-raised rounded-lg p-3">
             <p className="text-xs text-muted-foreground mb-1">Lifetime Earned</p>
             <p className="text-lg font-bold text-green-600">{stats.lifetimeEarned}</p>
           </div>
-          <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
+          <div className="bg-bg-raised rounded-lg p-3">
             <p className="text-xs text-muted-foreground mb-1">Lifetime Redeemed</p>
             <p className="text-lg font-bold text-orange-600">{stats.lifetimeRedeemed}</p>
           </div>
@@ -196,7 +196,7 @@ export function LoyaltyDashboardPanel({
 
         {/* Referral Stats (if available) */}
         {stats.referralStats && (
-          <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+          <div className="border-t border-border-subtle pt-4">
             <div className="flex items-center gap-2 mb-3">
               <Users className="w-4 h-4 text-blue-600" />
               <p className="font-semibold text-sm">Referral Activity</p>
@@ -220,7 +220,7 @@ export function LoyaltyDashboardPanel({
 
         {/* Recent Transactions */}
         {stats.recentTransactions && stats.recentTransactions.length > 0 && (
-          <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+          <div className="border-t border-border-subtle pt-4">
             <p className="font-semibold text-sm mb-3">Recent Activity</p>
             <div className="space-y-2">
               {stats.recentTransactions.slice(0, 3).map((tx, idx) => (

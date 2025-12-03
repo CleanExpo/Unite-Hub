@@ -53,7 +53,7 @@ export default function TrendChip({
           icon: <Minus className="h-3 w-3" />,
           label: "Stable",
           variant: "secondary" as const,
-          className: "bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300",
+          className: "bg-gray-100 text-gray-800 hover:bg-bg-hover dark:text-gray-300",
           description: "Performance is stable",
         };
       case "INITIAL":
@@ -148,7 +148,7 @@ export function TrendIndicator({
     case "STABLE":
       return (
         <Minus
-          className={`${sizeClasses[size]} text-gray-500 dark:text-gray-400`}
+          className={`${sizeClasses[size]} text-text-secondary`}
         />
       );
     case "INITIAL":

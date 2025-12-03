@@ -149,7 +149,7 @@ export default function MindmapPage() {
   return (
     <div className="flex flex-col h-screen">
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800">
+      <div className="flex items-center justify-between px-6 py-4 border-b border-border-subtle">
         <div className="flex items-center gap-3">
           <Button
             variant="ghost"
@@ -160,7 +160,7 @@ export default function MindmapPage() {
           </Button>
           <div>
             <h1 className="text-2xl font-bold">Project Mindmap</h1>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-text-secondary">
               Version {mindmapData.mindmap.version} • {mindmapData.nodes.length}{" "}
               nodes
             </p>

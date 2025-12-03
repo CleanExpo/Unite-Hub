@@ -263,7 +263,7 @@ export function MediaPlayer({
           </div>
 
           {showTranscript && (
-            <div className="max-h-96 overflow-y-auto bg-gray-50 dark:bg-gray-800 rounded-lg p-4 space-y-2">
+            <div className="max-h-96 overflow-y-auto bg-bg-raised rounded-lg p-4 space-y-2">
               {transcript.segments.map((segment, index) => (
                 <button
                   key={index}
@@ -271,13 +271,13 @@ export function MediaPlayer({
                     seekTo(segment.start);
                     onTimestampClick?.(segment.start);
                   }}
-                  className={`w-full text-left p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors ${
+                  className={`w-full text-left p-2 rounded hover:bg-bg-hover transition-colors ${
                     activeSegment === index
                       ? "bg-blue-100 dark:bg-blue-900 border-l-4 border-blue-500"
                       : ""
                   }`}
                 >
-                  <span className="text-xs text-gray-500 dark:text-gray-400 font-mono">
+                  <span className="text-xs text-text-secondary font-mono">
                     {formatTime(segment.start)}
                   </span>
                   <p className="text-sm text-gray-900 dark:text-gray-100 mt-1">

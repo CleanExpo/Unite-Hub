@@ -142,7 +142,7 @@ export default function PerformancePage() {
 
         {/* Period Tabs */}
         <Section className="mt-6">
-          <div className="flex gap-2 p-1 bg-gray-100 dark:bg-gray-800 rounded-lg w-fit">
+          <div className="flex gap-2 p-1 bg-bg-hover rounded-lg w-fit">
             <TabButton
               active={activeTab === "quarterly"}
               onClick={() => setActiveTab("quarterly")}
@@ -180,12 +180,12 @@ export default function PerformancePage() {
         {/* Empty State */}
         {!loading && reports.length === 0 && (
           <Section className="mt-6">
-            <div className="text-center py-12 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+            <div className="text-center py-12 bg-bg-raised/50 rounded-lg">
               <BarChart3 className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-1">
+              <h3 className="text-lg font-medium text-text-primary mb-1">
                 No {activeTab} reports yet
               </h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+              <p className="text-sm text-text-secondary mb-4">
                 Generate your first {activeTab} report to see performance metrics
               </p>
               <button
@@ -206,7 +206,7 @@ export default function PerformancePage() {
           <>
             {/* Latest Report Card */}
             <Section className="mt-6">
-              <h2 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">
+              <h2 className="text-sm font-medium text-text-secondary mb-3">
                 Latest Report
               </h2>
               <PerformanceCard
@@ -219,7 +219,7 @@ export default function PerformancePage() {
             {/* KPI Table */}
             {metrics && (
               <Section className="mt-6">
-                <h2 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">
+                <h2 className="text-sm font-medium text-text-secondary mb-3">
                   Key Performance Indicators
                 </h2>
                 <KPITable metrics={metrics} period={activeTab} />
@@ -229,7 +229,7 @@ export default function PerformancePage() {
             {/* Visual Assets */}
             {latestReport.visual_asset_ids && latestReport.visual_asset_ids.length > 0 && (
               <Section className="mt-6">
-                <h2 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">
+                <h2 className="text-sm font-medium text-text-secondary mb-3">
                   Report Visuals
                 </h2>
                 <VisualGallery
@@ -250,7 +250,7 @@ export default function PerformancePage() {
             {/* Historical Reports */}
             {reports.length > 1 && (
               <Section className="mt-6">
-                <h2 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">
+                <h2 className="text-sm font-medium text-text-secondary mb-3">
                   Previous Reports
                 </h2>
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -269,8 +269,8 @@ export default function PerformancePage() {
 
         {/* Data Integrity Notice */}
         <Section className="mt-8">
-          <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+          <div className="p-4 bg-bg-raised/50 rounded-lg">
+            <p className="text-xs text-text-secondary">
               <strong>Data Integrity:</strong> All metrics shown are based on real data from
               Unite-Hub internal systems and DataForSEO API. No estimates, projections, or
               synthetic performance data is included. Reports require approval before
@@ -297,8 +297,8 @@ function TabButton({ active, onClick, icon: Icon, label }: TabButtonProps) {
       onClick={onClick}
       className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition-colors ${
         active
-          ? "bg-white dark:bg-gray-700 text-teal-600 dark:text-teal-400 shadow-sm"
-          : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+          ? "bg-bg-input text-teal-600 dark:text-teal-400 shadow-sm"
+          : "text-text-secondary hover:text-gray-900 dark:hover:text-white"
       }`}
     >
       <Icon className="w-4 h-4" />

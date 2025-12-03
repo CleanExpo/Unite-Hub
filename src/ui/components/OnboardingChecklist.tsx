@@ -96,7 +96,7 @@ export function OnboardingChecklist({
         </div>
         {showProgress && (
           <div className="mt-2">
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+            <div className="w-full bg-bg-hover rounded-full h-2">
               <div
                 className="bg-blue-600 h-2 rounded-full transition-all duration-500"
                 style={{ width: `${progressPercentage}%` }}
@@ -115,7 +115,7 @@ export function OnboardingChecklist({
               onClick={() =>
                 setExpandedCategory(expandedCategory === category ? null : category)
               }
-              className="flex items-center justify-between w-full text-left py-2 px-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="flex items-center justify-between w-full text-left py-2 px-3 rounded-lg hover:bg-bg-hover transition-colors"
             >
               <span className="font-medium text-sm">
                 {categoryLabels[category] || category}
@@ -141,7 +141,7 @@ export function OnboardingChecklist({
                     className={`flex items-start gap-3 p-3 rounded-lg border ${
                       task.status === 'completed'
                         ? 'bg-green-50 dark:bg-green-900/10 border-green-200 dark:border-green-800'
-                        : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700'
+                        : 'bg-bg-card border-border-subtle'
                     }`}
                   >
                     <div className="mt-0.5">{getStatusIcon(task.status)}</div>

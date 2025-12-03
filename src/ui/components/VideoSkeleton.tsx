@@ -30,14 +30,14 @@ export function VideoSkeleton({
       <div
         className={`
           ${aspectRatioClasses[aspectRatio]}
-          bg-gray-200 dark:bg-gray-700
+          bg-bg-hover
           animate-pulse
         `}
       >
         {/* Center play button indicator */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
-            <Play className="w-8 h-8 text-gray-400 dark:text-gray-500 ml-1" />
+            <Play className="w-8 h-8 text-text-muted ml-1" />
           </div>
         </div>
 
@@ -56,8 +56,8 @@ export function VideoSkeleton({
 
       {/* Disclaimer skeleton */}
       <div className="flex items-center gap-2 mt-2 px-1">
-        <div className="w-3 h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
-        <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-2/3 animate-pulse" />
+        <div className="w-3 h-3 bg-bg-hover rounded animate-pulse" />
+        <div className="h-3 bg-bg-hover rounded w-2/3 animate-pulse" />
       </div>
     </div>
   );

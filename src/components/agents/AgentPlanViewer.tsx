@@ -60,7 +60,7 @@ const getStatusColor = (status: string) => {
     case 'rejected':
       return 'bg-red-100 dark:bg-red-950 text-red-800 dark:text-red-200';
     default:
-      return 'bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200';
+      return 'bg-bg-raised text-text-primary';
   }
 };
 
@@ -102,7 +102,7 @@ export function AgentPlanViewer({
           <CardContent>
             <div className="text-3xl font-bold text-blue-600">
               {complexity_score || 0}
-              <span className="text-sm text-gray-600 dark:text-gray-400 ml-2">/100</span>
+              <span className="text-sm text-text-secondary ml-2">/100</span>
             </div>
           </CardContent>
         </Card>
@@ -114,7 +114,7 @@ export function AgentPlanViewer({
           <CardContent>
             <div className="text-3xl font-bold text-purple-600">
               {confidence_score || 0}
-              <span className="text-sm text-gray-600 dark:text-gray-400 ml-2">/100</span>
+              <span className="text-sm text-text-secondary ml-2">/100</span>
             </div>
           </CardContent>
         </Card>
@@ -126,7 +126,7 @@ export function AgentPlanViewer({
           <CardContent>
             <div className={`text-3xl font-bold ${safety_validation?.risk_score || 0 < 30 ? 'text-green-600' : safety_validation?.risk_score || 0 < 60 ? 'text-yellow-600' : 'text-red-600'}`}>
               {safety_validation?.risk_score || 0}
-              <span className="text-sm text-gray-600 dark:text-gray-400 ml-2">/100</span>
+              <span className="text-sm text-text-secondary ml-2">/100</span>
             </div>
           </CardContent>
         </Card>
@@ -142,7 +142,7 @@ export function AgentPlanViewer({
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+            <p className="text-sm text-text-secondary whitespace-pre-wrap">
               {plan.reasoning_trace}
             </p>
           </CardContent>
@@ -171,7 +171,7 @@ export function AgentPlanViewer({
                 <h4 className="font-semibold text-sm mb-2">Risk Factors</h4>
                 <ul className="space-y-1">
                   {safety_validation.risk_factors.map((factor, i) => (
-                    <li key={i} className="text-sm text-gray-700 dark:text-gray-300 flex items-center">
+                    <li key={i} className="text-sm text-text-secondary flex items-center">
                       <span className="w-2 h-2 bg-yellow-600 rounded-full mr-2"></span>
                       {factor}
                     </li>
@@ -222,14 +222,14 @@ export function AgentPlanViewer({
               {plan.steps.map((step) => (
                 <div
                   key={step.step_number}
-                  className="border border-gray-200 dark:border-gray-700 rounded-lg p-4"
+                  className="border border-border-subtle rounded-lg p-4"
                 >
                   <div className="flex items-start justify-between mb-2">
                     <div>
                       <h4 className="font-semibold text-sm">
                         Step {step.step_number}: {step.action_type}
                       </h4>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                      <p className="text-sm text-text-secondary">
                         {step.description}
                       </p>
                     </div>
@@ -242,14 +242,14 @@ export function AgentPlanViewer({
                   </div>
 
                   <div className="space-y-2">
-                    <div className="text-xs text-gray-700 dark:text-gray-300">
+                    <div className="text-xs text-text-secondary">
                       <span className="font-semibold">Command:</span>
-                      <pre className="mt-1 bg-gray-100 dark:bg-gray-900 p-2 rounded text-xs overflow-auto">
+                      <pre className="mt-1 bg-bg-raised p-2 rounded text-xs overflow-auto">
                         {JSON.stringify(step.command, null, 2)}
                       </pre>
                     </div>
 
-                    <div className="text-xs text-gray-700 dark:text-gray-300">
+                    <div className="text-xs text-text-secondary">
                       <span className="font-semibold">Expected Outcome:</span>
                       <p className="mt-1 italic">{step.promised_outcome}</p>
                     </div>

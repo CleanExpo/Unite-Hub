@@ -315,10 +315,10 @@ export function ConvexExecutionPanel({ onRoadmapGenerated }: ConvexExecutionPane
       <div className="w-full max-w-6xl mx-auto space-y-6 p-6">
         {/* Header */}
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-3xl font-bold text-text-primary">
             CONVEX Execution Roadmap
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-text-secondary">
             Select a template and generate your personalized implementation roadmap
           </p>
         </div>
@@ -353,11 +353,11 @@ export function ConvexExecutionPanel({ onRoadmapGenerated }: ConvexExecutionPane
                 <CardContent className="space-y-3">
                   <div className="grid grid-cols-2 gap-2 text-sm">
                     <div>
-                      <span className="text-gray-600 dark:text-gray-400">Duration:</span>
+                      <span className="text-text-secondary">Duration:</span>
                       <p className="font-semibold">{template.estimatedDuration}h</p>
                     </div>
                     <div>
-                      <span className="text-gray-600 dark:text-gray-400">Expected Result:</span>
+                      <span className="text-text-secondary">Expected Result:</span>
                       <p className="font-semibold text-sm">{template.expectedResults}</p>
                     </div>
                   </div>
@@ -399,7 +399,7 @@ export function ConvexExecutionPanel({ onRoadmapGenerated }: ConvexExecutionPane
             <CardContent className="space-y-6">
               {selectedTemplate.variables.map((variable) => (
                 <div key={variable.name} className="space-y-2">
-                  <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                  <label className="text-sm font-semibold text-text-secondary">
                     {variable.name} {variable.required && <span className="text-red-600">*</span>}
                   </label>
 
@@ -479,10 +479,10 @@ export function ConvexExecutionPanel({ onRoadmapGenerated }: ConvexExecutionPane
       {/* Header */}
       <div className="flex justify-between items-start">
         <div className="space-y-2">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-3xl font-bold text-text-primary">
             {roadmap.templateName} Roadmap
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-text-secondary">
             {roadmap.totalDuration} weeks • {roadmap.milestones.length} milestones
           </p>
         </div>
@@ -503,7 +503,7 @@ export function ConvexExecutionPanel({ onRoadmapGenerated }: ConvexExecutionPane
         <CardContent className="pt-6">
           <div className="space-y-3">
             <div className="flex justify-between items-center">
-              <span className="font-semibold text-gray-700 dark:text-gray-300">Overall Progress</span>
+              <span className="font-semibold text-text-secondary">Overall Progress</span>
               <span className="text-2xl font-bold text-blue-600">{roadmap.overallProgress}%</span>
             </div>
             <Progress value={roadmap.overallProgress} className="h-3" />
@@ -547,7 +547,7 @@ export function ConvexExecutionPanel({ onRoadmapGenerated }: ConvexExecutionPane
                 </div>
                 <div className="text-right">
                   <div className="text-2xl font-bold text-blue-600">{milestone.completionPercentage}%</div>
-                  <div className="text-xs text-gray-600 dark:text-gray-400">complete</div>
+                  <div className="text-xs text-text-secondary">complete</div>
                   {expandedMilestone === idx ? (
                     <ChevronUp className="h-5 w-5 mx-auto mt-1" />
                   ) : (
@@ -561,10 +561,10 @@ export function ConvexExecutionPanel({ onRoadmapGenerated }: ConvexExecutionPane
               <CardContent className="border-t dark:border-gray-700 space-y-4 pt-4">
                 {/* Tasks */}
                 <div>
-                  <h4 className="font-semibold mb-3 text-gray-700 dark:text-gray-300">Tasks</h4>
+                  <h4 className="font-semibold mb-3 text-text-secondary">Tasks</h4>
                   <ul className="space-y-2">
                     {milestone.tasks.map((task) => (
-                      <li key={task.id} className="flex items-start gap-3 p-2 bg-gray-50 dark:bg-gray-800 rounded">
+                      <li key={task.id} className="flex items-start gap-3 p-2 bg-bg-raised rounded">
                         <input
                           type="checkbox"
                           checked={task.status === 'completed'}
@@ -573,24 +573,24 @@ export function ConvexExecutionPanel({ onRoadmapGenerated }: ConvexExecutionPane
                         />
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
-                            <span className="font-medium text-gray-700 dark:text-gray-300">{task.title}</span>
+                            <span className="font-medium text-text-secondary">{task.title}</span>
                             <Badge
                               variant="outline"
                               className={`text-xs ${getPriorityColor(task.priority)}`}
                             >
                               {task.priority}
                             </Badge>
-                            <span className="text-xs text-gray-600 dark:text-gray-400">
+                            <span className="text-xs text-text-secondary">
                               {task.estimatedHours}h
                             </span>
                           </div>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                          <p className="text-sm text-text-secondary mt-1">
                             {task.description}
                           </p>
                           {task.successCriteria.length > 0 && (
                             <div className="mt-2 text-xs space-y-1">
                               {task.successCriteria.map((criterion, cidx) => (
-                                <div key={cidx} className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                                <div key={cidx} className="flex items-center gap-2 text-text-secondary">
                                   <div className="h-1 w-1 bg-gray-600 rounded-full" />
                                   {criterion}
                                 </div>
@@ -606,10 +606,10 @@ export function ConvexExecutionPanel({ onRoadmapGenerated }: ConvexExecutionPane
                 {/* Success Metrics */}
                 {milestone.successMetrics.length > 0 && (
                   <div>
-                    <h4 className="font-semibold mb-2 text-gray-700 dark:text-gray-300">Success Metrics</h4>
+                    <h4 className="font-semibold mb-2 text-text-secondary">Success Metrics</h4>
                     <ul className="space-y-1">
                       {milestone.successMetrics.map((metric, midx) => (
-                        <li key={midx} className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                        <li key={midx} className="flex items-center gap-2 text-sm text-text-secondary">
                           <Target className="h-4 w-4 text-blue-600" />
                           {metric}
                         </li>
@@ -635,7 +635,7 @@ export function ConvexExecutionPanel({ onRoadmapGenerated }: ConvexExecutionPane
           <CardContent>
             <ul className="space-y-2">
               {roadmap.riskFactors.map((risk, idx) => (
-                <li key={idx} className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300">
+                <li key={idx} className="flex items-start gap-3 text-sm text-text-secondary">
                   <div className="h-2 w-2 bg-orange-600 rounded-full mt-1.5 flex-shrink-0" />
                   {risk}
                 </li>
@@ -657,7 +657,7 @@ export function ConvexExecutionPanel({ onRoadmapGenerated }: ConvexExecutionPane
           <CardContent>
             <ul className="space-y-2">
               {roadmap.supportResources.map((resource, idx) => (
-                <li key={idx} className="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300">
+                <li key={idx} className="flex items-start gap-3 text-sm text-text-secondary">
                   <div className="h-2 w-2 bg-blue-600 rounded-full mt-1.5 flex-shrink-0" />
                   {resource}
                 </li>

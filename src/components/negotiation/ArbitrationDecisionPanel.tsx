@@ -19,11 +19,11 @@ export const ArbitrationDecisionPanel: React.FC<ArbitrationDecisionPanelProps> =
   loading,
 }) => {
   if (loading) {
-    return <p className="text-sm text-gray-600 dark:text-gray-400">Computing arbitration...</p>;
+    return <p className="text-sm text-text-secondary">Computing arbitration...</p>;
   }
 
   if (!decision) {
-    return <p className="text-sm text-gray-600 dark:text-gray-400">No decision available</p>;
+    return <p className="text-sm text-text-secondary">No decision available</p>;
   }
 
   const isSafetyOverride = isSafetyVetoed(decision.riskScore);
@@ -47,7 +47,7 @@ export const ArbitrationDecisionPanel: React.FC<ArbitrationDecisionPanelProps> =
             <AlertCircle className="w-5 h-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
           )}
           <div>
-            <p className="font-semibold text-gray-900 dark:text-white">
+            <p className="font-semibold text-text-primary">
               {decision.selectedAgent} - {decision.selectedAction}
             </p>
             <p className={`text-xs font-medium mt-1 ${
@@ -68,45 +68,45 @@ export const ArbitrationDecisionPanel: React.FC<ArbitrationDecisionPanelProps> =
 
         <div className="grid grid-cols-3 gap-3 text-sm">
           <div>
-            <p className="text-gray-600 dark:text-gray-400 text-xs">Confidence</p>
-            <p className="font-semibold text-gray-900 dark:text-white">{decision.confidenceScore.toFixed(0)}%</p>
+            <p className="text-text-secondary text-xs">Confidence</p>
+            <p className="font-semibold text-text-primary">{decision.confidenceScore.toFixed(0)}%</p>
           </div>
           <div>
-            <p className="text-gray-600 dark:text-gray-400 text-xs">Risk Score</p>
+            <p className="text-text-secondary text-xs">Risk Score</p>
             <p className={`font-semibold ${
               isSafetyVetoed(decision.riskScore)
                 ? 'text-red-600 dark:text-red-400'
-                : 'text-gray-900 dark:text-white'
+                : 'text-text-primary'
             }`}>
               {decision.riskScore.toFixed(0)}/100
             </p>
           </div>
           <div>
-            <p className="text-gray-600 dark:text-gray-400 text-xs">Consensus</p>
-            <p className="font-semibold text-gray-900 dark:text-white">{decision.consensusPercentage.toFixed(0)}%</p>
+            <p className="text-text-secondary text-xs">Consensus</p>
+            <p className="font-semibold text-text-primary">{decision.consensusPercentage.toFixed(0)}%</p>
           </div>
         </div>
       </div>
 
       {alternatives && alternatives.length > 0 && (
         <div className="space-y-2">
-          <p className="text-xs font-medium text-gray-700 dark:text-gray-300">Alternatives Considered</p>
+          <p className="text-xs font-medium text-text-secondary">Alternatives Considered</p>
           {alternatives.map((alt) => (
-            <div key={`${alt.agentId}-${alt.action}`} className="p-2 bg-gray-50 dark:bg-gray-800 rounded text-xs">
+            <div key={`${alt.agentId}-${alt.action}`} className="p-2 bg-bg-raised rounded text-xs">
               <div className="flex items-center justify-between">
-                <span className="font-medium text-gray-900 dark:text-white">{alt.agentId}</span>
-                <span className="text-gray-600 dark:text-gray-400">{alt.score.toFixed(0)} points</span>
+                <span className="font-medium text-text-primary">{alt.agentId}</span>
+                <span className="text-text-secondary">{alt.score.toFixed(0)} points</span>
               </div>
-              <p className="text-gray-700 dark:text-gray-300">{alt.action}</p>
+              <p className="text-text-secondary">{alt.action}</p>
             </div>
           ))}
         </div>
       )}
 
       {rationale && (
-        <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700">
-          <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">Rationale</p>
-          <p className="text-xs text-gray-600 dark:text-gray-400 whitespace-pre-wrap">{rationale}</p>
+        <div className="p-3 bg-bg-raised rounded border border-border-subtle">
+          <p className="text-xs font-medium text-text-secondary mb-2">Rationale</p>
+          <p className="text-xs text-text-secondary whitespace-pre-wrap">{rationale}</p>
         </div>
       )}
     </div>

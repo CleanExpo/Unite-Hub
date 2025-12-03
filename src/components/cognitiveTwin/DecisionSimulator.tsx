@@ -171,7 +171,7 @@ export default function DecisionSimulator({
         <CardContent className="space-y-6">
           {/* Scenario Description */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <label className="block text-sm font-medium text-text-secondary mb-2">
               Describe the decision you need to make *
             </label>
             <Textarea
@@ -186,7 +186,7 @@ export default function DecisionSimulator({
           {/* Options */}
           <div>
             <div className="flex items-center justify-between mb-3">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="text-sm font-medium text-text-secondary">
                 Options to Consider *
               </label>
               <Button
@@ -338,7 +338,7 @@ export default function DecisionSimulator({
                       </h4>
                       <ul className="space-y-1">
                         {opt.pros.map((pro, i) => (
-                          <li key={i} className="text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2">
+                          <li key={i} className="text-sm text-text-secondary flex items-start gap-2">
                             <span className="text-green-500 mt-1">•</span>
                             <span>{pro}</span>
                           </li>
@@ -354,7 +354,7 @@ export default function DecisionSimulator({
                       </h4>
                       <ul className="space-y-1">
                         {opt.cons.map((con, i) => (
-                          <li key={i} className="text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2">
+                          <li key={i} className="text-sm text-text-secondary flex items-start gap-2">
                             <span className="text-red-500 mt-1">•</span>
                             <span>{con}</span>
                           </li>
@@ -371,7 +371,7 @@ export default function DecisionSimulator({
                         </h4>
                         <ul className="space-y-1">
                           {opt.risks.map((risk, i) => (
-                            <li key={i} className="text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2">
+                            <li key={i} className="text-sm text-text-secondary flex items-start gap-2">
                               <span className="text-yellow-500 mt-1">•</span>
                               <span>{risk}</span>
                             </li>
@@ -386,7 +386,7 @@ export default function DecisionSimulator({
                         <h4 className="text-sm font-semibold mb-2">Key Considerations</h4>
                         <ul className="space-y-1">
                           {opt.key_considerations.map((consideration, i) => (
-                            <li key={i} className="text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2">
+                            <li key={i} className="text-sm text-text-secondary flex items-start gap-2">
                               <span className="text-blue-500 mt-1">•</span>
                               <span>{consideration}</span>
                             </li>
@@ -409,7 +409,7 @@ export default function DecisionSimulator({
 
               <CardContent className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="block text-sm font-medium text-text-secondary mb-2">
                     Rationale for choosing this option *
                   </label>
                   <Textarea

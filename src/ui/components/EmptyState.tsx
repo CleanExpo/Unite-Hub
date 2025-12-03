@@ -59,13 +59,13 @@ export function EmptyState({
       <Icon
         className={`
           ${styles.icon}
-          text-gray-300 dark:text-gray-600
+          text-text-muted
         `}
       />
       <h3
         className={`
           ${styles.title}
-          text-gray-900 dark:text-white
+          text-text-primary
         `}
       >
         {title}
@@ -74,7 +74,7 @@ export function EmptyState({
         <p
           className={`
             ${styles.description}
-            text-gray-500 dark:text-gray-400
+            text-text-secondary
             mt-1 max-w-sm
           `}
         >

@@ -39,17 +39,17 @@ export default async function StaffDashboardPage() {
       <Section>
         {/* Overview Cards */}
         <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-          <div className='p-4 bg-white dark:bg-gray-800 rounded shadow'>
+          <div className='p-4 bg-bg-card rounded shadow'>
             <h3 className='font-bold'>Active Projects</h3>
             <p className='text-3xl mt-2'>{projectList.length}</p>
           </div>
 
-          <div className='p-4 bg-white dark:bg-gray-800 rounded shadow'>
+          <div className='p-4 bg-bg-card rounded shadow'>
             <h3 className='font-bold'>Tasks Assigned</h3>
             <p className='text-3xl mt-2'>{taskList.length}</p>
           </div>
 
-          <div className='p-4 bg-white dark:bg-gray-800 rounded shadow'>
+          <div className='p-4 bg-bg-card rounded shadow'>
             <h3 className='font-bold'>Avg Progress</h3>
             <StaffProgressRing percent={projectList.length ? Math.floor(Math.random()*40+20) : 0} />
           </div>

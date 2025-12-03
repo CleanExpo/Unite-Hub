@@ -20,14 +20,14 @@ export const ConsensusScoreChart: React.FC<ConsensusScoreChartProps> = ({
 
   return (
     <div className="space-y-4">
-      <h3 className="font-semibold text-gray-900 dark:text-white">Consensus Scores</h3>
+      <h3 className="font-semibold text-text-primary">Consensus Scores</h3>
 
       <div className="space-y-3">
         {agentScores.map((score) => (
           <div key={score.agentId} className="space-y-1">
             <div className="flex items-center justify-between text-sm">
-              <span className="font-medium text-gray-700 dark:text-gray-300">{score.agentId}</span>
-              <span className="text-gray-600 dark:text-gray-400">{score.overallConsensus.toFixed(0)}/100</span>
+              <span className="font-medium text-text-secondary">{score.agentId}</span>
+              <span className="text-text-secondary">{score.overallConsensus.toFixed(0)}/100</span>
             </div>
             <div className="w-full h-2 bg-gray-300 dark:bg-gray-700 rounded-full overflow-hidden">
               <div
@@ -39,9 +39,9 @@ export const ConsensusScoreChart: React.FC<ConsensusScoreChartProps> = ({
         ))}
       </div>
 
-      <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+      <div className="mt-6 p-4 bg-bg-raised rounded-lg border border-border-subtle">
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Overall Consensus</span>
+          <span className="text-sm font-medium text-text-secondary">Overall Consensus</span>
           <div className="flex items-center gap-2">
             <div
               className={`w-3 h-3 rounded-full ${
@@ -65,7 +65,7 @@ export const ConsensusScoreChart: React.FC<ConsensusScoreChartProps> = ({
             </span>
           </div>
         </div>
-        <p className="text-xs text-gray-600 dark:text-gray-400 mt-2">
+        <p className="text-xs text-text-secondary mt-2">
           {finalConsensusScore >= 65
             ? '✓ Consensus achieved'
             : finalConsensusScore >= 50

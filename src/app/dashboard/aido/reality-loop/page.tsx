@@ -196,7 +196,7 @@ export default function RealityLoopPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Reality-Loop Console</h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">
+          <p className="text-text-secondary mt-1">
             Convert real-world events into content opportunities automatically
           </p>
         </div>
@@ -379,7 +379,7 @@ export default function RealityLoopPage() {
                         </div>
 
                         {/* Metadata */}
-                        <div className="flex gap-4 text-sm text-gray-600 dark:text-gray-400">
+                        <div className="flex gap-4 text-sm text-text-secondary">
                           <div className="flex items-center gap-1">
                             <Calendar className="w-4 h-4" />
                             {formatTimestamp(event.timestamp)}
@@ -398,11 +398,11 @@ export default function RealityLoopPage() {
 
                         {/* AI Insights */}
                         {event.aiInsights && (
-                          <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">
-                            <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
+                          <div className="bg-bg-raised p-3 rounded-lg">
+                            <p className="text-xs font-semibold text-text-secondary mb-1">
                               AI Insights:
                             </p>
-                            <p className="text-sm text-gray-700 dark:text-gray-300">
+                            <p className="text-sm text-text-secondary">
                               {event.aiInsights}
                             </p>
                           </div>
@@ -414,7 +414,7 @@ export default function RealityLoopPage() {
                             <summary className="cursor-pointer text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
                               View raw payload
                             </summary>
-                            <pre className="mt-2 bg-gray-100 dark:bg-gray-800 p-2 rounded overflow-x-auto">
+                            <pre className="mt-2 bg-bg-hover p-2 rounded overflow-x-auto">
                               {JSON.stringify(event.rawPayload, null, 2)}
                             </pre>
                           </details>
@@ -422,7 +422,7 @@ export default function RealityLoopPage() {
 
                         {/* Actions */}
                         {event.linkedContentId && (
-                          <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                          <div className="pt-2 border-t border-border-subtle">
                             <Button variant="link" className="p-0 h-auto text-xs">
                               View Generated Content →
                             </Button>

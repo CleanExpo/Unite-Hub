@@ -95,7 +95,7 @@ export function AgentConsole({
       case 'warning':
         return 'bg-yellow-50 dark:bg-yellow-950 text-yellow-700 dark:text-yellow-300';
       default:
-        return 'bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300';
+        return 'bg-bg-raised text-text-secondary';
     }
   };
 

@@ -24,7 +24,7 @@ export const SafetyLedgerTable: React.FC = () => {
   if (isLoading && ledger.length === 0) {
     return (
       <div className="flex items-center justify-center p-8">
-        <p className="text-sm text-gray-600 dark:text-gray-400">Loading ledger...</p>
+        <p className="text-sm text-text-secondary">Loading ledger...</p>
       </div>
     );
   }
@@ -83,34 +83,34 @@ export const SafetyLedgerTable: React.FC = () => {
     const reduction = riskBefore - riskAfter;
     if (reduction >= 30) return 'text-green-600 dark:text-green-400';
     if (reduction >= 15) return 'text-blue-600 dark:text-blue-400';
-    return 'text-gray-600 dark:text-gray-400';
+    return 'text-text-secondary';
   };
 
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <History className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-        <h3 className="font-semibold text-gray-900 dark:text-white">
+        <History className="w-5 h-5 text-text-secondary" />
+        <h3 className="font-semibold text-text-primary">
           Intervention History
         </h3>
-        <span className="ml-auto text-sm text-gray-600 dark:text-gray-400">
+        <span className="ml-auto text-sm text-text-secondary">
           {ledger.length} action{ledger.length !== 1 ? 's' : ''}
         </span>
       </div>
 
       {ledger.length === 0 ? (
-        <div className="flex items-center justify-center p-8 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
-          <p className="text-sm text-gray-600 dark:text-gray-400">No interventions recorded</p>
+        <div className="flex items-center justify-center p-8 bg-bg-raised rounded-lg border border-border-subtle">
+          <p className="text-sm text-text-secondary">No interventions recorded</p>
         </div>
       ) : (
-        <div className="overflow-x-auto border border-gray-200 dark:border-gray-700 rounded-lg">
+        <div className="overflow-x-auto border border-border-subtle rounded-lg">
           <table className="w-full">
             <thead>
-              <tr className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+              <tr className="bg-bg-raised border-b border-border-subtle">
                 <th className="px-4 py-3 text-left">
                   <button
                     onClick={() => handleSort('timestamp')}
-                    className="flex items-center gap-1 font-semibold text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
+                    className="flex items-center gap-1 font-semibold text-text-primary hover:text-gray-600 dark:hover:text-gray-400"
                   >
                     Time
                     {sortField === 'timestamp' && (
@@ -121,7 +121,7 @@ export const SafetyLedgerTable: React.FC = () => {
                 <th className="px-4 py-3 text-left">
                   <button
                     onClick={() => handleSort('action')}
-                    className="flex items-center gap-1 font-semibold text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400"
+                    className="flex items-center gap-1 font-semibold text-text-primary hover:text-gray-600 dark:hover:text-gray-400"
                   >
                     Action
                     {sortField === 'action' && (
@@ -132,7 +132,7 @@ export const SafetyLedgerTable: React.FC = () => {
                 <th className="px-4 py-3 text-center">
                   <button
                     onClick={() => handleSort('riskReduction')}
-                    className="flex items-center gap-1 font-semibold text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-400 ml-auto"
+                    className="flex items-center gap-1 font-semibold text-text-primary hover:text-gray-600 dark:hover:text-gray-400 ml-auto"
                   >
                     Risk Reduction
                     {sortField === 'riskReduction' && (
@@ -147,9 +147,9 @@ export const SafetyLedgerTable: React.FC = () => {
               {sortedLedger.map((entry) => (
                 <tr
                   key={entry.id}
-                  className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors"
+                  className="border-b border-border-subtle hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors"
                 >
-                  <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
+                  <td className="px-4 py-3 text-sm text-text-secondary">
                     {new Date(entry.createdAt).toLocaleTimeString()}
                   </td>
                   <td className="px-4 py-3">
@@ -160,7 +160,7 @@ export const SafetyLedgerTable: React.FC = () => {
                   <td className={`px-4 py-3 text-center font-semibold ${getRiskColor(entry.riskBefore, entry.riskAfter)}`}>
                     -{entry.riskReduction}%
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-700 dark:text-gray-300 max-w-xs truncate">
+                  <td className="px-4 py-3 text-sm text-text-secondary max-w-xs truncate">
                     {entry.reason}
                   </td>
                 </tr>
@@ -172,19 +172,19 @@ export const SafetyLedgerTable: React.FC = () => {
 
       {ledger.length > 0 && (
         <div className="grid grid-cols-3 gap-3 pt-4">
-          <div className="bg-white dark:bg-gray-800 p-3 rounded border border-gray-200 dark:border-gray-700">
-            <p className="text-xs text-gray-600 dark:text-gray-400">Total Actions</p>
-            <p className="text-xl font-bold text-gray-900 dark:text-white">{ledger.length}</p>
+          <div className="bg-bg-card p-3 rounded border border-border-subtle">
+            <p className="text-xs text-text-secondary">Total Actions</p>
+            <p className="text-xl font-bold text-text-primary">{ledger.length}</p>
           </div>
-          <div className="bg-white dark:bg-gray-800 p-3 rounded border border-gray-200 dark:border-gray-700">
-            <p className="text-xs text-gray-600 dark:text-gray-400">Avg Risk Reduction</p>
-            <p className="text-xl font-bold text-gray-900 dark:text-white">
+          <div className="bg-bg-card p-3 rounded border border-border-subtle">
+            <p className="text-xs text-text-secondary">Avg Risk Reduction</p>
+            <p className="text-xl font-bold text-text-primary">
               {Math.round(ledger.reduce((sum, e) => sum + e.riskReduction, 0) / ledger.length)}%
             </p>
           </div>
-          <div className="bg-white dark:bg-gray-800 p-3 rounded border border-gray-200 dark:border-gray-700">
-            <p className="text-xs text-gray-600 dark:text-gray-400">Total Reduced</p>
-            <p className="text-xl font-bold text-gray-900 dark:text-white">
+          <div className="bg-bg-card p-3 rounded border border-border-subtle">
+            <p className="text-xs text-text-secondary">Total Reduced</p>
+            <p className="text-xl font-bold text-text-primary">
               {ledger.reduce((sum, e) => sum + e.riskReduction, 0)}%
             </p>
           </div>

@@ -116,7 +116,7 @@ export function RewardRedemptionModal({
               </AlertDescription>
             </Alert>
 
-            <Card className="p-4 bg-gray-50 dark:bg-gray-800">
+            <Card className="p-4 bg-bg-raised">
               <p className="text-xs text-muted-foreground mb-2">Request ID</p>
               <p className="font-mono text-sm break-all">{requestId}</p>
             </Card>
@@ -128,10 +128,10 @@ export function RewardRedemptionModal({
         ) : (
           <div className="space-y-4">
             {/* Reward Details */}
-            <Card className="p-4 bg-gray-50 dark:bg-gray-800">
+            <Card className="p-4 bg-bg-raised">
               <h3 className="font-semibold text-lg mb-2">{reward.name}</h3>
               <p className="text-sm text-muted-foreground mb-3">{reward.description}</p>
-              <div className="flex justify-between items-center pt-2 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex justify-between items-center pt-2 border-t border-border-subtle">
                 <span className="text-sm font-medium">Cost</span>
                 <span className="text-lg font-bold text-purple-600 dark:text-purple-400">
                   {reward.creditCost} credits

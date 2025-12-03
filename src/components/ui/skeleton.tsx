@@ -26,7 +26,7 @@ export default function Skeleton({
 
   return (
     <div
-      className={`bg-gray-200 dark:bg-gray-700 animate-pulse ${variantClasses[variant]} ${className}`}
+      className={`bg-bg-hover animate-pulse ${variantClasses[variant]} ${className}`}
       style={{ width, height }}
       aria-label="Loading..."
       role="status"
@@ -39,7 +39,7 @@ export default function Skeleton({
  */
 export function SkeletonCard() {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 space-y-4">
+    <div className="bg-bg-card rounded-xl shadow p-6 space-y-4">
       <Skeleton height="2rem" width="60%" />
       <Skeleton height="1rem" width="100%" />
       <Skeleton height="1rem" width="90%" />

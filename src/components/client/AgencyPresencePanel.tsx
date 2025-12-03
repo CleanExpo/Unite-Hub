@@ -67,15 +67,15 @@ export default function AgencyPresencePanel() {
   ];
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+    <div className="bg-bg-card rounded-lg border border-border-subtle p-6">
       <div className="flex items-center gap-2 mb-4">
         <Users className="w-5 h-5 text-teal-600" />
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+        <h3 className="text-lg font-semibold text-text-primary">
           Your Team
         </h3>
       </div>
 
-      <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+      <p className="text-sm text-text-secondary mb-4">
         Your dedicated team is working on your account right now.
       </p>
 
@@ -90,7 +90,7 @@ export default function AgencyPresencePanel() {
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <span className="font-medium text-gray-900 dark:text-white">
+                <span className="font-medium text-text-primary">
                   {member.name}
                 </span>
                 <span
@@ -99,7 +99,7 @@ export default function AgencyPresencePanel() {
                   {STATUS_LABELS[member.status]}
                 </span>
               </div>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+              <p className="text-xs text-text-secondary mb-1">
                 {member.role}
               </p>
               <p className="text-sm text-gray-600 dark:text-gray-300">

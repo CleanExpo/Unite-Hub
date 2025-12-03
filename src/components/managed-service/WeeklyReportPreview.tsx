@@ -89,7 +89,7 @@ export const WeeklyReportPreview: React.FC<WeeklyReportPreviewProps> = ({ report
       case 'low':
         return 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300';
       default:
-        return 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300';
+        return 'bg-bg-hover text-text-secondary';
     }
   };
 
@@ -219,7 +219,7 @@ export const WeeklyReportPreview: React.FC<WeeklyReportPreviewProps> = ({ report
   if (loading) {
     return (
       <div className="flex items-center justify-center py-8">
-        <p className="text-gray-600 dark:text-gray-400">Loading report...</p>
+        <p className="text-text-secondary">Loading report...</p>
       </div>
     );
   }
@@ -227,9 +227,9 @@ export const WeeklyReportPreview: React.FC<WeeklyReportPreviewProps> = ({ report
   return (
     <div className="space-y-4">
       {/* Control Buttons */}
-      <div className="flex items-center justify-between bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+      <div className="flex items-center justify-between bg-bg-card rounded-lg p-4 border border-border-subtle">
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-600 dark:text-gray-400">Status:</span>
+          <span className="text-sm text-text-secondary">Status:</span>
           <span
             className={`px-3 py-1 rounded text-xs font-medium ${
               report.status === 'sent'
@@ -242,14 +242,14 @@ export const WeeklyReportPreview: React.FC<WeeklyReportPreviewProps> = ({ report
             {report.status.charAt(0).toUpperCase() + report.status.slice(1)}
           </span>
           {report.sentAt && (
-            <span className="text-xs text-gray-600 dark:text-gray-400">Sent {formatDateTime(report.sentAt)}</span>
+            <span className="text-xs text-text-secondary">Sent {formatDateTime(report.sentAt)}</span>
           )}
         </div>
 
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowPreview(!showPreview)}
-            className="flex items-center gap-2 px-3 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors text-sm"
+            className="flex items-center gap-2 px-3 py-2 text-text-secondary bg-bg-hover rounded hover:bg-bg-hover transition-colors text-sm"
           >
             <Eye className="w-4 h-4" />
             {showPreview ? 'Hide' : 'Show'} Preview
@@ -257,7 +257,7 @@ export const WeeklyReportPreview: React.FC<WeeklyReportPreviewProps> = ({ report
 
           <button
             onClick={downloadAsHTML}
-            className="flex items-center gap-2 px-3 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors text-sm"
+            className="flex items-center gap-2 px-3 py-2 text-text-secondary bg-bg-hover rounded hover:bg-bg-hover transition-colors text-sm"
           >
             <Download className="w-4 h-4" />
             Download
@@ -277,28 +277,28 @@ export const WeeklyReportPreview: React.FC<WeeklyReportPreviewProps> = ({ report
 
       {/* Preview */}
       {showPreview && (
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="bg-bg-card rounded-lg border border-border-subtle overflow-hidden">
           <div className="p-8 space-y-6">
             {/* Header */}
-            <div className="border-b border-gray-200 dark:border-gray-700 pb-6">
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            <div className="border-b border-border-subtle pb-6">
+              <h1 className="text-3xl font-bold text-text-primary mb-2">
                 Weekly Report - Week {report.reportNumber}
               </h1>
-              <p className="text-gray-600 dark:text-gray-400">
+              <p className="text-text-secondary">
                 {formatDate(report.periodStartDate)} to {formatDate(report.periodEndDate)}
               </p>
             </div>
 
             {/* Executive Summary */}
             <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Executive Summary</h2>
-              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{report.executiveSummary}</p>
+              <h2 className="text-xl font-bold text-text-primary mb-3">Executive Summary</h2>
+              <p className="text-text-secondary leading-relaxed">{report.executiveSummary}</p>
             </div>
 
             {/* Key Highlights */}
             {report.highlights.length > 0 && (
               <div>
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Key Highlights</h2>
+                <h2 className="text-xl font-bold text-text-primary mb-3">Key Highlights</h2>
                 <ul className="space-y-2">
                   {report.highlights.map((highlight, idx) => (
                     <li
@@ -306,7 +306,7 @@ export const WeeklyReportPreview: React.FC<WeeklyReportPreviewProps> = ({ report
                       className="flex items-start gap-3 bg-yellow-50 dark:bg-yellow-900/20 p-3 rounded"
                     >
                       <span className="text-yellow-600 dark:text-yellow-400 mt-0.5">✓</span>
-                      <span className="text-gray-700 dark:text-gray-300">{highlight}</span>
+                      <span className="text-text-secondary">{highlight}</span>
                     </li>
                   ))}
                 </ul>
@@ -315,14 +315,14 @@ export const WeeklyReportPreview: React.FC<WeeklyReportPreviewProps> = ({ report
 
             {/* Hours Utilization */}
             <div>
-              <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Hours Utilization</h2>
+              <h2 className="text-xl font-bold text-text-primary mb-3">Hours Utilization</h2>
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Hours Used</p>
+                  <p className="text-sm text-text-secondary mb-1">Hours Used</p>
                   <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">{report.hoursUtilized}h</p>
                 </div>
                 <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4">
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Hours Remaining</p>
+                  <p className="text-sm text-text-secondary mb-1">Hours Remaining</p>
                   <p className="text-2xl font-bold text-green-600 dark:text-green-400">{report.hoursRemaining}h</p>
                 </div>
               </div>
@@ -331,15 +331,15 @@ export const WeeklyReportPreview: React.FC<WeeklyReportPreviewProps> = ({ report
             {/* KPI Tracking */}
             {report.kpiTracking.length > 0 && (
               <div>
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">KPI Tracking</h2>
+                <h2 className="text-xl font-bold text-text-primary mb-3">KPI Tracking</h2>
                 <div className="space-y-3">
                   {report.kpiTracking.map((metric, idx) => (
                     <div
                       key={idx}
-                      className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-gray-200 dark:border-gray-600"
+                      className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 border border-border-subtle"
                     >
                       <div className="flex items-start justify-between mb-2">
-                        <h3 className="font-semibold text-gray-900 dark:text-white">{metric.name}</h3>
+                        <h3 className="font-semibold text-text-primary">{metric.name}</h3>
                         <div
                           className={`flex items-center gap-1 text-sm font-medium ${metric.trend === 'up' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}
                         >
@@ -354,15 +354,15 @@ export const WeeklyReportPreview: React.FC<WeeklyReportPreviewProps> = ({ report
 
                       <div className="grid grid-cols-2 gap-2 text-sm">
                         <div>
-                          <p className="text-gray-600 dark:text-gray-400">Current</p>
-                          <p className="font-semibold text-gray-900 dark:text-white">
+                          <p className="text-text-secondary">Current</p>
+                          <p className="font-semibold text-text-primary">
                             {metric.value.toFixed(2)}
                             {metric.unit}
                           </p>
                         </div>
                         <div>
-                          <p className="text-gray-600 dark:text-gray-400">Target</p>
-                          <p className="font-semibold text-gray-900 dark:text-white">
+                          <p className="text-text-secondary">Target</p>
+                          <p className="font-semibold text-text-primary">
                             {metric.target.toFixed(2)}
                             {metric.unit}
                           </p>
@@ -377,35 +377,35 @@ export const WeeklyReportPreview: React.FC<WeeklyReportPreviewProps> = ({ report
             {/* Traffic Data */}
             {report.trafficData && (
               <div>
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Traffic Data</h2>
+                <h2 className="text-xl font-bold text-text-primary mb-3">Traffic Data</h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   <div className="bg-gray-50 dark:bg-gray-700 rounded p-3">
-                    <p className="text-xs text-gray-600 dark:text-gray-400">Sessions</p>
-                    <p className="text-xl font-bold text-gray-900 dark:text-white">
+                    <p className="text-xs text-text-secondary">Sessions</p>
+                    <p className="text-xl font-bold text-text-primary">
                       {report.trafficData.sessions.toLocaleString()}
                     </p>
                   </div>
                   <div className="bg-gray-50 dark:bg-gray-700 rounded p-3">
-                    <p className="text-xs text-gray-600 dark:text-gray-400">Users</p>
-                    <p className="text-xl font-bold text-gray-900 dark:text-white">
+                    <p className="text-xs text-text-secondary">Users</p>
+                    <p className="text-xl font-bold text-text-primary">
                       {report.trafficData.users.toLocaleString()}
                     </p>
                   </div>
                   <div className="bg-gray-50 dark:bg-gray-700 rounded p-3">
-                    <p className="text-xs text-gray-600 dark:text-gray-400">Pageviews</p>
-                    <p className="text-xl font-bold text-gray-900 dark:text-white">
+                    <p className="text-xs text-text-secondary">Pageviews</p>
+                    <p className="text-xl font-bold text-text-primary">
                       {report.trafficData.pageviews.toLocaleString()}
                     </p>
                   </div>
                   <div className="bg-gray-50 dark:bg-gray-700 rounded p-3">
-                    <p className="text-xs text-gray-600 dark:text-gray-400">Bounce Rate</p>
-                    <p className="text-xl font-bold text-gray-900 dark:text-white">
+                    <p className="text-xs text-text-secondary">Bounce Rate</p>
+                    <p className="text-xl font-bold text-text-primary">
                       {report.trafficData.bounceRate.toFixed(1)}%
                     </p>
                   </div>
                   <div className="bg-gray-50 dark:bg-gray-700 rounded p-3 md:col-span-2">
-                    <p className="text-xs text-gray-600 dark:text-gray-400">Avg Session Duration</p>
-                    <p className="text-xl font-bold text-gray-900 dark:text-white">
+                    <p className="text-xs text-text-secondary">Avg Session Duration</p>
+                    <p className="text-xl font-bold text-text-primary">
                       {report.trafficData.avgSessionDuration.toFixed(1)}s
                     </p>
                   </div>
@@ -416,17 +416,17 @@ export const WeeklyReportPreview: React.FC<WeeklyReportPreviewProps> = ({ report
             {/* Rank Data */}
             {report.rankData && (
               <div>
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Ranking Improvements</h2>
+                <h2 className="text-xl font-bold text-text-primary mb-3">Ranking Improvements</h2>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 border border-green-200 dark:border-green-800">
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Keywords Improved</p>
+                    <p className="text-sm text-text-secondary mb-1">Keywords Improved</p>
                     <p className="text-2xl font-bold text-green-600 dark:text-green-400">
                       {report.rankData.improvementCount}
                     </p>
                   </div>
                   <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">Top Ranking Keyword</p>
-                    <p className="font-semibold text-gray-900 dark:text-white">{report.rankData.topKeyword}</p>
+                    <p className="text-sm text-text-secondary mb-1">Top Ranking Keyword</p>
+                    <p className="font-semibold text-text-primary">{report.rankData.topKeyword}</p>
                     <p className="text-sm text-blue-600 dark:text-blue-400">Rank #{report.rankData.topRank}</p>
                   </div>
                 </div>
@@ -436,7 +436,7 @@ export const WeeklyReportPreview: React.FC<WeeklyReportPreviewProps> = ({ report
             {/* Recommendations */}
             {report.recommendations.length > 0 && (
               <div>
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Recommendations</h2>
+                <h2 className="text-xl font-bold text-text-primary mb-3">Recommendations</h2>
                 <div className="space-y-3">
                   {report.recommendations.map((rec, idx) => (
                     <div
@@ -445,18 +445,18 @@ export const WeeklyReportPreview: React.FC<WeeklyReportPreviewProps> = ({ report
                     >
                       <div className="flex items-start justify-between mb-2">
                         <div>
-                          <h3 className="font-semibold text-gray-900 dark:text-white">{rec.title}</h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{rec.description}</p>
+                          <h3 className="font-semibold text-text-primary">{rec.title}</h3>
+                          <p className="text-sm text-text-secondary mt-1">{rec.description}</p>
                         </div>
                         <span className={`px-2 py-1 rounded text-xs font-medium whitespace-nowrap ml-2 ${getPriorityColor(rec.priority)}`}>
                           {rec.priority.toUpperCase()}
                         </span>
                       </div>
 
-                      <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">Impact: {rec.impact}</p>
+                      <p className="text-sm text-text-secondary mb-2">Impact: {rec.impact}</p>
 
                       {rec.actionItems && rec.actionItems.length > 0 && (
-                        <ul className="ml-4 text-sm text-gray-700 dark:text-gray-300 space-y-1">
+                        <ul className="ml-4 text-sm text-text-secondary space-y-1">
                           {rec.actionItems.map((item, itemIdx) => (
                             <li key={itemIdx} className="flex items-start gap-2">
                               <span className="text-blue-500">•</span>
@@ -490,7 +490,7 @@ export const WeeklyReportPreview: React.FC<WeeklyReportPreviewProps> = ({ report
             )}
 
             {/* Footer */}
-            <div className="border-t border-gray-200 dark:border-gray-700 pt-4 text-xs text-gray-600 dark:text-gray-400">
+            <div className="border-t border-border-subtle pt-4 text-xs text-text-secondary">
               <p>Generated on {formatDateTime(report.createdAt)}</p>
             </div>
           </div>
@@ -500,18 +500,18 @@ export const WeeklyReportPreview: React.FC<WeeklyReportPreviewProps> = ({ report
       {/* Send Modal */}
       {showSendModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 max-w-md w-full mx-4">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Send Report</h2>
+          <div className="bg-bg-card rounded-lg shadow-lg p-6 max-w-md w-full mx-4">
+            <h2 className="text-xl font-bold text-text-primary mb-4">Send Report</h2>
 
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-text-secondary mb-2">
                 Recipient Email
               </label>
               <input
                 type="email"
                 value={recipientEmail}
                 onChange={(e) => setRecipientEmail(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-4 py-2 border border-border-base rounded-lg dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="client@example.com"
               />
             </div>
@@ -519,7 +519,7 @@ export const WeeklyReportPreview: React.FC<WeeklyReportPreviewProps> = ({ report
             <div className="flex gap-2">
               <button
                 onClick={() => setShowSendModal(false)}
-                className="flex-1 px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors font-medium"
+                className="flex-1 px-4 py-2 text-text-secondary bg-bg-hover rounded-lg hover:bg-bg-hover transition-colors font-medium"
               >
                 Cancel
               </button>

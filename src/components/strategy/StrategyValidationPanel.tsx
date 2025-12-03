@@ -36,8 +36,8 @@ export function StrategyValidationPanel({
       <div className="space-y-4 p-6">
         {[1, 2, 3].map((idx) => (
           <div key={idx} className="space-y-2">
-            <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
-            <div className="h-8 bg-gray-100 dark:bg-gray-800 rounded-lg animate-pulse" />
+            <div className="h-12 bg-bg-hover rounded-lg animate-pulse" />
+            <div className="h-8 bg-bg-hover rounded-lg animate-pulse" />
           </div>
         ))}
       </div>
@@ -76,7 +76,7 @@ export function StrategyValidationPanel({
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6"
+        className="bg-bg-card rounded-lg border border-border-subtle p-6"
         style={{
           borderColor: statusColor.borderColor,
           backgroundColor:
@@ -85,7 +85,7 @@ export function StrategyValidationPanel({
       >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
-            <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">Validation Status</div>
+            <div className="text-sm text-text-secondary mb-2">Validation Status</div>
             <div className="flex items-center gap-2">
               <div
                 className="w-4 h-4 rounded-full"
@@ -101,21 +101,21 @@ export function StrategyValidationPanel({
           </div>
 
           <div>
-            <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">Validation Score</div>
+            <div className="text-sm text-text-secondary mb-2">Validation Score</div>
             <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
               {validation.validationScore.toFixed(1)}%
             </div>
           </div>
 
           <div>
-            <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">Consensus Level</div>
+            <div className="text-sm text-text-secondary mb-2">Consensus Level</div>
             <div
               className="text-lg font-semibold"
               style={{ color: consensusInfo.color }}
             >
               {consensusInfo.formatted}
             </div>
-            <div className="text-xs text-gray-600 dark:text-gray-400 capitalize mt-1">
+            <div className="text-xs text-text-secondary capitalize mt-1">
               {consensusInfo.interpretation} agreement
             </div>
           </div>
@@ -127,21 +127,21 @@ export function StrategyValidationPanel({
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden"
+        className="bg-bg-card rounded-lg border border-border-subtle overflow-hidden"
       >
         <button
           onClick={() =>
             setExpandedSection(expandedSection === 'agents' ? null : 'agents')
           }
-          className="w-full px-6 py-4 flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+          className="w-full px-6 py-4 flex items-center gap-3 hover:bg-bg-hover transition-colors"
         >
           <Users className="w-5 h-5 text-purple-600 dark:text-purple-400" />
 
           <div className="flex-1 text-left">
-            <h3 className="font-semibold text-gray-900 dark:text-white">
+            <h3 className="font-semibold text-text-primary">
               Agent Validations
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-text-secondary">
               {validation.agentValidations.length} agents evaluated this strategy
             </p>
           </div>
@@ -164,7 +164,7 @@ export function StrategyValidationPanel({
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="border-t border-gray-200 dark:border-gray-700"
+              className="border-t border-border-subtle"
             >
               <div className="p-6 space-y-4">
                 {validation.agentValidations.map((agent, idx) => {
@@ -177,12 +177,12 @@ export function StrategyValidationPanel({
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: idx * 0.05 }}
-                      className="bg-gray-50 dark:bg-gray-900/30 rounded-lg p-4 border border-gray-200 dark:border-gray-700"
+                      className="bg-bg-raised rounded-lg p-4 border border-border-subtle"
                     >
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-start gap-3">
                           <div
-                            className="w-10 h-10 rounded-full flex items-center justify-center text-lg flex-shrink-0 bg-white dark:bg-gray-800"
+                            className="w-10 h-10 rounded-full flex items-center justify-center text-lg flex-shrink-0 bg-bg-card"
                             style={{
                               borderColor: agentInfo.color,
                               borderWidth: '2px',
@@ -192,10 +192,10 @@ export function StrategyValidationPanel({
                           </div>
 
                           <div>
-                            <h4 className="font-semibold text-gray-900 dark:text-white">
+                            <h4 className="font-semibold text-text-primary">
                               {agentInfo.label}
                             </h4>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                            <p className="text-sm text-text-secondary">
                               {agentInfo.description}
                             </p>
                           </div>
@@ -206,7 +206,7 @@ export function StrategyValidationPanel({
 
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
                         <div>
-                          <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">
+                          <div className="text-xs text-text-secondary mb-1">
                             Validation Score
                           </div>
                           <div className="text-lg font-bold text-blue-600 dark:text-blue-400">
@@ -215,7 +215,7 @@ export function StrategyValidationPanel({
                         </div>
 
                         <div>
-                          <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">
+                          <div className="text-xs text-text-secondary mb-1">
                             Risk Assessment
                           </div>
                           <div className="text-lg font-bold text-amber-600 dark:text-amber-400">
@@ -224,7 +224,7 @@ export function StrategyValidationPanel({
                         </div>
 
                         <div>
-                          <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">
+                          <div className="text-xs text-text-secondary mb-1">
                             Recommendation
                           </div>
                           <div className="text-sm font-semibold capitalize">
@@ -234,11 +234,11 @@ export function StrategyValidationPanel({
                       </div>
 
                       {agent.reasoning && (
-                        <div className="bg-white dark:bg-gray-800 rounded p-3 mb-3">
-                          <div className="text-xs text-gray-600 dark:text-gray-400 mb-1 font-semibold">
+                        <div className="bg-bg-card rounded p-3 mb-3">
+                          <div className="text-xs text-text-secondary mb-1 font-semibold">
                             Reasoning
                           </div>
-                          <p className="text-sm text-gray-700 dark:text-gray-300">
+                          <p className="text-sm text-text-secondary">
                             {agent.reasoning}
                           </p>
                         </div>
@@ -246,14 +246,14 @@ export function StrategyValidationPanel({
 
                       {agent.supportingPoints && agent.supportingPoints.length > 0 && (
                         <div className="mb-3">
-                          <div className="text-xs text-gray-600 dark:text-gray-400 mb-2 font-semibold">
+                          <div className="text-xs text-text-secondary mb-2 font-semibold">
                             Supporting Points
                           </div>
                           <div className="space-y-1">
                             {agent.supportingPoints.map((point, pidx) => (
                               <div
                                 key={pidx}
-                                className="text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2"
+                                className="text-sm text-text-secondary flex items-start gap-2"
                               >
                                 <span className="text-green-600 dark:text-green-400 mt-1">✓</span>
                                 <span>{point}</span>
@@ -265,14 +265,14 @@ export function StrategyValidationPanel({
 
                       {agent.concerns && agent.concerns.length > 0 && (
                         <div>
-                          <div className="text-xs text-gray-600 dark:text-gray-400 mb-2 font-semibold">
+                          <div className="text-xs text-text-secondary mb-2 font-semibold">
                             Concerns
                           </div>
                           <div className="space-y-1">
                             {agent.concerns.map((concern, cidx) => (
                               <div
                                 key={cidx}
-                                className="text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2"
+                                className="text-sm text-text-secondary flex items-start gap-2"
                               >
                                 <span className="text-amber-600 dark:text-amber-400 mt-1">⚠</span>
                                 <span>{concern}</span>
@@ -296,21 +296,21 @@ export function StrategyValidationPanel({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden"
+          className="bg-bg-card rounded-lg border border-border-subtle overflow-hidden"
         >
           <button
             onClick={() =>
               setExpandedSection(expandedSection === 'conflicts' ? null : 'conflicts')
             }
-            className="w-full px-6 py-4 flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+            className="w-full px-6 py-4 flex items-center gap-3 hover:bg-bg-hover transition-colors"
           >
             <AlertTriangle className="w-5 h-5 text-red-600 dark:text-red-400" />
 
             <div className="flex-1 text-left">
-              <h3 className="font-semibold text-gray-900 dark:text-white">
+              <h3 className="font-semibold text-text-primary">
                 Detected Conflicts
               </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p className="text-sm text-text-secondary">
                 {validation.conflicts.length} potential conflict{validation.conflicts.length !== 1 ? 's' : ''} found
               </p>
             </div>
@@ -333,7 +333,7 @@ export function StrategyValidationPanel({
                 animate={{ height: 'auto', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="border-t border-gray-200 dark:border-gray-700"
+                className="border-t border-border-subtle"
               >
                 <div className="p-6 space-y-4">
                   {validation.conflicts.map((conflict, idx) => {
@@ -346,13 +346,13 @@ export function StrategyValidationPanel({
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: idx * 0.05 }}
-                        className="bg-gray-50 dark:bg-gray-900/30 rounded-lg p-4 border"
+                        className="bg-bg-raised rounded-lg p-4 border"
                         style={{
                           borderColor: conflictColor.borderColor,
                         }}
                       >
                         <div className="flex items-start justify-between mb-3">
-                          <h4 className="font-semibold text-gray-900 dark:text-white flex-1">
+                          <h4 className="font-semibold text-text-primary flex-1">
                             {conflict.type.replace(/_/g, ' ').toUpperCase()}
                           </h4>
 
@@ -367,13 +367,13 @@ export function StrategyValidationPanel({
                           </div>
                         </div>
 
-                        <p className="text-sm text-gray-700 dark:text-gray-300 mb-3">
+                        <p className="text-sm text-text-secondary mb-3">
                           {conflict.description}
                         </p>
 
                         {conflict.items && conflict.items.length > 0 && (
                           <div>
-                            <div className="text-xs text-gray-600 dark:text-gray-400 mb-2 font-semibold">
+                            <div className="text-xs text-text-secondary mb-2 font-semibold">
                               Affected Items
                             </div>
                             <div className="flex flex-wrap gap-2">
@@ -408,21 +408,21 @@ export function StrategyValidationPanel({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden"
+          className="bg-bg-card rounded-lg border border-border-subtle overflow-hidden"
         >
           <button
             onClick={() =>
               setExpandedSection(expandedSection === 'recommendations' ? null : 'recommendations')
             }
-            className="w-full px-6 py-4 flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+            className="w-full px-6 py-4 flex items-center gap-3 hover:bg-bg-hover transition-colors"
           >
             <Info className="w-5 h-5 text-blue-600 dark:text-blue-400" />
 
             <div className="flex-1 text-left">
-              <h3 className="font-semibold text-gray-900 dark:text-white">
+              <h3 className="font-semibold text-text-primary">
                 Recommendations
               </h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p className="text-sm text-text-secondary">
                 {validation.recommendations.length} recommendation{validation.recommendations.length !== 1 ? 's' : ''} from agents
               </p>
             </div>
@@ -445,7 +445,7 @@ export function StrategyValidationPanel({
                 animate={{ height: 'auto', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="border-t border-gray-200 dark:border-gray-700"
+                className="border-t border-border-subtle"
               >
                 <div className="p-6 space-y-3">
                   {validation.recommendations.map((rec, idx) => (

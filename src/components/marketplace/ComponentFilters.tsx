@@ -40,7 +40,7 @@ export default function ComponentFilters({
     <div className="space-y-4 mb-6">
       {/* Sort Dropdown */}
       <div className="flex items-center gap-3">
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Sort by:</span>
+        <span className="text-sm font-medium text-text-secondary">Sort by:</span>
         <Select
           value={sortBy}
           onValueChange={(value: any) => onSortChange(value)}
@@ -59,7 +59,7 @@ export default function ComponentFilters({
 
       {/* Category Filters */}
       <div className="space-y-2">
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Categories:</span>
+        <span className="text-sm font-medium text-text-secondary">Categories:</span>
         <div className="flex flex-wrap gap-2">
           {categories.map((category) => (
             <Badge
@@ -76,7 +76,7 @@ export default function ComponentFilters({
 
       {/* Style Filters */}
       <div className="space-y-2">
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Style:</span>
+        <span className="text-sm font-medium text-text-secondary">Style:</span>
         <div className="flex flex-wrap gap-2">
           {styles.map((style) => (
             <Badge

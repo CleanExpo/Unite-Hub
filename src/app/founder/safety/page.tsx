@@ -108,10 +108,10 @@ export default function FounderSafetyPage() {
 
   if (!isInitialized) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="flex items-center justify-center min-h-screen bg-bg-raised">
         <div className="text-center">
           <Shield className="w-12 h-12 text-blue-600 dark:text-blue-400 mx-auto mb-4 animate-pulse" />
-          <p className="text-gray-600 dark:text-gray-400">Initializing Safety Command Center...</p>
+          <p className="text-text-secondary">Initializing Safety Command Center...</p>
         </div>
       </div>
     );
@@ -119,11 +119,11 @@ export default function FounderSafetyPage() {
 
   if (!isOwner) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="flex items-center justify-center min-h-screen bg-bg-raised">
         <div className="text-center">
           <AlertTriangle className="w-12 h-12 text-orange-600 dark:text-orange-400 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Access Denied</h1>
-          <p className="text-gray-600 dark:text-gray-400">
+          <h1 className="text-2xl font-bold text-text-primary mb-2">Access Denied</h1>
+          <p className="text-text-secondary">
             Only workspace owners can access the Safety Command Center
           </p>
         </div>
@@ -151,14 +151,14 @@ export default function FounderSafetyPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-bg-raised">
       {/* Header */}
-      <div className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800">
+      <div className="border-b border-border-subtle bg-bg-card">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Shield className="w-8 h-8 text-blue-600 dark:text-blue-400" />
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              <h1 className="text-3xl font-bold text-text-primary">
                 Founder Safety Command Center
               </h1>
             </div>
@@ -170,7 +170,7 @@ export default function FounderSafetyPage() {
               Execute Intervention
             </button>
           </div>
-          <p className="text-gray-600 dark:text-gray-400 mt-2">
+          <p className="text-text-secondary mt-2">
             Real-time visibility and control for global autonomous safety
           </p>
         </div>
@@ -202,23 +202,23 @@ export default function FounderSafetyPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
           {/* Left Column: Predictions and Events */}
           <div className="lg:col-span-2 space-y-8">
-            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+            <div className="bg-bg-card rounded-lg border border-border-subtle p-6">
               <SafetyPredictionPanel />
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+            <div className="bg-bg-card rounded-lg border border-border-subtle p-6">
               <SafetySignalFeed />
             </div>
           </div>
 
           {/* Right Column: Cascade Risk */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 h-fit">
+          <div className="bg-bg-card rounded-lg border border-border-subtle p-6 h-fit">
             <CascadeRiskMatrix />
           </div>
         </div>
 
         {/* Ledger Table */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+        <div className="bg-bg-card rounded-lg border border-border-subtle p-6">
           <SafetyLedgerTable />
         </div>
       </div>
@@ -226,24 +226,24 @@ export default function FounderSafetyPage() {
       {/* Intervention Dialog */}
       {showInterventionDialog && (
         <div className="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 max-w-md w-full p-6 space-y-4">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+          <div className="bg-bg-card rounded-lg border border-border-subtle max-w-md w-full p-6 space-y-4">
+            <h2 className="text-xl font-bold text-text-primary flex items-center gap-2">
               <AlertTriangle className="w-5 h-5 text-orange-600 dark:text-orange-400" />
               Execute Intervention
             </h2>
 
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-text-secondary">
               Select an intervention action and provide a reason. This action will be immediately recorded in the safety ledger.
             </p>
 
             <div>
-              <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+              <label className="block text-sm font-medium text-text-primary mb-2">
                 Action
               </label>
               <select
                 value={interventionAction}
                 onChange={(e) => setInterventionAction(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full px-3 py-2 border border-border-base rounded-lg bg-bg-input text-text-primary"
               >
                 <option value="throttle">Throttle Operations</option>
                 <option value="pause_workflow">Pause Workflow</option>
@@ -255,14 +255,14 @@ export default function FounderSafetyPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+              <label className="block text-sm font-medium text-text-primary mb-2">
                 Reason (Required)
               </label>
               <textarea
                 value={interventionReason}
                 onChange={(e) => setInterventionReason(e.target.value)}
                 placeholder="Explain why this intervention is necessary..."
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 h-24"
+                className="w-full px-3 py-2 border border-border-base rounded-lg bg-bg-input text-text-primary placeholder-gray-400 dark:placeholder-gray-500 h-24"
               />
             </div>
 
@@ -270,7 +270,7 @@ export default function FounderSafetyPage() {
               <button
                 onClick={() => setShowInterventionDialog(false)}
                 disabled={interventionInProgress}
-                className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50"
+                className="flex-1 px-4 py-2 border border-border-base rounded-lg text-text-primary hover:bg-bg-hover transition-colors disabled:opacity-50"
               >
                 Cancel
               </button>

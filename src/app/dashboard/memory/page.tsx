@@ -89,7 +89,7 @@ export default function MemoryDashboard() {
           <Brain className="w-8 h-8 text-blue-600" />
           Living Intelligence Dashboard
         </h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-1">
+        <p className="text-text-secondary mt-1">
           Explore and manage the unified memory system across all agents and operations.
         </p>
       </div>
@@ -105,7 +105,7 @@ export default function MemoryDashboard() {
               <div className="text-3xl font-bold text-blue-600">
                 {metrics.totalMemories}
               </div>
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+              <p className="text-xs text-text-secondary mt-1">
                 Stored in system
               </p>
             </CardContent>
@@ -119,7 +119,7 @@ export default function MemoryDashboard() {
               <div className="text-3xl font-bold text-amber-600">
                 {metrics.averageImportance.toFixed(0)}
               </div>
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+              <p className="text-xs text-text-secondary mt-1">
                 Out of 100
               </p>
             </CardContent>
@@ -133,7 +133,7 @@ export default function MemoryDashboard() {
               <div className="text-3xl font-bold text-green-600">
                 {metrics.averageConfidence.toFixed(0)}
               </div>
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+              <p className="text-xs text-text-secondary mt-1">
                 Out of 100
               </p>
             </CardContent>
@@ -147,7 +147,7 @@ export default function MemoryDashboard() {
               <div className="text-3xl font-bold text-red-600">
                 {metrics.unresignedSignals}
               </div>
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+              <p className="text-xs text-text-secondary mt-1">
                 Requiring attention
               </p>
             </CardContent>
@@ -161,7 +161,7 @@ export default function MemoryDashboard() {
               <div className="text-3xl font-bold text-purple-600">
                 {Object.keys(metrics.memoryTypeDistribution).length}
               </div>
-              <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+              <p className="text-xs text-text-secondary mt-1">
                 Categories in use
               </p>
             </CardContent>
@@ -195,12 +195,12 @@ export default function MemoryDashboard() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+              <p className="text-sm text-text-secondary mb-4">
                 To view relationships, first search for a memory in the Explorer tab and note its ID.
               </p>
-              <div className="p-6 bg-gray-50 dark:bg-gray-900 rounded border border-dashed border-gray-300 dark:border-gray-700 text-center">
+              <div className="p-6 bg-bg-raised rounded border border-dashed border-border-base text-center">
                 <Brain className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className="text-sm text-text-secondary">
                   Select a memory from the Explorer to view its relationships
                 </p>
               </div>
@@ -236,12 +236,12 @@ export default function MemoryDashboard() {
                         return (
                           <div key={type}>
                             <div className="flex justify-between text-sm mb-1">
-                              <span className="text-gray-700 dark:text-gray-300">{type}</span>
-                              <span className="text-gray-600 dark:text-gray-400">
+                              <span className="text-text-secondary">{type}</span>
+                              <span className="text-text-secondary">
                                 {count} ({percentage}%)
                               </span>
                             </div>
-                            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                            <div className="w-full bg-bg-hover rounded-full h-2">
                               <div
                                 className="bg-blue-600 h-2 rounded-full"
                                 style={{ width: `${percentage}%` }}
@@ -255,20 +255,20 @@ export default function MemoryDashboard() {
               )}
 
               {/* System Status */}
-              <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+              <div className="border-t border-border-subtle pt-4">
                 <h3 className="font-semibold text-sm text-gray-900 dark:text-gray-100 mb-3">
                   System Status
                 </h3>
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <p className="text-gray-600 dark:text-gray-400">Status</p>
+                    <p className="text-text-secondary">Status</p>
                     <p className="font-medium text-green-600 flex items-center gap-1">
                       <span className="w-2 h-2 bg-green-600 rounded-full" />
                       Operational
                     </p>
                   </div>
                   <div>
-                    <p className="text-gray-600 dark:text-gray-400">Workspace</p>
+                    <p className="text-text-secondary">Workspace</p>
                     <p className="font-medium text-gray-900 dark:text-gray-100 font-mono text-xs">
                       {workspaceId.substring(0, 12)}...
                     </p>

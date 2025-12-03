@@ -120,7 +120,7 @@ export default function StrategySignoffPanel({
       {recommendations.map((rec) => (
         <Card key={rec.recommendation_id} className="overflow-hidden">
           <CardHeader
-            className="pb-2 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800"
+            className="pb-2 cursor-pointer hover:bg-bg-hover"
             onClick={() =>
               setExpandedId(
                 expandedId === rec.recommendation_id ? null : rec.recommendation_id
@@ -191,7 +191,7 @@ export default function StrategySignoffPanel({
                     {rec.metrics_to_track.map((metric, i) => (
                       <span
                         key={i}
-                        className="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded"
+                        className="text-xs bg-bg-hover px-2 py-1 rounded"
                       >
                         {metric}
                       </span>

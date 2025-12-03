@@ -40,7 +40,7 @@ const getMemoryTypeColor = (type: string) => {
     signal: 'bg-red-100 dark:bg-red-950 text-red-800 dark:text-red-200',
     reasoning_trace: 'bg-indigo-100 dark:bg-indigo-950 text-indigo-800 dark:text-indigo-200',
   };
-  return colors[type] || 'bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200';
+  return colors[type] || 'bg-bg-raised text-text-primary';
 };
 
 export function MemoryExplorerPanel({
@@ -124,7 +124,7 @@ export function MemoryExplorerPanel({
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
                 placeholder="e.g., 'engagement strategies', 'user preferences'..."
-                className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="flex-1 px-3 py-2 border border-border-base rounded-md bg-bg-card text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 disabled={isSearching}
               />
               <Button
@@ -151,7 +151,7 @@ export function MemoryExplorerPanel({
               <select
                 value={memoryTypeFilter || ''}
                 onChange={(e) => setMemoryTypeFilter(e.target.value || null)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-border-base rounded-md bg-bg-card text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">All Types</option>
                 <option value="lesson">Lesson</option>
@@ -220,7 +220,7 @@ export function MemoryExplorerPanel({
               <div
                 key={memory.id}
                 onClick={() => setSelectedMemory(memory)}
-                className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition"
+                className="border border-border-subtle rounded-lg p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900 transition"
               >
                 <div className="flex items-start justify-between mb-2">
                   <div>
@@ -230,7 +230,7 @@ export function MemoryExplorerPanel({
                         {memory.memoryType}
                       </Badge>
                     </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className="text-sm text-text-secondary">
                       {memory.content.description || memory.content.summary || 'No description'}
                     </p>
                   </div>
@@ -242,7 +242,7 @@ export function MemoryExplorerPanel({
                   </div>
                 </div>
 
-                <div className="flex flex-wrap gap-4 text-xs text-gray-600 dark:text-gray-400">
+                <div className="flex flex-wrap gap-4 text-xs text-text-secondary">
                   <span>Importance: {memory.importance}</span>
                   <span>Confidence: {memory.confidence}</span>
                 </div>
@@ -277,32 +277,32 @@ export function MemoryExplorerPanel({
               <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-1">
                 Content
               </p>
-              <pre className="text-xs bg-gray-100 dark:bg-gray-900 p-2 rounded overflow-auto max-h-64">
+              <pre className="text-xs bg-bg-raised p-2 rounded overflow-auto max-h-64">
                 {JSON.stringify(selectedMemory.content, null, 2)}
               </pre>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <div>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Relevance Score</p>
+                <p className="text-xs text-text-secondary">Relevance Score</p>
                 <p className="text-lg font-bold text-blue-600">
                   {selectedMemory.relevanceScore.toFixed(1)}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Importance</p>
+                <p className="text-xs text-text-secondary">Importance</p>
                 <p className="text-lg font-bold text-amber-600">
                   {selectedMemory.importance}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Confidence</p>
+                <p className="text-xs text-text-secondary">Confidence</p>
                 <p className="text-lg font-bold text-green-600">
                   {selectedMemory.confidence}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Rank</p>
+                <p className="text-xs text-text-secondary">Rank</p>
                 <p className="text-lg font-bold text-purple-600">
                   #{selectedMemory.rank}
                 </p>

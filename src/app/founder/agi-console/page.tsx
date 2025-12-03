@@ -168,7 +168,7 @@ export default function AGIConsolePage() {
       {/* Header */}
       <div>
         <h1 className="text-4xl font-bold tracking-tight">AGI Governance Console</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2">
+        <p className="text-text-secondary mt-2">
           Multi-model routing oversight, risk management, and founder control center.
           Maintains human authority over AGI operations.
         </p>
@@ -209,7 +209,7 @@ export default function AGIConsolePage() {
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {models.map(model => (
-                  <Card key={model.model} className="bg-gray-50 dark:bg-gray-900">
+                  <Card key={model.model} className="bg-bg-raised">
                     <CardContent className="pt-6">
                       <div className="space-y-3">
                         <div className="flex items-start justify-between">
@@ -559,7 +559,7 @@ export default function AGIConsolePage() {
 
       {/* Footer */}
       <Card className="bg-blue-50 dark:bg-blue-950/20 border-blue-200">
-        <CardContent className="pt-6 text-sm text-gray-600 dark:text-gray-400">
+        <CardContent className="pt-6 text-sm text-text-secondary">
           <p>
             <strong>Last Updated:</strong> {new Date().toLocaleString()}
           </p>

@@ -45,7 +45,7 @@ export function LiveBidPanel({ workspaceId }: LiveBidPanelProps) {
     return (
       <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-900">
         <div className="text-center py-8">
-          <p className="text-gray-500 dark:text-gray-400">
+          <p className="text-text-secondary">
             No active auction. Bids will appear here when an auction starts.
           </p>
         </div>
@@ -79,7 +79,7 @@ export function LiveBidPanel({ workspaceId }: LiveBidPanelProps) {
             {isLoadingBids && (
               <div className="flex items-center gap-2">
                 <div className="h-2 w-2 bg-blue-500 rounded-full animate-pulse" />
-                <span className="text-xs text-gray-500 dark:text-gray-400">Updating...</span>
+                <span className="text-xs text-text-secondary">Updating...</span>
               </div>
             )}
           </div>
@@ -87,10 +87,10 @@ export function LiveBidPanel({ workspaceId }: LiveBidPanelProps) {
       </div>
 
       {/* Bids List */}
-      <div className="divide-y divide-gray-200 dark:divide-gray-700">
+      <div className="divide-y divide-border-subtle">
         {displayBids.length === 0 ? (
           <div className="px-6 py-8 text-center">
-            <p className="text-gray-500 dark:text-gray-400">
+            <p className="text-text-secondary">
               {filterShowDisqualified
                 ? 'No disqualified bids'
                 : 'Waiting for bids...'}
@@ -106,7 +106,7 @@ export function LiveBidPanel({ workspaceId }: LiveBidPanelProps) {
       {/* Summary */}
       {displayBids.length > 0 && (
         <div className="border-t border-gray-200 bg-gray-50 px-6 py-3 dark:border-gray-700 dark:bg-gray-800">
-          <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
+          <div className="flex justify-between text-sm text-text-secondary">
             <span>
               {filterShowDisqualified
                 ? `${disqualifiedBids.length} disqualified`
@@ -129,12 +129,12 @@ export function LiveBidPanel({ workspaceId }: LiveBidPanelProps) {
  */
 function BidRow({ bid }: { bid: any }) {
   return (
-    <div className="px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+    <div className="px-6 py-4 hover:bg-bg-hover transition-colors">
       <div className="flex items-start justify-between gap-4">
         {/* Agent Info */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-2">
-            <span className="font-medium text-gray-900 dark:text-white truncate">
+            <span className="font-medium text-text-primary truncate">
               {bid.agentId}
             </span>
             <Badge
@@ -162,26 +162,26 @@ function BidRow({ bid }: { bid: any }) {
           {/* Metrics Grid */}
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 mb-3">
             <div>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Confidence</p>
+              <p className="text-xs text-text-secondary">Confidence</p>
               <p className={`text-sm font-medium ${getScoreColor(bid.confidence).split(' ')[1]}`}>
                 {formatConfidence(bid.confidence)}
               </p>
             </div>
             <div>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Success Rate</p>
-              <p className="text-sm font-medium text-gray-900 dark:text-white">
+              <p className="text-xs text-text-secondary">Success Rate</p>
+              <p className="text-sm font-medium text-text-primary">
                 {formatSuccessRate(bid.successRate)}
               </p>
             </div>
             <div>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Capability Match</p>
-              <p className="text-sm font-medium text-gray-900 dark:text-white">
+              <p className="text-xs text-text-secondary">Capability Match</p>
+              <p className="text-sm font-medium text-text-primary">
                 {bid.capabilityMatch}%
               </p>
             </div>
             <div>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Context Relevance</p>
-              <p className="text-sm font-medium text-gray-900 dark:text-white">
+              <p className="text-xs text-text-secondary">Context Relevance</p>
+              <p className="text-sm font-medium text-text-primary">
                 {bid.contextRelevance}%
               </p>
             </div>
@@ -191,8 +191,8 @@ function BidRow({ bid }: { bid: any }) {
           <div className="space-y-2 mb-3">
             <div>
               <div className="flex justify-between items-center mb-1">
-                <span className="text-xs text-gray-600 dark:text-gray-400">Raw Score</span>
-                <span className="text-xs font-medium text-gray-900 dark:text-white">
+                <span className="text-xs text-text-secondary">Raw Score</span>
+                <span className="text-xs font-medium text-text-primary">
                   {bid.rawScore.toFixed(2)}
                 </span>
               </div>
@@ -203,8 +203,8 @@ function BidRow({ bid }: { bid: any }) {
             </div>
             <div>
               <div className="flex justify-between items-center mb-1">
-                <span className="text-xs text-gray-600 dark:text-gray-400">Load Factor</span>
-                <span className="text-xs font-medium text-gray-900 dark:text-white">
+                <span className="text-xs text-text-secondary">Load Factor</span>
+                <span className="text-xs font-medium text-text-primary">
                   {bid.loadFactor.toFixed(2)}x
                 </span>
               </div>
@@ -218,11 +218,11 @@ function BidRow({ bid }: { bid: any }) {
 
         {/* Bid Amount */}
         <div className="text-right shrink-0">
-          <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">Final Bid</p>
-          <p className="text-xl font-bold text-gray-900 dark:text-white">
+          <p className="text-xs text-text-secondary mb-1">Final Bid</p>
+          <p className="text-xl font-bold text-text-primary">
             {formatBid(bid.finalBid)}
           </p>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+          <p className="text-xs text-text-secondary mt-2">
             {getBidStatus(bid)}
           </p>
         </div>

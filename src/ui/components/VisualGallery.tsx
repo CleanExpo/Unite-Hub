@@ -31,7 +31,7 @@ interface VisualGalleryProps {
 }
 
 const statusStyles = {
-  draft: "border-gray-200 dark:border-gray-700",
+  draft: "border-border-subtle",
   proposed: "border-amber-300 dark:border-amber-600",
   approved: "border-green-300 dark:border-green-600",
   rejected: "border-red-300 dark:border-red-600",
@@ -65,7 +65,7 @@ export function VisualGallery({
         <div
           key={item.id}
           className={`
-            relative bg-white dark:bg-gray-800
+            relative bg-bg-card
             border-2 ${statusStyles[item.status]}
             rounded-lg overflow-hidden
             ${onSelect ? "cursor-pointer hover:shadow-md transition-shadow" : ""}
@@ -73,7 +73,7 @@ export function VisualGallery({
           onClick={() => onSelect?.(item.id)}
         >
           {/* Image */}
-          <div className="aspect-video bg-gray-100 dark:bg-gray-700">
+          <div className="aspect-video bg-bg-hover">
             {item.imageUrl ? (
               <img
                 src={item.imageUrl}
@@ -90,7 +90,7 @@ export function VisualGallery({
           {/* Content */}
           <div className="p-3">
             <div className="flex items-start justify-between mb-2">
-              <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+              <p className="text-sm font-medium text-text-primary truncate">
                 {item.label}
               </p>
               <AIModelBadge model={item.model as AIModel} size="sm" />
@@ -144,7 +144,7 @@ export function VisualGallery({
                     e.stopPropagation();
                     onRegenerate(item.id);
                   }}
-                  className="p-1 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+                  className="p-1 text-gray-400 hover:bg-bg-hover rounded"
                 >
                   <RefreshCw className="w-4 h-4" />
                 </button>
@@ -158,7 +158,7 @@ export function VisualGallery({
       {items.length > 0 && (
         <div className="col-span-full flex items-center gap-2 mt-2">
           <AlertTriangle className="w-3 h-3 text-amber-500" />
-          <p className="text-xs text-gray-500 dark:text-gray-400">
+          <p className="text-xs text-text-secondary">
             All visuals are AI-generated concepts. Approval required before client-facing use.
           </p>
         </div>

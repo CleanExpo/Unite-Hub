@@ -43,7 +43,7 @@ export function MarketplaceHistoryTimeline({ workspaceId }: MarketplaceHistoryTi
       <div className="border-b border-gray-200 bg-gray-50 px-6 py-4 dark:border-gray-700 dark:bg-gray-800">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <History className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+            <History className="h-5 w-5 text-text-secondary" />
             <h3 className="text-lg font-semibold">Auction History</h3>
           </div>
           <div className="flex items-center gap-2">
@@ -51,7 +51,7 @@ export function MarketplaceHistoryTimeline({ workspaceId }: MarketplaceHistoryTi
             <select
               value={filterType}
               onChange={(e) => setFilterType(e.target.value as FilterType)}
-              className="text-sm px-3 py-1 rounded border border-gray-300 bg-white dark:bg-gray-800 dark:border-gray-600"
+              className="text-sm px-3 py-1 rounded border border-gray-300 bg-bg-card dark:border-gray-600"
             >
               <option value="all">All</option>
               <option value="success">Success</option>
@@ -63,17 +63,17 @@ export function MarketplaceHistoryTimeline({ workspaceId }: MarketplaceHistoryTi
       </div>
 
       {/* Timeline */}
-      <div className="divide-y divide-gray-200 dark:divide-gray-700">
+      <div className="divide-y divide-border-subtle">
         {isLoadingHistory ? (
           <div className="px-6 py-8 text-center">
             <div className="flex justify-center mb-3">
               <div className="h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent" />
             </div>
-            <p className="text-gray-500 dark:text-gray-400">Loading history...</p>
+            <p className="text-text-secondary">Loading history...</p>
           </div>
         ) : filteredAuctions.length === 0 ? (
           <div className="px-6 py-8 text-center">
-            <p className="text-gray-500 dark:text-gray-400">
+            <p className="text-text-secondary">
               {historicalAuctions.length === 0
                 ? 'No auction history yet'
                 : 'No auctions match the selected filter'}
@@ -96,22 +96,22 @@ export function MarketplaceHistoryTimeline({ workspaceId }: MarketplaceHistoryTi
         <div className="border-t border-gray-200 bg-gray-50 px-6 py-3 dark:border-gray-700 dark:bg-gray-800">
           <div className="grid grid-cols-4 gap-4 text-center text-sm">
             <div>
-              <p className="text-gray-600 dark:text-gray-400">Total Auctions</p>
-              <p className="font-semibold text-gray-900 dark:text-white">
+              <p className="text-text-secondary">Total Auctions</p>
+              <p className="font-semibold text-text-primary">
                 {filteredAuctions.length}
               </p>
             </div>
             <div>
-              <p className="text-gray-600 dark:text-gray-400">Total Value</p>
-              <p className="font-semibold text-gray-900 dark:text-white">
+              <p className="text-text-secondary">Total Value</p>
+              <p className="font-semibold text-text-primary">
                 {formatPrice(
                   filteredAuctions.reduce((sum, a) => sum + (a.winningBid || 0), 0)
                 )}
               </p>
             </div>
             <div>
-              <p className="text-gray-600 dark:text-gray-400">Avg Complexity</p>
-              <p className="font-semibold text-gray-900 dark:text-white">
+              <p className="text-text-secondary">Avg Complexity</p>
+              <p className="font-semibold text-text-primary">
                 {(
                   filteredAuctions.reduce((sum, a) => sum + a.taskComplexity, 0) /
                   filteredAuctions.length
@@ -119,7 +119,7 @@ export function MarketplaceHistoryTimeline({ workspaceId }: MarketplaceHistoryTi
               </p>
             </div>
             <div>
-              <p className="text-gray-600 dark:text-gray-400">Success Rate</p>
+              <p className="text-text-secondary">Success Rate</p>
               <p className="font-semibold text-emerald-600 dark:text-emerald-400">
                 {(
                   (filteredAuctions.filter((a) => a.outcome === 'success').length /
@@ -153,7 +153,7 @@ function AuctionTimelineEntry({
       {/* Collapsed View */}
       <button
         onClick={onToggle}
-        className="w-full px-6 py-4 text-left hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        className="w-full px-6 py-4 text-left hover:bg-bg-hover transition-colors"
       >
         <div className="flex items-start justify-between gap-4">
           {/* Left: Timeline marker + Info */}
@@ -164,7 +164,7 @@ function AuctionTimelineEntry({
 
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
-                <h4 className="font-medium text-gray-900 dark:text-white truncate">
+                <h4 className="font-medium text-text-primary truncate">
                   {auction.taskTitle}
                 </h4>
                 <Badge
@@ -175,7 +175,7 @@ function AuctionTimelineEntry({
                 </Badge>
               </div>
 
-              <div className="flex flex-wrap items-center gap-2 text-xs text-gray-600 dark:text-gray-400">
+              <div className="flex flex-wrap items-center gap-2 text-xs text-text-secondary">
                 <span>{getComplexityLabel(auction.taskComplexity)}</span>
                 <span>•</span>
                 <span>{getTimeElapsed(auction.completedAt)}</span>
@@ -197,10 +197,10 @@ function AuctionTimelineEntry({
 
           {/* Right: Bid amount + Winner + Chevron */}
           <div className="text-right shrink-0">
-            <p className="text-sm font-semibold text-gray-900 dark:text-white">
+            <p className="text-sm font-semibold text-text-primary">
               {formatBid(auction.winningBid)}
             </p>
-            <p className="text-xs text-gray-600 dark:text-gray-400">
+            <p className="text-xs text-text-secondary">
               {auction.winningAgent}
             </p>
           </div>
@@ -215,42 +215,42 @@ function AuctionTimelineEntry({
 
       {/* Expanded Details */}
       {isExpanded && (
-        <div className="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 px-6 py-4">
+        <div className="border-t border-border-subtle bg-bg-raised/50 px-6 py-4">
           <div className="space-y-4">
             {/* Metadata Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               <div>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Task ID</p>
-                <p className="text-sm font-medium text-gray-900 dark:text-white break-all">
+                <p className="text-xs text-text-secondary">Task ID</p>
+                <p className="text-sm font-medium text-text-primary break-all">
                   {auction.auctionId}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Complexity</p>
-                <p className="text-sm font-medium text-gray-900 dark:text-white">
+                <p className="text-xs text-text-secondary">Complexity</p>
+                <p className="text-sm font-medium text-text-primary">
                   {auction.taskComplexity}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Completed</p>
-                <p className="text-sm font-medium text-gray-900 dark:text-white">
+                <p className="text-xs text-text-secondary">Completed</p>
+                <p className="text-sm font-medium text-text-primary">
                   {formatDate(auction.completedAt)}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Winning Bid</p>
-                <p className="text-sm font-medium text-gray-900 dark:text-white">
+                <p className="text-xs text-text-secondary">Winning Bid</p>
+                <p className="text-sm font-medium text-text-primary">
                   {formatPrice(auction.winningBid)}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Winner</p>
-                <p className="text-sm font-medium text-gray-900 dark:text-white">
+                <p className="text-xs text-text-secondary">Winner</p>
+                <p className="text-sm font-medium text-text-primary">
                   {auction.winningAgent}
                 </p>
               </div>
               <div>
-                <p className="text-xs text-gray-600 dark:text-gray-400">Outcome</p>
+                <p className="text-xs text-text-secondary">Outcome</p>
                 <Badge className={getOutcomeColor(auction.outcome)}>
                   {auction.outcome.replace('_', ' ')}
                 </Badge>

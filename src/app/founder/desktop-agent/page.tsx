@@ -76,7 +76,7 @@ export default function DesktopAgentPage() {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Desktop Agent</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2">
+        <p className="text-text-secondary mt-2">
           Control and monitor desktop automation with Synthex integration
         </p>
       </div>
@@ -88,7 +88,7 @@ export default function DesktopAgentPage() {
             <div className="text-center">
               <Activity className="w-8 h-8 mx-auto mb-2 text-blue-600" />
               <div className="text-2xl font-bold">{stats.totalCommands}</div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Available Commands</p>
+              <p className="text-sm text-text-secondary">Available Commands</p>
             </div>
           </CardContent>
         </Card>
@@ -98,7 +98,7 @@ export default function DesktopAgentPage() {
             <div className="text-center">
               <Shield className="w-8 h-8 mx-auto mb-2 text-yellow-600" />
               <div className="text-2xl font-bold">{stats.pendingApprovals}</div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Pending Approvals</p>
+              <p className="text-sm text-text-secondary">Pending Approvals</p>
             </div>
           </CardContent>
         </Card>
@@ -108,7 +108,7 @@ export default function DesktopAgentPage() {
             <div className="text-center">
               <Zap className="w-8 h-8 mx-auto mb-2 text-green-600" />
               <div className="text-2xl font-bold">Active</div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Status</p>
+              <p className="text-sm text-text-secondary">Status</p>
             </div>
           </CardContent>
         </Card>
@@ -118,7 +118,7 @@ export default function DesktopAgentPage() {
             <div className="text-center">
               <AlertTriangle className="w-8 h-8 mx-auto mb-2 text-red-600" />
               <div className="text-2xl font-bold">{stats.errorCount}</div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Recent Errors</p>
+              <p className="text-sm text-text-secondary">Recent Errors</p>
             </div>
           </CardContent>
         </Card>
@@ -183,11 +183,11 @@ export default function DesktopAgentPage() {
               </CardHeader>
               <CardContent>
                 {stats.pendingApprovals === 0 ? (
-                  <p className="text-gray-600 dark:text-gray-400 text-center py-8">
+                  <p className="text-text-secondary text-center py-8">
                     No pending approvals. All commands have been processed.
                   </p>
                 ) : (
-                  <p className="text-gray-600 dark:text-gray-400">
+                  <p className="text-text-secondary">
                     {stats.pendingApprovals} command(s) awaiting your approval.
                   </p>
                 )}

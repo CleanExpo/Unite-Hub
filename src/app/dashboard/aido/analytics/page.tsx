@@ -128,7 +128,7 @@ export default function AIDOAnalyticsPage() {
           )}
         </div>
         <h3 className="text-2xl font-bold">{value}</h3>
-        <p className="text-sm text-gray-600 dark:text-gray-400">{title}</p>
+        <p className="text-sm text-text-secondary">{title}</p>
         {subtitle && <p className="text-xs text-gray-500 mt-1">{subtitle}</p>}
       </CardContent>
     </Card>
@@ -142,7 +142,7 @@ export default function AIDOAnalyticsPage() {
           <BarChart3 className="w-8 h-8 text-blue-600 dark:text-blue-400" />
           <h1 className="text-3xl font-bold">Analytics Overview</h1>
         </div>
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className="text-text-secondary">
           Real-time insights into your AIDO performance and client engagement
         </p>
       </div>
@@ -243,7 +243,7 @@ export default function AIDOAnalyticsPage() {
                     <div className="flex items-center justify-between">
                       <span className="text-sm">Email Opens</span>
                       <div className="flex items-center gap-2">
-                        <div className="w-32 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                        <div className="w-32 bg-bg-hover rounded-full h-2">
                           <div
                             className="bg-cyan-500 h-2 rounded-full"
                             style={{ width: `${stats.openRate}%` }}
@@ -255,7 +255,7 @@ export default function AIDOAnalyticsPage() {
                     <div className="flex items-center justify-between">
                       <span className="text-sm">Link Clicks</span>
                       <div className="flex items-center gap-2">
-                        <div className="w-32 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                        <div className="w-32 bg-bg-hover rounded-full h-2">
                           <div
                             className="bg-orange-500 h-2 rounded-full"
                             style={{ width: `${stats.clickRate}%` }}
@@ -267,7 +267,7 @@ export default function AIDOAnalyticsPage() {
                     <div className="flex items-center justify-between">
                       <span className="text-sm">Replies</span>
                       <div className="flex items-center gap-2">
-                        <div className="w-32 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                        <div className="w-32 bg-bg-hover rounded-full h-2">
                           <div
                             className="bg-green-500 h-2 rounded-full"
                             style={{ width: `${stats.replyRate}%` }}
@@ -330,7 +330,7 @@ export default function AIDOAnalyticsPage() {
                   <TrendingUp className="w-5 h-5 text-blue-600 mt-0.5" />
                   <div>
                     <p className="font-medium">Focus on hot leads</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className="text-sm text-text-secondary">
                       You have {stats.hotLeads} contacts with AI scores above 80. Prioritize outreach to these high-quality leads.
                     </p>
                   </div>
@@ -339,7 +339,7 @@ export default function AIDOAnalyticsPage() {
                   <Mail className="w-5 h-5 text-green-600 mt-0.5" />
                   <div>
                     <p className="font-medium">Improve open rates</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className="text-sm text-text-secondary">
                       Your current open rate is {stats.openRate}%. Industry average is 21%. Try A/B testing subject lines.
                     </p>
                   </div>
@@ -348,7 +348,7 @@ export default function AIDOAnalyticsPage() {
                   <Activity className="w-5 h-5 text-purple-600 mt-0.5" />
                   <div>
                     <p className="font-medium">Re-engage inactive contacts</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className="text-sm text-text-secondary">
                       {Math.round(stats.totalContacts * 0.2)} contacts haven't engaged in 30+ days. Consider a re-engagement campaign.
                     </p>
                   </div>

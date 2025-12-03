@@ -157,6 +157,36 @@ See `docs/MULTI_PLATFORM_MARKETING_INTELLIGENCE.md`
 
 ---
 
+## Design System Enforcement
+
+**⚠️ CRITICAL**: Before generating ANY UI component, read `/DESIGN-SYSTEM.md`
+
+This project enforces strict design compliance to prevent generic LLM UI patterns.
+
+**Key Files**:
+- `/DESIGN-SYSTEM.md` - Complete design enforcement rules
+- `/docs/UI-LIBRARY-INDEX.md` - UI library quick reference
+
+**Quick Reference**:
+- **Forbidden**: `bg-white`, `text-gray-600`, `grid grid-cols-3 gap-4`, unstyled shadcn cards
+- **Required**: Design tokens (`bg-bg-card`, `text-text-primary`, `accent-500`)
+- **Accent**: `#ff6b35` (orange)
+- **Library Priority**: Project components → StyleUI/KokonutUI → shadcn base (never raw)
+
+**Pre-Generation Checklist**:
+1. Read design tokens from `globals.css` @theme block
+2. Check `/src/components/ui/` for existing patterns
+3. Reference `/docs/UI-LIBRARY-INDEX.md` for premium components
+4. Verify no forbidden patterns will be used
+
+**Quality Gates** (minimum 9/10 on all):
+- Visual distinctiveness
+- Brand alignment
+- Code quality
+- Accessibility
+
+---
+
 ## 5 Whys Image Generation Methodology (MANDATORY)
 
 **⚠️ CRITICAL**: ALL images for Unite-Hub/Synthex MUST follow this methodology. NO exceptions.

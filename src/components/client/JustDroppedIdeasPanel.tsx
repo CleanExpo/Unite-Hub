@@ -82,15 +82,15 @@ export default function JustDroppedIdeasPanel() {
   ];
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+    <div className="bg-bg-card rounded-lg border border-border-subtle p-6">
       <div className="flex items-center gap-2 mb-4">
         <Sparkles className="w-5 h-5 text-teal-600" />
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+        <h3 className="text-lg font-semibold text-text-primary">
           Just Dropped
         </h3>
       </div>
 
-      <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+      <p className="text-sm text-text-secondary mb-4">
         Fresh ideas to grow your business
       </p>
 
@@ -105,7 +105,7 @@ export default function JustDroppedIdeasPanel() {
                 <span className="text-xs font-medium text-teal-600 dark:text-teal-400">
                   {idea.category}
                 </span>
-                <h4 className="font-medium text-gray-900 dark:text-white text-sm">
+                <h4 className="font-medium text-text-primary text-sm">
                   {idea.title}
                 </h4>
               </div>
@@ -124,7 +124,7 @@ export default function JustDroppedIdeasPanel() {
       </div>
 
       {ideas.length === 0 && (
-        <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
+        <p className="text-sm text-text-secondary text-center py-4">
           No new ideas yet. We&apos;re analyzing your data!
         </p>
       )}

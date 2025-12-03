@@ -19,9 +19,9 @@ export default function PillarPage() {
 
   if (!pillar) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-bg-raised flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-500 dark:text-gray-400">Pillar not found</p>
+          <p className="text-text-secondary">Pillar not found</p>
           <button
             onClick={() => router.push("/client/dashboard/visual-playground")}
             className="mt-4 text-teal-600 hover:text-teal-700"
@@ -34,7 +34,7 @@ export default function PillarPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-bg-raised">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back Button */}
         <button
@@ -49,11 +49,11 @@ export default function PillarPage() {
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
             <Sparkles className="w-8 h-8 text-teal-600" />
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-2xl font-bold text-text-primary">
               {pillar.title}
             </h1>
           </div>
-          <p className="text-gray-500 dark:text-gray-400">{pillar.description}</p>
+          <p className="text-text-secondary">{pillar.description}</p>
         </div>
 
         {/* Disclaimer */}
@@ -71,7 +71,7 @@ export default function PillarPage() {
           {pillar.subPillars.map((subPillar) => (
             <div
               key={subPillar.id}
-              className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 hover:border-teal-500 dark:hover:border-teal-500 transition-colors cursor-pointer"
+              className="bg-bg-card rounded-lg border border-border-subtle p-6 hover:border-teal-500 dark:hover:border-teal-500 transition-colors cursor-pointer"
               onClick={() =>
                 router.push(
                   `/client/dashboard/visual-playground/${pillarId}/${subPillar.id}`
@@ -80,10 +80,10 @@ export default function PillarPage() {
             >
               <div className="flex items-center justify-between">
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+                  <h3 className="text-lg font-semibold text-text-primary mb-1">
                     {subPillar.title}
                   </h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                  <p className="text-sm text-text-secondary mb-2">
                     {subPillar.description}
                   </p>
                   <p className="text-xs text-yellow-600 dark:text-yellow-400">

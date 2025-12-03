@@ -47,9 +47,9 @@ export default function VideoApprovalCard({
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <div className="bg-bg-card rounded-lg border border-border-subtle overflow-hidden">
       {/* Thumbnail */}
-      <div className="relative aspect-video bg-gray-100 dark:bg-gray-700">
+      <div className="relative aspect-video bg-bg-hover">
         {thumbnailUrl ? (
           <img
             src={thumbnailUrl}
@@ -58,7 +58,7 @@ export default function VideoApprovalCard({
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
-            <Play className="w-12 h-12 text-gray-300 dark:text-gray-600" />
+            <Play className="w-12 h-12 text-text-muted" />
           </div>
         )}
 
@@ -81,12 +81,12 @@ export default function VideoApprovalCard({
       {/* Content */}
       <div className="p-4">
         <div className="flex items-start justify-between mb-2">
-          <h3 className="font-medium text-gray-900 dark:text-white">{title}</h3>
+          <h3 className="font-medium text-text-primary">{title}</h3>
           <AIModelBadge model={model} />
         </div>
 
         {description && (
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+          <p className="text-sm text-text-secondary mb-3">
             {description}
           </p>
         )}

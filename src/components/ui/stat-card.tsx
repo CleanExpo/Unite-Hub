@@ -79,7 +79,7 @@ export function StatCard({
             <p className="text-sm font-medium text-gray-500 dark:text-slate-400">
               {title}
             </p>
-            <p className="text-3xl font-bold text-gray-900 dark:text-white">
+            <p className="text-3xl font-bold text-text-primary">
               {displayValue}
             </p>
             {change !== undefined && (

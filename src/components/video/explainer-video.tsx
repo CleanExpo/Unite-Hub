@@ -352,7 +352,7 @@ export function ExplainerVideo({
       {/* Transcript Panel */}
       {isTranscriptOpen && transcript && (
         <div className="lg:w-1/3 bg-gray-100 dark:bg-slate-800 rounded-lg p-4 max-h-[400px] overflow-y-auto">
-          <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
+          <h3 className="font-semibold text-text-primary mb-2">
             Transcript
           </h3>
           <div className="text-sm text-gray-600 dark:text-slate-300 whitespace-pre-wrap">

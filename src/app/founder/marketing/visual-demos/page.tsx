@@ -223,13 +223,13 @@ export default function VisualDemosPage() {
                   placeholder="Search demos..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2 text-sm border border-border-subtle rounded-lg bg-bg-card focus:ring-2 focus:ring-teal-500 focus:border-transparent"
                 />
               </div>
               <select
                 value={personaFilter}
                 onChange={(e) => setPersonaFilter(e.target.value)}
-                className="px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800"
+                className="px-3 py-2 text-sm border border-border-subtle rounded-lg bg-bg-card"
               >
                 <option value="all">All Personas</option>
                 {PERSONA_OPTIONS.map((persona) => (
@@ -242,7 +242,7 @@ export default function VisualDemosPage() {
             <div className="flex gap-2">
               <Link
                 href="/founder/visual-engine"
-                className="flex items-center gap-2 px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
+                className="flex items-center gap-2 px-4 py-2 border border-border-subtle rounded-lg hover:bg-bg-hover"
               >
                 <Wand2 className="w-4 h-4" />
                 Style Wizard
@@ -265,7 +265,7 @@ export default function VisualDemosPage() {
             <Card>
               <CardContent className="py-12 text-center">
                 <Sparkles className="w-12 h-12 mx-auto text-gray-300 mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg font-medium text-text-primary mb-2">
                   No demos found
                 </h3>
                 <p className="text-sm text-gray-500 mb-4">
@@ -287,7 +287,7 @@ export default function VisualDemosPage() {
           <Card className="border-2 border-dashed border-purple-200 dark:border-purple-800 bg-purple-50/50 dark:bg-purple-900/10">
             <CardContent className="py-8 text-center">
               <Wand2 className="w-10 h-10 mx-auto text-purple-600 mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              <h3 className="text-xl font-semibold text-text-primary mb-2">
                 Animation Style Wizard
               </h3>
               <p className="text-sm text-gray-500 mb-6 max-w-md mx-auto">
@@ -330,7 +330,7 @@ function CategoryPill({ active, onClick, label, count, icon: Icon, color }: Cate
       className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
         active
           ? "bg-teal-600 text-white"
-          : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+          : "bg-bg-hover text-gray-600 dark:text-gray-300 hover:bg-bg-hover"
       }`}
     >
       {Icon && <Icon className={`w-4 h-4 ${active ? "" : color?.split(" ")[0]}`} />}
@@ -406,17 +406,17 @@ function DemoCard({ demo, onPreview }: DemoCardProps) {
       </div>
 
       <CardContent className="pt-4">
-        <h3 className="font-semibold text-gray-900 dark:text-white mb-1 group-hover:text-teal-600 transition-colors">
+        <h3 className="font-semibold text-text-primary mb-1 group-hover:text-teal-600 transition-colors">
           {demo.title}
         </h3>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-3 line-clamp-2">
+        <p className="text-sm text-text-secondary mb-3 line-clamp-2">
           {demo.description}
         </p>
 
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             {demo.persona && (
-              <span className="px-2 py-0.5 text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded capitalize">
+              <span className="px-2 py-0.5 text-xs bg-bg-hover text-text-secondary rounded capitalize">
                 {demo.persona}
               </span>
             )}
@@ -447,7 +447,7 @@ function DemoPreviewModal({ demo, onClose }: DemoPreviewModalProps) {
 
   return (
     <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
+      <div className="bg-bg-card rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
         {/* Preview Area */}
         <div className="relative h-80 bg-gradient-to-br from-gray-900 to-gray-800 overflow-hidden">
           <div className="absolute inset-0 flex items-center justify-center">
@@ -479,27 +479,27 @@ function DemoPreviewModal({ demo, onClose }: DemoPreviewModalProps) {
                 </div>
                 <span className="text-sm text-gray-500">{categoryConfig.label}</span>
               </div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{demo.title}</h2>
-              <p className="text-gray-500 dark:text-gray-400 mt-1">{demo.description}</p>
+              <h2 className="text-2xl font-bold text-text-primary">{demo.title}</h2>
+              <p className="text-text-secondary mt-1">{demo.description}</p>
             </div>
           </div>
 
           <div className="grid sm:grid-cols-3 gap-4 mb-6">
             <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
               <p className="text-xs text-gray-500 mb-1">Animation</p>
-              <p className="font-medium text-gray-900 dark:text-white">
+              <p className="font-medium text-text-primary">
                 {demo.config.animation || "Default"}
               </p>
             </div>
             <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
               <p className="text-xs text-gray-500 mb-1">Intensity</p>
-              <p className="font-medium text-gray-900 dark:text-white capitalize">
+              <p className="font-medium text-text-primary capitalize">
                 {demo.config.intensity || "Normal"}
               </p>
             </div>
             <div className="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
               <p className="text-xs text-gray-500 mb-1">Persona</p>
-              <p className="font-medium text-gray-900 dark:text-white capitalize">
+              <p className="font-medium text-text-primary capitalize">
                 {demo.persona || "Universal"}
               </p>
             </div>
@@ -508,11 +508,11 @@ function DemoPreviewModal({ demo, onClose }: DemoPreviewModalProps) {
           <div className="flex justify-end gap-3">
             <button
               onClick={onClose}
-              className="px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
+              className="px-4 py-2 text-sm text-text-secondary hover:bg-bg-hover rounded-lg"
             >
               Close
             </button>
-            <button className="flex items-center gap-2 px-4 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800">
+            <button className="flex items-center gap-2 px-4 py-2 text-sm border border-border-subtle rounded-lg hover:bg-bg-hover">
               <Copy className="w-4 h-4" />
               Copy Config
             </button>

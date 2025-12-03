@@ -75,7 +75,7 @@ export function PageContainer({
   return (
     <div
       className={`
-        min-h-screen bg-gray-50 dark:bg-gray-900
+        min-h-screen bg-bg-raised
         ${spacing.page.paddingX} ${spacing.page.paddingY}
         ${className}
       `}

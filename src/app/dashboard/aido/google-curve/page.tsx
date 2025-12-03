@@ -264,7 +264,7 @@ export default function GoogleCurvePage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Google-Curve Anticipation Engine</h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">
+          <p className="text-text-secondary mt-1">
             Detect algorithm shifts 5-10 days before competitors
           </p>
         </div>
@@ -421,12 +421,12 @@ export default function GoogleCurvePage() {
             </div>
           ) : (
             <div className="space-y-2">
-              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+              <p className="text-sm text-text-secondary mb-4">
                 Monitoring {observations.length} keywords with position tracking every 6 hours
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 {observations.slice(0, 6).map((obs) => (
-                  <Card key={obs.id} className="bg-gray-50 dark:bg-gray-800">
+                  <Card key={obs.id} className="bg-bg-raised">
                     <CardContent className="pt-4 pb-3">
                       <div className="flex items-center justify-between mb-2">
                         <p className="text-sm font-semibold truncate">{obs.keyword}</p>
@@ -502,8 +502,8 @@ export default function GoogleCurvePage() {
 
                       {/* Affected Keywords */}
                       {signal.affectedKeywords && signal.affectedKeywords.length > 0 && (
-                        <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">
-                          <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">
+                        <div className="bg-bg-raised p-3 rounded-lg">
+                          <p className="text-xs font-semibold text-text-secondary mb-2">
                             Affected Keywords ({signal.affectedKeywords.length}):
                           </p>
                           <div className="flex flex-wrap gap-2">
@@ -523,7 +523,7 @@ export default function GoogleCurvePage() {
 
                       {/* Actions */}
                       {signal.recommendationId && (
-                        <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                        <div className="pt-2 border-t border-border-subtle">
                           <Button variant="link" className="p-0 h-auto text-xs">
                             <Zap className="w-3 h-3 mr-1" />
                             View Strategy Recommendations →

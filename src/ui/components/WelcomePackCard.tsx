@@ -77,7 +77,7 @@ export function WelcomePackCard({
               className={`flex items-center gap-2 p-2 rounded-lg ${
                 item.available
                   ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300'
-                  : 'bg-gray-50 dark:bg-gray-800 text-gray-400'
+                  : 'bg-bg-raised text-gray-400'
               }`}
             >
               <item.icon className="h-4 w-4" />

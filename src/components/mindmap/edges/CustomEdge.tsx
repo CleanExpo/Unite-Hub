@@ -91,7 +91,7 @@ export default function CustomEdge({
           }}
           className="nodrag nopan"
         >
-          <div className="px-2 py-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded text-xs font-medium shadow-sm">
+          <div className="px-2 py-1 bg-bg-card border border-border-base rounded text-xs font-medium shadow-sm">
             {data?.label || style.label}
           </div>
         </div>

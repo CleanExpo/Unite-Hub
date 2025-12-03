@@ -81,7 +81,7 @@ export default function FounderAgentsDashboard() {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Autonomous Agents</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2">
+        <p className="text-text-secondary mt-2">
           Enable Synthex to autonomously plan, reason, and execute safe multi-step workflows
         </p>
       </div>
@@ -93,7 +93,7 @@ export default function FounderAgentsDashboard() {
             <div className="text-center">
               <Brain className="w-8 h-8 mx-auto mb-2 text-blue-600" />
               <div className="text-2xl font-bold">{stats.totalPlans}</div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Total Plans</p>
+              <p className="text-sm text-text-secondary">Total Plans</p>
             </div>
           </CardContent>
         </Card>
@@ -103,7 +103,7 @@ export default function FounderAgentsDashboard() {
             <div className="text-center">
               <AlertTriangle className="w-8 h-8 mx-auto mb-2 text-yellow-600" />
               <div className="text-2xl font-bold">{stats.pendingApproval}</div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Pending Approval</p>
+              <p className="text-sm text-text-secondary">Pending Approval</p>
             </div>
           </CardContent>
         </Card>
@@ -113,7 +113,7 @@ export default function FounderAgentsDashboard() {
             <div className="text-center">
               <Zap className="w-8 h-8 mx-auto mb-2 text-green-600" />
               <div className="text-2xl font-bold">{stats.runningExecutions}</div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Running Executions</p>
+              <p className="text-sm text-text-secondary">Running Executions</p>
             </div>
           </CardContent>
         </Card>
@@ -123,7 +123,7 @@ export default function FounderAgentsDashboard() {
             <div className="text-center">
               <Shield className="w-8 h-8 mx-auto mb-2 text-purple-600" />
               <div className="text-2xl font-bold">{stats.completedPlans}</div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">Completed Plans</p>
+              <p className="text-sm text-text-secondary">Completed Plans</p>
             </div>
           </CardContent>
         </Card>
@@ -177,7 +177,7 @@ export default function FounderAgentsDashboard() {
             ) : (
               <Card>
                 <CardContent className="pt-8">
-                  <p className="text-center text-gray-600 dark:text-gray-400">
+                  <p className="text-center text-text-secondary">
                     Create a plan to view its details
                   </p>
                 </CardContent>
@@ -223,7 +223,7 @@ export default function FounderAgentsDashboard() {
             ) : (
               <Card>
                 <CardContent className="pt-8">
-                  <p className="text-center text-gray-600 dark:text-gray-400">
+                  <p className="text-center text-text-secondary">
                     Create and review a plan before execution
                   </p>
                 </CardContent>
@@ -244,7 +244,7 @@ export default function FounderAgentsDashboard() {
             ) : (
               <Card>
                 <CardContent className="pt-8">
-                  <p className="text-center text-gray-600 dark:text-gray-400">
+                  <p className="text-center text-text-secondary">
                     Execute a plan to monitor its progress
                   </p>
                 </CardContent>

@@ -30,13 +30,13 @@ export default function CreativeLabInfoDrawer({
       />
 
       {/* Drawer */}
-      <div className="fixed right-0 top-0 bottom-0 z-50 w-full max-w-md bg-white dark:bg-gray-900 shadow-2xl overflow-y-auto">
+      <div className="fixed right-0 top-0 bottom-0 z-50 w-full max-w-md bg-bg-card shadow-2xl overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 p-4">
+        <div className="sticky top-0 bg-bg-card border-b border-border-subtle p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Info className="w-5 h-5 text-teal-600" />
-              <h2 className="text-lg font-bold text-gray-900 dark:text-white">
+              <h2 className="text-lg font-bold text-text-primary">
                 About This Page
               </h2>
             </div>
@@ -83,7 +83,7 @@ export default function CreativeLabInfoDrawer({
 
           {/* AI Tools Used */}
           <section>
-            <h3 className="flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white mb-3">
+            <h3 className="flex items-center gap-2 text-sm font-semibold text-text-primary mb-3">
               <Cpu className="w-4 h-4" />
               AI Tools Used
             </h3>
@@ -117,7 +117,7 @@ export default function CreativeLabInfoDrawer({
 
           {/* Honesty & Transparency */}
           <section>
-            <h3 className="flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white mb-3">
+            <h3 className="flex items-center gap-2 text-sm font-semibold text-text-primary mb-3">
               <Shield className="w-4 h-4" />
               Honesty & Transparency
             </h3>
@@ -132,7 +132,7 @@ export default function CreativeLabInfoDrawer({
 
           {/* Your Role */}
           <section>
-            <h3 className="flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white mb-3">
+            <h3 className="flex items-center gap-2 text-sm font-semibold text-text-primary mb-3">
               <Users className="w-4 h-4" />
               Your Role in Reviewing
             </h3>
@@ -149,8 +149,8 @@ export default function CreativeLabInfoDrawer({
           </section>
 
           {/* Final Note */}
-          <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4">
-            <p className="text-xs text-gray-500 dark:text-gray-400 italic">
+          <div className="bg-bg-hover rounded-lg p-4">
+            <p className="text-xs text-text-secondary italic">
               This space exists to help you explore possibilities, not to
               replace professional creative work. Every concept is a
               conversation starter, not a conclusion.
@@ -171,7 +171,7 @@ export function CreativeLabInfoTrigger({
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
+      className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 border border-border-subtle rounded-lg hover:bg-bg-hover"
     >
       <Info className="w-4 h-4" />
       About This Page

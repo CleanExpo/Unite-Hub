@@ -169,3 +169,12 @@ coverage/
 __tests__/__snapshots__/
 *.tgz
 .claude/mcp.json
+
+# === SECURITY: Files with actual secrets/keys - NEVER COMMIT ===
+add-to-vercel.ps1
+ADD_SECRETS_TO_VERCEL.md
+SECRETS_SECURITY_GUIDE.md
+SECRETS_QUICK_REFERENCE.md
+*_SECRETS_*.md
+add-to-vercel.*
+.playwright-mcp/

@@ -187,7 +187,7 @@ export default function IntelligenceHubPage() {
       {/* Header */}
       <div>
         <h1 className="text-4xl font-bold tracking-tight">Founder Intelligence Hub</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2">
+        <p className="text-text-secondary mt-2">
           Unified view of agent health, global insights, and strategic recommendations
         </p>
       </div>
@@ -352,7 +352,7 @@ export default function IntelligenceHubPage() {
                         </Badge>
                       </div>
                       <div className="flex items-center gap-2 text-xs text-gray-500">
-                        <span className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded capitalize">
+                        <span className="bg-bg-hover px-2 py-1 rounded capitalize">
                           {insight.theme.replace(/_/g, ' ')}
                         </span>
                         <span>Confidence: {(insight.confidence * 100).toFixed(0)}%</span>
@@ -378,23 +378,23 @@ export default function IntelligenceHubPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-800">
+                <div className="flex items-center justify-between p-3 bg-bg-raised rounded border border-border-subtle">
                   <span className="text-sm">Email → Coordination: share_insight (email_engagement_trend)</span>
                   <Badge variant="outline">3m ago</Badge>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-800">
+                <div className="flex items-center justify-between p-3 bg-bg-raised rounded border border-border-subtle">
                   <span className="text-sm">Analysis → Email: feedback (campaign_performance)</span>
                   <Badge variant="outline">8m ago</Badge>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-800">
+                <div className="flex items-center justify-between p-3 bg-bg-raised rounded border border-border-subtle">
                   <span className="text-sm">Coordination → Content: request_approval (launch_workflow)</span>
                   <Badge variant="outline" className="border-yellow-300">12m ago</Badge>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-800">
+                <div className="flex items-center justify-between p-3 bg-bg-raised rounded border border-border-subtle">
                   <span className="text-sm">Research → Analysis: notify_risk (market_volatility)</span>
                   <Badge variant="outline" className="border-red-300">15m ago</Badge>
                 </div>
-                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900 rounded border border-gray-200 dark:border-gray-800">
+                <div className="flex items-center justify-between p-3 bg-bg-raised rounded border border-border-subtle">
                   <span className="text-sm">Content → Coordination: acknowledge (asset_ready)</span>
                   <Badge variant="outline">22m ago</Badge>
                 </div>
@@ -450,7 +450,7 @@ export default function IntelligenceHubPage() {
 
       {/* Footer */}
       <Card className="bg-blue-50 dark:bg-blue-950/20 border-blue-200">
-        <CardContent className="pt-6 text-sm text-gray-600 dark:text-gray-400">
+        <CardContent className="pt-6 text-sm text-text-secondary">
           <p>
             <strong>Last Updated:</strong> {new Date().toLocaleString()}
           </p>

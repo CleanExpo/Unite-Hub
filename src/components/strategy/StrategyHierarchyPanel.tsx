@@ -120,8 +120,8 @@ export function StrategyHierarchyPanel({
       <div className="space-y-4 p-6">
         {[1, 2, 3, 4].map((level) => (
           <div key={level} className="space-y-2">
-            <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
-            <div className="h-8 bg-gray-100 dark:bg-gray-800 rounded-lg animate-pulse" />
+            <div className="h-12 bg-bg-hover rounded-lg animate-pulse" />
+            <div className="h-8 bg-bg-hover rounded-lg animate-pulse" />
           </div>
         ))}
       </div>
@@ -132,29 +132,29 @@ export function StrategyHierarchyPanel({
     <div className="space-y-6">
       {/* Summary Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-          <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Items</div>
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">
+        <div className="bg-bg-card rounded-lg border border-border-subtle p-4">
+          <div className="text-sm text-text-secondary mb-1">Total Items</div>
+          <div className="text-2xl font-bold text-text-primary">
             {levels.reduce((sum, level) => sum + level.items.length, 0)}
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-          <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Total Effort</div>
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">
+        <div className="bg-bg-card rounded-lg border border-border-subtle p-4">
+          <div className="text-sm text-text-secondary mb-1">Total Effort</div>
+          <div className="text-2xl font-bold text-text-primary">
             {totalEffort.formatted}
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-          <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Hierarchy Score</div>
+        <div className="bg-bg-card rounded-lg border border-border-subtle p-4">
+          <div className="text-sm text-text-secondary mb-1">Hierarchy Score</div>
           <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
             {hierarchy.hierarchyScore.toFixed(1)}%
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
-          <div className="text-sm text-gray-600 dark:text-gray-400 mb-1">Balance</div>
+        <div className="bg-bg-card rounded-lg border border-border-subtle p-4">
+          <div className="text-sm text-text-secondary mb-1">Balance</div>
           <div className="text-2xl font-bold">
             {decompositionRatio.isWellBalanced ? (
               <span className="text-green-600 dark:text-green-400">✓ Good</span>
@@ -208,14 +208,14 @@ export function StrategyHierarchyPanel({
               <div className="flex-shrink-0">{getLevelIcon(level.level)}</div>
 
               <div className="flex-1 text-left">
-                <h3 className="font-semibold text-gray-900 dark:text-white">
+                <h3 className="font-semibold text-text-primary">
                   L{level.level}: {level.title}
                 </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">{level.description}</p>
+                <p className="text-sm text-text-secondary">{level.description}</p>
               </div>
 
               <div className="flex items-center gap-2 flex-shrink-0">
-                <span className="inline-block bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm font-semibold px-3 py-1 rounded-full">
+                <span className="inline-block bg-bg-input text-text-primary text-sm font-semibold px-3 py-1 rounded-full">
                   {level.items.length}
                 </span>
 
@@ -248,7 +248,7 @@ export function StrategyHierarchyPanel({
                           initial={{ opacity: 0, x: -10 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: idx * 0.02 }}
-                          className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md transition-shadow"
+                          className="bg-bg-card rounded-lg border border-border-subtle overflow-hidden hover:shadow-md transition-shadow"
                         >
                           {/* Item Header */}
                           <button
@@ -256,7 +256,7 @@ export function StrategyHierarchyPanel({
                               toggleItem(item.id);
                               onItemClick?.(item, level.level);
                             }}
-                            className="w-full px-4 py-3 flex items-center gap-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                            className="w-full px-4 py-3 flex items-center gap-3 hover:bg-bg-hover transition-colors"
                           >
                             <div className="flex-shrink-0">
                               {item.dependencies && item.dependencies.length > 0 && (
@@ -265,10 +265,10 @@ export function StrategyHierarchyPanel({
                             </div>
 
                             <div className="flex-1 text-left">
-                              <h4 className="font-medium text-gray-900 dark:text-white">
+                              <h4 className="font-medium text-text-primary">
                                 {item.title}
                               </h4>
-                              <p className="text-xs text-gray-600 dark:text-gray-400">
+                              <p className="text-xs text-text-secondary">
                                 {item.description}
                               </p>
                             </div>
@@ -304,14 +304,14 @@ export function StrategyHierarchyPanel({
                                 animate={{ height: 'auto', opacity: 1 }}
                                 exit={{ height: 0, opacity: 0 }}
                                 transition={{ duration: 0.15 }}
-                                className="border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/30 p-4 space-y-3"
+                                className="border-t border-border-subtle bg-bg-raised p-4 space-y-3"
                               >
                                 {item.estimatedDuration && (
                                   <div>
-                                    <div className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
+                                    <div className="text-xs font-semibold text-text-secondary mb-1">
                                       Duration
                                     </div>
-                                    <div className="text-sm text-gray-900 dark:text-white">
+                                    <div className="text-sm text-text-primary">
                                       {(item.estimatedDuration / 60).toFixed(1)} hours
                                     </div>
                                   </div>
@@ -319,10 +319,10 @@ export function StrategyHierarchyPanel({
 
                                 {item.owner && (
                                   <div>
-                                    <div className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
+                                    <div className="text-xs font-semibold text-text-secondary mb-1">
                                       Owner
                                     </div>
-                                    <div className="text-sm text-gray-900 dark:text-white">
+                                    <div className="text-sm text-text-primary">
                                       {item.owner}
                                     </div>
                                   </div>
@@ -330,7 +330,7 @@ export function StrategyHierarchyPanel({
 
                                 {item.resourcesRequired && item.resourcesRequired.length > 0 && (
                                   <div>
-                                    <div className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">
+                                    <div className="text-xs font-semibold text-text-secondary mb-2">
                                       Resources Required
                                     </div>
                                     <div className="flex flex-wrap gap-2">
@@ -348,14 +348,14 @@ export function StrategyHierarchyPanel({
 
                                 {item.dependencies && item.dependencies.length > 0 && (
                                   <div>
-                                    <div className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">
+                                    <div className="text-xs font-semibold text-text-secondary mb-2">
                                       Dependencies
                                     </div>
                                     <div className="space-y-1">
                                       {item.dependencies.map((dep, didx) => (
                                         <div
                                           key={didx}
-                                          className="text-xs text-gray-700 dark:text-gray-300 flex items-center gap-2"
+                                          className="text-xs text-text-secondary flex items-center gap-2"
                                         >
                                           <span className="text-amber-600 dark:text-amber-400">→</span>
                                           <span>{dep}</span>

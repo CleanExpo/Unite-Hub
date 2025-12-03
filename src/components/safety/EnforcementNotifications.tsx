@@ -208,7 +208,7 @@ export const EnforcementNotifications: React.FC<EnforcementNotificationsProps> =
 
       {/* Notification count overflow indicator */}
       {sortedNotifications.length > 3 && (
-        <div className="text-center text-xs text-gray-600 dark:text-gray-400">
+        <div className="text-center text-xs text-text-secondary">
           +{sortedNotifications.length - 3} more notification{sortedNotifications.length - 3 !== 1 ? 's' : ''}
         </div>
       )}

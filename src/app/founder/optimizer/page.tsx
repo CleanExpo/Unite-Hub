@@ -124,7 +124,7 @@ export default function OptimizerPage() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <AlertCircle className="w-8 h-8 text-red-600 mx-auto mb-2" />
-          <p className="text-gray-700 dark:text-gray-300">Please log in to access the optimizer</p>
+          <p className="text-text-secondary">Please log in to access the optimizer</p>
         </div>
       </div>
     );
@@ -135,14 +135,14 @@ export default function OptimizerPage() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <AlertCircle className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
-          <p className="text-gray-700 dark:text-gray-300">No workspace selected</p>
+          <p className="text-text-secondary">No workspace selected</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-6 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-bg-raised py-6 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -152,8 +152,8 @@ export default function OptimizerPage() {
                 <Zap className="w-6 h-6 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Execution Optimizer</h1>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                <h1 className="text-3xl font-bold text-text-primary">Execution Optimizer</h1>
+                <p className="text-sm text-text-secondary mt-1">
                   Real-time workflow optimization and adaptation
                 </p>
               </div>
@@ -161,10 +161,10 @@ export default function OptimizerPage() {
             <button
               onClick={fetchOptimizerStatus}
               disabled={refreshing}
-              className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50"
+              className="p-2 hover:bg-bg-hover rounded-lg transition-colors disabled:opacity-50"
               title="Refresh data"
             >
-              <RefreshCw className={`w-5 h-5 text-gray-600 dark:text-gray-400 ${refreshing ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`w-5 h-5 text-text-secondary ${refreshing ? 'animate-spin' : ''}`} />
             </button>
           </div>
         </div>
@@ -183,7 +183,7 @@ export default function OptimizerPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left Column - Status & Stats */}
           <div className="lg:col-span-1 space-y-6">
-            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+            <div className="bg-bg-card rounded-lg border border-border-subtle p-6 shadow-sm">
               <OptimizerStatusPanel
                 data={statusData || undefined}
                 loading={loading}
@@ -191,7 +191,7 @@ export default function OptimizerPage() {
               />
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+            <div className="bg-bg-card rounded-lg border border-border-subtle p-6 shadow-sm">
               <OptimizerStatsPanel
                 patterns={patterns}
                 dailyTrends={dailyTrends}
@@ -205,23 +205,23 @@ export default function OptimizerPage() {
           <div className="lg:col-span-2 space-y-6">
             {/* Current Profile */}
             {currentProfile && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+              <div className="bg-bg-card rounded-lg border border-border-subtle p-6 shadow-sm">
                 <div className="flex items-center gap-2 mb-4">
-                  <Settings className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                  <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Current Profile</h2>
+                  <Settings className="w-5 h-5 text-text-secondary" />
+                  <h2 className="text-lg font-semibold text-text-primary">Current Profile</h2>
                 </div>
 
                 <div className="space-y-4">
                   {/* Profile Header */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Profile Name</p>
-                      <p className="text-lg font-bold text-gray-900 dark:text-white">
+                      <p className="text-xs font-medium text-text-secondary">Profile Name</p>
+                      <p className="text-lg font-bold text-text-primary">
                         {currentProfile.profileName}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Adaptation Score</p>
+                      <p className="text-xs font-medium text-text-secondary">Adaptation Score</p>
                       <p className="text-lg font-bold text-blue-600 dark:text-blue-400">
                         {currentProfile.adaptationScore}/100
                       </p>
@@ -230,41 +230,41 @@ export default function OptimizerPage() {
 
                   {/* Resource Estimates */}
                   <div className="grid grid-cols-2 gap-3">
-                    <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded">
-                      <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Cost Estimate</p>
-                      <p className="text-lg font-bold text-gray-900 dark:text-white">
+                    <div className="p-3 bg-bg-raised rounded">
+                      <p className="text-xs font-medium text-text-secondary">Cost Estimate</p>
+                      <p className="text-lg font-bold text-text-primary">
                         ${currentProfile.resourceCostEstimate.toFixed(4)}
                       </p>
                     </div>
-                    <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded">
-                      <p className="text-xs font-medium text-gray-600 dark:text-gray-400">Duration Est.</p>
-                      <p className="text-lg font-bold text-gray-900 dark:text-white">
+                    <div className="p-3 bg-bg-raised rounded">
+                      <p className="text-xs font-medium text-text-secondary">Duration Est.</p>
+                      <p className="text-lg font-bold text-text-primary">
                         {Math.round(currentProfile.resourceDurationEstimate)}ms
                       </p>
                     </div>
                   </div>
 
                   {/* Adaptations Applied */}
-                  <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-                    <p className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Adaptations Applied</p>
+                  <div className="border-t border-border-subtle pt-4">
+                    <p className="text-sm font-semibold text-text-primary mb-3">Adaptations Applied</p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
-                      <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded">
-                        <p className="text-gray-600 dark:text-gray-400">Parallelism</p>
-                        <p className="font-semibold text-gray-900 dark:text-white">
+                      <div className="p-2 bg-bg-raised rounded">
+                        <p className="text-text-secondary">Parallelism</p>
+                        <p className="font-semibold text-text-primary">
                           {currentProfile.adaptations.parallelismReduction > 0 ? '+' : ''}
                           {currentProfile.adaptations.parallelismReduction}%
                         </p>
                       </div>
-                      <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded">
-                        <p className="text-gray-600 dark:text-gray-400">Reasoning Tokens</p>
-                        <p className="font-semibold text-gray-900 dark:text-white">
+                      <div className="p-2 bg-bg-raised rounded">
+                        <p className="text-text-secondary">Reasoning Tokens</p>
+                        <p className="font-semibold text-text-primary">
                           {currentProfile.adaptations.reasoningTokenReduction > 0 ? '+' : ''}
                           {currentProfile.adaptations.reasoningTokenReduction}%
                         </p>
                       </div>
-                      <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded">
-                        <p className="text-gray-600 dark:text-gray-400">Context Size</p>
-                        <p className="font-semibold text-gray-900 dark:text-white">
+                      <div className="p-2 bg-bg-raised rounded">
+                        <p className="text-text-secondary">Context Size</p>
+                        <p className="font-semibold text-text-primary">
                           {currentProfile.adaptations.contextSizeReduction > 0 ? '+' : ''}
                           {currentProfile.adaptations.contextSizeReduction}%
                         </p>
@@ -274,11 +274,11 @@ export default function OptimizerPage() {
 
                   {/* Explainability */}
                   {currentProfile.explainabilityNotes && (
-                    <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-                      <p className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                    <div className="border-t border-border-subtle pt-4">
+                      <p className="text-sm font-semibold text-text-primary mb-2">
                         Explanation
                       </p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400 whitespace-pre-wrap">
+                      <p className="text-xs text-text-secondary whitespace-pre-wrap">
                         {currentProfile.explainabilityNotes}
                       </p>
                     </div>
@@ -289,7 +289,7 @@ export default function OptimizerPage() {
 
             {/* Optimized Steps Preview */}
             {lastRun && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+              <div className="bg-bg-card rounded-lg border border-border-subtle p-6 shadow-sm">
                 <OptimizedStepPreview
                   selectedAgents={lastRun.selectedAgents}
                   parallelismLevel={lastRun.parallelismLevel}
@@ -301,7 +301,7 @@ export default function OptimizerPage() {
 
             {/* Profile History Timeline */}
             {profileHistory.length > 0 && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+              <div className="bg-bg-card rounded-lg border border-border-subtle p-6 shadow-sm">
                 <AdaptationTimeline history={profileHistory} loading={loading} />
               </div>
             )}
@@ -311,10 +311,10 @@ export default function OptimizerPage() {
         {/* Loading State */}
         {loading && (
           <div className="fixed inset-0 bg-black/20 dark:bg-black/40 flex items-center justify-center">
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
+            <div className="bg-bg-card rounded-lg p-6 shadow-lg">
               <div className="flex items-center gap-3">
                 <RefreshCw className="w-5 h-5 animate-spin text-blue-600 dark:text-blue-400" />
-                <span className="text-gray-900 dark:text-white">Loading optimizer data...</span>
+                <span className="text-text-primary">Loading optimizer data...</span>
               </div>
             </div>
           </div>

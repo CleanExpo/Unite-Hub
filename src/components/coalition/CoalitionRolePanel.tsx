@@ -34,7 +34,7 @@ export function CoalitionRolePanel({ workspaceId }: CoalitionRolePanelProps) {
       <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-900">
         <div className="text-center py-8">
           <Users className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-          <p className="text-gray-500 dark:text-gray-400">
+          <p className="text-text-secondary">
             No active coalition roles. Roles will appear when a coalition forms.
           </p>
         </div>
@@ -57,12 +57,12 @@ export function CoalitionRolePanel({ workspaceId }: CoalitionRolePanelProps) {
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
+                  <p className="text-xs text-text-secondary mb-1">
                     {formatRole(roleType)}
                   </p>
                   {assignment && member ? (
                     <>
-                      <p className="font-semibold text-gray-900 dark:text-white truncate">
+                      <p className="font-semibold text-text-primary truncate">
                         {member.agentId}
                       </p>
                       <div className="flex items-center gap-2 mt-2">
@@ -74,19 +74,19 @@ export function CoalitionRolePanel({ workspaceId }: CoalitionRolePanelProps) {
                         )}
                       </div>
                       <div className="mt-3 space-y-2 text-xs">
-                        <div className="flex justify-between text-gray-600 dark:text-gray-400">
+                        <div className="flex justify-between text-text-secondary">
                           <span>Capability Match</span>
                           <span className="font-medium">
                             {formatPercentage(member.capabilityMatch)}
                           </span>
                         </div>
-                        <div className="flex justify-between text-gray-600 dark:text-gray-400">
+                        <div className="flex justify-between text-text-secondary">
                           <span>Success Rate</span>
                           <span className="font-medium">
                             {formatPercentage(member.successRate)}
                           </span>
                         </div>
-                        <div className="flex justify-between text-gray-600 dark:text-gray-400">
+                        <div className="flex justify-between text-text-secondary">
                           <span>Role Score</span>
                           <span className="font-medium">
                             {formatPercentage(assignment.allocationScore)}
@@ -95,7 +95,7 @@ export function CoalitionRolePanel({ workspaceId }: CoalitionRolePanelProps) {
                       </div>
                     </>
                   ) : (
-                    <p className="text-sm text-gray-500 dark:text-gray-400 italic">
+                    <p className="text-sm text-text-secondary italic">
                       Unassigned
                     </p>
                   )}
@@ -128,17 +128,17 @@ export function CoalitionRolePanel({ workspaceId }: CoalitionRolePanelProps) {
       {/* All Members Detail */}
       <div className="rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900">
         <div className="border-b border-gray-200 bg-gray-50 px-6 py-3 dark:border-gray-700 dark:bg-gray-800">
-          <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+          <h3 className="text-sm font-semibold text-text-primary">
             Coalition Members
           </h3>
         </div>
 
-        <div className="divide-y divide-gray-200 dark:divide-gray-700">
+        <div className="divide-y divide-border-subtle">
           {coalitionMembers.map((member) => (
             <div key={member.agentId} className="p-4">
               <div className="flex items-start justify-between gap-4 mb-3">
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-gray-900 dark:text-white truncate">
+                  <p className="font-medium text-text-primary truncate">
                     {member.agentId}
                   </p>
                   <div className="flex items-center gap-2 mt-1">
@@ -146,7 +146,7 @@ export function CoalitionRolePanel({ workspaceId }: CoalitionRolePanelProps) {
                       {formatRole(member.primaryRole)}
                     </Badge>
                     {member.secondaryRoles.length > 0 && (
-                      <span className="text-xs text-gray-600 dark:text-gray-400">
+                      <span className="text-xs text-text-secondary">
                         +{member.secondaryRoles.length} secondary
                       </span>
                     )}
@@ -156,8 +156,8 @@ export function CoalitionRolePanel({ workspaceId }: CoalitionRolePanelProps) {
                   </div>
                 </div>
                 <div className="text-right shrink-0">
-                  <p className="text-xs text-gray-600 dark:text-gray-400">Capability</p>
-                  <p className="text-lg font-bold text-gray-900 dark:text-white">
+                  <p className="text-xs text-text-secondary">Capability</p>
+                  <p className="text-lg font-bold text-text-primary">
                     {formatPercentage(member.capabilityMatch)}
                   </p>
                 </div>
@@ -165,13 +165,13 @@ export function CoalitionRolePanel({ workspaceId }: CoalitionRolePanelProps) {
 
               <div className="grid grid-cols-2 gap-3 text-xs">
                 <div className="bg-gray-50 p-2 rounded dark:bg-gray-800">
-                  <p className="text-gray-600 dark:text-gray-400">Success Rate</p>
-                  <p className="font-semibold text-gray-900 dark:text-white">
+                  <p className="text-text-secondary">Success Rate</p>
+                  <p className="font-semibold text-text-primary">
                     {formatPercentage(member.successRate)}
                   </p>
                 </div>
                 <div className="bg-gray-50 p-2 rounded dark:bg-gray-800">
-                  <p className="text-gray-600 dark:text-gray-400">Status</p>
+                  <p className="text-text-secondary">Status</p>
                   <p className={`font-semibold ${member.status === 'active' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                     {member.status}
                   </p>

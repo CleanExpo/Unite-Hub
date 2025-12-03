@@ -52,7 +52,7 @@ export function ReviewPackCard({ pack, onClick }: ReviewPackCardProps) {
       <CardContent>
         <div className="space-y-3">
           {/* Period */}
-          <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+          <div className="flex items-center gap-2 text-sm text-text-secondary">
             <Calendar className="w-4 h-4" />
             <span>
               {formatDate(pack.startDate)} - {formatDate(pack.endDate)}

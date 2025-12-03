@@ -106,11 +106,11 @@ export default function DomainHealthGrid({
         {[...Array(13)].map((_, i) => (
           <Card key={i} className="animate-pulse">
             <CardHeader className="pb-3">
-              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+              <div className="h-4 bg-bg-hover rounded w-3/4"></div>
             </CardHeader>
             <CardContent>
-              <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mb-2"></div>
-              <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-full"></div>
+              <div className="h-8 bg-bg-hover rounded w-1/2 mb-2"></div>
+              <div className="h-3 bg-bg-hover rounded w-full"></div>
             </CardContent>
           </Card>
         ))}
@@ -127,7 +127,7 @@ export default function DomainHealthGrid({
             <AlertCircle className="w-5 h-5 mt-0.5" />
             <div>
               <p className="font-semibold">Error Loading Domains</p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{error}</p>
+              <p className="text-sm text-text-secondary">{error}</p>
             </div>
           </div>
         </CardContent>
@@ -143,7 +143,7 @@ export default function DomainHealthGrid({
           <div className="flex flex-col items-center justify-center text-center">
             <Brain className="w-12 h-12 text-gray-400 mb-3" />
             <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">No Domains Yet</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            <p className="text-sm text-text-secondary mt-1">
               Domain health data will appear here once your Cognitive Twin starts tracking.
             </p>
           </div>
@@ -252,7 +252,7 @@ export default function DomainHealthGrid({
                 </Badge>
 
                 {/* Meta Info */}
-                <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+                <div className="flex items-center justify-between mt-3 pt-3 border-t border-border-subtle">
                   <span className="text-xs text-gray-500">
                     {new Date(domain.last_updated).toLocaleDateString()}
                   </span>

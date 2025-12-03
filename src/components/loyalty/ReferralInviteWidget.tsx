@@ -130,7 +130,7 @@ export function ReferralInviteWidget({
             {codes.map((code) => (
               <div
                 key={code.id}
-                className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 flex items-center justify-between"
+                className="bg-bg-raised rounded-lg p-4 flex items-center justify-between"
               >
                 <div className="flex-1">
                   <p className="font-mono font-bold text-teal-600 dark:text-teal-400">

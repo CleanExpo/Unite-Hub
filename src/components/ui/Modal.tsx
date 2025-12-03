@@ -80,11 +80,11 @@ export default function Modal({
 
       {/* Modal */}
       <div
-        className={`relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl ${sizeClasses[size]} w-full max-h-[90vh] overflow-y-auto animate-scaleIn`}
+        className={`relative bg-bg-card rounded-2xl shadow-2xl ${sizeClasses[size]} w-full max-h-[90vh] overflow-y-auto animate-scaleIn`}
       >
         {/* Header */}
         {(title || showCloseButton) && (
-          <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-between p-6 border-b border-border-subtle">
             {title && (
               <h2
                 id="modal-title"
@@ -96,7 +96,7 @@ export default function Modal({
             {showCloseButton && (
               <button
                 onClick={onClose}
-                className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-lg hover:bg-bg-hover transition-colors"
                 aria-label="Close modal"
               >
                 <svg
@@ -134,7 +134,7 @@ export default function Modal({
  */
 export function ModalFooter({ children, className = '' }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={`flex items-center justify-end gap-3 pt-6 border-t border-gray-200 dark:border-gray-700 ${className}`}>
+    <div className={`flex items-center justify-end gap-3 pt-6 border-t border-border-subtle ${className}`}>
       {children}
     </div>
   );

@@ -265,7 +265,7 @@ export default function AIDOOnboardingPage() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">AIDO Client Onboarding</h1>
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className="text-text-secondary">
           AI-powered discovery to understand your business, expertise, and audience
         </p>
       </div>
@@ -296,12 +296,12 @@ export default function AIDOOnboardingPage() {
                     className={`text-sm font-medium ${
                       currentStep === step.id
                         ? 'text-blue-600 dark:text-blue-400'
-                        : 'text-gray-600 dark:text-gray-400'
+                        : 'text-text-secondary'
                     }`}
                   >
                     {step.title}
                   </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-500">{step.description}</p>
+                  <p className="text-xs text-text-muted">{step.description}</p>
                 </div>
               </div>
               {idx < steps.length - 1 && (
@@ -562,7 +562,7 @@ export default function AIDOOnboardingPage() {
                             <Badge className="bg-green-100 text-green-800">Connected</Badge>
                           )}
                         </div>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                        <p className="text-sm text-text-secondary mb-2">
                           See what your customers are actually searching for
                         </p>
                         <ul className="text-xs text-gray-500 space-y-1">
@@ -593,7 +593,7 @@ export default function AIDOOnboardingPage() {
                             <Badge className="bg-green-100 text-green-800">Connected</Badge>
                           )}
                         </div>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                        <p className="text-sm text-text-secondary mb-2">
                           Understand local search behavior and customer questions
                         </p>
                         <ul className="text-xs text-gray-500 space-y-1">
@@ -624,7 +624,7 @@ export default function AIDOOnboardingPage() {
                             <Badge className="bg-green-100 text-green-800">Connected</Badge>
                           )}
                         </div>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                        <p className="text-sm text-text-secondary mb-2">
                           Learn who your audience is and what they care about
                         </p>
                         <ul className="text-xs text-gray-500 space-y-1">
@@ -656,7 +656,7 @@ export default function AIDOOnboardingPage() {
           )}
 
           {/* Navigation Buttons */}
-          <div className="flex items-center justify-between pt-6 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-between pt-6 border-t border-border-subtle">
             <Button variant="outline" onClick={handleBack} disabled={currentStep === 1}>
               Back
             </Button>

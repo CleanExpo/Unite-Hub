@@ -47,7 +47,7 @@ const getMemoryTypeColor = (type: string) => {
     signal: 'bg-red-100 dark:bg-red-950 text-red-800 dark:text-red-200',
     reasoning_trace: 'bg-indigo-100 dark:bg-indigo-950 text-indigo-800 dark:text-indigo-200',
   };
-  return colors[type] || 'bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200';
+  return colors[type] || 'bg-bg-raised text-text-primary';
 };
 
 export function MemoryDetailModal({
@@ -100,14 +100,14 @@ export function MemoryDetailModal({
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-950">
+        <div className="flex items-center justify-between p-6 border-b border-border-subtle sticky top-0 bg-white dark:bg-gray-950">
           <div>
             <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
               <Badge className={getMemoryTypeColor(memory.memoryType)}>
                 {memory.memoryType}
               </Badge>
             </h2>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+            <p className="text-sm text-text-secondary mt-1">
               ID: <span className="font-mono">{memory.id.substring(0, 16)}...</span>
             </p>
           </div>
@@ -123,20 +123,20 @@ export function MemoryDetailModal({
         <CardContent className="p-6 space-y-6">
           {/* Scores Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded">
-              <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Recall Priority</p>
+            <div className="p-3 bg-bg-raised rounded">
+              <p className="text-xs text-text-secondary mb-1">Recall Priority</p>
               <p className="text-2xl font-bold text-blue-600">{memory.recallPriority}</p>
             </div>
-            <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded">
-              <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Importance</p>
+            <div className="p-3 bg-bg-raised rounded">
+              <p className="text-xs text-text-secondary mb-1">Importance</p>
               <p className="text-2xl font-bold text-amber-600">{memory.importance}</p>
             </div>
-            <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded">
-              <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Confidence</p>
+            <div className="p-3 bg-bg-raised rounded">
+              <p className="text-xs text-text-secondary mb-1">Confidence</p>
               <p className="text-2xl font-bold text-green-600">{memory.confidence}</p>
             </div>
-            <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded">
-              <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Age</p>
+            <div className="p-3 bg-bg-raised rounded">
+              <p className="text-xs text-text-secondary mb-1">Age</p>
               <p className="text-2xl font-bold text-purple-600">{ageDays}d</p>
             </div>
           </div>
@@ -146,21 +146,21 @@ export function MemoryDetailModal({
             <h3 className="font-semibold text-sm text-gray-900 dark:text-gray-100">Metadata</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
               <div>
-                <p className="text-gray-600 dark:text-gray-400">Source</p>
+                <p className="text-text-secondary">Source</p>
                 <p className="font-medium text-gray-900 dark:text-gray-100">{memory.source || 'N/A'}</p>
               </div>
               <div>
-                <p className="text-gray-600 dark:text-gray-400">Agent</p>
+                <p className="text-text-secondary">Agent</p>
                 <p className="font-medium text-gray-900 dark:text-gray-100">{memory.agent || 'N/A'}</p>
               </div>
               <div>
-                <p className="text-gray-600 dark:text-gray-400">Created</p>
+                <p className="text-text-secondary">Created</p>
                 <p className="font-medium text-gray-900 dark:text-gray-100 font-mono text-xs">
                   {createdDate.toLocaleString()}
                 </p>
               </div>
               <div>
-                <p className="text-gray-600 dark:text-gray-400">Updated</p>
+                <p className="text-text-secondary">Updated</p>
                 <p className="font-medium text-gray-900 dark:text-gray-100 font-mono text-xs">
                   {updatedDate.toLocaleString()}
                 </p>
@@ -194,7 +194,7 @@ export function MemoryDetailModal({
           {/* Content */}
           <div className="space-y-2">
             <h3 className="font-semibold text-sm text-gray-900 dark:text-gray-100">Content</h3>
-            <pre className="bg-gray-100 dark:bg-gray-900 p-3 rounded text-xs overflow-auto max-h-48 text-gray-700 dark:text-gray-300">
+            <pre className="bg-bg-raised p-3 rounded text-xs overflow-auto max-h-48 text-text-secondary">
               {JSON.stringify(memory.content, null, 2)}
             </pre>
           </div>
@@ -218,18 +218,18 @@ export function MemoryDetailModal({
           )}
 
           {/* Redaction Section */}
-          <div className="space-y-3 border-t border-gray-200 dark:border-gray-700 pt-4">
+          <div className="space-y-3 border-t border-border-subtle pt-4">
             <h3 className="font-semibold text-sm text-gray-900 dark:text-gray-100">
               Redact Memory
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-text-secondary">
               Mark this memory as redacted for compliance. The memory will be excluded from retrieval.
             </p>
             <textarea
               value={redactionReason}
               onChange={(e) => setRedactionReason(e.target.value)}
               placeholder="Reason for redaction (e.g., GDPR data deletion, compliance requirement)..."
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
+              className="w-full px-3 py-2 border border-border-base rounded-md bg-bg-card text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
               rows={3}
               disabled={isRedacting}
             />
@@ -245,7 +245,7 @@ export function MemoryDetailModal({
           </div>
 
           {/* Utility Buttons */}
-          <div className="flex gap-2 pt-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex gap-2 pt-4 border-t border-border-subtle">
             <Button
               onClick={handleCopyId}
               variant="outline"

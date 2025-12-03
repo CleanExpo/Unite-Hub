@@ -5,6 +5,53 @@ description: Handles frontend/UX/route work for Unite-Hub. Fixes UI bugs, implem
 
 # Frontend Agent Skill
 
+## ⚠️ PRE-GENERATION CHECKLIST (MANDATORY)
+
+Before creating ANY UI component, complete this checklist:
+
+```yaml
+PRE_GENERATION_CHECKLIST:
+  1. READ_DESIGN_SYSTEM:
+     - [ ] Read /DESIGN-SYSTEM.md for forbidden patterns
+     - [ ] Check /src/app/globals.css @theme block for tokens
+     - [ ] Note: accent-500 = #ff6b35 (orange)
+
+  2. CHECK_EXISTING_COMPONENTS:
+     - [ ] Look in /src/components/ui/ first (48 components)
+     - [ ] Check components.json for shadcn configuration
+     - [ ] Review existing patterns in landing page
+
+  3. REFERENCE_UI_LIBRARIES:
+     - [ ] See /docs/UI-LIBRARY-INDEX.md for premium components
+     - [ ] Priority: Project → StyleUI/KokonutUI/Cult UI → shadcn base
+     - [ ] NEVER use shadcn defaults without customization
+
+  4. VERIFY_NO_FORBIDDEN_PATTERNS:
+     - [ ] No bg-white, text-gray-600, or generic hover states
+     - [ ] No uniform grid-cols-3 gap-4 layouts
+     - [ ] No unstyled <Card className="p-6">
+     - [ ] No icons without brand colors
+```
+
+**FORBIDDEN CODE PATTERNS**:
+```typescript
+// ❌ NEVER GENERATE THESE
+className="bg-white rounded-lg shadow p-4"     // Generic card
+className="grid grid-cols-3 gap-4"              // Uniform grid
+className="text-gray-600"                        // Default muted
+className="hover:bg-gray-100"                    // Generic hover
+<Card className="p-6">                           // Unstyled shadcn
+```
+
+**REQUIRED PATTERNS**:
+```typescript
+// ✅ ALWAYS USE DESIGN TOKENS
+className="bg-bg-card border border-border-base hover:border-accent-500"
+className="text-text-primary"
+className="text-text-secondary"
+className="bg-accent-500 hover:bg-accent-400"
+```
+
 ## Overview
 
 The Frontend Agent is responsible for all UI/UX work in the Unite-Hub Next.js application:

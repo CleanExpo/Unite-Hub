@@ -86,9 +86,9 @@ export function TrialUpgradePrompt({
       <div className="flex gap-3">
         {getUrgencyIcon()}
         <div className="flex-1">
-          <p className="font-semibold text-gray-900 dark:text-white">{message}</p>
+          <p className="font-semibold text-text-primary">{message}</p>
           {reason && (
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+            <p className="text-sm text-text-secondary mt-1">
               <strong>Reason:</strong> {reason}
             </p>
           )}
@@ -100,7 +100,7 @@ export function TrialUpgradePrompt({
         <p className="text-sm font-semibold">Your Trial Usage</p>
         <div className="grid grid-cols-3 gap-2 text-xs">
           <div>
-            <p className="text-gray-600 dark:text-gray-400">AI Tokens</p>
+            <p className="text-text-secondary">AI Tokens</p>
             <p className="font-bold">
               {trialState.aiTokens.percentUsed > 100
                 ? `${trialState.aiTokens.percentUsed}%`
@@ -108,13 +108,13 @@ export function TrialUpgradePrompt({
             </p>
           </div>
           <div>
-            <p className="text-gray-600 dark:text-gray-400">VIF Visuals</p>
+            <p className="text-text-secondary">VIF Visuals</p>
             <p className="font-bold">
               {trialState.vifGenerations.used} / {trialState.vifGenerations.cap}
             </p>
           </div>
           <div>
-            <p className="text-gray-600 dark:text-gray-400">Blueprints</p>
+            <p className="text-text-secondary">Blueprints</p>
             <p className="font-bold">
               {trialState.blueprints.created} / {trialState.blueprints.cap}
             </p>
@@ -154,7 +154,7 @@ export function TrialUpgradePrompt({
       </div>
 
       {/* Trial Info */}
-      <div className="bg-gray-100 dark:bg-slate-800 rounded p-2 text-xs text-gray-700 dark:text-gray-300">
+      <div className="bg-gray-100 dark:bg-slate-800 rounded p-2 text-xs text-text-secondary">
         <p>
           <strong>No hidden fees.</strong> Trial ends in {trialState.daysRemaining} day
           {trialState.daysRemaining !== 1 ? 's' : ''}. Upgrade anytime during or after trial. No credit

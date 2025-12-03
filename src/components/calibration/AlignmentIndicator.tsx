@@ -42,13 +42,13 @@ export const AlignmentIndicator: React.FC<AlignmentIndicatorProps> = ({
     <div className={`rounded-lg border p-4 ${getHealthBg(systemHealthScore)} space-y-4`}>
       <div className="flex items-center gap-2">
         <Activity className={`w-5 h-5 ${getHealthColor(systemHealthScore)}`} />
-        <h3 className="font-semibold text-gray-900 dark:text-white">System Alignment</h3>
+        <h3 className="font-semibold text-text-primary">System Alignment</h3>
       </div>
 
       {/* Health Score */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          <span className="text-sm font-medium text-text-secondary">
             System Health
           </span>
           <span className={`text-2xl font-bold ${getHealthColor(systemHealthScore)}`}>
@@ -75,10 +75,10 @@ export const AlignmentIndicator: React.FC<AlignmentIndicatorProps> = ({
       {/* Confidence Score */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          <span className="text-sm font-medium text-text-secondary">
             Calibration Confidence
           </span>
-          <span className="text-lg font-bold text-gray-900 dark:text-white">
+          <span className="text-lg font-bold text-text-primary">
             {overallConfidence}%
           </span>
         </div>
@@ -94,7 +94,7 @@ export const AlignmentIndicator: React.FC<AlignmentIndicatorProps> = ({
       {issuesDetected > 0 && (
         <div className="flex items-center gap-2 p-2 bg-white/50 dark:bg-gray-900/50 rounded">
           <AlertCircle className="w-4 h-4 text-orange-600 dark:text-orange-400 flex-shrink-0" />
-          <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
+          <span className="text-xs font-medium text-text-secondary">
             {issuesDetected} issue{issuesDetected !== 1 ? 's' : ''} detected
           </span>
         </div>
@@ -102,7 +102,7 @@ export const AlignmentIndicator: React.FC<AlignmentIndicatorProps> = ({
 
       {/* Last Calibration */}
       {lastCalibration && (
-        <div className="text-xs text-gray-600 dark:text-gray-400 pt-2 border-t border-gray-300 dark:border-gray-700/50">
+        <div className="text-xs text-text-secondary pt-2 border-t border-border-base/50">
           Last calibration: {new Date(lastCalibration).toLocaleString()}
         </div>
       )}

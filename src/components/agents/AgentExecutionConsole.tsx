@@ -39,11 +39,11 @@ const getStatusBadgeColor = (status: string) => {
     case 'failed':
       return 'bg-red-100 dark:bg-red-950 text-red-800 dark:text-red-200';
     case 'pending':
-      return 'bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200';
+      return 'bg-bg-raised text-text-primary';
     case 'skipped':
       return 'bg-orange-100 dark:bg-orange-950 text-orange-800 dark:text-orange-200';
     default:
-      return 'bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200';
+      return 'bg-bg-raised text-text-primary';
   }
 };
 
@@ -172,23 +172,23 @@ export function AgentExecutionConsole({
       <CardContent className="space-y-4">
         {/* Summary Statistics */}
         {summary && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-gray-50 dark:bg-gray-900 rounded">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-bg-raised rounded">
             <div>
-              <p className="text-xs font-semibold text-gray-600 dark:text-gray-400">Total Steps</p>
+              <p className="text-xs font-semibold text-text-secondary">Total Steps</p>
               <p className="text-lg font-bold text-gray-900 dark:text-gray-100">
                 {summary.total_steps}
               </p>
             </div>
             <div>
-              <p className="text-xs font-semibold text-gray-600 dark:text-gray-400">Completed</p>
+              <p className="text-xs font-semibold text-text-secondary">Completed</p>
               <p className="text-lg font-bold text-green-600">{summary.completed_steps}</p>
             </div>
             <div>
-              <p className="text-xs font-semibold text-gray-600 dark:text-gray-400">Failed</p>
+              <p className="text-xs font-semibold text-text-secondary">Failed</p>
               <p className="text-lg font-bold text-red-600">{summary.failed_steps}</p>
             </div>
             <div>
-              <p className="text-xs font-semibold text-gray-600 dark:text-gray-400">Success Rate</p>
+              <p className="text-xs font-semibold text-text-secondary">Success Rate</p>
               <p className="text-lg font-bold text-blue-600">{summary.success_rate}</p>
             </div>
           </div>
@@ -197,14 +197,14 @@ export function AgentExecutionConsole({
         {/* Execution Steps */}
         <div className="space-y-2 max-h-96 overflow-y-auto font-mono text-sm">
           {steps.length === 0 ? (
-            <p className="text-gray-600 dark:text-gray-400 text-center py-8">
+            <p className="text-text-secondary text-center py-8">
               No steps to display. Fetching...
             </p>
           ) : (
             steps.map((step) => (
               <div
                 key={step.step_number}
-                className="border border-gray-200 dark:border-gray-700 rounded p-3 bg-gray-50 dark:bg-gray-900"
+                className="border border-border-subtle rounded p-3 bg-bg-raised"
               >
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-semibold">Step {step.step_number}: {step.action_type}</span>
@@ -213,7 +213,7 @@ export function AgentExecutionConsole({
                   </Badge>
                 </div>
 
-                <div className="space-y-1 text-xs text-gray-700 dark:text-gray-300">
+                <div className="space-y-1 text-xs text-text-secondary">
                   <div>
                     <span className="font-semibold">Promised:</span> {step.promised_outcome}
                   </div>
@@ -239,7 +239,7 @@ export function AgentExecutionConsole({
         </div>
 
         {isLoading && (
-          <div className="text-center text-sm text-gray-600 dark:text-gray-400">
+          <div className="text-center text-sm text-text-secondary">
             Updating...
           </div>
         )}

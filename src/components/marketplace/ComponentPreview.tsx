@@ -62,7 +62,7 @@ export default function ComponentPreview({
         <DialogHeader>
           <div className="space-y-2">
             <DialogTitle className="text-2xl">{component.name}</DialogTitle>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-text-secondary">
               {component.description}
             </p>
             <div className="flex flex-wrap gap-2">
@@ -97,7 +97,7 @@ export default function ComponentPreview({
           {/* Preview Tab */}
           <TabsContent value="preview" className="space-y-4">
             <div className="space-y-3">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="text-sm font-medium text-text-secondary">
                 Accent Color
               </label>
               <div className="flex items-center gap-3">
@@ -105,16 +105,16 @@ export default function ComponentPreview({
                   type="color"
                   value={accentColor}
                   onChange={(e) => setAccentColor(e.target.value)}
-                  className="w-12 h-12 rounded-lg cursor-pointer border border-gray-200 dark:border-gray-700"
+                  className="w-12 h-12 rounded-lg cursor-pointer border border-border-subtle"
                 />
-                <span className="text-sm text-gray-500 dark:text-gray-400">
+                <span className="text-sm text-text-secondary">
                   {accentColor}
                 </span>
               </div>
             </div>
 
-            <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-gray-50 dark:bg-slate-900 min-h-64">
-              <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-24">
+            <div className="border border-border-subtle rounded-lg p-4 bg-gray-50 dark:bg-slate-900 min-h-64">
+              <p className="text-sm text-text-secondary text-center py-24">
                 Live preview would render here
               </p>
             </div>
@@ -124,7 +124,7 @@ export default function ComponentPreview({
           <TabsContent value="code" className="space-y-4">
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                <h4 className="text-sm font-medium text-text-secondary">
                   Component Code
                 </h4>
                 <Button
@@ -144,8 +144,8 @@ export default function ComponentPreview({
                 </pre>
               </div>
 
-              <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-                <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+              <div className="pt-4 border-t border-border-subtle">
+                <h4 className="text-sm font-medium text-text-secondary mb-3">
                   Export Code
                 </h4>
                 <div className="flex flex-wrap gap-2">
@@ -185,29 +185,29 @@ export default function ComponentPreview({
           <TabsContent value="details" className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label className="text-sm font-medium text-text-secondary">
                   Category
                 </label>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className="text-sm text-text-secondary">
                   {component.category}
                 </p>
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label className="text-sm font-medium text-text-secondary">
                   Style Tag
                 </label>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className="text-sm text-text-secondary">
                   {component.style_tag}
                 </p>
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label className="text-sm font-medium text-text-secondary">
                   Accessibility Score
                 </label>
                 <div className="flex items-center gap-2">
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                  <div className="w-full bg-bg-hover rounded-full h-2">
                     <div
                       className="bg-green-500 h-2 rounded-full"
                       style={{ width: `${component.accessibility_score}%` }}
@@ -220,11 +220,11 @@ export default function ComponentPreview({
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label className="text-sm font-medium text-text-secondary">
                   Performance Score
                 </label>
                 <div className="flex items-center gap-2">
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                  <div className="w-full bg-bg-hover rounded-full h-2">
                     <div
                       className="bg-blue-500 h-2 rounded-full"
                       style={{ width: `${component.performance_score}%` }}
@@ -237,16 +237,16 @@ export default function ComponentPreview({
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label className="text-sm font-medium text-text-secondary">
                   Tailwind Classes
                 </label>
-                <p className="text-xs text-gray-600 dark:text-gray-400 break-words">
+                <p className="text-xs text-text-secondary break-words">
                   {component.tailwind_classes}
                 </p>
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label className="text-sm font-medium text-text-secondary">
                   Features
                 </label>
                 <div className="flex gap-2">

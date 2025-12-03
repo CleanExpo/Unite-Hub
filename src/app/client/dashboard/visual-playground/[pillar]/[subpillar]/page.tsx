@@ -34,9 +34,9 @@ export default function SubPillarPage() {
 
   if (!pillar || !subPillar) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-bg-raised flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-500 dark:text-gray-400">Content not found</p>
+          <p className="text-text-secondary">Content not found</p>
           <button
             onClick={() => router.push("/client/dashboard/visual-playground")}
             className="mt-4 text-teal-600 hover:text-teal-700"
@@ -77,7 +77,7 @@ Remember: This is a starting point for exploration, not a final deliverable.`,
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-bg-raised">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back Button */}
         <button
@@ -94,11 +94,11 @@ Remember: This is a starting point for exploration, not a final deliverable.`,
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
             <Sparkles className="w-8 h-8 text-teal-600" />
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-2xl font-bold text-text-primary">
               {subPillar.title}
             </h1>
           </div>
-          <p className="text-gray-500 dark:text-gray-400">
+          <p className="text-text-secondary">
             {subPillar.description}
           </p>
         </div>
@@ -142,20 +142,20 @@ Remember: This is a starting point for exploration, not a final deliverable.`,
         {/* Generated Concepts */}
         {concepts.length > 0 && (
           <div className="space-y-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+            <h2 className="text-lg font-semibold text-text-primary">
               Generated Concepts
             </h2>
 
             {concepts.map((concept) => (
               <div
                 key={concept.id}
-                className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6"
+                className="bg-bg-card rounded-lg border border-border-subtle p-6"
               >
                 <div className="flex items-start justify-between mb-4">
-                  <h3 className="font-medium text-gray-900 dark:text-white">
+                  <h3 className="font-medium text-text-primary">
                     {concept.title}
                   </h3>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                  <span className="text-xs text-text-secondary">
                     {concept.generatedBy}
                   </span>
                 </div>
@@ -177,9 +177,9 @@ Remember: This is a starting point for exploration, not a final deliverable.`,
 
         {/* Empty State */}
         {concepts.length === 0 && !generating && (
-          <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-            <Sparkles className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-500 dark:text-gray-400">
+          <div className="text-center py-12 bg-bg-card rounded-lg border border-border-subtle">
+            <Sparkles className="w-12 h-12 text-text-muted mx-auto mb-4" />
+            <p className="text-text-secondary">
               Click &quot;Generate Concept Preview&quot; to create AI-generated ideas
             </p>
           </div>

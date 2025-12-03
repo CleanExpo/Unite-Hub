@@ -168,8 +168,8 @@ export default function NegotiationDashboardPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Agent Negotiation & Arbitration</h1>
-          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+          <h1 className="text-3xl font-bold text-text-primary">Agent Negotiation & Arbitration</h1>
+          <p className="text-sm text-text-secondary mt-1">
             Monitor multi-agent negotiations, consensus scoring, and arbitration decisions
           </p>
         </div>
@@ -186,7 +186,7 @@ export default function NegotiationDashboardPage() {
 
           <button
             onClick={() => setShowControls(!showControls)}
-            className="inline-flex items-center gap-2 px-3 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg transition-colors"
+            className="inline-flex items-center gap-2 px-3 py-2 bg-bg-hover hover:bg-gray-300 dark:hover:bg-gray-600 text-text-primary rounded-lg transition-colors"
           >
             <Settings className="w-4 h-4" />
             Controls
@@ -233,7 +233,7 @@ export default function NegotiationDashboardPage() {
             {currentDecision && currentDecision.riskScore >= 80 && (
               <button
                 disabled
-                className="w-full px-4 py-2 bg-gray-300 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded text-sm font-medium cursor-not-allowed"
+                className="w-full px-4 py-2 bg-gray-300 dark:bg-gray-700 text-text-secondary rounded text-sm font-medium cursor-not-allowed"
               >
                 Decision Locked (Risk ≥ 80 - Safety Override)
               </button>
@@ -250,7 +250,7 @@ export default function NegotiationDashboardPage() {
       )}
 
       {/* Tabs */}
-      <div className="border-b border-gray-200 dark:border-gray-700">
+      <div className="border-b border-border-subtle">
         <div className="flex gap-8 overflow-x-auto">
           {tabs.map((tab) => (
             <button
@@ -259,12 +259,12 @@ export default function NegotiationDashboardPage() {
               className={`px-4 py-3 font-medium text-sm whitespace-nowrap border-b-2 transition-colors ${
                 activeTab === tab.id
                   ? 'border-blue-600 text-blue-600 dark:text-blue-400'
-                  : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                  : 'border-transparent text-text-secondary hover:text-gray-900 dark:hover:text-gray-200'
               }`}
             >
               {tab.label}
               {tab.count !== undefined && (
-                <span className="ml-2 inline-flex items-center justify-center w-5 h-5 text-xs font-semibold bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white rounded-full">
+                <span className="ml-2 inline-flex items-center justify-center w-5 h-5 text-xs font-semibold bg-bg-hover text-text-primary rounded-full">
                   {tab.count}
                 </span>
               )}
@@ -298,7 +298,7 @@ export default function NegotiationDashboardPage() {
                 <ProposalMatrix proposals={currentProposals} loading={isLoadingDetails} />
               </>
             ) : (
-              <p className="text-sm text-gray-600 dark:text-gray-400">Select a session to view proposals</p>
+              <p className="text-sm text-text-secondary">Select a session to view proposals</p>
             )}
           </div>
         )}
@@ -316,7 +316,7 @@ export default function NegotiationDashboardPage() {
                 <ConsensusScoreChart scores={currentConsensusScores} />
               </>
             ) : (
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p className="text-sm text-text-secondary">
                 {!selectedSession ? 'Select a session' : 'No consensus scores available'}
               </p>
             )}
@@ -341,7 +341,7 @@ export default function NegotiationDashboardPage() {
                 />
               </>
             ) : (
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p className="text-sm text-text-secondary">
                 {!selectedSession ? 'Select a session to view decision' : 'No arbitration decision yet'}
               </p>
             )}

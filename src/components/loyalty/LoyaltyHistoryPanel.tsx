@@ -127,14 +127,14 @@ export function LoyaltyHistoryPanel({
             {transactions.map((tx) => (
               <div
                 key={tx.id}
-                className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                className="flex items-center justify-between p-3 bg-bg-raised rounded-lg hover:bg-bg-hover transition-colors"
               >
                 <div className="flex items-center gap-3 flex-1">
                   <div className="flex-shrink-0">
                     {getTransactionIcon(tx.type)}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">
+                    <p className="text-sm font-medium text-text-primary">
                       {getTransactionLabel(tx.type)}
                     </p>
                     <p className="text-xs text-muted-foreground">

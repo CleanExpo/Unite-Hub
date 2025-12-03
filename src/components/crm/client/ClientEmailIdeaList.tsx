@@ -62,7 +62,7 @@ const priorityConfig: Record<string, { color: string; bgColor: string }> = {
   urgent: { color: 'text-red-700', bgColor: 'bg-red-100 dark:bg-red-900/30' },
   high: { color: 'text-orange-700', bgColor: 'bg-orange-100 dark:bg-orange-900/30' },
   medium: { color: 'text-yellow-700', bgColor: 'bg-yellow-100 dark:bg-yellow-900/30' },
-  low: { color: 'text-gray-600', bgColor: 'bg-gray-100 dark:bg-gray-800' },
+  low: { color: 'text-gray-600', bgColor: 'bg-bg-hover' },
 };
 
 export function ClientEmailIdeaList({

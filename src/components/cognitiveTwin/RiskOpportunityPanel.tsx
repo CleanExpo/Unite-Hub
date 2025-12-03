@@ -187,24 +187,24 @@ export default function RiskOpportunityPanel({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="animate-pulse">
           <CardHeader>
-            <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
+            <div className="h-6 bg-bg-hover rounded w-1/3"></div>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               {[...Array(3)].map((_, i) => (
-                <div key={i} className="h-20 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                <div key={i} className="h-20 bg-bg-hover rounded"></div>
               ))}
             </div>
           </CardContent>
         </Card>
         <Card className="animate-pulse">
           <CardHeader>
-            <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
+            <div className="h-6 bg-bg-hover rounded w-1/3"></div>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               {[...Array(3)].map((_, i) => (
-                <div key={i} className="h-20 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                <div key={i} className="h-20 bg-bg-hover rounded"></div>
               ))}
             </div>
           </CardContent>
@@ -222,7 +222,7 @@ export default function RiskOpportunityPanel({
             <AlertCircle className="w-5 h-5 mt-0.5" />
             <div>
               <p className="font-semibold">Error Loading Data</p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{error}</p>
+              <p className="text-sm text-text-secondary">{error}</p>
             </div>
           </div>
         </CardContent>
@@ -338,7 +338,7 @@ export default function RiskOpportunityPanel({
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
                         <h4 className="font-semibold">{risk.title}</h4>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                        <p className="text-sm text-text-secondary mt-1">
                           {risk.description}
                         </p>
                       </div>
@@ -355,7 +355,7 @@ export default function RiskOpportunityPanel({
                       </Badge>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3 mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+                    <div className="grid grid-cols-2 gap-3 mt-3 pt-3 border-t border-border-subtle">
                       <div className="text-xs">
                         <span className="text-gray-500">Probability:</span>{" "}
                         <span className="font-semibold">{risk.probability}%</span>
@@ -485,7 +485,7 @@ export default function RiskOpportunityPanel({
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex-1">
                         <h4 className="font-semibold">{opp.title}</h4>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                        <p className="text-sm text-text-secondary mt-1">
                           {opp.description}
                         </p>
                       </div>
@@ -502,7 +502,7 @@ export default function RiskOpportunityPanel({
                       </Badge>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-3 mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
+                    <div className="grid grid-cols-2 gap-3 mt-3 pt-3 border-t border-border-subtle">
                       <div className="text-xs">
                         <span className="text-gray-500">Value:</span>{" "}
                         <span className="font-semibold">{opp.potential_value}/100</span>

@@ -48,7 +48,7 @@ export const ProjectTimeline: React.FC<ProjectTimelineProps> = ({ phases, loadin
       case 'blocked':
         return 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300';
       default:
-        return 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300';
+        return 'bg-bg-hover text-text-secondary';
     }
   };
 
@@ -88,7 +88,7 @@ export const ProjectTimeline: React.FC<ProjectTimelineProps> = ({ phases, loadin
   if (loading) {
     return (
       <div className="flex items-center justify-center py-8">
-        <p className="text-gray-600 dark:text-gray-400">Loading timeline...</p>
+        <p className="text-text-secondary">Loading timeline...</p>
       </div>
     );
   }
@@ -96,7 +96,7 @@ export const ProjectTimeline: React.FC<ProjectTimelineProps> = ({ phases, loadin
   if (phases.length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="text-gray-600 dark:text-gray-400">No timeline phases yet</p>
+        <p className="text-text-secondary">No timeline phases yet</p>
       </div>
     );
   }
@@ -119,9 +119,9 @@ export const ProjectTimeline: React.FC<ProjectTimelineProps> = ({ phases, loadin
             )}
 
             {/* Phase Card */}
-            <div className="relative bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+            <div className="relative bg-bg-card rounded-lg border border-border-subtle p-6">
               {/* Phase Indicator Circle */}
-              <div className="absolute -left-4 top-6 w-8 h-8 bg-white dark:bg-gray-800 border-4 border-blue-500 rounded-full flex items-center justify-center">
+              <div className="absolute -left-4 top-6 w-8 h-8 bg-bg-card border-4 border-blue-500 rounded-full flex items-center justify-center">
                 <div className="w-2 h-2 bg-blue-500 rounded-full" />
               </div>
 
@@ -130,7 +130,7 @@ export const ProjectTimeline: React.FC<ProjectTimelineProps> = ({ phases, loadin
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                      <h3 className="text-lg font-semibold text-text-primary">
                         Phase {phase.phase_number}: {phase.phase_name}
                       </h3>
                       <span className={`flex items-center gap-1 px-2 py-1 rounded text-xs font-medium ${getStatusColor(phase.status)}`}>
@@ -138,28 +138,28 @@ export const ProjectTimeline: React.FC<ProjectTimelineProps> = ({ phases, loadin
                         {phase.status.charAt(0).toUpperCase() + phase.status.slice(1)}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">{phase.description}</p>
+                    <p className="text-sm text-text-secondary">{phase.description}</p>
                   </div>
                 </div>
 
                 {/* Dates */}
                 <div className="grid grid-cols-3 gap-4 mb-4 text-sm">
                   <div>
-                    <p className="text-gray-600 dark:text-gray-400 text-xs mb-1">Start Date</p>
-                    <p className="font-medium text-gray-900 dark:text-white flex items-center gap-1">
+                    <p className="text-text-secondary text-xs mb-1">Start Date</p>
+                    <p className="font-medium text-text-primary flex items-center gap-1">
                       <Calendar className="w-3 h-3" />
                       {formatDate(phase.start_date)}
                     </p>
                   </div>
                   <div>
-                    <p className="text-gray-600 dark:text-gray-400 text-xs mb-1">Planned End</p>
-                    <p className="font-medium text-gray-900 dark:text-white flex items-center gap-1">
+                    <p className="text-text-secondary text-xs mb-1">Planned End</p>
+                    <p className="font-medium text-text-primary flex items-center gap-1">
                       <Calendar className="w-3 h-3" />
                       {formatDate(phase.planned_end_date)}
                     </p>
                   </div>
                   <div>
-                    <p className="text-gray-600 dark:text-gray-400 text-xs mb-1">
+                    <p className="text-text-secondary text-xs mb-1">
                       {daysRemaining > 0 ? 'Days Remaining' : 'Overdue'}
                     </p>
                     <p className={`font-medium flex items-center gap-1 ${daysRemaining > 0 ? 'text-blue-600 dark:text-blue-400' : 'text-red-600 dark:text-red-400'}`}>
@@ -172,10 +172,10 @@ export const ProjectTimeline: React.FC<ProjectTimelineProps> = ({ phases, loadin
                 {/* Progress Bar */}
                 <div className="mb-4">
                   <div className="flex items-center justify-between mb-2">
-                    <p className="text-xs text-gray-600 dark:text-gray-400 font-medium">Progress</p>
-                    <p className="text-xs text-gray-900 dark:text-white font-semibold">{phase.completion_percentage}%</p>
+                    <p className="text-xs text-text-secondary font-medium">Progress</p>
+                    <p className="text-xs text-text-primary font-semibold">{phase.completion_percentage}%</p>
                   </div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 overflow-hidden">
+                  <div className="w-full bg-bg-hover rounded-full h-2.5 overflow-hidden">
                     {/* Elapsed Time Track */}
                     <div
                       className="bg-gray-400 dark:bg-gray-600 h-full transition-all"
@@ -187,7 +187,7 @@ export const ProjectTimeline: React.FC<ProjectTimelineProps> = ({ phases, loadin
                       style={{ width: `${completionPercentage}%` }}
                     />
                   </div>
-                  <div className="flex justify-between mt-1 text-xs text-gray-600 dark:text-gray-400">
+                  <div className="flex justify-between mt-1 text-xs text-text-secondary">
                     <span>Elapsed: {Math.round(elapsedPercentage)}%</span>
                     <span>Completed: {phase.completion_percentage}%</span>
                   </div>
@@ -196,10 +196,10 @@ export const ProjectTimeline: React.FC<ProjectTimelineProps> = ({ phases, loadin
                 {/* Activities */}
                 {phase.key_activities && phase.key_activities.length > 0 && (
                   <div className="mb-4">
-                    <p className="text-xs text-gray-600 dark:text-gray-400 font-medium mb-2">Key Activities</p>
+                    <p className="text-xs text-text-secondary font-medium mb-2">Key Activities</p>
                     <ul className="space-y-1">
                       {phase.key_activities.map((activity, idx) => (
-                        <li key={idx} className="text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2">
+                        <li key={idx} className="text-sm text-text-secondary flex items-start gap-2">
                           <span className="text-blue-500 mt-0.5">•</span>
                           {activity}
                         </li>
@@ -211,7 +211,7 @@ export const ProjectTimeline: React.FC<ProjectTimelineProps> = ({ phases, loadin
                 {/* Deliverables */}
                 {phase.deliverables && phase.deliverables.length > 0 && (
                   <div>
-                    <p className="text-xs text-gray-600 dark:text-gray-400 font-medium mb-2">Deliverables</p>
+                    <p className="text-xs text-text-secondary font-medium mb-2">Deliverables</p>
                     <div className="space-y-2">
                       {phase.deliverables.map((deliverable, idx) => (
                         <div
@@ -219,12 +219,12 @@ export const ProjectTimeline: React.FC<ProjectTimelineProps> = ({ phases, loadin
                           className="flex items-center justify-between bg-gray-50 dark:bg-gray-700/50 rounded p-2"
                         >
                           <div>
-                            <p className="text-sm font-medium text-gray-900 dark:text-white">
+                            <p className="text-sm font-medium text-text-primary">
                               {deliverable.name}
                             </p>
-                            <p className="text-xs text-gray-600 dark:text-gray-400">{deliverable.format}</p>
+                            <p className="text-xs text-text-secondary">{deliverable.format}</p>
                           </div>
-                          <p className="text-xs text-gray-600 dark:text-gray-400">
+                          <p className="text-xs text-text-secondary">
                             Due: {formatDate(deliverable.dueDate)}
                           </p>
                         </div>

@@ -153,13 +153,13 @@ export default function DigestViewer({
         <div className="lg:col-span-2">
           <Card className="animate-pulse">
             <CardHeader>
-              <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+              <div className="h-6 bg-bg-hover rounded w-1/2"></div>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded"></div>
-                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6"></div>
-                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-4/6"></div>
+                <div className="h-4 bg-bg-hover rounded"></div>
+                <div className="h-4 bg-bg-hover rounded w-5/6"></div>
+                <div className="h-4 bg-bg-hover rounded w-4/6"></div>
               </div>
             </CardContent>
           </Card>
@@ -167,12 +167,12 @@ export default function DigestViewer({
         <div>
           <Card className="animate-pulse">
             <CardHeader>
-              <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-2/3"></div>
+              <div className="h-5 bg-bg-hover rounded w-2/3"></div>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded"></div>
-                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                <div className="h-4 bg-bg-hover rounded"></div>
+                <div className="h-4 bg-bg-hover rounded"></div>
               </div>
             </CardContent>
           </Card>
@@ -190,7 +190,7 @@ export default function DigestViewer({
             <AlertCircle className="w-5 h-5 mt-0.5" />
             <div>
               <p className="font-semibold">Error Loading Digest</p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{error}</p>
+              <p className="text-sm text-text-secondary">{error}</p>
             </div>
           </div>
         </CardContent>
@@ -260,7 +260,7 @@ export default function DigestViewer({
 
             {/* Progress Bar */}
             <div className="mt-3">
-              <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+              <div className="h-2 bg-bg-hover rounded-full overflow-hidden">
                 <div
                   className="h-full bg-blue-500 transition-all duration-300"
                   style={{ width: `${completionPercentage}%` }}
@@ -285,8 +285,8 @@ export default function DigestViewer({
                     className={cn(
                       "flex items-start gap-3 p-3 rounded-lg border transition-all cursor-pointer",
                       isCompleted
-                        ? "bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-800"
-                        : "bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700"
+                        ? "bg-bg-raised border-border-subtle"
+                        : "bg-bg-card border-border-subtle hover:border-blue-300 dark:hover:border-blue-700"
                     )}
                     onClick={() => handleActionToggle(action.id)}
                   >
@@ -364,7 +364,7 @@ export default function DigestViewer({
             </div>
 
             {/* Domains Improved/Declined */}
-            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border-subtle">
               <div>
                 <div className="text-xs text-gray-500 mb-1">Improved</div>
                 <div className="text-lg font-bold text-green-500">
@@ -381,7 +381,7 @@ export default function DigestViewer({
 
             {/* Critical Alerts */}
             {digest.key_metrics.critical_alerts > 0 && (
-              <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+              <div className="pt-4 border-t border-border-subtle">
                 <div className="flex items-center gap-2 text-red-600 dark:text-red-400">
                   <AlertCircle className="w-4 h-4" />
                   <span className="text-sm font-medium">

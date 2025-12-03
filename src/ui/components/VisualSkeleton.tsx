@@ -30,7 +30,7 @@ export function VisualSkeleton({
       <div
         className={`
           ${aspectRatioClasses[aspectRatio]}
-          bg-gray-200 dark:bg-gray-700
+          bg-bg-hover
           animate-pulse
         `}
       >
@@ -47,8 +47,8 @@ export function VisualSkeleton({
 
       {/* Disclaimer skeleton */}
       <div className="flex items-center gap-2 mt-2 px-1">
-        <div className="w-3 h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
-        <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-3/4 animate-pulse" />
+        <div className="w-3 h-3 bg-bg-hover rounded animate-pulse" />
+        <div className="h-3 bg-bg-hover rounded w-3/4 animate-pulse" />
       </div>
     </div>
   );

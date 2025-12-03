@@ -106,7 +106,7 @@ export default function ClientReviewPacksPage() {
                 {/* Period */}
                 <div>
                   <h3 className="text-sm font-medium text-gray-500 mb-2">Review Period</h3>
-                  <div className="flex items-center gap-2 text-gray-900 dark:text-white">
+                  <div className="flex items-center gap-2 text-text-primary">
                     <Calendar className="w-5 h-5 text-teal-600" />
                     {formatDate(selectedPack.startDate)} - {formatDate(selectedPack.endDate)}
                   </div>
@@ -116,8 +116,8 @@ export default function ClientReviewPacksPage() {
                 {selectedPack.narrative && (
                   <div>
                     <h3 className="text-sm font-medium text-gray-500 mb-2">Performance Summary</h3>
-                    <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
-                      <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-line">
+                    <div className="p-4 bg-bg-raised/50 rounded-lg">
+                      <p className="text-sm text-text-secondary whitespace-pre-line">
                         {selectedPack.narrative}
                       </p>
                     </div>
@@ -149,7 +149,7 @@ export default function ClientReviewPacksPage() {
                       {selectedPack.visualAssetIds.map((id, i) => (
                         <div
                           key={id}
-                          className="aspect-video bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center"
+                          className="aspect-video bg-bg-hover rounded-lg flex items-center justify-center"
                         >
                           <Image className="w-8 h-8 text-gray-400" />
                         </div>
@@ -166,7 +166,7 @@ export default function ClientReviewPacksPage() {
                       {selectedPack.dataSources.map((source) => (
                         <span
                           key={source}
-                          className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-800 rounded text-gray-600 dark:text-gray-400"
+                          className="px-2 py-1 text-xs bg-bg-hover rounded text-text-secondary"
                         >
                           {source}
                         </span>
@@ -177,7 +177,7 @@ export default function ClientReviewPacksPage() {
 
                 {/* Delivery Info */}
                 {selectedPack.sentAt && (
-                  <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <div className="pt-4 border-t border-border-subtle">
                     <p className="text-sm text-gray-500">
                       Delivered via <strong className="capitalize">{selectedPack.deliveryChannel}</strong> on{" "}
                       {formatDate(selectedPack.sentAt)}
@@ -228,8 +228,8 @@ export default function ClientReviewPacksPage() {
 
         {/* Info Notice */}
         <Section className="mt-8">
-          <div className="p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+          <div className="p-4 bg-bg-raised/50 rounded-lg">
+            <p className="text-xs text-text-secondary">
               <strong>About Review Packs:</strong> These documents summarize your agency's work
               during each period. All data is sourced from real performance metrics and verified
               before delivery.

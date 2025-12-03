@@ -173,7 +173,7 @@ export default function HealthTrendChart({
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white dark:bg-gray-800 p-3 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+        <div className="bg-bg-card p-3 rounded-lg shadow-lg border border-border-subtle">
           <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">
             {payload[0].payload.fullDate}
           </p>
@@ -189,7 +189,7 @@ export default function HealthTrendChart({
                       className="w-3 h-3 rounded-full"
                       style={{ backgroundColor: entry.color }}
                     />
-                    <span className="text-xs text-gray-600 dark:text-gray-400">
+                    <span className="text-xs text-text-secondary">
                       {domain.domain_name}
                     </span>
                   </div>
@@ -209,10 +209,10 @@ export default function HealthTrendChart({
     return (
       <Card className="animate-pulse">
         <CardHeader>
-          <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
+          <div className="h-6 bg-bg-hover rounded w-1/3"></div>
         </CardHeader>
         <CardContent>
-          <div className="h-[400px] bg-gray-200 dark:bg-gray-700 rounded"></div>
+          <div className="h-[400px] bg-bg-hover rounded"></div>
         </CardContent>
       </Card>
     );
@@ -227,7 +227,7 @@ export default function HealthTrendChart({
             <AlertCircle className="w-5 h-5 mt-0.5" />
             <div>
               <p className="font-semibold">Error Loading Chart</p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{error}</p>
+              <p className="text-sm text-text-secondary">{error}</p>
             </div>
           </div>
         </CardContent>
@@ -297,8 +297,8 @@ export default function HealthTrendChart({
                 className={cn(
                   "flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all text-sm",
                   isVisible
-                    ? "bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600"
-                    : "bg-gray-100 dark:bg-gray-900 border-gray-200 dark:border-gray-800 opacity-50"
+                    ? "bg-bg-card border-border-base"
+                    : "bg-bg-raised border-border-subtle opacity-50"
                 )}
               >
                 <div
@@ -402,7 +402,7 @@ export default function HealthTrendChart({
 
         {/* Stats Summary */}
         {domainStats.length > 0 && visibleDomains.size > 0 && (
-          <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+          <div className="mt-6 pt-6 border-t border-border-subtle">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {domainStats
                 .filter(stat => visibleDomains.has(stat.domain_id))

@@ -128,7 +128,7 @@ export default function ClientDashboardOverview() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-bg-raised">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Trial Capability Banner */}
         {isInTrial && trialState && (
@@ -142,10 +142,10 @@ export default function ClientDashboardOverview() {
 
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-2xl font-bold text-text-primary">
             Welcome back, {userName}
           </h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-text-secondary mt-1">
             Here&apos;s what your team has been working on
           </p>
         </div>
@@ -176,10 +176,10 @@ export default function ClientDashboardOverview() {
                   <Compass className="w-5 h-5 text-teal-600 dark:text-teal-300" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+                  <h3 className="text-sm font-semibold text-text-primary">
                     Your 90-Day Journey
                   </h3>
-                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                  <p className="text-xs text-text-secondary mt-1">
                     Track your progress from onboarding to optimization
                   </p>
                   <div className="flex items-center gap-1 mt-2 text-xs text-teal-600 dark:text-teal-400">
@@ -192,18 +192,18 @@ export default function ClientDashboardOverview() {
             <JustDroppedIdeasPanel />
 
             {/* Quick Actions */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            <div className="bg-bg-card rounded-lg border border-border-subtle p-6">
+              <h3 className="text-lg font-semibold text-text-primary mb-4">
                 Quick Actions
               </h3>
               <div className="space-y-2">
-                <button className="w-full text-left px-4 py-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-700 dark:text-gray-300">
+                <button className="w-full text-left px-4 py-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-bg-hover text-sm text-text-secondary">
                   Request a new audit
                 </button>
-                <button className="w-full text-left px-4 py-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-700 dark:text-gray-300">
+                <button className="w-full text-left px-4 py-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-bg-hover text-sm text-text-secondary">
                   Schedule a strategy call
                 </button>
-                <button className="w-full text-left px-4 py-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm text-gray-700 dark:text-gray-300">
+                <button className="w-full text-left px-4 py-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-bg-hover text-sm text-text-secondary">
                   View all reports
                 </button>
               </div>

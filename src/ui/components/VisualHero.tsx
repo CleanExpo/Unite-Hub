@@ -54,27 +54,27 @@ export function VisualHero({
       {/* Visual Content */}
       <div
         className={`
-          relative bg-gray-100 dark:bg-gray-800
+          relative bg-bg-hover
           ${aspectRatioClasses[aspectRatio]}
         `}
       >
         {/* Loading state */}
         {loading && (
-          <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse">
+          <div className="absolute inset-0 bg-bg-hover animate-pulse">
             <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
           </div>
         )}
 
         {/* Error state */}
         {(error || imgError) && !loading && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-800">
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-bg-hover">
             <ImageOff className="w-10 h-10 text-gray-400 mb-2" />
             <p className="text-sm text-gray-500 mb-2">Failed to load</p>
             {onRetry && (
               <button
                 type="button"
                 onClick={onRetry}
-                className="flex items-center gap-1 px-2 py-1 text-xs bg-white dark:bg-gray-700 border rounded hover:bg-gray-50"
+                className="flex items-center gap-1 px-2 py-1 text-xs bg-bg-input border rounded hover:bg-gray-50"
               >
                 <RefreshCw className="w-3 h-3" />
                 Retry
@@ -93,11 +93,11 @@ export function VisualHero({
           />
         ) : !loading && !error && !imgError && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-gray-300 dark:text-gray-600">
+            <div className="text-text-muted">
               {isVideo ? (
                 <Play className="w-16 h-16" />
               ) : (
-                <div className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded" />
+                <div className="w-16 h-16 bg-bg-hover rounded" />
               )}
             </div>
           </div>
@@ -127,7 +127,7 @@ export function VisualHero({
       {/* Disclaimer */}
       <div className="flex items-center gap-2 mt-2 px-1">
         <AlertTriangle className="w-3 h-3 text-amber-500 flex-shrink-0" />
-        <p className="text-xs text-gray-500 dark:text-gray-400">{disclaimer}</p>
+        <p className="text-xs text-text-secondary">{disclaimer}</p>
       </div>
     </div>
   );

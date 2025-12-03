@@ -54,7 +54,7 @@ export function CoalitionSynergyPanel({ workspaceId }: CoalitionSynergyPanelProp
       <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-900">
         <div className="text-center py-8">
           <TrendingUp className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-          <p className="text-gray-500 dark:text-gray-400">
+          <p className="text-text-secondary">
             Synergy metrics will appear when a coalition forms.
           </p>
         </div>
@@ -114,7 +114,7 @@ export function CoalitionSynergyPanel({ workspaceId }: CoalitionSynergyPanelProp
       {/* Synergy Components */}
       <div className="rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900">
         <div className="border-b border-gray-200 bg-gray-50 px-6 py-3 dark:border-gray-700 dark:bg-gray-800">
-          <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+          <h3 className="text-sm font-semibold text-text-primary">
             Synergy Breakdown
           </h3>
         </div>
@@ -123,10 +123,10 @@ export function CoalitionSynergyPanel({ workspaceId }: CoalitionSynergyPanelProp
           {/* Capability Overlap (35%) */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-sm font-medium text-gray-900 dark:text-white">
+              <label className="text-sm font-medium text-text-primary">
                 Capability Overlap (35%)
               </label>
-              <span className="text-sm font-semibold text-gray-900 dark:text-white">
+              <span className="text-sm font-semibold text-text-primary">
                 {formatPercentage((activeCoalition.synergyScore * 0.35).toFixed(1))}
               </span>
             </div>
@@ -134,7 +134,7 @@ export function CoalitionSynergyPanel({ workspaceId }: CoalitionSynergyPanelProp
               value={(activeCoalition.synergyScore * 0.35)}
               className="h-2"
             />
-            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+            <p className="text-xs text-text-secondary mt-1">
               How well agents cover required capabilities
             </p>
           </div>
@@ -142,10 +142,10 @@ export function CoalitionSynergyPanel({ workspaceId }: CoalitionSynergyPanelProp
           {/* Skill Complement (25%) */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-sm font-medium text-gray-900 dark:text-white">
+              <label className="text-sm font-medium text-text-primary">
                 Skill Complement (25%)
               </label>
-              <span className="text-sm font-semibold text-gray-900 dark:text-white">
+              <span className="text-sm font-semibold text-text-primary">
                 {formatPercentage((activeCoalition.synergyScore * 0.25).toFixed(1))}
               </span>
             </div>
@@ -153,7 +153,7 @@ export function CoalitionSynergyPanel({ workspaceId }: CoalitionSynergyPanelProp
               value={(activeCoalition.synergyScore * 0.25)}
               className="h-2"
             />
-            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+            <p className="text-xs text-text-secondary mt-1">
               How well agents fill each other's knowledge gaps
             </p>
           </div>
@@ -161,10 +161,10 @@ export function CoalitionSynergyPanel({ workspaceId }: CoalitionSynergyPanelProp
           {/* Historical Success (20%) */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-sm font-medium text-gray-900 dark:text-white">
+              <label className="text-sm font-medium text-text-primary">
                 Historical Success (20%)
               </label>
-              <span className="text-sm font-semibold text-gray-900 dark:text-white">
+              <span className="text-sm font-semibold text-text-primary">
                 {formatPercentage((activeCoalition.synergyScore * 0.2).toFixed(1))}
               </span>
             </div>
@@ -172,7 +172,7 @@ export function CoalitionSynergyPanel({ workspaceId }: CoalitionSynergyPanelProp
               value={(activeCoalition.synergyScore * 0.2)}
               className="h-2"
             />
-            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+            <p className="text-xs text-text-secondary mt-1">
               Past coalition success rates
             </p>
           </div>
@@ -180,10 +180,10 @@ export function CoalitionSynergyPanel({ workspaceId }: CoalitionSynergyPanelProp
           {/* Safety Profile (20%) */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="text-sm font-medium text-gray-900 dark:text-white">
+              <label className="text-sm font-medium text-text-primary">
                 Safety Profile (20%)
               </label>
-              <span className="text-sm font-semibold text-gray-900 dark:text-white">
+              <span className="text-sm font-semibold text-text-primary">
                 {formatPercentage((activeCoalition.synergyScore * 0.2).toFixed(1))}
               </span>
             </div>
@@ -191,7 +191,7 @@ export function CoalitionSynergyPanel({ workspaceId }: CoalitionSynergyPanelProp
               value={(activeCoalition.synergyScore * 0.2)}
               className="h-2"
             />
-            <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+            <p className="text-xs text-text-secondary mt-1">
               Agent risk levels (inverse of risk score)
             </p>
           </div>
@@ -202,8 +202,8 @@ export function CoalitionSynergyPanel({ workspaceId }: CoalitionSynergyPanelProp
       <div className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">Estimated Success</p>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">
+            <p className="text-xs text-text-secondary mb-1">Estimated Success</p>
+            <p className="text-2xl font-bold text-text-primary">
               {formatPercentage(activeCoalition.estimatedOutcome)}
             </p>
           </div>
@@ -215,7 +215,7 @@ export function CoalitionSynergyPanel({ workspaceId }: CoalitionSynergyPanelProp
 
       {/* Trend Information */}
       {synergyTrend && (
-        <div className="text-xs text-gray-600 dark:text-gray-400 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+        <div className="text-xs text-text-secondary p-3 bg-bg-raised rounded-lg">
           <p>
             Recent average: <span className="font-semibold">{formatPercentage(synergyTrend.avgRecent)}</span>
             <br />

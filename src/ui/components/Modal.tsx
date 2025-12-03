@@ -78,7 +78,7 @@ export function Modal({
       <div
         className={`
           relative w-full ${sizeClasses[size]}
-          bg-white dark:bg-gray-800
+          bg-bg-card
           rounded-lg shadow-xl
           transform transition-all
           ${className}
@@ -92,7 +92,7 @@ export function Modal({
               p-1 rounded-full
               text-gray-400 hover:text-gray-600
               dark:text-gray-500 dark:hover:text-gray-300
-              hover:bg-gray-100 dark:hover:bg-gray-700
+              hover:bg-bg-hover
               transition-colors
             "
             aria-label="Close modal"
@@ -114,7 +114,7 @@ export function ModalHeader({
     <div
       className={`
         px-6 py-4
-        border-b border-gray-200 dark:border-gray-700
+        border-b border-border-subtle
         ${className}
       `}
     >
@@ -132,7 +132,7 @@ export function ModalTitle({
 }) {
   return (
     <h2
-      className={`text-lg font-semibold text-gray-900 dark:text-white ${className}`}
+      className={`text-lg font-semibold text-text-primary ${className}`}
     >
       {children}
     </h2>
@@ -163,7 +163,7 @@ export function ModalFooter({
       className={`
         flex items-center justify-end gap-3
         px-6 py-4
-        border-t border-gray-200 dark:border-gray-700
+        border-t border-border-subtle
         ${className}
       `}
     >

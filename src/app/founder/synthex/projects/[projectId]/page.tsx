@@ -176,7 +176,7 @@ export default function ProjectDetailPage() {
       case 'in_progress':
         return 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300';
       default:
-        return 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300';
+        return 'bg-bg-hover text-text-secondary';
     }
   };
 
@@ -198,7 +198,7 @@ export default function ProjectDetailPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <p className="text-gray-600 dark:text-gray-400">Loading project...</p>
+        <p className="text-text-secondary">Loading project...</p>
       </div>
     );
   }
@@ -227,19 +227,19 @@ export default function ProjectDetailPage() {
         <div className="flex items-center gap-4">
           <button
             onClick={() => router.back()}
-            className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+            className="text-text-secondary hover:text-gray-900 dark:hover:text-white"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{project.project_name}</h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-1">{project.client_name}</p>
+            <h1 className="text-3xl font-bold text-text-primary">{project.project_name}</h1>
+            <p className="text-text-secondary mt-1">{project.client_name}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={loadProjectData}
-            className="flex items-center gap-2 px-4 py-2 text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 text-text-secondary bg-bg-hover rounded-lg hover:bg-bg-hover transition-colors"
           >
             <RefreshCw className="w-4 h-4" />
             Refresh
@@ -255,8 +255,8 @@ export default function ProjectDetailPage() {
 
       {/* Project Info Cards */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-          <p className="text-sm text-gray-600 dark:text-gray-400">Status</p>
+        <div className="bg-bg-card rounded-lg p-4 border border-border-subtle">
+          <p className="text-sm text-text-secondary">Status</p>
           <div className={`inline-flex items-center gap-2 px-3 py-1 rounded mt-2 text-xs font-medium ${getStatusColor(project.status)}`}>
             {project.status === 'active' && <CheckCircle className="w-3 h-3" />}
             {project.status !== 'active' && <AlertCircle className="w-3 h-3" />}
@@ -264,31 +264,31 @@ export default function ProjectDetailPage() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-          <p className="text-sm text-gray-600 dark:text-gray-400">Service Tier</p>
-          <p className="text-lg font-semibold text-gray-900 dark:text-white mt-2">
+        <div className="bg-bg-card rounded-lg p-4 border border-border-subtle">
+          <p className="text-sm text-text-secondary">Service Tier</p>
+          <p className="text-lg font-semibold text-text-primary mt-2">
             {project.service_tier.charAt(0).toUpperCase() + project.service_tier.slice(1)}
           </p>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-          <p className="text-sm text-gray-600 dark:text-gray-400">Monthly Hours</p>
-          <p className="text-lg font-semibold text-gray-900 dark:text-white mt-2 flex items-center gap-2">
+        <div className="bg-bg-card rounded-lg p-4 border border-border-subtle">
+          <p className="text-sm text-text-secondary">Monthly Hours</p>
+          <p className="text-lg font-semibold text-text-primary mt-2 flex items-center gap-2">
             <Clock className="w-4 h-4" />
             {project.monthly_hours}h
           </p>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-          <p className="text-sm text-gray-600 dark:text-gray-400">Monthly Cost</p>
-          <p className="text-lg font-semibold text-gray-900 dark:text-white mt-2">
+        <div className="bg-bg-card rounded-lg p-4 border border-border-subtle">
+          <p className="text-sm text-text-secondary">Monthly Cost</p>
+          <p className="text-lg font-semibold text-text-primary mt-2">
             {formatCurrency(project.monthly_cost_cents)}
           </p>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
-          <p className="text-sm text-gray-600 dark:text-gray-400">Start Date</p>
-          <p className="text-lg font-semibold text-gray-900 dark:text-white mt-2 flex items-center gap-2">
+        <div className="bg-bg-card rounded-lg p-4 border border-border-subtle">
+          <p className="text-sm text-text-secondary">Start Date</p>
+          <p className="text-lg font-semibold text-text-primary mt-2 flex items-center gap-2">
             <Calendar className="w-4 h-4" />
             {formatDate(project.start_date)}
           </p>
@@ -296,8 +296,8 @@ export default function ProjectDetailPage() {
       </div>
 
       {/* Tabs */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-        <div className="flex border-b border-gray-200 dark:border-gray-700">
+      <div className="bg-bg-card rounded-lg border border-border-subtle">
+        <div className="flex border-b border-border-subtle">
           {(['overview', 'timeline', 'tasks', 'reports'] as const).map((tab) => (
             <button
               key={tab}
@@ -305,7 +305,7 @@ export default function ProjectDetailPage() {
               className={`px-4 py-3 font-medium border-b-2 transition-colors ${
                 activeTab === tab
                   ? 'border-blue-600 text-blue-600 dark:text-blue-400'
-                  : 'border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                  : 'border-transparent text-text-secondary hover:text-gray-900 dark:hover:text-white'
               }`}
             >
               {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -317,22 +317,22 @@ export default function ProjectDetailPage() {
           {activeTab === 'overview' && (
             <div className="space-y-4">
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Project Details</h3>
+                <h3 className="text-lg font-semibold text-text-primary mb-2">Project Details</h3>
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
-                    <p className="text-gray-600 dark:text-gray-400">Service Type</p>
-                    <p className="font-medium text-gray-900 dark:text-white mt-1">
+                    <p className="text-text-secondary">Service Type</p>
+                    <p className="font-medium text-text-primary mt-1">
                       {project.service_type.replace(/_/g, ' ').toUpperCase()}
                     </p>
                   </div>
                   <div>
-                    <p className="text-gray-600 dark:text-gray-400">Client Email</p>
-                    <p className="font-medium text-gray-900 dark:text-white mt-1">{project.client_email}</p>
+                    <p className="text-text-secondary">Client Email</p>
+                    <p className="font-medium text-text-primary mt-1">{project.client_email}</p>
                   </div>
                   {project.client_website && (
                     <div>
-                      <p className="text-gray-600 dark:text-gray-400">Website</p>
-                      <p className="font-medium text-gray-900 dark:text-white mt-1">
+                      <p className="text-text-secondary">Website</p>
+                      <p className="font-medium text-text-primary mt-1">
                         <a
                           href={project.client_website}
                           target="_blank"
@@ -347,27 +347,27 @@ export default function ProjectDetailPage() {
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Quick Stats</h3>
+              <div className="pt-4 border-t border-border-subtle">
+                <h3 className="text-lg font-semibold text-text-primary mb-2">Quick Stats</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Total Timelines</p>
-                    <p className="text-2xl font-bold text-gray-900 dark:text-white">{timelines.length}</p>
+                    <p className="text-sm text-text-secondary">Total Timelines</p>
+                    <p className="text-2xl font-bold text-text-primary">{timelines.length}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Pending Tasks</p>
+                    <p className="text-sm text-text-secondary">Pending Tasks</p>
                     <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
                       {tasks.filter((t) => t.status === 'pending').length}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">In Progress</p>
+                    <p className="text-sm text-text-secondary">In Progress</p>
                     <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                       {tasks.filter((t) => t.status === 'in_progress').length}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Reports Generated</p>
+                    <p className="text-sm text-text-secondary">Reports Generated</p>
                     <p className="text-2xl font-bold text-purple-600 dark:text-purple-400">{reports.length}</p>
                   </div>
                 </div>
@@ -378,16 +378,16 @@ export default function ProjectDetailPage() {
           {activeTab === 'timeline' && (
             <div className="space-y-4">
               {timelines.length === 0 ? (
-                <p className="text-gray-600 dark:text-gray-400">No timelines yet</p>
+                <p className="text-text-secondary">No timelines yet</p>
               ) : (
                 timelines.map((timeline, index) => (
-                  <div key={timeline.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                  <div key={timeline.id} className="border border-border-subtle rounded-lg p-4">
                     <div className="flex items-start justify-between mb-3">
                       <div>
-                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white">
+                        <h4 className="text-lg font-semibold text-text-primary">
                           Phase {timeline.phase_number}: {timeline.phase_name}
                         </h4>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{timeline.description}</p>
+                        <p className="text-sm text-text-secondary mt-1">{timeline.description}</p>
                       </div>
                       <span className={`px-3 py-1 rounded text-xs font-medium ${getStatusColor(timeline.status)}`}>
                         {timeline.status.replace(/_/g, ' ').toUpperCase()}
@@ -396,22 +396,22 @@ export default function ProjectDetailPage() {
 
                     <div className="grid grid-cols-3 gap-4 text-sm mb-3">
                       <div>
-                        <p className="text-gray-600 dark:text-gray-400">Start Date</p>
-                        <p className="font-medium text-gray-900 dark:text-white">{formatDate(timeline.start_date)}</p>
+                        <p className="text-text-secondary">Start Date</p>
+                        <p className="font-medium text-text-primary">{formatDate(timeline.start_date)}</p>
                       </div>
                       <div>
-                        <p className="text-gray-600 dark:text-gray-400">Planned End</p>
-                        <p className="font-medium text-gray-900 dark:text-white">
+                        <p className="text-text-secondary">Planned End</p>
+                        <p className="font-medium text-text-primary">
                           {formatDate(timeline.planned_end_date)}
                         </p>
                       </div>
                       <div>
-                        <p className="text-gray-600 dark:text-gray-400">Progress</p>
-                        <p className="font-medium text-gray-900 dark:text-white">{timeline.completion_percentage}%</p>
+                        <p className="text-text-secondary">Progress</p>
+                        <p className="font-medium text-text-primary">{timeline.completion_percentage}%</p>
                       </div>
                     </div>
 
-                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                    <div className="w-full bg-bg-hover rounded-full h-2">
                       <div
                         className="bg-blue-600 h-2 rounded-full transition-all"
                         style={{ width: `${timeline.completion_percentage}%` }}
@@ -426,16 +426,16 @@ export default function ProjectDetailPage() {
           {activeTab === 'tasks' && (
             <div className="space-y-3">
               {tasks.length === 0 ? (
-                <p className="text-gray-600 dark:text-gray-400">No tasks yet</p>
+                <p className="text-text-secondary">No tasks yet</p>
               ) : (
                 tasks.map((task) => (
-                  <div key={task.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                  <div key={task.id} className="border border-border-subtle rounded-lg p-4 hover:bg-bg-hover">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <h4 className="font-semibold text-gray-900 dark:text-white">{task.task_name}</h4>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{task.description}</p>
-                        <div className="flex items-center gap-4 mt-2 text-xs text-gray-600 dark:text-gray-400">
-                          <span className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                        <h4 className="font-semibold text-text-primary">{task.task_name}</h4>
+                        <p className="text-sm text-text-secondary mt-1">{task.description}</p>
+                        <div className="flex items-center gap-4 mt-2 text-xs text-text-secondary">
+                          <span className="bg-bg-hover px-2 py-1 rounded">
                             {task.task_type.replace(/_/g, ' ')}
                           </span>
                           <span className="flex items-center gap-1">
@@ -448,7 +448,7 @@ export default function ProjectDetailPage() {
                         <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${getStatusColor(task.status)}`}>
                           {task.status.replace(/_/g, ' ').toUpperCase()}
                         </span>
-                        <p className="text-xs text-gray-600 dark:text-gray-400 mt-2">
+                        <p className="text-xs text-text-secondary mt-2">
                           {task.priority.toUpperCase()}
                         </p>
                       </div>
@@ -462,16 +462,16 @@ export default function ProjectDetailPage() {
           {activeTab === 'reports' && (
             <div className="space-y-3">
               {reports.length === 0 ? (
-                <p className="text-gray-600 dark:text-gray-400">No reports yet</p>
+                <p className="text-text-secondary">No reports yet</p>
               ) : (
                 reports.map((report) => (
-                  <div key={report.id} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 cursor-pointer">
+                  <div key={report.id} className="border border-border-subtle rounded-lg p-4 hover:bg-bg-hover cursor-pointer">
                     <div className="flex items-start justify-between">
                       <div>
-                        <h4 className="font-semibold text-gray-900 dark:text-white">
+                        <h4 className="font-semibold text-text-primary">
                           {report.report_type === 'weekly' ? 'Weekly' : report.report_type === 'monthly' ? 'Monthly' : 'Milestone'} Report #{report.report_number}
                         </h4>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                        <p className="text-sm text-text-secondary mt-1">
                           {formatDate(report.period_start_date)} - {formatDate(report.period_end_date)}
                         </p>
                       </div>

@@ -54,7 +54,7 @@ export default function ComponentCard({
 
       <CardContent className="flex-grow pt-4">
         <h3 className="text-lg font-semibold mb-2 line-clamp-2">{component.name}</h3>
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">{component.description}</p>
+        <p className="text-sm text-text-secondary mb-4 line-clamp-2">{component.description}</p>
 
         {/* Badges */}
         <div className="flex flex-wrap gap-2 mb-4">
@@ -65,7 +65,7 @@ export default function ComponentCard({
         </div>
 
         {/* Stats */}
-        <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+        <div className="flex items-center gap-4 text-sm text-text-secondary">
           <div className="flex items-center gap-1">
             <Eye className="w-4 h-4" />
             <span>{component.view_count}</span>

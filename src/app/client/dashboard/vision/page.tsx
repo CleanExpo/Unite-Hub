@@ -62,17 +62,17 @@ export default function VisionPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-bg-raised">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
             <User className="w-8 h-8 text-teal-600" />
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-2xl font-bold text-text-primary">
               Your Vision & Persona
             </h1>
           </div>
-          <p className="text-gray-500 dark:text-gray-400">
+          <p className="text-text-secondary">
             AI-generated summary of your business context and goals
           </p>
         </div>
@@ -88,9 +88,9 @@ export default function VisionPage() {
         </div>
 
         {/* Persona Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
+        <div className="bg-bg-card rounded-lg border border-border-subtle p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+            <h2 className="text-lg font-semibold text-text-primary">
               Client Persona
             </h2>
             <button
@@ -114,8 +114,8 @@ export default function VisionPage() {
               <div className="flex items-start gap-3">
                 <Target className="w-5 h-5 text-teal-600 flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">Goals</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">{persona.goals}</p>
+                  <p className="text-sm font-medium text-text-primary">Goals</p>
+                  <p className="text-sm text-text-secondary">{persona.goals}</p>
                 </div>
               </div>
             )}
@@ -123,8 +123,8 @@ export default function VisionPage() {
               <div className="flex items-start gap-3">
                 <Users className="w-5 h-5 text-teal-600 flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">Audience</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">{persona.audience}</p>
+                  <p className="text-sm font-medium text-text-primary">Audience</p>
+                  <p className="text-sm text-text-secondary">{persona.audience}</p>
                 </div>
               </div>
             )}
@@ -132,8 +132,8 @@ export default function VisionPage() {
               <div className="flex items-start gap-3 md:col-span-2">
                 <Palette className="w-5 h-5 text-teal-600 flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">Brand Notes</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">{persona.brand_notes}</p>
+                  <p className="text-sm font-medium text-text-primary">Brand Notes</p>
+                  <p className="text-sm text-text-secondary">{persona.brand_notes}</p>
                 </div>
               </div>
             )}
@@ -146,24 +146,24 @@ export default function VisionPage() {
 
         {/* Knowledge Feed */}
         <div>
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-lg font-semibold text-text-primary mb-4">
             Knowledge Feed
           </h2>
           <div className="space-y-3">
             {knowledgeItems.map((item) => (
               <div
                 key={item.id}
-                className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4"
+                className="bg-bg-card rounded-lg border border-border-subtle p-4"
               >
                 <div className="flex items-start gap-3">
-                  <div className="p-2 bg-gray-100 dark:bg-gray-700 rounded text-gray-600 dark:text-gray-400">
+                  <div className="p-2 bg-bg-hover rounded text-text-secondary">
                     {getSourceIcon(item.source_type)}
                   </div>
                   <div className="flex-1">
-                    <p className="font-medium text-gray-900 dark:text-white">
+                    <p className="font-medium text-text-primary">
                       {item.title}
                     </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
+                    <p className="text-sm text-text-secondary line-clamp-2">
                       {item.content}
                     </p>
                     <p className="text-xs text-gray-400 mt-1">

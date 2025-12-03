@@ -69,7 +69,7 @@ export function VeoVideoShowcase({
   if (filteredVideos.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className="text-text-secondary">
           No videos found for this category.
         </p>
       </div>
@@ -81,12 +81,12 @@ export function VeoVideoShowcase({
       {/* Header */}
       <div className="text-center mb-12">
         {title && (
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-4">
             {title}
           </h2>
         )}
         {subtitle && (
-          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          <p className="text-xl text-text-secondary max-w-2xl mx-auto">
             {subtitle}
           </p>
         )}
@@ -107,7 +107,7 @@ export function VeoVideoShowcase({
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                   selectedCategory === category.id
                     ? 'bg-gradient-to-r from-[#347bf7] to-[#5a9dff] text-white shadow-lg'
-                    : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                    : 'bg-bg-hover text-text-secondary hover:bg-bg-hover'
                 }`}
               >
                 {category.label}
@@ -116,13 +116,13 @@ export function VeoVideoShowcase({
           </div>
 
           {/* View Mode Toggle */}
-          <div className="flex gap-2 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg">
+          <div className="flex gap-2 bg-bg-hover p-1 rounded-lg">
             <button
               onClick={() => setViewMode('carousel')}
               className={`p-2 rounded-md transition-all ${
                 viewMode === 'carousel'
-                  ? 'bg-white dark:bg-gray-700 text-blue-600 shadow'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                  ? 'bg-bg-input text-blue-600 shadow'
+                  : 'text-text-secondary hover:text-gray-900 dark:hover:text-gray-200'
               }`}
               aria-label="Carousel view"
             >
@@ -132,8 +132,8 @@ export function VeoVideoShowcase({
               onClick={() => setViewMode('grid')}
               className={`p-2 rounded-md transition-all ${
                 viewMode === 'grid'
-                  ? 'bg-white dark:bg-gray-700 text-blue-600 shadow'
-                  : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+                  ? 'bg-bg-input text-blue-600 shadow'
+                  : 'text-text-secondary hover:text-gray-900 dark:hover:text-gray-200'
               }`}
               aria-label="Grid view"
             >

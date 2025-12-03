@@ -24,7 +24,7 @@ export function Table({ children, className = "" }: TableProps) {
       <div className="inline-block min-w-full align-middle">
         <table
           className={`
-            min-w-full divide-y divide-gray-200 dark:divide-gray-700
+            min-w-full divide-y divide-border-subtle
             ${className}
           `}
         >
@@ -37,7 +37,7 @@ export function Table({ children, className = "" }: TableProps) {
 
 export function TableHead({ children, className = "" }: TableProps) {
   return (
-    <thead className={`bg-gray-50 dark:bg-gray-800/50 ${className}`}>
+    <thead className={`bg-bg-raised/50 ${className}`}>
       {children}
     </thead>
   );
@@ -47,8 +47,8 @@ export function TableBody({ children, className = "" }: TableProps) {
   return (
     <tbody
       className={`
-        divide-y divide-gray-200 dark:divide-gray-700
-        bg-white dark:bg-gray-800
+        divide-y divide-border-subtle
+        bg-bg-card
         ${className}
       `}
     >
@@ -61,7 +61,7 @@ export function TableRow({ children, className = "" }: TableProps) {
   return (
     <tr
       className={`
-        hover:bg-gray-50 dark:hover:bg-gray-700/50
+        hover:bg-bg-hover
         transition-colors
         ${className}
       `}
@@ -87,7 +87,7 @@ export function TableHeader({
       className={`
         px-4 py-3
         text-xs font-semibold uppercase tracking-wider
-        text-gray-500 dark:text-gray-400
+        text-text-secondary
         ${alignClass}
         ${className}
       `}
@@ -134,7 +134,7 @@ export function TableEmpty({
     <tr>
       <td
         colSpan={colSpan}
-        className="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400"
+        className="px-4 py-8 text-center text-sm text-text-secondary"
       >
         {message}
       </td>

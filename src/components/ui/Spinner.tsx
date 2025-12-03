@@ -46,10 +46,10 @@ export default function Spinner({
 export function SpinnerOverlay({ message }: { message?: string }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-8 text-center">
+      <div className="bg-bg-card rounded-xl shadow-2xl p-8 text-center">
         <Spinner size="xl" />
         {message && (
-          <p className="mt-4 text-gray-700 dark:text-gray-300 font-medium">
+          <p className="mt-4 text-text-secondary font-medium">
             {message}
           </p>
         )}

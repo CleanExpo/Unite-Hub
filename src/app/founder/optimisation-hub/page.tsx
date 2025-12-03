@@ -155,7 +155,7 @@ export default function FounderOptimisationHubPage() {
       {/* Header */}
       <div>
         <h1 className="text-4xl font-bold tracking-tight">Founder Optimisation Hub</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2">
+        <p className="text-text-secondary mt-2">
           Reward-driven, safety-constrained optimization layer. Review agent rewards, optimization suggestions, and approved strategy playbooks.
         </p>
       </div>
@@ -247,7 +247,7 @@ export default function FounderOptimisationHubPage() {
             </CardHeader>
             <CardContent className="space-y-3">
               {suggestions.map((s, idx) => (
-                <Card key={idx} className="bg-gray-50 dark:bg-gray-900">
+                <Card key={idx} className="bg-bg-raised">
                   <CardContent className="pt-4">
                     <div className="space-y-3">
                       <div className="flex items-start justify-between">
@@ -422,7 +422,7 @@ export default function FounderOptimisationHubPage() {
 
       {/* Footer */}
       <Card className="bg-blue-50 dark:bg-blue-950/20 border-blue-200">
-        <CardContent className="pt-6 text-sm text-gray-600 dark:text-gray-400">
+        <CardContent className="pt-6 text-sm text-text-secondary">
           <p>
             <strong>Last Updated:</strong> {new Date().toLocaleString()}
           </p>

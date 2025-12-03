@@ -65,7 +65,7 @@ export function WeeklyInsightsCard({
       case 'normal':
         return 'border-blue-500 bg-blue-50 dark:bg-blue-900/10';
       default:
-        return 'border-gray-300 bg-gray-50 dark:bg-gray-800';
+        return 'border-gray-300 bg-bg-raised';
     }
   };
 

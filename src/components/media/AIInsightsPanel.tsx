@@ -110,13 +110,13 @@ ${analysis.insights.map((i) => `- ${i}`).join("\n")}
       case "negative":
         return "text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900";
       default:
-        return "text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-900";
+        return "text-text-secondary bg-bg-raised";
     }
   };
 
   if (loading) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+      <div className="bg-bg-card rounded-lg border border-border-subtle p-6">
         <div className="flex items-center gap-3 mb-4">
           <Brain className="h-5 w-5 text-blue-500 animate-pulse" />
           <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
@@ -124,9 +124,9 @@ ${analysis.insights.map((i) => `- ${i}`).join("\n")}
           </h2>
         </div>
         <div className="space-y-3">
-          <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
-          <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 animate-pulse" />
-          <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6 animate-pulse" />
+          <div className="h-4 bg-bg-hover rounded animate-pulse" />
+          <div className="h-4 bg-bg-hover rounded w-3/4 animate-pulse" />
+          <div className="h-4 bg-bg-hover rounded w-5/6 animate-pulse" />
         </div>
       </div>
     );
@@ -134,14 +134,14 @@ ${analysis.insights.map((i) => `- ${i}`).join("\n")}
 
   if (!analysis) {
     return (
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
+      <div className="bg-bg-card rounded-lg border border-border-subtle p-6">
         <div className="flex items-center gap-3 mb-4">
           <Brain className="h-5 w-5 text-gray-400" />
           <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
             AI Analysis
           </h2>
         </div>
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+        <p className="text-sm text-text-secondary">
           No analysis available yet. Analysis will appear after processing completes.
         </p>
       </div>
@@ -149,9 +149,9 @@ ${analysis.insights.map((i) => `- ${i}`).join("\n")}
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <div className="bg-bg-card rounded-lg border border-border-subtle overflow-hidden">
       {/* Header */}
-      <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-b border-gray-200 dark:border-gray-700">
+      <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-b border-border-subtle">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Sparkles className="h-5 w-5 text-blue-500" />
@@ -172,7 +172,7 @@ ${analysis.insights.map((i) => `- ${i}`).join("\n")}
           </button>
         </div>
         {modelUsed && (
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-xs text-text-secondary mt-1">
             Analyzed by {modelUsed}
             {analyzedAt && ` on ${new Date(analyzedAt).toLocaleDateString()}`}
           </p>
@@ -180,7 +180,7 @@ ${analysis.insights.map((i) => `- ${i}`).join("\n")}
       </div>
 
       {/* Content */}
-      <div className="divide-y divide-gray-200 dark:divide-gray-700">
+      <div className="divide-y divide-border-subtle">
         {/* Summary */}
         <Section
           icon={<MessageSquare className="h-4 w-4" />}
@@ -188,7 +188,7 @@ ${analysis.insights.map((i) => `- ${i}`).join("\n")}
           isExpanded={expandedSections.has("summary")}
           onToggle={() => toggleSection("summary")}
         >
-          <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+          <p className="text-sm text-text-secondary leading-relaxed">
             {analysis.summary}
           </p>
         </Section>
@@ -209,7 +209,7 @@ ${analysis.insights.map((i) => `- ${i}`).join("\n")}
               {analysis.sentiment.overall.charAt(0).toUpperCase() +
                 analysis.sentiment.overall.slice(1)}
             </span>
-            <p className="text-sm text-gray-700 dark:text-gray-300">
+            <p className="text-sm text-text-secondary">
               {analysis.sentiment.explanation}
             </p>
           </div>
@@ -227,7 +227,7 @@ ${analysis.insights.map((i) => `- ${i}`).join("\n")}
             {analysis.key_points.map((point, index) => (
               <li
                 key={index}
-                className="flex gap-2 text-sm text-gray-700 dark:text-gray-300"
+                className="flex gap-2 text-sm text-text-secondary"
               >
                 <span className="text-blue-500 font-medium">•</span>
                 <span>{point}</span>
@@ -269,7 +269,7 @@ ${analysis.insights.map((i) => `- ${i}`).join("\n")}
               {analysis.action_items.map((item, index) => (
                 <li
                   key={index}
-                  className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300"
+                  className="flex items-start gap-2 text-sm text-text-secondary"
                 >
                   <input
                     type="checkbox"
@@ -330,7 +330,7 @@ ${analysis.insights.map((i) => `- ${i}`).join("\n")}
               {analysis.insights.map((insight, index) => (
                 <li
                   key={index}
-                  className="flex gap-2 text-sm text-gray-700 dark:text-gray-300"
+                  className="flex gap-2 text-sm text-text-secondary"
                 >
                   <Sparkles className="h-4 w-4 text-purple-500 flex-shrink-0 mt-0.5" />
                   <span>{insight}</span>
@@ -364,13 +364,13 @@ function Section({
     <div>
       <button
         onClick={onToggle}
-        className="w-full flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+        className="w-full flex items-center justify-between p-4 hover:bg-bg-hover transition-colors"
       >
         <div className="flex items-center gap-2">
-          <span className="text-gray-500 dark:text-gray-400">{icon}</span>
+          <span className="text-text-secondary">{icon}</span>
           <span className="font-medium text-gray-900 dark:text-gray-100">{title}</span>
           {badge !== undefined && (
-            <span className="px-2 py-0.5 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-xs">
+            <span className="px-2 py-0.5 bg-bg-hover text-text-secondary rounded-full text-xs">
               {badge}
             </span>
           )}
@@ -398,7 +398,7 @@ function EntityGroup({
 }) {
   return (
     <div>
-      <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-2">
+      <div className="flex items-center gap-2 text-xs text-text-secondary mb-2">
         <span className="h-3 w-3">{icon}</span>
         <span className="font-medium">{label}</span>
       </div>
@@ -406,7 +406,7 @@ function EntityGroup({
         {items.map((item, index) => (
           <span
             key={index}
-            className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded text-sm"
+            className="px-2 py-1 bg-bg-hover text-text-secondary rounded text-sm"
           >
             {item}
           </span>

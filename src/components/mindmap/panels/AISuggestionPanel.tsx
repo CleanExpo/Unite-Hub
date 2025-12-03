@@ -213,8 +213,8 @@ export default function AISuggestionPanel({
   const pendingSuggestions = suggestions.filter((s) => s.status === 'pending');
 
   return (
-    <div className="w-80 h-full bg-white dark:bg-gray-900 border-l border-gray-200 dark:border-gray-800 flex flex-col">
-      <div className="p-4 border-b border-gray-200 dark:border-gray-800">
+    <div className="w-80 h-full bg-bg-card border-l border-border-subtle flex flex-col">
+      <div className="p-4 border-b border-border-subtle">
         <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-semibold flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-purple-500" />
@@ -267,7 +267,7 @@ export default function AISuggestionPanel({
               return (
                 <div
                   key={suggestion.id}
-                  className="p-3 border border-gray-200 dark:border-gray-800 rounded-lg space-y-2"
+                  className="p-3 border border-border-subtle rounded-lg space-y-2"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <Badge className={colorClass}>

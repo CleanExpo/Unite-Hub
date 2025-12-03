@@ -156,7 +156,7 @@ export function KPITable({ metrics, period, className = "" }: KPITableProps) {
   }
 
   return (
-    <div className={`overflow-hidden rounded-lg border border-gray-200 dark:border-gray-700 ${className}`}>
+    <div className={`overflow-hidden rounded-lg border border-border-subtle ${className}`}>
       <Table>
         <TableHead>
           <TableRow>
@@ -181,7 +181,7 @@ export function KPITable({ metrics, period, className = "" }: KPITableProps) {
               >
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    <span className="font-medium text-gray-900 dark:text-white">
+                    <span className="font-medium text-text-primary">
                       {row.label}
                     </span>
                     {row.tooltip && (
@@ -199,7 +199,7 @@ export function KPITable({ metrics, period, className = "" }: KPITableProps) {
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex items-center justify-end gap-2">
-                    <span className="font-semibold text-gray-900 dark:text-white">
+                    <span className="font-semibold text-text-primary">
                       {row.value}
                       {row.unit && (
                         <span className="text-xs text-gray-500 ml-1">{row.unit}</span>
@@ -211,7 +211,7 @@ export function KPITable({ metrics, period, className = "" }: KPITableProps) {
                   </div>
                 </TableCell>
                 <TableCell className="hidden sm:table-cell">
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                  <span className="text-xs text-text-secondary">
                     {row.source}
                   </span>
                 </TableCell>
@@ -222,8 +222,8 @@ export function KPITable({ metrics, period, className = "" }: KPITableProps) {
       </Table>
 
       {/* Data integrity notice */}
-      <div className="px-4 py-2 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-200 dark:border-gray-700">
-        <p className="text-xs text-gray-500 dark:text-gray-400">
+      <div className="px-4 py-2 bg-bg-raised/50 border-t border-border-subtle">
+        <p className="text-xs text-text-secondary">
           All metrics are based on real data. No estimates or projections included.
         </p>
       </div>

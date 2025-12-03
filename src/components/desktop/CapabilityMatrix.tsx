@@ -101,7 +101,7 @@ export function CapabilityMatrix({
 
         {Object.entries(capabilities).map(([category, caps]) => (
           <div key={category} className="space-y-3">
-            <h3 className="font-semibold text-sm uppercase tracking-wide text-gray-700 dark:text-gray-300">
+            <h3 className="font-semibold text-sm uppercase tracking-wide text-text-secondary">
               {category.replace(/_/g, ' ')}
             </h3>
 
@@ -109,7 +109,7 @@ export function CapabilityMatrix({
               {(caps as Capability[]).map((cap) => (
                 <div
                   key={cap.commandName}
-                  className="flex items-start justify-between p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900/50"
+                  className="flex items-start justify-between p-3 border border-border-subtle rounded-lg bg-bg-raised/50"
                 >
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
@@ -125,7 +125,7 @@ export function CapabilityMatrix({
                         </Badge>
                       )}
                     </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                    <p className="text-sm text-text-secondary">
                       {cap.description}
                     </p>
                     {Object.keys(cap.parameters).length > 0 && (

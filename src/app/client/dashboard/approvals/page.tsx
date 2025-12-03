@@ -102,14 +102,14 @@ export default function ApprovalsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-bg-raised">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+          <h1 className="text-2xl font-bold text-text-primary mb-2">
             Approval Inbox
           </h1>
-          <p className="text-gray-500 dark:text-gray-400">
+          <p className="text-text-secondary">
             Review and approve AI-generated content before use
           </p>
         </div>
@@ -145,7 +145,7 @@ export default function ApprovalsPage() {
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value as typeof filter)}
-            className="text-sm border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-1.5 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+            className="text-sm border border-border-subtle rounded-lg px-3 py-1.5 bg-bg-card text-text-secondary"
           >
             <option value="all">All</option>
             <option value="pending">Pending</option>
@@ -160,9 +160,9 @@ export default function ApprovalsPage() {
             <p className="text-gray-500">Loading...</p>
           </div>
         ) : filteredApprovals.length === 0 ? (
-          <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
-            <Cpu className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-500 dark:text-gray-400">
+          <div className="text-center py-12 bg-bg-card rounded-lg border border-border-subtle">
+            <Cpu className="w-12 h-12 text-text-muted mx-auto mb-4" />
+            <p className="text-text-secondary">
               No {filter === "all" ? "" : filter} approvals
             </p>
           </div>
@@ -171,14 +171,14 @@ export default function ApprovalsPage() {
             {filteredApprovals.map((item) => (
               <div
                 key={item.id}
-                className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4"
+                className="bg-bg-card rounded-lg border border-border-subtle p-4"
               >
                 <div className="flex items-start justify-between mb-3">
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-white">
+                    <p className="font-medium text-text-primary">
                       {item.description || `${item.item_type} concept`}
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    <p className="text-xs text-text-secondary mt-1">
                       Generated {formatDate(item.generated_at)}
                     </p>
                   </div>

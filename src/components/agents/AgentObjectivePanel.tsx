@@ -103,7 +103,7 @@ export function AgentObjectivePanel({
               value={objective}
               onChange={(e) => setObjective(e.target.value)}
               placeholder="Enter a high-level objective (e.g., 'Open Notepad, create a file with today's date, and save it to Desktop')"
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-border-base rounded-md bg-bg-card text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               rows={4}
               disabled={isLoading}
             />
@@ -118,7 +118,7 @@ export function AgentObjectivePanel({
               value={constraints}
               onChange={(e) => setConstraints(e.target.value)}
               placeholder="e.g., Do not delete any existing files&#10;Maximum 10 steps"
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-border-base rounded-md bg-bg-card text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               rows={3}
               disabled={isLoading}
             />

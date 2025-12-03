@@ -77,7 +77,7 @@ const MOOD_OPTIONS: MoodOption[] = [
     value: "neutral",
     label: "Neutral",
     icon: <Meh className="w-5 h-5" />,
-    color: "text-gray-500 bg-gray-50 dark:bg-gray-950 border-gray-200 dark:border-gray-800",
+    color: "text-gray-500 bg-gray-50 dark:bg-gray-950 border-border-subtle",
   },
   {
     value: "low",
@@ -301,7 +301,7 @@ export default function JournalEntryForm({
 
             {/* Mood Selector */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+              <label className="block text-sm font-medium text-text-secondary mb-3">
                 How are you feeling?
               </label>
               <div className="grid grid-cols-5 gap-2">
@@ -313,7 +313,7 @@ export default function JournalEntryForm({
                       "flex flex-col items-center gap-2 p-3 rounded-lg border-2 transition-all",
                       mood === option.value
                         ? option.color
-                        : "border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600"
+                        : "border-border-subtle hover:border-gray-300 dark:hover:border-gray-600"
                     )}
                   >
                     <div className={mood === option.value ? "" : "text-gray-400"}>
@@ -327,18 +327,18 @@ export default function JournalEntryForm({
 
             {/* Rich Text Editor */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-text-secondary mb-2">
                 Content *
               </label>
 
               {/* Formatting Toolbar */}
-              <div className="flex items-center gap-2 mb-2 p-2 bg-gray-50 dark:bg-gray-900 rounded-t-lg border border-b-0 border-gray-200 dark:border-gray-700">
+              <div className="flex items-center gap-2 mb-2 p-2 bg-bg-raised rounded-t-lg border border-b-0 border-border-subtle">
                 <button
                   onClick={() => applyFormatting("bold")}
                   className={cn(
                     "px-3 py-1 rounded text-sm font-bold transition-colors",
                     isBold
-                      ? "bg-gray-200 dark:bg-gray-800"
+                      ? "bg-bg-hover"
                       : "hover:bg-gray-200 dark:hover:bg-gray-800"
                   )}
                   title="Bold"
@@ -350,7 +350,7 @@ export default function JournalEntryForm({
                   className={cn(
                     "px-3 py-1 rounded text-sm italic transition-colors",
                     isItalic
-                      ? "bg-gray-200 dark:bg-gray-800"
+                      ? "bg-bg-hover"
                       : "hover:bg-gray-200 dark:hover:bg-gray-800"
                   )}
                   title="Italic"
@@ -362,7 +362,7 @@ export default function JournalEntryForm({
                   className={cn(
                     "px-3 py-1 rounded text-sm transition-colors",
                     isList
-                      ? "bg-gray-200 dark:bg-gray-800"
+                      ? "bg-bg-hover"
                       : "hover:bg-gray-200 dark:hover:bg-gray-800"
                   )}
                   title="Bullet List"
@@ -386,7 +386,7 @@ export default function JournalEntryForm({
 
             {/* Tags */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="block text-sm font-medium text-text-secondary mb-2">
                 Tags
               </label>
               <div className="flex gap-2">
@@ -434,7 +434,7 @@ export default function JournalEntryForm({
             )}
 
             {/* Actions */}
-            <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex gap-3 pt-4 border-t border-border-subtle">
               <Button
                 variant="outline"
                 onClick={handleSaveDraft}
@@ -483,7 +483,7 @@ export default function JournalEntryForm({
                 <button
                   key={prompt.id}
                   onClick={() => applyPrompt(prompt.text)}
-                  className="w-full p-3 text-left rounded-lg border border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-700 hover:bg-purple-50 dark:hover:bg-purple-950 transition-all group"
+                  className="w-full p-3 text-left rounded-lg border border-border-subtle hover:border-purple-300 dark:hover:border-purple-700 hover:bg-purple-50 dark:hover:bg-purple-950 transition-all group"
                 >
                   <div className="flex items-start gap-2">
                     <Lightbulb className="w-4 h-4 text-purple-500 flex-shrink-0 mt-0.5" />
@@ -491,7 +491,7 @@ export default function JournalEntryForm({
                       <div className="text-xs font-medium text-purple-600 dark:text-purple-400 mb-1">
                         {prompt.category}
                       </div>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 group-hover:text-purple-900 dark:group-hover:text-purple-100">
+                      <p className="text-sm text-text-secondary group-hover:text-purple-900 dark:group-hover:text-purple-100">
                         {prompt.text}
                       </p>
                     </div>
@@ -528,7 +528,7 @@ export default function JournalEntryForm({
             <CardTitle className="text-sm">Writing Tips</CardTitle>
           </CardHeader>
           <CardContent>
-            <ul className="space-y-2 text-xs text-gray-600 dark:text-gray-400">
+            <ul className="space-y-2 text-xs text-text-secondary">
               <li className="flex items-start gap-2">
                 <span className="text-blue-500 mt-0.5">•</span>
                 <span>Be honest and authentic with your feelings</span>

@@ -70,15 +70,15 @@ const URGENCY_CONFIG: Record<string, { label: string; color: string; bgColor: st
   },
   this_month: {
     label: 'This Month',
-    color: 'text-gray-700 dark:text-gray-300',
-    bgColor: 'bg-gray-100 dark:bg-gray-900/30',
+    color: 'text-text-secondary',
+    bgColor: 'bg-bg-raised/30',
   },
 };
 
 const IMPACT_CONFIG: Record<string, { label: string; color: string }> = {
   high: { label: 'High Impact', color: 'text-green-600 dark:text-green-400' },
   medium: { label: 'Medium Impact', color: 'text-yellow-600 dark:text-yellow-400' },
-  low: { label: 'Low Impact', color: 'text-gray-600 dark:text-gray-400' },
+  low: { label: 'Low Impact', color: 'text-text-secondary' },
 };
 
 const EFFORT_CONFIG: Record<string, { label: string; color: string }> = {

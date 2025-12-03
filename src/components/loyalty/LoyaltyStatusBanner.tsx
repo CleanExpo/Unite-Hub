@@ -97,7 +97,7 @@ export function LoyaltyStatusBanner({
       <CardContent>
         <div className="space-y-6">
           {/* Current Balance */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
+          <div className="bg-bg-card rounded-lg p-4">
             <div className="flex justify-between items-end">
               <div>
                 <p className="text-sm text-muted-foreground">Current Balance</p>
@@ -120,7 +120,7 @@ export function LoyaltyStatusBanner({
                 {balance.monthlyEarned} / {balance.monthlyCap}
               </p>
             </div>
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+            <div className="w-full bg-bg-hover rounded-full h-2">
               <div
                 className={`h-2 rounded-full transition-all ${
                   !balance.canEarnMore
@@ -142,7 +142,7 @@ export function LoyaltyStatusBanner({
 
           {/* Stats Grid */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
+            <div className="bg-bg-raised rounded-lg p-3">
               <div className="flex items-center gap-2 mb-1">
                 <TrendingUp className="w-4 h-4 text-green-600" />
                 <p className="text-xs font-semibold text-muted-foreground">Lifetime Redeemed</p>
@@ -150,7 +150,7 @@ export function LoyaltyStatusBanner({
               <p className="text-lg font-bold">{balance.lifetimeRedeemed}</p>
             </div>
 
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
+            <div className="bg-bg-raised rounded-lg p-3">
               <div className="flex items-center gap-2 mb-1">
                 <Target className="w-4 h-4 text-blue-600" />
                 <p className="text-xs font-semibold text-muted-foreground">Monthly Remaining</p>

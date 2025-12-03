@@ -78,7 +78,7 @@ export default function AIDOSettingsPage() {
           <Settings className="w-8 h-8 text-blue-600 dark:text-blue-400" />
           <h1 className="text-3xl font-bold">AIDO Settings</h1>
         </div>
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className="text-text-secondary">
           Configure your AI-powered marketing automation preferences
         </p>
       </div>
@@ -188,7 +188,7 @@ export default function AIDOSettingsPage() {
                 id="ai-model"
                 value={aiModel}
                 onChange={(e) => setAiModel(e.target.value)}
-                className="w-full px-3 py-2 border rounded-md bg-white dark:bg-gray-800"
+                className="w-full px-3 py-2 border rounded-md bg-bg-card"
               >
                 <option value="claude-sonnet-4-5-20250929">Claude Sonnet 4.5 (Recommended)</option>
                 <option value="claude-opus-4-5-20251101">Claude Opus 4 (Premium)</option>
@@ -253,7 +253,7 @@ export default function AIDOSettingsPage() {
                 value={emailSignature}
                 onChange={(e) => setEmailSignature(e.target.value)}
                 placeholder="Best regards,&#10;Your Name&#10;Your Company"
-                className="w-full px-3 py-2 border rounded-md bg-white dark:bg-gray-800 min-h-[100px]"
+                className="w-full px-3 py-2 border rounded-md bg-bg-card min-h-[100px]"
               />
             </div>
 

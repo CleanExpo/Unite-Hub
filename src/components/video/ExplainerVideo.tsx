@@ -299,10 +299,10 @@ export function ExplainerVideo({
 
       {/* Title & Description */}
       {(title || description) && (
-        <div className="p-4 bg-white dark:bg-gray-800">
-          <h3 className="font-semibold text-lg text-gray-900 dark:text-white">{title}</h3>
+        <div className="p-4 bg-bg-card">
+          <h3 className="font-semibold text-lg text-text-primary">{title}</h3>
           {description && (
-            <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">{description}</p>
+            <p className="text-text-secondary text-sm mt-1">{description}</p>
           )}
         </div>
       )}

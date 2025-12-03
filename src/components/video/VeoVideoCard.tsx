@@ -116,12 +116,12 @@ export function VeoVideoCard({
         </div>
 
         {/* Video Info */}
-        <div className="p-4 bg-white dark:bg-gray-900">
-          <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+        <div className="p-4 bg-bg-card">
+          <h3 className="text-lg font-bold text-text-primary mb-2 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
             {video.title}
           </h3>
 
-          <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-3">
+          <p className="text-sm text-text-secondary line-clamp-2 mb-3">
             {video.description}
           </p>
 
@@ -131,7 +131,7 @@ export function VeoVideoCard({
               {video.tags.slice(0, 3).map((tag, index) => (
                 <span
                   key={index}
-                  className="inline-flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-md"
+                  className="inline-flex items-center gap-1 text-xs text-text-secondary bg-bg-hover px-2 py-1 rounded-md"
                 >
                   <Tag className="w-3 h-3" />
                   {tag}
@@ -141,8 +141,8 @@ export function VeoVideoCard({
           )}
 
           {/* Metadata */}
-          <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
-            <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+          <div className="flex items-center justify-between mt-3 pt-3 border-t border-border-subtle">
+            <div className="flex items-center gap-2 text-xs text-text-secondary">
               <span>{video.metadata.views?.toLocaleString() || 0} views</span>
             </div>
             <div className="flex items-center gap-2">

@@ -21,7 +21,7 @@ export const SafetySignalFeed: React.FC = () => {
   if (isLoading && events.length === 0) {
     return (
       <div className="flex items-center justify-center p-8">
-        <p className="text-sm text-gray-600 dark:text-gray-400">Loading events...</p>
+        <p className="text-sm text-text-secondary">Loading events...</p>
       </div>
     );
   }
@@ -67,11 +67,11 @@ export const SafetySignalFeed: React.FC = () => {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <Zap className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-        <h3 className="font-semibold text-gray-900 dark:text-white">
+        <Zap className="w-5 h-5 text-text-secondary" />
+        <h3 className="font-semibold text-text-primary">
           Recent Events
         </h3>
-        <span className="ml-auto text-sm text-gray-600 dark:text-gray-400">
+        <span className="ml-auto text-sm text-text-secondary">
           {events.length} event{events.length !== 1 ? 's' : ''}
         </span>
       </div>
@@ -102,10 +102,10 @@ export const SafetySignalFeed: React.FC = () => {
                   {getSeverityIcon(event.severity)}
 
                   <div className="flex-1">
-                    <p className="font-medium text-gray-900 dark:text-white capitalize">
+                    <p className="font-medium text-text-primary capitalize">
                       {event.type.replace(/_/g, ' ')}
                     </p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">
+                    <p className="text-xs text-text-secondary">
                       {event.source} • {formatTime(event.createdAt)}
                     </p>
                   </div>
@@ -115,45 +115,45 @@ export const SafetySignalFeed: React.FC = () => {
                       {event.riskLevel}%
                     </span>
                     {isExpanded ? (
-                      <ChevronUp className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                      <ChevronUp className="w-5 h-5 text-text-secondary" />
                     ) : (
-                      <ChevronDown className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                      <ChevronDown className="w-5 h-5 text-text-secondary" />
                     )}
                   </div>
                 </button>
 
                 {/* Details */}
                 {isExpanded && (
-                  <div className="border-t border-opacity-30 border-gray-300 dark:border-gray-600 p-4 bg-white/50 dark:bg-gray-800/50">
+                  <div className="border-t border-opacity-30 border-border-base p-4 bg-white/50 dark:bg-gray-800/50">
                     <div className="grid grid-cols-2 gap-3 mb-3">
                       <div>
-                        <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase mb-1">
+                        <p className="text-xs font-semibold text-text-secondary uppercase mb-1">
                           Severity
                         </p>
-                        <p className="text-sm font-bold text-gray-900 dark:text-white">
+                        <p className="text-sm font-bold text-text-primary">
                           {event.severity}/5
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase mb-1">
+                        <p className="text-xs font-semibold text-text-secondary uppercase mb-1">
                           Risk Level
                         </p>
-                        <p className="text-sm font-bold text-gray-900 dark:text-white">
+                        <p className="text-sm font-bold text-text-primary">
                           {event.riskLevel}%
                         </p>
                       </div>
                     </div>
 
                     <div>
-                      <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase mb-2">
+                      <p className="text-xs font-semibold text-text-secondary uppercase mb-2">
                         Source
                       </p>
-                      <p className="text-sm text-gray-700 dark:text-gray-300 bg-white/50 dark:bg-gray-900/50 p-2 rounded">
+                      <p className="text-sm text-text-secondary bg-white/50 dark:bg-gray-900/50 p-2 rounded">
                         {event.source}
                       </p>
                     </div>
 
-                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-3">
+                    <p className="text-xs text-text-secondary mt-3">
                       Event ID: {event.id}
                     </p>
                   </div>
@@ -165,15 +165,15 @@ export const SafetySignalFeed: React.FC = () => {
       )}
 
       {events.length > 0 && (
-        <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+        <div className="pt-2 border-t border-border-subtle">
           <div className="grid grid-cols-2 gap-3">
-            <div className="bg-white dark:bg-gray-800 p-3 rounded border border-gray-200 dark:border-gray-700">
-              <p className="text-xs text-gray-600 dark:text-gray-400">Total Events</p>
-              <p className="text-lg font-bold text-gray-900 dark:text-white">{events.length}</p>
+            <div className="bg-bg-card p-3 rounded border border-border-subtle">
+              <p className="text-xs text-text-secondary">Total Events</p>
+              <p className="text-lg font-bold text-text-primary">{events.length}</p>
             </div>
-            <div className="bg-white dark:bg-gray-800 p-3 rounded border border-gray-200 dark:border-gray-700">
-              <p className="text-xs text-gray-600 dark:text-gray-400">Avg Severity</p>
-              <p className="text-lg font-bold text-gray-900 dark:text-white">
+            <div className="bg-bg-card p-3 rounded border border-border-subtle">
+              <p className="text-xs text-text-secondary">Avg Severity</p>
+              <p className="text-lg font-bold text-text-primary">
                 {(events.reduce((sum, e) => sum + e.severity, 0) / events.length).toFixed(1)}
               </p>
             </div>

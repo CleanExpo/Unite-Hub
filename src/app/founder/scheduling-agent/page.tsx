@@ -159,7 +159,7 @@ export default function SchedulingAgentDemo() {
       {/* Header */}
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Scheduling Agent</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2">
+        <p className="text-text-secondary mt-2">
           Autonomous meeting proposal generation with calendar availability analysis
         </p>
       </div>
@@ -282,7 +282,7 @@ export default function SchedulingAgentDemo() {
                             </span>
                           </div>
                           <div className="flex justify-between items-center pt-2 border-t">
-                            <span className="text-sm text-gray-600 dark:text-gray-400">
+                            <span className="text-sm text-text-secondary">
                               {slot.durationMinutes} min
                             </span>
                             <Badge
@@ -330,7 +330,7 @@ export default function SchedulingAgentDemo() {
                             <AlertTriangle className="h-4 w-4 text-orange-600 mt-0.5" />
                             <div className="flex-1">
                               <p className="font-medium text-sm">{conflict.eventA.title}</p>
-                              <p className="text-xs text-gray-600 dark:text-gray-400">
+                              <p className="text-xs text-text-secondary">
                                 {eventAStart.toLocaleTimeString('en-US', {
                                   hour: '2-digit',
                                   minute: '2-digit',
@@ -338,14 +338,14 @@ export default function SchedulingAgentDemo() {
                               </p>
                             </div>
                           </div>
-                          <div className="text-center text-xs text-gray-600 dark:text-gray-400">
+                          <div className="text-center text-xs text-text-secondary">
                             overlaps with
                           </div>
                           <div className="flex items-start gap-2">
                             <AlertTriangle className="h-4 w-4 text-orange-600 mt-0.5" />
                             <div className="flex-1">
                               <p className="font-medium text-sm">{conflict.eventB.title}</p>
-                              <p className="text-xs text-gray-600 dark:text-gray-400">
+                              <p className="text-xs text-text-secondary">
                                 {eventBStart.toLocaleTimeString('en-US', {
                                   hour: '2-digit',
                                   minute: '2-digit',
@@ -378,7 +378,7 @@ export default function SchedulingAgentDemo() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-800 font-mono text-sm whitespace-pre-wrap overflow-auto max-h-96">
+                <div className="bg-bg-raised p-4 rounded-lg border border-border-subtle font-mono text-sm whitespace-pre-wrap overflow-auto max-h-96">
                   {demo.result?.proposalEmail || 'No proposal generated'}
                 </div>
               </CardContent>
@@ -421,15 +421,15 @@ export default function SchedulingAgentDemo() {
                 <CardContent className="space-y-3 text-sm">
                   <div>
                     <span className="font-medium">Available Slots:</span>
-                    <p className="text-gray-600 dark:text-gray-400">{availableSlots.length} found</p>
+                    <p className="text-text-secondary">{availableSlots.length} found</p>
                   </div>
                   <div>
                     <span className="font-medium">Calendar Conflicts:</span>
-                    <p className="text-gray-600 dark:text-gray-400">{conflicts.length} detected</p>
+                    <p className="text-text-secondary">{conflicts.length} detected</p>
                   </div>
                   <div>
                     <span className="font-medium">Best Time:</span>
-                    <p className="text-gray-600 dark:text-gray-400">
+                    <p className="text-text-secondary">
                       {availableSlots[0]
                         ? new Date(availableSlots[0].start).toLocaleTimeString('en-US', {
                             weekday: 'short',
@@ -456,31 +456,31 @@ export default function SchedulingAgentDemo() {
         <CardContent className="space-y-3 text-sm">
           <div>
             <p className="font-medium text-blue-900 dark:text-blue-200">1. Calendar Analysis</p>
-            <p className="text-gray-700 dark:text-gray-300">
+            <p className="text-text-secondary">
               The agent scans the target participant's calendar for available time slots within the requested date range.
             </p>
           </div>
           <div>
             <p className="font-medium text-blue-900 dark:text-blue-200">2. Conflict Detection</p>
-            <p className="text-gray-700 dark:text-gray-300">
+            <p className="text-text-secondary">
               It identifies overlapping events and back-to-back meetings that could affect schedule quality.
             </p>
           </div>
           <div>
             <p className="font-medium text-blue-900 dark:text-blue-200">3. Confidence Scoring</p>
-            <p className="text-gray-700 dark:text-gray-300">
+            <p className="text-text-secondary">
               Available slots are ranked by confidence (0-100%) based on buffer time and business hours preference.
             </p>
           </div>
           <div>
             <p className="font-medium text-blue-900 dark:text-blue-200">4. Proposal Generation</p>
-            <p className="text-gray-700 dark:text-gray-300">
+            <p className="text-text-secondary">
               Professional email with up to 5 available slots is generated and formatted for calendar tools.
             </p>
           </div>
           <div>
             <p className="font-medium text-blue-900 dark:text-blue-200">5. Risk Evaluation</p>
-            <p className="text-gray-700 dark:text-gray-300">
+            <p className="text-text-secondary">
               The system assesses risks and routes high-risk proposals to founder for review.
             </p>
           </div>

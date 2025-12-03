@@ -41,7 +41,7 @@ export function EngagementHeatmap({
 
   // Get color based on activity level
   const getColor = (count: number) => {
-    if (count === 0) return 'bg-gray-100 dark:bg-gray-800';
+    if (count === 0) return 'bg-bg-hover';
     const intensity = count / maxCount;
     if (intensity >= 0.75) return 'bg-green-500';
     if (intensity >= 0.5) return 'bg-green-400';
@@ -139,7 +139,7 @@ export function EngagementHeatmap({
         {/* Legend */}
         <div className="flex items-center justify-end gap-1 mt-4">
           <span className="text-xs text-muted-foreground mr-1">Less</span>
-          <div className="w-3 h-3 rounded-sm bg-gray-100 dark:bg-gray-800" />
+          <div className="w-3 h-3 rounded-sm bg-bg-hover" />
           <div className="w-3 h-3 rounded-sm bg-green-200" />
           <div className="w-3 h-3 rounded-sm bg-green-300" />
           <div className="w-3 h-3 rounded-sm bg-green-400" />

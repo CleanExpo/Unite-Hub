@@ -80,7 +80,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
       accent: 'bg-accent-100 text-accent-500',
       neutral: 'bg-bg-hover text-text-secondary',
       default: 'bg-bg-hover text-text-secondary',
-      secondary: 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300',
+      secondary: 'bg-bg-hover text-gray-600 dark:text-gray-300',
       outline: 'bg-transparent border border-border-subtle text-text-secondary',
       destructive: 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400',
       danger: 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400',

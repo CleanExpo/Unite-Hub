@@ -79,7 +79,7 @@ export default function HealthTrendChart({
     if (active && payload && payload.length) {
       const point = payload[0].payload;
       return (
-        <div className="bg-white dark:bg-gray-800 p-3 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700">
+        <div className="bg-bg-card p-3 rounded-lg shadow-lg border border-border-subtle">
           <p className="text-sm text-gray-500">{point.fullDate}</p>
           <p className="text-lg font-semibold" style={{ color: getScoreColor(point.health_score) }}>
             {point.health_score}/100
@@ -182,7 +182,7 @@ export default function HealthTrendChart({
         </ResponsiveContainer>
 
         {stats && (
-          <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-border-subtle">
             <div className="text-center">
               <div className="text-xs text-gray-500">Average</div>
               <div className="font-semibold">{stats.avg.toFixed(0)}</div>

@@ -112,7 +112,7 @@ export function LaunchProgressGraph({
                   </div>
                 ))}
               </div>
-              <div className="flex h-2 overflow-hidden rounded bg-gray-200 dark:bg-gray-700">
+              <div className="flex h-2 overflow-hidden rounded bg-bg-hover">
                 <div
                   style={{ width: `${progress}%` }}
                   className="flex flex-col justify-center overflow-hidden bg-blue-500 transition-all duration-500"

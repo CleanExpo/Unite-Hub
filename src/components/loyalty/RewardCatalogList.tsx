@@ -149,18 +149,18 @@ export function RewardCatalogList({
               return (
                 <div
                   key={reward.id}
-                  className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4"
+                  className="bg-bg-card border border-border-subtle rounded-lg p-4"
                 >
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900 dark:text-white">
+                      <h3 className="font-semibold text-text-primary">
                         {reward.name}
                       </h3>
                       <p className="text-sm text-muted-foreground mt-1">
                         {reward.description}
                       </p>
                       <div className="flex items-center gap-2 mt-2">
-                        <span className="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                        <span className="text-xs bg-bg-hover px-2 py-1 rounded">
                           {reward.category}
                         </span>
                         {reward.dailyLimit && (

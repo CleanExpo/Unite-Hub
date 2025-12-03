@@ -141,7 +141,7 @@ export function MediaGallery({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search files, tags, or content..."
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+            className="w-full pl-10 pr-4 py-2 border border-border-base rounded-lg bg-bg-card text-gray-900 dark:text-gray-100"
           />
         </div>
 
@@ -149,7 +149,7 @@ export function MediaGallery({
         <select
           value={selectedType || ""}
           onChange={(e) => setSelectedType(e.target.value || null)}
-          className="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+          className="px-4 py-2 border border-border-base rounded-lg bg-bg-card text-gray-900 dark:text-gray-100"
         >
           <option value="">All Types</option>
           <option value="video">Video</option>
@@ -163,7 +163,7 @@ export function MediaGallery({
         <select
           value={selectedStatus || ""}
           onChange={(e) => setSelectedStatus(e.target.value || null)}
-          className="px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+          className="px-4 py-2 border border-border-base rounded-lg bg-bg-card text-gray-900 dark:text-gray-100"
         >
           <option value="">All Status</option>
           <option value="uploading">Uploading</option>
@@ -185,7 +185,7 @@ export function MediaGallery({
       {/* Empty State */}
       {!loading && filteredMedia.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-gray-500 dark:text-gray-400">
+          <p className="text-text-secondary">
             {searchQuery ? "No media files match your search" : "No media files yet"}
           </p>
         </div>
@@ -198,10 +198,10 @@ export function MediaGallery({
             <div
               key={media.id}
               onClick={() => onSelect?.(media)}
-              className="group relative bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition-all"
+              className="group relative bg-bg-card border border-border-subtle rounded-lg overflow-hidden cursor-pointer hover:shadow-lg transition-all"
             >
               {/* Thumbnail */}
-              <div className="aspect-video bg-gray-100 dark:bg-gray-900 flex items-center justify-center relative">
+              <div className="aspect-video bg-bg-raised flex items-center justify-center relative">
                 {media.file_type === "image" && media.public_url ? (
                   <img
                     src={media.public_url}
@@ -212,7 +212,7 @@ export function MediaGallery({
                   <div className="flex flex-col items-center gap-2">
                     {getFileIcon(media.file_type)}
                     {media.duration_seconds && (
-                      <span className="text-xs text-gray-500 dark:text-gray-400">
+                      <span className="text-xs text-text-secondary">
                         {formatDuration(media.duration_seconds)}
                       </span>
                     )}
@@ -247,14 +247,14 @@ export function MediaGallery({
                 </h3>
 
                 {/* Metadata */}
-                <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
+                <div className="flex items-center gap-3 text-xs text-text-secondary">
                   <span className="capitalize">{media.file_type}</span>
                   <span>•</span>
                   <span>{formatFileSize(media.file_size_bytes)}</span>
                 </div>
 
                 {/* Date */}
-                <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
+                <div className="flex items-center gap-1 text-xs text-text-secondary">
                   <Calendar className="h-3 w-3" />
                   <span>{formatDate(media.created_at)}</span>
                 </div>
@@ -281,7 +281,7 @@ export function MediaGallery({
 
                 {/* AI Analysis Summary (if available) */}
                 {media.ai_analysis?.summary && (
-                  <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2">
+                  <p className="text-xs text-text-secondary line-clamp-2">
                     {media.ai_analysis.summary}
                   </p>
                 )}

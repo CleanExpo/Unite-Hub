@@ -60,8 +60,8 @@ export const OptimizedStepPreview: React.FC<OptimizedStepPreviewProps> = ({
   if (loading) {
     return (
       <div className="space-y-3">
-        <h3 className="font-semibold text-gray-900 dark:text-white">Optimized Steps</h3>
-        <div className="text-sm text-gray-600 dark:text-gray-400">Loading step optimization...</div>
+        <h3 className="font-semibold text-text-primary">Optimized Steps</h3>
+        <div className="text-sm text-text-secondary">Loading step optimization...</div>
       </div>
     );
   }
@@ -83,8 +83,8 @@ export const OptimizedStepPreview: React.FC<OptimizedStepPreviewProps> = ({
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Zap className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-          <h3 className="font-semibold text-gray-900 dark:text-white">Optimized Steps</h3>
+          <Zap className="w-5 h-5 text-text-secondary" />
+          <h3 className="font-semibold text-text-primary">Optimized Steps</h3>
         </div>
         {parallelismLevel > 1 && (
           <span className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded text-xs font-semibold">
@@ -98,15 +98,15 @@ export const OptimizedStepPreview: React.FC<OptimizedStepPreviewProps> = ({
         <div className="p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
           <div className="flex items-center gap-2 mb-1">
             <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-            <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Parallelism</span>
+            <span className="text-xs font-medium text-text-secondary">Parallelism</span>
           </div>
-          <p className="text-xl font-bold text-gray-900 dark:text-white">{parallelismLevel}</p>
-          <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">concurrent agents</p>
+          <p className="text-xl font-bold text-text-primary">{parallelismLevel}</p>
+          <p className="text-xs text-text-secondary mt-0.5">concurrent agents</p>
         </div>
 
         <div className={`p-3 border rounded-lg ${getRiskBg(riskScore)} border-current`}>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Risk Score</span>
+            <span className="text-xs font-medium text-text-secondary">Risk Score</span>
           </div>
           <p className={`text-xl font-bold ${getRiskColor(riskScore)}`}>{riskScore}</p>
           <p className={`text-xs mt-0.5 ${getRiskColor(riskScore)}`}>
@@ -118,12 +118,12 @@ export const OptimizedStepPreview: React.FC<OptimizedStepPreviewProps> = ({
       {/* Step Execution Flow */}
       {displaySteps.length > 0 && (
         <div className="space-y-2">
-          <h4 className="text-sm font-medium text-gray-900 dark:text-white">Execution Flow</h4>
+          <h4 className="text-sm font-medium text-text-primary">Execution Flow</h4>
           <div className="space-y-1.5">
             {displaySteps.map((step, index) => {
               const agentConfig = agentColors[step.agent as keyof typeof agentColors] || {
-                bg: 'bg-gray-50 dark:bg-gray-900/20',
-                border: 'border-gray-200 dark:border-gray-800',
+                bg: 'bg-bg-raised/20',
+                border: 'border-border-subtle',
                 icon: '⚙️',
               };
 
@@ -134,18 +134,18 @@ export const OptimizedStepPreview: React.FC<OptimizedStepPreviewProps> = ({
                   >
                     <span className="text-lg">{agentConfig.icon}</span>
                     <div className="flex-1">
-                      <p className="text-xs font-semibold text-gray-900 dark:text-white">
+                      <p className="text-xs font-semibold text-text-primary">
                         {step.stepId}
                       </p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">
+                      <p className="text-xs text-text-secondary">
                         {step.agent.replace(/_/g, ' ')}
                       </p>
                     </div>
-                    <span className="text-xs font-medium text-gray-500 dark:text-gray-400">#{index + 1}</span>
+                    <span className="text-xs font-medium text-text-secondary">#{index + 1}</span>
                   </div>
                   {index < displaySteps.length - 1 && (
                     <div className="flex justify-center py-1">
-                      <div className="text-gray-400 dark:text-gray-600 text-xs">↓</div>
+                      <div className="text-text-muted text-xs">↓</div>
                     </div>
                   )}
                 </div>
@@ -157,12 +157,12 @@ export const OptimizedStepPreview: React.FC<OptimizedStepPreviewProps> = ({
 
       {/* Step Ordering Info */}
       {stepOrdering.length > 0 && (
-        <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+        <div className="p-3 bg-bg-raised rounded-lg border border-border-subtle">
           <div className="flex items-center gap-2 mb-2">
-            <Layers className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-            <h4 className="text-xs font-semibold text-gray-900 dark:text-white">Execution Order</h4>
+            <Layers className="w-4 h-4 text-text-secondary" />
+            <h4 className="text-xs font-semibold text-text-primary">Execution Order</h4>
           </div>
-          <p className="text-xs text-gray-600 dark:text-gray-400 break-all">
+          <p className="text-xs text-text-secondary break-all">
             {stepOrdering.join(' → ')}
           </p>
         </div>
@@ -170,7 +170,7 @@ export const OptimizedStepPreview: React.FC<OptimizedStepPreviewProps> = ({
 
       {displaySteps.length === 0 && (
         <div className="text-center py-4">
-          <p className="text-sm text-gray-600 dark:text-gray-400">No optimized steps available</p>
+          <p className="text-sm text-text-secondary">No optimized steps available</p>
         </div>
       )}
     </div>
