@@ -175,7 +175,9 @@ export function getSubPillar(
   subPillarId: string
 ): SubPillar | undefined {
   const pillar = getPillar(pillarId);
-  if (!pillar) return undefined;
+  if (!pillar) {
+    return undefined;
+  }
   return pillar.subPillars.find(sp => sp.id === subPillarId);
 }
 
