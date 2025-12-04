@@ -8,7 +8,11 @@
     { "path": "/api/agents/continuous-intelligence", "schedule": "*/30 * * * *" },
     { "path": "/api/aido/google-curve/monitor", "schedule": "0 */6 * * *" },
     { "path": "/api/seo/sync-rankings", "schedule": "0 6 * * *" },
-    { "path": "/api/managed/scheduler/weekly", "schedule": "0 9 * * 1" }
+    { "path": "/api/managed/scheduler/weekly", "schedule": "0 9 * * 1" },
+    { "path": "/api/cron/model-scout", "schedule": "0 */6 * * *" },
+    { "path": "/api/cron/cost-report", "schedule": "0 8 * * *" },
+    { "path": "/api/cron/content-queue", "schedule": "*/15 * * * *" },
+    { "path": "/api/cron/seo-health", "schedule": "0 6 * * *" }
   ],
   "regions": ["iad1"]
 }

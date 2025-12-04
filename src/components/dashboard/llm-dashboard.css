@@ -1,0 +1,462 @@
+/* LLM Orchestration Dashboard Styles */
+/* Based on Unite-Hub Design System */
+
+/* ============================================
+   CSS VARIABLES (Design Tokens)
+   ============================================ */
+:root {
+  /* Colors */
+  --llm-bg-primary: hsl(var(--bg-primary));
+  --llm-bg-secondary: hsl(var(--bg-secondary));
+  --llm-bg-card: hsl(var(--bg-card));
+  --llm-text-primary: hsl(var(--text-primary));
+  --llm-text-secondary: hsl(var(--text-secondary));
+  --llm-text-muted: hsl(var(--text-muted));
+  --llm-accent: hsl(var(--accent-500));
+  --llm-accent-light: hsl(var(--accent-400));
+  --llm-border: hsl(var(--border));
+
+  /* Status Colors */
+  --llm-status-success: #22c55e;
+  --llm-status-warning: #f59e0b;
+  --llm-status-error: #ef4444;
+  --llm-status-info: #3b82f6;
+
+  /* Shadows */
+  --llm-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --llm-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --llm-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+
+  /* Animations */
+  --llm-transition-fast: 150ms ease;
+  --llm-transition-normal: 250ms ease;
+  --llm-transition-slow: 350ms ease;
+}
+
+/* ============================================
+   DASHBOARD LAYOUT
+   ============================================ */
+.llm-dashboard {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  min-height: 100vh;
+  background: var(--llm-bg-primary);
+}
+
+.llm-dashboard-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.llm-dashboard-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ============================================
+   CARDS
+   ============================================ */
+.llm-card {
+  background: var(--llm-bg-card);
+  border: 1px solid var(--llm-border);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  box-shadow: var(--llm-shadow-sm);
+  transition: box-shadow var(--llm-transition-fast);
+}
+
+.llm-card:hover {
+  box-shadow: var(--llm-shadow-md);
+}
+
+.llm-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.llm-card-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--llm-text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.llm-card-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--llm-accent);
+  line-height: 1;
+}
+
+.llm-card-subtitle {
+  font-size: 0.75rem;
+  color: var(--llm-text-muted);
+  margin-top: 0.25rem;
+}
+
+/* ============================================
+   STATS GRID
+   ============================================ */
+.llm-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.llm-stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.llm-stat-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--llm-accent);
+  color: white;
+}
+
+/* ============================================
+   MODEL LIST
+   ============================================ */
+.llm-model-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.llm-model-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: var(--llm-bg-secondary);
+  border-radius: 0.5rem;
+  transition: background var(--llm-transition-fast);
+}
+
+.llm-model-item:hover {
+  background: var(--llm-bg-card);
+}
+
+.llm-model-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.375rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--llm-accent), var(--llm-accent-light));
+  color: white;
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+.llm-model-info {
+  flex: 1;
+}
+
+.llm-model-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--llm-text-primary);
+}
+
+.llm-model-provider {
+  font-size: 0.75rem;
+  color: var(--llm-text-muted);
+}
+
+.llm-model-cost {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--llm-text-secondary);
+}
+
+/* ============================================
+   TASK TYPES
+   ============================================ */
+.llm-task-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.75rem;
+}
+
+.llm-task-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--llm-bg-secondary);
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--llm-text-primary);
+  border: 1px solid transparent;
+  transition: all var(--llm-transition-fast);
+}
+
+.llm-task-badge:hover {
+  border-color: var(--llm-accent);
+  background: var(--llm-bg-card);
+}
+
+.llm-task-badge-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--llm-accent);
+}
+
+/* ============================================
+   USAGE CHART
+   ============================================ */
+.llm-chart-container {
+  height: 200px;
+  position: relative;
+}
+
+.llm-chart-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: var(--llm-bg-secondary);
+  border-radius: 0.5rem;
+  color: var(--llm-text-muted);
+  font-size: 0.875rem;
+}
+
+/* ============================================
+   BUDGET METER
+   ============================================ */
+.llm-budget-meter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.llm-budget-bar {
+  height: 0.75rem;
+  background: var(--llm-bg-secondary);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.llm-budget-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--llm-status-success), var(--llm-status-warning));
+  border-radius: 9999px;
+  transition: width var(--llm-transition-slow);
+}
+
+.llm-budget-fill.warning {
+  background: linear-gradient(90deg, var(--llm-status-warning), var(--llm-status-error));
+}
+
+.llm-budget-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--llm-text-muted);
+}
+
+/* ============================================
+   SCHEDULED TASKS
+   ============================================ */
+.llm-task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.llm-task-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--llm-bg-secondary);
+  border-radius: 0.5rem;
+}
+
+.llm-task-status {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+}
+
+.llm-task-status.enabled {
+  background: var(--llm-status-success);
+}
+
+.llm-task-status.disabled {
+  background: var(--llm-status-error);
+}
+
+.llm-task-name {
+  flex: 1;
+  font-size: 0.875rem;
+  color: var(--llm-text-primary);
+}
+
+.llm-task-schedule {
+  font-size: 0.75rem;
+  color: var(--llm-text-muted);
+  font-family: monospace;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.llm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: all var(--llm-transition-fast);
+}
+
+.llm-btn-primary {
+  background: var(--llm-accent);
+  color: white;
+}
+
+.llm-btn-primary:hover {
+  background: var(--llm-accent-light);
+}
+
+.llm-btn-secondary {
+  background: var(--llm-bg-secondary);
+  color: var(--llm-text-primary);
+  border: 1px solid var(--llm-border);
+}
+
+.llm-btn-secondary:hover {
+  background: var(--llm-bg-card);
+}
+
+.llm-btn-icon {
+  padding: 0.5rem;
+}
+
+/* ============================================
+   ALERTS & NOTIFICATIONS
+   ============================================ */
+.llm-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.llm-alert-success {
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  color: var(--llm-status-success);
+}
+
+.llm-alert-warning {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: var(--llm-status-warning);
+}
+
+.llm-alert-error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: var(--llm-status-error);
+}
+
+.llm-alert-info {
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: var(--llm-status-info);
+}
+
+/* ============================================
+   LOADING STATES
+   ============================================ */
+.llm-skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--llm-bg-secondary) 25%,
+    var(--llm-bg-card) 50%,
+    var(--llm-bg-secondary) 75%
+  );
+  background-size: 200% 100%;
+  animation: llm-shimmer 1.5s infinite;
+  border-radius: 0.25rem;
+}
+
+@keyframes llm-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.llm-spinner {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid var(--llm-border);
+  border-top-color: var(--llm-accent);
+  border-radius: 9999px;
+  animation: llm-spin 0.75s linear infinite;
+}
+
+@keyframes llm-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1024px) {
+  .llm-dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .llm-dashboard-sidebar {
+    order: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .llm-dashboard {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .llm-stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .llm-card {
+    padding: 1rem;
+  }
+
+  .llm-card-value {
+    font-size: 1.5rem;
+  }
+}
