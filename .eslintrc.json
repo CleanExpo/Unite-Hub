@@ -1,15 +1,19 @@
-{
-  "extends": "next/core-web-vitals",
-  "rules": {
-    "@typescript-eslint/no-unused-vars": "warn",
-    "@typescript-eslint/no-explicit-any": "warn",
-    "react-hooks/exhaustive-deps": "warn"
+﻿{
+  "extends": ["next/core-web-vitals"],
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2022": true
   },
-  "ignorePatterns": [
-    "node_modules/",
-    ".next/",
-    "out/",
-    "coverage/",
-    "logs/"
-  ]
+  "globals": {
+    "React": "readonly",
+    "NodeJS": "readonly"
+  },
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+    "no-unused-vars": "off",
+    "curly": "warn",
+    "no-console": "off"
+  }
 }
