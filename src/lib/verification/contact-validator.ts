@@ -77,7 +77,9 @@ function validateEmailFormat(email: string): boolean {
  */
 function isDisposableEmail(email: string): boolean {
   const domain = email.split('@')[1]?.toLowerCase();
-  if (!domain) return false;
+  if (!domain) {
+return false;
+}
   return DISPOSABLE_EMAIL_DOMAINS.has(domain);
 }
 
@@ -259,13 +261,7 @@ function validateABNFormat(abn: string): boolean {
   return sum % 89 === 0;
 }
 
-/**
- * Format ABN with spaces
- */
-function formatABN(abn: string): string {
-  const cleaned = abn.replace(/\s/g, '');
-  return `${cleaned.slice(0, 2)} ${cleaned.slice(2, 5)} ${cleaned.slice(5, 8)} ${cleaned.slice(8)}`;
-}
+// formatABN function available if needed for ABN display formatting
 
 /**
  * Lookup ABN via ABR API

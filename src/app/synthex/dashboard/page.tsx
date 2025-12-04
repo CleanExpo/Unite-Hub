@@ -39,14 +39,16 @@ import {
   ImageIcon,
   Film,
   Sparkles,
+  Eye,
 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import JobCreationModal from '@/components/synthex/JobCreationModal';
 import JobProgressCard from '@/components/synthex/JobProgressCard';
-import ResultPreviewCard from '@/components/synthex/ResultPreviewCard';
+// ResultPreviewCard imported when needed for result display
 import VisualGenerationPanel from '@/components/synthex/VisualGenerationPanel';
 import VideoCreationPanel from '@/components/synthex/VideoCreationPanel';
 import SeoAnalysisPanel from '@/components/synthex/SeoAnalysisPanel';
+import WebsitePreviewPanel from '@/components/synthex/WebsitePreviewPanel';
 
 // ============================================================================
 // TYPES
@@ -116,7 +118,7 @@ export default function SynthexDashboard() {
     fetchTenantData();
   }, [tenantId, router]);
 
-  const handleCreateJob = async (jobData: any) => {
+  const handleCreateJob = async (jobData: Record<string, unknown>) => {
     setCreatingJob(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
@@ -380,6 +382,10 @@ export default function SynthexDashboard() {
         {/* Tabs for Jobs and Results */}
         <Tabs defaultValue="jobs" className="space-y-6">
           <TabsList className="bg-slate-200">
+            <TabsTrigger value="preview" className="gap-2">
+              <Eye size={16} />
+              Website Preview
+            </TabsTrigger>
             <TabsTrigger value="jobs" className="gap-2">
               <Zap size={16} />
               Jobs ({jobs.length})
@@ -405,6 +411,19 @@ export default function SynthexDashboard() {
               Analytics
             </TabsTrigger>
           </TabsList>
+
+          {/* Website Preview Tab */}
+          <TabsContent value="preview" className="space-y-4">
+            <WebsitePreviewPanel
+              tenantId={tenantId || ''}
+              onApprove={(preview) => {
+                console.log('Preview approved:', preview.id);
+              }}
+              onRevisionRequested={(preview) => {
+                console.log('Revision requested:', preview.id);
+              }}
+            />
+          </TabsContent>
 
           {/* Jobs Tab */}
           <TabsContent value="jobs" className="space-y-4">

@@ -20,22 +20,25 @@ import { generateNonce, getEnvironmentCSP, NONCE_HEADER } from "./lib/security/c
 
 // Staff role type from staff_users table
 type StaffRole = 'owner' | 'admin' | 'developer';
-type StaffStatus = 'active' | 'pending' | 'disabled';
-
-interface StaffUser {
-  role: StaffRole;
-  status: StaffStatus;
-}
+// StaffStatus type reserved for future staff status checking: 'active' | 'pending' | 'disabled'
 
 /**
  * Normalize legacy role names to new UserRole enum
  */
 function normalizeRole(role: string | null | undefined): UserRole {
-  if (!role) return 'CLIENT';
+  if (!role) {
+return 'CLIENT';
+}
   const upperRole = role.toUpperCase();
-  if (upperRole === 'FOUNDER' || upperRole === 'ADMIN' || role === 'admin') return 'FOUNDER';
-  if (upperRole === 'STAFF') return 'STAFF';
-  if (upperRole === 'CLIENT' || upperRole === 'CUSTOMER' || role === 'customer') return 'CLIENT';
+  if (upperRole === 'FOUNDER' || upperRole === 'ADMIN' || role === 'admin') {
+return 'FOUNDER';
+}
+  if (upperRole === 'STAFF') {
+return 'STAFF';
+}
+  if (upperRole === 'CLIENT' || upperRole === 'CUSTOMER' || role === 'customer') {
+return 'CLIENT';
+}
   return 'CLIENT';
 }
 
@@ -43,7 +46,9 @@ function normalizeRole(role: string | null | undefined): UserRole {
  * Map staff role to UserRole for backwards compatibility
  */
 function staffRoleToUserRole(staffRole: StaffRole | null): UserRole {
-  if (!staffRole) return 'CLIENT';
+  if (!staffRole) {
+return 'CLIENT';
+}
   switch (staffRole) {
     case 'owner': return 'FOUNDER';
     case 'admin': return 'ADMIN';

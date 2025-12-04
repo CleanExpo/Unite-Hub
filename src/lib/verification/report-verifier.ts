@@ -100,7 +100,9 @@ Focus on:
 
   const text = response.content[0].type === 'text' ? response.content[0].text : '';
   const jsonMatch = text.match(/\[[\s\S]*\]/);
-  if (!jsonMatch) return [];
+  if (!jsonMatch) {
+return [];
+}
 
   try {
     return JSON.parse(jsonMatch[0]);
@@ -208,8 +210,8 @@ function buildSourceContext(sourceData: ReportSourceData): string {
       }
       if (img.validation.detected_elements) {
         const elements = Object.entries(img.validation.detected_elements)
-          .filter(([_, v]) => v)
-          .map(([k]) => k.replace(/_/g, ' '));
+          .filter((entry) => entry[1])
+          .map((entry) => entry[0].replace(/_/g, ' '));
         if (elements.length > 0) {
           parts.push(`  - Detected: ${elements.join(', ')}`);
         }
@@ -280,7 +282,9 @@ Check for:
 
   const text = response.content[0].type === 'text' ? response.content[0].text : '';
   const jsonMatch = text.match(/\[[\s\S]*\]/);
-  if (!jsonMatch) return [];
+  if (!jsonMatch) {
+return [];
+}
 
   try {
     return JSON.parse(jsonMatch[0]);
@@ -351,7 +355,9 @@ Check for:
 
   const text = response.content[0].type === 'text' ? response.content[0].text : '';
   const jsonMatch = text.match(/\[[\s\S]*\]/);
-  if (!jsonMatch) return [];
+  if (!jsonMatch) {
+return [];
+}
 
   try {
     return JSON.parse(jsonMatch[0]);
@@ -372,7 +378,9 @@ function calculateAccuracyScore(
   consistencyIssues: string[]
 ): number {
   const totalClaims = verified + unverified;
-  if (totalClaims === 0) return 50; // Can't assess without claims
+  if (totalClaims === 0) {
+return 50;
+} // Can't assess without claims
 
   // Base score from verified claims
   let score = (verified / totalClaims) * 100;

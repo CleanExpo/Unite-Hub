@@ -184,7 +184,9 @@ Extract each line item. Combine duplicates. Standardize descriptions.`,
 
   const text = response.content[0].type === 'text' ? response.content[0].text : '';
   const jsonMatch = text.match(/\[[\s\S]*\]/);
-  if (!jsonMatch) return [];
+  if (!jsonMatch) {
+return [];
+}
 
   try {
     return JSON.parse(jsonMatch[0]);
@@ -197,7 +199,9 @@ Extract each line item. Combine duplicates. Standardize descriptions.`,
  * Find duplicate items using AI similarity detection
  */
 async function findDuplicates(items: ScopeItem[]): Promise<ScopeItem[]> {
-  if (items.length < 2) return [];
+  if (items.length < 2) {
+return [];
+}
 
   const response = await anthropic.messages.create({
     model: 'claude-sonnet-4-5-20250929',
@@ -230,7 +234,9 @@ Consider items duplicates if:
 
   const text = response.content[0].type === 'text' ? response.content[0].text : '';
   const jsonMatch = text.match(/\[[\s\S]*\]/);
-  if (!jsonMatch) return [];
+  if (!jsonMatch) {
+return [];
+}
 
   try {
     return JSON.parse(jsonMatch[0]);
@@ -383,7 +389,9 @@ function calculateCompletenessScore(
   sequenceIssues: SequenceIssue[],
   missingSafetyItems: string[]
 ): number {
-  if (items.length === 0) return 0;
+  if (items.length === 0) {
+return 0;
+}
 
   // Start with base score
   let score = 100;

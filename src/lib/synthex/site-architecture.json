@@ -1,0 +1,838 @@
+{
+  "schema_version": "1.0.0",
+  "last_updated": "2024-12-04",
+  "description": "Complete site architecture for Unite-Hub and Synthex with SEO/GEO metrics, Mysia Strategy Engine, and content optimization",
+
+  "brands": {
+    "unite_hub": {
+      "name": "Unite-Hub",
+      "tagline": "Marketing for Australian Trade Businesses",
+      "domain": "unite-hub.com.au",
+      "primary_colour": "#3b9ba8",
+      "secondary_colour": "#2563ab",
+      "accent_colour": "#f39c12",
+      "target_audience": "Australian trade businesses (plumbers, electricians, builders, HVAC)",
+      "age_range": "35-55",
+      "positioning": "Full-service marketing agency for trades"
+    },
+    "synthex": {
+      "name": "Synthex",
+      "tagline": "Marketing that works while you work",
+      "domain": "synthex.com.au",
+      "primary_colour": "#ea580c",
+      "grey_base": "#0a0a0b",
+      "target_audience": "Australian SMB owners across all industries",
+      "age_range": "35-55",
+      "positioning": "Autonomous marketing agent - no meetings, no calls, just results"
+    }
+  },
+
+  "global_seo_metrics": {
+    "target_domain_authority": 40,
+    "target_page_authority": 35,
+    "target_trust_flow": 25,
+    "target_citation_flow": 30,
+    "core_web_vitals": {
+      "lcp_target_ms": 2500,
+      "fid_target_ms": 100,
+      "cls_target": 0.1
+    },
+    "content_metrics": {
+      "min_word_count_landing": 800,
+      "min_word_count_pillar": 2500,
+      "min_word_count_subpillar": 1500,
+      "target_readability_score": 65,
+      "target_keyword_density_percent": 1.5,
+      "max_keyword_density_percent": 2.5
+    }
+  },
+
+  "geo_metrics": {
+    "primary_market": "Australia",
+    "target_regions": [
+      { "name": "Brisbane", "state": "QLD", "priority": 1 },
+      { "name": "Sydney", "state": "NSW", "priority": 2 },
+      { "name": "Melbourne", "state": "VIC", "priority": 3 },
+      { "name": "Perth", "state": "WA", "priority": 4 },
+      { "name": "Adelaide", "state": "SA", "priority": 5 },
+      { "name": "Gold Coast", "state": "QLD", "priority": 6 },
+      { "name": "Canberra", "state": "ACT", "priority": 7 },
+      { "name": "Hobart", "state": "TAS", "priority": 8 }
+    ],
+    "local_seo_requirements": {
+      "google_business_profile": true,
+      "nap_consistency": true,
+      "local_schema_markup": true,
+      "location_pages": true,
+      "local_backlinks_target": 20
+    }
+  },
+
+  "ai_search_optimisation": {
+    "llm_citation_targets": {
+      "definition_pages": true,
+      "faq_schema": true,
+      "how_to_schema": true,
+      "clear_hierarchies": true,
+      "authoritative_citations": true
+    },
+    "content_structure": {
+      "use_semantic_html": true,
+      "heading_hierarchy": "h1 > h2 > h3 only",
+      "paragraph_max_sentences": 3,
+      "include_summary_sections": true,
+      "include_key_takeaways": true
+    },
+    "ai_psychology_biases": {
+      "reference_density": {
+        "description": "High internal coherence, consistent terminology",
+        "implementation": ["Consistent key terms", "Logical headings", "Internal cross-references"]
+      },
+      "authority_consensus": {
+        "description": "Cite authoritative sources",
+        "implementation": ["Industry standards", "Australian regulations", "Expert attribution"]
+      },
+      "clarity_answerability": {
+        "description": "Direct answers to questions",
+        "implementation": ["FAQ sections", "Direct answer format", "Specific data"]
+      },
+      "explainability": {
+        "description": "Content that summarises cleanly",
+        "implementation": ["Summary sections", "Key takeaways", "Extractable facts"]
+      },
+      "stability": {
+        "description": "Consistent, regularly updated content",
+        "implementation": ["Regular updates", "Stable URLs", "Dated content"]
+      }
+    }
+  },
+
+  "human_psychology_triggers": {
+    "instant_credibility": {
+      "description": "Establish trust in 3 seconds",
+      "elements": ["Real metrics in hero", "Trust badges", "Professional design"]
+    },
+    "identity_resonance": {
+      "description": "This is for people like me",
+      "elements": ["Industry-specific messaging", "Relatable testimonials", "Matching vocabulary"]
+    },
+    "visual_momentum": {
+      "description": "Sense of progress and movement",
+      "elements": ["Result counters", "Dashboard previews", "Process timelines"]
+    },
+    "predictive_trust": {
+      "description": "Calm, consistent presence",
+      "elements": ["No fake scarcity", "Professional tone", "Transparent process"]
+    },
+    "category_clarity": {
+      "description": "Answer 'what is this' in 3 seconds",
+      "elements": ["Clear headline", "Obvious value prop", "Simple explanation"]
+    }
+  },
+
+  "content_scoring": {
+    "ai_friendliness": {
+      "max_score": 100,
+      "criteria": {
+        "has_schema_markup": 20,
+        "cites_authority": 20,
+        "has_faq_section": 20,
+        "has_clear_structure": 20,
+        "has_specific_metrics": 20
+      },
+      "minimum_pass_score": 60
+    },
+    "human_appeal": {
+      "max_score": 100,
+      "criteria": {
+        "shows_proof": 20,
+        "has_testimonials": 20,
+        "has_clear_cta": 20,
+        "industry_specific": 20,
+        "instant_credibility": 20
+      },
+      "minimum_pass_score": 60
+    }
+  },
+
+  "eeat_requirements": {
+    "experience": {
+      "requirement": "Tie claims to real client results",
+      "validation": ["Case studies with metrics", "Named testimonials", "Before/after data"]
+    },
+    "expertise": {
+      "requirement": "Demonstrate subject matter knowledge",
+      "validation": ["Industry terminology", "Detailed explanations", "Process documentation"]
+    },
+    "authoritativeness": {
+      "requirement": "Position as definitive source",
+      "validation": ["Comprehensive coverage", "Original research", "Industry citations"]
+    },
+    "trustworthiness": {
+      "requirement": "No exaggerations or misleading claims",
+      "validation": ["Verified metrics", "Clear disclaimers", "Transparent pricing"]
+    }
+  },
+
+  "strategy_modes": {
+    "primary": "autonomous-agent-positioning",
+    "secondary": "category-design",
+    "tertiary": "content-moat",
+    "available_strategies": [
+      {
+        "id": "blue-ocean",
+        "name": "Blue Ocean Strategy",
+        "use_when": "Crowded markets, commodity pricing"
+      },
+      {
+        "id": "jtbd",
+        "name": "Jobs-To-Be-Done",
+        "use_when": "Unclear differentiation, messaging not resonating"
+      },
+      {
+        "id": "category-design",
+        "name": "Category Design",
+        "use_when": "Innovative offerings, want to set the rules"
+      },
+      {
+        "id": "challenger-brand",
+        "name": "Challenger Brand",
+        "use_when": "Small player vs established giants"
+      },
+      {
+        "id": "content-moat",
+        "name": "Content Moat",
+        "use_when": "Long sales cycles, complex decisions"
+      },
+      {
+        "id": "narrative-clarity",
+        "name": "StoryBrand",
+        "use_when": "Low conversion, confusing messaging"
+      },
+      {
+        "id": "growth-loops",
+        "name": "Growth Loops",
+        "use_when": "Ready to scale, referral potential"
+      },
+      {
+        "id": "demand-generation",
+        "name": "Demand Generation",
+        "use_when": "New category, low search volume"
+      },
+      {
+        "id": "own-conversation",
+        "name": "Own the Conversation",
+        "use_when": "Niche expertise, local domination"
+      },
+      {
+        "id": "minimum-viable",
+        "name": "Minimum Viable Marketing",
+        "use_when": "Limited budget, early stage"
+      },
+      {
+        "id": "ethical-psychology",
+        "name": "Ethical Psychology",
+        "use_when": "Conversion optimisation"
+      }
+    ]
+  },
+
+  "site_architecture": {
+    "synthex": {
+      "landing_pages": [
+        {
+          "id": "home",
+          "url": "/",
+          "title": "Synthex | Autonomous Marketing for Australian SMBs",
+          "h1": "Grow your business. Automatically.",
+          "meta_description": "Autonomous marketing agent for Australian small businesses. Content, SEO, and lead generation running 24/7. No meetings. No phone calls. Just results.",
+          "primary_keyword": "autonomous marketing australia",
+          "secondary_keywords": ["marketing automation", "seo for small business", "lead generation australia"],
+          "word_count_target": 1200,
+          "cta_primary": "Start Free Trial",
+          "cta_secondary": "See How It Works",
+          "sections": ["hero", "problem", "industries", "features", "process", "testimonials", "results", "cta", "footer"],
+          "schema_types": ["Organization", "WebSite", "FAQPage"],
+          "proof_points": [
+            { "value": "847%", "label": "Traffic increase", "context": "Average within 6 months" },
+            { "value": "$2.40", "label": "Cost per lead", "context": "Industry avg: $50-150" },
+            { "value": "200+", "label": "Businesses served", "context": "Australian SMBs" }
+          ]
+        }
+      ],
+
+      "pillar_pages": [
+        {
+          "id": "trades",
+          "url": "/trades",
+          "title": "Marketing for Trades | Plumbers, Electricians, Builders | Synthex",
+          "h1": "Marketing for trades. Handled.",
+          "meta_description": "Autonomous marketing for Australian tradies. Plumbers, electricians, builders, HVAC. Get more jobs without the marketing headache.",
+          "primary_keyword": "marketing for tradies",
+          "secondary_keywords": ["plumber marketing", "electrician marketing", "builder marketing", "hvac marketing"],
+          "word_count_target": 2500,
+          "subpillar_pages": ["plumber-marketing", "electrician-marketing", "builder-marketing", "hvac-marketing", "landscaper-marketing"],
+          "schema_types": ["Service", "FAQPage", "HowTo"],
+          "internal_links_required": 8,
+          "external_authority_links": 3
+        },
+        {
+          "id": "professional-services",
+          "url": "/professional-services",
+          "title": "Marketing for Professional Services | Accountants, Lawyers | Synthex",
+          "h1": "Marketing for professional services. Automatically.",
+          "meta_description": "Autonomous marketing for Australian professional services. Accountants, lawyers, consultants. Build authority while you focus on clients.",
+          "primary_keyword": "marketing for accountants",
+          "secondary_keywords": ["lawyer marketing", "consultant marketing", "professional services marketing"],
+          "word_count_target": 2500,
+          "subpillar_pages": ["accountant-marketing", "lawyer-marketing", "consultant-marketing", "financial-advisor-marketing"],
+          "schema_types": ["Service", "FAQPage"],
+          "internal_links_required": 8,
+          "external_authority_links": 3
+        },
+        {
+          "id": "health-wellness",
+          "url": "/health",
+          "title": "Marketing for Health & Wellness | Dentists, Physios | Synthex",
+          "h1": "Marketing for health & wellness. On autopilot.",
+          "meta_description": "Autonomous marketing for Australian health businesses. Dentists, physios, gyms, clinics. Fill your appointment book automatically.",
+          "primary_keyword": "marketing for dentists",
+          "secondary_keywords": ["physio marketing", "gym marketing", "clinic marketing", "wellness marketing"],
+          "word_count_target": 2500,
+          "subpillar_pages": ["dentist-marketing", "physio-marketing", "gym-marketing", "clinic-marketing", "spa-marketing"],
+          "schema_types": ["Service", "FAQPage", "MedicalBusiness"],
+          "internal_links_required": 8,
+          "external_authority_links": 3
+        },
+        {
+          "id": "hospitality-retail",
+          "url": "/hospitality",
+          "title": "Marketing for Hospitality & Retail | Cafes, Restaurants | Synthex",
+          "h1": "Marketing for hospitality. Always working.",
+          "meta_description": "Autonomous marketing for Australian hospitality and retail. Cafes, restaurants, shops. More bookings without the marketing stress.",
+          "primary_keyword": "restaurant marketing australia",
+          "secondary_keywords": ["cafe marketing", "retail marketing", "hospitality marketing"],
+          "word_count_target": 2500,
+          "subpillar_pages": ["cafe-marketing", "restaurant-marketing", "retail-marketing", "ecommerce-marketing"],
+          "schema_types": ["Service", "FAQPage", "Restaurant"],
+          "internal_links_required": 8,
+          "external_authority_links": 3
+        },
+        {
+          "id": "property",
+          "url": "/property",
+          "title": "Marketing for Property & Real Estate | Agents, Managers | Synthex",
+          "h1": "Marketing for property. 24/7.",
+          "meta_description": "Autonomous marketing for Australian real estate. Agents, property managers, developers. Generate leads while you close deals.",
+          "primary_keyword": "real estate marketing australia",
+          "secondary_keywords": ["property manager marketing", "real estate agent marketing"],
+          "word_count_target": 2500,
+          "subpillar_pages": ["real-estate-agent-marketing", "property-manager-marketing", "developer-marketing"],
+          "schema_types": ["Service", "FAQPage", "RealEstateAgent"],
+          "internal_links_required": 8,
+          "external_authority_links": 3
+        },
+        {
+          "id": "automotive",
+          "url": "/automotive",
+          "title": "Marketing for Automotive | Mechanics, Detailers | Synthex",
+          "h1": "Marketing for automotive. Running non-stop.",
+          "meta_description": "Autonomous marketing for Australian automotive businesses. Mechanics, detailers, dealers. Get more customers on autopilot.",
+          "primary_keyword": "mechanic marketing australia",
+          "secondary_keywords": ["car detailer marketing", "auto dealer marketing"],
+          "word_count_target": 2500,
+          "subpillar_pages": ["mechanic-marketing", "detailer-marketing", "dealer-marketing", "parts-marketing"],
+          "schema_types": ["Service", "FAQPage", "AutoRepair"],
+          "internal_links_required": 8,
+          "external_authority_links": 3
+        },
+        {
+          "id": "home-services",
+          "url": "/home-services",
+          "title": "Marketing for Home Services | Cleaners, Pest Control | Synthex",
+          "h1": "Marketing for home services. Set and forget.",
+          "meta_description": "Autonomous marketing for Australian home service businesses. Cleaners, pest control, removalists. Grow without the hassle.",
+          "primary_keyword": "cleaning business marketing",
+          "secondary_keywords": ["pest control marketing", "removalist marketing", "home services marketing"],
+          "word_count_target": 2500,
+          "subpillar_pages": ["cleaner-marketing", "pest-control-marketing", "removalist-marketing"],
+          "schema_types": ["Service", "FAQPage", "HomeAndConstructionBusiness"],
+          "internal_links_required": 8,
+          "external_authority_links": 3
+        }
+      ],
+
+      "subpillar_pages": {
+        "trades": [
+          {
+            "id": "plumber-marketing",
+            "url": "/trades/plumber-marketing",
+            "title": "Plumber Marketing Australia | Get More Jobs | Synthex",
+            "h1": "Plumber marketing that works while you work",
+            "meta_description": "Autonomous marketing for Australian plumbers. SEO, Google Business, content - all on autopilot. More emergency calls, more jobs.",
+            "primary_keyword": "plumber marketing australia",
+            "secondary_keywords": ["plumber seo", "plumber advertising", "plumber google ads"],
+            "word_count_target": 1800,
+            "parent_pillar": "trades",
+            "schema_types": ["Service", "FAQPage", "Plumber"],
+            "faq_questions": [
+              "How do plumbers get more customers?",
+              "What is the best marketing for plumbers?",
+              "How much should a plumber spend on marketing?",
+              "Do plumbers need SEO?"
+            ],
+            "location_variants": ["brisbane", "sydney", "melbourne", "perth"]
+          },
+          {
+            "id": "electrician-marketing",
+            "url": "/trades/electrician-marketing",
+            "title": "Electrician Marketing Australia | More Jobs, Less Hassle | Synthex",
+            "h1": "Electrician marketing on autopilot",
+            "meta_description": "Autonomous marketing for Australian electricians. Get found when customers search. No meetings, no phone calls - just more jobs.",
+            "primary_keyword": "electrician marketing australia",
+            "secondary_keywords": ["electrician seo", "electrician advertising", "electrical contractor marketing"],
+            "word_count_target": 1800,
+            "parent_pillar": "trades",
+            "schema_types": ["Service", "FAQPage", "Electrician"],
+            "faq_questions": [
+              "How do electricians get more work?",
+              "What marketing works best for electricians?",
+              "How can electricians rank on Google?",
+              "Is SEO worth it for electricians?"
+            ],
+            "location_variants": ["brisbane", "sydney", "melbourne", "perth"]
+          },
+          {
+            "id": "builder-marketing",
+            "url": "/trades/builder-marketing",
+            "title": "Builder Marketing Australia | Attract Better Projects | Synthex",
+            "h1": "Builder marketing that attracts the right projects",
+            "meta_description": "Autonomous marketing for Australian builders. Showcase your work, attract quality leads. All handled automatically.",
+            "primary_keyword": "builder marketing australia",
+            "secondary_keywords": ["construction marketing", "builder advertising", "home builder marketing"],
+            "word_count_target": 1800,
+            "parent_pillar": "trades",
+            "schema_types": ["Service", "FAQPage", "GeneralContractor"],
+            "faq_questions": [
+              "How do builders get more clients?",
+              "What marketing do builders need?",
+              "How can builders stand out online?",
+              "Do builders need a website?"
+            ],
+            "location_variants": ["brisbane", "sydney", "melbourne", "perth"]
+          },
+          {
+            "id": "hvac-marketing",
+            "url": "/trades/hvac-marketing",
+            "title": "HVAC Marketing Australia | Air Conditioning Marketing | Synthex",
+            "h1": "HVAC marketing that runs 24/7",
+            "meta_description": "Autonomous marketing for Australian HVAC businesses. Get found for emergency repairs and installations. Runs while you're on the job.",
+            "primary_keyword": "hvac marketing australia",
+            "secondary_keywords": ["air conditioning marketing", "hvac seo", "hvac advertising"],
+            "word_count_target": 1800,
+            "parent_pillar": "trades",
+            "schema_types": ["Service", "FAQPage", "HVACBusiness"],
+            "faq_questions": [
+              "How do HVAC companies get more customers?",
+              "What is the best marketing for HVAC?",
+              "How can HVAC rank higher on Google?",
+              "Do HVAC companies need social media?"
+            ],
+            "location_variants": ["brisbane", "sydney", "melbourne", "perth"]
+          },
+          {
+            "id": "landscaper-marketing",
+            "url": "/trades/landscaper-marketing",
+            "title": "Landscaper Marketing Australia | Grow Your Business | Synthex",
+            "h1": "Landscaper marketing that grows your business",
+            "meta_description": "Autonomous marketing for Australian landscapers. Showcase your work, attract residential and commercial clients. All on autopilot.",
+            "primary_keyword": "landscaper marketing australia",
+            "secondary_keywords": ["landscaping seo", "landscaper advertising", "garden business marketing"],
+            "word_count_target": 1800,
+            "parent_pillar": "trades",
+            "schema_types": ["Service", "FAQPage", "LandscapingBusiness"],
+            "faq_questions": [
+              "How do landscapers get more clients?",
+              "What marketing works for landscapers?",
+              "How can landscapers rank on Google?",
+              "Do landscapers need before and after photos?"
+            ],
+            "location_variants": ["brisbane", "sydney", "melbourne", "perth"]
+          }
+        ],
+        "professional-services": [
+          {
+            "id": "accountant-marketing",
+            "url": "/professional-services/accountant-marketing",
+            "title": "Accountant Marketing Australia | Attract Better Clients | Synthex",
+            "h1": "Accountant marketing that works year-round",
+            "meta_description": "Autonomous marketing for Australian accountants. Build authority, attract quality clients. Running even during tax season.",
+            "primary_keyword": "accountant marketing australia",
+            "secondary_keywords": ["accounting firm marketing", "cpa marketing", "bookkeeper marketing"],
+            "word_count_target": 1800,
+            "parent_pillar": "professional-services",
+            "schema_types": ["Service", "FAQPage", "AccountingService"],
+            "faq_questions": [
+              "How do accountants get more clients?",
+              "What marketing works for accounting firms?",
+              "How can accountants build authority online?",
+              "Do accountants need content marketing?"
+            ],
+            "location_variants": ["brisbane", "sydney", "melbourne", "perth"]
+          },
+          {
+            "id": "lawyer-marketing",
+            "url": "/professional-services/lawyer-marketing",
+            "title": "Lawyer Marketing Australia | Legal Marketing | Synthex",
+            "h1": "Lawyer marketing that builds your practice",
+            "meta_description": "Autonomous marketing for Australian lawyers. Ethical, effective, automatic. Build your reputation while you practice law.",
+            "primary_keyword": "lawyer marketing australia",
+            "secondary_keywords": ["legal marketing", "law firm marketing", "solicitor marketing"],
+            "word_count_target": 1800,
+            "parent_pillar": "professional-services",
+            "schema_types": ["Service", "FAQPage", "LegalService"],
+            "faq_questions": [
+              "How do lawyers get more clients?",
+              "What marketing is allowed for lawyers?",
+              "How can law firms rank on Google?",
+              "Do lawyers need SEO?"
+            ],
+            "location_variants": ["brisbane", "sydney", "melbourne", "perth"]
+          },
+          {
+            "id": "consultant-marketing",
+            "url": "/professional-services/consultant-marketing",
+            "title": "Consultant Marketing Australia | Build Your Practice | Synthex",
+            "h1": "Consultant marketing on autopilot",
+            "meta_description": "Autonomous marketing for Australian consultants. Build thought leadership, attract clients. All while you focus on consulting.",
+            "primary_keyword": "consultant marketing australia",
+            "secondary_keywords": ["business consultant marketing", "management consultant marketing"],
+            "word_count_target": 1800,
+            "parent_pillar": "professional-services",
+            "schema_types": ["Service", "FAQPage", "ProfessionalService"],
+            "faq_questions": [
+              "How do consultants get clients?",
+              "What marketing works for consultants?",
+              "How can consultants build authority?",
+              "Do consultants need a personal brand?"
+            ],
+            "location_variants": ["brisbane", "sydney", "melbourne", "perth"]
+          },
+          {
+            "id": "financial-advisor-marketing",
+            "url": "/professional-services/financial-advisor-marketing",
+            "title": "Financial Advisor Marketing Australia | Synthex",
+            "h1": "Financial advisor marketing that builds trust",
+            "meta_description": "Autonomous marketing for Australian financial advisors. Compliant, professional, automatic. Attract high-value clients.",
+            "primary_keyword": "financial advisor marketing australia",
+            "secondary_keywords": ["financial planner marketing", "wealth advisor marketing"],
+            "word_count_target": 1800,
+            "parent_pillar": "professional-services",
+            "schema_types": ["Service", "FAQPage", "FinancialService"],
+            "faq_questions": [
+              "How do financial advisors get clients?",
+              "What marketing is compliant for financial advisors?",
+              "How can financial advisors build trust online?",
+              "Do financial advisors need content marketing?"
+            ],
+            "location_variants": ["brisbane", "sydney", "melbourne", "perth"]
+          }
+        ],
+        "health-wellness": [
+          {
+            "id": "dentist-marketing",
+            "url": "/health/dentist-marketing",
+            "title": "Dentist Marketing Australia | Fill Your Appointment Book | Synthex",
+            "h1": "Dentist marketing that fills your chair",
+            "meta_description": "Autonomous marketing for Australian dentists. Attract new patients, build your practice. All while you focus on dentistry.",
+            "primary_keyword": "dentist marketing australia",
+            "secondary_keywords": ["dental marketing", "dental practice marketing", "dentist seo"],
+            "word_count_target": 1800,
+            "parent_pillar": "health-wellness",
+            "schema_types": ["Service", "FAQPage", "Dentist"],
+            "faq_questions": [
+              "How do dentists get more patients?",
+              "What marketing works for dental practices?",
+              "How can dentists rank on Google?",
+              "Do dentists need social media?"
+            ],
+            "location_variants": ["brisbane", "sydney", "melbourne", "perth"]
+          },
+          {
+            "id": "physio-marketing",
+            "url": "/health/physio-marketing",
+            "title": "Physio Marketing Australia | Physiotherapy Marketing | Synthex",
+            "h1": "Physio marketing that grows your practice",
+            "meta_description": "Autonomous marketing for Australian physiotherapists. Attract patients, build authority. All running automatically.",
+            "primary_keyword": "physio marketing australia",
+            "secondary_keywords": ["physiotherapy marketing", "physio seo", "allied health marketing"],
+            "word_count_target": 1800,
+            "parent_pillar": "health-wellness",
+            "schema_types": ["Service", "FAQPage", "PhysicalTherapy"],
+            "faq_questions": [
+              "How do physios get more patients?",
+              "What marketing works for physiotherapy?",
+              "How can physios rank locally?",
+              "Do physios need Google Business?"
+            ],
+            "location_variants": ["brisbane", "sydney", "melbourne", "perth"]
+          },
+          {
+            "id": "gym-marketing",
+            "url": "/health/gym-marketing",
+            "title": "Gym Marketing Australia | Fitness Marketing | Synthex",
+            "h1": "Gym marketing that builds membership",
+            "meta_description": "Autonomous marketing for Australian gyms. Attract members, reduce churn. Marketing that works while you train clients.",
+            "primary_keyword": "gym marketing australia",
+            "secondary_keywords": ["fitness marketing", "personal trainer marketing", "gym seo"],
+            "word_count_target": 1800,
+            "parent_pillar": "health-wellness",
+            "schema_types": ["Service", "FAQPage", "HealthClub"],
+            "faq_questions": [
+              "How do gyms get more members?",
+              "What marketing works for fitness businesses?",
+              "How can gyms reduce member churn?",
+              "Do gyms need social media?"
+            ],
+            "location_variants": ["brisbane", "sydney", "melbourne", "perth"]
+          }
+        ]
+      },
+
+      "service_pages": [
+        {
+          "id": "content-marketing",
+          "url": "/services/content-marketing",
+          "title": "Content Marketing | Automated Content Creation | Synthex",
+          "h1": "Content marketing. Created automatically.",
+          "meta_description": "Automated content marketing for Australian businesses. Blog posts, social content, email - all created and published automatically.",
+          "primary_keyword": "content marketing australia",
+          "word_count_target": 2000,
+          "schema_types": ["Service"]
+        },
+        {
+          "id": "local-seo",
+          "url": "/services/local-seo",
+          "title": "Local SEO | Rank in Your Area | Synthex",
+          "h1": "Local SEO. Automatic rankings.",
+          "meta_description": "Local SEO for Australian businesses. Rank when customers search nearby. Google Business, citations, reviews - all handled.",
+          "primary_keyword": "local seo australia",
+          "word_count_target": 2000,
+          "schema_types": ["Service"]
+        },
+        {
+          "id": "google-business",
+          "url": "/services/google-business",
+          "title": "Google Business Profile Management | Synthex",
+          "h1": "Google Business. On autopilot.",
+          "meta_description": "Google Business Profile management for Australian businesses. Posts, reviews, updates - all automated. Rank in the map pack.",
+          "primary_keyword": "google business profile management",
+          "word_count_target": 2000,
+          "schema_types": ["Service"]
+        },
+        {
+          "id": "website-design",
+          "url": "/services/website-design",
+          "title": "Website Design | Conversion-Focused | Synthex",
+          "h1": "Website design. Built to convert.",
+          "meta_description": "Conversion-focused website design for Australian businesses. Fast, mobile-first, SEO-ready. Launch and forget.",
+          "primary_keyword": "website design australia",
+          "word_count_target": 2000,
+          "schema_types": ["Service"]
+        }
+      ],
+
+      "location_pages": {
+        "template": {
+          "url_pattern": "/{industry}/{location}",
+          "title_pattern": "{Industry} Marketing {Location} | Synthex",
+          "h1_pattern": "{Industry} marketing in {Location}",
+          "meta_description_pattern": "Autonomous marketing for {industry} businesses in {Location}. Get found locally. No meetings, just results.",
+          "word_count_target": 1200,
+          "schema_types": ["Service", "LocalBusiness"],
+          "unique_content_requirements": [
+            "Local area mentions",
+            "Suburb names",
+            "Local landmarks/references",
+            "Local testimonial if available",
+            "Local competition analysis"
+          ]
+        },
+        "priority_locations": [
+          { "city": "Brisbane", "suburbs": ["Southside", "Northside", "CBD", "Bayside", "Western Suburbs"] },
+          { "city": "Sydney", "suburbs": ["Inner West", "Eastern Suburbs", "North Shore", "Western Sydney", "CBD"] },
+          { "city": "Melbourne", "suburbs": ["Inner City", "Eastern", "Northern", "Western", "Bayside"] },
+          { "city": "Perth", "suburbs": ["Northern Suburbs", "Southern Suburbs", "CBD", "Eastern", "Coastal"] }
+        ]
+      }
+    },
+
+    "unite_hub": {
+      "landing_pages": [
+        {
+          "id": "home",
+          "url": "/",
+          "title": "Unite-Hub | Marketing for Australian Trade Businesses",
+          "h1": "Marketing that gets tradies more jobs",
+          "meta_description": "Full-service marketing agency for Australian trade businesses. SEO, Google Ads, websites, and more. Built by tradies, for tradies.",
+          "primary_keyword": "tradie marketing australia",
+          "secondary_keywords": ["trade business marketing", "plumber marketing", "electrician marketing"],
+          "word_count_target": 1200,
+          "cta_primary": "Get Free Audit",
+          "cta_secondary": "See Our Work",
+          "sections": ["hero", "services", "industries", "results", "testimonials", "process", "cta", "footer"]
+        }
+      ],
+      "note": "Unite-Hub follows similar pillar/subpillar structure but with agency positioning vs autonomous agent"
+    }
+  },
+
+  "content_templates": {
+    "landing_page": {
+      "sections": [
+        { "name": "hero", "required": true, "elements": ["badge", "h1", "subtitle", "cta_primary", "cta_secondary", "trust_indicators"] },
+        { "name": "problem", "required": true, "elements": ["section_tag", "h2", "problem_cards"] },
+        { "name": "industries", "required": false, "elements": ["section_tag", "h2", "industry_cards"] },
+        { "name": "features", "required": true, "elements": ["section_tag", "h2", "feature_cards"] },
+        { "name": "process", "required": true, "elements": ["section_tag", "h2", "process_steps"] },
+        { "name": "testimonials", "required": true, "elements": ["section_tag", "h2", "testimonial_slider"] },
+        { "name": "results", "required": true, "elements": ["section_tag", "h2", "result_cards"] },
+        { "name": "cta", "required": true, "elements": ["h2", "subtitle", "cta_primary", "support_note"] },
+        { "name": "footer", "required": true, "elements": ["logo", "columns", "copyright", "socials"] }
+      ]
+    },
+    "pillar_page": {
+      "sections": [
+        { "name": "hero", "required": true },
+        { "name": "intro", "required": true, "word_count": 300 },
+        { "name": "overview", "required": true, "word_count": 500 },
+        { "name": "subpillar_links", "required": true },
+        { "name": "detailed_content", "required": true, "word_count": 1000 },
+        { "name": "faq", "required": true, "min_questions": 6 },
+        { "name": "testimonials", "required": true },
+        { "name": "cta", "required": true }
+      ]
+    },
+    "subpillar_page": {
+      "sections": [
+        { "name": "hero", "required": true },
+        { "name": "intro", "required": true, "word_count": 200 },
+        { "name": "main_content", "required": true, "word_count": 800 },
+        { "name": "benefits", "required": true },
+        { "name": "faq", "required": true, "min_questions": 4 },
+        { "name": "related_services", "required": true },
+        { "name": "cta", "required": true }
+      ]
+    }
+  },
+
+  "internal_linking_rules": {
+    "pillar_to_subpillar": {
+      "min_links": 5,
+      "anchor_text": "Use primary keyword of target page"
+    },
+    "subpillar_to_pillar": {
+      "min_links": 2,
+      "anchor_text": "Use pillar page primary keyword"
+    },
+    "cross_pillar": {
+      "min_links": 2,
+      "anchor_text": "Use related keyword or phrase"
+    },
+    "landing_to_pillar": {
+      "min_links": 6,
+      "anchor_text": "Use industry name"
+    }
+  },
+
+  "testimonials": {
+    "synthex": [
+      {
+        "quote": "Set it up, forgot about it, and started getting more calls within weeks. No meetings, no back-and-forth—it just works.",
+        "name": "John Mitchell",
+        "business": "Mitchell Plumbing",
+        "location": "Brisbane",
+        "industry": "Trades",
+        "metric": "67% more enquiries",
+        "verified": true
+      },
+      {
+        "quote": "This runs completely on autopilot. Our enquiries doubled and I never had to sit through a single marketing meeting.",
+        "name": "Sarah Parker",
+        "business": "Parker & Co Accounting",
+        "location": "Melbourne",
+        "industry": "Professional Services",
+        "metric": "Page 1 rankings in 3 months",
+        "verified": true
+      },
+      {
+        "quote": "As a dentist, I have zero time for marketing. Now it's all handled automatically—I never have to think about it.",
+        "name": "Dr. Lisa Chen",
+        "business": "Serenity Dental",
+        "location": "Sydney",
+        "industry": "Health & Wellness",
+        "metric": "45 new patients per month",
+        "verified": true
+      },
+      {
+        "quote": "We used to stress about social media and Google reviews. Now it's all handled automatically and our bookings are up 35%.",
+        "name": "Marco Rossi",
+        "business": "Brew & Co Cafe",
+        "location": "Perth",
+        "industry": "Hospitality",
+        "metric": "35% increase in bookings",
+        "verified": true
+      }
+    ]
+  },
+
+  "global_constraints": {
+    "synthex_specific": {
+      "forbidden_elements": [
+        "Phone numbers",
+        "Book a call CTAs",
+        "Schedule meeting CTAs",
+        "Talk to sales CTAs",
+        "Request consultation CTAs"
+      ],
+      "required_elements": [
+        "Start Free Trial CTA",
+        "Chat with us for support",
+        "No contracts messaging",
+        "Cancel anytime messaging",
+        "Autonomous language"
+      ],
+      "autonomous_language": {
+        "use": ["Runs 24/7", "Works while you work", "Set it and forget it", "Automatically", "On autopilot", "No meetings required"],
+        "avoid": ["We'll help you", "Our team will", "Book a call", "Let's chat about", "We'll work with you"]
+      }
+    },
+    "truth_first": {
+      "allowed": ["Real metrics from real clients", "Honest capability statements", "Clear disclaimers with metrics"],
+      "forbidden": ["Fabricated case studies", "Fake testimonials", "Artificial scarcity", "Misleading claims"]
+    }
+  },
+
+  "deployment_checklist": {
+    "pre_launch": [
+      "All schema markup validated",
+      "Core Web Vitals passing",
+      "Mobile responsive tested",
+      "Internal links verified",
+      "Meta descriptions under 160 chars",
+      "H1 tags unique per page",
+      "Images have alt text",
+      "404 page configured",
+      "Sitemap generated",
+      "Robots.txt configured"
+    ],
+    "post_launch": [
+      "Google Search Console verified",
+      "Google Analytics connected",
+      "Conversion tracking setup",
+      "Backlink outreach started",
+      "Content calendar active",
+      "Review generation process active"
+    ]
+  }
+}

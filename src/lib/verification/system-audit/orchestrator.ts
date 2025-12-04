@@ -64,7 +64,9 @@ function getPriority(category: AuditCategory, status: VerificationStatus): Remed
 }
 
 function getEstimatedEffort(checkId: string, autoFixable: boolean): RemediationTask['estimated_effort'] {
-  if (autoFixable) return 'minutes';
+  if (autoFixable) {
+return 'minutes';
+}
 
   // Some checks require more effort
   const highEffortChecks = ['arch-001', 'back-001', 'sec-007'];
@@ -268,7 +270,9 @@ export async function runSystemAudit(
   const criticalFailures: AuditCheck[] = [];
 
   for (const result of Object.values(categoryResults)) {
-    if (!result) continue;
+    if (!result) {
+continue;
+}
     totalChecks += result.total;
     passed += result.passed;
     failed += result.failed;
@@ -385,7 +389,7 @@ export async function runQuickHealthCheck(): Promise<{
       if (result.status === 'failed') {
         issues.push(`${check.name}: ${result.message}`);
       }
-    } catch (error) {
+    } catch {
       issues.push(`${check.name}: Check error`);
     }
   }
