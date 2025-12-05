@@ -1,0 +1,125 @@
+{
+  "audit_name": "Synthex Full Systems Audit",
+  "version": "1.1.0",
+  "updated": "2025-12-05",
+  "run_command": "Read this file and verify each check. Report pass/fail for each.",
+
+  "check_files_exist": [
+    "src/lib/content/synthex-config.json",
+    "src/lib/content/synthex-content-engine.ts",
+    "src/lib/llm/orchestrator.ts",
+    "scripts/run-overnight-tests-v2.mjs",
+    "scripts/test-content-engine.mjs",
+    "CLAUDE.md",
+    "vercel.json"
+  ],
+
+  "check_config_sections": {
+    "file": "src/lib/content/synthex-config.json",
+    "required_sections": [
+      "copywriting",
+      "ai_psychology",
+      "human_psychology",
+      "eeat",
+      "voice",
+      "design",
+      "aura_layers",
+      "brand_rules"
+    ]
+  },
+
+  "check_framework_usage": {
+    "description": "Verify content engine uses these frameworks per section type",
+    "mappings": {
+      "hero": "storybrand",
+      "problem": "pas",
+      "features": "fab",
+      "process": "aida",
+      "testimonials": "4ps",
+      "cta": "pas",
+      "faq": "fab"
+    }
+  },
+
+  "check_voice_enforcement": {
+    "use_words": ["autonomous", "automatic", "hands-off", "set and forget", "24/7", "while you sleep"],
+    "avoid_words": ["AI-powered", "revolutionary", "cutting-edge", "synergy", "leverage", "disrupt", "tailored", "game-changing", "paradigm", "ecosystem", "best-in-class"]
+  },
+
+  "check_brand_rules": {
+    "no_phone_numbers": true,
+    "primary_cta": "Start Free Trial",
+    "secondary_cta": "See How It Works",
+    "no_book_a_call": true
+  },
+
+  "check_imports": {
+    "content_generation_files_must_import": [
+      "synthex-config.json",
+      "synthex-content-engine"
+    ],
+    "must_not_import": [
+      "pipeline.ts"
+    ]
+  },
+
+  "check_prompts": {
+    "must_contain": [
+      "FRAMEWORK:",
+      "VOICE:",
+      "BRAND"
+    ],
+    "must_not_contain": [
+      "Generate a compelling",
+      "Write marketing copy",
+      "Make it engaging"
+    ]
+  },
+
+  "check_overnight_test_results": {
+    "directory": "test-results/v2-run-*",
+    "file": "final-report.json",
+    "thresholds": {
+      "average_quality_score": 80,
+      "excellent_percentage": 50,
+      "needs_work_percentage_max": 5
+    }
+  },
+
+  "check_scoring_system": {
+    "description": "Content scorer must differentiate quality",
+    "good_content_score_min": 70,
+    "bad_content_score_max": 40
+  },
+
+  "verification_tests": [
+    {
+      "test": "Generate hero section for trades",
+      "verify": ["Uses StoryBrand structure", "No banned words", "You language > We language"]
+    },
+    {
+      "test": "Generate problem section",
+      "verify": ["Uses PAS structure", "Industry-specific pain points"]
+    },
+    {
+      "test": "Generate features section",
+      "verify": ["Uses FAB structure", "Feature -> Advantage -> Benefit for each"]
+    }
+  ],
+
+  "report_format": {
+    "output": "audit-report.md",
+    "sections": [
+      "Files Check (pass/fail each)",
+      "Config Validation (sections present)",
+      "Framework Usage (correct mapping)",
+      "Voice Compliance (word checks)",
+      "Brand Rules (violations found)",
+      "Import Verification",
+      "Prompt Quality",
+      "Test Results Summary",
+      "Overall Score",
+      "Issues To Fix"
+    ]
+  }
+}
