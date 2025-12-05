@@ -14,13 +14,13 @@
  * @see https://ai.google.dev/gemini-api/docs/image-generation
  */
 
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, Modality } from "@google/genai";
 
 // ============================================
 // Types
 // ============================================
 
-export type GeminiImageModel = "gemini-2.5-flash-image" | "gemini-3-pro-image-preview";
+export type GeminiImageModel = "gemini-2.0-flash-exp-image-generation" | "gemini-2.5-flash-image" | "gemini-3-pro-image-preview";
 
 export type AspectRatio =
   | "1:1"
@@ -145,7 +145,7 @@ export async function generateImage(
   const client = getGeminiImageClient();
 
   const {
-    model = "gemini-2.5-flash-image",
+    model = "gemini-2.0-flash-exp-image-generation",
     aspectRatio = "1:1",
     imageSize = "1K",
     enableGrounding = false,
@@ -153,7 +153,7 @@ export async function generateImage(
 
   // Build config based on model
   const config: Record<string, unknown> = {
-    responseModalities: ["TEXT", "IMAGE"],
+    responseModalities: [Modality.TEXT, Modality.IMAGE],
   };
 
   // Add image config for aspect ratio and size
@@ -205,7 +205,7 @@ export async function editImage(
   const client = getGeminiImageClient();
 
   const {
-    model = "gemini-2.5-flash-image",
+    model = "gemini-2.0-flash-exp-image-generation",
     aspectRatio = "1:1",
     imageSize = "1K",
     originalMimeType = "image/png",
@@ -216,7 +216,7 @@ export async function editImage(
 
   // Build config
   const config: Record<string, unknown> = {
-    responseModalities: ["TEXT", "IMAGE"],
+    responseModalities: [Modality.TEXT, Modality.IMAGE],
   };
 
   if (model === "gemini-3-pro-image-preview") {
@@ -299,7 +299,7 @@ export function startImageChat(options: GeminiImageOptions = {}): GeminiImageCha
 
   // Build base config
   const baseConfig: Record<string, unknown> = {
-    responseModalities: ["TEXT", "IMAGE"],
+    responseModalities: [Modality.TEXT, Modality.IMAGE],
   };
 
   if (model === "gemini-3-pro-image-preview") {
@@ -415,6 +415,7 @@ function parseImageResponse(
  * Calculate cost for Gemini image generation
  *
  * Pricing (as of 2024):
+ * - gemini-2.0-flash-exp-image-generation: ~$0.0002 per image (very cheap during preview)
  * - gemini-2.5-flash-image: ~$0.02 per image (1K)
  * - gemini-3-pro-image-preview:
  *   - 1K: ~$0.04 per image
@@ -423,12 +424,14 @@ function parseImageResponse(
  */
 export function calculateImageCost(
   count: number,
-  model: GeminiImageModel = "gemini-2.5-flash-image",
+  model: GeminiImageModel = "gemini-2.0-flash-exp-image-generation",
   imageSize: ImageSize = "1K"
 ): number {
-  let costPerImage = 0.02; // Default: flash 1K
+  let costPerImage = 0.0002; // Default: 2.0 flash experimental (very cheap)
 
-  if (model === "gemini-2.5-flash-image") {
+  if (model === "gemini-2.0-flash-exp-image-generation") {
+    costPerImage = 0.0002; // Experimental models are very cheap
+  } else if (model === "gemini-2.5-flash-image") {
     costPerImage = 0.02;
   } else if (model === "gemini-3-pro-image-preview") {
     switch (imageSize) {

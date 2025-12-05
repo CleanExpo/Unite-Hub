@@ -73,7 +73,7 @@ function getDefaultDashboard(role: UserRole, isStaff: boolean): string {
   }
 }
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   // Generate cryptographically secure nonce for CSP
   const nonce = generateNonce();
 

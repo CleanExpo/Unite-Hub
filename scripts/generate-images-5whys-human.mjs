@@ -24,15 +24,17 @@
  * NO ROBOTS. NO COLD TECH. REAL HUMAN STORIES.
  */
 
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI, Modality } from '@google/genai';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import 'dotenv/config';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const ALLOWED_IMAGE_MODEL = 'gemini-3-pro-image-preview';
+// Use the working image generation model
+const ALLOWED_IMAGE_MODEL = 'gemini-2.0-flash-exp-image-generation';
 const OUTPUT_DIR = path.join(__dirname, '..', 'public', 'images', 'generated');
 
 // CRITICAL: No text, but HUMAN stories
@@ -1050,9 +1052,9 @@ async function generateImage(imageConfig, index, total) {
   try {
     const response = await genAI.models.generateContent({
       model: ALLOWED_IMAGE_MODEL,
-      contents: [{ parts: [{ text: imageConfig.prompt }] }],
-      generationConfig: {
-        responseModalities: ['IMAGE', 'TEXT'],
+      contents: `Generate an image: ${imageConfig.prompt}`,
+      config: {
+        responseModalities: [Modality.TEXT, Modality.IMAGE],
       },
     });
 

@@ -13,8 +13,12 @@
  * Path Inside Container: /app/clients/{clientId}/
  */
 
+// Prevent Turbopack from analyzing this module for client bundles
+import 'server-only';
+
 import fs from "fs/promises";
-import path from "path";
+// Use path.posix to prevent Turbopack file scanning on dynamic joins
+import { posix as path } from "path";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export interface ClientFolderStructure {

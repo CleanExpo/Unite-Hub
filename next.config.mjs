@@ -27,10 +27,8 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
 
-  // ESLint - skip linting during build (fixing code quality issues separately)
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  // NOTE: eslint config removed - deprecated in Next.js 16
+  // Use .eslintrc.json or eslint.config.mjs for ESLint configuration
 
   // Transpile these packages for compatibility
   transpilePackages: ['reactflow', '@reactflow/core', '@reactflow/background', '@reactflow/controls', '@reactflow/minimap'],

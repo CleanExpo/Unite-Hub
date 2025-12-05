@@ -1,0 +1,503 @@
+{
+  "version": "1.0.0",
+  "brand": "synthex",
+  "updated_at": "2025-12-05",
+
+  "copywriting": {
+    "primary_framework": "storybrand",
+    "frameworks": {
+      "storybrand": {
+        "name": "StoryBrand Framework",
+        "description": "Customer as hero, brand as guide",
+        "when_to_use": "Homepage, landing pages, brand messaging",
+        "structure": [
+          "Character (customer) has a problem",
+          "Meets a guide (brand) who understands",
+          "Guide gives them a plan",
+          "Calls them to action",
+          "Helps them avoid failure",
+          "Leads to success"
+        ]
+      },
+      "pas": {
+        "name": "Problem-Agitate-Solve",
+        "description": "Identify problem, amplify pain, present solution",
+        "when_to_use": "Cold audiences, awareness stage, problem sections",
+        "structure": [
+          "Problem: State the pain clearly",
+          "Agitate: Make it feel urgent",
+          "Solve: Present the solution"
+        ]
+      },
+      "aida": {
+        "name": "Attention-Interest-Desire-Action",
+        "description": "Classic funnel progression",
+        "when_to_use": "Sales pages, email sequences, ads",
+        "structure": [
+          "Attention: Hook with bold claim or question",
+          "Interest: Build with benefits and proof",
+          "Desire: Create emotional want",
+          "Action: Clear CTA"
+        ]
+      },
+      "fab": {
+        "name": "Features-Advantages-Benefits",
+        "description": "Translate features into customer value",
+        "when_to_use": "Product pages, feature sections",
+        "structure": [
+          "Feature: What it is",
+          "Advantage: What it does",
+          "Benefit: Why it matters to THEM"
+        ]
+      },
+      "4ps": {
+        "name": "Promise-Picture-Proof-Push",
+        "description": "Promise outcome, visualize, prove, prompt action",
+        "when_to_use": "Sales pages, case studies, testimonial sections",
+        "structure": [
+          "Promise: State the outcome",
+          "Picture: Help them visualize success",
+          "Proof: Show evidence it works",
+          "Push: Call to action"
+        ]
+      }
+    },
+    "headline_formulas": {
+      "4u": {
+        "formula": "Useful + Urgent + Unique + Ultra-specific",
+        "example": "Get 3X More Leads in 30 Days Without Spending More on Ads"
+      },
+      "how_to": {
+        "formula": "How to [Achieve Desire] Without [Pain Point]",
+        "example": "How to Fill Your Calendar Without Chasing Leads"
+      },
+      "number": {
+        "formula": "[Number] Ways to [Achieve Result] [Timeframe]",
+        "example": "5 Ways to Double Your Bookings This Month"
+      }
+    },
+    "section_to_framework": {
+      "hero": "storybrand",
+      "problem": "pas",
+      "features": "fab",
+      "process": "aida",
+      "testimonials": "4ps",
+      "results": "4ps",
+      "cta": "pas",
+      "faq": "fab"
+    }
+  },
+
+  "ai_psychology": {
+    "description": "Optimize content for AI search systems (ChatGPT, Perplexity, Google AI)",
+    "biases": {
+      "clarity": {
+        "name": "Clarity Bias",
+        "description": "AI favors clear, unambiguous statements",
+        "tactics": [
+          "Use definitive language (is, does, provides)",
+          "Avoid hedging (might, could, possibly)",
+          "One idea per sentence",
+          "Short paragraphs (2-3 sentences max)"
+        ]
+      },
+      "structure": {
+        "name": "Structure Preference",
+        "description": "AI prefers well-organized content",
+        "tactics": [
+          "Clear heading hierarchy (H1 → H2 → H3)",
+          "Logical flow between sections",
+          "Consistent formatting patterns",
+          "Lists for multiple items"
+        ]
+      },
+      "entity_recognition": {
+        "name": "Entity Recognition",
+        "description": "AI identifies and weights named entities",
+        "tactics": [
+          "Name the brand consistently (Synthex, not 'we' or 'our platform')",
+          "Use industry-standard terms",
+          "Reference known frameworks and standards",
+          "Include location entities (Australian, Brisbane)"
+        ]
+      },
+      "recency": {
+        "name": "Recency Signal",
+        "description": "AI values fresh, current information",
+        "tactics": [
+          "Include current year where relevant",
+          "Reference recent developments",
+          "Use present tense",
+          "Update content regularly"
+        ]
+      },
+      "authority_markers": {
+        "name": "Authority Markers",
+        "description": "AI identifies expertise signals",
+        "tactics": [
+          "Cite specific sources when possible",
+          "Include credentials and experience",
+          "Reference industry standards (IICRC, ISO, etc.)",
+          "Use precise numbers over vague claims"
+        ]
+      }
+    }
+  },
+
+  "human_psychology": {
+    "description": "Trigger emotional responses that drive action",
+    "triggers": {
+      "instant_credibility": {
+        "name": "Instant Credibility",
+        "description": "Build trust in first 3 seconds",
+        "implementation": [
+          "Social proof above the fold",
+          "Trust badges visible immediately",
+          "Professional, clean design",
+          "Specific numbers (200+ clients, not 'many clients')"
+        ]
+      },
+      "identity_resonance": {
+        "name": "Identity Resonance",
+        "description": "Reader sees themselves in the message",
+        "implementation": [
+          "Use 'you' and 'your' (not 'we' and 'our')",
+          "Mirror their vocabulary and pain points",
+          "Address their specific industry",
+          "Show testimonials from similar businesses"
+        ]
+      },
+      "cognitive_ease": {
+        "name": "Cognitive Ease",
+        "description": "Easy to read = easy to trust",
+        "implementation": [
+          "Short sentences (under 20 words)",
+          "Common words over jargon",
+          "Clear visual hierarchy",
+          "White space for breathing room"
+        ]
+      },
+      "loss_aversion": {
+        "name": "Loss Aversion",
+        "description": "Fear of missing out > desire to gain",
+        "implementation": [
+          "Frame what they lose without it",
+          "Show competitor advantage",
+          "Opportunity cost of waiting",
+          "What happens if nothing changes"
+        ]
+      },
+      "social_proof": {
+        "name": "Social Proof",
+        "description": "People follow others like them",
+        "implementation": [
+          "Testimonials from same industry",
+          "Case studies with specific results",
+          "Client count (200+ Australian SMBs)",
+          "Logo bar of recognizable names"
+        ]
+      },
+      "scarcity": {
+        "name": "Scarcity & Urgency",
+        "description": "Limited availability drives action",
+        "implementation": [
+          "Limited spots available",
+          "Time-sensitive offers",
+          "Exclusive access",
+          "First-mover advantage"
+        ]
+      }
+    }
+  },
+
+  "eeat": {
+    "description": "Google E-E-A-T guidelines for content quality",
+    "experience": {
+      "description": "First-hand knowledge demonstrated",
+      "signals": [
+        "Real examples from actual work",
+        "Specific details only experience provides",
+        "Behind-the-scenes insights",
+        "Lessons learned from failures"
+      ]
+    },
+    "expertise": {
+      "description": "Deep knowledge in the subject",
+      "signals": [
+        "Industry-specific terminology used correctly",
+        "Comprehensive coverage of topics",
+        "Nuanced understanding of edge cases",
+        "References to standards and best practices"
+      ]
+    },
+    "authoritativeness": {
+      "description": "Recognized as a trusted source",
+      "signals": [
+        "Consistent brand presence",
+        "Citations from other sources",
+        "Industry recognition or awards",
+        "Published content and thought leadership"
+      ]
+    },
+    "trustworthiness": {
+      "description": "Honest and transparent",
+      "signals": [
+        "Accurate, verifiable claims",
+        "Clear pricing (no hidden fees)",
+        "Easy to find contact information",
+        "Privacy policy and terms visible"
+      ]
+    }
+  },
+
+  "voice": {
+    "brand_voice": "Confident, direct, helpful - like a knowledgeable mate",
+    "tone_attributes": [
+      "Confident but not arrogant",
+      "Direct but not cold",
+      "Helpful but not pushy",
+      "Professional but approachable"
+    ],
+    "language_rules": [
+      {
+        "rule": "Use 'you' not 'we'",
+        "good": "Your marketing runs while you sleep",
+        "bad": "We run your marketing while you sleep"
+      },
+      {
+        "rule": "Active voice always",
+        "good": "Synthex handles your SEO",
+        "bad": "Your SEO is handled by Synthex"
+      },
+      {
+        "rule": "Concrete over abstract",
+        "good": "Get 3 new leads per week",
+        "bad": "Improve your lead generation"
+      },
+      {
+        "rule": "Specific over vague",
+        "good": "200+ Australian SMBs",
+        "bad": "Many businesses"
+      },
+      {
+        "rule": "Australian English",
+        "good": "colour, organisation, centre",
+        "bad": "color, organization, center"
+      }
+    ],
+    "vocabulary": {
+      "use": [
+        "autonomous",
+        "automatic",
+        "hands-off",
+        "set and forget",
+        "done for you",
+        "24/7",
+        "while you sleep",
+        "no meetings",
+        "no micromanagement",
+        "works in background"
+      ],
+      "avoid": [
+        "AI-powered",
+        "revolutionary",
+        "cutting-edge",
+        "game-changing",
+        "synergy",
+        "leverage",
+        "disrupt",
+        "paradigm",
+        "ecosystem",
+        "best-in-class",
+        "tailored"
+      ]
+    },
+    "industry_adaptation": {
+      "trades": {
+        "tone": "Mate-to-mate, no BS, practical",
+        "vocabulary": "Simple, action-oriented",
+        "example": "Your ute, your tools, your business. We handle the marketing."
+      },
+      "professional_services": {
+        "tone": "Polished, authoritative, respectful of expertise",
+        "vocabulary": "Industry-appropriate, professional",
+        "example": "Focus on billable hours. Let us handle visibility."
+      },
+      "health_wellness": {
+        "tone": "Warm, caring, understanding",
+        "vocabulary": "Accessible, supportive",
+        "example": "You care for your patients. We bring them to you."
+      },
+      "hospitality": {
+        "tone": "Friendly, energetic, service-oriented",
+        "vocabulary": "Welcoming, experiential",
+        "example": "You create the experience. We fill the seats."
+      },
+      "retail": {
+        "tone": "Enthusiastic, customer-focused",
+        "vocabulary": "Benefit-driven, visual",
+        "example": "You curate the products. We bring the customers."
+      },
+      "automotive": {
+        "tone": "Straightforward, technical competence",
+        "vocabulary": "Direct, results-focused",
+        "example": "You fix the cars. We fill the bays."
+      },
+      "property": {
+        "tone": "Professional, market-aware, confident",
+        "vocabulary": "Industry terms, results-driven",
+        "example": "You close the deals. We generate the leads."
+      },
+      "home_services": {
+        "tone": "Reliable, trustworthy, practical",
+        "vocabulary": "Simple, benefit-focused",
+        "example": "You do the work. We keep the phone ringing."
+      }
+    }
+  },
+
+  "design": {
+    "colors": {
+      "primary": "#ea580c",
+      "primary_hover": "#c2410c",
+      "secondary": "#18181b",
+      "accent": "#f97316",
+      "background": "#0a0a0b",
+      "surface": "#18181b",
+      "text": "#fafafa",
+      "text_muted": "#a1a1aa",
+      "border": "rgba(255,255,255,0.1)",
+      "success": "#16a34a",
+      "warning": "#f59e0b",
+      "error": "#dc2626"
+    },
+    "typography": {
+      "font_header": "Inter, system-ui, sans-serif",
+      "font_body": "Inter, system-ui, sans-serif",
+      "font_accent": "Source Serif 4, Georgia, serif",
+      "usage": {
+        "headers": "Inter - clean, modern, readable",
+        "body": "Inter - consistent, professional",
+        "emphasis": "Source Serif 4 italic - for standout quotes or highlights"
+      }
+    },
+    "spacing": {
+      "section_padding": "6rem",
+      "element_gap": "1.5rem",
+      "text_gap": "1rem"
+    },
+    "visual_style": {
+      "aesthetic": "Dark mode luxe",
+      "background_treatment": "Subtle grid overlay at 80% opacity",
+      "ambient_elements": "Faint gradient orbs (orange top-right, grey bottom-left)",
+      "card_style": "Dark surface with subtle border, hover lift effect",
+      "button_style": "High-gloss primary color, scale on hover"
+    }
+  },
+
+  "aura_layers": {
+    "description": "5-layer architecture for page design",
+    "layer_0_atmosphere": {
+      "purpose": "Set the foundational mood and tone",
+      "elements": {
+        "background": "Deep black (#0a0a0b) with subtle grid",
+        "ambient_effect": "Faint gradient orbs with blur",
+        "cursor_reactivity": "None for Synthex (clean, professional)"
+      }
+    },
+    "layer_1_structure": {
+      "purpose": "Define physical feel and user journey",
+      "elements": {
+        "grid": "Fluid 12-column for flexibility",
+        "scroll": "Smooth parallax for depth",
+        "navigation": "Sticky top, appears on scroll"
+      }
+    },
+    "layer_2_narrative": {
+      "purpose": "Deliver immediate impact and brand story",
+      "elements": {
+        "hero_visual": "Typography-focused for Synthex",
+        "headline_treatment": "Bold, static, high contrast",
+        "story_flow": "Problem → Solution → Proof → Action"
+      }
+    },
+    "layer_3_engagement": {
+      "purpose": "Present features, benefits, and build trust",
+      "elements": {
+        "feature_presentation": "Floating cards with subtle shadows",
+        "social_proof": "Testimonial carousel with manual navigation",
+        "cta_design": "High-gloss button, gradient hover"
+      }
+    },
+    "layer_4_delight": {
+      "purpose": "Add premium feel through subtle details",
+      "elements": {
+        "hover_states": "Scale lift (1.02) with shadow increase",
+        "transitions": "Ease-out-expo, 300ms duration",
+        "micro_interactions": "Stagger fade-in on scroll"
+      }
+    }
+  },
+
+  "brand_rules": {
+    "synthex_specific": {
+      "no_phone_numbers": true,
+      "no_book_a_call": true,
+      "primary_cta": "Start Free Trial",
+      "secondary_cta": "See How It Works",
+      "positioning": "Autonomous marketing agent - set it and forget it",
+      "key_differentiator": "No meetings, no micromanagement, runs 24/7"
+    },
+    "trust_signals": {
+      "client_count": "200+ Australian SMBs",
+      "guarantee": "Cancel anytime, no contracts",
+      "proof_format": "Specific results from real businesses"
+    },
+    "avoid": [
+      "Phone numbers or call booking",
+      "Generic stock photos",
+      "Vague claims without specifics",
+      "Corporate jargon",
+      "Comparison to competitors by name"
+    ]
+  },
+
+  "content_scoring": {
+    "ai_friendliness": {
+      "weight": 0.3,
+      "checks": [
+        "Sentence length under 20 words average",
+        "Clear heading hierarchy",
+        "Entity names used consistently",
+        "Specific numbers over vague claims"
+      ]
+    },
+    "human_appeal": {
+      "weight": 0.3,
+      "checks": [
+        "Uses 'you' language (3+ per section)",
+        "Emotional triggers present",
+        "Specific benefits stated",
+        "No corporate jargon"
+      ]
+    },
+    "eeat_compliance": {
+      "weight": 0.2,
+      "checks": [
+        "Experience signals present",
+        "Expertise demonstrated",
+        "Authority markers included",
+        "Trust signals visible"
+      ]
+    },
+    "seo_score": {
+      "weight": 0.2,
+      "checks": [
+        "Primary keyword in H1",
+        "Keywords in first 100 words",
+        "Meta description under 160 chars",
+        "Word count meets target"
+      ]
+    }
+  }
+}

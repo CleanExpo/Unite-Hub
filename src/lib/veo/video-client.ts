@@ -396,7 +396,7 @@ export async function extendVideo(
     aspectRatio = "16:9",
     resolution = "720p", // Extension only supports 720p
     negativePrompt,
-    personGeneration = "allow_all", // Extension requires allow_all
+    // personGeneration defaults to "allow_all" (required for extension)
     numberOfVideos = 1,
   } = options;
 
@@ -565,11 +565,17 @@ export function calculateVideoCost(
   let cost = baseCosts[model];
 
   // Adjust for duration
-  if (durationSeconds === 4) cost *= 0.6;
-  if (durationSeconds === 6) cost *= 0.8;
+  if (durationSeconds === 4) {
+cost *= 0.6;
+}
+  if (durationSeconds === 6) {
+cost *= 0.8;
+}
 
   // 1080p premium
-  if (resolution === "1080p") cost *= 1.5;
+  if (resolution === "1080p") {
+cost *= 1.5;
+}
 
   return cost;
 }

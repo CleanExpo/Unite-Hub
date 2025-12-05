@@ -198,9 +198,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Select model based on request
+    // Note: gemini-2.0-flash-exp-image-generation is the working model for image generation
     const model: GeminiImageModel = professional
       ? "gemini-3-pro-image-preview"
-      : "gemini-2.5-flash-image";
+      : "gemini-2.0-flash-exp-image-generation";
 
     // Get resolution dimensions for database storage
     const dimensions = getResolutionDimensions(aspectRatio, imageSize);

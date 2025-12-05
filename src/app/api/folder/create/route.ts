@@ -6,11 +6,14 @@
  * (audits, snapshots, geo, keywords, competitors, backlinks, reports).
  */
 
+// Prevent Turbopack from analyzing dynamic paths for client bundles
+import 'server-only';
+
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
-import ClientDataManager from "@/server/clientDataManager";
 import fs from "fs/promises";
-import path from "path";
+// Use path.posix to prevent Turbopack file scanning on dynamic joins
+import { posix as path } from "path";
 
 const VALID_FOLDER_TYPES = [
   "audits",
