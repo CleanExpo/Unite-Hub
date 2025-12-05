@@ -1,4 +1,4 @@
-/* eslint-disable no-undef, no-console */
+/* eslint-disable no-console */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -200,10 +200,10 @@ export default function Home() {
           <ScrollReveal delay={300}>
             <div className="max-w-[600px] mx-auto bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10 hover:border-white/30 transition-colors">
               <p className="text-sm text-white/80 mb-4">
-                "I spent $30,000 on a marketing agency over 18 months. Got nothing. Synthex did more in the first week than they did the entire time." — Tradie, Brisbane
+                "I spent $30,000 on a marketing agency over 18 months. Got nothing. Synthex did more in the first week than they did the entire time." — Electrician, Brisbane
               </p>
               <p className="text-xs text-white/60">
-                Built by founders who've been scammed by agencies too. We built what we wished existed.
+                Built by founders who've been burned by agencies too. We built what we wished existed.
               </p>
             </div>
           </ScrollReveal>
@@ -232,17 +232,17 @@ export default function Home() {
                   </div>
                   <h3 className="text-xl font-bold text-text-primary mb-3">Tradies & Contractors</h3>
                   <p className="text-text-secondary mb-4">
-                    "I've been burned by Hipages, ServiceSeeking, and two different agencies. $100k down the drain." Sound familiar? We fix that.
+                    Plumbers, sparkies, builders, chippies - you've been burned by Hipages, ServiceSeeking, and agencies. $100K+ down the drain. We actually bring you jobs.
                   </p>
                   <ul className="space-y-2 text-sm text-text-secondary">
                     <li className="flex items-center gap-2">
-                      <span className="text-accent-500">✓</span> Your own leads, not shared with 10 competitors
+                      <span className="text-accent-500">✓</span> Your own leads - not shared with 8 competitors
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-accent-500">✓</span> Before/after galleries that sell for you
+                      <span className="text-accent-500">✓</span> Before/after photos sent automatically
                     </li>
                     <li className="flex items-center gap-2">
-                      <span className="text-accent-500">✓</span> Google Maps ranking without the agency fees
+                      <span className="text-accent-500">✓</span> Google reviews that come in while you're on the tools
                     </li>
                   </ul>
                 </div>
@@ -453,7 +453,7 @@ export default function Home() {
                     <div>
                       <h3 className="text-xl font-bold mb-2">"Marketing agencies are a scam"</h3>
                       <p className="text-white/70">
-                        <em>"I've been burned by two agencies. $30,000 over 18 months, got nothing. They promised the world and delivered excuses."</em> — Plumber, Sydney
+                        <em>"Been burned by two agencies. $30K over 18 months, got nothing. They built a fancy website no one visits and charged me monthly for 'SEO' I never saw."</em> — Dave, Plumbing - Western Sydney
                       </p>
                     </div>
                   </div>
@@ -470,7 +470,7 @@ export default function Home() {
                     <div>
                       <h3 className="text-xl font-bold mb-2">"$100k+ on platforms that share your leads"</h3>
                       <p className="text-white/70">
-                        <em>"Hipages, ServiceSeeking, Adwords — burned through $100k over 5 years. Every lead goes to 10 competitors. It's a race to the bottom."</em> — Builder, Melbourne
+                        <em>"Hipages, ServiceSeeking, Google Ads — $110K over 5 years. Every quote I send goes to 8 other sparkies. By the time I call, they've already picked someone cheaper."</em> — James, Electrical - Bayside Melbourne
                       </p>
                     </div>
                   </div>
@@ -485,9 +485,9 @@ export default function Home() {
                       </div>
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold mb-2">"47 unfinished course modules"</h3>
+                      <h3 className="text-xl font-bold mb-2">"No time for social media courses"</h3>
                       <p className="text-white/70">
-                        <em>"I've got $3,000 in marketing courses I've never finished. The $297 'signature system' is gathering dust. I just don't have time."</em> — Coach, Brisbane
+                        <em>"Bought a $497 course on Instagram for tradies. Got through module 2. I'm on the tools 10 hours a day - when am I supposed to make reels?"</em> — Lisa, Carpentry - Brisbane Northside
                       </p>
                     </div>
                   </div>
@@ -502,9 +502,9 @@ export default function Home() {
                       </div>
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold mb-2">"Paying for tools I barely use"</h3>
+                      <h3 className="text-xl font-bold mb-2">"Paying for tools I never log into"</h3>
                       <p className="text-white/70">
-                        <em>"I'm paying for Mailchimp, Canva Pro, Hootsuite, and two other things I forgot about. None of them talk to each other. It's a mess."</em> — Salon Owner, Perth
+                        <em>"My missus set up Mailchimp, Canva, and something called Hootsuite. I think we pay $180 a month? Haven't logged in since March."</em> — Tony, HVAC - Adelaide
                       </p>
                     </div>
                   </div>

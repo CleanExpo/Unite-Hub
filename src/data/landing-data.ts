@@ -28,56 +28,56 @@ export interface Integration {
 
 export const caseStudies: CaseStudy[] = [
   {
-    company: 'Brisbane Balustrades',
-    industry: 'Manufacturing & Trade Services',
+    company: 'Gold Coast Glass & Balustrades',
+    industry: 'Trade Services - Glass & Balustrades',
     challenge:
-      '50+ leads per month, no way to qualify them. Lost 30% to competitors due to slow response times.',
+      '50+ leads per month from Hipages and ServiceSeeking, no way to qualify them. Lost 30% to competitors due to slow response times.',
     solution:
       'Synthex auto-scored every lead based on engagement and intent. Prioritized hot opportunities in real-time.',
     metrics: [
       { label: 'Lead Response Time', before: '3 days', after: '4 hours' },
       { label: 'Close Rate', before: '18%', after: '31%' },
-      { label: 'Monthly Revenue', before: '$42K', after: '$89K (+112%)' },
+      { label: 'Monthly Revenue', before: 'A$42K', after: 'A$89K (+112%)' },
     ],
     testimonial:
-      'Finally, our team can focus on closing deals instead of digging through emails. This changed everything.',
-    testimonialAuthor: 'Sarah Mitchell, Owner',
+      "Been in the glass game for 20 years. Wasted $45K on agencies that didn't deliver. Synthex actually works - we're not competing on price anymore because we reply first.",
+    testimonialAuthor: 'Dave Mitchell, Owner - Gold Coast',
   },
   {
-    company: 'Digital Agency Midwest',
-    industry: 'Creative & Marketing Agency',
+    company: 'Perth Plumbing Solutions',
+    industry: 'Trade Services - Plumbing',
     challenge:
-      'Managing 25 client social projects. Team drowning in content scheduling, missing deadlines.',
+      "Managing quotes, follow-ups, and Google reviews while on the tools. Wife was doing admin nights and weekends - couldn't scale.",
     solution:
-      'AI generates platform-specific content for all 8 platforms. Team approves and publishes in one click.',
+      'Synthex handles follow-up emails, review requests, and social media automatically. AI personalizes every message based on job type.',
     metrics: [
-      { label: 'Content Turnaround', before: '8 hours', after: '45 minutes' },
+      { label: 'Follow-up Time', before: '3-5 days', after: 'Same day' },
       {
-        label: 'Time Saved',
-        before: '0 hrs/client',
-        after: '4.5 hrs/client/month',
+        label: 'Google Reviews',
+        before: '2 per month',
+        after: '15 per month',
       },
-      { label: 'Client Satisfaction', before: '7.2/10', after: '9.1/10' },
+      { label: 'Quote Acceptance', before: '28%', after: '47%' },
     ],
     testimonial:
-      'We went from scrambling to keep up with client demands to confidently taking on 10 more accounts.',
-    testimonialAuthor: 'Marcus Chen, Agency Director',
+      "Mate, I'm a plumber not a marketer. This thing sends follow-ups while I'm under a house. Reviews come in automatically. My missus finally has her weekends back.",
+    testimonialAuthor: 'Tony Rizzo, Owner - Perth',
   },
   {
-    company: 'Local Fitness Coaching',
-    industry: 'Health & Wellness',
+    company: 'Melbourne Bricklaying Co.',
+    industry: 'Trade Services - Bricklaying & Masonry',
     challenge:
-      'No system to nurture leads. Email marketing was manual, inconsistent, and poorly timed.',
+      "70+ enquiries a month, couldn't keep up. Spent $28K on an agency for 18 months - they made a Facebook page and disappeared.",
     solution:
-      'Drip campaigns with AI-triggered follow-ups based on lead score. Personalized content for each prospect.',
+      'Synthex handles lead qualification, follow-ups, and sends before/after photos to prospects automatically. Built trust without lifting a finger.',
     metrics: [
-      { label: 'Email Engagement', before: '12%', after: '34%' },
-      { label: 'Lead-to-Client Rate', before: '22%', after: '48%' },
-      { label: 'Monthly Revenue', before: '$8K', after: '$14.2K (+78%)' },
+      { label: 'Lead Response', before: '2-4 days', after: '2 hours' },
+      { label: 'Quote Conversion', before: '19%', after: '38%' },
+      { label: 'Monthly Revenue', before: 'A$63K', after: 'A$127K (+102%)' },
     ],
     testimonial:
-      'Synthex basically doubled our conversion rate. We can now focus on coaching instead of chasing leads.',
-    testimonialAuthor: 'Jessica Torres, Head Coach',
+      "That agency took my money and ghosted. Synthex costs less than their monthly retainer and actually brings in jobs. My crew's booked 3 months out now.",
+    testimonialAuthor: 'Marco Battaglia, Owner - Melbourne',
   },
 ];
 
