@@ -1,0 +1,16 @@
+{
+  "id": "fake-file-task-1764928910181",
+  "taskId": "fake-file-task",
+  "stored_at": 1764928910181,
+  "evidence_path": "D:\\Unite-Hub\\audit-reports\\evidence\\fake-file-task",
+  "collector_id": "independent-verifier-1",
+  "evidence_type": "package",
+  "status": "stored",
+  "metadata": {
+    "verification_status": false,
+    "verifier_id": "independent-verifier-1",
+    "proof_merkle_root": "c3678c73a5e929b7fa6fd69b2c29eecc0ecd099cd544c7d4d95ceca0655f95cc"
+  },
+  "retention_days": 90,
+  "expires_at": 1772704910181
+}

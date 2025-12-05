@@ -174,7 +174,7 @@
    Theme Configuration (Tailwind v4)
    Synthex Design System - Merged from tailwind.config.cjs
    =================================== */
-@theme {
+@theme inline {
   /* ===================================
      Synthex Color System
      =================================== */

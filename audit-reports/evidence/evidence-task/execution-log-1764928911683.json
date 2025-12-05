@@ -1,0 +1,22 @@
+{
+  "taskId": "evidence-task",
+  "captured_at": 1764928911683,
+  "steps": [
+    {
+      "step_id": "verify-file_exists: D:\\Unite-Hub\\.test-verification\\evidence-test.ts",
+      "description": "file_exists: D:\\Unite-Hub\\.test-verification\\evidence-test.ts",
+      "status": "completed",
+      "start_time": 1764928910683,
+      "end_time": 1764928911683,
+      "duration_ms": 1000
+    },
+    {
+      "step_id": "verify-no_placeholders: D:\\Unite-Hub\\.test-verification\\evidence-test.ts",
+      "description": "no_placeholders: D:\\Unite-Hub\\.test-verification\\evidence-test.ts",
+      "status": "completed",
+      "start_time": 1764928910683,
+      "end_time": 1764928911683,
+      "duration_ms": 1000
+    }
+  ]
+}
