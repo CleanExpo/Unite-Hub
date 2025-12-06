@@ -161,74 +161,94 @@ CREATE POLICY "Invoices visible to tenant"
 --
 -- TWO-PHASE MARGIN STRUCTURE:
 --   Months 1-3:  40% margin (60% cost) - heavy onboarding
---   Months 4-12: 80% margin (20% cost) - standard ops
+--   Months 4-12: 60%+ margin (40% cost) - standard ops
+--   MINIMUM TARGET: 60% annual blended margin
+--
+-- *** COMPLETE API COST BREAKDOWN (ALL SERVICES) ***
 -- =====================================================
 --
--- STARTER ($495/mo)
+-- STARTER ($495/mo = ~$330 USD)
 -- ─────────────────────────────────────────────────────
--- PHASE 1 (Months 1-3): Revenue $1,485 → Max cost $891 (60%)
---   Setup/onboarding:     $300
---   Training/handholding: $200
---   AI tokens (10K × 3):  $30
---   Emails (1K × 3):      $4
---   Infrastructure:       $30
---   Support (intensive):  $150
---   Total Phase 1:        $714 → 48% cost, 52% margin ✓
+-- MONTHLY OPERATIONAL COSTS:
+--   Anthropic LLM (10K tokens):     $10/mo
+--   Perplexity SEO Search:          $2/mo
+--   DataForSEO (keywords/SERP):     $5/mo
+--   Gemini Images (5 images):       $3/mo
+--   SendGrid Emails (1K):           $1/mo
+--   Supabase DB (share):            $3/mo
+--   Vercel Hosting (share):         $2/mo
+--   Stripe Fees (2.9% of $495):     $14/mo
+--   Support/Overhead:               $15/mo
+--   ───────────────────────────────
+--   MONTHLY OPS TOTAL:              $55/mo
 --
--- PHASE 2 (Months 4-12): Revenue $4,455 → Max cost $891 (20%)
---   AI tokens (10K × 9):  $90
---   Emails (1K × 9):      $11
---   Infrastructure:       $90
---   Support (standard):   $100
---   Storage:              $5
---   Total Phase 2:        $296 → 7% cost, 93% margin ✓
+-- PHASE 1 (Months 1-3): Revenue $1,485
+--   Onboarding/setup:    $300 (one-time)
+--   Training:            $200 (one-time)
+--   Ops costs (3mo):     $165
+--   Total Phase 1:       $665 → 45% cost, 55% margin ✓
 --
--- ANNUAL: $1,010 cost / $5,940 revenue → 83% blended margin ✓
--- ─────────────────────────────────────────────────────
+-- PHASE 2 (Months 4-12): Revenue $4,455
+--   Ops costs (9mo):     $495
+--   Total Phase 2:       $495 → 11% cost, 89% margin ✓
 --
--- PRO ($895/mo)
--- ─────────────────────────────────────────────────────
--- PHASE 1 (Months 1-3): Revenue $2,685 → Max cost $1,611 (60%)
---   Setup/onboarding:     $500
---   Training/strategy:    $350
---   AI tokens (75K × 3):  $113
---   Emails (5K × 3):      $19
---   Infrastructure:       $45
---   Support (intensive):  $300
---   Total Phase 1:        $1,327 → 49% cost, 51% margin ✓
---
--- PHASE 2 (Months 4-12): Revenue $8,055 → Max cost $1,611 (20%)
---   AI tokens (75K × 9):  $338
---   Emails (5K × 9):      $56
---   Infrastructure:       $135
---   Support (priority):   $200
---   Storage:              $18
---   Total Phase 2:        $747 → 9% cost, 91% margin ✓
---
--- ANNUAL: $2,074 cost / $10,740 revenue → 81% blended margin ✓
+-- ANNUAL: $1,160 cost / $5,940 revenue → 80.5% margin ✓
 -- ─────────────────────────────────────────────────────
 --
--- ELITE ($1,295/mo)
+-- PRO ($895/mo = ~$600 USD)
 -- ─────────────────────────────────────────────────────
--- PHASE 1 (Months 1-3): Revenue $3,885 → Max cost $2,331 (60%)
---   Setup/onboarding:     $800
---   Training/strategy:    $500
---   AI tokens (300K × 3): $270
---   Emails (15K × 3):     $56
---   Infrastructure:       $75
---   Support (dedicated):  $450
---   Total Phase 1:        $2,151 → 55% cost, 45% margin ✓
+-- MONTHLY OPERATIONAL COSTS:
+--   Anthropic LLM (75K tokens):     $45/mo
+--   Perplexity SEO Search:          $8/mo
+--   DataForSEO (full suite):        $20/mo
+--   Gemini Images (20 images):      $15/mo
+--   SendGrid Emails (5K):           $6/mo
+--   Supabase DB (share):            $5/mo
+--   Vercel Hosting (share):         $3/mo
+--   Stripe Fees (2.9% of $895):     $26/mo
+--   Support/Overhead:               $35/mo
+--   ───────────────────────────────
+--   MONTHLY OPS TOTAL:              $163/mo
 --
--- PHASE 2 (Months 4-12): Revenue $11,655 → Max cost $2,331 (20%)
---   AI tokens (300K × 9): $810
---   Emails (15K × 9):     $169
---   Infrastructure:       $225
---   Support (dedicated):  $350
---   Storage:              $45
---   Total Phase 2:        $1,599 → 14% cost, 86% margin ✓
+-- PHASE 1 (Months 1-3): Revenue $2,685
+--   Onboarding/setup:    $500 (one-time)
+--   Strategy sessions:   $350 (one-time)
+--   Ops costs (3mo):     $489
+--   Total Phase 1:       $1,339 → 50% cost, 50% margin ✓
 --
--- ANNUAL: $3,750 cost / $15,540 revenue → 76% blended margin
--- (Acceptable: Phase 1 is 45%, Phase 2 is 86%)
+-- PHASE 2 (Months 4-12): Revenue $8,055
+--   Ops costs (9mo):     $1,467
+--   Total Phase 2:       $1,467 → 18% cost, 82% margin ✓
+--
+-- ANNUAL: $2,806 cost / $10,740 revenue → 73.9% margin ✓
+-- ─────────────────────────────────────────────────────
+--
+-- ELITE ($1,295/mo = ~$865 USD)
+-- ─────────────────────────────────────────────────────
+-- MONTHLY OPERATIONAL COSTS:
+--   Anthropic LLM (300K tokens):    $120/mo
+--   Perplexity SEO Search:          $25/mo
+--   DataForSEO (enterprise):        $60/mo
+--   Gemini Images (50 images):      $40/mo
+--   SendGrid Emails (15K):          $19/mo
+--   Supabase DB (share):            $10/mo
+--   Vercel Hosting (share):         $5/mo
+--   Stripe Fees (2.9% of $1295):    $38/mo
+--   Support/Overhead:               $70/mo
+--   ───────────────────────────────
+--   MONTHLY OPS TOTAL:              $387/mo
+--
+-- PHASE 1 (Months 1-3): Revenue $3,885
+--   Onboarding/setup:    $800 (one-time)
+--   Strategy sessions:   $500 (one-time)
+--   Ops costs (3mo):     $1,161
+--   Total Phase 1:       $2,461 → 63% cost, 37% margin ✓
+--
+-- PHASE 2 (Months 4-12): Revenue $11,655
+--   Ops costs (9mo):     $3,483
+--   Total Phase 2:       $3,483 → 30% cost, 70% margin ✓
+--
+-- ANNUAL: $5,944 cost / $15,540 revenue → 61.7% margin ✓
 -- =====================================================
 INSERT INTO synthex_billing_plans (code, name, description, price_monthly, price_yearly, currency, limits, features, sort_order, metadata) VALUES
 (
@@ -241,7 +261,7 @@ INSERT INTO synthex_billing_plans (code, name, description, price_monthly, price
     '{"ai_tokens": 10000, "ai_model": "haiku", "audits": 2, "contacts": 500, "seats": 1, "campaigns": 3, "content": 5, "emails_sent": 1000, "storage_mb": 250}',
     '["10,000 AI tokens/month", "2 website audits/month", "500 contacts", "1 team seat", "3 email campaigns", "1,000 emails/month", "Basic dashboard", "Email support"]',
     1,
-    '{"gst_included": true, "min_contract_months": 3, "onboarding_months": 3, "phase1_margin_pct": 52, "phase1_cost": 714, "phase2_margin_pct": 93, "phase2_cost": 296, "annual_cost": 1010, "annual_revenue": 5940, "blended_margin_pct": 83, "overage_ai_per_1k": 2.00, "overage_email_per_100": 0.50}'
+    '{"gst_included": true, "min_contract_months": 3, "min_margin_pct": 60, "monthly_ops_cost": 55, "phase1_cost": 665, "phase1_margin_pct": 55, "phase2_cost": 495, "phase2_margin_pct": 89, "annual_cost": 1160, "annual_revenue": 5940, "blended_margin_pct": 80.5, "cost_breakdown": {"anthropic": 10, "perplexity": 2, "dataforseo": 5, "gemini": 3, "sendgrid": 1, "supabase": 3, "vercel": 2, "stripe": 14, "support": 15}}'
 ),
 (
     'pro',
@@ -253,7 +273,7 @@ INSERT INTO synthex_billing_plans (code, name, description, price_monthly, price
     '{"ai_tokens": 75000, "ai_model": "sonnet", "audits": 8, "contacts": 2000, "seats": 3, "campaigns": 8, "content": 15, "emails_sent": 5000, "storage_mb": 1000}',
     '["75,000 AI tokens/month", "8 website audits/month", "2,000 contacts", "3 team seats", "8 campaigns", "5,000 emails/month", "Drip campaigns", "Priority support", "API access"]',
     2,
-    '{"gst_included": true, "min_contract_months": 3, "popular": true, "onboarding_months": 3, "phase1_margin_pct": 51, "phase1_cost": 1327, "phase2_margin_pct": 91, "phase2_cost": 747, "annual_cost": 2074, "annual_revenue": 10740, "blended_margin_pct": 81, "overage_ai_per_1k": 1.50, "overage_email_per_100": 0.40}'
+    '{"gst_included": true, "min_contract_months": 3, "popular": true, "min_margin_pct": 60, "monthly_ops_cost": 163, "phase1_cost": 1339, "phase1_margin_pct": 50, "phase2_cost": 1467, "phase2_margin_pct": 82, "annual_cost": 2806, "annual_revenue": 10740, "blended_margin_pct": 73.9, "cost_breakdown": {"anthropic": 45, "perplexity": 8, "dataforseo": 20, "gemini": 15, "sendgrid": 6, "supabase": 5, "vercel": 3, "stripe": 26, "support": 35}}'
 ),
 (
     'elite',
@@ -265,7 +285,7 @@ INSERT INTO synthex_billing_plans (code, name, description, price_monthly, price
     '{"ai_tokens": 300000, "ai_model": "opus", "audits": 30, "contacts": 7500, "seats": 8, "campaigns": 30, "content": 50, "emails_sent": 15000, "storage_mb": 5000}',
     '["300,000 AI tokens/month", "30 website audits/month", "7,500 contacts", "8 team seats", "30 campaigns", "15,000 emails/month", "Dedicated AI agent", "A/B testing", "White label", "Agency tools"]',
     3,
-    '{"gst_included": true, "min_contract_months": 3, "onboarding_months": 3, "phase1_margin_pct": 45, "phase1_cost": 2151, "phase2_margin_pct": 86, "phase2_cost": 1599, "annual_cost": 3750, "annual_revenue": 15540, "blended_margin_pct": 76, "overage_ai_per_1k": 1.00, "overage_email_per_100": 0.30}'
+    '{"gst_included": true, "min_contract_months": 3, "min_margin_pct": 60, "monthly_ops_cost": 387, "phase1_cost": 2461, "phase1_margin_pct": 37, "phase2_cost": 3483, "phase2_margin_pct": 70, "annual_cost": 5944, "annual_revenue": 15540, "blended_margin_pct": 61.7, "cost_breakdown": {"anthropic": 120, "perplexity": 25, "dataforseo": 60, "gemini": 40, "sendgrid": 19, "supabase": 10, "vercel": 5, "stripe": 38, "support": 70}}'
 )
 ON CONFLICT (code) DO UPDATE SET
     name = EXCLUDED.name,
