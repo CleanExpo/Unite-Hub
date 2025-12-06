@@ -275,6 +275,130 @@ ON CONFLICT (code) DO UPDATE SET
     limits = EXCLUDED.limits,
     features = EXCLUDED.features,
     sort_order = EXCLUDED.sort_order,
+    metadata = EXCLUDED.metadata,
+    updated_at = now();
+
+-- =====================================================
+-- Table: synthex_credit_packs
+-- Purchasable credit packs (100% markup on cost)
+-- =====================================================
+DROP TABLE IF EXISTS synthex_credit_packs CASCADE;
+DROP TABLE IF EXISTS synthex_credit_purchases CASCADE;
+
+CREATE TABLE synthex_credit_packs (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    code TEXT UNIQUE NOT NULL,
+    name TEXT NOT NULL,
+    description TEXT,
+    credit_type TEXT NOT NULL CHECK (credit_type IN ('ai_tokens', 'emails', 'audits', 'storage_mb', 'mixed')),
+    quantity BIGINT NOT NULL,
+    cost_aud NUMERIC(10,2) NOT NULL,
+    price_aud NUMERIC(10,2) NOT NULL,
+    markup_pct NUMERIC(5,2) NOT NULL DEFAULT 100,
+    is_active BOOLEAN NOT NULL DEFAULT true,
+    valid_days INT DEFAULT 90,
+    metadata JSONB DEFAULT '{}',
+    created_at TIMESTAMPTZ DEFAULT now(),
+    updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+COMMENT ON TABLE synthex_credit_packs IS 'Purchasable credit packs with 100% markup on cost';
+COMMENT ON COLUMN synthex_credit_packs.cost_aud IS 'Our cost to deliver these credits';
+COMMENT ON COLUMN synthex_credit_packs.price_aud IS 'Price charged to customer (cost × 2 for 100% markup)';
+COMMENT ON COLUMN synthex_credit_packs.valid_days IS 'Days until credits expire (default 90)';
+
+CREATE TABLE synthex_credit_purchases (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id UUID NOT NULL,
+    pack_id UUID NOT NULL REFERENCES synthex_credit_packs(id),
+    quantity_purchased BIGINT NOT NULL,
+    quantity_remaining BIGINT NOT NULL,
+    amount_paid NUMERIC(10,2) NOT NULL,
+    currency TEXT NOT NULL DEFAULT 'AUD',
+    expires_at TIMESTAMPTZ NOT NULL,
+    status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'exhausted', 'expired', 'refunded')),
+    external_payment_id TEXT,
+    metadata JSONB DEFAULT '{}',
+    created_at TIMESTAMPTZ DEFAULT now(),
+    updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+COMMENT ON TABLE synthex_credit_purchases IS 'Record of credit pack purchases by tenants';
+
+CREATE INDEX IF NOT EXISTS idx_synthex_credit_purchases_tenant ON synthex_credit_purchases(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_synthex_credit_purchases_status ON synthex_credit_purchases(status);
+CREATE INDEX IF NOT EXISTS idx_synthex_credit_purchases_expires ON synthex_credit_purchases(expires_at);
+
+ALTER TABLE synthex_credit_packs ENABLE ROW LEVEL SECURITY;
+ALTER TABLE synthex_credit_purchases ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Credit packs visible to all"
+    ON synthex_credit_packs FOR SELECT
+    USING (is_active = true);
+
+CREATE POLICY "Credit purchases visible to tenant"
+    ON synthex_credit_purchases FOR ALL
+    USING (tenant_id = current_setting('app.tenant_id', true)::uuid)
+    WITH CHECK (tenant_id = current_setting('app.tenant_id', true)::uuid);
+
+GRANT SELECT ON synthex_credit_packs TO authenticated;
+GRANT ALL ON synthex_credit_purchases TO authenticated;
+
+-- =====================================================
+-- Seed credit packs (100% markup = 2x cost)
+-- =====================================================
+-- AI TOKEN COSTS:
+--   Haiku:  ~$0.25/1M input, $1.25/1M output → avg $0.75/1M
+--   Sonnet: ~$3/1M input, $15/1M output → avg $9/1M
+--   Opus:   ~$15/1M input, $75/1M output → avg $45/1M
+-- EMAIL COST: ~$0.001/email (SendGrid)
+-- AUDIT COST: ~$2/audit (AI + crawl)
+-- =====================================================
+INSERT INTO synthex_credit_packs (code, name, description, credit_type, quantity, cost_aud, price_aud, markup_pct, valid_days, metadata) VALUES
+-- AI Token Packs (Haiku-tier pricing for broad use)
+('ai_tokens_50k', '50K AI Tokens', 'Quick top-up for small projects', 'ai_tokens', 50000, 5, 10, 100, 90,
+ '{"use_case": "small_project", "model_tier": "haiku"}'),
+('ai_tokens_250k', '250K AI Tokens', 'Standard pack for medium projects', 'ai_tokens', 250000, 20, 40, 100, 90,
+ '{"use_case": "medium_project", "model_tier": "mixed", "popular": true}'),
+('ai_tokens_1m', '1M AI Tokens', 'Power pack for large campaigns', 'ai_tokens', 1000000, 70, 140, 100, 90,
+ '{"use_case": "large_project", "model_tier": "mixed"}'),
+('ai_tokens_5m', '5M AI Tokens', 'Enterprise pack for heavy usage', 'ai_tokens', 5000000, 300, 600, 100, 180,
+ '{"use_case": "enterprise", "model_tier": "all", "extended_validity": true}'),
+
+-- Email Packs
+('emails_5k', '5,000 Emails', 'Small email campaign boost', 'emails', 5000, 5, 10, 100, 90,
+ '{"use_case": "small_campaign"}'),
+('emails_25k', '25,000 Emails', 'Medium campaign pack', 'emails', 25000, 20, 40, 100, 90,
+ '{"use_case": "medium_campaign", "popular": true}'),
+('emails_100k', '100,000 Emails', 'Large blast pack', 'emails', 100000, 75, 150, 100, 90,
+ '{"use_case": "large_campaign"}'),
+
+-- Audit Packs
+('audits_5', '5 Website Audits', 'Quick audit bundle', 'audits', 5, 10, 20, 100, 90,
+ '{"use_case": "spot_check"}'),
+('audits_20', '20 Website Audits', 'Monthly audit pack', 'audits', 20, 35, 70, 100, 90,
+ '{"use_case": "regular_monitoring", "popular": true}'),
+('audits_50', '50 Website Audits', 'Agency audit bundle', 'audits', 50, 80, 160, 100, 180,
+ '{"use_case": "agency", "extended_validity": true}'),
+
+-- Mixed Bundles (best value)
+('starter_boost', 'Starter Boost Bundle', '100K tokens + 5K emails + 5 audits', 'mixed', 1, 25, 49, 96, 90,
+ '{"includes": {"ai_tokens": 100000, "emails": 5000, "audits": 5}, "savings_pct": 18}'),
+('pro_boost', 'Pro Boost Bundle', '500K tokens + 25K emails + 20 audits', 'mixed', 1, 100, 199, 99, 90,
+ '{"includes": {"ai_tokens": 500000, "emails": 25000, "audits": 20}, "savings_pct": 20, "popular": true}'),
+('elite_boost', 'Elite Boost Bundle', '2M tokens + 100K emails + 50 audits', 'mixed', 1, 400, 799, 100, 180,
+ '{"includes": {"ai_tokens": 2000000, "emails": 100000, "audits": 50}, "savings_pct": 15, "extended_validity": true}')
+
+ON CONFLICT (code) DO UPDATE SET
+    name = EXCLUDED.name,
+    description = EXCLUDED.description,
+    credit_type = EXCLUDED.credit_type,
+    quantity = EXCLUDED.quantity,
+    cost_aud = EXCLUDED.cost_aud,
+    price_aud = EXCLUDED.price_aud,
+    markup_pct = EXCLUDED.markup_pct,
+    valid_days = EXCLUDED.valid_days,
+    metadata = EXCLUDED.metadata,
     updated_at = now();
 
 -- =====================================================
