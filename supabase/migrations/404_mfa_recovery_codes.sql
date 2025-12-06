@@ -34,14 +34,17 @@ COMMENT ON COLUMN mfa_recovery_codes.used_at IS 'Timestamp when the recovery cod
 -- =====================================================
 
 -- Index for faster lookups by user
+DROP INDEX IF EXISTS idx_mfa_recovery_codes_user_id;
 CREATE INDEX IF NOT EXISTS idx_mfa_recovery_codes_user_id
   ON mfa_recovery_codes(user_id);
 
 -- Index for faster hash lookups during verification
+DROP INDEX IF EXISTS idx_mfa_recovery_codes_hash;
 CREATE INDEX IF NOT EXISTS idx_mfa_recovery_codes_hash
   ON mfa_recovery_codes(code_hash);
 
 -- Index for unused codes lookup
+DROP INDEX IF EXISTS idx_mfa_recovery_codes_unused;
 CREATE INDEX IF NOT EXISTS idx_mfa_recovery_codes_unused
   ON mfa_recovery_codes(user_id, used)
   WHERE used = FALSE;
@@ -54,18 +57,21 @@ CREATE INDEX IF NOT EXISTS idx_mfa_recovery_codes_unused
 ALTER TABLE mfa_recovery_codes ENABLE ROW LEVEL SECURITY;
 
 -- Policy: Users can view their own recovery codes
+DROP POLICY IF EXISTS "Users can view their own recovery codes" ON mfa_recovery_codes;
 CREATE POLICY "Users can view their own recovery codes"
   ON mfa_recovery_codes
   FOR SELECT
   USING (auth.uid() = user_id);
 
 -- Policy: Users can delete their own recovery codes
+DROP POLICY IF EXISTS "Users can delete their own recovery codes" ON mfa_recovery_codes;
 CREATE POLICY "Users can delete their own recovery codes"
   ON mfa_recovery_codes
   FOR DELETE
   USING (auth.uid() = user_id);
 
 -- Policy: Service role can manage all recovery codes
+DROP POLICY IF EXISTS "Service role can manage recovery codes" ON mfa_recovery_codes;
 CREATE POLICY "Service role can manage recovery codes"
   ON mfa_recovery_codes
   FOR ALL
@@ -92,6 +98,7 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- Trigger to update used_at timestamp
+DROP TRIGGER IF EXISTS trigger_mark_recovery_code_used ON mfa_recovery_codes;
 CREATE TRIGGER trigger_mark_recovery_code_used
   BEFORE UPDATE ON mfa_recovery_codes
   FOR EACH ROW
@@ -149,6 +156,7 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- Trigger to audit recovery code usage
+DROP TRIGGER IF EXISTS trigger_log_recovery_code_usage ON mfa_recovery_codes;
 CREATE TRIGGER trigger_log_recovery_code_usage
   AFTER UPDATE ON mfa_recovery_codes
   FOR EACH ROW

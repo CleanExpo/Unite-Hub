@@ -30,9 +30,13 @@ CREATE TABLE IF NOT EXISTS rate_limit_logs (
 );
 
 -- Indexes for efficient queries
+DROP INDEX IF EXISTS idx_rate_limit_logs_client;
 CREATE INDEX idx_rate_limit_logs_client ON rate_limit_logs(client_key, created_at DESC);
+DROP INDEX IF EXISTS idx_rate_limit_logs_endpoint;
 CREATE INDEX idx_rate_limit_logs_endpoint ON rate_limit_logs(endpoint, created_at DESC);
+DROP INDEX IF EXISTS idx_rate_limit_logs_created;
 CREATE INDEX idx_rate_limit_logs_created ON rate_limit_logs(created_at DESC);
+DROP INDEX IF EXISTS idx_rate_limit_logs_tier;
 CREATE INDEX idx_rate_limit_logs_tier ON rate_limit_logs(tier);
 
 -- Partition by time for easy cleanup (optional, uncomment if needed)
@@ -69,14 +73,18 @@ CREATE TABLE IF NOT EXISTS rate_limit_overrides (
   )
 );
 
+DROP INDEX IF EXISTS idx_rate_limit_overrides_client;
 CREATE INDEX idx_rate_limit_overrides_client ON rate_limit_overrides(client_key);
+DROP INDEX IF EXISTS idx_rate_limit_overrides_workspace;
 CREATE INDEX idx_rate_limit_overrides_workspace ON rate_limit_overrides(workspace_id);
+DROP INDEX IF EXISTS idx_rate_limit_overrides_expires;
 CREATE INDEX idx_rate_limit_overrides_expires ON rate_limit_overrides(expires_at);
 
 -- Enable RLS
 ALTER TABLE rate_limit_overrides ENABLE ROW LEVEL SECURITY;
 
 -- Only founders/admins can manage overrides
+DROP POLICY IF EXISTS "rate_limit_overrides_admin" ON rate_limit_overrides;
 CREATE POLICY "rate_limit_overrides_admin" ON rate_limit_overrides
   FOR ALL TO authenticated
   USING (public.is_founder() OR public.has_role('ADMIN'))
@@ -101,13 +109,16 @@ CREATE TABLE IF NOT EXISTS blocked_ips (
   UNIQUE(ip_address)
 );
 
+DROP INDEX IF EXISTS idx_blocked_ips_address;
 CREATE INDEX idx_blocked_ips_address ON blocked_ips(ip_address);
+DROP INDEX IF EXISTS idx_blocked_ips_until;
 CREATE INDEX idx_blocked_ips_until ON blocked_ips(blocked_until);
 
 -- Enable RLS
 ALTER TABLE blocked_ips ENABLE ROW LEVEL SECURITY;
 
 -- Only founders/admins can manage blocked IPs
+DROP POLICY IF EXISTS "blocked_ips_admin" ON blocked_ips;
 CREATE POLICY "blocked_ips_admin" ON blocked_ips
   FOR ALL TO authenticated
   USING (public.is_founder() OR public.has_role('ADMIN'))

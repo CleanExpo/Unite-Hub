@@ -26,6 +26,7 @@ import {
   Search,
   FileText,
   LogOut,
+  Settings,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -83,6 +84,11 @@ const navigationItems = [
     label: 'AI Assistant',
     href: '/synthex/assistant',
     icon: Bot,
+  },
+  {
+    label: 'Settings',
+    href: '/synthex/settings',
+    icon: Settings,
   },
 ];
 

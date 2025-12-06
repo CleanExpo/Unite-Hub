@@ -1,0 +1,233 @@
+/**
+ * Migration: 413_synthex_delivery_log.sql
+ * Phase: B6 - Synthex Outbound Delivery Engine
+ *
+ * Creates delivery logging and tracking tables for email, SMS, and social channels.
+ */
+
+-- Delivery Log table
+-- Tracks all outbound delivery attempts across channels
+create table if not exists synthex_delivery_log (
+  id uuid primary key default gen_random_uuid(),
+  schedule_id uuid not null references synthex_campaign_schedule(id) on delete cascade,
+  tenant_id uuid not null references synthex_tenants(id) on delete cascade,
+  brand_id uuid references synthex_brands(id) on delete set null,
+  campaign_id uuid references synthex_campaigns(id) on delete set null,
+
+  -- Delivery details
+  channel text not null check (channel in ('email', 'sms', 'social', 'push', 'webhook')),
+  recipient text, -- email address, phone number, social handle, etc.
+  subject text, -- email subject or notification title
+
+  -- Status tracking
+  status text not null default 'pending' check (status in ('pending', 'sending', 'sent', 'delivered', 'opened', 'clicked', 'bounced', 'failed', 'unsubscribed')),
+
+  -- Response data
+  provider text, -- sendgrid, resend, twilio, etc.
+  provider_message_id text, -- ID from the provider
+  response jsonb, -- Full response from provider
+  error_message text,
+
+  -- Retry tracking
+  retry_count int default 0,
+  max_retries int default 3,
+  next_retry_at timestamp with time zone,
+
+  -- Engagement tracking
+  opened_at timestamp with time zone,
+  clicked_at timestamp with time zone,
+
+  -- Timestamps
+  attempted_at timestamp with time zone default now(),
+  delivered_at timestamp with time zone,
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now()
+);
+
+-- Email templates table (for reusable templates)
+create table if not exists synthex_email_templates (
+  id uuid primary key default gen_random_uuid(),
+  tenant_id uuid not null references synthex_tenants(id) on delete cascade,
+  brand_id uuid references synthex_brands(id) on delete set null,
+  user_id uuid not null references auth.users(id) on delete cascade,
+
+  -- Template details
+  name text not null,
+  subject text not null,
+  html_content text not null,
+  text_content text,
+
+  -- Variables (Handlebars style)
+  variables jsonb default '[]'::jsonb, -- ["first_name", "company", etc.]
+
+  -- Metadata
+  category text check (category in ('transactional', 'marketing', 'drip', 'notification', 'welcome', 'other')),
+  is_active boolean default true,
+
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now()
+);
+
+-- Delivery statistics table (aggregated metrics)
+create table if not exists synthex_delivery_stats (
+  id uuid primary key default gen_random_uuid(),
+  tenant_id uuid not null references synthex_tenants(id) on delete cascade,
+  campaign_id uuid references synthex_campaigns(id) on delete set null,
+
+  -- Date for aggregation
+  stats_date date not null default current_date,
+  channel text not null check (channel in ('email', 'sms', 'social', 'push', 'webhook', 'all')),
+
+  -- Counts
+  total_sent int default 0,
+  total_delivered int default 0,
+  total_opened int default 0,
+  total_clicked int default 0,
+  total_bounced int default 0,
+  total_failed int default 0,
+  total_unsubscribed int default 0,
+
+  -- Rates (stored for quick access)
+  delivery_rate numeric(5,2) default 0,
+  open_rate numeric(5,2) default 0,
+  click_rate numeric(5,2) default 0,
+  bounce_rate numeric(5,2) default 0,
+
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now(),
+
+  -- One record per tenant/campaign/date/channel
+  unique(tenant_id, campaign_id, stats_date, channel)
+);
+
+-- Indexes for performance
+drop index if exists idx_delivery_log_schedule;
+create index if not exists idx_delivery_log_schedule on synthex_delivery_log(schedule_id);
+drop index if exists idx_delivery_log_tenant;
+create index if not exists idx_delivery_log_tenant on synthex_delivery_log(tenant_id);
+drop index if exists idx_delivery_log_status;
+create index if not exists idx_delivery_log_status on synthex_delivery_log(status);
+drop index if exists idx_delivery_log_channel;
+create index if not exists idx_delivery_log_channel on synthex_delivery_log(channel);
+drop index if exists idx_delivery_log_attempted;
+create index if not exists idx_delivery_log_attempted on synthex_delivery_log(attempted_at);
+drop index if exists idx_delivery_log_pending;
+create index if not exists idx_delivery_log_pending on synthex_delivery_log(status, next_retry_at)
+  where status in ('pending', 'failed');
+
+drop index if exists idx_templates_tenant;
+create index if not exists idx_templates_tenant on synthex_email_templates(tenant_id);
+drop index if exists idx_templates_active;
+create index if not exists idx_templates_active on synthex_email_templates(tenant_id, is_active) where is_active = true;
+
+drop index if exists idx_delivery_stats_tenant;
+create index if not exists idx_delivery_stats_tenant on synthex_delivery_stats(tenant_id);
+drop index if exists idx_delivery_stats_date;
+create index if not exists idx_delivery_stats_date on synthex_delivery_stats(stats_date);
+drop index if exists idx_delivery_stats_campaign;
+create index if not exists idx_delivery_stats_campaign on synthex_delivery_stats(campaign_id);
+
+-- Updated_at triggers
+drop trigger if exists update_delivery_log_timestamp on synthex_delivery_log;
+create trigger update_delivery_log_timestamp
+  before update on synthex_delivery_log
+  for each row execute function update_updated_at_column();
+
+drop trigger if exists update_templates_timestamp on synthex_email_templates;
+create trigger update_templates_timestamp
+  before update on synthex_email_templates
+  for each row execute function update_updated_at_column();
+
+drop trigger if exists update_delivery_stats_timestamp on synthex_delivery_stats;
+create trigger update_delivery_stats_timestamp
+  before update on synthex_delivery_stats
+  for each row execute function update_updated_at_column();
+
+-- RLS Policies
+alter table synthex_delivery_log enable row level security;
+alter table synthex_email_templates enable row level security;
+alter table synthex_delivery_stats enable row level security;
+
+-- Delivery log policies (tenant-based)
+drop policy if exists "delivery_log_select" on synthex_delivery_log;
+create policy "delivery_log_select" on synthex_delivery_log
+  for select using (
+    exists (
+      select 1 from synthex_tenants
+      where id = synthex_delivery_log.tenant_id
+      and owner_user_id = auth.uid()
+    )
+  );
+
+drop policy if exists "delivery_log_insert" on synthex_delivery_log;
+create policy "delivery_log_insert" on synthex_delivery_log
+  for insert with check (
+    exists (
+      select 1 from synthex_tenants
+      where id = synthex_delivery_log.tenant_id
+      and owner_user_id = auth.uid()
+    )
+  );
+
+drop policy if exists "delivery_log_update" on synthex_delivery_log;
+create policy "delivery_log_update" on synthex_delivery_log
+  for update using (
+    exists (
+      select 1 from synthex_tenants
+      where id = synthex_delivery_log.tenant_id
+      and owner_user_id = auth.uid()
+    )
+  );
+
+-- Email templates policies
+drop policy if exists "templates_select" on synthex_email_templates;
+create policy "templates_select" on synthex_email_templates
+  for select using (auth.uid() = user_id);
+
+drop policy if exists "templates_insert" on synthex_email_templates;
+create policy "templates_insert" on synthex_email_templates
+  for insert with check (auth.uid() = user_id);
+
+drop policy if exists "templates_update" on synthex_email_templates;
+create policy "templates_update" on synthex_email_templates
+  for update using (auth.uid() = user_id);
+
+drop policy if exists "templates_delete" on synthex_email_templates;
+create policy "templates_delete" on synthex_email_templates
+  for delete using (auth.uid() = user_id);
+
+-- Delivery stats policies
+drop policy if exists "delivery_stats_select" on synthex_delivery_stats;
+create policy "delivery_stats_select" on synthex_delivery_stats
+  for select using (
+    exists (
+      select 1 from synthex_tenants
+      where id = synthex_delivery_stats.tenant_id
+      and owner_user_id = auth.uid()
+    )
+  );
+
+drop policy if exists "delivery_stats_insert" on synthex_delivery_stats;
+create policy "delivery_stats_insert" on synthex_delivery_stats
+  for insert with check (
+    exists (
+      select 1 from synthex_tenants
+      where id = synthex_delivery_stats.tenant_id
+      and owner_user_id = auth.uid()
+    )
+  );
+
+drop policy if exists "delivery_stats_update" on synthex_delivery_stats;
+create policy "delivery_stats_update" on synthex_delivery_stats
+  for update using (
+    exists (
+      select 1 from synthex_tenants
+      where id = synthex_delivery_stats.tenant_id
+      and owner_user_id = auth.uid()
+    )
+  );
+
+-- Comments
+comment on table synthex_delivery_log is 'Tracks all outbound delivery attempts';
+comment on table synthex_email_templates is 'Reusable email templates with variable support';
+comment on table synthex_delivery_stats is 'Aggregated delivery statistics by date and channel';

@@ -163,10 +163,14 @@ END $$;
 -- NOTE: audit_logs table structure from 001_initial_schema.sql:
 --   id, org_id, action, resource, resource_id, agent, status, error_message, details, created_at
 -- Does NOT have: user_id, workspace_id, timestamp (use org_id and created_at)
+DROP INDEX IF EXISTS idx_audit_logs_created_at_desc;
 CREATE INDEX IF NOT EXISTS idx_audit_logs_created_at_desc ON audit_logs(created_at DESC);
+DROP INDEX IF EXISTS idx_audit_logs_category;
 CREATE INDEX IF NOT EXISTS idx_audit_logs_category ON audit_logs(category);
+DROP INDEX IF EXISTS idx_audit_logs_severity;
 CREATE INDEX IF NOT EXISTS idx_audit_logs_severity ON audit_logs(severity);
 -- Index on org_id + created_at for org-scoped queries (org_id is the existing FK)
+DROP INDEX IF EXISTS idx_audit_logs_org_created;
 CREATE INDEX IF NOT EXISTS idx_audit_logs_org_created ON audit_logs(org_id, created_at DESC);
 
 -- ============================================================================

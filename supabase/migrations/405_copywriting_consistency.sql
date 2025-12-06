@@ -47,9 +47,13 @@ CREATE TABLE voc_research (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+DROP INDEX IF EXISTS idx_voc_research_workspace;
 CREATE INDEX idx_voc_research_workspace ON voc_research(workspace_id);
+DROP INDEX IF EXISTS idx_voc_research_client;
 CREATE INDEX idx_voc_research_client ON voc_research(client_id);
+DROP INDEX IF EXISTS idx_voc_research_category;
 CREATE INDEX idx_voc_research_category ON voc_research(category);
+DROP INDEX IF EXISTS idx_voc_research_gold;
 CREATE INDEX idx_voc_research_gold ON voc_research(is_gold) WHERE is_gold = TRUE;
 
 -- ============================================
@@ -76,7 +80,9 @@ CREATE TABLE competitor_analysis (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+DROP INDEX IF EXISTS idx_competitor_analysis_workspace;
 CREATE INDEX idx_competitor_analysis_workspace ON competitor_analysis(workspace_id);
+DROP INDEX IF EXISTS idx_competitor_analysis_client;
 CREATE INDEX idx_competitor_analysis_client ON competitor_analysis(client_id);
 
 -- ============================================
@@ -104,8 +110,11 @@ CREATE TABLE page_copy_templates (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+DROP INDEX IF EXISTS idx_page_copy_templates_workspace;
 CREATE INDEX idx_page_copy_templates_workspace ON page_copy_templates(workspace_id);
+DROP INDEX IF EXISTS idx_page_copy_templates_type;
 CREATE INDEX idx_page_copy_templates_type ON page_copy_templates(page_type);
+DROP INDEX IF EXISTS idx_page_copy_templates_industry;
 CREATE INDEX idx_page_copy_templates_industry ON page_copy_templates(industry);
 
 -- ============================================
@@ -140,8 +149,11 @@ CREATE TABLE generated_page_copy (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+DROP INDEX IF EXISTS idx_generated_page_copy_workspace;
 CREATE INDEX idx_generated_page_copy_workspace ON generated_page_copy(workspace_id);
+DROP INDEX IF EXISTS idx_generated_page_copy_client;
 CREATE INDEX idx_generated_page_copy_client ON generated_page_copy(client_id);
+DROP INDEX IF EXISTS idx_generated_page_copy_status;
 CREATE INDEX idx_generated_page_copy_status ON generated_page_copy(status);
 
 -- ============================================
@@ -199,7 +211,9 @@ CREATE TABLE business_consistency_master (
   UNIQUE(workspace_id, client_id)
 );
 
+DROP INDEX IF EXISTS idx_business_consistency_workspace;
 CREATE INDEX idx_business_consistency_workspace ON business_consistency_master(workspace_id);
+DROP INDEX IF EXISTS idx_business_consistency_client;
 CREATE INDEX idx_business_consistency_client ON business_consistency_master(client_id);
 
 -- ============================================
@@ -229,9 +243,13 @@ CREATE TABLE citation_listings (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+DROP INDEX IF EXISTS idx_citation_listings_master;
 CREATE INDEX idx_citation_listings_master ON citation_listings(consistency_master_id);
+DROP INDEX IF EXISTS idx_citation_listings_platform;
 CREATE INDEX idx_citation_listings_platform ON citation_listings(platform_name);
+DROP INDEX IF EXISTS idx_citation_listings_tier;
 CREATE INDEX idx_citation_listings_tier ON citation_listings(platform_tier);
+DROP INDEX IF EXISTS idx_citation_listings_consistent;
 CREATE INDEX idx_citation_listings_consistent ON citation_listings(is_consistent);
 
 -- ============================================
@@ -258,7 +276,9 @@ CREATE TABLE consistency_audit_log (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+DROP INDEX IF EXISTS idx_consistency_audit_master;
 CREATE INDEX idx_consistency_audit_master ON consistency_audit_log(consistency_master_id);
+DROP INDEX IF EXISTS idx_consistency_audit_date;
 CREATE INDEX idx_consistency_audit_date ON consistency_audit_log(created_at DESC);
 
 -- ============================================
@@ -275,6 +295,7 @@ ALTER TABLE citation_listings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE consistency_audit_log ENABLE ROW LEVEL SECURITY;
 
 -- VOC Research policies
+DROP POLICY IF EXISTS "voc_research_workspace_select" ON voc_research;
 CREATE POLICY "voc_research_workspace_select" ON voc_research
   FOR SELECT USING (
     workspace_id IN (
@@ -284,6 +305,7 @@ CREATE POLICY "voc_research_workspace_select" ON voc_research
     )
   );
 
+DROP POLICY IF EXISTS "voc_research_workspace_insert" ON voc_research;
 CREATE POLICY "voc_research_workspace_insert" ON voc_research
   FOR INSERT WITH CHECK (
     workspace_id IN (
@@ -293,6 +315,7 @@ CREATE POLICY "voc_research_workspace_insert" ON voc_research
     )
   );
 
+DROP POLICY IF EXISTS "voc_research_workspace_update" ON voc_research;
 CREATE POLICY "voc_research_workspace_update" ON voc_research
   FOR UPDATE USING (
     workspace_id IN (
@@ -302,6 +325,7 @@ CREATE POLICY "voc_research_workspace_update" ON voc_research
     )
   );
 
+DROP POLICY IF EXISTS "voc_research_workspace_delete" ON voc_research;
 CREATE POLICY "voc_research_workspace_delete" ON voc_research
   FOR DELETE USING (
     workspace_id IN (
@@ -312,61 +336,76 @@ CREATE POLICY "voc_research_workspace_delete" ON voc_research
   );
 
 -- Similar policies for other tables (abbreviated for brevity)
+DROP POLICY IF EXISTS "competitor_analysis_select" ON competitor_analysis;
 CREATE POLICY "competitor_analysis_select" ON competitor_analysis FOR SELECT USING (
   workspace_id IN (SELECT w.id FROM workspaces w JOIN user_organizations uo ON uo.org_id = w.org_id WHERE uo.user_id = auth.uid() AND uo.is_active = true)
 );
+DROP POLICY IF EXISTS "competitor_analysis_insert" ON competitor_analysis;
 CREATE POLICY "competitor_analysis_insert" ON competitor_analysis FOR INSERT WITH CHECK (
   workspace_id IN (SELECT w.id FROM workspaces w JOIN user_organizations uo ON uo.org_id = w.org_id WHERE uo.user_id = auth.uid() AND uo.is_active = true)
 );
 
+DROP POLICY IF EXISTS "page_copy_templates_select" ON page_copy_templates;
 CREATE POLICY "page_copy_templates_select" ON page_copy_templates FOR SELECT USING (
   workspace_id IS NULL OR workspace_id IN (SELECT w.id FROM workspaces w JOIN user_organizations uo ON uo.org_id = w.org_id WHERE uo.user_id = auth.uid() AND uo.is_active = true)
 );
+DROP POLICY IF EXISTS "page_copy_templates_insert" ON page_copy_templates;
 CREATE POLICY "page_copy_templates_insert" ON page_copy_templates FOR INSERT WITH CHECK (
   workspace_id IN (SELECT w.id FROM workspaces w JOIN user_organizations uo ON uo.org_id = w.org_id WHERE uo.user_id = auth.uid() AND uo.role IN ('owner', 'admin') AND uo.is_active = true)
 );
 
+DROP POLICY IF EXISTS "generated_page_copy_select" ON generated_page_copy;
 CREATE POLICY "generated_page_copy_select" ON generated_page_copy FOR SELECT USING (
   workspace_id IN (SELECT w.id FROM workspaces w JOIN user_organizations uo ON uo.org_id = w.org_id WHERE uo.user_id = auth.uid() AND uo.is_active = true)
 );
+DROP POLICY IF EXISTS "generated_page_copy_insert" ON generated_page_copy;
 CREATE POLICY "generated_page_copy_insert" ON generated_page_copy FOR INSERT WITH CHECK (
   workspace_id IN (SELECT w.id FROM workspaces w JOIN user_organizations uo ON uo.org_id = w.org_id WHERE uo.user_id = auth.uid() AND uo.is_active = true)
 );
+DROP POLICY IF EXISTS "generated_page_copy_update" ON generated_page_copy;
 CREATE POLICY "generated_page_copy_update" ON generated_page_copy FOR UPDATE USING (
   workspace_id IN (SELECT w.id FROM workspaces w JOIN user_organizations uo ON uo.org_id = w.org_id WHERE uo.user_id = auth.uid() AND uo.is_active = true)
 );
 
+DROP POLICY IF EXISTS "business_consistency_master_select" ON business_consistency_master;
 CREATE POLICY "business_consistency_master_select" ON business_consistency_master FOR SELECT USING (
   workspace_id IN (SELECT w.id FROM workspaces w JOIN user_organizations uo ON uo.org_id = w.org_id WHERE uo.user_id = auth.uid() AND uo.is_active = true)
 );
+DROP POLICY IF EXISTS "business_consistency_master_insert" ON business_consistency_master;
 CREATE POLICY "business_consistency_master_insert" ON business_consistency_master FOR INSERT WITH CHECK (
   workspace_id IN (SELECT w.id FROM workspaces w JOIN user_organizations uo ON uo.org_id = w.org_id WHERE uo.user_id = auth.uid() AND uo.is_active = true)
 );
+DROP POLICY IF EXISTS "business_consistency_master_update" ON business_consistency_master;
 CREATE POLICY "business_consistency_master_update" ON business_consistency_master FOR UPDATE USING (
   workspace_id IN (SELECT w.id FROM workspaces w JOIN user_organizations uo ON uo.org_id = w.org_id WHERE uo.user_id = auth.uid() AND uo.is_active = true)
 );
 
+DROP POLICY IF EXISTS "citation_listings_select" ON citation_listings;
 CREATE POLICY "citation_listings_select" ON citation_listings FOR SELECT USING (
   consistency_master_id IN (SELECT id FROM business_consistency_master WHERE workspace_id IN (
     SELECT w.id FROM workspaces w JOIN user_organizations uo ON uo.org_id = w.org_id WHERE uo.user_id = auth.uid() AND uo.is_active = true
   ))
 );
+DROP POLICY IF EXISTS "citation_listings_insert" ON citation_listings;
 CREATE POLICY "citation_listings_insert" ON citation_listings FOR INSERT WITH CHECK (
   consistency_master_id IN (SELECT id FROM business_consistency_master WHERE workspace_id IN (
     SELECT w.id FROM workspaces w JOIN user_organizations uo ON uo.org_id = w.org_id WHERE uo.user_id = auth.uid() AND uo.is_active = true
   ))
 );
+DROP POLICY IF EXISTS "citation_listings_update" ON citation_listings;
 CREATE POLICY "citation_listings_update" ON citation_listings FOR UPDATE USING (
   consistency_master_id IN (SELECT id FROM business_consistency_master WHERE workspace_id IN (
     SELECT w.id FROM workspaces w JOIN user_organizations uo ON uo.org_id = w.org_id WHERE uo.user_id = auth.uid() AND uo.is_active = true
   ))
 );
 
+DROP POLICY IF EXISTS "consistency_audit_log_select" ON consistency_audit_log;
 CREATE POLICY "consistency_audit_log_select" ON consistency_audit_log FOR SELECT USING (
   consistency_master_id IN (SELECT id FROM business_consistency_master WHERE workspace_id IN (
     SELECT w.id FROM workspaces w JOIN user_organizations uo ON uo.org_id = w.org_id WHERE uo.user_id = auth.uid() AND uo.is_active = true
   ))
 );
+DROP POLICY IF EXISTS "consistency_audit_log_insert" ON consistency_audit_log;
 CREATE POLICY "consistency_audit_log_insert" ON consistency_audit_log FOR INSERT WITH CHECK (
   consistency_master_id IN (SELECT id FROM business_consistency_master WHERE workspace_id IN (
     SELECT w.id FROM workspaces w JOIN user_organizations uo ON uo.org_id = w.org_id WHERE uo.user_id = auth.uid() AND uo.is_active = true

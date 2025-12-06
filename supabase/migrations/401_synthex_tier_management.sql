@@ -139,7 +139,9 @@ BEGIN
 END $$;
 
 -- Create index for tier queries
+DROP INDEX IF EXISTS idx_workspaces_current_tier;
 CREATE INDEX IF NOT EXISTS idx_workspaces_current_tier ON workspaces(current_tier);
+DROP INDEX IF EXISTS idx_workspaces_subscription_status;
 CREATE INDEX IF NOT EXISTS idx_workspaces_subscription_status ON workspaces(subscription_status);
 
 -- ============================================================================
@@ -266,11 +268,13 @@ GRANT EXECUTE ON FUNCTION public.workspace_within_limit(UUID, TEXT, INTEGER) TO 
 -- Enable RLS on tier_limits (readable by all authenticated users)
 ALTER TABLE synthex_tier_limits ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "tier_limits_select_authenticated" ON synthex_tier_limits;
 CREATE POLICY "tier_limits_select_authenticated" ON synthex_tier_limits
   FOR SELECT TO authenticated
   USING (true);
 
 -- Only admins can modify tier limits
+DROP POLICY IF EXISTS "tier_limits_admin_all" ON synthex_tier_limits;
 CREATE POLICY "tier_limits_admin_all" ON synthex_tier_limits
   FOR ALL TO authenticated
   USING (public.has_role('FOUNDER', 'ADMIN'))
@@ -307,13 +311,16 @@ CREATE TABLE IF NOT EXISTS synthex_usage_tracking (
   UNIQUE(workspace_id, period_start)
 );
 
+DROP INDEX IF EXISTS idx_usage_tracking_workspace;
 CREATE INDEX idx_usage_tracking_workspace ON synthex_usage_tracking(workspace_id);
+DROP INDEX IF EXISTS idx_usage_tracking_period;
 CREATE INDEX idx_usage_tracking_period ON synthex_usage_tracking(period_start, period_end);
 
 -- Enable RLS
 ALTER TABLE synthex_usage_tracking ENABLE ROW LEVEL SECURITY;
 
 -- Users can only see their own workspace's usage
+DROP POLICY IF EXISTS "usage_tracking_select" ON synthex_usage_tracking;
 CREATE POLICY "usage_tracking_select" ON synthex_usage_tracking
   FOR SELECT TO authenticated
   USING (public.is_workspace_member(workspace_id));
