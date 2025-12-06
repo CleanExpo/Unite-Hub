@@ -159,22 +159,37 @@ CREATE POLICY "Invoices visible to tenant"
 -- Seed default plans (AUD pricing, GST inclusive)
 -- Minimum 3-month contract, Annual = 12 months for price of 10
 --
--- PROFIT MARGIN TARGETS: 80%+ per tier
+-- PROFIT MARGIN TARGETS: 80%+ over 12 months
 -- =====================================================
--- STARTER ($495/mo): Max cost $99 → Target profit 80%+
---   AI: 15K tokens (Haiku only) = ~$15/mo
---   Email: 1,500/mo = ~$2/mo
---   Infra: $10, Support: $15, Storage: $1 = $43 total → 91% margin
+-- STARTER: $5,940/yr revenue → Max $1,188 cost (20%)
+--   Setup/onboarding:     $100 (one-time)
+--   AI (10K × 12 Haiku):  $120/yr ($0.01/1K tokens)
+--   Emails (1K × 12):     $15/yr ($0.00125/email)
+--   Infrastructure:       $120/yr ($10/mo)
+--   Support (email):      $150/yr ($12.50/mo)
+--   Storage (250MB):      $6/yr
+--   ─────────────────────────────
+--   TOTAL: $511/yr → 91.4% margin ✓
 --
--- PRO ($895/mo): Max cost $179 → Target profit 80%+
---   AI: 100K tokens (Haiku/Sonnet) = ~$45/mo
---   Email: 8,000/mo = ~$10/mo
---   Infra: $15, Support: $40, Storage: $3 = $113 total → 87% margin
+-- PRO: $10,740/yr revenue → Max $2,148 cost (20%)
+--   Setup/onboarding:     $200 (one-time)
+--   AI (75K × 12 Sonnet): $450/yr ($0.005/1K tokens avg)
+--   Emails (5K × 12):     $75/yr ($0.00125/email)
+--   Infrastructure:       $180/yr ($15/mo)
+--   Support (priority):   $360/yr ($30/mo)
+--   Storage (1GB):        $24/yr
+--   ─────────────────────────────
+--   TOTAL: $1,289/yr → 88.0% margin ✓
 --
--- ELITE ($1295/mo): Max cost $259 → Target profit 80%+
---   AI: 500K tokens (Sonnet/Opus) = ~$120/mo
---   Email: 25,000/mo = ~$25/mo
---   Infra: $25, Support: $60, Storage: $8 = $238 total → 82% margin
+-- ELITE: $15,540/yr revenue → Max $3,108 cost (20%)
+--   Setup/onboarding:     $400 (one-time)
+--   AI (300K × 12 mixed): $1,080/yr ($0.003/1K tokens avg)
+--   Emails (15K × 12):    $225/yr ($0.00125/email)
+--   Infrastructure:       $300/yr ($25/mo)
+--   Support (dedicated):  $600/yr ($50/mo)
+--   Storage (5GB):        $60/yr
+--   ─────────────────────────────
+--   TOTAL: $2,665/yr → 82.8% margin ✓
 -- =====================================================
 INSERT INTO synthex_billing_plans (code, name, description, price_monthly, price_yearly, currency, limits, features, sort_order, metadata) VALUES
 (
@@ -184,10 +199,10 @@ INSERT INTO synthex_billing_plans (code, name, description, price_monthly, price
     495,
     4950,
     'AUD',
-    '{"ai_tokens": 15000, "ai_model": "haiku", "audits": 2, "contacts": 500, "seats": 1, "campaigns": 3, "content": 5, "emails_sent": 1500, "storage_mb": 500}',
-    '["15,000 AI tokens/month (Haiku)", "2 website audits/month", "500 contacts", "1 team seat", "3 email campaigns", "1,500 emails/month", "Basic dashboard", "Email support"]',
+    '{"ai_tokens": 10000, "ai_model": "haiku", "audits": 2, "contacts": 500, "seats": 1, "campaigns": 3, "content": 5, "emails_sent": 1000, "storage_mb": 250}',
+    '["10,000 AI tokens/month", "2 website audits/month", "500 contacts", "1 team seat", "3 email campaigns", "1,000 emails/month", "Basic dashboard", "Email support"]',
     1,
-    '{"gst_included": true, "min_contract_months": 3, "max_cost_aud": 99, "target_margin_pct": 80, "overage_ai_per_1k": 1.50, "overage_email_per_100": 0.50}'
+    '{"gst_included": true, "min_contract_months": 3, "annual_revenue": 5940, "max_annual_cost": 1188, "actual_annual_cost": 511, "margin_pct": 91.4, "overage_ai_per_1k": 2.00, "overage_email_per_100": 0.50}'
 ),
 (
     'pro',
@@ -196,10 +211,10 @@ INSERT INTO synthex_billing_plans (code, name, description, price_monthly, price
     895,
     8950,
     'AUD',
-    '{"ai_tokens": 100000, "ai_model": "sonnet", "audits": 10, "contacts": 2500, "seats": 3, "campaigns": 10, "content": 20, "emails_sent": 8000, "storage_mb": 2000}',
-    '["100,000 AI tokens/month (Sonnet)", "10 website audits/month", "2,500 contacts", "3 team seats", "10 campaigns", "8,000 emails/month", "Drip campaigns", "Priority support", "API access"]',
+    '{"ai_tokens": 75000, "ai_model": "sonnet", "audits": 8, "contacts": 2000, "seats": 3, "campaigns": 8, "content": 15, "emails_sent": 5000, "storage_mb": 1000}',
+    '["75,000 AI tokens/month", "8 website audits/month", "2,000 contacts", "3 team seats", "8 campaigns", "5,000 emails/month", "Drip campaigns", "Priority support", "API access"]',
     2,
-    '{"gst_included": true, "min_contract_months": 3, "popular": true, "max_cost_aud": 179, "target_margin_pct": 80, "overage_ai_per_1k": 1.00, "overage_email_per_100": 0.40}'
+    '{"gst_included": true, "min_contract_months": 3, "popular": true, "annual_revenue": 10740, "max_annual_cost": 2148, "actual_annual_cost": 1289, "margin_pct": 88.0, "overage_ai_per_1k": 1.50, "overage_email_per_100": 0.40}'
 ),
 (
     'elite',
@@ -208,10 +223,10 @@ INSERT INTO synthex_billing_plans (code, name, description, price_monthly, price
     1295,
     12950,
     'AUD',
-    '{"ai_tokens": 500000, "ai_model": "opus", "audits": 50, "contacts": 10000, "seats": 10, "campaigns": 50, "content": 100, "emails_sent": 25000, "storage_mb": 10000}',
-    '["500,000 AI tokens/month (Opus)", "50 website audits/month", "10,000 contacts", "10 team seats", "50 campaigns", "25,000 emails/month", "Dedicated AI agent", "A/B testing", "White label", "Agency tools"]',
+    '{"ai_tokens": 300000, "ai_model": "opus", "audits": 30, "contacts": 7500, "seats": 8, "campaigns": 30, "content": 50, "emails_sent": 15000, "storage_mb": 5000}',
+    '["300,000 AI tokens/month", "30 website audits/month", "7,500 contacts", "8 team seats", "30 campaigns", "15,000 emails/month", "Dedicated AI agent", "A/B testing", "White label", "Agency tools"]',
     3,
-    '{"gst_included": true, "min_contract_months": 3, "max_cost_aud": 259, "target_margin_pct": 80, "overage_ai_per_1k": 0.80, "overage_email_per_100": 0.30}'
+    '{"gst_included": true, "min_contract_months": 3, "annual_revenue": 15540, "max_annual_cost": 3108, "actual_annual_cost": 2665, "margin_pct": 82.8, "overage_ai_per_1k": 1.00, "overage_email_per_100": 0.30}'
 )
 ON CONFLICT (code) DO UPDATE SET
     name = EXCLUDED.name,
