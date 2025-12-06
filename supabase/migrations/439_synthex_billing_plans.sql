@@ -159,37 +159,76 @@ CREATE POLICY "Invoices visible to tenant"
 -- Seed default plans (AUD pricing, GST inclusive)
 -- Minimum 3-month contract, Annual = 12 months for price of 10
 --
--- PROFIT MARGIN TARGETS: 80%+ over 12 months
+-- TWO-PHASE MARGIN STRUCTURE:
+--   Months 1-3:  40% margin (60% cost) - heavy onboarding
+--   Months 4-12: 80% margin (20% cost) - standard ops
 -- =====================================================
--- STARTER: $5,940/yr revenue → Max $1,188 cost (20%)
---   Setup/onboarding:     $100 (one-time)
---   AI (10K × 12 Haiku):  $120/yr ($0.01/1K tokens)
---   Emails (1K × 12):     $15/yr ($0.00125/email)
---   Infrastructure:       $120/yr ($10/mo)
---   Support (email):      $150/yr ($12.50/mo)
---   Storage (250MB):      $6/yr
---   ─────────────────────────────
---   TOTAL: $511/yr → 91.4% margin ✓
 --
--- PRO: $10,740/yr revenue → Max $2,148 cost (20%)
---   Setup/onboarding:     $200 (one-time)
---   AI (75K × 12 Sonnet): $450/yr ($0.005/1K tokens avg)
---   Emails (5K × 12):     $75/yr ($0.00125/email)
---   Infrastructure:       $180/yr ($15/mo)
---   Support (priority):   $360/yr ($30/mo)
---   Storage (1GB):        $24/yr
---   ─────────────────────────────
---   TOTAL: $1,289/yr → 88.0% margin ✓
+-- STARTER ($495/mo)
+-- ─────────────────────────────────────────────────────
+-- PHASE 1 (Months 1-3): Revenue $1,485 → Max cost $891 (60%)
+--   Setup/onboarding:     $300
+--   Training/handholding: $200
+--   AI tokens (10K × 3):  $30
+--   Emails (1K × 3):      $4
+--   Infrastructure:       $30
+--   Support (intensive):  $150
+--   Total Phase 1:        $714 → 48% cost, 52% margin ✓
 --
--- ELITE: $15,540/yr revenue → Max $3,108 cost (20%)
---   Setup/onboarding:     $400 (one-time)
---   AI (300K × 12 mixed): $1,080/yr ($0.003/1K tokens avg)
---   Emails (15K × 12):    $225/yr ($0.00125/email)
---   Infrastructure:       $300/yr ($25/mo)
---   Support (dedicated):  $600/yr ($50/mo)
---   Storage (5GB):        $60/yr
---   ─────────────────────────────
---   TOTAL: $2,665/yr → 82.8% margin ✓
+-- PHASE 2 (Months 4-12): Revenue $4,455 → Max cost $891 (20%)
+--   AI tokens (10K × 9):  $90
+--   Emails (1K × 9):      $11
+--   Infrastructure:       $90
+--   Support (standard):   $100
+--   Storage:              $5
+--   Total Phase 2:        $296 → 7% cost, 93% margin ✓
+--
+-- ANNUAL: $1,010 cost / $5,940 revenue → 83% blended margin ✓
+-- ─────────────────────────────────────────────────────
+--
+-- PRO ($895/mo)
+-- ─────────────────────────────────────────────────────
+-- PHASE 1 (Months 1-3): Revenue $2,685 → Max cost $1,611 (60%)
+--   Setup/onboarding:     $500
+--   Training/strategy:    $350
+--   AI tokens (75K × 3):  $113
+--   Emails (5K × 3):      $19
+--   Infrastructure:       $45
+--   Support (intensive):  $300
+--   Total Phase 1:        $1,327 → 49% cost, 51% margin ✓
+--
+-- PHASE 2 (Months 4-12): Revenue $8,055 → Max cost $1,611 (20%)
+--   AI tokens (75K × 9):  $338
+--   Emails (5K × 9):      $56
+--   Infrastructure:       $135
+--   Support (priority):   $200
+--   Storage:              $18
+--   Total Phase 2:        $747 → 9% cost, 91% margin ✓
+--
+-- ANNUAL: $2,074 cost / $10,740 revenue → 81% blended margin ✓
+-- ─────────────────────────────────────────────────────
+--
+-- ELITE ($1,295/mo)
+-- ─────────────────────────────────────────────────────
+-- PHASE 1 (Months 1-3): Revenue $3,885 → Max cost $2,331 (60%)
+--   Setup/onboarding:     $800
+--   Training/strategy:    $500
+--   AI tokens (300K × 3): $270
+--   Emails (15K × 3):     $56
+--   Infrastructure:       $75
+--   Support (dedicated):  $450
+--   Total Phase 1:        $2,151 → 55% cost, 45% margin ✓
+--
+-- PHASE 2 (Months 4-12): Revenue $11,655 → Max cost $2,331 (20%)
+--   AI tokens (300K × 9): $810
+--   Emails (15K × 9):     $169
+--   Infrastructure:       $225
+--   Support (dedicated):  $350
+--   Storage:              $45
+--   Total Phase 2:        $1,599 → 14% cost, 86% margin ✓
+--
+-- ANNUAL: $3,750 cost / $15,540 revenue → 76% blended margin
+-- (Acceptable: Phase 1 is 45%, Phase 2 is 86%)
 -- =====================================================
 INSERT INTO synthex_billing_plans (code, name, description, price_monthly, price_yearly, currency, limits, features, sort_order, metadata) VALUES
 (
@@ -202,7 +241,7 @@ INSERT INTO synthex_billing_plans (code, name, description, price_monthly, price
     '{"ai_tokens": 10000, "ai_model": "haiku", "audits": 2, "contacts": 500, "seats": 1, "campaigns": 3, "content": 5, "emails_sent": 1000, "storage_mb": 250}',
     '["10,000 AI tokens/month", "2 website audits/month", "500 contacts", "1 team seat", "3 email campaigns", "1,000 emails/month", "Basic dashboard", "Email support"]',
     1,
-    '{"gst_included": true, "min_contract_months": 3, "annual_revenue": 5940, "max_annual_cost": 1188, "actual_annual_cost": 511, "margin_pct": 91.4, "overage_ai_per_1k": 2.00, "overage_email_per_100": 0.50}'
+    '{"gst_included": true, "min_contract_months": 3, "onboarding_months": 3, "phase1_margin_pct": 52, "phase1_cost": 714, "phase2_margin_pct": 93, "phase2_cost": 296, "annual_cost": 1010, "annual_revenue": 5940, "blended_margin_pct": 83, "overage_ai_per_1k": 2.00, "overage_email_per_100": 0.50}'
 ),
 (
     'pro',
@@ -214,7 +253,7 @@ INSERT INTO synthex_billing_plans (code, name, description, price_monthly, price
     '{"ai_tokens": 75000, "ai_model": "sonnet", "audits": 8, "contacts": 2000, "seats": 3, "campaigns": 8, "content": 15, "emails_sent": 5000, "storage_mb": 1000}',
     '["75,000 AI tokens/month", "8 website audits/month", "2,000 contacts", "3 team seats", "8 campaigns", "5,000 emails/month", "Drip campaigns", "Priority support", "API access"]',
     2,
-    '{"gst_included": true, "min_contract_months": 3, "popular": true, "annual_revenue": 10740, "max_annual_cost": 2148, "actual_annual_cost": 1289, "margin_pct": 88.0, "overage_ai_per_1k": 1.50, "overage_email_per_100": 0.40}'
+    '{"gst_included": true, "min_contract_months": 3, "popular": true, "onboarding_months": 3, "phase1_margin_pct": 51, "phase1_cost": 1327, "phase2_margin_pct": 91, "phase2_cost": 747, "annual_cost": 2074, "annual_revenue": 10740, "blended_margin_pct": 81, "overage_ai_per_1k": 1.50, "overage_email_per_100": 0.40}'
 ),
 (
     'elite',
@@ -226,7 +265,7 @@ INSERT INTO synthex_billing_plans (code, name, description, price_monthly, price
     '{"ai_tokens": 300000, "ai_model": "opus", "audits": 30, "contacts": 7500, "seats": 8, "campaigns": 30, "content": 50, "emails_sent": 15000, "storage_mb": 5000}',
     '["300,000 AI tokens/month", "30 website audits/month", "7,500 contacts", "8 team seats", "30 campaigns", "15,000 emails/month", "Dedicated AI agent", "A/B testing", "White label", "Agency tools"]',
     3,
-    '{"gst_included": true, "min_contract_months": 3, "annual_revenue": 15540, "max_annual_cost": 3108, "actual_annual_cost": 2665, "margin_pct": 82.8, "overage_ai_per_1k": 1.00, "overage_email_per_100": 0.30}'
+    '{"gst_included": true, "min_contract_months": 3, "onboarding_months": 3, "phase1_margin_pct": 45, "phase1_cost": 2151, "phase2_margin_pct": 86, "phase2_cost": 1599, "annual_cost": 3750, "annual_revenue": 15540, "blended_margin_pct": 76, "overage_ai_per_1k": 1.00, "overage_email_per_100": 0.30}'
 )
 ON CONFLICT (code) DO UPDATE SET
     name = EXCLUDED.name,
