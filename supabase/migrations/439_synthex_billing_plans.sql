@@ -158,6 +158,23 @@ CREATE POLICY "Invoices visible to tenant"
 -- =====================================================
 -- Seed default plans (AUD pricing, GST inclusive)
 -- Minimum 3-month contract, Annual = 12 months for price of 10
+--
+-- PROFIT MARGIN TARGETS: 80%+ per tier
+-- =====================================================
+-- STARTER ($495/mo): Max cost $99 → Target profit 80%+
+--   AI: 15K tokens (Haiku only) = ~$15/mo
+--   Email: 1,500/mo = ~$2/mo
+--   Infra: $10, Support: $15, Storage: $1 = $43 total → 91% margin
+--
+-- PRO ($895/mo): Max cost $179 → Target profit 80%+
+--   AI: 100K tokens (Haiku/Sonnet) = ~$45/mo
+--   Email: 8,000/mo = ~$10/mo
+--   Infra: $15, Support: $40, Storage: $3 = $113 total → 87% margin
+--
+-- ELITE ($1295/mo): Max cost $259 → Target profit 80%+
+--   AI: 500K tokens (Sonnet/Opus) = ~$120/mo
+--   Email: 25,000/mo = ~$25/mo
+--   Infra: $25, Support: $60, Storage: $8 = $238 total → 82% margin
 -- =====================================================
 INSERT INTO synthex_billing_plans (code, name, description, price_monthly, price_yearly, currency, limits, features, sort_order, metadata) VALUES
 (
@@ -167,10 +184,10 @@ INSERT INTO synthex_billing_plans (code, name, description, price_monthly, price
     495,
     4950,
     'AUD',
-    '{"ai_tokens": 20000, "audits": 2, "contacts": 500, "seats": 1, "campaigns": 5, "content": 10, "emails_sent": 2000}',
-    '["20,000 AI tokens/month", "2 website audits/month", "500 contacts", "1 team seat", "5 email campaigns", "Basic AI workspace", "Email support", "Core dashboard"]',
+    '{"ai_tokens": 15000, "ai_model": "haiku", "audits": 2, "contacts": 500, "seats": 1, "campaigns": 3, "content": 5, "emails_sent": 1500, "storage_mb": 500}',
+    '["15,000 AI tokens/month (Haiku)", "2 website audits/month", "500 contacts", "1 team seat", "3 email campaigns", "1,500 emails/month", "Basic dashboard", "Email support"]',
     1,
-    '{"gst_included": true, "min_contract_months": 3}'
+    '{"gst_included": true, "min_contract_months": 3, "max_cost_aud": 99, "target_margin_pct": 80, "overage_ai_per_1k": 1.50, "overage_email_per_100": 0.50}'
 ),
 (
     'pro',
@@ -179,10 +196,10 @@ INSERT INTO synthex_billing_plans (code, name, description, price_monthly, price
     895,
     8950,
     'AUD',
-    '{"ai_tokens": 250000, "audits": 20, "contacts": 5000, "seats": 3, "campaigns": -1, "content": -1, "emails_sent": 15000}',
-    '["250,000 AI tokens/month", "20 website audits/month", "5,000 contacts", "3 team seats", "Unlimited campaigns", "Full NEXUS AI workspace", "Drip campaigns", "Priority support", "API access"]',
+    '{"ai_tokens": 100000, "ai_model": "sonnet", "audits": 10, "contacts": 2500, "seats": 3, "campaigns": 10, "content": 20, "emails_sent": 8000, "storage_mb": 2000}',
+    '["100,000 AI tokens/month (Sonnet)", "10 website audits/month", "2,500 contacts", "3 team seats", "10 campaigns", "8,000 emails/month", "Drip campaigns", "Priority support", "API access"]',
     2,
-    '{"gst_included": true, "min_contract_months": 3, "popular": true}'
+    '{"gst_included": true, "min_contract_months": 3, "popular": true, "max_cost_aud": 179, "target_margin_pct": 80, "overage_ai_per_1k": 1.00, "overage_email_per_100": 0.40}'
 ),
 (
     'elite',
@@ -191,10 +208,10 @@ INSERT INTO synthex_billing_plans (code, name, description, price_monthly, price
     1295,
     12950,
     'AUD',
-    '{"ai_tokens": 2000000, "audits": 100, "contacts": -1, "seats": 10, "campaigns": -1, "content": -1, "emails_sent": -1}',
-    '["2,000,000 AI tokens/month", "100 website audits/month", "Unlimited contacts", "10 team seats", "Everything in Pro", "Dedicated AI agent", "Custom brand model", "A/B testing", "White label options", "Agency integration"]',
+    '{"ai_tokens": 500000, "ai_model": "opus", "audits": 50, "contacts": 10000, "seats": 10, "campaigns": 50, "content": 100, "emails_sent": 25000, "storage_mb": 10000}',
+    '["500,000 AI tokens/month (Opus)", "50 website audits/month", "10,000 contacts", "10 team seats", "50 campaigns", "25,000 emails/month", "Dedicated AI agent", "A/B testing", "White label", "Agency tools"]',
     3,
-    '{"gst_included": true, "min_contract_months": 3}'
+    '{"gst_included": true, "min_contract_months": 3, "max_cost_aud": 259, "target_margin_pct": 80, "overage_ai_per_1k": 0.80, "overage_email_per_100": 0.30}'
 )
 ON CONFLICT (code) DO UPDATE SET
     name = EXCLUDED.name,
