@@ -156,52 +156,45 @@ CREATE POLICY "Invoices visible to tenant"
     WITH CHECK (tenant_id = current_setting('app.tenant_id', true)::uuid);
 
 -- =====================================================
--- Seed default plans
+-- Seed default plans (AUD pricing, GST inclusive)
+-- Minimum 3-month contract, Annual = 12 months for price of 10
 -- =====================================================
-INSERT INTO synthex_billing_plans (code, name, description, price_monthly, price_yearly, currency, limits, features, sort_order) VALUES
-(
-    'free',
-    'Free',
-    'Perfect for getting started with Synthex',
-    0,
-    0,
-    'USD',
-    '{"ai_tokens": 10000, "emails_sent": 100, "contacts": 250, "campaigns": 2, "events": 1000, "api_calls": 1000, "team_members": 1}',
-    '["Basic SEO reports", "Email campaigns", "Contact management", "Standard support"]',
-    1
-),
+INSERT INTO synthex_billing_plans (code, name, description, price_monthly, price_yearly, currency, limits, features, sort_order, metadata) VALUES
 (
     'starter',
     'Starter',
     'For growing businesses and small teams',
-    49,
-    490,
-    'USD',
-    '{"ai_tokens": 100000, "emails_sent": 5000, "contacts": 2500, "campaigns": 10, "events": 25000, "api_calls": 10000, "team_members": 3}',
-    '["Advanced SEO reports", "A/B testing", "Audience segmentation", "Priority support", "API access"]',
-    2
+    495,
+    4950,
+    'AUD',
+    '{"ai_tokens": 20000, "audits": 2, "contacts": 500, "seats": 1, "campaigns": 5, "content": 10, "emails_sent": 2000}',
+    '["20,000 AI tokens/month", "2 website audits/month", "500 contacts", "1 team seat", "5 email campaigns", "Basic AI workspace", "Email support", "Core dashboard"]',
+    1,
+    '{"gst_included": true, "min_contract_months": 3}'
 ),
 (
-    'professional',
-    'Professional',
+    'pro',
+    'Pro',
     'For established businesses with advanced needs',
-    149,
-    1490,
-    'USD',
-    '{"ai_tokens": 500000, "emails_sent": 25000, "contacts": 15000, "campaigns": 50, "events": 100000, "api_calls": 50000, "team_members": 10}',
-    '["All Starter features", "Custom automations", "Advanced analytics", "Dedicated support", "Custom integrations", "White-label options"]',
-    3
+    895,
+    8950,
+    'AUD',
+    '{"ai_tokens": 250000, "audits": 20, "contacts": 5000, "seats": 3, "campaigns": -1, "content": -1, "emails_sent": 15000}',
+    '["250,000 AI tokens/month", "20 website audits/month", "5,000 contacts", "3 team seats", "Unlimited campaigns", "Full NEXUS AI workspace", "Drip campaigns", "Priority support", "API access"]',
+    2,
+    '{"gst_included": true, "min_contract_months": 3, "popular": true}'
 ),
 (
-    'enterprise',
-    'Enterprise',
-    'Custom solutions for large organizations',
-    499,
-    4990,
-    'USD',
-    '{"ai_tokens": -1, "emails_sent": -1, "contacts": -1, "campaigns": -1, "events": -1, "api_calls": -1, "team_members": -1}',
-    '["All Professional features", "Unlimited usage", "Dedicated account manager", "Custom SLA", "On-premise option", "Training & onboarding"]',
-    4
+    'elite',
+    'Elite',
+    'For agencies and high-volume businesses',
+    1295,
+    12950,
+    'AUD',
+    '{"ai_tokens": 2000000, "audits": 100, "contacts": -1, "seats": 10, "campaigns": -1, "content": -1, "emails_sent": -1}',
+    '["2,000,000 AI tokens/month", "100 website audits/month", "Unlimited contacts", "10 team seats", "Everything in Pro", "Dedicated AI agent", "Custom brand model", "A/B testing", "White label options", "Agency integration"]',
+    3,
+    '{"gst_included": true, "min_contract_months": 3}'
 )
 ON CONFLICT (code) DO UPDATE SET
     name = EXCLUDED.name,
