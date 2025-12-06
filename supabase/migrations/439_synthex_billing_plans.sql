@@ -6,21 +6,7 @@
 -- for AI tokens, emails, events, and other resources
 -- =====================================================
 
--- Drop existing objects if they exist (idempotent)
-DROP POLICY IF EXISTS "Plans visible to all" ON synthex_billing_plans;
-DROP POLICY IF EXISTS "Subscriptions visible to tenant" ON synthex_subscriptions;
-DROP POLICY IF EXISTS "Usage meters visible to tenant" ON synthex_usage_meters;
-DROP POLICY IF EXISTS "Invoices visible to tenant" ON synthex_invoices;
-
-DROP INDEX IF EXISTS idx_synthex_subscriptions_tenant;
-DROP INDEX IF EXISTS idx_synthex_subscriptions_plan;
-DROP INDEX IF EXISTS idx_synthex_subscriptions_status;
-DROP INDEX IF EXISTS idx_synthex_usage_meters_tenant;
-DROP INDEX IF EXISTS idx_synthex_usage_meters_metric;
-DROP INDEX IF EXISTS idx_synthex_usage_meters_period;
-DROP INDEX IF EXISTS idx_synthex_invoices_tenant;
-DROP INDEX IF EXISTS idx_synthex_invoices_status;
-
+-- Drop tables first (CASCADE handles policies and indexes)
 DROP TABLE IF EXISTS synthex_invoices CASCADE;
 DROP TABLE IF EXISTS synthex_usage_meters CASCADE;
 DROP TABLE IF EXISTS synthex_subscriptions CASCADE;

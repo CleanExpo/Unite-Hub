@@ -6,20 +6,7 @@
 -- and funnels that can be used across all brands and paying clients
 -- =====================================================
 
--- Drop existing objects if they exist (idempotent)
-DROP POLICY IF EXISTS "Templates visible based on scope" ON synthex_templates;
-DROP POLICY IF EXISTS "Template ratings by users" ON synthex_template_ratings;
-DROP POLICY IF EXISTS "Template usage tracking" ON synthex_template_usage;
-
-DROP INDEX IF EXISTS idx_synthex_templates_scope_type;
-DROP INDEX IF EXISTS idx_synthex_templates_tenant;
-DROP INDEX IF EXISTS idx_synthex_templates_category;
-DROP INDEX IF EXISTS idx_synthex_templates_public;
-DROP INDEX IF EXISTS idx_synthex_template_ratings_template;
-DROP INDEX IF EXISTS idx_synthex_template_ratings_user;
-DROP INDEX IF EXISTS idx_synthex_template_usage_template;
-DROP INDEX IF EXISTS idx_synthex_template_usage_tenant;
-
+-- Drop tables first (CASCADE handles policies and indexes)
 DROP TABLE IF EXISTS synthex_template_usage CASCADE;
 DROP TABLE IF EXISTS synthex_template_ratings CASCADE;
 DROP TABLE IF EXISTS synthex_templates CASCADE;

@@ -6,18 +6,7 @@
 -- from a single Synthex account with portfolio overview
 -- =====================================================
 
--- Drop existing objects if they exist (idempotent)
-DROP POLICY IF EXISTS "Agency accounts visible to members" ON synthex_agency_accounts;
-DROP POLICY IF EXISTS "Agency clients visible to agency members" ON synthex_agency_clients;
-DROP POLICY IF EXISTS "Agency memberships visible to user" ON synthex_agency_memberships;
-DROP POLICY IF EXISTS "Users can update their active tenant" ON synthex_agency_active_tenant;
-
-DROP INDEX IF EXISTS idx_synthex_agency_clients_agency;
-DROP INDEX IF EXISTS idx_synthex_agency_clients_tenant;
-DROP INDEX IF EXISTS idx_synthex_agency_clients_status;
-DROP INDEX IF EXISTS idx_synthex_agency_memberships_agency;
-DROP INDEX IF EXISTS idx_synthex_agency_active_tenant_user;
-
+-- Drop tables first (CASCADE handles policies and indexes)
 DROP TABLE IF EXISTS synthex_agency_active_tenant CASCADE;
 DROP TABLE IF EXISTS synthex_agency_memberships CASCADE;
 DROP TABLE IF EXISTS synthex_agency_clients CASCADE;
