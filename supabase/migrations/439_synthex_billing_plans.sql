@@ -115,14 +115,14 @@ COMMENT ON TABLE synthex_invoices IS 'Invoice records for tenant billing history
 -- =====================================================
 -- Indexes for performance
 -- =====================================================
-CREATE INDEX idx_synthex_subscriptions_tenant ON synthex_subscriptions(tenant_id);
-CREATE INDEX idx_synthex_subscriptions_plan ON synthex_subscriptions(plan_id);
-CREATE INDEX idx_synthex_subscriptions_status ON synthex_subscriptions(status);
-CREATE INDEX idx_synthex_usage_meters_tenant ON synthex_usage_meters(tenant_id);
-CREATE INDEX idx_synthex_usage_meters_metric ON synthex_usage_meters(metric);
-CREATE INDEX idx_synthex_usage_meters_period ON synthex_usage_meters(period_start, period_end);
-CREATE INDEX idx_synthex_invoices_tenant ON synthex_invoices(tenant_id);
-CREATE INDEX idx_synthex_invoices_status ON synthex_invoices(status);
+CREATE INDEX IF NOT EXISTS idx_synthex_subscriptions_tenant ON synthex_subscriptions(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_synthex_subscriptions_plan ON synthex_subscriptions(plan_id);
+CREATE INDEX IF NOT EXISTS idx_synthex_subscriptions_status ON synthex_subscriptions(status);
+CREATE INDEX IF NOT EXISTS idx_synthex_usage_meters_tenant ON synthex_usage_meters(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_synthex_usage_meters_metric ON synthex_usage_meters(metric);
+CREATE INDEX IF NOT EXISTS idx_synthex_usage_meters_period ON synthex_usage_meters(period_start, period_end);
+CREATE INDEX IF NOT EXISTS idx_synthex_invoices_tenant ON synthex_invoices(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_synthex_invoices_status ON synthex_invoices(status);
 
 -- =====================================================
 -- Row Level Security

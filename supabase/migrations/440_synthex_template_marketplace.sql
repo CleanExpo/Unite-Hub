@@ -81,16 +81,16 @@ COMMENT ON TABLE synthex_template_usage IS 'Usage tracking for templates (views,
 -- =====================================================
 -- Indexes for performance
 -- =====================================================
-CREATE INDEX idx_synthex_templates_scope_type ON synthex_templates(scope, type);
-CREATE INDEX idx_synthex_templates_tenant ON synthex_templates(tenant_id) WHERE tenant_id IS NOT NULL;
-CREATE INDEX idx_synthex_templates_category ON synthex_templates(category) WHERE category IS NOT NULL;
-CREATE INDEX idx_synthex_templates_public ON synthex_templates(is_public) WHERE is_public = true;
-CREATE INDEX idx_synthex_templates_featured ON synthex_templates(is_featured) WHERE is_featured = true;
-CREATE INDEX idx_synthex_templates_tags ON synthex_templates USING GIN (tags);
-CREATE INDEX idx_synthex_template_ratings_template ON synthex_template_ratings(template_id);
-CREATE INDEX idx_synthex_template_ratings_user ON synthex_template_ratings(user_id);
-CREATE INDEX idx_synthex_template_usage_template ON synthex_template_usage(template_id);
-CREATE INDEX idx_synthex_template_usage_tenant ON synthex_template_usage(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_synthex_templates_scope_type ON synthex_templates(scope, type);
+CREATE INDEX IF NOT EXISTS idx_synthex_templates_tenant ON synthex_templates(tenant_id) WHERE tenant_id IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_synthex_templates_category ON synthex_templates(category) WHERE category IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_synthex_templates_public ON synthex_templates(is_public) WHERE is_public = true;
+CREATE INDEX IF NOT EXISTS idx_synthex_templates_featured ON synthex_templates(is_featured) WHERE is_featured = true;
+CREATE INDEX IF NOT EXISTS idx_synthex_templates_tags ON synthex_templates USING GIN (tags);
+CREATE INDEX IF NOT EXISTS idx_synthex_template_ratings_template ON synthex_template_ratings(template_id);
+CREATE INDEX IF NOT EXISTS idx_synthex_template_ratings_user ON synthex_template_ratings(user_id);
+CREATE INDEX IF NOT EXISTS idx_synthex_template_usage_template ON synthex_template_usage(template_id);
+CREATE INDEX IF NOT EXISTS idx_synthex_template_usage_tenant ON synthex_template_usage(tenant_id);
 
 -- =====================================================
 -- Row Level Security

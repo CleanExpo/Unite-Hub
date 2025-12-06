@@ -89,11 +89,11 @@ COMMENT ON COLUMN synthex_agency_active_tenant.tenant_id IS 'Currently selected 
 -- =====================================================
 -- Indexes for performance
 -- =====================================================
-CREATE INDEX idx_synthex_agency_clients_agency ON synthex_agency_clients(agency_id);
-CREATE INDEX idx_synthex_agency_clients_tenant ON synthex_agency_clients(tenant_id);
-CREATE INDEX idx_synthex_agency_clients_status ON synthex_agency_clients(status);
-CREATE INDEX idx_synthex_agency_memberships_agency ON synthex_agency_memberships(agency_id);
-CREATE INDEX idx_synthex_agency_active_tenant_user ON synthex_agency_active_tenant(user_id);
+CREATE INDEX IF NOT EXISTS idx_synthex_agency_clients_agency ON synthex_agency_clients(agency_id);
+CREATE INDEX IF NOT EXISTS idx_synthex_agency_clients_tenant ON synthex_agency_clients(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_synthex_agency_clients_status ON synthex_agency_clients(status);
+CREATE INDEX IF NOT EXISTS idx_synthex_agency_memberships_agency ON synthex_agency_memberships(agency_id);
+CREATE INDEX IF NOT EXISTS idx_synthex_agency_active_tenant_user ON synthex_agency_active_tenant(user_id);
 
 -- =====================================================
 -- Row Level Security
