@@ -5,6 +5,58 @@
 - **Phase 5**: 16,116 LOC, 235+ tests (100% pass), <100ms latency, 99.5%+ reliability
 - **Core**: AI agents, email sync, drip campaigns, lead scoring, real-time alerts, SEO suite
 
+---
+
+## IMPORTANT RULES (YOU MUST FOLLOW)
+
+### Workspace Isolation
+**YOU MUST** always filter queries by workspaceId. **NEVER** query without workspace filter.
+```typescript
+// API Routes
+const workspaceId = req.nextUrl.searchParams.get("workspaceId");
+.eq("workspace_id", workspaceId)
+
+// React Components
+const { currentOrganization } = useAuth();
+const workspaceId = currentOrganization?.org_id;
+```
+
+### Supabase Client Selection
+**YOU MUST** use the correct client per context:
+| Context | Import |
+|---------|--------|
+| Server Components | `import { createClient } from "@/lib/supabase/server"` |
+| Client Components | `import { createClient } from "@/lib/supabase/client"` |
+| API Routes | `import { getSupabaseServer } from "@/lib/supabase"` |
+
+### AI Model Selection
+Use "think", "think hard", "think harder", or "ultrathink" to trigger extended thinking.
+- **Complex reasoning**: claude-opus-4-5-20251101
+- **Standard ops**: claude-sonnet-4-5-20250929 (default)
+- **Quick tasks**: claude-haiku-4-5-20251001
+
+### Before Database Migrations
+**YOU MUST** check `.claude/SCHEMA_REFERENCE.md` first.
+Run `\i scripts/rls-diagnostics.sql` in Supabase SQL Editor.
+
+### Design System
+**YOU MUST** read `/DESIGN-SYSTEM.md` before generating UI.
+**NEVER** use: `bg-white`, `text-gray-600`, raw shadcn cards.
+
+---
+
+## Sub-folder CLAUDE.md Guides
+
+| Domain | Location | When to Use |
+|--------|----------|-------------|
+| API Routes | `src/app/api/CLAUDE.md` | Building/fixing REST endpoints |
+| Agents | `src/lib/agents/CLAUDE.md` | AI agent development |
+| Database | `supabase/CLAUDE.md` | Migrations, RLS, schemas |
+| Components | `src/components/CLAUDE.md` | UI component work |
+| Core Lib | `src/lib/CLAUDE.md` | Business logic, utilities |
+
+---
+
 ## Quick Commands
 
 **Dev**: `npm run dev` (port 3008) | `npm run build` | `npm start`
