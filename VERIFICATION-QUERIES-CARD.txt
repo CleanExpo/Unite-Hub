@@ -1,0 +1,191 @@
+╔════════════════════════════════════════════════════════════════════════════════╗
+║                                                                                ║
+║                    ✅ VERIFICATION QUERIES CARD                                ║
+║                                                                                ║
+║           Run These 3 Queries After Migration Deployment                       ║
+║                                                                                ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+⏱️  TIME REQUIRED: 10 minutes (copy, paste, run each query)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PREREQUISITE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ MIGRATION DEPLOYED (showing "Query succeeded")
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+QUERY 1: CHECK RLS ENABLED ON ALL 9 TABLES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+What it does: Verifies that RLS is enabled on all 9 protected tables
+
+Copy and paste this into SQL Editor:
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ SELECT tablename, rowsecurity FROM pg_tables                              │
+│ WHERE schemaname = 'public'                                               │
+│   AND tablename IN (                                                      │
+│     'projects', 'generated_content', 'drip_campaigns',                    │
+│     'calendar_posts', 'email_intelligence', 'generated_images',           │
+│     'marketing_strategies', 'audit_logs', 'project_mindmaps'              │
+│   )                                                                        │
+│ ORDER BY tablename;                                                        │
+└────────────────────────────────────────────────────────────────────────────┘
+
+Expected Result (PASS):
+
+┌──────────────────────────┬──────────────┐
+│ tablename                │ rowsecurity  │
+├──────────────────────────┼──────────────┤
+│ audit_logs               │ true         │
+│ calendar_posts           │ true         │
+│ drip_campaigns           │ true         │
+│ email_intelligence       │ true         │
+│ generated_content        │ true         │
+│ generated_images         │ true         │
+│ marketing_strategies     │ true         │
+│ project_mindmaps         │ true         │
+│ projects                 │ true         │
+└──────────────────────────┴──────────────┘
+
+✅ PASS: All 9 tables show "true"
+❌ FAIL: Any table shows "false"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+QUERY 2: COUNT TOTAL POLICIES CREATED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+What it does: Counts how many RLS policies were created (should be 45+)
+
+Copy and paste this into SQL Editor:
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ SELECT COUNT(*) as policy_count FROM pg_policies                          │
+│ WHERE schemaname = 'public';                                              │
+└────────────────────────────────────────────────────────────────────────────┘
+
+Expected Result (PASS):
+
+┌──────────────┐
+│ policy_count │
+├──────────────┤
+│ 45           │
+└──────────────┘
+
+(May vary slightly depending on existing policies, but should be >= 20)
+
+✅ PASS: Count is 20 or more
+❌ FAIL: Count is less than 20
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+QUERY 3: LIST POLICIES BY TABLE (DETAILED VIEW)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+What it does: Shows how many policies each table has (detailed verification)
+
+Copy and paste this into SQL Editor:
+
+┌────────────────────────────────────────────────────────────────────────────┐
+│ SELECT tablename, COUNT(*) as policy_count FROM pg_policies               │
+│ WHERE schemaname = 'public'                                               │
+│   AND tablename IN (                                                      │
+│     'projects', 'generated_content', 'drip_campaigns',                    │
+│     'calendar_posts', 'email_intelligence', 'generated_images',           │
+│     'marketing_strategies', 'audit_logs', 'project_mindmaps'              │
+│   )                                                                        │
+│ GROUP BY tablename                                                         │
+│ ORDER BY tablename;                                                        │
+└────────────────────────────────────────────────────────────────────────────┘
+
+Expected Result (PASS):
+
+┌──────────────────────────┬──────────────┐
+│ tablename                │ policy_count │
+├──────────────────────────┼──────────────┤
+│ audit_logs               │ 3            │
+│ calendar_posts           │ 5            │
+│ drip_campaigns           │ 5            │
+│ email_intelligence       │ 5            │
+│ generated_content        │ 5            │
+│ generated_images         │ 5            │
+│ marketing_strategies     │ 5            │
+│ project_mindmaps         │ 5            │
+│ projects                 │ 5            │
+└──────────────────────────┴──────────────┘
+
+(audit_logs has 3 because it uses tenant_id not workspace_id)
+
+✅ PASS: All tables have policies (no 0 counts)
+❌ FAIL: Any table shows 0 policies
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+HOW TO RUN QUERIES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+For each query:
+1. Click: "New Query" button (top right)
+2. Paste: Query SQL above into editor
+3. Run: Click "Run" button (bottom right)
+4. Check: Results match expected output
+5. Note: Whether PASS or FAIL
+
+Repeat for all 3 queries.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+VERIFICATION CHECKLIST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+After running all 3 queries:
+
+[ ] Query 1: All 9 tables show "true" (RLS enabled)
+[ ] Query 2: Policy count is >= 20
+[ ] Query 3: All tables have policies (no 0 counts)
+
+If ALL checks pass: ✅ DEPLOYMENT SUCCESSFUL
+If ANY check fails: ❌ INVESTIGATE (see troubleshooting)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+IF VERIFICATION FAILS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+If any query shows unexpected results:
+
+1. Check: Error message (if any)
+2. Note: Which query failed and why
+3. Tell me: Query number and expected vs actual results
+4. Reference: DEPLOYMENT-V3-COMPREHENSIVE.md → Troubleshooting
+
+Common issues:
+  - Query 1 shows "false": RLS didn't enable on that table
+  - Query 2 shows low count: Some policies didn't create
+  - Query 3 shows 0 for a table: That table's policies failed
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+AFTER VERIFICATION PASSES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Once all 3 verification queries pass:
+
+Tell me: "Verification complete - all checks passed"
+
+Next steps:
+1. Run application testing checklist (29 test cases)
+2. Test basic functionality
+3. Test workspace isolation
+4. Test data operations
+5. Test admin functions
+6. Check for errors
+
+Expected time: 30-60 minutes
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Current Status:
+  Phase 1: ✅ COMPLETE (preparation)
+  Phase 2: ✅ COMPLETE (backup)
+  Phase 3: ✅ COMPLETE (deployment)
+  Phase 4: ⏳ IN PROGRESS (verification)
+  Phase 5: ⏳ READY (testing)
+  Phase 6: ⏳ READY (monitoring)
+

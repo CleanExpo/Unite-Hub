@@ -1,0 +1,158 @@
+╔════════════════════════════════════════════════════════════════════════════════╗
+║                                                                                ║
+║                    🚀 V3 MIGRATION DEPLOYMENT CARD                             ║
+║                                                                                ║
+║                   Deploy After Backup is Complete                              ║
+║                                                                                ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+⏱️  TIME REQUIRED: 5 minutes (copy, paste, run)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PREREQUISITE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ BACKUP COMPLETE (showing "Available" status)
+
+If backup not complete: WAIT before proceeding
+If backup failed: DO NOT PROCEED, contact support
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 1: OPEN SQL EDITOR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Location: https://supabase.com/dashboard/projects
+1. Click: Your "Unite-Hub" project
+2. Left sidebar → Click: "SQL Editor"
+3. Wait: SQL Editor page loads
+4. Status: Ready when you see empty query box
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 2: CREATE NEW QUERY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+In SQL Editor:
+1. Click: "New Query" button (top right, green/blue)
+2. Wait: New blank query editor appears
+3. Status: Ready when you have empty editor box
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 3: COPY MIGRATION FILE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+From your file editor or IDE:
+1. Open file: supabase/migrations/555_corrected_rls_policies_v3.sql
+2. Select all: Ctrl+A (Windows) or Cmd+A (Mac)
+3. Copy: Ctrl+C (Windows) or Cmd+C (Mac)
+4. Status: File content copied to clipboard
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 4: PASTE INTO SQL EDITOR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+In Supabase SQL Editor:
+1. Click: In the blank query editor box
+2. Paste: Ctrl+V (Windows) or Cmd+V (Mac)
+3. Wait: SQL content appears in editor
+4. Verify: Should see ~415 lines of SQL starting with:
+   "-- =========================================================================="
+5. Status: Ready when all SQL is visible
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STEP 5: EXECUTE MIGRATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+In Supabase SQL Editor:
+1. Find: "Run" button (bottom right, green button with "Run")
+2. Click: The Run button
+3. Wait: 2-5 seconds for execution
+4. Watch: Status bar at bottom shows progress
+5. Status: Ready when execution completes
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EXPECTED RESULT (SUCCESS)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+After clicking "Run":
+
+You should see at bottom:
+  ✅ "Query succeeded"
+
+In the output area, you should see notices like:
+  NOTICE: RLS policies created for projects
+  NOTICE: RLS policies created for generated_content
+  NOTICE: RLS policies created for drip_campaigns
+  NOTICE: RLS policies created for calendar_posts
+  NOTICE: RLS policies created for email_intelligence
+  NOTICE: RLS policies created for generated_images
+  NOTICE: RLS policies created for marketing_strategies
+  NOTICE: RLS policies created for audit_logs
+  NOTICE: RLS policies created for project_mindmaps
+  NOTICE: Total tables with RLS enabled: 9
+
+Status: ✅ DEPLOYMENT SUCCESSFUL
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+IF ERROR OCCURS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+If you see error message:
+1. Note: Exact error text
+2. Check: Which table is mentioned (if any)
+3. Tell me: The error message
+4. Reference: DEPLOYMENT-V3-COMPREHENSIVE.md → Troubleshooting
+
+Common issues:
+  - "Helper function not found" → Migration 020 not applied
+  - "Table does not exist" → OK, table is optional (will skip)
+  - Other SQL errors → Check error message and table name
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+AFTER SUCCESSFUL DEPLOYMENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Once you see "Query succeeded":
+
+Next steps:
+1. Tell me: "Migration deployed successfully"
+2. We will: Run verification queries
+3. You will: Copy 3 SQL verification queries
+4. Expected: All 3 queries return expected results
+
+Verification queries will check:
+  Query 1: All 9 tables have RLS enabled
+  Query 2: 45+ policies created
+  Query 3: Detailed policy listing by table
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SUMMARY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Deployment v3 Migration:
+  File: 555_corrected_rls_policies_v3.sql (415 lines)
+  Tables: 9 (comprehensive coverage)
+  Policies: 45+ (workspace-scoped)
+  Safety: Idempotent, error-tolerant
+  Time: 5 minutes
+
+Success Indicators:
+  ✅ "Query succeeded" message
+  ✅ 9 NOTICE messages (one per table)
+  ✅ No error messages
+  ✅ Execution completes in 2-5 seconds
+
+Next Phase:
+  → Verification (3 SQL queries)
+  → Testing (29 test cases)
+  → Monitoring (24 hours)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Current Status:
+  Phase 1: ✅ COMPLETE (preparation)
+  Phase 2: ✅ COMPLETE (backup)
+  Phase 3: ⏳ IN PROGRESS (deployment)
+  Phase 4: ⏳ READY (verification)
+  Phase 5: ⏳ READY (testing)
+  Phase 6: ⏳ READY (monitoring)
+
