@@ -68,7 +68,9 @@ export function getMessagesForAgent(
   msgs = msgs.sort((a, b) => {
     const priorityOrder = { critical: 4, high: 3, medium: 2, low: 1 };
     const priorityDiff = (priorityOrder[b.priority ?? 'medium'] ?? 2) - (priorityOrder[a.priority ?? 'medium'] ?? 2);
-    if (priorityDiff !== 0) return priorityDiff;
+    if (priorityDiff !== 0) {
+return priorityDiff;
+}
     return b.createdAt.localeCompare(a.createdAt);
   });
 
@@ -87,13 +89,15 @@ export function getMessage(id: string): AgentMessage | null {
  */
 export function getConversationThread(messageId: string): AgentMessage[] {
   const root = messageBus.find(m => m.id === messageId);
-  if (!root) return [];
+  if (!root) {
+return [];
+}
 
   const thread: AgentMessage[] = [root];
   const visited = new Set([messageId]);
 
   // Find all replies to any message in the thread
-  let toProcess = [messageId];
+  const toProcess = [messageId];
   while (toProcess.length > 0) {
     const current = toProcess.shift()!;
     const replies = messageBus.filter(m => m.replyToId === current && !visited.has(m.id));

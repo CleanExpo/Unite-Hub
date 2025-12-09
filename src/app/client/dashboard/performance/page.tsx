@@ -36,7 +36,9 @@ export default function PerformancePage() {
   }, [clientId, activeTab]);
 
   const fetchReports = async () => {
-    if (!clientId) return;
+    if (!clientId) {
+return;
+}
 
     setLoading(true);
     setError(null);
@@ -60,7 +62,9 @@ export default function PerformancePage() {
   };
 
   const generateReport = async () => {
-    if (!clientId) return;
+    if (!clientId) {
+return;
+}
 
     setGenerating(true);
     setError(null);
@@ -89,7 +93,9 @@ export default function PerformancePage() {
   };
 
   const approveReport = async (reportId: string) => {
-    if (!clientId) return;
+    if (!clientId) {
+return;
+}
 
     try {
       const response = await fetch("/api/performance/approve", {

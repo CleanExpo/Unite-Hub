@@ -39,8 +39,8 @@ export interface SimulationMetrics {
 }
 
 // Simulation history
-let simulationHistory: SimulationResult[] = [];
-let scenarios: Scenario[] = [];
+const simulationHistory: SimulationResult[] = [];
+const scenarios: Scenario[] = [];
 
 /**
  * Create a scenario
@@ -176,7 +176,9 @@ export function runSimulation(scenarioId: string, config: Partial<SimulationConf
  * Select random task type from available types
  */
 function selectRandomTaskType(taskTypes: string[], seed: number): string {
-  if (taskTypes.length === 0) return 'general';
+  if (taskTypes.length === 0) {
+return 'general';
+}
   const seededRandom = Math.sin(seed) * 10000;
   const index = Math.floor((seededRandom - Math.floor(seededRandom)) * taskTypes.length);
   return taskTypes[index];
@@ -202,14 +204,24 @@ function simulateRouting(
 
   // Simulate latency based on load
   let latency = 1000;
-  if (conditions.agentLoad === 'heavy') latency *= 1.5;
-  if (conditions.agentLoad === 'critical') latency *= 2;
-  if (conditions.agentLoad === 'light') latency *= 0.7;
+  if (conditions.agentLoad === 'heavy') {
+latency *= 1.5;
+}
+  if (conditions.agentLoad === 'critical') {
+latency *= 2;
+}
+  if (conditions.agentLoad === 'light') {
+latency *= 0.7;
+}
 
   // Simulate cost
   let cost = 0.003;
-  if (selectedModel.includes('opus')) cost = 0.015;
-  if (selectedModel.includes('haiku')) cost = 0.0004;
+  if (selectedModel.includes('opus')) {
+cost = 0.015;
+}
+  if (selectedModel.includes('haiku')) {
+cost = 0.0004;
+}
 
   return {
     model: selectedModel,
@@ -234,9 +246,15 @@ function simulateExecution(
 
   // Model-specific accuracy
   let accuracy = 80;
-  if (model.includes('opus')) accuracy = 95;
-  if (model.includes('sonnet')) accuracy = 88;
-  if (model.includes('haiku')) accuracy = 75;
+  if (model.includes('opus')) {
+accuracy = 95;
+}
+  if (model.includes('sonnet')) {
+accuracy = 88;
+}
+  if (model.includes('haiku')) {
+accuracy = 75;
+}
 
   const latency = Math.round(1000 + Math.random() * 500);
 
@@ -310,12 +328,20 @@ export function forecastAgentBehavior(
   const projectedCost = avgCost * (1 + loadIncrease) * (timeframe / 60); // Scale by timeframe
 
   const riskFactors: string[] = [];
-  if (loadIncrease > 0.2) riskFactors.push('Significant load increase expected');
-  if (avgLatency > 2000) riskFactors.push('Latency may exceed targets');
+  if (loadIncrease > 0.2) {
+riskFactors.push('Significant load increase expected');
+}
+  if (avgLatency > 2000) {
+riskFactors.push('Latency may exceed targets');
+}
 
   const recommendations: string[] = [];
-  if (projectedCost > 100) recommendations.push('Consider cost optimization strategies');
-  if (riskFactors.length > 0) recommendations.push('Review risk profiles proactively');
+  if (projectedCost > 100) {
+recommendations.push('Consider cost optimization strategies');
+}
+  if (riskFactors.length > 0) {
+recommendations.push('Review risk profiles proactively');
+}
 
   return {
     expectedLoadIncrease: Math.round(loadIncrease * 100),

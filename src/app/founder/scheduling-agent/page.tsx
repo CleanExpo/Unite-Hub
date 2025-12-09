@@ -47,7 +47,9 @@ export default function SchedulingAgentDemo() {
       date.setDate(date.getDate() + i);
 
       // Skip weekends
-      if (date.getDay() === 0 || date.getDay() === 6) continue;
+      if (date.getDay() === 0 || date.getDay() === 6) {
+continue;
+}
 
       // Add some sample meetings
       const numMeetings = Math.floor(Math.random() * 3) + 2; // 2-4 meetings per day

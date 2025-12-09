@@ -271,18 +271,26 @@ export class SelfHealingService {
       switch (decision) {
         case 'APPROVED':
           await this.markStatus(jobId, 'APPROVED');
-          if (patchId) await this.markPatchStatus(patchId, 'APPROVED');
+          if (patchId) {
+await this.markPatchStatus(patchId, 'APPROVED');
+}
           break;
         case 'REJECTED':
           await this.markStatus(jobId, 'REJECTED');
-          if (patchId) await this.markPatchStatus(patchId, 'REJECTED');
+          if (patchId) {
+await this.markPatchStatus(patchId, 'REJECTED');
+}
           break;
         case 'APPLY_SANDBOX':
-          if (patchId) await this.markPatchStatus(patchId, 'APPLIED_SANDBOX');
+          if (patchId) {
+await this.markPatchStatus(patchId, 'APPLIED_SANDBOX');
+}
           await this.markStatus(jobId, 'APPLIED_SANDBOX');
           break;
         case 'APPLY_MAIN':
-          if (patchId) await this.markPatchStatus(patchId, 'APPLIED_MAIN');
+          if (patchId) {
+await this.markPatchStatus(patchId, 'APPLIED_MAIN');
+}
           await this.markStatus(jobId, 'APPLIED_MAIN');
           break;
       }

@@ -239,7 +239,9 @@ export class CoalitionArchiveBridge {
           const current = agentPairMap.get(pairKey) || { count: 0, successes: 0 };
 
           current.count++;
-          if (entry.outcome === 'success') current.successes++;
+          if (entry.outcome === 'success') {
+current.successes++;
+}
 
           agentPairMap.set(pairKey, current);
         }
@@ -263,7 +265,9 @@ export class CoalitionArchiveBridge {
         const current = leaderMap.get(leader) || { count: 0, successes: 0 };
 
         current.count++;
-        if (entry.outcome === 'success') current.successes++;
+        if (entry.outcome === 'success') {
+current.successes++;
+}
 
         leaderMap.set(leader, current);
       }

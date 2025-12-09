@@ -220,7 +220,9 @@ class TaskMarketplaceEngineImpl {
     task: MarketplaceTask,
     qualifiedBids: AgentBid[]
   ): Promise<boolean> {
-    if (qualifiedBids.length < 2) return false;
+    if (qualifiedBids.length < 2) {
+return false;
+}
 
     // Sort by bid and take top 2-3
     const topBids = qualifiedBids.sort((a, b) => b.finalBid - a.finalBid).slice(0, 3);

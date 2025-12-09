@@ -91,7 +91,9 @@ export function FlashlightCursor({
 
   // Check for reduced motion preference
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined') {
+return;
+}
 
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     setPrefersReducedMotion(mediaQuery.matches);
@@ -103,7 +105,9 @@ export function FlashlightCursor({
 
   // Check for mobile device
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined') {
+return;
+}
 
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window);
@@ -125,9 +129,15 @@ export function FlashlightCursor({
 
   // Set up event listeners
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    if (!enabled || prefersReducedMotion) return;
-    if (isMobile && !showOnMobile) return;
+    if (typeof window === 'undefined') {
+return;
+}
+    if (!enabled || prefersReducedMotion) {
+return;
+}
+    if (isMobile && !showOnMobile) {
+return;
+}
 
     window.addEventListener('mousemove', handleMouseMove);
     document.body.addEventListener('mouseenter', handleMouseEnter);
@@ -179,7 +189,9 @@ export function useFlashlightPosition() {
   const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined') {
+return;
+}
 
     const handleMouseMove = (e: MouseEvent) => {
       setPosition({ x: e.clientX, y: e.clientY });
@@ -208,7 +220,9 @@ export function useFlashlightPosition() {
 
 export function FlashlightCSSVariables() {
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined') {
+return;
+}
 
     const handleMouseMove = (e: MouseEvent) => {
       document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`);

@@ -66,7 +66,9 @@ export class GSiteService {
    * Initialize browser with stealth settings
    */
   async initialize(): Promise<void> {
-    if (this.browser) return;
+    if (this.browser) {
+return;
+}
 
     const { chromium } = await getPlaywright();
     this.browser = await chromium.launch({

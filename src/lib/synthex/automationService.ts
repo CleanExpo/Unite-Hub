@@ -153,7 +153,9 @@ export async function listWorkflows(
 
     const { data, error } = await query;
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     const workflows: Workflow[] = (data || []).map(mapWorkflowFromDb);
     return { data: workflows, error: null };
@@ -171,7 +173,9 @@ export async function getWorkflow(workflowId: string): Promise<ServiceResult<Wor
       .eq('id', workflowId)
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { data: mapWorkflowFromDb(data), error: null };
   } catch (error) {
@@ -201,7 +205,9 @@ export async function createWorkflow(
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { data: mapWorkflowFromDb(data), error: null };
   } catch (error) {
@@ -222,11 +228,21 @@ export async function updateWorkflow(
 ): Promise<ServiceResult<Workflow>> {
   try {
     const dbUpdates: Record<string, unknown> = {};
-    if (updates.name !== undefined) dbUpdates.name = updates.name;
-    if (updates.description !== undefined) dbUpdates.description = updates.description;
-    if (updates.trigger !== undefined) dbUpdates.trigger = updates.trigger;
-    if (updates.actions !== undefined) dbUpdates.actions = updates.actions;
-    if (updates.isActive !== undefined) dbUpdates.is_active = updates.isActive;
+    if (updates.name !== undefined) {
+dbUpdates.name = updates.name;
+}
+    if (updates.description !== undefined) {
+dbUpdates.description = updates.description;
+}
+    if (updates.trigger !== undefined) {
+dbUpdates.trigger = updates.trigger;
+}
+    if (updates.actions !== undefined) {
+dbUpdates.actions = updates.actions;
+}
+    if (updates.isActive !== undefined) {
+dbUpdates.is_active = updates.isActive;
+}
 
     const { data, error } = await supabaseAdmin
       .from('synthex_automation_workflows')
@@ -235,7 +251,9 @@ export async function updateWorkflow(
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { data: mapWorkflowFromDb(data), error: null };
   } catch (error) {
@@ -251,7 +269,9 @@ export async function deleteWorkflow(workflowId: string): Promise<ServiceResult<
       .delete()
       .eq('id', workflowId);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { data: true, error: null };
   } catch (error) {
@@ -285,7 +305,9 @@ export async function executeWorkflow(
       .select()
       .single();
 
-    if (createError) throw createError;
+    if (createError) {
+throw createError;
+}
 
     const actionResults: Array<{ action: WorkflowAction; result: unknown; error?: string }> = [];
     let currentIndex = 0;
@@ -332,7 +354,9 @@ export async function executeWorkflow(
       .select()
       .single();
 
-    if (updateError) throw updateError;
+    if (updateError) {
+throw updateError;
+}
 
     // Update workflow stats
     const statsUpdate = {
@@ -496,7 +520,9 @@ export async function listRuns(
 
     const { data, error } = await query;
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     const runs: WorkflowRun[] = (data || []).map(mapRunFromDb);
     return { data: runs, error: null };
@@ -521,7 +547,9 @@ export async function listTemplates(
       .eq('is_active', true)
       .order('name');
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     const templates: AutomationTemplate[] = (data || []).map(mapTemplateFromDb);
     return { data: templates, error: null };
@@ -560,7 +588,9 @@ export async function createTemplate(
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { data: mapTemplateFromDb(data), error: null };
   } catch (error) {

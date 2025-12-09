@@ -6,10 +6,14 @@ export async function GET(req: NextRequest) {
   try {
     const authHeader = req.headers.get('authorization');
     const token = authHeader?.replace('Bearer ', '');
-    if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!token) {
+return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+}
 
     const { data: userData, error: authError } = await supabaseBrowser.auth.getUser(token);
-    if (authError || !userData.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (authError || !userData.user) {
+return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+}
 
     const sourceType = req.nextUrl.searchParams.get('sourceType') || undefined;
     const tenantId = req.nextUrl.searchParams.get('tenantId') || undefined;

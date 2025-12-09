@@ -217,7 +217,7 @@ async function getPerceivedScore(
   endDate: Date
 ): Promise<number> {
   // Try to get real metrics from campaigns
-  let query = supabase
+  const query = supabase
     .from('campaigns')
     .select('open_rate, click_rate, status')
     .eq('status', 'sent')
@@ -282,8 +282,12 @@ async function calculateDataCompleteness(
 
   if (archiveCount && archiveCount > 0) {
     completeness += 0.15;
-    if (archiveCount > 10) completeness += 0.1;
-    if (archiveCount > 50) completeness += 0.1;
+    if (archiveCount > 10) {
+completeness += 0.1;
+}
+    if (archiveCount > 50) {
+completeness += 0.1;
+}
   }
 
   // Check for campaign data
@@ -306,9 +310,15 @@ async function calculateDataCompleteness(
       .single();
 
     if (contact) {
-      if (contact.ai_score) completeness += 0.05;
-      if (contact.email) completeness += 0.05;
-      if (contact.phone) completeness += 0.05;
+      if (contact.ai_score) {
+completeness += 0.05;
+}
+      if (contact.email) {
+completeness += 0.05;
+}
+      if (contact.phone) {
+completeness += 0.05;
+}
     }
   }
 

@@ -63,7 +63,9 @@ export async function createConceptPack(
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {
+throw error;
+}
 
   return {
     id: data.id,
@@ -117,7 +119,9 @@ export async function addConceptItem(
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {
+throw error;
+}
 
   return {
     id: data.id,
@@ -145,7 +149,9 @@ export async function getConceptPack(packId: string): Promise<ConceptPack | null
     .eq("id", packId)
     .single();
 
-  if (packError || !pack) return null;
+  if (packError || !pack) {
+return null;
+}
 
   const { data: items } = await supabase
     .from("visual_concept_items")
@@ -200,7 +206,9 @@ export async function getWorkspaceConceptPacks(
 
   const { data: packs } = await query;
 
-  if (!packs) return [];
+  if (!packs) {
+return [];
+}
 
   // Get items for all packs
   const packIds = packs.map(p => p.id);
@@ -211,7 +219,9 @@ export async function getWorkspaceConceptPacks(
 
   const itemsByPack = (allItems || []).reduce(
     (acc, item) => {
-      if (!acc[item.pack_id]) acc[item.pack_id] = [];
+      if (!acc[item.pack_id]) {
+acc[item.pack_id] = [];
+}
       acc[item.pack_id].push(item);
       return acc;
     },

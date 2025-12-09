@@ -105,7 +105,9 @@ class IndustryEventsScanner {
     // Sort by relevance score and date
     allEvents.sort((a, b) => {
       const relevanceDiff = b.relevance_score - a.relevance_score;
-      if (relevanceDiff !== 0) return relevanceDiff;
+      if (relevanceDiff !== 0) {
+return relevanceDiff;
+}
       return new Date(a.date).getTime() - new Date(b.date).getTime();
     });
 
@@ -482,8 +484,12 @@ class IndustryEventsScanner {
       (eventDate.getTime() - Date.now()) / (24 * 60 * 60 * 1000)
     );
 
-    if (daysUntil <= 3) return 'immediate';
-    if (daysUntil <= 7) return 'this_week';
+    if (daysUntil <= 3) {
+return 'immediate';
+}
+    if (daysUntil <= 7) {
+return 'this_week';
+}
     return 'this_month';
   }
 }

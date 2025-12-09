@@ -102,8 +102,12 @@ export function SoftLaunchTracker({
   };
 
   const getMomentumIcon = (score: number) => {
-    if (score >= 70) return <TrendingUp className="h-4 w-4 text-green-500" />;
-    if (score >= 40) return <TrendingDown className="h-4 w-4 text-yellow-500" />;
+    if (score >= 70) {
+return <TrendingUp className="h-4 w-4 text-green-500" />;
+}
+    if (score >= 40) {
+return <TrendingDown className="h-4 w-4 text-yellow-500" />;
+}
     return <TrendingDown className="h-4 w-4 text-red-500" />;
   };
 

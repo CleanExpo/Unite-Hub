@@ -269,10 +269,14 @@ Return JSON:
       });
 
       const textBlock = response.content.find((c) => c.type === 'text');
-      if (!textBlock) throw new Error('No response');
+      if (!textBlock) {
+throw new Error('No response');
+}
 
       const jsonMatch = textBlock.text.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) throw new Error('No JSON found');
+      if (!jsonMatch) {
+throw new Error('No JSON found');
+}
 
       const result = JSON.parse(jsonMatch[0]);
 
@@ -342,14 +346,26 @@ Return JSON:
     let confidence = 0.5; // Base confidence
 
     // More data = higher confidence
-    if (inputs.currentMomentum) confidence += 0.15;
-    if (inputs.topOpportunities.length > 3) confidence += 0.1;
-    if (inputs.activeRisks.length > 0) confidence += 0.05; // Having risk data is good
-    if (inputs.clientCount > 10) confidence += 0.1;
+    if (inputs.currentMomentum) {
+confidence += 0.15;
+}
+    if (inputs.topOpportunities.length > 3) {
+confidence += 0.1;
+}
+    if (inputs.activeRisks.length > 0) {
+confidence += 0.05;
+} // Having risk data is good
+    if (inputs.clientCount > 10) {
+confidence += 0.1;
+}
 
     // Longer horizons = lower confidence
-    if (horizon === '12_week') confidence -= 0.1;
-    if (horizon === '1_year') confidence -= 0.2;
+    if (horizon === '12_week') {
+confidence -= 0.1;
+}
+    if (horizon === '1_year') {
+confidence -= 0.2;
+}
 
     return Math.max(0.2, Math.min(0.9, confidence));
   }
@@ -391,10 +407,14 @@ Return JSON array of strings:
       });
 
       const textBlock = response.content.find((c) => c.type === 'text');
-      if (!textBlock) return [];
+      if (!textBlock) {
+return [];
+}
 
       const jsonMatch = textBlock.text.match(/\[[\s\S]*\]/);
-      if (!jsonMatch) return [];
+      if (!jsonMatch) {
+return [];
+}
 
       return JSON.parse(jsonMatch[0]) as string[];
     } catch (error) {
@@ -421,8 +441,11 @@ Return JSON array of strings:
       const expectedMomentum = Object.values(f.expectedCase.projectedMomentum);
       const avgMomentum = expectedMomentum.reduce((a, b) => a + b, 0) / expectedMomentum.length;
 
-      if (avgMomentum >= 60) positiveCount++;
-      else if (avgMomentum < 45) challengingCount++;
+      if (avgMomentum >= 60) {
+positiveCount++;
+} else if (avgMomentum < 45) {
+challengingCount++;
+}
 
       allDrivers.push(...f.expectedCase.keyDrivers);
       watchItems.push(...f.worstCase.keyDrivers);

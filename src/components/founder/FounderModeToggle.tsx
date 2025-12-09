@@ -88,7 +88,9 @@ export function FounderModeToggle() {
   }, [user]);
 
   async function toggleMode(service: keyof ServiceModes) {
-    if (!isAdmin || updating) return;
+    if (!isAdmin || updating) {
+return;
+}
 
     const newMode = modes[service] === "test" ? "live" : "test";
 
@@ -97,7 +99,9 @@ export function FounderModeToggle() {
       const confirmed = window.confirm(
         `Are you sure you want to switch ${SERVICE_INFO[service].name} to LIVE mode?\n\n${SERVICE_INFO[service].liveNote}`
       );
-      if (!confirmed) return;
+      if (!confirmed) {
+return;
+}
     }
 
     setUpdating(service);

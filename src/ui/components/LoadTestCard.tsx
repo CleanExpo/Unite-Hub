@@ -100,16 +100,28 @@ export function LoadTestCard({
   };
 
   const getErrorRateColor = (rate: number) => {
-    if (rate >= 0.05) return 'text-red-500';
-    if (rate >= 0.02) return 'text-orange-500';
-    if (rate >= 0.01) return 'text-yellow-500';
+    if (rate >= 0.05) {
+return 'text-red-500';
+}
+    if (rate >= 0.02) {
+return 'text-orange-500';
+}
+    if (rate >= 0.01) {
+return 'text-yellow-500';
+}
     return 'text-green-500';
   };
 
   const getResponseTimeColor = (time: number) => {
-    if (time >= 500) return 'text-red-500';
-    if (time >= 300) return 'text-orange-500';
-    if (time >= 200) return 'text-yellow-500';
+    if (time >= 500) {
+return 'text-red-500';
+}
+    if (time >= 300) {
+return 'text-orange-500';
+}
+    if (time >= 200) {
+return 'text-yellow-500';
+}
     return 'text-green-500';
   };
 

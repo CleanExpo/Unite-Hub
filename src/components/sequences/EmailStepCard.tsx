@@ -96,12 +96,16 @@ export function EmailStepCard({
   };
 
   const calculateOpenRate = () => {
-    if (!step.metrics || step.metrics.sent === 0) return "0%";
+    if (!step.metrics || step.metrics.sent === 0) {
+return "0%";
+}
     return ((step.metrics.opened / step.metrics.sent) * 100).toFixed(1) + "%";
   };
 
   const calculateClickRate = () => {
-    if (!step.metrics || step.metrics.sent === 0) return "0%";
+    if (!step.metrics || step.metrics.sent === 0) {
+return "0%";
+}
     return ((step.metrics.clicked / step.metrics.sent) * 100).toFixed(1) + "%";
   };
 

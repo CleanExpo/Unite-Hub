@@ -98,14 +98,20 @@ export default function DecisionSimulator({
 
   // Validate form
   const isFormValid = () => {
-    if (!scenario.trim()) return false;
-    if (options.length < 2) return false;
+    if (!scenario.trim()) {
+return false;
+}
+    if (options.length < 2) {
+return false;
+}
     return options.every(opt => opt.title.trim() && opt.description.trim());
   };
 
   // Handle analyze
   const handleAnalyze = async () => {
-    if (!isFormValid() || !onAnalyze) return;
+    if (!isFormValid() || !onAnalyze) {
+return;
+}
 
     setAnalyzing(true);
     setError(null);
@@ -123,7 +129,9 @@ export default function DecisionSimulator({
 
   // Handle record decision
   const handleRecordDecision = async () => {
-    if (!selectedOption || !rationale.trim() || !onRecordDecision) return;
+    if (!selectedOption || !rationale.trim() || !onRecordDecision) {
+return;
+}
 
     setRecording(true);
     setError(null);
@@ -152,8 +160,12 @@ export default function DecisionSimulator({
 
   // Get impact icon
   const ImpactIcon = ({ impact }: { impact: "positive" | "neutral" | "negative" }) => {
-    if (impact === "positive") return <TrendingUp className="w-4 h-4 text-green-500" />;
-    if (impact === "negative") return <TrendingDown className="w-4 h-4 text-red-500" />;
+    if (impact === "positive") {
+return <TrendingUp className="w-4 h-4 text-green-500" />;
+}
+    if (impact === "negative") {
+return <TrendingDown className="w-4 h-4 text-red-500" />;
+}
     return <AlertCircle className="w-4 h-4 text-gray-500" />;
   };
 
@@ -268,7 +280,9 @@ export default function DecisionSimulator({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {analysis.map((opt) => {
               const option = options.find(o => o.id === opt.option_id);
-              if (!option) return null;
+              if (!option) {
+return null;
+}
 
               const isSelected = selectedOption === opt.option_id;
 

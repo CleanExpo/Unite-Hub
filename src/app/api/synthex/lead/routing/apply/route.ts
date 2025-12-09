@@ -93,7 +93,9 @@ export async function POST(req: NextRequest) {
       user.id
     );
 
-    if (result.error) throw result.error;
+    if (result.error) {
+throw result.error;
+}
 
     return NextResponse.json({
       status: 'ok',

@@ -252,9 +252,15 @@ export default function GoogleCurvePage() {
     const diffMs = now.getTime() - date.getTime();
     const diffHours = Math.floor(diffMs / 3600000);
 
-    if (diffHours < 1) return 'Just now';
-    if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffHours < 168) return `${Math.floor(diffHours / 24)}d ago`;
+    if (diffHours < 1) {
+return 'Just now';
+}
+    if (diffHours < 24) {
+return `${diffHours}h ago`;
+}
+    if (diffHours < 168) {
+return `${Math.floor(diffHours / 24)}d ago`;
+}
     return date.toLocaleDateString();
   };
 

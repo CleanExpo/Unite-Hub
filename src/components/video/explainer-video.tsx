@@ -87,7 +87,9 @@ export function ExplainerVideo({
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      if (!containerRef.current?.contains(document.activeElement)) return;
+      if (!containerRef.current?.contains(document.activeElement)) {
+return;
+}
 
       switch (e.key) {
         case ' ':
@@ -118,7 +120,9 @@ export function ExplainerVideo({
   }, [isPlaying]);
 
   const togglePlay = () => {
-    if (!videoRef.current) return;
+    if (!videoRef.current) {
+return;
+}
 
     if (isPlaying) {
       videoRef.current.pause();
@@ -130,7 +134,9 @@ export function ExplainerVideo({
   };
 
   const seek = (seconds: number) => {
-    if (!videoRef.current) return;
+    if (!videoRef.current) {
+return;
+}
     videoRef.current.currentTime = Math.max(
       0,
       Math.min(duration, videoRef.current.currentTime + seconds)
@@ -138,7 +144,9 @@ export function ExplainerVideo({
   };
 
   const handleTimeUpdate = () => {
-    if (!videoRef.current) return;
+    if (!videoRef.current) {
+return;
+}
     const time = videoRef.current.currentTime;
     setCurrentTime(time);
     onProgress?.(time / duration);
@@ -150,14 +158,18 @@ export function ExplainerVideo({
   };
 
   const handleSeek = (value: number[]) => {
-    if (!videoRef.current) return;
+    if (!videoRef.current) {
+return;
+}
     const time = (value[0] / 100) * duration;
     videoRef.current.currentTime = time;
     setCurrentTime(time);
   };
 
   const handleVolumeChange = (value: number[]) => {
-    if (!videoRef.current) return;
+    if (!videoRef.current) {
+return;
+}
     const newVolume = value[0] / 100;
     videoRef.current.volume = newVolume;
     setVolume(newVolume);
@@ -165,13 +177,17 @@ export function ExplainerVideo({
   };
 
   const toggleMute = () => {
-    if (!videoRef.current) return;
+    if (!videoRef.current) {
+return;
+}
     videoRef.current.muted = !isMuted;
     setIsMuted(!isMuted);
   };
 
   const toggleFullscreen = async () => {
-    if (!containerRef.current) return;
+    if (!containerRef.current) {
+return;
+}
 
     if (!isFullscreen) {
       await containerRef.current.requestFullscreen();
@@ -182,7 +198,9 @@ export function ExplainerVideo({
   };
 
   const handlePlaybackRateChange = (rate: number) => {
-    if (!videoRef.current) return;
+    if (!videoRef.current) {
+return;
+}
     videoRef.current.playbackRate = rate;
     setPlaybackRate(rate);
   };

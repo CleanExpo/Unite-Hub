@@ -6,7 +6,7 @@
  * Returns Prometheus-formatted metrics for monitoring and alerting
  */
 
-/* eslint-disable no-undef, no-console */
+ 
 
 import { NextRequest, NextResponse } from 'next/server';
 import { exportPrometheus } from '@/lib/monitoring/error-metrics';

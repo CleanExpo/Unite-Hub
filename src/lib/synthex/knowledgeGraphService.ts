@@ -201,7 +201,9 @@ export async function getNode(tenantId: string, nodeId: string): Promise<KGNode 
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') return null;
+    if (error.code === 'PGRST116') {
+return null;
+}
     console.error('Error fetching node:', error);
     throw new Error(`Failed to get node: ${error.message}`);
   }

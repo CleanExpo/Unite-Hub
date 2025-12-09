@@ -17,23 +17,37 @@ const formatSubmissionTime = (dateString: string) => {
   const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
   const diffDays = Math.floor(diffHours / 24);
 
-  if (diffHours < 1) return "Just now";
-  if (diffHours < 24) return `${diffHours} ${diffHours === 1 ? "hour" : "hours"} ago`;
-  if (diffDays === 1) return "1 day ago";
+  if (diffHours < 1) {
+return "Just now";
+}
+  if (diffHours < 24) {
+return `${diffHours} ${diffHours === 1 ? "hour" : "hours"} ago`;
+}
+  if (diffDays === 1) {
+return "1 day ago";
+}
   return `${diffDays} days ago`;
 };
 
 // Helper function to format reviewed time
 const formatReviewedTime = (dateString: string | null) => {
-  if (!dateString) return null;
+  if (!dateString) {
+return null;
+}
   const date = new Date(dateString);
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
   const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
 
-  if (diffHours < 1) return "Just now";
-  if (diffHours < 24) return `Today at ${date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}`;
-  if (diffHours < 48) return `Yesterday at ${date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}`;
+  if (diffHours < 1) {
+return "Just now";
+}
+  if (diffHours < 24) {
+return `Today at ${date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}`;
+}
+  if (diffHours < 48) {
+return `Yesterday at ${date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}`;
+}
   return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 };
 
@@ -88,7 +102,9 @@ export default function ApprovalsPage() {
   );
 
   const handleApprove = async (id: string) => {
-    if (!userId) return;
+    if (!userId) {
+return;
+}
     try {
       await approve(id, userId);
     } catch (err) {
@@ -97,7 +113,9 @@ export default function ApprovalsPage() {
   };
 
   const handleDecline = async (id: string) => {
-    if (!userId) return;
+    if (!userId) {
+return;
+}
     try {
       await decline(id, userId, "Needs revisions");
     } catch (err) {
@@ -106,7 +124,9 @@ export default function ApprovalsPage() {
   };
 
   const handleApproveAll = async () => {
-    if (!userId) return;
+    if (!userId) {
+return;
+}
     try {
       await Promise.all(pendingApprovals.map((a) => approve(a.id, userId)));
     } catch (err) {
@@ -115,7 +135,9 @@ export default function ApprovalsPage() {
   };
 
   const getFilteredApprovals = (approvalList: typeof pendingApprovals) => {
-    if (priorityFilter === "all") return approvalList;
+    if (priorityFilter === "all") {
+return approvalList;
+}
     return approvalList.filter((a) => a.priority === priorityFilter);
   };
 

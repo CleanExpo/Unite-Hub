@@ -42,7 +42,9 @@ export function EmailAddressManager({
   const [isLoading, setIsLoading] = useState(false);
 
   const handleAddEmail = async () => {
-    if (!newEmail) return;
+    if (!newEmail) {
+return;
+}
     setIsLoading(true);
     try {
       await onAddEmail(newEmail, newLabel);

@@ -117,7 +117,9 @@ export function DripCampaignBuilder({
         });
       }
 
-      if (onSave) onSave(newCampaign);
+      if (onSave) {
+onSave(newCampaign);
+}
       alert("Campaign saved!");
     } catch (error) {
       console.error("Save failed:", error);

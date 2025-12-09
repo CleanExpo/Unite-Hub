@@ -204,7 +204,9 @@ export async function canGenerateVisual(
     used = queue.graphics_used_month;
   }
 
-  if (quota === -1) return { allowed: true, quotaRemaining: -1 }; // Unlimited
+  if (quota === -1) {
+return { allowed: true, quotaRemaining: -1 };
+} // Unlimited
 
   if (used >= quota) {
     return {
@@ -275,7 +277,7 @@ export async function incrementQuotaUsage(
   planCode: string
 ): Promise<boolean> {
   // Determine which quota to increment
-  let increment: Record<string, number> = {
+  const increment: Record<string, number> = {
     updated_at: new Date().toISOString(),
   };
 

@@ -14,7 +14,7 @@
  * @module lib/tracing/opentelemetry-setup
  */
 
-/* eslint-disable no-console, no-undef */
+ 
 
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';

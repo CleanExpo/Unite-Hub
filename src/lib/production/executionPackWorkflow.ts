@@ -76,7 +76,9 @@ export async function generateExecutionPack(
     weekEnd
   );
 
-  if (!pack) return null;
+  if (!pack) {
+return null;
+}
 
   await updatePackStatus(pack.id, 'generating');
 

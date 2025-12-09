@@ -355,9 +355,15 @@ function calculateLeakAlignedScores(
 ): LeakAlignedScores {
   // NavBoost potential (based on Core Web Vitals and user experience)
   let navboostPotential = 70;
-  if (coreWebVitals.lcp && coreWebVitals.lcp < 2500) navboostPotential += 10;
-  if (coreWebVitals.cls && coreWebVitals.cls < 0.1) navboostPotential += 10;
-  if (mobileMetrics.isMobileFriendly) navboostPotential += 10;
+  if (coreWebVitals.lcp && coreWebVitals.lcp < 2500) {
+navboostPotential += 10;
+}
+  if (coreWebVitals.cls && coreWebVitals.cls < 0.1) {
+navboostPotential += 10;
+}
+  if (mobileMetrics.isMobileFriendly) {
+navboostPotential += 10;
+}
 
   // Technical health score
   let technicalHealthScore = 100;
@@ -373,9 +379,15 @@ function calculateLeakAlignedScores(
 
   // User experience score
   let userExperienceScore = 50;
-  if (coreWebVitals.lcp && coreWebVitals.lcp < 2500) userExperienceScore += 15;
-  if (coreWebVitals.cls && coreWebVitals.cls < 0.1) userExperienceScore += 15;
-  if (mobileMetrics.isMobileFriendly) userExperienceScore += 20;
+  if (coreWebVitals.lcp && coreWebVitals.lcp < 2500) {
+userExperienceScore += 15;
+}
+  if (coreWebVitals.cls && coreWebVitals.cls < 0.1) {
+userExperienceScore += 15;
+}
+  if (mobileMetrics.isMobileFriendly) {
+userExperienceScore += 20;
+}
 
   return {
     navboostPotential: Math.min(100, navboostPotential),
@@ -462,14 +474,14 @@ export async function runAudit(jobId: string): Promise<RunAuditResult> {
 
     // Initialize result structures
     let coreWebVitals: CoreWebVitals = {};
-    let technicalIssues: TechnicalIssue[] = [];
-    let mobileMetrics: MobileMetrics = {
+    const technicalIssues: TechnicalIssue[] = [];
+    const mobileMetrics: MobileMetrics = {
       isMobileFriendly: true,
       viewportConfigured: true,
       textSizeAppropriate: true,
       tapTargetsAdequate: true,
     };
-    let securityMetrics: SecurityMetrics = {
+    const securityMetrics: SecurityMetrics = {
       hasHttps: job.target_identifier.startsWith('https'),
       hasMixedContent: false,
       hasSecurityHeaders: false,
@@ -609,7 +621,9 @@ export async function getAuditResults(jobId: string): Promise<SEOAuditResult | n
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') return null;
+      if (error.code === 'PGRST116') {
+return null;
+}
       console.error('[SEO Audit] Get results error:', error);
       return null;
     }
@@ -638,7 +652,9 @@ export async function getAuditJob(jobId: string): Promise<SEOAuditJob | null> {
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') return null;
+      if (error.code === 'PGRST116') {
+return null;
+}
       console.error('[SEO Audit] Get job error:', error);
       return null;
     }

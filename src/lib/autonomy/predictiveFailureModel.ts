@@ -383,7 +383,9 @@ class PredictiveFailureModel {
    * Private: Calculate risk signal from autonomy runs
    */
   private calculateRiskSignal(runs: any[]): number {
-    if (runs.length === 0) return 0;
+    if (runs.length === 0) {
+return 0;
+}
 
     const recentRuns = runs.slice(0, 10);
     const avgRiskScore = recentRuns.reduce((sum, r) => sum + (r.risk_score || 0), 0) / recentRuns.length;
@@ -399,7 +401,9 @@ class PredictiveFailureModel {
    * Private: Calculate uncertainty signal
    */
   private calculateUncertaintySignal(runs: any[]): number {
-    if (runs.length === 0) return 0;
+    if (runs.length === 0) {
+return 0;
+}
 
     const recentRuns = runs.slice(0, 10);
     const avgUncertainty = recentRuns.reduce((sum, r) => sum + (r.uncertainty_score || 0), 0) / recentRuns.length;
@@ -414,7 +418,9 @@ class PredictiveFailureModel {
    * Private: Calculate memory signal
    */
   private calculateMemorySignal(memories: any[]): number {
-    if (memories.length === 0) return 0;
+    if (memories.length === 0) {
+return 0;
+}
 
     // Count memories with low confidence
     const lowConfidenceCount = memories.filter(m => (m.confidence || 70) < 50).length;
@@ -430,7 +436,9 @@ class PredictiveFailureModel {
    * Private: Calculate agent performance signal
    */
   private calculateAgentPerformanceSignal(runs: any[]): number {
-    if (runs.length === 0) return 0;
+    if (runs.length === 0) {
+return 0;
+}
 
     const recentRuns = runs.slice(0, 10);
 
@@ -456,7 +464,9 @@ class PredictiveFailureModel {
    * Private: Calculate orchestration signal
    */
   private calculateOrchestrationSignal(runs: any[]): number {
-    if (runs.length === 0) return 0;
+    if (runs.length === 0) {
+return 0;
+}
 
     const recentRuns = runs.slice(0, 10);
 
@@ -474,7 +484,9 @@ class PredictiveFailureModel {
    * Private: Calculate error signal
    */
   private calculateErrorSignal(events: any[]): number {
-    if (events.length === 0) return 0;
+    if (events.length === 0) {
+return 0;
+}
 
     const recentEvents = events.slice(0, 50);
 
@@ -492,7 +504,9 @@ class PredictiveFailureModel {
    * Private: Calculate trend
    */
   private calculateTrend(values: number[]): 'improving' | 'stable' | 'worsening' {
-    if (values.length < 3) return 'stable';
+    if (values.length < 3) {
+return 'stable';
+}
 
     const recent = values.slice(0, 3);
     const older = values.slice(-3);
@@ -502,8 +516,12 @@ class PredictiveFailureModel {
 
     const change = ((recentAvg - olderAvg) / Math.max(olderAvg, 1)) * 100;
 
-    if (change > 15) return 'worsening';
-    if (change < -15) return 'improving';
+    if (change > 15) {
+return 'worsening';
+}
+    if (change < -15) {
+return 'improving';
+}
 
     return 'stable';
   }
@@ -713,7 +731,7 @@ class PredictiveFailureModel {
    */
   private calculateSeverity(probability: number, failureType: string): number {
     // Base severity from probability
-    let baseSeverity = Math.ceil(probability / 20);
+    const baseSeverity = Math.ceil(probability / 20);
 
     // Type-based severity adjustments
     const multipliers: Record<string, number> = {

@@ -129,11 +129,21 @@ export interface VisualContext {
 function determineTimeOfDay(timestamp: string): TimeOfDay {
   const hour = new Date(timestamp).getHours();
 
-  if (hour < 6) return 'early_morning';
-  if (hour < 9) return 'morning';
-  if (hour < 12) return 'midday';
-  if (hour < 17) return 'afternoon';
-  if (hour < 21) return 'evening';
+  if (hour < 6) {
+return 'early_morning';
+}
+  if (hour < 9) {
+return 'morning';
+}
+  if (hour < 12) {
+return 'midday';
+}
+  if (hour < 17) {
+return 'afternoon';
+}
+  if (hour < 21) {
+return 'evening';
+}
   return 'night';
 }
 
@@ -226,27 +236,47 @@ function generateSceneTags(objects: VisualObject[], safetyMarkers: any, crowdedn
   const tags: string[] = [];
 
   // Crowdedness
-  if (crowdedness > 0.7) tags.push('crowded');
-  if (crowdedness < 0.2) tags.push('quiet');
+  if (crowdedness > 0.7) {
+tags.push('crowded');
+}
+  if (crowdedness < 0.2) {
+tags.push('quiet');
+}
 
   // Clutter
   const objectCount = objects.length;
-  if (objectCount > 10) tags.push('cluttered');
-  if (objectCount < 3) tags.push('minimal');
+  if (objectCount > 10) {
+tags.push('cluttered');
+}
+  if (objectCount < 3) {
+tags.push('minimal');
+}
 
   // Safety
-  if (safetyMarkers.vehicleTraffic) tags.push('traffic');
-  if (safetyMarkers.machinery) tags.push('machinery');
-  if (safetyMarkers.hazards.length > 0) tags.push('hazardous');
+  if (safetyMarkers.vehicleTraffic) {
+tags.push('traffic');
+}
+  if (safetyMarkers.machinery) {
+tags.push('machinery');
+}
+  if (safetyMarkers.hazards.length > 0) {
+tags.push('hazardous');
+}
 
   // Light
   const avgBrightness = objects.reduce((sum, o) => sum + (o.color === 'dark' ? 0.3 : 0.8), 0) / Math.max(objects.length, 1);
-  if (avgBrightness < 0.4) tags.push('dimly_lit');
-  if (avgBrightness > 0.8) tags.push('bright');
+  if (avgBrightness < 0.4) {
+tags.push('dimly_lit');
+}
+  if (avgBrightness > 0.8) {
+tags.push('bright');
+}
 
   // Motion
   const movingObjects = objects.filter((o) => o.activity && o.activity !== 'stationary');
-  if (movingObjects.length > 0) tags.push('dynamic');
+  if (movingObjects.length > 0) {
+tags.push('dynamic');
+}
 
   return tags;
 }

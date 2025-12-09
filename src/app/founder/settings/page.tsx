@@ -72,7 +72,9 @@ export default function FounderSettingsPage() {
   };
 
   const handleSaveMode = async () => {
-    if (!mode) return;
+    if (!mode) {
+return;
+}
 
     if (selectedMode === mode.mode) {
       setError('No changes to save. New mode is the same as current mode.');

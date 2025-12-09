@@ -330,7 +330,9 @@ export function collectStoryData(
     const activation = collectActivationData(workspaceId, timeRange);
     milestones = [...milestones, ...activation.milestones];
     events = [...events, ...activation.events];
-    if (activation.insufficient) missingSources.push('activation');
+    if (activation.insufficient) {
+missingSources.push('activation');
+}
   }
 
   if (theme === 'performance' || theme === 'mixed') {
@@ -338,7 +340,9 @@ export function collectStoryData(
     kpis = [...kpis, ...performance.kpis];
     trends = [...trends, ...performance.trends];
     events = [...events, ...performance.events];
-    if (performance.insufficient) missingSources.push('performance');
+    if (performance.insufficient) {
+missingSources.push('performance');
+}
   }
 
   if (theme === 'creative' || theme === 'mixed') {
@@ -346,7 +350,9 @@ export function collectStoryData(
     milestones = [...milestones, ...creative.milestones];
     events = [...events, ...creative.events];
     kpis = [...kpis, ...creative.kpis];
-    if (creative.insufficient) missingSources.push('creative');
+    if (creative.insufficient) {
+missingSources.push('creative');
+}
   }
 
   if (theme === 'success' || theme === 'mixed') {
@@ -354,7 +360,9 @@ export function collectStoryData(
     kpis = [...kpis, ...success.kpis];
     trends = [...trends, ...success.trends];
     events = [...events, ...success.events];
-    if (success.insufficient) missingSources.push('success');
+    if (success.insufficient) {
+missingSources.push('success');
+}
   }
 
   // Sort events by date

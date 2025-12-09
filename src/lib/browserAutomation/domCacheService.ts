@@ -94,7 +94,9 @@ class DomCacheService {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       result = data;
     } else {
       const { data, error } = await supabase
@@ -103,7 +105,9 @@ class DomCacheService {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       result = data;
     }
 
@@ -216,36 +220,48 @@ class DomCacheService {
     // Try each selector strategy in order of specificity
     if (selector.id) {
       const found = elements.find((e) => e.id === selector.id);
-      if (found) return found;
+      if (found) {
+return found;
+}
     }
 
     if (selector.xpath) {
       const found = elements.find((e) => e.xpath === selector.xpath);
-      if (found) return found;
+      if (found) {
+return found;
+}
     }
 
     if (selector.cssSelector) {
       const found = elements.find((e) => e.cssSelector === selector.cssSelector);
-      if (found) return found;
+      if (found) {
+return found;
+}
     }
 
     if (selector.name) {
       const found = elements.find((e) => e.name === selector.name);
-      if (found) return found;
+      if (found) {
+return found;
+}
     }
 
     if (selector.ariaLabel) {
       const found = elements.find((e) =>
         e.ariaLabel?.toLowerCase() === selector.ariaLabel!.toLowerCase()
       );
-      if (found) return found;
+      if (found) {
+return found;
+}
     }
 
     if (selector.text) {
       const found = elements.find((e) =>
         e.text?.toLowerCase() === selector.text!.toLowerCase()
       );
-      if (found) return found;
+      if (found) {
+return found;
+}
     }
 
     return null;
@@ -414,9 +430,15 @@ class DomCacheService {
         addedElements.push(newEl);
       } else {
         const changes: string[] = [];
-        if (oldEl.text !== newEl.text) changes.push('text');
-        if (oldEl.visible !== newEl.visible) changes.push('visibility');
-        if (oldEl.disabled !== newEl.disabled) changes.push('disabled');
+        if (oldEl.text !== newEl.text) {
+changes.push('text');
+}
+        if (oldEl.visible !== newEl.visible) {
+changes.push('visibility');
+}
+        if (oldEl.disabled !== newEl.disabled) {
+changes.push('disabled');
+}
         if (changes.length > 0) {
           changedElements.push({ old: oldEl, new: newEl, changes });
         }

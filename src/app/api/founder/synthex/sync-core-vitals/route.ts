@@ -118,8 +118,12 @@ function generateVitalsStatus(
     (inp !== undefined && inp > 500 ? 'poor' : inp !== undefined && inp > 200 ? 'needs_improvement' : 'good'),
   ];
 
-  if (metrics.includes('poor')) return 'poor';
-  if (metrics.includes('needs_improvement')) return 'needs_improvement';
+  if (metrics.includes('poor')) {
+return 'poor';
+}
+  if (metrics.includes('needs_improvement')) {
+return 'needs_improvement';
+}
   return 'good';
 }
 

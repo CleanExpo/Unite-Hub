@@ -14,13 +14,17 @@ export default function StabilityEnforcementPage() {
   const [records, setRecords] = useState<StabilityEnforcementRecord[]>([]);
 
   useEffect(() => {
-    if (currentOrganization?.org_id) fetchData();
+    if (currentOrganization?.org_id) {
+fetchData();
+}
   }, [currentOrganization]);
 
   const fetchData = async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session || !currentOrganization) return;
+      if (!session || !currentOrganization) {
+return;
+}
       const response = await fetch(`/api/evolution/stability/overview?tenantId=${currentOrganization.org_id}`, {
         headers: { 'Authorization': `Bearer ${session.access_token}` },
       });
@@ -29,11 +33,16 @@ export default function StabilityEnforcementPage() {
         setMode(data.mode);
         setRecords(data.records || []);
       }
-    } catch (error) { console.error('Failed:', error); }
-    finally { setLoading(false); }
+    } catch (error) {
+ console.error('Failed:', error); 
+} finally {
+ setLoading(false); 
+}
   };
 
-  if (loading) return <div className="container mx-auto p-6"><div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div></div>;
+  if (loading) {
+return <div className="container mx-auto p-6"><div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div></div>;
+}
 
   const getModeColor = (m: string) => {
     switch (m) {

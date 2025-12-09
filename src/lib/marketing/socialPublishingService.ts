@@ -165,7 +165,9 @@ export async function schedulePost(
       })
       .eq('id', assetId);
 
-    if (updateError) throw updateError;
+    if (updateError) {
+throw updateError;
+}
 
     const scheduledPost: ScheduledPost = {
       id: `scheduled-${assetId}`,
@@ -220,7 +222,9 @@ export async function getScheduledPosts(
 
     const { data, error } = await query;
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { data: data || [], error: null };
   } catch (err) {
@@ -241,7 +245,9 @@ export async function cancelScheduledPost(assetId: string): Promise<{ success: b
       .eq('id', assetId)
       .eq('status', 'scheduled');
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true, error: null };
   } catch (err) {
@@ -415,7 +421,9 @@ export function generateCaptionVariants(
 }
 
 function truncateCaption(text: string, maxLength: number): string {
-  if (text.length <= maxLength) return text;
+  if (text.length <= maxLength) {
+return text;
+}
   return text.substring(0, maxLength - 3) + '...';
 }
 

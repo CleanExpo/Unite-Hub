@@ -185,9 +185,15 @@ async function sendViaSendGrid(options: EmailOptions): Promise<EmailResult> {
       html: options.html,
     };
 
-    if (options.replyTo) msg.replyTo = options.replyTo;
-    if (options.cc) msg.cc = options.cc;
-    if (options.bcc) msg.bcc = options.bcc;
+    if (options.replyTo) {
+msg.replyTo = options.replyTo;
+}
+    if (options.cc) {
+msg.cc = options.cc;
+}
+    if (options.bcc) {
+msg.bcc = options.bcc;
+}
     if (options.attachments) {
       msg.attachments = options.attachments.map(att => ({
         filename: att.filename,
@@ -271,10 +277,18 @@ async function sendViaSMTP(options: EmailOptions): Promise<EmailResult> {
       html: options.html,
     };
 
-    if (options.replyTo) mailOptions.replyTo = options.replyTo;
-    if (options.cc) mailOptions.cc = options.cc;
-    if (options.bcc) mailOptions.bcc = options.bcc;
-    if (options.attachments) mailOptions.attachments = options.attachments;
+    if (options.replyTo) {
+mailOptions.replyTo = options.replyTo;
+}
+    if (options.cc) {
+mailOptions.cc = options.cc;
+}
+    if (options.bcc) {
+mailOptions.bcc = options.bcc;
+}
+    if (options.attachments) {
+mailOptions.attachments = options.attachments;
+}
 
     const info = await smtpTransporter.sendMail(mailOptions);
 

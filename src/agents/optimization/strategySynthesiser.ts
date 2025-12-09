@@ -182,8 +182,12 @@ export function scorePlayFeasibility(play: StrategyPlay): number {
   let score = 0.5; // Base score
 
   // Adjust by priority
-  if (play.priority === 'high') score += 0.2;
-  if (play.priority === 'medium') score += 0.1;
+  if (play.priority === 'high') {
+score += 0.2;
+}
+  if (play.priority === 'medium') {
+score += 0.1;
+}
 
   // Adjust by number of agents (more = complex = lower feasibility)
   score -= (play.agentsInvolved.length - 1) * 0.05;
@@ -208,7 +212,9 @@ export function getRankedStrategies(): Array<StrategyPlay & { feasibilityScore: 
       const aPriority = priorityOrder[a.priority] ?? 0;
       const bPriority = priorityOrder[b.priority] ?? 0;
 
-      if (bPriority !== aPriority) return bPriority - aPriority;
+      if (bPriority !== aPriority) {
+return bPriority - aPriority;
+}
       return b.feasibilityScore - a.feasibilityScore;
     });
 }

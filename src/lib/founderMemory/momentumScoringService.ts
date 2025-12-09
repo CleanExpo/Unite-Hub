@@ -252,18 +252,32 @@ class MomentumScoringService {
     let score = 50; // Base score
 
     // Adjust based on campaign activity
-    if (activeCampaigns > 0) score += 10;
-    if (avgOpenRate > 0.3) score += 10;
-    if (avgClickRate > 0.05) score += 10;
-    if ((emailsSent || 0) > 50) score += 10;
+    if (activeCampaigns > 0) {
+score += 10;
+}
+    if (avgOpenRate > 0.3) {
+score += 10;
+}
+    if (avgClickRate > 0.05) {
+score += 10;
+}
+    if ((emailsSent || 0) > 50) {
+score += 10;
+}
 
     // Penalize low activity
-    if (activeCampaigns === 0 && (emailsSent || 0) < 10) score -= 20;
+    if (activeCampaigns === 0 && (emailsSent || 0) < 10) {
+score -= 20;
+}
 
     score = Math.max(0, Math.min(100, score));
 
-    if (avgOpenRate > 0.3) signals.highlights.push(`Strong open rate: ${(avgOpenRate * 100).toFixed(1)}%`);
-    if (activeCampaigns > 2) signals.highlights.push(`${activeCampaigns} active campaigns running`);
+    if (avgOpenRate > 0.3) {
+signals.highlights.push(`Strong open rate: ${(avgOpenRate * 100).toFixed(1)}%`);
+}
+    if (activeCampaigns > 2) {
+signals.highlights.push(`${activeCampaigns} active campaigns running`);
+}
 
     return { domain: 'marketing', score, trend: 0, signals };
   }
@@ -312,19 +326,34 @@ class MomentumScoringService {
     // Calculate score
     let score = 50;
 
-    if (hotLeads > 5) score += 15;
-    else if (hotLeads > 0) score += 10;
+    if (hotLeads > 5) {
+score += 15;
+} else if (hotLeads > 0) {
+score += 10;
+}
 
-    if (warmLeads > 10) score += 10;
-    if (convertedCount > 0) score += 15;
-    if (hotPreClients > 3) score += 10;
+    if (warmLeads > 10) {
+score += 10;
+}
+    if (convertedCount > 0) {
+score += 15;
+}
+    if (hotPreClients > 3) {
+score += 10;
+}
 
-    if (hotLeads === 0 && warmLeads < 3) score -= 20;
+    if (hotLeads === 0 && warmLeads < 3) {
+score -= 20;
+}
 
     score = Math.max(0, Math.min(100, score));
 
-    if (hotLeads > 3) signals.highlights.push(`${hotLeads} hot leads ready for conversion`);
-    if (convertedCount > 0) signals.highlights.push(`${convertedCount} conversions this period`);
+    if (hotLeads > 3) {
+signals.highlights.push(`${hotLeads} hot leads ready for conversion`);
+}
+    if (convertedCount > 0) {
+signals.highlights.push(`${convertedCount} conversions this period`);
+}
 
     return { domain: 'sales', score, trend: 0, signals };
   }
@@ -377,18 +406,29 @@ class MomentumScoringService {
     // Calculate score
     let score = 50;
 
-    if (successRate > 0.95) score += 20;
-    else if (successRate > 0.8) score += 10;
-    else if (successRate < 0.7) score -= 15;
+    if (successRate > 0.95) {
+score += 20;
+} else if (successRate > 0.8) {
+score += 10;
+} else if (successRate < 0.7) {
+score -= 15;
+}
 
-    if (emailDeliveryRate > 0.95) score += 15;
-    else if (emailDeliveryRate > 0.85) score += 10;
+    if (emailDeliveryRate > 0.95) {
+score += 15;
+} else if (emailDeliveryRate > 0.85) {
+score += 10;
+}
 
-    if (totalAutomations > 100) score += 5;
+    if (totalAutomations > 100) {
+score += 5;
+}
 
     score = Math.max(0, Math.min(100, score));
 
-    if (successRate > 0.9) signals.highlights.push(`${(successRate * 100).toFixed(1)}% automation success rate`);
+    if (successRate > 0.9) {
+signals.highlights.push(`${(successRate * 100).toFixed(1)}% automation success rate`);
+}
 
     return { domain: 'delivery', score, trend: 0, signals };
   }
@@ -431,15 +471,23 @@ class MomentumScoringService {
     // Calculate score
     let score = 50;
 
-    if ((contentGenerated || 0) > 20) score += 15;
-    else if ((contentGenerated || 0) > 5) score += 10;
+    if ((contentGenerated || 0) > 20) {
+score += 15;
+} else if ((contentGenerated || 0) > 5) {
+score += 10;
+}
 
-    if ((aiProcessed || 0) > 50) score += 15;
-    else if ((aiProcessed || 0) > 20) score += 10;
+    if ((aiProcessed || 0) > 50) {
+score += 15;
+} else if ((aiProcessed || 0) > 20) {
+score += 10;
+}
 
     score = Math.max(0, Math.min(100, score));
 
-    if ((contentGenerated || 0) > 10) signals.highlights.push(`${contentGenerated} content pieces generated`);
+    if ((contentGenerated || 0) > 10) {
+signals.highlights.push(`${contentGenerated} content pieces generated`);
+}
 
     return { domain: 'product', score, trend: 0, signals };
   }
@@ -490,18 +538,30 @@ class MomentumScoringService {
     // Calculate score
     let score = 50;
 
-    if (avgSentiment > 0.7) score += 20;
-    else if (avgSentiment > 0.5) score += 10;
-    else if (avgSentiment < 0.4) score -= 15;
+    if (avgSentiment > 0.7) {
+score += 20;
+} else if (avgSentiment > 0.5) {
+score += 10;
+} else if (avgSentiment < 0.4) {
+score -= 15;
+}
 
-    if (positiveCount > negativeCount * 2) score += 10;
-    if (negativeCount > positiveCount) score -= 10;
+    if (positiveCount > negativeCount * 2) {
+score += 10;
+}
+    if (negativeCount > positiveCount) {
+score -= 10;
+}
 
-    if ((activeClients || 0) > 20) score += 10;
+    if ((activeClients || 0) > 20) {
+score += 10;
+}
 
     score = Math.max(0, Math.min(100, score));
 
-    if (avgSentiment > 0.65) signals.highlights.push(`${(avgSentiment * 100).toFixed(0)}% positive client sentiment`);
+    if (avgSentiment > 0.65) {
+signals.highlights.push(`${(avgSentiment * 100).toFixed(0)}% positive client sentiment`);
+}
 
     return { domain: 'clients', score, trend: 0, signals };
   }
@@ -538,15 +598,23 @@ class MomentumScoringService {
     // Calculate score
     let score = 60; // Engineering baseline
 
-    if (errorRate < 0.02) score += 25;
-    else if (errorRate < 0.05) score += 15;
-    else if (errorRate > 0.1) score -= 20;
+    if (errorRate < 0.02) {
+score += 25;
+} else if (errorRate < 0.05) {
+score += 15;
+} else if (errorRate > 0.1) {
+score -= 20;
+}
 
-    if (totalLogs > 500) score += 5; // Active system
+    if (totalLogs > 500) {
+score += 5;
+} // Active system
 
     score = Math.max(0, Math.min(100, score));
 
-    if (errorRate < 0.03) signals.highlights.push(`${((1 - errorRate) * 100).toFixed(1)}% system reliability`);
+    if (errorRate < 0.03) {
+signals.highlights.push(`${((1 - errorRate) * 100).toFixed(1)}% system reliability`);
+}
 
     return { domain: 'engineering', score, trend: 0, signals };
   }
@@ -581,14 +649,21 @@ class MomentumScoringService {
     // Calculate score
     let score = 50;
 
-    if (convertedClients > 10) score += 20;
-    else if (convertedClients > 5) score += 10;
+    if (convertedClients > 10) {
+score += 20;
+} else if (convertedClients > 5) {
+score += 10;
+}
 
-    if (highValueLeads > 5) score += 15;
+    if (highValueLeads > 5) {
+score += 15;
+}
 
     score = Math.max(0, Math.min(100, score));
 
-    if (convertedClients > 5) signals.highlights.push(`${convertedClients} converted clients (revenue potential)`);
+    if (convertedClients > 5) {
+signals.highlights.push(`${convertedClients} converted clients (revenue potential)`);
+}
 
     return { domain: 'finance', score, trend: 0, signals };
   }
@@ -597,11 +672,17 @@ class MomentumScoringService {
    * Calculate trend from current and previous scores
    */
   private calculateTrend(current: number, previous?: number): TrendDirection {
-    if (previous === undefined) return 0;
+    if (previous === undefined) {
+return 0;
+}
 
     const diff = current - previous;
-    if (diff > 5) return 1; // Improving
-    if (diff < -5) return -1; // Declining
+    if (diff > 5) {
+return 1;
+} // Improving
+    if (diff < -5) {
+return -1;
+} // Declining
     return 0; // Stable
   }
 
@@ -623,7 +704,9 @@ class MomentumScoringService {
       .limit(1)
       .single();
 
-    if (error || !data) return null;
+    if (error || !data) {
+return null;
+}
     return this.mapDbToMomentum(data);
   }
 
@@ -669,10 +752,14 @@ Return JSON:
       });
 
       const textBlock = response.content.find((c) => c.type === 'text');
-      if (!textBlock) return {};
+      if (!textBlock) {
+return {};
+}
 
       const jsonMatch = textBlock.text.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) return {};
+      if (!jsonMatch) {
+return {};
+}
 
       return JSON.parse(jsonMatch[0]) as DomainNotes;
     } catch (error) {
@@ -694,7 +781,9 @@ Return JSON:
       .limit(1)
       .single();
 
-    if (error || !data) return null;
+    if (error || !data) {
+return null;
+}
     return this.mapDbToMomentum(data);
   }
 
@@ -714,7 +803,9 @@ Return JSON:
       .order('period_end', { ascending: false })
       .limit(limit);
 
-    if (error || !data) return [];
+    if (error || !data) {
+return [];
+}
     return data.map(this.mapDbToMomentum);
   }
 
@@ -722,7 +813,9 @@ Return JSON:
    * Helper: calculate average
    */
   private average(numbers: number[]): number {
-    if (numbers.length === 0) return 0;
+    if (numbers.length === 0) {
+return 0;
+}
     return numbers.reduce((a, b) => a + b, 0) / numbers.length;
   }
 

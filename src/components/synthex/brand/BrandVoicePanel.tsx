@@ -139,7 +139,9 @@ export default function BrandVoicePanel({ className = '' }: Props) {
 
   // Fetch voices
   const fetchVoices = useCallback(async () => {
-    if (!tenantId) return;
+    if (!tenantId) {
+return;
+}
     setLoading(true);
     try {
       const res = await fetch(`/api/synthex/brand/voice?tenantId=${tenantId}&activeOnly=false`);
@@ -179,7 +181,9 @@ export default function BrandVoicePanel({ className = '' }: Props) {
 
   // Save voice
   const handleSave = async () => {
-    if (!tenantId || !editingVoice) return;
+    if (!tenantId || !editingVoice) {
+return;
+}
 
     if (!editingVoice.brandName) {
       alert('Brand name is required');
@@ -222,8 +226,12 @@ export default function BrandVoicePanel({ className = '' }: Props) {
 
   // Delete voice
   const handleDelete = async (voice: BrandVoice) => {
-    if (!tenantId) return;
-    if (!confirm(`Delete "${voice.name}"? This cannot be undone.`)) return;
+    if (!tenantId) {
+return;
+}
+    if (!confirm(`Delete "${voice.name}"? This cannot be undone.`)) {
+return;
+}
 
     try {
       const res = await fetch(
@@ -244,7 +252,9 @@ export default function BrandVoicePanel({ className = '' }: Props) {
 
   // Helper to add to array
   const addToArray = (key: keyof BrandVoice, value: string, setter: (val: string) => void) => {
-    if (!value.trim() || !editingVoice) return;
+    if (!value.trim() || !editingVoice) {
+return;
+}
     const currentArray = (editingVoice[key] as string[]) || [];
     if (!currentArray.includes(value.trim())) {
       setEditingVoice({
@@ -257,7 +267,9 @@ export default function BrandVoicePanel({ className = '' }: Props) {
 
   // Helper to remove from array
   const removeFromArray = (key: keyof BrandVoice, value: string) => {
-    if (!editingVoice) return;
+    if (!editingVoice) {
+return;
+}
     const currentArray = (editingVoice[key] as string[]) || [];
     setEditingVoice({
       ...editingVoice,

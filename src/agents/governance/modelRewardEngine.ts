@@ -41,7 +41,7 @@ export interface ModelComparison {
 
 // In-memory reward tracking
 let rewardHistory: ModelReward[] = [];
-let taskMetricsLog: TaskMetrics[] = [];
+const taskMetricsLog: TaskMetrics[] = [];
 
 /**
  * Record task execution and reward
@@ -106,7 +106,9 @@ export function getModelRewardHistory(
 export function getModelAverageScore(modelId: string): ModelScore | null {
   const rewards = rewardHistory.filter(r => r.modelId === modelId);
 
-  if (rewards.length === 0) return null;
+  if (rewards.length === 0) {
+return null;
+}
 
   const avgQualityScore =
     rewards.reduce((sum, r) => sum + r.qualityScore, 0) / rewards.length;
@@ -142,7 +144,9 @@ export function getModelScoreForTask(modelId: string, taskType: string): ModelSc
     r => r.modelId === modelId && r.taskType === taskType
   );
 
-  if (rewards.length === 0) return null;
+  if (rewards.length === 0) {
+return null;
+}
 
   const avgQualityScore =
     rewards.reduce((sum, r) => sum + r.qualityScore, 0) / rewards.length;
@@ -305,14 +309,23 @@ export function identifyModelWeaknesses(modelId: string): {
   const weakAreas: string[] = [];
   const strengths: string[] = [];
 
-  if (avgQuality < 60) weakAreas.push('output quality');
-  else if (avgQuality > 80) strengths.push('output quality');
+  if (avgQuality < 60) {
+weakAreas.push('output quality');
+} else if (avgQuality > 80) {
+strengths.push('output quality');
+}
 
-  if (avgCost < 60) weakAreas.push('cost efficiency');
-  else if (avgCost > 80) strengths.push('cost efficiency');
+  if (avgCost < 60) {
+weakAreas.push('cost efficiency');
+} else if (avgCost > 80) {
+strengths.push('cost efficiency');
+}
 
-  if (avgLatency < 60) weakAreas.push('latency performance');
-  else if (avgLatency > 80) strengths.push('latency performance');
+  if (avgLatency < 60) {
+weakAreas.push('latency performance');
+} else if (avgLatency > 80) {
+strengths.push('latency performance');
+}
 
   return {
     modelId,

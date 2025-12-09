@@ -82,10 +82,14 @@ export default function FounderReportCenterPage() {
   };
 
   const loadReport = async () => {
-    if (!selectedClient) return;
+    if (!selectedClient) {
+return;
+}
 
     const client = clients.find(c => c.client_id === selectedClient);
-    if (!client) return;
+    if (!client) {
+return;
+}
 
     try {
       const report = buildFounderReport({
@@ -102,7 +106,9 @@ export default function FounderReportCenterPage() {
   };
 
   const handleCopyMarkdown = async () => {
-    if (!currentReport) return;
+    if (!currentReport) {
+return;
+}
     try {
       const exported = exportReportToMarkdown(currentReport);
       await navigator.clipboard.writeText(exported.content);
@@ -114,7 +120,9 @@ export default function FounderReportCenterPage() {
   };
 
   const handleDownloadHTML = () => {
-    if (!currentReport) return;
+    if (!currentReport) {
+return;
+}
     const exported = exportReportToHTML(currentReport);
     const blob = new Blob([exported.content], { type: 'text/html' });
     const url = URL.createObjectURL(blob);

@@ -116,8 +116,12 @@ function normaliseCategory(signals: EngineSignal[]): SignalCategory {
   const upCount = signals.filter(s => s.trend === 'up').length;
   const downCount = signals.filter(s => s.trend === 'down').length;
   let trend: 'up' | 'down' | 'stable' = 'stable';
-  if (upCount > downCount && upCount > signals.length / 3) trend = 'up';
-  if (downCount > upCount && downCount > signals.length / 3) trend = 'down';
+  if (upCount > downCount && upCount > signals.length / 3) {
+trend = 'up';
+}
+  if (downCount > upCount && downCount > signals.length / 3) {
+trend = 'down';
+}
 
   return {
     score: Math.round(avgScore * 100) / 100,
@@ -145,7 +149,9 @@ function computeConfidenceScore(signalJson: SignalJson): number {
     .map(([, cat]) => cat as SignalCategory)
     .filter(cat => cat.signals.length > 0);
 
-  if (categories.length === 0) return 0;
+  if (categories.length === 0) {
+return 0;
+}
 
   return categories.reduce((sum, cat) => sum + cat.confidence, 0) / categories.length;
 }
@@ -183,7 +189,9 @@ function computeTrendShiftScore(signalJson: SignalJson): number {
     .map(([, cat]) => cat as SignalCategory)
     .filter(cat => cat.signals.length > 0);
 
-  if (categories.length === 0) return 0;
+  if (categories.length === 0) {
+return 0;
+}
 
   // Count categories with non-stable trends
   const shifting = categories.filter(cat => cat.trend !== 'stable').length;
@@ -200,17 +208,23 @@ function computeFatigueScore(signalJson: SignalJson): number {
 
   if (signalJson.creative.signals.length > 0) {
     totalIndicators++;
-    if (signalJson.creative.trend === 'down') fatigueIndicators++;
+    if (signalJson.creative.trend === 'down') {
+fatigueIndicators++;
+}
   }
 
   if (signalJson.performance.signals.length > 0) {
     totalIndicators++;
-    if (signalJson.performance.trend === 'down') fatigueIndicators++;
+    if (signalJson.performance.trend === 'down') {
+fatigueIndicators++;
+}
   }
 
   if (signalJson.campaign.signals.length > 0) {
     totalIndicators++;
-    if (signalJson.campaign.trend === 'down') fatigueIndicators++;
+    if (signalJson.campaign.trend === 'down') {
+fatigueIndicators++;
+}
   }
 
   return totalIndicators > 0 ? fatigueIndicators / totalIndicators : 0;
@@ -231,10 +245,14 @@ async function collectCreativeSignals(
     .gte('created_at', startDate.toISOString())
     .lte('created_at', endDate.toISOString());
 
-  if (clientId) query = query.eq('client_id', clientId);
+  if (clientId) {
+query = query.eq('client_id', clientId);
+}
 
   const { data } = await query.limit(50);
-  if (!data || data.length === 0) return [];
+  if (!data || data.length === 0) {
+return [];
+}
 
   return data.map(row => {
     const eventData = row.event_data as Record<string, unknown>;
@@ -265,7 +283,9 @@ async function collectPerformanceSignals(
     .lte('sent_at', endDate.toISOString())
     .limit(50);
 
-  if (!data || data.length === 0) return [];
+  if (!data || data.length === 0) {
+return [];
+}
 
   return data.flatMap(row => [
     {
@@ -301,10 +321,14 @@ async function collectRealitySignals(
     .gte('created_at', startDate.toISOString())
     .lte('created_at', endDate.toISOString());
 
-  if (clientId) query = query.eq('client_id', clientId);
+  if (clientId) {
+query = query.eq('client_id', clientId);
+}
 
   const { data } = await query.limit(10);
-  if (!data || data.length === 0) return [];
+  if (!data || data.length === 0) {
+return [];
+}
 
   return data.map(row => ({
     engine: 'reality',
@@ -330,10 +354,14 @@ async function collectOrmSignals(
     .gte('created_at', startDate.toISOString())
     .lte('created_at', endDate.toISOString());
 
-  if (clientId) query = query.eq('client_id', clientId);
+  if (clientId) {
+query = query.eq('client_id', clientId);
+}
 
   const { data } = await query.limit(50);
-  if (!data || data.length === 0) return [];
+  if (!data || data.length === 0) {
+return [];
+}
 
   return [{
     engine: 'orm',
@@ -358,10 +386,14 @@ async function collectAlignmentSignals(
     .select('ai_score, updated_at')
     .not('ai_score', 'is', null);
 
-  if (clientId) query = query.eq('id', clientId);
+  if (clientId) {
+query = query.eq('id', clientId);
+}
 
   const { data } = await query.limit(50);
-  if (!data || data.length === 0) return [];
+  if (!data || data.length === 0) {
+return [];
+}
 
   const avgScore = data.reduce((sum, c) => sum + (c.ai_score || 0), 0) / data.length;
 
@@ -430,7 +462,9 @@ async function collectCampaignSignals(
     .lte('created_at', endDate.toISOString())
     .limit(50);
 
-  if (!data || data.length === 0) return [];
+  if (!data || data.length === 0) {
+return [];
+}
 
   const sent = data.filter(c => c.status === 'sent').length;
   const total = data.length;
@@ -459,10 +493,14 @@ async function collectVifSignals(
     .gte('created_at', startDate.toISOString())
     .lte('created_at', endDate.toISOString());
 
-  if (clientId) query = query.eq('client_id', clientId);
+  if (clientId) {
+query = query.eq('client_id', clientId);
+}
 
   const { data } = await query.limit(50);
-  if (!data || data.length === 0) return [];
+  if (!data || data.length === 0) {
+return [];
+}
 
   return [{
     engine: 'vif',
@@ -488,10 +526,14 @@ async function collectStorySignals(
     .gte('created_at', startDate.toISOString())
     .lte('created_at', endDate.toISOString());
 
-  if (clientId) query = query.eq('client_id', clientId);
+  if (clientId) {
+query = query.eq('client_id', clientId);
+}
 
   const { data } = await query.limit(50);
-  if (!data || data.length === 0) return [];
+  if (!data || data.length === 0) {
+return [];
+}
 
   return [{
     engine: 'story',
@@ -517,7 +559,9 @@ async function collectExternalSignals(
     .eq('is_active', true)
     .limit(20);
 
-  if (!data || data.length === 0) return [];
+  if (!data || data.length === 0) {
+return [];
+}
 
   return data.map(row => ({
     engine: 'external',
@@ -546,11 +590,15 @@ export async function getLatestMatrix(
     .order('created_at', { ascending: false })
     .limit(1);
 
-  if (clientId) query = query.eq('client_id', clientId);
+  if (clientId) {
+query = query.eq('client_id', clientId);
+}
 
   const { data, error } = await query.single();
 
-  if (error) return null;
+  if (error) {
+return null;
+}
 
   return data as UnifiedSignalMatrix;
 }

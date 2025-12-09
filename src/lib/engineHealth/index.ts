@@ -32,11 +32,15 @@ export async function getHealthSnapshots(engineName?: string): Promise<EngineHea
     .order('created_at', { ascending: false })
     .limit(50);
 
-  if (engineName) query = query.eq('engine_name', engineName);
+  if (engineName) {
+query = query.eq('engine_name', engineName);
+}
 
   const { data } = await query;
 
-  if (!data) return [];
+  if (!data) {
+return [];
+}
 
   return data.map(row => ({
     id: row.id,
@@ -69,7 +73,9 @@ export async function recordHealth(
       });
       healthStatus = 'critical';
     } else if (value > 0.7) {
-      if (healthStatus !== 'critical') healthStatus = 'degraded';
+      if (healthStatus !== 'critical') {
+healthStatus = 'degraded';
+}
     }
   });
 
@@ -88,7 +94,9 @@ export async function recordHealth(
     .select()
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+return null;
+}
 
   return {
     id: data.id,

@@ -99,13 +99,27 @@ export function calculateLeadScore(events: LeadEventRecord[]): number {
  * Determine funnel stage from score
  */
 export function getFunnelStage(score: number): FunnelStage {
-  if (score >= STAGE_THRESHOLDS.activation_day_90) return 'activation_day_90';
-  if (score >= STAGE_THRESHOLDS.activation_day_60) return 'activation_day_60';
-  if (score >= STAGE_THRESHOLDS.activation_day_30) return 'activation_day_30';
-  if (score >= STAGE_THRESHOLDS.early_activation) return 'early_activation';
-  if (score >= STAGE_THRESHOLDS.trial) return 'trial';
-  if (score >= STAGE_THRESHOLDS.lead) return 'lead';
-  if (score >= STAGE_THRESHOLDS.engaged) return 'engaged';
+  if (score >= STAGE_THRESHOLDS.activation_day_90) {
+return 'activation_day_90';
+}
+  if (score >= STAGE_THRESHOLDS.activation_day_60) {
+return 'activation_day_60';
+}
+  if (score >= STAGE_THRESHOLDS.activation_day_30) {
+return 'activation_day_30';
+}
+  if (score >= STAGE_THRESHOLDS.early_activation) {
+return 'early_activation';
+}
+  if (score >= STAGE_THRESHOLDS.trial) {
+return 'trial';
+}
+  if (score >= STAGE_THRESHOLDS.lead) {
+return 'lead';
+}
+  if (score >= STAGE_THRESHOLDS.engaged) {
+return 'engaged';
+}
   return 'visitor';
 }
 
@@ -124,8 +138,12 @@ export function getConversionLikelihood(
   // Multiple interactions
   const interactionCount = events.length;
 
-  if (score >= 70 && hasHighValueEvents) return 'high';
-  if (score >= 40 || interactionCount >= 5) return 'medium';
+  if (score >= 70 && hasHighValueEvents) {
+return 'high';
+}
+  if (score >= 40 || interactionCount >= 5) {
+return 'medium';
+}
   return 'low';
 }
 
@@ -269,7 +287,9 @@ export async function getLeadProfile(leadId: string): Promise<LeadProfile | null
     .eq('id', leadId)
     .single();
 
-  if (error || !lead) return null;
+  if (error || !lead) {
+return null;
+}
 
   const { data: events } = await supabase
     .from('lead_events')
@@ -311,13 +331,17 @@ export async function getLeadsByStage(stage: FunnelStage): Promise<LeadProfile[]
     .select('*')
     .eq('score->stage', stage);
 
-  if (error || !leads) return [];
+  if (error || !leads) {
+return [];
+}
 
   // Get events for each lead
   const profiles: LeadProfile[] = [];
   for (const lead of leads) {
     const profile = await getLeadProfile(lead.id);
-    if (profile) profiles.push(profile);
+    if (profile) {
+profiles.push(profile);
+}
   }
 
   return profiles;

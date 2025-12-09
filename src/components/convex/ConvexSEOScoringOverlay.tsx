@@ -175,20 +175,30 @@ export function ConvexSEOScoringOverlay({
 
   // Score color mapping
   const getScoreColor = (score: number): string => {
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
+    if (score >= 80) {
+return 'text-green-600';
+}
+    if (score >= 60) {
+return 'text-yellow-600';
+}
     return 'text-red-600';
   };
 
   const getScoreBadgeVariant = (
     score: number
   ): 'default' | 'secondary' | 'destructive' | 'outline' => {
-    if (score >= 80) return 'default';
-    if (score >= 60) return 'secondary';
+    if (score >= 80) {
+return 'default';
+}
+    if (score >= 60) {
+return 'secondary';
+}
     return 'destructive';
   };
 
-  if (!isOpen) return null;
+  if (!isOpen) {
+return null;
+}
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">

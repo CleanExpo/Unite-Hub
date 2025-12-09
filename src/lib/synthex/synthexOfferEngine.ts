@@ -355,7 +355,9 @@ export function getAllIndustries(): IndustryPreset[] {
  */
 export function getRecommendedPlanForIndustry(industry: string): Plan | null {
   const preset = INDUSTRY_PRESETS[industry];
-  if (!preset) return null;
+  if (!preset) {
+return null;
+}
   return PLANS[preset.suggestedPlan] || null;
 }
 

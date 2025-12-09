@@ -339,7 +339,9 @@ export class StrategySignoffService {
       .limit(1)
       .single();
 
-    if (!snapshot) return [];
+    if (!snapshot) {
+return [];
+}
 
     const snapshotData = snapshot.snapshot_data as StrategySnapshot;
 
@@ -374,7 +376,9 @@ export class StrategySignoffService {
       .limit(1)
       .single();
 
-    if (error || !data) return null;
+    if (error || !data) {
+return null;
+}
 
     return data.snapshot_data as StrategySnapshot;
   }

@@ -196,13 +196,17 @@ class TrendSignalsBridge {
   private calculateVelocity(
     trendData: Array<{ month: string; search_volume: number }>
   ): number {
-    if (trendData.length < 2) return 0;
+    if (trendData.length < 2) {
+return 0;
+}
 
     // Calculate percentage change from first to last month
     const first = trendData[0].search_volume;
     const last = trendData[trendData.length - 1].search_volume;
 
-    if (first === 0) return 0;
+    if (first === 0) {
+return 0;
+}
 
     const percentChange = ((last - first) / first) * 100;
 
@@ -241,9 +245,15 @@ class TrendSignalsBridge {
    * Determine signal type based on velocity
    */
   private determineSignalType(velocity: number): TopicSignal['signal_type'] {
-    if (velocity > 40) return 'emerging';
-    if (velocity > 10) return 'trending';
-    if (velocity < -20) return 'declining';
+    if (velocity > 40) {
+return 'emerging';
+}
+    if (velocity > 10) {
+return 'trending';
+}
+    if (velocity < -20) {
+return 'declining';
+}
     return 'opportunity';
   }
 
@@ -253,8 +263,12 @@ class TrendSignalsBridge {
   private mapCompetitionLevel(
     competition: number
   ): 'low' | 'medium' | 'high' {
-    if (competition < 0.4) return 'low';
-    if (competition < 0.7) return 'medium';
+    if (competition < 0.4) {
+return 'low';
+}
+    if (competition < 0.7) {
+return 'medium';
+}
     return 'high';
   }
 

@@ -224,10 +224,14 @@ export function recordRoutingOutcome(
   actualCostPerToken: number
 ): void {
   const decision = routingHistory.find(d => d.id === decisionId);
-  if (!decision) return;
+  if (!decision) {
+return;
+}
 
   const metrics = routingMetrics[decision.selectedModel];
-  if (!metrics) return;
+  if (!metrics) {
+return;
+}
 
   // Update success rate
   const totalRuns = metrics.totalRequests;

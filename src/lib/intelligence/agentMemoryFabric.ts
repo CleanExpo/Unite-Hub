@@ -49,11 +49,21 @@ export function queryMemory(opts: {
   let res = inMemoryStore;
 
   // Filter by criteria
-  if (opts.agent) res = res.filter(m => m.agent === opts.agent);
-  if (opts.scope) res = res.filter(m => m.scope === opts.scope);
-  if (opts.topic) res = res.filter(m => m.topic === opts.topic);
-  if (opts.minImportance !== undefined) res = res.filter(m => m.importance >= opts.minImportance);
-  if (opts.tag) res = res.filter(m => m.tags?.includes(opts.tag));
+  if (opts.agent) {
+res = res.filter(m => m.agent === opts.agent);
+}
+  if (opts.scope) {
+res = res.filter(m => m.scope === opts.scope);
+}
+  if (opts.topic) {
+res = res.filter(m => m.topic === opts.topic);
+}
+  if (opts.minImportance !== undefined) {
+res = res.filter(m => m.importance >= opts.minImportance);
+}
+  if (opts.tag) {
+res = res.filter(m => m.tags?.includes(opts.tag));
+}
 
   // Exclude expired items
   const now = new Date();

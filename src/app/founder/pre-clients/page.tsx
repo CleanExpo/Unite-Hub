@@ -92,17 +92,27 @@ export default function PreClientsPage() {
   const [newClient, setNewClient] = useState({ name: '', email: '', company: '' });
 
   const fetchPreClients = useCallback(async () => {
-    if (!workspaceId) return;
+    if (!workspaceId) {
+return;
+}
 
     try {
       setLoading(true);
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const params = new URLSearchParams({ workspaceId });
-      if (search) params.append('search', search);
-      if (statusFilter !== 'all') params.append('status', statusFilter);
-      if (engagementFilter !== 'all') params.append('engagement', engagementFilter);
+      if (search) {
+params.append('search', search);
+}
+      if (statusFilter !== 'all') {
+params.append('status', statusFilter);
+}
+      if (engagementFilter !== 'all') {
+params.append('engagement', engagementFilter);
+}
 
       const response = await fetch(`/api/pre-clients?${params}`, {
         headers: {
@@ -142,12 +152,16 @@ export default function PreClientsPage() {
   }, [fetchPreClients]);
 
   const handleCreate = async () => {
-    if (!workspaceId || !newClient.name || !newClient.email) return;
+    if (!workspaceId || !newClient.name || !newClient.email) {
+return;
+}
 
     try {
       setCreating(true);
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const response = await fetch('/api/pre-clients', {
         method: 'POST',
@@ -198,7 +212,9 @@ export default function PreClientsPage() {
   };
 
   const formatDate = (dateStr?: string) => {
-    if (!dateStr) return '-';
+    if (!dateStr) {
+return '-';
+}
     return new Date(dateStr).toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
@@ -207,9 +223,15 @@ export default function PreClientsPage() {
   };
 
   const getSentimentColor = (score?: number) => {
-    if (score === undefined) return 'text-gray-400';
-    if (score >= 0.7) return 'text-green-600';
-    if (score >= 0.4) return 'text-yellow-600';
+    if (score === undefined) {
+return 'text-gray-400';
+}
+    if (score >= 0.7) {
+return 'text-green-600';
+}
+    if (score >= 0.4) {
+return 'text-yellow-600';
+}
     return 'text-red-600';
   };
 

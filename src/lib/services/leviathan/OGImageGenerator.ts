@@ -243,11 +243,15 @@ export class OGImageGenerator {
       if ((currentLine + ' ' + word).trim().length <= maxChars) {
         currentLine = (currentLine + ' ' + word).trim();
       } else {
-        if (currentLine) lines.push(currentLine);
+        if (currentLine) {
+lines.push(currentLine);
+}
         currentLine = word;
       }
     }
-    if (currentLine) lines.push(currentLine);
+    if (currentLine) {
+lines.push(currentLine);
+}
 
     // Limit to 2 lines
     const displayLines = lines.slice(0, 2);

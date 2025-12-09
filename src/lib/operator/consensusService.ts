@@ -277,7 +277,9 @@ export class ConsensusService {
       .eq("queue_item_id", queueItemId)
       .order("created_at", { ascending: true });
 
-    if (error) return [];
+    if (error) {
+return [];
+}
     return data;
   }
 
@@ -291,7 +293,9 @@ export class ConsensusService {
     // Get votes
     const votes = await this.getVotes(queueItemId);
 
-    if (votes.length < 2) return conflicts;
+    if (votes.length < 2) {
+return conflicts;
+}
 
     // Get queue item
     const { data: queueItem } = await supabase
@@ -300,7 +304,9 @@ export class ConsensusService {
       .eq("id", queueItemId)
       .single();
 
-    if (!queueItem) return conflicts;
+    if (!queueItem) {
+return conflicts;
+}
 
     // Check for conflicting votes between same role
     const votesByRole: Record<string, ConsensusVote[]> = {};
@@ -473,7 +479,9 @@ export class ConsensusService {
       .eq("status", "OPEN")
       .order("created_at", { ascending: false });
 
-    if (error) return [];
+    if (error) {
+return [];
+}
     return data;
   }
 
@@ -520,7 +528,9 @@ export class ConsensusService {
       .order("created_at", { ascending: false })
       .limit(limit);
 
-    if (error) return [];
+    if (error) {
+return [];
+}
     return data;
   }
 }

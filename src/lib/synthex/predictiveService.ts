@@ -75,7 +75,9 @@ export async function getEngagementHistory(
       .order('occurred_at', { ascending: true })
       .limit(limit);
 
-    if (error) throw new Error(error.message);
+    if (error) {
+throw new Error(error.message);
+}
     return { data: data as EngagementEvent[], error: null };
   } catch (err) {
     return { data: null, error: err instanceof Error ? err : new Error('Unknown error') };
@@ -105,7 +107,9 @@ export async function getEngagementByHourDay(
       p_days: days,
     });
 
-    if (error) throw new Error(error.message);
+    if (error) {
+throw new Error(error.message);
+}
     return { data, error: null };
   } catch (err) {
     return { data: null, error: err instanceof Error ? err : new Error('Unknown error') };
@@ -290,7 +294,9 @@ export async function getSendTimePredictionHistory(
       .order('generated_at', { ascending: false })
       .limit(limit);
 
-    if (error) throw new Error(error.message);
+    if (error) {
+throw new Error(error.message);
+}
 
     const result = (data || []).map((p) => ({
       id: p.id,
@@ -403,9 +409,15 @@ export function buildHeatmapData(
  * Format hour for display
  */
 export function formatHour(hour: number): string {
-  if (hour === 0) return '12:00 AM';
-  if (hour === 12) return '12:00 PM';
-  if (hour < 12) return `${hour}:00 AM`;
+  if (hour === 0) {
+return '12:00 AM';
+}
+  if (hour === 12) {
+return '12:00 PM';
+}
+  if (hour < 12) {
+return `${hour}:00 AM`;
+}
   return `${hour - 12}:00 PM`;
 }
 

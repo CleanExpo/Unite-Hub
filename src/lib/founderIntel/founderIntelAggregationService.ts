@@ -367,8 +367,11 @@ function generateExecutiveSummary(signals: AggregatedSignals): string {
   ) / 3;
 
   let status = 'stable';
-  if (avgHealth >= 75) status = 'strong';
-  else if (avgHealth < 50) status = 'attention needed';
+  if (avgHealth >= 75) {
+status = 'strong';
+} else if (avgHealth < 50) {
+status = 'attention needed';
+}
 
   return `The agency is operating in **${status}** condition with an average health score of ${avgHealth.toFixed(0)}%. ` +
     `${signals.alerts.length} active alerts require attention, and ${signals.opportunities.length} opportunities have been identified.`;
@@ -406,9 +409,15 @@ function generateRecommendations(signals: AggregatedSignals): string {
 function getMissingDataSources(signals: AggregatedSignals): string[] {
   const missing: string[] = [];
 
-  if (signals.agency_health.score === 0) missing.push('Agency Director data');
-  if (signals.creative_health.score === 0) missing.push('Creative Director data');
-  if (signals.archive_completeness.score === 0) missing.push('Archive data');
+  if (signals.agency_health.score === 0) {
+missing.push('Agency Director data');
+}
+  if (signals.creative_health.score === 0) {
+missing.push('Creative Director data');
+}
+  if (signals.archive_completeness.score === 0) {
+missing.push('Archive data');
+}
 
   return missing;
 }

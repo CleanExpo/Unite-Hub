@@ -88,7 +88,9 @@ export function HeroSection({
 
           <h1 className="text-5xl md:text-6xl font-bold text-white max-w-4xl mx-auto">
             {headline.split('{{highlight}}').map((part, index) => {
-              if (index === 0) return part;
+              if (index === 0) {
+return part;
+}
               return (
                 <span key={index}>
                   <span className={`bg-gradient-to-r ${headlineGradients[gradient]} bg-clip-text text-transparent`}>

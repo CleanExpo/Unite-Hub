@@ -487,13 +487,17 @@ export async function getContactIntelligenceSummary(
 // =====================================================
 
 function flattenAndDeduplicate(jsonbAgg: any[]): any[] {
-  if (!jsonbAgg || !Array.isArray(jsonbAgg)) return [];
+  if (!jsonbAgg || !Array.isArray(jsonbAgg)) {
+return [];
+}
 
   const flattened: any[] = [];
   const seen = new Set<string>();
 
   for (const item of jsonbAgg) {
-    if (!Array.isArray(item)) continue;
+    if (!Array.isArray(item)) {
+continue;
+}
 
     for (const subItem of item) {
       const key =

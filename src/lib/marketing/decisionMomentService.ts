@@ -77,7 +77,9 @@ export async function getDecisionMapWithAssets(id: string) {
       .order('moment_key'),
   ]);
 
-  if (mapResult.error) return { data: null, error: mapResult.error };
+  if (mapResult.error) {
+return { data: null, error: mapResult.error };
+}
 
   return {
     data: {
@@ -126,7 +128,9 @@ export async function duplicateDecisionMap(id: string, newName: string) {
 
   // Get original map
   const { data: original, error: fetchError } = await getDecisionMapWithAssets(id);
-  if (fetchError || !original) return { data: null, error: fetchError };
+  if (fetchError || !original) {
+return { data: null, error: fetchError };
+}
 
   // Create new map
   const { data: newMap, error: createError } = await supabase
@@ -141,7 +145,9 @@ export async function duplicateDecisionMap(id: string, newName: string) {
     .select()
     .single();
 
-  if (createError || !newMap) return { data: null, error: createError };
+  if (createError || !newMap) {
+return { data: null, error: createError };
+}
 
   // Duplicate assets
   if (original.assets && original.assets.length > 0) {

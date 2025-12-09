@@ -76,15 +76,33 @@ export async function PUT(
       updated_at: new Date().toISOString(),
     };
 
-    if (updates.templateName) dbUpdates.template_name = updates.templateName;
-    if (updates.copyText) dbUpdates.copy_text = updates.copyText;
-    if (updates.hashtags) dbUpdates.hashtags = updates.hashtags;
-    if (updates.emojiSuggestions) dbUpdates.emoji_suggestions = updates.emojiSuggestions;
-    if (updates.callToAction) dbUpdates.call_to_action = updates.callToAction;
-    if (updates.variations) dbUpdates.variations = updates.variations;
-    if (updates.performancePrediction) dbUpdates.performance_prediction = updates.performancePrediction;
-    if (updates.tags) dbUpdates.tags = updates.tags;
-    if (typeof updates.isFavorite === 'boolean') dbUpdates.is_favorite = updates.isFavorite;
+    if (updates.templateName) {
+dbUpdates.template_name = updates.templateName;
+}
+    if (updates.copyText) {
+dbUpdates.copy_text = updates.copyText;
+}
+    if (updates.hashtags) {
+dbUpdates.hashtags = updates.hashtags;
+}
+    if (updates.emojiSuggestions) {
+dbUpdates.emoji_suggestions = updates.emojiSuggestions;
+}
+    if (updates.callToAction) {
+dbUpdates.call_to_action = updates.callToAction;
+}
+    if (updates.variations) {
+dbUpdates.variations = updates.variations;
+}
+    if (updates.performancePrediction) {
+dbUpdates.performance_prediction = updates.performancePrediction;
+}
+    if (updates.tags) {
+dbUpdates.tags = updates.tags;
+}
+    if (typeof updates.isFavorite === 'boolean') {
+dbUpdates.is_favorite = updates.isFavorite;
+}
 
     const { error } = await supabase
       .from("social_templates")

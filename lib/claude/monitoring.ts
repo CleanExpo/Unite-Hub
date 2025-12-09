@@ -44,7 +44,9 @@ export class AIMonitor {
       ? this.getEndpointMetrics(endpoint)
       : this.metrics;
 
-    if (relevantMetrics.length === 0) return 0;
+    if (relevantMetrics.length === 0) {
+return 0;
+}
 
     const total = relevantMetrics.reduce((sum, m) => sum + m.duration, 0);
     return total / relevantMetrics.length;
@@ -56,7 +58,9 @@ export class AIMonitor {
       ? this.getEndpointMetrics(endpoint)
       : this.metrics;
 
-    if (relevantMetrics.length === 0) return 0;
+    if (relevantMetrics.length === 0) {
+return 0;
+}
 
     const successful = relevantMetrics.filter((m) => m.success).length;
     return (successful / relevantMetrics.length) * 100;

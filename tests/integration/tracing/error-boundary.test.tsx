@@ -4,10 +4,10 @@
  * Comprehensive test suite for React error boundary tracing with 8 quality gates
  */
 
-/* eslint-disable @typescript-eslint/no-explicit-any, no-undef */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* global setTimeout */
 
-/* eslint-disable no-console */
+ 
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import React from 'react';

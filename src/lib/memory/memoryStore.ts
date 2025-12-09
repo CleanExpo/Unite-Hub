@@ -180,7 +180,9 @@ export class MemoryStore {
     // Add hinted keywords
     if (hint) {
       hint.split(/\s+/).forEach(word => {
-        if (word.length > 2) keywords.add(word.toLowerCase());
+        if (word.length > 2) {
+keywords.add(word.toLowerCase());
+}
       });
     }
 
@@ -266,10 +268,18 @@ export class MemoryStore {
     const supabase = await getSupabaseServer();
 
     // Validate required fields
-    if (!request.workspaceId) throw new Error('workspaceId is required');
-    if (!request.agent) throw new Error('agent is required');
-    if (!request.memoryType) throw new Error('memoryType is required');
-    if (!request.content) throw new Error('content is required');
+    if (!request.workspaceId) {
+throw new Error('workspaceId is required');
+}
+    if (!request.agent) {
+throw new Error('agent is required');
+}
+    if (!request.memoryType) {
+throw new Error('memoryType is required');
+}
+    if (!request.content) {
+throw new Error('content is required');
+}
 
     // Set defaults
     const importance = request.importance ?? 50;
@@ -338,9 +348,15 @@ export class MemoryStore {
     const supabase = await getSupabaseServer();
 
     // Validate
-    if (!request.memoryId) throw new Error('memoryId is required');
-    if (!request.linkedMemoryId) throw new Error('linkedMemoryId is required');
-    if (!request.relationship) throw new Error('relationship is required');
+    if (!request.memoryId) {
+throw new Error('memoryId is required');
+}
+    if (!request.linkedMemoryId) {
+throw new Error('linkedMemoryId is required');
+}
+    if (!request.relationship) {
+throw new Error('relationship is required');
+}
 
     // Same memory cannot link to itself
     if (request.memoryId === request.linkedMemoryId) {
@@ -390,11 +406,21 @@ export class MemoryStore {
     const supabase = await getSupabaseServer();
 
     // Validate
-    if (!request.memoryId) throw new Error('memoryId is required');
-    if (!request.workspaceId) throw new Error('workspaceId is required');
-    if (!request.signalType) throw new Error('signalType is required');
-    if (request.signalValue === undefined) throw new Error('signalValue is required');
-    if (!request.sourceAgent) throw new Error('sourceAgent is required');
+    if (!request.memoryId) {
+throw new Error('memoryId is required');
+}
+    if (!request.workspaceId) {
+throw new Error('workspaceId is required');
+}
+    if (!request.signalType) {
+throw new Error('signalType is required');
+}
+    if (request.signalValue === undefined) {
+throw new Error('signalValue is required');
+}
+    if (!request.sourceAgent) {
+throw new Error('sourceAgent is required');
+}
 
     if (request.signalValue < 0 || request.signalValue > 100) {
       throw new Error('signalValue must be between 0 and 100');
@@ -435,9 +461,15 @@ export class MemoryStore {
   ): Promise<{ success: boolean }> {
     const supabase = await getSupabaseServer();
 
-    if (!memoryId) throw new Error('memoryId is required');
-    if (!reason) throw new Error('reason is required');
-    if (!redactedByUserId) throw new Error('redactedByUserId is required');
+    if (!memoryId) {
+throw new Error('memoryId is required');
+}
+    if (!reason) {
+throw new Error('reason is required');
+}
+    if (!redactedByUserId) {
+throw new Error('redactedByUserId is required');
+}
 
     const { error } = await supabase.rpc('redact_memory', {
       p_memory_id: memoryId,

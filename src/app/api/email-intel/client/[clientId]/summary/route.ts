@@ -161,16 +161,24 @@ export async function GET(
 // Helper functions
 
 function calculateRelationshipDuration(firstContactAt: string | null): string {
-  if (!firstContactAt) return 'Unknown';
+  if (!firstContactAt) {
+return 'Unknown';
+}
 
   const start = new Date(firstContactAt);
   const now = new Date();
   const diffMs = now.getTime() - start.getTime();
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-  if (diffDays < 7) return `${diffDays} days`;
-  if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks`;
-  if (diffDays < 365) return `${Math.floor(diffDays / 30)} months`;
+  if (diffDays < 7) {
+return `${diffDays} days`;
+}
+  if (diffDays < 30) {
+return `${Math.floor(diffDays / 7)} weeks`;
+}
+  if (diffDays < 365) {
+return `${Math.floor(diffDays / 30)} months`;
+}
   return `${Math.floor(diffDays / 365)} years`;
 }
 
@@ -178,7 +186,9 @@ function calculateFrequency(
   totalMessages: number,
   firstContactAt: string | null
 ): string {
-  if (!firstContactAt || totalMessages === 0) return 'No activity';
+  if (!firstContactAt || totalMessages === 0) {
+return 'No activity';
+}
 
   const start = new Date(firstContactAt);
   const now = new Date();
@@ -189,17 +199,33 @@ function calculateFrequency(
 
   const messagesPerWeek = totalMessages / diffWeeks;
 
-  if (messagesPerWeek >= 10) return 'Very Active (10+ msgs/week)';
-  if (messagesPerWeek >= 5) return 'Active (5-10 msgs/week)';
-  if (messagesPerWeek >= 2) return 'Regular (2-5 msgs/week)';
-  if (messagesPerWeek >= 0.5) return 'Occasional (1-2 msgs/week)';
+  if (messagesPerWeek >= 10) {
+return 'Very Active (10+ msgs/week)';
+}
+  if (messagesPerWeek >= 5) {
+return 'Active (5-10 msgs/week)';
+}
+  if (messagesPerWeek >= 2) {
+return 'Regular (2-5 msgs/week)';
+}
+  if (messagesPerWeek >= 0.5) {
+return 'Occasional (1-2 msgs/week)';
+}
   return 'Infrequent (<1 msg/week)';
 }
 
 function getSentimentLabel(score: number): string {
-  if (score > 0.5) return 'Very Positive';
-  if (score > 0.2) return 'Positive';
-  if (score > -0.2) return 'Neutral';
-  if (score > -0.5) return 'Negative';
+  if (score > 0.5) {
+return 'Very Positive';
+}
+  if (score > 0.2) {
+return 'Positive';
+}
+  if (score > -0.2) {
+return 'Neutral';
+}
+  if (score > -0.5) {
+return 'Negative';
+}
   return 'Very Negative';
 }

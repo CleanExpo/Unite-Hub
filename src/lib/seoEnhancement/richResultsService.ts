@@ -424,7 +424,9 @@ export async function createSchemaTemplate(
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to create template: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to create template: ${error.message}`);
+}
   return data;
 }
 
@@ -465,7 +467,9 @@ export async function generateSchema(
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to save schema: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to save schema: ${error.message}`);
+}
   return data;
 }
 
@@ -481,7 +485,9 @@ export async function validateExistingSchema(schemaId: string): Promise<Generate
     .eq('id', schemaId)
     .single();
 
-  if (fetchError) throw new Error(`Schema not found: ${fetchError.message}`);
+  if (fetchError) {
+throw new Error(`Schema not found: ${fetchError.message}`);
+}
 
   const validation = validateSchema(schema.schema_json);
 
@@ -498,7 +504,9 @@ export async function validateExistingSchema(schemaId: string): Promise<Generate
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to update validation: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to update validation: ${error.message}`);
+}
   return data;
 }
 
@@ -531,7 +539,9 @@ export async function getSchemas(
 
   const { data, error } = await query;
 
-  if (error) throw new Error(`Failed to fetch schemas: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to fetch schemas: ${error.message}`);
+}
   return data || [];
 }
 
@@ -571,7 +581,9 @@ export async function checkRichResultOpportunity(
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to save monitoring: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to save monitoring: ${error.message}`);
+}
   return data;
 }
 
@@ -600,7 +612,9 @@ export async function getRichResultMonitoring(
 
   const { data, error } = await query;
 
-  if (error) throw new Error(`Failed to fetch monitoring: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to fetch monitoring: ${error.message}`);
+}
   return data || [];
 }
 

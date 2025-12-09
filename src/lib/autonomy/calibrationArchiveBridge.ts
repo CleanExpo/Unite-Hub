@@ -161,7 +161,9 @@ class CalibrationArchiveBridge {
 
     // Identify pattern type based on metrics
     const patternType = this.identifyPatternType(metricsAnalyzed);
-    if (!patternType) return;
+    if (!patternType) {
+return;
+}
 
     // Check if this pattern has been seen before
     const { data: existingPatterns } = await supabase

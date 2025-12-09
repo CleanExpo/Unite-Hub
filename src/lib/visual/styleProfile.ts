@@ -220,11 +220,21 @@ export function prepareProfileForExport(
   styleDetails: Array<{ id: string; name: string; description: string; bestFor?: string[] }>
 ): ProfileExportData {
   const enabledFeatures: string[] = [];
-  if (profile.features.flashlightCursor) enabledFeatures.push('Cursor Spotlight');
-  if (profile.features.threeDElements) enabledFeatures.push('3D Elements');
-  if (profile.features.scrollAnimations) enabledFeatures.push('Scroll Animations');
-  if (profile.features.videoBackgrounds) enabledFeatures.push('Video Backgrounds');
-  if (profile.features.magneticElements) enabledFeatures.push('Magnetic Elements');
+  if (profile.features.flashlightCursor) {
+enabledFeatures.push('Cursor Spotlight');
+}
+  if (profile.features.threeDElements) {
+enabledFeatures.push('3D Elements');
+}
+  if (profile.features.scrollAnimations) {
+enabledFeatures.push('Scroll Animations');
+}
+  if (profile.features.videoBackgrounds) {
+enabledFeatures.push('Video Backgrounds');
+}
+  if (profile.features.magneticElements) {
+enabledFeatures.push('Magnetic Elements');
+}
 
   const styles = profile.preferredStyles.map(styleId => {
     const detail = styleDetails.find(d => d.id === styleId);

@@ -106,7 +106,9 @@ class AlertWebSocketServer {
 
   private handleMessage(clientId: string, message: WebSocketMessage) {
     const client = this.clients.get(clientId);
-    if (!client) return;
+    if (!client) {
+return;
+}
 
     switch (message.type) {
       case 'auth':
@@ -193,7 +195,9 @@ class AlertWebSocketServer {
 
   private handleUnsubscribe(clientId: string, message: WebSocketMessage) {
     const client = this.clients.get(clientId);
-    if (!client || !message.frameworkId) return;
+    if (!client || !message.frameworkId) {
+return;
+}
 
     const channel = `alerts:${client.workspaceId}:${message.frameworkId}`;
     const subscribers = this.subscriptions.get(channel);

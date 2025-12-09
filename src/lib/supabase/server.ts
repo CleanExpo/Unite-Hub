@@ -12,7 +12,7 @@
  * called during Turbopack's static analysis phase.
  */
 
-/* eslint-disable no-undef, no-console */
+ 
 
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import type { Database } from '@/types/database.generated';

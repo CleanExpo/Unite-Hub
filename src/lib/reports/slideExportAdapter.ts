@@ -116,7 +116,9 @@ export function exportToSlides(
  * Condense deck to fit max frames
  */
 function condenseDeck(frames: SlideFrame[], maxFrames: number): SlideFrame[] {
-  if (frames.length <= maxFrames) return frames;
+  if (frames.length <= maxFrames) {
+return frames;
+}
 
   // Always keep: title, summary, closing
   const essential = frames.filter(f =>
@@ -148,11 +150,15 @@ function condenseDeck(frames: SlideFrame[], maxFrames: number): SlideFrame[] {
 
   // Title first
   const title = essential.find(f => f.frame_type === 'title');
-  if (title) result.push({ ...title, order: order++ });
+  if (title) {
+result.push({ ...title, order: order++ });
+}
 
   // Summary
   const summary = essential.find(f => f.frame_type === 'summary');
-  if (summary) result.push({ ...summary, order: order++ });
+  if (summary) {
+result.push({ ...summary, order: order++ });
+}
 
   // Selected sections
   selectedSections.forEach(section => {
@@ -161,7 +167,9 @@ function condenseDeck(frames: SlideFrame[], maxFrames: number): SlideFrame[] {
 
   // Closing
   const closing = essential.find(f => f.frame_type === 'closing');
-  if (closing) result.push({ ...closing, order: order++ });
+  if (closing) {
+result.push({ ...closing, order: order++ });
+}
 
   return result;
 }

@@ -41,11 +41,19 @@ export function EngagementHeatmap({
 
   // Get color based on activity level
   const getColor = (count: number) => {
-    if (count === 0) return 'bg-bg-hover';
+    if (count === 0) {
+return 'bg-bg-hover';
+}
     const intensity = count / maxCount;
-    if (intensity >= 0.75) return 'bg-green-500';
-    if (intensity >= 0.5) return 'bg-green-400';
-    if (intensity >= 0.25) return 'bg-green-300';
+    if (intensity >= 0.75) {
+return 'bg-green-500';
+}
+    if (intensity >= 0.5) {
+return 'bg-green-400';
+}
+    if (intensity >= 0.25) {
+return 'bg-green-300';
+}
     return 'bg-green-200';
   };
 

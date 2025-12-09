@@ -65,16 +65,24 @@ export interface RoutingDecision {
  */
 export function canHandleLocalIntentDetection(packet: CompressedContextPacket): boolean {
   // Simple, low-confidence extraction tasks
-  if (packet.complexity_level !== 'simple') return false;
+  if (packet.complexity_level !== 'simple') {
+return false;
+}
 
   // Intent detection only (not full reasoning)
-  if (!['task', 'reminder', 'status_check'].includes(packet.event_tag)) return false;
+  if (!['task', 'reminder', 'status_check'].includes(packet.event_tag)) {
+return false;
+}
 
   // High confidence in compression
-  if (packet.confidence < 0.85) return false;
+  if (packet.confidence < 0.85) {
+return false;
+}
 
   // No contextual knowledge needed
-  if (packet.requires_context) return false;
+  if (packet.requires_context) {
+return false;
+}
 
   return true;
 }
@@ -84,10 +92,14 @@ export function canHandleLocalIntentDetection(packet: CompressedContextPacket): 
  */
 export function canHandleLocalTaskExecution(packet: CompressedContextPacket): boolean {
   // Must be a clear task
-  if (packet.event_tag !== 'task') return false;
+  if (packet.event_tag !== 'task') {
+return false;
+}
 
   // Simple complexity level
-  if (packet.complexity_level !== 'simple') return false;
+  if (packet.complexity_level !== 'simple') {
+return false;
+}
 
   // Actions that don't require reasoning: scheduling, tagging, reminding
   const simpleTaskActions = ['Add to calendar', 'Set reminder', 'Tag contact'];
@@ -96,7 +108,9 @@ export function canHandleLocalTaskExecution(packet: CompressedContextPacket): bo
   }
 
   // Not requiring business context
-  if (packet.requires_context) return false;
+  if (packet.requires_context) {
+return false;
+}
 
   return true;
 }
@@ -184,7 +198,7 @@ export function estimateCloudCost(
   useExtendedThinking: boolean = false
 ): number {
   let inputCost = inputTokens * MODEL_INPUT_COSTS[model];
-  let outputCost = expectedOutputTokens * MODEL_OUTPUT_COSTS[model];
+  const outputCost = expectedOutputTokens * MODEL_OUTPUT_COSTS[model];
 
   // Extended thinking multiplier
   if (useExtendedThinking) {
@@ -216,7 +230,9 @@ const LATENCY_PROFILES = {
  */
 export function estimateLatency(engine: ReasoningEngine): number {
   const profile = LATENCY_PROFILES[engine];
-  if (!profile) return 1000;
+  if (!profile) {
+return 1000;
+}
 
   // Average of min and max
   return (profile.min + profile.max) / 2;

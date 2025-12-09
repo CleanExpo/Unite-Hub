@@ -86,8 +86,12 @@ export default function TimelinePage() {
   const uniqueTypes = [...new Set(events.map((e) => e.event_type))];
 
   const filteredEvents = events.filter((event) => {
-    if (filterModel !== "all" && event.model_used !== filterModel) return false;
-    if (filterType !== "all" && event.event_type !== filterType) return false;
+    if (filterModel !== "all" && event.model_used !== filterModel) {
+return false;
+}
+    if (filterType !== "all" && event.event_type !== filterType) {
+return false;
+}
     return true;
   });
 
@@ -98,9 +102,15 @@ export default function TimelinePage() {
     const hours = Math.floor(diff / 3600000);
     const days = Math.floor(hours / 24);
 
-    if (hours < 1) return "Just now";
-    if (hours < 24) return `${hours}h ago`;
-    if (days < 7) return `${days}d ago`;
+    if (hours < 1) {
+return "Just now";
+}
+    if (hours < 24) {
+return `${hours}h ago`;
+}
+    if (days < 7) {
+return `${days}d ago`;
+}
     return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
   };
 

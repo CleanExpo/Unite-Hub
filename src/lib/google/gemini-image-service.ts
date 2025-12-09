@@ -74,11 +74,21 @@ export async function generateImage(request: ImageGenerationRequest): Promise<Im
 
     if (fiveWhys) {
       fullPrompt += `\n\n5 WHYS CONTEXT:`;
-      if (fiveWhys.why1_image) fullPrompt += `\n- Purpose: ${fiveWhys.why1_image}`;
-      if (fiveWhys.why2_style) fullPrompt += `\n- Style: ${fiveWhys.why2_style}`;
-      if (fiveWhys.why3_situation) fullPrompt += `\n- Situation: ${fiveWhys.why3_situation}`;
-      if (fiveWhys.why4_person) fullPrompt += `\n- Person: ${fiveWhys.why4_person}`;
-      if (fiveWhys.why5_feeling) fullPrompt += `\n- Feeling: ${fiveWhys.why5_feeling}`;
+      if (fiveWhys.why1_image) {
+fullPrompt += `\n- Purpose: ${fiveWhys.why1_image}`;
+}
+      if (fiveWhys.why2_style) {
+fullPrompt += `\n- Style: ${fiveWhys.why2_style}`;
+}
+      if (fiveWhys.why3_situation) {
+fullPrompt += `\n- Situation: ${fiveWhys.why3_situation}`;
+}
+      if (fiveWhys.why4_person) {
+fullPrompt += `\n- Person: ${fiveWhys.why4_person}`;
+}
+      if (fiveWhys.why5_feeling) {
+fullPrompt += `\n- Feeling: ${fiveWhys.why5_feeling}`;
+}
     }
 
     fullPrompt += HUMAN_STORY_MANDATE;

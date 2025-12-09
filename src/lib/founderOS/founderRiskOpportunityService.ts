@@ -98,7 +98,9 @@ function generateId(prefix: string): string {
 
 function calculateComponentHealth(signals: BusinessSignal[], family: string): number {
   const familySignals = signals.filter((s) => s.signal_family === family);
-  if (familySignals.length === 0) return 50; // Default neutral score
+  if (familySignals.length === 0) {
+return 50;
+} // Default neutral score
 
   // Get score-type signals
   const scoreSignals = familySignals.filter(
@@ -108,7 +110,9 @@ function calculateComponentHealth(signals: BusinessSignal[], family: string): nu
       s.signal_key.includes('health')
   );
 
-  if (scoreSignals.length === 0) return 50;
+  if (scoreSignals.length === 0) {
+return 50;
+}
 
   // Calculate weighted average
   let weightedSum = 0;
@@ -144,7 +148,9 @@ function detectTrend(signals: BusinessSignal[]): 'improving' | 'stable' | 'decli
     .filter((s) => s.signal_key.includes('score') && s.value_numeric !== null)
     .sort((a, b) => new Date(a.observed_at).getTime() - new Date(b.observed_at).getTime());
 
-  if (scoreSignals.length < 2) return 'stable';
+  if (scoreSignals.length < 2) {
+return 'stable';
+}
 
   // Compare recent vs older signals
   const midpoint = Math.floor(scoreSignals.length / 2);
@@ -157,8 +163,12 @@ function detectTrend(signals: BusinessSignal[]): 'improving' | 'stable' | 'decli
   const change = recentAvg - olderAvg;
   const changePercent = olderAvg > 0 ? (change / olderAvg) * 100 : 0;
 
-  if (changePercent > 5) return 'improving';
-  if (changePercent < -5) return 'declining';
+  if (changePercent > 5) {
+return 'improving';
+}
+  if (changePercent < -5) {
+return 'declining';
+}
   return 'stable';
 }
 

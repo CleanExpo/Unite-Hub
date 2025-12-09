@@ -188,7 +188,9 @@ export async function getAgency(agencyId: string): Promise<Agency | null> {
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') return null;
+    if (error.code === 'PGRST116') {
+return null;
+}
     throw new Error(`Failed to fetch agency: ${error.message}`);
   }
 
@@ -345,7 +347,9 @@ export async function getActiveTenantForUser(userId: string): Promise<AgencyActi
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') return null;
+    if (error.code === 'PGRST116') {
+return null;
+}
     throw new Error(`Failed to get active tenant: ${error.message}`);
   }
 

@@ -181,16 +181,26 @@ export async function updateReward(
       updated_at: new Date().toISOString(),
     };
 
-    if (updates.name) updateData.name = updates.name;
-    if (updates.description) updateData.description = updates.description;
-    if (updates.isActive !== undefined) updateData.is_active = updates.isActive;
-    if (updates.creditCost) updateData.credit_cost = Number(updates.creditCost);
+    if (updates.name) {
+updateData.name = updates.name;
+}
+    if (updates.description) {
+updateData.description = updates.description;
+}
+    if (updates.isActive !== undefined) {
+updateData.is_active = updates.isActive;
+}
+    if (updates.creditCost) {
+updateData.credit_cost = Number(updates.creditCost);
+}
     if (updates.dailyLimit !== undefined) {
       updateData.daily_redemption_limit = updates.dailyLimit
         ? Number(updates.dailyLimit)
         : null;
     }
-    if (updates.metadata) updateData.metadata = updates.metadata;
+    if (updates.metadata) {
+updateData.metadata = updates.metadata;
+}
 
     const { error } = await supabaseAdmin
       .from('reward_catalog')

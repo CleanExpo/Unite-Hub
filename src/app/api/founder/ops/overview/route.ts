@@ -61,7 +61,9 @@ export async function GET(req: NextRequest) {
       .eq('workspace_id', workspaceId)
       .not('status', 'eq', 'archived');
 
-    if (totalError) throw totalError;
+    if (totalError) {
+throw totalError;
+}
 
     // Get pending approvals
     const { count: pendingApprovals, error: approvalsError } = await supabase
@@ -70,7 +72,9 @@ export async function GET(req: NextRequest) {
       .eq('workspace_id', workspaceId)
       .eq('status', 'pending_review');
 
-    if (approvalsError) throw approvalsError;
+    if (approvalsError) {
+throw approvalsError;
+}
 
     // Get scheduled today
     const today = new Date().toISOString().split('T')[0];
@@ -80,7 +84,9 @@ export async function GET(req: NextRequest) {
       .eq('workspace_id', workspaceId)
       .eq('queue_date', today);
 
-    if (queueError) throw queueError;
+    if (queueError) {
+throw queueError;
+}
 
     const scheduledToday = todayQueue?.length || 0;
     const completedToday = todayQueue?.filter((q: any) => q.status === 'completed').length || 0;
@@ -95,7 +101,9 @@ export async function GET(req: NextRequest) {
       .not('deadline', 'is', null)
       .lt('deadline', now);
 
-    if (overdueError) throw overdueError;
+    if (overdueError) {
+throw overdueError;
+}
 
     // Get queue status for today
     const { data: queueStatus, error: statusError } = await supabase.rpc('get_queue_status', {
@@ -103,7 +111,9 @@ export async function GET(req: NextRequest) {
       p_date: today,
     });
 
-    if (statusError) throw statusError;
+    if (statusError) {
+throw statusError;
+}
 
     // Get distribution by brand
     const { data: tasksByBrand, error: brandError } = await supabase
@@ -112,7 +122,9 @@ export async function GET(req: NextRequest) {
       .eq('workspace_id', workspaceId)
       .not('status', 'eq', 'archived');
 
-    if (brandError) throw brandError;
+    if (brandError) {
+throw brandError;
+}
 
     const byBrand: Record<string, number> = {};
     tasksByBrand?.forEach((task: any) => {
@@ -126,7 +138,9 @@ export async function GET(req: NextRequest) {
       .eq('workspace_id', workspaceId)
       .not('status', 'eq', 'archived');
 
-    if (priorityError) throw priorityError;
+    if (priorityError) {
+throw priorityError;
+}
 
     const byPriority: Record<string, number> = {
       low: 0,

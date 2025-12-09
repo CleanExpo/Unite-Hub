@@ -31,7 +31,9 @@ export async function POST(req: NextRequest) {
   try {
     // AI-specific rate limiting
     const rateLimitResult = await aiAgentRateLimit(req);
-    if (rateLimitResult) return rateLimitResult;
+    if (rateLimitResult) {
+return rateLimitResult;
+}
 
     // Parse and validate request body
     const body = await req.json();

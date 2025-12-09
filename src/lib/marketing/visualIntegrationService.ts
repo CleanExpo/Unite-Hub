@@ -232,7 +232,9 @@ export function getRecommendationsForPlatform(
   persona: string
 ): AnimationRecommendation[] {
   const platformConfig = PLATFORM_VISUAL_CONFIGS[platform];
-  if (!platformConfig) return [];
+  if (!platformConfig) {
+return [];
+}
 
   const recommendations: AnimationRecommendation[] = [];
 
@@ -274,7 +276,9 @@ export async function attachVisualPreview(
       })
       .eq('id', assetId);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return {
       data: {
@@ -308,7 +312,9 @@ export async function getVisualDemosForAsset(
 
     const { data, error } = await query.limit(10);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { data: data || [], error: null };
   } catch (err) {

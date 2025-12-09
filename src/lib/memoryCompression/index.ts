@@ -33,9 +33,15 @@ export async function getCompressedPackets(options: {
     .select('*')
     .order('created_at', { ascending: false });
 
-  if (options.sourceType) query = query.eq('source_type', options.sourceType);
-  if (options.tenantScope) query = query.eq('tenant_scope', options.tenantScope);
-  if (options.regionScope) query = query.eq('region_scope', options.regionScope);
+  if (options.sourceType) {
+query = query.eq('source_type', options.sourceType);
+}
+  if (options.tenantScope) {
+query = query.eq('tenant_scope', options.tenantScope);
+}
+  if (options.regionScope) {
+query = query.eq('region_scope', options.regionScope);
+}
 
   const { data } = await query.limit(options.limit || 50);
 
@@ -91,7 +97,9 @@ export async function compressAndStore(
     .select()
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+return null;
+}
 
   return {
     id: data.id,

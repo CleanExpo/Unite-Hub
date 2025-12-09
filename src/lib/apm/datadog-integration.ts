@@ -11,7 +11,7 @@
  * @module lib/apm/datadog-integration
  */
 
-/* eslint-disable no-undef, no-console, @typescript-eslint/no-unused-vars */
+ 
 
 
 import type { RumInitConfiguration, RumGlobal } from '@datadog/browser-rum';

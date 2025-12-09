@@ -66,16 +66,28 @@ export function PatternCard({ pattern, onClick, className = '' }: PatternCardPro
   const TypeIcon = typeConfig.icon;
 
   const getStrengthLabel = (score: number) => {
-    if (score >= 0.8) return 'Strong';
-    if (score >= 0.6) return 'Moderate';
-    if (score >= 0.4) return 'Emerging';
+    if (score >= 0.8) {
+return 'Strong';
+}
+    if (score >= 0.6) {
+return 'Moderate';
+}
+    if (score >= 0.4) {
+return 'Emerging';
+}
     return 'Weak';
   };
 
   const getStrengthColor = (score: number) => {
-    if (score >= 0.8) return 'bg-green-500';
-    if (score >= 0.6) return 'bg-yellow-500';
-    if (score >= 0.4) return 'bg-orange-500';
+    if (score >= 0.8) {
+return 'bg-green-500';
+}
+    if (score >= 0.6) {
+return 'bg-yellow-500';
+}
+    if (score >= 0.4) {
+return 'bg-orange-500';
+}
     return 'bg-gray-400';
   };
 

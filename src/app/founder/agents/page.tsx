@@ -33,7 +33,9 @@ export default function FounderAgentsDashboard() {
 
   // Fetch stats
   useEffect(() => {
-    if (!workspaceId || !session?.access_token) return;
+    if (!workspaceId || !session?.access_token) {
+return;
+}
 
     const fetchStats = async () => {
       try {

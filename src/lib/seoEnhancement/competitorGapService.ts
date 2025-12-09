@@ -180,7 +180,9 @@ export async function addCompetitor(
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to add competitor: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to add competitor: ${error.message}`);
+}
   return data;
 }
 
@@ -201,7 +203,9 @@ export async function getCompetitors(
     .eq('is_active', true)
     .order('created_at', { ascending: false });
 
-  if (error) throw new Error(`Failed to fetch competitors: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to fetch competitors: ${error.message}`);
+}
   return data || [];
 }
 
@@ -219,11 +223,11 @@ export async function analyzeKeywordGap(
   const competitors = await getCompetitors(workspaceId, clientDomain);
   const competitorDomains = competitors.map(c => c.competitor_domain);
 
-  let clientKeywords: KeywordGap[] = [];
-  let competitorKeywords: KeywordGap[] = [];
-  let missingKeywords: KeywordGap[] = [];
-  let weakKeywords: KeywordGap[] = [];
-  let strongKeywords: KeywordGap[] = [];
+  const clientKeywords: KeywordGap[] = [];
+  const competitorKeywords: KeywordGap[] = [];
+  const missingKeywords: KeywordGap[] = [];
+  const weakKeywords: KeywordGap[] = [];
+  const strongKeywords: KeywordGap[] = [];
 
   if (client && competitorDomains.length > 0) {
     try {
@@ -289,7 +293,9 @@ export async function analyzeKeywordGap(
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to save keyword gap analysis: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to save keyword gap analysis: ${error.message}`);
+}
   return data;
 }
 
@@ -384,7 +390,9 @@ export async function analyzeContentGap(
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to save content gap analysis: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to save content gap analysis: ${error.message}`);
+}
   return data;
 }
 
@@ -476,8 +484,8 @@ export async function analyzeBacklinkGap(
   const competitorDomains = competitors.map(c => c.competitor_domain);
 
   let clientBacklinks = { total: 0, referringDomains: 0, rank: 0 };
-  let competitorBacklinks: Array<{ total: number; referringDomains: number; rank: number }> = [];
-  let linkGapDomains: LinkGapDomain[] = [];
+  const competitorBacklinks: Array<{ total: number; referringDomains: number; rank: number }> = [];
+  const linkGapDomains: LinkGapDomain[] = [];
 
   if (client) {
     try {
@@ -581,7 +589,9 @@ export async function analyzeBacklinkGap(
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to save backlink gap analysis: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to save backlink gap analysis: ${error.message}`);
+}
   return data;
 }
 

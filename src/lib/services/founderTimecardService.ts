@@ -89,7 +89,9 @@ export async function stopTimer(): Promise<TimeEntry | null> {
     .eq("is_running", true)
     .single();
 
-  if (!running) return null;
+  if (!running) {
+return null;
+}
 
   const endTime = new Date();
   const startTime = new Date(running.start_time);

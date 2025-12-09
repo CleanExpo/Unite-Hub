@@ -222,19 +222,28 @@ export class StrategySummaryReportService {
 
     // Determine status
     let status: HealthStatus;
-    if (overallScore >= 80) status = 'EXCELLENT';
-    else if (overallScore >= 65) status = 'GOOD';
-    else if (overallScore >= 50) status = 'FAIR';
-    else if (overallScore >= 35) status = 'POOR';
-    else status = 'CRITICAL';
+    if (overallScore >= 80) {
+status = 'EXCELLENT';
+} else if (overallScore >= 65) {
+status = 'GOOD';
+} else if (overallScore >= 50) {
+status = 'FAIR';
+} else if (overallScore >= 35) {
+status = 'POOR';
+} else {
+status = 'CRITICAL';
+}
 
     // Calculate trend (compare recent vs older performance)
     let trend: TrendDirection = 'STABLE';
     if (performance && performance.length >= 10) {
       const recent = performance.slice(0, 5).reduce((s, p) => s + (p.achievement_percent || 0), 0) / 5;
       const older = performance.slice(-5).reduce((s, p) => s + (p.achievement_percent || 0), 0) / 5;
-      if (recent > older * 1.05) trend = 'IMPROVING';
-      else if (recent < older * 0.95) trend = 'DECLINING';
+      if (recent > older * 1.05) {
+trend = 'IMPROVING';
+} else if (recent < older * 0.95) {
+trend = 'DECLINING';
+}
     }
 
     return {
@@ -300,17 +309,29 @@ export class StrategySummaryReportService {
 
       // Determine status
       let status: HealthStatus;
-      if (score >= 80) status = 'EXCELLENT';
-      else if (score >= 65) status = 'GOOD';
-      else if (score >= 50) status = 'FAIR';
-      else if (score >= 35) status = 'POOR';
-      else status = 'CRITICAL';
+      if (score >= 80) {
+status = 'EXCELLENT';
+} else if (score >= 65) {
+status = 'GOOD';
+} else if (score >= 50) {
+status = 'FAIR';
+} else if (score >= 35) {
+status = 'POOR';
+} else {
+status = 'CRITICAL';
+}
 
       // Identify improvement areas
       const improvementAreas: string[] = [];
-      if (performance < 60) improvementAreas.push('Improve KPI performance');
-      if (allocation > 30) improvementAreas.push('Consider reducing allocation');
-      if (domainDrift > 0) improvementAreas.push(`Resolve ${domainDrift} drift signal(s)`);
+      if (performance < 60) {
+improvementAreas.push('Improve KPI performance');
+}
+      if (allocation > 30) {
+improvementAreas.push('Consider reducing allocation');
+}
+      if (domainDrift > 0) {
+improvementAreas.push(`Resolve ${domainDrift} drift signal(s)`);
+}
 
       reports.push({
         domain,
@@ -346,7 +367,9 @@ export class StrategySummaryReportService {
       .gte('started_at', startDate.toISOString())
       .order('started_at', { ascending: false });
 
-    if (error || !data) return [];
+    if (error || !data) {
+return [];
+}
 
     return data.map(cycle => ({
       cycle_id: cycle.id,
@@ -375,7 +398,9 @@ export class StrategySummaryReportService {
       .in('status', ['ACTIVE', 'DRAFT'])
       .order('created_at', { ascending: false });
 
-    if (!plans) return [];
+    if (!plans) {
+return [];
+}
 
     const reports: HorizonProgressReport[] = [];
 

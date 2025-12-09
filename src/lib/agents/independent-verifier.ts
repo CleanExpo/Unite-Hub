@@ -392,29 +392,23 @@ export class IndependentVerifier {
       if (criterion.startsWith('file_exists:')) {
         const filePath = criterion.replace('file_exists:', '').trim();
         criterionEvidence = await verifyFileExists(filePath);
-      }
-      else if (criterion.startsWith('no_placeholders:')) {
+      } else if (criterion.startsWith('no_placeholders:')) {
         const filePath = criterion.replace('no_placeholders:', '').trim();
         criterionEvidence = await verifyNoPlaceholders(filePath);
-      }
-      else if (criterion.startsWith('typescript_compiles:')) {
+      } else if (criterion.startsWith('typescript_compiles:')) {
         const filePath = criterion.replace('typescript_compiles:', '').trim();
         criterionEvidence = await verifyTypeScriptCompiles(filePath);
-      }
-      else if (criterion.startsWith('lint_passes:')) {
+      } else if (criterion.startsWith('lint_passes:')) {
         const filePath = criterion.replace('lint_passes:', '').trim();
         criterionEvidence = await verifyLintPasses(filePath);
-      }
-      else if (criterion.startsWith('tests_pass:')) {
+      } else if (criterion.startsWith('tests_pass:')) {
         const testFile = criterion.replace('tests_pass:', '').trim();
         criterionEvidence = await verifyTestsPassing(testFile);
-      }
-      else if (criterion.startsWith('endpoint_responds:')) {
+      } else if (criterion.startsWith('endpoint_responds:')) {
         const endpoint = criterion.replace('endpoint_responds:', '').trim();
         const [path, method] = endpoint.split('|').map(s => s.trim());
         criterionEvidence = await verifyEndpointResponds(path, method || 'GET');
-      }
-      else {
+      } else {
         // Unknown criterion type
         criterionEvidence = {
           criterion,

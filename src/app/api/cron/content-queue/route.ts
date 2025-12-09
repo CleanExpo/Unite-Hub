@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     const result = await runTask('content-queue-processor');
     return NextResponse.json(result);
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error('[Cron] content-queue failed:', error);
     return NextResponse.json({ error: 'Task failed', details: String(error) }, { status: 500 });
   }

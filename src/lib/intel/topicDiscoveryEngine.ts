@@ -287,7 +287,9 @@ export class TopicDiscoveryEngine {
     opportunities.sort((a, b) => {
       const priorityOrder = { critical: 4, high: 3, medium: 2, low: 1 };
       const priorityDiff = priorityOrder[b.priority] - priorityOrder[a.priority];
-      if (priorityDiff !== 0) return priorityDiff;
+      if (priorityDiff !== 0) {
+return priorityDiff;
+}
       return b.confidence_score - a.confidence_score;
     });
 
@@ -573,8 +575,12 @@ export class TopicDiscoveryEngine {
   ): TrendOpportunity['estimated_impact'] {
     const impactScore = avgStrength * 0.7 + (sourceCount / 5) * 100 * 0.3;
 
-    if (impactScore >= 70) return 'high';
-    if (impactScore >= 40) return 'medium';
+    if (impactScore >= 70) {
+return 'high';
+}
+    if (impactScore >= 40) {
+return 'medium';
+}
     return 'low';
   }
 

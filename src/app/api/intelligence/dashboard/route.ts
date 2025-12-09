@@ -89,16 +89,22 @@ export async function GET(req: NextRequest) {
       totalEnergy += record.energy_level || 0;
       totalDecisionReadiness += record.decision_readiness || 0;
 
-      if (record.sentiment === "positive") sentimentCounts.positive++;
-      else if (record.sentiment === "negative") sentimentCounts.negative++;
-      else sentimentCounts.neutral++;
+      if (record.sentiment === "positive") {
+sentimentCounts.positive++;
+} else if (record.sentiment === "negative") {
+sentimentCounts.negative++;
+} else {
+sentimentCounts.neutral++;
+}
     }
 
     // Calculate contact-level breakdown
     const contactMap = new Map();
 
     for (const record of intelligence) {
-      if (!record.contact) continue;
+      if (!record.contact) {
+continue;
+}
 
       const contactId = record.contact.id;
 
@@ -130,9 +136,13 @@ export async function GET(req: NextRequest) {
       contact.energySum += record.energy_level || 0;
       contact.decisionSum += record.decision_readiness || 0;
 
-      if (record.sentiment === "positive") contact.sentimentBreakdown.positive++;
-      else if (record.sentiment === "negative") contact.sentimentBreakdown.negative++;
-      else contact.sentimentBreakdown.neutral++;
+      if (record.sentiment === "positive") {
+contact.sentimentBreakdown.positive++;
+} else if (record.sentiment === "negative") {
+contact.sentimentBreakdown.negative++;
+} else {
+contact.sentimentBreakdown.neutral++;
+}
     }
 
     // Calculate averages for contacts

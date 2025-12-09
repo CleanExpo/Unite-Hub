@@ -129,7 +129,9 @@ export class ApprovalQueueService {
 
     const { data, error } = await query;
 
-    if (error) return [];
+    if (error) {
+return [];
+}
     return data;
   }
 
@@ -142,12 +144,14 @@ export class ApprovalQueueService {
   ): Promise<QueueItem[]> {
     const operator = await operatorRoleService.getOperator(userId, organizationId);
 
-    if (!operator) return [];
+    if (!operator) {
+return [];
+}
 
     const supabase = await getSupabaseServer();
 
     // Get items matching operator's permissions
-    let query = supabase
+    const query = supabase
       .from("operator_approval_queue")
       .select(`
         *,
@@ -168,12 +172,16 @@ export class ApprovalQueueService {
 
     const { data, error } = await query;
 
-    if (error) return [];
+    if (error) {
+return [];
+}
 
     // Filter by operator's permissions
     return data.filter((item) => {
       const proposal = item.autonomy_proposals;
-      if (!proposal) return false;
+      if (!proposal) {
+return false;
+}
 
       // Check domain access
       if (!operator.allowed_domains.includes(proposal.domain)) {
@@ -356,7 +364,9 @@ export class ApprovalQueueService {
       .in("status", ["PENDING", "ASSIGNED"])
       .select();
 
-    if (error) return 0;
+    if (error) {
+return 0;
+}
     return data.length;
   }
 

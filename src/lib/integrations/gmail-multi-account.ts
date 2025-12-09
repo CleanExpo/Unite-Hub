@@ -148,7 +148,9 @@ export async function syncGmailEmails(integrationId: string) {
     let imported = 0;
 
     for (const message of messages) {
-      if (!message.id) continue;
+      if (!message.id) {
+continue;
+}
 
       try {
         const fullMessage = await gmail.users.messages.get({

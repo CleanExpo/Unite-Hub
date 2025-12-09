@@ -111,7 +111,9 @@ export function OnboardingWizard({ open, onClose }: OnboardingWizardProps) {
 
   // Step 1: Profile Setup
   const handleStep1Complete = async () => {
-    if (!user) return;
+    if (!user) {
+return;
+}
     setIsSubmitting(true);
 
     try {
@@ -127,7 +129,9 @@ export function OnboardingWizard({ open, onClose }: OnboardingWizardProps) {
           .from("public")
           .upload(filePath, avatarFile);
 
-        if (uploadError) throw uploadError;
+        if (uploadError) {
+throw uploadError;
+}
 
         const { data: urlData } = supabaseBrowser.storage
           .from("public")
@@ -147,7 +151,9 @@ export function OnboardingWizard({ open, onClose }: OnboardingWizardProps) {
         })
         .eq("id", user.id);
 
-      if (error) throw error;
+      if (error) {
+throw error;
+}
 
       await refreshProfile();
       await completeStep(1, { business_name: businessName, phone, timezone });
@@ -248,7 +254,9 @@ export function OnboardingWizard({ open, onClose }: OnboardingWizardProps) {
         method: "POST",
       });
 
-      if (!response.ok) throw new Error("Sync failed");
+      if (!response.ok) {
+throw new Error("Sync failed");
+}
 
       const result = await response.json();
       setContactsFound(result.contactsCount || 0);
@@ -278,7 +286,9 @@ export function OnboardingWizard({ open, onClose }: OnboardingWizardProps) {
           body: JSON.stringify({ template: selectedTemplate }),
         });
 
-        if (!response.ok) throw new Error("Failed to create campaign");
+        if (!response.ok) {
+throw new Error("Failed to create campaign");
+}
 
         await completeStep(4, { campaign_template: selectedTemplate });
       } catch (error) {
@@ -678,10 +688,15 @@ export function OnboardingWizard({ open, onClose }: OnboardingWizardProps) {
             {currentStep !== 5 && (
               <Button
                 onClick={() => {
-                  if (currentStep === 1) handleStep1Complete();
-                  else if (currentStep === 2 && connectionSuccess) handleStep2Complete();
-                  else if (currentStep === 3 && contactsFound > 0) handleStep3Complete();
-                  else if (currentStep === 4) handleStep4Complete();
+                  if (currentStep === 1) {
+handleStep1Complete();
+} else if (currentStep === 2 && connectionSuccess) {
+handleStep2Complete();
+} else if (currentStep === 3 && contactsFound > 0) {
+handleStep3Complete();
+} else if (currentStep === 4) {
+handleStep4Complete();
+}
                 }}
                 disabled={
                   isSubmitting ||

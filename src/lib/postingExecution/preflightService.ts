@@ -125,7 +125,9 @@ export async function getPreflightById(preflightId: string): Promise<PreflightRe
     .eq('id', preflightId)
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+return null;
+}
 
   return mapToPreflightResult(data);
 }

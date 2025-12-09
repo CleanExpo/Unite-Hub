@@ -49,7 +49,9 @@ export function useActiveStrategy(
 
   const loadStrategy = useCallback(
     async (isPolling: boolean = false) => {
-      if (!strategyId || !workspaceId) return;
+      if (!strategyId || !workspaceId) {
+return;
+}
 
       // Initialize polling manager on first call
       if (!pollingManagerRef.current) {
@@ -243,7 +245,9 @@ export function useStrategyHistory(
   const [analytics, setAnalytics] = useState<any>(null);
 
   const loadHistory = useCallback(async () => {
-    if (!workspaceId) return;
+    if (!workspaceId) {
+return;
+}
 
     try {
       setIsLoadingHistory(true);
@@ -309,7 +313,9 @@ export function useRefreshOnFocus(
   enabled: boolean = true
 ) {
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled) {
+return;
+}
 
     const handleFocus = () => {
       refetchFn();
@@ -351,7 +357,9 @@ export function usePeriodicRefresh(
   }, [initialInterval]);
 
   const startRefreshTimer = useCallback(() => {
-    if (!enabled) return;
+    if (!enabled) {
+return;
+}
 
     intervalRef.current = setInterval(async () => {
       try {
@@ -408,8 +416,12 @@ export function useSynchronizedPolling(
   const isPollingRef = useRef<boolean>(false);
 
   const pollAll = useCallback(async () => {
-    if (isPollingRef.current) return; // Prevent overlapping polls
-    if (!strategyId || !workspaceId) return;
+    if (isPollingRef.current) {
+return;
+} // Prevent overlapping polls
+    if (!strategyId || !workspaceId) {
+return;
+}
 
     isPollingRef.current = true;
     setIsLoadingStrategy(true);
@@ -442,7 +454,9 @@ export function useSynchronizedPolling(
   }, [workspaceId, strategyId, setIsLoadingStrategy, setIsLoadingValidation, setIsLoadingHistory]);
 
   useEffect(() => {
-    if (!enabled || !strategyId) return;
+    if (!enabled || !strategyId) {
+return;
+}
 
     // Initial poll
     pollAll();

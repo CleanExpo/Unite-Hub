@@ -64,7 +64,9 @@ export class TCPQELEngine {
       .eq('active', true)
       .single();
 
-    if (!tenantPlan) return;
+    if (!tenantPlan) {
+return;
+}
 
     const usage = tenantPlan.quota_usage || {};
     usage[engine] = (usage[engine] || 0) + amount;

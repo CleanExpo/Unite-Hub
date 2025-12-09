@@ -333,7 +333,9 @@ export class DeltaEngine {
   ): GEOChange[] {
     const changes: GEOChange[] = [];
 
-    if (!previousGEO || !currentGEO) return changes;
+    if (!previousGEO || !currentGEO) {
+return changes;
+}
 
     // Radius change
     if (previousGEO.radiusKm !== currentGEO.radiusKm) {
@@ -452,8 +454,12 @@ export class DeltaEngine {
     const upCount = metricDeltas.filter(m => m.trend === "UP" && m.significance !== "LOW").length;
     const downCount = metricDeltas.filter(m => m.trend === "DOWN" && m.significance !== "LOW").length;
 
-    if (upCount > downCount * 1.5) return "IMPROVING";
-    if (downCount > upCount * 1.5) return "DECLINING";
+    if (upCount > downCount * 1.5) {
+return "IMPROVING";
+}
+    if (downCount > upCount * 1.5) {
+return "DECLINING";
+}
     return "STABLE";
   }
 

@@ -174,11 +174,21 @@ class MicrosoftGraphClient {
     }
 
     const params = new URLSearchParams();
-    if (options.top) params.set('$top', String(options.top));
-    if (options.skip) params.set('$skip', String(options.skip));
-    if (options.filter) params.set('$filter', options.filter);
-    if (options.orderBy) params.set('$orderby', options.orderBy);
-    if (options.select) params.set('$select', options.select.join(','));
+    if (options.top) {
+params.set('$top', String(options.top));
+}
+    if (options.skip) {
+params.set('$skip', String(options.skip));
+}
+    if (options.filter) {
+params.set('$filter', options.filter);
+}
+    if (options.orderBy) {
+params.set('$orderby', options.orderBy);
+}
+    if (options.select) {
+params.set('$select', options.select.join(','));
+}
 
     const folder = options.folderId || 'inbox';
     const endpoint = `/me/mailFolders/${folder}/messages?${params.toString()}`;

@@ -179,7 +179,9 @@ export class ChaosTestEngine {
    * Run chaos simulation (shadow mode)
    */
   private async runChaosSimulation(config: ChaosTestConfig): Promise<void> {
-    if (!this.currentEvent) return;
+    if (!this.currentEvent) {
+return;
+}
 
     const faultConfig = FAULT_CONFIGS[config.fault];
     const intensityMultiplier = MODE_MULTIPLIERS[config.mode] * (config.intensity / 100);

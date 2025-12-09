@@ -162,7 +162,9 @@ export function TierProvider({
 
   // Check if workspace can access a feature
   const canAccessFeature = (featureName: FeatureName): boolean => {
-    if (!tierInfo?.limits) return false;
+    if (!tierInfo?.limits) {
+return false;
+}
 
     // Check subscription status
     if (tierInfo.subscriptionStatus === 'cancelled' || tierInfo.subscriptionStatus === 'past_due') {
@@ -174,7 +176,9 @@ export function TierProvider({
 
   // Get limit value for a resource
   const getLimit = (limitName: LimitName): number => {
-    if (!tierInfo?.limits) return 0;
+    if (!tierInfo?.limits) {
+return 0;
+}
     return tierInfo.limits[limitName];
   };
 
@@ -185,7 +189,9 @@ export function TierProvider({
 
   // Check if workspace has at least the required tier
   const hasTier = (requiredTier: TierLevel): boolean => {
-    if (!tierInfo) return false;
+    if (!tierInfo) {
+return false;
+}
 
     // Check subscription status
     if (tierInfo.subscriptionStatus === 'cancelled') {

@@ -17,7 +17,9 @@ export class CacheManager {
   async get<T>(key: string): Promise<T | null> {
     try {
       const value = await this.redis.get(key);
-      if (!value) return null;
+      if (!value) {
+return null;
+}
 
       const parsed = JSON.parse(value);
       log.debug(`Cache HIT: ${key}`);

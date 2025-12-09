@@ -76,7 +76,9 @@ export function calculateAvailability(input: AvailabilityInput): AvailabilitySlo
 function mergeOverlappingEvents(
   events: Array<{ start: number; end: number; title: string; original: CalendarEvent }>
 ): Array<{ start: number; end: number }> {
-  if (events.length === 0) return [];
+  if (events.length === 0) {
+return [];
+}
 
   const merged: Array<{ start: number; end: number }> = [
     { start: events[0].start, end: events[0].end },
@@ -127,7 +129,9 @@ function calculateConfidence(slotStart: number, slotEnd: number, durationMs: num
  * Get next available slot
  */
 export function getNextAvailableSlot(slots: AvailabilitySlot[]): AvailabilitySlot | null {
-  if (slots.length === 0) return null;
+  if (slots.length === 0) {
+return null;
+}
   return slots[0]; // Already sorted by confidence
 }
 
@@ -148,9 +152,15 @@ export function filterByPreference(
   return slots.filter(slot => {
     const slotHour = new Date(slot.start).getHours();
     return preferences.some(pref => {
-      if (pref === 'morning') return slotHour >= 8 && slotHour < 12;
-      if (pref === 'afternoon') return slotHour >= 12 && slotHour < 17;
-      if (pref === 'evening') return slotHour >= 17 && slotHour < 21;
+      if (pref === 'morning') {
+return slotHour >= 8 && slotHour < 12;
+}
+      if (pref === 'afternoon') {
+return slotHour >= 12 && slotHour < 17;
+}
+      if (pref === 'evening') {
+return slotHour >= 17 && slotHour < 21;
+}
       return true;
     });
   });

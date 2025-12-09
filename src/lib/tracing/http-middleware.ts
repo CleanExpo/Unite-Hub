@@ -16,7 +16,7 @@
  * @module lib/tracing/http-middleware
  */
 
-/* eslint-disable no-console, no-undef, @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* global Headers, fetch */
 
 import { NextRequest, NextResponse } from 'next/server';

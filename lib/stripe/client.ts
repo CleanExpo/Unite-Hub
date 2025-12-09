@@ -398,7 +398,9 @@ export function getPlanTierFromPriceId(priceId: string): PlanTier | null {
   for (const [key, plan] of Object.entries(PRICING_PLANS)) {
     if (plan.stripePriceIdMonthly === priceId || plan.stripePriceIdAnnual === priceId) {
       // Map 'pro' to 'professional' for legacy compatibility
-      if (key === 'pro') return 'professional';
+      if (key === 'pro') {
+return 'professional';
+}
       return key as PlanTier;
     }
   }

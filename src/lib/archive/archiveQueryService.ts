@@ -175,8 +175,12 @@ export async function getFounderArchiveOverview(
     clientMap.set(entry.client_id, clientData);
 
     // Track date range
-    if (!earliest || entry.event_date < earliest) earliest = entry.event_date;
-    if (!latest || entry.event_date > latest) latest = entry.event_date;
+    if (!earliest || entry.event_date < earliest) {
+earliest = entry.event_date;
+}
+    if (!latest || entry.event_date > latest) {
+latest = entry.event_date;
+}
   }
 
   const entriesByClient = Array.from(clientMap.entries())

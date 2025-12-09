@@ -146,9 +146,15 @@ export async function updateRealityEventStatus(
     processing_status: status,
   };
 
-  if (processingLog !== undefined) updateData.processing_log = processingLog;
-  if (normalizedPayload !== undefined) updateData.normalized_payload = normalizedPayload;
-  if (linkedContentAssetIds !== undefined) updateData.linked_content_asset_ids = linkedContentAssetIds;
+  if (processingLog !== undefined) {
+updateData.processing_log = processingLog;
+}
+  if (normalizedPayload !== undefined) {
+updateData.normalized_payload = normalizedPayload;
+}
+  if (linkedContentAssetIds !== undefined) {
+updateData.linked_content_asset_ids = linkedContentAssetIds;
+}
 
   const { data, error } = await supabase
     .from('reality_events')

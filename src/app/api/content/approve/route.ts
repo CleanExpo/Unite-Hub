@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+ 
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 

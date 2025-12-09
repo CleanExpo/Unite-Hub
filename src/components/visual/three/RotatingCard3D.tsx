@@ -35,7 +35,9 @@ export function RotatingCard3D({
   const [hovered, setHovered] = useState(false);
 
   useFrame((state, delta) => {
-    if (!meshRef.current) return;
+    if (!meshRef.current) {
+return;
+}
 
     // Gentle auto-rotation (safe, not disorienting)
     if (autoRotate && !hovered) {

@@ -567,7 +567,9 @@ class AutonomyTuningModel {
     // Group adjustments by category
     const byCategory = adjustments.reduce(
       (acc, adj) => {
-        if (!acc[adj.category]) acc[adj.category] = [];
+        if (!acc[adj.category]) {
+acc[adj.category] = [];
+}
         acc[adj.category].push(adj);
         return acc;
       },
@@ -598,7 +600,9 @@ class AutonomyTuningModel {
    * Calculate overall confidence score
    */
   private calculateOverallConfidence(adjustments: ParameterAdjustment[]): number {
-    if (adjustments.length === 0) return 100;
+    if (adjustments.length === 0) {
+return 100;
+}
 
     const lockedCount = adjustments.filter(a => !a.safetyConstraintRespected).length;
     const largeDeltas = adjustments.filter(a => Math.abs(a.delta) > 15).length;
@@ -625,7 +629,9 @@ class AutonomyTuningModel {
    */
   private normalizeWeights(weights: Record<string, number>): Record<string, number> {
     const sum = Object.values(weights).reduce((a, b) => a + b, 0);
-    if (sum === 0) return weights;
+    if (sum === 0) {
+return weights;
+}
 
     return Object.fromEntries(Object.entries(weights).map(([k, v]) => [k, v / sum]));
   }

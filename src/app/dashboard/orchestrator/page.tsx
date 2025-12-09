@@ -57,7 +57,9 @@ export default function OrchestratorDashboardPage() {
   };
 
   const handleRetry = async () => {
-    if (!selectedTaskId) return;
+    if (!selectedTaskId) {
+return;
+}
 
     const retryTaskId = await retryTask(selectedTaskId);
     if (retryTaskId) {

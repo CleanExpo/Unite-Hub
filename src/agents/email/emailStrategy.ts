@@ -102,7 +102,9 @@ export class EmailStrategy {
         break;
     }
 
-    if (!template) return null;
+    if (!template) {
+return null;
+}
 
     return {
       ...template,

@@ -14,7 +14,7 @@
  * @module lib/supabase/pooling-config
  */
 
-/* eslint-disable no-undef, no-console, @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 /**
  * Pooling modes supported by pg_bouncer

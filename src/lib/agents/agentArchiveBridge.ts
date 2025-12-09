@@ -291,7 +291,9 @@ export class AgentArchiveBridge {
         .order("created_at", { ascending: false })
         .limit(limit);
 
-      if (error) throw error;
+      if (error) {
+throw error;
+}
 
       return (data || [])
         .map((row) => row.details as AgentLogEntry)
@@ -319,7 +321,9 @@ export class AgentArchiveBridge {
         .order("created_at", { ascending: false })
         .limit(limit);
 
-      if (error) throw error;
+      if (error) {
+throw error;
+}
 
       return data || [];
     } catch (error) {

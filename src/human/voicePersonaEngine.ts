@@ -212,13 +212,17 @@ export function personalizeResponse(input: {
 
   // Adjust based on cognitive state
   let response = input.base_response;
-  let pace: 'fast' | 'slow' | 'very slow' | 'normal' | 'paused' = energyProfile.pace;
+  const pace: 'fast' | 'slow' | 'very slow' | 'normal' | 'paused' = energyProfile.pace;
   let pacing_ms = 150; // Base pacing
 
   // Adjust pacing based on energy
-  if (pace === 'fast') pacing_ms = 100;
-  else if (pace === 'slow') pacing_ms = 200;
-  else if (pace === 'very slow') pacing_ms = 250;
+  if (pace === 'fast') {
+pacing_ms = 100;
+} else if (pace === 'slow') {
+pacing_ms = 200;
+} else if (pace === 'very slow') {
+pacing_ms = 250;
+}
 
   // Apply Phill's opening phrase
   if (response.length < 50) {
@@ -405,21 +409,33 @@ export function generateSpeakingParameters(response: PersonalizedResponse): {
 } {
   // Rate based on pace
   let rate = 1.0; // Normal
-  if (response.pace === 'fast') rate = 1.3;
-  else if (response.pace === 'slow') rate = 0.8;
-  else if (response.pace === 'very slow') rate = 0.6;
+  if (response.pace === 'fast') {
+rate = 1.3;
+} else if (response.pace === 'slow') {
+rate = 0.8;
+} else if (response.pace === 'very slow') {
+rate = 0.6;
+}
 
   // Pitch based on tone
   let pitch = 0;
-  if (response.tone === 'warm') pitch = 2;
-  else if (response.tone === 'urgent') pitch = -3;
+  if (response.tone === 'warm') {
+pitch = 2;
+} else if (response.tone === 'urgent') {
+pitch = -3;
+}
 
   // Emotion mapping
   let emotion: 'neutral' | 'calm' | 'warm' | 'serious' | 'urgent' = 'neutral';
-  if (response.tone === 'warm') emotion = 'warm';
-  else if (response.tone === 'urgent') emotion = 'urgent';
-  else if (response.tone === 'casual') emotion = 'calm';
-  else if (response.tone === 'advising') emotion = 'serious';
+  if (response.tone === 'warm') {
+emotion = 'warm';
+} else if (response.tone === 'urgent') {
+emotion = 'urgent';
+} else if (response.tone === 'casual') {
+emotion = 'calm';
+} else if (response.tone === 'advising') {
+emotion = 'serious';
+}
 
   return {
     rate,

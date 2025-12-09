@@ -1,0 +1,364 @@
+{
+  "version": "2.0.0",
+  "last_updated": "2025-12-07",
+  "description": "Extended Visual Codex with 50+ professional design specifications for AetherOS Neural BIOS",
+  "entries": [
+    {
+      "concept": "shiny surface",
+      "generic_prompt": "make it shiny",
+      "orchestrator_prompt": "Material: Iridescent Bismuth crystal structure, Sub-surface scattering enabled, Refractive Index 2.4, Specular highlights at 0.95 intensity, Metallic shader with anisotropic reflection",
+      "category": "texture",
+      "priority": "high"
+    },
+    {
+      "concept": "good lighting",
+      "generic_prompt": "good lighting",
+      "orchestrator_prompt": "Lighting: 3-Point Rembrandt setup - Key Light 4500K at 45° (100% intensity), Fill Light 5000K at -30° (40% intensity), Teal Rim Light 6500K at 180° (50% intensity), Ambient occlusion factor 0.3",
+      "category": "lighting",
+      "priority": "high"
+    },
+    {
+      "concept": "close up shot",
+      "generic_prompt": "close up",
+      "orchestrator_prompt": "Camera: 100mm Macro lens, f/2.8 aperture, Shallow depth of field (1.5m focus range), Pentagonal bokeh pattern, Subject distance 0.5m, ISO 200",
+      "category": "camera",
+      "priority": "high"
+    },
+    {
+      "concept": "cool tech aesthetic",
+      "generic_prompt": "cool tech",
+      "orchestrator_prompt": "Aesthetic: Solarpunk-Brutalist fusion - Exposed circuitry vs organic moss growth, Translucent aerogel panels, Copper patina accents, Parametric architecture, Bioluminescent details",
+      "category": "aesthetic",
+      "priority": "high"
+    },
+    {
+      "concept": "professional business",
+      "generic_prompt": "professional",
+      "orchestrator_prompt": "Aesthetic: Clean Corporate Minimalism - Sans-serif typography (Inter/Helvetica), Navy/Charcoal palette with gold accents, Asymmetric grid layout, Negative space emphasis, Premium matte finish",
+      "category": "aesthetic",
+      "priority": "high"
+    },
+    {
+      "concept": "modern design",
+      "generic_prompt": "modern",
+      "orchestrator_prompt": "Aesthetic: Contemporary Flat Design 3.0 - Subtle depth through elevation, Micro-interactions, Gradient mesh overlays, Variable font weights, 8px grid system, Accessible color contrast 4.5:1",
+      "category": "aesthetic",
+      "priority": "high"
+    },
+    {
+      "concept": "dramatic lighting",
+      "generic_prompt": "dramatic",
+      "orchestrator_prompt": "Lighting: Chiaroscuro technique - Single hard light source at 90°, Deep shadows with 0.1 fill, High contrast ratio 8:1, Volumetric fog particles, God rays through aperture",
+      "category": "lighting",
+      "priority": "medium"
+    },
+    {
+      "concept": "soft lighting",
+      "generic_prompt": "soft lighting",
+      "orchestrator_prompt": "Lighting: Diffused northern window light simulation - 5500K color temperature, Large softbox equivalent (2m²), Wrap-around fill at 0.7 intensity, Gradient falloff, No harsh shadows",
+      "category": "lighting",
+      "priority": "medium"
+    },
+    {
+      "concept": "wide angle view",
+      "generic_prompt": "wide shot",
+      "orchestrator_prompt": "Camera: 24mm Wide-angle lens, f/8 aperture for deep focus, Perspective correction enabled, Barrel distortion minimal, Full environmental context, Horizon line at lower third",
+      "category": "camera",
+      "priority": "medium"
+    },
+    {
+      "concept": "cinematic framing",
+      "generic_prompt": "cinematic",
+      "orchestrator_prompt": "Camera: 2.39:1 anamorphic aspect ratio, 50mm equivalent focal length, Shallow DOF with smooth bokeh, Film grain overlay at 5%, Color grade: Teal-orange LUT, Vignette at 15%",
+      "category": "camera",
+      "priority": "medium"
+    },
+    {
+      "concept": "luxury material",
+      "generic_prompt": "luxurious",
+      "orchestrator_prompt": "Material: Polished marble with gold leaf inlay, Velvet fabric (short pile, 0.5mm), Brushed titanium accents, Mother-of-pearl iridescence, Leather grain (full-grain, 1.2mm thickness)",
+      "category": "texture",
+      "priority": "medium"
+    },
+    {
+      "concept": "rough texture",
+      "generic_prompt": "textured surface",
+      "orchestrator_prompt": "Material: Weathered concrete (aggregate exposed), Displacement mapping depth 2mm, Normal map intensity 0.8, Moss growth in crevices, Rust stains (iron oxide), Water staining patterns",
+      "category": "texture",
+      "priority": "medium"
+    },
+    {
+      "concept": "glassmorphism",
+      "generic_prompt": "glass effect",
+      "orchestrator_prompt": "Material: Frosted glass (transmittance 0.6), Gaussian blur background 40px, Border glow (1px white at 0.5 opacity), Subtle gradient overlay (white to transparent 10%), Shadow depth 20px blur",
+      "category": "texture",
+      "priority": "high"
+    },
+    {
+      "concept": "vibrant colors",
+      "generic_prompt": "colorful",
+      "orchestrator_prompt": "Color: High saturation palette (80-95%), Complementary color harmony, RGB gamut maximized, HDR color space, Gradient transitions with easing, Color psychology: Energetic and optimistic",
+      "category": "aesthetic",
+      "priority": "medium"
+    },
+    {
+      "concept": "minimalist composition",
+      "generic_prompt": "simple",
+      "orchestrator_prompt": "Composition: Rule of thirds adherence, Single focal point, 70% negative space, Monochromatic or duo-tone palette, Clean edges, Geometric precision, Breathing room around elements",
+      "category": "composition",
+      "priority": "high"
+    },
+    {
+      "concept": "dynamic composition",
+      "generic_prompt": "dynamic layout",
+      "orchestrator_prompt": "Composition: Diagonal leading lines at 45°, Z-axis depth layers (3 planes), Asymmetric balance, Golden ratio spiral placement, Motion blur directional at 15%, Perspective foreshortening",
+      "category": "composition",
+      "priority": "high"
+    },
+    {
+      "concept": "sunset lighting",
+      "generic_prompt": "sunset",
+      "orchestrator_prompt": "Lighting: Golden hour simulation - 2500K warm key light at 15° elevation, Long shadows (1:8 ratio), Orange-pink gradient ambient (2500K to 3500K), Atmospheric haze particles, Lens flare artifacts",
+      "category": "lighting",
+      "priority": "low"
+    },
+    {
+      "concept": "studio lighting",
+      "generic_prompt": "studio",
+      "orchestrator_prompt": "Lighting: Professional studio setup - 5600K balanced white, Four-point lighting (key/fill/rim/background), Cyclorama white backdrop (seamless), Hair light at 60° rear, Shadow control at 0.2",
+      "category": "lighting",
+      "priority": "medium"
+    },
+    {
+      "concept": "neon aesthetic",
+      "generic_prompt": "neon",
+      "orchestrator_prompt": "Material: Neon tube simulation - Emission strength 5.0, Bloom radius 20px, Color temperature 10000K (cyan/magenta), Glass tube thickness 12mm, Argon gas glow effect, Reflections on wet surfaces",
+      "category": "texture",
+      "priority": "low"
+    },
+    {
+      "concept": "natural organic",
+      "generic_prompt": "natural",
+      "orchestrator_prompt": "Aesthetic: Biophilic design - Green/earth tone palette, Organic curved forms (Fibonacci curves), Natural wood grain texture, Stone aggregate, Leaf vein patterns, Imperfect asymmetry, Living plant integration",
+      "category": "aesthetic",
+      "priority": "medium"
+    },
+    {
+      "concept": "chrome metal",
+      "generic_prompt": "metallic chrome",
+      "orchestrator_prompt": "Material: Mirror-polished chromium surface, Refractive Index 2.9, Perfect specular reflections, Environment map reflectance at 0.98, Anisotropic highlights with linear brushing, Blued steel color tint",
+      "category": "texture",
+      "priority": "high"
+    },
+    {
+      "concept": "matte finish",
+      "generic_prompt": "matte surface",
+      "orchestrator_prompt": "Material: Non-reflective matte coating, Roughness value 0.9, Diffuse scattering only, No specular highlights, Velvet-like microstructure, Lambert shading model, Powder coat texture",
+      "category": "texture",
+      "priority": "medium"
+    },
+    {
+      "concept": "holographic effect",
+      "generic_prompt": "holographic",
+      "orchestrator_prompt": "Material: Rainbow diffraction grating, Spectral dispersion enabled, Viewing angle-dependent colors, Metallic base layer, Rainbow gradient (380nm-700nm spectrum), Prismatic light split, Iridescent shift",
+      "category": "texture",
+      "priority": "high"
+    },
+    {
+      "concept": "carbon fiber",
+      "generic_prompt": "carbon fiber texture",
+      "orchestrator_prompt": "Material: Woven carbon fiber composite (2x2 twill pattern), Epoxy resin clear coat, Anisotropic reflection along weave direction, Normal map depth 0.3mm, Glossiness 0.7, Black with subtle blue sheen",
+      "category": "texture",
+      "priority": "medium"
+    },
+    {
+      "concept": "fabric cloth",
+      "generic_prompt": "fabric texture",
+      "orchestrator_prompt": "Material: Linen weave (12x12 threads per cm), Sub-surface scattering 0.4, Fuzz/fiber shader, Micro-displacement 0.5mm, Natural color variation, Soft fold creases, Subsurface light transmission",
+      "category": "texture",
+      "priority": "low"
+    },
+    {
+      "concept": "water droplets",
+      "generic_prompt": "water drops",
+      "orchestrator_prompt": "Material: Water droplet physics - Surface tension radius 2-5mm, Refractive index 1.33, Caustic light patterns, Fresnel rim at edges, Meniscus contact angle 110°, Subtle chromatic aberration",
+      "category": "texture",
+      "priority": "medium"
+    },
+    {
+      "concept": "translucent plastic",
+      "generic_prompt": "translucent material",
+      "orchestrator_prompt": "Material: Milky acrylic plastic (transmittance 0.7), Sub-surface scattering depth 5mm, Internal light diffusion, Edge glow effect, Slight color tint (warm white), Smooth polished surface",
+      "category": "texture",
+      "priority": "medium"
+    },
+    {
+      "concept": "brushed aluminum",
+      "generic_prompt": "brushed metal",
+      "orchestrator_prompt": "Material: Anodized aluminum with linear brushing, Directional anisotropy at 0°, Micro-scratches normal map, Specular highlights elongated, Matte aluminum base (RGB: 200,200,205), Industrial grade finish",
+      "category": "texture",
+      "priority": "high"
+    },
+    {
+      "concept": "backlit rim lighting",
+      "generic_prompt": "backlit",
+      "orchestrator_prompt": "Lighting: Edge light separation technique - Rim light 8000K at 180° (80% intensity), Creates silhouette edge glow, Subject isolation from background, Volumetric atmosphere, Halo effect radius 10px",
+      "category": "lighting",
+      "priority": "high"
+    },
+    {
+      "concept": "moody atmospheric",
+      "generic_prompt": "moody atmosphere",
+      "orchestrator_prompt": "Lighting: Low-key noir style - Single source side lighting 3000K, 90% shadow ratio, Smoke/fog particles (density 0.3), Cool color grading (desaturated blues), High contrast 10:1, Mystery ambiance",
+      "category": "lighting",
+      "priority": "medium"
+    },
+    {
+      "concept": "high key bright",
+      "generic_prompt": "bright airy",
+      "orchestrator_prompt": "Lighting: High-key photography - Overlit environment 6000K, Multiple white reflectors, Shadow fill 0.9, Minimal contrast 2:1, Blown-out whites acceptable, Clean clinical feel, Fashion photography style",
+      "category": "lighting",
+      "priority": "medium"
+    },
+    {
+      "concept": "neon cyberpunk",
+      "generic_prompt": "cyberpunk lighting",
+      "orchestrator_prompt": "Lighting: Cyberpunk night scene - Magenta/cyan neon sources (8000K-12000K), Wet surface reflections, Atmospheric fog (density 0.5), Rain particles, Bloom radius 30px, Blade Runner color palette",
+      "category": "lighting",
+      "priority": "high"
+    },
+    {
+      "concept": "product photography",
+      "generic_prompt": "product shot",
+      "orchestrator_prompt": "Camera: 85mm portrait lens, f/11 aperture for full product focus, Neutral white background (RGB: 255,255,255), Camera height at product center, No perspective distortion, Even lighting, Commercial quality",
+      "category": "camera",
+      "priority": "high"
+    },
+    {
+      "concept": "aerial drone shot",
+      "generic_prompt": "aerial view",
+      "orchestrator_prompt": "Camera: Bird's eye 90° top-down angle, 16mm ultra-wide lens, f/5.6 aperture, High altitude perspective, Miniature effect tilt-shift, Grid composition, Geographic scale visible",
+      "category": "camera",
+      "priority": "medium"
+    },
+    {
+      "concept": "low angle heroic",
+      "generic_prompt": "low angle",
+      "orchestrator_prompt": "Camera: Dutch angle at 15° tilt, Low perspective 0.5m height, 35mm wide lens, f/4 aperture, Subject dominance composition, Dramatic sky visible, Power/authority framing, Worm's eye view",
+      "category": "camera",
+      "priority": "medium"
+    },
+    {
+      "concept": "bokeh portrait",
+      "generic_prompt": "blurred background",
+      "orchestrator_prompt": "Camera: 135mm telephoto lens, f/1.4 aperture (wide open), Extremely shallow DOF (0.3m range), Creamy bokeh circles, Subject isolation, Background compression, Professional portrait style",
+      "category": "camera",
+      "priority": "high"
+    },
+    {
+      "concept": "tilt shift miniature",
+      "generic_prompt": "miniature effect",
+      "orchestrator_prompt": "Camera: Tilt-shift lens simulation, Selective focus plane at 30° tilt, Extreme bokeh on edges, Toy-like miniature appearance, Saturated colors +20%, Aerial perspective, Diorama effect",
+      "category": "camera",
+      "priority": "low"
+    },
+    {
+      "concept": "long exposure motion",
+      "generic_prompt": "motion blur",
+      "orchestrator_prompt": "Camera: 2-second exposure time, Directional motion blur (horizontal/radial), Light trails visible, Smooth water effect, Star trail rotation if night, Tripod stability, Neutral density filter simulation",
+      "category": "camera",
+      "priority": "medium"
+    },
+    {
+      "concept": "y2k aesthetic",
+      "generic_prompt": "y2k style",
+      "orchestrator_prompt": "Aesthetic: Y2K Futurism revival - Chrome gradients, Inflated 3D typography, Holographic textures, Bubbly organic shapes, Transparent UI elements, Pink/cyan/silver palette, Cyber optimism vibes",
+      "category": "aesthetic",
+      "priority": "high"
+    },
+    {
+      "concept": "frutiger aero",
+      "generic_prompt": "frutiger aero",
+      "orchestrator_prompt": "Aesthetic: Frutiger Aero (2004-2013) - Glossy plastic surfaces, Water droplets, Green leaf motifs, Blue sky gradients, Transparent glass layers, Rounded sans-serif fonts, Vista/7 era design",
+      "category": "aesthetic",
+      "priority": "high"
+    },
+    {
+      "concept": "brutalism digital",
+      "generic_prompt": "brutalist design",
+      "orchestrator_prompt": "Aesthetic: Digital Brutalism - Raw unpolished elements, Monospace typography, Black/white/red palette only, Asymmetric chaos grid, Anti-design rebellion, Functional over beautiful, Concrete textures",
+      "category": "aesthetic",
+      "priority": "medium"
+    },
+    {
+      "concept": "vaporwave retro",
+      "generic_prompt": "vaporwave",
+      "orchestrator_prompt": "Aesthetic: Vaporwave nostalgia - Pink/purple/cyan gradient, Classical statue elements, Japanese text overlays, Grid floors, Palm trees, Sunset gradients, VHS artifacts, 80s-90s computer graphics",
+      "category": "aesthetic",
+      "priority": "medium"
+    },
+    {
+      "concept": "neumorphism soft ui",
+      "generic_prompt": "neumorphic",
+      "orchestrator_prompt": "Aesthetic: Neumorphism (Soft UI) - Single background color base, Soft shadows (blur 20px, offset 10px), Inner highlights, Extruded button appearance, Monochromatic palette, Tactile 3D illusion",
+      "category": "aesthetic",
+      "priority": "high"
+    },
+    {
+      "concept": "swiss modernism",
+      "generic_prompt": "swiss style",
+      "orchestrator_prompt": "Aesthetic: International Swiss Style - Helvetica/Univers fonts mandatory, Asymmetric grid system, Photography + typography combination, Limited color palette (max 3), Mathematical precision, Objective clarity",
+      "category": "aesthetic",
+      "priority": "medium"
+    },
+    {
+      "concept": "art deco luxury",
+      "generic_prompt": "art deco",
+      "orchestrator_prompt": "Aesthetic: Art Deco glamour - Geometric patterns (chevrons, sunbursts), Gold/black/cream palette, Symmetrical compositions, Stepped forms, Luxe materials, Bold typography, 1920s-1930s elegance",
+      "category": "aesthetic",
+      "priority": "low"
+    },
+    {
+      "concept": "memphis design",
+      "generic_prompt": "memphis style",
+      "orchestrator_prompt": "Aesthetic: Memphis Milano (1981) - Bright primary colors, Geometric shapes collision, Squiggly lines, Asymmetric balance, Pattern clashing, Postmodern chaos, Playful irreverence, Laminate textures",
+      "category": "aesthetic",
+      "priority": "low"
+    },
+    {
+      "concept": "rule of thirds",
+      "generic_prompt": "balanced composition",
+      "orchestrator_prompt": "Composition: Classic rule of thirds - 3x3 grid overlay, Subject on power points (intersections), Horizon on upper/lower third line, Visual weight balanced, Leading lines to focal point, Negative space utilization",
+      "category": "composition",
+      "priority": "high"
+    },
+    {
+      "concept": "symmetrical balance",
+      "generic_prompt": "symmetrical",
+      "orchestrator_prompt": "Composition: Mirror symmetry - Central vertical axis, Equal visual weight both sides, Formal balanced layout, Creates stability/authority, Centered focal point, Architectural precision, Classical approach",
+      "category": "composition",
+      "priority": "medium"
+    },
+    {
+      "concept": "deep depth layers",
+      "generic_prompt": "layered depth",
+      "orchestrator_prompt": "Composition: Z-axis stratification - Foreground (0-2m), Midground (2-10m), Background (10m+), Atmospheric perspective, Size diminution, Overlap occlusion, Parallax motion potential, 3D spatial depth",
+      "category": "composition",
+      "priority": "high"
+    },
+    {
+      "concept": "golden ratio spiral",
+      "generic_prompt": "fibonacci composition",
+      "orchestrator_prompt": "Composition: Golden ratio (1.618) spiral placement - Fibonacci curve overlay, Natural eye flow path, Elements along spiral arm, Focal point at spiral center, Harmonic proportions, Nature-inspired balance",
+      "category": "composition",
+      "priority": "medium"
+    },
+    {
+      "concept": "framing device",
+      "generic_prompt": "frame within frame",
+      "orchestrator_prompt": "Composition: Natural framing technique - Doorways/windows as frames, Branches/foliage borders, Architectural elements, Directs attention to subject, Creates depth layers, Viewfinder effect, Contextual storytelling",
+      "category": "composition",
+      "priority": "medium"
+    }
+  ]
+}

@@ -325,7 +325,9 @@ class AuctionArchiveBridgeImpl {
       filtered = filtered.filter((a) => agentIds.includes(a.winningAgentId));
     }
 
-    if (filtered.length === 0) return 0;
+    if (filtered.length === 0) {
+return 0;
+}
 
     return (
       filtered.filter((a) => a.outcome === 'success').length / filtered.length

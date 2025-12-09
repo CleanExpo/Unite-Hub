@@ -136,7 +136,9 @@ export async function analyzeRankings(
   const alerts: RankingAlert[] = [];
 
   for (const trend of trends) {
-    if (!trend.currentRank) continue;
+    if (!trend.currentRank) {
+continue;
+}
 
     // Major drop (>5 positions)
     if (trend.change < -5) {

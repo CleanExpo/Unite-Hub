@@ -220,8 +220,11 @@ export default function SynthexPortfolio() {
 
           // Determine churn risk
           let churnRisk: 'low' | 'medium' | 'high' = 'low';
-          if (healthScore < 30) churnRisk = 'high';
-          else if (healthScore < 60) churnRisk = 'medium';
+          if (healthScore < 30) {
+churnRisk = 'high';
+} else if (healthScore < 60) {
+churnRisk = 'medium';
+}
 
           // Recommendation
           let recommendation = '';
@@ -303,8 +306,12 @@ export default function SynthexPortfolio() {
   const filteredTenants = tenants
     .filter((t) => (filterStatus === 'all' ? true : t.status === filterStatus))
     .sort((a, b) => {
-      if (sortBy === 'health') return b.metrics.healthScore - a.metrics.healthScore;
-      if (sortBy === 'revenue') return b.metrics.monthlyRevenue - a.metrics.monthlyRevenue;
+      if (sortBy === 'health') {
+return b.metrics.healthScore - a.metrics.healthScore;
+}
+      if (sortBy === 'revenue') {
+return b.metrics.monthlyRevenue - a.metrics.monthlyRevenue;
+}
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     });
 

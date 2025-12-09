@@ -28,11 +28,17 @@ export async function fetchFinancialSummary(
 ): Promise<{ success: boolean; data?: FinancialSummary; error?: string }> {
   try {
     const params = new URLSearchParams({ organizationId, type: 'summary' });
-    if (startDate) params.append('startDate', startDate);
-    if (endDate) params.append('endDate', endDate);
+    if (startDate) {
+params.append('startDate', startDate);
+}
+    if (endDate) {
+params.append('endDate', endDate);
+}
 
     const headers: HeadersInit = { 'Content-Type': 'application/json' };
-    if (token) headers['Authorization'] = `Bearer ${token}`;
+    if (token) {
+headers['Authorization'] = `Bearer ${token}`;
+}
 
     const response = await fetch(`/api/reports/financial?${params.toString()}`, { headers });
     const result = await response.json();
@@ -58,12 +64,20 @@ export async function fetchOrganizationPnL(
 ): Promise<{ success: boolean; data?: ProfitAndLossStatement; error?: string }> {
   try {
     const params = new URLSearchParams({ organizationId, type: 'pnl' });
-    if (startDate) params.append('startDate', startDate);
-    if (endDate) params.append('endDate', endDate);
-    if (includePrevious) params.append('includePrevious', 'true');
+    if (startDate) {
+params.append('startDate', startDate);
+}
+    if (endDate) {
+params.append('endDate', endDate);
+}
+    if (includePrevious) {
+params.append('includePrevious', 'true');
+}
 
     const headers: HeadersInit = { 'Content-Type': 'application/json' };
-    if (token) headers['Authorization'] = `Bearer ${token}`;
+    if (token) {
+headers['Authorization'] = `Bearer ${token}`;
+}
 
     const response = await fetch(`/api/reports/financial?${params.toString()}`, { headers });
     const result = await response.json();
@@ -87,10 +101,14 @@ export async function fetchProjectFinancials(
 ): Promise<{ success: boolean; data?: ProjectFinancials[]; error?: string }> {
   try {
     const params = new URLSearchParams({ organizationId, type: 'projects' });
-    if (projectId) params.append('projectId', projectId);
+    if (projectId) {
+params.append('projectId', projectId);
+}
 
     const headers: HeadersInit = { 'Content-Type': 'application/json' };
-    if (token) headers['Authorization'] = `Bearer ${token}`;
+    if (token) {
+headers['Authorization'] = `Bearer ${token}`;
+}
 
     const response = await fetch(`/api/reports/financial?${params.toString()}`, { headers });
     const result = await response.json();
@@ -115,11 +133,17 @@ export async function fetchAICostBreakdown(
 ): Promise<{ success: boolean; data?: AICostBreakdown[]; error?: string }> {
   try {
     const params = new URLSearchParams({ organizationId, type: 'ai_costs' });
-    if (startDate) params.append('startDate', startDate);
-    if (endDate) params.append('endDate', endDate);
+    if (startDate) {
+params.append('startDate', startDate);
+}
+    if (endDate) {
+params.append('endDate', endDate);
+}
 
     const headers: HeadersInit = { 'Content-Type': 'application/json' };
-    if (token) headers['Authorization'] = `Bearer ${token}`;
+    if (token) {
+headers['Authorization'] = `Bearer ${token}`;
+}
 
     const response = await fetch(`/api/reports/financial?${params.toString()}`, { headers });
     const result = await response.json();
@@ -149,7 +173,9 @@ export async function fetchMonthlyComparison(
     });
 
     const headers: HeadersInit = { 'Content-Type': 'application/json' };
-    if (token) headers['Authorization'] = `Bearer ${token}`;
+    if (token) {
+headers['Authorization'] = `Bearer ${token}`;
+}
 
     const response = await fetch(`/api/reports/financial?${params.toString()}`, { headers });
     const result = await response.json();
@@ -172,7 +198,9 @@ export async function refreshReports(
 ): Promise<{ success: boolean; error?: string }> {
   try {
     const headers: HeadersInit = { 'Content-Type': 'application/json' };
-    if (token) headers['Authorization'] = `Bearer ${token}`;
+    if (token) {
+headers['Authorization'] = `Bearer ${token}`;
+}
 
     const response = await fetch('/api/reports/financial/refresh', {
       method: 'POST',
@@ -205,7 +233,9 @@ export async function fetchClientBilling(
     const params = new URLSearchParams({ contactId, type: 'billing' });
 
     const headers: HeadersInit = { 'Content-Type': 'application/json' };
-    if (token) headers['Authorization'] = `Bearer ${token}`;
+    if (token) {
+headers['Authorization'] = `Bearer ${token}`;
+}
 
     const response = await fetch(`/api/reports/client?${params.toString()}`, { headers });
     const result = await response.json();
@@ -230,11 +260,17 @@ export async function fetchClientPnL(
 ): Promise<{ success: boolean; data?: ClientPnL; error?: string }> {
   try {
     const params = new URLSearchParams({ contactId, type: 'pnl' });
-    if (startDate) params.append('startDate', startDate);
-    if (endDate) params.append('endDate', endDate);
+    if (startDate) {
+params.append('startDate', startDate);
+}
+    if (endDate) {
+params.append('endDate', endDate);
+}
 
     const headers: HeadersInit = { 'Content-Type': 'application/json' };
-    if (token) headers['Authorization'] = `Bearer ${token}`;
+    if (token) {
+headers['Authorization'] = `Bearer ${token}`;
+}
 
     const response = await fetch(`/api/reports/client?${params.toString()}`, { headers });
     const result = await response.json();
@@ -263,11 +299,17 @@ export async function fetchClientHours(
 }> {
   try {
     const params = new URLSearchParams({ contactId, type: 'hours' });
-    if (startDate) params.append('startDate', startDate);
-    if (endDate) params.append('endDate', endDate);
+    if (startDate) {
+params.append('startDate', startDate);
+}
+    if (endDate) {
+params.append('endDate', endDate);
+}
 
     const headers: HeadersInit = { 'Content-Type': 'application/json' };
-    if (token) headers['Authorization'] = `Bearer ${token}`;
+    if (token) {
+headers['Authorization'] = `Bearer ${token}`;
+}
 
     const response = await fetch(`/api/reports/client?${params.toString()}`, { headers });
     const result = await response.json();
@@ -296,11 +338,17 @@ export async function fetchClientPayments(
 }> {
   try {
     const params = new URLSearchParams({ contactId, type: 'payments' });
-    if (startDate) params.append('startDate', startDate);
-    if (endDate) params.append('endDate', endDate);
+    if (startDate) {
+params.append('startDate', startDate);
+}
+    if (endDate) {
+params.append('endDate', endDate);
+}
 
     const headers: HeadersInit = { 'Content-Type': 'application/json' };
-    if (token) headers['Authorization'] = `Bearer ${token}`;
+    if (token) {
+headers['Authorization'] = `Bearer ${token}`;
+}
 
     const response = await fetch(`/api/reports/client?${params.toString()}`, { headers });
     const result = await response.json();

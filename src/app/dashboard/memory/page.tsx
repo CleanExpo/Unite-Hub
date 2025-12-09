@@ -37,7 +37,9 @@ export default function MemoryDashboard() {
   const accessToken = session?.access_token;
 
   useEffect(() => {
-    if (!workspaceId || !accessToken) return;
+    if (!workspaceId || !accessToken) {
+return;
+}
 
     const fetchMetrics = async () => {
       setMetricsLoading(true);

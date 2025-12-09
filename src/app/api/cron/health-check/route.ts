@@ -58,8 +58,9 @@ export async function GET(req: NextRequest) {
     function logCheck(name: string, status: 'pass' | 'fail' | 'warn', details: string) {
       checks[name] = { status, details };
       totalChecks++;
-      if (status === 'pass') passedChecks++;
-      else if (status === 'fail') {
+      if (status === 'pass') {
+passedChecks++;
+} else if (status === 'fail') {
         failedChecks++;
         criticalIssues.push(`${name}: ${details}`);
       } else {

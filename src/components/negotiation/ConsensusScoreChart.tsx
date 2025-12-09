@@ -13,8 +13,12 @@ export const ConsensusScoreChart: React.FC<ConsensusScoreChartProps> = ({
   finalConsensusScore,
 }) => {
   const getBarColor = (score: number) => {
-    if (score >= 65) return 'bg-green-500';
-    if (score >= 50) return 'bg-yellow-500';
+    if (score >= 65) {
+return 'bg-green-500';
+}
+    if (score >= 50) {
+return 'bg-yellow-500';
+}
     return 'bg-red-500';
   };
 

@@ -52,7 +52,9 @@ export async function POST(req: NextRequest) {
 
     // Get the lead
     const leadsResult = await getRoutableLeads(tenantId, { limit: 1000 });
-    if (leadsResult.error) throw leadsResult.error;
+    if (leadsResult.error) {
+throw leadsResult.error;
+}
 
     const lead = leadsResult.data?.find((l) => l.id === leadId);
     if (!lead) {

@@ -77,7 +77,9 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
   // Auto-generate breadcrumbs from pathname if not provided
   const breadcrumbs = items || generateBreadcrumbs(pathname);
 
-  if (breadcrumbs.length === 0) return null;
+  if (breadcrumbs.length === 0) {
+return null;
+}
 
   // Truncate middle items if more than 3 segments
   const shouldTruncate = breadcrumbs.length > 3;
@@ -136,7 +138,9 @@ export function Breadcrumbs({ items, className }: BreadcrumbsProps) {
 }
 
 function generateBreadcrumbs(pathname: string | null): BreadcrumbItem[] {
-  if (!pathname) return [];
+  if (!pathname) {
+return [];
+}
 
   const segments = pathname.split('/').filter(Boolean);
   const breadcrumbs: BreadcrumbItem[] = [];

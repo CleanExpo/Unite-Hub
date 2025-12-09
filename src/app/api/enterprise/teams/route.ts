@@ -222,9 +222,15 @@ export async function PATCH(req: NextRequest) {
 
     // Update team properties
     const updates: Record<string, unknown> = {};
-    if (name) updates.name = name;
-    if (description !== undefined) updates.description = description;
-    if (lead_user_id) updates.lead_user_id = lead_user_id;
+    if (name) {
+updates.name = name;
+}
+    if (description !== undefined) {
+updates.description = description;
+}
+    if (lead_user_id) {
+updates.lead_user_id = lead_user_id;
+}
 
     let updatedTeam = team;
     if (Object.keys(updates).length > 0) {

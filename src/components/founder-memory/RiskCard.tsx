@@ -52,23 +52,41 @@ export function RiskCard({ risk, onClick, className = '' }: RiskCardProps) {
   const MitigationIcon = mitigation.icon;
 
   const getSeverityColor = (score: number) => {
-    if (score >= 80) return 'bg-red-500';
-    if (score >= 60) return 'bg-orange-500';
-    if (score >= 40) return 'bg-yellow-500';
+    if (score >= 80) {
+return 'bg-red-500';
+}
+    if (score >= 60) {
+return 'bg-orange-500';
+}
+    if (score >= 40) {
+return 'bg-yellow-500';
+}
     return 'bg-green-500';
   };
 
   const getRiskScoreLabel = (score: number) => {
-    if (score >= 80) return 'Critical';
-    if (score >= 60) return 'High';
-    if (score >= 40) return 'Medium';
+    if (score >= 80) {
+return 'Critical';
+}
+    if (score >= 60) {
+return 'High';
+}
+    if (score >= 40) {
+return 'Medium';
+}
     return 'Low';
   };
 
   const getRiskScoreColor = (score: number) => {
-    if (score >= 80) return 'text-red-600 dark:text-red-400';
-    if (score >= 60) return 'text-orange-600 dark:text-orange-400';
-    if (score >= 40) return 'text-yellow-600 dark:text-yellow-400';
+    if (score >= 80) {
+return 'text-red-600 dark:text-red-400';
+}
+    if (score >= 60) {
+return 'text-orange-600 dark:text-orange-400';
+}
+    if (score >= 40) {
+return 'text-yellow-600 dark:text-yellow-400';
+}
     return 'text-green-600 dark:text-green-400';
   };
 

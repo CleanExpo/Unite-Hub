@@ -54,7 +54,9 @@ export default function Modal({
     return () => document.removeEventListener('keydown', handleEscape);
   }, [isModalOpen, onClose]);
 
-  if (!isModalOpen) return null;
+  if (!isModalOpen) {
+return null;
+}
 
   const sizeClasses = {
     sm: 'max-w-sm',

@@ -206,7 +206,9 @@ export async function linkNodes(
   const node1 = nodes.find((n) => n.id === nodeId1);
   const node2 = nodes.find((n) => n.id === nodeId2);
 
-  if (!node1 || !node2) return false;
+  if (!node1 || !node2) {
+return false;
+}
 
   const node1Related = [...new Set([...(node1.related_nodes || []), nodeId2])];
   const node2Related = [...new Set([...(node2.related_nodes || []), nodeId1])];

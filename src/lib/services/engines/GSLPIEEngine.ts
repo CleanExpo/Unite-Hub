@@ -61,8 +61,11 @@ export class GSLPIEEngine {
     const secondAvg = secondHalf.reduce((s, m) => s + m.latency_ms, 0) / (secondHalf.length || 1);
 
     let trend: 'improving' | 'stable' | 'degrading' = 'stable';
-    if (secondAvg < firstAvg * 0.9) trend = 'improving';
-    else if (secondAvg > firstAvg * 1.1) trend = 'degrading';
+    if (secondAvg < firstAvg * 0.9) {
+trend = 'improving';
+} else if (secondAvg > firstAvg * 1.1) {
+trend = 'degrading';
+}
 
     return { avg_latency, p95_latency, avg_error_rate, avg_throughput, trend };
   }

@@ -165,7 +165,9 @@ export default function VideoLibraryPage() {
         {filteredVideos.length === 0 && (
           <div className="text-center py-16">
             <p className="text-muted-foreground text-lg mb-4">No videos found matching your search.</p>
-            <Button variant="outline" onClick={() => { setSearchQuery(""); setSelectedCategory("all"); }}>
+            <Button variant="outline" onClick={() => {
+ setSearchQuery(""); setSelectedCategory("all"); 
+}}>
               Clear Filters
             </Button>
           </div>

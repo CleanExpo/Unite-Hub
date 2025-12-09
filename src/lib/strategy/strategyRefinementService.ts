@@ -173,7 +173,9 @@ export class StrategyRefinementService {
 
     // Analyze each metric for drift
     for (const [key, group] of metricGroups) {
-      if (group.length < cfg.min_data_points) continue;
+      if (group.length < cfg.min_data_points) {
+continue;
+}
 
       const [domain, metricName] = key.split('-');
       const driftAnalysis = this.detectMetricDrift(group, cfg.drift_threshold_percent);
@@ -464,8 +466,11 @@ export class StrategyRefinementService {
       .reduce((sum, r) => sum + r.achievement_percent, 0) / Math.min(10, data.length);
 
     let trend: 'IMPROVING' | 'DECLINING' | 'STABLE' = 'STABLE';
-    if (recentAvg > olderAvg * 1.05) trend = 'IMPROVING';
-    else if (recentAvg < olderAvg * 0.95) trend = 'DECLINING';
+    if (recentAvg > olderAvg * 1.05) {
+trend = 'IMPROVING';
+} else if (recentAvg < olderAvg * 0.95) {
+trend = 'DECLINING';
+}
 
     return {
       success_patterns: successPatterns,
@@ -595,7 +600,9 @@ export class StrategyRefinementService {
             .select()
             .single();
 
-          if (signal) signals.push(signal);
+          if (signal) {
+signals.push(signal);
+}
         }
       }
     }
@@ -604,14 +611,22 @@ export class StrategyRefinementService {
   }
 
   private calculateSeverity(driftPercent: number): DriftSeverity {
-    if (driftPercent > 30) return 'CRITICAL';
-    if (driftPercent > 20) return 'HIGH';
-    if (driftPercent > 10) return 'MEDIUM';
+    if (driftPercent > 30) {
+return 'CRITICAL';
+}
+    if (driftPercent > 20) {
+return 'HIGH';
+}
+    if (driftPercent > 10) {
+return 'MEDIUM';
+}
     return 'LOW';
   }
 
   private calculateOverallSeverity(signals: DriftSignal[]): DriftSeverity {
-    if (signals.length === 0) return 'LOW';
+    if (signals.length === 0) {
+return 'LOW';
+}
 
     const severityOrder: DriftSeverity[] = ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'];
     const maxSeverity = signals.reduce((max, s) => {
@@ -624,10 +639,18 @@ export class StrategyRefinementService {
   }
 
   private calculatePerformanceGrade(achievementPercent: number): string {
-    if (achievementPercent >= 90) return 'A';
-    if (achievementPercent >= 80) return 'B';
-    if (achievementPercent >= 70) return 'C';
-    if (achievementPercent >= 60) return 'D';
+    if (achievementPercent >= 90) {
+return 'A';
+}
+    if (achievementPercent >= 80) {
+return 'B';
+}
+    if (achievementPercent >= 70) {
+return 'C';
+}
+    if (achievementPercent >= 60) {
+return 'D';
+}
     return 'F';
   }
 

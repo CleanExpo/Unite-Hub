@@ -20,10 +20,18 @@ const HOURS = Array.from({ length: 24 }, (_, i) => i);
 
 // Color scale from cool (low) to warm (high)
 function getColor(value: number): string {
-  if (value <= 0.2) return '#1e3a5f';  // Dark blue
-  if (value <= 0.4) return '#2d6a4f';  // Dark green
-  if (value <= 0.6) return '#55a630';  // Green
-  if (value <= 0.8) return '#f9c74f';  // Yellow
+  if (value <= 0.2) {
+return '#1e3a5f';
+}  // Dark blue
+  if (value <= 0.4) {
+return '#2d6a4f';
+}  // Dark green
+  if (value <= 0.6) {
+return '#55a630';
+}  // Green
+  if (value <= 0.8) {
+return '#f9c74f';
+}  // Yellow
   return '#f94144';  // Red (best)
 }
 

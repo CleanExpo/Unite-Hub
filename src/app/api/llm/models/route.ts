@@ -36,7 +36,7 @@ export async function GET() {
       total_models: models.length,
     });
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error('[API] Models error:', error);
     return NextResponse.json(
       { error: 'Failed to fetch models', details: String(error) },

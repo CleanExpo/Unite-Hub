@@ -166,16 +166,36 @@ class ReplayService {
       updated_at: new Date().toISOString(),
     };
 
-    if (updates.name) dbUpdates.name = updates.name;
-    if (updates.description !== undefined) dbUpdates.description = updates.description;
-    if (updates.startUrl) dbUpdates.start_url = updates.startUrl;
-    if (updates.steps) dbUpdates.steps = updates.steps;
-    if (updates.variables) dbUpdates.variables = updates.variables;
-    if (updates.assertions) dbUpdates.assertions = updates.assertions;
-    if (updates.retryConfig) dbUpdates.retry_config = updates.retryConfig;
-    if (updates.scheduleConfig !== undefined) dbUpdates.schedule_config = updates.scheduleConfig;
-    if (updates.notifyOnComplete !== undefined) dbUpdates.notify_on_complete = updates.notifyOnComplete;
-    if (updates.notifyOnFail !== undefined) dbUpdates.notify_on_fail = updates.notifyOnFail;
+    if (updates.name) {
+dbUpdates.name = updates.name;
+}
+    if (updates.description !== undefined) {
+dbUpdates.description = updates.description;
+}
+    if (updates.startUrl) {
+dbUpdates.start_url = updates.startUrl;
+}
+    if (updates.steps) {
+dbUpdates.steps = updates.steps;
+}
+    if (updates.variables) {
+dbUpdates.variables = updates.variables;
+}
+    if (updates.assertions) {
+dbUpdates.assertions = updates.assertions;
+}
+    if (updates.retryConfig) {
+dbUpdates.retry_config = updates.retryConfig;
+}
+    if (updates.scheduleConfig !== undefined) {
+dbUpdates.schedule_config = updates.scheduleConfig;
+}
+    if (updates.notifyOnComplete !== undefined) {
+dbUpdates.notify_on_complete = updates.notifyOnComplete;
+}
+    if (updates.notifyOnFail !== undefined) {
+dbUpdates.notify_on_fail = updates.notifyOnFail;
+}
 
     const { error } = await supabase
       .from('browser_replay_tasks')
@@ -511,7 +531,9 @@ class ReplayService {
       const date = run.started_at.split('T')[0];
       const current = byDay.get(date) || { count: 0, successCount: 0 };
       current.count++;
-      if (run.status === 'completed') current.successCount++;
+      if (run.status === 'completed') {
+current.successCount++;
+}
       byDay.set(date, current);
     }
 

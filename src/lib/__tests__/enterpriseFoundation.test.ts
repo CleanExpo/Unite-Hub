@@ -121,7 +121,9 @@ describe('Enterprise Foundation', () => {
 
     it('should check wildcard permission', () => {
       const hasPermission = (permissions: string[], required: string): boolean => {
-        if (permissions.includes('*')) return true;
+        if (permissions.includes('*')) {
+return true;
+}
         return permissions.includes(required);
       };
 
@@ -345,13 +347,19 @@ describe('Enterprise Foundation', () => {
         newRole: WorkspaceRole
       ): boolean => {
         // Cannot modify own role
-        if (targetUserId === actorUserId) return false;
+        if (targetUserId === actorUserId) {
+return false;
+}
 
         // Must be owner or admin
-        if (!['owner', 'admin'].includes(actorRole)) return false;
+        if (!['owner', 'admin'].includes(actorRole)) {
+return false;
+}
 
         // Admin cannot create owner
-        if (actorRole === 'admin' && newRole === 'owner') return false;
+        if (actorRole === 'admin' && newRole === 'owner') {
+return false;
+}
 
         return true;
       };

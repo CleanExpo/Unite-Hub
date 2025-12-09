@@ -494,7 +494,9 @@ Respond with a JSON array of suggestions:
 
   private extractVariables(templateText: string): string[] {
     const matches = templateText.match(/\{\{([^}]+)\}\}/g);
-    if (!matches) return [];
+    if (!matches) {
+return [];
+}
     return matches.map((m) => m.slice(2, -2));
   }
 

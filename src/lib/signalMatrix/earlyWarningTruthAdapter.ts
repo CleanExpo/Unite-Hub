@@ -184,10 +184,18 @@ export function meetsMinimumTruthStandards(event: EarlyWarningEvent): {
  * Get confidence label
  */
 function getConfidenceLabel(confidence: number): string {
-  if (confidence >= 0.85) return 'High';
-  if (confidence >= 0.7) return 'Good';
-  if (confidence >= 0.5) return 'Moderate';
-  if (confidence >= 0.3) return 'Low';
+  if (confidence >= 0.85) {
+return 'High';
+}
+  if (confidence >= 0.7) {
+return 'Good';
+}
+  if (confidence >= 0.5) {
+return 'Moderate';
+}
+  if (confidence >= 0.3) {
+return 'Low';
+}
   return 'Very Low';
 }
 
@@ -195,9 +203,17 @@ function getConfidenceLabel(confidence: number): string {
  * Get completeness label
  */
 function getCompletenessLabel(completeness: number): string {
-  if (completeness >= 0.85) return 'Excellent';
-  if (completeness >= 0.7) return 'Good';
-  if (completeness >= 0.5) return 'Moderate';
-  if (completeness >= 0.3) return 'Limited';
+  if (completeness >= 0.85) {
+return 'Excellent';
+}
+  if (completeness >= 0.7) {
+return 'Good';
+}
+  if (completeness >= 0.5) {
+return 'Moderate';
+}
+  if (completeness >= 0.3) {
+return 'Limited';
+}
   return 'Minimal';
 }

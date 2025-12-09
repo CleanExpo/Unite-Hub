@@ -45,7 +45,9 @@ export default function CampaignsPage() {
   };
 
   const handleGenerateCampaign = () => {
-    if (!selectedBundle) return;
+    if (!selectedBundle) {
+return;
+}
 
     // Create a sample brief from the selected bundle
     const brief: CampaignBrief = {

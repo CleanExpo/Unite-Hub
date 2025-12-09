@@ -12,7 +12,9 @@ export function announceToScreenReader(
   message: string,
   priority: "polite" | "assertive" = "polite"
 ): void {
-  if (typeof document === "undefined") return;
+  if (typeof document === "undefined") {
+return;
+}
 
   // Find or create announcer element
   let announcer = document.getElementById("a11y-announcer");
@@ -57,7 +59,9 @@ export function getContrastRatio(
       b = parseInt(hex.slice(4, 6), 16) / 255;
     } else if (color.startsWith("rgb")) {
       const match = color.match(/\d+/g);
-      if (!match) return 0;
+      if (!match) {
+return 0;
+}
       [r, g, b] = match.map((v) => parseInt(v) / 255);
     } else {
       return 0;
@@ -117,10 +121,14 @@ export function createFocusTrap(container: HTMLElement): {
   };
 
   const handleKeyDown = (e: KeyboardEvent): void => {
-    if (e.key !== "Tab") return;
+    if (e.key !== "Tab") {
+return;
+}
 
     const focusable = getFocusableElements();
-    if (focusable.length === 0) return;
+    if (focusable.length === 0) {
+return;
+}
 
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
@@ -163,12 +171,16 @@ export function setupSkipLink(
   skipLinkId: string = "skip-link",
   mainContentId: string = "main-content"
 ): void {
-  if (typeof document === "undefined") return;
+  if (typeof document === "undefined") {
+return;
+}
 
   const skipLink = document.getElementById(skipLinkId);
   const mainContent = document.getElementById(mainContentId);
 
-  if (!skipLink || !mainContent) return;
+  if (!skipLink || !mainContent) {
+return;
+}
 
   skipLink.addEventListener("click", (e) => {
     e.preventDefault();
@@ -182,7 +194,9 @@ export function setupSkipLink(
  * Reduced motion preference detection
  */
 export function prefersReducedMotion(): boolean {
-  if (typeof window === "undefined") return false;
+  if (typeof window === "undefined") {
+return false;
+}
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
@@ -192,7 +206,9 @@ export function prefersReducedMotion(): boolean {
 export function onReducedMotionChange(
   callback: (prefersReduced: boolean) => void
 ): () => void {
-  if (typeof window === "undefined") return () => {};
+  if (typeof window === "undefined") {
+return () => {};
+}
 
   const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
@@ -270,8 +286,12 @@ export function handleArrowKeyNavigation(
 
   // Handle looping or bounds
   if (loop) {
-    if (newIndex < 0) newIndex = items.length - 1;
-    if (newIndex >= items.length) newIndex = 0;
+    if (newIndex < 0) {
+newIndex = items.length - 1;
+}
+    if (newIndex >= items.length) {
+newIndex = 0;
+}
   } else {
     newIndex = Math.max(0, Math.min(newIndex, items.length - 1));
   }
@@ -292,10 +312,14 @@ export function handleLoadingState(
   elementId: string,
   loadingMessage: string = "Loading..."
 ): void {
-  if (typeof document === "undefined") return;
+  if (typeof document === "undefined") {
+return;
+}
 
   const element = document.getElementById(elementId);
-  if (!element) return;
+  if (!element) {
+return;
+}
 
   if (isLoading) {
     element.setAttribute("aria-busy", "true");

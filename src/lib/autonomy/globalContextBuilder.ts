@@ -296,10 +296,18 @@ class GlobalContextBuilder {
 
     for (const action of actions) {
       const actionType = action.action || '';
-      if (actionType.includes('email')) agentCount['email-agent'] = (agentCount['email-agent'] || 0) + 1;
-      if (actionType.includes('content')) agentCount['content-agent'] = (agentCount['content-agent'] || 0) + 1;
-      if (actionType.includes('contact')) agentCount['contact-intelligence'] = (agentCount['contact-intelligence'] || 0) + 1;
-      if (actionType.includes('orchestrator')) agentCount['orchestrator'] = (agentCount['orchestrator'] || 0) + 1;
+      if (actionType.includes('email')) {
+agentCount['email-agent'] = (agentCount['email-agent'] || 0) + 1;
+}
+      if (actionType.includes('content')) {
+agentCount['content-agent'] = (agentCount['content-agent'] || 0) + 1;
+}
+      if (actionType.includes('contact')) {
+agentCount['contact-intelligence'] = (agentCount['contact-intelligence'] || 0) + 1;
+}
+      if (actionType.includes('orchestrator')) {
+agentCount['orchestrator'] = (agentCount['orchestrator'] || 0) + 1;
+}
     }
 
     return Object.entries(agentCount)
@@ -320,7 +328,9 @@ class GlobalContextBuilder {
       .eq('workspace_id', workspaceId)
       .limit(50);
 
-    if (!orchestrations || orchestrations.length === 0) return 0;
+    if (!orchestrations || orchestrations.length === 0) {
+return 0;
+}
 
     const completed = orchestrations.filter((t) => t.status === 'completed').length;
     return Math.round((completed / orchestrations.length) * 100);

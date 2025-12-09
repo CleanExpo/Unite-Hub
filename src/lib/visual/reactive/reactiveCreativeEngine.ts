@@ -127,28 +127,44 @@ export function getReactiveMethodRecommendations(
     if (record) {
       // Performance score
       if (record.avg_engagement_rate !== null) {
-        if (record.avg_engagement_rate >= 0.03) score += 30;
-        else if (record.avg_engagement_rate >= 0.015) score += 15;
-        else if (record.avg_engagement_rate < 0.005) score -= 20;
+        if (record.avg_engagement_rate >= 0.03) {
+score += 30;
+} else if (record.avg_engagement_rate >= 0.015) {
+score += 15;
+} else if (record.avg_engagement_rate < 0.005) {
+score -= 20;
+}
       }
 
       // Channel fit
-      if (record.best_channel === channel) score += 20;
-      if (record.worst_channel === channel) score -= 15;
+      if (record.best_channel === channel) {
+score += 20;
+}
+      if (record.worst_channel === channel) {
+score -= 15;
+}
 
       // Recency bonus
       if (record.last_used) {
         const daysSinceUse = (Date.now() - new Date(record.last_used).getTime()) / (1000 * 60 * 60 * 24);
-        if (daysSinceUse < 7) score += 5;
-        else if (daysSinceUse > 30) score -= 5;
+        if (daysSinceUse < 7) {
+score += 5;
+} else if (daysSinceUse > 30) {
+score -= 5;
+}
       }
 
       // Usage experience
-      if (record.usage_count > 10) score += 5;
+      if (record.usage_count > 10) {
+score += 5;
+}
     } else {
       // Untested method
-      if (mode === 'exploratory') score += 10;
-      else if (mode === 'conservative') score -= 20;
+      if (mode === 'exploratory') {
+score += 10;
+} else if (mode === 'conservative') {
+score -= 20;
+}
     }
 
     return { method, score };
@@ -192,7 +208,9 @@ function calculateMethodAdjustments(
     const asset = allAssets[i];
     const record = methodRecords.find(r => r.method_id === asset.method_id);
 
-    if (!record) continue;
+    if (!record) {
+continue;
+}
 
     let adjustment = 0;
     let reason = '';
@@ -238,7 +256,9 @@ function calculateChannelAdjustments(
 
   for (const channel of channels) {
     const snapshot = snapshots.find(s => s.channel === channel);
-    if (!snapshot) continue;
+    if (!snapshot) {
+continue;
+}
 
     let modifier = 1.0;
     let reason = '';
@@ -410,9 +430,13 @@ function calculateConfidenceScore(
 
   // Data volume bonus
   const totalUsage = methodRecords.reduce((sum, r) => sum + r.usage_count, 0);
-  if (totalUsage > 100) score += 15;
-  else if (totalUsage > 50) score += 10;
-  else if (totalUsage < 10) score -= 15;
+  if (totalUsage > 100) {
+score += 15;
+} else if (totalUsage > 50) {
+score += 10;
+} else if (totalUsage < 10) {
+score -= 15;
+}
 
   // Channel coverage bonus
   const coveredChannels = brief.channels.filter(ch =>
@@ -423,7 +447,9 @@ function calculateConfidenceScore(
 
   // Recency bonus
   const recentRecords = methodRecords.filter(r => {
-    if (!r.last_used) return false;
+    if (!r.last_used) {
+return false;
+}
     const days = (Date.now() - new Date(r.last_used).getTime()) / (1000 * 60 * 60 * 24);
     return days < 30;
   });

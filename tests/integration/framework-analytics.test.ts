@@ -357,10 +357,15 @@ describe('Framework Analytics', () => {
     it('should identify percentile performance level', async () => {
       const rank = mockMetrics.benchmark_comparison.percentile_rank;
       let level: string;
-      if (rank >= 90) level = 'top-10';
-      else if (rank >= 75) level = 'top-25';
-      else if (rank >= 50) level = 'above-average';
-      else level = 'below-average';
+      if (rank >= 90) {
+level = 'top-10';
+} else if (rank >= 75) {
+level = 'top-25';
+} else if (rank >= 50) {
+level = 'above-average';
+} else {
+level = 'below-average';
+}
 
       expect(['top-10', 'top-25', 'above-average', 'below-average']).toContain(level);
     });

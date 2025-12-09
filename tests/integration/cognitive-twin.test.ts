@@ -711,10 +711,15 @@ describe("Cognitive Twin Integration", () => {
       };
 
       const errors = [];
-      if (!invalidInputs.domain) errors.push("Domain required");
-      if (invalidInputs.options.length === 0)
-        errors.push("At least one option required");
-      if (!invalidInputs.context) errors.push("Context required");
+      if (!invalidInputs.domain) {
+errors.push("Domain required");
+}
+      if (invalidInputs.options.length === 0) {
+errors.push("At least one option required");
+}
+      if (!invalidInputs.context) {
+errors.push("Context required");
+}
 
       expect(errors.length).toBe(3);
     });

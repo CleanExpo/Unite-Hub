@@ -260,7 +260,9 @@ export function getKeyframesCSS(presetId: string): string | null {
  * Helper to check reduced motion preference
  */
 export function prefersReducedMotion(): boolean {
-  if (typeof window === 'undefined') return false;
+  if (typeof window === 'undefined') {
+return false;
+}
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 

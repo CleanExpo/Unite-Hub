@@ -180,7 +180,9 @@ export function getPlan(planId: string): PricingPlan | undefined {
  */
 export function hasFeature(planId: string, feature: string): boolean {
   const plan = getPlan(planId);
-  if (!plan) return false;
+  if (!plan) {
+return false;
+}
   return plan.features.some(f => f.toLowerCase().includes(feature.toLowerCase()));
 }
 
@@ -189,7 +191,9 @@ export function hasFeature(planId: string, feature: string): boolean {
  */
 export function getLimit(planId: string, limitType: keyof PlanLimit): number {
   const plan = getPlan(planId);
-  if (!plan) return 0;
+  if (!plan) {
+return 0;
+}
   return plan.limits[limitType];
 }
 
@@ -202,7 +206,9 @@ export function calculateOverage(
   quantity: number
 ): number {
   const plan = getPlan(planId);
-  if (!plan) return 0;
+  if (!plan) {
+return 0;
+}
 
   if (overageType === "aiTokensPer1000") {
     return quantity * plan.overages.aiTokensPer1000;
@@ -237,7 +243,9 @@ export function getPriceForInterval(
   interval: BillingInterval
 ): number {
   const plan = getPlan(planId);
-  if (!plan) return 0;
+  if (!plan) {
+return 0;
+}
   return interval === "year" ? plan.annualPrice : plan.price;
 }
 
@@ -246,7 +254,9 @@ export function getPriceForInterval(
  */
 export function getMonthlyEquivalent(planId: string): number {
   const plan = getPlan(planId);
-  if (!plan) return 0;
+  if (!plan) {
+return 0;
+}
   return Math.round(plan.annualPrice / 12);
 }
 
@@ -265,7 +275,9 @@ export function getStripePriceId(
   interval: BillingInterval
 ): string | undefined {
   const plan = getPlan(planId);
-  if (!plan) return undefined;
+  if (!plan) {
+return undefined;
+}
   return interval === "year" ? plan.stripePriceIdAnnual : plan.stripePriceIdMonthly;
 }
 

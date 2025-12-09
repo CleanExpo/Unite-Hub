@@ -28,7 +28,9 @@ export default function LearningLoopPage() {
   useEffect(() => {
     async function fetchRuns() {
       const { data: { session } } = await supabaseBrowser.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const response = await fetch('/api/cross-tenant/learning', {
         headers: { Authorization: `Bearer ${session.access_token}` }

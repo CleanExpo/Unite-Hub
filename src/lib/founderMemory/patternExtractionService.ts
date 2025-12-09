@@ -263,11 +263,15 @@ Focus on actionable, meaningful patterns. Return empty array if no significant p
       });
 
       const textBlock = response.content.find((c) => c.type === 'text');
-      if (!textBlock) return [];
+      if (!textBlock) {
+return [];
+}
 
       // Parse AI response
       const jsonMatch = textBlock.text.match(/\[[\s\S]*\]/);
-      if (!jsonMatch) return [];
+      if (!jsonMatch) {
+return [];
+}
 
       const rawPatterns = JSON.parse(jsonMatch[0]) as Array<{
         type: PatternType;

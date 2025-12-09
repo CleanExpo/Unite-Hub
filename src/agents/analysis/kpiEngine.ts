@@ -45,10 +45,14 @@ export function analyseKPIs(datasets: AnalysisDatasets): KPIResult {
  * Email engagement score (0-100) based on opens and clicks
  */
 function calculateEmailEngagement(emails?: Array<any>): number {
-  if (!emails || emails.length === 0) return 0;
+  if (!emails || emails.length === 0) {
+return 0;
+}
 
   const totalEmails = emails.reduce((sum, e) => sum + (e.sent || 0), 0);
-  if (totalEmails === 0) return 0;
+  if (totalEmails === 0) {
+return 0;
+}
 
   const totalOpens = emails.reduce((sum, e) => sum + (e.opens || 0), 0);
   const totalClicks = emails.reduce((sum, e) => sum + (e.clicks || 0), 0);
@@ -63,12 +67,16 @@ function calculateEmailEngagement(emails?: Array<any>): number {
  * Email open rate (%)
  */
 function calculateEmailOpenRate(emails?: Array<any>): number {
-  if (!emails || emails.length === 0) return 0;
+  if (!emails || emails.length === 0) {
+return 0;
+}
 
   const totalSent = emails.reduce((sum, e) => sum + (e.sent || 0), 0);
   const totalOpens = emails.reduce((sum, e) => sum + (e.opens || 0), 0);
 
-  if (totalSent === 0) return 0;
+  if (totalSent === 0) {
+return 0;
+}
   return (totalOpens / totalSent) * 100;
 }
 
@@ -76,12 +84,16 @@ function calculateEmailOpenRate(emails?: Array<any>): number {
  * Email click rate (%)
  */
 function calculateEmailClickRate(emails?: Array<any>): number {
-  if (!emails || emails.length === 0) return 0;
+  if (!emails || emails.length === 0) {
+return 0;
+}
 
   const totalSent = emails.reduce((sum, e) => sum + (e.sent || 0), 0);
   const totalClicks = emails.reduce((sum, e) => sum + (e.clicks || 0), 0);
 
-  if (totalSent === 0) return 0;
+  if (totalSent === 0) {
+return 0;
+}
   return (totalClicks / totalSent) * 100;
 }
 
@@ -89,12 +101,16 @@ function calculateEmailClickRate(emails?: Array<any>): number {
  * Email bounce rate (%)
  */
 function calculateEmailBounceRate(emails?: Array<any>): number {
-  if (!emails || emails.length === 0) return 0;
+  if (!emails || emails.length === 0) {
+return 0;
+}
 
   const totalSent = emails.reduce((sum, e) => sum + (e.sent || 0), 0);
   const totalBounces = emails.reduce((sum, e) => sum + (e.bounces || 0), 0);
 
-  if (totalSent === 0) return 0;
+  if (totalSent === 0) {
+return 0;
+}
   return (totalBounces / totalSent) * 100;
 }
 
@@ -102,7 +118,9 @@ function calculateEmailBounceRate(emails?: Array<any>): number {
  * Content auto-approval rate (%)
  */
 function calculateAutoApprovedContentPercentage(content?: Array<any>): number {
-  if (!content || content.length === 0) return 0;
+  if (!content || content.length === 0) {
+return 0;
+}
 
   const autoApproved = content.filter((c) => c.ready_to_use === true).length;
   return (autoApproved / content.length) * 100;
@@ -112,7 +130,9 @@ function calculateAutoApprovedContentPercentage(content?: Array<any>): number {
  * Scheduling efficiency (0-100) based on available slots vs conflicts
  */
 function calculateSchedulingEfficiency(scheduling?: Array<any>): number {
-  if (!scheduling || scheduling.length === 0) return 50; // Neutral if no data
+  if (!scheduling || scheduling.length === 0) {
+return 50;
+} // Neutral if no data
 
   const totalSlots = scheduling.reduce((sum, s) => sum + (s.slots_available || 0), 0);
   const totalConflicts = scheduling.reduce((sum, s) => sum + (s.conflicts?.length || 0), 0);
@@ -129,7 +149,9 @@ function calculateSchedulingEfficiency(scheduling?: Array<any>): number {
  * Total scheduling conflicts detected
  */
 function calculateTotalConflicts(scheduling?: Array<any>): number {
-  if (!scheduling || scheduling.length === 0) return 0;
+  if (!scheduling || scheduling.length === 0) {
+return 0;
+}
   return scheduling.reduce((sum, s) => sum + (s.conflicts?.length || 0), 0);
 }
 
@@ -137,7 +159,9 @@ function calculateTotalConflicts(scheduling?: Array<any>): number {
  * Average staff utilization (0-100)
  */
 function calculateStaffUtilization(staff?: Array<any>): number {
-  if (!staff || staff.length === 0) return 0;
+  if (!staff || staff.length === 0) {
+return 0;
+}
 
   const avgUtilization = staff.reduce((sum, s) => sum + (s.utilization || 0), 0) / staff.length;
   return Math.round(avgUtilization);
@@ -147,7 +171,9 @@ function calculateStaffUtilization(staff?: Array<any>): number {
  * Count staff members at overload (>80% utilization)
  */
 function calculateStaffOverload(staff?: Array<any>): number {
-  if (!staff || staff.length === 0) return 0;
+  if (!staff || staff.length === 0) {
+return 0;
+}
   return staff.filter((s) => (s.utilization || 0) > 80).length;
 }
 
@@ -157,21 +183,31 @@ function calculateStaffOverload(staff?: Array<any>): number {
 function evaluateFinancialHealth(
   financials?: Array<any>
 ): 'strong' | 'stable' | 'at_risk' | 'critical' {
-  if (!financials || financials.length === 0) return 'stable';
+  if (!financials || financials.length === 0) {
+return 'stable';
+}
 
   // Calculate average profit margin from financials
   const margins = financials.map((f) => {
     const revenue = f.revenue || 0;
     const expenses = f.expenses || 0;
-    if (revenue === 0) return 0;
+    if (revenue === 0) {
+return 0;
+}
     return ((revenue - expenses) / revenue) * 100;
   });
 
   const avgMargin = margins.reduce((sum, m) => sum + m, 0) / margins.length;
 
-  if (avgMargin >= 40) return 'strong';
-  if (avgMargin >= 20) return 'stable';
-  if (avgMargin >= 0) return 'at_risk';
+  if (avgMargin >= 40) {
+return 'strong';
+}
+  if (avgMargin >= 20) {
+return 'stable';
+}
+  if (avgMargin >= 0) {
+return 'at_risk';
+}
   return 'critical';
 }
 
@@ -179,12 +215,16 @@ function evaluateFinancialHealth(
  * Calculate profit margin (%)
  */
 function calculateProfitMargin(financials?: Array<any>): number {
-  if (!financials || financials.length === 0) return 0;
+  if (!financials || financials.length === 0) {
+return 0;
+}
 
   const totalRevenue = financials.reduce((sum, f) => sum + (f.revenue || 0), 0);
   const totalExpenses = financials.reduce((sum, f) => sum + (f.expenses || 0), 0);
 
-  if (totalRevenue === 0) return 0;
+  if (totalRevenue === 0) {
+return 0;
+}
   return ((totalRevenue - totalExpenses) / totalRevenue) * 100;
 }
 

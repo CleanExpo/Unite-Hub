@@ -1,4 +1,4 @@
-/* eslint-disable no-console, no-undef */
+ 
 /* global process */
 
 /**

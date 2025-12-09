@@ -215,7 +215,9 @@ Environment: ${this.environment}
 ${this.notificationChannels.join(' ')}
 {{/is_alert}}`
       );
-      if (latencyCritical.ruleId) rules.push(latencyCritical.ruleId);
+      if (latencyCritical.ruleId) {
+rules.push(latencyCritical.ruleId);
+}
 
       // Alert 2: Health check latency > 3 seconds (warning)
       const latencyWarning = await this.createAlertRule(
@@ -229,7 +231,9 @@ Current value: {{value}}ms
 ${this.notificationChannels.join(' ')}
 {{/is_warning}}`
       );
-      if (latencyWarning.ruleId) rules.push(latencyWarning.ruleId);
+      if (latencyWarning.ruleId) {
+rules.push(latencyWarning.ruleId);
+}
 
       // Alert 3: Route success rate < 95%
       const routeSuccess = await this.createAlertRule(
@@ -243,7 +247,9 @@ Current: {{value}}%
 ${this.notificationChannels.join(' ')}
 {{/is_alert}}`
       );
-      if (routeSuccess.ruleId) rules.push(routeSuccess.ruleId);
+      if (routeSuccess.ruleId) {
+rules.push(routeSuccess.ruleId);
+}
 
       // Alert 4: Database response time > 2 seconds
       const dbLatency = await this.createAlertRule(
@@ -257,7 +263,9 @@ Current value: {{value}}ms
 ${this.notificationChannels.join(' ')}
 {{/is_alert}}`
       );
-      if (dbLatency.ruleId) rules.push(dbLatency.ruleId);
+      if (dbLatency.ruleId) {
+rules.push(dbLatency.ruleId);
+}
 
       // Alert 5: Cache hit rate < 75%
       const cacheHitRate = await this.createAlertRule(
@@ -272,7 +280,9 @@ This may indicate cache eviction or misconfiguration
 ${this.notificationChannels.join(' ')}
 {{/is_alert}}`
       );
-      if (cacheHitRate.ruleId) rules.push(cacheHitRate.ruleId);
+      if (cacheHitRate.ruleId) {
+rules.push(cacheHitRate.ruleId);
+}
 
       // Alert 6: Dependency health degraded
       const depHealth = await this.createAlertRule(
@@ -286,7 +296,9 @@ Status value: {{value}} (0=healthy, 1=degraded, 2=unhealthy)
 ${this.notificationChannels.join(' ')}
 {{/is_alert}}`
       );
-      if (depHealth.ruleId) rules.push(depHealth.ruleId);
+      if (depHealth.ruleId) {
+rules.push(depHealth.ruleId);
+}
 
       logger.info('Health check alerts created', { count: rules.length });
       return { success: true, rules };
@@ -316,7 +328,9 @@ Immediate investigation required
 ${this.notificationChannels.join(' ')}
 {{/is_alert}}`
       );
-      if (verificationSuccess.ruleId) rules.push(verificationSuccess.ruleId);
+      if (verificationSuccess.ruleId) {
+rules.push(verificationSuccess.ruleId);
+}
 
       logger.info('Verification alerts created', { count: rules.length });
       return { success: true, rules };

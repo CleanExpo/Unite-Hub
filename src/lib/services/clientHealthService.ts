@@ -67,7 +67,9 @@ export async function createMomentumAlert(data: {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true, alert };
   } catch (error) {
@@ -111,7 +113,9 @@ export async function getOrgAlerts(
 
     const { data, error } = await query;
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true, alerts: data };
   } catch (error) {
@@ -142,7 +146,9 @@ export async function acknowledgeAlert(
       })
       .eq('id', alertId);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true };
   } catch (error) {
@@ -171,7 +177,9 @@ export async function resolveAlert(
       })
       .eq('id', alertId);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true };
   } catch (error) {
@@ -216,7 +224,9 @@ export async function checkClientHealth(
         message: `No activity in the last ${THRESHOLDS.inactivity_hours} hours. Consider reaching out.`,
         alertData: { last_check: new Date().toISOString() },
       });
-      if (alertResult.alert) alerts.push(alertResult.alert);
+      if (alertResult.alert) {
+alerts.push(alertResult.alert);
+}
     }
 
     // Check for stalled tasks
@@ -241,7 +251,9 @@ export async function checkClientHealth(
         message: `${inProgressTasks.length} task(s) haven't progressed in ${THRESHOLDS.tasks_stalled_hours} hours.`,
         alertData: { stalled_tasks: inProgressTasks.map(t => t.title) },
       });
-      if (alertResult.alert) alerts.push(alertResult.alert);
+      if (alertResult.alert) {
+alerts.push(alertResult.alert);
+}
     }
 
     // Check for zero activity in multiple days
@@ -265,7 +277,9 @@ export async function checkClientHealth(
         message: `No activity in ${THRESHOLDS.zero_audit_activity_days} days. Client may be at risk of churning.`,
         alertData: { days_inactive: THRESHOLDS.zero_audit_activity_days },
       });
-      if (alertResult.alert) alerts.push(alertResult.alert);
+      if (alertResult.alert) {
+alerts.push(alertResult.alert);
+}
     }
 
     // Check for score drop (needs previous score)
@@ -291,7 +305,9 @@ export async function checkClientHealth(
           message: `Score dropped by ${drop} points (from ${previousScore} to ${currentScore}). Investigate and reach out.`,
           alertData: { previous_score: previousScore, current_score: currentScore, drop },
         });
-        if (alertResult.alert) alerts.push(alertResult.alert);
+        if (alertResult.alert) {
+alerts.push(alertResult.alert);
+}
       }
     }
 
@@ -359,7 +375,9 @@ export async function getAlertSummary(
       .eq('organization_id', organizationId)
       .eq('status', 'active');
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     const summary = {
       total: data?.length || 0,

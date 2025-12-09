@@ -250,7 +250,9 @@ export class CSVGenerator {
    * Escape CSV special characters
    */
   private escapeCsv(value: string): string {
-    if (!value) return "";
+    if (!value) {
+return "";
+}
 
     // If value contains comma, quote, or newline, wrap in quotes and escape internal quotes
     if (value.includes(",") || value.includes('"') || value.includes("\n")) {

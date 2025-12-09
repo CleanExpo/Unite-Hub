@@ -21,7 +21,7 @@ export async function GET() {
       timezone: 'Australia/Brisbane',
     });
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error('[API] Cron status error:', error);
     return NextResponse.json(
       { error: 'Failed to get status', details: String(error) },

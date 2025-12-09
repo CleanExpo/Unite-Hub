@@ -34,7 +34,7 @@ export async function GET() {
       timestamp: report.timestamp,
     });
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error('[API] Discovery error:', error);
     return NextResponse.json(
       { error: 'Failed to run discovery', details: String(error) },

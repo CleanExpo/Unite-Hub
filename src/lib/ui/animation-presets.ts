@@ -104,13 +104,17 @@ export const staggerStyle = (index: number, baseDelay = 50) => ({
 // ============================================================================
 
 export const prefersReducedMotion = (): boolean => {
-  if (typeof window === 'undefined') return false;
+  if (typeof window === 'undefined') {
+return false;
+}
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 };
 
 // Helper to get motion-safe classes
 export const motionSafe = (animationClass: string, fallbackClass = ''): string => {
-  if (typeof window === 'undefined') return animationClass;
+  if (typeof window === 'undefined') {
+return animationClass;
+}
   return prefersReducedMotion() ? fallbackClass : animationClass;
 };
 

@@ -30,7 +30,9 @@ export function ConversionFunnelCard({
   variant,
 }: ConversionFunnelCardProps) {
   const getChangeIndicator = (current: number, previous?: number) => {
-    if (!previous) return null;
+    if (!previous) {
+return null;
+}
     const change = ((current - previous) / previous) * 100;
 
     if (change > 0) {

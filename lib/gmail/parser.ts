@@ -113,7 +113,9 @@ function extractBody(message: gmail_v1.Schema$Message): { bodyHtml: string; body
   let bodyPlain = "";
 
   const payload = message.payload;
-  if (!payload) return { bodyHtml, bodyPlain };
+  if (!payload) {
+return { bodyHtml, bodyPlain };
+}
 
   // Single part message
   if (payload.body?.data && !payload.parts) {
@@ -173,7 +175,9 @@ function extractAttachments(message: gmail_v1.Schema$Message): EmailAttachment[]
   const attachments: EmailAttachment[] = [];
   const payload = message.payload;
 
-  if (!payload?.parts) return attachments;
+  if (!payload?.parts) {
+return attachments;
+}
 
   const extractFromParts = (parts: gmail_v1.Schema$MessagePart[]) => {
     for (const part of parts) {

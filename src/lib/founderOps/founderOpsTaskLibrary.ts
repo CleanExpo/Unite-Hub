@@ -314,7 +314,9 @@ export class FounderOpsTaskLibrary {
     const allTasks = this.getAllTaskArchetypes();
 
     // If no metadata, return all tasks
-    if (!brandMetadata) return allTasks;
+    if (!brandMetadata) {
+return allTasks;
+}
 
     // Filter by recommended channels
     if (brandMetadata.recommended_channels && brandMetadata.recommended_channels.length > 0) {
@@ -338,11 +340,21 @@ export class FounderOpsTaskLibrary {
     const errors: string[] = [];
 
     // Check required fields
-    if (!task.workspace_id) errors.push('workspace_id is required');
-    if (!task.brand_slug) errors.push('brand_slug is required');
-    if (!task.archetype) errors.push('archetype is required');
-    if (!task.title) errors.push('title is required');
-    if (!task.priority) errors.push('priority is required');
+    if (!task.workspace_id) {
+errors.push('workspace_id is required');
+}
+    if (!task.brand_slug) {
+errors.push('brand_slug is required');
+}
+    if (!task.archetype) {
+errors.push('archetype is required');
+}
+    if (!task.title) {
+errors.push('title is required');
+}
+    if (!task.priority) {
+errors.push('priority is required');
+}
     if (!task.channels || task.channels.length === 0) {
       errors.push('at least one channel is required');
     }

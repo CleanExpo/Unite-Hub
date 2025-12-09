@@ -30,7 +30,9 @@ function parseMigrationOrder(content: string): MigrationRecord[] {
 
   for (const line of content.split('\n')) {
     const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith('#')) continue;
+    if (!trimmed || trimmed.startsWith('#')) {
+continue;
+}
 
     // Format: filename.sql:linecount
     const match = trimmed.match(/^([^:]+):(\d+)$/);

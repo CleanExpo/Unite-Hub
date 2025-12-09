@@ -37,7 +37,9 @@ export default function MarketplacePage() {
 
   // Fetch auction status
   const fetchAuctionStatus = useCallback(async () => {
-    if (!workspaceId) return;
+    if (!workspaceId) {
+return;
+}
 
     try {
       setLoadingAuction(true);
@@ -64,7 +66,9 @@ export default function MarketplacePage() {
 
   // Fetch auction history
   const fetchAuctionHistory = useCallback(async () => {
-    if (!workspaceId) return;
+    if (!workspaceId) {
+return;
+}
 
     try {
       setLoadingHistory(true);
@@ -83,7 +87,9 @@ export default function MarketplacePage() {
 
   // Polling logic with exponential backoff
   useEffect(() => {
-    if (!pollingActive || !workspaceId) return;
+    if (!pollingActive || !workspaceId) {
+return;
+}
 
     const timer = setInterval(async () => {
       await fetchAuctionStatus();
@@ -100,7 +106,9 @@ export default function MarketplacePage() {
 
   // Initial fetch
   useEffect(() => {
-    if (!workspaceId) return;
+    if (!workspaceId) {
+return;
+}
 
     fetchAuctionStatus();
     fetchAuctionHistory();
@@ -121,7 +129,9 @@ export default function MarketplacePage() {
     taskTitle: string;
     taskComplexity: number;
   }) => {
-    if (!workspaceId) return;
+    if (!workspaceId) {
+return;
+}
 
     try {
       setStartingAuction(true);

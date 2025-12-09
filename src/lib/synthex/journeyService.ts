@@ -201,7 +201,9 @@ export async function createCohort(
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { data: mapCohortFromDb(data), error: null };
   } catch (error) {
@@ -220,7 +222,9 @@ export async function listCohorts(
       .eq('tenant_id', tenantId)
       .order('created_at', { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     const cohorts = (data || []).map(mapCohortFromDb);
     return { data: cohorts, error: null };
@@ -238,7 +242,9 @@ export async function getCohort(cohortId: string): Promise<ServiceResult<Cohort>
       .eq('id', cohortId)
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { data: mapCohortFromDb(data), error: null };
   } catch (error) {
@@ -254,7 +260,9 @@ export async function deleteCohort(cohortId: string): Promise<ServiceResult<bool
       .delete()
       .eq('id', cohortId);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { data: true, error: null };
   } catch (error) {
@@ -279,7 +287,9 @@ export async function evaluateCohort(
       .eq('id', cohortId)
       .single();
 
-    if (cohortError) throw cohortError;
+    if (cohortError) {
+throw cohortError;
+}
 
     // Get all contacts with their scores and lead models
     const { data: contacts, error: contactsError } = await supabaseAdmin
@@ -291,7 +301,9 @@ export async function evaluateCohort(
       `)
       .eq('tenant_id', tenantId);
 
-    if (contactsError) throw contactsError;
+    if (contactsError) {
+throw contactsError;
+}
 
     const matches: string[] = [];
     const rule = cohort.rule as CohortRule;
@@ -372,7 +384,9 @@ async function evaluateContactAgainstRule(
       return (leadModel?.ltv_estimate as number || 0) >= (rule.threshold || 0);
 
     case 'composite':
-      if (!rule.rules) return false;
+      if (!rule.rules) {
+return false;
+}
       const results = await Promise.all(
         rule.rules.map((r) => evaluateContactAgainstRule(contact, r))
       );
@@ -417,7 +431,9 @@ export async function createJourney(
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { data: mapJourneyFromDb(data), error: null };
   } catch (error) {
@@ -461,7 +477,9 @@ export async function listJourneys(
 
     const { data, error } = await query;
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     const journeys = (data || []).map((row) => {
       const journey = mapJourneyFromDb(row);
@@ -486,7 +504,9 @@ export async function getJourney(journeyId: string): Promise<ServiceResult<Journ
       .eq('id', journeyId)
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     const journey = mapJourneyFromDb(data);
     if (data.synthex_cohorts) {
@@ -513,7 +533,9 @@ export async function advanceStage(
       .eq('id', journeyId)
       .single();
 
-    if (getError) throw getError;
+    if (getError) {
+throw getError;
+}
 
     const now = new Date().toISOString();
     const stageHistory = [...(current.stage_history || [])];
@@ -549,7 +571,9 @@ export async function advanceStage(
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     // Log event
     await addJourneyEvent(journeyId, current.tenant_id, 'stage_enter', {
@@ -603,7 +627,9 @@ export async function addJourneyEvent(
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { data: mapEventFromDb(data), error: null };
   } catch (error) {
@@ -629,7 +655,9 @@ export async function listJourneyEvents(
 
     const { data, error } = await query;
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     const events = (data || []).map(mapEventFromDb);
     return { data: events, error: null };
@@ -659,7 +687,9 @@ export async function generateAnalytics(
 
     const { data: journeys, error } = await query;
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     const total = journeys?.length || 0;
     const active = journeys?.filter((j) => j.is_active).length || 0;
@@ -707,7 +737,9 @@ export async function generateAnalytics(
       .select()
       .single();
 
-    if (upsertError) throw upsertError;
+    if (upsertError) {
+throw upsertError;
+}
 
     return { data: mapAnalyticsFromDb(data), error: null };
   } catch (error) {
@@ -730,7 +762,9 @@ export async function predictNextStage(
       .eq('id', journeyId)
       .single();
 
-    if (journeyError) throw journeyError;
+    if (journeyError) {
+throw journeyError;
+}
 
     const stageHistory = journey.stage_history || [];
     const currentStage = journey.current_stage;
@@ -765,7 +799,9 @@ Respond in JSON format:
 
     const text = response.content[0].type === 'text' ? response.content[0].text : '';
     const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error('Failed to parse prediction');
+    if (!jsonMatch) {
+throw new Error('Failed to parse prediction');
+}
 
     const prediction = JSON.parse(jsonMatch[0]);
 

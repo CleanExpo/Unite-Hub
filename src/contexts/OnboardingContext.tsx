@@ -97,7 +97,9 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
 
   // Start onboarding (create record if doesn't exist)
   const startOnboarding = useCallback(async () => {
-    if (!user || status) return;
+    if (!user || status) {
+return;
+}
 
     try {
       const { data, error } = await supabaseBrowser
@@ -110,7 +112,9 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       setStatus(data);
     } catch (error) {
       console.error("Error starting onboarding:", error);
@@ -121,7 +125,9 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
   // Complete a step
   const completeStep = useCallback(
     async (step: number, data?: Record<string, any>) => {
-      if (!user || !status) return;
+      if (!user || !status) {
+return;
+}
 
       try {
         const stepKey = `step_${step}_complete` as keyof OnboardingStatus;
@@ -143,7 +149,9 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
           .select()
           .single();
 
-        if (error) throw error;
+        if (error) {
+throw error;
+}
         setStatus(updatedStatus);
       } catch (error) {
         console.error("Error completing step:", error);
@@ -155,7 +163,9 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
 
   // Skip onboarding
   const skipOnboarding = useCallback(async () => {
-    if (!user || !status) return;
+    if (!user || !status) {
+return;
+}
 
     try {
       const { data: updatedStatus, error } = await supabaseBrowser
@@ -167,7 +177,9 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       setStatus(updatedStatus);
     } catch (error) {
       console.error("Error skipping onboarding:", error);
@@ -178,7 +190,9 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
   // Go to specific step
   const goToStep = useCallback(
     async (step: number) => {
-      if (!user || !status) return;
+      if (!user || !status) {
+return;
+}
 
       try {
         const { data: updatedStatus, error } = await supabaseBrowser
@@ -190,7 +204,9 @@ export function OnboardingProvider({ children }: { children: React.ReactNode }) 
           .select()
           .single();
 
-        if (error) throw error;
+        if (error) {
+throw error;
+}
         setStatus(updatedStatus);
       } catch (error) {
         console.error("Error updating step:", error);

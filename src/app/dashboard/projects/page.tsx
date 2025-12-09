@@ -19,7 +19,9 @@ import { StatsGridSkeleton } from "@/components/skeletons/StatsCardSkeleton";
 
 // Helper function to format due date
 const formatDueDate = (dateString: string | null) => {
-  if (!dateString) return "No due date";
+  if (!dateString) {
+return "No due date";
+}
   const date = new Date(dateString);
   return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 };

@@ -80,7 +80,9 @@ export function CTASection({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formConfig?.onSubmit || !email) return;
+    if (!formConfig?.onSubmit || !email) {
+return;
+}
 
     setIsSubmitting(true);
     try {

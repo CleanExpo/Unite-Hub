@@ -90,10 +90,18 @@ export async function PATCH(req: NextRequest) {
       updated_at: new Date().toISOString(),
     };
 
-    if (status) updates.status = status;
-    if (triageStatus) updates.triage_status = triageStatus;
-    if (isRead !== undefined) updates.is_read = isRead;
-    if (assignedTo !== undefined) updates.assigned_to = assignedTo;
+    if (status) {
+updates.status = status;
+}
+    if (triageStatus) {
+updates.triage_status = triageStatus;
+}
+    if (isRead !== undefined) {
+updates.is_read = isRead;
+}
+    if (assignedTo !== undefined) {
+updates.assigned_to = assignedTo;
+}
 
     const { error } = await supabase
       .from('social_messages')

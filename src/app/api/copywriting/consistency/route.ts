@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ success: true, data: masters[0] });
 
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error("Consistency GET error:", error);
     return NextResponse.json(
       { error: "Failed to fetch consistency data" },
@@ -133,7 +133,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true, data: master });
 
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error("Consistency POST error:", error);
     return NextResponse.json(
       { error: "Failed to save consistency data" },
@@ -194,7 +194,7 @@ export async function PUT(request: NextRequest) {
     }
 
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error("Consistency PUT error:", error);
     return NextResponse.json(
       { error: "Failed to perform action" },

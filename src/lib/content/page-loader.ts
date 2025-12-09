@@ -439,12 +439,12 @@ export class BatchProcessor {
     let totalCost = 0;
     let totalTokens = 0;
 
-    // eslint-disable-next-line no-console
+     
     console.log(`[Batch] Starting generation of ${pages.length} pages`);
 
     for (let i = 0; i < pages.length; i++) {
       const page = pages[i];
-      // eslint-disable-next-line no-console
+       
       console.log(`[Batch] [${i + 1}/${pages.length}] Generating: ${page.url}`);
 
       try {
@@ -464,7 +464,7 @@ export class BatchProcessor {
         }
 
         if (!result.success && this.config.stop_on_error) {
-          // eslint-disable-next-line no-console
+           
           console.log(`[Batch] Stopping due to error on ${page.url}`);
           break;
         }
@@ -491,7 +491,7 @@ export class BatchProcessor {
     const successful = results.filter((r) => r.success).length;
     const failed = results.filter((r) => !r.success).length;
 
-    // eslint-disable-next-line no-console
+     
     console.log(`[Batch] Complete: ${successful}/${pages.length} successful, $${totalCost.toFixed(4)} total cost`);
 
     return {

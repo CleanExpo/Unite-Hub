@@ -115,9 +115,13 @@ export async function processAdvisorRequest(request: AdvisorRequest): Promise<Ad
 
   // Determine advice type
   let adviceType: AdviceType = 'guidance';
-  if (request.question.toLowerCase().includes('predict')) adviceType = 'prediction';
-  else if (request.question.toLowerCase().includes('wrong') || request.question.toLowerCase().includes('fix')) adviceType = 'correction';
-  else if (request.question.toLowerCase().includes('alert') || request.question.toLowerCase().includes('warn')) adviceType = 'alert';
+  if (request.question.toLowerCase().includes('predict')) {
+adviceType = 'prediction';
+} else if (request.question.toLowerCase().includes('wrong') || request.question.toLowerCase().includes('fix')) {
+adviceType = 'correction';
+} else if (request.question.toLowerCase().includes('alert') || request.question.toLowerCase().includes('warn')) {
+adviceType = 'alert';
+}
 
   // Select routing (Phase 8 integration point)
   const selectedAgent = selectBestAgent(request.domain, adviceType);
@@ -165,7 +169,9 @@ export async function processAdvisorRequest(request: AdvisorRequest): Promise<Ad
  * Get timing recommendation based on personal context
  */
 function getTimingRecommendation(ctx: PersonalContext, domain: KnowledgeDomain): string {
-  if (!ctx.cognitiveState) return '';
+  if (!ctx.cognitiveState) {
+return '';
+}
 
   const isOptimalCreative = isOptimalFor(ctx, 'creative');
   const isOptimalAnalytical = isOptimalFor(ctx, 'analytical');

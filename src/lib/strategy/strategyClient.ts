@@ -723,9 +723,15 @@ export function getDecompositionRatio(l2: number, l3: number, l4: number): {
   const l4Ratio = getL4ToL3Ratio(l3, l4);
 
   const recommendations: string[] = [];
-  if (!l2Ratio.isBalanced) recommendations.push(l2Ratio.recommendation);
-  if (!l3Ratio.isBalanced) recommendations.push(l3Ratio.recommendation);
-  if (!l4Ratio.isBalanced) recommendations.push(l4Ratio.recommendation);
+  if (!l2Ratio.isBalanced) {
+recommendations.push(l2Ratio.recommendation);
+}
+  if (!l3Ratio.isBalanced) {
+recommendations.push(l3Ratio.recommendation);
+}
+  if (!l4Ratio.isBalanced) {
+recommendations.push(l4Ratio.recommendation);
+}
 
   return {
     l2ToL1: l2Ratio.ratio,
@@ -750,12 +756,15 @@ export function assessComplexity(totalItems: number): {
   level: 'simple' | 'moderate' | 'complex' | 'very_complex';
   description: string;
 } {
-  if (totalItems < 10)
-    return { level: 'simple', description: 'Simple strategy with few moving parts' };
-  if (totalItems < 25)
-    return { level: 'moderate', description: 'Moderate complexity with manageable scope' };
-  if (totalItems < 50)
-    return { level: 'complex', description: 'Complex strategy requiring careful coordination' };
+  if (totalItems < 10) {
+return { level: 'simple', description: 'Simple strategy with few moving parts' };
+}
+  if (totalItems < 25) {
+return { level: 'moderate', description: 'Moderate complexity with manageable scope' };
+}
+  if (totalItems < 50) {
+return { level: 'complex', description: 'Complex strategy requiring careful coordination' };
+}
   return {
     level: 'very_complex',
     description: 'Very complex strategy with significant execution risk',
@@ -1025,7 +1034,9 @@ export function getAgentInfo(agentId: string): {
  * Format timestamp for display
  */
 export function formatTimestamp(timestamp: string | null | undefined): string {
-  if (!timestamp) return 'Not yet';
+  if (!timestamp) {
+return 'Not yet';
+}
 
   const date = new Date(timestamp);
   const now = new Date();
@@ -1035,9 +1046,15 @@ export function formatTimestamp(timestamp: string | null | undefined): string {
   const hours = Math.floor(diff / 3600000);
   const days = Math.floor(diff / 86400000);
 
-  if (minutes < 60) return `${minutes}m ago`;
-  if (hours < 24) return `${hours}h ago`;
-  if (days < 7) return `${days}d ago`;
+  if (minutes < 60) {
+return `${minutes}m ago`;
+}
+  if (hours < 24) {
+return `${hours}h ago`;
+}
+  if (days < 7) {
+return `${days}d ago`;
+}
 
   return date.toLocaleDateString('en-US', {
     month: 'short',

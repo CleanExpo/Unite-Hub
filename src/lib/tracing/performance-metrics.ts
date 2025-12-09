@@ -17,7 +17,7 @@
  * @module lib/tracing/performance-metrics
  */
 
-/* eslint-disable no-console */
+ 
 /* global process, console */
 
 /**

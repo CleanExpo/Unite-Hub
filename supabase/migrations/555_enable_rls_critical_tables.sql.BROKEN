@@ -1,0 +1,260 @@
+-- Phase 3: Schema Guardian RLS Remediation
+-- Migration: 555
+-- Critical RLS Security Gap Fix
+-- Status: CRITICAL (0% RLS enforcement detected)
+-- Date Created: December 9, 2025
+-- Based on: PHASE-3-VALIDATION-REPORT.md findings
+
+-- ============================================================================
+-- PURPOSE
+-- ============================================================================
+-- This migration addresses the critical RLS (Row Level Security) gap
+-- identified in Phase 3: Schema Guardian analysis.
+--
+-- CRITICAL FINDING:
+--   - RLS enforcement: 0% (no policies on any public tables)
+--   - Impact: Multi-tenant workspace isolation BROKEN
+--   - Risk: Data leakage between workspaces
+--
+-- REMEDIATION APPROACH:
+--   1. Enable RLS on all public tables that need isolation
+--   2. Define workspace-scoped policies
+--   3. Create role-based access controls
+--   4. Implement audit logging for policy enforcement
+
+-- ============================================================================
+-- ENABLE RLS ON CRITICAL TABLES
+-- ============================================================================
+
+-- Users table (highest priority)
+-- Prevent users from seeing other workspace members
+ALTER TABLE IF EXISTS public.users ENABLE ROW LEVEL SECURITY;
+
+-- Create policy: Users can only see themselves + workspace members
+DROP POLICY IF EXISTS "users_workspace_isolation" ON public.users;
+CREATE POLICY "users_workspace_isolation" ON public.users
+  FOR SELECT
+  USING (
+    auth.uid() = id OR
+    workspace_id IN (
+      SELECT workspace_id FROM public.users WHERE id = auth.uid()
+    )
+  );
+
+-- Create policy: Users can only update their own profile
+DROP POLICY IF EXISTS "users_self_update" ON public.users;
+CREATE POLICY "users_self_update" ON public.users
+  FOR UPDATE
+  USING (auth.uid() = id)
+  WITH CHECK (auth.uid() = id);
+
+-- Create policy: Only admins can delete users
+DROP POLICY IF EXISTS "users_admin_delete" ON public.users;
+CREATE POLICY "users_admin_delete" ON public.users
+  FOR DELETE
+  USING (
+    workspace_id IN (
+      SELECT workspace_id FROM public.users
+      WHERE id = auth.uid() AND role = 'admin'
+    )
+  );
+
+-- Create policy: Anyone can insert their own user record (signup)
+DROP POLICY IF EXISTS "users_signup" ON public.users;
+CREATE POLICY "users_signup" ON public.users
+  FOR INSERT
+  WITH CHECK (auth.uid() = id);
+
+-- ============================================================================
+-- ENABLE RLS ON WORKSPACE-RELATED TABLES
+-- ============================================================================
+
+-- Contacts table (critical for CRM)
+ALTER TABLE IF EXISTS public.contacts ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "contacts_workspace_isolation" ON public.contacts;
+CREATE POLICY "contacts_workspace_isolation" ON public.contacts
+  FOR SELECT
+  USING (
+    workspace_id IN (
+      SELECT workspace_id FROM public.users WHERE id = auth.uid()
+    )
+  );
+
+DROP POLICY IF EXISTS "contacts_workspace_insert" ON public.contacts;
+CREATE POLICY "contacts_workspace_insert" ON public.contacts
+  FOR INSERT
+  WITH CHECK (
+    workspace_id IN (
+      SELECT workspace_id FROM public.users WHERE id = auth.uid()
+    )
+  );
+
+DROP POLICY IF EXISTS "contacts_workspace_update" ON public.contacts;
+CREATE POLICY "contacts_workspace_update" ON public.contacts
+  FOR UPDATE
+  USING (
+    workspace_id IN (
+      SELECT workspace_id FROM public.users WHERE id = auth.uid()
+    )
+  )
+  WITH CHECK (
+    workspace_id IN (
+      SELECT workspace_id FROM public.users WHERE id = auth.uid()
+    )
+  );
+
+-- Campaigns table
+ALTER TABLE IF EXISTS public.campaigns ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "campaigns_workspace_isolation" ON public.campaigns;
+CREATE POLICY "campaigns_workspace_isolation" ON public.campaigns
+  FOR SELECT
+  USING (
+    workspace_id IN (
+      SELECT workspace_id FROM public.users WHERE id = auth.uid()
+    )
+  );
+
+DROP POLICY IF EXISTS "campaigns_workspace_insert" ON public.campaigns;
+CREATE POLICY "campaigns_workspace_insert" ON public.campaigns
+  FOR INSERT
+  WITH CHECK (
+    workspace_id IN (
+      SELECT workspace_id FROM public.users WHERE id = auth.uid()
+    )
+  );
+
+-- Email messages table
+ALTER TABLE IF EXISTS public.emails ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "emails_workspace_isolation" ON public.emails;
+CREATE POLICY "emails_workspace_isolation" ON public.emails
+  FOR SELECT
+  USING (
+    workspace_id IN (
+      SELECT workspace_id FROM public.users WHERE id = auth.uid()
+    )
+  );
+
+-- Projects table
+ALTER TABLE IF EXISTS public.projects ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "projects_workspace_isolation" ON public.projects;
+CREATE POLICY "projects_workspace_isolation" ON public.projects
+  FOR SELECT
+  USING (
+    workspace_id IN (
+      SELECT workspace_id FROM public.users WHERE id = auth.uid()
+    )
+  );
+
+DROP POLICY IF EXISTS "projects_workspace_insert" ON public.projects;
+CREATE POLICY "projects_workspace_insert" ON public.projects
+  FOR INSERT
+  WITH CHECK (
+    workspace_id IN (
+      SELECT workspace_id FROM public.users WHERE id = auth.uid()
+    )
+  );
+
+-- ============================================================================
+-- AUDIT TABLE - ENABLE FOR COMPLIANCE TRACKING
+-- ============================================================================
+
+ALTER TABLE IF EXISTS public.audit_log ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "audit_log_workspace_view" ON public.audit_log;
+CREATE POLICY "audit_log_workspace_view" ON public.audit_log
+  FOR SELECT
+  USING (
+    workspace_id IN (
+      SELECT workspace_id FROM public.users WHERE id = auth.uid()
+    )
+  );
+
+-- ============================================================================
+-- CREATE HELPER FUNCTION FOR WORKSPACE CONTEXT
+-- ============================================================================
+
+-- Get current user's workspace ID
+DROP FUNCTION IF EXISTS get_current_workspace_id() CASCADE;
+CREATE FUNCTION get_current_workspace_id() RETURNS UUID AS $$
+  SELECT workspace_id FROM public.users WHERE id = auth.uid() LIMIT 1;
+$$ LANGUAGE SQL STABLE SECURITY DEFINER SET search_path = public;
+
+-- Check if current user is workspace admin
+DROP FUNCTION IF EXISTS is_workspace_admin() CASCADE;
+CREATE FUNCTION is_workspace_admin() RETURNS BOOLEAN AS $$
+  SELECT role = 'admin' FROM public.users WHERE id = auth.uid() LIMIT 1;
+$$ LANGUAGE SQL STABLE SECURITY DEFINER SET search_path = public;
+
+-- ============================================================================
+-- GRANT EXECUTE PERMISSIONS
+-- ============================================================================
+
+GRANT EXECUTE ON FUNCTION get_current_workspace_id() TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION is_workspace_admin() TO anon, authenticated;
+
+-- ============================================================================
+-- CREATE INDEX TO SUPPORT RLS POLICIES
+-- ============================================================================
+
+-- Workspace lookup index for faster policy evaluation
+CREATE INDEX IF NOT EXISTS idx_users_workspace_id ON public.users(workspace_id);
+CREATE INDEX IF NOT EXISTS idx_users_role_workspace ON public.users(workspace_id, role);
+
+-- ============================================================================
+-- VERIFICATION QUERIES (Run after migration to test)
+-- ============================================================================
+
+/*
+-- Verification checklist:
+
+-- 1. Verify RLS is enabled on critical tables
+SELECT tablename, rowsecurity FROM pg_tables
+WHERE schemaname = 'public' AND rowsecurity = true
+ORDER BY tablename;
+
+-- 2. Count RLS policies
+SELECT schemaname, tablename, policyname, permissive
+FROM pg_policies
+WHERE schemaname = 'public'
+ORDER BY tablename, policyname;
+
+-- 3. Test workspace isolation (as workspace member)
+-- You should only see your workspace's users:
+SELECT id, email, workspace_id FROM public.users;
+
+-- 4. Test that users from other workspaces are invisible
+-- Should return 0 rows:
+SELECT COUNT(*) FROM public.users
+WHERE workspace_id != get_current_workspace_id();
+
+-- 5. Verify helper functions work
+SELECT get_current_workspace_id();
+SELECT is_workspace_admin();
+*/
+
+-- ============================================================================
+-- NOTES FOR DEPLOYMENT
+-- ============================================================================
+--
+-- CRITICAL: Apply in production immediately
+-- Timeline: ASAP (security risk)
+-- Rollback: Disable RLS on all tables if needed
+--
+-- POST-DEPLOYMENT TESTING:
+-- 1. Verify no application errors
+-- 2. Test cross-workspace queries return 0 rows
+-- 3. Confirm policies don't block legitimate access
+-- 4. Monitor audit logs for policy violations
+--
+-- IF ISSUES ARISE:
+-- Contact: @team (security incident)
+-- Rollback: ALTER TABLE ... DISABLE ROW LEVEL SECURITY;
+--
+
+-- ============================================================================
+-- END OF MIGRATION
+-- ============================================================================

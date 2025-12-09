@@ -84,7 +84,9 @@ export async function executeAutoBatch(
 
   for (const action of actions) {
     // Only process suggested actions
-    if (action.state !== 'suggested') continue;
+    if (action.state !== 'suggested') {
+continue;
+}
 
     // Check if eligible for auto-execution
     if (!canAutoExecute(preferences, action.category, action.riskClass)) {

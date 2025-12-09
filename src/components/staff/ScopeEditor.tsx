@@ -77,7 +77,9 @@ export function ScopeEditor({ scope, onChange, loading = false, isAIGenerated = 
   }
 
   function handleDeleteSection(sectionId: string) {
-    if (!confirm('Delete this section?')) return;
+    if (!confirm('Delete this section?')) {
+return;
+}
 
     onChange({
       ...scope,

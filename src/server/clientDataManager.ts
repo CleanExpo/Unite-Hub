@@ -366,7 +366,9 @@ export class ClientDataManager {
             const stat = await fs.stat(filePath);
 
             // Skip if not a file or if in archive folder
-            if (!stat.isFile() || file === "archive") continue;
+            if (!stat.isFile() || file === "archive") {
+continue;
+}
 
             // Check if file is older than retention period
             if (stat.mtime < cutoffDate) {

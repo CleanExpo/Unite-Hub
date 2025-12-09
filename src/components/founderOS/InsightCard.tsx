@@ -106,8 +106,12 @@ export function InsightCard({
   };
 
   const getConfidenceColor = (confidence: number) => {
-    if (confidence >= 80) return "text-green-600 dark:text-green-400";
-    if (confidence >= 60) return "text-yellow-600 dark:text-yellow-400";
+    if (confidence >= 80) {
+return "text-green-600 dark:text-green-400";
+}
+    if (confidence >= 60) {
+return "text-yellow-600 dark:text-yellow-400";
+}
     return "text-red-600 dark:text-red-400";
   };
 
@@ -117,14 +121,22 @@ export function InsightCard({
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const days = Math.floor(hours / 24);
 
-    if (hours < 1) return "Just now";
-    if (hours < 24) return `${hours}h ago`;
-    if (days < 7) return `${days}d ago`;
+    if (hours < 1) {
+return "Just now";
+}
+    if (hours < 24) {
+return `${hours}h ago`;
+}
+    if (days < 7) {
+return `${days}d ago`;
+}
     return date.toLocaleDateString();
   };
 
   const handleAcknowledge = async () => {
-    if (!onAcknowledge) return;
+    if (!onAcknowledge) {
+return;
+}
     setIsAcknowledging(true);
     try {
       await onAcknowledge(id);
@@ -135,7 +147,9 @@ export function InsightCard({
   };
 
   const handleDismiss = async () => {
-    if (!onDismiss) return;
+    if (!onDismiss) {
+return;
+}
     setIsDismissing(true);
     try {
       await onDismiss(id);

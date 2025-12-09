@@ -28,7 +28,9 @@ export class UncertaintyPropagator {
    * Tracks how each pass reduces uncertainty and computes final score.
    */
   async propagateUncertainties(passes: any[]): Promise<number> {
-    if (passes.length === 0) return 100;
+    if (passes.length === 0) {
+return 100;
+}
 
     // Track uncertainty through passes
     const uncertaintyTrace: PassUncertainty[] = passes.map((pass, idx) => {
@@ -97,8 +99,11 @@ export class UncertaintyPropagator {
 
     // Determine trend
     let trend: 'improving' | 'stable' | 'worsening' = 'stable';
-    if (totalReduction > 50) trend = 'improving';
-    else if (totalReduction < 10 && increasingPasses.length > passes.length / 2) trend = 'worsening';
+    if (totalReduction > 50) {
+trend = 'improving';
+} else if (totalReduction < 10 && increasingPasses.length > passes.length / 2) {
+trend = 'worsening';
+}
 
     return {
       totalReduction: Math.round(totalReduction),
@@ -114,7 +119,9 @@ export class UncertaintyPropagator {
    * Predicts final uncertainty based on current trend.
    */
   estimateFinalUncertainty(passesCompleted: any[], totalPasses: number = 5): number {
-    if (passesCompleted.length === 0) return 100;
+    if (passesCompleted.length === 0) {
+return 100;
+}
 
     const pattern = this.analyzeUncertaintyPattern(passesCompleted);
     const remainingPasses = totalPasses - passesCompleted.length;
@@ -164,10 +171,18 @@ export class UncertaintyPropagator {
     const u = pass.uncertainty;
     const c = pass.confidence;
 
-    if (u > 70) return 'Very high uncertainty, low confidence';
-    if (u > 50 && c < 60) return 'High uncertainty with low confidence';
-    if (u > 50) return 'Moderate-high uncertainty in analysis';
-    if (c < 50) return 'Low confidence in decision';
+    if (u > 70) {
+return 'Very high uncertainty, low confidence';
+}
+    if (u > 50 && c < 60) {
+return 'High uncertainty with low confidence';
+}
+    if (u > 50) {
+return 'Moderate-high uncertainty in analysis';
+}
+    if (c < 50) {
+return 'Low confidence in decision';
+}
     return 'Acceptable uncertainty level';
   }
 }

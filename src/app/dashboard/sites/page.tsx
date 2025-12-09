@@ -34,14 +34,18 @@ export default function SitesPage() {
   const [adding, setAdding] = useState(false);
 
   useEffect(() => {
-    if (workspaceLoading || !workspaceId) return;
+    if (workspaceLoading || !workspaceId) {
+return;
+}
     loadSites();
   }, [workspaceLoading, workspaceId]);
 
   const loadSites = async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const res = await fetch(`/api/sites?workspaceId=${workspaceId}`, {
         headers: { "Authorization": `Bearer ${session.access_token}` }
@@ -59,12 +63,16 @@ export default function SitesPage() {
   };
 
   const addSite = async () => {
-    if (!newSite.name || !newSite.domain || !newSite.url) return;
+    if (!newSite.name || !newSite.domain || !newSite.url) {
+return;
+}
 
     setAdding(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const res = await fetch("/api/sites", {
         method: "POST",
@@ -96,7 +104,9 @@ export default function SitesPage() {
     setScanning(siteId);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const res = await fetch("/api/sites/scan", {
         method: "POST",
@@ -118,8 +128,12 @@ export default function SitesPage() {
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return "text-green-400";
-    if (score >= 60) return "text-yellow-400";
+    if (score >= 80) {
+return "text-green-400";
+}
+    if (score >= 60) {
+return "text-yellow-400";
+}
     return "text-red-400";
   };
 

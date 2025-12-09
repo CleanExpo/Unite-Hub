@@ -44,23 +44,37 @@ export function OrchestrationChannelHealth({
   className = '',
 }: OrchestrationChannelHealthProps) {
   const getHealthColor = (score: number) => {
-    if (score >= 0.7) return 'text-green-500';
-    if (score >= 0.4) return 'text-yellow-500';
+    if (score >= 0.7) {
+return 'text-green-500';
+}
+    if (score >= 0.4) {
+return 'text-yellow-500';
+}
     return 'text-red-500';
   };
 
   const getFatigueColor = (score: number) => {
-    if (score <= 0.3) return 'text-green-500';
-    if (score <= 0.6) return 'text-yellow-500';
+    if (score <= 0.3) {
+return 'text-green-500';
+}
+    if (score <= 0.6) {
+return 'text-yellow-500';
+}
     return 'text-red-500';
   };
 
   const formatLastPost = (timestamp?: string) => {
-    if (!timestamp) return 'Never';
+    if (!timestamp) {
+return 'Never';
+}
     const date = new Date(timestamp);
     const hours = Math.floor((Date.now() - date.getTime()) / (1000 * 60 * 60));
-    if (hours < 1) return 'Just now';
-    if (hours < 24) return `${hours}h ago`;
+    if (hours < 1) {
+return 'Just now';
+}
+    if (hours < 24) {
+return `${hours}h ago`;
+}
     return `${Math.floor(hours / 24)}d ago`;
   };
 

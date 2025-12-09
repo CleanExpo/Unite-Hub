@@ -225,7 +225,9 @@ export async function updatePersona(
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
     return { data: mapScoreFromDb(data), error: null };
   } catch (error) {
     console.error('[audienceScoringService] updatePersona error:', error);
@@ -258,7 +260,9 @@ export async function listScores(
     }
 
     const { data, error } = await query;
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { data: (data || []).map(mapScoreFromDb), error: null };
   } catch (error) {
@@ -280,7 +284,9 @@ export async function getScore(
       .eq('contact_id', contactId)
       .single();
 
-    if (error && error.code !== 'PGRST116') throw error;
+    if (error && error.code !== 'PGRST116') {
+throw error;
+}
     return { data: data ? mapScoreFromDb(data) : null, error: null };
   } catch (error) {
     console.error('[audienceScoringService] getScore error:', error);
@@ -303,7 +309,9 @@ export async function getEvents(
       .order('created_at', { ascending: false })
       .limit(limit);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
     return { data, error: null };
   } catch (error) {
     console.error('[audienceScoringService] getEvents error:', error);

@@ -163,10 +163,15 @@ export class TrustModeReportGenerator {
     };
 
     signatures.forEach((sig) => {
-      if (sig.status === "SIGNED") stats.signed++;
-      else if (sig.status === "SENT" || sig.status === "DELIVERED") stats.pending++;
-      else if (sig.status === "DECLINED") stats.declined++;
-      else if (sig.status === "EXPIRED") stats.expired++;
+      if (sig.status === "SIGNED") {
+stats.signed++;
+} else if (sig.status === "SENT" || sig.status === "DELIVERED") {
+stats.pending++;
+} else if (sig.status === "DECLINED") {
+stats.declined++;
+} else if (sig.status === "EXPIRED") {
+stats.expired++;
+}
     });
 
     return stats;

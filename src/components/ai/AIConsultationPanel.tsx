@@ -70,7 +70,9 @@ export function AIConsultationPanel({
 
   async function sendMessage() {
     const trimmedInput = input.trim();
-    if (!trimmedInput || loading) return;
+    if (!trimmedInput || loading) {
+return;
+}
 
     setLoading(true);
     setInput("");

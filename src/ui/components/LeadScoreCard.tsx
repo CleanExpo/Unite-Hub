@@ -57,9 +57,15 @@ export function LeadScoreCard({
   };
 
   const getStageColor = (stage: FunnelStage) => {
-    if (stage.includes('activation') || stage.includes('day')) return 'bg-green-500';
-    if (stage === 'trial') return 'bg-blue-500';
-    if (stage === 'lead') return 'bg-yellow-500';
+    if (stage.includes('activation') || stage.includes('day')) {
+return 'bg-green-500';
+}
+    if (stage === 'trial') {
+return 'bg-blue-500';
+}
+    if (stage === 'lead') {
+return 'bg-yellow-500';
+}
     return 'bg-gray-500';
   };
 

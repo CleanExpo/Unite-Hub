@@ -105,7 +105,9 @@ export async function collectCreativeSignals(
 
   // Stagnation signal from method diversity
   const recentMethods = methodRecords.filter(r => {
-    if (!r.last_used) return false;
+    if (!r.last_used) {
+return false;
+}
     const days = (Date.now() - new Date(r.last_used).getTime()) / (1000 * 60 * 60 * 24);
     return days < 30;
   });
@@ -371,7 +373,9 @@ function generateAlerts(
 }
 
 function calculateVariance(values: number[]): number {
-  if (values.length === 0) return 0;
+  if (values.length === 0) {
+return 0;
+}
   const mean = values.reduce((a, b) => a + b, 0) / values.length;
   return values.reduce((sum, v) => sum + Math.pow(v - mean, 2), 0) / values.length;
 }

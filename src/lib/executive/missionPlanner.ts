@@ -264,10 +264,14 @@ export class MissionPlanner {
     result: Record<string, any>
   ): boolean {
     const mission = this.missions.get(missionId);
-    if (!mission) return false;
+    if (!mission) {
+return false;
+}
 
     const step = mission.steps.find((s) => s.step_number === stepNumber);
-    if (!step || step.status !== 'executing') return false;
+    if (!step || step.status !== 'executing') {
+return false;
+}
 
     step.status = 'completed';
     step.result = result;

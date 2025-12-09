@@ -171,22 +171,54 @@ export async function updateContentAsset(
     updated_at: new Date().toISOString(),
   };
 
-  if (updates.topicId !== undefined) updateData.topic_id = updates.topicId;
-  if (updates.intentClusterId !== undefined) updateData.intent_cluster_id = updates.intentClusterId;
-  if (updates.type !== undefined) updateData.type = updates.type;
-  if (updates.format !== undefined) updateData.format = updates.format;
-  if (updates.title !== undefined) updateData.title = updates.title;
-  if (updates.slug !== undefined) updateData.slug = updates.slug;
-  if (updates.summary !== undefined) updateData.summary = updates.summary;
-  if (updates.bodyMarkdown !== undefined) updateData.body_markdown = updates.bodyMarkdown;
-  if (updates.qaBlocks !== undefined) updateData.qa_blocks = updates.qaBlocks;
-  if (updates.schemaTypes !== undefined) updateData.schema_types = updates.schemaTypes;
-  if (updates.mediaAssets !== undefined) updateData.media_assets = updates.mediaAssets;
-  if (updates.localisationTags !== undefined) updateData.localisation_tags = updates.localisationTags;
-  if (updates.authorityScore !== undefined) updateData.authority_score = updates.authorityScore;
-  if (updates.evergreenScore !== undefined) updateData.evergreen_score = updates.evergreenScore;
-  if (updates.aiSourceScore !== undefined) updateData.ai_source_score = updates.aiSourceScore;
-  if (updates.status !== undefined) updateData.status = updates.status;
+  if (updates.topicId !== undefined) {
+updateData.topic_id = updates.topicId;
+}
+  if (updates.intentClusterId !== undefined) {
+updateData.intent_cluster_id = updates.intentClusterId;
+}
+  if (updates.type !== undefined) {
+updateData.type = updates.type;
+}
+  if (updates.format !== undefined) {
+updateData.format = updates.format;
+}
+  if (updates.title !== undefined) {
+updateData.title = updates.title;
+}
+  if (updates.slug !== undefined) {
+updateData.slug = updates.slug;
+}
+  if (updates.summary !== undefined) {
+updateData.summary = updates.summary;
+}
+  if (updates.bodyMarkdown !== undefined) {
+updateData.body_markdown = updates.bodyMarkdown;
+}
+  if (updates.qaBlocks !== undefined) {
+updateData.qa_blocks = updates.qaBlocks;
+}
+  if (updates.schemaTypes !== undefined) {
+updateData.schema_types = updates.schemaTypes;
+}
+  if (updates.mediaAssets !== undefined) {
+updateData.media_assets = updates.mediaAssets;
+}
+  if (updates.localisationTags !== undefined) {
+updateData.localisation_tags = updates.localisationTags;
+}
+  if (updates.authorityScore !== undefined) {
+updateData.authority_score = updates.authorityScore;
+}
+  if (updates.evergreenScore !== undefined) {
+updateData.evergreen_score = updates.evergreenScore;
+}
+  if (updates.aiSourceScore !== undefined) {
+updateData.ai_source_score = updates.aiSourceScore;
+}
+  if (updates.status !== undefined) {
+updateData.status = updates.status;
+}
 
   const { data, error } = await supabase
     .from('content_assets')

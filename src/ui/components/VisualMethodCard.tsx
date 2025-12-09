@@ -90,7 +90,9 @@ export function VisualMethodCard({
   const costConfig = getCostConfig();
 
   const formatTime = (seconds: number) => {
-    if (seconds < 60) return `${seconds}s`;
+    if (seconds < 60) {
+return `${seconds}s`;
+}
     return `${Math.round(seconds / 60)}m`;
   };
 

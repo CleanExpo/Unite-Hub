@@ -111,7 +111,9 @@ function calculateFleschReadingEase(text: string): number {
   const words = text.split(/\s+/).filter(w => w.length > 0);
   const syllables = words.reduce((count, word) => count + countSyllables(word), 0);
 
-  if (sentences.length === 0 || words.length === 0) return 0;
+  if (sentences.length === 0 || words.length === 0) {
+return 0;
+}
 
   const avgSentenceLength = words.length / sentences.length;
   const avgSyllablesPerWord = syllables / words.length;
@@ -129,7 +131,9 @@ function calculateFleschKincaidGrade(text: string): number {
   const words = text.split(/\s+/).filter(w => w.length > 0);
   const syllables = words.reduce((count, word) => count + countSyllables(word), 0);
 
-  if (sentences.length === 0 || words.length === 0) return 0;
+  if (sentences.length === 0 || words.length === 0) {
+return 0;
+}
 
   const avgSentenceLength = words.length / sentences.length;
   const avgSyllablesPerWord = syllables / words.length;
@@ -142,7 +146,9 @@ function calculateFleschKincaidGrade(text: string): number {
  */
 function countSyllables(word: string): number {
   word = word.toLowerCase().replace(/[^a-z]/g, '');
-  if (word.length <= 3) return 1;
+  if (word.length <= 3) {
+return 1;
+}
 
   word = word.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, '');
   word = word.replace(/^y/, '');
@@ -311,7 +317,9 @@ export async function createContentAnalysis(params: CreateContentAnalysisParams)
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to create content analysis: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to create content analysis: ${error.message}`);
+}
 
   // Run analysis
   runContentAnalysis(data.id, params).catch(console.error);
@@ -421,7 +429,9 @@ export async function runContentAnalysis(
       .select()
       .single();
 
-    if (resultError) throw new Error(`Failed to save results: ${resultError.message}`);
+    if (resultError) {
+throw new Error(`Failed to save results: ${resultError.message}`);
+}
 
     // Update job status
     await supabase
@@ -452,7 +462,9 @@ export async function getContentAnalysis(jobId: string): Promise<ContentOptimiza
     .eq('analysis_job_id', jobId)
     .single();
 
-  if (error) return null;
+  if (error) {
+return null;
+}
   return data;
 }
 
@@ -481,7 +493,9 @@ export async function getContentAnalysisHistory(
 
   const { data, error } = await query;
 
-  if (error) throw new Error(`Failed to fetch history: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to fetch history: ${error.message}`);
+}
   return data || [];
 }
 

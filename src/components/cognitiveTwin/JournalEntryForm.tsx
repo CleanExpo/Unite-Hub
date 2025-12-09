@@ -129,7 +129,9 @@ export default function JournalEntryForm({
   }, [mood, tags]);
 
   const loadPrompts = async () => {
-    if (!onGeneratePrompts) return;
+    if (!onGeneratePrompts) {
+return;
+}
 
     setLoadingPrompts(true);
     try {
@@ -176,7 +178,9 @@ export default function JournalEntryForm({
   // Basic formatting functions
   const applyFormatting = (type: "bold" | "italic" | "list") => {
     const textarea = document.querySelector("textarea") as HTMLTextAreaElement;
-    if (!textarea) return;
+    if (!textarea) {
+return;
+}
 
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
@@ -212,7 +216,9 @@ export default function JournalEntryForm({
 
   // Handle save draft
   const handleSaveDraft = async () => {
-    if (!isFormValid() || !onSaveDraft) return;
+    if (!isFormValid() || !onSaveDraft) {
+return;
+}
 
     setSaving(true);
     setError(null);
@@ -237,7 +243,9 @@ export default function JournalEntryForm({
 
   // Handle publish
   const handlePublish = async () => {
-    if (!isFormValid() || !onPublish) return;
+    if (!isFormValid() || !onPublish) {
+return;
+}
 
     setPublishing(true);
     setError(null);

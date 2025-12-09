@@ -70,7 +70,9 @@ export class PatternDetectionEngine {
 
       // Update centroids
       centroids = clusters.map((cluster) => {
-        if (cluster.points.length === 0) return cluster.centroid;
+        if (cluster.points.length === 0) {
+return cluster.centroid;
+}
         const sum = cluster.points.reduce((acc, p) => acc + p.value, 0);
         return sum / cluster.points.length;
       });
@@ -160,7 +162,9 @@ export class PatternDetectionEngine {
     centroids: number[],
     previousCentroids: number[]
   ): boolean {
-    if (previousCentroids.length === 0) return false;
+    if (previousCentroids.length === 0) {
+return false;
+}
 
     const totalChange = centroids.reduce((sum, centroid, i) => {
       return sum + Math.abs(centroid - (previousCentroids[i] || 0));
@@ -181,7 +185,9 @@ export class PatternDetectionEngine {
     for (let i = 0; i < clusters.length; i++) {
       const cluster = clusters[i];
 
-      if (cluster.points.length === 0) continue;
+      if (cluster.points.length === 0) {
+continue;
+}
 
       // Calculate pattern metrics
       const confidence = Math.min(
@@ -234,7 +240,9 @@ export class PatternDetectionEngine {
   private detectTrend(
     dataPoints: AlertDataPoint[]
   ): "increasing" | "decreasing" | "stable" {
-    if (dataPoints.length < 2) return "stable";
+    if (dataPoints.length < 2) {
+return "stable";
+}
 
     // Sort by timestamp
     const sorted = [...dataPoints].sort((a, b) => a.timestamp - b.timestamp);
@@ -249,8 +257,12 @@ export class PatternDetectionEngine {
 
     const change = (avgSecond - avgFirst) / (avgFirst || 1);
 
-    if (Math.abs(change) < 0.05) return "stable";
-    if (change > 0) return "increasing";
+    if (Math.abs(change) < 0.05) {
+return "stable";
+}
+    if (change > 0) {
+return "increasing";
+}
     return "decreasing";
   }
 
@@ -258,7 +270,9 @@ export class PatternDetectionEngine {
    * Calculate average value
    */
   private calculateAverage(points: AlertDataPoint[]): number {
-    if (points.length === 0) return 0;
+    if (points.length === 0) {
+return 0;
+}
     const sum = points.reduce((acc, p) => acc + p.value, 0);
     return sum / points.length;
   }
@@ -296,9 +310,15 @@ export class PatternDetectionEngine {
     const criticalPercent = severities.critical / total;
     const highPercent = (severities.critical + severities.high) / total;
 
-    if (criticalPercent > 0.3) return "critical";
-    if (highPercent > 0.5) return "high";
-    if (severities.medium > total * 0.5) return "medium";
+    if (criticalPercent > 0.3) {
+return "critical";
+}
+    if (highPercent > 0.5) {
+return "high";
+}
+    if (severities.medium > total * 0.5) {
+return "medium";
+}
     return "low";
   }
 
@@ -382,7 +402,9 @@ export class PatternDetectionEngine {
       Math.abs(pattern2.centroid)
     );
 
-    if (maxCentroid === 0) return 1;
+    if (maxCentroid === 0) {
+return 1;
+}
 
     const centroidSimilarity = 1 - centroidDistance / maxCentroid;
     const confidenceSimilarity =

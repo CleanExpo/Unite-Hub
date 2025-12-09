@@ -90,7 +90,9 @@ export async function processGmailWithGemini(
       .order('received_at', { ascending: false })
       .limit(maxEmails);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
     if (!emails || emails.length === 0) {
       return { processed: 0, failed: 0, budgetExceeded: false };
     }
@@ -320,23 +322,39 @@ async function updateContactScore(contactId: string, intelligence: EmailIntellig
     .eq('id', contactId)
     .single();
 
-  if (!contact) return;
+  if (!contact) {
+return;
+}
 
   // Calculate score adjustment
   let scoreAdjustment = 0;
 
   // Intent-based scoring
-  if (intelligence.intent === 'meeting_request') scoreAdjustment += 10;
-  if (intelligence.intent === 'proposal') scoreAdjustment += 15;
-  if (intelligence.intent === 'question') scoreAdjustment += 5;
+  if (intelligence.intent === 'meeting_request') {
+scoreAdjustment += 10;
+}
+  if (intelligence.intent === 'proposal') {
+scoreAdjustment += 15;
+}
+  if (intelligence.intent === 'question') {
+scoreAdjustment += 5;
+}
 
   // Sentiment-based scoring
-  if (intelligence.sentiment === 'positive') scoreAdjustment += 5;
-  if (intelligence.sentiment === 'negative') scoreAdjustment -= 10;
+  if (intelligence.sentiment === 'positive') {
+scoreAdjustment += 5;
+}
+  if (intelligence.sentiment === 'negative') {
+scoreAdjustment -= 10;
+}
 
   // Priority-based scoring
-  if (intelligence.priority === 'high') scoreAdjustment += 10;
-  if (intelligence.priority === 'low') scoreAdjustment -= 5;
+  if (intelligence.priority === 'high') {
+scoreAdjustment += 10;
+}
+  if (intelligence.priority === 'low') {
+scoreAdjustment -= 5;
+}
 
   // Calculate new score (0-100 range)
   const newScore = Math.max(0, Math.min(100, contact.ai_score + scoreAdjustment));

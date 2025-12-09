@@ -221,9 +221,15 @@ export class ProposalEngine {
     actions: unknown[]
   ): number {
     let score = 0;
-    if (objectives.length > 0) score += 30;
-    if (tactics.length > 0) score += 30;
-    if (actions.length > 0) score += 40;
+    if (objectives.length > 0) {
+score += 30;
+}
+    if (tactics.length > 0) {
+score += 30;
+}
+    if (actions.length > 0) {
+score += 40;
+}
     return score;
   }
 
@@ -247,12 +253,20 @@ export class ProposalEngine {
     const actionCount = actions.length;
 
     // Score based on reasonable timeline
-    if (weeks === 0 || actionCount === 0) return 50;
+    if (weeks === 0 || actionCount === 0) {
+return 50;
+}
 
     const actionsPerWeek = actionCount / weeks;
-    if (actionsPerWeek <= 3) return 90;
-    if (actionsPerWeek <= 5) return 70;
-    if (actionsPerWeek <= 8) return 50;
+    if (actionsPerWeek <= 3) {
+return 90;
+}
+    if (actionsPerWeek <= 5) {
+return 70;
+}
+    if (actionsPerWeek <= 8) {
+return 50;
+}
     return 30;
   }
 

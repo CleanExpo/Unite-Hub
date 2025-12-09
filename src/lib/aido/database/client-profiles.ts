@@ -135,15 +135,33 @@ export async function updateClientProfile(
     updated_at: new Date().toISOString(),
   };
 
-  if (updates.name !== undefined) updateData.name = updates.name;
-  if (updates.primaryDomain !== undefined) updateData.primary_domain = updates.primaryDomain;
-  if (updates.niches !== undefined) updateData.niches = updates.niches;
-  if (updates.locations !== undefined) updateData.locations = updates.locations;
-  if (updates.brandTone !== undefined) updateData.brand_tone = updates.brandTone;
-  if (updates.expertiseTags !== undefined) updateData.expertise_tags = updates.expertiseTags;
-  if (updates.valueProps !== undefined) updateData.value_props = updates.valueProps;
-  if (updates.gmbListingIds !== undefined) updateData.gmb_listing_ids = updates.gmbListingIds;
-  if (updates.socialChannels !== undefined) updateData.social_channels = updates.socialChannels;
+  if (updates.name !== undefined) {
+updateData.name = updates.name;
+}
+  if (updates.primaryDomain !== undefined) {
+updateData.primary_domain = updates.primaryDomain;
+}
+  if (updates.niches !== undefined) {
+updateData.niches = updates.niches;
+}
+  if (updates.locations !== undefined) {
+updateData.locations = updates.locations;
+}
+  if (updates.brandTone !== undefined) {
+updateData.brand_tone = updates.brandTone;
+}
+  if (updates.expertiseTags !== undefined) {
+updateData.expertise_tags = updates.expertiseTags;
+}
+  if (updates.valueProps !== undefined) {
+updateData.value_props = updates.valueProps;
+}
+  if (updates.gmbListingIds !== undefined) {
+updateData.gmb_listing_ids = updates.gmbListingIds;
+}
+  if (updates.socialChannels !== undefined) {
+updateData.social_channels = updates.socialChannels;
+}
 
   const { data, error } = await supabase
     .from('client_profiles')

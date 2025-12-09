@@ -43,7 +43,9 @@ export function useCachedFetch<T>(
   const [error, setError] = useState<Error | null>(null);
 
   const fetch = useCallback(async () => {
-    if (!enabled) return;
+    if (!enabled) {
+return;
+}
 
     setIsLoading(true);
     setError(null);
@@ -165,7 +167,9 @@ export function usePerformanceMeasure(name: string): PerformanceMeasureResult {
   }, []);
 
   const endMeasure = useCallback(() => {
-    if (startTimeRef.current === null) return null;
+    if (startTimeRef.current === null) {
+return null;
+}
 
     const dur = performance.now() - startTimeRef.current;
     setDuration(dur);

@@ -125,7 +125,9 @@ export function validateDialogueSafety(input: {
   const commCheck = checkCommunicationAuthorization(input.interaction, input.config);
   if (commCheck.status !== 'safe') {
     reasons.push(...commCheck.reasons);
-    if (status !== 'blocked') status = commCheck.status;
+    if (status !== 'blocked') {
+status = commCheck.status;
+}
     requiresApproval = requiresApproval || commCheck.requires_approval;
   }
 
@@ -134,7 +136,9 @@ export function validateDialogueSafety(input: {
     const autonomyCheck = checkAutonomyPolicy(input.interaction, input.config);
     if (autonomyCheck.status !== 'safe') {
       reasons.push(...autonomyCheck.reasons);
-      if (status !== 'blocked') status = autonomyCheck.status;
+      if (status !== 'blocked') {
+status = autonomyCheck.status;
+}
       requiresApproval = requiresApproval || autonomyCheck.requires_approval;
     }
   }
@@ -143,7 +147,9 @@ export function validateDialogueSafety(input: {
   const contentCheck = checkResponseContent(input.interaction.personalized_response);
   if (contentCheck.status !== 'safe') {
     reasons.push(...contentCheck.reasons);
-    if (status !== 'blocked') status = contentCheck.status;
+    if (status !== 'blocked') {
+status = contentCheck.status;
+}
   }
 
   // Generate explanation
@@ -151,9 +157,15 @@ export function validateDialogueSafety(input: {
 
   // Determine approval priority
   let approval_priority: 'low' | 'medium' | 'high' | 'critical' = 'low';
-  if (reasons.some((r) => r === 'financial_execution')) approval_priority = 'high';
-  if (reasons.some((r) => r === 'external_communication_blocked')) approval_priority = 'medium';
-  if (reasons.some((r) => r === 'autonomy_violation')) approval_priority = 'critical';
+  if (reasons.some((r) => r === 'financial_execution')) {
+approval_priority = 'high';
+}
+  if (reasons.some((r) => r === 'external_communication_blocked')) {
+approval_priority = 'medium';
+}
+  if (reasons.some((r) => r === 'autonomy_violation')) {
+approval_priority = 'critical';
+}
 
   // Suggest alternative response if blocked
   let suggested_response: string | undefined;
@@ -382,7 +394,9 @@ function generateSafetyExplanation(reasons: BlockReason[]): string {
     manual_override: 'Safety decision manually overridden.',
   };
 
-  if (reasons.length === 0) return 'Safety check passed.';
+  if (reasons.length === 0) {
+return 'Safety check passed.';
+}
 
   // Deduplicate reasons
   const uniqueReasons: BlockReason[] = [];
@@ -422,7 +436,9 @@ function generateSafeAlternative(reasons: BlockReason[]): string {
     }
   }
 
-  if (uniqueReasons.length === 0) return 'Response approved.';
+  if (uniqueReasons.length === 0) {
+return 'Response approved.';
+}
 
   return alternatives[uniqueReasons[0]] || 'Please confirm this action with the founder.';
 }

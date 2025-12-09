@@ -47,7 +47,9 @@ export async function getNextJob(): Promise<{ success: boolean; job?: Production
       .limit(1)
       .single();
 
-    if (error && error.code !== 'PGRST116') throw error;
+    if (error && error.code !== 'PGRST116') {
+throw error;
+}
 
     return { success: true, job: data };
   } catch (error) {
@@ -89,7 +91,9 @@ export async function getQueueStats(
 
     const { data, error } = await query;
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     // Calculate stats
     const stats = {
@@ -102,9 +106,15 @@ export async function getQueueStats(
 
     data?.forEach(job => {
       // Status counts
-      if (job.status === 'pending') stats.pending++;
-      if (job.status === 'queued') stats.queued++;
-      if (job.status === 'processing') stats.processing++;
+      if (job.status === 'pending') {
+stats.pending++;
+}
+      if (job.status === 'queued') {
+stats.queued++;
+}
+      if (job.status === 'processing') {
+stats.processing++;
+}
 
       // Type counts
       stats.byType[job.job_type as JobType] = (stats.byType[job.job_type as JobType] || 0) + 1;
@@ -208,12 +218,16 @@ export async function queuePendingJobs(): Promise<{ success: boolean; queued: nu
       .select('id')
       .eq('status', 'pending');
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     let queued = 0;
     for (const job of jobs || []) {
       const result = await queueJob(job.id);
-      if (result.success) queued++;
+      if (result.success) {
+queued++;
+}
     }
 
     return { success: true, queued };
@@ -247,7 +261,9 @@ export async function runQueueProcessor(
   for (let i = 0; i < maxJobs; i++) {
     const { job } = await getNextJob();
 
-    if (!job) break; // No more jobs
+    if (!job) {
+break;
+} // No more jobs
 
     const result = await processJob(job);
 

@@ -32,7 +32,9 @@ export async function getPolicies(tenantId: string): Promise<BoundaryPolicy[]> {
     .eq('tenant_id', tenantId)
     .eq('is_active', true);
 
-  if (error) return [];
+  if (error) {
+return [];
+}
 
   return (data || []).map(row => ({
     id: row.id,
@@ -103,7 +105,9 @@ export async function getCrossingLogs(tenantId: string): Promise<BoundaryCrossin
     .order('created_at', { ascending: false })
     .limit(100);
 
-  if (error) return [];
+  if (error) {
+return [];
+}
 
   return (data || []).map(row => ({
     id: row.id,

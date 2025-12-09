@@ -57,7 +57,9 @@ export function AssetUpload({ onUploadComplete, workspaceId }: AssetUploadProps)
   };
 
   const handleUpload = async () => {
-    if (files.length === 0) return;
+    if (files.length === 0) {
+return;
+}
 
     setUploading(true);
     setUploadProgress(0);

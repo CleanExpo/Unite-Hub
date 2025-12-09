@@ -159,15 +159,27 @@ export function computeCompletenessScore(
   signals: AggregatedSignals
 ): number {
   let completeness = 0;
-  let totalFactors = 6;
+  const totalFactors = 6;
 
   // Check health metrics presence
-  if (signals.agency_health.score > 0) completeness++;
-  if (signals.client_health.score > 0) completeness++;
-  if (signals.creative_health.score > 0) completeness++;
-  if (signals.scaling_risk.score > 0) completeness++;
-  if (signals.orm_reality.score > 0) completeness++;
-  if (signals.archive_completeness.score > 0) completeness++;
+  if (signals.agency_health.score > 0) {
+completeness++;
+}
+  if (signals.client_health.score > 0) {
+completeness++;
+}
+  if (signals.creative_health.score > 0) {
+completeness++;
+}
+  if (signals.scaling_risk.score > 0) {
+completeness++;
+}
+  if (signals.orm_reality.score > 0) {
+completeness++;
+}
+  if (signals.archive_completeness.score > 0) {
+completeness++;
+}
 
   return completeness / totalFactors;
 }

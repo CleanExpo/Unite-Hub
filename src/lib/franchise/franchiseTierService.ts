@@ -182,10 +182,14 @@ export async function hasFeature(
   feature: keyof FranchiseTier['features']
 ): Promise<boolean> {
   const license = await getAgencyLicense(agencyId);
-  if (!license) return false;
+  if (!license) {
+return false;
+}
 
   const tier = await getTierByName(license.tierName);
-  if (!tier) return false;
+  if (!tier) {
+return false;
+}
 
   return tier.features[feature] ?? false;
 }
@@ -202,7 +206,9 @@ async function getTierByName(name: string): Promise<FranchiseTier | null> {
     .eq('name', name)
     .single();
 
-  if (!data) return null;
+  if (!data) {
+return null;
+}
   return mapToTier(data);
 }
 

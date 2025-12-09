@@ -110,7 +110,9 @@ class ApprovalService {
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') return null; // Not found
+      if (error.code === 'PGRST116') {
+return null;
+} // Not found
       throw error;
     }
 

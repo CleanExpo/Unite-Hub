@@ -155,7 +155,9 @@ export async function detectCrossRegionPatterns(): Promise<MeshInsight[]> {
     .not('region_id', 'is', null)
     .gte('weight', 0.6);
 
-  if (!regionGroups) return insights;
+  if (!regionGroups) {
+return insights;
+}
 
   // Find patterns appearing in multiple regions
   const patternMap = new Map<string, Set<string>>();
@@ -239,13 +241,17 @@ export async function generateFounderInsights(): Promise<{
 }
 
 function calculateAverageConfidence(nodes: any[]): number {
-  if (nodes.length === 0) return 0;
+  if (nodes.length === 0) {
+return 0;
+}
   const sum = nodes.reduce((acc, n) => acc + (n.confidence || 0), 0);
   return Math.round((sum / nodes.length) * 100) / 100;
 }
 
 function calculateAverage(values: number[]): number {
-  if (values.length === 0) return 0;
+  if (values.length === 0) {
+return 0;
+}
   const sum = values.reduce((acc, v) => acc + v, 0);
   return Math.round((sum / values.length) * 100) / 100;
 }

@@ -59,10 +59,18 @@ describe('Strategy Engine Integration', () => {
   describe('Health Score Calculations', () => {
     it('should map scores to correct status', () => {
       const getStatus = (score: number): HealthStatus => {
-        if (score >= 80) return 'EXCELLENT';
-        if (score >= 65) return 'GOOD';
-        if (score >= 50) return 'FAIR';
-        if (score >= 35) return 'POOR';
+        if (score >= 80) {
+return 'EXCELLENT';
+}
+        if (score >= 65) {
+return 'GOOD';
+}
+        if (score >= 50) {
+return 'FAIR';
+}
+        if (score >= 35) {
+return 'POOR';
+}
         return 'CRITICAL';
       };
 
@@ -104,9 +112,15 @@ describe('Strategy Engine Integration', () => {
     it('should calculate severity from drift percentage', () => {
       const getSeverity = (driftPercent: number): DriftSeverity => {
         const abs = Math.abs(driftPercent);
-        if (abs >= 30) return 'CRITICAL';
-        if (abs >= 20) return 'HIGH';
-        if (abs >= 10) return 'MEDIUM';
+        if (abs >= 30) {
+return 'CRITICAL';
+}
+        if (abs >= 20) {
+return 'HIGH';
+}
+        if (abs >= 10) {
+return 'MEDIUM';
+}
         return 'LOW';
       };
 
@@ -157,8 +171,12 @@ describe('Strategy Engine Integration', () => {
   describe('Trend Calculation', () => {
     it('should determine trend direction', () => {
       const getTrend = (changePercent: number): TrendDirection => {
-        if (changePercent > 5) return 'IMPROVING';
-        if (changePercent < -5) return 'DECLINING';
+        if (changePercent > 5) {
+return 'IMPROVING';
+}
+        if (changePercent < -5) {
+return 'DECLINING';
+}
         return 'STABLE';
       };
 
@@ -198,10 +216,18 @@ describe('Strategy Engine Integration', () => {
   describe('Adjustment Logic', () => {
     it('should map strength to adjustment type', () => {
       const getAdjustmentType = (strength: number): AdjustmentType => {
-        if (strength > 0.5) return 'STRENGTHEN';
-        if (strength > 0.2) return 'ACCELERATE';
-        if (strength > -0.2) return 'MAINTAIN';
-        if (strength > -0.5) return 'WEAKEN';
+        if (strength > 0.5) {
+return 'STRENGTHEN';
+}
+        if (strength > 0.2) {
+return 'ACCELERATE';
+}
+        if (strength > -0.2) {
+return 'MAINTAIN';
+}
+        if (strength > -0.5) {
+return 'WEAKEN';
+}
         return 'PAUSE';
       };
 

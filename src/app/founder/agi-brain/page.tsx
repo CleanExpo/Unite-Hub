@@ -104,7 +104,9 @@ export default function AGIBrainPage() {
   );
 
   const renderBusinessTab = () => {
-    if (!businessBrain) return <div>Loading business intelligence...</div>;
+    if (!businessBrain) {
+return <div>Loading business intelligence...</div>;
+}
 
     const atRiskDims = getAtRiskDimensions(businessBrain);
     const themes = getStrategicThemes(businessBrain);
@@ -214,7 +216,9 @@ export default function AGIBrainPage() {
 
       {['morning', 'midday', 'evening'].map(type => {
         const briefing = briefings[type];
-        if (!briefing) return null;
+        if (!briefing) {
+return null;
+}
 
         return (
           <div key={type} className="bg-gray-50 p-4 rounded border border-gray-300">

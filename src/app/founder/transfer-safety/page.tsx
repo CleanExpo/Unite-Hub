@@ -19,7 +19,9 @@ export default function TransferSafetyPage() {
   const fetchData = async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const response = await fetch('/api/regions/transfer-safety', {
         headers: { 'Authorization': `Bearer ${session.access_token}` },

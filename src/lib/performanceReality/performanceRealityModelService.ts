@@ -65,7 +65,9 @@ export function computeTruePerformanceScore(input: ModelInput): ModelOutput {
  * Calculate adjustment from attribution factors
  */
 function calculateAttributionAdjustment(factors: AttributionFactor[]): number {
-  if (factors.length === 0) return 0;
+  if (factors.length === 0) {
+return 0;
+}
 
   let totalAdjustment = 0;
 
@@ -83,7 +85,9 @@ function calculateAttributionAdjustment(factors: AttributionFactor[]): number {
  * Calculate adjustment from external signals
  */
 function calculateExternalAdjustment(signals: ExternalSignal[]): number {
-  if (signals.length === 0) return 0;
+  if (signals.length === 0) {
+return 0;
+}
 
   let totalAdjustment = 0;
 
@@ -208,7 +212,9 @@ export function generateDemoPerceivedScore(scope: string): number {
  * Determine primary driver from attribution factors
  */
 export function getPrimaryDriver(factors: AttributionFactor[]): string {
-  if (factors.length === 0) return 'unknown';
+  if (factors.length === 0) {
+return 'unknown';
+}
 
   const sorted = [...factors].sort((a, b) =>
     Math.abs(b.contribution * b.weight) - Math.abs(a.contribution * a.weight)
@@ -221,7 +227,9 @@ export function getPrimaryDriver(factors: AttributionFactor[]): string {
  * Get secondary drivers from attribution factors
  */
 export function getSecondaryDrivers(factors: AttributionFactor[]): string[] {
-  if (factors.length < 2) return [];
+  if (factors.length < 2) {
+return [];
+}
 
   const sorted = [...factors].sort((a, b) =>
     Math.abs(b.contribution * b.weight) - Math.abs(a.contribution * a.weight)

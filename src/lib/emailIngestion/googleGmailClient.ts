@@ -380,7 +380,9 @@ class GoogleGmailClient {
     const emails: string[] = [];
     const names: string[] = [];
 
-    if (!header) return { emails, names };
+    if (!header) {
+return { emails, names };
+}
 
     const parts = header.split(',');
     for (const part of parts) {
@@ -424,8 +426,12 @@ class GoogleGmailClient {
         } else if (part.mimeType?.startsWith('multipart/')) {
           // Recursively extract from nested parts
           const nested = this.extractBody(part as unknown as GmailMessage['payload']);
-          if (nested.text) text = nested.text;
-          if (nested.html) html = nested.html;
+          if (nested.text) {
+text = nested.text;
+}
+          if (nested.html) {
+html = nested.html;
+}
         }
       }
     }
@@ -442,7 +448,9 @@ class GoogleGmailClient {
     const attachments: ParsedEmailMessage['attachments'] = [];
 
     const processPartsForAttachments = (parts: GmailMessage['payload']['parts']): void => {
-      if (!parts) return;
+      if (!parts) {
+return;
+}
 
       for (const part of parts) {
         if (part.filename && part.body?.attachmentId) {

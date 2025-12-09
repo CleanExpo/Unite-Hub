@@ -28,7 +28,9 @@ export default function AgencyDashboardPage({ params }: PageProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchData = useCallback(async () => {
-    if (!session?.access_token) return;
+    if (!session?.access_token) {
+return;
+}
 
     setIsLoading(true);
     try {

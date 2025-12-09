@@ -174,7 +174,9 @@ export class CoalitionFormationEngine {
    * Calculate how many required capabilities agent brings
    */
   private calculateCapabilityOverlap(agentCapabilities: string[], requiredCapabilities: string[]): number {
-    if (requiredCapabilities.length === 0) return 0;
+    if (requiredCapabilities.length === 0) {
+return 0;
+}
 
     const matches = requiredCapabilities.filter((req) =>
       agentCapabilities.some((cap) => cap.toLowerCase().includes(req.toLowerCase()))
@@ -243,7 +245,9 @@ export class CoalitionFormationEngine {
    * Calculate coalition-level synergy from member scores
    */
   private calculateCoalitionSynergy(candidates: CoalitionCandidate[]): number {
-    if (candidates.length === 0) return 0;
+    if (candidates.length === 0) {
+return 0;
+}
 
     // Average of individual scores
     const avgSynergy = candidates.reduce((sum, c) => sum + c.synergyCon, 0) / candidates.length;
@@ -269,7 +273,9 @@ export class CoalitionFormationEngine {
     coalitionSynergy: number,
     taskComplexity: number
   ): number {
-    if (candidates.length === 0) return 0;
+    if (candidates.length === 0) {
+return 0;
+}
 
     // Base success probability from synergy
     const synergyContribution = coalitionSynergy / 100;

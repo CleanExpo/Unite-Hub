@@ -633,8 +633,12 @@ export class StrategyPlannerService {
   }
 
   private generateProposalTitle(objectives: ProposedObjective[]): string {
-    if (objectives.length === 0) return "Strategy Proposal";
-    if (objectives.length === 1) return objectives[0].name;
+    if (objectives.length === 0) {
+return "Strategy Proposal";
+}
+    if (objectives.length === 1) {
+return objectives[0].name;
+}
     return `Multi-Domain Strategy: ${objectives[0].domain} + ${objectives.length - 1} more`;
   }
 

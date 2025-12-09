@@ -133,14 +133,22 @@ export function CreativeOpsCard({
 }
 
 function getScoreColor(score: number): string {
-  if (score >= 70) return 'text-green-500 font-medium';
-  if (score >= 50) return 'text-yellow-500';
+  if (score >= 70) {
+return 'text-green-500 font-medium';
+}
+  if (score >= 50) {
+return 'text-yellow-500';
+}
   return 'text-red-500';
 }
 
 function getPressureColor(score: number): string {
-  if (score <= 30) return 'text-green-500 font-medium';
-  if (score <= 50) return 'text-yellow-500';
+  if (score <= 30) {
+return 'text-green-500 font-medium';
+}
+  if (score <= 50) {
+return 'text-yellow-500';
+}
   return 'text-red-500';
 }
 

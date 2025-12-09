@@ -38,14 +38,22 @@ export function AgentRiskApprovalModal({
   const [submissionResult, setSubmissionResult] = useState<{ success?: boolean; error?: string }>({});
 
   const getRiskColorClass = (score: number) => {
-    if (score < 30) return 'text-green-600';
-    if (score < 60) return 'text-yellow-600';
+    if (score < 30) {
+return 'text-green-600';
+}
+    if (score < 60) {
+return 'text-yellow-600';
+}
     return 'text-red-600';
   };
 
   const getRiskLevelText = (score: number) => {
-    if (score < 30) return 'Low Risk';
-    if (score < 60) return 'Medium Risk';
+    if (score < 30) {
+return 'Low Risk';
+}
+    if (score < 60) {
+return 'Medium Risk';
+}
     return 'High Risk';
   };
 

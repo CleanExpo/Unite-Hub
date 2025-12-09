@@ -243,15 +243,23 @@ function analyzeSentiment(body: string): string {
   let negativeCount = 0;
 
   positiveWords.forEach((word) => {
-    if (lower.includes(word)) positiveCount++;
+    if (lower.includes(word)) {
+positiveCount++;
+}
   });
 
   negativeWords.forEach((word) => {
-    if (lower.includes(word)) negativeCount++;
+    if (lower.includes(word)) {
+negativeCount++;
+}
   });
 
-  if (positiveCount > negativeCount) return 'positive';
-  if (negativeCount > positiveCount) return 'negative';
+  if (positiveCount > negativeCount) {
+return 'positive';
+}
+  if (negativeCount > positiveCount) {
+return 'negative';
+}
   return 'neutral';
 }
 

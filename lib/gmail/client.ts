@@ -107,7 +107,9 @@ export class GmailClient {
    * Check if token needs refresh
    */
   needsTokenRefresh(expiryDate?: number): boolean {
-    if (!expiryDate) return false;
+    if (!expiryDate) {
+return false;
+}
     const now = Date.now();
     const bufferTime = 5 * 60 * 1000; // 5 minutes buffer
     return now >= (expiryDate - bufferTime);

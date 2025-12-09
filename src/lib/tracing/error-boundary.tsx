@@ -17,7 +17,7 @@
  * @module lib/tracing/error-boundary
  */
 
-/* eslint-disable no-console */
+ 
 /* global process, console */
 
 import React, { ReactNode, ReactElement } from 'react';

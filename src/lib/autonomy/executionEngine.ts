@@ -133,7 +133,9 @@ export class ExecutionEngine {
         .select()
         .single();
 
-      if (execError) throw execError;
+      if (execError) {
+throw execError;
+}
 
       // Update proposal status
       await supabase
@@ -444,7 +446,9 @@ export class ExecutionEngine {
       .eq("client_id", clientId)
       .single();
 
-    if (!scopes) return true; // No scopes = no restrictions
+    if (!scopes) {
+return true;
+} // No scopes = no restrictions
 
     const now = new Date();
     const currentHour = now.getHours();
@@ -492,7 +496,9 @@ export class ExecutionEngine {
       .order("executed_at", { ascending: false })
       .limit(limit);
 
-    if (error) return [];
+    if (error) {
+return [];
+}
     return data;
   }
 

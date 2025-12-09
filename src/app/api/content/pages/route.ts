@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
       pages: filtered,
     });
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error('[API] Pages list error:', error);
     return NextResponse.json(
       { error: 'Failed to list pages', details: String(error) },

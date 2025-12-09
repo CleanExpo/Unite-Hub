@@ -66,12 +66,18 @@ export default function CampaignsPage() {
     setLoading(true);
     try {
       const params = new URLSearchParams({ workspaceId: workspaceId! });
-      if (brandFilter !== 'all') params.append('brandSlug', brandFilter);
-      if (statusFilter !== 'all') params.append('approvalStatus', statusFilter);
+      if (brandFilter !== 'all') {
+params.append('brandSlug', brandFilter);
+}
+      if (statusFilter !== 'all') {
+params.append('approvalStatus', statusFilter);
+}
 
       const response = await fetch(`/api/campaigns/blueprints?${params.toString()}`);
 
-      if (!response.ok) throw new Error('Failed to fetch blueprints');
+      if (!response.ok) {
+throw new Error('Failed to fetch blueprints');
+}
 
       const data = await response.json();
       setBlueprints(data.blueprints || []);
@@ -103,7 +109,9 @@ export default function CampaignsPage() {
         `/api/campaigns/channels?workspaceId=${workspaceId}&brandSlug=${brandFilter !== 'all' ? brandFilter : 'unite_group'}`
       );
 
-      if (!response.ok) throw new Error('Failed to fetch channels');
+      if (!response.ok) {
+throw new Error('Failed to fetch channels');
+}
 
       const data = await response.json();
       setAvailableChannels(data.playbook_channels || []);

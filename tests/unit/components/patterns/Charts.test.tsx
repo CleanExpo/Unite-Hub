@@ -407,7 +407,9 @@ describe('Charts Components (Phase 2B)', () => {
 
         slices.forEach((slice) => {
           const fill = slice.getAttribute('fill');
-          if (fill) colors.add(fill);
+          if (fill) {
+colors.add(fill);
+}
         });
 
         // Should have multiple colors

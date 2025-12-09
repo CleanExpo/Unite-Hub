@@ -188,10 +188,15 @@ export function scoreTruthCompliance(action: ClientAgentAction): number {
   // Reasoning quality contributes 20%
   if (action.agent_reasoning) {
     const reasoningLength = action.agent_reasoning.length;
-    if (reasoningLength >= 100) score += 20;
-    else if (reasoningLength >= 50) score += 15;
-    else if (reasoningLength >= 20) score += 10;
-    else score += 5;
+    if (reasoningLength >= 100) {
+score += 20;
+} else if (reasoningLength >= 50) {
+score += 15;
+} else if (reasoningLength >= 20) {
+score += 10;
+} else {
+score += 5;
+}
   }
 
   // Risk-appropriate confidence contributes 10%

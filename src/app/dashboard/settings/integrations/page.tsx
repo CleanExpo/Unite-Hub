@@ -80,13 +80,17 @@ export default function IntegrationsPage() {
   const [xeroConnecting, setXeroConnecting] = useState(false);
 
   useEffect(() => {
-    if (workspaceLoading) return;
+    if (workspaceLoading) {
+return;
+}
     loadIntegrations();
     loadXeroStatus();
   }, [workspaceId, workspaceLoading]);
 
   const loadIntegrations = async () => {
-    if (!workspaceId) return;
+    if (!workspaceId) {
+return;
+}
 
     setLoading(true);
     try {
@@ -272,7 +276,9 @@ export default function IntegrationsPage() {
 
   const setPrimary = async (integrationId: string) => {
     try {
-      if (!workspaceId) return;
+      if (!workspaceId) {
+return;
+}
 
       // Get session for auth
       const { data: { session } } = await supabaseBrowser.auth.getSession();
@@ -351,7 +357,9 @@ export default function IntegrationsPage() {
   };
 
   const disconnectAccount = async (integrationId: string) => {
-    if (!confirm("Are you sure you want to disconnect this account?")) return;
+    if (!confirm("Are you sure you want to disconnect this account?")) {
+return;
+}
 
     try {
       // Get session for auth
@@ -465,7 +473,9 @@ export default function IntegrationsPage() {
   };
 
   const disconnectXero = async () => {
-    if (!confirm("Are you sure you want to disconnect Xero? This will stop cost tracking to your accounting system.")) return;
+    if (!confirm("Are you sure you want to disconnect Xero? This will stop cost tracking to your accounting system.")) {
+return;
+}
 
     try {
       const { data: { session } } = await supabaseBrowser.auth.getSession();

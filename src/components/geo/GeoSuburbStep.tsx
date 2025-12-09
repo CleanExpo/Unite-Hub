@@ -126,7 +126,9 @@ export default function GeoSuburbStep({
   };
 
   const getFilteredSuburbs = () => {
-    if (!searchQuery) return suburbs;
+    if (!searchQuery) {
+return suburbs;
+}
     const query = searchQuery.toLowerCase();
     return suburbs.filter(
       (suburb) =>

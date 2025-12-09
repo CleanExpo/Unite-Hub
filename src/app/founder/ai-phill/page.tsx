@@ -120,7 +120,9 @@ export default function AiPhillPage() {
   ]);
 
   const handleSendMessage = async () => {
-    if (!input.trim()) return;
+    if (!input.trim()) {
+return;
+}
 
     const userMessage: Message = {
       id: Date.now().toString(),

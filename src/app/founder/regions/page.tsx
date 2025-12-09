@@ -26,7 +26,9 @@ export default function RegionsDashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchData = useCallback(async () => {
-    if (!session?.access_token) return;
+    if (!session?.access_token) {
+return;
+}
 
     setIsLoading(true);
     try {

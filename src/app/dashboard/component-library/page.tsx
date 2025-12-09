@@ -62,7 +62,9 @@ export default function ComponentLibraryPage() {
 
   // Fetch components
   const fetchComponents = useCallback(async () => {
-    if (!workspaceId) return;
+    if (!workspaceId) {
+return;
+}
 
     try {
       setLoading(true);
@@ -70,15 +72,23 @@ export default function ComponentLibraryPage() {
       params.set("workspaceId", workspaceId);
       params.set("page", currentPage.toString());
       params.set("limit", "20");
-      if (selectedCategory) params.set("category", selectedCategory);
-      if (selectedStyle) params.set("style_tag", selectedStyle);
-      if (sortBy) params.set("sort", sortBy);
+      if (selectedCategory) {
+params.set("category", selectedCategory);
+}
+      if (selectedStyle) {
+params.set("style_tag", selectedStyle);
+}
+      if (sortBy) {
+params.set("sort", sortBy);
+}
 
       const response = await fetch(`/api/marketplace/list?${params}`, {
         headers: { "Content-Type": "application/json" },
       });
 
-      if (!response.ok) throw new Error("Failed to fetch components");
+      if (!response.ok) {
+throw new Error("Failed to fetch components");
+}
 
       const data = await response.json();
       setComponents(data.data || []);
@@ -110,7 +120,9 @@ export default function ComponentLibraryPage() {
       params.set("query", debouncedQuery);
 
       const response = await fetch(`/api/marketplace/search?${params}`);
-      if (!response.ok) throw new Error("Failed to search components");
+      if (!response.ok) {
+throw new Error("Failed to search components");
+}
 
       const data = await response.json();
       setComponents(data.data || []);
@@ -139,7 +151,9 @@ export default function ComponentLibraryPage() {
 
   // Toggle favorite
   const handleFavoriteToggle = async (componentId: string) => {
-    if (!workspaceId) return;
+    if (!workspaceId) {
+return;
+}
 
     try {
       const response = await fetch(
@@ -150,7 +164,9 @@ export default function ComponentLibraryPage() {
         }
       );
 
-      if (!response.ok) throw new Error("Failed to toggle favorite");
+      if (!response.ok) {
+throw new Error("Failed to toggle favorite");
+}
 
       const data = await response.json();
       if (data.isFavorited) {
@@ -192,10 +208,12 @@ export default function ComponentLibraryPage() {
   // Export code
   const handleExportCode = (componentId: string, format: "tsx" | "jsx" | "css") => {
     const component = components.find((c) => c.id === componentId);
-    if (!component) return;
+    if (!component) {
+return;
+}
 
     let content = "";
-    let filename = `${component.name.toLowerCase().replace(/\s+/g, "-")}.${format}`;
+    const filename = `${component.name.toLowerCase().replace(/\s+/g, "-")}.${format}`;
 
     if (format === "tsx" || format === "jsx") {
       content = component.component_code;

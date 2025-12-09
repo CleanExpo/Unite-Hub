@@ -55,26 +55,41 @@ export const EnforcementNotifications: React.FC<EnforcementNotificationsProps> =
   }, [notifications, onDismiss]);
 
   const getSeverityColor = (severity: number) => {
-    if (severity >= 5)
-      return 'bg-red-600 border-red-700 dark:bg-red-900 dark:border-red-800';
-    if (severity >= 4)
-      return 'bg-orange-600 border-orange-700 dark:bg-orange-900 dark:border-orange-800';
-    if (severity >= 3)
-      return 'bg-yellow-600 border-yellow-700 dark:bg-yellow-900 dark:border-yellow-800';
+    if (severity >= 5) {
+return 'bg-red-600 border-red-700 dark:bg-red-900 dark:border-red-800';
+}
+    if (severity >= 4) {
+return 'bg-orange-600 border-orange-700 dark:bg-orange-900 dark:border-orange-800';
+}
+    if (severity >= 3) {
+return 'bg-yellow-600 border-yellow-700 dark:bg-yellow-900 dark:border-yellow-800';
+}
     return 'bg-blue-600 border-blue-700 dark:bg-blue-900 dark:border-blue-800';
   };
 
   const getSeverityIcon = (severity: number) => {
-    if (severity >= 5) return <AlertOctagon className="w-5 h-5" />;
-    if (severity >= 4) return <AlertCircle className="w-5 h-5" />;
-    if (severity >= 3) return <AlertTriangle className="w-5 h-5" />;
+    if (severity >= 5) {
+return <AlertOctagon className="w-5 h-5" />;
+}
+    if (severity >= 4) {
+return <AlertCircle className="w-5 h-5" />;
+}
+    if (severity >= 3) {
+return <AlertTriangle className="w-5 h-5" />;
+}
     return <Bell className="w-5 h-5" />;
   };
 
   const getSeverityLabel = (severity: number) => {
-    if (severity >= 5) return 'CRITICAL';
-    if (severity >= 4) return 'HIGH';
-    if (severity >= 3) return 'WARN';
+    if (severity >= 5) {
+return 'CRITICAL';
+}
+    if (severity >= 4) {
+return 'HIGH';
+}
+    if (severity >= 3) {
+return 'WARN';
+}
     return 'INFO';
   };
 
@@ -142,7 +157,9 @@ export const EnforcementNotifications: React.FC<EnforcementNotificationsProps> =
                 </a>
                 <button
                   onClick={() => {
-                    if (onDismiss) onDismiss(notification.id);
+                    if (onDismiss) {
+onDismiss(notification.id);
+}
                     setDisplayedNotifications(prev =>
                       prev.filter(n => n.id !== notification.id)
                     );
@@ -155,7 +172,9 @@ export const EnforcementNotifications: React.FC<EnforcementNotificationsProps> =
             </div>
             <button
               onClick={() => {
-                if (onDismiss) onDismiss(notification.id);
+                if (onDismiss) {
+onDismiss(notification.id);
+}
                 setDisplayedNotifications(prev =>
                   prev.filter(n => n.id !== notification.id)
                 );
@@ -193,7 +212,9 @@ export const EnforcementNotifications: React.FC<EnforcementNotificationsProps> =
             </div>
             <button
               onClick={() => {
-                if (onDismiss) onDismiss(notification.id);
+                if (onDismiss) {
+onDismiss(notification.id);
+}
                 setDisplayedNotifications(prev =>
                   prev.filter(n => n.id !== notification.id)
                 );

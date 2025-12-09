@@ -44,14 +44,22 @@ export function StaffActivityCard({
   onStaffClick,
 }: StaffActivityCardProps) {
   const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-500';
-    if (score >= 60) return 'text-amber-500';
+    if (score >= 80) {
+return 'text-green-500';
+}
+    if (score >= 60) {
+return 'text-amber-500';
+}
     return 'text-red-500';
   };
 
   const getScoreVariant = (score: number): 'default' | 'secondary' | 'destructive' => {
-    if (score >= 80) return 'default';
-    if (score >= 60) return 'secondary';
+    if (score >= 80) {
+return 'default';
+}
+    if (score >= 60) {
+return 'secondary';
+}
     return 'destructive';
   };
 

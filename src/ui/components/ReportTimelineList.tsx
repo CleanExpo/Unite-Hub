@@ -94,7 +94,9 @@ export function ReportTimelineList({
 
         {(['weekly', 'monthly', 'ninety_day'] as ReportType[]).map((type) => {
           const groupReports = groups[type];
-          if (groupReports.length === 0) return null;
+          if (groupReports.length === 0) {
+return null;
+}
 
           const config = typeConfig[type];
           const isExpanded = expandedGroups.has(type);

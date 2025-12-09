@@ -255,10 +255,15 @@ export class LeadScoringFramework {
 
     // Determine tier
     let tier: "hot" | "warm" | "lukewarm" | "cold";
-    if (totalScore >= 80) tier = "hot";
-    else if (totalScore >= 60) tier = "warm";
-    else if (totalScore >= 40) tier = "lukewarm";
-    else tier = "cold";
+    if (totalScore >= 80) {
+tier = "hot";
+} else if (totalScore >= 60) {
+tier = "warm";
+} else if (totalScore >= 40) {
+tier = "lukewarm";
+} else {
+tier = "cold";
+}
 
     // Determine trend (mock - in production would compare to previous score)
     const trend: "increasing" | "stable" | "decreasing" = totalScore > 70 ? "increasing" : "stable";
@@ -307,13 +312,17 @@ export class LeadScoringFramework {
     currentScore: number,
     previousScores: number[]
   ): "increasing" | "stable" | "decreasing" {
-    if (previousScores.length === 0) return "stable";
+    if (previousScores.length === 0) {
+return "stable";
+}
 
     const avgPrevious =
       previousScores.reduce((a, b) => a + b, 0) / previousScores.length;
     const change = currentScore - avgPrevious;
 
-    if (Math.abs(change) < 5) return "stable";
+    if (Math.abs(change) < 5) {
+return "stable";
+}
     return change > 0 ? "increasing" : "decreasing";
   }
 
@@ -372,14 +381,20 @@ export class LeadScoringFramework {
 
     for (const outcome of outcomes) {
       const score = scores.find((s) => s.contactId === outcome.contactId);
-      if (!score) continue;
+      if (!score) {
+continue;
+}
 
       const predicted = score.tier === "hot" || score.tier === "warm";
       correct += predicted === outcome.converted ? 1 : 0;
 
-      if (predicted && outcome.converted) truePositives++;
-      else if (predicted && !outcome.converted) falsePositives++;
-      else if (!predicted && outcome.converted) falseNegatives++;
+      if (predicted && outcome.converted) {
+truePositives++;
+} else if (predicted && !outcome.converted) {
+falsePositives++;
+} else if (!predicted && outcome.converted) {
+falseNegatives++;
+}
 
       // Track calibration error
       const expectedConversion = score.totalScore / 100;

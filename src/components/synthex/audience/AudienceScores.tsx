@@ -53,7 +53,9 @@ export default function AudienceScores({ tenantId }: AudienceScoresProps) {
   const [error, setError] = useState<string | null>(null);
 
   const loadScores = useCallback(async () => {
-    if (!tenantId) return;
+    if (!tenantId) {
+return;
+}
 
     setLoading(true);
     setError(null);
@@ -113,14 +115,22 @@ export default function AudienceScores({ tenantId }: AudienceScoresProps) {
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 50) return 'text-green-400';
-    if (score >= 20) return 'text-yellow-400';
-    if (score >= 0) return 'text-gray-400';
+    if (score >= 50) {
+return 'text-green-400';
+}
+    if (score >= 20) {
+return 'text-yellow-400';
+}
+    if (score >= 0) {
+return 'text-gray-400';
+}
     return 'text-red-400';
   };
 
   const getPersonaBadgeColor = (persona: string | null) => {
-    if (!persona) return 'bg-gray-700 text-gray-400';
+    if (!persona) {
+return 'bg-gray-700 text-gray-400';
+}
 
     const colors: Record<string, string> = {
       'Early Adopter': 'bg-purple-500/20 text-purple-400',

@@ -224,7 +224,9 @@ export class MemoryRanker {
    * - 100 accesses: 100 points
    */
   private computeAccessFrequency(accessCount: number = 0): number {
-    if (accessCount === 0) return 0;
+    if (accessCount === 0) {
+return 0;
+}
 
     // Logarithmic scale: score = 33.3 * log10(accessCount + 1)
     // At accessCount=1: log10(2) ≈ 0.301 → ~10 points
@@ -420,11 +422,17 @@ export class MemoryRanker {
     };
 
     scores.forEach(score => {
-      if (score < 20) distribution['0-20']++;
-      else if (score < 40) distribution['20-40']++;
-      else if (score < 60) distribution['40-60']++;
-      else if (score < 80) distribution['60-80']++;
-      else distribution['80-100']++;
+      if (score < 20) {
+distribution['0-20']++;
+} else if (score < 40) {
+distribution['20-40']++;
+} else if (score < 60) {
+distribution['40-60']++;
+} else if (score < 80) {
+distribution['60-80']++;
+} else {
+distribution['80-100']++;
+}
     });
 
     return {

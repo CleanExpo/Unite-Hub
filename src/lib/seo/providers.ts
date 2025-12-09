@@ -113,10 +113,14 @@ class DataForSeoProvider implements SeoProvider {
 
         // Parse response for each keyword
         for (const task of data.tasks || []) {
-          if (task.status_code !== 20000) continue;
+          if (task.status_code !== 20000) {
+continue;
+}
 
           const result = task.result?.[0];
-          if (!result) continue;
+          if (!result) {
+continue;
+}
 
           const keyword = result.keyword;
 
@@ -315,8 +319,12 @@ export class UnifiedSeoMonitor {
   }
 
   private normalizeResults(providerResults: RankingData[][]): RankingData[] {
-    if (providerResults.length === 0) return [];
-    if (providerResults.length === 1) return providerResults[0];
+    if (providerResults.length === 0) {
+return [];
+}
+    if (providerResults.length === 1) {
+return providerResults[0];
+}
 
     // Merge results by keyword
     const keywordMap = new Map<string, RankingData[]>();
@@ -333,7 +341,9 @@ export class UnifiedSeoMonitor {
     const consensus: RankingData[] = [];
 
     for (const [keyword, rankings] of keywordMap) {
-      if (rankings.length === 0) continue;
+      if (rankings.length === 0) {
+continue;
+}
 
       // If we have multiple providers, average the positions
       const avgPosition = Math.round(
@@ -383,8 +393,12 @@ export class UnifiedSeoMonitor {
   }
 
   private scoreConfidence(ranking: RankingData, providerCount: number): number {
-    if (providerCount === 0) return 50; // Minimum confidence
-    if (providerCount === 1) return 75; // Single provider data
+    if (providerCount === 0) {
+return 50;
+} // Minimum confidence
+    if (providerCount === 1) {
+return 75;
+} // Single provider data
 
     // Both providers agree (within 2 positions)
     // This requires tracking which positions came from which provider
@@ -460,13 +474,19 @@ export class UnifiedSeoMonitor {
       // Below 20 = 0
     }
 
-    if (totalWeight === 0) return 0;
+    if (totalWeight === 0) {
+return 0;
+}
     return Math.round((achievedWeight / totalWeight) * 100);
   }
 
   private getConfidenceLevel(avgConfidence: number): 'high' | 'medium' | 'low' {
-    if (avgConfidence >= 85) return 'high';
-    if (avgConfidence >= 70) return 'medium';
+    if (avgConfidence >= 85) {
+return 'high';
+}
+    if (avgConfidence >= 70) {
+return 'medium';
+}
     return 'low';
   }
 

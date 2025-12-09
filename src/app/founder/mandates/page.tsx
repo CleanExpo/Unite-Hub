@@ -24,7 +24,9 @@ export default function MandatesPage() {
   useEffect(() => {
     async function fetchMandates() {
       const { data: { session } } = await supabaseBrowser.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const response = await fetch('/api/agent-mandates?tenantId=current', {
         headers: { Authorization: `Bearer ${session.access_token}` }

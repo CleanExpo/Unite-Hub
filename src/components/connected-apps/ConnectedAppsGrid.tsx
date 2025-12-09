@@ -40,7 +40,9 @@ export function ConnectedAppsGrid() {
 
   // Fetch connected apps
   useEffect(() => {
-    if (!workspaceId || !session?.access_token) return;
+    if (!workspaceId || !session?.access_token) {
+return;
+}
 
     const fetchApps = async () => {
       try {
@@ -89,7 +91,9 @@ export function ConnectedAppsGrid() {
   }, []);
 
   const handleConnect = async (provider: 'google' | 'microsoft') => {
-    if (!workspaceId || !session?.access_token) return;
+    if (!workspaceId || !session?.access_token) {
+return;
+}
 
     try {
       setConnectingProvider(provider);
@@ -123,7 +127,9 @@ export function ConnectedAppsGrid() {
   };
 
   const handleDisconnect = async (appId: string) => {
-    if (!workspaceId || !session?.access_token) return;
+    if (!workspaceId || !session?.access_token) {
+return;
+}
 
     if (!confirm('Are you sure you want to disconnect this app? This will remove all synced emails.')) {
       return;
@@ -153,7 +159,9 @@ export function ConnectedAppsGrid() {
   };
 
   const handleSync = async (appId: string) => {
-    if (!workspaceId || !session?.access_token) return;
+    if (!workspaceId || !session?.access_token) {
+return;
+}
 
     try {
       setSyncingApp(appId);

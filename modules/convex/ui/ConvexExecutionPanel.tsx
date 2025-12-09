@@ -106,7 +106,9 @@ export default function ConvexExecutionPanel() {
   }
 
   async function handleGenerate() {
-    if (!selectedTemplate) return;
+    if (!selectedTemplate) {
+return;
+}
 
     setIsGenerating(true);
     setGeneratedOutput(null);

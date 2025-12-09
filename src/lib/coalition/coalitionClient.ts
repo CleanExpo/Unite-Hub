@@ -136,9 +136,15 @@ export function formatSynergyScore(score: number): string {
  * Get color for synergy level
  */
 export function getSynergyColor(score: number): string {
-  if (score >= 80) return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-100';
-  if (score >= 65) return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100';
-  if (score >= 50) return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100';
+  if (score >= 80) {
+return 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-100';
+}
+  if (score >= 65) {
+return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100';
+}
+  if (score >= 50) {
+return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100';
+}
   return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100';
 }
 
@@ -146,9 +152,15 @@ export function getSynergyColor(score: number): string {
  * Get synergy status label
  */
 export function getSynergyStatusLabel(score: number): string {
-  if (score >= 80) return 'Excellent Synergy';
-  if (score >= 65) return 'Good Synergy';
-  if (score >= 50) return 'Fair Synergy';
+  if (score >= 80) {
+return 'Excellent Synergy';
+}
+  if (score >= 65) {
+return 'Good Synergy';
+}
+  if (score >= 50) {
+return 'Fair Synergy';
+}
   return 'Low Synergy';
 }
 
@@ -204,9 +216,15 @@ export function formatOutcome(outcome: string): string {
  * Get risk color
  */
 export function getRiskColor(riskScore: number): string {
-  if (riskScore >= 80) return 'text-red-600 dark:text-red-400';
-  if (riskScore >= 65) return 'text-orange-600 dark:text-orange-400';
-  if (riskScore >= 50) return 'text-yellow-600 dark:text-yellow-400';
+  if (riskScore >= 80) {
+return 'text-red-600 dark:text-red-400';
+}
+  if (riskScore >= 65) {
+return 'text-orange-600 dark:text-orange-400';
+}
+  if (riskScore >= 50) {
+return 'text-yellow-600 dark:text-yellow-400';
+}
   return 'text-green-600 dark:text-green-400';
 }
 
@@ -225,8 +243,12 @@ export function formatDuration(ms: number): string {
   const minutes = Math.floor(seconds / 60);
   const hours = Math.floor(minutes / 60);
 
-  if (hours > 0) return `${hours}h ${minutes % 60}m`;
-  if (minutes > 0) return `${minutes}m ${seconds % 60}s`;
+  if (hours > 0) {
+return `${hours}h ${minutes % 60}m`;
+}
+  if (minutes > 0) {
+return `${minutes}m ${seconds % 60}s`;
+}
   return `${seconds}s`;
 }
 
@@ -255,9 +277,15 @@ export function getTimeElapsed(timestamp: string): string {
   const diffHours = Math.floor(diffMins / 60);
   const diffDays = Math.floor(diffHours / 24);
 
-  if (diffMins < 1) return 'Just now';
-  if (diffMins < 60) return `${diffMins}m ago`;
-  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffMins < 1) {
+return 'Just now';
+}
+  if (diffMins < 60) {
+return `${diffMins}m ago`;
+}
+  if (diffHours < 24) {
+return `${diffHours}h ago`;
+}
   return `${diffDays}d ago`;
 }
 
@@ -265,7 +293,9 @@ export function getTimeElapsed(timestamp: string): string {
  * Check if coalition is in progress
  */
 export function isCoalitionActive(coalition: CoalitionProposal | null): boolean {
-  if (!coalition) return false;
+  if (!coalition) {
+return false;
+}
   return coalition.status === 'proposed' || coalition.status === 'accepted' || coalition.status === 'executing';
 }
 

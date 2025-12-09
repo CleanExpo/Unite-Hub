@@ -270,8 +270,12 @@ export async function PATCH(req: NextRequest) {
 
     // Update member
     const updates: any = {};
-    if (role) updates.role = role;
-    if (status) updates.status = status;
+    if (role) {
+updates.role = role;
+}
+    if (status) {
+updates.status = status;
+}
 
     const result = await updateTenantMember(member_id, updates);
 

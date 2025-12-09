@@ -208,12 +208,24 @@ export async function updateCampaign(
 
   const updateData: Record<string, unknown> = {};
 
-  if (updates.name !== undefined) updateData.name = updates.name;
-  if (updates.description !== undefined) updateData.description = updates.description;
-  if (updates.type !== undefined) updateData.type = updates.type;
-  if (updates.status !== undefined) updateData.status = updates.status;
-  if (updates.steps !== undefined) updateData.steps = JSON.stringify(updates.steps);
-  if (updates.scheduledAt !== undefined) updateData.scheduled_at = updates.scheduledAt;
+  if (updates.name !== undefined) {
+updateData.name = updates.name;
+}
+  if (updates.description !== undefined) {
+updateData.description = updates.description;
+}
+  if (updates.type !== undefined) {
+updateData.type = updates.type;
+}
+  if (updates.status !== undefined) {
+updateData.status = updates.status;
+}
+  if (updates.steps !== undefined) {
+updateData.steps = JSON.stringify(updates.steps);
+}
+  if (updates.scheduledAt !== undefined) {
+updateData.scheduled_at = updates.scheduledAt;
+}
   if (updates.targetAudience !== undefined) {
     updateData.target_audience = updates.targetAudience ? JSON.stringify(updates.targetAudience) : null;
   }
@@ -333,9 +345,15 @@ export async function getCampaignStats(tenantId: string, brandId?: string): Prom
   for (const row of data || []) {
     stats.total++;
 
-    if (row.status === 'active') stats.active++;
-    if (row.status === 'draft') stats.drafts++;
-    if (row.status === 'completed') stats.completed++;
+    if (row.status === 'active') {
+stats.active++;
+}
+    if (row.status === 'draft') {
+stats.drafts++;
+}
+    if (row.status === 'completed') {
+stats.completed++;
+}
 
     stats.total_emails_sent += row.emails_sent || 0;
     stats.total_opens += row.emails_opened || 0;

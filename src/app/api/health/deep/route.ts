@@ -1,4 +1,4 @@
-/* eslint-disable no-undef, @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* global process */
 
 /**
@@ -214,9 +214,15 @@ async function checkExternalAPIs(): Promise<DependencyCheck> {
     );
 
     const missingServices: string[] = [];
-    if (!hasGmailConfig) missingServices.push('Gmail OAuth');
-    if (!hasEmailConfig) missingServices.push('Email service');
-    if (!hasSupabaseConfig) missingServices.push('Supabase');
+    if (!hasGmailConfig) {
+missingServices.push('Gmail OAuth');
+}
+    if (!hasEmailConfig) {
+missingServices.push('Email service');
+}
+    if (!hasSupabaseConfig) {
+missingServices.push('Supabase');
+}
 
     if (missingServices.length > 0) {
       return {

@@ -64,7 +64,9 @@ export async function userHasWorkspaceAccess(
 ): Promise<boolean> {
   // Check ownership first (faster)
   const isOwner = await userOwnsWorkspace(supabase, userId, workspaceId);
-  if (isOwner) return true;
+  if (isOwner) {
+return true;
+}
 
   // Check organization membership
   // Workspace might be linked to an org

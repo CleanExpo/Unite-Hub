@@ -14,13 +14,17 @@ export default function EvolutionKernelPage() {
   const [tasks, setTasks] = useState<EvolutionTask[]>([]);
 
   useEffect(() => {
-    if (currentOrganization?.org_id) fetchData();
+    if (currentOrganization?.org_id) {
+fetchData();
+}
   }, [currentOrganization]);
 
   const fetchData = async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session || !currentOrganization) return;
+      if (!session || !currentOrganization) {
+return;
+}
       const response = await fetch(`/api/evolution/kernel/tasks?tenantId=${currentOrganization.org_id}`, {
         headers: { 'Authorization': `Bearer ${session.access_token}` },
       });
@@ -28,14 +32,19 @@ export default function EvolutionKernelPage() {
         const data = await response.json();
         setTasks(data.tasks || []);
       }
-    } catch (error) { console.error('Failed:', error); }
-    finally { setLoading(false); }
+    } catch (error) {
+ console.error('Failed:', error); 
+} finally {
+ setLoading(false); 
+}
   };
 
   const runKernel = async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session || !currentOrganization) return;
+      if (!session || !currentOrganization) {
+return;
+}
       await fetch('/api/evolution/kernel/run', {
         method: 'POST',
         headers: {
@@ -45,10 +54,14 @@ export default function EvolutionKernelPage() {
         body: JSON.stringify({ tenantId: currentOrganization.org_id })
       });
       fetchData();
-    } catch (error) { console.error('Failed:', error); }
+    } catch (error) {
+ console.error('Failed:', error); 
+}
   };
 
-  if (loading) return <div className="container mx-auto p-6"><div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div></div>;
+  if (loading) {
+return <div className="container mx-auto p-6"><div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div></div>;
+}
 
   return (
     <div className="container mx-auto p-6 space-y-6">

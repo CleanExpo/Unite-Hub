@@ -186,7 +186,9 @@ export async function getRoutableLeads(
 
     const { data: contacts, error: contactsError } = await query;
 
-    if (contactsError) throw contactsError;
+    if (contactsError) {
+throw contactsError;
+}
 
     if (!contacts || contacts.length === 0) {
       return { data: [], error: null };
@@ -254,7 +256,9 @@ export async function getOwnerPreferences(
       .eq('is_active', true)
       .order('owner_name', { ascending: true });
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     const preferences: OwnerPreferences[] = (data || []).map((row) => ({
       id: row.id,
@@ -294,7 +298,9 @@ export async function getRoutingRecommendation(
   try {
     // Get available owners
     const ownersResult = await getOwnerPreferences(tenantId);
-    if (ownersResult.error) throw ownersResult.error;
+    if (ownersResult.error) {
+throw ownersResult.error;
+}
 
     const owners = ownersResult.data || [];
 
@@ -465,7 +471,9 @@ export async function applyRoutingDecision(
       .select()
       .single();
 
-    if (logError) throw logError;
+    if (logError) {
+throw logError;
+}
 
     // Update the lead's owner
     const { error: updateError } = await supabaseAdmin
@@ -474,7 +482,9 @@ export async function applyRoutingDecision(
       .eq('id', leadId)
       .eq('tenant_id', tenantId);
 
-    if (updateError) throw updateError;
+    if (updateError) {
+throw updateError;
+}
 
     // Update owner's active lead count
     await supabaseAdmin.rpc('increment_owner_lead_count', {
@@ -530,7 +540,9 @@ export async function listRoutingLog(
 
     const { data, error } = await query;
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     const entries = (data || []).map(mapLogEntryFromDb);
     return { data: entries, error: null };
@@ -570,7 +582,9 @@ export async function upsertOwnerPreferences(
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return {
       data: {

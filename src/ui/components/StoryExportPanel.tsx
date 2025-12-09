@@ -86,7 +86,9 @@ export function StoryExportPanel({
 
   const handleCopy = async (formatId: string) => {
     const exported = getExportContent(formatId);
-    if (!exported) return;
+    if (!exported) {
+return;
+}
 
     try {
       await navigator.clipboard.writeText(exported.content);
@@ -99,7 +101,9 @@ export function StoryExportPanel({
 
   const handleDownload = (formatId: string) => {
     const exported = getExportContent(formatId);
-    if (!exported) return;
+    if (!exported) {
+return;
+}
 
     const blob = new Blob([exported.content], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);

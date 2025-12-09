@@ -175,11 +175,21 @@ export async function PATCH(request: NextRequest) {
     }
 
     const updates: Record<string, unknown> = {};
-    if (text_content !== undefined) updates.text_content = text_content;
-    if (hashtags !== undefined) updates.hashtags = hashtags;
-    if (scheduled_for !== undefined) updates.scheduled_for = scheduled_for;
-    if (status !== undefined) updates.status = status;
-    if (media_urls !== undefined) updates.media_urls = media_urls;
+    if (text_content !== undefined) {
+updates.text_content = text_content;
+}
+    if (hashtags !== undefined) {
+updates.hashtags = hashtags;
+}
+    if (scheduled_for !== undefined) {
+updates.scheduled_for = scheduled_for;
+}
+    if (status !== undefined) {
+updates.status = status;
+}
+    if (media_urls !== undefined) {
+updates.media_urls = media_urls;
+}
 
     const post = await updatePost(tenant_id, post_id, updates);
 

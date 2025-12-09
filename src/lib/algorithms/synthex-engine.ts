@@ -304,7 +304,9 @@ export function infoNCELoss(
  */
 export function ndcgAtK(relevances: number[], k: number): number {
   const sliced = relevances.slice(0, k);
-  if (sliced.length === 0) return 0;
+  if (sliced.length === 0) {
+return 0;
+}
 
   // DCG
   let dcg = 0;
@@ -328,7 +330,9 @@ export function ndcgAtK(relevances: number[], k: number): number {
  * MRR = (1/|Q|) × Σ 1/rank_i
  */
 export function meanReciprocalRank(rankings: number[][]): number {
-  if (rankings.length === 0) return 0;
+  if (rankings.length === 0) {
+return 0;
+}
 
   let sum = 0;
   for (const ranking of rankings) {
@@ -350,7 +354,9 @@ export function meanAveragePrecision(
   predictions: string[][],
   groundTruth: Set<string>[]
 ): number {
-  if (predictions.length === 0) return 0;
+  if (predictions.length === 0) {
+return 0;
+}
 
   let mapSum = 0;
 
@@ -421,7 +427,9 @@ export function recallAtK(
   groundTruth: Set<string>,
   k: number
 ): number {
-  if (groundTruth.size === 0) return 0;
+  if (groundTruth.size === 0) {
+return 0;
+}
   const topK = predictions.slice(0, k);
   const hits = topK.filter(item => groundTruth.has(item)).length;
   return hits / groundTruth.size;
@@ -523,7 +531,9 @@ export function dinAttentionScore(
   historyEmbeddings: number[][],
   historyWeights?: number[]
 ): number {
-  if (historyEmbeddings.length === 0) return 0;
+  if (historyEmbeddings.length === 0) {
+return 0;
+}
 
   const softmax = (values: number[]): number[] => {
     const max = Math.max(...values);
@@ -665,7 +675,9 @@ export function popularitySample<T>(
     const rand = Math.random();
 
     for (let i = 0; i < available.length; i++) {
-      if (usedIndices.has(i)) continue;
+      if (usedIndices.has(i)) {
+continue;
+}
       cumulative += probabilities[i];
       if (rand <= cumulative) {
         sampled.push(available[i]);
@@ -707,7 +719,9 @@ export function hardNegativeSample<T>(
     const rand = Math.random();
 
     for (let i = 0; i < available.length; i++) {
-      if (usedIndices.has(i)) continue;
+      if (usedIndices.has(i)) {
+continue;
+}
       cumulative += probabilities[i];
       if (rand <= cumulative) {
         sampled.push(available[i]);
@@ -746,7 +760,9 @@ export class ABTestManager {
 
   assignUserToVariant(testId: string, userId: string): RankingMethod | null {
     const test = this.tests.get(testId);
-    if (!test) return null;
+    if (!test) {
+return null;
+}
 
     // Deterministic assignment based on user ID hash
     const hash = this.hashString(userId);
@@ -769,7 +785,9 @@ export class ABTestManager {
     metrics: EvaluationMetrics
   ): void {
     const testResults = this.results.get(testId);
-    if (!testResults) return;
+    if (!testResults) {
+return;
+}
 
     const methodResults = testResults.get(method) || [];
     methodResults.push({
@@ -786,12 +804,16 @@ export class ABTestManager {
   getTestResults(testId: string): Map<RankingMethod, ABTestResult> | null {
     const test = this.tests.get(testId);
     const rawResults = this.results.get(testId);
-    if (!test || !rawResults) return null;
+    if (!test || !rawResults) {
+return null;
+}
 
     const aggregated = new Map<RankingMethod, ABTestResult>();
 
     for (const [method, results] of rawResults) {
-      if (results.length === 0) continue;
+      if (results.length === 0) {
+continue;
+}
 
       // Aggregate metrics
       const avgMetrics: EvaluationMetrics = {

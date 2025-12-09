@@ -345,8 +345,12 @@ describe('Framework Validation', () => {
 
     it('should calculate reusability score', async () => {
       let reusability = 70;
-      if (testFramework.components.length >= 5) reusability += 15;
-      if (testFramework.reasoning_patterns.length > 0) reusability += 15;
+      if (testFramework.components.length >= 5) {
+reusability += 15;
+}
+      if (testFramework.reasoning_patterns.length > 0) {
+reusability += 15;
+}
 
       expect(reusability).toBeGreaterThanOrEqual(70);
       expect(reusability).toBeLessThanOrEqual(100);

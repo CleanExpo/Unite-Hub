@@ -31,13 +31,17 @@
  * validateEmailFormat("invalid@") // false
  */
 export function validateEmailFormat(email: string): boolean {
-  if (!email || typeof email !== "string") return false;
+  if (!email || typeof email !== "string") {
+return false;
+}
 
   // Trim whitespace
   const trimmed = email.trim().toLowerCase();
 
   // Basic length check (320 is max length per RFC 5321)
-  if (trimmed.length > 320) return false;
+  if (trimmed.length > 320) {
+return false;
+}
 
   // RFC 5322 compliant regex
   const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
@@ -55,21 +59,29 @@ export function validateEmailFormat(email: string): boolean {
  * - No special characters in domain
  */
 export function validateEmailStrict(email: string): boolean {
-  if (!validateEmailFormat(email)) return false;
+  if (!validateEmailFormat(email)) {
+return false;
+}
 
   const trimmed = email.trim().toLowerCase();
 
   // Check for consecutive dots
-  if (trimmed.includes("..")) return false;
+  if (trimmed.includes("..")) {
+return false;
+}
 
   // Check for dots at start/end of local part
   const [local, domain] = trimmed.split("@");
-  if (local.startsWith(".") || local.endsWith(".")) return false;
+  if (local.startsWith(".") || local.endsWith(".")) {
+return false;
+}
 
   // Check domain has valid TLD (at least 2 characters)
   const domainParts = domain.split(".");
   const tld = domainParts[domainParts.length - 1];
-  if (tld.length < 2) return false;
+  if (tld.length < 2) {
+return false;
+}
 
   return true;
 }
@@ -86,7 +98,9 @@ export function validateEmailStrict(email: string): boolean {
  * extractDomain("invalid") // null
  */
 export function extractDomain(email: string): string | null {
-  if (!validateEmailFormat(email)) return null;
+  if (!validateEmailFormat(email)) {
+return null;
+}
 
   const parts = email.trim().toLowerCase().split("@");
   return parts[1] || null;
@@ -105,7 +119,9 @@ export function isFromDomain(
   allowSubdomains: boolean = false
 ): boolean {
   const emailDomain = extractDomain(email);
-  if (!emailDomain) return false;
+  if (!emailDomain) {
+return false;
+}
 
   const normalizedDomain = domain.toLowerCase();
 
@@ -165,7 +181,9 @@ const DISPOSABLE_EMAIL_DOMAINS = new Set([
  */
 export function isDisposableEmail(email: string): boolean {
   const domain = extractDomain(email);
-  if (!domain) return false;
+  if (!domain) {
+return false;
+}
 
   return DISPOSABLE_EMAIL_DOMAINS.has(domain);
 }
@@ -206,7 +224,9 @@ const ROLE_BASED_PREFIXES = new Set([
  * isRoleBasedEmail("john.doe@example.com") // false
  */
 export function isRoleBasedEmail(email: string): boolean {
-  if (!validateEmailFormat(email)) return false;
+  if (!validateEmailFormat(email)) {
+return false;
+}
 
   const [local] = email.trim().toLowerCase().split("@");
   const prefix = local.split("+")[0]; // Handle plus addressing
@@ -241,7 +261,9 @@ export function normalizeEmail(email: string, options: {
     lowercase = true,
   } = options;
 
-  if (!validateEmailFormat(email)) return email;
+  if (!validateEmailFormat(email)) {
+return email;
+}
 
   let [local, domain] = email.trim().split("@");
 
@@ -446,10 +468,14 @@ const COMMON_DOMAIN_TYPOS: Record<string, string> = {
  */
 export function suggestEmailCorrection(email: string): string | null {
   const domain = extractDomain(email);
-  if (!domain) return null;
+  if (!domain) {
+return null;
+}
 
   const correction = COMMON_DOMAIN_TYPOS[domain];
-  if (!correction) return null;
+  if (!correction) {
+return null;
+}
 
   const [local] = email.split("@");
   return `${local}@${correction}`;

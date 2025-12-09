@@ -39,11 +39,15 @@ export async function getEvents(status?: string): Promise<StabilisationEvent[]> 
     .order('created_at', { ascending: false })
     .limit(50);
 
-  if (status) query = query.eq('status', status);
+  if (status) {
+query = query.eq('status', status);
+}
 
   const { data } = await query;
 
-  if (!data) return [];
+  if (!data) {
+return [];
+}
 
   return data.map(row => ({
     id: row.id,
@@ -79,7 +83,9 @@ export async function recordEvent(
     .select()
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+return null;
+}
 
   return {
     id: data.id,

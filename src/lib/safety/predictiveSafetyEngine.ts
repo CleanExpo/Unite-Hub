@@ -456,9 +456,13 @@ class PredictiveSafetyEngine {
       const pendingPredictions = (predictions || []).filter(p => !p.materialized && new Date(p.expires_at) > new Date()).length;
 
       let overallStatus: 'CRITICAL' | 'HIGH_RISK' | 'WARN' | 'HEALTHY' = 'HEALTHY';
-      if (highRiskEvents >= 3 || (events || []).some(e => e.risk_level >= 80)) overallStatus = 'CRITICAL';
-      else if (highRiskEvents >= 1) overallStatus = 'HIGH_RISK';
-      else if ((predictions || []).some(p => p.probability >= 70)) overallStatus = 'WARN';
+      if (highRiskEvents >= 3 || (events || []).some(e => e.risk_level >= 80)) {
+overallStatus = 'CRITICAL';
+} else if (highRiskEvents >= 1) {
+overallStatus = 'HIGH_RISK';
+} else if ((predictions || []).some(p => p.probability >= 70)) {
+overallStatus = 'WARN';
+}
 
       return {
         activeEvents,
@@ -490,7 +494,9 @@ class PredictiveSafetyEngine {
         .order('created_at', { ascending: false })
         .limit(10);
 
-      if (!runs || runs.length === 0) return 50;
+      if (!runs || runs.length === 0) {
+return 50;
+}
 
       const avgRisk = runs.reduce((sum, r) => sum + (r.risk_score || 0), 0) / runs.length;
       const avgUncertainty = runs.reduce((sum, r) => sum + (r.uncertainty_score || 0), 0) / runs.length;

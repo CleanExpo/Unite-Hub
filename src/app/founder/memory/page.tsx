@@ -24,7 +24,9 @@ export default function MemoryCompressionPage() {
   const fetchData = async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const response = await fetch('/api/memory/compressed', {
         headers: { 'Authorization': `Bearer ${session.access_token}` },

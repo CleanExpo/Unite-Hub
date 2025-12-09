@@ -80,7 +80,9 @@ export default function ClientActivationPage() {
   };
 
   const getCurrentDay = () => {
-    if (!program) return 1;
+    if (!program) {
+return 1;
+}
     const start = new Date(program.start_date);
     const now = new Date();
     const diff = now.getTime() - start.getTime();

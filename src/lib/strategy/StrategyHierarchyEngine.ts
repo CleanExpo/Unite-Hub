@@ -260,8 +260,12 @@ export class StrategyHierarchyEngine {
     pillar: { name: string; description: string; requiredResources: string[]; estimatedWeeks: number },
     objective: StrategicObjective
   ): 'low' | 'medium' | 'high' | 'critical' {
-    if (objective.priority === 'critical') return 'high';
-    if (pillar.estimatedWeeks > 4) return 'medium';
+    if (objective.priority === 'critical') {
+return 'high';
+}
+    if (pillar.estimatedWeeks > 4) {
+return 'medium';
+}
     return 'low';
   }
 
@@ -320,9 +324,15 @@ export class StrategyHierarchyEngine {
     let score = 100;
 
     // Deduct points for missing levels
-    if (l2.items.length === 0) score -= 25;
-    if (l3.items.length === 0) score -= 25;
-    if (l4.items.length === 0) score -= 25;
+    if (l2.items.length === 0) {
+score -= 25;
+}
+    if (l3.items.length === 0) {
+score -= 25;
+}
+    if (l4.items.length === 0) {
+score -= 25;
+}
 
     // Deduct points for poor decomposition ratio
     const l2ToL1Ratio = l2.items.length / (l1.items.length || 1);
@@ -330,14 +340,22 @@ export class StrategyHierarchyEngine {
     const l4ToL3Ratio = l4.items.length / (l3.items.length || 1);
 
     // Ideal ratio: 1:3-5, 1:2-4, 1:2-3
-    if (l2ToL1Ratio < 3 || l2ToL1Ratio > 5) score -= 10;
-    if (l3ToL2Ratio < 2 || l3ToL2Ratio > 4) score -= 10;
-    if (l4ToL3Ratio < 2 || l4ToL3Ratio > 3) score -= 10;
+    if (l2ToL1Ratio < 3 || l2ToL1Ratio > 5) {
+score -= 10;
+}
+    if (l3ToL2Ratio < 2 || l3ToL2Ratio > 4) {
+score -= 10;
+}
+    if (l4ToL3Ratio < 2 || l4ToL3Ratio > 3) {
+score -= 10;
+}
 
     // Bonus for strong dependency chains
     const allItems = [...l2.items, ...l3.items, ...l4.items];
     const itemsWithDeps = allItems.filter((item) => item.dependencies.length > 0).length;
-    if (itemsWithDeps / allItems.length > 0.7) score += 15;
+    if (itemsWithDeps / allItems.length > 0.7) {
+score += 15;
+}
 
     return Math.max(0, Math.min(100, score));
   }

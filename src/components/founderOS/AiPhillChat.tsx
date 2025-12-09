@@ -72,7 +72,9 @@ export function AiPhillChat({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim() || isThinking) return;
+    if (!input.trim() || isThinking) {
+return;
+}
 
     const userMessage: Message = {
       id: Date.now().toString(),

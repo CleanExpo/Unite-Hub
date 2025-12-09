@@ -54,7 +54,9 @@ export default function HealthTrendChart({
 
   // Calculate stats
   const stats = useMemo(() => {
-    if (data.length === 0) return null;
+    if (data.length === 0) {
+return null;
+}
 
     const scores = data.map((d) => d.health_score);
     const latest = scores[scores.length - 1];
@@ -69,8 +71,12 @@ export default function HealthTrendChart({
 
   // Get score color
   const getScoreColor = (score: number) => {
-    if (score >= 80) return "#10B981";
-    if (score >= 60) return "#F59E0B";
+    if (score >= 80) {
+return "#10B981";
+}
+    if (score >= 60) {
+return "#F59E0B";
+}
     return "#EF4444";
   };
 

@@ -34,7 +34,9 @@ export async function getPreferences(
     .eq('founder_user_id', founderUserId)
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+return null;
+}
 
   return mapToPreferences(data);
 }
@@ -100,7 +102,9 @@ export function resolveDomainLevel(
   preferences: AutopilotPreferences | null,
   category: string
 ): DomainLevel {
-  if (!preferences) return 'suggest';
+  if (!preferences) {
+return 'suggest';
+}
 
   // Map category to domain
   const categoryToDomain: Record<string, keyof DomainLevels> = {
@@ -131,7 +135,9 @@ export function canAutoExecute(
   }
 
   // High risk never auto-executes
-  if (riskClass === 'high') return false;
+  if (riskClass === 'high') {
+return false;
+}
 
   // Medium risk only in aggressive mode
   if (riskClass === 'medium' && preferences.automationProfile !== 'aggressive') {

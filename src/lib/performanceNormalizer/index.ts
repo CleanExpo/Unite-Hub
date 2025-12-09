@@ -27,11 +27,15 @@ export async function getNormalizedSnapshots(tenantId?: string): Promise<Normali
     .order('created_at', { ascending: false })
     .limit(30);
 
-  if (tenantId) query = query.eq('tenant_id', tenantId);
+  if (tenantId) {
+query = query.eq('tenant_id', tenantId);
+}
 
   const { data } = await query;
 
-  if (!data) return [];
+  if (!data) {
+return [];
+}
 
   return data.map(row => ({
     id: row.id,
@@ -86,7 +90,9 @@ export async function normalizePerformance(
     .select()
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+return null;
+}
 
   return {
     id: data.id,

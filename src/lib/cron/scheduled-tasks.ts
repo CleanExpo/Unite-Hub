@@ -134,7 +134,7 @@ export const SCHEDULED_TASKS: ScheduledTask[] = [
 
 async function sendNotification(title: string, data: unknown): Promise<void> {
   // In production, implement email/Slack/webhook notifications
-  // eslint-disable-next-line no-console
+   
   console.log(`[Notification] ${title}:`, JSON.stringify(data, null, 2));
 
   // Example: Send to webhook
@@ -147,7 +147,7 @@ async function sendNotification(title: string, data: unknown): Promise<void> {
         body: JSON.stringify({ title, data, timestamp: new Date().toISOString() }),
       });
     } catch (error) {
-      // eslint-disable-next-line no-console
+       
       console.error('[Notification] Failed to send webhook:', error);
     }
   }
@@ -170,9 +170,9 @@ export async function runModelScoutTask(config: Record<string, unknown>): Promis
     const report = await runModelDiscovery();
 
     // Log results
-    // eslint-disable-next-line no-console
+     
     console.log(`[ModelScout] New models: ${report.new_models.length}`);
-    // eslint-disable-next-line no-console
+     
     console.log(`[ModelScout] Price changes: ${report.price_changes.length}`);
 
     // Send notifications if configured
@@ -220,7 +220,7 @@ export async function runModelScoutTask(config: Record<string, unknown>): Promis
 /**
  * Cost Report Task - Generate daily cost report
  */
-// eslint-disable-next-line no-unused-vars
+ 
 export async function runCostReportTask(_config: Record<string, unknown>): Promise<TaskResult> {
   const startedAt = new Date();
 
@@ -249,9 +249,9 @@ export async function runCostReportTask(_config: Record<string, unknown>): Promi
       },
     };
 
-    // eslint-disable-next-line no-console
+     
     console.log(`[CostReport] Daily cost: $${dailyUsage.total_cost_usd.toFixed(4)}`);
-    // eslint-disable-next-line no-console
+     
     console.log(`[CostReport] Monthly budget: ${report.monthly.percent_used.toFixed(1)}% used`);
 
     // Alert if budget threshold exceeded
@@ -293,9 +293,9 @@ export async function runContentQueueTask(config: Record<string, unknown>): Prom
     const pendingCount = 0; // Would come from DB
     const maxPages = (config.max_pages_per_run as number) || 5;
 
-    // eslint-disable-next-line no-console
+     
     console.log(`[ContentQueue] Processing up to ${maxPages} pages`);
-    // eslint-disable-next-line no-console
+     
     console.log(`[ContentQueue] Pending in queue: ${pendingCount}`);
 
     // Process logic would go here
@@ -412,7 +412,7 @@ export async function runSEOHealthCheckTask(config: Record<string, unknown>): Pr
 /**
  * Strategy Review Task
  */
-// eslint-disable-next-line no-unused-vars
+ 
 export async function runStrategyReviewTask(_config: Record<string, unknown>): Promise<TaskResult> {
   const startedAt = new Date();
 
@@ -461,7 +461,7 @@ export async function runTask(taskId: string): Promise<TaskResult> {
     throw new Error(`Task is disabled: ${taskId}`);
   }
 
-  // eslint-disable-next-line no-console
+   
   console.log(`[Cron] Running task: ${task.name}`);
 
   const handlers: Record<string, (config: Record<string, unknown>) => Promise<TaskResult>> = {
@@ -481,7 +481,7 @@ export async function runTask(taskId: string): Promise<TaskResult> {
 
   // Log result
   if (DEFAULT_CRON_CONFIG.log_results) {
-    // eslint-disable-next-line no-console
+     
     console.log(`[Cron] Task ${taskId} completed:`, {
       success: result.success,
       duration_ms: result.duration_ms,

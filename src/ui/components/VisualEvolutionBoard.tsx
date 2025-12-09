@@ -75,9 +75,15 @@ export function VisualEvolutionBoard({
   const statusConfig = getStatusConfig();
 
   const getFitnessColor = (score: number) => {
-    if (score >= 80) return 'text-green-500';
-    if (score >= 60) return 'text-yellow-500';
-    if (score >= 40) return 'text-orange-500';
+    if (score >= 80) {
+return 'text-green-500';
+}
+    if (score >= 60) {
+return 'text-yellow-500';
+}
+    if (score >= 40) {
+return 'text-orange-500';
+}
     return 'text-red-500';
   };
 

@@ -25,7 +25,9 @@ export default function PatternHubPage() {
   useEffect(() => {
     async function fetchPatterns() {
       const { data: { session } } = await supabaseBrowser.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const response = await fetch('/api/cross-tenant/patterns', {
         headers: { Authorization: `Bearer ${session.access_token}` }

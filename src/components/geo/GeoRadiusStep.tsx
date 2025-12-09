@@ -82,16 +82,28 @@ export default function GeoRadiusStep({
   };
 
   const getRadiusColor = (radius: number) => {
-    if (radius <= 5) return "text-green-600";
-    if (radius <= 15) return "text-blue-600";
-    if (radius <= 25) return "text-orange-600";
+    if (radius <= 5) {
+return "text-green-600";
+}
+    if (radius <= 15) {
+return "text-blue-600";
+}
+    if (radius <= 25) {
+return "text-orange-600";
+}
     return "text-red-600";
   };
 
   const getCostColor = (multiplier: number) => {
-    if (multiplier <= 1.1) return "text-green-600";
-    if (multiplier <= 1.4) return "text-blue-600";
-    if (multiplier <= 1.7) return "text-orange-600";
+    if (multiplier <= 1.1) {
+return "text-green-600";
+}
+    if (multiplier <= 1.4) {
+return "text-blue-600";
+}
+    if (multiplier <= 1.7) {
+return "text-orange-600";
+}
     return "text-red-600";
   };
 

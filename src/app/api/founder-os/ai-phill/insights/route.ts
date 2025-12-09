@@ -48,22 +48,32 @@ export async function GET(req: NextRequest) {
     const filters: InsightFilters = {};
 
     const category = req.nextUrl.searchParams.get('category');
-    if (category) filters.category = category as any;
+    if (category) {
+filters.category = category as any;
+}
 
     const priority = req.nextUrl.searchParams.get('priority');
-    if (priority) filters.priority = priority as any;
+    if (priority) {
+filters.priority = priority as any;
+}
 
     const reviewStatus = req.nextUrl.searchParams.get('reviewStatus');
-    if (reviewStatus) filters.reviewStatus = reviewStatus as any;
+    if (reviewStatus) {
+filters.reviewStatus = reviewStatus as any;
+}
 
     const businessId = req.nextUrl.searchParams.get('businessId');
-    if (businessId) filters.businessId = businessId;
+    if (businessId) {
+filters.businessId = businessId;
+}
 
     const limit = parseInt(req.nextUrl.searchParams.get('limit') || '20', 10);
     filters.limit = limit;
 
     const offset = parseInt(req.nextUrl.searchParams.get('offset') || '0', 10);
-    if (offset > 0) filters.offset = offset;
+    if (offset > 0) {
+filters.offset = offset;
+}
 
     // Get insights
     const result = await getInsights(userId, filters);

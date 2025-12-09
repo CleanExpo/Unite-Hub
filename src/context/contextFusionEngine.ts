@@ -335,11 +335,21 @@ export async function generateSituationSnapshot(input: ContextInputs): Promise<S
 function determineTimeOfDay(date: Date): string {
   const hours = date.getHours();
 
-  if (hours >= 5 && hours < 9) return 'early_morning';
-  if (hours >= 9 && hours < 12) return 'morning';
-  if (hours >= 12 && hours < 14) return 'midday';
-  if (hours >= 14 && hours < 18) return 'afternoon';
-  if (hours >= 18 && hours < 21) return 'evening';
+  if (hours >= 5 && hours < 9) {
+return 'early_morning';
+}
+  if (hours >= 9 && hours < 12) {
+return 'morning';
+}
+  if (hours >= 12 && hours < 14) {
+return 'midday';
+}
+  if (hours >= 14 && hours < 18) {
+return 'afternoon';
+}
+  if (hours >= 18 && hours < 21) {
+return 'evening';
+}
   return 'night';
 }
 
@@ -350,7 +360,9 @@ function getDayType(date: Date): 'weekday' | 'weekend' | 'holiday' {
   const day = date.getDay();
 
   // TODO: Integrate with holiday calendar in Phase 9
-  if (day === 0 || day === 6) return 'weekend';
+  if (day === 0 || day === 6) {
+return 'weekend';
+}
   return 'weekday';
 }
 
@@ -360,11 +372,21 @@ function getDayType(date: Date): 'weekday' | 'weekend' | 'holiday' {
 function inferActivityFromCalendarEvent(eventTitle: string): string {
   const lower = eventTitle.toLowerCase();
 
-  if (lower.includes('meeting') || lower.includes('standup') || lower.includes('sync')) return 'in_meeting';
-  if (lower.includes('coffee') || lower.includes('lunch') || lower.includes('dinner')) return 'socializing';
-  if (lower.includes('exercise') || lower.includes('gym') || lower.includes('run')) return 'exercising';
-  if (lower.includes('break') || lower.includes('rest')) return 'resting';
-  if (lower.includes('commute') || lower.includes('travel')) return 'commuting';
+  if (lower.includes('meeting') || lower.includes('standup') || lower.includes('sync')) {
+return 'in_meeting';
+}
+  if (lower.includes('coffee') || lower.includes('lunch') || lower.includes('dinner')) {
+return 'socializing';
+}
+  if (lower.includes('exercise') || lower.includes('gym') || lower.includes('run')) {
+return 'exercising';
+}
+  if (lower.includes('break') || lower.includes('rest')) {
+return 'resting';
+}
+  if (lower.includes('commute') || lower.includes('travel')) {
+return 'commuting';
+}
 
   return 'unknown_activity';
 }
@@ -504,14 +526,20 @@ function generateOpportunityFlags(input: {
  * Calculate urgency based on upcoming calendar events
  */
 function calculateCalendarUrgency(upcomingEvents?: Array<{ startTime: string }>): 'low' | 'medium' | 'high' {
-  if (!upcomingEvents || upcomingEvents.length === 0) return 'low';
+  if (!upcomingEvents || upcomingEvents.length === 0) {
+return 'low';
+}
 
   const now = Date.now();
   const nextEventTime = new Date(upcomingEvents[0].startTime).getTime();
   const timeUntilEvent = nextEventTime - now;
 
-  if (timeUntilEvent < 5 * 60 * 1000) return 'high'; // < 5 min
-  if (timeUntilEvent < 15 * 60 * 1000) return 'medium'; // < 15 min
+  if (timeUntilEvent < 5 * 60 * 1000) {
+return 'high';
+} // < 5 min
+  if (timeUntilEvent < 15 * 60 * 1000) {
+return 'medium';
+} // < 15 min
   return 'low';
 }
 
@@ -552,13 +580,23 @@ function extractRecentEntities(transcript?: string, visualContext?: VisualContex
  */
 function calculateCompleteness(input: ContextInputs): number {
   let score = 0;
-  let maxScore = 5;
+  const maxScore = 5;
 
-  if (input.visualContext) score += 1;
-  if (input.recentTranscript) score += 1;
-  if (input.upcomingEvents && input.upcomingEvents.length > 0) score += 1;
-  if (input.cognitiveState) score += 1;
-  if (input.lifeSignals) score += 1;
+  if (input.visualContext) {
+score += 1;
+}
+  if (input.recentTranscript) {
+score += 1;
+}
+  if (input.upcomingEvents && input.upcomingEvents.length > 0) {
+score += 1;
+}
+  if (input.cognitiveState) {
+score += 1;
+}
+  if (input.lifeSignals) {
+score += 1;
+}
 
   return score / maxScore;
 }
@@ -578,7 +616,9 @@ function calculateConsistency(input: ContextInputs): number {
     activitySources.push(inferActivityFromCalendarEvent(input.upcomingEvents[0].title));
   }
 
-  if (activitySources.length < 2) return 0.8; // Can't calculate with < 2 sources
+  if (activitySources.length < 2) {
+return 0.8;
+} // Can't calculate with < 2 sources
 
   // Check if activities match
   const allMatch = activitySources.every((a) => a === activitySources[0]);

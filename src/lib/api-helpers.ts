@@ -288,7 +288,9 @@ export function rateLimitError(
  * Validates email format using RFC 5322 regex
  */
 export function validateEmail(email: string): boolean {
-  if (!email || typeof email !== "string") return false;
+  if (!email || typeof email !== "string") {
+return false;
+}
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email.trim());
@@ -298,7 +300,9 @@ export function validateEmail(email: string): boolean {
  * Validates UUID format (v4)
  */
 export function validateUUID(uuid: string): boolean {
-  if (!uuid || typeof uuid !== "string") return false;
+  if (!uuid || typeof uuid !== "string") {
+return false;
+}
 
   const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
   return uuidRegex.test(uuid);
@@ -308,7 +312,9 @@ export function validateUUID(uuid: string): boolean {
  * Validates phone number (basic check - international formats)
  */
 export function validatePhone(phone: string): boolean {
-  if (!phone || typeof phone !== "string") return false;
+  if (!phone || typeof phone !== "string") {
+return false;
+}
 
   // Remove common formatting characters
   const cleaned = phone.replace(/[\s\-\(\)\.]/g, "");
@@ -322,7 +328,9 @@ export function validatePhone(phone: string): boolean {
  * Validates URL format
  */
 export function validateURL(url: string): boolean {
-  if (!url || typeof url !== "string") return false;
+  if (!url || typeof url !== "string") {
+return false;
+}
 
   try {
     new URL(url);
@@ -376,7 +384,9 @@ export function validateLength<T extends Record<string, any>>(
   for (const [field, { min, max }] of Object.entries(constraints)) {
     const value = data[field];
 
-    if (value === undefined || value === null) continue;
+    if (value === undefined || value === null) {
+continue;
+}
 
     if (typeof value !== "string") {
       errors[field] = `${field} must be a string`;
@@ -415,7 +425,9 @@ export function validateEnum<T extends Record<string, any>>(
   for (const [field, validValues] of Object.entries(enums)) {
     const value = data[field];
 
-    if (value === undefined || value === null) continue;
+    if (value === undefined || value === null) {
+continue;
+}
 
     if (!validValues.includes(value as string)) {
       errors[field] = `${field} must be one of: ${validValues.join(", ")}`;
@@ -666,7 +678,9 @@ export function parseSorting(
  * Formats Supabase errors for API responses
  */
 export function formatSupabaseError(error: any): { message: string; details?: string } {
-  if (!error) return { message: "Unknown error" };
+  if (!error) {
+return { message: "Unknown error" };
+}
 
   // PostgreSQL error codes
   const pgErrorMessages: Record<string, string> = {
@@ -770,7 +784,9 @@ export async function extractFields<T extends string>(
 ): Promise<{ fields: Record<T, any> | null; error: NextResponse | null }> {
   const { body, error } = await parseRequestBody(req);
 
-  if (error) return { fields: null, error };
+  if (error) {
+return { fields: null, error };
+}
 
   const validationErrors = validateRequired(body, requiredFields);
 

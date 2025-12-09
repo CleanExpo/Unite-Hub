@@ -43,7 +43,9 @@ function createMockRedisClient(): Redis {
   return {
     get: async (key: string) => {
       const item = mockData.get(key);
-      if (!item) return null;
+      if (!item) {
+return null;
+}
       if (Date.now() > item.expiry) {
         mockData.delete(key);
         return null;
@@ -81,7 +83,9 @@ function createMockRedisClient(): Redis {
     },
     ttl: async (key: string) => {
       const item = mockData.get(key);
-      if (!item) return -2;
+      if (!item) {
+return -2;
+}
       const remaining = Math.floor((item.expiry - Date.now()) / 1000);
       return remaining > 0 ? remaining : -2;
     },
@@ -114,7 +118,9 @@ function createMockRedisClient(): Redis {
     },
     zremrangebyscore: async (key: string, min: string | number, max: string | number) => {
       const set = sortedSets.get(key);
-      if (!set) return 0;
+      if (!set) {
+return 0;
+}
       const minScore = min === '-inf' ? -Infinity : Number(min);
       const maxScore = max === '+inf' ? Infinity : Number(max);
       let removed = 0;
@@ -128,7 +134,9 @@ function createMockRedisClient(): Redis {
     },
     zrange: async (key: string, start: number, stop: number, ...args: string[]) => {
       const set = sortedSets.get(key);
-      if (!set) return [];
+      if (!set) {
+return [];
+}
       const entries = Array.from(set.entries()).sort((a, b) => a[1] - b[1]);
       const endIdx = stop < 0 ? entries.length + stop + 1 : stop + 1;
       const slice = entries.slice(start, endIdx);

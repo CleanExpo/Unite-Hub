@@ -351,9 +351,15 @@ export async function DELETE(req: NextRequest) {
 // Helper functions
 
 function getPlanFromPriceId(priceId: string): string {
-  if (priceId.includes("starter")) return "starter";
-  if (priceId.includes("pro")) return "pro";
-  if (priceId.includes("elite")) return "elite";
+  if (priceId.includes("starter")) {
+return "starter";
+}
+  if (priceId.includes("pro")) {
+return "pro";
+}
+  if (priceId.includes("elite")) {
+return "elite";
+}
 
   if (
     priceId === process.env.STRIPE_TEST_PRICE_STARTER ||

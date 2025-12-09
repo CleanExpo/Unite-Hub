@@ -46,8 +46,12 @@ export function getMetrics(opts?: {
 }): IntelligenceMetric[] {
   let res = metrics;
 
-  if (opts?.agent) res = res.filter(m => m.agent === opts.agent);
-  if (opts?.metric) res = res.filter(m => m.metric === opts.metric);
+  if (opts?.agent) {
+res = res.filter(m => m.agent === opts.agent);
+}
+  if (opts?.metric) {
+res = res.filter(m => m.metric === opts.metric);
+}
 
   if (opts?.since) {
     const sinceTime = opts.since.getTime();
@@ -72,7 +76,9 @@ export function getAverageMetric(agent: string, metric: string, timeWindowMinute
   const since = new Date(Date.now() - timeWindowMinutes * 60 * 1000);
   const values = getMetrics({ agent, metric, since });
 
-  if (values.length === 0) return null;
+  if (values.length === 0) {
+return null;
+}
   return values.reduce((sum, m) => sum + m.value, 0) / values.length;
 }
 
@@ -83,7 +89,9 @@ export function getMetricPercentile(agent: string, metric: string, percentile: n
   const since = new Date(Date.now() - timeWindowMinutes * 60 * 1000);
   const values = getMetrics({ agent, metric, since }).map(m => m.value).sort((a, b) => a - b);
 
-  if (values.length === 0) return null;
+  if (values.length === 0) {
+return null;
+}
   const index = Math.ceil((percentile / 100) * values.length) - 1;
   return values[Math.max(0, index)];
 }
@@ -101,7 +109,9 @@ export function getMetricTrend(agent: string, metric: string, windowSizeMinutes 
   const recent = getMetrics({ agent, metric, since: recentSince, until: recentUntil }).map(m => m.value);
   const historical = getMetrics({ agent, metric, since: historicalSince, until: historicalUntil }).map(m => m.value);
 
-  if (recent.length === 0 || historical.length === 0) return null;
+  if (recent.length === 0 || historical.length === 0) {
+return null;
+}
 
   const recentAvg = recent.reduce((a, b) => a + b, 0) / recent.length;
   const historicalAvg = historical.reduce((a, b) => a + b, 0) / historical.length;
@@ -155,7 +165,9 @@ export function identifyAnomalies(agent: string, metric: string, stdDevThreshold
   const since = new Date(Date.now() - timeWindowMinutes * 60 * 1000);
   const values = getMetrics({ agent, metric, since });
 
-  if (values.length < 2) return [];
+  if (values.length < 2) {
+return [];
+}
 
   const nums = values.map(m => m.value);
   const mean = nums.reduce((a, b) => a + b, 0) / nums.length;
@@ -175,13 +187,17 @@ export function identifyAnomalies(agent: string, metric: string, stdDevThreshold
  */
 export function getMetricStats() {
   const byAgent = metrics.reduce((acc, m) => {
-    if (!acc[m.agent]) acc[m.agent] = 0;
+    if (!acc[m.agent]) {
+acc[m.agent] = 0;
+}
     acc[m.agent]++;
     return acc;
   }, {} as Record<string, number>);
 
   const byMetric = metrics.reduce((acc, m) => {
-    if (!acc[m.metric]) acc[m.metric] = 0;
+    if (!acc[m.metric]) {
+acc[m.metric] = 0;
+}
     acc[m.metric]++;
     return acc;
   }, {} as Record<string, number>);

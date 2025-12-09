@@ -265,7 +265,7 @@ export async function speakAlert(input: {
 
   // Keep alerts very short (<5 seconds)
   const wordCount = input.text.split(/\s+/).length;
-  let duration_ms = Math.min(wordCount * 100, 5000); // 100ms per word for alerts (faster)
+  const duration_ms = Math.min(wordCount * 100, 5000); // 100ms per word for alerts (faster)
 
   // Alerts use on-device synthesis for speed
   const synthesis_time_ms = Math.min(150, input.config.alert_response_target);

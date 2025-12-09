@@ -44,12 +44,18 @@ export async function getPuritySnapshots(
     .order('created_at', { ascending: false })
     .limit(50);
 
-  if (sourceEngine) query = query.eq('source_engine', sourceEngine);
-  if (tenantId) query = query.eq('tenant_id', tenantId);
+  if (sourceEngine) {
+query = query.eq('source_engine', sourceEngine);
+}
+  if (tenantId) {
+query = query.eq('tenant_id', tenantId);
+}
 
   const { data } = await query;
 
-  if (!data) return [];
+  if (!data) {
+return [];
+}
 
   return data.map(row => ({
     id: row.id,
@@ -117,7 +123,9 @@ export async function analyzePurity(
     .select()
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+return null;
+}
 
   return {
     id: data.id,

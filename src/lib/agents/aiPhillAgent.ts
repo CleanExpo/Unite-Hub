@@ -1142,7 +1142,9 @@ ${journalEntries.length > 0 ? journalEntries.join('\n---\n') : 'No recent journa
     signalsByFamily: Record<string, founderSignalInferenceService.BusinessSignal[]>
   ): string {
     const families = Object.keys(signalsByFamily);
-    if (families.length === 0) return 'No signals available.';
+    if (families.length === 0) {
+return 'No signals available.';
+}
 
     return families
       .map((family) => {
@@ -1163,7 +1165,9 @@ ${journalEntries.length > 0 ? journalEntries.join('\n---\n') : 'No recent journa
    * Summarize signals for digest
    */
   private summarizeSignals(signals: founderSignalInferenceService.BusinessSignal[]): string {
-    if (signals.length === 0) return 'No signals this week.';
+    if (signals.length === 0) {
+return 'No signals this week.';
+}
 
     const byFamily: Record<string, number> = {};
     for (const signal of signals) {

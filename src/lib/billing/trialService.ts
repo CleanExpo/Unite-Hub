@@ -235,7 +235,9 @@ export async function startTrial(userId: string, workspaceId: string): Promise<{
       })
       .eq('id', userId);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     const trialInfo: TrialInfo = {
       userId,
@@ -264,7 +266,9 @@ export async function getTrialInfo(userId: string, workspaceId: string): Promise
       .eq('id', userId)
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     if (!profile?.trial_start) {
       return { data: null, error: null };
@@ -326,7 +330,9 @@ export async function extendTrial(userId: string, additionalDays: number = 7): P
       })
       .eq('id', userId);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true, newEndDate: newEnd.toISOString(), error: null };
   } catch (err) {
@@ -402,7 +408,9 @@ export async function getOnboardingProgress(userId: string, workspaceId: string)
       .eq('id', userId)
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     if (!data?.onboarding_progress) {
       // Initialize onboarding
@@ -434,7 +442,9 @@ export async function updateOnboardingProgress(
   try {
     // Get current progress
     const { data: current } = await getOnboardingProgress(userId, workspaceId);
-    if (!current) throw new Error('Onboarding not initialized');
+    if (!current) {
+throw new Error('Onboarding not initialized');
+}
 
     // Update answers
     const updatedAnswers = { ...current.answers, ...answer };
@@ -458,7 +468,9 @@ export async function updateOnboardingProgress(
       .update({ onboarding_progress: updatedProgress })
       .eq('id', userId);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { data: updatedProgress, error: null };
   } catch (err) {
@@ -475,7 +487,9 @@ export async function completeOnboarding(
   try {
     // Get onboarding answers
     const { data: progress } = await getOnboardingProgress(userId, workspaceId);
-    if (!progress) throw new Error('Onboarding not found');
+    if (!progress) {
+throw new Error('Onboarding not found');
+}
 
     // Generate baseline audit ID (would trigger actual audit in production)
     const baselineAuditId = `audit-${workspaceId}-${Date.now()}`;
@@ -493,7 +507,9 @@ export async function completeOnboarding(
       })
       .eq('id', userId);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     // Apply onboarding answers to workspace settings
     await applyOnboardingToWorkspace(workspaceId, progress.answers);

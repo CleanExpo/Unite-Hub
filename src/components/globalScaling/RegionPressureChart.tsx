@@ -49,9 +49,15 @@ const pressureConfig = [
 ];
 
 function getPressureColor(value: number): string {
-  if (value > 75) return '[&>div]:bg-red-500';
-  if (value > 50) return '[&>div]:bg-orange-500';
-  if (value > 25) return '[&>div]:bg-yellow-500';
+  if (value > 75) {
+return '[&>div]:bg-red-500';
+}
+  if (value > 50) {
+return '[&>div]:bg-orange-500';
+}
+  if (value > 25) {
+return '[&>div]:bg-yellow-500';
+}
   return '[&>div]:bg-green-500';
 }
 

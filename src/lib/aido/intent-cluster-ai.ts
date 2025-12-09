@@ -254,17 +254,25 @@ export function scoreQuestionQuality(question: string): number {
   let score = 0.5;
 
   // Has question mark (+0.1)
-  if (question.includes('?')) score += 0.1;
+  if (question.includes('?')) {
+score += 0.1;
+}
 
   // Contains numbers/specifics (+0.2)
-  if (/\d+/.test(question)) score += 0.2;
+  if (/\d+/.test(question)) {
+score += 0.2;
+}
 
   // Contains location/place (+0.1)
   const locationWords = ['in', 'at', 'near', 'around', 'within'];
-  if (locationWords.some(word => question.toLowerCase().includes(word))) score += 0.1;
+  if (locationWords.some(word => question.toLowerCase().includes(word))) {
+score += 0.1;
+}
 
   // Not too long (+0.1)
-  if (question.length < 100 && question.length > 20) score += 0.1;
+  if (question.length < 100 && question.length > 20) {
+score += 0.1;
+}
 
   return Math.min(score, 1.0);
 }

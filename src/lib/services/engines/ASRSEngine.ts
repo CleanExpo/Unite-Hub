@@ -80,7 +80,9 @@ export class ASRSEngine {
 
   private matchesRule(action: string, context: Record<string, any>, rule: any): boolean {
     const conditions = rule.conditions || {};
-    if (conditions.actions && !conditions.actions.includes(action)) return false;
+    if (conditions.actions && !conditions.actions.includes(action)) {
+return false;
+}
     return true;
   }
 
@@ -89,9 +91,15 @@ export class ASRSEngine {
     let risk = baseRisk;
 
     // Adjust based on context factors
-    if (context.sensitive_data) risk += 20;
-    if (context.external_request) risk += 15;
-    if (context.high_volume) risk += 10;
+    if (context.sensitive_data) {
+risk += 20;
+}
+    if (context.external_request) {
+risk += 15;
+}
+    if (context.high_volume) {
+risk += 10;
+}
 
     return Math.min(100, risk);
   }

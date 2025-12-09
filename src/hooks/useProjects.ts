@@ -34,9 +34,15 @@ export function useProjects({ orgId, status, category, priority }: UseProjectsPa
 
       // Build query params
       const params = new URLSearchParams({ orgId });
-      if (status) params.append("status", status);
-      if (category) params.append("category", category);
-      if (priority) params.append("priority", priority);
+      if (status) {
+params.append("status", status);
+}
+      if (category) {
+params.append("category", category);
+}
+      if (priority) {
+params.append("priority", priority);
+}
 
       const response = await fetch(`/api/projects?${params.toString()}`);
 

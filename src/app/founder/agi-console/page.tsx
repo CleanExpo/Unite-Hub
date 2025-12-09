@@ -149,8 +149,12 @@ export default function AGIConsolePage() {
   };
 
   const getTrendIcon = (trend: string) => {
-    if (trend === 'improving') return <TrendingUp className="w-4 h-4 text-green-600" />;
-    if (trend === 'declining') return <AlertTriangle className="w-4 h-4 text-red-600" />;
+    if (trend === 'improving') {
+return <TrendingUp className="w-4 h-4 text-green-600" />;
+}
+    if (trend === 'declining') {
+return <AlertTriangle className="w-4 h-4 text-red-600" />;
+}
     return <Radio className="w-4 h-4 text-gray-600" />;
   };
 

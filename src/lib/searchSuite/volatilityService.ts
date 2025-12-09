@@ -227,7 +227,9 @@ class VolatilityService {
           changePercent: (rankChange / previousOur.position) * 100,
           affectedUrls: [latestOur.url],
         });
-        if (alert) alerts.push(alert);
+        if (alert) {
+alerts.push(alert);
+}
       }
 
       // Significant rank gain
@@ -242,7 +244,9 @@ class VolatilityService {
           changePercent: (rankChange / previousOur.position) * 100,
           affectedUrls: [latestOur.url],
         });
-        if (alert) alerts.push(alert);
+        if (alert) {
+alerts.push(alert);
+}
       }
     }
 
@@ -257,7 +261,9 @@ class VolatilityService {
         currentValue: 'Not ranking',
         affectedUrls: [previousOur.url],
       });
-      if (alert) alerts.push(alert);
+      if (alert) {
+alerts.push(alert);
+}
     }
 
     // Check for new ranking
@@ -270,7 +276,9 @@ class VolatilityService {
         currentValue: String(latestOur.position),
         affectedUrls: [latestOur.url],
       });
-      if (alert) alerts.push(alert);
+      if (alert) {
+alerts.push(alert);
+}
     }
 
     // Check for SERP feature changes
@@ -289,7 +297,9 @@ class VolatilityService {
         previousValue: previousFeatures.join(', '),
         currentValue: latestFeatures.join(', '),
       });
-      if (alert) alerts.push(alert);
+      if (alert) {
+alerts.push(alert);
+}
     }
 
     if (gainedFeatures.length > 0) {
@@ -301,7 +311,9 @@ class VolatilityService {
         previousValue: previousFeatures.join(', '),
         currentValue: latestFeatures.join(', '),
       });
-      if (alert) alerts.push(alert);
+      if (alert) {
+alerts.push(alert);
+}
     }
 
     // High volatility alert
@@ -313,7 +325,9 @@ class VolatilityService {
         description: `Volatility score: ${metrics.volatilityScore.toFixed(1)} (${metrics.volatilityLevel}). Average position change: ${metrics.avgPositionChange.toFixed(1)}`,
         currentValue: String(metrics.volatilityScore),
       });
-      if (alert) alerts.push(alert);
+      if (alert) {
+alerts.push(alert);
+}
     }
 
     return alerts;
@@ -538,10 +552,18 @@ class VolatilityService {
   }
 
   private getVolatilityLevel(score: number): VolatilityLevel {
-    if (score < 10) return 'stable';
-    if (score < 25) return 'low';
-    if (score < 50) return 'moderate';
-    if (score < 75) return 'high';
+    if (score < 10) {
+return 'stable';
+}
+    if (score < 25) {
+return 'low';
+}
+    if (score < 50) {
+return 'moderate';
+}
+    if (score < 75) {
+return 'high';
+}
     return 'extreme';
   }
 

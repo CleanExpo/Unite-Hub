@@ -180,7 +180,7 @@ export function exportVoiceScript(voiceScript: VoiceScript): ExportedStory {
  * Export founder narrative with operational details
  */
 export function exportFounderMarkdown(narrative: FounderStoryNarrative): ExportedStory {
-  let md = exportToMarkdown(narrative).content;
+  const md = exportToMarkdown(narrative).content;
 
   // Add founder-specific sections before the footer
   const footerIndex = md.lastIndexOf('---');

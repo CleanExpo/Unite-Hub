@@ -22,7 +22,9 @@ export default function SettingsPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (workspaceLoading) return;
+    if (workspaceLoading) {
+return;
+}
     loadIntegrations();
   }, [workspaceLoading]);
 

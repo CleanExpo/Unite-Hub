@@ -27,8 +27,11 @@ export class AGLBASEngine {
     const assessed = pools.map(pool => {
       const utilization = (pool.desired_capacity / pool.max_capacity) * 100;
       let status: 'under' | 'optimal' | 'over' = 'optimal';
-      if (utilization > 80) status = 'over';
-      else if (utilization < 30) status = 'under';
+      if (utilization > 80) {
+status = 'over';
+} else if (utilization < 30) {
+status = 'under';
+}
 
       return {
         pool_id: pool.id,
@@ -62,7 +65,9 @@ export class AGLBASEngine {
       .eq('tenant_id', tenantId)
       .single();
 
-    if (!pool) throw new Error('Pool not found');
+    if (!pool) {
+throw new Error('Pool not found');
+}
 
     const validCapacity = Math.max(pool.min_capacity, Math.min(newCapacity, pool.max_capacity));
 

@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */
+ 
 import type { NextRequest } from "next/server";
 import { withErrorBoundary, ValidationError, AuthenticationError, AuthorizationError, DatabaseError, successResponse } from "@/lib/errors/boundaries";
 import { validateUserAuth, validateWorkspaceAccess } from "@/lib/workspace-validation";

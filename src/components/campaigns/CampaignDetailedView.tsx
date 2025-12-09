@@ -70,7 +70,9 @@ export function CampaignDetailedView({
         `/api/campaigns/blueprints/${blueprintId}?workspaceId=${workspaceId}`
       );
 
-      if (!response.ok) throw new Error('Failed to fetch blueprint');
+      if (!response.ok) {
+throw new Error('Failed to fetch blueprint');
+}
 
       const data = await response.json();
       setBlueprint(data.blueprint);
@@ -103,7 +105,9 @@ export function CampaignDetailedView({
         }
       );
 
-      if (!response.ok) throw new Error('Failed to approve channel');
+      if (!response.ok) {
+throw new Error('Failed to approve channel');
+}
 
       const data = await response.json();
       setBlueprint(data.blueprint);
@@ -113,7 +117,9 @@ export function CampaignDetailedView({
         description: `${channel.replace(/_/g, ' ')} has been approved`,
       });
 
-      if (onApprove) onApprove(blueprintId!, channel);
+      if (onApprove) {
+onApprove(blueprintId!, channel);
+}
     } catch (error) {
       console.error('Error approving channel:', error);
       toast({
@@ -135,7 +141,9 @@ export function CampaignDetailedView({
         }
       );
 
-      if (!response.ok) throw new Error('Failed to approve blueprint');
+      if (!response.ok) {
+throw new Error('Failed to approve blueprint');
+}
 
       const data = await response.json();
       setBlueprint(data.blueprint);
@@ -145,7 +153,9 @@ export function CampaignDetailedView({
         description: 'All channels have been approved',
       });
 
-      if (onApprove) onApprove(blueprintId!);
+      if (onApprove) {
+onApprove(blueprintId!);
+}
     } catch (error) {
       console.error('Error approving blueprint:', error);
       toast({
@@ -179,7 +189,9 @@ export function CampaignDetailedView({
         }
       );
 
-      if (!response.ok) throw new Error('Failed to reject blueprint');
+      if (!response.ok) {
+throw new Error('Failed to reject blueprint');
+}
 
       const data = await response.json();
       setBlueprint(data.blueprint);
@@ -189,7 +201,9 @@ export function CampaignDetailedView({
         description: 'The blueprint has been rejected',
       });
 
-      if (onReject) onReject(blueprintId!, rejectReason);
+      if (onReject) {
+onReject(blueprintId!, rejectReason);
+}
       onClose();
     } catch (error) {
       console.error('Error rejecting blueprint:', error);
@@ -203,27 +217,40 @@ export function CampaignDetailedView({
 
   const getChannelApprovalBadge = (channel: string) => {
     const approval = blueprint?.channel_approvals?.[channel];
-    if (approval === 'approved')
-      return <Badge variant="default"><CheckCircle className="h-3 w-3 mr-1" />Approved</Badge>;
-    if (approval === 'rejected')
-      return <Badge variant="destructive"><ThumbsDown className="h-3 w-3 mr-1" />Rejected</Badge>;
-    if (approval === 'pending')
-      return <Badge variant="outline"><Clock className="h-3 w-3 mr-1" />Pending</Badge>;
+    if (approval === 'approved') {
+return <Badge variant="default"><CheckCircle className="h-3 w-3 mr-1" />Approved</Badge>;
+}
+    if (approval === 'rejected') {
+return <Badge variant="destructive"><ThumbsDown className="h-3 w-3 mr-1" />Rejected</Badge>;
+}
+    if (approval === 'pending') {
+return <Badge variant="outline"><Clock className="h-3 w-3 mr-1" />Pending</Badge>;
+}
     return <Badge variant="secondary">Draft</Badge>;
   };
 
   const getChannelContent = (channel: string) => {
-    if (channel.includes('website')) return blueprint?.website_content;
-    if (channel.includes('blog')) return blueprint?.blog_content;
-    if (channel.includes('email')) return blueprint?.email_content;
-    if (channel.includes('facebook') || channel.includes('instagram') || channel.includes('linkedin'))
-      return blueprint?.social_content?.[channel];
-    if (channel.includes('tiktok') || channel.includes('youtube'))
-      return blueprint?.video_content?.[channel];
+    if (channel.includes('website')) {
+return blueprint?.website_content;
+}
+    if (channel.includes('blog')) {
+return blueprint?.blog_content;
+}
+    if (channel.includes('email')) {
+return blueprint?.email_content;
+}
+    if (channel.includes('facebook') || channel.includes('instagram') || channel.includes('linkedin')) {
+return blueprint?.social_content?.[channel];
+}
+    if (channel.includes('tiktok') || channel.includes('youtube')) {
+return blueprint?.video_content?.[channel];
+}
     return null;
   };
 
-  if (!blueprint && !loading) return null;
+  if (!blueprint && !loading) {
+return null;
+}
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -385,7 +412,9 @@ export function CampaignDetailedView({
                   <CardContent className="space-y-4">
                     {(() => {
                       const content = getChannelContent(selectedChannel);
-                      if (!content) return <p className="text-muted-foreground">No content generated</p>;
+                      if (!content) {
+return <p className="text-muted-foreground">No content generated</p>;
+}
 
                       return (
                         <>

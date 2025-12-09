@@ -448,7 +448,9 @@ export class AIRouter {
     completionTokens: number
   ): number {
     const capability = MODEL_REGISTRY[model];
-    if (!capability) return 0;
+    if (!capability) {
+return 0;
+}
 
     const promptCost = (promptTokens / 1_000_000) * capability.costPerMillionPrompt;
     const completionCost = (completionTokens / 1_000_000) * capability.costPerMillionCompletion;

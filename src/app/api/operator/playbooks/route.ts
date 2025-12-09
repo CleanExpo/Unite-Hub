@@ -308,13 +308,21 @@ export async function POST(req: NextRequest) {
           updated_at: new Date().toISOString(),
         };
 
-        if (parsed.data.name) updateData.name = parsed.data.name;
-        if (parsed.data.description !== undefined)
-          updateData.description = parsed.data.description;
-        if (parsed.data.domain !== undefined) updateData.domain = parsed.data.domain;
-        if (parsed.data.risk_level !== undefined)
-          updateData.risk_level = parsed.data.risk_level;
-        if (parsed.data.status) updateData.status = parsed.data.status;
+        if (parsed.data.name) {
+updateData.name = parsed.data.name;
+}
+        if (parsed.data.description !== undefined) {
+updateData.description = parsed.data.description;
+}
+        if (parsed.data.domain !== undefined) {
+updateData.domain = parsed.data.domain;
+}
+        if (parsed.data.risk_level !== undefined) {
+updateData.risk_level = parsed.data.risk_level;
+}
+        if (parsed.data.status) {
+updateData.status = parsed.data.status;
+}
 
         const { data, error } = await supabase
           .from("operator_playbooks")
@@ -375,19 +383,30 @@ export async function POST(req: NextRequest) {
           updated_at: new Date().toISOString(),
         };
 
-        if (parsed.data.rule_name) updateData.rule_name = parsed.data.rule_name;
-        if (parsed.data.conditions) updateData.conditions = parsed.data.conditions;
-        if (parsed.data.rule_action) updateData.action = parsed.data.rule_action;
-        if (parsed.data.action_params)
-          updateData.action_params = parsed.data.action_params;
-        if (parsed.data.coaching_message !== undefined)
-          updateData.coaching_message = parsed.data.coaching_message;
-        if (parsed.data.coaching_severity)
-          updateData.coaching_severity = parsed.data.coaching_severity;
-        if (parsed.data.priority !== undefined)
-          updateData.priority = parsed.data.priority;
-        if (parsed.data.is_active !== undefined)
-          updateData.is_active = parsed.data.is_active;
+        if (parsed.data.rule_name) {
+updateData.rule_name = parsed.data.rule_name;
+}
+        if (parsed.data.conditions) {
+updateData.conditions = parsed.data.conditions;
+}
+        if (parsed.data.rule_action) {
+updateData.action = parsed.data.rule_action;
+}
+        if (parsed.data.action_params) {
+updateData.action_params = parsed.data.action_params;
+}
+        if (parsed.data.coaching_message !== undefined) {
+updateData.coaching_message = parsed.data.coaching_message;
+}
+        if (parsed.data.coaching_severity) {
+updateData.coaching_severity = parsed.data.coaching_severity;
+}
+        if (parsed.data.priority !== undefined) {
+updateData.priority = parsed.data.priority;
+}
+        if (parsed.data.is_active !== undefined) {
+updateData.is_active = parsed.data.is_active;
+}
 
         const { data, error } = await supabase
           .from("playbook_rules")

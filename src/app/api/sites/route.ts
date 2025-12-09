@@ -31,7 +31,9 @@ export async function GET(req: NextRequest) {
       .eq('workspace_id', workspaceId)
       .order('created_at', { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return NextResponse.json({ success: true, sites });
   } catch (error) {
@@ -81,7 +83,9 @@ export async function POST(req: NextRequest) {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return NextResponse.json({ success: true, site });
   } catch (error) {

@@ -1,0 +1,2887 @@
+{
+  "timestamp": "2025-12-08T21:00:42.434Z",
+  "status": "draft",
+  "notes": [
+    "Non-destructive SQL diff PLAN only. No database access, no schema changes.",
+    "Intended to be wired later to Supabase SQL Editor / read-only DB access.",
+    "Use this as a checklist before you touch any production schema."
+  ],
+  "assumptions": [
+    "supabase/migrations is the single source of truth for migration scripts.",
+    "Live Supabase schema may contain legacy or manual changes.",
+    "All destructive actions MUST be manually reviewed."
+  ],
+  "steps": [
+    {
+      "stepId": "collect_live_schema",
+      "description": "Export live schema from Supabase (read-only) into a snapshot file, e.g. reports/live_schema_snapshot.sql",
+      "requiresDbAccess": true,
+      "destructive": false
+    },
+    {
+      "stepId": "compare_migrations_to_live",
+      "description": "Diff migration history vs live schema to detect drift, missing objects, and legacy artefacts.",
+      "requiresDbAccess": true,
+      "destructive": false
+    },
+    {
+      "stepId": "classify_changes",
+      "description": "Classify differences into safe additions, risky changes, and dangerous deletions.",
+      "requiresDbAccess": false,
+      "destructive": false
+    },
+    {
+      "stepId": "manual_review_gate",
+      "description": "Human must sign off before any destructive SQL is executed in Supabase SQL Editor.",
+      "requiresDbAccess": false,
+      "destructive": false
+    }
+  ],
+  "migrationFiles": [
+    {
+      "fileName": "001_initial_schema.sql",
+      "sizeBytes": 8280,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "002_team_projects_approvals.sql",
+      "sizeBytes": 13144,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "003_user_organizations.sql",
+      "sizeBytes": 10712,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "004_add_profile_fields.sql",
+      "sizeBytes": 2821,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "004_email_integrations.sql",
+      "sizeBytes": 6368,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "005_user_profile_enhancements.sql",
+      "sizeBytes": 7102,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "006_whatsapp_integration.sql",
+      "sizeBytes": 8644,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "007_user_onboarding.sql",
+      "sizeBytes": 3145,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "008_drip_campaigns.sql",
+      "sizeBytes": 6718,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "009_contacts_enhancements.sql",
+      "sizeBytes": 1783,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "010_fix_organizations_table.sql",
+      "sizeBytes": 2599,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "011_generated_images.sql",
+      "sizeBytes": 3297,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "012_subscriptions.sql",
+      "sizeBytes": 7432,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "013_calendar_system.sql",
+      "sizeBytes": 6912,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "014_fix_username_constraint.sql",
+      "sizeBytes": 965,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "014_oauth_states.sql",
+      "sizeBytes": 1733,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "015_webhook_events.sql",
+      "sizeBytes": 1702,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "019_fix_organization_id_type.sql",
+      "sizeBytes": 6201,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "020_implement_real_rls_policies.sql",
+      "sizeBytes": 21630,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "021_create_interactions_table.sql",
+      "sizeBytes": 4563,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "022_add_performance_indexes.sql",
+      "sizeBytes": 8301,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "023_CREATE_FUNCTIONS_ONLY.sql",
+      "sizeBytes": 2364,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "024_TEST_ONE_POLICY.sql",
+      "sizeBytes": 2327,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "025_COMPLETE_RLS.sql",
+      "sizeBytes": 9771,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "026_FINAL_DATABASE_SECURITY.sql",
+      "sizeBytes": 19823,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "026_performance_indexes.sql",
+      "sizeBytes": 7131,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "027_VERIFY_ALL_SECURITY.sql",
+      "sizeBytes": 11716,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "028_mindmap_feature.sql",
+      "sizeBytes": 14811,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "029_media_files.sql",
+      "sizeBytes": 6961,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "030_media_storage_bucket.sql",
+      "sizeBytes": 4760,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "031_storage_policies.sql",
+      "sizeBytes": 3328,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "032_fix_user_profiles_rls.sql",
+      "sizeBytes": 1568,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "033_fix_organizations_rls.sql",
+      "sizeBytes": 2021,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "034_fix_user_organizations_rls.sql",
+      "sizeBytes": 2039,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "035_fix_all_init_tables_rls.sql",
+      "sizeBytes": 6324,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "036_fix_rls_correct_schema.sql",
+      "sizeBytes": 7600,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "037_cleanup_duplicate_rls_policies.sql",
+      "sizeBytes": 4725,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "038_core_saas_tables.sql",
+      "sizeBytes": 19662,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "039_autonomous_intelligence_system.sql",
+      "sizeBytes": 8692,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "039_create_proposal_scopes_table.sql",
+      "sizeBytes": 2987,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "040_add_intelligence_tracking.sql",
+      "sizeBytes": 3804,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "040_fix_ai_score_type.sql",
+      "sizeBytes": 976,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "040_projects_and_tasks.sql",
+      "sizeBytes": 9364,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "041_create_client_emails_table.sql",
+      "sizeBytes": 3187,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "042_extend_generated_content.sql",
+      "sizeBytes": 5516,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "042_time_tracking.sql",
+      "sizeBytes": 11901,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "043_autonomous_tasks_table.sql",
+      "sizeBytes": 8793,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "043_tenant_infrastructure.sql",
+      "sizeBytes": 15832,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "044_add_missing_columns.sql",
+      "sizeBytes": 9673,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "044_financial_reporting.sql",
+      "sizeBytes": 20969,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "045_fix_rls_policies.sql",
+      "sizeBytes": 12861,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "046_ai_usage_tracking_CLEANED.sql",
+      "sizeBytes": 18399,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "046_ai_usage_tracking.sql",
+      "sizeBytes": 13845,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "047_web_scraping_tables.sql",
+      "sizeBytes": 6425,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "048_phase1_core_tables.sql",
+      "sizeBytes": 9669,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "049_phase2_step4_api_compatibility.sql",
+      "sizeBytes": 9898,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "050_xero_integration.sql",
+      "sizeBytes": 11145,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "052_multi_xero_accounts.sql",
+      "sizeBytes": 6514,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "053_generative_workspace.sql",
+      "sizeBytes": 5535,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "053_phase7_seo_tables.sql",
+      "sizeBytes": 10607,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "054_add_generated_content_columns.sql",
+      "sizeBytes": 560,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "054_delta_history_columns.sql",
+      "sizeBytes": 8804,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "055_anomaly_detection_tables.sql",
+      "sizeBytes": 3314,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "056_strategy_snapshots_table.sql",
+      "sizeBytes": 1788,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "057_trusted_mode_foundation.sql",
+      "sizeBytes": 12851,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "058_signature_requests.sql",
+      "sizeBytes": 4358,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "059_operator_profiles.sql",
+      "sizeBytes": 7104,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "060_collaborative_review.sql",
+      "sizeBytes": 7278,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "061_operator_insights.sql",
+      "sizeBytes": 12178,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "062_operator_playbooks.sql",
+      "sizeBytes": 11866,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "063_strategy_graph.sql",
+      "sizeBytes": 11627,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "064_strategy_simulations.sql",
+      "sizeBytes": 10399,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "065_strategy_horizons.sql",
+      "sizeBytes": 11099,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "066_strategy_refinement.sql",
+      "sizeBytes": 11849,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "067_enterprise_foundation.sql",
+      "sizeBytes": 12499,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "068_enterprise_teams.sql",
+      "sizeBytes": 14884,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "069_enterprise_billing.sql",
+      "sizeBytes": 18889,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "070_enterprise_financial.sql",
+      "sizeBytes": 14386,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "071_leviathan_entity_graph.sql",
+      "sizeBytes": 10373,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "072_leviathan_cloud_deployments.sql",
+      "sizeBytes": 8458,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "073_leviathan_social_stack.sql",
+      "sizeBytes": 9430,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "074_leviathan_orchestrator.sql",
+      "sizeBytes": 13787,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "076_mvp_dashboard.sql",
+      "sizeBytes": 8553,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "079_add_workspace_to_campaign_tables.sql",
+      "sizeBytes": 6320,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "079_image_approvals_multistep_workflow.sql",
+      "sizeBytes": 4930,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "079b_cleanup_orphaned_workspace_records.sql",
+      "sizeBytes": 4979,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "080_auto_generation_jobs.sql",
+      "sizeBytes": 2434,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "080_workspace_isolation_constraints.sql",
+      "sizeBytes": 17761,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "081_image_safety_labels.sql",
+      "sizeBytes": 1522,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "082_branding_packs.sql",
+      "sizeBytes": 1504,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "083_template_sanitisation_logs.sql",
+      "sizeBytes": 1528,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "084_image_usage_analytics.sql",
+      "sizeBytes": 2079,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "085_feature_flags.sql",
+      "sizeBytes": 2676,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "086_language_settings.sql",
+      "sizeBytes": 4377,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "087_voice_logs.sql",
+      "sizeBytes": 1598,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "088_client_chat.sql",
+      "sizeBytes": 3889,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "089_token_economy.sql",
+      "sizeBytes": 3874,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "090_enhanced_audit_logs.sql",
+      "sizeBytes": 14680,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "090_usage_lockouts.sql",
+      "sizeBytes": 3717,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "091_stripe_billing.sql",
+      "sizeBytes": 5708,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "092_credit_forecasts.sql",
+      "sizeBytes": 2241,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "093_pricing_engine.sql",
+      "sizeBytes": 3823,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "094_credit_marketplace.sql",
+      "sizeBytes": 4213,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "095_autonomous_tier_manager.sql",
+      "sizeBytes": 4080,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "096_voice_profiles.sql",
+      "sizeBytes": 2297,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "097_concierge_system.sql",
+      "sizeBytes": 3737,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "098_behaviour_analytics.sql",
+      "sizeBytes": 3624,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "099_project_predictions.sql",
+      "sizeBytes": 1987,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "100_multi_agent_system.sql",
+      "sizeBytes": 13868,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "100_unified_automation_matrix.sql",
+      "sizeBytes": 5967,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "100_website_audits.sql",
+      "sizeBytes": 3860,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "101_sandbox_users.sql",
+      "sizeBytes": 3252,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "101_self_healing_workflows.sql",
+      "sizeBytes": 3389,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "102_billing_tables.sql",
+      "sizeBytes": 5733,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "102_client_journey_intelligence.sql",
+      "sizeBytes": 3909,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "103_autonomous_revenue_engine.sql",
+      "sizeBytes": 3694,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "103_visual_concept_packs.sql",
+      "sizeBytes": 4053,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "104_autonomous_compliance_engine.sql",
+      "sizeBytes": 3662,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "104_client_feature_flags.sql",
+      "sizeBytes": 1902,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "105_autonomous_qa_engine.sql",
+      "sizeBytes": 2622,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "105_client_approvals.sql",
+      "sizeBytes": 1718,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "106_ai_event_timeline.sql",
+      "sizeBytes": 1313,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "106_autonomous_documentation_engine.sql",
+      "sizeBytes": 2495,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "107_autonomous_governance_engine.sql",
+      "sizeBytes": 2449,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "107_client_knowledge.sql",
+      "sizeBytes": 2179,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "108_client_roadmap.sql",
+      "sizeBytes": 2566,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "108_strategic_intelligence_engine.sql",
+      "sizeBytes": 3695,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "109_autonomous_feature_evolution_engine.sql",
+      "sizeBytes": 2240,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "109_visual_assets.sql",
+      "sizeBytes": 2615,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "110_autonomous_rd_engine.sql",
+      "sizeBytes": 2870,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "110_performance_reports.sql",
+      "sizeBytes": 1738,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "111_autonomous_marketing_engine.sql",
+      "sizeBytes": 3769,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "111_financial_founder_dashboard.sql",
+      "sizeBytes": 4690,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "112_autonomous_support_ops_engine.sql",
+      "sizeBytes": 4470,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "112_founder_timecard.sql",
+      "sizeBytes": 1135,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "113_client_review_packs.sql",
+      "sizeBytes": 1854,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "113_multi_brand_white_label_engine.sql",
+      "sizeBytes": 3205,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "114_education_academy_engine.sql",
+      "sizeBytes": 4382,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "114_voice_navigation_events.sql",
+      "sizeBytes": 1282,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "115_client_launch_kits.sql",
+      "sizeBytes": 6174,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "115_global_benchmark_reputation_engine.sql",
+      "sizeBytes": 2605,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "116_brand_intelligence_engine.sql",
+      "sizeBytes": 1922,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "116_client_success.sql",
+      "sizeBytes": 9605,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "117_academy_auto_curriculum_generator.sql",
+      "sizeBytes": 2166,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "117_production_jobs.sql",
+      "sizeBytes": 8838,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "118_founder_assistant.sql",
+      "sizeBytes": 10496,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "118_strategic_growth_advisor.sql",
+      "sizeBytes": 2645,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "119_activation_timeline.sql",
+      "sizeBytes": 8450,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "119_ai_industry_awards_engine.sql",
+      "sizeBytes": 2648,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "120_predictive_global_network_intelligence.sql",
+      "sizeBytes": 1371,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "120_production_recipes.sql",
+      "sizeBytes": 8531,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "121_franchise_investor_management_engine.sql",
+      "sizeBytes": 6516,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "121_training_centre.sql",
+      "sizeBytes": 7565,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "122_ai_talent_recruitment_engine.sql",
+      "sizeBytes": 5383,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "122_living_intelligence_archive.sql",
+      "sizeBytes": 5037,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "123_ai_compliance_marketplace.sql",
+      "sizeBytes": 2957,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "123_founder_intel.sql",
+      "sizeBytes": 7883,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "124_industry_knowledge_graph_engine.sql",
+      "sizeBytes": 3243,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "124_performance_reality_engine.sql",
+      "sizeBytes": 8891,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "125_ai_commercial_engine.sql",
+      "sizeBytes": 3774,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "125_signal_matrix_early_warning.sql",
+      "sizeBytes": 8613,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "126_client_ops_agent.sql",
+      "sizeBytes": 12724,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "126_industry_simulator.sql",
+      "sizeBytes": 3924,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "127_campaign_orchestration_engine.sql",
+      "sizeBytes": 10272,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "127_investor_forecast_engine.sql",
+      "sizeBytes": 3868,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "128_ai_international_expansion_engine.sql",
+      "sizeBytes": 5030,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "128_autonomous_posting_engine.sql",
+      "sizeBytes": 10810,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "129_multi_licensor_royalty_compliance_engine.sql",
+      "sizeBytes": 6799,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "129_scaling_mode_control_engine.sql",
+      "sizeBytes": 9336,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "130_autonomous_board_strategy_engine.sql",
+      "sizeBytes": 2345,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "130_cross_channel_execution.sql",
+      "sizeBytes": 10507,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "131_creative_combat_engine.sql",
+      "sizeBytes": 10750,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "131_maos_deep_agent_orchestration_core.sql",
+      "sizeBytes": 6100,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "132_autonomous_dev_refactor_engine.sql",
+      "sizeBytes": 4492,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "132_founder_autopilot_mode.sql",
+      "sizeBytes": 10097,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "133_multi_tenant_agency_engine.sql",
+      "sizeBytes": 12501,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "133_voice_first_agent_execution_layer.sql",
+      "sizeBytes": 4033,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "134_human_supervision_oversight_engine.sql",
+      "sizeBytes": 6379,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "134_licensing_franchise_region.sql",
+      "sizeBytes": 13558,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "135_autonomous_safety_risk_supervisor.sql",
+      "sizeBytes": 6616,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "135_global_region_scaling.sql",
+      "sizeBytes": 10992,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "136_global_compliance_cultural_adaptation.sql",
+      "sizeBytes": 15138,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "136_mcse_cognitive_supervisor.sql",
+      "sizeBytes": 4657,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "137_global_intelligence_mesh.sql",
+      "sizeBytes": 11858,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "137_unified_prediction_early_warning_engine.sql",
+      "sizeBytes": 6831,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "138_autonomous_incident_response_remediation_engine.sql",
+      "sizeBytes": 7202,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "138_predictive_opportunity_engine.sql",
+      "sizeBytes": 6149,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "139_ai_navigator_mode.sql",
+      "sizeBytes": 4600,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "139_incident_learning_continuous_improvement_engine.sql",
+      "sizeBytes": 6292,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "140_market_comparator_engine.sql",
+      "sizeBytes": 2217,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "140_strategic_objective_roadmap_intelligence_engine.sql",
+      "sizeBytes": 6648,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "141_adaptive_creative_ecosystem.sql",
+      "sizeBytes": 2248,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "141_enterprise_governance_compliance_board_intelligence.sql",
+      "sizeBytes": 6811,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "142_cross_region_convergence.sql",
+      "sizeBytes": 3289,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "142_global_regulatory_harmonisation_region_policy_engine.sql",
+      "sizeBytes": 6766,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "143_global_memory_compression.sql",
+      "sizeBytes": 1738,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "143_region_aware_autonomous_operations_engine.sql",
+      "sizeBytes": 6670,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "144_cognitive_load_balancer.sql",
+      "sizeBytes": 1297,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "144_global_sla_latency_performance_intelligence_engine.sql",
+      "sizeBytes": 6497,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "145_autonomous_global_load_balancing_agent_scaling_engine.sql",
+      "sizeBytes": 6919,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "145_decision_arbitration_engine.sql",
+      "sizeBytes": 1238,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "146_founder_cognitive_map.sql",
+      "sizeBytes": 1060,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "146_tenant_commercial_plans_quotas_licensing.sql",
+      "sizeBytes": 5124,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "147_strategic_alignment_engine.sql",
+      "sizeBytes": 1457,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "147_unified_compliance_sla_contract_enforcement.sql",
+      "sizeBytes": 3115,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "148_founder_ops_tasks.sql",
+      "sizeBytes": 7108,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "148_signal_purity_engine.sql",
+      "sizeBytes": 1416,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "148_unified_frontend_console.sql",
+      "sizeBytes": 3169,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "149_cross_tenant_marketplace.sql",
+      "sizeBytes": 3804,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "149_founder_ops_queue.sql",
+      "sizeBytes": 8456,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "150_autonomous_tenant_expansion.sql",
+      "sizeBytes": 3313,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "150_founder_ops_archive_bridge.sql",
+      "sizeBytes": 8795,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "150_load_aware_decision_pipeline.sql",
+      "sizeBytes": 1292,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "151_autonomous_cross_engine_harmonisation.sql",
+      "sizeBytes": 3372,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "151_founder_flight_deck_v2.sql",
+      "sizeBytes": 1008,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "151_search_console_cache.sql",
+      "sizeBytes": 16023,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "152_autonomous_global_system_seal.sql",
+      "sizeBytes": 3548,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "152_multi_agency_broadcast_engine.sql",
+      "sizeBytes": 2474,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "152_search_console_tokens.sql",
+      "sizeBytes": 16370,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "153_campaign_blueprints.sql",
+      "sizeBytes": 15159,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "153_client_sites_secrets_vault.sql",
+      "sizeBytes": 5981,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "153_narrative_intelligence_engine.sql",
+      "sizeBytes": 1318,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "154_campaign_channels.sql",
+      "sizeBytes": 13192,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "154_temporal_trend_engine.sql",
+      "sizeBytes": 1421,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "155_region_transfer_safety_layer.sql",
+      "sizeBytes": 1519,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "155_trial_profiles.sql",
+      "sizeBytes": 10536,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "156_franchise_opportunity_propagation.sql",
+      "sizeBytes": 1488,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "156_trial_activity_log.sql",
+      "sizeBytes": 8110,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "157_loyalty_credits.sql",
+      "sizeBytes": 8794,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "157_multi_domain_success_predictor.sql",
+      "sizeBytes": 1525,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "158_founder_situational_awareness_mode.sql",
+      "sizeBytes": 1254,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "158_referral_tracking.sql",
+      "sizeBytes": 11335,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "159_ai_workload_governor.sql",
+      "sizeBytes": 2051,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "159_reward_catalog.sql",
+      "sizeBytes": 10610,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "160_adaptive_engine_health_monitor.sql",
+      "sizeBytes": 1242,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "161_creative_risk_sensitivity_engine.sql",
+      "sizeBytes": 1328,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "162_performance_equality_normalizer.sql",
+      "sizeBytes": 1481,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "163_networked_intelligence_exchange.sql",
+      "sizeBytes": 1306,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "164_unified_memory_spine.sql",
+      "sizeBytes": 1159,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "165_global_insight_renderer.sql",
+      "sizeBytes": 1316,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "166_cross_engine_playbook_generator.sql",
+      "sizeBytes": 1322,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "167_intelligence_stabilisation_protocol.sql",
+      "sizeBytes": 1160,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "168_evolution_kernel.sql",
+      "sizeBytes": 3106,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "169_evolution_planner.sql",
+      "sizeBytes": 1936,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "170_autonomous_adjustment_engine.sql",
+      "sizeBytes": 2184,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "171_human_in_loop_console.sql",
+      "sizeBytes": 2023,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "172_global_evolution_mesh.sql",
+      "sizeBytes": 4270,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "173_stability_enforcement_protocol.sql",
+      "sizeBytes": 3456,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "174_evolution_regression_guard.sql",
+      "sizeBytes": 1756,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "175_experimentation_sandbox_engine.sql",
+      "sizeBytes": 1526,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "176_human_training_insight_engine.sql",
+      "sizeBytes": 1773,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "177_knowledge_distillation_engine.sql",
+      "sizeBytes": 1599,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "178_pattern_library_engine.sql",
+      "sizeBytes": 1639,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "179_operator_coaching_mode.sql",
+      "sizeBytes": 1645,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "180_ai_pair_operator_staff.sql",
+      "sizeBytes": 2811,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "181_incident_postmortem_intelligence_engine.sql",
+      "sizeBytes": 1823,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "182_long_horizon_roadmap_generator.sql",
+      "sizeBytes": 1711,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "183_meta_governance_console.sql",
+      "sizeBytes": 2807,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "184_tenant_intelligence_boundary_engine.sql",
+      "sizeBytes": 2528,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "185_federated_pattern_exchange_hub.sql",
+      "sizeBytes": 2078,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "186_cross_tenant_benchmark_engine.sql",
+      "sizeBytes": 2141,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "187_multi_agent_council_orchestrator.sql",
+      "sizeBytes": 3260,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "188_agent_role_profiles_mandates.sql",
+      "sizeBytes": 2462,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "189_extended_evolution_layer_v2.sql",
+      "sizeBytes": 1887,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "190_tenant_cohort_intelligence_engine.sql",
+      "sizeBytes": 2417,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "191_global_multi_tenant_learning_loop.sql",
+      "sizeBytes": 3037,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "192_cross_tenant_safety_fairness_auditor.sql",
+      "sizeBytes": 2233,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "193_global_agent_governance_charter.sql",
+      "sizeBytes": 2642,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "194_global_fault_isolation_matrix.sql",
+      "sizeBytes": 1926,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "195_regional_failover_routing.sql",
+      "sizeBytes": 1722,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "196_autopilot_black_box_recorder.sql",
+      "sizeBytes": 1917,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "197_task_migration_reassignment.sql",
+      "sizeBytes": 1278,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "198_circuit_breaker_framework.sql",
+      "sizeBytes": 1853,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "199_resilient_queue_federation.sql",
+      "sizeBytes": 1843,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "200_operator_crisis_console.sql",
+      "sizeBytes": 1850,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "201_disaster_mode_safety_governor.sql",
+      "sizeBytes": 1851,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "202_cross_region_intelligence_preservation.sql",
+      "sizeBytes": 2116,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "203_field_reliability_certification.sql",
+      "sizeBytes": 1914,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "204_aido_2026_google_algorithm_shift.sql",
+      "sizeBytes": 7341,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "205_oauth_tokens.sql",
+      "sizeBytes": 8295,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "220_autonomous_monitoring_system.sql",
+      "sizeBytes": 14572,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "221_desktop_agent_bridge.sql",
+      "sizeBytes": 13855,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "222_autonomous_agent_mode.sql",
+      "sizeBytes": 14722,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "223_living_intelligence_foundation.sql",
+      "sizeBytes": 14800,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "224_reasoning_engine_core.sql",
+      "sizeBytes": 10731,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "225_orchestrator_engine_core.sql",
+      "sizeBytes": 12391,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "226_global_autonomy_core.sql",
+      "sizeBytes": 13860,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "227_global_self_correction.sql",
+      "sizeBytes": 10201,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "228_global_predictive_safety.sql",
+      "sizeBytes": 13935,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "229_global_autonomy_calibration.sql",
+      "sizeBytes": 12913,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "230_autonomy_tuning_results.sql",
+      "sizeBytes": 4418,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "231_threshold_adjustment_proposals.sql",
+      "sizeBytes": 6375,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "232_calibration_archives_and_patterns.sql",
+      "sizeBytes": 7298,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "233_negotiation_and_arbitration.sql",
+      "sizeBytes": 10485,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "234_task_marketplace_auction_system.sql",
+      "sizeBytes": 10051,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "235_coalition_formation_system.sql",
+      "sizeBytes": 11064,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "236_hierarchical_strategy_system.sql",
+      "sizeBytes": 12541,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "237_phase_4_execution_system.sql",
+      "sizeBytes": 12196,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "238_brand_metadata.sql",
+      "sizeBytes": 3967,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "239_founder_ops_hub.sql",
+      "sizeBytes": 5119,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "240_convex_framework_tables.sql",
+      "sizeBytes": 16281,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "241_convex_advanced_features.sql",
+      "sizeBytes": 16197,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "242_convex_custom_frameworks.sql",
+      "sizeBytes": 15061,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "243_email_agent_queues.sql",
+      "sizeBytes": 3458,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "243_scheduling_agent_tables.sql",
+      "sizeBytes": 9491,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "244_analysis_agent_tables.sql",
+      "sizeBytes": 10258,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "244_research_agent_tables.sql",
+      "sizeBytes": 4543,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "245_content_agent_tables.sql",
+      "sizeBytes": 8787,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "245_coordination_agent_tables.sql",
+      "sizeBytes": 5546,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "246_unified_intelligence_layer.sql",
+      "sizeBytes": 7880,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "247_optimization_layer.sql",
+      "sizeBytes": 7882,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "248_agi_governance_system.sql",
+      "sizeBytes": 7243,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "249_phase9_business_brain.sql",
+      "sizeBytes": 4970,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "250_phase10_human_extension_layer.sql",
+      "sizeBytes": 4000,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "251_phase11_wake_window_system.sql",
+      "sizeBytes": 9883,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "252_phase12_dialogue_layer.sql",
+      "sizeBytes": 9564,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "253_phase13_real_world_context_layer.sql",
+      "sizeBytes": 18464,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "254_synthex_core_structure.sql",
+      "sizeBytes": 16451,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "255_rbac_roles_and_device_auth.sql",
+      "sizeBytes": 10218,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "256_synthex_seo_metrics.sql",
+      "sizeBytes": 13481,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "260_synthex_autonomous_integrations.sql",
+      "sizeBytes": 15380,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "270_managed_service_schema.sql",
+      "sizeBytes": 17596,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "271_platform_mode_toggle.sql",
+      "sizeBytes": 3089,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "272_managed_service_strategies.sql",
+      "sizeBytes": 7205,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "272_synthex_social_marketing_models.sql",
+      "sizeBytes": 9552,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "273_convex_framework_alerts.sql",
+      "sizeBytes": 12598,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "274_alert_analytics_tables.sql",
+      "sizeBytes": 15515,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "274_pre_client_historical_email_tables.sql",
+      "sizeBytes": 16088,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "275_email_agent_queues.sql",
+      "sizeBytes": 3458,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "275_founder_cognitive_twin_core.sql",
+      "sizeBytes": 26885,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "276_research_agent_tables.sql",
+      "sizeBytes": 4543,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "276_seo_enhancement_suite.sql",
+      "sizeBytes": 22320,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "277_content_agent_tables.sql",
+      "sizeBytes": 8787,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "278_phase6_extended_thinking_schema.sql",
+      "sizeBytes": 13934,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "279_phase6_ml_schema.sql",
+      "sizeBytes": 8243,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "280_phase6_prediction_schema.sql",
+      "sizeBytes": 11743,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "281_phase6_cost_optimization_schema.sql",
+      "sizeBytes": 13186,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "282_convex_strategy_tables.sql",
+      "sizeBytes": 16644,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "290_extend_platform_mode_services.sql",
+      "sizeBytes": 1459,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "291_connected_apps_email_intelligence.sql",
+      "sizeBytes": 24372,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "292_social_inbox_and_engagement.sql",
+      "sizeBytes": 14145,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "293_ads_automation_engine.sql",
+      "sizeBytes": 16122,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "294_search_engine_master_suite.sql",
+      "sizeBytes": 20882,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "295_browser_automation_boost.sql",
+      "sizeBytes": 19208,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "299_fix_existing_tables.sql",
+      "sizeBytes": 12691,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "300_founder_intelligence_os_core.sql",
+      "sizeBytes": 25912,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "300A_PRE_MIGRATION_FIX_ALL.sql",
+      "sizeBytes": 56065,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "301_seo_leak_engine_core.sql",
+      "sizeBytes": 88959,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "302_boost_bump_engine.sql",
+      "sizeBytes": 12386,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "303_multi_channel_autonomy.sql",
+      "sizeBytes": 29464,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "303A_PRE_MIGRATION_FIX_304_305.sql",
+      "sizeBytes": 28964,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "304_email_identity_engine.sql",
+      "sizeBytes": 22582,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "305_cognitive_twin_engine.sql",
+      "sizeBytes": 18115,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "306_client_approval_and_strategy_core.sql",
+      "sizeBytes": 4917,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "307_ai_consultation_engine.sql",
+      "sizeBytes": 5286,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "308_profiles_user_role_enum.sql",
+      "sizeBytes": 1615,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "309_seed_founder_and_staff_roles.sql",
+      "sizeBytes": 787,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "309_seed_founder_staff_roles.sql",
+      "sizeBytes": 1021,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "310_business_identity_vault.sql",
+      "sizeBytes": 5122,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "311_verify_ai_score_type.sql",
+      "sizeBytes": 3066,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "312_create_missing_core_tables.sql",
+      "sizeBytes": 7002,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "313_enable_rls_policies.sql",
+      "sizeBytes": 3022,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "314a_rls_helper_functions.sql",
+      "sizeBytes": 3373,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "314b_rls_policies.sql",
+      "sizeBytes": 17059,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "315_observability_tables.sql",
+      "sizeBytes": 7610,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "316_self_healing_jobs_and_patches.sql",
+      "sizeBytes": 11355,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "320_fix_rls_infinite_recursion.sql",
+      "sizeBytes": 6643,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "321_fix_profiles_signup_trigger.sql",
+      "sizeBytes": 3775,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "322_dual_portal_access_control.sql",
+      "sizeBytes": 9743,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "400_core_foundation_consolidation.sql",
+      "sizeBytes": 8402,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "401_synthex_tier_management.sql",
+      "sizeBytes": 11592,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "402_extended_rls_policies.sql",
+      "sizeBytes": 17526,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "403_rate_limiting_infrastructure.sql",
+      "sizeBytes": 9278,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "404_mfa_recovery_codes.sql",
+      "sizeBytes": 7596,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "405_copywriting_consistency.sql",
+      "sizeBytes": 22304,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "406_synthex_website_previews.sql",
+      "sizeBytes": 5441,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "407_synthex_seo_reports.sql",
+      "sizeBytes": 5817,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "408_synthex_assistant_messages.sql",
+      "sizeBytes": 4440,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "409_synthex_content.sql",
+      "sizeBytes": 6613,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "410_synthex_campaigns.sql",
+      "sizeBytes": 9252,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "411_synthex_agent_memory.sql",
+      "sizeBytes": 5926,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "412_synthex_campaign_schedule.sql",
+      "sizeBytes": 8860,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "413_synthex_delivery_log.sql",
+      "sizeBytes": 9341,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "414_synthex_attribution.sql",
+      "sizeBytes": 9465,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "415_synthex_channel_events.sql",
+      "sizeBytes": 10799,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "416_synthex_predictive_models.sql",
+      "sizeBytes": 10032,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "417_synthex_audience_core.sql",
+      "sizeBytes": 12993,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "418_synthex_audience_scoring.sql",
+      "sizeBytes": 6210,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "419_synthex_lead_churn_ltv.sql",
+      "sizeBytes": 4852,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "420_synthex_automation_core.sql",
+      "sizeBytes": 9404,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "421_synthex_cohort_journey.sql",
+      "sizeBytes": 15845,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "422_api_rate_limiting.sql",
+      "sizeBytes": 10016,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "422_synthex_revenue_attribution.sql",
+      "sizeBytes": 11108,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "423_global_event_bus.sql",
+      "sizeBytes": 10902,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "423_synthex_lead_routing.sql",
+      "sizeBytes": 10024,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "424_permission_matrix_rbac_v2.sql",
+      "sizeBytes": 10327,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "424_synthex_conversation_intel.sql",
+      "sizeBytes": 14533,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "425_synthex_brand_intelligence.sql",
+      "sizeBytes": 14491,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "425_unified_observability.sql",
+      "sizeBytes": 7987,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "426_backup_recovery_hooks.sql",
+      "sizeBytes": 7643,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "426_synthex_integrations_core.sql",
+      "sizeBytes": 8122,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "427_feature_flags_framework.sql",
+      "sizeBytes": 7400,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "427_synthex_reputation.sql",
+      "sizeBytes": 14993,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "4275_synthex_tenant_profiles.sql",
+      "sizeBytes": 15878,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "428_security_rbac_hardening.sql",
+      "sizeBytes": 12570,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "428_synthex_billing_core.sql",
+      "sizeBytes": 10265,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "429_rate_limiting_abuse_detection.sql",
+      "sizeBytes": 10621,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "430_config_health_sanity_checks.sql",
+      "sizeBytes": 9358,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "430_founder_cognitive_twin_core.sql",
+      "sizeBytes": 13748,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "430_synthex_templates.sql",
+      "sizeBytes": 20598,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "431_observability_audit_trails.sql",
+      "sizeBytes": 8036,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "431_synthex_admin_views.sql",
+      "sizeBytes": 9553,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "432_backup_export_infrastructure.sql",
+      "sizeBytes": 5447,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "432_research_fabric_core.sql",
+      "sizeBytes": 14495,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "432_synthex_sales_crm.sql",
+      "sizeBytes": 16073,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "433_feature_flags_kill_switch.sql",
+      "sizeBytes": 10595,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "433_synthex_invoicing.sql",
+      "sizeBytes": 8813,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "433_synthex_template_library.sql",
+      "sizeBytes": 9281,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "434_synthex_safety_guardrails.sql",
+      "sizeBytes": 9903,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "434_synthex_template_intelligence.sql",
+      "sizeBytes": 11193,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "435_synthex_auto_branding.sql",
+      "sizeBytes": 12964,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "435_synthex_knowledge_graph.sql",
+      "sizeBytes": 16374,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "436_synthex_competitor_intel.sql",
+      "sizeBytes": 18232,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "436_synthex_persona_builder.sql",
+      "sizeBytes": 14812,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "437_founder_audit_log_core.sql",
+      "sizeBytes": 5550,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "437_synthex_cross_channel.sql",
+      "sizeBytes": 15275,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "437_synthex_social_scheduler.sql",
+      "sizeBytes": 22285,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "438_rate_limiting_core.sql",
+      "sizeBytes": 9356,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "438_synthex_agency_workspaces.sql",
+      "sizeBytes": 8561,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "438_synthex_compliance.sql",
+      "sizeBytes": 18979,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "439_policy_engine_core.sql",
+      "sizeBytes": 10073,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "439_synthex_billing_plans.sql",
+      "sizeBytes": 25567,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "439_synthex_tone_manager.sql",
+      "sizeBytes": 13202,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "440_aetheros_visual_system.sql",
+      "sizeBytes": 11888,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "440_notifications_center.sql",
+      "sizeBytes": 8575,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "440_synthex_multi_brand.sql",
+      "sizeBytes": 17003,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "440_synthex_template_marketplace.sql",
+      "sizeBytes": 13802,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "441_synthex_credit_system.sql",
+      "sizeBytes": 24098,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "441_synthex_template_playbooks.sql",
+      "sizeBytes": 10343,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "442_synthex_brands.sql",
+      "sizeBytes": 11003,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "442_synthex_experiments.sql",
+      "sizeBytes": 16213,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "442a_synthex_brands_fix.sql",
+      "sizeBytes": 5852,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "443_synthex_agency_command.sql",
+      "sizeBytes": 15108,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "444_synthex_experiments.sql",
+      "sizeBytes": 12757,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "444_synthex_localization.sql",
+      "sizeBytes": 17254,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "445_synthex_behavior_trends.sql",
+      "sizeBytes": 17240,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "445_synthex_playbooks.sql",
+      "sizeBytes": 21120,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "446_synthex_audit_log.sql",
+      "sizeBytes": 16950,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "446_synthex_reputation.sql",
+      "sizeBytes": 17526,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "447_synthex_multi_creative.sql",
+      "sizeBytes": 18134,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "448_synthex_lead_state_machine.sql",
+      "sizeBytes": 18097,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "449_synthex_revenue_routing.sql",
+      "sizeBytes": 16363,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "450_synthex_dynamic_segmentation.sql",
+      "sizeBytes": 20259,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "451_synthex_multimodel_reasoning.sql",
+      "sizeBytes": 14767,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "452_synthex_contact_intent_sentiment.sql",
+      "sizeBytes": 19867,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "453_synthex_personalisation_engine.sql",
+      "sizeBytes": 20218,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "454_synthex_offer_intelligence.sql",
+      "sizeBytes": 15092,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "455_synthex_funnel_dropoff.sql",
+      "sizeBytes": 17572,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "456_synthex_conversion_engine.sql",
+      "sizeBytes": 17483,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "457_synthex_multibrand_intel.sql",
+      "sizeBytes": 18520,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "458_synthex_attribution_memory_v2.sql",
+      "sizeBytes": 23268,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "459_synthex_opportunity_graph.sql",
+      "sizeBytes": 26977,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "460_synthex_send_engine_v3.sql",
+      "sizeBytes": 20167,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "461_synthex_agent_mesh.sql",
+      "sizeBytes": 21632,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "462_synthex_outcome_simulator.sql",
+      "sizeBytes": 19957,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "463_synthex_identity_graph.sql",
+      "sizeBytes": 19289,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "464_synthex_attribution_v3.sql",
+      "sizeBytes": 30887,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "465_synthex_experimentation.sql",
+      "sizeBytes": 27781,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "466_synthex_global_experiments.sql",
+      "sizeBytes": 13035,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "467_synthex_knowledge_graph.sql",
+      "sizeBytes": 18735,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "468_synthex_playbook_engine.sql",
+      "sizeBytes": 25931,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "469_synthex_business_registry.sql",
+      "sizeBytes": 13827,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "470_synthex_founder_kpis.sql",
+      "sizeBytes": 22091,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "471_synthex_growth_scenarios.sql",
+      "sizeBytes": 22466,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "472_synthex_finance_runway.sql",
+      "sizeBytes": 13806,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "473_synthex_experiments.sql",
+      "sizeBytes": 18821,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "474_synthex_market_radar.sql",
+      "sizeBytes": 13334,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "475_synthex_feature_flags.sql",
+      "sizeBytes": 7519,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "476_synthex_risk_incidents.sql",
+      "sizeBytes": 7491,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "477_synthex_auto_optimizer.sql",
+      "sizeBytes": 6661,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "478_synthex_guardrails.sql",
+      "sizeBytes": 7505,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "479_synthex_experiments_extend.sql",
+      "sizeBytes": 3995,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "480_founder_command_center.sql",
+      "sizeBytes": 6767,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "481_security_audit_log.sql",
+      "sizeBytes": 984,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "481_unite_knowledge_playbooks.sql",
+      "sizeBytes": 12631,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "482_security_api_keys.sql",
+      "sizeBytes": 878,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "482_unite_reporting_engine.sql",
+      "sizeBytes": 12570,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "483_security_policies.sql",
+      "sizeBytes": 1529,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "483_unite_experiments.sql",
+      "sizeBytes": 11729,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "484_security_config_registry.sql",
+      "sizeBytes": 1563,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "484_unite_risk_center.sql",
+      "sizeBytes": 9460,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "485_security_sessions_devices.sql",
+      "sizeBytes": 2061,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "485_unite_template_library.sql",
+      "sizeBytes": 6994,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "486_security_alerts.sql",
+      "sizeBytes": 1005,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "486_unite_search_knowledge.sql",
+      "sizeBytes": 6677,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "487_unite_notifications_incidents.sql",
+      "sizeBytes": 6806,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "488_unite_runbooks_playbooks.sql",
+      "sizeBytes": 3093,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "489_unite_kpi_engine.sql",
+      "sizeBytes": 4660,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "490_unite_experiments_v2.sql",
+      "sizeBytes": 3381,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "491_unite_ai_governance.sql",
+      "sizeBytes": 5306,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "492_unite_usage_cost_telemetry.sql",
+      "sizeBytes": 4511,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "493_unite_plans_pricing.sql",
+      "sizeBytes": 4874,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "494_unite_billing_invoicing.sql",
+      "sizeBytes": 4395,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "495_unite_observability_core.sql",
+      "sizeBytes": 4025,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "496_unite_self_healing_core.sql",
+      "sizeBytes": 6936,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "497_unite_experiments_flags.sql",
+      "sizeBytes": 7864,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "498_unite_knowledge_graph.sql",
+      "sizeBytes": 5124,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "499_unite_stress_test_core.sql",
+      "sizeBytes": 4736,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "500_unite_runtime_orchestrator.sql",
+      "sizeBytes": 7385,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "501_unite_cross_graph_fusion.sql",
+      "sizeBytes": 3649,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "502_unite_stability_telemetry.sql",
+      "sizeBytes": 3740,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "503_unite_adaptive_recovery.sql",
+      "sizeBytes": 4331,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "504_unite_model_governance.sql",
+      "sizeBytes": 3491,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "505_unite_schema_drift.sql",
+      "sizeBytes": 3501,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "506_unite_simulation_twin.sql",
+      "sizeBytes": 3429,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "507_scenario_engine.sql",
+      "sizeBytes": 3265,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "508_futurecasting.sql",
+      "sizeBytes": 2378,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "510_compliance_center_core.sql",
+      "sizeBytes": 10135,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "511_admin_security_center.sql",
+      "sizeBytes": 10838,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "512_incident_response_core.sql",
+      "sizeBytes": 12728,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "515_data_retention_core.sql",
+      "sizeBytes": 8169,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "516_webhook_governance_core.sql",
+      "sizeBytes": 12434,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "517_risk_scoring_core.sql",
+      "sizeBytes": 12611,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "518_governance_overview_views.sql",
+      "sizeBytes": 6146,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "519_runbooks_core.sql",
+      "sizeBytes": 16725,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "520_cleanup_before_run.sql",
+      "sizeBytes": 583,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "520_sla_reporting_core.sql",
+      "sizeBytes": 16471,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "521_evidence_pack_core.sql",
+      "sizeBytes": 10631,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "522_founder_timeline_views.sql",
+      "sizeBytes": 9220,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "523_operational_debt_core.sql",
+      "sizeBytes": 8205,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "524_remediation_engine_core.sql",
+      "sizeBytes": 8725,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "525_governance_scorecard.sql",
+      "sizeBytes": 6277,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "526_founder_heatmap_core.sql",
+      "sizeBytes": 7960,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "527_founder_observatory.sql",
+      "sizeBytes": 6984,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "528_drift_detector.sql",
+      "sizeBytes": 8109,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "529_early_warning.sql",
+      "sizeBytes": 8725,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "530_governance_forecast.sql",
+      "sizeBytes": 8939,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "531_founder_reality_map.sql",
+      "sizeBytes": 6294,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "532_ai_oversight_loop.sql",
+      "sizeBytes": 6092,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "533_intelligence_bus.sql",
+      "sizeBytes": 5072,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "534_critical_path_engine.sql",
+      "sizeBytes": 7248,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "535_coherence_matrix.sql",
+      "sizeBytes": 6839,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "536_runtime_integrity_sentinel.sql",
+      "sizeBytes": 5493,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "537_self_evaluation_loop.sql",
+      "sizeBytes": 6971,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "538_longitudinal_trends.sql",
+      "sizeBytes": 6300,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "539_founder_daily_ops_graph.sql",
+      "sizeBytes": 9345,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "540_autonomous_task_routing.sql",
+      "sizeBytes": 7973,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "541_founder_stress_load_balancer.sql",
+      "sizeBytes": 7606,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "542_ai_assisted_priority_arbiter.sql",
+      "sizeBytes": 6634,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "543_founder_focus_engine.sql",
+      "sizeBytes": 7833,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "544_distraction_shield.sql",
+      "sizeBytes": 7074,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "545_time_block_orchestrator.sql",
+      "sizeBytes": 8491,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "546_founder_performance_telemetry.sql",
+      "sizeBytes": 9713,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "547_founder_cognitive_load_monitor.sql",
+      "sizeBytes": 10533,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "548_energy_mapping_engine.sql",
+      "sizeBytes": 13447,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "549_founder_intent_router.sql",
+      "sizeBytes": 11784,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "550_founder_recovery_protocols.sql",
+      "sizeBytes": 15560,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "551_founder_unified_state_model.sql",
+      "sizeBytes": 13830,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "552_multivariate_founder_health_index.sql",
+      "sizeBytes": 17405,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "553_founder_trend_forecaster.sql",
+      "sizeBytes": 17521,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "554_autonomous_founder_stability_guard.sql",
+      "sizeBytes": 19981,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "check_before_apply.sql",
+      "sizeBytes": 1561,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "COMPREHENSIVE_SCHEMA_FIX.sql",
+      "sizeBytes": 33809,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "CONSOLIDATED_400-403.sql",
+      "sizeBytes": 52819,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "FIX_ALL_SEO_TABLES.sql",
+      "sizeBytes": 13489,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "FIX_CONTENT_OPTIMIZATION_SCHEMA.sql",
+      "sizeBytes": 6769,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "FIX_SCHEMA_TEMPLATES.sql",
+      "sizeBytes": 3920,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "validate_e30_e33_prerequisites.sql",
+      "sizeBytes": 9365,
+      "plannedStatus": "to-verify"
+    },
+    {
+      "fileName": "verify_e16_e17_e18.sql",
+      "sizeBytes": 7625,
+      "plannedStatus": "to-verify"
+    }
+  ]
+}

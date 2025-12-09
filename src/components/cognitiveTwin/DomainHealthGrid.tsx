@@ -53,8 +53,11 @@ export default function DomainHealthGrid({
 
       if (domain.previous_score !== undefined) {
         trendValue = domain.health_score - domain.previous_score;
-        if (trendValue > 2) trend = "up";
-        else if (trendValue < -2) trend = "down";
+        if (trendValue > 2) {
+trend = "up";
+} else if (trendValue < -2) {
+trend = "down";
+}
       }
 
       return { ...domain, trend, trendValue };
@@ -63,33 +66,55 @@ export default function DomainHealthGrid({
 
   // Get health level based on score
   const getHealthLevel = (score: number): { label: string; variant: "success" | "warning" | "danger" | "default" } => {
-    if (score >= 80) return { label: "Excellent", variant: "success" };
-    if (score >= 60) return { label: "Good", variant: "default" };
-    if (score >= 40) return { label: "Fair", variant: "warning" };
+    if (score >= 80) {
+return { label: "Excellent", variant: "success" };
+}
+    if (score >= 60) {
+return { label: "Good", variant: "default" };
+}
+    if (score >= 40) {
+return { label: "Fair", variant: "warning" };
+}
     return { label: "Needs Attention", variant: "danger" };
   };
 
   // Get color classes based on score
   const getScoreColor = (score: number): string => {
-    if (score >= 80) return "text-green-600 dark:text-green-400";
-    if (score >= 60) return "text-blue-600 dark:text-blue-400";
-    if (score >= 40) return "text-yellow-600 dark:text-yellow-400";
+    if (score >= 80) {
+return "text-green-600 dark:text-green-400";
+}
+    if (score >= 60) {
+return "text-blue-600 dark:text-blue-400";
+}
+    if (score >= 40) {
+return "text-yellow-600 dark:text-yellow-400";
+}
     return "text-red-600 dark:text-red-400";
   };
 
   // Get background color based on score
   const getBackgroundColor = (score: number, isSelected: boolean): string => {
     const base = isSelected ? "ring-2 ring-blue-500" : "";
-    if (score >= 80) return cn("bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800", base);
-    if (score >= 60) return cn("bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800", base);
-    if (score >= 40) return cn("bg-yellow-50 dark:bg-yellow-950 border-yellow-200 dark:border-yellow-800", base);
+    if (score >= 80) {
+return cn("bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800", base);
+}
+    if (score >= 60) {
+return cn("bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800", base);
+}
+    if (score >= 40) {
+return cn("bg-yellow-50 dark:bg-yellow-950 border-yellow-200 dark:border-yellow-800", base);
+}
     return cn("bg-red-50 dark:bg-red-950 border-red-200 dark:border-red-800", base);
   };
 
   // Render trend icon
   const TrendIcon = ({ trend, value }: { trend: "up" | "down" | "stable"; value: number }) => {
-    if (trend === "up") return <TrendingUp className="w-4 h-4 text-green-500" />;
-    if (trend === "down") return <TrendingDown className="w-4 h-4 text-red-500" />;
+    if (trend === "up") {
+return <TrendingUp className="w-4 h-4 text-green-500" />;
+}
+    if (trend === "down") {
+return <TrendingDown className="w-4 h-4 text-red-500" />;
+}
     return <Minus className="w-4 h-4 text-gray-400" />;
   };
 

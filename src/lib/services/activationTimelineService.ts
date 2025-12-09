@@ -155,7 +155,9 @@ export async function getActivationProgram(
     .eq('id', programId)
     .single();
 
-  if (!program) return null;
+  if (!program) {
+return null;
+}
 
   // Get milestones
   const { data: milestones } = await supabase
@@ -249,7 +251,9 @@ export async function updateMilestoneStatus(
     .select()
     .single();
 
-  if (error || !milestone) return false;
+  if (error || !milestone) {
+return false;
+}
 
   // Log event
   if (status === 'completed') {
@@ -277,11 +281,15 @@ async function recalculateProgress(programId: string): Promise<void> {
     .select('*')
     .eq('program_id', programId);
 
-  if (!milestones) return;
+  if (!milestones) {
+return;
+}
 
   const calculatePhaseProgress = (phase: number) => {
     const phaseMilestones = milestones.filter((m) => m.phase === phase);
-    if (phaseMilestones.length === 0) return 0;
+    if (phaseMilestones.length === 0) {
+return 0;
+}
     const completed = phaseMilestones.filter((m) => m.status === 'completed').length;
     return Math.round((completed / phaseMilestones.length) * 100);
   };
@@ -293,8 +301,11 @@ async function recalculateProgress(programId: string): Promise<void> {
 
   // Determine current phase
   let currentPhase = 1;
-  if (phase1 >= 100 && phase2 >= 100) currentPhase = 3;
-  else if (phase1 >= 100) currentPhase = 2;
+  if (phase1 >= 100 && phase2 >= 100) {
+currentPhase = 3;
+} else if (phase1 >= 100) {
+currentPhase = 2;
+}
 
   await supabase
     .from('activation_programs')
@@ -344,7 +355,9 @@ export async function getUpcomingMilestones(
     .eq('id', programId)
     .single();
 
-  if (!program) return [];
+  if (!program) {
+return [];
+}
 
   const currentDay = getProgramDay(program.start_date);
 
@@ -372,7 +385,9 @@ export async function getOverdueMilestones(
     .eq('id', programId)
     .single();
 
-  if (!program) return [];
+  if (!program) {
+return [];
+}
 
   const currentDay = getProgramDay(program.start_date);
 

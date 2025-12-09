@@ -182,7 +182,7 @@ export async function POST(request: NextRequest) {
       console.error("Failed to create demo campaign:", campaignError);
     }
 
-    let campaignId: string | null = campaign?.id || null;
+    const campaignId: string | null = campaign?.id || null;
 
     // Step 5: Create sample campaign steps
     if (campaignId) {

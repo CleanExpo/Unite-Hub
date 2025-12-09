@@ -230,7 +230,7 @@ export function InteractiveMindmap({
 
     // Simple tree layout
     const layoutedNodes: Node[] = [];
-    let currentY = 0;
+    const currentY = 0;
 
     const layoutNode = (
       node: MindmapNode,
@@ -282,7 +282,9 @@ export function InteractiveMindmap({
 
   // Trigger AI analysis
   const handleTriggerAI = useCallback(async () => {
-    if (!onTriggerAI) return;
+    if (!onTriggerAI) {
+return;
+}
 
     setIsTriggeringAI(true);
     try {

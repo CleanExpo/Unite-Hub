@@ -34,7 +34,9 @@ export function sequenceTasks(tasks: WorkflowTask[]): WorkflowTask[] {
 
     // Otherwise, sort by priority
     const priorityDiff = b.priority - a.priority;
-    if (priorityDiff !== 0) return priorityDiff;
+    if (priorityDiff !== 0) {
+return priorityDiff;
+}
 
     // If priority is same, shorter estimated duration first (quick wins)
     return (a.estimatedDuration || 60) - (b.estimatedDuration || 60);
@@ -136,7 +138,9 @@ function calculateCriticalPath(
 
   for (let i = 0; i < tasks.length; i++) {
     for (const task of tasks) {
-      if (processed.has(task.id)) continue;
+      if (processed.has(task.id)) {
+continue;
+}
 
       const canProcess =
         !task.dependencies || task.dependencies.every((depId) => processed.has(depId));

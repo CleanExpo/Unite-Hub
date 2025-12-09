@@ -6,13 +6,19 @@ export async function GET(req: NextRequest) {
   try {
     const authHeader = req.headers.get('authorization');
     const token = authHeader?.replace('Bearer ', '');
-    if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!token) {
+return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+}
 
     const { data: userData, error: authError } = await supabaseBrowser.auth.getUser(token);
-    if (authError || !userData.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (authError || !userData.user) {
+return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+}
 
     const tenantId = req.nextUrl.searchParams.get('tenantId');
-    if (!tenantId) return NextResponse.json({ error: 'tenantId required' }, { status: 400 });
+    if (!tenantId) {
+return NextResponse.json({ error: 'tenantId required' }, { status: 400 });
+}
 
     const playbooks = await getPlaybooks(tenantId);
     return NextResponse.json({ success: true, playbooks });
@@ -26,10 +32,14 @@ export async function POST(req: NextRequest) {
   try {
     const authHeader = req.headers.get('authorization');
     const token = authHeader?.replace('Bearer ', '');
-    if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!token) {
+return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+}
 
     const { data: userData, error: authError } = await supabaseBrowser.auth.getUser(token);
-    if (authError || !userData.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (authError || !userData.user) {
+return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+}
 
     const body = await req.json();
     const { tenantId, scope } = body;
@@ -39,7 +49,9 @@ export async function POST(req: NextRequest) {
     }
 
     const playbook = await generatePlaybook(tenantId, scope);
-    if (!playbook) return NextResponse.json({ error: 'Failed to generate' }, { status: 500 });
+    if (!playbook) {
+return NextResponse.json({ error: 'Failed to generate' }, { status: 500 });
+}
 
     return NextResponse.json({ success: true, playbook });
   } catch (error) {

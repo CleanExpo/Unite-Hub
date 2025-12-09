@@ -46,10 +46,18 @@ export const autonomyScoringModel = {
     uncertaintyScore: number
   ): 'proceed' | 'validate' | 'pause' | 'halt' {
     // Safety gates override autonomy score
-    if (riskScore >= 80) return 'halt';
-    if (riskScore >= 60 && autonomyScore < 60) return 'halt';
-    if (uncertaintyScore >= 75) return 'pause';
-    if (autonomyScore < 40) return 'validate';
+    if (riskScore >= 80) {
+return 'halt';
+}
+    if (riskScore >= 60 && autonomyScore < 60) {
+return 'halt';
+}
+    if (uncertaintyScore >= 75) {
+return 'pause';
+}
+    if (autonomyScore < 40) {
+return 'validate';
+}
 
     return 'proceed';
   },
@@ -271,11 +279,21 @@ export const autonomyScoringModel = {
     const uncertaintyExp = this.explainUncertainty(params.uncertaintyScore);
 
     const nextSteps: string[] = [];
-    if (params.readiness < 60) nextSteps.push('Review and address agent readiness issues.');
-    if (params.consistency < 60) nextSteps.push('Gather more memory context to improve consistency.');
-    if (params.confidence < 60) nextSteps.push('Run additional validation passes before execution.');
-    if (params.riskScore > 60) nextSteps.push('Implement additional risk mitigation controls.');
-    if (params.uncertaintyScore > 70) nextSteps.push('Collect more data to reduce uncertainty.');
+    if (params.readiness < 60) {
+nextSteps.push('Review and address agent readiness issues.');
+}
+    if (params.consistency < 60) {
+nextSteps.push('Gather more memory context to improve consistency.');
+}
+    if (params.confidence < 60) {
+nextSteps.push('Run additional validation passes before execution.');
+}
+    if (params.riskScore > 60) {
+nextSteps.push('Implement additional risk mitigation controls.');
+}
+    if (params.uncertaintyScore > 70) {
+nextSteps.push('Collect more data to reduce uncertainty.');
+}
 
     if (nextSteps.length === 0) {
       nextSteps.push('Proceed with execution and continuous monitoring.');

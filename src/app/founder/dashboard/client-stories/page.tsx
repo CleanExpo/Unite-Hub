@@ -100,7 +100,9 @@ export default function FounderClientStoriesPage() {
   };
 
   const loadClientStory = async () => {
-    if (!selectedClient) return;
+    if (!selectedClient) {
+return;
+}
 
     try {
       const story = generateFounderClientStory(

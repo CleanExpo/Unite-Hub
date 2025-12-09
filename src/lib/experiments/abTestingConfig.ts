@@ -85,10 +85,14 @@ export const experiments: ABTest[] = [
 
 // Get assigned variant for a user session
 export function getAssignedVariant(testId: string): ABTestVariant | null {
-  if (typeof window === 'undefined') return null;
+  if (typeof window === 'undefined') {
+return null;
+}
 
   const test = experiments.find(e => e.id === testId && e.enabled);
-  if (!test) return null;
+  if (!test) {
+return null;
+}
 
   // Check if already assigned
   const stored = sessionStorage.getItem(`ab_${testId}`);
@@ -115,7 +119,9 @@ export function getAssignedVariant(testId: string): ABTestVariant | null {
 // Get variant content for a specific key
 export function getVariantContent<T>(testId: string, key: string, defaultValue: T): T {
   const variant = getAssignedVariant(testId);
-  if (!variant) return defaultValue;
+  if (!variant) {
+return defaultValue;
+}
 
   return (variant.content[key] as T) ?? defaultValue;
 }
@@ -123,7 +129,9 @@ export function getVariantContent<T>(testId: string, key: string, defaultValue: 
 // Check if a test is active for current page
 export function isTestActiveForPage(testId: string, pathname: string): boolean {
   const test = experiments.find(e => e.id === testId);
-  if (!test || !test.enabled) return false;
+  if (!test || !test.enabled) {
+return false;
+}
 
   return test.targetPages.some(page => pathname.includes(page));
 }
@@ -138,7 +146,9 @@ export function getActiveExperimentsForPage(pathname: string): ABTest[] {
 
 // Analytics helper to track experiment exposure
 export function trackExperimentExposure(testId: string, variantId: string): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined') {
+return;
+}
 
   fetch('/api/analytics/experiments', {
     method: 'POST',

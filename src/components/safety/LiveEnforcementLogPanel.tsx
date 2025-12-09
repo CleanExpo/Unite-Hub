@@ -40,8 +40,12 @@ export const LiveEnforcementLogPanel: React.FC<LiveEnforcementLogPanelProps> = (
 
   // Filter events
   const filteredEvents = events.filter(event => {
-    if (filterSeverity !== null && event.severity !== filterSeverity) return false;
-    if (filterAction !== null && event.action !== filterAction) return false;
+    if (filterSeverity !== null && event.severity !== filterSeverity) {
+return false;
+}
+    if (filterAction !== null && event.action !== filterAction) {
+return false;
+}
     if (searchAgent && !event.affectedSystems.some(sys => sys.toLowerCase().includes(searchAgent.toLowerCase()))) {
       return false;
     }
@@ -49,23 +53,41 @@ export const LiveEnforcementLogPanel: React.FC<LiveEnforcementLogPanelProps> = (
   });
 
   const getSeverityColor = (severity: number) => {
-    if (severity >= 5) return 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800';
-    if (severity >= 4) return 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800';
-    if (severity >= 3) return 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800';
+    if (severity >= 5) {
+return 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800';
+}
+    if (severity >= 4) {
+return 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800';
+}
+    if (severity >= 3) {
+return 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800';
+}
     return 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800';
   };
 
   const getSeverityIcon = (severity: number) => {
-    if (severity >= 5) return <AlertOctagon className="w-5 h-5 text-red-600 dark:text-red-400" />;
-    if (severity >= 4) return <AlertCircle className="w-5 h-5 text-orange-600 dark:text-orange-400" />;
-    if (severity >= 3) return <AlertTriangle className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />;
+    if (severity >= 5) {
+return <AlertOctagon className="w-5 h-5 text-red-600 dark:text-red-400" />;
+}
+    if (severity >= 4) {
+return <AlertCircle className="w-5 h-5 text-orange-600 dark:text-orange-400" />;
+}
+    if (severity >= 3) {
+return <AlertTriangle className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />;
+}
     return <Activity className="w-5 h-5 text-blue-600 dark:text-blue-400" />;
   };
 
   const getSeverityBadge = (severity: number) => {
-    if (severity >= 5) return 'bg-red-600 text-white';
-    if (severity >= 4) return 'bg-orange-600 text-white';
-    if (severity >= 3) return 'bg-yellow-600 text-white';
+    if (severity >= 5) {
+return 'bg-red-600 text-white';
+}
+    if (severity >= 4) {
+return 'bg-orange-600 text-white';
+}
+    if (severity >= 3) {
+return 'bg-yellow-600 text-white';
+}
     return 'bg-blue-600 text-white';
   };
 

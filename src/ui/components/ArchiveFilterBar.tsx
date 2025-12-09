@@ -141,13 +141,21 @@ export function ArchiveFilterBar({
     filters.importanceMin;
 
   const getCurrentTimeframe = () => {
-    if (!filters.from) return 'all';
+    if (!filters.from) {
+return 'all';
+}
     const days = Math.ceil(
       (Date.now() - new Date(filters.from).getTime()) / (1000 * 60 * 60 * 24)
     );
-    if (days <= 7) return '7d';
-    if (days <= 30) return '30d';
-    if (days <= 90) return '90d';
+    if (days <= 7) {
+return '7d';
+}
+    if (days <= 30) {
+return '30d';
+}
+    if (days <= 90) {
+return '90d';
+}
     return 'all';
   };
 

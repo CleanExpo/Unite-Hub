@@ -51,7 +51,9 @@ export function MetadataUpdater({
   const pathname = usePathname();
 
   useEffect(() => {
-    if (!pathname) return;
+    if (!pathname) {
+return;
+}
 
     // Find matching route title
     let pageTitle = '';

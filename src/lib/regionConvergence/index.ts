@@ -104,7 +104,9 @@ export async function generatePacket(
     .select()
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+return null;
+}
 
   return transformPacket(data);
 }

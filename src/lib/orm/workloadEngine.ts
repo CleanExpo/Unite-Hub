@@ -101,10 +101,15 @@ export class WorkloadEngine {
     const avgTaskTime = tasksCompleted > 0 ? (hoursLogged * 60) / tasksCompleted : 0;
 
     let capacityStatus: 'available' | 'optimal' | 'busy' | 'overloaded';
-    if (utilizationPercent < 50) capacityStatus = 'available';
-    else if (utilizationPercent < THRESHOLDS.staff_utilization_optimal) capacityStatus = 'optimal';
-    else if (utilizationPercent < THRESHOLDS.staff_utilization_overloaded) capacityStatus = 'busy';
-    else capacityStatus = 'overloaded';
+    if (utilizationPercent < 50) {
+capacityStatus = 'available';
+} else if (utilizationPercent < THRESHOLDS.staff_utilization_optimal) {
+capacityStatus = 'optimal';
+} else if (utilizationPercent < THRESHOLDS.staff_utilization_overloaded) {
+capacityStatus = 'busy';
+} else {
+capacityStatus = 'overloaded';
+}
 
     return {
       staff_id: staffId,
@@ -227,10 +232,15 @@ export class WorkloadEngine {
 
     // Determine status
     let status: 'healthy' | 'moderate' | 'stressed' | 'critical';
-    if (combinedIndex < 50) status = 'healthy';
-    else if (combinedIndex < 70) status = 'moderate';
-    else if (combinedIndex < 85) status = 'stressed';
-    else status = 'critical';
+    if (combinedIndex < 50) {
+status = 'healthy';
+} else if (combinedIndex < 70) {
+status = 'moderate';
+} else if (combinedIndex < 85) {
+status = 'stressed';
+} else {
+status = 'critical';
+}
 
     // Generate recommendations
     const recommendations: string[] = [];

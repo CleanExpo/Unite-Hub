@@ -87,7 +87,9 @@ export async function recordChannelEvent(
       .select('id')
       .single();
 
-    if (error) throw new Error(error.message);
+    if (error) {
+throw new Error(error.message);
+}
     return { data, error: null };
   } catch (err) {
     return { data: null, error: err instanceof Error ? err : new Error('Unknown error') };
@@ -117,7 +119,9 @@ export async function recordChannelEvents(
       .insert(rows)
       .select('id');
 
-    if (error) throw new Error(error.message);
+    if (error) {
+throw new Error(error.message);
+}
     return { data: { count: data?.length || 0 }, error: null };
   } catch (err) {
     return { data: null, error: err instanceof Error ? err : new Error('Unknown error') };
@@ -159,7 +163,9 @@ export async function getChannelEvents(
     }
 
     const { data, error } = await query;
-    if (error) throw new Error(error.message);
+    if (error) {
+throw new Error(error.message);
+}
     return { data, error: null };
   } catch (err) {
     return { data: null, error: err instanceof Error ? err : new Error('Unknown error') };
@@ -179,7 +185,9 @@ export async function getDailySummary(
       p_days: days,
     });
 
-    if (error) throw new Error(error.message);
+    if (error) {
+throw new Error(error.message);
+}
     return { data: data as DailySummary[], error: null };
   } catch (err) {
     return { data: null, error: err instanceof Error ? err : new Error('Unknown error') };
@@ -199,7 +207,9 @@ export async function getChannelTotals(
       p_days: days,
     });
 
-    if (error) throw new Error(error.message);
+    if (error) {
+throw new Error(error.message);
+}
     return { data: data as ChannelTotals[], error: null };
   } catch (err) {
     return { data: null, error: err instanceof Error ? err : new Error('Unknown error') };
@@ -233,7 +243,9 @@ export async function getDailyStats(
     }
 
     const { data, error } = await query;
-    if (error) throw new Error(error.message);
+    if (error) {
+throw new Error(error.message);
+}
     return { data: data as ChannelDailyStats[], error: null };
   } catch (err) {
     return { data: null, error: err instanceof Error ? err : new Error('Unknown error') };
@@ -330,8 +342,12 @@ export async function getRealTimeOverview(
       getChannelTotals(tenantId, days),
     ]);
 
-    if (summaryResult.error) throw summaryResult.error;
-    if (totalsResult.error) throw totalsResult.error;
+    if (summaryResult.error) {
+throw summaryResult.error;
+}
+    if (totalsResult.error) {
+throw totalsResult.error;
+}
 
     const dailySummary = summaryResult.data || [];
     const channelTotals = totalsResult.data || [];
@@ -364,7 +380,9 @@ export async function triggerDailyAggregation(
       p_date: dateStr,
     });
 
-    if (error) throw new Error(error.message);
+    if (error) {
+throw new Error(error.message);
+}
     return { data: { count: data as number }, error: null };
   } catch (err) {
     return { data: null, error: err instanceof Error ? err : new Error('Unknown error') };

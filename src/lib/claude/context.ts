@@ -248,15 +248,23 @@ export function analyzeSentiment(text: string): 'positive' | 'neutral' | 'negati
 
   positiveWords.forEach((word) => {
     const matches = lowerText.match(new RegExp(`\\b${word}\\b`, 'g'));
-    if (matches) positiveCount += matches.length;
+    if (matches) {
+positiveCount += matches.length;
+}
   });
 
   negativeWords.forEach((word) => {
     const matches = lowerText.match(new RegExp(`\\b${word}\\b`, 'g'));
-    if (matches) negativeCount += matches.length;
+    if (matches) {
+negativeCount += matches.length;
+}
   });
 
-  if (positiveCount > negativeCount + 1) return 'positive';
-  if (negativeCount > positiveCount + 1) return 'negative';
+  if (positiveCount > negativeCount + 1) {
+return 'positive';
+}
+  if (negativeCount > positiveCount + 1) {
+return 'negative';
+}
   return 'neutral';
 }

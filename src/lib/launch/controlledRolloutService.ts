@@ -233,7 +233,9 @@ export async function completeFounderGate(
   gate: FounderGate
 ): Promise<boolean> {
   const client = await getSoftLaunchClient(clientId);
-  if (!client) return false;
+  if (!client) {
+return false;
+}
 
   const supabase = await getSupabaseServer();
 

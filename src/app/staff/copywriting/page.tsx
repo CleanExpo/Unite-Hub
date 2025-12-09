@@ -94,7 +94,7 @@ export default function StaffCopywritingPage() {
         setGeneratedCopy(copyData.data || []);
       }
     } catch (error) {
-      // eslint-disable-next-line no-console
+       
       console.error('Error loading dashboard data:', error);
     } finally {
       setLoading(false);

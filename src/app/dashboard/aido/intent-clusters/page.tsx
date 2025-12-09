@@ -170,14 +170,22 @@ export default function IntentClustersPage() {
   };
 
   const getScoreColor = (score: number): string => {
-    if (score >= 0.8) return 'text-green-600 dark:text-green-400';
-    if (score >= 0.6) return 'text-yellow-600 dark:text-yellow-400';
+    if (score >= 0.8) {
+return 'text-green-600 dark:text-green-400';
+}
+    if (score >= 0.6) {
+return 'text-yellow-600 dark:text-yellow-400';
+}
     return 'text-red-600 dark:text-red-400';
   };
 
   const getScoreBgColor = (score: number): string => {
-    if (score >= 0.8) return 'bg-green-100 dark:bg-green-900/20';
-    if (score >= 0.6) return 'bg-yellow-100 dark:bg-yellow-900/20';
+    if (score >= 0.8) {
+return 'bg-green-100 dark:bg-green-900/20';
+}
+    if (score >= 0.6) {
+return 'bg-yellow-100 dark:bg-yellow-900/20';
+}
     return 'bg-red-100 dark:bg-red-900/20';
   };
 

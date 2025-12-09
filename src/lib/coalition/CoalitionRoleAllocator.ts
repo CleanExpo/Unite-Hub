@@ -288,7 +288,9 @@ export class CoalitionRoleAllocator {
    * Calculate overall allocation quality score
    */
   private calculateAllocationScore(assignments: RoleAssignment[], conflictCount: number): number {
-    if (assignments.length === 0) return 0;
+    if (assignments.length === 0) {
+return 0;
+}
 
     // Base score from capability matches
     const avgCapabilityMatch =

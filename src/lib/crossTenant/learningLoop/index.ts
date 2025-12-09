@@ -38,7 +38,9 @@ export async function getLearningRuns(): Promise<LearningLoopRun[]> {
     .order('started_at', { ascending: false })
     .limit(30);
 
-  if (error) return [];
+  if (error) {
+return [];
+}
 
   return (data || []).map(row => ({
     id: row.id,
@@ -67,7 +69,9 @@ export async function getTenantInsightPackets(tenantId: string): Promise<TenantI
     .order('created_at', { ascending: false })
     .limit(20);
 
-  if (error) return [];
+  if (error) {
+return [];
+}
 
   return (data || []).map(row => ({
     id: row.id,

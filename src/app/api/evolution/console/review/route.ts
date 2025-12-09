@@ -6,13 +6,19 @@ export async function GET(req: NextRequest) {
   try {
     const authHeader = req.headers.get('authorization');
     const token = authHeader?.replace('Bearer ', '');
-    if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!token) {
+return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+}
 
     const { data: userData, error: authError } = await supabaseBrowser.auth.getUser(token);
-    if (authError || !userData.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (authError || !userData.user) {
+return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+}
 
     const tenantId = req.nextUrl.searchParams.get('tenantId');
-    if (!tenantId) return NextResponse.json({ error: 'tenantId required' }, { status: 400 });
+    if (!tenantId) {
+return NextResponse.json({ error: 'tenantId required' }, { status: 400 });
+}
 
     const queue = await getReviewQueue(tenantId);
 
@@ -27,13 +33,19 @@ export async function POST(req: NextRequest) {
   try {
     const authHeader = req.headers.get('authorization');
     const token = authHeader?.replace('Bearer ', '');
-    if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!token) {
+return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+}
 
     const { data: userData, error: authError } = await supabaseBrowser.auth.getUser(token);
-    if (authError || !userData.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (authError || !userData.user) {
+return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+}
 
     const { itemId, decision, notes } = await req.json();
-    if (!itemId || !decision) return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    if (!itemId || !decision) {
+return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+}
 
     const success = await submitReview(itemId, userData.user.id, decision, notes);
 

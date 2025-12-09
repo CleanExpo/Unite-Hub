@@ -159,7 +159,9 @@ export async function recordRevenueEvent(
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     // Update daily aggregates
     await updateDailyAggregates(
@@ -223,7 +225,9 @@ export async function listRevenueEvents(
 
     const { data, error } = await query;
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     const events = (data || []).map(mapEventFromDb);
     return { data: events, error: null };
@@ -259,7 +263,9 @@ export async function getStageSummary(
 
     const { data, error } = await query;
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     // Aggregate by stage
     const byStage: Record<string, { revenue: number; conversions: number; orders: number }> = {};
@@ -317,7 +323,9 @@ export async function getChannelAttribution(
 
     const { data, error } = await query;
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     // Aggregate by channel
     const byChannel: Record<string, ChannelAttribution> = {};
@@ -384,7 +392,9 @@ export async function getRevenueStats(
       listRevenueEvents(tenantId, { ...options, limit: 1000 }),
     ]);
 
-    if (stageResult.error) throw stageResult.error;
+    if (stageResult.error) {
+throw stageResult.error;
+}
 
     const stages = stageResult.data || [];
     const events = eventsResult.data || [];

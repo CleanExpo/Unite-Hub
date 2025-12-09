@@ -233,16 +233,36 @@ export async function PATCH(req: NextRequest) {
 
     // Map frontend keys to database column names
     const dbUpdates: Record<string, unknown> = {};
-    if (updates.name !== undefined) dbUpdates.name = updates.name;
-    if (updates.stage !== undefined) dbUpdates.stage = updates.stage;
-    if (updates.value !== undefined) dbUpdates.value = updates.value;
-    if (updates.probability !== undefined) dbUpdates.probability = updates.probability;
-    if (updates.expectedClose !== undefined) dbUpdates.expected_close = updates.expectedClose;
-    if (updates.ownerId !== undefined) dbUpdates.owner_user_id = updates.ownerId;
-    if (updates.contactId !== undefined) dbUpdates.contact_id = updates.contactId;
-    if (updates.companyName !== undefined) dbUpdates.company_name = updates.companyName;
-    if (updates.notes !== undefined) dbUpdates.notes = updates.notes;
-    if (updates.status !== undefined) dbUpdates.status = updates.status;
+    if (updates.name !== undefined) {
+dbUpdates.name = updates.name;
+}
+    if (updates.stage !== undefined) {
+dbUpdates.stage = updates.stage;
+}
+    if (updates.value !== undefined) {
+dbUpdates.value = updates.value;
+}
+    if (updates.probability !== undefined) {
+dbUpdates.probability = updates.probability;
+}
+    if (updates.expectedClose !== undefined) {
+dbUpdates.expected_close = updates.expectedClose;
+}
+    if (updates.ownerId !== undefined) {
+dbUpdates.owner_user_id = updates.ownerId;
+}
+    if (updates.contactId !== undefined) {
+dbUpdates.contact_id = updates.contactId;
+}
+    if (updates.companyName !== undefined) {
+dbUpdates.company_name = updates.companyName;
+}
+    if (updates.notes !== undefined) {
+dbUpdates.notes = updates.notes;
+}
+    if (updates.status !== undefined) {
+dbUpdates.status = updates.status;
+}
 
     const result = await updateOpportunity(opportunityId, dbUpdates);
 

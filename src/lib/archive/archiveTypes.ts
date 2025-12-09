@@ -279,8 +279,14 @@ export function getImportanceLabel(score: number): {
   label: string;
   color: string;
 } {
-  if (score >= 90) return { label: 'Critical', color: 'text-red-500' };
-  if (score >= 70) return { label: 'Significant', color: 'text-orange-500' };
-  if (score >= 50) return { label: 'Notable', color: 'text-yellow-500' };
+  if (score >= 90) {
+return { label: 'Critical', color: 'text-red-500' };
+}
+  if (score >= 70) {
+return { label: 'Significant', color: 'text-orange-500' };
+}
+  if (score >= 50) {
+return { label: 'Notable', color: 'text-yellow-500' };
+}
   return { label: 'Routine', color: 'text-muted-foreground' };
 }

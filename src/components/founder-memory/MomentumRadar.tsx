@@ -68,9 +68,15 @@ export function MomentumRadar({ scores, className = '' }: MomentumRadarProps) {
 
   // Get score color
   const getScoreColor = (score: number): string => {
-    if (score >= 80) return '#22c55e'; // green
-    if (score >= 60) return '#eab308'; // yellow
-    if (score >= 40) return '#f97316'; // orange
+    if (score >= 80) {
+return '#22c55e';
+} // green
+    if (score >= 60) {
+return '#eab308';
+} // yellow
+    if (score >= 40) {
+return '#f97316';
+} // orange
     return '#ef4444'; // red
   };
 

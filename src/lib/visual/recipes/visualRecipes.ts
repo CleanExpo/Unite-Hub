@@ -437,7 +437,9 @@ export function searchRecipes(query: string): VisualRecipe[] {
 
 export function estimateRecipeCost(recipeId: string): { time: number; cost: number } {
   const recipe = getRecipeById(recipeId);
-  if (!recipe) return { time: 0, cost: 0 };
+  if (!recipe) {
+return { time: 0, cost: 0 };
+}
 
   return {
     time: recipe.estimated_time_minutes,

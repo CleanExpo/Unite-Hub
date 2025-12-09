@@ -15,7 +15,9 @@ export function QuickActions({ clientId, onRefresh }: QuickActionsProps) {
   const [generating, setGenerating] = useState(false);
 
   const handleSeedTemplates = async () => {
-    if (!confirm("This will add 250+ pre-built templates. Continue?")) return;
+    if (!confirm("This will add 250+ pre-built templates. Continue?")) {
+return;
+}
 
     setSeeding(true);
     try {

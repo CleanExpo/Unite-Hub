@@ -33,16 +33,28 @@ export function SuccessScoreCard({
   calculatedAt,
 }: SuccessScoreCardProps) {
   const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-500';
-    if (score >= 60) return 'text-blue-500';
-    if (score >= 40) return 'text-amber-500';
+    if (score >= 80) {
+return 'text-green-500';
+}
+    if (score >= 60) {
+return 'text-blue-500';
+}
+    if (score >= 40) {
+return 'text-amber-500';
+}
     return 'text-red-500';
   };
 
   const getScoreBg = (score: number) => {
-    if (score >= 80) return 'bg-green-500';
-    if (score >= 60) return 'bg-blue-500';
-    if (score >= 40) return 'bg-amber-500';
+    if (score >= 80) {
+return 'bg-green-500';
+}
+    if (score >= 60) {
+return 'bg-blue-500';
+}
+    if (score >= 40) {
+return 'bg-amber-500';
+}
     return 'bg-red-500';
   };
 

@@ -141,7 +141,9 @@ export default function VisualGenerationPanel({
 
       // Get session
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error('Not authenticated');
+      if (!session) {
+throw new Error('Not authenticated');
+}
 
       // Fetch capabilities
       const capRes = await fetch(`/api/synthex/visual/capabilities?tenantId=${tenantId}&planCode=${planCode}`, {
@@ -191,7 +193,9 @@ export default function VisualGenerationPanel({
     try {
       setCreatingBrandKit(true);
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error('Not authenticated');
+      if (!session) {
+throw new Error('Not authenticated');
+}
 
       const response = await fetch('/api/synthex/visual/brand-kits', {
         method: 'POST',
@@ -271,7 +275,9 @@ export default function VisualGenerationPanel({
     try {
       setGenerating(true);
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error('Not authenticated');
+      if (!session) {
+throw new Error('Not authenticated');
+}
 
       const response = await fetch('/api/synthex/visual/generate', {
         method: 'POST',

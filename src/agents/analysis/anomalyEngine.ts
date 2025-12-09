@@ -42,7 +42,9 @@ export function detectAnomalies(datasets: AnalysisDatasets, kpis: KPIResult): An
  */
 function detectEmailAnomalies(emails?: Array<any>): Anomaly[] {
   const anomalies: Anomaly[] = [];
-  if (!emails || emails.length === 0) return anomalies;
+  if (!emails || emails.length === 0) {
+return anomalies;
+}
 
   // Calculate average metrics
   const openRates = emails.map((e) => (e.opens || 0) / (e.sent || 1));
@@ -100,7 +102,9 @@ function detectEmailAnomalies(emails?: Array<any>): Anomaly[] {
  */
 function detectResearchAnomalies(research?: Array<any>): Anomaly[] {
   const anomalies: Anomaly[] = [];
-  if (!research || research.length === 0) return anomalies;
+  if (!research || research.length === 0) {
+return anomalies;
+}
 
   // Count high-threat insights
   const highThreatInsights = research.filter((r) => r.threat_level === 'high');
@@ -141,7 +145,9 @@ function detectResearchAnomalies(research?: Array<any>): Anomaly[] {
  */
 function detectContentAnomalies(kpis: KPIResult, content?: Array<any>): Anomaly[] {
   const anomalies: Anomaly[] = [];
-  if (!content || content.length === 0) return anomalies;
+  if (!content || content.length === 0) {
+return anomalies;
+}
 
   // Detect high-risk content clustering
   const highRiskContent = content.filter((c) => c.risk_level === 'high' || c.risk_level === 'critical');
@@ -179,7 +185,9 @@ function detectContentAnomalies(kpis: KPIResult, content?: Array<any>): Anomaly[
  */
 function detectSchedulingAnomalies(kpis: KPIResult, scheduling?: Array<any>): Anomaly[] {
   const anomalies: Anomaly[] = [];
-  if (!scheduling || scheduling.length === 0) return anomalies;
+  if (!scheduling || scheduling.length === 0) {
+return anomalies;
+}
 
   // Detect conflict spike
   if (kpis.schedulingConflicts > 5) {
@@ -218,7 +226,9 @@ function detectSchedulingAnomalies(kpis: KPIResult, scheduling?: Array<any>): An
  */
 function detectStaffAnomalies(kpis: KPIResult, staff?: Array<any>): Anomaly[] {
   const anomalies: Anomaly[] = [];
-  if (!staff || staff.length === 0) return anomalies;
+  if (!staff || staff.length === 0) {
+return anomalies;
+}
 
   // Detect overload conditions
   if (kpis.staffOverload > 0) {
@@ -259,7 +269,9 @@ function detectStaffAnomalies(kpis: KPIResult, staff?: Array<any>): Anomaly[] {
  */
 function detectFinancialAnomalies(financials?: Array<any>): Anomaly[] {
   const anomalies: Anomaly[] = [];
-  if (!financials || financials.length < 2) return anomalies;
+  if (!financials || financials.length < 2) {
+return anomalies;
+}
 
   // Calculate revenue trend
   const revenues = financials.map((f) => f.revenue || 0);
@@ -323,8 +335,14 @@ function detectFinancialAnomalies(financials?: Array<any>): Anomaly[] {
  * Calculate anomaly severity based on z-score
  */
 export function calculateAnomalySeverity(zScore: number): 'low' | 'medium' | 'high' | 'critical' {
-  if (zScore > 3) return 'critical';
-  if (zScore > 2) return 'high';
-  if (zScore > 1.5) return 'medium';
+  if (zScore > 3) {
+return 'critical';
+}
+  if (zScore > 2) {
+return 'high';
+}
+  if (zScore > 1.5) {
+return 'medium';
+}
   return 'low';
 }

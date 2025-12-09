@@ -21,8 +21,12 @@ export async function getLoadSnapshots(tenantId?: string, regionId?: string): Pr
 
   let query = supabase.from('cognitive_load_snapshots').select('*').order('created_at', { ascending: false });
 
-  if (tenantId) query = query.eq('tenant_id', tenantId);
-  if (regionId) query = query.eq('region_id', regionId);
+  if (tenantId) {
+query = query.eq('tenant_id', tenantId);
+}
+  if (regionId) {
+query = query.eq('region_id', regionId);
+}
 
   const { data } = await query.limit(20);
 
@@ -52,9 +56,15 @@ export async function generateLoadSnapshot(tenantId: string, regionId?: string):
   const overallLoad = Object.values(loadVector).reduce((a, b) => a + b, 0) / Object.keys(loadVector).length;
 
   const recommendedActions: string[] = [];
-  if (loadVector.inference > 0.7) recommendedActions.push('Consider reducing inference frequency');
-  if (loadVector.memory > 0.5) recommendedActions.push('Review memory compression settings');
-  if (overallLoad > 0.6) recommendedActions.push('Monitor for potential throttling');
+  if (loadVector.inference > 0.7) {
+recommendedActions.push('Consider reducing inference frequency');
+}
+  if (loadVector.memory > 0.5) {
+recommendedActions.push('Review memory compression settings');
+}
+  if (overallLoad > 0.6) {
+recommendedActions.push('Monitor for potential throttling');
+}
 
   const { data, error } = await supabase
     .from('cognitive_load_snapshots')
@@ -69,7 +79,9 @@ export async function generateLoadSnapshot(tenantId: string, regionId?: string):
     .select()
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+return null;
+}
 
   return {
     id: data.id,

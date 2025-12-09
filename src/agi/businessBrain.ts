@@ -99,11 +99,17 @@ export function generateBusinessBrainSummary(owner: string): BusinessBrainSummar
   );
 
   let overallStatus: 'excellent' | 'good' | 'adequate' | 'at-risk' | 'critical';
-  if (healthScore >= 85) overallStatus = 'excellent';
-  else if (healthScore >= 70) overallStatus = 'good';
-  else if (healthScore >= 50) overallStatus = 'adequate';
-  else if (healthScore >= 25) overallStatus = 'at-risk';
-  else overallStatus = 'critical';
+  if (healthScore >= 85) {
+overallStatus = 'excellent';
+} else if (healthScore >= 70) {
+overallStatus = 'good';
+} else if (healthScore >= 50) {
+overallStatus = 'adequate';
+} else if (healthScore >= 25) {
+overallStatus = 'at-risk';
+} else {
+overallStatus = 'critical';
+}
 
   // Extract top opportunities, risks, decisions
   const topOpportunities = dimensions

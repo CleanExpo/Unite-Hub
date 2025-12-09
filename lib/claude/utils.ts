@@ -147,10 +147,18 @@ export function isValidAIResponse<T>(response: any): response is { success: true
 
 // Extract error message from API response
 export function extractErrorMessage(error: any): string {
-  if (typeof error === 'string') return error;
-  if (error?.error) return error.error;
-  if (error?.details) return error.details;
-  if (error?.message) return error.message;
+  if (typeof error === 'string') {
+return error;
+}
+  if (error?.error) {
+return error.error;
+}
+  if (error?.details) {
+return error.details;
+}
+  if (error?.message) {
+return error.message;
+}
   return 'An unknown error occurred';
 }
 
@@ -200,9 +208,15 @@ export function formatTimestamp(date: Date | string): string {
 
 // Calculate confidence level description
 export function getConfidenceDescription(score: number): string {
-  if (score >= 80) return 'High confidence';
-  if (score >= 60) return 'Medium confidence';
-  if (score >= 40) return 'Low confidence';
+  if (score >= 80) {
+return 'High confidence';
+}
+  if (score >= 60) {
+return 'Medium confidence';
+}
+  if (score >= 40) {
+return 'Low confidence';
+}
   return 'Very low confidence';
 }
 
@@ -255,7 +269,9 @@ export function extractKeywords(text: string, limit: number = 10): string[] {
 
 // Truncate text with ellipsis
 export function truncateText(text: string, maxLength: number = 100): string {
-  if (text.length <= maxLength) return text;
+  if (text.length <= maxLength) {
+return text;
+}
   return text.slice(0, maxLength - 3) + '...';
 }
 
@@ -272,7 +288,9 @@ export function debounce<T extends (...args: any[]) => any>(
       func(...args);
     };
 
-    if (timeout) clearTimeout(timeout);
+    if (timeout) {
+clearTimeout(timeout);
+}
     timeout = setTimeout(later, wait);
   };
 }

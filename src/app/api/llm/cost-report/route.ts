@@ -19,7 +19,7 @@ export async function GET() {
 
     return NextResponse.json(report);
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error('[API] Cost report error:', error);
     return NextResponse.json(
       { error: 'Failed to generate report', details: String(error) },

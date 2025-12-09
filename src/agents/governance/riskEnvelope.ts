@@ -102,7 +102,7 @@ const defaultBoundaries: RiskBoundary[] = [
 ];
 
 // Risk profiles
-let riskProfiles: RiskProfile[] = [
+const riskProfiles: RiskProfile[] = [
   {
     id: 'conservative',
     name: 'Conservative Risk Profile',
@@ -153,7 +153,9 @@ export function getActiveProfile(): RiskProfile {
  */
 export function setActiveProfile(profileId: string): RiskProfile | null {
   const profile = riskProfiles.find(p => p.id === profileId);
-  if (!profile) return null;
+  if (!profile) {
+return null;
+}
 
   if (!profile.founderApproved && profileId !== 'balanced') {
     console.warn(`Risk profile ${profileId} not founder-approved. Requires approval to enable.`);
@@ -338,10 +340,14 @@ export function adjustBoundaryThreshold(
   newThreshold: number
 ): boolean {
   const profile = riskProfiles.find(p => p.id === profileId);
-  if (!profile) return false;
+  if (!profile) {
+return false;
+}
 
   const boundary = profile.boundaries.find(b => b.id === boundaryId);
-  if (!boundary) return false;
+  if (!boundary) {
+return false;
+}
 
   boundary.threshold = newThreshold;
   profile.updatedAt = new Date().toISOString();
@@ -402,7 +408,9 @@ export function listActiveBoundaries(): RiskBoundary[] {
  */
 export function approveProfile(profileId: string): RiskProfile | null {
   const profile = riskProfiles.find(p => p.id === profileId);
-  if (!profile) return null;
+  if (!profile) {
+return null;
+}
 
   profile.founderApproved = true;
   profile.updatedAt = new Date().toISOString();
@@ -420,7 +428,9 @@ export function revokeProfileApproval(profileId: string): RiskProfile | null {
   }
 
   const profile = riskProfiles.find(p => p.id === profileId);
-  if (!profile) return null;
+  if (!profile) {
+return null;
+}
 
   profile.founderApproved = false;
   profile.updatedAt = new Date().toISOString();

@@ -67,9 +67,15 @@ export default function FounderOverviewPage() {
         fetch("/api/founder/overview/system"),
       ]);
 
-      if (finRes.ok) setFinancial(await finRes.json());
-      if (timeRes.ok) setTime(await timeRes.json());
-      if (sysRes.ok) setSystem(await sysRes.json());
+      if (finRes.ok) {
+setFinancial(await finRes.json());
+}
+      if (timeRes.ok) {
+setTime(await timeRes.json());
+}
+      if (sysRes.ok) {
+setSystem(await sysRes.json());
+}
     } catch (err) {
       console.error("Failed to fetch dashboard data:", err);
     } finally {

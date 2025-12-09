@@ -28,7 +28,9 @@ export interface EventPayload {
 
 // Generate session ID for anonymous tracking
 export function getSessionId(): string {
-  if (typeof window === 'undefined') return 'server';
+  if (typeof window === 'undefined') {
+return 'server';
+}
 
   let sessionId = sessionStorage.getItem('unite_session_id');
   if (!sessionId) {
@@ -43,7 +45,9 @@ export function trackEvent(
   event: LandingEvent,
   metadata?: Record<string, unknown>
 ): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined') {
+return;
+}
 
   const payload: EventPayload = {
     event,
@@ -84,7 +88,9 @@ async function sendToAnalytics(payload: EventPayload): Promise<void> {
 
 // Scroll depth tracking hook
 export function useScrollDepthTracking(): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined') {
+return;
+}
 
   const tracked = {
     scroll_25: false,
@@ -140,14 +146,18 @@ export interface ConversionStep {
 }
 
 export function getConversionFunnel(): ConversionStep[] {
-  if (typeof window === 'undefined') return [];
+  if (typeof window === 'undefined') {
+return [];
+}
 
   const stored = localStorage.getItem('conversion_funnel');
   return stored ? JSON.parse(stored) : [];
 }
 
 export function updateConversionFunnel(step: string): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined') {
+return;
+}
 
   const funnel = getConversionFunnel();
   const existingStep = funnel.find(s => s.step === step);

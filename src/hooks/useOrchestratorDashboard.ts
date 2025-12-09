@@ -168,7 +168,9 @@ export function useTaskStatus(taskId: string | null) {
   const workspaceId = currentOrganization?.org_id;
 
   const fetchStatus = useCallback(async () => {
-    if (!taskId || !workspaceId) return;
+    if (!taskId || !workspaceId) {
+return;
+}
 
     try {
       const supabase = createClient();

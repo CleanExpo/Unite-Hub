@@ -151,15 +151,21 @@ export class OpenRouterClient {
       while (true) {
         const { done, value } = await reader.read();
 
-        if (done) break;
+        if (done) {
+break;
+}
 
         buffer += decoder.decode(value, { stream: true });
         const lines = buffer.split('\n');
         buffer = lines.pop() || '';
 
         for (const line of lines) {
-          if (line.trim() === '') continue;
-          if (line.trim() === 'data: [DONE]') continue;
+          if (line.trim() === '') {
+continue;
+}
+          if (line.trim() === 'data: [DONE]') {
+continue;
+}
 
           if (line.startsWith('data: ')) {
             try {

@@ -129,7 +129,9 @@ export async function listPipelines(tenantId: string): Promise<ServiceResult<Pip
       .order('is_default', { ascending: false })
       .order('created_at', { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true, data: data || [] };
   } catch (err: unknown) {
@@ -158,7 +160,9 @@ export async function createPipeline(input: PipelineInput): Promise<ServiceResul
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true, data };
   } catch (err: unknown) {
@@ -200,7 +204,9 @@ export async function updatePipeline(
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true, data };
   } catch (err: unknown) {
@@ -246,7 +252,9 @@ export async function listOpportunities(
 
     const { data, error } = await query.order('created_at', { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true, data: data || [] };
   } catch (err: unknown) {
@@ -281,7 +289,9 @@ export async function createOpportunity(input: OpportunityInput): Promise<Servic
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true, data };
   } catch (err: unknown) {
@@ -326,7 +336,9 @@ export async function updateOpportunity(
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true, data };
   } catch (err: unknown) {
@@ -360,7 +372,9 @@ export async function recordActivity(input: ActivityInput): Promise<ServiceResul
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true, data };
   } catch (err: unknown) {
@@ -394,7 +408,9 @@ export async function listActivities(
 
     const { data, error } = await query.order('created_at', { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true, data: data || [] };
   } catch (err: unknown) {
@@ -416,7 +432,9 @@ export async function forecastRevenue(tenantId: string): Promise<ServiceResult<R
       tenant_id_param: tenantId,
     });
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     // RPC returns array with single row
     const forecast = data && data.length > 0 ? data[0] : null;

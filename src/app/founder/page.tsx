@@ -96,8 +96,12 @@ export default function FounderOSDashboard() {
   const totalSignals = businesses.reduce((sum, b) => sum + b.recentSignals, 0);
 
   const getHealthColor = (score: number) => {
-    if (score >= 80) return 'text-green-400';
-    if (score >= 60) return 'text-yellow-400';
+    if (score >= 80) {
+return 'text-green-400';
+}
+    if (score >= 60) {
+return 'text-yellow-400';
+}
     return 'text-red-400';
   };
 

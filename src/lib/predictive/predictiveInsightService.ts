@@ -222,8 +222,11 @@ export async function getCategoryTrends(
     const secondHalf = catWindows.filter(w => new Date(w.created_at).getTime() >= midpoint).length;
 
     let trend = 'stable';
-    if (secondHalf > firstHalf * 1.5) trend = 'rising';
-    else if (firstHalf > secondHalf * 1.5) trend = 'declining';
+    if (secondHalf > firstHalf * 1.5) {
+trend = 'rising';
+} else if (firstHalf > secondHalf * 1.5) {
+trend = 'declining';
+}
 
     trends[cat] = { count, avgConfidence, trend };
   }

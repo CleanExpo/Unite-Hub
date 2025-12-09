@@ -11,7 +11,9 @@ export default function PairOperatorPage() {
   const [input, setInput] = useState('');
 
   const sendMessage = () => {
-    if (!input.trim()) return;
+    if (!input.trim()) {
+return;
+}
     setMessages(prev => [...prev, { role: 'user', content: input }]);
     // Simulated response
     setTimeout(() => {

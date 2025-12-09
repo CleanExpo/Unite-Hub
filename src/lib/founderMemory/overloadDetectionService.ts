@@ -193,7 +193,9 @@ class OverloadDetectionService {
       .in('status', ['active', 'warm', 'hot']);
 
     const pendingFollowups = contacts?.filter((c) => {
-      if (!c.last_contacted_at) return true;
+      if (!c.last_contacted_at) {
+return true;
+}
       return new Date(c.last_contacted_at) < thirtyDaysAgo;
     }).length || 0;
 
@@ -329,9 +331,15 @@ class OverloadDetectionService {
    * Get severity from ratio
    */
   private getSeverityFromRatio(ratio: number): OverloadSeverity {
-    if (ratio >= 2) return 'critical';
-    if (ratio >= 1.5) return 'high';
-    if (ratio >= 1) return 'moderate';
+    if (ratio >= 2) {
+return 'critical';
+}
+    if (ratio >= 1.5) {
+return 'high';
+}
+    if (ratio >= 1) {
+return 'moderate';
+}
     return 'low';
   }
 
@@ -375,9 +383,15 @@ class OverloadDetectionService {
    * Determine overall severity
    */
   private determineSeverity(score: number): OverloadSeverity {
-    if (score >= 75) return 'critical';
-    if (score >= 50) return 'high';
-    if (score >= 25) return 'moderate';
+    if (score >= 75) {
+return 'critical';
+}
+    if (score >= 50) {
+return 'high';
+}
+    if (score >= 25) {
+return 'moderate';
+}
     return 'low';
   }
 

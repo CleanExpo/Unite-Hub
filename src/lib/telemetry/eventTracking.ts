@@ -42,7 +42,7 @@ export interface TrackEventOptions {
 export async function trackEvent(options: TrackEventOptions): Promise<void> {
   try {
     // Map extended event types to base types for storage
-    let eventType = options.eventType;
+    const eventType = options.eventType;
 
     // Map custom events to base types
     const eventTypeMap: Record<string, string> = {

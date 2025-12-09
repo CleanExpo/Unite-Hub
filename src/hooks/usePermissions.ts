@@ -191,7 +191,9 @@ export function usePermissions() {
      * ```
      */
     getAllPermissions: (): Permission[] => {
-      if (!role) return [];
+      if (!role) {
+return [];
+}
       return getPermissionsForRole(role);
     },
 
@@ -207,7 +209,9 @@ export function usePermissions() {
      * ```
      */
     getRoleName: (): string => {
-      if (!role) return 'Unknown';
+      if (!role) {
+return 'Unknown';
+}
       return getRoleDisplayName(role);
     },
 
@@ -223,7 +227,9 @@ export function usePermissions() {
      * ```
      */
     getDescription: (): string => {
-      if (!role) return '';
+      if (!role) {
+return '';
+}
       return getRoleDescription(role);
     },
 
@@ -233,7 +239,9 @@ export function usePermissions() {
      * @returns Number representing role level
      */
     getRoleLevel: (): number => {
-      if (!role) return 0;
+      if (!role) {
+return 0;
+}
       return ROLE_HIERARCHY[role];
     },
 

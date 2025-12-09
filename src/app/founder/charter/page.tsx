@@ -26,7 +26,9 @@ export default function CharterPage() {
   useEffect(() => {
     async function fetchCharter() {
       const { data: { session } } = await supabaseBrowser.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const response = await fetch('/api/governance/charter', {
         headers: { Authorization: `Bearer ${session.access_token}` }

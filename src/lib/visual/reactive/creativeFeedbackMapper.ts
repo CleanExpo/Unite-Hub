@@ -111,26 +111,44 @@ export function mapAssetToFeedback(
   let score = 50; // baseline
 
   // Engagement contribution (40%)
-  if (engRate >= BENCHMARKS.engagement_rate.excellent) score += 20;
-  else if (engRate >= BENCHMARKS.engagement_rate.good) score += 12;
-  else if (engRate >= BENCHMARKS.engagement_rate.average) score += 5;
-  else if (engRate < BENCHMARKS.engagement_rate.poor) score -= 15;
-  else score -= 5;
+  if (engRate >= BENCHMARKS.engagement_rate.excellent) {
+score += 20;
+} else if (engRate >= BENCHMARKS.engagement_rate.good) {
+score += 12;
+} else if (engRate >= BENCHMARKS.engagement_rate.average) {
+score += 5;
+} else if (engRate < BENCHMARKS.engagement_rate.poor) {
+score -= 15;
+} else {
+score -= 5;
+}
 
   // CTR contribution (30%)
-  if (ctr >= BENCHMARKS.ctr.excellent) score += 15;
-  else if (ctr >= BENCHMARKS.ctr.good) score += 8;
-  else if (ctr >= BENCHMARKS.ctr.average) score += 3;
-  else if (ctr < BENCHMARKS.ctr.poor) score -= 10;
-  else score -= 3;
+  if (ctr >= BENCHMARKS.ctr.excellent) {
+score += 15;
+} else if (ctr >= BENCHMARKS.ctr.good) {
+score += 8;
+} else if (ctr >= BENCHMARKS.ctr.average) {
+score += 3;
+} else if (ctr < BENCHMARKS.ctr.poor) {
+score -= 10;
+} else {
+score -= 3;
+}
 
   // Completion rate contribution (30%) if available
   if (completionRate !== null) {
-    if (completionRate >= BENCHMARKS.completion_rate.excellent) score += 15;
-    else if (completionRate >= BENCHMARKS.completion_rate.good) score += 8;
-    else if (completionRate >= BENCHMARKS.completion_rate.average) score += 3;
-    else if (completionRate < BENCHMARKS.completion_rate.poor) score -= 10;
-    else score -= 3;
+    if (completionRate >= BENCHMARKS.completion_rate.excellent) {
+score += 15;
+} else if (completionRate >= BENCHMARKS.completion_rate.good) {
+score += 8;
+} else if (completionRate >= BENCHMARKS.completion_rate.average) {
+score += 3;
+} else if (completionRate < BENCHMARKS.completion_rate.poor) {
+score -= 10;
+} else {
+score -= 3;
+}
   }
 
   // Clamp score
@@ -183,14 +201,22 @@ export function mapCampaignToFeedback(
   const ctr = summary.overall_ctr || 0;
 
   let score = 50;
-  if (engRate >= BENCHMARKS.engagement_rate.good) score += 15;
-  else if (engRate < BENCHMARKS.engagement_rate.poor) score -= 15;
+  if (engRate >= BENCHMARKS.engagement_rate.good) {
+score += 15;
+} else if (engRate < BENCHMARKS.engagement_rate.poor) {
+score -= 15;
+}
 
-  if (ctr >= BENCHMARKS.ctr.good) score += 10;
-  else if (ctr < BENCHMARKS.ctr.poor) score -= 10;
+  if (ctr >= BENCHMARKS.ctr.good) {
+score += 10;
+} else if (ctr < BENCHMARKS.ctr.poor) {
+score -= 10;
+}
 
   // Bonus for no underperformers
-  if (summary.underperforming_assets.length === 0) score += 5;
+  if (summary.underperforming_assets.length === 0) {
+score += 5;
+}
   // Penalty for many underperformers
   else if (summary.underperforming_assets.length > summary.total_assets * 0.3) {
     score -= 10;
@@ -233,15 +259,24 @@ function mapChannelToFeedback(snapshot: ChannelPerformanceSnapshot): ChannelFeed
   const ctr = snapshot.ctr || 0;
 
   let score = 50;
-  if (engRate >= BENCHMARKS.engagement_rate.good) score += 20;
-  else if (engRate < BENCHMARKS.engagement_rate.poor) score -= 20;
+  if (engRate >= BENCHMARKS.engagement_rate.good) {
+score += 20;
+} else if (engRate < BENCHMARKS.engagement_rate.poor) {
+score -= 20;
+}
 
-  if (ctr >= BENCHMARKS.ctr.good) score += 15;
-  else if (ctr < BENCHMARKS.ctr.poor) score -= 15;
+  if (ctr >= BENCHMARKS.ctr.good) {
+score += 15;
+} else if (ctr < BENCHMARKS.ctr.poor) {
+score -= 15;
+}
 
   // Trend adjustment
-  if (snapshot.trend === 'improving') score += 10;
-  else if (snapshot.trend === 'declining') score -= 10;
+  if (snapshot.trend === 'improving') {
+score += 10;
+} else if (snapshot.trend === 'declining') {
+score -= 10;
+}
 
   score = Math.max(0, Math.min(100, score));
 
@@ -250,11 +285,17 @@ function mapChannelToFeedback(snapshot: ChannelPerformanceSnapshot): ChannelFeed
 
   // Determine action
   let action: ChannelFeedback['action'];
-  if (score >= 75 && snapshot.trend !== 'declining') action = 'increase_investment';
-  else if (score >= 60) action = 'maintain';
-  else if (score >= 40) action = 'experiment';
-  else if (score >= 20) action = 'reduce';
-  else action = 'pause';
+  if (score >= 75 && snapshot.trend !== 'declining') {
+action = 'increase_investment';
+} else if (score >= 60) {
+action = 'maintain';
+} else if (score >= 40) {
+action = 'experiment';
+} else if (score >= 20) {
+action = 'reduce';
+} else {
+action = 'pause';
+}
 
   return {
     channel: snapshot.channel,
@@ -272,11 +313,17 @@ function mapMethodToInsight(record: MethodPerformanceRecord): MethodInsight {
   const engRate = record.avg_engagement_rate || 0;
 
   let tier: MethodInsight['performance_tier'];
-  if (record.usage_count === 0) tier = 'untested';
-  else if (engRate >= BENCHMARKS.engagement_rate.good) tier = 'top';
-  else if (engRate >= BENCHMARKS.engagement_rate.average) tier = 'strong';
-  else if (engRate >= BENCHMARKS.engagement_rate.poor) tier = 'average';
-  else tier = 'weak';
+  if (record.usage_count === 0) {
+tier = 'untested';
+} else if (engRate >= BENCHMARKS.engagement_rate.good) {
+tier = 'top';
+} else if (engRate >= BENCHMARKS.engagement_rate.average) {
+tier = 'strong';
+} else if (engRate >= BENCHMARKS.engagement_rate.poor) {
+tier = 'average';
+} else {
+tier = 'weak';
+}
 
   const bestChannels = record.best_channel ? [record.best_channel] : [];
   const avoidChannels = record.worst_channel && tier !== 'top'
@@ -317,12 +364,22 @@ function scoreToLabel(
   score: number,
   dataQuality: 'sufficient' | 'partial' | 'insufficient_data'
 ): PerformanceLabel {
-  if (dataQuality === 'insufficient_data') return 'insufficient_data';
-  if (dataQuality === 'partial' && score < 60) return 'needs_experiment';
+  if (dataQuality === 'insufficient_data') {
+return 'insufficient_data';
+}
+  if (dataQuality === 'partial' && score < 60) {
+return 'needs_experiment';
+}
 
-  if (score >= 75) return 'high_performer';
-  if (score >= 60) return 'solid_performer';
-  if (score >= 40) return 'average';
+  if (score >= 75) {
+return 'high_performer';
+}
+  if (score >= 60) {
+return 'solid_performer';
+}
+  if (score >= 40) {
+return 'average';
+}
   return 'underperformer';
 }
 

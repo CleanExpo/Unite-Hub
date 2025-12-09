@@ -67,7 +67,9 @@ export function AIInsightsPanel({
 
   // Copy to clipboard
   const copyToClipboard = () => {
-    if (!analysis) return;
+    if (!analysis) {
+return;
+}
 
     const text = `
 # AI Analysis

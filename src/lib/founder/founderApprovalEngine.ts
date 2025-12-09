@@ -107,10 +107,18 @@ export function recordFounderDecision(
 export function requiresManualOverride(req: ApprovalRequest): boolean {
   const { manualOverrideRequiredFor } = founderControlConfig;
 
-  if (req.itemType === 'claim') return true; // All claims need review
-  if (req.itemType === 'override') return true; // Overrides are manual by definition
-  if (req.riskLevel === 'critical') return true;
-  if (req.riskLevel === 'high' && req.itemType === 'automation') return true;
+  if (req.itemType === 'claim') {
+return true;
+} // All claims need review
+  if (req.itemType === 'override') {
+return true;
+} // Overrides are manual by definition
+  if (req.riskLevel === 'critical') {
+return true;
+}
+  if (req.riskLevel === 'high' && req.itemType === 'automation') {
+return true;
+}
 
   return false;
 }

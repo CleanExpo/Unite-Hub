@@ -197,9 +197,13 @@ export class DatadogTrending {
       let severity: 'none' | 'low' | 'medium' | 'high' = 'none';
       if (isAnomaly) {
         const absZ = Math.abs(zScore);
-        if (absZ > 4.0) severity = 'high';
-        else if (absZ > 3.0) severity = 'medium';
-        else severity = 'low';
+        if (absZ > 4.0) {
+severity = 'high';
+} else if (absZ > 3.0) {
+severity = 'medium';
+} else {
+severity = 'low';
+}
       }
 
       // Expected range (±2 standard deviations)
@@ -307,7 +311,9 @@ export class DatadogTrending {
    * Calculate average of array
    */
   private average(values: number[]): number {
-    if (values.length === 0) return 0;
+    if (values.length === 0) {
+return 0;
+}
     return values.reduce((a, b) => a + b, 0) / values.length;
   }
 
@@ -315,7 +321,9 @@ export class DatadogTrending {
    * Calculate standard deviation
    */
   private standardDeviation(values: number[]): number {
-    if (values.length === 0) return 0;
+    if (values.length === 0) {
+return 0;
+}
 
     const avg = this.average(values);
     const squareDiffs = values.map((value) => Math.pow(value - avg, 2));
@@ -328,7 +336,9 @@ export class DatadogTrending {
    * Simple linear forecast for next value
    */
   private forecastNext(values: number[]): number {
-    if (values.length < 2) return values[0] || 0;
+    if (values.length < 2) {
+return values[0] || 0;
+}
 
     // Simple moving average of last 3 values + trend
     const recent = values.slice(-3);
@@ -348,14 +358,20 @@ export class DatadogTrending {
    * Calculate confidence level based on variance
    */
   private calculateConfidence(values: number[]): 'high' | 'medium' | 'low' {
-    if (values.length < 10) return 'low';
+    if (values.length < 10) {
+return 'low';
+}
 
     const stddev = this.standardDeviation(values);
     const avg = this.average(values);
     const coefficientOfVariation = avg !== 0 ? (stddev / Math.abs(avg)) * 100 : 0;
 
-    if (coefficientOfVariation < 10) return 'high';
-    if (coefficientOfVariation < 25) return 'medium';
+    if (coefficientOfVariation < 10) {
+return 'high';
+}
+    if (coefficientOfVariation < 25) {
+return 'medium';
+}
     return 'low';
   }
 

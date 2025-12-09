@@ -237,7 +237,9 @@ class EmailIngestionService {
       gmail.parseMessage(msg as Parameters<typeof gmail.parseMessage>[0])
     );
 
-    if (parsedMessages.length === 0) return;
+    if (parsedMessages.length === 0) {
+return;
+}
 
     // Get thread metadata from messages
     const firstMessage = parsedMessages[parsedMessages.length - 1];
@@ -486,7 +488,9 @@ class EmailIngestionService {
       parsedMessages.push(parsed);
     }
 
-    if (parsedMessages.length === 0) return;
+    if (parsedMessages.length === 0) {
+return;
+}
 
     // Sort by date
     parsedMessages.sort((a, b) => a.date.getTime() - b.date.getTime());

@@ -469,7 +469,9 @@ export class OvernightTestHarness {
     const testsCompleted = this.results.length;
     const totalTests = this.personas.length * TEST_TYPES.length;
 
-    if (testsCompleted === 0) return 'calculating...';
+    if (testsCompleted === 0) {
+return 'calculating...';
+}
 
     const avgTimePerTest = elapsed / testsCompleted;
     const remainingTests = totalTests - testsCompleted;

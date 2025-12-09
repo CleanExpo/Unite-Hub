@@ -160,7 +160,9 @@ export class StrategyExecutionEngine {
           metrics: {},
         });
 
-      if (insertError) throw insertError;
+      if (insertError) {
+throw insertError;
+}
 
       this.activeExecutions.set(this.config.strategyId, this.context);
 
@@ -188,7 +190,9 @@ export class StrategyExecutionEngine {
         .update({ status: 'running' })
         .eq('id', this.context.executionId);
 
-      if (updateError) throw updateError;
+      if (updateError) {
+throw updateError;
+}
 
       // Propagate L4 tasks to agent tasks
       const tasks = await this.propagator.propagateTasks(
@@ -214,7 +218,9 @@ export class StrategyExecutionEngine {
    * Process task queue in dependency order
    */
   private async processTaskQueue(): Promise<void> {
-    if (!this.context) return;
+    if (!this.context) {
+return;
+}
 
     try {
       // Fetch all tasks for this execution
@@ -224,8 +230,12 @@ export class StrategyExecutionEngine {
         .eq('execution_id', this.context.executionId)
         .order('priority', { ascending: false });
 
-      if (tasksError) throw tasksError;
-      if (!tasks || tasks.length === 0) return;
+      if (tasksError) {
+throw tasksError;
+}
+      if (!tasks || tasks.length === 0) {
+return;
+}
 
       // Build dependency graph
       const taskMap = new Map(tasks.map((t) => [t.id, t]));
@@ -249,7 +259,9 @@ export class StrategyExecutionEngine {
         })
         .eq('id', this.context.executionId);
 
-      if (updateError) throw updateError;
+      if (updateError) {
+throw updateError;
+}
     } catch (error) {
       console.error('Task queue processing failed:', error);
       throw error;
@@ -264,10 +276,14 @@ export class StrategyExecutionEngine {
     taskMap: Map<string, any>,
     processed: Set<string>
   ): Promise<void> {
-    if (!this.context) return;
+    if (!this.context) {
+return;
+}
 
     // Check if already processed
-    if (processed.has(task.id)) return;
+    if (processed.has(task.id)) {
+return;
+}
 
     // Check dependencies
     const dependencies = task.dependencies || [];
@@ -407,7 +423,9 @@ export class StrategyExecutionEngine {
    * Start health monitoring loop
    */
   private startHealthMonitoring(): void {
-    if (!this.context) return;
+    if (!this.context) {
+return;
+}
 
     const monitoringInterval = setInterval(async () => {
       if (!this.context || this.context.status !== 'running') {
@@ -430,7 +448,9 @@ export class StrategyExecutionEngine {
    * Pause execution
    */
   async pauseExecution(): Promise<void> {
-    if (!this.context) throw new Error('No execution in progress');
+    if (!this.context) {
+throw new Error('No execution in progress');
+}
 
     this.context.status = 'paused';
 
@@ -439,14 +459,18 @@ export class StrategyExecutionEngine {
       .update({ status: 'paused' })
       .eq('id', this.context.executionId);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
   }
 
   /**
    * Resume paused execution
    */
   async resumeExecution(): Promise<void> {
-    if (!this.context) throw new Error('No execution in progress');
+    if (!this.context) {
+throw new Error('No execution in progress');
+}
 
     this.context.status = 'running';
 
@@ -455,7 +479,9 @@ export class StrategyExecutionEngine {
       .update({ status: 'running' })
       .eq('id', this.context.executionId);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     // Continue processing
     await this.processTaskQueue();
@@ -465,7 +491,9 @@ export class StrategyExecutionEngine {
    * Cancel execution
    */
   async cancelExecution(): Promise<void> {
-    if (!this.context) throw new Error('No execution in progress');
+    if (!this.context) {
+throw new Error('No execution in progress');
+}
 
     this.context.status = 'cancelled';
     this.context.completedAt = new Date();
@@ -478,7 +506,9 @@ export class StrategyExecutionEngine {
       })
       .eq('id', this.context.executionId);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     this.activeExecutions.delete(this.config.strategyId);
   }
@@ -496,7 +526,9 @@ export class StrategyExecutionEngine {
       .select('*')
       .eq('execution_id', this.context.executionId);
 
-    if (tasksError) throw tasksError;
+    if (tasksError) {
+throw tasksError;
+}
 
     const startTime = this.context.startedAt.getTime();
     const endTime = this.context.completedAt?.getTime() || Date.now();

@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
       latency_ms: response.latency_ms,
     });
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error('[API] LLM route error:', error);
     return NextResponse.json(
       { error: 'Failed to process request', details: String(error) },

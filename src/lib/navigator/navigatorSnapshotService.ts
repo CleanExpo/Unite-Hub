@@ -91,7 +91,9 @@ export async function getLatestSnapshot(tenantId: string): Promise<NavigatorSnap
     .limit(1)
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+return null;
+}
 
   return transformSnapshot(data);
 }
@@ -105,7 +107,9 @@ export async function getSnapshotById(snapshotId: string): Promise<NavigatorSnap
     .eq('id', snapshotId)
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+return null;
+}
 
   return transformSnapshot(data);
 }
@@ -119,7 +123,9 @@ export async function getInsightsForSnapshot(snapshotId: string): Promise<Naviga
     .eq('snapshot_id', snapshotId)
     .order('priority', { ascending: false });
 
-  if (error || !data) return [];
+  if (error || !data) {
+return [];
+}
 
   return data.map(transformInsight);
 }
@@ -137,7 +143,9 @@ export async function listSnapshots(
     .order('created_at', { ascending: false })
     .limit(limit);
 
-  if (error || !data) return [];
+  if (error || !data) {
+return [];
+}
 
   return data.map(transformSnapshot);
 }

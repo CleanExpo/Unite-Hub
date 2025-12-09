@@ -586,7 +586,9 @@ function determineRiskLevel(
   advisor: AdvisorType,
   context: AdvisorContext
 ): 'low' | 'medium' | 'high' | 'critical' {
-  if (packet.priority === 'critical') return 'critical';
+  if (packet.priority === 'critical') {
+return 'critical';
+}
 
   const advisorProfile = ADVISOR_PROFILES[advisor];
 
@@ -606,7 +608,9 @@ function determineRiskLevel(
   }
 
   // Most decisions are medium or low
-  if (packet.priority === 'high') return 'medium';
+  if (packet.priority === 'high') {
+return 'medium';
+}
 
   return 'low';
 }

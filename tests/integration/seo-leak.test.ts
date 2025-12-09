@@ -136,12 +136,15 @@ describe("SEO Leak Engine Integration", () => {
       };
 
       const issues = [];
-      if (contentSignals.word_count < 800)
-        issues.push("Content too short (< 800 words)");
-      if (contentSignals.internal_links < 3)
-        issues.push("Insufficient internal linking");
-      if (contentSignals.images_without_alt > 0)
-        issues.push("Images missing alt text");
+      if (contentSignals.word_count < 800) {
+issues.push("Content too short (< 800 words)");
+}
+      if (contentSignals.internal_links < 3) {
+issues.push("Insufficient internal linking");
+}
+      if (contentSignals.images_without_alt > 0) {
+issues.push("Images missing alt text");
+}
 
       expect(issues.length).toBeGreaterThan(0);
     });

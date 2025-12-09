@@ -233,7 +233,9 @@ export class OrchestratorArchiveBridge {
         .eq('workspace_id', workspaceId)
         .limit(10);
 
-      if (!memories) return [];
+      if (!memories) {
+return [];
+}
 
       // Calculate similarity based on keyword overlap
       const objectiveKeywords = objective.toLowerCase().split(/\s+/);

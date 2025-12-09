@@ -313,9 +313,13 @@ export class GlobalAutonomyEngine {
 
     // Determine recommendation
     let recommendation: 'proceed' | 'validate' | 'pause' | 'halt' = 'proceed';
-    if (riskScore >= 80) recommendation = 'halt';
-    else if (uncertaintyScore >= 75) recommendation = 'pause';
-    else if (autonomyScore < 50) recommendation = 'validate';
+    if (riskScore >= 80) {
+recommendation = 'halt';
+} else if (uncertaintyScore >= 75) {
+recommendation = 'pause';
+} else if (autonomyScore < 50) {
+recommendation = 'validate';
+}
 
     return {
       readiness,
@@ -409,7 +413,9 @@ export class GlobalAutonomyEngine {
    */
   private async assessReadiness(context: Record<string, any>): Promise<number> {
     const agents = context.activeAgents || [];
-    if (agents.length === 0) return 0;
+    if (agents.length === 0) {
+return 0;
+}
 
     // Check agent health from context
     const healthyAgents = agents.filter(
@@ -426,7 +432,9 @@ export class GlobalAutonomyEngine {
     const memories = context.relevantMemories || [];
     const planSteps = context.planSteps || [];
 
-    if (memories.length === 0 || planSteps.length === 0) return 50;
+    if (memories.length === 0 || planSteps.length === 0) {
+return 50;
+}
 
     // Simple consistency: how many memories support plan steps?
     const supportedSteps = planSteps.filter((step: any) =>

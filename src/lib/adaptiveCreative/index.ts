@@ -46,7 +46,9 @@ export async function getAdaptiveState(
 
   const { data } = await query.limit(1).single();
 
-  if (!data) return null;
+  if (!data) {
+return null;
+}
 
   return {
     id: data.id,
@@ -125,7 +127,9 @@ export async function createAdaptiveState(
     .select()
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+return null;
+}
 
   return {
     id: data.id,

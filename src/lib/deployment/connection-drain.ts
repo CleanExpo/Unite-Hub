@@ -1,4 +1,4 @@
-/* eslint-disable no-undef, no-console */
+ 
 /**
  * Connection Draining Module
  *

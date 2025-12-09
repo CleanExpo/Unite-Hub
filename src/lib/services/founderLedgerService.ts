@@ -118,7 +118,9 @@ export async function detectDuplicates(): Promise<{
     .select("*")
     .order("date", { ascending: true });
 
-  if (!transactions) return { duplicates: [], marked: 0 };
+  if (!transactions) {
+return { duplicates: [], marked: 0 };
+}
 
   // Group by key attributes
   const groups = new Map<string, string[]>();
@@ -176,13 +178,17 @@ export async function detectAnomalies(): Promise<Anomaly[]> {
     .select("*")
     .gte("date", ninetyDaysAgo.toISOString().split("T")[0]);
 
-  if (!transactions) return [];
+  if (!transactions) {
+return [];
+}
 
   // Calculate averages by category
   const categoryAvg = new Map<string, { sum: number; count: number }>();
 
   for (const txn of transactions) {
-    if (!txn.category) continue;
+    if (!txn.category) {
+continue;
+}
     const existing = categoryAvg.get(txn.category) || { sum: 0, count: 0 };
     existing.sum += txn.amount;
     existing.count += 1;
@@ -191,9 +197,13 @@ export async function detectAnomalies(): Promise<Anomaly[]> {
 
   // Detect unusual amounts (>3x average)
   for (const txn of transactions) {
-    if (!txn.category) continue;
+    if (!txn.category) {
+continue;
+}
     const avg = categoryAvg.get(txn.category);
-    if (!avg) continue;
+    if (!avg) {
+continue;
+}
 
     const categoryMean = avg.sum / avg.count;
 

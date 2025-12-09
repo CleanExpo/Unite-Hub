@@ -85,11 +85,21 @@ export function AuditViewer({ clientId, organizationId }: AuditViewerProps) {
         limit: "500",
       });
 
-      if (actionFilter !== "all") params.set("action_type", actionFilter);
-      if (sourceFilter !== "all") params.set("source", sourceFilter);
-      if (actorFilter !== "all") params.set("actor_type", actorFilter);
-      if (dateFrom) params.set("from", dateFrom);
-      if (dateTo) params.set("to", dateTo);
+      if (actionFilter !== "all") {
+params.set("action_type", actionFilter);
+}
+      if (sourceFilter !== "all") {
+params.set("source", sourceFilter);
+}
+      if (actorFilter !== "all") {
+params.set("actor_type", actorFilter);
+}
+      if (dateFrom) {
+params.set("from", dateFrom);
+}
+      if (dateTo) {
+params.set("to", dateTo);
+}
 
       const res = await fetch(`/api/trust/audit?${params}`);
       const data = await res.json();
@@ -102,7 +112,9 @@ export function AuditViewer({ clientId, organizationId }: AuditViewerProps) {
   };
 
   const filteredEvents = events.filter((event) => {
-    if (!searchQuery) return true;
+    if (!searchQuery) {
+return true;
+}
     const query = searchQuery.toLowerCase();
     return (
       event.action_type.toLowerCase().includes(query) ||
@@ -112,12 +124,24 @@ export function AuditViewer({ clientId, organizationId }: AuditViewerProps) {
   });
 
   const getActionBadgeColor = (action: string): string => {
-    if (action.includes("CREATED")) return "bg-blue-100 text-blue-800";
-    if (action.includes("APPROVED")) return "bg-green-100 text-green-800";
-    if (action.includes("REJECTED")) return "bg-red-100 text-red-800";
-    if (action.includes("EXECUTED")) return "bg-purple-100 text-purple-800";
-    if (action.includes("ROLLED_BACK")) return "bg-orange-100 text-orange-800";
-    if (action.includes("FAILED")) return "bg-red-100 text-red-800";
+    if (action.includes("CREATED")) {
+return "bg-blue-100 text-blue-800";
+}
+    if (action.includes("APPROVED")) {
+return "bg-green-100 text-green-800";
+}
+    if (action.includes("REJECTED")) {
+return "bg-red-100 text-red-800";
+}
+    if (action.includes("EXECUTED")) {
+return "bg-purple-100 text-purple-800";
+}
+    if (action.includes("ROLLED_BACK")) {
+return "bg-orange-100 text-orange-800";
+}
+    if (action.includes("FAILED")) {
+return "bg-red-100 text-red-800";
+}
     return "bg-gray-100 text-gray-800";
   };
 

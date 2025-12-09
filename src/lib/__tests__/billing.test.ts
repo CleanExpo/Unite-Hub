@@ -214,7 +214,9 @@ describe('Billing System', () => {
   describe('Usage Metering', () => {
     it('should calculate usage percentage', () => {
       const calculatePercentage = (current: number, limit: number): number => {
-        if (limit === -1) return 0; // Unlimited
+        if (limit === -1) {
+return 0;
+} // Unlimited
         return (current / limit) * 100;
       };
 
@@ -226,7 +228,9 @@ describe('Billing System', () => {
 
     it('should check if within limits', () => {
       const isWithinLimit = (counter: UsageCounter): boolean => {
-        if (counter.limit === -1) return true;
+        if (counter.limit === -1) {
+return true;
+}
         return counter.current < counter.limit;
       };
 
@@ -237,7 +241,9 @@ describe('Billing System', () => {
 
     it('should identify warning threshold', () => {
       const isWarning = (current: number, limit: number): boolean => {
-        if (limit === -1) return false;
+        if (limit === -1) {
+return false;
+}
         const percentage = (current / limit) * 100;
         return percentage >= 80 && percentage < 100;
       };
@@ -270,8 +276,12 @@ describe('Billing System', () => {
         limit: number,
         behavior: LimitBehavior
       ): { allowed: boolean; message?: string; charge?: number } => {
-        if (limit === -1) return { allowed: true };
-        if (current < limit) return { allowed: true };
+        if (limit === -1) {
+return { allowed: true };
+}
+        if (current < limit) {
+return { allowed: true };
+}
 
         switch (behavior) {
           case 'warn':
@@ -425,8 +435,12 @@ describe('Billing System', () => {
         currentCount: number,
         limit: number
       ): { allowed: boolean; reason?: string } => {
-        if (limit === -1) return { allowed: true };
-        if (currentCount < limit) return { allowed: true };
+        if (limit === -1) {
+return { allowed: true };
+}
+        if (currentCount < limit) {
+return { allowed: true };
+}
         return { allowed: false, reason: 'Workspace limit reached' };
       };
 
@@ -440,8 +454,12 @@ describe('Billing System', () => {
         currentCount: number,
         limit: number
       ): { allowed: boolean; reason?: string } => {
-        if (limit === -1) return { allowed: true };
-        if (currentCount < limit) return { allowed: true };
+        if (limit === -1) {
+return { allowed: true };
+}
+        if (currentCount < limit) {
+return { allowed: true };
+}
         return { allowed: false, reason: 'User limit reached' };
       };
 

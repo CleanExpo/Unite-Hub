@@ -521,7 +521,9 @@ ${this.getPlatformGuidelines(params.platform, 'image')}`;
       key => this.MODEL_MAP[key].model === model
     );
 
-    if (!modelKey) return 0;
+    if (!modelKey) {
+return 0;
+}
 
     const pricing = this.MODEL_MAP[modelKey].pricing;
     const promptCost = (promptTokens / 1000000) * pricing.prompt;

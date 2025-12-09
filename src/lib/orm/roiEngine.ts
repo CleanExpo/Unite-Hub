@@ -92,10 +92,15 @@ export class ROIEngine {
     // Determine overall rating
     const avgScore = (valueDeliveredIndex + roiScore + qualityScore + timelineAdherence) / 4;
     let overallRating: 'excellent' | 'good' | 'fair' | 'poor';
-    if (avgScore >= 80) overallRating = 'excellent';
-    else if (avgScore >= 60) overallRating = 'good';
-    else if (avgScore >= 40) overallRating = 'fair';
-    else overallRating = 'poor';
+    if (avgScore >= 80) {
+overallRating = 'excellent';
+} else if (avgScore >= 60) {
+overallRating = 'good';
+} else if (avgScore >= 40) {
+overallRating = 'fair';
+} else {
+overallRating = 'poor';
+}
 
     // Generate highlights
     const highlights: string[] = [];
@@ -236,7 +241,9 @@ export class ROIEngine {
    * Calculate value-per-cost ratio
    */
   calculateValuePerCostRatio(roi: ClientROI, cost: number): number {
-    if (cost === 0) return 0;
+    if (cost === 0) {
+return 0;
+}
     return Math.round((roi.value_delivered_index / cost) * 100) / 100;
   }
 

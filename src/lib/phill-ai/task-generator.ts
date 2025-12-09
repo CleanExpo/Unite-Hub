@@ -379,7 +379,9 @@ ${JSON.stringify(context.recentActivity.slice(0, 10), null, 2)}`;
     const seen = new Set<string>();
     const unique = tasks.filter((task) => {
       const key = task.title.toLowerCase().replace(/\s+/g, ' ').trim();
-      if (seen.has(key)) return false;
+      if (seen.has(key)) {
+return false;
+}
       seen.add(key);
       return true;
     });
@@ -396,7 +398,9 @@ ${JSON.stringify(context.recentActivity.slice(0, 10), null, 2)}`;
       const aPriority = priorityOrder[a.priority || 'medium'];
       const bPriority = priorityOrder[b.priority || 'medium'];
 
-      if (aPriority !== bPriority) return aPriority - bPriority;
+      if (aPriority !== bPriority) {
+return aPriority - bPriority;
+}
 
       return (b.confidence || 70) - (a.confidence || 70);
     });

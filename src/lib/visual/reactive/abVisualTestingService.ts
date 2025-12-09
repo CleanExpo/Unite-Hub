@@ -338,7 +338,9 @@ export function evaluateTestResults(test: VisualABTest): VisualABTest {
   const control = test.control;
   const variation = test.variations[0];
 
-  if (!control || !variation) return test;
+  if (!control || !variation) {
+return test;
+}
 
   const controlRate = control.engagement_rate || 0;
   const variationRate = variation.engagement_rate || 0;

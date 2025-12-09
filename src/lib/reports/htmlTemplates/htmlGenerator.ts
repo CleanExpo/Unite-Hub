@@ -692,9 +692,15 @@ export class HTMLReportGenerator {
    * Get health score message
    */
   private getHealthScoreMessage(score: number): string {
-    if (score >= 80) return "Excellent! Your SEO health is in great shape. Focus on maintaining and expanding your rankings.";
-    if (score >= 60) return "Good performance with room for improvement. Review recommendations to boost your score.";
-    if (score >= 40) return "Average performance. Several optimization opportunities identified below.";
+    if (score >= 80) {
+return "Excellent! Your SEO health is in great shape. Focus on maintaining and expanding your rankings.";
+}
+    if (score >= 60) {
+return "Good performance with room for improvement. Review recommendations to boost your score.";
+}
+    if (score >= 40) {
+return "Average performance. Several optimization opportunities identified below.";
+}
     return "Critical issues detected. Immediate action required to improve SEO health.";
   }
 }

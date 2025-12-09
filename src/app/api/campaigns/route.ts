@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/naming-convention */
+ 
 import type { NextRequest } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
 import { validateUserAndWorkspace } from "@/lib/workspace-validation";

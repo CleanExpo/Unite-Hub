@@ -35,7 +35,9 @@ export async function GET(req: NextRequest) {
       }
     );
 
-    if (queueError) throw queueError;
+    if (queueError) {
+throw queueError;
+}
 
     // Get queue status
     const { data: statusData, error: statusError } = await supabase.rpc('get_queue_status', {
@@ -43,7 +45,9 @@ export async function GET(req: NextRequest) {
       p_date: date,
     });
 
-    if (statusError) throw statusError;
+    if (statusError) {
+throw statusError;
+}
 
     const tasks = queueData || [];
     const totalDuration = tasks.reduce((sum: number, t: any) => sum + t.estimated_duration_minutes, 0);

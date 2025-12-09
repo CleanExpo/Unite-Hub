@@ -112,11 +112,21 @@ export async function getCombinedAnalytics(
     };
 
     for (const d of deliveryData || []) {
-      if (d.status === 'sent' || d.status === 'delivered') deliveries.sent++;
-      if (d.status === 'delivered') deliveries.delivered++;
-      if (d.status === 'opened') deliveries.opened++;
-      if (d.status === 'clicked') deliveries.clicked++;
-      if (d.status === 'failed' || d.status === 'bounced') deliveries.failed++;
+      if (d.status === 'sent' || d.status === 'delivered') {
+deliveries.sent++;
+}
+      if (d.status === 'delivered') {
+deliveries.delivered++;
+}
+      if (d.status === 'opened') {
+deliveries.opened++;
+}
+      if (d.status === 'clicked') {
+deliveries.clicked++;
+}
+      if (d.status === 'failed' || d.status === 'bounced') {
+deliveries.failed++;
+}
       deliveries.byChannel[d.channel] = (deliveries.byChannel[d.channel] || 0) + 1;
     }
 
@@ -143,9 +153,15 @@ export async function getCombinedAnalytics(
     };
 
     for (const c of campaignData || []) {
-      if (c.status === 'active') campaigns.active++;
-      if (c.status === 'completed') campaigns.completed++;
-      if (c.status === 'scheduled') campaigns.scheduled++;
+      if (c.status === 'active') {
+campaigns.active++;
+}
+      if (c.status === 'completed') {
+campaigns.completed++;
+}
+      if (c.status === 'scheduled') {
+campaigns.scheduled++;
+}
     }
 
     return {
@@ -269,7 +285,9 @@ export async function getCampaignPerformance(
       .gte('perf_date', startDate.toISOString().split('T')[0])
       .order('perf_date', { ascending: true });
 
-    if (error) throw new Error(error.message);
+    if (error) {
+throw new Error(error.message);
+}
 
     const result = (data || []).map((row) => ({
       date: row.perf_date,
@@ -316,13 +334,27 @@ export async function updateCampaignPerformance(
     if (existing) {
       // Update existing
       const updates: Record<string, number> = {};
-      if (metrics.impressions) updates.impressions = (existing.impressions || 0) + metrics.impressions;
-      if (metrics.opens) updates.opens = (existing.opens || 0) + metrics.opens;
-      if (metrics.clicks) updates.clicks = (existing.clicks || 0) + metrics.clicks;
-      if (metrics.conversions) updates.conversions = (existing.conversions || 0) + metrics.conversions;
-      if (metrics.unsubscribes) updates.unsubscribes = (existing.unsubscribes || 0) + metrics.unsubscribes;
-      if (metrics.bounces) updates.bounces = (existing.bounces || 0) + metrics.bounces;
-      if (metrics.revenue) updates.total_revenue = (existing.total_revenue || 0) + metrics.revenue;
+      if (metrics.impressions) {
+updates.impressions = (existing.impressions || 0) + metrics.impressions;
+}
+      if (metrics.opens) {
+updates.opens = (existing.opens || 0) + metrics.opens;
+}
+      if (metrics.clicks) {
+updates.clicks = (existing.clicks || 0) + metrics.clicks;
+}
+      if (metrics.conversions) {
+updates.conversions = (existing.conversions || 0) + metrics.conversions;
+}
+      if (metrics.unsubscribes) {
+updates.unsubscribes = (existing.unsubscribes || 0) + metrics.unsubscribes;
+}
+      if (metrics.bounces) {
+updates.bounces = (existing.bounces || 0) + metrics.bounces;
+}
+      if (metrics.revenue) {
+updates.total_revenue = (existing.total_revenue || 0) + metrics.revenue;
+}
 
       // Calculate rates
       const totalSent = (existing.impressions || 0) + (metrics.impressions || 0);
@@ -411,7 +443,9 @@ export async function getTopCampaigns(
       .order(orderColumn, { ascending: false })
       .limit(limit);
 
-    if (error) throw new Error(error.message);
+    if (error) {
+throw new Error(error.message);
+}
 
     // Aggregate by campaign
     const campaignMap = new Map<string, {
@@ -482,7 +516,9 @@ export async function getChannelComparison(
       .eq('tenant_id', tenantId)
       .gte('occurred_at', startDate.toISOString());
 
-    if (error) throw new Error(error.message);
+    if (error) {
+throw new Error(error.message);
+}
 
     const channels: Record<string, {
       events: number;

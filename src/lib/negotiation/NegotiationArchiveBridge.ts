@@ -162,7 +162,9 @@ class NegotiationArchiveBridge {
       .order('created_at', { ascending: false })
       .limit(20);
 
-    if (!recentRecords || recentRecords.length < 3) return;
+    if (!recentRecords || recentRecords.length < 3) {
+return;
+}
 
     // Analyze agent selection frequency
     const agentSelectionCounts: Record<string, number> = {};
@@ -234,14 +236,19 @@ class NegotiationArchiveBridge {
     let score = 50; // Base
 
     // Consensus boost
-    if (consensusAchieved) score += 20;
+    if (consensusAchieved) {
+score += 20;
+}
 
     // Conflict complexity boost
     score += Math.min(20, conflictsDetected * 5);
 
     // Outcome boost
-    if (outcome === 'success') score += 15;
-    else if (outcome === 'failure') score += 10; // Failures are also important to remember
+    if (outcome === 'success') {
+score += 15;
+} else if (outcome === 'failure') {
+score += 10;
+} // Failures are also important to remember
 
     return Math.min(100, score);
   }

@@ -37,7 +37,9 @@ export default function FounderApprovalsPage() {
     try {
       // TODO: Get business_id from context/session
       const res = await fetch("/api/client-approvals?status=pending_review");
-      if (!res.ok) throw new Error("Failed to load approvals");
+      if (!res.ok) {
+throw new Error("Failed to load approvals");
+}
       const data = await res.json();
       setApprovals(data);
     } catch (error) {
@@ -72,7 +74,9 @@ export default function FounderApprovalsPage() {
         body: JSON.stringify({ id, status, reviewer_notes: notes }),
       });
 
-      if (!res.ok) throw new Error("Failed to update approval");
+      if (!res.ok) {
+throw new Error("Failed to update approval");
+}
 
       toast({
         title: "Success",

@@ -408,8 +408,12 @@ export class AuditComplianceService {
         (byCategory[event.event_category] || 0) + 1;
       bySeverity[event.severity] = (bySeverity[event.severity] || 0) + 1;
 
-      if (event.severity === 'critical') criticalEvents++;
-      if (event.severity === 'warning') warningEvents++;
+      if (event.severity === 'critical') {
+criticalEvents++;
+}
+      if (event.severity === 'warning') {
+warningEvents++;
+}
     });
 
     // Security events

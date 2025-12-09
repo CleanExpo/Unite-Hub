@@ -106,7 +106,9 @@ export default function ProfilePage() {
   }, [profile]);
 
   const getInitials = (name: string | undefined) => {
-    if (!name) return "U";
+    if (!name) {
+return "U";
+}
     const parts = name.split(" ");
     if (parts.length >= 2) {
       return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
@@ -233,7 +235,9 @@ export default function ProfilePage() {
 
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file) {
+return;
+}
 
     // Validate file size (2MB)
     if (file.size > 2 * 1024 * 1024) {
@@ -301,7 +305,9 @@ export default function ProfilePage() {
   };
 
   const handleDeleteAvatar = async () => {
-    if (!confirm("Are you sure you want to delete your avatar?")) return;
+    if (!confirm("Are you sure you want to delete your avatar?")) {
+return;
+}
 
     setIsUploadingAvatar(true);
 

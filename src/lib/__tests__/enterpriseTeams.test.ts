@@ -103,7 +103,9 @@ describe('Enterprise Teams', () => {
 
     it('should handle wildcard permission', () => {
       const hasPermission = (permissions: string[], required: string): boolean => {
-        if (permissions.includes('*')) return true;
+        if (permissions.includes('*')) {
+return true;
+}
         return permissions.includes(required);
       };
 
@@ -221,9 +223,15 @@ describe('Enterprise Teams', () => {
         teamAccess: AccessLevel | null,
         individualAccess: AccessLevel | null
       ): AccessLevel | null => {
-        if (!teamAccess && !individualAccess) return null;
-        if (!teamAccess) return individualAccess;
-        if (!individualAccess) return teamAccess;
+        if (!teamAccess && !individualAccess) {
+return null;
+}
+        if (!teamAccess) {
+return individualAccess;
+}
+        if (!individualAccess) {
+return teamAccess;
+}
 
         const hierarchy: AccessLevel[] = ['read', 'write', 'admin'];
         const teamIdx = hierarchy.indexOf(teamAccess);
@@ -274,10 +282,18 @@ describe('Enterprise Teams', () => {
       const getEffectivePermission = (
         sources: Partial<Record<PermissionSource, boolean>>
       ): boolean => {
-        if (sources.direct !== undefined) return sources.direct;
-        if (sources.team !== undefined) return sources.team;
-        if (sources.bu !== undefined) return sources.bu;
-        if (sources.org !== undefined) return sources.org;
+        if (sources.direct !== undefined) {
+return sources.direct;
+}
+        if (sources.team !== undefined) {
+return sources.team;
+}
+        if (sources.bu !== undefined) {
+return sources.bu;
+}
+        if (sources.org !== undefined) {
+return sources.org;
+}
         return false;
       };
 

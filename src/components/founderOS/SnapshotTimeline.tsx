@@ -70,10 +70,18 @@ export function SnapshotTimeline({
 
   const toggleCompareSelection = (id: string) => {
     setSelectedForCompare((prev) => {
-      if (prev[0] === id) return [null, prev[1]];
-      if (prev[1] === id) return [prev[0], null];
-      if (prev[0] === null) return [id, prev[1]];
-      if (prev[1] === null) return [prev[0], id];
+      if (prev[0] === id) {
+return [null, prev[1]];
+}
+      if (prev[1] === id) {
+return [prev[0], null];
+}
+      if (prev[0] === null) {
+return [id, prev[1]];
+}
+      if (prev[1] === null) {
+return [prev[0], id];
+}
       return [prev[1], id];
     });
   };
@@ -85,10 +93,16 @@ export function SnapshotTimeline({
   };
 
   const getHealthTrend = (current: number, previous?: number) => {
-    if (!previous) return null;
+    if (!previous) {
+return null;
+}
     const diff = current - previous;
-    if (diff > 5) return "up";
-    if (diff < -5) return "down";
+    if (diff > 5) {
+return "up";
+}
+    if (diff < -5) {
+return "down";
+}
     return "stable";
   };
 

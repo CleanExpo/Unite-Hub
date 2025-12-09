@@ -74,9 +74,15 @@ export async function getStaffTasks(filters?: {
 }): Promise<{ data: StaffTask[] }> {
   try {
     const params = new URLSearchParams();
-    if (filters?.myTasksOnly) params.append('my_tasks_only', 'true');
-    if (filters?.status) params.append('status', filters.status);
-    if (filters?.priority) params.append('priority', filters.priority);
+    if (filters?.myTasksOnly) {
+params.append('my_tasks_only', 'true');
+}
+    if (filters?.status) {
+params.append('status', filters.status);
+}
+    if (filters?.priority) {
+params.append('priority', filters.priority);
+}
 
     const url = `/api/staff/tasks${params.toString() ? `?${params.toString()}` : ''}`;
     const res = await fetch(url, { cache: 'no-store' });
@@ -178,7 +184,9 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
     const completedThisWeek = tasks.filter((t) => {
-      if (t.status !== 'completed' || !t.updated_at) return false;
+      if (t.status !== 'completed' || !t.updated_at) {
+return false;
+}
       return new Date(t.updated_at) >= oneWeekAgo;
     }).length;
 

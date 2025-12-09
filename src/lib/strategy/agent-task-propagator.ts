@@ -94,7 +94,9 @@ export class AgentTaskPropagator {
         .eq('workspace_id', this.workspaceId)
         .order('created_at', { ascending: true });
 
-      if (l4Error) throw l4Error;
+      if (l4Error) {
+throw l4Error;
+}
       if (!l4Items || l4Items.length === 0) {
         console.log(`No L4 items found for strategy ${strategyId}`);
         return [];
@@ -135,7 +137,9 @@ export class AgentTaskPropagator {
         }))
       );
 
-      if (insertError) throw insertError;
+      if (insertError) {
+throw insertError;
+}
 
       console.log(`Created ${agentTasks.length} agent tasks from ${l4Items.length} L4 items`);
 
@@ -290,7 +294,9 @@ export class AgentTaskPropagator {
       .select('id, dependencies')
       .eq('execution_id', executionId);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     const graph: Record<string, string[]> = {};
 
@@ -349,7 +355,9 @@ export class AgentTaskPropagator {
     graph: Record<string, string[]>,
     visited: Set<string>
   ): boolean {
-    if (visited.has(taskId)) return true;
+    if (visited.has(taskId)) {
+return true;
+}
 
     visited.add(taskId);
 
@@ -374,8 +382,12 @@ export class AgentTaskPropagator {
     const visiting = new Set<string>();
 
     const visit = (taskId: string) => {
-      if (visited.has(taskId)) return;
-      if (visiting.has(taskId)) throw new Error('Circular dependency detected');
+      if (visited.has(taskId)) {
+return;
+}
+      if (visiting.has(taskId)) {
+throw new Error('Circular dependency detected');
+}
 
       visiting.add(taskId);
 

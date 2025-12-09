@@ -20,12 +20,16 @@ export async function POST(
     if (token) {
       const { supabaseBrowser } = await import('@/lib/supabase');
       const { data, error } = await supabaseBrowser.auth.getUser(token);
-      if (error || !data.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      if (error || !data.user) {
+return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+}
       userId = data.user.id;
     } else {
       const supabase = await getSupabaseServer();
       const { data, error } = await supabase.auth.getUser();
-      if (error || !data.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      if (error || !data.user) {
+return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+}
       userId = data.user.id;
     }
 
@@ -56,7 +60,9 @@ export async function POST(
       .update({ status: 'running' })
       .eq('id', executionId);
 
-    if (updateError) throw updateError;
+    if (updateError) {
+throw updateError;
+}
 
     return NextResponse.json({
       success: true,

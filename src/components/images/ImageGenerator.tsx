@@ -26,7 +26,9 @@ export function ImageGenerator({ onGenerate }: ImageGeneratorProps) {
   const [isGenerating, setIsGenerating] = useState(false);
 
   const handleGenerate = async () => {
-    if (!prompt) return;
+    if (!prompt) {
+return;
+}
 
     setIsGenerating(true);
     try {

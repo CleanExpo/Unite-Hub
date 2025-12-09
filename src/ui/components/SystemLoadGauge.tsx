@@ -24,16 +24,28 @@ export function SystemLoadGauge({
   const percentage = Math.round((current_load / max_capacity) * 100);
 
   const getLoadColor = (pct: number) => {
-    if (pct >= 90) return 'text-red-500';
-    if (pct >= 70) return 'text-orange-500';
-    if (pct >= 50) return 'text-yellow-500';
+    if (pct >= 90) {
+return 'text-red-500';
+}
+    if (pct >= 70) {
+return 'text-orange-500';
+}
+    if (pct >= 50) {
+return 'text-yellow-500';
+}
     return 'text-green-500';
   };
 
   const getLoadBgColor = (pct: number) => {
-    if (pct >= 90) return 'bg-red-500';
-    if (pct >= 70) return 'bg-orange-500';
-    if (pct >= 50) return 'bg-yellow-500';
+    if (pct >= 90) {
+return 'bg-red-500';
+}
+    if (pct >= 70) {
+return 'bg-orange-500';
+}
+    if (pct >= 50) {
+return 'bg-yellow-500';
+}
     return 'bg-green-500';
   };
 
@@ -49,9 +61,15 @@ export function SystemLoadGauge({
   };
 
   const getStatusText = (pct: number) => {
-    if (pct >= 90) return 'Critical';
-    if (pct >= 70) return 'High';
-    if (pct >= 50) return 'Moderate';
+    if (pct >= 90) {
+return 'Critical';
+}
+    if (pct >= 70) {
+return 'High';
+}
+    if (pct >= 50) {
+return 'Moderate';
+}
     return 'Normal';
   };
 

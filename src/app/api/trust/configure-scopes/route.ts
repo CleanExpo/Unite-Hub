@@ -98,10 +98,18 @@ export async function POST(req: NextRequest) {
 
     // Count enabled domains
     const enabledDomains: string[] = [];
-    if (scopes.seo_scope_json?.enabled) enabledDomains.push("SEO");
-    if (scopes.content_scope_json?.enabled) enabledDomains.push("CONTENT");
-    if (scopes.ads_scope_json?.enabled) enabledDomains.push("ADS");
-    if (scopes.cro_scope_json?.enabled) enabledDomains.push("CRO");
+    if (scopes.seo_scope_json?.enabled) {
+enabledDomains.push("SEO");
+}
+    if (scopes.content_scope_json?.enabled) {
+enabledDomains.push("CONTENT");
+}
+    if (scopes.ads_scope_json?.enabled) {
+enabledDomains.push("ADS");
+}
+    if (scopes.cro_scope_json?.enabled) {
+enabledDomains.push("CRO");
+}
 
     return NextResponse.json({
       scopes,

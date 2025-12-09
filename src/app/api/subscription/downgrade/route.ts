@@ -23,7 +23,9 @@ export async function POST(req: NextRequest) {
   try {
     // Rate limiting
     const rateLimitResult = await apiRateLimit(req);
-    if (rateLimitResult) return rateLimitResult;
+    if (rateLimitResult) {
+return rateLimitResult;
+}
 
     // Parse and validate request body
     const body = await req.json();

@@ -410,7 +410,9 @@ export class FinancialReportingService {
       .eq('org_id', orgId)
       .single();
 
-    if (!subscription || !subscription.plan) return 0;
+    if (!subscription || !subscription.plan) {
+return 0;
+}
 
     const plan = subscription.plan as any;
     const days = (periodEnd.getTime() - periodStart.getTime()) / (1000 * 60 * 60 * 24);

@@ -25,7 +25,9 @@ export function CoalitionHistoryTimeline({ workspaceId }: CoalitionHistoryTimeli
   const { historicalCoalitions, isLoadingHistory } = useCoalitionStore();
 
   const filteredCoalitions = historicalCoalitions.filter((coalition) => {
-    if (filterType === 'all') return true;
+    if (filterType === 'all') {
+return true;
+}
     return coalition.outcome === filterType || (filterType === 'partial' && coalition.outcome === 'partial_success');
   });
 

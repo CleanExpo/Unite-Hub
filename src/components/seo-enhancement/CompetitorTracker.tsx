@@ -104,7 +104,9 @@ export function CompetitorTracker({
   };
 
   const addCompetitor = async () => {
-    if (!newDomain) return;
+    if (!newDomain) {
+return;
+}
 
     setLoading(true);
     setError(null);

@@ -151,16 +151,28 @@ export default function FounderOpsBrandWorkload({ workspaceId }: FounderOpsBrand
 // Brand Workload Card Component
 function BrandWorkloadCard({ workload }: { workload: BrandWorkload }) {
   const getCapacityColor = (percentage: number) => {
-    if (percentage >= 90) return 'text-red-500';
-    if (percentage >= 70) return 'text-orange-500';
-    if (percentage >= 50) return 'text-yellow-500';
+    if (percentage >= 90) {
+return 'text-red-500';
+}
+    if (percentage >= 70) {
+return 'text-orange-500';
+}
+    if (percentage >= 50) {
+return 'text-yellow-500';
+}
     return 'text-green-500';
   };
 
   const getCapacityBgColor = (percentage: number) => {
-    if (percentage >= 90) return 'bg-red-500';
-    if (percentage >= 70) return 'bg-orange-500';
-    if (percentage >= 50) return 'bg-yellow-500';
+    if (percentage >= 90) {
+return 'bg-red-500';
+}
+    if (percentage >= 70) {
+return 'bg-orange-500';
+}
+    if (percentage >= 50) {
+return 'bg-yellow-500';
+}
     return 'bg-green-500';
   };
 

@@ -143,7 +143,9 @@ export async function refund(
     .eq('region_id', regionId)
     .single();
 
-  if (!state) return;
+  if (!state) {
+return;
+}
 
   const newBalance = state.ai_budget_remaining + amount;
 

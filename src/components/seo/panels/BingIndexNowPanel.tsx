@@ -43,7 +43,9 @@ export default function BingIndexNowPanel({
   } | null>(null);
 
   async function handleSubmitUrls() {
-    if (!urlInput.trim() || !hasCredential) return;
+    if (!urlInput.trim() || !hasCredential) {
+return;
+}
 
     setSubmitting(true);
     setSubmitResult(null);

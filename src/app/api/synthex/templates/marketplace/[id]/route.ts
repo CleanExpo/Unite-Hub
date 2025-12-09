@@ -134,14 +134,30 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     } = body;
 
     const updates: Record<string, unknown> = {};
-    if (name !== undefined) updates.name = name;
-    if (description !== undefined) updates.description = description;
-    if (category !== undefined) updates.category = category;
-    if (tags !== undefined) updates.tags = tags;
-    if (content !== undefined) updates.content = content;
-    if (is_public !== undefined) updates.is_public = is_public;
-    if (preview_image_url !== undefined) updates.preview_image_url = preview_image_url;
-    if (metadata !== undefined) updates.metadata = metadata;
+    if (name !== undefined) {
+updates.name = name;
+}
+    if (description !== undefined) {
+updates.description = description;
+}
+    if (category !== undefined) {
+updates.category = category;
+}
+    if (tags !== undefined) {
+updates.tags = tags;
+}
+    if (content !== undefined) {
+updates.content = content;
+}
+    if (is_public !== undefined) {
+updates.is_public = is_public;
+}
+    if (preview_image_url !== undefined) {
+updates.preview_image_url = preview_image_url;
+}
+    if (metadata !== undefined) {
+updates.metadata = metadata;
+}
 
     const template = await updateTemplate(id, updates, user.id);
 

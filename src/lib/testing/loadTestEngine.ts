@@ -217,7 +217,9 @@ export class LoadTestEngine {
    * Run shadow mode test (simulated metrics)
    */
   private async runShadowTest(config: LoadTestConfig): Promise<void> {
-    if (!this.currentTest) return;
+    if (!this.currentTest) {
+return;
+}
 
     const endpoints = SCENARIO_ENDPOINTS[config.scenario];
     const totalRequests = config.target_rps * config.duration_seconds;

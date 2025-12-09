@@ -25,8 +25,12 @@ export function GovernanceScoreBar({
   showIcon = true,
 }: GovernanceScoreBarProps) {
   const getStatus = () => {
-    if (score >= thresholds.warning) return 'healthy';
-    if (score >= thresholds.critical) return 'warning';
+    if (score >= thresholds.warning) {
+return 'healthy';
+}
+    if (score >= thresholds.critical) {
+return 'warning';
+}
     return 'critical';
   };
 

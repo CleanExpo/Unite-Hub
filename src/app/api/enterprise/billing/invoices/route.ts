@@ -13,13 +13,17 @@ async function getAuthenticatedUser(req: NextRequest) {
 
   if (token) {
     const { data, error } = await supabaseBrowser.auth.getUser(token);
-    if (error || !data.user) return null;
+    if (error || !data.user) {
+return null;
+}
     return data.user;
   }
 
   const supabase = await getSupabaseServer();
   const { data, error } = await supabase.auth.getUser();
-  if (error || !data.user) return null;
+  if (error || !data.user) {
+return null;
+}
   return data.user;
 }
 

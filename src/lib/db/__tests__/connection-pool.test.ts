@@ -210,7 +210,9 @@ describe('Connection Pool', () => {
       // Open circuit
       for (let i = 0; i < 2; i++) {
         await expect(
-          pool.withRetry(async () => { throw new Error('Fail'); })
+          pool.withRetry(async () => {
+ throw new Error('Fail'); 
+})
         ).rejects.toThrow();
       }
 
@@ -256,7 +258,9 @@ describe('Connection Pool', () => {
 
       // Cause some failures (but not enough to open circuit)
       await expect(
-        pool.withRetry(async () => { throw new Error('Fail'); })
+        pool.withRetry(async () => {
+ throw new Error('Fail'); 
+})
       ).rejects.toThrow();
 
       // Health check should reduce failure count
@@ -286,7 +290,9 @@ describe('Connection Pool', () => {
 
       await pool.withRetry(async () => 'success');
       await expect(
-        pool.withRetry(async () => { throw new Error('Fail'); })
+        pool.withRetry(async () => {
+ throw new Error('Fail'); 
+})
       ).rejects.toThrow();
 
       const stats = pool.getStats();
@@ -301,7 +307,9 @@ describe('Connection Pool', () => {
 
       await pool.withRetry(async () => {
         attempts++;
-        if (attempts < 2) throw new Error('Retry');
+        if (attempts < 2) {
+throw new Error('Retry');
+}
         return 'success';
       });
 

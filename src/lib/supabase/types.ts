@@ -42,7 +42,9 @@ export async function createTypedServerClient(getCookieStore: () => Promise<any>
     {
       cookies: {
         get(name: string) {
-          if (!cookieStore) return undefined;
+          if (!cookieStore) {
+return undefined;
+}
           try {
             return cookieStore.get(name)?.value;
           } catch {
@@ -50,7 +52,9 @@ export async function createTypedServerClient(getCookieStore: () => Promise<any>
           }
         },
         set(name: string, value: string, options: CookieOptions) {
-          if (!cookieStore) return;
+          if (!cookieStore) {
+return;
+}
           try {
             cookieStore.set({ name, value, ...options });
           } catch {
@@ -58,7 +62,9 @@ export async function createTypedServerClient(getCookieStore: () => Promise<any>
           }
         },
         remove(name: string, options: CookieOptions) {
-          if (!cookieStore) return;
+          if (!cookieStore) {
+return;
+}
           try {
             cookieStore.set({ name, value: '', ...options });
           } catch {

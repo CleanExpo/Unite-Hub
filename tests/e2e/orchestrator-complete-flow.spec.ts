@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */
+ 
 /* global process */
 
 /**
@@ -60,7 +60,9 @@ describe('Orchestrator Complete Verification Flow', () => {
       // Simulate retry logic
       while (attempts < 3 && !verified) {
         attempts++;
-        if (attempts === 2) verified = true; // Succeed on 2nd attempt
+        if (attempts === 2) {
+verified = true;
+} // Succeed on 2nd attempt
       }
 
       expect(attempts).toBe(2);

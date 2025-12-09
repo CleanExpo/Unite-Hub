@@ -308,7 +308,9 @@ class AgentNegotiationEngine {
 
     const { data } = await query.order('created_at', { ascending: false }).limit(1);
 
-    if (!data || data.length === 0) return null;
+    if (!data || data.length === 0) {
+return null;
+}
 
     const session = data[0];
     return {
@@ -331,7 +333,9 @@ class AgentNegotiationEngine {
    * Calculate overall consensus metric
    */
   calculateOverallConsensus(consensusScores: ConsensusScore[]): number {
-    if (consensusScores.length === 0) return 0;
+    if (consensusScores.length === 0) {
+return 0;
+}
     const avgConsensus = consensusScores.reduce((sum, cs) => sum + cs.overallConsensus, 0) / consensusScores.length;
     return Math.round(avgConsensus);
   }

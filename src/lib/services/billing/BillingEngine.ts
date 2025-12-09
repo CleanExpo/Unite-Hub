@@ -116,7 +116,9 @@ export class BillingEngine {
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') return null;
+      if (error.code === 'PGRST116') {
+return null;
+}
       console.error('Error fetching plan:', error);
       throw new Error('Failed to fetch plan');
     }
@@ -140,7 +142,9 @@ export class BillingEngine {
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') return null;
+      if (error.code === 'PGRST116') {
+return null;
+}
       console.error('Error fetching subscription:', error);
       throw new Error('Failed to fetch subscription');
     }
@@ -451,7 +455,9 @@ export class BillingEngine {
    */
   async hasFeature(orgId: string, feature: string): Promise<boolean> {
     const subscription = await this.getSubscription(orgId);
-    if (!subscription || !subscription.plan) return false;
+    if (!subscription || !subscription.plan) {
+return false;
+}
 
     return subscription.plan.features.includes(feature);
   }
@@ -470,7 +476,9 @@ export class BillingEngine {
     reports: number;
   } | null> {
     const subscription = await this.getSubscription(orgId);
-    if (!subscription || !subscription.plan) return null;
+    if (!subscription || !subscription.plan) {
+return null;
+}
 
     const plan = subscription.plan;
     return {

@@ -197,10 +197,14 @@ export function hasPermission(
   role: UserRole | undefined | null,
   permission: Permission
 ): boolean {
-  if (!role) return false;
+  if (!role) {
+return false;
+}
 
   const allowedRoles = PERMISSIONS[permission];
-  if (!allowedRoles) return false;
+  if (!allowedRoles) {
+return false;
+}
 
   return allowedRoles.includes(role as any);
 }
@@ -222,7 +226,9 @@ export function hasAllPermissions(
   role: UserRole | undefined | null,
   permissions: Permission[]
 ): boolean {
-  if (!role) return false;
+  if (!role) {
+return false;
+}
   return permissions.every(permission => hasPermission(role, permission));
 }
 
@@ -243,7 +249,9 @@ export function hasAnyPermission(
   role: UserRole | undefined | null,
   permissions: Permission[]
 ): boolean {
-  if (!role) return false;
+  if (!role) {
+return false;
+}
   return permissions.some(permission => hasPermission(role, permission));
 }
 
@@ -293,7 +301,9 @@ export function hasRoleOrHigher(
   role: UserRole | undefined | null,
   requiredRole: UserRole
 ): boolean {
-  if (!role) return false;
+  if (!role) {
+return false;
+}
   return ROLE_HIERARCHY[role] >= ROLE_HIERARCHY[requiredRole];
 }
 

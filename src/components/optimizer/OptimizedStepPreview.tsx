@@ -68,14 +68,22 @@ export const OptimizedStepPreview: React.FC<OptimizedStepPreviewProps> = ({
 
   const displaySteps = selectedAgents.length > 0 ? selectedAgents : steps;
   const getRiskColor = (score: number) => {
-    if (score >= 75) return 'text-red-600 dark:text-red-400';
-    if (score >= 50) return 'text-yellow-600 dark:text-yellow-400';
+    if (score >= 75) {
+return 'text-red-600 dark:text-red-400';
+}
+    if (score >= 50) {
+return 'text-yellow-600 dark:text-yellow-400';
+}
     return 'text-green-600 dark:text-green-400';
   };
 
   const getRiskBg = (score: number) => {
-    if (score >= 75) return 'bg-red-50 dark:bg-red-900/20';
-    if (score >= 50) return 'bg-yellow-50 dark:bg-yellow-900/20';
+    if (score >= 75) {
+return 'bg-red-50 dark:bg-red-900/20';
+}
+    if (score >= 50) {
+return 'bg-yellow-50 dark:bg-yellow-900/20';
+}
     return 'bg-green-50 dark:bg-green-900/20';
   };
 

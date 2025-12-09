@@ -34,15 +34,23 @@ export function ScalingHealthScoresPanel({
 }: ScalingHealthScoresPanelProps) {
   const getScoreColor = (score: number, inverted: boolean = false) => {
     const effectiveScore = inverted ? 100 - score : score;
-    if (effectiveScore >= 80) return 'text-green-500';
-    if (effectiveScore >= 60) return 'text-yellow-500';
+    if (effectiveScore >= 80) {
+return 'text-green-500';
+}
+    if (effectiveScore >= 60) {
+return 'text-yellow-500';
+}
     return 'text-red-500';
   };
 
   const getProgressColor = (score: number, inverted: boolean = false) => {
     const effectiveScore = inverted ? 100 - score : score;
-    if (effectiveScore >= 80) return 'bg-green-500';
-    if (effectiveScore >= 60) return 'bg-yellow-500';
+    if (effectiveScore >= 80) {
+return 'bg-green-500';
+}
+    if (effectiveScore >= 60) {
+return 'bg-yellow-500';
+}
     return 'bg-red-500';
   };
 

@@ -14,7 +14,9 @@ export const emailIntegrationsPatch = {
       .insert([data])
       .select()
       .single();
-    if (error) throw error;
+    if (error) {
+throw error;
+}
     return integration;
   },
 
@@ -24,7 +26,9 @@ export const emailIntegrationsPatch = {
       .select("*")
       .eq("id", id)
       .single();
-    if (error) throw error;
+    if (error) {
+throw error;
+}
     return data;
   },
 
@@ -35,7 +39,9 @@ export const emailIntegrationsPatch = {
       .eq("org_id", orgId)
       .eq("is_active", true)
       .order("created_at", { ascending: true });
-    if (error) throw error;
+    if (error) {
+throw error;
+}
     return data || [];
   },
 
@@ -46,7 +52,9 @@ export const emailIntegrationsPatch = {
       .eq("workspace_id", workspaceId)
       .eq("is_active", true)
       .order("created_at", { ascending: true });
-    if (error) throw error;
+    if (error) {
+throw error;
+}
     return data || [];
   },
 
@@ -63,7 +71,9 @@ export const emailIntegrationsPatch = {
       .eq("provider", provider)
       .eq("email_address", emailAddress)
       .single();
-    if (error && error.code !== "PGRST116") throw error; // PGRST116 = not found
+    if (error && error.code !== "PGRST116") {
+throw error;
+} // PGRST116 = not found
     return data;
   },
 
@@ -76,7 +86,9 @@ export const emailIntegrationsPatch = {
       .eq("is_primary", true)
       .eq("is_active", true)
       .single();
-    if (error && error.code !== "PGRST116") throw error; // PGRST116 = not found
+    if (error && error.code !== "PGRST116") {
+throw error;
+} // PGRST116 = not found
     return data;
   },
 
@@ -86,7 +98,9 @@ export const emailIntegrationsPatch = {
       .from("email_integrations")
       .update(data)
       .eq("id", id);
-    if (error) throw error;
+    if (error) {
+throw error;
+}
   },
 };
 
@@ -100,7 +114,9 @@ export const sentEmailsPatch = {
       .insert([data])
       .select()
       .single();
-    if (error) throw error;
+    if (error) {
+throw error;
+}
     return email;
   },
 
@@ -110,7 +126,9 @@ export const sentEmailsPatch = {
       .select("*")
       .eq("id", id)
       .single();
-    if (error) throw error;
+    if (error) {
+throw error;
+}
     return data;
   },
 
@@ -121,7 +139,9 @@ export const sentEmailsPatch = {
       .eq("workspace_id", workspaceId)
       .order("sent_at", { ascending: false })
       .limit(limit);
-    if (error) throw error;
+    if (error) {
+throw error;
+}
     return data || [];
   },
 

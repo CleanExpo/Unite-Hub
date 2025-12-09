@@ -510,7 +510,9 @@ export async function getDailyCostBreakdown(): Promise<{
       .select('provider, cost_usd')
       .gte('created_at', `${today}T00:00:00`);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     const costs = {
       gemini: 0,

@@ -333,7 +333,9 @@ ${report.summary}
 
     if (this.config.skipWeekends) {
       const day = now.getUTCDay();
-      if (day === 0 || day === 6) return false;
+      if (day === 0 || day === 6) {
+return false;
+}
     }
 
     return hour >= this.config.workingHours.start && hour < this.config.workingHours.end;

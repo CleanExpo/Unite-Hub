@@ -40,7 +40,9 @@ export async function getAssessments(tenantId: string): Promise<CreativeRiskAsse
     .order('created_at', { ascending: false })
     .limit(30);
 
-  if (!data) return [];
+  if (!data) {
+return [];
+}
 
   return data.map(row => ({
     id: row.id,
@@ -99,7 +101,9 @@ export async function assessRisk(
     .select()
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+return null;
+}
 
   return {
     id: data.id,

@@ -300,7 +300,9 @@ export class RollbackEngine {
       .eq("status", "ROLLED_BACK")
       .order("rolled_back_at", { ascending: false });
 
-    if (error) return [];
+    if (error) {
+return [];
+}
     return data;
   }
 

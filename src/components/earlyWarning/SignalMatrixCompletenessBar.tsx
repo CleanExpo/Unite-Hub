@@ -116,22 +116,38 @@ export function SignalMatrixCompletenessBar({
 }
 
 function getLabel(value: number): string {
-  if (value >= 0.85) return 'Excellent';
-  if (value >= 0.7) return 'Good';
-  if (value >= 0.5) return 'Moderate';
-  if (value >= 0.3) return 'Limited';
+  if (value >= 0.85) {
+return 'Excellent';
+}
+  if (value >= 0.7) {
+return 'Good';
+}
+  if (value >= 0.5) {
+return 'Moderate';
+}
+  if (value >= 0.3) {
+return 'Limited';
+}
   return 'Minimal';
 }
 
 function getColor(value: number): string {
-  if (value >= 0.7) return 'text-green-500';
-  if (value >= 0.5) return 'text-yellow-500';
+  if (value >= 0.7) {
+return 'text-green-500';
+}
+  if (value >= 0.5) {
+return 'text-yellow-500';
+}
   return 'text-red-500';
 }
 
 function getInverseColor(value: number): string {
   // Lower is better for anomaly, trend shift, fatigue
-  if (value <= 0.3) return 'text-green-500';
-  if (value <= 0.6) return 'text-yellow-500';
+  if (value <= 0.3) {
+return 'text-green-500';
+}
+  if (value <= 0.6) {
+return 'text-yellow-500';
+}
   return 'text-red-500';
 }

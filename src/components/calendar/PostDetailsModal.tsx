@@ -64,7 +64,9 @@ export default function PostDetailsModal({
   );
   const [editedCTA, setEditedCTA] = useState(post.callToAction || "");
 
-  if (!isOpen) return null;
+  if (!isOpen) {
+return null;
+}
 
   const handleSave = () => {
     onUpdate({

@@ -71,8 +71,12 @@ export function ScalingTierCard({
   const statusConfig = getStatusConfig();
 
   const getProgressColor = () => {
-    if (utilization_percent >= 90) return '[&>div]:bg-red-500';
-    if (utilization_percent >= 75) return '[&>div]:bg-yellow-500';
+    if (utilization_percent >= 90) {
+return '[&>div]:bg-red-500';
+}
+    if (utilization_percent >= 75) {
+return '[&>div]:bg-yellow-500';
+}
     return '[&>div]:bg-green-500';
   };
 

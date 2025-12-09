@@ -32,7 +32,9 @@ export async function getActiveCharter(): Promise<GovernanceCharter | null> {
     .eq('is_active', true)
     .single();
 
-  if (error) return null;
+  if (error) {
+return null;
+}
 
   return {
     id: data.id,
@@ -56,7 +58,9 @@ export async function getCharterVersions(): Promise<GovernanceCharter[]> {
     .select('*')
     .order('created_at', { ascending: false });
 
-  if (error) return [];
+  if (error) {
+return [];
+}
 
   return (data || []).map(row => ({
     id: row.id,
@@ -79,7 +83,9 @@ export async function checkCompliance(
   const supabase = await getSupabaseServer();
   const charter = await getActiveCharter();
 
-  if (!charter) return null;
+  if (!charter) {
+return null;
+}
 
   const violations: string[] = [];
   // Compliance checking logic would go here
@@ -96,7 +102,9 @@ export async function checkCompliance(
     .select()
     .single();
 
-  if (error) return null;
+  if (error) {
+return null;
+}
 
   return {
     id: data.id,
@@ -119,7 +127,9 @@ export async function getTenantComplianceStatus(tenantId: string): Promise<Chart
     .order('checked_at', { ascending: false })
     .limit(50);
 
-  if (error) return [];
+  if (error) {
+return [];
+}
 
   return (data || []).map(row => ({
     id: row.id,

@@ -77,12 +77,16 @@ export function SequenceList({
   };
 
   const calculateOpenRate = (seq: Sequence) => {
-    if (seq.metrics.sent === 0) return "0%";
+    if (seq.metrics.sent === 0) {
+return "0%";
+}
     return ((seq.metrics.opened / seq.metrics.sent) * 100).toFixed(1) + "%";
   };
 
   const calculateReplyRate = (seq: Sequence) => {
-    if (seq.metrics.sent === 0) return "0%";
+    if (seq.metrics.sent === 0) {
+return "0%";
+}
     return ((seq.metrics.replied / seq.metrics.sent) * 100).toFixed(1) + "%";
   };
 

@@ -148,10 +148,15 @@ export function buildLearningProfile(
 
   // Determine adaptation level
   let adaptationLevel: LearningProfile['adaptation_level'];
-  if (totalUsage < 10) adaptationLevel = 'new';
-  else if (totalUsage < 50) adaptationLevel = 'learning';
-  else if (totalUsage < 200) adaptationLevel = 'adapted';
-  else adaptationLevel = 'optimized';
+  if (totalUsage < 10) {
+adaptationLevel = 'new';
+} else if (totalUsage < 50) {
+adaptationLevel = 'learning';
+} else if (totalUsage < 200) {
+adaptationLevel = 'adapted';
+} else {
+adaptationLevel = 'optimized';
+}
 
   return {
     workspace_id: workspaceId,
@@ -186,7 +191,7 @@ export function getProfileBasedRecommendations(
 
   for (const method of categoryMethods) {
     let score = 50;
-    let reasons: string[] = [];
+    const reasons: string[] = [];
 
     // Check if in preferred methods
     const preferred = profile.preferred_methods.find(p => p.method_id === method.id);

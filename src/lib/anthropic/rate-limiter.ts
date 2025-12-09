@@ -66,11 +66,17 @@ function calculateBackoff(
 function isRetryableError(error: unknown): boolean {
   if (error instanceof Anthropic.APIError) {
     // Rate limit errors
-    if (error.status === 429) return true;
+    if (error.status === 429) {
+return true;
+}
     // Server errors
-    if (error.status >= 500 && error.status < 600) return true;
+    if (error.status >= 500 && error.status < 600) {
+return true;
+}
     // Timeout errors
-    if (error.status === 408 || error.status === 504) return true;
+    if (error.status === 408 || error.status === 504) {
+return true;
+}
   }
 
   // Network errors

@@ -63,7 +63,9 @@ export async function GET(req: NextRequest) {
 
     const result = await listCohorts(tenantId);
 
-    if (result.error) throw result.error;
+    if (result.error) {
+throw result.error;
+}
 
     return NextResponse.json({
       status: 'ok',
@@ -123,7 +125,9 @@ export async function POST(req: NextRequest) {
       icon,
     });
 
-    if (result.error) throw result.error;
+    if (result.error) {
+throw result.error;
+}
 
     // Optionally evaluate cohort immediately
     let evaluationResult = null;

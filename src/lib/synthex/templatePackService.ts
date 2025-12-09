@@ -113,7 +113,9 @@ export async function createOrUpdatePack(
       .select()
       .single();
 
-    if (error) throw new Error(`Failed to update pack: ${error.message}`);
+    if (error) {
+throw new Error(`Failed to update pack: ${error.message}`);
+}
     return mapPackFromDb(data);
   } else {
     // Create new pack
@@ -123,7 +125,9 @@ export async function createOrUpdatePack(
       .select()
       .single();
 
-    if (error) throw new Error(`Failed to create pack: ${error.message}`);
+    if (error) {
+throw new Error(`Failed to create pack: ${error.message}`);
+}
     return mapPackFromDb(data);
   }
 }
@@ -150,7 +154,9 @@ export async function addTemplateToPack(
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to add template: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to add template: ${error.message}`);
+}
   return mapTemplateFromDb(data);
 }
 
@@ -186,7 +192,9 @@ export async function listAvailablePacks(
 
   const { data, error } = await query;
 
-  if (error) throw new Error(`Failed to list packs: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to list packs: ${error.message}`);
+}
   return (data || []).map(mapPackFromDb);
 }
 
@@ -201,7 +209,9 @@ export async function getPackById(packId: string): Promise<TemplatePack | null> 
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') return null; // Not found
+    if (error.code === 'PGRST116') {
+return null;
+} // Not found
     throw new Error(`Failed to get pack: ${error.message}`);
   }
 
@@ -218,7 +228,9 @@ export async function deletePack(packId: string, tenantId: string): Promise<void
     .eq('id', packId)
     .eq('owner_tenant_id', tenantId);
 
-  if (error) throw new Error(`Failed to delete pack: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to delete pack: ${error.message}`);
+}
 }
 
 // =============================================================================
@@ -246,7 +258,9 @@ export async function listTemplatesInPack(
 
   const { data, error } = await query;
 
-  if (error) throw new Error(`Failed to list templates: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to list templates: ${error.message}`);
+}
   return (data || []).map(mapTemplateFromDb);
 }
 
@@ -261,7 +275,9 @@ export async function getTemplateById(templateId: string): Promise<Template | nu
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') return null; // Not found
+    if (error.code === 'PGRST116') {
+return null;
+} // Not found
     throw new Error(`Failed to get template: ${error.message}`);
   }
 
@@ -277,10 +293,18 @@ export async function updateTemplate(
 ): Promise<Template> {
   const dbData: any = {};
 
-  if (updates.name !== undefined) dbData.name = updates.name;
-  if (updates.description !== undefined) dbData.description = updates.description;
-  if (updates.content !== undefined) dbData.content = updates.content;
-  if (updates.metadata !== undefined) dbData.metadata = updates.metadata;
+  if (updates.name !== undefined) {
+dbData.name = updates.name;
+}
+  if (updates.description !== undefined) {
+dbData.description = updates.description;
+}
+  if (updates.content !== undefined) {
+dbData.content = updates.content;
+}
+  if (updates.metadata !== undefined) {
+dbData.metadata = updates.metadata;
+}
 
   const { data, error } = await supabaseAdmin
     .from('synthex_templates')
@@ -289,7 +313,9 @@ export async function updateTemplate(
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to update template: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to update template: ${error.message}`);
+}
   return mapTemplateFromDb(data);
 }
 
@@ -302,7 +328,9 @@ export async function deleteTemplate(templateId: string): Promise<void> {
     .delete()
     .eq('id', templateId);
 
-  if (error) throw new Error(`Failed to delete template: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to delete template: ${error.message}`);
+}
 }
 
 // =============================================================================
@@ -327,14 +355,18 @@ export async function cloneTemplateToTenant(
       p_customizations: customizationsJson,
     });
 
-  if (error) throw new Error(`Failed to clone template: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to clone template: ${error.message}`);
+}
 
   const clonedTemplateId = data;
 
   // If AI adaptation requested, enhance the cloned template
   if (options.aiAdaptation) {
     const template = await getTemplateById(clonedTemplateId);
-    if (!template) throw new Error('Cloned template not found');
+    if (!template) {
+throw new Error('Cloned template not found');
+}
 
     const adaptedContent = await adaptTemplateWithAI(
       template,
@@ -348,7 +380,9 @@ export async function cloneTemplateToTenant(
 
   // Return the cloned template
   const template = await getTemplateById(clonedTemplateId);
-  if (!template) throw new Error('Cloned template not found');
+  if (!template) {
+throw new Error('Cloned template not found');
+}
 
   return template;
 }
@@ -480,7 +514,9 @@ export async function recordTemplateUsage(
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to record usage: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to record usage: ${error.message}`);
+}
   return mapUsageFromDb(data);
 }
 
@@ -500,7 +536,9 @@ export async function getTemplateUsageStats(
     .select('*', { count: 'exact', head: true })
     .eq('template_id', templateId);
 
-  if (countError) throw new Error(`Failed to count usage: ${countError.message}`);
+  if (countError) {
+throw new Error(`Failed to count usage: ${countError.message}`);
+}
 
   // Unique tenants
   const { data: uniqueData, error: uniqueError } = await supabaseAdmin
@@ -508,7 +546,9 @@ export async function getTemplateUsageStats(
     .select('tenant_id')
     .eq('template_id', templateId);
 
-  if (uniqueError) throw new Error(`Failed to count unique tenants: ${uniqueError.message}`);
+  if (uniqueError) {
+throw new Error(`Failed to count unique tenants: ${uniqueError.message}`);
+}
 
   const uniqueTenants = new Set(uniqueData?.map(u => u.tenant_id) || []).size;
 
@@ -520,7 +560,9 @@ export async function getTemplateUsageStats(
     .order('used_at', { ascending: false })
     .limit(10);
 
-  if (recentError) throw new Error(`Failed to fetch recent usage: ${recentError.message}`);
+  if (recentError) {
+throw new Error(`Failed to fetch recent usage: ${recentError.message}`);
+}
 
   return {
     totalUsage: totalUsage || 0,

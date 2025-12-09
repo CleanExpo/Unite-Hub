@@ -68,7 +68,9 @@ export default function TopicRadarPanel({
 
   // Auto-refresh
   useEffect(() => {
-    if (!autoRefresh) return;
+    if (!autoRefresh) {
+return;
+}
 
     const interval = setInterval(() => {
       fetchRadar();
@@ -115,7 +117,9 @@ export default function TopicRadarPanel({
     );
   }
 
-  if (!radar) return null;
+  if (!radar) {
+return null;
+}
 
   return (
     <Card>

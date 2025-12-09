@@ -117,7 +117,9 @@ export class OrgPermissionService {
       .eq('name', roleName)
       .single();
 
-    if (!role) return;
+    if (!role) {
+return;
+}
 
     const { error } = await supabase
       .from('user_org_roles')
@@ -305,7 +307,9 @@ export class OrgPermissionService {
       .eq('name', roleName)
       .single();
 
-    if (!role) return [];
+    if (!role) {
+return [];
+}
 
     const { data, error } = await supabase
       .from('user_org_roles')

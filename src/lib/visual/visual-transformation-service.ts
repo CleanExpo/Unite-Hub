@@ -363,12 +363,18 @@ export class VisualTransformationService {
    * Map dimensions to DALL-E 3 supported sizes
    */
   private getDalleSize(dimensions?: { width: number; height: number }): string {
-    if (!dimensions) return "1024x1024";
+    if (!dimensions) {
+return "1024x1024";
+}
 
     const ratio = dimensions.width / dimensions.height;
 
-    if (ratio > 1.5) return "1792x1024"; // Wide/landscape
-    if (ratio < 0.67) return "1024x1792"; // Tall/portrait
+    if (ratio > 1.5) {
+return "1792x1024";
+} // Wide/landscape
+    if (ratio < 0.67) {
+return "1024x1792";
+} // Tall/portrait
     return "1024x1024"; // Square
   }
 

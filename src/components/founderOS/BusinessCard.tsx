@@ -48,20 +48,32 @@ export function BusinessCard({
   const [isLoading, setIsLoading] = useState(false);
 
   const getHealthColor = (score: number) => {
-    if (score >= 70) return "text-green-600 dark:text-green-400";
-    if (score >= 40) return "text-yellow-600 dark:text-yellow-400";
+    if (score >= 70) {
+return "text-green-600 dark:text-green-400";
+}
+    if (score >= 40) {
+return "text-yellow-600 dark:text-yellow-400";
+}
     return "text-red-600 dark:text-red-400";
   };
 
   const getHealthBgColor = (score: number) => {
-    if (score >= 70) return "bg-green-50 dark:bg-green-950";
-    if (score >= 40) return "bg-yellow-50 dark:bg-yellow-950";
+    if (score >= 70) {
+return "bg-green-50 dark:bg-green-950";
+}
+    if (score >= 40) {
+return "bg-yellow-50 dark:bg-yellow-950";
+}
     return "bg-red-50 dark:bg-red-950";
   };
 
   const getHealthIcon = (score: number) => {
-    if (score >= 70) return TrendingUp;
-    if (score >= 40) return Minus;
+    if (score >= 70) {
+return TrendingUp;
+}
+    if (score >= 40) {
+return Minus;
+}
     return TrendingDown;
   };
 
@@ -95,9 +107,15 @@ export function BusinessCard({
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const days = Math.floor(hours / 24);
 
-    if (hours < 1) return "Just now";
-    if (hours < 24) return `${hours}h ago`;
-    if (days < 7) return `${days}d ago`;
+    if (hours < 1) {
+return "Just now";
+}
+    if (hours < 24) {
+return `${hours}h ago`;
+}
+    if (days < 7) {
+return `${days}d ago`;
+}
     return date.toLocaleDateString();
   };
 

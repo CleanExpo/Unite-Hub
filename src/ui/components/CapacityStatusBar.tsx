@@ -32,8 +32,12 @@ export function CapacityStatusBar({
   const percentage = Math.min(100, (value / max) * 100);
 
   const getStatus = (): 'healthy' | 'warning' | 'critical' => {
-    if (percentage >= thresholds.critical) return 'critical';
-    if (percentage >= thresholds.warning) return 'warning';
+    if (percentage >= thresholds.critical) {
+return 'critical';
+}
+    if (percentage >= thresholds.warning) {
+return 'warning';
+}
     return 'healthy';
   };
 
@@ -68,8 +72,12 @@ export function CapacityStatusBar({
   };
 
   const formatValue = (v: number) => {
-    if (v >= 1000000) return `${(v / 1000000).toFixed(1)}M`;
-    if (v >= 1000) return `${(v / 1000).toFixed(1)}K`;
+    if (v >= 1000000) {
+return `${(v / 1000000).toFixed(1)}M`;
+}
+    if (v >= 1000) {
+return `${(v / 1000).toFixed(1)}K`;
+}
     return v.toFixed(0);
   };
 

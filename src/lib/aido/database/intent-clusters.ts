@@ -181,20 +181,48 @@ export async function updateIntentCluster(
     last_refreshed_at: new Date().toISOString(),
   };
 
-  if (updates.topicId !== undefined) updateData.topic_id = updates.topicId;
-  if (updates.primaryIntent !== undefined) updateData.primary_intent = updates.primaryIntent;
-  if (updates.secondaryIntents !== undefined) updateData.secondary_intents = updates.secondaryIntents;
-  if (updates.searcherMindset !== undefined) updateData.searcher_mindset = updates.searcherMindset;
-  if (updates.painPoints !== undefined) updateData.pain_points = updates.painPoints;
-  if (updates.desiredOutcomes !== undefined) updateData.desired_outcomes = updates.desiredOutcomes;
-  if (updates.riskConcerns !== undefined) updateData.risk_concerns = updates.riskConcerns;
-  if (updates.purchaseStage !== undefined) updateData.purchase_stage = updates.purchaseStage;
-  if (updates.exampleQueries !== undefined) updateData.example_queries = updates.exampleQueries;
-  if (updates.followUpQuestions !== undefined) updateData.follow_up_questions = updates.followUpQuestions;
-  if (updates.localModifiers !== undefined) updateData.local_modifiers = updates.localModifiers;
-  if (updates.businessImpactScore !== undefined) updateData.business_impact_score = updates.businessImpactScore;
-  if (updates.difficultyScore !== undefined) updateData.difficulty_score = updates.difficultyScore;
-  if (updates.alignmentScore !== undefined) updateData.alignment_score = updates.alignmentScore;
+  if (updates.topicId !== undefined) {
+updateData.topic_id = updates.topicId;
+}
+  if (updates.primaryIntent !== undefined) {
+updateData.primary_intent = updates.primaryIntent;
+}
+  if (updates.secondaryIntents !== undefined) {
+updateData.secondary_intents = updates.secondaryIntents;
+}
+  if (updates.searcherMindset !== undefined) {
+updateData.searcher_mindset = updates.searcherMindset;
+}
+  if (updates.painPoints !== undefined) {
+updateData.pain_points = updates.painPoints;
+}
+  if (updates.desiredOutcomes !== undefined) {
+updateData.desired_outcomes = updates.desiredOutcomes;
+}
+  if (updates.riskConcerns !== undefined) {
+updateData.risk_concerns = updates.riskConcerns;
+}
+  if (updates.purchaseStage !== undefined) {
+updateData.purchase_stage = updates.purchaseStage;
+}
+  if (updates.exampleQueries !== undefined) {
+updateData.example_queries = updates.exampleQueries;
+}
+  if (updates.followUpQuestions !== undefined) {
+updateData.follow_up_questions = updates.followUpQuestions;
+}
+  if (updates.localModifiers !== undefined) {
+updateData.local_modifiers = updates.localModifiers;
+}
+  if (updates.businessImpactScore !== undefined) {
+updateData.business_impact_score = updates.businessImpactScore;
+}
+  if (updates.difficultyScore !== undefined) {
+updateData.difficulty_score = updates.difficultyScore;
+}
+  if (updates.alignmentScore !== undefined) {
+updateData.alignment_score = updates.alignmentScore;
+}
 
   const { data, error } = await supabase
     .from('intent_clusters')

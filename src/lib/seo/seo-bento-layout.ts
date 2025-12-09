@@ -122,7 +122,9 @@ export function getColSpanClass(colSpan: 1 | 2 | 3): string {
  * Get Row Span Class
  */
 export function getRowSpanClass(rowSpan?: 1 | 2): string {
-  if (!rowSpan || rowSpan === 1) return "";
+  if (!rowSpan || rowSpan === 1) {
+return "";
+}
   return "row-span-2";
 }
 
@@ -137,10 +139,14 @@ export function filterPanels(
   return panels
     .filter((panel) => {
       // Check mode
-      if (panel.mode !== "both" && panel.mode !== mode) return false;
+      if (panel.mode !== "both" && panel.mode !== mode) {
+return false;
+}
 
       // Check role
-      if (panel.visibleFor === "all") return true;
+      if (panel.visibleFor === "all") {
+return true;
+}
       return panel.visibleFor.includes(role);
     })
     .sort((a, b) => a.priority - b.priority);
@@ -260,9 +266,15 @@ export const panelPriorities = {
  * Breakpoint Detection Helper
  */
 export function detectBreakpoint(width: number): "mobile" | "tablet" | "desktop" | "wide" {
-  if (width < 768) return "mobile";
-  if (width < 1024) return "tablet";
-  if (width < 1536) return "desktop";
+  if (width < 768) {
+return "mobile";
+}
+  if (width < 1024) {
+return "tablet";
+}
+  if (width < 1536) {
+return "desktop";
+}
   return "wide";
 }
 

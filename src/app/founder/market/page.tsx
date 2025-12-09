@@ -27,7 +27,9 @@ export default function MarketPage() {
   const fetchData = async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const [baselinesRes, trendsRes] = await Promise.all([
         fetch('/api/market/baselines', {

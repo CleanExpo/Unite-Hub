@@ -3,7 +3,7 @@
  * Configuration, behavioral, and schema drift detection
  */
 
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 if (typeof window !== "undefined") {
   throw new Error("driftService must only run on server");

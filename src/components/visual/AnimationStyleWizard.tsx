@@ -323,7 +323,9 @@ export function AnimationStyleWizard({ onComplete, clientName = 'Client' }: Wiza
 
   // Handle option selection
   const handleSelect = useCallback((optionId: string) => {
-    if (!currentQuestion) return;
+    if (!currentQuestion) {
+return;
+}
 
     if (currentQuestion.type === 'single') {
       setAnswers(prev => ({

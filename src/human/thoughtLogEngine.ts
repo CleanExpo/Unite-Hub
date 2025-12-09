@@ -85,13 +85,19 @@ function inferUrgency(text: string): 'low' | 'medium' | 'high' | 'critical' {
   const lowerText = text.toLowerCase();
 
   const criticalKeywords = ['urgent', 'asap', 'critical', 'emergency', 'immediately', 'right now'];
-  if (criticalKeywords.some((kw) => lowerText.includes(kw))) return 'critical';
+  if (criticalKeywords.some((kw) => lowerText.includes(kw))) {
+return 'critical';
+}
 
   const highKeywords = ['important', 'soon', 'this week', 'deadline', 'decision needed'];
-  if (highKeywords.some((kw) => lowerText.includes(kw))) return 'high';
+  if (highKeywords.some((kw) => lowerText.includes(kw))) {
+return 'high';
+}
 
   const mediumKeywords = ['consider', 'maybe', 'think about', 'explore', 'opportunity'];
-  if (mediumKeywords.some((kw) => lowerText.includes(kw))) return 'medium';
+  if (mediumKeywords.some((kw) => lowerText.includes(kw))) {
+return 'medium';
+}
 
   return 'low';
 }

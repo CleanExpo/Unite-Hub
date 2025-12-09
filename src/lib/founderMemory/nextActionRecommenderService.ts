@@ -142,7 +142,9 @@ class NextActionRecommenderService {
       .order('priority_score', { ascending: false })
       .limit(limit);
 
-    if (error || !data) return [];
+    if (error || !data) {
+return [];
+}
     return data.map(this.mapDbToAction);
   }
 
@@ -401,10 +403,14 @@ Return JSON:
       });
 
       const textBlock = response.content.find((c) => c.type === 'text');
-      if (!textBlock) throw new Error('No response');
+      if (!textBlock) {
+throw new Error('No response');
+}
 
       const jsonMatch = textBlock.text.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) throw new Error('No JSON');
+      if (!jsonMatch) {
+throw new Error('No JSON');
+}
 
       return JSON.parse(jsonMatch[0]) as ActionContext;
     } catch {
@@ -430,7 +436,9 @@ Return JSON:
       .order('last_contacted_at', { ascending: true, nullsFirst: true })
       .limit(20);
 
-    if (!contacts) return [];
+    if (!contacts) {
+return [];
+}
 
     const now = Date.now();
     return contacts

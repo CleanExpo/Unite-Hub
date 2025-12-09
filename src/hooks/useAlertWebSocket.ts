@@ -49,7 +49,9 @@ export function useAlertWebSocket({
   });
 
   const connect = useCallback(() => {
-    if (status.isConnecting || status.isConnected) return;
+    if (status.isConnecting || status.isConnected) {
+return;
+}
 
     setStatus((prev) => ({
       ...prev,
@@ -101,7 +103,9 @@ export function useAlertWebSocket({
               onConnect?.();
 
               // Send ping every 30 seconds
-              if (pingIntervalRef.current) clearInterval(pingIntervalRef.current);
+              if (pingIntervalRef.current) {
+clearInterval(pingIntervalRef.current);
+}
               pingIntervalRef.current = setInterval(() => {
                 if (socketRef.current?.readyState === WebSocket.OPEN) {
                   socketRef.current.send(JSON.stringify({ type: 'ping' }));
@@ -158,7 +162,9 @@ export function useAlertWebSocket({
       socketRef.current.onclose = () => {
         console.log('[WebSocket] Disconnected');
 
-        if (pingIntervalRef.current) clearInterval(pingIntervalRef.current);
+        if (pingIntervalRef.current) {
+clearInterval(pingIntervalRef.current);
+}
 
         setStatus((prev) => ({
           ...prev,
@@ -210,8 +216,12 @@ export function useAlertWebSocket({
 
     // Cleanup on unmount
     return () => {
-      if (pingIntervalRef.current) clearInterval(pingIntervalRef.current);
-      if (reconnectTimeoutRef.current) clearTimeout(reconnectTimeoutRef.current);
+      if (pingIntervalRef.current) {
+clearInterval(pingIntervalRef.current);
+}
+      if (reconnectTimeoutRef.current) {
+clearTimeout(reconnectTimeoutRef.current);
+}
 
       if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
         socketRef.current.close(1000, 'Component unmount');
@@ -220,8 +230,12 @@ export function useAlertWebSocket({
   }, [connect]);
 
   const disconnect = useCallback(() => {
-    if (pingIntervalRef.current) clearInterval(pingIntervalRef.current);
-    if (reconnectTimeoutRef.current) clearTimeout(reconnectTimeoutRef.current);
+    if (pingIntervalRef.current) {
+clearInterval(pingIntervalRef.current);
+}
+    if (reconnectTimeoutRef.current) {
+clearTimeout(reconnectTimeoutRef.current);
+}
 
     if (socketRef.current) {
       socketRef.current.close(1000, 'Manual disconnect');

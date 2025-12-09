@@ -86,7 +86,7 @@ export function validateCronRequest(
   // Check if CRON_SECRET is configured
   const cronSecret = process.env.CRON_SECRET;
   if (!cronSecret) {
-    // eslint-disable-next-line no-console
+     
     console.error(`[${logPrefix}] CRON_SECRET not configured`);
     return {
       valid: false,
@@ -100,7 +100,7 @@ export function validateCronRequest(
 
   // Validate secret (minimum 32 characters recommended)
   if (cronSecret.length < 32) {
-    // eslint-disable-next-line no-console
+     
     console.warn(
       `[${logPrefix}] CRON_SECRET is less than 32 characters. ` +
       'Consider using a stronger secret.'
@@ -110,7 +110,7 @@ export function validateCronRequest(
   // Get authorization header
   const authHeader = req.headers.get('authorization');
   if (!authHeader) {
-    // eslint-disable-next-line no-console
+     
     console.warn(`[${logPrefix}] Missing authorization header`);
     return {
       valid: false,
@@ -125,7 +125,7 @@ export function validateCronRequest(
   // Validate secret matches
   const expectedAuth = `Bearer ${cronSecret}`;
   if (authHeader !== expectedAuth) {
-    // eslint-disable-next-line no-console
+     
     console.warn(`[${logPrefix}] Invalid cron secret`);
     return {
       valid: false,
@@ -145,7 +145,7 @@ export function validateCronRequest(
     const age = Math.abs(now - timestamp);
 
     if (isNaN(timestamp)) {
-      // eslint-disable-next-line no-console
+       
       console.warn(`[${logPrefix}] Invalid timestamp format: ${timestampHeader}`);
       return {
         valid: false,
@@ -158,7 +158,7 @@ export function validateCronRequest(
     }
 
     if (age > timestampWindow) {
-      // eslint-disable-next-line no-console
+       
       console.warn(
         `[${logPrefix}] Timestamp too old: ${age}ms (max: ${timestampWindow}ms)`
       );
@@ -172,7 +172,7 @@ export function validateCronRequest(
       };
     }
   } else if (requireTimestamp) {
-    // eslint-disable-next-line no-console
+     
     console.warn(`[${logPrefix}] Missing required timestamp header`);
     return {
       valid: false,
@@ -185,7 +185,7 @@ export function validateCronRequest(
   }
 
   // All checks passed
-  // eslint-disable-next-line no-console
+   
   console.log(`[${logPrefix}] Request authenticated successfully`);
   return { valid: true };
 }

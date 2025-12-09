@@ -76,8 +76,12 @@ export function detectConflicts(events: CalendarEvent[]): ConflictAnalysis[] {
  * Calculate conflict severity based on overlap duration
  */
 function calculateConflictSeverity(overlapMinutes: number): 'low' | 'medium' | 'high' {
-  if (overlapMinutes <= 15) return 'low';
-  if (overlapMinutes <= 30) return 'medium';
+  if (overlapMinutes <= 15) {
+return 'low';
+}
+  if (overlapMinutes <= 30) {
+return 'medium';
+}
   return 'high';
 }
 
@@ -121,7 +125,9 @@ export function findConsecutiveEvents(
   events: CalendarEvent[],
   maxGapMinutes: number = 15
 ): CalendarEvent[][] {
-  if (events.length < 2) return [];
+  if (events.length < 2) {
+return [];
+}
 
   const sorted = [...events].sort(
     (a, b) => new Date(a.start).getTime() - new Date(b.start).getTime()

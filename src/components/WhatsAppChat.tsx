@@ -97,7 +97,9 @@ export default function WhatsAppChat({ conversation, workspaceId, onUpdate }: Wh
   };
 
   const handleSendMessage = async () => {
-    if (!newMessage.trim() || sending) return;
+    if (!newMessage.trim() || sending) {
+return;
+}
 
     try {
       setSending(true);
@@ -152,7 +154,9 @@ export default function WhatsAppChat({ conversation, workspaceId, onUpdate }: Wh
   };
 
   const getStatusIcon = (message: WhatsAppMessage) => {
-    if (message.direction === 'inbound') return null;
+    if (message.direction === 'inbound') {
+return null;
+}
 
     switch (message.status) {
       case 'sent':

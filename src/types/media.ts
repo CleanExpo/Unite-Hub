@@ -289,7 +289,9 @@ export function isFailed(media: MediaFile): boolean {
  */
 
 export function formatFileSize(bytes: number): string {
-  if (bytes === 0) return '0 Bytes';
+  if (bytes === 0) {
+return '0 Bytes';
+}
   const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
@@ -318,11 +320,21 @@ export function formatTimestamp(seconds: number): string {
  */
 
 export function getFileTypeFromMime(mimeType: string): FileType {
-  if (mimeType.startsWith('video/')) return 'video';
-  if (mimeType.startsWith('audio/')) return 'audio';
-  if (mimeType.startsWith('image/')) return 'image';
-  if (mimeType === 'application/pdf' || mimeType.startsWith('text/')) return 'document';
-  if (mimeType === 'image/svg+xml' || mimeType === 'application/json') return 'sketch';
+  if (mimeType.startsWith('video/')) {
+return 'video';
+}
+  if (mimeType.startsWith('audio/')) {
+return 'audio';
+}
+  if (mimeType.startsWith('image/')) {
+return 'image';
+}
+  if (mimeType === 'application/pdf' || mimeType.startsWith('text/')) {
+return 'document';
+}
+  if (mimeType === 'image/svg+xml' || mimeType === 'application/json') {
+return 'sketch';
+}
   return 'document'; // Default fallback
 }
 

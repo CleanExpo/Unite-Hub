@@ -27,23 +27,41 @@ export const SafetySignalFeed: React.FC = () => {
   }
 
   const getSeverityColor = (severity: number) => {
-    if (severity >= 4) return 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800';
-    if (severity >= 3) return 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800';
-    if (severity >= 2) return 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800';
+    if (severity >= 4) {
+return 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800';
+}
+    if (severity >= 3) {
+return 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800';
+}
+    if (severity >= 2) {
+return 'bg-yellow-50 dark:bg-yellow-900/20 border-yellow-200 dark:border-yellow-800';
+}
     return 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800';
   };
 
   const getSeverityIcon = (severity: number) => {
-    if (severity >= 4) return <AlertOctagon className="w-5 h-5 text-red-600 dark:text-red-400" />;
-    if (severity >= 3) return <AlertCircle className="w-5 h-5 text-orange-600 dark:text-orange-400" />;
-    if (severity >= 2) return <AlertTriangle className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />;
+    if (severity >= 4) {
+return <AlertOctagon className="w-5 h-5 text-red-600 dark:text-red-400" />;
+}
+    if (severity >= 3) {
+return <AlertCircle className="w-5 h-5 text-orange-600 dark:text-orange-400" />;
+}
+    if (severity >= 2) {
+return <AlertTriangle className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />;
+}
     return <Zap className="w-5 h-5 text-blue-600 dark:text-blue-400" />;
   };
 
   const getRiskBadgeColor = (riskLevel: number) => {
-    if (riskLevel >= 75) return 'bg-red-600 text-white';
-    if (riskLevel >= 50) return 'bg-orange-600 text-white';
-    if (riskLevel >= 25) return 'bg-yellow-600 text-white';
+    if (riskLevel >= 75) {
+return 'bg-red-600 text-white';
+}
+    if (riskLevel >= 50) {
+return 'bg-orange-600 text-white';
+}
+    if (riskLevel >= 25) {
+return 'bg-yellow-600 text-white';
+}
     return 'bg-blue-600 text-white';
   };
 
@@ -56,10 +74,18 @@ export const SafetySignalFeed: React.FC = () => {
     const hours = Math.floor(diff / 3600000);
     const days = Math.floor(diff / 86400000);
 
-    if (minutes < 1) return 'Just now';
-    if (minutes < 60) return `${minutes}m ago`;
-    if (hours < 24) return `${hours}h ago`;
-    if (days < 7) return `${days}d ago`;
+    if (minutes < 1) {
+return 'Just now';
+}
+    if (minutes < 60) {
+return `${minutes}m ago`;
+}
+    if (hours < 24) {
+return `${hours}h ago`;
+}
+    if (days < 7) {
+return `${days}d ago`;
+}
 
     return date.toLocaleDateString();
   };

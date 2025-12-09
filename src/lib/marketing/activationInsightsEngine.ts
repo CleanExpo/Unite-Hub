@@ -119,10 +119,18 @@ const HEALTH_THRESHOLDS = {
  * Get current activation phase from day
  */
 export function getActivationPhase(day: number): ActivationPhase {
-  if (day <= 14) return 'trial';
-  if (day <= 44) return 'phase_1';
-  if (day <= 74) return 'phase_2';
-  if (day <= 90) return 'phase_3';
+  if (day <= 14) {
+return 'trial';
+}
+  if (day <= 44) {
+return 'phase_1';
+}
+  if (day <= 74) {
+return 'phase_2';
+}
+  if (day <= 90) {
+return 'phase_3';
+}
   return 'graduated';
 }
 

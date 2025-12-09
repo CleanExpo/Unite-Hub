@@ -470,7 +470,7 @@ export async function calculateUpcomingCharges(tenantId: string): Promise<Upcomi
 
   // Calculate usage-based charges (if any overages)
   const metrics: UsageMetric[] = ['emails_sent', 'contacts', 'ai_calls'];
-  let usageChargesCents = 0;
+  const usageChargesCents = 0;
   let overageChargesCents = 0;
 
   for (const metric of metrics) {

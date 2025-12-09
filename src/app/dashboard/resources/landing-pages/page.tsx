@@ -98,7 +98,9 @@ function LandingPageFeature({ clientId }: { clientId: string }) {
   useEffect(() => {
     const fetchChecklists = async () => {
       const { data: { session } } = await supabaseBrowser.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       try {
         const response = await fetch(`/api/landing-pages?clientId=${clientId}`, {
@@ -121,7 +123,9 @@ function LandingPageFeature({ clientId }: { clientId: string }) {
   useEffect(() => {
     const fetchPersonas = async () => {
       const { data: { session } } = await supabaseBrowser.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       try {
         const response = await fetch(`/api/personas?clientId=${clientId}&activeOnly=true`, {
@@ -144,7 +148,9 @@ function LandingPageFeature({ clientId }: { clientId: string }) {
   useEffect(() => {
     const fetchStats = async () => {
       const { data: { session } } = await supabaseBrowser.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       try {
         const response = await fetch(`/api/landing-pages/stats?clientId=${clientId}`, {

@@ -1,0 +1,685 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "generated": "2025-12-06",
+    "generator": "Claude Code Opus 4.5 - Gap Analysis Phase A1",
+    "project": "Unite-Hub + Synthex",
+    "total_items": 35
+  },
+  "backlog": [
+    {
+      "id": "SYNTHEX-001",
+      "category": "synthex",
+      "title": "Create Synthex Dashboard Page",
+      "description": "Create the main Synthex client dashboard at /synthex/dashboard with KPIs, recent activity feed, quick action buttons, and AI agent status indicators. This is the primary landing page after onboarding.",
+      "impact": "Critical",
+      "suggested_phase": "PHASE_B1",
+      "source_files": [
+        "src/app/(synthex)/layout.tsx",
+        "src/app/(synthex)/client-dashboard/page.tsx"
+      ],
+      "dependencies": [],
+      "acceptance_criteria": [
+        "Page renders with real workspace data",
+        "Shows KPIs: active projects, content pieces, SEO score, pending approvals",
+        "Recent activity feed displays last 10 agent actions",
+        "Quick action buttons work: Generate Content, Run SEO Audit, View Campaigns"
+      ]
+    },
+    {
+      "id": "SYNTHEX-002",
+      "category": "synthex",
+      "title": "Create Synthex Workspace Page",
+      "description": "Create the AI workspace page at /synthex/workspace where users can interact with AI to generate content, run analyses, and manage tasks.",
+      "impact": "Critical",
+      "suggested_phase": "PHASE_B1",
+      "source_files": [
+        "src/app/(synthex)/layout.tsx",
+        "src/lib/synthex/synthexOfferEngine.ts"
+      ],
+      "dependencies": ["SYNTHEX-001"],
+      "acceptance_criteria": [
+        "Chat interface for AI assistant",
+        "Content generation form with templates",
+        "SEO analysis trigger button",
+        "Task management sidebar"
+      ]
+    },
+    {
+      "id": "SYNTHEX-003",
+      "category": "synthex",
+      "title": "Create Synthex Campaigns Page",
+      "description": "Create the campaigns management page at /synthex/campaigns for viewing, creating, and managing email and drip campaigns.",
+      "impact": "Critical",
+      "suggested_phase": "PHASE_B1",
+      "source_files": [
+        "src/app/(synthex)/layout.tsx",
+        "src/app/api/campaigns/drip/route.ts",
+        "src/app/api/campaigns/blueprints/route.ts"
+      ],
+      "dependencies": ["SYNTHEX-001"],
+      "acceptance_criteria": [
+        "List of campaigns with status indicators",
+        "Create new campaign wizard",
+        "Campaign performance metrics",
+        "Drip campaign visual builder"
+      ]
+    },
+    {
+      "id": "SYNTHEX-004",
+      "category": "synthex",
+      "title": "Create Synthex SEO Reports Page",
+      "description": "Create the SEO reports page at /synthex/seo showing audit results, keyword rankings, and optimization recommendations.",
+      "impact": "Important",
+      "suggested_phase": "PHASE_B1",
+      "source_files": [
+        "src/app/(synthex)/layout.tsx",
+        "src/app/api/synthex/seo/analyze/route.ts",
+        "src/app/api/synthex/seo/analyses/route.ts"
+      ],
+      "dependencies": ["SYNTHEX-001"],
+      "acceptance_criteria": [
+        "List of past SEO audits",
+        "Current SEO score with breakdown",
+        "Keyword ranking tracker",
+        "Actionable recommendations list"
+      ]
+    },
+    {
+      "id": "SYNTHEX-005",
+      "category": "synthex",
+      "title": "Create Synthex Content Library Page",
+      "description": "Create the content library page at /synthex/content for managing generated content, drafts, and approved assets.",
+      "impact": "Important",
+      "suggested_phase": "PHASE_B1",
+      "source_files": [
+        "src/app/(synthex)/layout.tsx",
+        "src/app/api/content/pending/route.ts",
+        "src/app/api/content/generate/route.ts"
+      ],
+      "dependencies": ["SYNTHEX-001"],
+      "acceptance_criteria": [
+        "Content cards with preview",
+        "Filter by type, status, date",
+        "Approve/reject workflow",
+        "Edit content inline",
+        "Download/export options"
+      ]
+    },
+    {
+      "id": "SYNTHEX-006",
+      "category": "synthex",
+      "title": "Create Synthex Analytics Page",
+      "description": "Create the analytics dashboard at /synthex/analytics showing performance metrics across all channels.",
+      "impact": "Important",
+      "suggested_phase": "PHASE_B3",
+      "source_files": [
+        "src/app/(synthex)/layout.tsx",
+        "src/app/api/analytics/overview/route.ts"
+      ],
+      "dependencies": ["SYNTHEX-001"],
+      "acceptance_criteria": [
+        "Channel performance charts",
+        "Campaign ROI metrics",
+        "Content engagement stats",
+        "Date range selector"
+      ]
+    },
+    {
+      "id": "SYNTHEX-007",
+      "category": "synthex",
+      "title": "Create Synthex Projects Page",
+      "description": "Create the projects management page at /synthex/projects for organizing work by client or project.",
+      "impact": "Nice-to-have",
+      "suggested_phase": "PHASE_B3",
+      "source_files": [
+        "src/app/(synthex)/layout.tsx"
+      ],
+      "dependencies": ["SYNTHEX-001"],
+      "acceptance_criteria": [
+        "Project list with status",
+        "Create/edit project forms",
+        "Project-scoped content and campaigns",
+        "Team member assignment"
+      ]
+    },
+    {
+      "id": "SYNTHEX-008",
+      "category": "synthex",
+      "title": "Create Synthex Ideas Page",
+      "description": "Create the ideas capture page at /synthex/ideas for brainstorming and planning content ideas.",
+      "impact": "Nice-to-have",
+      "suggested_phase": "PHASE_B3",
+      "source_files": [
+        "src/app/(synthex)/layout.tsx"
+      ],
+      "dependencies": ["SYNTHEX-001"],
+      "acceptance_criteria": [
+        "Idea cards with notes",
+        "AI-powered idea suggestions",
+        "Convert idea to content workflow",
+        "Tag and categorize ideas"
+      ]
+    },
+    {
+      "id": "SYNTHEX-009",
+      "category": "synthex",
+      "title": "Create Synthex Vault Page",
+      "description": "Create the digital vault page at /synthex/vault for secure storage of brand assets and credentials.",
+      "impact": "Nice-to-have",
+      "suggested_phase": "PHASE_B3",
+      "source_files": [
+        "src/app/(synthex)/layout.tsx"
+      ],
+      "dependencies": ["SYNTHEX-001"],
+      "acceptance_criteria": [
+        "File upload and management",
+        "Brand asset organization",
+        "Secure credential storage",
+        "Access controls"
+      ]
+    },
+    {
+      "id": "SYNTHEX-010",
+      "category": "synthex",
+      "title": "Create Synthex AI Assistant Page",
+      "description": "Create the AI assistant page at /synthex/assistant with a full chat interface for interacting with Claude.",
+      "impact": "Important",
+      "suggested_phase": "PHASE_B2",
+      "source_files": [
+        "src/app/(synthex)/layout.tsx",
+        "src/app/api/founder/assistant/route.ts"
+      ],
+      "dependencies": ["SYNTHEX-001"],
+      "acceptance_criteria": [
+        "Chat interface with message history",
+        "Context-aware responses (knows user's business)",
+        "Quick action buttons",
+        "Ability to trigger agent actions from chat"
+      ]
+    },
+    {
+      "id": "UX-001",
+      "category": "ux",
+      "title": "Create Contact Page",
+      "description": "Create the contact page at /contact with a form that submits to the contact API.",
+      "impact": "Important",
+      "suggested_phase": "PHASE_B1",
+      "source_files": [
+        "src/app/page.tsx",
+        "src/app/(marketing)/about/page.tsx",
+        "src/app/api/contact/submit/route.ts"
+      ],
+      "dependencies": [],
+      "acceptance_criteria": [
+        "Contact form with name, email, message",
+        "Form validation",
+        "Success/error feedback",
+        "Sends email notification"
+      ]
+    },
+    {
+      "id": "UX-002",
+      "category": "ux",
+      "title": "Create Blog Detail Route",
+      "description": "Create dynamic blog post route at /blog/[slug] to display individual blog posts.",
+      "impact": "Important",
+      "suggested_phase": "PHASE_B2",
+      "source_files": [
+        "src/app/(marketing)/blog/page.tsx"
+      ],
+      "dependencies": [],
+      "acceptance_criteria": [
+        "Dynamic route renders blog content",
+        "404 for non-existent posts",
+        "SEO metadata per post",
+        "Share buttons"
+      ]
+    },
+    {
+      "id": "UX-003",
+      "category": "ux",
+      "title": "Create Forgot Password Page",
+      "description": "Create the forgot password page at /forgot-password with password reset flow.",
+      "impact": "Important",
+      "suggested_phase": "PHASE_B1",
+      "source_files": [
+        "src/app/login/page.tsx"
+      ],
+      "dependencies": [],
+      "acceptance_criteria": [
+        "Email input form",
+        "Sends password reset email via Supabase",
+        "Success message",
+        "Link back to login"
+      ]
+    },
+    {
+      "id": "UX-004",
+      "category": "ux",
+      "title": "Verify Privacy, Terms, Cookies Pages",
+      "description": "Verify that /privacy, /terms, and /cookies pages exist and contain appropriate content.",
+      "impact": "Important",
+      "suggested_phase": "PHASE_B1",
+      "source_files": [
+        "src/app/page.tsx"
+      ],
+      "dependencies": [],
+      "acceptance_criteria": [
+        "All three pages exist",
+        "Content is legally appropriate",
+        "Consistent styling with marketing site"
+      ]
+    },
+    {
+      "id": "WORKFLOW-001",
+      "category": "workflow",
+      "title": "Post-Login Routing Based on Role",
+      "description": "Implement role-based routing after login: CLIENT -> Synthex portal, FOUNDER/ADMIN -> Dashboard, new users -> onboarding.",
+      "impact": "Critical",
+      "suggested_phase": "PHASE_B1",
+      "source_files": [
+        "src/app/login/page.tsx",
+        "src/middleware.ts",
+        "src/contexts/AuthContext.tsx"
+      ],
+      "dependencies": [],
+      "acceptance_criteria": [
+        "New users redirected to onboarding",
+        "CLIENT role users go to /synthex/dashboard",
+        "FOUNDER/ADMIN go to /dashboard/overview",
+        "Handles missing organization gracefully"
+      ]
+    },
+    {
+      "id": "WORKFLOW-002",
+      "category": "workflow",
+      "title": "Onboarding to Dashboard Flow",
+      "description": "Ensure the onboarding completion redirects to a functional Synthex dashboard (not 404).",
+      "impact": "Critical",
+      "suggested_phase": "PHASE_B1",
+      "source_files": [
+        "src/app/synthex/onboarding/page.tsx"
+      ],
+      "dependencies": ["SYNTHEX-001"],
+      "acceptance_criteria": [
+        "Onboarding redirect goes to existing page",
+        "User lands with correct workspace context",
+        "Dashboard shows 'getting started' state for new users"
+      ]
+    },
+    {
+      "id": "WORKFLOW-003",
+      "category": "workflow",
+      "title": "Gmail Connection UI in Synthex",
+      "description": "Add Gmail OAuth connection flow in Synthex portal settings or integrations page.",
+      "impact": "Important",
+      "suggested_phase": "PHASE_B2",
+      "source_files": [
+        "src/app/api/email/oauth/authorize/route.ts",
+        "src/app/api/email/oauth/callback/route.ts"
+      ],
+      "dependencies": ["SYNTHEX-001"],
+      "acceptance_criteria": [
+        "Connect Gmail button in settings",
+        "OAuth flow completes successfully",
+        "Connected status indicator",
+        "Disconnect option"
+      ]
+    },
+    {
+      "id": "WORKFLOW-004",
+      "category": "workflow",
+      "title": "Content Generation from UI",
+      "description": "Add ability to trigger content generation from Synthex workspace, with progress feedback and result display.",
+      "impact": "Critical",
+      "suggested_phase": "PHASE_B1",
+      "source_files": [
+        "src/app/api/content/generate/route.ts",
+        "scripts/run-content-agent.mjs"
+      ],
+      "dependencies": ["SYNTHEX-002"],
+      "acceptance_criteria": [
+        "Generate content button in workspace",
+        "Progress indicator during generation",
+        "Result displayed in content library",
+        "Error handling with user feedback"
+      ]
+    },
+    {
+      "id": "WORKFLOW-005",
+      "category": "workflow",
+      "title": "SEO Audit Trigger from UI",
+      "description": "Add ability to run SEO audits on-demand from Synthex portal with results displayed in SEO page.",
+      "impact": "Important",
+      "suggested_phase": "PHASE_B2",
+      "source_files": [
+        "src/app/api/synthex/seo/analyze/route.ts"
+      ],
+      "dependencies": ["SYNTHEX-004"],
+      "acceptance_criteria": [
+        "Run audit button",
+        "Progress indicator",
+        "Results displayed with score and recommendations",
+        "Audit history saved"
+      ]
+    },
+    {
+      "id": "AGENT-001",
+      "category": "agent_skill",
+      "title": "Agent Status Dashboard Widget",
+      "description": "Create a dashboard widget showing real-time status of AI agents (running, idle, last run time, success rate).",
+      "impact": "Important",
+      "suggested_phase": "PHASE_B4",
+      "source_files": [
+        ".claude/agent.md",
+        "src/app/api/agent/status/route.ts"
+      ],
+      "dependencies": ["SYNTHEX-001"],
+      "acceptance_criteria": [
+        "Widget shows agent list with status",
+        "Last run timestamp per agent",
+        "Success/failure indicators",
+        "Link to detailed agent logs"
+      ]
+    },
+    {
+      "id": "AGENT-002",
+      "category": "agent_skill",
+      "title": "Agent Activity Feed",
+      "description": "Create a feed showing recent agent actions (emails processed, content generated, audits completed).",
+      "impact": "Important",
+      "suggested_phase": "PHASE_B4",
+      "source_files": [
+        ".claude/agent.md",
+        "src/app/api/audit/history/route.ts"
+      ],
+      "dependencies": ["SYNTHEX-001"],
+      "acceptance_criteria": [
+        "Real-time activity feed",
+        "Filterable by agent type",
+        "Action details on click",
+        "Pagination for history"
+      ]
+    },
+    {
+      "id": "AGENT-003",
+      "category": "agent_skill",
+      "title": "Create GMB Manager Skill",
+      "description": "Create a new agent skill for managing Google Business Profile: posting updates, responding to reviews, managing photos.",
+      "impact": "Important",
+      "suggested_phase": "PHASE_B4",
+      "source_files": [
+        ".claude/skills/"
+      ],
+      "dependencies": [],
+      "acceptance_criteria": [
+        "SKILL.md file created",
+        "API routes for GMB operations",
+        "Integration with Google Business API",
+        "UI for GMB management in Synthex"
+      ]
+    },
+    {
+      "id": "AGENT-004",
+      "category": "agent_skill",
+      "title": "Create Social Scheduler Skill",
+      "description": "Create an agent skill for scheduling and posting content to social media platforms (Meta, LinkedIn, Twitter).",
+      "impact": "Important",
+      "suggested_phase": "PHASE_B4",
+      "source_files": [
+        ".claude/skills/multi-channel/SKILL.md",
+        ".claude/skills/social-playbook/SKILL.md"
+      ],
+      "dependencies": [],
+      "acceptance_criteria": [
+        "Schedule post for future date/time",
+        "Multi-platform support",
+        "Queue management UI",
+        "Post performance tracking"
+      ]
+    },
+    {
+      "id": "AGENT-005",
+      "category": "agent_skill",
+      "title": "Email Campaign Runner Skill",
+      "description": "Create an agent skill for executing email drip campaigns: send sequences, track opens/clicks, handle automation triggers.",
+      "impact": "Important",
+      "suggested_phase": "PHASE_B3",
+      "source_files": [
+        ".claude/skills/email-agent/SKILL.md",
+        "src/app/api/campaigns/drip/route.ts"
+      ],
+      "dependencies": ["SYNTHEX-003"],
+      "acceptance_criteria": [
+        "Execute drip campaign steps",
+        "Track email delivery and engagement",
+        "Handle automation triggers (new contact, score threshold)",
+        "Pause/resume capability"
+      ]
+    },
+    {
+      "id": "AGENT-006",
+      "category": "agent_skill",
+      "title": "Website Auditor Skill Enhancement",
+      "description": "Enhance the SEO audit skill to be user-triggerable from UI with real-time progress and detailed results.",
+      "impact": "Important",
+      "suggested_phase": "PHASE_B2",
+      "source_files": [
+        ".claude/skills/seo-leak/SKILL.md",
+        ".claude/skills/no-bluff-seo/SKILL.md"
+      ],
+      "dependencies": ["WORKFLOW-005"],
+      "acceptance_criteria": [
+        "Trigger from UI button",
+        "WebSocket progress updates",
+        "Detailed audit report",
+        "Historical comparison"
+      ]
+    },
+    {
+      "id": "INFRA-001",
+      "category": "infra",
+      "title": "WebSocket Real-Time Updates",
+      "description": "Implement WebSocket connection for real-time updates on agent status, content generation progress, and notifications.",
+      "impact": "Important",
+      "suggested_phase": "PHASE_B4",
+      "source_files": [
+        "src/lib/websocket/websocket-server.ts"
+      ],
+      "dependencies": [],
+      "acceptance_criteria": [
+        "WebSocket endpoint for client connection",
+        "Broadcast agent status changes",
+        "Content generation progress events",
+        "Reconnection handling"
+      ]
+    },
+    {
+      "id": "INFRA-002",
+      "category": "infra",
+      "title": "Agent Scheduling System",
+      "description": "Implement a scheduling system for automated agent runs (daily SEO checks, hourly email processing, weekly reports).",
+      "impact": "Important",
+      "suggested_phase": "PHASE_B4",
+      "source_files": [
+        "src/lib/jobs/scheduled-jobs.ts",
+        "src/lib/cron/scheduled-tasks.ts"
+      ],
+      "dependencies": [],
+      "acceptance_criteria": [
+        "Cron-based scheduling",
+        "User-configurable schedules",
+        "Schedule management UI",
+        "Execution logs"
+      ]
+    },
+    {
+      "id": "PLACEHOLDER-001",
+      "category": "ux",
+      "title": "Replace Dashboard Vault Placeholder",
+      "description": "Replace placeholder content in dashboard/vault/page.tsx with functional vault implementation.",
+      "impact": "Nice-to-have",
+      "suggested_phase": "PHASE_B3",
+      "source_files": [
+        "src/app/dashboard/vault/page.tsx"
+      ],
+      "dependencies": [],
+      "acceptance_criteria": [
+        "File upload functionality",
+        "File listing and management",
+        "Category/tag organization",
+        "Search capability"
+      ]
+    },
+    {
+      "id": "PLACEHOLDER-002",
+      "category": "ux",
+      "title": "Replace Dashboard Memory Placeholder",
+      "description": "Replace placeholder content in dashboard/memory/page.tsx with functional memory/context viewer.",
+      "impact": "Nice-to-have",
+      "suggested_phase": "PHASE_B3",
+      "source_files": [
+        "src/app/dashboard/memory/page.tsx"
+      ],
+      "dependencies": [],
+      "acceptance_criteria": [
+        "AI memory/context display",
+        "Memory management controls",
+        "Usage statistics"
+      ]
+    },
+    {
+      "id": "PLACEHOLDER-003",
+      "category": "ux",
+      "title": "Replace Dashboard Marketplace Placeholder",
+      "description": "Replace placeholder content in dashboard/marketplace/page.tsx or remove if not planned for MVP.",
+      "impact": "Nice-to-have",
+      "suggested_phase": "PHASE_B3",
+      "source_files": [
+        "src/app/dashboard/marketplace/page.tsx"
+      ],
+      "dependencies": [],
+      "acceptance_criteria": [
+        "Decide: implement or remove",
+        "If implement: integration/plugin marketplace",
+        "If remove: update navigation"
+      ]
+    },
+    {
+      "id": "PLACEHOLDER-004",
+      "category": "ux",
+      "title": "Replace Dashboard Campaigns Placeholder",
+      "description": "Enhance dashboard/campaigns/page.tsx beyond placeholder to fully functional campaign management.",
+      "impact": "Important",
+      "suggested_phase": "PHASE_B2",
+      "source_files": [
+        "src/app/dashboard/campaigns/page.tsx"
+      ],
+      "dependencies": [],
+      "acceptance_criteria": [
+        "Campaign list with filters",
+        "Create campaign wizard",
+        "Campaign analytics",
+        "Drip campaign builder"
+      ]
+    },
+    {
+      "id": "PLACEHOLDER-005",
+      "category": "ux",
+      "title": "Replace Dashboard Brief Placeholder",
+      "description": "Implement dashboard/brief/page.tsx for project briefs and creative requests.",
+      "impact": "Nice-to-have",
+      "suggested_phase": "PHASE_B3",
+      "source_files": [
+        "src/app/dashboard/brief/page.tsx"
+      ],
+      "dependencies": [],
+      "acceptance_criteria": [
+        "Brief creation form",
+        "Brief templates",
+        "AI-assisted brief writing",
+        "Brief to project conversion"
+      ]
+    },
+    {
+      "id": "AIDO-001",
+      "category": "workflow",
+      "title": "Complete AIDO Pages",
+      "description": "Complete the AIDO (AI Desktop Operator) pages that have TODO/placeholder content.",
+      "impact": "Nice-to-have",
+      "suggested_phase": "PHASE_B3",
+      "source_files": [
+        "src/app/dashboard/aido/settings/page.tsx",
+        "src/app/dashboard/aido/overview/page.tsx",
+        "src/app/dashboard/aido/onboarding/page.tsx",
+        "src/app/dashboard/aido/intent-clusters/page.tsx",
+        "src/app/dashboard/aido/google-curve/page.tsx",
+        "src/app/dashboard/aido/content/page.tsx",
+        "src/app/dashboard/aido/clients/page.tsx"
+      ],
+      "dependencies": [],
+      "acceptance_criteria": [
+        "All AIDO pages functional",
+        "Consistent UX with rest of dashboard",
+        "Feature parity with Synthex equivalent"
+      ]
+    },
+    {
+      "id": "BLOG-001",
+      "category": "ux",
+      "title": "Dynamic Blog Content System",
+      "description": "Implement a dynamic blog system with database-backed posts, categories, and CMS functionality.",
+      "impact": "Nice-to-have",
+      "suggested_phase": "PHASE_B5",
+      "source_files": [
+        "src/app/(marketing)/blog/page.tsx"
+      ],
+      "dependencies": ["UX-002"],
+      "acceptance_criteria": [
+        "Blog posts stored in database",
+        "Admin interface for creating posts",
+        "Markdown/rich text editor",
+        "Category and tag system",
+        "SEO metadata per post"
+      ]
+    }
+  ],
+  "phase_summary": {
+    "PHASE_B1": {
+      "title": "Synthex Portal MVP",
+      "description": "Make the Synthex client portal functional for paying customers",
+      "items": ["SYNTHEX-001", "SYNTHEX-002", "SYNTHEX-003", "SYNTHEX-004", "SYNTHEX-005", "UX-001", "UX-003", "UX-004", "WORKFLOW-001", "WORKFLOW-002", "WORKFLOW-004"],
+      "estimated_scope": "15-20 items",
+      "priority": "Critical"
+    },
+    "PHASE_B2": {
+      "title": "Integration Connections",
+      "description": "Let users connect business assets and run on-demand analyses",
+      "items": ["SYNTHEX-010", "UX-002", "WORKFLOW-003", "WORKFLOW-005", "AGENT-006", "PLACEHOLDER-004"],
+      "estimated_scope": "6-8 items",
+      "priority": "Important"
+    },
+    "PHASE_B3": {
+      "title": "Content & Campaign Flow",
+      "description": "End-to-end content creation and campaign deployment",
+      "items": ["SYNTHEX-006", "SYNTHEX-007", "SYNTHEX-008", "SYNTHEX-009", "AGENT-005", "PLACEHOLDER-001", "PLACEHOLDER-002", "PLACEHOLDER-003", "PLACEHOLDER-005", "AIDO-001"],
+      "estimated_scope": "10-12 items",
+      "priority": "Important"
+    },
+    "PHASE_B4": {
+      "title": "Agent Visibility & Control",
+      "description": "Surface AI agents to end users with status, activity, and configuration",
+      "items": ["AGENT-001", "AGENT-002", "AGENT-003", "AGENT-004", "INFRA-001", "INFRA-002"],
+      "estimated_scope": "6 items",
+      "priority": "Important"
+    },
+    "PHASE_B5": {
+      "title": "Analytics & Content Management",
+      "description": "Performance dashboards and content management system",
+      "items": ["BLOG-001"],
+      "estimated_scope": "3-5 items",
+      "priority": "Nice-to-have"
+    }
+  }
+}

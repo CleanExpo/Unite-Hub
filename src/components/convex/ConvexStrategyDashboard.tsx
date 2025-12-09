@@ -119,7 +119,9 @@ export function ConvexStrategyDashboard() {
 
   // Generate strategy
   const handleGenerateStrategy = async () => {
-    if (!validateInput()) return;
+    if (!validateInput()) {
+return;
+}
 
     setIsLoading(true);
     setError(null);
@@ -186,7 +188,9 @@ export function ConvexStrategyDashboard() {
 
   // Export strategy
   const handleExportStrategy = () => {
-    if (!result) return;
+    if (!result) {
+return;
+}
 
     const exportData = JSON.stringify(result, null, 2);
     const blob = new Blob([exportData], { type: 'application/json' });
@@ -202,14 +206,22 @@ export function ConvexStrategyDashboard() {
 
   // Score color mapping
   const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
+    if (score >= 80) {
+return 'text-green-600';
+}
+    if (score >= 60) {
+return 'text-yellow-600';
+}
     return 'text-red-600';
   };
 
   const getScoreBadgeVariant = (score: number): 'default' | 'secondary' | 'destructive' | 'outline' => {
-    if (score >= 80) return 'default';
-    if (score >= 60) return 'secondary';
+    if (score >= 80) {
+return 'default';
+}
+    if (score >= 60) {
+return 'secondary';
+}
     return 'destructive';
   };
 

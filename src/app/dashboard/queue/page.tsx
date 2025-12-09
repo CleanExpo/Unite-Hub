@@ -56,7 +56,9 @@ export default function ReviewQueuePage() {
   }, [workspaceId]);
 
   const filteredItems = items.filter(item => {
-    if (filter === "all") return true;
+    if (filter === "all") {
+return true;
+}
     return item.status === filter;
   });
 

@@ -48,16 +48,36 @@ export async function PATCH(request: NextRequest, context: { params: Promise<{ i
     const updates: TablesUpdate<"team_members"> = {};
 
     // Only include fields that are provided
-    if (body.name !== undefined) updates.name = body.name;
-    if (body.role !== undefined) updates.role = body.role;
-    if (body.email !== undefined) updates.email = body.email;
-    if (body.phone !== undefined) updates.phone = body.phone;
-    if (body.avatar_url !== undefined) updates.avatar_url = body.avatar_url;
-    if (body.initials !== undefined) updates.initials = body.initials;
-    if (body.capacity_hours !== undefined) updates.capacity_hours = body.capacity_hours;
-    if (body.hours_allocated !== undefined) updates.hours_allocated = body.hours_allocated;
-    if (body.skills !== undefined) updates.skills = body.skills;
-    if (body.is_active !== undefined) updates.is_active = body.is_active;
+    if (body.name !== undefined) {
+updates.name = body.name;
+}
+    if (body.role !== undefined) {
+updates.role = body.role;
+}
+    if (body.email !== undefined) {
+updates.email = body.email;
+}
+    if (body.phone !== undefined) {
+updates.phone = body.phone;
+}
+    if (body.avatar_url !== undefined) {
+updates.avatar_url = body.avatar_url;
+}
+    if (body.initials !== undefined) {
+updates.initials = body.initials;
+}
+    if (body.capacity_hours !== undefined) {
+updates.capacity_hours = body.capacity_hours;
+}
+    if (body.hours_allocated !== undefined) {
+updates.hours_allocated = body.hours_allocated;
+}
+    if (body.skills !== undefined) {
+updates.skills = body.skills;
+}
+    if (body.is_active !== undefined) {
+updates.is_active = body.is_active;
+}
 
     const supabase = await getSupabaseServer();
     const { data: teamMember, error } = await supabase

@@ -284,12 +284,24 @@ class PatternLearnerService {
       updated_at: new Date().toISOString(),
     };
 
-    if (updates.name) dbUpdates.name = updates.name;
-    if (updates.description !== undefined) dbUpdates.description = updates.description;
-    if (updates.category) dbUpdates.category = updates.category;
-    if (updates.status) dbUpdates.status = updates.status;
-    if (updates.steps) dbUpdates.steps = updates.steps;
-    if (updates.variableFields) dbUpdates.variable_fields = updates.variableFields;
+    if (updates.name) {
+dbUpdates.name = updates.name;
+}
+    if (updates.description !== undefined) {
+dbUpdates.description = updates.description;
+}
+    if (updates.category) {
+dbUpdates.category = updates.category;
+}
+    if (updates.status) {
+dbUpdates.status = updates.status;
+}
+    if (updates.steps) {
+dbUpdates.steps = updates.steps;
+}
+    if (updates.variableFields) {
+dbUpdates.variable_fields = updates.variableFields;
+}
 
     const { error } = await supabase
       .from('browser_learned_patterns')

@@ -56,8 +56,8 @@ export interface GovernanceReport {
 }
 
 // In-memory governance policies and audit log
-let governancePolicies: GovernancePolicy[] = [];
-let auditLog: GovernanceAuditEntry[] = [];
+const governancePolicies: GovernancePolicy[] = [];
+const auditLog: GovernanceAuditEntry[] = [];
 
 /**
  * Create new governance policy
@@ -118,7 +118,9 @@ export function validateDecision(decision: AgentDecision): {
 function checkConstraint(decision: AgentDecision, constraint: GovernanceConstraint): string | null {
   const value = getDecisionValue(decision, constraint.type);
 
-  if (value === null) return null;
+  if (value === null) {
+return null;
+}
 
   switch (constraint.operator) {
     case '<':

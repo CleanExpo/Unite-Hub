@@ -203,7 +203,9 @@ export function createLazyComponent<T extends React.ComponentType<unknown>>(
 export function preloadComponents(
   importFns: Array<() => Promise<unknown>>
 ): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined') {
+return;
+}
 
   requestIdleCallback(() => {
     importFns.forEach((fn) => {
@@ -275,7 +277,9 @@ export class LRUCache<K, V> {
   }
 
   get(key: K): V | undefined {
-    if (!this.cache.has(key)) return undefined;
+    if (!this.cache.has(key)) {
+return undefined;
+}
 
     // Move to end (most recently used)
     const value = this.cache.get(key)!;
@@ -339,7 +343,9 @@ export function startMeasure(name: string): void {
  */
 export function endMeasure(name: string): number | null {
   const mark = performanceMarks.get(name);
-  if (!mark) return null;
+  if (!mark) {
+return null;
+}
 
   const duration = performance.now() - mark.startTime;
   mark.duration = duration;
@@ -389,9 +395,15 @@ export function getOptimizedImageUrl(
   // For Supabase storage URLs, add transformation parameters
   if (url.includes('supabase.co/storage')) {
     const params = new URLSearchParams();
-    if (options.width) params.set('width', String(options.width));
-    if (options.height) params.set('height', String(options.height));
-    if (options.quality) params.set('quality', String(options.quality));
+    if (options.width) {
+params.set('width', String(options.width));
+}
+    if (options.height) {
+params.set('height', String(options.height));
+}
+    if (options.quality) {
+params.set('quality', String(options.quality));
+}
 
     const separator = url.includes('?') ? '&' : '?';
     return `${url}${separator}${params.toString()}`;
@@ -400,9 +412,15 @@ export function getOptimizedImageUrl(
   // For Unsplash URLs, use their API
   if (url.includes('unsplash.com')) {
     const params = new URLSearchParams();
-    if (options.width) params.set('w', String(options.width));
-    if (options.height) params.set('h', String(options.height));
-    if (options.quality) params.set('q', String(options.quality));
+    if (options.width) {
+params.set('w', String(options.width));
+}
+    if (options.height) {
+params.set('h', String(options.height));
+}
+    if (options.quality) {
+params.set('q', String(options.quality));
+}
     params.set('auto', 'format');
     params.set('fit', 'crop');
 

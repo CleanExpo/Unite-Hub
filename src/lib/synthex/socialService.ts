@@ -653,7 +653,9 @@ export async function getPostAnalytics(
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') return null;
+    if (error.code === 'PGRST116') {
+return null;
+}
     console.error('Error fetching analytics:', error);
     return null;
   }

@@ -27,7 +27,9 @@ export class AIREEngine {
       .select('id')
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
     return data.id;
   }
 
@@ -38,7 +40,9 @@ export class AIREEngine {
       .eq('id', runbookId)
       .single();
 
-    if (!runbook) throw new Error('Runbook not found');
+    if (!runbook) {
+throw new Error('Runbook not found');
+}
 
     const steps = runbook.steps || [];
 

@@ -220,9 +220,13 @@ export class PredictionEngine {
 
     // Determine tier
     let tier = "Cold";
-    if (totalScore >= 80) tier = "Hot";
-    else if (totalScore >= 60) tier = "Warm";
-    else if (totalScore >= 40) tier = "Lukewarm";
+    if (totalScore >= 80) {
+tier = "Hot";
+} else if (totalScore >= 60) {
+tier = "Warm";
+} else if (totalScore >= 40) {
+tier = "Lukewarm";
+}
 
     return {
       score: Math.round(totalScore),
@@ -362,15 +366,22 @@ export class PredictionEngine {
 
     for (const outcome of actualOutcomes) {
       const prediction = predictions.find((p) => p.leadId === outcome.leadId);
-      if (!prediction) continue;
+      if (!prediction) {
+continue;
+}
 
       const predicted = prediction.conversionProbability > 0.5;
       const actual = outcome.converted;
 
-      if (predicted && actual) truePositives++;
-      else if (predicted && !actual) falsePositives++;
-      else if (!predicted && actual) falseNegatives++;
-      else trueNegatives++;
+      if (predicted && actual) {
+truePositives++;
+} else if (predicted && !actual) {
+falsePositives++;
+} else if (!predicted && actual) {
+falseNegatives++;
+} else {
+trueNegatives++;
+}
     }
 
     const total =

@@ -38,7 +38,9 @@ const REDACTED = '[REDACTED_API_KEY]';
  * ```
  */
 export function sanitizeString(str: string): string {
-  if (typeof str !== 'string') return str;
+  if (typeof str !== 'string') {
+return str;
+}
 
   let sanitized = str;
 
@@ -77,7 +79,9 @@ export function sanitizeString(str: string): string {
  * ```
  */
 export function sanitizeError(error: unknown): unknown {
-  if (!error) return error;
+  if (!error) {
+return error;
+}
 
   // Handle Error objects
   if (error instanceof Error) {
@@ -136,13 +140,19 @@ export function sanitizeError(error: unknown): unknown {
  * ```
  */
 export function sanitizeObject(obj: Record<string, any>): Record<string, any> {
-  if (!obj || typeof obj !== 'object') return obj;
+  if (!obj || typeof obj !== 'object') {
+return obj;
+}
 
   // Handle arrays
   if (Array.isArray(obj)) {
     return obj.map(item => {
-      if (typeof item === 'string') return sanitizeString(item);
-      if (typeof item === 'object' && item !== null) return sanitizeObject(item);
+      if (typeof item === 'string') {
+return sanitizeString(item);
+}
+      if (typeof item === 'object' && item !== null) {
+return sanitizeObject(item);
+}
       return item;
     });
   }

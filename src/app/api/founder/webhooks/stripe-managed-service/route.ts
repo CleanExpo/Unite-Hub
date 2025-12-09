@@ -70,8 +70,12 @@ function verifyWebhookSignature(
  */
 function extractServiceTier(product: any): string {
   const metadata = product?.metadata || {};
-  if (metadata.service_tier === 'professional') return 'professional';
-  if (metadata.service_tier === 'enterprise') return 'enterprise';
+  if (metadata.service_tier === 'professional') {
+return 'professional';
+}
+  if (metadata.service_tier === 'enterprise') {
+return 'enterprise';
+}
   return 'starter';  // Default to starter
 }
 
@@ -285,8 +289,12 @@ async function handleSubscriptionUpdated(event: StripeEvent, supabase: ReturnTyp
 
   // Map Stripe status to project status
   let projectStatus = 'active';
-  if (newStatus === 'paused') projectStatus = 'paused';
-  if (newStatus === 'canceled') projectStatus = 'cancelled';
+  if (newStatus === 'paused') {
+projectStatus = 'paused';
+}
+  if (newStatus === 'canceled') {
+projectStatus = 'cancelled';
+}
 
   // Update project status
   const { error } = await supabase

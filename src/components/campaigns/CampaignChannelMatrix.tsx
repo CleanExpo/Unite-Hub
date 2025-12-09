@@ -54,7 +54,9 @@ export function CampaignChannelMatrix({
 
   const getChannelCategory = (channel: string): string => {
     for (const [category, channels] of Object.entries(channelCategories)) {
-      if (channels.includes(channel)) return category;
+      if (channels.includes(channel)) {
+return category;
+}
     }
     return 'other';
   };
@@ -75,17 +77,28 @@ export function CampaignChannelMatrix({
     blueprint: Blueprint,
     channel: string
   ): 'approved' | 'pending' | 'rejected' | null => {
-    if (!blueprint.channel_approvals) return null;
+    if (!blueprint.channel_approvals) {
+return null;
+}
     return blueprint.channel_approvals[channel] || null;
   };
 
   const getChannelContent = (blueprint: Blueprint, channel: string): any => {
-    if (channel.includes('website')) return blueprint.website_content;
-    if (channel.includes('blog')) return blueprint.blog_content;
-    if (channel.includes('email')) return blueprint.email_content;
-    if (channel.includes('facebook') || channel.includes('instagram') || channel.includes('linkedin'))
-      return blueprint.social_content?.[channel];
-    if (channel.includes('tiktok') || channel.includes('youtube')) return blueprint.video_content?.[channel];
+    if (channel.includes('website')) {
+return blueprint.website_content;
+}
+    if (channel.includes('blog')) {
+return blueprint.blog_content;
+}
+    if (channel.includes('email')) {
+return blueprint.email_content;
+}
+    if (channel.includes('facebook') || channel.includes('instagram') || channel.includes('linkedin')) {
+return blueprint.social_content?.[channel];
+}
+    if (channel.includes('tiktok') || channel.includes('youtube')) {
+return blueprint.video_content?.[channel];
+}
     return null;
   };
 
@@ -117,17 +130,29 @@ export function CampaignChannelMatrix({
     const approvalStatus = getChannelApprovalStatus(blueprint, channel);
     const content = getChannelContent(blueprint, channel);
 
-    if (!isEnabled) return 'Channel not included';
-    if (approvalStatus === 'approved') return 'Approved';
-    if (approvalStatus === 'rejected') return 'Rejected';
-    if (approvalStatus === 'pending') return 'Pending approval';
-    if (content) return 'Draft content available - click to view';
+    if (!isEnabled) {
+return 'Channel not included';
+}
+    if (approvalStatus === 'approved') {
+return 'Approved';
+}
+    if (approvalStatus === 'rejected') {
+return 'Rejected';
+}
+    if (approvalStatus === 'pending') {
+return 'Pending approval';
+}
+    if (content) {
+return 'Draft content available - click to view';
+}
     return 'Included in blueprint';
   };
 
   const groupedChannels = availableChannels.reduce((acc, channel) => {
     const category = getChannelCategory(channel);
-    if (!acc[category]) acc[category] = [];
+    if (!acc[category]) {
+acc[category] = [];
+}
     acc[category].push(channel);
     return acc;
   }, {} as Record<string, string[]>);

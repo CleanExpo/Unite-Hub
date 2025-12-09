@@ -192,11 +192,21 @@ class ConnectedAppsService {
     const supabase = await getSupabaseServer();
 
     const updateData: Record<string, unknown> = {};
-    if (update.status !== undefined) updateData.status = update.status;
-    if (update.lastSyncAt !== undefined) updateData.last_sync_at = update.lastSyncAt;
-    if (update.lastError !== undefined) updateData.last_error = update.lastError;
-    if (update.grantedScopes !== undefined) updateData.granted_scopes = update.grantedScopes;
-    if (update.metadata !== undefined) updateData.metadata = update.metadata;
+    if (update.status !== undefined) {
+updateData.status = update.status;
+}
+    if (update.lastSyncAt !== undefined) {
+updateData.last_sync_at = update.lastSyncAt;
+}
+    if (update.lastError !== undefined) {
+updateData.last_error = update.lastError;
+}
+    if (update.grantedScopes !== undefined) {
+updateData.granted_scopes = update.grantedScopes;
+}
+    if (update.metadata !== undefined) {
+updateData.metadata = update.metadata;
+}
 
     const { data, error } = await supabase
       .from('connected_apps')

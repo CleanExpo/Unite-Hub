@@ -1,0 +1,200 @@
+/**
+ * Migration: 412_synthex_campaign_schedule.sql
+ * Phase: B5 - Synthex Campaign Scheduling + Analytics
+ *
+ * Creates campaign scheduling and execution tracking tables.
+ */
+
+-- Campaign Schedule table
+-- Stores scheduled send times for campaign steps
+create table if not exists synthex_campaign_schedule (
+  id uuid primary key default gen_random_uuid(),
+  campaign_id uuid not null references synthex_campaigns(id) on delete cascade,
+  tenant_id uuid not null references synthex_tenants(id) on delete cascade,
+  brand_id uuid references synthex_brands(id) on delete set null,
+  user_id uuid not null references auth.users(id) on delete cascade,
+
+  -- Scheduling details
+  step_index int not null default 0,
+  send_at timestamp with time zone not null,
+  timezone text default 'UTC',
+
+  -- Status tracking
+  status text not null default 'pending' check (status in ('pending', 'queued', 'sending', 'sent', 'failed', 'cancelled')),
+  sent_at timestamp with time zone,
+  error_message text,
+
+  -- Retry logic
+  retry_count int default 0,
+  max_retries int default 3,
+  next_retry_at timestamp with time zone,
+
+  -- Metadata
+  recipient_count int default 0,
+  sent_count int default 0,
+  failed_count int default 0,
+
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now()
+);
+
+-- Campaign Analytics table
+-- Stores aggregated campaign performance metrics
+create table if not exists synthex_campaign_analytics (
+  id uuid primary key default gen_random_uuid(),
+  campaign_id uuid not null references synthex_campaigns(id) on delete cascade,
+  tenant_id uuid not null references synthex_tenants(id) on delete cascade,
+
+  -- Date for daily aggregation
+  analytics_date date not null default current_date,
+
+  -- Email metrics
+  emails_sent int default 0,
+  emails_delivered int default 0,
+  emails_bounced int default 0,
+  emails_opened int default 0,
+  unique_opens int default 0,
+  emails_clicked int default 0,
+  unique_clicks int default 0,
+  unsubscribes int default 0,
+  spam_reports int default 0,
+
+  -- Calculated rates (stored for quick access)
+  open_rate numeric(5,2) default 0,
+  click_rate numeric(5,2) default 0,
+  bounce_rate numeric(5,2) default 0,
+  unsubscribe_rate numeric(5,2) default 0,
+
+  -- Revenue tracking (optional)
+  revenue_generated numeric(12,2) default 0,
+  conversions int default 0,
+
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now(),
+
+  -- One record per campaign per day
+  unique(campaign_id, analytics_date)
+);
+
+-- Insights table
+-- Stores AI-generated insights and recommendations
+create table if not exists synthex_insights (
+  id uuid primary key default gen_random_uuid(),
+  tenant_id uuid not null references synthex_tenants(id) on delete cascade,
+  brand_id uuid references synthex_brands(id) on delete set null,
+  user_id uuid not null references auth.users(id) on delete cascade,
+
+  -- Insight details
+  insight_type text not null check (insight_type in ('opportunity', 'warning', 'pattern', 'recommendation', 'trend')),
+  category text not null check (category in ('seo', 'content', 'campaign', 'engagement', 'conversion', 'general')),
+  title text not null,
+  description text not null,
+
+  -- Priority and status
+  priority int default 3 check (priority >= 1 and priority <= 5), -- 1 = highest
+  status text default 'new' check (status in ('new', 'viewed', 'actioned', 'dismissed')),
+
+  -- Related entities (optional)
+  related_campaign_id uuid references synthex_campaigns(id) on delete set null,
+  related_content_id uuid references synthex_content(id) on delete set null,
+
+  -- AI metadata
+  confidence_score numeric(3,2) default 0.8,
+  ai_model text,
+  source_data jsonb,
+
+  -- Timestamps
+  generated_at timestamp with time zone default now(),
+  viewed_at timestamp with time zone,
+  actioned_at timestamp with time zone,
+  expires_at timestamp with time zone,
+
+  created_at timestamp with time zone default now()
+);
+
+-- Indexes for performance
+create index if not exists idx_schedule_campaign on synthex_campaign_schedule(campaign_id);
+create index if not exists idx_schedule_tenant on synthex_campaign_schedule(tenant_id);
+create index if not exists idx_schedule_send_at on synthex_campaign_schedule(send_at) where status = 'pending';
+create index if not exists idx_schedule_status on synthex_campaign_schedule(status);
+
+create index if not exists idx_analytics_campaign on synthex_campaign_analytics(campaign_id);
+create index if not exists idx_analytics_tenant on synthex_campaign_analytics(tenant_id);
+create index if not exists idx_analytics_date on synthex_campaign_analytics(analytics_date);
+
+create index if not exists idx_insights_tenant on synthex_insights(tenant_id);
+create index if not exists idx_insights_type on synthex_insights(insight_type);
+create index if not exists idx_insights_status on synthex_insights(status) where status = 'new';
+
+-- Updated_at triggers
+create trigger update_schedule_timestamp
+  before update on synthex_campaign_schedule
+  for each row execute function update_updated_at_column();
+
+create trigger update_analytics_timestamp
+  before update on synthex_campaign_analytics
+  for each row execute function update_updated_at_column();
+
+-- RLS Policies
+alter table synthex_campaign_schedule enable row level security;
+alter table synthex_campaign_analytics enable row level security;
+alter table synthex_insights enable row level security;
+
+-- Schedule policies
+create policy "schedule_select" on synthex_campaign_schedule
+  for select using (auth.uid() = user_id);
+
+create policy "schedule_insert" on synthex_campaign_schedule
+  for insert with check (auth.uid() = user_id);
+
+create policy "schedule_update" on synthex_campaign_schedule
+  for update using (auth.uid() = user_id);
+
+create policy "schedule_delete" on synthex_campaign_schedule
+  for delete using (auth.uid() = user_id);
+
+-- Analytics policies (tenant-based for team access)
+create policy "analytics_select" on synthex_campaign_analytics
+  for select using (
+    exists (
+      select 1 from synthex_tenants
+      where id = synthex_campaign_analytics.tenant_id
+      and owner_user_id = auth.uid()
+    )
+  );
+
+create policy "analytics_insert" on synthex_campaign_analytics
+  for insert with check (
+    exists (
+      select 1 from synthex_tenants
+      where id = synthex_campaign_analytics.tenant_id
+      and owner_user_id = auth.uid()
+    )
+  );
+
+create policy "analytics_update" on synthex_campaign_analytics
+  for update using (
+    exists (
+      select 1 from synthex_tenants
+      where id = synthex_tenants.id
+      and owner_user_id = auth.uid()
+    )
+  );
+
+-- Insights policies
+create policy "insights_select" on synthex_insights
+  for select using (auth.uid() = user_id);
+
+create policy "insights_insert" on synthex_insights
+  for insert with check (auth.uid() = user_id);
+
+create policy "insights_update" on synthex_insights
+  for update using (auth.uid() = user_id);
+
+create policy "insights_delete" on synthex_insights
+  for delete using (auth.uid() = user_id);
+
+-- Comments
+comment on table synthex_campaign_schedule is 'Scheduled send times for campaign steps';
+comment on table synthex_campaign_analytics is 'Daily aggregated campaign performance metrics';
+comment on table synthex_insights is 'AI-generated insights and recommendations';

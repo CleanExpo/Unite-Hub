@@ -52,7 +52,9 @@ export function ExplainerVideo({
       setShowControls(true);
       clearTimeout(timeout);
       timeout = setTimeout(() => {
-        if (isPlaying) setShowControls(false);
+        if (isPlaying) {
+setShowControls(false);
+}
       }, 3000);
     };
 
@@ -99,7 +101,9 @@ export function ExplainerVideo({
   };
 
   const toggleFullscreen = async () => {
-    if (!containerRef.current) return;
+    if (!containerRef.current) {
+return;
+}
 
     if (isFullscreen) {
       await document.exitFullscreen();

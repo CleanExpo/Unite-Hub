@@ -141,11 +141,15 @@ export function calculateCycleAlignments(
 
   for (const [sourceCycle, dependentCycles] of Object.entries(CYCLE_DEPENDENCIES)) {
     const sourceState = stateMap.get(sourceCycle as CreativeCycle);
-    if (!sourceState) continue;
+    if (!sourceState) {
+continue;
+}
 
     for (const depCycle of dependentCycles) {
       const depState = stateMap.get(depCycle);
-      if (!depState) continue;
+      if (!depState) {
+continue;
+}
 
       // Calculate alignment based on health difference
       const healthDiff = Math.abs(sourceState.health - depState.health);
@@ -155,10 +159,15 @@ export function calculateCycleAlignments(
 
       // Determine status
       let status: CycleAlignment['status'];
-      if (drift < 15) status = 'aligned';
-      else if (drift < 30) status = 'minor_drift';
-      else if (drift < 50) status = 'major_drift';
-      else status = 'critical_misalignment';
+      if (drift < 15) {
+status = 'aligned';
+} else if (drift < 30) {
+status = 'minor_drift';
+} else if (drift < 50) {
+status = 'major_drift';
+} else {
+status = 'critical_misalignment';
+}
 
       // Identify issues
       const issues: string[] = [];

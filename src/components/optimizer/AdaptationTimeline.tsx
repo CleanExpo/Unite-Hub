@@ -44,9 +44,15 @@ export const AdaptationTimeline: React.FC<AdaptationTimelineProps> = ({
   }
 
   const getScoreTrend = (current: number, previous?: number) => {
-    if (!previous) return null;
-    if (current > previous) return 'up';
-    if (current < previous) return 'down';
+    if (!previous) {
+return null;
+}
+    if (current > previous) {
+return 'up';
+}
+    if (current < previous) {
+return 'down';
+}
     return 'stable';
   };
 

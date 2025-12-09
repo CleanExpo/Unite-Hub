@@ -412,14 +412,18 @@ function selectBestMethodForFormat(
   format: { supports_motion: boolean; aspect_ratio: string },
   brief: CampaignBrief
 ): MethodMetadata | null {
-  if (methods.length === 0) return null;
+  if (methods.length === 0) {
+return null;
+}
 
   // Filter by motion support if needed
   let filtered = format.supports_motion
     ? methods
     : methods.filter(m => !m.motion_support);
 
-  if (filtered.length === 0) filtered = methods;
+  if (filtered.length === 0) {
+filtered = methods;
+}
 
   // Score and sort
   return filtered.sort((a, b) =>

@@ -493,8 +493,12 @@ export async function scaleContainer(
 
     // Update database
     const updates: any = {};
-    if (cpuLimit !== undefined) updates.cpu_limit = cpuLimit;
-    if (memoryLimitMb !== undefined) updates.memory_limit_mb = memoryLimitMb;
+    if (cpuLimit !== undefined) {
+updates.cpu_limit = cpuLimit;
+}
+    if (memoryLimitMb !== undefined) {
+updates.memory_limit_mb = memoryLimitMb;
+}
 
     const { error: updateError } = await supabase
       .from('tenant_containers')

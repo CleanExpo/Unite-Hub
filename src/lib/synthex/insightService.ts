@@ -222,7 +222,9 @@ export async function getInsights(
 
     const { data, error } = await query;
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { data, error: null };
   } catch (err) {
@@ -252,7 +254,9 @@ export async function updateInsightStatus(
       .update(updateData)
       .eq('id', insightId);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true, error: null };
   } catch (err) {
@@ -286,7 +290,9 @@ export async function getInsightCounts(
       .eq('user_id', userId)
       .neq('status', 'dismissed');
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     const counts = {
       new: 0,
@@ -296,9 +302,13 @@ export async function getInsightCounts(
     };
 
     data?.forEach((item) => {
-      if (item.status === 'new') counts.new++;
-      else if (item.status === 'viewed') counts.viewed++;
-      else if (item.status === 'actioned') counts.actioned++;
+      if (item.status === 'new') {
+counts.new++;
+} else if (item.status === 'viewed') {
+counts.viewed++;
+} else if (item.status === 'actioned') {
+counts.actioned++;
+}
     });
 
     return { data: counts, error: null };

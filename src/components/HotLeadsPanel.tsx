@@ -1,4 +1,4 @@
-/* eslint-disable no-undef, no-console */
+ 
 "use client";
 
 import { useState, useEffect } from "react";

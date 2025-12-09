@@ -151,13 +151,27 @@ export async function PATCH(
       updated_at: new Date().toISOString(),
     };
 
-    if (name !== undefined) updateData.name = name.trim();
-    if (email !== undefined) updateData.email = email.toLowerCase().trim();
-    if (company !== undefined) updateData.company = company?.trim() || null;
-    if (job_title !== undefined) updateData.job_title = job_title?.trim() || null;
-    if (phone !== undefined) updateData.phone = phone?.trim() || null;
-    if (status !== undefined) updateData.status = status;
-    if (tags !== undefined) updateData.tags = tags;
+    if (name !== undefined) {
+updateData.name = name.trim();
+}
+    if (email !== undefined) {
+updateData.email = email.toLowerCase().trim();
+}
+    if (company !== undefined) {
+updateData.company = company?.trim() || null;
+}
+    if (job_title !== undefined) {
+updateData.job_title = job_title?.trim() || null;
+}
+    if (phone !== undefined) {
+updateData.phone = phone?.trim() || null;
+}
+    if (status !== undefined) {
+updateData.status = status;
+}
+    if (tags !== undefined) {
+updateData.tags = tags;
+}
 
     // Update contact
     const { data: contact, error: updateError } = await supabase

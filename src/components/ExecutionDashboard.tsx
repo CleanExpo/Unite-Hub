@@ -136,7 +136,9 @@ export default function ExecutionDashboard({
   }, [executionId]);
 
   const handleCancel = useCallback(async () => {
-    if (!confirm('Are you sure you want to cancel this execution?')) return;
+    if (!confirm('Are you sure you want to cancel this execution?')) {
+return;
+}
 
     try {
       setIsControlling(true);

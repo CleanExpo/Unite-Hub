@@ -225,7 +225,9 @@ export async function syncOutlookEmails(integrationId: string) {
         const body = message.body?.content || "";
         const receivedAt = new Date(message.receivedDateTime);
 
-        if (!from) continue;
+        if (!from) {
+continue;
+}
 
         // Check if contact exists, create if not
         let contact = await db.contacts.getByEmail(from, integration.workspace_id);
@@ -315,7 +317,9 @@ export async function syncOutlookEmailsWithMultiple(integrationId: string) {
         const body = message.body?.content || "";
         const receivedAt = new Date(message.receivedDateTime);
 
-        if (!from) continue;
+        if (!from) {
+continue;
+}
 
         // Check if contact exists via client_emails table
         let clientEmail = await db.clientEmails.getByEmail(from, integration.workspace_id);

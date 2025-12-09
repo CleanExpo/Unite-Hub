@@ -97,7 +97,9 @@ export function ActivationMilestoneList({
 
   // Group by phase
   const grouped = milestones.reduce((acc, m) => {
-    if (!acc[m.phase]) acc[m.phase] = [];
+    if (!acc[m.phase]) {
+acc[m.phase] = [];
+}
     acc[m.phase].push(m);
     return acc;
   }, {} as Record<number, Milestone[]>);

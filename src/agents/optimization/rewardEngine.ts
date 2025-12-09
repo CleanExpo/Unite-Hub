@@ -55,8 +55,12 @@ export function recordReward(
 export function getRecentRewards(agent?: string, dimension?: RewardDimension, limit = 100): AgentRewardEvent[] {
   let items = rewardBuffer;
 
-  if (agent) items = items.filter(r => r.agent === agent);
-  if (dimension) items = items.filter(r => r.dimension === dimension);
+  if (agent) {
+items = items.filter(r => r.agent === agent);
+}
+  if (dimension) {
+items = items.filter(r => r.dimension === dimension);
+}
 
   return items.slice(-limit).reverse();
 }
@@ -66,7 +70,9 @@ export function getRecentRewards(agent?: string, dimension?: RewardDimension, li
  */
 export function getAverageReward(agent: string): number {
   const items = rewardBuffer.filter(r => r.agent === agent);
-  if (!items.length) return 0;
+  if (!items.length) {
+return 0;
+}
   return items.reduce((sum, r) => sum + r.reward, 0) / items.length;
 }
 
@@ -75,7 +81,9 @@ export function getAverageReward(agent: string): number {
  */
 export function getRewardByDimension(dimension: RewardDimension): number {
   const items = rewardBuffer.filter(r => r.dimension === dimension);
-  if (!items.length) return 0;
+  if (!items.length) {
+return 0;
+}
   return items.reduce((sum, r) => sum + r.reward, 0) / items.length;
 }
 
@@ -100,7 +108,9 @@ export function getRewardTrend(agent: string, windowMinutes = 60): { recent: num
       new Date(r.createdAt).getTime() < recentSince.getTime()
   );
 
-  if (!recent.length || !historical.length) return null;
+  if (!recent.length || !historical.length) {
+return null;
+}
 
   const recentAvg = recent.reduce((sum, r) => sum + r.reward, 0) / recent.length;
   const historicalAvg = historical.reduce((sum, r) => sum + r.reward, 0) / historical.length;

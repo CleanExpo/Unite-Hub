@@ -314,9 +314,15 @@ export async function getMethodPerformanceRecords(
       }
       const perf = channelPerf.get(channel)!;
 
-      if (event.event_type === 'impression') perf.impressions++;
-      if (['like', 'comment', 'share', 'save'].includes(event.event_type)) perf.engagements++;
-      if (event.event_type === 'click') perf.clicks++;
+      if (event.event_type === 'impression') {
+perf.impressions++;
+}
+      if (['like', 'comment', 'share', 'save'].includes(event.event_type)) {
+perf.engagements++;
+}
+      if (event.event_type === 'click') {
+perf.clicks++;
+}
     }
 
     // Find best and worst channels
@@ -433,7 +439,9 @@ function calculateTrend(
   events: any[],
   daysBack: number
 ): 'improving' | 'stable' | 'declining' | 'unknown' {
-  if (events.length < 10) return 'unknown';
+  if (events.length < 10) {
+return 'unknown';
+}
 
   const midpoint = new Date();
   midpoint.setDate(midpoint.getDate() - daysBack / 2);
@@ -441,17 +449,25 @@ function calculateTrend(
   const firstHalf = events.filter(e => new Date(e.created_at) < midpoint);
   const secondHalf = events.filter(e => new Date(e.created_at) >= midpoint);
 
-  if (firstHalf.length < 5 || secondHalf.length < 5) return 'unknown';
+  if (firstHalf.length < 5 || secondHalf.length < 5) {
+return 'unknown';
+}
 
   const firstEngRate = calculateEngagementRate(firstHalf);
   const secondEngRate = calculateEngagementRate(secondHalf);
 
-  if (firstEngRate === null || secondEngRate === null) return 'unknown';
+  if (firstEngRate === null || secondEngRate === null) {
+return 'unknown';
+}
 
   const change = (secondEngRate - firstEngRate) / Math.max(firstEngRate, 0.001);
 
-  if (change > 0.1) return 'improving';
-  if (change < -0.1) return 'declining';
+  if (change > 0.1) {
+return 'improving';
+}
+  if (change < -0.1) {
+return 'declining';
+}
   return 'stable';
 }
 

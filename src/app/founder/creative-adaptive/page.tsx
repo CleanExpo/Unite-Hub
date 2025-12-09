@@ -29,7 +29,9 @@ export default function CreativeAdaptivePage() {
   const fetchData = async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const { data: orgs } = await supabase
         .from('user_organizations')
@@ -58,12 +60,16 @@ export default function CreativeAdaptivePage() {
   };
 
   const handleSuggest = async () => {
-    if (!tenantId) return;
+    if (!tenantId) {
+return;
+}
 
     setGenerating(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const response = await fetch('/api/creative/adaptive/suggest', {
         method: 'POST',

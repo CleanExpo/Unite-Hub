@@ -155,7 +155,9 @@ class RiskAnalysisService {
         byCategory[r.category] = (byCategory[r.category] || 0) + 1;
       }
       totalRiskScore += r.riskScore;
-      if (r.riskScore >= 0.7) criticalCount++;
+      if (r.riskScore >= 0.7) {
+criticalCount++;
+}
     });
 
     return {
@@ -188,7 +190,9 @@ class RiskAnalysisService {
       .lte('sentiment_score', 0.3) // Negative sentiment
       .gte('created_at', sinceDate.toISOString());
 
-    if (!emails || emails.length === 0) return { new: 0, updated: 0 };
+    if (!emails || emails.length === 0) {
+return { new: 0, updated: 0 };
+}
 
     let newCount = 0;
     let updatedCount = 0;
@@ -205,8 +209,11 @@ class RiskAnalysisService {
         category: 'client_churn',
       });
 
-      if (result === 'new') newCount++;
-      else if (result === 'updated') updatedCount++;
+      if (result === 'new') {
+newCount++;
+} else if (result === 'updated') {
+updatedCount++;
+}
     }
 
     return { new: newCount, updated: updatedCount };
@@ -227,7 +234,9 @@ class RiskAnalysisService {
       .eq('workspace_id', workspaceId)
       .in('status', ['active', 'warm', 'hot']);
 
-    if (!contacts) return { new: 0, updated: 0 };
+    if (!contacts) {
+return { new: 0, updated: 0 };
+}
 
     let newCount = 0;
     let updatedCount = 0;
@@ -248,8 +257,11 @@ class RiskAnalysisService {
           category: 'client_churn',
         });
 
-        if (result === 'new') newCount++;
-        else if (result === 'updated') updatedCount++;
+        if (result === 'new') {
+newCount++;
+} else if (result === 'updated') {
+updatedCount++;
+}
       }
     }
 
@@ -271,7 +283,9 @@ class RiskAnalysisService {
       .eq('status', 'active')
       .gte('created_at', sinceDate.toISOString());
 
-    if (!campaigns) return { new: 0, updated: 0 };
+    if (!campaigns) {
+return { new: 0, updated: 0 };
+}
 
     let newCount = 0;
     let updatedCount = 0;
@@ -291,8 +305,11 @@ class RiskAnalysisService {
           category: 'revenue',
         });
 
-        if (result === 'new') newCount++;
-        else if (result === 'updated') updatedCount++;
+        if (result === 'new') {
+newCount++;
+} else if (result === 'updated') {
+updatedCount++;
+}
       }
     }
 
@@ -313,7 +330,9 @@ class RiskAnalysisService {
       .eq('workspace_id', workspaceId)
       .in('engagement_level', ['hot', 'warm']);
 
-    if (!preClients) return { new: 0, updated: 0 };
+    if (!preClients) {
+return { new: 0, updated: 0 };
+}
 
     let newCount = 0;
     let updatedCount = 0;
@@ -334,8 +353,11 @@ class RiskAnalysisService {
           category: 'revenue',
         });
 
-        if (result === 'new') newCount++;
-        else if (result === 'updated') updatedCount++;
+        if (result === 'new') {
+newCount++;
+} else if (result === 'updated') {
+updatedCount++;
+}
       }
     }
 
@@ -357,7 +379,9 @@ class RiskAnalysisService {
       .eq('workspace_id', workspaceId)
       .lte('ai_score', 30); // Low engagement score
 
-    if (!contacts) return { new: 0, updated: 0 };
+    if (!contacts) {
+return { new: 0, updated: 0 };
+}
 
     let newCount = 0;
     let updatedCount = 0;
@@ -374,8 +398,11 @@ class RiskAnalysisService {
           category: 'client_churn',
         });
 
-        if (result === 'new') newCount++;
-        else if (result === 'updated') updatedCount++;
+        if (result === 'new') {
+newCount++;
+} else if (result === 'updated') {
+updatedCount++;
+}
       }
     }
 
@@ -469,7 +496,9 @@ class RiskAnalysisService {
       .eq('mitigation_status', 'identified')
       .lt('updated_at', sixtyDaysAgo.toISOString());
 
-    if (!oldRisks || oldRisks.length === 0) return 0;
+    if (!oldRisks || oldRisks.length === 0) {
+return 0;
+}
 
     await supabaseAdmin
       .from('founder_risk_register')
@@ -499,7 +528,9 @@ class RiskAnalysisService {
       .order('risk_score', { ascending: false })
       .limit(limit);
 
-    if (error || !data) return [];
+    if (error || !data) {
+return [];
+}
     return data.map(this.mapDbToRisk);
   }
 
@@ -517,8 +548,12 @@ class RiskAnalysisService {
       updated_at: new Date().toISOString(),
     };
 
-    if (mitigationPlan) updateData.mitigation_plan = mitigationPlan;
-    if (status === 'resolved') updateData.resolved_at = new Date().toISOString();
+    if (mitigationPlan) {
+updateData.mitigation_plan = mitigationPlan;
+}
+    if (status === 'resolved') {
+updateData.resolved_at = new Date().toISOString();
+}
 
     const { error } = await supabaseAdmin
       .from('founder_risk_register')
@@ -568,7 +603,9 @@ class RiskAnalysisService {
       .select()
       .single();
 
-    if (error || !result) return null;
+    if (error || !result) {
+return null;
+}
     return this.mapDbToRisk(result);
   }
 

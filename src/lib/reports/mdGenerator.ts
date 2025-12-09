@@ -298,8 +298,12 @@ For questions or assistance, please contact your SEO account manager.`;
    * Get health emoji
    */
   private getHealthEmoji(score: number): string {
-    if (score >= 80) return "🟢";
-    if (score >= 60) return "🟡";
+    if (score >= 80) {
+return "🟢";
+}
+    if (score >= 60) {
+return "🟡";
+}
     return "🔴";
   }
 
@@ -307,10 +311,18 @@ For questions or assistance, please contact your SEO account manager.`;
    * Get health grade
    */
   private getHealthGrade(score: number): string {
-    if (score >= 90) return "A";
-    if (score >= 80) return "B";
-    if (score >= 70) return "C";
-    if (score >= 60) return "D";
+    if (score >= 90) {
+return "A";
+}
+    if (score >= 80) {
+return "B";
+}
+    if (score >= 70) {
+return "C";
+}
+    if (score >= 60) {
+return "D";
+}
     return "F";
   }
 
@@ -318,9 +330,15 @@ For questions or assistance, please contact your SEO account manager.`;
    * Get health message
    */
   private getHealthMessage(score: number): string {
-    if (score >= 80) return "Excellent performance! Focus on maintaining and expanding your rankings.";
-    if (score >= 60) return "Good performance with room for improvement.";
-    if (score >= 40) return "Average performance. Several optimization opportunities identified.";
+    if (score >= 80) {
+return "Excellent performance! Focus on maintaining and expanding your rankings.";
+}
+    if (score >= 60) {
+return "Good performance with room for improvement.";
+}
+    if (score >= 40) {
+return "Average performance. Several optimization opportunities identified.";
+}
     return "Critical issues detected. Immediate action required.";
   }
 }

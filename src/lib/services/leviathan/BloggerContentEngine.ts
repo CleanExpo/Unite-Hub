@@ -329,7 +329,7 @@ export class BloggerContentEngine {
    */
   private extractTopic(title: string): string {
     // Remove common prefixes
-    let topic = title
+    const topic = title
       .replace(/^(guide to|understanding|discover|learn about|essential|complete|expert)\s+/i, '')
       .toLowerCase();
 

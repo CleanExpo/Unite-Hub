@@ -263,10 +263,16 @@ export class HistoryTimeline {
 
     // Fallback: infer from health score delta
     const healthDelta = deltaSummary.health_score_delta;
-    if (!healthDelta) return "STABLE";
+    if (!healthDelta) {
+return "STABLE";
+}
 
-    if (healthDelta.percentage_change >= 10) return "IMPROVING";
-    if (healthDelta.percentage_change <= -10) return "DECLINING";
+    if (healthDelta.percentage_change >= 10) {
+return "IMPROVING";
+}
+    if (healthDelta.percentage_change <= -10) {
+return "DECLINING";
+}
     return "STABLE";
   }
 
@@ -299,8 +305,11 @@ export class HistoryTimeline {
       const olderAvg = healthScores.slice(midpoint).reduce((a, b) => a + b, 0) / (entries.length - midpoint);
 
       const trendDelta = recentAvg - olderAvg;
-      if (trendDelta >= 5) healthScoreTrend = "IMPROVING";
-      else if (trendDelta <= -5) healthScoreTrend = "DECLINING";
+      if (trendDelta >= 5) {
+healthScoreTrend = "IMPROVING";
+} else if (trendDelta <= -5) {
+healthScoreTrend = "DECLINING";
+}
     }
 
     // Calculate total keywords gained/lost

@@ -188,8 +188,12 @@ function determineAcquisitionDifficulty(
   domainAuthority: number,
   linkType: string
 ): 'easy' | 'medium' | 'hard' {
-  if (domainAuthority > 70) return 'hard';
-  if (domainAuthority > 40) return 'medium';
+  if (domainAuthority > 70) {
+return 'hard';
+}
+  if (domainAuthority > 40) {
+return 'medium';
+}
   return 'easy';
 }
 
@@ -203,9 +207,15 @@ function determineContentPriority(
 ): 'critical' | 'high' | 'medium' | 'low' {
   const coverageGap = competitorCoverage - yourCoverage;
 
-  if (searchDemand > 10000 && coverageGap > 50) return 'critical';
-  if (searchDemand > 5000 && coverageGap > 30) return 'high';
-  if (searchDemand > 1000 && coverageGap > 20) return 'medium';
+  if (searchDemand > 10000 && coverageGap > 50) {
+return 'critical';
+}
+  if (searchDemand > 5000 && coverageGap > 30) {
+return 'high';
+}
+  if (searchDemand > 1000 && coverageGap > 20) {
+return 'medium';
+}
   return 'low';
 }
 

@@ -20,7 +20,9 @@ export async function generatePersonalizedContent(
   try {
     // Get contact with full intelligence
     const contact = await db.contacts.getById(contactId);
-    if (!contact) throw new Error(`Contact ${contactId} not found`);
+    if (!contact) {
+throw new Error(`Contact ${contactId} not found`);
+}
 
     // Get contact interaction history
     const emails = await db.emails.getByContact(contactId);

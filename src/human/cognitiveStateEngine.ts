@@ -37,31 +37,41 @@ export function deriveCognitiveState(
   let activeMinutes = 30;
 
   for (const signal of signals.signals) {
-    if (signal.signal_type === 'sleep_hours') sleepHours = signal.value;
-    if (signal.signal_type === 'recovery_percent') recoveryPercent = signal.value;
-    if (signal.signal_type === 'stress_level') stressLevel = signal.value;
-    if (signal.signal_type === 'calendar_load_percent') calendarLoadPercent = signal.value;
-    if (signal.signal_type === 'active_minutes') activeMinutes = signal.value;
+    if (signal.signal_type === 'sleep_hours') {
+sleepHours = signal.value;
+}
+    if (signal.signal_type === 'recovery_percent') {
+recoveryPercent = signal.value;
+}
+    if (signal.signal_type === 'stress_level') {
+stressLevel = signal.value;
+}
+    if (signal.signal_type === 'calendar_load_percent') {
+calendarLoadPercent = signal.value;
+}
+    if (signal.signal_type === 'active_minutes') {
+activeMinutes = signal.value;
+}
   }
 
   // Sleep factor (weight: 0.35)
-  let sleepScore = sleepHours >= 7 && sleepHours <= 9 ? 100 : Math.max(0, 100 - Math.abs(sleepHours - 8) * 15);
+  const sleepScore = sleepHours >= 7 && sleepHours <= 9 ? 100 : Math.max(0, 100 - Math.abs(sleepHours - 8) * 15);
   factors.push({ factor: 'sleep_hours', weight: 0.35, value: sleepScore });
 
   // Recovery factor (weight: 0.25)
-  let recoveryScore = recoveryPercent;
+  const recoveryScore = recoveryPercent;
   factors.push({ factor: 'recovery_percent', weight: 0.25, value: recoveryScore });
 
   // Stress factor (weight: 0.20, inverse)
-  let stressScore = stressLevel <= 3 ? 100 : stressLevel <= 7 ? 60 : 30;
+  const stressScore = stressLevel <= 3 ? 100 : stressLevel <= 7 ? 60 : 30;
   factors.push({ factor: 'stress_level', weight: 0.2, value: stressScore });
 
   // Activity factor (weight: 0.10)
-  let activityScore = activeMinutes >= 30 ? 100 : (activeMinutes / 30) * 100;
+  const activityScore = activeMinutes >= 30 ? 100 : (activeMinutes / 30) * 100;
   factors.push({ factor: 'activity_level', weight: 0.1, value: activityScore });
 
   // Calendar load factor (weight: 0.10, inverse)
-  let calendarScore = calendarLoadPercent <= 50 ? 100 : Math.max(30, 100 - (calendarLoadPercent - 50) * 0.8);
+  const calendarScore = calendarLoadPercent <= 50 ? 100 : Math.max(30, 100 - (calendarLoadPercent - 50) * 0.8);
   factors.push({ factor: 'calendar_load', weight: 0.1, value: calendarScore });
 
   // Recent workload modifier (if provided)
@@ -80,11 +90,17 @@ export function deriveCognitiveState(
 
   // Determine state
   let state: CognitiveState = 'good';
-  if (cognitiveScore >= 85) state = 'sharp';
-  else if (cognitiveScore >= 70) state = 'good';
-  else if (cognitiveScore >= 50) state = 'tired';
-  else if (cognitiveScore >= 30) state = 'fatigued';
-  else state = 'overloaded';
+  if (cognitiveScore >= 85) {
+state = 'sharp';
+} else if (cognitiveScore >= 70) {
+state = 'good';
+} else if (cognitiveScore >= 50) {
+state = 'tired';
+} else if (cognitiveScore >= 30) {
+state = 'fatigued';
+} else {
+state = 'overloaded';
+}
 
   // Generate recommendations
   const recommendations = generateCognitiveRecommendations(state, factors);

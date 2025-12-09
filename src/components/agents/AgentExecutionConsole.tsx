@@ -98,7 +98,9 @@ export function AgentExecutionConsole({
     // Fetch immediately
     fetchStatus();
 
-    if (!isAutoRefreshing) return;
+    if (!isAutoRefreshing) {
+return;
+}
 
     const interval = setInterval(() => {
       fetchStatus();

@@ -170,17 +170,39 @@ function hexToColorName(hex: string): string {
   const b = parseInt(hex.substr(4, 2), 16);
 
   // Simple color mapping
-  if (r > 200 && g < 100 && b < 100) return "vibrant red";
-  if (r < 100 && g > 200 && b < 100) return "vibrant green";
-  if (r < 100 && g < 100 && b > 200) return "vibrant blue";
-  if (r > 200 && g > 200 && b < 100) return "golden yellow";
-  if (r > 200 && g < 100 && b > 200) return "magenta";
-  if (r < 100 && g > 200 && b > 200) return "cyan";
-  if (r > 200 && g > 150 && b < 100) return "orange";
-  if (r > 150 && g < 100 && b > 150) return "purple";
-  if (r < 80 && g < 80 && b < 80) return "dark charcoal";
-  if (r > 220 && g > 220 && b > 220) return "clean white";
-  if (r > 150 && g > 150 && b > 150) return "neutral gray";
+  if (r > 200 && g < 100 && b < 100) {
+return "vibrant red";
+}
+  if (r < 100 && g > 200 && b < 100) {
+return "vibrant green";
+}
+  if (r < 100 && g < 100 && b > 200) {
+return "vibrant blue";
+}
+  if (r > 200 && g > 200 && b < 100) {
+return "golden yellow";
+}
+  if (r > 200 && g < 100 && b > 200) {
+return "magenta";
+}
+  if (r < 100 && g > 200 && b > 200) {
+return "cyan";
+}
+  if (r > 200 && g > 150 && b < 100) {
+return "orange";
+}
+  if (r > 150 && g < 100 && b > 150) {
+return "purple";
+}
+  if (r < 80 && g < 80 && b < 80) {
+return "dark charcoal";
+}
+  if (r > 220 && g > 220 && b > 220) {
+return "clean white";
+}
+  if (r > 150 && g > 150 && b > 150) {
+return "neutral gray";
+}
 
   return `#${hex}`;
 }

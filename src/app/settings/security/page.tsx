@@ -71,7 +71,9 @@ export default function SecuritySettingsPage() {
 
   // Handle MFA disable
   const handleDisableMFA = async () => {
-    if (!mfaStatus?.enrolledFactors[0]?.id) return;
+    if (!mfaStatus?.enrolledFactors[0]?.id) {
+return;
+}
 
     setDisabling(true);
 
@@ -103,7 +105,9 @@ export default function SecuritySettingsPage() {
 
   // Download recovery codes
   const handleDownloadRecoveryCodes = () => {
-    if (!recoveryCodes.length) return;
+    if (!recoveryCodes.length) {
+return;
+}
 
     const codesText = [
       'Unite-Hub Two-Factor Authentication Recovery Codes',

@@ -340,7 +340,9 @@ class HistoryIngestionService {
    * Parse email list header
    */
   private parseEmailList(header: string): Array<{ email: string; name?: string }> {
-    if (!header) return [];
+    if (!header) {
+return [];
+}
 
     return header.split(',').map((part) => {
       const match = part.trim().match(/(?:"?([^"]*)"?\s)?<?([^\s<>]+@[^\s<>]+)>?/);
@@ -480,7 +482,9 @@ class HistoryIngestionService {
       .select('id, first_message_at, last_message_at, message_count')
       .eq('pre_client_id', preClientId);
 
-    if (!threads || threads.length === 0) return;
+    if (!threads || threads.length === 0) {
+return;
+}
 
     const totalThreads = threads.length;
     const totalMessages = threads.reduce((sum, t) => sum + (t.message_count || 0), 0);
@@ -516,7 +520,9 @@ class HistoryIngestionService {
       .eq('id', jobId)
       .single();
 
-    if (!job) return null;
+    if (!job) {
+return null;
+}
 
     return {
       jobId: job.id,

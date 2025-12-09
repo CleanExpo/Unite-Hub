@@ -146,7 +146,9 @@ export class OperatorRoleService {
       .eq("organization_id", organizationId)
       .single();
 
-    if (error) return null;
+    if (error) {
+return null;
+}
     return data;
   }
 
@@ -163,7 +165,9 @@ export class OperatorRoleService {
       .eq("is_active", true)
       .order("role", { ascending: true });
 
-    if (error) return [];
+    if (error) {
+return [];
+}
     return data;
   }
 
@@ -351,7 +355,9 @@ export class OperatorRoleService {
 
     const { data, error } = await query;
 
-    if (error) return [];
+    if (error) {
+return [];
+}
     return data;
   }
 
@@ -413,7 +419,9 @@ export class OperatorRoleService {
 
     const { data, error } = await query;
 
-    if (error) return [];
+    if (error) {
+return [];
+}
     return data;
   }
 }

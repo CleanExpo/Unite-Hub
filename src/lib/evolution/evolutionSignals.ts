@@ -150,7 +150,9 @@ export class EvolutionSignalsEngine {
   }
 
   private calculatePriorityScore(signals: EvolutionSignal[]): number {
-    if (signals.length === 0) return 0;
+    if (signals.length === 0) {
+return 0;
+}
 
     const scores = signals.map((s) => {
       switch (s.priority) {
@@ -165,7 +167,9 @@ export class EvolutionSignalsEngine {
   }
 
   private calculateTrend(signals: EvolutionSignal[]): 'increasing' | 'stable' | 'decreasing' {
-    if (signals.length < 3) return 'stable';
+    if (signals.length < 3) {
+return 'stable';
+}
 
     const now = Date.now();
     const oneWeek = 7 * 24 * 60 * 60 * 1000;
@@ -181,8 +185,12 @@ export class EvolutionSignalsEngine {
       }
     ).length;
 
-    if (recentCount > olderCount * 1.5) return 'increasing';
-    if (recentCount < olderCount * 0.5) return 'decreasing';
+    if (recentCount > olderCount * 1.5) {
+return 'increasing';
+}
+    if (recentCount < olderCount * 0.5) {
+return 'decreasing';
+}
     return 'stable';
   }
 }

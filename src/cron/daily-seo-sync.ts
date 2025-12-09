@@ -111,7 +111,9 @@ export async function weeklySeoReport() {
       .gte('summary_date', sevenDaysAgo.toISOString().split('T')[0])
       .order('summary_date', { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     if (!summaries || summaries.length === 0) {
       console.warn('⚠️ No summary data available for weekly report');

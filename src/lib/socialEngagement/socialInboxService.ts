@@ -241,8 +241,12 @@ class SocialInboxService {
             normalizedMsg
           );
 
-          if (thread) totalThreads++;
-          if (message) totalMessages++;
+          if (thread) {
+totalThreads++;
+}
+          if (message) {
+totalMessages++;
+}
         }
 
         cursor = result.nextCursor;

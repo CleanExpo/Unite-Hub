@@ -58,7 +58,9 @@ export default function OptimizerPage() {
   const workspaceId = currentOrganization?.org_id;
 
   const fetchOptimizerStatus = async () => {
-    if (!workspaceId || !session?.access_token) return;
+    if (!workspaceId || !session?.access_token) {
+return;
+}
 
     try {
       setRefreshing(true);
@@ -68,7 +70,9 @@ export default function OptimizerPage() {
         },
       });
 
-      if (!response.ok) throw new Error('Failed to fetch status');
+      if (!response.ok) {
+throw new Error('Failed to fetch status');
+}
       const data = await response.json();
 
       setStatusData(data.status && data.metrics ? data : null);
@@ -84,7 +88,9 @@ export default function OptimizerPage() {
   };
 
   const fetchAdaptationProfile = async () => {
-    if (!workspaceId || !session?.access_token) return;
+    if (!workspaceId || !session?.access_token) {
+return;
+}
 
     try {
       const response = await fetch(`/api/optimizer/profile?workspaceId=${workspaceId}`, {
@@ -93,7 +99,9 @@ export default function OptimizerPage() {
         },
       });
 
-      if (!response.ok) throw new Error('Failed to fetch profile');
+      if (!response.ok) {
+throw new Error('Failed to fetch profile');
+}
       const data = await response.json();
 
       setCurrentProfile(data.currentProfile);
@@ -104,7 +112,9 @@ export default function OptimizerPage() {
   };
 
   useEffect(() => {
-    if (!workspaceId || !session?.access_token) return;
+    if (!workspaceId || !session?.access_token) {
+return;
+}
 
     setLoading(true);
     Promise.all([fetchOptimizerStatus(), fetchAdaptationProfile()]).then(() => {

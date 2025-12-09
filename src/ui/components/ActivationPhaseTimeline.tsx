@@ -65,21 +65,31 @@ export function ActivationPhaseTimeline({
   atRisk,
 }: ActivationPhaseTimelineProps) {
   const getPhaseIndex = (phase: ActivationPhase) => {
-    if (phase === 'graduated') return 4;
+    if (phase === 'graduated') {
+return 4;
+}
     return PHASES.findIndex((p) => p.phase === phase);
   };
 
   const currentIndex = getPhaseIndex(currentPhase);
 
   const getPhaseStatus = (index: number) => {
-    if (index < currentIndex) return 'completed';
-    if (index === currentIndex) return 'current';
+    if (index < currentIndex) {
+return 'completed';
+}
+    if (index === currentIndex) {
+return 'current';
+}
     return 'upcoming';
   };
 
   const getHealthColor = (score: number) => {
-    if (score >= 75) return 'text-green-500';
-    if (score >= 60) return 'text-yellow-500';
+    if (score >= 75) {
+return 'text-green-500';
+}
+    if (score >= 60) {
+return 'text-yellow-500';
+}
     return 'text-red-500';
   };
 

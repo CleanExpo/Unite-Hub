@@ -67,8 +67,12 @@ export async function GET(req: NextRequest) {
       getRevenueStats(tenantId, dateRange),
     ]);
 
-    if (stageSummaryResult.error) throw stageSummaryResult.error;
-    if (statsResult.error) throw statsResult.error;
+    if (stageSummaryResult.error) {
+throw stageSummaryResult.error;
+}
+    if (statsResult.error) {
+throw statsResult.error;
+}
 
     const response: {
       status: string;
@@ -84,7 +88,9 @@ export async function GET(req: NextRequest) {
     // Optionally include channel attribution
     if (includeChannels) {
       const channelsResult = await getChannelAttribution(tenantId, dateRange);
-      if (channelsResult.error) throw channelsResult.error;
+      if (channelsResult.error) {
+throw channelsResult.error;
+}
       response.channels = channelsResult.data || [];
     }
 

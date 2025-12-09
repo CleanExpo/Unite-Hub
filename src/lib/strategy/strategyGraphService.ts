@@ -188,7 +188,9 @@ export class StrategyGraphService {
       .single();
 
     if (error) {
-      if (error.code === "PGRST116") return null;
+      if (error.code === "PGRST116") {
+return null;
+}
       throw new Error(`Failed to get node: ${error.message}`);
     }
 
@@ -328,7 +330,9 @@ export class StrategyGraphService {
     const visited = new Set<string>();
 
     const findPaths = (nodeId: string, currentPath: string[]) => {
-      if (visited.has(nodeId)) return;
+      if (visited.has(nodeId)) {
+return;
+}
       visited.add(nodeId);
 
       currentPath.push(nodeId);
@@ -470,8 +474,12 @@ export class StrategyGraphService {
 
     while (queue.length > 0) {
       const current = queue.shift()!;
-      if (current === sourceId) return true;
-      if (visited.has(current)) continue;
+      if (current === sourceId) {
+return true;
+}
+      if (visited.has(current)) {
+continue;
+}
       visited.add(current);
 
       const deps = reverseAdj.get(current) || [];
@@ -493,7 +501,9 @@ export class StrategyGraphService {
       .eq("source_node_id", nodeId)
       .eq("edge_type", "DEPENDS_ON");
 
-    if (!edges || edges.length === 0) return [];
+    if (!edges || edges.length === 0) {
+return [];
+}
 
     const depIds = edges.map((e) => e.target_node_id);
 
@@ -521,7 +531,9 @@ export class StrategyGraphService {
       .eq("target_node_id", nodeId)
       .eq("edge_type", "DEPENDS_ON");
 
-    if (!edges || edges.length === 0) return [];
+    if (!edges || edges.length === 0) {
+return [];
+}
 
     const depIds = edges.map((e) => e.source_node_id);
 

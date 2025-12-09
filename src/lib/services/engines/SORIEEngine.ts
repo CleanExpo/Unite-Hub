@@ -32,7 +32,9 @@ export class SORIEEngine {
       .select('id')
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
     return data.id;
   }
 
@@ -43,7 +45,9 @@ export class SORIEEngine {
       .eq('id', objectiveId)
       .single();
 
-    if (!objective) throw new Error('Objective not found');
+    if (!objective) {
+throw new Error('Objective not found');
+}
 
     const roadmapItems = this.createRoadmapItems(objective);
     const confidence = this.calculateConfidence(objective, roadmapItems);
@@ -60,7 +64,9 @@ export class SORIEEngine {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
     return data;
   }
 
@@ -84,7 +90,9 @@ export class SORIEEngine {
       .select('id')
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
     return data.id;
   }
 
@@ -121,8 +129,12 @@ export class SORIEEngine {
 
   private calculateConfidence(objective: any, roadmapItems: any[]): number {
     let confidence = 70;
-    if (objective.priority <= 3) confidence += 10;
-    if (objective.kpi_targets && Object.keys(objective.kpi_targets).length > 0) confidence += 10;
+    if (objective.priority <= 3) {
+confidence += 10;
+}
+    if (objective.kpi_targets && Object.keys(objective.kpi_targets).length > 0) {
+confidence += 10;
+}
     return Math.min(100, confidence);
   }
 }

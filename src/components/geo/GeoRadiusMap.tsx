@@ -74,11 +74,21 @@ export default function GeoRadiusMap({
 
   const getZoomLevel = (radius: number): number => {
     // Approximate zoom levels for different radii
-    if (radius <= 3) return 14;
-    if (radius <= 5) return 13;
-    if (radius <= 10) return 12;
-    if (radius <= 20) return 11;
-    if (radius <= 50) return 10;
+    if (radius <= 3) {
+return 14;
+}
+    if (radius <= 5) {
+return 13;
+}
+    if (radius <= 10) {
+return 12;
+}
+    if (radius <= 20) {
+return 11;
+}
+    if (radius <= 50) {
+return 10;
+}
     return 9;
   };
 

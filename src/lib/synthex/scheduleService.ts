@@ -92,7 +92,9 @@ export async function createSchedule(params: CreateScheduleParams): Promise<{
       .insert(records)
       .select();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { data, error: null };
   } catch (err) {
@@ -114,7 +116,9 @@ export async function getSchedulesByCampaign(
       .eq('campaign_id', campaignId)
       .order('step_index', { ascending: true });
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { data, error: null };
   } catch (err) {
@@ -160,7 +164,9 @@ export async function listSchedules(
 
     const { data, error } = await query;
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { data, error: null };
   } catch (err) {
@@ -185,10 +191,18 @@ export async function updateScheduleStatus(
   try {
     const updateData: Record<string, unknown> = { status };
 
-    if (metadata?.sentAt) updateData.sent_at = metadata.sentAt;
-    if (metadata?.errorMessage) updateData.error_message = metadata.errorMessage;
-    if (typeof metadata?.sentCount === 'number') updateData.sent_count = metadata.sentCount;
-    if (typeof metadata?.failedCount === 'number') updateData.failed_count = metadata.failedCount;
+    if (metadata?.sentAt) {
+updateData.sent_at = metadata.sentAt;
+}
+    if (metadata?.errorMessage) {
+updateData.error_message = metadata.errorMessage;
+}
+    if (typeof metadata?.sentCount === 'number') {
+updateData.sent_count = metadata.sentCount;
+}
+    if (typeof metadata?.failedCount === 'number') {
+updateData.failed_count = metadata.failedCount;
+}
 
     if (status === 'failed') {
       // Increment retry count on failure
@@ -212,7 +226,9 @@ export async function updateScheduleStatus(
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { data, error: null };
   } catch (err) {
@@ -234,7 +250,9 @@ export async function cancelSchedule(
       .eq('id', scheduleId)
       .in('status', ['pending', 'queued']); // Can only cancel if not already sent
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true, error: null };
   } catch (err) {
@@ -258,7 +276,9 @@ export async function getDueSchedules(
       .order('send_at', { ascending: true })
       .limit(limit);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { data, error: null };
   } catch (err) {
@@ -293,7 +313,9 @@ export async function getCampaignAnalytics(
 
     const { data, error } = await query;
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { data, error: null };
   } catch (err) {
@@ -330,7 +352,9 @@ export async function getTenantAnalyticsSummary(
       .eq('tenant_id', tenantId)
       .gte('analytics_date', startDate.toISOString().split('T')[0]);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     if (!data || data.length === 0) {
       return {
@@ -414,7 +438,9 @@ export async function recordAnalytics(
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { data, error: null };
   } catch (err) {

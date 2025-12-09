@@ -320,7 +320,9 @@ export function formatBriefingForDisplay(briefing: DailyBriefing): string {
   // Header
   lines.push(`\n${'═'.repeat(60)}`);
   lines.push(`${briefing.type.toUpperCase()} BRIEFING for ${briefing.date}`);
-  if (briefing.isUrgent) lines.push('🚨 URGENT');
+  if (briefing.isUrgent) {
+lines.push('🚨 URGENT');
+}
   lines.push(`${'═'.repeat(60)}\n`);
 
   // TL;DR

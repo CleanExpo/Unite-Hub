@@ -56,8 +56,12 @@ export function ScalingModeOverview({
   className = '',
 }: ScalingModeOverviewProps) {
   const getUtilisationColor = (percent: number) => {
-    if (percent >= 90) return 'text-red-500';
-    if (percent >= 70) return 'text-yellow-500';
+    if (percent >= 90) {
+return 'text-red-500';
+}
+    if (percent >= 70) {
+return 'text-yellow-500';
+}
     return 'text-green-500';
   };
 

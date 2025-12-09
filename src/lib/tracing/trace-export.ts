@@ -16,7 +16,7 @@
  * @module lib/tracing/trace-export
  */
 
-/* eslint-disable no-console, no-undef */
+ 
 /* global process, setInterval, clearInterval */
 
 import { getTraceContext } from './trace-context';

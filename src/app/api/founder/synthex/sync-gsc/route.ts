@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
     const dateEnd = today.toISOString().split('T')[0];
     const dateStart = thirtyDaysAgo.toISOString().split('T')[0];
 
-    let gscData: Record<string, any> = {
+    const gscData: Record<string, any> = {
       totalMetrics: {},
       queries: [],
       pages: [],

@@ -130,7 +130,9 @@ export function TeamDashboard({ organizationId, canManageTeams = false }: TeamDa
   };
 
   const handleCreateTeam = async () => {
-    if (!newTeamName.trim()) return;
+    if (!newTeamName.trim()) {
+return;
+}
 
     try {
       const response = await fetch('/api/enterprise/teams', {
@@ -164,7 +166,9 @@ export function TeamDashboard({ organizationId, canManageTeams = false }: TeamDa
   };
 
   const handleDeleteTeam = async (teamId: string) => {
-    if (!confirm('Are you sure you want to delete this team?')) return;
+    if (!confirm('Are you sure you want to delete this team?')) {
+return;
+}
 
     try {
       const response = await fetch(`/api/enterprise/teams?team_id=${teamId}`, {

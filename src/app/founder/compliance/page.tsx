@@ -51,7 +51,9 @@ export default function ComplianceDashboardPage() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
 
   const fetchData = useCallback(async () => {
-    if (!agencyId || !session?.access_token) return;
+    if (!agencyId || !session?.access_token) {
+return;
+}
 
     setIsLoading(true);
     try {
@@ -97,7 +99,9 @@ export default function ComplianceDashboardPage() {
   }, [fetchData]);
 
   const handleCheck = async () => {
-    if (!checkText.trim() || !session?.access_token) return;
+    if (!checkText.trim() || !session?.access_token) {
+return;
+}
 
     setIsChecking(true);
     setCheckResult(null);

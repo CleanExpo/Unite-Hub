@@ -286,7 +286,9 @@ export class SignatureService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     // Log audit event
     await this.logAuditEvent(options.client_id, options.organization_id, {
@@ -445,7 +447,9 @@ export class SignatureService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     // Update trusted mode request
     await supabase
@@ -530,7 +534,9 @@ export class SignatureService {
       .eq("id", requestId)
       .single();
 
-    if (error) return null;
+    if (error) {
+return null;
+}
     return data;
   }
 
@@ -546,7 +552,9 @@ export class SignatureService {
       .eq("client_id", clientId)
       .order("created_at", { ascending: false });
 
-    if (error) return [];
+    if (error) {
+return [];
+}
     return data;
   }
 
@@ -593,8 +601,12 @@ export class SignatureService {
    * Get default signature provider
    */
   private getDefaultProvider(): SignatureProvider {
-    if (process.env.DOCUSIGN_API_KEY) return "docusign";
-    if (process.env.HELLOSIGN_API_KEY) return "hellosign";
+    if (process.env.DOCUSIGN_API_KEY) {
+return "docusign";
+}
+    if (process.env.HELLOSIGN_API_KEY) {
+return "hellosign";
+}
     return "manual";
   }
 

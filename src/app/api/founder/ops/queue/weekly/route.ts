@@ -45,7 +45,9 @@ export async function GET(req: NextRequest) {
       }
     );
 
-    if (queueError) throw queueError;
+    if (queueError) {
+throw queueError;
+}
 
     const tasks = queueData || [];
     const dailyQueues: any[] = [];

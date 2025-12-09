@@ -46,14 +46,22 @@ export function BusinessHealthGauge({
   }, [score, animated]);
 
   const getHealthStatus = (score: number) => {
-    if (score >= 70) return { label: "Excellent", color: "green", icon: TrendingUp };
-    if (score >= 40) return { label: "Good", color: "yellow", icon: Minus };
+    if (score >= 70) {
+return { label: "Excellent", color: "green", icon: TrendingUp };
+}
+    if (score >= 40) {
+return { label: "Good", color: "yellow", icon: Minus };
+}
     return { label: "Needs Attention", color: "red", icon: TrendingDown };
   };
 
   const getColor = (score: number) => {
-    if (score >= 70) return "#22c55e"; // green-500
-    if (score >= 40) return "#eab308"; // yellow-500
+    if (score >= 70) {
+return "#22c55e";
+} // green-500
+    if (score >= 40) {
+return "#eab308";
+} // yellow-500
     return "#ef4444"; // red-500
   };
 

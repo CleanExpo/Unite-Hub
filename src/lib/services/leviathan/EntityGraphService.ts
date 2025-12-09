@@ -130,7 +130,9 @@ export class EntityGraphService {
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') return null;
+      if (error.code === 'PGRST116') {
+return null;
+}
       throw new Error('Failed to fetch graph');
     }
 
@@ -214,7 +216,9 @@ export class EntityGraphService {
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') return null;
+      if (error.code === 'PGRST116') {
+return null;
+}
       throw new Error('Failed to fetch node');
     }
 
@@ -271,9 +275,15 @@ export class EntityGraphService {
     const supabase = await getSupabaseServer();
 
     const updates: any = {};
-    if (scores.authority !== undefined) updates.authority_score = scores.authority;
-    if (scores.relevance !== undefined) updates.relevance_score = scores.relevance;
-    if (scores.freshness !== undefined) updates.freshness_score = scores.freshness;
+    if (scores.authority !== undefined) {
+updates.authority_score = scores.authority;
+}
+    if (scores.relevance !== undefined) {
+updates.relevance_score = scores.relevance;
+}
+    if (scores.freshness !== undefined) {
+updates.freshness_score = scores.freshness;
+}
 
     const { error } = await supabase
       .from('entity_nodes')

@@ -5,7 +5,9 @@ import { apiRateLimit } from "@/lib/rate-limit";
 export async function GET(request: NextRequest) {
   try {
     const rateLimitResult = await apiRateLimit(request);
-    if (rateLimitResult) return rateLimitResult;
+    if (rateLimitResult) {
+return rateLimitResult;
+}
 
     const workspaceId = request.nextUrl.searchParams.get("workspaceId");
     const page = parseInt(request.nextUrl.searchParams.get("page") || "1");
@@ -29,8 +31,12 @@ export async function GET(request: NextRequest) {
       .select("*", { count: "exact" })
       .eq("workspace_id", workspaceId);
 
-    if (category) query = query.eq("category", category);
-    if (style_tag) query = query.eq("style_tag", style_tag);
+    if (category) {
+query = query.eq("category", category);
+}
+    if (style_tag) {
+query = query.eq("style_tag", style_tag);
+}
 
     if (sort === "popular") {
       query = query.order("view_count", { ascending: false });

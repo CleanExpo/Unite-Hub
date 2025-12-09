@@ -56,7 +56,9 @@ export function BulkActions({
     setShowDeleteDialog(false);
   };
 
-  if (selectedIds.length === 0) return null;
+  if (selectedIds.length === 0) {
+return null;
+}
 
   return (
     <>

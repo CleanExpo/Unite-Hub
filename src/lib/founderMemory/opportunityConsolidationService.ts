@@ -140,8 +140,11 @@ class OpportunityConsolidationService {
     // Score and save each opportunity
     for (const opp of allOpportunities) {
       const result = await this.processOpportunity(founderId, workspaceId, opp, scoreWithAI);
-      if (result === 'new') newCount++;
-      else if (result === 'updated') updatedCount++;
+      if (result === 'new') {
+newCount++;
+} else if (result === 'updated') {
+updatedCount++;
+}
     }
 
     // Recalculate priority ranks
@@ -180,7 +183,9 @@ class OpportunityConsolidationService {
       .gte('created_at', sinceDate.toISOString())
       .or('extracted_intent.ilike.%opportunity%,extracted_idea.neq.null');
 
-    if (!emails) return [];
+    if (!emails) {
+return [];
+}
 
     return emails
       .filter((e) => e.extracted_idea || (e.extracted_intent && e.extracted_intent.includes('opportunity')))
@@ -208,7 +213,9 @@ class OpportunityConsolidationService {
       .in('status', ['open', 'new'])
       .gte('created_at', sinceDate.toISOString());
 
-    if (!insights) return [];
+    if (!insights) {
+return [];
+}
 
     return insights.map((i) => ({
       sourceType: 'pre_client_insight' as OpportunitySource,
@@ -236,7 +243,9 @@ class OpportunityConsolidationService {
       .gte('created_at', sinceDate.toISOString())
       .limit(20);
 
-    if (!messages) return [];
+    if (!messages) {
+return [];
+}
 
     return messages
       .filter((m) => m.content && m.content.length > 20)
@@ -263,7 +272,9 @@ class OpportunityConsolidationService {
       .eq('workspace_id', workspaceId)
       .gte('created_at', sinceDate.toISOString());
 
-    if (!ads) return [];
+    if (!ads) {
+return [];
+}
 
     // Filter for high CTR or conversion opportunities
     return ads
@@ -297,7 +308,9 @@ class OpportunityConsolidationService {
       .order('impressions', { ascending: false })
       .limit(10);
 
-    if (!analytics) return [];
+    if (!analytics) {
+return [];
+}
 
     return analytics
       .filter((a) => a.impressions > 100)
@@ -417,10 +430,14 @@ Return JSON only:
       });
 
       const textBlock = response.content.find((c) => c.type === 'text');
-      if (!textBlock) throw new Error('No response');
+      if (!textBlock) {
+throw new Error('No response');
+}
 
       const jsonMatch = textBlock.text.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) throw new Error('No JSON found');
+      if (!jsonMatch) {
+throw new Error('No JSON found');
+}
 
       const result = JSON.parse(jsonMatch[0]);
 
@@ -447,7 +464,9 @@ Return JSON only:
       .eq('workspace_id', workspaceId)
       .in('status', ['open', 'evaluating']);
 
-    if (!opportunities) return;
+    if (!opportunities) {
+return;
+}
 
     // Calculate priority score: value / (effort * time)
     const ranked = opportunities
@@ -485,7 +504,9 @@ Return JSON only:
       .order('estimated_value_score', { ascending: false })
       .limit(limit);
 
-    if (error || !data) return [];
+    if (error || !data) {
+return [];
+}
     return data.map(this.mapDbToOpportunity);
   }
 
@@ -531,7 +552,9 @@ Return JSON only:
 
     const { data, error } = await query;
 
-    if (error || !data) return [];
+    if (error || !data) {
+return [];
+}
     return data.map(this.mapDbToOpportunity);
   }
 
@@ -549,7 +572,9 @@ Return JSON only:
       updated_at: new Date().toISOString(),
     };
 
-    if (notes) updateData.notes = notes;
+    if (notes) {
+updateData.notes = notes;
+}
 
     const { error } = await supabaseAdmin
       .from('founder_opportunity_backlog')
@@ -598,7 +623,9 @@ Return JSON only:
       .select()
       .single();
 
-    if (error || !result) return null;
+    if (error || !result) {
+return null;
+}
 
     // Recalculate ranks
     await this.recalculatePriorityRanks(founderId, workspaceId);

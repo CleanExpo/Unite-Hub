@@ -206,9 +206,15 @@ export class BloggerService {
     try {
       const requestBody: any = {};
 
-      if (post.title) requestBody.title = post.title;
-      if (post.content) requestBody.content = post.content;
-      if (post.labels) requestBody.labels = post.labels;
+      if (post.title) {
+requestBody.title = post.title;
+}
+      if (post.content) {
+requestBody.content = post.content;
+}
+      if (post.labels) {
+requestBody.labels = post.labels;
+}
 
       const response = await this.blogger.posts.patch({
         blogId,

@@ -50,7 +50,9 @@ export async function GET(req: NextRequest) {
       p_type: type || null,
     });
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     logger.info('Blueprints retrieved', { workspaceId, count: blueprints?.length || 0 });
 
@@ -167,7 +169,9 @@ export async function POST(req: NextRequest) {
       .select()
       .single();
 
-    if (insertError) throw insertError;
+    if (insertError) {
+throw insertError;
+}
 
     logger.info('Blueprint created', {
       blueprintId: insertedBlueprint.id,

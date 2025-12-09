@@ -3,7 +3,7 @@
  * Critical system telemetry and early warning signals
  */
 
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 if (typeof window !== "undefined") {
   throw new Error("earlyWarningService must only run on server");

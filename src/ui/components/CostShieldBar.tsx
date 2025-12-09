@@ -44,14 +44,22 @@ export function CostShieldBar({ status, onViewDetails }: CostShieldBarProps) {
   const monthlyPercent = (status.total_month_usd / status.budget.monthly_limit_usd) * 100;
 
   const getStatusColor = (percent: number) => {
-    if (percent >= 90) return 'text-red-500';
-    if (percent >= 70) return 'text-yellow-500';
+    if (percent >= 90) {
+return 'text-red-500';
+}
+    if (percent >= 70) {
+return 'text-yellow-500';
+}
     return 'text-green-500';
   };
 
   const getProgressColor = (percent: number) => {
-    if (percent >= 90) return 'bg-red-500';
-    if (percent >= 70) return 'bg-yellow-500';
+    if (percent >= 90) {
+return 'bg-red-500';
+}
+    if (percent >= 70) {
+return 'bg-yellow-500';
+}
     return 'bg-green-500';
   };
 

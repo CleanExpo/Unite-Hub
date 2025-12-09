@@ -140,7 +140,9 @@ export function OpportunityCount({
   count: number;
   onClick?: () => void;
 }) {
-  if (count === 0) return null;
+  if (count === 0) {
+return null;
+}
 
   return (
     <div

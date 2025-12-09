@@ -26,10 +26,18 @@ export function MarketplaceHistoryTimeline({ workspaceId }: MarketplaceHistoryTi
 
   // Filter auctions
   const filteredAuctions = historicalAuctions.filter((auction) => {
-    if (filterType === 'all') return true;
-    if (filterType === 'success') return auction.outcome === 'success';
-    if (filterType === 'partial') return auction.outcome === 'partial_success';
-    if (filterType === 'failure') return auction.outcome === 'failure';
+    if (filterType === 'all') {
+return true;
+}
+    if (filterType === 'success') {
+return auction.outcome === 'success';
+}
+    if (filterType === 'partial') {
+return auction.outcome === 'partial_success';
+}
+    if (filterType === 'failure') {
+return auction.outcome === 'failure';
+}
     return true;
   });
 

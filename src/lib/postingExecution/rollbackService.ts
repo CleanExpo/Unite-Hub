@@ -117,7 +117,9 @@ export async function getRollbackById(rollbackId: string): Promise<RollbackResul
     .eq('id', rollbackId)
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+return null;
+}
 
   return mapToRollbackResult(data);
 }

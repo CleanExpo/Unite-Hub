@@ -207,15 +207,33 @@ export async function updateContent(
 
   const updateData: Record<string, unknown> = {};
 
-  if (updates.title !== undefined) updateData.title = updates.title;
-  if (updates.type !== undefined) updateData.type = updates.type;
-  if (updates.status !== undefined) updateData.status = updates.status;
-  if (updates.contentMarkdown !== undefined) updateData.content_markdown = updates.contentMarkdown;
-  if (updates.contentHtml !== undefined) updateData.content_html = updates.contentHtml;
-  if (updates.contentPlain !== undefined) updateData.content_plain = updates.contentPlain;
-  if (updates.tags !== undefined) updateData.tags = updates.tags;
-  if (updates.category !== undefined) updateData.category = updates.category;
-  if (updates.meta !== undefined) updateData.meta = updates.meta ? JSON.stringify(updates.meta) : null;
+  if (updates.title !== undefined) {
+updateData.title = updates.title;
+}
+  if (updates.type !== undefined) {
+updateData.type = updates.type;
+}
+  if (updates.status !== undefined) {
+updateData.status = updates.status;
+}
+  if (updates.contentMarkdown !== undefined) {
+updateData.content_markdown = updates.contentMarkdown;
+}
+  if (updates.contentHtml !== undefined) {
+updateData.content_html = updates.contentHtml;
+}
+  if (updates.contentPlain !== undefined) {
+updateData.content_plain = updates.contentPlain;
+}
+  if (updates.tags !== undefined) {
+updateData.tags = updates.tags;
+}
+  if (updates.category !== undefined) {
+updateData.category = updates.category;
+}
+  if (updates.meta !== undefined) {
+updateData.meta = updates.meta ? JSON.stringify(updates.meta) : null;
+}
 
   const { data, error } = await supabase
     .from('synthex_content')
@@ -334,9 +352,15 @@ export async function getContentStats(tenantId: string, brandId?: string): Promi
   for (const row of data || []) {
     stats.total++;
 
-    if (row.status === 'pending_review') stats.pending_review++;
-    if (row.status === 'approved') stats.approved++;
-    if (row.status === 'published') stats.published++;
+    if (row.status === 'pending_review') {
+stats.pending_review++;
+}
+    if (row.status === 'approved') {
+stats.approved++;
+}
+    if (row.status === 'published') {
+stats.published++;
+}
 
     if (row.type in stats.by_type) {
       stats.by_type[row.type as ContentType]++;

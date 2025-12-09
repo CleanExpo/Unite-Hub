@@ -47,7 +47,9 @@ export function SearchConsoleDetail({ workspaceId, brandSlug }: SearchConsoleDet
       setError(null);
 
       const params = new URLSearchParams({ workspaceId, source });
-      if (brandSlug) params.append('brandSlug', brandSlug);
+      if (brandSlug) {
+params.append('brandSlug', brandSlug);
+}
 
       const response = await fetch(`/api/analytics/search-console?${params.toString()}`);
       const result = await response.json();
@@ -69,7 +71,9 @@ export function SearchConsoleDetail({ workspaceId, brandSlug }: SearchConsoleDet
   }, [workspaceId, brandSlug, source]);
 
   const filteredQueries = React.useMemo(() => {
-    if (!data?.data?.queries) return [];
+    if (!data?.data?.queries) {
+return [];
+}
 
     let queries = [...data.data.queries];
 
@@ -131,7 +135,9 @@ export function SearchConsoleDetail({ workspaceId, brandSlug }: SearchConsoleDet
     );
   }
 
-  if (!data) return null;
+  if (!data) {
+return null;
+}
 
   return (
     <div className="space-y-6">

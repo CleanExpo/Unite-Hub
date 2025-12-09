@@ -42,8 +42,12 @@ export function ActivationProgressBar({
   };
 
   const getPhaseFromDay = (day: number) => {
-    if (day <= 14) return 1;
-    if (day <= 45) return 2;
+    if (day <= 14) {
+return 1;
+}
+    if (day <= 45) {
+return 2;
+}
     return 3;
   };
 

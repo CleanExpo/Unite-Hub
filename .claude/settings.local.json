@@ -2,7 +2,15 @@
   "permissions": {
     "allow": [
       "Bash(git rm:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(node --version:*)",
+      "Bash(npm:*)",
+      "Bash(find:*)",
+      "Bash(ls:*)",
+      "Bash(echo:*)",
+      "Bash(timeout 30 npm run:*)",
+      "Bash(supabase migration list:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []

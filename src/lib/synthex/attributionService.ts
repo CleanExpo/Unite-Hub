@@ -114,7 +114,9 @@ export async function recordEvent(event: AttributionEvent): Promise<{
       .select()
       .single();
 
-    if (error) throw new Error(error.message);
+    if (error) {
+throw new Error(error.message);
+}
 
     // Update engagement score after recording event
     if (event.email || event.contactId) {
@@ -172,7 +174,9 @@ export async function getEventsForCampaign(
 
     const { data, error } = await query;
 
-    if (error) throw new Error(error.message);
+    if (error) {
+throw new Error(error.message);
+}
     return { data, error: null };
   } catch (err) {
     return { data: null, error: err instanceof Error ? err : new Error('Unknown error') };
@@ -214,7 +218,9 @@ export async function getEventsForTenant(
 
     const { data, error } = await query;
 
-    if (error) throw new Error(error.message);
+    if (error) {
+throw new Error(error.message);
+}
     return { data, error: null };
   } catch (err) {
     return { data: null, error: err instanceof Error ? err : new Error('Unknown error') };
@@ -232,7 +238,9 @@ async function updateEngagementScore(
   channel: Channel,
   revenue?: number
 ): Promise<void> {
-  if (!email && !contactId) return;
+  if (!email && !contactId) {
+return;
+}
 
   const eventWeight = EVENT_WEIGHTS[eventType];
   const revenueValue = revenue || 0;
@@ -269,10 +277,18 @@ async function updateEngagementScore(
     };
 
     // Update event counts
-    if (eventType === 'impression') updates.impressions = (existing.impressions || 0) + 1;
-    if (eventType === 'open') updates.opens = (existing.opens || 0) + 1;
-    if (eventType === 'click') updates.clicks = (existing.clicks || 0) + 1;
-    if (eventType === 'conversion') updates.conversions = (existing.conversions || 0) + 1;
+    if (eventType === 'impression') {
+updates.impressions = (existing.impressions || 0) + 1;
+}
+    if (eventType === 'open') {
+updates.opens = (existing.opens || 0) + 1;
+}
+    if (eventType === 'click') {
+updates.clicks = (existing.clicks || 0) + 1;
+}
+    if (eventType === 'conversion') {
+updates.conversions = (existing.conversions || 0) + 1;
+}
 
     await supabaseAdmin
       .from('synthex_engagement_scores')
@@ -304,10 +320,18 @@ async function updateEngagementScore(
  * Calculate engagement tier from score
  */
 function calculateTier(score: number): EngagementTier {
-  if (score >= TIER_THRESHOLDS.champion) return 'champion';
-  if (score >= TIER_THRESHOLDS.hot) return 'hot';
-  if (score >= TIER_THRESHOLDS.warm) return 'warm';
-  if (score >= TIER_THRESHOLDS.warming) return 'warming';
+  if (score >= TIER_THRESHOLDS.champion) {
+return 'champion';
+}
+  if (score >= TIER_THRESHOLDS.hot) {
+return 'hot';
+}
+  if (score >= TIER_THRESHOLDS.warm) {
+return 'warm';
+}
+  if (score >= TIER_THRESHOLDS.warming) {
+return 'warming';
+}
   return 'cold';
 }
 
@@ -348,7 +372,9 @@ export async function getEngagementScores(
 
     const { data, error } = await query;
 
-    if (error) throw new Error(error.message);
+    if (error) {
+throw new Error(error.message);
+}
     return { data, error: null };
   } catch (err) {
     return { data: null, error: err instanceof Error ? err : new Error('Unknown error') };
@@ -375,7 +401,9 @@ export async function getEngagementSummary(tenantId: string): Promise<{
       .select('tier')
       .eq('tenant_id', tenantId);
 
-    if (error) throw new Error(error.message);
+    if (error) {
+throw new Error(error.message);
+}
 
     const summary = {
       cold: 0,
@@ -413,7 +441,9 @@ export async function recalculateEngagementScore(
       .eq('email', email)
       .order('occurred_at', { ascending: true });
 
-    if (error) throw new Error(error.message);
+    if (error) {
+throw new Error(error.message);
+}
 
     // Calculate scores
     let overallScore = 0;
@@ -435,10 +465,18 @@ export async function recalculateEngagementScore(
       channelScores[event.channel] = (channelScores[event.channel] || 0) + weight;
       totalRevenue += event.revenue || 0;
 
-      if (event.event_type === 'impression') counts.impressions++;
-      if (event.event_type === 'open') counts.opens++;
-      if (event.event_type === 'click') counts.clicks++;
-      if (event.event_type === 'conversion') counts.conversions++;
+      if (event.event_type === 'impression') {
+counts.impressions++;
+}
+      if (event.event_type === 'open') {
+counts.opens++;
+}
+      if (event.event_type === 'click') {
+counts.clicks++;
+}
+      if (event.event_type === 'conversion') {
+counts.conversions++;
+}
     }
 
     overallScore = Math.max(0, overallScore);
@@ -469,7 +507,9 @@ export async function recalculateEngagementScore(
       .select()
       .single();
 
-    if (upsertError) throw new Error(upsertError.message);
+    if (upsertError) {
+throw new Error(upsertError.message);
+}
     return { data: result, error: null };
   } catch (err) {
     return { data: null, error: err instanceof Error ? err : new Error('Unknown error') };

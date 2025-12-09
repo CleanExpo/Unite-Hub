@@ -204,7 +204,9 @@ export class EnterpriseReadinessChecks {
           .select('*', { count: 'exact', head: true })
           .eq('team_id', team.id);
 
-        if (count && count > 0) teamsWithMembers++;
+        if (count && count > 0) {
+teamsWithMembers++;
+}
       }
 
       checks.push({
@@ -329,7 +331,9 @@ export class EnterpriseReadinessChecks {
           .select('*', { count: 'exact', head: true })
           .eq('campaign_id', campaign.id);
 
-        if (count && count > 0) campaignsWithSteps++;
+        if (count && count > 0) {
+campaignsWithSteps++;
+}
       }
 
       checks.push({

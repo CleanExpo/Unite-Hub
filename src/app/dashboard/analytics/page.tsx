@@ -18,7 +18,9 @@ export default function AnalyticsPage() {
     async function checkTrial() {
       try {
         const { data: { session } } = await supabase.auth.getSession();
-        if (!session) return;
+        if (!session) {
+return;
+}
 
         const { data: profile } = await supabase
           .from("user_profiles")

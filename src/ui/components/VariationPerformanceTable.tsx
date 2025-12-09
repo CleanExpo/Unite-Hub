@@ -155,7 +155,9 @@ function getStatusColor(status: string): string {
 
 function calculateAvgLift(tests: VisualABTest[]): string {
   const testsWithLift = tests.filter(t => t.lift !== null);
-  if (testsWithLift.length === 0) return '0';
+  if (testsWithLift.length === 0) {
+return '0';
+}
 
   const avgLift = testsWithLift.reduce((sum, t) => sum + (t.lift || 0), 0) / testsWithLift.length;
   return (avgLift * 100).toFixed(1);

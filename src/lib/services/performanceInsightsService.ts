@@ -153,10 +153,18 @@ export function normalizeMetrics(
 ): NormalizedMetrics {
   const dataSources: string[] = ["Unite-Hub Internal Database"];
 
-  if (external.rankTracking) dataSources.push("DataForSEO Rank Tracking");
-  if (external.backlinks) dataSources.push("DataForSEO Backlinks");
-  if (external.traffic) dataSources.push("DataForSEO Traffic");
-  if (external.keywords) dataSources.push("DataForSEO Keywords");
+  if (external.rankTracking) {
+dataSources.push("DataForSEO Rank Tracking");
+}
+  if (external.backlinks) {
+dataSources.push("DataForSEO Backlinks");
+}
+  if (external.traffic) {
+dataSources.push("DataForSEO Traffic");
+}
+  if (external.keywords) {
+dataSources.push("DataForSEO Keywords");
+}
 
   return {
     internal,

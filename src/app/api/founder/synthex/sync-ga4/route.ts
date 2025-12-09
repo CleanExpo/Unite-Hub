@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
     const dateEnd = today.toISOString().split('T')[0];
     const dateStart = thirtyDaysAgo.toISOString().split('T')[0];
 
-    let ga4Data: Record<string, any> = {};
+    const ga4Data: Record<string, any> = {};
 
     try {
       const serviceAccountKey = process.env.GOOGLE_SERVICE_ACCOUNT_KEY

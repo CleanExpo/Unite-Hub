@@ -195,14 +195,18 @@ export async function cleanupExpiredEvidence(): Promise<number> {
         const taskPath = path.join(evidenceBaseDir, taskDir);
         const stat = await fs.stat(taskPath);
 
-        if (!stat.isDirectory()) continue;
+        if (!stat.isDirectory()) {
+continue;
+}
 
         try {
           const files = await fs.readdir(taskPath);
           const now = Date.now();
 
           for (const file of files) {
-            if (!file.startsWith('metadata-')) continue;
+            if (!file.startsWith('metadata-')) {
+continue;
+}
 
             try {
               const metadataPath = path.join(taskPath, file);
@@ -251,14 +255,18 @@ export async function validateEvidenceIntegrity(taskId: string): Promise<boolean
 
     try {
       const files = await fs.readdir(storageDir);
-      if (files.length === 0) return false;
+      if (files.length === 0) {
+return false;
+}
 
       // Try to read all files
       for (const file of files) {
         const filePath = path.join(storageDir, file);
         const stat = await fs.stat(filePath);
 
-        if (!stat.isFile()) continue;
+        if (!stat.isFile()) {
+continue;
+}
 
         // Verify file is readable
         await fs.access(filePath);

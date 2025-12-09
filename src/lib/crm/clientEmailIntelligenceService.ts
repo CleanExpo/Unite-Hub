@@ -327,7 +327,9 @@ class ClientEmailIntelligenceService {
       .eq('id', clientId)
       .single();
 
-    if (!client) return null;
+    if (!client) {
+return null;
+}
 
     // Get recent email subjects and snippets
     const { data: threads } = await supabase
@@ -573,8 +575,12 @@ Respond with valid JSON only.`;
       };
 
       existing.pendingCount++;
-      if (row.priority === 'urgent') existing.urgentCount++;
-      if (row.priority === 'high') existing.highCount++;
+      if (row.priority === 'urgent') {
+existing.urgentCount++;
+}
+      if (row.priority === 'high') {
+existing.highCount++;
+}
 
       clientStats.set(row.client_id, existing);
     }
@@ -583,8 +589,12 @@ Respond with valid JSON only.`;
     return [...clientStats.values()]
       .sort((a, b) => {
         // Sort by urgent first, then high, then total
-        if (a.urgentCount !== b.urgentCount) return b.urgentCount - a.urgentCount;
-        if (a.highCount !== b.highCount) return b.highCount - a.highCount;
+        if (a.urgentCount !== b.urgentCount) {
+return b.urgentCount - a.urgentCount;
+}
+        if (a.highCount !== b.highCount) {
+return b.highCount - a.highCount;
+}
         return b.pendingCount - a.pendingCount;
       })
       .slice(0, limit);
@@ -602,20 +612,31 @@ Respond with valid JSON only.`;
     let score = 50; // Base score
 
     // Message volume factor (up to +20)
-    if (params.totalMessages > 50) score += 20;
-    else if (params.totalMessages > 20) score += 15;
-    else if (params.totalMessages > 10) score += 10;
-    else if (params.totalMessages > 5) score += 5;
+    if (params.totalMessages > 50) {
+score += 20;
+} else if (params.totalMessages > 20) {
+score += 15;
+} else if (params.totalMessages > 10) {
+score += 10;
+} else if (params.totalMessages > 5) {
+score += 5;
+}
 
     // Sentiment factor (up to +/-15)
     score += Math.round(params.averageSentiment * 15);
 
     // Recency factor (up to +20)
-    if (params.lastEmailDaysAgo < 7) score += 20;
-    else if (params.lastEmailDaysAgo < 14) score += 15;
-    else if (params.lastEmailDaysAgo < 30) score += 10;
-    else if (params.lastEmailDaysAgo < 60) score += 5;
-    else score -= 10;
+    if (params.lastEmailDaysAgo < 7) {
+score += 20;
+} else if (params.lastEmailDaysAgo < 14) {
+score += 15;
+} else if (params.lastEmailDaysAgo < 30) {
+score += 10;
+} else if (params.lastEmailDaysAgo < 60) {
+score += 5;
+} else {
+score -= 10;
+}
 
     // Pending actions factor (-5 per pending, max -10)
     score -= Math.min(params.pendingIdeas * 2, 10);

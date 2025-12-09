@@ -1276,7 +1276,9 @@ export function isDemoMode(): boolean {
  * Note: NEXT_PUBLIC_DEMO_MODE=true must be set for this to have effect.
  */
 export function enableDemoMode() {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined") {
+return;
+}
 
   if (!DEMO_MODE_ENABLED) {
     console.warn(
@@ -1294,7 +1296,9 @@ export function enableDemoMode() {
  * Disable demo mode (client-side only).
  */
 export function disableDemoMode() {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined") {
+return;
+}
 
   localStorage.removeItem("demo_org_id");
   console.log("Demo mode disabled");

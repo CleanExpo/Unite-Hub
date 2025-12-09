@@ -226,7 +226,9 @@ export function findMatchingProfile(
 
   // Exact match
   const exactMatch = store.profiles.find((p) => p.environmentSignature === signature);
-  if (exactMatch) return exactMatch;
+  if (exactMatch) {
+return exactMatch;
+}
 
   // Fuzzy match on environment type
   const typeMatches = store.profiles.filter((p) => p.location?.placeType === visualContext.environmentType);
@@ -575,11 +577,21 @@ function generateEnvironmentSignature(visualContext: VisualContext): string {
 function extractFocusFactors(visualContext: VisualContext): string[] {
   const factors: string[] = [];
 
-  if (visualContext.tags.includes('quiet')) factors.push('quiet');
-  if (visualContext.tags.includes('bright')) factors.push('natural light');
-  if (visualContext.tags.includes('minimal')) factors.push('minimal clutter');
-  if (visualContext.objects.some((o) => o.label.includes('plant'))) factors.push('plants');
-  if (visualContext.tags.includes('organized')) factors.push('organized space');
+  if (visualContext.tags.includes('quiet')) {
+factors.push('quiet');
+}
+  if (visualContext.tags.includes('bright')) {
+factors.push('natural light');
+}
+  if (visualContext.tags.includes('minimal')) {
+factors.push('minimal clutter');
+}
+  if (visualContext.objects.some((o) => o.label.includes('plant'))) {
+factors.push('plants');
+}
+  if (visualContext.tags.includes('organized')) {
+factors.push('organized space');
+}
 
   return factors;
 }

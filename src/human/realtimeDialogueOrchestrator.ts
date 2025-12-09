@@ -165,13 +165,13 @@ export async function processDialogueInteraction(input: {
     intent: input.compressed_packet.event_tag,
   });
 
-  let compressionStart = Date.now();
+  const compressionStart = Date.now();
   const updatedSession = updateSessionAfterUserTurn(input.session, userTurn);
   timings.compression_ms = Date.now() - compressionStart;
 
   // Step 2: Advisor response (if routing to cloud/advisor)
   let advisorResponse: AdvisorResponse | undefined;
-  let routingStart = Date.now();
+  const routingStart = Date.now();
 
   if (input.routing_decision.primary_engine !== 'local_intent') {
     // Would call generateAdvisorResponse from realTimeAdvisorBridge
@@ -210,7 +210,7 @@ export async function processDialogueInteraction(input: {
     modulateByCognitiveState,
   } = require('./voicePersonaEngine');
 
-  let personaStart = Date.now();
+  const personaStart = Date.now();
 
   const tone = selectAppropriateTone({
     user_emotion: userTurn.user_emotion as UserEmotion,
@@ -234,7 +234,7 @@ export async function processDialogueInteraction(input: {
   timings.persona_ms = Date.now() - personaStart;
 
   // Step 4: Safety filter (would call dialogueSafetyFilter)
-  let safetyStart = Date.now();
+  const safetyStart = Date.now();
   let safety_status: 'safe' | 'flagged' | 'blocked' = 'safe';
 
   if (input.config.require_safety_filter) {
@@ -267,7 +267,7 @@ export async function processDialogueInteraction(input: {
   const finalSession = updateSessionAfterAssistantTurn(updatedSession, assistantTurn);
 
   // Step 6: Output to glasses
-  let outputStart = Date.now();
+  const outputStart = Date.now();
   let glasses_output: GlassesOutput | undefined;
 
   if (input.glasses_session && input.config.output_targets.includes('glasses')) {
@@ -431,7 +431,7 @@ export function concludeDialogueSession(input: {
   const summary = getSessionSummary(finalSession);
 
   // Extract memory fragments if consolidation enabled
-  let memory_to_consolidate: string[] = [];
+  const memory_to_consolidate: string[] = [];
   if (input.consolidate_memory) {
     const { extractMemoryFragments } = require('./dialogueStateEngine');
 
@@ -479,7 +479,7 @@ export async function processConversationFlow(input: {
   };
 }> {
   const interactions: DialogueInteraction[] = [input.initial_interaction];
-  let currentSession = input.session;
+  const currentSession = input.session;
   const maxTurns = input.max_turns || 5;
 
   // In production, this would:

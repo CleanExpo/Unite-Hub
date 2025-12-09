@@ -78,7 +78,9 @@ export function AgentConsole({
 
   // Auto-refresh
   useEffect(() => {
-    if (!autoRefresh) return;
+    if (!autoRefresh) {
+return;
+}
 
     const interval = setInterval(fetchLogs, 5000); // Refresh every 5 seconds
     return () => clearInterval(interval);

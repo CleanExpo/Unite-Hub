@@ -73,7 +73,9 @@ export default function DigestViewer({
 
   // Calculate completion percentage
   const completionPercentage = useMemo(() => {
-    if (digest.action_items.length === 0) return 0;
+    if (digest.action_items.length === 0) {
+return 0;
+}
     return (completedActions.size / digest.action_items.length) * 100;
   }, [completedActions, digest.action_items]);
 

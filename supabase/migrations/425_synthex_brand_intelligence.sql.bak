@@ -1,0 +1,294 @@
+-- Phase B19: Synthex Brand Intelligence + Tone Consistency Engine
+-- Migration: 425_synthex_brand_intelligence.sql
+-- Creates tables for brand voice, style guides, and tone consistency
+
+-- ============================================
+-- Brand Voice Profiles Table
+-- Per-tenant brand voice configuration
+-- ============================================
+create table if not exists synthex_brand_voices (
+  id uuid primary key default gen_random_uuid(),
+  tenant_id uuid not null references synthex_tenants(id) on delete cascade,
+  -- Profile identification
+  name text not null default 'Default Brand Voice',
+  is_default boolean default false,
+  is_active boolean default true,
+  -- Core brand attributes
+  brand_name text not null,
+  tagline text,
+  mission_statement text,
+  -- Voice characteristics (1-10 scale)
+  formality_level int default 5 check (formality_level >= 1 and formality_level <= 10),
+  humor_level int default 3 check (humor_level >= 1 and humor_level <= 10),
+  enthusiasm_level int default 5 check (enthusiasm_level >= 1 and enthusiasm_level <= 10),
+  empathy_level int default 7 check (empathy_level >= 1 and empathy_level <= 10),
+  technical_level int default 5 check (technical_level >= 1 and technical_level <= 10),
+  -- Tone descriptors
+  tone_keywords text[] default '{}', -- e.g., ['friendly', 'professional', 'approachable']
+  avoid_keywords text[] default '{}', -- words/phrases to avoid
+  -- Writing style
+  preferred_sentence_length text default 'medium', -- short, medium, long
+  use_contractions boolean default true,
+  use_emoji boolean default false,
+  use_exclamation boolean default true,
+  first_person text default 'we', -- 'we', 'I', 'the team'
+  -- Target audience
+  audience_description text,
+  audience_pain_points text[] default '{}',
+  audience_goals text[] default '{}',
+  -- Sample content
+  sample_greetings text[] default '{}',
+  sample_closings text[] default '{}',
+  sample_paragraphs text[] default '{}',
+  -- Do's and Don'ts
+  dos text[] default '{}',
+  donts text[] default '{}',
+  -- Industry context
+  industry text,
+  competitors text[] default '{}',
+  differentiators text[] default '{}',
+  -- Metadata
+  metadata jsonb default '{}',
+  -- Timestamps
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+-- Ensure only one default voice per tenant
+create unique index if not exists idx_brand_voices_default_unique
+  on synthex_brand_voices(tenant_id) where is_default = true;
+
+-- ============================================
+-- Brand Style Guide Table
+-- Detailed style rules and guidelines
+-- ============================================
+create table if not exists synthex_brand_style_guides (
+  id uuid primary key default gen_random_uuid(),
+  tenant_id uuid not null references synthex_tenants(id) on delete cascade,
+  voice_id uuid references synthex_brand_voices(id) on delete cascade,
+  -- Category of style rule
+  category text not null, -- grammar, punctuation, capitalization, formatting, terminology
+  -- Rule details
+  rule_name text not null,
+  rule_description text,
+  -- Examples
+  correct_example text,
+  incorrect_example text,
+  -- Priority (higher = more important)
+  priority int default 50,
+  is_active boolean default true,
+  -- Timestamps
+  created_at timestamptz default now()
+);
+
+-- ============================================
+-- Brand Terminology Table
+-- Custom terminology and translations
+-- ============================================
+create table if not exists synthex_brand_terminology (
+  id uuid primary key default gen_random_uuid(),
+  tenant_id uuid not null references synthex_tenants(id) on delete cascade,
+  voice_id uuid references synthex_brand_voices(id) on delete cascade,
+  -- Terminology
+  term text not null,
+  definition text,
+  preferred_usage text, -- how to use it correctly
+  avoid_alternatives text[] default '{}', -- terms to avoid as alternatives
+  -- Context
+  context text, -- when to use this term
+  category text, -- product, service, internal, industry
+  -- Status
+  is_active boolean default true,
+  -- Timestamps
+  created_at timestamptz default now()
+);
+
+-- ============================================
+-- Content Tone Analysis Table
+-- Logs of tone analysis for generated content
+-- ============================================
+create table if not exists synthex_tone_analysis_log (
+  id uuid primary key default gen_random_uuid(),
+  tenant_id uuid not null references synthex_tenants(id) on delete cascade,
+  voice_id uuid references synthex_brand_voices(id),
+  -- Content reference
+  content_type text not null, -- email, social, landing_page, ad, etc.
+  content_id uuid, -- reference to the generated content
+  original_text text not null,
+  analyzed_text text, -- text after tone adjustments
+  -- Analysis results
+  formality_score numeric(5,2),
+  sentiment_score numeric(5,4), -- -1 to 1
+  readability_score numeric(5,2), -- Flesch-Kincaid or similar
+  brand_alignment_score numeric(5,2), -- 0-100 how well it matches brand voice
+  -- Issues found
+  tone_issues jsonb default '[]', -- Array of { issue, severity, suggestion }
+  terminology_issues jsonb default '[]',
+  style_issues jsonb default '[]',
+  -- Actions taken
+  auto_corrected boolean default false,
+  corrections_applied jsonb default '[]',
+  -- Model info
+  model_version text default 'claude-sonnet-4.5',
+  -- Timestamps
+  analyzed_at timestamptz default now(),
+  created_at timestamptz default now()
+);
+
+-- ============================================
+-- Brand Voice Templates Table
+-- Pre-built templates for common content types
+-- ============================================
+create table if not exists synthex_brand_templates (
+  id uuid primary key default gen_random_uuid(),
+  tenant_id uuid not null references synthex_tenants(id) on delete cascade,
+  voice_id uuid references synthex_brand_voices(id) on delete cascade,
+  -- Template info
+  name text not null,
+  description text,
+  content_type text not null, -- email_welcome, email_followup, social_post, ad_copy, etc.
+  -- Template content
+  subject_template text,
+  body_template text not null,
+  -- Variables available
+  variables jsonb default '[]', -- Array of { name, description, example }
+  -- Usage
+  usage_count int default 0,
+  last_used_at timestamptz,
+  -- Status
+  is_active boolean default true,
+  -- Timestamps
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+-- ============================================
+-- Indexes for Performance
+-- ============================================
+create index if not exists idx_brand_voices_tenant
+  on synthex_brand_voices(tenant_id);
+create index if not exists idx_brand_voices_active
+  on synthex_brand_voices(tenant_id) where is_active = true;
+
+create index if not exists idx_brand_style_tenant
+  on synthex_brand_style_guides(tenant_id);
+create index if not exists idx_brand_style_voice
+  on synthex_brand_style_guides(voice_id);
+create index if not exists idx_brand_style_category
+  on synthex_brand_style_guides(category);
+
+create index if not exists idx_brand_terminology_tenant
+  on synthex_brand_terminology(tenant_id);
+create index if not exists idx_brand_terminology_voice
+  on synthex_brand_terminology(voice_id);
+
+create index if not exists idx_tone_analysis_tenant
+  on synthex_tone_analysis_log(tenant_id);
+create index if not exists idx_tone_analysis_voice
+  on synthex_tone_analysis_log(voice_id);
+create index if not exists idx_tone_analysis_type
+  on synthex_tone_analysis_log(content_type);
+
+create index if not exists idx_brand_templates_tenant
+  on synthex_brand_templates(tenant_id);
+create index if not exists idx_brand_templates_voice
+  on synthex_brand_templates(voice_id);
+create index if not exists idx_brand_templates_type
+  on synthex_brand_templates(content_type);
+
+-- ============================================
+-- Row Level Security
+-- ============================================
+alter table synthex_brand_voices enable row level security;
+alter table synthex_brand_style_guides enable row level security;
+alter table synthex_brand_terminology enable row level security;
+alter table synthex_tone_analysis_log enable row level security;
+alter table synthex_brand_templates enable row level security;
+
+-- Brand Voices policies
+create policy "synthex_brand_voices_select"
+  on synthex_brand_voices for select
+  using (tenant_id in (select id from synthex_tenants where owner_user_id = auth.uid()));
+
+create policy "synthex_brand_voices_insert"
+  on synthex_brand_voices for insert
+  with check (tenant_id in (select id from synthex_tenants where owner_user_id = auth.uid()));
+
+create policy "synthex_brand_voices_update"
+  on synthex_brand_voices for update
+  using (tenant_id in (select id from synthex_tenants where owner_user_id = auth.uid()));
+
+create policy "synthex_brand_voices_delete"
+  on synthex_brand_voices for delete
+  using (tenant_id in (select id from synthex_tenants where owner_user_id = auth.uid()));
+
+-- Style Guides policies
+create policy "synthex_style_guides_select"
+  on synthex_brand_style_guides for select
+  using (tenant_id in (select id from synthex_tenants where owner_user_id = auth.uid()));
+
+create policy "synthex_style_guides_insert"
+  on synthex_brand_style_guides for insert
+  with check (tenant_id in (select id from synthex_tenants where owner_user_id = auth.uid()));
+
+create policy "synthex_style_guides_update"
+  on synthex_brand_style_guides for update
+  using (tenant_id in (select id from synthex_tenants where owner_user_id = auth.uid()));
+
+create policy "synthex_style_guides_delete"
+  on synthex_brand_style_guides for delete
+  using (tenant_id in (select id from synthex_tenants where owner_user_id = auth.uid()));
+
+-- Terminology policies
+create policy "synthex_terminology_select"
+  on synthex_brand_terminology for select
+  using (tenant_id in (select id from synthex_tenants where owner_user_id = auth.uid()));
+
+create policy "synthex_terminology_insert"
+  on synthex_brand_terminology for insert
+  with check (tenant_id in (select id from synthex_tenants where owner_user_id = auth.uid()));
+
+create policy "synthex_terminology_update"
+  on synthex_brand_terminology for update
+  using (tenant_id in (select id from synthex_tenants where owner_user_id = auth.uid()));
+
+create policy "synthex_terminology_delete"
+  on synthex_brand_terminology for delete
+  using (tenant_id in (select id from synthex_tenants where owner_user_id = auth.uid()));
+
+-- Tone Analysis policies
+create policy "synthex_tone_analysis_select"
+  on synthex_tone_analysis_log for select
+  using (tenant_id in (select id from synthex_tenants where owner_user_id = auth.uid()));
+
+create policy "synthex_tone_analysis_insert"
+  on synthex_tone_analysis_log for insert
+  with check (tenant_id in (select id from synthex_tenants where owner_user_id = auth.uid()));
+
+-- Brand Templates policies
+create policy "synthex_templates_select"
+  on synthex_brand_templates for select
+  using (tenant_id in (select id from synthex_tenants where owner_user_id = auth.uid()));
+
+create policy "synthex_templates_insert"
+  on synthex_brand_templates for insert
+  with check (tenant_id in (select id from synthex_tenants where owner_user_id = auth.uid()));
+
+create policy "synthex_templates_update"
+  on synthex_brand_templates for update
+  using (tenant_id in (select id from synthex_tenants where owner_user_id = auth.uid()));
+
+create policy "synthex_templates_delete"
+  on synthex_brand_templates for delete
+  using (tenant_id in (select id from synthex_tenants where owner_user_id = auth.uid()));
+
+-- ============================================
+-- Updated At Triggers
+-- ============================================
+create trigger trigger_brand_voices_updated_at
+  before update on synthex_brand_voices
+  for each row execute function update_synthex_automation_updated_at();
+
+create trigger trigger_brand_templates_updated_at
+  before update on synthex_brand_templates
+  for each row execute function update_synthex_automation_updated_at();

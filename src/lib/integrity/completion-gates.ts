@@ -126,7 +126,9 @@ export async function canStepComplete(
           c => c.id === criterionResult.criterionId
         );
 
-        if (!criterion?.required) continue; // Only block on required criteria
+        if (!criterion?.required) {
+continue;
+} // Only block on required criteria
 
         let category: BlockingIssue['category'];
         let severity: BlockingIssue['severity'] = 'high';
@@ -448,7 +450,9 @@ export async function getGateDecisionHistory(
     const logs: GateDecisionLog[] = [];
 
     for (const file of files) {
-      if (!file.startsWith('gate-decision-')) continue;
+      if (!file.startsWith('gate-decision-')) {
+continue;
+}
 
       try {
         const content = await fs.readFile(

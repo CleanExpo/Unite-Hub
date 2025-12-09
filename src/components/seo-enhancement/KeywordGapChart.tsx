@@ -57,24 +57,44 @@ export function KeywordGapChart({
   };
 
   const getDifficultyColor = (difficulty: number) => {
-    if (difficulty < 30) return 'text-green-600';
-    if (difficulty < 60) return 'text-yellow-600';
+    if (difficulty < 30) {
+return 'text-green-600';
+}
+    if (difficulty < 60) {
+return 'text-yellow-600';
+}
     return 'text-red-600';
   };
 
   const getPositionDisplay = (position: number | null) => {
-    if (position === null) return 'Not ranking';
-    if (position <= 3) return `#${position}`;
-    if (position <= 10) return `Page 1 (#${position})`;
-    if (position <= 20) return `Page 2 (#${position})`;
+    if (position === null) {
+return 'Not ranking';
+}
+    if (position <= 3) {
+return `#${position}`;
+}
+    if (position <= 10) {
+return `Page 1 (#${position})`;
+}
+    if (position <= 20) {
+return `Page 2 (#${position})`;
+}
     return `#${position}`;
   };
 
   const getPositionClass = (position: number | null) => {
-    if (position === null) return 'text-gray-400';
-    if (position <= 3) return 'text-green-600 font-bold';
-    if (position <= 10) return 'text-blue-600';
-    if (position <= 20) return 'text-yellow-600';
+    if (position === null) {
+return 'text-gray-400';
+}
+    if (position <= 3) {
+return 'text-green-600 font-bold';
+}
+    if (position <= 10) {
+return 'text-blue-600';
+}
+    if (position <= 20) {
+return 'text-yellow-600';
+}
     return 'text-gray-600';
   };
 

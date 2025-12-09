@@ -185,11 +185,17 @@ export class AICapacityPlanner {
       const utilizationPercent = (tokensUsed / config.monthly_tokens) * 100;
 
       let status: 'healthy' | 'warning' | 'critical' = 'healthy';
-      if (utilizationPercent >= 90) status = 'critical';
-      else if (utilizationPercent >= 75) status = 'warning';
+      if (utilizationPercent >= 90) {
+status = 'critical';
+} else if (utilizationPercent >= 75) {
+status = 'warning';
+}
 
-      if (status === 'critical') overallStatus = 'critical';
-      else if (status === 'warning' && overallStatus !== 'critical') overallStatus = 'warning';
+      if (status === 'critical') {
+overallStatus = 'critical';
+} else if (status === 'warning' && overallStatus !== 'critical') {
+overallStatus = 'warning';
+}
 
       const recommendations: string[] = [];
       if (status === 'critical') {

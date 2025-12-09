@@ -193,7 +193,9 @@ function calculateOverallConfidence(safetyResults: SafetyCheckResults): number {
   const passedChecks = safetyResults.checks.filter(c => c.passed).length;
   const totalChecks = safetyResults.checks.length;
 
-  if (totalChecks === 0) return 0.5;
+  if (totalChecks === 0) {
+return 0.5;
+}
 
   return Math.round((passedChecks / totalChecks) * 100) / 100;
 }

@@ -121,11 +121,15 @@ export default function PreClientDetailPage({ params }: { params: Promise<{ id: 
   const [selectedApp, setSelectedApp] = useState<string>('');
 
   const fetchPreClient = useCallback(async () => {
-    if (!workspaceId || !id) return;
+    if (!workspaceId || !id) {
+return;
+}
 
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const response = await fetch(
         `/api/pre-clients/${id}?workspaceId=${workspaceId}`,
@@ -144,11 +148,15 @@ export default function PreClientDetailPage({ params }: { params: Promise<{ id: 
   }, [workspaceId, id]);
 
   const fetchThreads = useCallback(async () => {
-    if (!workspaceId || !id) return;
+    if (!workspaceId || !id) {
+return;
+}
 
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const response = await fetch(
         `/api/pre-clients/${id}/threads?workspaceId=${workspaceId}&limit=20`,
@@ -167,11 +175,15 @@ export default function PreClientDetailPage({ params }: { params: Promise<{ id: 
   }, [workspaceId, id]);
 
   const fetchTimeline = useCallback(async () => {
-    if (!workspaceId || !id) return;
+    if (!workspaceId || !id) {
+return;
+}
 
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const response = await fetch(
         `/api/pre-clients/${id}/timeline?workspaceId=${workspaceId}&limit=20`,
@@ -190,11 +202,15 @@ export default function PreClientDetailPage({ params }: { params: Promise<{ id: 
   }, [workspaceId, id]);
 
   const fetchInsights = useCallback(async () => {
-    if (!workspaceId || !id) return;
+    if (!workspaceId || !id) {
+return;
+}
 
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const response = await fetch(
         `/api/pre-clients/${id}/insights?workspaceId=${workspaceId}&statuses=pending,in_progress&limit=20`,
@@ -213,11 +229,15 @@ export default function PreClientDetailPage({ params }: { params: Promise<{ id: 
   }, [workspaceId, id]);
 
   const fetchSummary = useCallback(async () => {
-    if (!workspaceId || !id) return;
+    if (!workspaceId || !id) {
+return;
+}
 
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const response = await fetch(`/api/pre-clients/${id}/timeline`, {
         method: 'POST',
@@ -241,11 +261,15 @@ export default function PreClientDetailPage({ params }: { params: Promise<{ id: 
   }, [workspaceId, id]);
 
   const fetchNarrative = useCallback(async () => {
-    if (!workspaceId || !id) return;
+    if (!workspaceId || !id) {
+return;
+}
 
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const response = await fetch(`/api/pre-clients/${id}/timeline`, {
         method: 'POST',
@@ -269,11 +293,15 @@ export default function PreClientDetailPage({ params }: { params: Promise<{ id: 
   }, [workspaceId, id]);
 
   const fetchConnectedApps = useCallback(async () => {
-    if (!workspaceId) return;
+    if (!workspaceId) {
+return;
+}
 
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const { data, error } = await supabase
         .from('connected_apps')
@@ -314,12 +342,16 @@ export default function PreClientDetailPage({ params }: { params: Promise<{ id: 
   }, [preClient, fetchThreads, fetchTimeline, fetchInsights, fetchSummary]);
 
   const handleStartIngestion = async () => {
-    if (!workspaceId || !selectedApp || !id) return;
+    if (!workspaceId || !selectedApp || !id) {
+return;
+}
 
     try {
       setIngesting(true);
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const response = await fetch(`/api/pre-clients/${id}/ingest-history`, {
         method: 'POST',
@@ -349,12 +381,16 @@ export default function PreClientDetailPage({ params }: { params: Promise<{ id: 
   };
 
   const handleConvert = async () => {
-    if (!workspaceId || !id) return;
+    if (!workspaceId || !id) {
+return;
+}
 
     try {
       setConverting(true);
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const response = await fetch(`/api/pre-clients/${id}`, {
         method: 'POST',
@@ -391,7 +427,9 @@ export default function PreClientDetailPage({ params }: { params: Promise<{ id: 
   };
 
   const formatDate = (dateStr?: string) => {
-    if (!dateStr) return '-';
+    if (!dateStr) {
+return '-';
+}
     return new Date(dateStr).toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',

@@ -21,7 +21,9 @@ export function CoalitionSynergyPanel({ workspaceId }: CoalitionSynergyPanelProp
 
   // Calculate synergy trends
   const synergyTrend = useMemo(() => {
-    if (historicalCoalitions.length < 2) return null;
+    if (historicalCoalitions.length < 2) {
+return null;
+}
 
     const recent = historicalCoalitions.slice(0, 10);
     const scores = recent.map((c) => c.synergyScore);

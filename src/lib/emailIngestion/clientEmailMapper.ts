@@ -274,7 +274,9 @@ class ClientEmailMapper {
    */
   private extractDomain(email: string): string | null {
     const parts = email.split('@');
-    if (parts.length !== 2) return null;
+    if (parts.length !== 2) {
+return null;
+}
 
     const domain = parts[1].toLowerCase();
 
@@ -342,7 +344,9 @@ class ClientEmailMapper {
     const intersection = new Set([...words1].filter((x) => words2.has(x)));
     const union = new Set([...words1, ...words2]);
 
-    if (union.size === 0) return 0;
+    if (union.size === 0) {
+return 0;
+}
     return intersection.size / union.size;
   }
 

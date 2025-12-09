@@ -31,7 +31,9 @@ export async function getCohorts(): Promise<TenantCohort[]> {
     .eq('is_active', true)
     .order('member_count', { ascending: false });
 
-  if (error) return [];
+  if (error) {
+return [];
+}
 
   return (data || []).map(row => ({
     id: row.id,
@@ -56,7 +58,9 @@ export async function getCohortSummaries(cohortId: string): Promise<CohortSummar
     .order('created_at', { ascending: false })
     .limit(20);
 
-  if (error) return [];
+  if (error) {
+return [];
+}
 
   return (data || []).map(row => ({
     id: row.id,

@@ -149,8 +149,12 @@ export function PersonaVisual({
 
   // Get blur placeholder color from profile
   const getBlurColor = (): string => {
-    if (blurDataURL) return blurDataURL;
-    if (!profile) return generateBlurPlaceholder("#f0f0f0");
+    if (blurDataURL) {
+return blurDataURL;
+}
+    if (!profile) {
+return generateBlurPlaceholder("#f0f0f0");
+}
 
     const muted = profile.cssVariables["--muted"] || "#f4f7fa";
     return generateBlurPlaceholder(muted);
@@ -164,7 +168,9 @@ export function PersonaVisual({
 
   // Generate prompt metadata for debugging
   const getPromptMetadata = () => {
-    if (!isTestMode) return null;
+    if (!isTestMode) {
+return null;
+}
 
     const prompt = generateSectionImagePrompt(sectionId, resolvedPersonaId);
     return {

@@ -207,8 +207,12 @@ export async function PUT(
       updated_at: new Date().toISOString(),
     };
 
-    if (body.name !== undefined) updates.name = body.name;
-    if (body.description !== undefined) updates.description = body.description;
+    if (body.name !== undefined) {
+updates.name = body.name;
+}
+    if (body.description !== undefined) {
+updates.description = body.description;
+}
     if (body.status !== undefined) {
       // Validate status
       const validStatuses = ['draft', 'active', 'paused', 'archived'];
@@ -217,8 +221,12 @@ export async function PUT(
       }
       updates.status = body.status;
     }
-    if (body.goal !== undefined) updates.goal = body.goal;
-    if (body.tags !== undefined) updates.tags = body.tags;
+    if (body.goal !== undefined) {
+updates.goal = body.goal;
+}
+    if (body.tags !== undefined) {
+updates.tags = body.tags;
+}
 
     // Update sequence
     const { data: updated, error: updateError } = await supabase

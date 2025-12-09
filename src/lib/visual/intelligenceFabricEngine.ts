@@ -235,7 +235,9 @@ export class IntelligenceFabricEngine {
 
       for (const providerId of method.providers) {
         const config = this.providerConfigs.find(p => p.id === providerId);
-        if (!config || !config.enabled) continue;
+        if (!config || !config.enabled) {
+continue;
+}
 
         // Mock execution - in production, call actual provider APIs
         const output = await this.executeWithProvider(config, method, job.params);
@@ -288,11 +290,21 @@ export class IntelligenceFabricEngine {
    * Infer output type from method
    */
   private inferOutputType(method: VisualMethod): FabricOutput['type'] {
-    if (method.category === 'motion') return 'video';
-    if (method.outputs.some(o => o.includes('svg'))) return 'svg';
-    if (method.outputs.some(o => o.includes('pdf'))) return 'pdf';
-    if (method.outputs.some(o => o.includes('lottie'))) return 'lottie';
-    if (method.outputs.some(o => o.includes('css'))) return 'css';
+    if (method.category === 'motion') {
+return 'video';
+}
+    if (method.outputs.some(o => o.includes('svg'))) {
+return 'svg';
+}
+    if (method.outputs.some(o => o.includes('pdf'))) {
+return 'pdf';
+}
+    if (method.outputs.some(o => o.includes('lottie'))) {
+return 'lottie';
+}
+    if (method.outputs.some(o => o.includes('css'))) {
+return 'css';
+}
     return 'image';
   }
 
@@ -391,7 +403,9 @@ export class IntelligenceFabricEngine {
    */
   routeToOptimalProvider(methodId: string): ProviderType | null {
     const method = getMethodById(methodId);
-    if (!method) return null;
+    if (!method) {
+return null;
+}
 
     // Find enabled providers that support this method
     const availableProviders = this.providerConfigs

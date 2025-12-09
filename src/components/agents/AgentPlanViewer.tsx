@@ -46,8 +46,12 @@ export interface AgentPlanViewerProps {
 }
 
 const getRiskColor = (riskScore: number) => {
-  if (riskScore < 30) return 'bg-green-100 dark:bg-green-950 text-green-800 dark:text-green-200';
-  if (riskScore < 60) return 'bg-yellow-100 dark:bg-yellow-950 text-yellow-800 dark:text-yellow-200';
+  if (riskScore < 30) {
+return 'bg-green-100 dark:bg-green-950 text-green-800 dark:text-green-200';
+}
+  if (riskScore < 60) {
+return 'bg-yellow-100 dark:bg-yellow-950 text-yellow-800 dark:text-yellow-200';
+}
   return 'bg-red-100 dark:bg-red-950 text-red-800 dark:text-red-200';
 };
 

@@ -59,8 +59,12 @@ export function JourneyTimeline({
     const phaseIndex = JOURNEY_PHASES.findIndex(p => p.phase === phase.phase);
     const currentPhaseIndex = JOURNEY_PHASES.findIndex(p => p.phase === journeyState.currentPhase);
 
-    if (phaseIndex < currentPhaseIndex) return 'completed';
-    if (phaseIndex === currentPhaseIndex) return 'current';
+    if (phaseIndex < currentPhaseIndex) {
+return 'completed';
+}
+    if (phaseIndex === currentPhaseIndex) {
+return 'current';
+}
     return 'upcoming';
   };
 

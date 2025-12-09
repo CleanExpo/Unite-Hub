@@ -490,7 +490,9 @@ export class MemoryArchiveBridge {
       .eq('workspace_id', workspaceId)
       .eq('is_resolved', false);
 
-    if (memError) throw new Error(`Failed to fetch memory metrics: ${memError.message}`);
+    if (memError) {
+throw new Error(`Failed to fetch memory metrics: ${memError.message}`);
+}
 
     const distribution: { [type: string]: number } = {};
     let totalImportance = 0;

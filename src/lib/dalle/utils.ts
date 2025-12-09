@@ -48,7 +48,9 @@ export function estimateGenerationTime(count: number): number {
  * Format time in seconds to human-readable format
  */
 export function formatDuration(seconds: number): string {
-  if (seconds < 60) return `${seconds}s`;
+  if (seconds < 60) {
+return `${seconds}s`;
+}
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
   return `${minutes}m ${remainingSeconds}s`;
@@ -258,6 +260,8 @@ export function calculateRemaining(current: number, limit: number): number {
  * Get usage percentage
  */
 export function getUsagePercentage(current: number, limit: number): number {
-  if (limit === 0) return 0;
+  if (limit === 0) {
+return 0;
+}
   return Math.round((current / limit) * 100);
 }

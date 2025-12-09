@@ -41,7 +41,9 @@ export default function OpportunitiesDashboardPage() {
   const fetchTenantAndOpportunities = async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       // Get user's tenant
       const { data: orgs } = await supabase
@@ -77,12 +79,16 @@ export default function OpportunitiesDashboardPage() {
   };
 
   const handleGenerate = async () => {
-    if (!tenantId) return;
+    if (!tenantId) {
+return;
+}
 
     setGenerating(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const response = await fetch('/api/opportunities/generate', {
         method: 'POST',
@@ -105,14 +111,18 @@ export default function OpportunitiesDashboardPage() {
 
   const handleViewDetails = async (windowId: string) => {
     const window = windows.find(w => w.id === windowId);
-    if (!window) return;
+    if (!window) {
+return;
+}
 
     setSelectedWindow(window);
 
     // Fetch signals
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const { data: signals } = await supabase
         .from('opportunity_signals')

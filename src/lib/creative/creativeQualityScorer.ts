@@ -301,10 +301,18 @@ export class CreativeQualityScorer {
    * Calculate letter grade from score
    */
   private calculateGrade(score: number): 'A' | 'B' | 'C' | 'D' | 'F' {
-    if (score >= 90) return 'A';
-    if (score >= 80) return 'B';
-    if (score >= 70) return 'C';
-    if (score >= 60) return 'D';
+    if (score >= 90) {
+return 'A';
+}
+    if (score >= 80) {
+return 'B';
+}
+    if (score >= 70) {
+return 'C';
+}
+    if (score >= 60) {
+return 'D';
+}
     return 'F';
   }
 
@@ -326,7 +334,9 @@ export class CreativeQualityScorer {
     const rgb1 = hexToRgb(color1);
     const rgb2 = hexToRgb(color2);
 
-    if (!rgb1 || !rgb2) return false;
+    if (!rgb1 || !rgb2) {
+return false;
+}
 
     const diff = Math.sqrt(
       Math.pow(rgb1.r - rgb2.r, 2) +

@@ -29,16 +29,36 @@ export async function PUT(
       updated_at: new Date().toISOString(),
     };
 
-    if (body.label !== undefined) updates.label = body.label;
-    if (body.description !== undefined) updates.description = body.description;
-    if (body.position_x !== undefined) updates.position_x = body.position_x;
-    if (body.position_y !== undefined) updates.position_y = body.position_y;
-    if (body.status !== undefined) updates.status = body.status;
-    if (body.priority !== undefined) updates.priority = body.priority;
-    if (body.color !== undefined) updates.color = body.color;
-    if (body.icon !== undefined) updates.icon = body.icon;
-    if (body.metadata !== undefined) updates.metadata = body.metadata;
-    if (body.node_type !== undefined) updates.node_type = body.node_type;
+    if (body.label !== undefined) {
+updates.label = body.label;
+}
+    if (body.description !== undefined) {
+updates.description = body.description;
+}
+    if (body.position_x !== undefined) {
+updates.position_x = body.position_x;
+}
+    if (body.position_y !== undefined) {
+updates.position_y = body.position_y;
+}
+    if (body.status !== undefined) {
+updates.status = body.status;
+}
+    if (body.priority !== undefined) {
+updates.priority = body.priority;
+}
+    if (body.color !== undefined) {
+updates.color = body.color;
+}
+    if (body.icon !== undefined) {
+updates.icon = body.icon;
+}
+    if (body.metadata !== undefined) {
+updates.metadata = body.metadata;
+}
+    if (body.node_type !== undefined) {
+updates.node_type = body.node_type;
+}
 
     // Update node
     const { data: node, error: updateError } = await supabase

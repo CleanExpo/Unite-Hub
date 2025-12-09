@@ -63,7 +63,9 @@ export async function GET(req: NextRequest) {
     // Get single contact score or list all
     if (contactId) {
       const result = await getScore(contactId);
-      if (result.error) throw result.error;
+      if (result.error) {
+throw result.error;
+}
       return NextResponse.json({ status: 'ok', score: result.data }, { status: 200 });
     }
 
@@ -73,7 +75,9 @@ export async function GET(req: NextRequest) {
       minScore: minScore ? parseInt(minScore) : undefined,
     });
 
-    if (result.error) throw result.error;
+    if (result.error) {
+throw result.error;
+}
 
     return NextResponse.json({
       status: 'ok',
@@ -142,7 +146,9 @@ export async function POST(req: NextRequest) {
 
     const result = await recordEvent(tenantId, contactId, event);
 
-    if (result.error) throw result.error;
+    if (result.error) {
+throw result.error;
+}
 
     return NextResponse.json({
       status: 'ok',

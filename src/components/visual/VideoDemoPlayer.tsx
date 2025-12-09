@@ -189,12 +189,16 @@ export function VideoDemoPlayer({
 
   // Auto-hide controls
   useEffect(() => {
-    if (!showControls) return;
+    if (!showControls) {
+return;
+}
 
     let timeout: NodeJS.Timeout;
     const hideControls = () => {
       timeout = setTimeout(() => {
-        if (isPlaying) setShowControlsOverlay(false);
+        if (isPlaying) {
+setShowControlsOverlay(false);
+}
       }, 3000);
     };
 

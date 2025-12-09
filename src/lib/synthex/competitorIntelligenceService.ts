@@ -197,7 +197,9 @@ export async function getCompetitor(tenantId: string, competitorId: string): Pro
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') return null;
+    if (error.code === 'PGRST116') {
+return null;
+}
     console.error('Error fetching competitor:', error);
     throw new Error(`Failed to get competitor: ${error.message}`);
   }
@@ -246,8 +248,12 @@ export async function fetchCompetitorSERP(
   // For now, simulate with random data
   const position = Math.floor(Math.random() * 20) + 1;
   const features: string[] = [];
-  if (Math.random() > 0.7) features.push('featured_snippet');
-  if (Math.random() > 0.8) features.push('local_pack');
+  if (Math.random() > 0.7) {
+features.push('featured_snippet');
+}
+  if (Math.random() > 0.8) {
+features.push('local_pack');
+}
 
   // Store SERP snapshot
   await supabase.from('synthex_competitor_serp').insert({

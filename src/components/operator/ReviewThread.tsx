@@ -73,7 +73,9 @@ export function ReviewThread({
     setLoading(true);
     try {
       const params = new URLSearchParams({ proposal_id: proposalId });
-      if (queueItemId) params.set("queue_item_id", queueItemId);
+      if (queueItemId) {
+params.set("queue_item_id", queueItemId);
+}
 
       const response = await fetch(`/api/operator/review?${params}`);
       const data = await response.json();
@@ -86,7 +88,9 @@ export function ReviewThread({
   };
 
   const handleSubmit = async () => {
-    if (!newComment.trim()) return;
+    if (!newComment.trim()) {
+return;
+}
 
     setSubmitting(true);
     try {

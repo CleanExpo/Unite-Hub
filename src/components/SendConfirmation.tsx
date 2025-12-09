@@ -32,7 +32,9 @@ export function SendConfirmation({
 }) {
   const [isProcessing, setIsProcessing] = useState(false);
 
-  if (!data) return null;
+  if (!data) {
+return null;
+}
 
   const handleConfirm = async () => {
     setIsProcessing(true);

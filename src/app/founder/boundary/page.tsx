@@ -23,7 +23,9 @@ export default function BoundaryPage() {
   useEffect(() => {
     async function fetchCrossings() {
       const { data: { session } } = await supabaseBrowser.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const response = await fetch('/api/cross-tenant/boundary?tenantId=current', {
         headers: { Authorization: `Bearer ${session.access_token}` }

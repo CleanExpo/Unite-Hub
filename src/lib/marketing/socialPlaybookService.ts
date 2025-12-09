@@ -120,7 +120,9 @@ export async function countPlaybooksByStatus(workspaceId: string) {
     .select('status')
     .eq('workspace_id', workspaceId);
 
-  if (error) return { data: null, error };
+  if (error) {
+return { data: null, error };
+}
 
   const counts = {
     draft: 0,

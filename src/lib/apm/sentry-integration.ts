@@ -12,7 +12,7 @@
  * @module lib/apm/sentry-integration
  */
 
-/* eslint-disable no-undef, no-console, @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 
 import * as Sentry from '@sentry/nextjs';
@@ -122,7 +122,7 @@ class SentryIntegration {
         ],
 
         // Before send hook - filter sensitive data
-        beforeSend: (event, _hint) => { // eslint-disable-line
+        beforeSend: (event, _hint) => {  
           // Filter out sensitive information
           if (event.request?.headers) {
             delete event.request.headers['authorization'];
@@ -144,7 +144,7 @@ class SentryIntegration {
         },
 
         // Before breadcrumb hook - filter PII
-        beforeBreadcrumb: (breadcrumb, _hint) => { // eslint-disable-line
+        beforeBreadcrumb: (breadcrumb, _hint) => {  
           // Filter sensitive data from breadcrumbs
           if (breadcrumb.data && breadcrumb.data.url) {
             // Remove query parameters that might contain sensitive data
@@ -157,7 +157,7 @@ class SentryIntegration {
                 }
               });
               breadcrumb.data.url = url.toString();
-            } catch (error) { // eslint-disable-line
+            } catch (error) {  
               // Invalid URL, skip filtering
             }
           }
@@ -191,7 +191,7 @@ class SentryIntegration {
 
       // Track initialization
       this.captureMessage('Sentry initialized', 'info');
-    } catch (error) { // eslint-disable-line
+    } catch (error) {  
       console.error('[Sentry] Failed to initialize:', error);
       throw error;
     }
@@ -231,7 +231,7 @@ class SentryIntegration {
       } as User);
 
       console.log('[Sentry] User context set:', user.id);
-    } catch (error) { // eslint-disable-line
+    } catch (error) {  
       console.error('[Sentry] Failed to set user context:', error);
     }
   }
@@ -247,7 +247,7 @@ class SentryIntegration {
     try {
       Sentry.setUser(null);
       console.log('[Sentry] User context cleared');
-    } catch (error) { // eslint-disable-line
+    } catch (error) {  
       console.error('[Sentry] Failed to clear user context:', error);
     }
   }
@@ -291,7 +291,7 @@ class SentryIntegration {
       const eventId = Sentry.captureMessage(message, level);
       console.debug('[Sentry] Message captured:', message);
       return eventId;
-    } catch (error) { // eslint-disable-line
+    } catch (error) {  
       console.error('[Sentry] Failed to capture message:', error);
       return '';
     }
@@ -308,7 +308,7 @@ class SentryIntegration {
     try {
       Sentry.addBreadcrumb(breadcrumb);
       console.debug('[Sentry] Breadcrumb added:', breadcrumb.message);
-    } catch (error) { // eslint-disable-line
+    } catch (error) {  
       console.error('[Sentry] Failed to add breadcrumb:', error);
     }
   }
@@ -323,7 +323,7 @@ class SentryIntegration {
 
     try {
       Sentry.setTag(key, value);
-    } catch (error) { // eslint-disable-line
+    } catch (error) {  
       console.error('[Sentry] Failed to set tag:', error);
     }
   }
@@ -338,7 +338,7 @@ class SentryIntegration {
 
     try {
       Sentry.setTags(tags);
-    } catch (error) { // eslint-disable-line
+    } catch (error) {  
       console.error('[Sentry] Failed to set tags:', error);
     }
   }
@@ -353,7 +353,7 @@ class SentryIntegration {
 
     try {
       Sentry.setContext(name, context);
-    } catch (error) { // eslint-disable-line
+    } catch (error) {  
       console.error('[Sentry] Failed to set context:', error);
     }
   }
@@ -376,7 +376,7 @@ class SentryIntegration {
 
       console.debug('[Sentry] Transaction started:', context.name);
       return transaction;
-    } catch (error) { // eslint-disable-line
+    } catch (error) {  
       console.error('[Sentry] Failed to start transaction:', error);
       throw error;
     }
@@ -402,7 +402,7 @@ class SentryIntegration {
 
       console.debug('[Sentry] Span started:', description || op);
       return span;
-    } catch (error) { // eslint-disable-line
+    } catch (error) {  
       console.error('[Sentry] Failed to start span:', error);
       return undefined;
     }
@@ -426,7 +426,7 @@ class SentryIntegration {
       const result = await fn();
       transaction.setStatus('ok');
       return result;
-    } catch (error) { // eslint-disable-line
+    } catch (error) {  
       transaction.setStatus('internal_error');
       this.captureException(error as Error, {
         tags: { transaction_name: name },

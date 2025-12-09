@@ -191,9 +191,15 @@ export function getThrottleDelay(currentLoad: number): number {
   const limits = getCurrentLimits();
   const loadPercent = (currentLoad / limits.concurrent_jobs) * 100;
 
-  if (loadPercent < 50) return 0;
-  if (loadPercent < 70) return 100;
-  if (loadPercent < 90) return 500;
+  if (loadPercent < 50) {
+return 0;
+}
+  if (loadPercent < 70) {
+return 100;
+}
+  if (loadPercent < 90) {
+return 500;
+}
   return 2000;
 }
 

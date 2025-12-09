@@ -65,7 +65,9 @@ class MetricsBuffer {
   }
 
   async flush(): Promise<void> {
-    if (this.buffer.length === 0) return;
+    if (this.buffer.length === 0) {
+return;
+}
 
     const metricsToFlush = [...this.buffer];
     this.buffer = [];
@@ -111,19 +113,25 @@ class MetricsBuffer {
 // ============================================
 
 function calculateMean(values: number[]): number {
-  if (values.length === 0) return 0;
+  if (values.length === 0) {
+return 0;
+}
   return values.reduce((sum, v) => sum + v, 0) / values.length;
 }
 
 function calculateStdDev(values: number[], mean?: number): number {
-  if (values.length < 2) return 0;
+  if (values.length < 2) {
+return 0;
+}
   const m = mean ?? calculateMean(values);
   const variance = values.reduce((sum, v) => sum + Math.pow(v - m, 2), 0) / values.length;
   return Math.sqrt(variance);
 }
 
 function calculatePercentile(values: number[], percentile: number): number {
-  if (values.length === 0) return 0;
+  if (values.length === 0) {
+return 0;
+}
   const sorted = [...values].sort((a, b) => a - b);
   const index = Math.ceil((percentile / 100) * sorted.length) - 1;
   return sorted[Math.max(0, index)];
@@ -294,7 +302,9 @@ class MLDetector {
         .select('route_path, method, status_code, latency_ms')
         .gte('created_at', oneHourAgo);
 
-      if (error || !data) return;
+      if (error || !data) {
+return;
+}
 
       // Calculate baselines per route
       const routeGroups = new Map<string, { latencies: number[], errors: number, total: number }>();
@@ -305,7 +315,9 @@ class MLDetector {
 
         group.latencies.push(log.latency_ms);
         group.total++;
-        if (log.status_code >= 500) group.errors++;
+        if (log.status_code >= 500) {
+group.errors++;
+}
 
         routeGroups.set(key, group);
       }

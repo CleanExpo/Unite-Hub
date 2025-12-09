@@ -29,7 +29,9 @@ export default function DesktopAgentPage() {
   const workspaceId = currentOrganization?.org_id || '';
 
   useEffect(() => {
-    if (!workspaceId || !session?.access_token) return;
+    if (!workspaceId || !session?.access_token) {
+return;
+}
 
     const fetchStats = async () => {
       try {

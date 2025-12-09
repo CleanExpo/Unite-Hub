@@ -25,7 +25,9 @@ export function AgencySwitcher({
   const [switching, setSwitching] = useState(false);
 
   const handleSwitch = async (agencyId: string) => {
-    if (agencyId === currentAgencyId) return;
+    if (agencyId === currentAgencyId) {
+return;
+}
 
     setSwitching(true);
     try {

@@ -255,10 +255,14 @@ REQUIREMENTS:
     feedback?: string
   ): Promise<GeneratedVisual | null> {
     const visual = this.pendingApprovals.get(visualId);
-    if (!visual) return null;
+    if (!visual) {
+return null;
+}
 
     const workflowStep = visual.approvalWorkflow.find((s) => s.step === step);
-    if (!workflowStep) return null;
+    if (!workflowStep) {
+return null;
+}
 
     workflowStep.status = decision;
     workflowStep.feedback = feedback;
@@ -293,7 +297,9 @@ REQUIREMENTS:
     revisedPrompt?: string
   ): Promise<GeneratedVisual | null> {
     const original = this.pendingApprovals.get(visualId);
-    if (!original) return null;
+    if (!original) {
+return null;
+}
 
     const newRequest: VisualRequest = {
       id: `${original.requestId}-revised`,
@@ -366,8 +372,12 @@ REQUIREMENTS:
     // Higher resolution = higher cost
     if (request.dimensions) {
       const pixels = request.dimensions.width * request.dimensions.height;
-      if (pixels > 2000000) multiplier *= 1.5;
-      if (pixels > 4000000) multiplier *= 2;
+      if (pixels > 2000000) {
+multiplier *= 1.5;
+}
+      if (pixels > 4000000) {
+multiplier *= 2;
+}
     }
 
     const total = baseCost * multiplier + enhancementCost;

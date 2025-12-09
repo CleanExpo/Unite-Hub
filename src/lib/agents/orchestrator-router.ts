@@ -85,6 +85,8 @@ export type AgentIntent =
   | 'social_inbox'
   | 'pre_client'
   | 'cognitive_twin'
+  | 'shadow_observer'
+  | 'codebase_audit'
   | 'unknown';
 
 export interface OrchestratorRequest {
@@ -807,6 +809,9 @@ async function executeStep(
       return executePreClientStep(step, request, context);
     case 'cognitive_twin':
       return executeCognitiveTwinStep(step, request, context);
+    case 'shadow_observer':
+    case 'codebase_audit':
+      return executeShadowObserverStep(step, request, context);
     default:
       throw new Error(`Unknown agent: ${step.agent}`);
   }
@@ -3428,13 +3433,21 @@ async function executeDecisionSimulatorStep(
       const prompt = step.inputs?.prompt as string;
       // Simple scenario type detection from prompt
       let scenarioType = 'other';
-      if (/pric/i.test(prompt)) scenarioType = 'pricing_change';
-      else if (/product|launch/i.test(prompt)) scenarioType = 'new_product';
-      else if (/hir|staff/i.test(prompt)) scenarioType = 'hiring';
-      else if (/market/i.test(prompt)) scenarioType = 'marketing_campaign';
-      else if (/partner/i.test(prompt)) scenarioType = 'partnership';
-      else if (/expand/i.test(prompt)) scenarioType = 'market_expansion';
-      else if (/cost|cut/i.test(prompt)) scenarioType = 'cost_reduction';
+      if (/pric/i.test(prompt)) {
+scenarioType = 'pricing_change';
+} else if (/product|launch/i.test(prompt)) {
+scenarioType = 'new_product';
+} else if (/hir|staff/i.test(prompt)) {
+scenarioType = 'hiring';
+} else if (/market/i.test(prompt)) {
+scenarioType = 'marketing_campaign';
+} else if (/partner/i.test(prompt)) {
+scenarioType = 'partnership';
+} else if (/expand/i.test(prompt)) {
+scenarioType = 'market_expansion';
+} else if (/cost|cut/i.test(prompt)) {
+scenarioType = 'cost_reduction';
+}
 
       return {
         agent: 'simulate_decision_scenarios',
@@ -4637,4 +4650,113 @@ export async function handleCompilePortfolioSynopsis(): Promise<{
 }> {
   const { getPortfolioStats } = await import('@/lib/founder/businessVaultService');
   return await getPortfolioStats();
+}
+
+// ============================================================================
+// SHADOW OBSERVER EXECUTOR
+// ============================================================================
+
+async function executeShadowObserverStep(
+  step: PlanStep,
+  request: OrchestratorRequest,
+  context: Record<string, unknown>
+): Promise<AgentOutput> {
+  try {
+    const { executeShadowObserverAudit, recordSelfEvalMetrics, formatForOrchestrator } =
+      await import('@/lib/agents/shadow-observer-agent');
+
+    switch (step.action) {
+      case 'audit':
+      case 'codebase_audit':
+      case 'full': {
+        const output = await executeShadowObserverAudit({
+          action: step.action as any,
+          severity: (step.inputs?.severity as string) as any,
+          targetFiles: step.inputs?.targetFiles as string[],
+          options: step.inputs?.options as Record<string, any>
+        });
+
+        // Record metrics to database
+        if (output.success && request.context?.founderId) {
+          await recordSelfEvalMetrics(output, request.context.founderId as string);
+        }
+
+        return {
+          agent: 'shadow_observer',
+          action: step.action,
+          result: formatForOrchestrator(output),
+          confidence: output.success ? 0.95 : 0.3,
+          citations: [output.reportPath].filter(Boolean)
+        };
+      }
+
+      case 'scan': {
+        const output = await executeShadowObserverAudit({
+          action: 'scan',
+          severity: (step.inputs?.severity as string) as any
+        });
+
+        return {
+          agent: 'shadow_observer',
+          action: 'scan',
+          result: formatForOrchestrator(output),
+          confidence: output.success ? 0.9 : 0.3,
+          citations: [output.reportPath].filter(Boolean)
+        };
+      }
+
+      case 'build': {
+        const output = await executeShadowObserverAudit({
+          action: 'build'
+        });
+
+        return {
+          agent: 'shadow_observer',
+          action: 'build',
+          result: formatForOrchestrator(output),
+          confidence: output.build?.pass ? 0.95 : 0.5,
+          citations: [output.reportPath].filter(Boolean)
+        };
+      }
+
+      case 'refactor': {
+        const output = await executeShadowObserverAudit({
+          action: 'refactor'
+        });
+
+        if (output.success && request.context?.founderId) {
+          await recordSelfEvalMetrics(output, request.context.founderId as string);
+        }
+
+        return {
+          agent: 'shadow_observer',
+          action: 'refactor',
+          result: formatForOrchestrator(output),
+          confidence: output.agentScore ? output.agentScore / 10 : 0.5,
+          citations: [output.reportPath].filter(Boolean)
+        };
+      }
+
+      default:
+        return {
+          agent: 'shadow_observer',
+          action: step.action,
+          result: {
+            success: false,
+            error: `Unknown action: ${step.action}`
+          },
+          confidence: 0.0
+        };
+    }
+  } catch (error) {
+    return {
+      agent: 'shadow_observer',
+      action: step.action,
+      result: {
+        success: false,
+        error: error instanceof Error ? error.message : String(error)
+      },
+      confidence: 0.0
+    };
+  }
 }

@@ -10,12 +10,16 @@ export default function StabilisationPage() {
   const [loading, setLoading] = useState(true);
   const [events, setEvents] = useState<StabilisationEvent[]>([]);
 
-  useEffect(() => { fetchData(); }, []);
+  useEffect(() => {
+ fetchData(); 
+}, []);
 
   const fetchData = async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
       const response = await fetch('/api/intelligence/stabilisation-events', {
         headers: { 'Authorization': `Bearer ${session.access_token}` },
       });
@@ -23,11 +27,16 @@ export default function StabilisationPage() {
         const data = await response.json();
         setEvents(data.events || []);
       }
-    } catch (error) { console.error('Failed:', error); }
-    finally { setLoading(false); }
+    } catch (error) {
+ console.error('Failed:', error); 
+} finally {
+ setLoading(false); 
+}
   };
 
-  if (loading) return <div className="container mx-auto p-6"><div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div></div>;
+  if (loading) {
+return <div className="container mx-auto p-6"><div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div></div>;
+}
 
   return (
     <div className="container mx-auto p-6 space-y-6">

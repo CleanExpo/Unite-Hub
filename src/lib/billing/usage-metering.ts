@@ -276,9 +276,15 @@ export async function canPerformAction(
  */
 function getPlanFromPriceId(priceId: string): string {
   // Check for plan ID in price ID
-  if (priceId.includes("starter")) return "starter";
-  if (priceId.includes("pro")) return "pro";
-  if (priceId.includes("elite")) return "elite";
+  if (priceId.includes("starter")) {
+return "starter";
+}
+  if (priceId.includes("pro")) {
+return "pro";
+}
+  if (priceId.includes("elite")) {
+return "elite";
+}
 
   // Check environment variables
   if (

@@ -53,7 +53,9 @@ export function PostingChannelStatus({
   const connectedCount = channels.filter(c => c.connected).length;
 
   const formatTime = (timestamp?: string) => {
-    if (!timestamp) return 'Never';
+    if (!timestamp) {
+return 'Never';
+}
     const date = new Date(timestamp);
     return date.toLocaleDateString('en-US', {
       month: 'short',

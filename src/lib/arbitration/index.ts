@@ -22,8 +22,12 @@ export async function getArbitrationEvents(tenantId?: string, status?: string): 
 
   let query = supabase.from('arbitration_events').select('*').order('created_at', { ascending: false });
 
-  if (tenantId) query = query.eq('tenant_id', tenantId);
-  if (status) query = query.eq('status', status);
+  if (tenantId) {
+query = query.eq('tenant_id', tenantId);
+}
+  if (status) {
+query = query.eq('status', status);
+}
 
   const { data } = await query.limit(50);
 
@@ -64,7 +68,9 @@ export async function createArbitrationEvent(
     .select()
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+return null;
+}
 
   return {
     id: data.id,

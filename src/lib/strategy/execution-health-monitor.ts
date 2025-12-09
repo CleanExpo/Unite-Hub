@@ -66,14 +66,18 @@ export class ExecutionHealthMonitor {
         .eq('id', executionId)
         .single();
 
-      if (execError) throw execError;
+      if (execError) {
+throw execError;
+}
 
       const { data: tasks, error: tasksError } = await supabaseAdmin
         .from('agent_tasks')
         .select('*')
         .eq('execution_id', executionId);
 
-      if (tasksError) throw tasksError;
+      if (tasksError) {
+throw tasksError;
+}
 
       if (!tasks || tasks.length === 0) {
         return {
@@ -344,7 +348,9 @@ export class ExecutionHealthMonitor {
       .order('created_at', { ascending: false })
       .limit(Math.floor(60 / intervalMinutes)); // Get last hour
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return (snapshots || []).map((s) => ({
       score: s.health_score,
@@ -370,7 +376,9 @@ export class ExecutionHealthMonitor {
       issues: metrics.issues,
     });
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
   }
 }
 

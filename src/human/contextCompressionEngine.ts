@@ -159,7 +159,9 @@ function detectEventTag(transcript: string): EventTag {
 
   // Check other patterns
   for (const [tag, patterns] of Object.entries(EVENT_TAG_PATTERNS)) {
-    if (tag === 'urgent_alert') continue;
+    if (tag === 'urgent_alert') {
+continue;
+}
 
     for (const pattern of patterns) {
       if (lowerTranscript.includes(pattern)) {
@@ -252,22 +254,38 @@ function inferImplicitAction(transcript: string, eventTag: EventTag): string | u
 
   // Task patterns
   if (eventTag === 'task') {
-    if (lowerTranscript.includes('email')) return 'Draft and review email';
-    if (lowerTranscript.includes('schedule')) return 'Add to calendar';
-    if (lowerTranscript.includes('remind')) return 'Set reminder';
+    if (lowerTranscript.includes('email')) {
+return 'Draft and review email';
+}
+    if (lowerTranscript.includes('schedule')) {
+return 'Add to calendar';
+}
+    if (lowerTranscript.includes('remind')) {
+return 'Set reminder';
+}
   }
 
   // Advisor query patterns
   if (eventTag === 'advisor_query') {
-    if (lowerTranscript.includes('should')) return 'Request decision guidance';
-    if (lowerTranscript.includes('how')) return 'Request process guidance';
-    if (lowerTranscript.includes('what')) return 'Request information or analysis';
+    if (lowerTranscript.includes('should')) {
+return 'Request decision guidance';
+}
+    if (lowerTranscript.includes('how')) {
+return 'Request process guidance';
+}
+    if (lowerTranscript.includes('what')) {
+return 'Request information or analysis';
+}
   }
 
   // Goal update patterns
   if (eventTag === 'goal_update') {
-    if (lowerTranscript.includes('progress')) return 'Update goal progress';
-    if (lowerTranscript.includes('achieve')) return 'Record goal completion';
+    if (lowerTranscript.includes('progress')) {
+return 'Update goal progress';
+}
+    if (lowerTranscript.includes('achieve')) {
+return 'Record goal completion';
+}
   }
 
   // Idea patterns
@@ -498,10 +516,18 @@ export function filterCompressedPackets(
   }
 ): CompressedContextPacket[] {
   return packets.filter((packet) => {
-    if (filters.domain && packet.domain !== filters.domain) return false;
-    if (filters.priority && packet.priority !== filters.priority) return false;
-    if (filters.eventTag && packet.event_tag !== filters.eventTag) return false;
-    if (filters.minimumConfidence && packet.confidence < filters.minimumConfidence) return false;
+    if (filters.domain && packet.domain !== filters.domain) {
+return false;
+}
+    if (filters.priority && packet.priority !== filters.priority) {
+return false;
+}
+    if (filters.eventTag && packet.event_tag !== filters.eventTag) {
+return false;
+}
+    if (filters.minimumConfidence && packet.confidence < filters.minimumConfidence) {
+return false;
+}
     return true;
   });
 }

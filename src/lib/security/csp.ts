@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */
+ 
 /**
  * Content Security Policy (CSP) Utilities with Nonce Support
  *

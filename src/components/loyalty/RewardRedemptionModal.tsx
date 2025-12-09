@@ -55,7 +55,9 @@ export function RewardRedemptionModal({
   }, [isOpen]);
 
   async function handleRedeem() {
-    if (!reward) return;
+    if (!reward) {
+return;
+}
 
     setStatus('submitting');
     setError(null);
@@ -88,7 +90,9 @@ export function RewardRedemptionModal({
     }
   }
 
-  if (!reward) return null;
+  if (!reward) {
+return null;
+}
 
   const userBalanceBig = BigInt(userBalance);
   const rewardCostBig = BigInt(reward.creditCost);

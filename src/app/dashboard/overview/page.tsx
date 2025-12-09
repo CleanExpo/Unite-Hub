@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+ 
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -141,7 +141,9 @@ export default function DashboardOverviewPage() {
       }
 
       const feedback = prompt("Enter feedback for iteration:");
-      if (!feedback) return;
+      if (!feedback) {
+return;
+}
 
       const response = await fetch("/api/content/iterate", {
         method: "POST",

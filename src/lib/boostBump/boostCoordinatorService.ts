@@ -188,7 +188,9 @@ export async function createBoostJob(params: CreateBoostJobParams): Promise<Boos
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to create boost job: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to create boost job: ${error.message}`);
+}
 
   // Log creation for audit
   await logBoostAction(data.id, 'created', params.createdBy, {
@@ -245,7 +247,9 @@ export async function getBoostJobs(
 
   const { data, error } = await query;
 
-  if (error) throw new Error(`Failed to fetch boost jobs: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to fetch boost jobs: ${error.message}`);
+}
   return (data || []).map(mapJobFromDb);
 }
 
@@ -262,7 +266,9 @@ export async function getBoostJob(jobId: string): Promise<BoostJob | null> {
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') return null;
+    if (error.code === 'PGRST116') {
+return null;
+}
     throw new Error(`Failed to fetch boost job: ${error.message}`);
   }
 
@@ -281,7 +287,9 @@ export async function scheduleBoost(
 
   // Verify job is approved
   const job = await getBoostJob(jobId);
-  if (!job) throw new Error('Boost job not found');
+  if (!job) {
+throw new Error('Boost job not found');
+}
   if (job.status !== 'approved') {
     throw new Error(`Cannot schedule job with status: ${job.status}. Job must be approved first.`);
   }
@@ -297,7 +305,9 @@ export async function scheduleBoost(
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to schedule boost job: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to schedule boost job: ${error.message}`);
+}
 
   await logBoostAction(jobId, 'scheduled', userId, { scheduledAt: scheduledAt.toISOString() });
 
@@ -315,7 +325,9 @@ export async function approveBoostJob(
   const supabase = await getSupabaseServer();
 
   const job = await getBoostJob(jobId);
-  if (!job) throw new Error('Boost job not found');
+  if (!job) {
+throw new Error('Boost job not found');
+}
   if (job.status !== 'pending_approval') {
     throw new Error(`Cannot approve job with status: ${job.status}`);
   }
@@ -333,7 +345,9 @@ export async function approveBoostJob(
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to approve boost job: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to approve boost job: ${error.message}`);
+}
 
   await logBoostAction(jobId, 'approved', userId, { notes });
 
@@ -351,7 +365,9 @@ export async function rejectBoostJob(
   const supabase = await getSupabaseServer();
 
   const job = await getBoostJob(jobId);
-  if (!job) throw new Error('Boost job not found');
+  if (!job) {
+throw new Error('Boost job not found');
+}
   if (job.status !== 'pending_approval') {
     throw new Error(`Cannot reject job with status: ${job.status}`);
   }
@@ -367,7 +383,9 @@ export async function rejectBoostJob(
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to reject boost job: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to reject boost job: ${error.message}`);
+}
 
   await logBoostAction(jobId, 'rejected', userId, { reason });
 
@@ -387,7 +405,9 @@ export async function recordBoostResult(
   const supabase = await getSupabaseServer();
 
   const job = await getBoostJob(jobId);
-  if (!job) throw new Error('Boost job not found');
+  if (!job) {
+throw new Error('Boost job not found');
+}
 
   // Determine success based on rank improvement
   const isSuccess = afterRank !== null && beforeRank !== null && afterRank < beforeRank;
@@ -409,7 +429,9 @@ export async function recordBoostResult(
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to record boost result: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to record boost result: ${error.message}`);
+}
 
   await logBoostAction(jobId, 'completed', userId, {
     beforeRank,
@@ -429,7 +451,9 @@ export async function startBoostJob(jobId: string, userId: string): Promise<Boos
   const supabase = await getSupabaseServer();
 
   const job = await getBoostJob(jobId);
-  if (!job) throw new Error('Boost job not found');
+  if (!job) {
+throw new Error('Boost job not found');
+}
   if (!['approved', 'scheduled'].includes(job.status)) {
     throw new Error(`Cannot start job with status: ${job.status}`);
   }
@@ -445,7 +469,9 @@ export async function startBoostJob(jobId: string, userId: string): Promise<Boos
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to start boost job: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to start boost job: ${error.message}`);
+}
 
   await logBoostAction(jobId, 'started', userId, {});
 
@@ -459,7 +485,9 @@ export async function cancelBoostJob(jobId: string, userId: string, reason: stri
   const supabase = await getSupabaseServer();
 
   const job = await getBoostJob(jobId);
-  if (!job) throw new Error('Boost job not found');
+  if (!job) {
+throw new Error('Boost job not found');
+}
   if (['completed', 'cancelled', 'rejected'].includes(job.status)) {
     throw new Error(`Cannot cancel job with status: ${job.status}`);
   }
@@ -475,7 +503,9 @@ export async function cancelBoostJob(jobId: string, userId: string, reason: stri
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to cancel boost job: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to cancel boost job: ${error.message}`);
+}
 
   await logBoostAction(jobId, 'cancelled', userId, { reason });
 
@@ -536,7 +566,9 @@ export async function getPerformanceSummary(businessId: string): Promise<Perform
       }
       byBoostType[job.boost_type].count++;
       byBoostType[job.boost_type].improvements.push(improvement);
-      if (improvement > 0) byBoostType[job.boost_type].successes++;
+      if (improvement > 0) {
+byBoostType[job.boost_type].successes++;
+}
 
       // By geo target
       const geoKey = job.geo_target?.country || 'unknown';
@@ -573,8 +605,11 @@ export async function getPerformanceSummary(businessId: string): Promise<Perform
     const olderAvg = olderJobs.reduce((sum, j) =>
       sum + ((j.before_rank || 0) - (j.after_rank || 0)), 0) / olderJobs.length;
 
-    if (recentAvg > olderAvg + 1) recentTrend = 'improving';
-    else if (recentAvg < olderAvg - 1) recentTrend = 'declining';
+    if (recentAvg > olderAvg + 1) {
+recentTrend = 'improving';
+} else if (recentAvg < olderAvg - 1) {
+recentTrend = 'declining';
+}
   }
 
   // Format by boost type
@@ -640,7 +675,9 @@ export async function getReadyToExecuteJobs(businessId?: string): Promise<BoostJ
 
   const { data, error } = await query;
 
-  if (error) throw new Error(`Failed to fetch ready jobs: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to fetch ready jobs: ${error.message}`);
+}
   return (data || []).map(mapJobFromDb);
 }
 

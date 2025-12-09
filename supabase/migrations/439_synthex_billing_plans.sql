@@ -6,6 +6,14 @@
 -- for AI tokens, emails, events, and other resources
 -- =====================================================
 
+-- =====================================================
+-- Enable required extensions
+-- =====================================================
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";      -- UUID generation functions
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";       -- Cryptographic functions for secure IDs
+CREATE EXTENSION IF NOT EXISTS "btree_gist";     -- GiST index support for exclusion constraints
+CREATE EXTENSION IF NOT EXISTS "pg_trgm";        -- Trigram matching for fuzzy search
+
 -- Drop tables first (CASCADE handles policies and indexes)
 DROP TABLE IF EXISTS synthex_invoices CASCADE;
 DROP TABLE IF EXISTS synthex_usage_meters CASCADE;

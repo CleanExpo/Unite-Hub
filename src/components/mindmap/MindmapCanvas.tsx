@@ -264,7 +264,9 @@ export default function MindmapCanvas({
 
   // Save mindmap
   const handleSave = useCallback(async () => {
-    if (!mindmapId) return;
+    if (!mindmapId) {
+return;
+}
 
     setSaving(true);
     try {

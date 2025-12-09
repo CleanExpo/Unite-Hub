@@ -28,12 +28,18 @@ export async function getLinks(
     .order('created_at', { ascending: false })
     .limit(100);
 
-  if (sourceType) query = query.eq('source_type', sourceType);
-  if (tenantId) query = query.eq('tenant_id', tenantId);
+  if (sourceType) {
+query = query.eq('source_type', sourceType);
+}
+  if (tenantId) {
+query = query.eq('tenant_id', tenantId);
+}
 
   const { data } = await query;
 
-  if (!data) return [];
+  if (!data) {
+return [];
+}
 
   return data.map(row => ({
     id: row.id,
@@ -70,7 +76,9 @@ export async function createLink(
     .select()
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+return null;
+}
 
   return {
     id: data.id,

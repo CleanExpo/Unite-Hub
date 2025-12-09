@@ -67,8 +67,12 @@ function timeframeToRange(timeframe: TouchpointTimeframe): StoryTimeRange {
  * Get data status from story health
  */
 function getDataStatus(health: number): 'complete' | 'partial' | 'limited' {
-  if (health >= 75) return 'complete';
-  if (health >= 40) return 'partial';
+  if (health >= 75) {
+return 'complete';
+}
+  if (health >= 40) {
+return 'partial';
+}
   return 'limited';
 }
 
@@ -77,7 +81,9 @@ function getDataStatus(health: number): 'complete' | 'partial' | 'limited' {
  */
 function generateExcerpt(narrative: ClientStoryNarrative | FounderStoryNarrative): string {
   const summary = narrative.executive_summary;
-  if (summary.length <= 150) return summary;
+  if (summary.length <= 150) {
+return summary;
+}
   return summary.substring(0, 147) + '...';
 }
 
@@ -244,16 +250,28 @@ export function getTouchpointFreshness(
 
   switch (timeframe) {
     case 'weekly':
-      if (ageDays <= 7) return 'fresh';
-      if (ageDays <= 14) return 'stale';
+      if (ageDays <= 7) {
+return 'fresh';
+}
+      if (ageDays <= 14) {
+return 'stale';
+}
       return 'expired';
     case 'monthly':
-      if (ageDays <= 30) return 'fresh';
-      if (ageDays <= 45) return 'stale';
+      if (ageDays <= 30) {
+return 'fresh';
+}
+      if (ageDays <= 45) {
+return 'stale';
+}
       return 'expired';
     case 'ninety_day':
-      if (ageDays <= 90) return 'fresh';
-      if (ageDays <= 120) return 'stale';
+      if (ageDays <= 90) {
+return 'fresh';
+}
+      if (ageDays <= 120) {
+return 'stale';
+}
       return 'expired';
   }
 }

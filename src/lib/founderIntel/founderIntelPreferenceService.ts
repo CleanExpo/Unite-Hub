@@ -139,7 +139,9 @@ export async function updateRiskThreshold(
   threshold: number
 ): Promise<boolean> {
   const current = await getPreferencesForUser(userId);
-  if (!current) return false;
+  if (!current) {
+return false;
+}
 
   const updatedThresholds = {
     ...current.risk_thresholds,
@@ -161,7 +163,9 @@ export async function muteEngine(
   engine: SourceEngine
 ): Promise<boolean> {
   const current = await getPreferencesForUser(userId);
-  if (!current) return false;
+  if (!current) {
+return false;
+}
 
   if (current.mute_rules.muted_engines.includes(engine)) {
     return true; // Already muted
@@ -187,7 +191,9 @@ export async function unmuteEngine(
   engine: SourceEngine
 ): Promise<boolean> {
   const current = await getPreferencesForUser(userId);
-  if (!current) return false;
+  if (!current) {
+return false;
+}
 
   const updatedMuteRules = {
     ...current.mute_rules,

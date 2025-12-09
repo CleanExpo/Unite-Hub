@@ -30,7 +30,9 @@ export default function NavigatorPage() {
   const fetchData = async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       // Get tenant
       const { data: orgs } = await supabase
@@ -62,12 +64,16 @@ export default function NavigatorPage() {
   };
 
   const handleGenerate = async () => {
-    if (!tenantId) return;
+    if (!tenantId) {
+return;
+}
 
     setGenerating(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const response = await fetch('/api/navigator/snapshot', {
         method: 'POST',

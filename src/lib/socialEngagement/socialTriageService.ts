@@ -324,7 +324,9 @@ Respond in JSON format:
       } as Record<SentimentLabel, number>,
     };
 
-    if (!messages?.length) return stats;
+    if (!messages?.length) {
+return stats;
+}
 
     const intentCounts = new Map<string, number>();
     let sentimentSum = 0;
@@ -333,9 +335,13 @@ Respond in JSON format:
 
     for (const msg of messages) {
       // Status counts
-      if (msg.triage_status === 'pending') stats.pendingCount++;
-      else if (msg.triage_status === 'triaged') stats.triagedCount++;
-      else if (msg.triage_status === 'requires_attention') stats.requiresAttentionCount++;
+      if (msg.triage_status === 'pending') {
+stats.pendingCount++;
+} else if (msg.triage_status === 'triaged') {
+stats.triagedCount++;
+} else if (msg.triage_status === 'requires_attention') {
+stats.requiresAttentionCount++;
+}
 
       // Sentiment distribution
       if (msg.sentiment_label) {
@@ -397,11 +403,15 @@ Respond in JSON format:
 
     // Excessive caps
     const capsRatio = (content.match(/[A-Z]/g) || []).length / content.length;
-    if (capsRatio > 0.5) score += 0.2;
+    if (capsRatio > 0.5) {
+score += 0.2;
+}
 
     // Excessive emojis
     const emojiCount = (content.match(/[\u{1F300}-\u{1F9FF}]/gu) || []).length;
-    if (emojiCount > 10) score += 0.1;
+    if (emojiCount > 10) {
+score += 0.1;
+}
 
     return Math.min(score, 1);
   }

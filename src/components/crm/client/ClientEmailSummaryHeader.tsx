@@ -84,15 +84,22 @@ export function ClientEmailSummaryHeader({
   const workspaceId = currentOrganization?.org_id;
 
   const fetchSummary = async (refresh = false) => {
-    if (!workspaceId || !session?.access_token) return;
+    if (!workspaceId || !session?.access_token) {
+return;
+}
 
     try {
-      if (refresh) setIsRefreshing(true);
-      else setIsLoading(true);
+      if (refresh) {
+setIsRefreshing(true);
+} else {
+setIsLoading(true);
+}
       setError(null);
 
       const params = new URLSearchParams({ workspaceId });
-      if (meetingContext) params.set('meetingContext', meetingContext);
+      if (meetingContext) {
+params.set('meetingContext', meetingContext);
+}
 
       const response = await fetch(
         `/api/email-intel/client/${clientId}/summary?${params}`,
@@ -127,14 +134,22 @@ export function ClientEmailSummaryHeader({
   }, [clientId, workspaceId, session?.access_token, meetingContext]);
 
   const getSentimentColor = (score: number) => {
-    if (score > 0.3) return 'text-green-600';
-    if (score < -0.3) return 'text-red-600';
+    if (score > 0.3) {
+return 'text-green-600';
+}
+    if (score < -0.3) {
+return 'text-red-600';
+}
     return 'text-yellow-600';
   };
 
   const getSentimentIcon = (score: number) => {
-    if (score > 0.3) return TrendingUp;
-    if (score < -0.3) return AlertTriangle;
+    if (score > 0.3) {
+return TrendingUp;
+}
+    if (score < -0.3) {
+return AlertTriangle;
+}
     return TrendingUp;
   };
 

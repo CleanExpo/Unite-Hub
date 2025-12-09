@@ -136,7 +136,9 @@ export class SessionManager {
       const now = Date.now();
       for (const [sessionId, context] of this.sessions.entries()) {
         const messages = context.getMessages();
-        if (messages.length === 0) continue;
+        if (messages.length === 0) {
+continue;
+}
 
         // Check last message timestamp
         const lastEntry = (context as any).context[messages.length - 1];

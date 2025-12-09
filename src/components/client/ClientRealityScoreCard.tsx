@@ -28,16 +28,28 @@ export default function ClientRealityScoreCard({
   dataPoints,
 }: RealityScoreCardProps) {
   const getScoreColor = (score: number) => {
-    if (score < 30) return "text-red-600";
-    if (score < 60) return "text-yellow-600";
-    if (score < 80) return "text-blue-600";
+    if (score < 30) {
+return "text-red-600";
+}
+    if (score < 60) {
+return "text-yellow-600";
+}
+    if (score < 80) {
+return "text-blue-600";
+}
     return "text-green-600";
   };
 
   const getBarColor = (score: number) => {
-    if (score < 30) return "bg-red-500";
-    if (score < 60) return "bg-yellow-500";
-    if (score < 80) return "bg-blue-500";
+    if (score < 30) {
+return "bg-red-500";
+}
+    if (score < 60) {
+return "bg-yellow-500";
+}
+    if (score < 80) {
+return "bg-blue-500";
+}
     return "bg-green-500";
   };
 

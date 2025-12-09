@@ -59,7 +59,9 @@ export default function LeadScoringPanel({ tenantId }: LeadScoringPanelProps) {
   const [error, setError] = useState<string | null>(null);
 
   const loadLeadModels = useCallback(async () => {
-    if (!tenantId) return;
+    if (!tenantId) {
+return;
+}
 
     setLoading(true);
     setError(null);
@@ -102,8 +104,12 @@ export default function LeadScoringPanel({ tenantId }: LeadScoringPanelProps) {
   };
 
   const getChurnRiskColor = (risk: number) => {
-    if (risk >= 0.7) return 'text-red-400';
-    if (risk >= 0.4) return 'text-yellow-400';
+    if (risk >= 0.7) {
+return 'text-red-400';
+}
+    if (risk >= 0.4) {
+return 'text-yellow-400';
+}
     return 'text-green-400';
   };
 

@@ -43,7 +43,9 @@ export function SequenceStats({
   recommendations = [],
 }: SequenceStatsProps) {
   const calculateRate = (count: number, total: number) => {
-    if (total === 0) return "0.0";
+    if (total === 0) {
+return "0.0";
+}
     return ((count / total) * 100).toFixed(1);
   };
 

@@ -77,7 +77,9 @@ export function isPublicRoute(path: string): boolean {
  * Check if route requires authentication
  */
 export function requiresAuth(path: string): boolean {
-  if (isPublicRoute(path)) return false;
+  if (isPublicRoute(path)) {
+return false;
+}
   return ROUTE_CONFIG.protected.some(pattern => matchesPattern(path, pattern));
 }
 

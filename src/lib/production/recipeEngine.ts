@@ -93,7 +93,9 @@ export async function createPackFromRecipe(
   const supabase = await getSupabaseServer();
 
   const recipe = await getRecipeBySlug(recipeSlug);
-  if (!recipe) return null;
+  if (!recipe) {
+return null;
+}
 
   // Determine pack type
   const packType = recipe.recipe_type.includes('strategy')
@@ -124,7 +126,9 @@ export async function createPackFromRecipe(
     .select()
     .single();
 
-  if (error || !pack) return null;
+  if (error || !pack) {
+return null;
+}
 
   // Create deliverable placeholders based on recipe outputs
   const deliverables = recipe.outputs.map((output) => ({
@@ -199,7 +203,9 @@ export async function getPackWithDeliverables(
     .eq('id', packId)
     .single();
 
-  if (!pack) return null;
+  if (!pack) {
+return null;
+}
 
   const { data: deliverables } = await supabase
     .from('pack_deliverables')

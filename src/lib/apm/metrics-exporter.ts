@@ -13,7 +13,7 @@
  * @module lib/apm/metrics-exporter
  */
 
-/* eslint-disable no-undef, no-console, @typescript-eslint/no-unused-vars */
+ 
 
 
 // ============================================================================
@@ -152,7 +152,9 @@ class MetricsExporter {
    * Export HTTP request metrics
    */
   public exportHttpMetrics(metrics: HttpMetrics): void {
-    if (!this.enabled) return;
+    if (!this.enabled) {
+return;
+}
 
     const tags = [
       `method:${metrics.method}`,
@@ -192,7 +194,9 @@ class MetricsExporter {
    * Export database query metrics
    */
   public exportDatabaseMetrics(metrics: DatabaseMetrics): void {
-    if (!this.enabled) return;
+    if (!this.enabled) {
+return;
+}
 
     const tags = [
       `operation:${metrics.operation}`,
@@ -230,7 +234,9 @@ class MetricsExporter {
    * Export cache metrics
    */
   public exportCacheMetrics(metrics: CacheMetrics): void {
-    if (!this.enabled) return;
+    if (!this.enabled) {
+return;
+}
 
     const tags = [
       `operation:${metrics.operation}`,
@@ -267,7 +273,9 @@ class MetricsExporter {
    * Export AI token usage metrics
    */
   public exportAITokenMetrics(metrics: AITokenMetrics): void {
-    if (!this.enabled) return;
+    if (!this.enabled) {
+return;
+}
 
     const tags = [
       `model:${metrics.model}`,
@@ -311,7 +319,9 @@ class MetricsExporter {
    * Export custom business metric
    */
   public exportBusinessMetric(metric: BusinessMetric): void {
-    if (!this.enabled) return;
+    if (!this.enabled) {
+return;
+}
 
     const tags = Object.entries(metric.tags).map(([key, value]) => `${key}:${value}`);
 
@@ -332,7 +342,9 @@ class MetricsExporter {
     value: number,
     timestamp: number
   ): void {
-    if (!this.enabled) return;
+    if (!this.enabled) {
+return;
+}
 
     const tags = [
       `endpoint:${endpoint}`,
@@ -355,7 +367,9 @@ class MetricsExporter {
     errorRate: number,
     timestamp: number
   ): void {
-    if (!this.enabled) return;
+    if (!this.enabled) {
+return;
+}
 
     const tags = [`endpoint:${endpoint}`];
 

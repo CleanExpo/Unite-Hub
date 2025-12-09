@@ -2,7 +2,7 @@
 export const maxDuration = 120; // 2 minutes
 export const dynamic = 'force-dynamic';
 
-/* eslint-disable no-undef, no-console */
+ 
 import type { NextRequest } from "next/server";
 import { withErrorBoundary, AuthenticationError, DatabaseError, successResponse } from "@/lib/errors/boundaries";
 import { getSupabaseServer } from "@/lib/supabase";

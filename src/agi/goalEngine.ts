@@ -75,9 +75,15 @@ export function registerGoal(input: Omit<BusinessGoal, 'id' | 'createdAt' | 'upd
  */
 export function listGoals(filters?: { domain?: GoalDomain; status?: GoalStatus; owner?: string }): BusinessGoal[] {
   return goals.filter(g => {
-    if (filters?.domain && g.domain !== filters.domain) return false;
-    if (filters?.status && g.status !== filters.status) return false;
-    if (filters?.owner && g.owner !== filters.owner) return false;
+    if (filters?.domain && g.domain !== filters.domain) {
+return false;
+}
+    if (filters?.status && g.status !== filters.status) {
+return false;
+}
+    if (filters?.owner && g.owner !== filters.owner) {
+return false;
+}
     return true;
   });
 }
@@ -94,7 +100,9 @@ export function getGoal(id: string): BusinessGoal | null {
  */
 export function updateGoalProgress(id: string, currentValue: number): BusinessGoal | null {
   const goal = goals.find(g => g.id === id);
-  if (!goal) return null;
+  if (!goal) {
+return null;
+}
 
   goal.currentValue = currentValue;
   goal.updatedAt = new Date().toISOString();
@@ -118,10 +126,14 @@ export function updateGoalProgress(id: string, currentValue: number): BusinessGo
  */
 export function updateKeyResult(goalId: string, krId: string, currentValue: number): BusinessGoal | null {
   const goal = goals.find(g => g.id === goalId);
-  if (!goal || !goal.keyResults) return null;
+  if (!goal || !goal.keyResults) {
+return null;
+}
 
   const kr = goal.keyResults.find(k => k.id === krId);
-  if (!kr) return null;
+  if (!kr) {
+return null;
+}
 
   kr.currentValue = currentValue;
 
@@ -199,7 +211,9 @@ export function getGoalsByDomain(domain: GoalDomain): (BusinessGoal & { progress
  */
 export function completeGoal(id: string, notes?: string): BusinessGoal | null {
   const goal = goals.find(g => g.id === id);
-  if (!goal) return null;
+  if (!goal) {
+return null;
+}
 
   goal.status = 'completed';
   goal.completedAt = new Date().toISOString();
@@ -214,7 +228,9 @@ export function completeGoal(id: string, notes?: string): BusinessGoal | null {
  */
 export function pauseGoal(id: string): BusinessGoal | null {
   const goal = goals.find(g => g.id === id);
-  if (!goal) return null;
+  if (!goal) {
+return null;
+}
 
   goal.status = 'paused';
   goal.updatedAt = new Date().toISOString();
@@ -227,7 +243,9 @@ export function pauseGoal(id: string): BusinessGoal | null {
  */
 export function resumeGoal(id: string): BusinessGoal | null {
   const goal = goals.find(g => g.id === id);
-  if (!goal) return null;
+  if (!goal) {
+return null;
+}
 
   goal.status = 'active';
   goal.updatedAt = new Date().toISOString();

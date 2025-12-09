@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */
+ 
 import { withErrorBoundary, successResponse } from '@/lib/errors/boundaries';
 
 /**

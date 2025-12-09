@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */
+ 
 /**
  * Health Check API Endpoint
  * Used by Docker healthcheck and monitoring systems

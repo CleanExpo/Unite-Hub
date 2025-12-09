@@ -214,37 +214,51 @@ class AdsOptimizationService {
     // Run opportunity detectors
     if (enabledTypes.includes('budget_increase')) {
       const budgetOpp = this.detectBudgetIncreaseOpportunity(campaign, currentAgg, baselineAgg);
-      if (budgetOpp) opportunities.push(budgetOpp);
+      if (budgetOpp) {
+opportunities.push(budgetOpp);
+}
     }
 
     if (enabledTypes.includes('budget_decrease')) {
       const budgetOpp = this.detectBudgetDecreaseOpportunity(campaign, currentAgg, baselineAgg);
-      if (budgetOpp) opportunities.push(budgetOpp);
+      if (budgetOpp) {
+opportunities.push(budgetOpp);
+}
     }
 
     if (enabledTypes.includes('underperforming_ad')) {
       const underperformOpp = this.detectUnderperformingOpportunity(campaign, currentAgg, baselineAgg);
-      if (underperformOpp) opportunities.push(underperformOpp);
+      if (underperformOpp) {
+opportunities.push(underperformOpp);
+}
     }
 
     if (enabledTypes.includes('high_performer_scale')) {
       const scaleOpp = this.detectHighPerformerOpportunity(campaign, currentAgg, baselineAgg);
-      if (scaleOpp) opportunities.push(scaleOpp);
+      if (scaleOpp) {
+opportunities.push(scaleOpp);
+}
     }
 
     if (enabledTypes.includes('cost_efficiency')) {
       const costOpp = this.detectCostEfficiencyOpportunity(campaign, currentAgg, baselineAgg);
-      if (costOpp) opportunities.push(costOpp);
+      if (costOpp) {
+opportunities.push(costOpp);
+}
     }
 
     if (enabledTypes.includes('conversion_opportunity')) {
       const convOpp = this.detectConversionOpportunity(campaign, currentAgg, baselineAgg);
-      if (convOpp) opportunities.push(convOpp);
+      if (convOpp) {
+opportunities.push(convOpp);
+}
     }
 
     if (enabledTypes.includes('trend_alert')) {
       const trendOpp = this.detectTrendAlert(campaign, currentMetrics);
-      if (trendOpp) opportunities.push(trendOpp);
+      if (trendOpp) {
+opportunities.push(trendOpp);
+}
     }
 
     return opportunities;
@@ -715,7 +729,9 @@ Provide:
     campaign: AdCampaign,
     recentMetrics: AdPerformanceSnapshot[]
   ): Partial<AdOptimizationOpportunity> | null {
-    if (recentMetrics.length < 3) return null;
+    if (recentMetrics.length < 3) {
+return null;
+}
 
     // Check for declining trend
     const midpoint = Math.floor(recentMetrics.length / 2);

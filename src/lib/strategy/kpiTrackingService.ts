@@ -365,11 +365,17 @@ export class KPITrackingService {
 
     // Determine health status
     let healthStatus: DomainKPISummary['health_status'];
-    if (overallScore >= 80) healthStatus = 'EXCELLENT';
-    else if (overallScore >= 60) healthStatus = 'GOOD';
-    else if (overallScore >= 40) healthStatus = 'FAIR';
-    else if (overallScore >= 20) healthStatus = 'POOR';
-    else healthStatus = 'CRITICAL';
+    if (overallScore >= 80) {
+healthStatus = 'EXCELLENT';
+} else if (overallScore >= 60) {
+healthStatus = 'GOOD';
+} else if (overallScore >= 40) {
+healthStatus = 'FAIR';
+} else if (overallScore >= 20) {
+healthStatus = 'POOR';
+} else {
+healthStatus = 'CRITICAL';
+}
 
     // Identify improvement areas (metrics not on track)
     const improvementAreas = trends
@@ -579,8 +585,12 @@ export class KPITrackingService {
    * Calculate trend from change percentage
    */
   private calculateTrend(changePercent: number): Trend {
-    if (changePercent > 5) return 'UP';
-    if (changePercent < -5) return 'DOWN';
+    if (changePercent > 5) {
+return 'UP';
+}
+    if (changePercent < -5) {
+return 'DOWN';
+}
     return 'STABLE';
   }
 

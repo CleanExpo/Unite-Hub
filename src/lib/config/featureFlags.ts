@@ -82,7 +82,9 @@ export const featureFlags: Record<string, FeatureFlag> = {
 // Check if a feature is enabled
 export function isFeatureEnabled(key: string): boolean {
   const flag = featureFlags[key];
-  if (!flag) return false;
+  if (!flag) {
+return false;
+}
 
   // Check environment override
   const envKey = `NEXT_PUBLIC_FEATURE_${key.toUpperCase()}`;
@@ -107,7 +109,9 @@ export function getFounderControlledFlags(): FeatureFlag[] {
 // Toggle a flag (for runtime changes via API)
 export function setFeatureFlag(key: string, enabled: boolean): boolean {
   const flag = featureFlags[key];
-  if (!flag) return false;
+  if (!flag) {
+return false;
+}
 
   flag.enabled = enabled;
   return true;

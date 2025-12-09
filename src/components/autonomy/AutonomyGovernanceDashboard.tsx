@@ -96,8 +96,12 @@ export function AutonomyGovernanceDashboard({
     try {
       // Fetch proposals
       const proposalParams = new URLSearchParams({ client_id: clientId });
-      if (statusFilter !== "all") proposalParams.set("status", statusFilter);
-      if (domainFilter !== "all") proposalParams.set("domain", domainFilter);
+      if (statusFilter !== "all") {
+proposalParams.set("status", statusFilter);
+}
+      if (domainFilter !== "all") {
+proposalParams.set("domain", domainFilter);
+}
 
       const proposalRes = await fetch(`/api/autonomy/propose?${proposalParams}`);
       const proposalData = await proposalRes.json();

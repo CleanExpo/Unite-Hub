@@ -42,8 +42,12 @@ function getRating(
 ): WebVitalMetric["rating"] {
   const thresholds = WEB_VITAL_THRESHOLDS[name];
 
-  if (value <= thresholds.good) return "good";
-  if (value <= thresholds.needsImprovement) return "needs-improvement";
+  if (value <= thresholds.good) {
+return "good";
+}
+  if (value <= thresholds.needsImprovement) {
+return "needs-improvement";
+}
   return "poor";
 }
 
@@ -93,9 +97,13 @@ export function calculatePerformanceScore(): {
 
     if (weight > 0) {
       let metricScore = 0;
-      if (metric.rating === "good") metricScore = 100;
-      else if (metric.rating === "needs-improvement") metricScore = 50;
-      else metricScore = 0;
+      if (metric.rating === "good") {
+metricScore = 100;
+} else if (metric.rating === "needs-improvement") {
+metricScore = 50;
+} else {
+metricScore = 0;
+}
 
       totalScore += metricScore * weight;
       totalWeight += weight;
@@ -145,7 +153,9 @@ export async function initWebVitals(
   customReportHandler?: ReportHandler
 ): Promise<void> {
   // Only run in browser
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined") {
+return;
+}
 
   const handler = customReportHandler || defaultReportHandler;
 

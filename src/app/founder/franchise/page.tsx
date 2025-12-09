@@ -32,7 +32,9 @@ export default function FranchiseDashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchData = useCallback(async () => {
-    if (!agencyId || !session?.access_token) return;
+    if (!agencyId || !session?.access_token) {
+return;
+}
 
     setIsLoading(true);
     try {

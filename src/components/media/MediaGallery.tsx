@@ -50,9 +50,15 @@ export function MediaGallery({
       const { data: { session } } = await supabase.auth.getSession();
 
       let url = `/api/media/upload?workspace_id=${workspaceId}`;
-      if (projectId) url += `&project_id=${projectId}`;
-      if (selectedType) url += `&file_type=${selectedType}`;
-      if (selectedStatus) url += `&status=${selectedStatus}`;
+      if (projectId) {
+url += `&project_id=${projectId}`;
+}
+      if (selectedType) {
+url += `&file_type=${selectedType}`;
+}
+      if (selectedStatus) {
+url += `&status=${selectedStatus}`;
+}
 
       const response = await fetch(url, {
         headers: {
@@ -106,14 +112,20 @@ export function MediaGallery({
 
   // Format file size
   const formatFileSize = (bytes: number) => {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    if (bytes < 1024) {
+return `${bytes} B`;
+}
+    if (bytes < 1024 * 1024) {
+return `${(bytes / 1024).toFixed(1)} KB`;
+}
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
   // Format duration
   const formatDuration = (seconds: number | null) => {
-    if (!seconds) return null;
+    if (!seconds) {
+return null;
+}
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return `${mins}:${secs.toString().padStart(2, "0")}`;

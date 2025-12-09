@@ -109,10 +109,18 @@ export default function DevicesPage() {
 
   const getDeviceName = (userAgent: string) => {
     // Extract basic device info from user agent
-    if (userAgent.toLowerCase().includes("chrome")) return "Chrome Browser";
-    if (userAgent.toLowerCase().includes("firefox")) return "Firefox Browser";
-    if (userAgent.toLowerCase().includes("safari")) return "Safari Browser";
-    if (userAgent.toLowerCase().includes("edge")) return "Edge Browser";
+    if (userAgent.toLowerCase().includes("chrome")) {
+return "Chrome Browser";
+}
+    if (userAgent.toLowerCase().includes("firefox")) {
+return "Firefox Browser";
+}
+    if (userAgent.toLowerCase().includes("safari")) {
+return "Safari Browser";
+}
+    if (userAgent.toLowerCase().includes("edge")) {
+return "Edge Browser";
+}
     return "Browser";
   };
 

@@ -91,8 +91,11 @@ export class ClientCapacityPlanner {
     const headroomClients = config.max_clients - currentClients;
 
     let status: 'green' | 'amber' | 'red' = 'green';
-    if (currentClients >= config.hard_limit) status = 'red';
-    else if (currentClients >= config.soft_limit) status = 'amber';
+    if (currentClients >= config.hard_limit) {
+status = 'red';
+} else if (currentClients >= config.soft_limit) {
+status = 'amber';
+}
 
     const recommendations: string[] = [];
     const nextMilestone = this.getNextMilestone(currentClients, config);
@@ -131,8 +134,12 @@ export class ClientCapacityPlanner {
    * Get tier for client count
    */
   getTierForClientCount(clientCount: number): typeof SCALING_TIERS[ScalingTierId] {
-    if (clientCount <= 5) return SCALING_TIERS.soft_launch;
-    if (clientCount <= 50) return SCALING_TIERS.hard_launch;
+    if (clientCount <= 5) {
+return SCALING_TIERS.soft_launch;
+}
+    if (clientCount <= 50) {
+return SCALING_TIERS.hard_launch;
+}
     return SCALING_TIERS.growth_phase;
   }
 
@@ -181,7 +188,9 @@ export class ClientCapacityPlanner {
     };
 
     const nextTier = nextTierMap[currentTier];
-    if (!nextTier) return null;
+    if (!nextTier) {
+return null;
+}
 
     const currentConfig = TIER_CONFIGS[currentTier];
     const nextConfig = TIER_CONFIGS[nextTier];

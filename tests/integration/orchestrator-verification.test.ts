@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */
+ 
 /* global process */
 
 /**
@@ -33,7 +33,9 @@ describe('Orchestrator Verification System', () => {
 
       while (attempts < maxRetries) {
         attempts++;
-        if (attempts >= 2) break; // Succeed on 2nd attempt
+        if (attempts >= 2) {
+break;
+} // Succeed on 2nd attempt
       }
 
       expect(attempts).toBe(2);

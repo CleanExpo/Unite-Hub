@@ -280,7 +280,9 @@ Provide a comprehensive analysis in this format:
 
   private extractList(text: string, sectionName: string): string[] {
     const section = this.extractSection(text, sectionName);
-    if (!section) return [];
+    if (!section) {
+return [];
+}
 
     return section
       .split("\n")

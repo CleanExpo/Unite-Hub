@@ -75,7 +75,9 @@ function PortfolioSummary({ portfolio }: { portfolio: Awaited<ReturnType<typeof 
 }
 
 function PendingDecisionsAlert({ count }: { count: number }) {
-  if (count === 0) return null;
+  if (count === 0) {
+return null;
+}
 
   return (
     <Card className="border-yellow-500 bg-yellow-50 dark:bg-yellow-950">

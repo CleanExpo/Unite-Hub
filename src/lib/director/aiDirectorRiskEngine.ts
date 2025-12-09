@@ -236,9 +236,13 @@ export class AIDirectorRiskEngine {
 
     // Determine overall risk level
     let riskLevel: RiskAssessment['risk_level'] = 'low';
-    if (totalRiskScore >= 60) riskLevel = 'critical';
-    else if (totalRiskScore >= 40) riskLevel = 'high';
-    else if (totalRiskScore >= 20) riskLevel = 'medium';
+    if (totalRiskScore >= 60) {
+riskLevel = 'critical';
+} else if (totalRiskScore >= 40) {
+riskLevel = 'high';
+} else if (totalRiskScore >= 20) {
+riskLevel = 'medium';
+}
 
     return {
       client_id: '',
@@ -310,30 +314,54 @@ export class AIDirectorRiskEngine {
     value: number
   ): 'low' | 'medium' | 'high' | 'critical' {
     const thresholds = RISK_THRESHOLDS[category];
-    if (value >= thresholds.critical) return 'critical';
-    if (value >= thresholds.high) return 'high';
-    if (value >= thresholds.medium) return 'medium';
+    if (value >= thresholds.critical) {
+return 'critical';
+}
+    if (value >= thresholds.high) {
+return 'high';
+}
+    if (value >= thresholds.medium) {
+return 'medium';
+}
     return 'low';
   }
 
   private getContentSeverity(contentCount: number): 'low' | 'medium' | 'high' | 'critical' {
-    if (contentCount === 0) return 'critical';
-    if (contentCount === 1) return 'high';
-    if (contentCount <= 3) return 'medium';
+    if (contentCount === 0) {
+return 'critical';
+}
+    if (contentCount === 1) {
+return 'high';
+}
+    if (contentCount <= 3) {
+return 'medium';
+}
     return 'low';
   }
 
   private getEngagementSeverity(daysInactive: number): 'low' | 'medium' | 'high' | 'critical' {
-    if (daysInactive >= 7) return 'critical';
-    if (daysInactive >= 5) return 'high';
-    if (daysInactive >= 3) return 'medium';
+    if (daysInactive >= 7) {
+return 'critical';
+}
+    if (daysInactive >= 5) {
+return 'high';
+}
+    if (daysInactive >= 3) {
+return 'medium';
+}
     return 'low';
   }
 
   private getQualitySeverity(score: number): 'low' | 'medium' | 'high' | 'critical' {
-    if (score < 10) return 'critical';
-    if (score < 30) return 'high';
-    if (score < 50) return 'medium';
+    if (score < 10) {
+return 'critical';
+}
+    if (score < 30) {
+return 'high';
+}
+    if (score < 50) {
+return 'medium';
+}
     return 'low';
   }
 

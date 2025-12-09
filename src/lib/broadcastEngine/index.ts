@@ -43,7 +43,9 @@ export async function getBroadcasts(senderAgencyId: string): Promise<BroadcastMe
     .order('created_at', { ascending: false })
     .limit(50);
 
-  if (!data) return [];
+  if (!data) {
+return [];
+}
 
   return data.map(row => ({
     id: row.id,
@@ -81,7 +83,9 @@ export async function createBroadcast(
     .select()
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+return null;
+}
 
   return {
     id: data.id,
@@ -105,7 +109,9 @@ export async function getReceipts(recipientAgencyId: string): Promise<BroadcastR
     .order('created_at', { ascending: false })
     .limit(50);
 
-  if (!data) return [];
+  if (!data) {
+return [];
+}
 
   return data.map(row => ({
     id: row.id,

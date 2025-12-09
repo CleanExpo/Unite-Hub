@@ -138,7 +138,7 @@ test.describe('Strategy Hierarchy Rendering', () => {
   test('TC-205: Collapse items to hide children', async ({ authenticatedPage: page }) => {
     // Expand L1
     const l1Item = page.locator('[data-testid="hierarchy-level-1"]').first();
-    let expandButton = l1Item.locator('[data-testid*="expand"]');
+    const expandButton = l1Item.locator('[data-testid*="expand"]');
     if (await expandButton.isVisible()) {
       await expandButton.click();
 

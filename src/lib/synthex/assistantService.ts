@@ -264,7 +264,9 @@ export async function getRecentConversations(
         last_message: row.content.substring(0, 100),
         created_at: row.created_at,
       });
-      if (conversations.length >= limit) break;
+      if (conversations.length >= limit) {
+break;
+}
     }
   }
 

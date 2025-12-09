@@ -91,12 +91,18 @@ export default function ConvexSEOScoringOverlay({
 
   const getScoreColor = (score: number, max: number) => {
     const percentage = (score / max) * 100;
-    if (percentage >= 80) return "bg-green-500";
-    if (percentage >= 60) return "bg-yellow-500";
+    if (percentage >= 80) {
+return "bg-green-500";
+}
+    if (percentage >= 60) {
+return "bg-yellow-500";
+}
     return "bg-red-500";
   };
 
-  if (!isOpen) return null;
+  if (!isOpen) {
+return null;
+}
 
   // Default scores for demo
   const defaultScores: SEOScore[] = [

@@ -157,21 +157,21 @@ export class StealthWrapperEngine {
     const topic = this.extractTopic(source.title);
 
     // Generate headline
-    let headline = this.generateHeadline(source.title, variant);
+    const headline = this.generateHeadline(source.title, variant);
 
     // Generate introduction
     let introduction = this.selectFromArray(INTRO_TEMPLATES, this.random)
       .replace(/{topic}/g, topic);
 
     // Generate summary
-    let summary = this.selectFromArray(SUMMARY_TEMPLATES, this.random)
+    const summary = this.selectFromArray(SUMMARY_TEMPLATES, this.random)
       .replace(/{topic}/g, topic);
 
     // Generate context sections
     const contextSections = this.generateContextSections(source, variant);
 
     // Generate conclusion
-    let conclusion = this.selectFromArray(CONCLUSION_TEMPLATES, this.random)
+    const conclusion = this.selectFromArray(CONCLUSION_TEMPLATES, this.random)
       .replace(/{topic}/g, topic);
 
     // If AI rewriting is available, enhance content

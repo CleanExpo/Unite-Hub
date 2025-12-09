@@ -274,7 +274,9 @@ export async function generateNoBluffReport(
       .select('id')
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     logger.info('✅ No Bluff report generated', {
       projectId: analysis.projectId,

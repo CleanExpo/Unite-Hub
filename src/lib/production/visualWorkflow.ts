@@ -41,7 +41,9 @@ export async function processVisualJob(
 
     // Safety check for visuals
     const safetyFlags: string[] = [];
-    if (!description) safetyFlags.push('no_description');
+    if (!description) {
+safetyFlags.push('no_description');
+}
 
     await updateJobSafety(
       job.id,

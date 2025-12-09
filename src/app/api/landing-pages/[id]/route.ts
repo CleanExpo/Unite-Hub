@@ -74,10 +74,18 @@ export async function PUT(
       updated_at: new Date().toISOString(),
     };
 
-    if (body.title) dbUpdates.title = body.title;
-    if (body.pageType) dbUpdates.page_type = body.pageType;
-    if (body.sections) dbUpdates.sections = body.sections;
-    if (body.personaId) dbUpdates.persona_id = body.personaId;
+    if (body.title) {
+dbUpdates.title = body.title;
+}
+    if (body.pageType) {
+dbUpdates.page_type = body.pageType;
+}
+    if (body.sections) {
+dbUpdates.sections = body.sections;
+}
+    if (body.personaId) {
+dbUpdates.persona_id = body.personaId;
+}
 
     const { error } = await supabase
       .from("landing_page_checklists")

@@ -34,7 +34,9 @@ export async function GET(req: NextRequest) {
       .from('organizations')
       .select('id');
 
-    if (orgsError) throw orgsError;
+    if (orgsError) {
+throw orgsError;
+}
 
     for (const org of orgs || []) {
       // Get all clients in the organization

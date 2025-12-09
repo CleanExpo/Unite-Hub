@@ -42,7 +42,9 @@ export async function getBenchmarkBands(metricType: string, cohortId?: string): 
   }
 
   const { data, error } = await query;
-  if (error) return [];
+  if (error) {
+return [];
+}
 
   return (data || []).map(row => ({
     id: row.id,
@@ -70,7 +72,9 @@ export async function getTenantBenchmarks(tenantId: string): Promise<TenantBench
     .order('created_at', { ascending: false })
     .limit(50);
 
-  if (error) return [];
+  if (error) {
+return [];
+}
 
   return (data || []).map(row => ({
     id: row.id,
@@ -95,17 +99,25 @@ export async function generateBenchmarkReport(
   const supabase = await getSupabaseServer();
 
   const bands = await getBenchmarkBands(metricType, cohortId);
-  if (bands.length === 0) return null;
+  if (bands.length === 0) {
+return null;
+}
 
   const band = bands[0];
   let percentilePosition: number | undefined;
 
   if (band.percentile50) {
-    if (tenantValue <= (band.percentile10 || 0)) percentilePosition = 10;
-    else if (tenantValue <= (band.percentile25 || 0)) percentilePosition = 25;
-    else if (tenantValue <= band.percentile50) percentilePosition = 50;
-    else if (tenantValue <= (band.percentile75 || 100)) percentilePosition = 75;
-    else percentilePosition = 90;
+    if (tenantValue <= (band.percentile10 || 0)) {
+percentilePosition = 10;
+} else if (tenantValue <= (band.percentile25 || 0)) {
+percentilePosition = 25;
+} else if (tenantValue <= band.percentile50) {
+percentilePosition = 50;
+} else if (tenantValue <= (band.percentile75 || 100)) {
+percentilePosition = 75;
+} else {
+percentilePosition = 90;
+}
   }
 
   const { data, error } = await supabase
@@ -124,7 +136,9 @@ export async function generateBenchmarkReport(
     .select()
     .single();
 
-  if (error) return null;
+  if (error) {
+return null;
+}
 
   return {
     id: data.id,

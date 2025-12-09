@@ -37,7 +37,9 @@ export function MediaPlayer({
   // Update current time
   useEffect(() => {
     const media = mediaRef.current;
-    if (!media) return;
+    if (!media) {
+return;
+}
 
     const updateTime = () => {
       setCurrentTime(media.currentTime);
@@ -65,7 +67,9 @@ export function MediaPlayer({
   // Play/Pause toggle
   const togglePlay = () => {
     const media = mediaRef.current;
-    if (!media) return;
+    if (!media) {
+return;
+}
 
     if (isPlaying) {
       media.pause();
@@ -78,7 +82,9 @@ export function MediaPlayer({
   // Seek to time
   const seekTo = (time: number) => {
     const media = mediaRef.current;
-    if (!media) return;
+    if (!media) {
+return;
+}
     media.currentTime = time;
   };
 
@@ -97,7 +103,9 @@ export function MediaPlayer({
   // Toggle mute
   const toggleMute = () => {
     const media = mediaRef.current;
-    if (!media) return;
+    if (!media) {
+return;
+}
     media.muted = !isMuted;
     setIsMuted(!isMuted);
   };
@@ -106,7 +114,9 @@ export function MediaPlayer({
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newVolume = parseFloat(e.target.value);
     const media = mediaRef.current;
-    if (!media) return;
+    if (!media) {
+return;
+}
     media.volume = newVolume;
     setVolume(newVolume);
     setIsMuted(newVolume === 0);
@@ -122,7 +132,9 @@ export function MediaPlayer({
   // Toggle fullscreen (video only)
   const toggleFullscreen = () => {
     const media = mediaRef.current;
-    if (!media || type !== "video") return;
+    if (!media || type !== "video") {
+return;
+}
 
     if (document.fullscreenElement) {
       document.exitFullscreen();

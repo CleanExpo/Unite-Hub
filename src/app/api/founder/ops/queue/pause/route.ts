@@ -38,7 +38,9 @@ export async function POST(req: NextRequest) {
       p_reason: reason,
     });
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     logger.info('Queue paused', { workspaceId, date, userId: user.id });
 

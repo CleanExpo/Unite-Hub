@@ -435,7 +435,9 @@ export async function updatePlatformMode(
       })
       .eq('id', 1);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     // Log the change
     await supabase.from('sys_platform_mode_audit').insert({

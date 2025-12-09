@@ -160,13 +160,27 @@ export async function updateTopic(
     updated_at: new Date().toISOString(),
   };
 
-  if (updates.pillarId !== undefined) updateData.pillar_id = updates.pillarId;
-  if (updates.name !== undefined) updateData.name = updates.name;
-  if (updates.slug !== undefined) updateData.slug = updates.slug;
-  if (updates.problemStatement !== undefined) updateData.problem_statement = updates.problemStatement;
-  if (updates.audienceSegment !== undefined) updateData.audience_segment = updates.audienceSegment;
-  if (updates.priorityLevel !== undefined) updateData.priority_level = updates.priorityLevel;
-  if (updates.status !== undefined) updateData.status = updates.status;
+  if (updates.pillarId !== undefined) {
+updateData.pillar_id = updates.pillarId;
+}
+  if (updates.name !== undefined) {
+updateData.name = updates.name;
+}
+  if (updates.slug !== undefined) {
+updateData.slug = updates.slug;
+}
+  if (updates.problemStatement !== undefined) {
+updateData.problem_statement = updates.problemStatement;
+}
+  if (updates.audienceSegment !== undefined) {
+updateData.audience_segment = updates.audienceSegment;
+}
+  if (updates.priorityLevel !== undefined) {
+updateData.priority_level = updates.priorityLevel;
+}
+  if (updates.status !== undefined) {
+updateData.status = updates.status;
+}
 
   const { data, error } = await supabase
     .from('topics')

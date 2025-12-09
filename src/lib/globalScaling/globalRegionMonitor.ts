@@ -48,7 +48,9 @@ export async function detectCrossRegionConflicts(): Promise<CrossRegionConflict[
       regions (name)
     `);
 
-  if (!states) return conflicts;
+  if (!states) {
+return conflicts;
+}
 
   const now = new Date().toISOString();
 

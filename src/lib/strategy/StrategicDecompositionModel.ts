@@ -256,9 +256,15 @@ export class StrategicDecompositionModel {
   private calculateDecompositionMetrics(hierarchy: StrategyHierarchy, issues: DecompositionIssue[]): DecompositionMetrics {
     // Completeness: all levels exist and have items
     let completeness = 100;
-    if (hierarchy.L2_Strategic_Pillars.items.length === 0) completeness -= 25;
-    if (hierarchy.L3_Strategic_Tactics.items.length === 0) completeness -= 25;
-    if (hierarchy.L4_Operational_Tasks.items.length === 0) completeness -= 25;
+    if (hierarchy.L2_Strategic_Pillars.items.length === 0) {
+completeness -= 25;
+}
+    if (hierarchy.L3_Strategic_Tactics.items.length === 0) {
+completeness -= 25;
+}
+    if (hierarchy.L4_Operational_Tasks.items.length === 0) {
+completeness -= 25;
+}
 
     // Balance: decomposition ratios are within expected ranges
     let balance = 100;
@@ -266,9 +272,15 @@ export class StrategicDecompositionModel {
     const l3Ratio = hierarchy.L3_Strategic_Tactics.items.length / (hierarchy.L2_Strategic_Pillars.items.length || 1);
     const l4Ratio = hierarchy.L4_Operational_Tasks.items.length / (hierarchy.L3_Strategic_Tactics.items.length || 1);
 
-    if (l2Ratio < 3 || l2Ratio > 5) balance -= 15;
-    if (l3Ratio < 2 || l3Ratio > 4) balance -= 15;
-    if (l4Ratio < 2 || l4Ratio > 3) balance -= 15;
+    if (l2Ratio < 3 || l2Ratio > 5) {
+balance -= 15;
+}
+    if (l3Ratio < 2 || l3Ratio > 4) {
+balance -= 15;
+}
+    if (l4Ratio < 2 || l4Ratio > 3) {
+balance -= 15;
+}
 
     // Coherence: deduct for issues indicating poor logical relationship
     let coherence = 100;

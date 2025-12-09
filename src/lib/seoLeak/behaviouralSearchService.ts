@@ -138,10 +138,18 @@ const EXPECTED_CTR_BY_POSITION: Record<number, number> = {
  * Get expected CTR for a position
  */
 function getExpectedCTR(position: number): number {
-  if (position <= 0) return 0;
-  if (position <= 20) return EXPECTED_CTR_BY_POSITION[position] || 0.3;
-  if (position <= 30) return 0.2;
-  if (position <= 50) return 0.1;
+  if (position <= 0) {
+return 0;
+}
+  if (position <= 20) {
+return EXPECTED_CTR_BY_POSITION[position] || 0.3;
+}
+  if (position <= 30) {
+return 0.2;
+}
+  if (position <= 50) {
+return 0.1;
+}
   return 0.05;
 }
 
@@ -158,26 +166,48 @@ function determineOpportunityLevel(
 
   // Position 1-3 opportunities are more critical
   if (position <= 3) {
-    if (ctrRatio < 0.5) return 'critical';
-    if (ctrRatio < 0.7) return 'high';
-    if (ctrRatio < 0.9) return 'medium';
-    if (ctrRatio < 1.1) return 'low';
+    if (ctrRatio < 0.5) {
+return 'critical';
+}
+    if (ctrRatio < 0.7) {
+return 'high';
+}
+    if (ctrRatio < 0.9) {
+return 'medium';
+}
+    if (ctrRatio < 1.1) {
+return 'low';
+}
     return 'none';
   }
 
   // Position 4-10 opportunities
   if (position <= 10) {
-    if (ctrRatio < 0.4) return 'critical';
-    if (ctrRatio < 0.6) return 'high';
-    if (ctrRatio < 0.8) return 'medium';
-    if (ctrRatio < 1.0) return 'low';
+    if (ctrRatio < 0.4) {
+return 'critical';
+}
+    if (ctrRatio < 0.6) {
+return 'high';
+}
+    if (ctrRatio < 0.8) {
+return 'medium';
+}
+    if (ctrRatio < 1.0) {
+return 'low';
+}
     return 'none';
   }
 
   // Beyond page 1
-  if (ctrRatio < 0.3) return 'high';
-  if (ctrRatio < 0.6) return 'medium';
-  if (ctrRatio < 0.9) return 'low';
+  if (ctrRatio < 0.3) {
+return 'high';
+}
+  if (ctrRatio < 0.6) {
+return 'medium';
+}
+  if (ctrRatio < 0.9) {
+return 'low';
+}
   return 'none';
 }
 
@@ -491,11 +521,17 @@ function calculateWinner(results: TestResults): { winner: TestWinner; significan
 
   // Convert to approximate significance (simplified)
   let significance = 0;
-  if (zScore >= 2.576) significance = 99;
-  else if (zScore >= 1.960) significance = 95;
-  else if (zScore >= 1.645) significance = 90;
-  else if (zScore >= 1.282) significance = 80;
-  else significance = Math.min(79, Math.round(zScore * 30));
+  if (zScore >= 2.576) {
+significance = 99;
+} else if (zScore >= 1.960) {
+significance = 95;
+} else if (zScore >= 1.645) {
+significance = 90;
+} else if (zScore >= 1.282) {
+significance = 80;
+} else {
+significance = Math.min(79, Math.round(zScore * 30));
+}
 
   // Determine winner
   let winner: TestWinner = 'no_winner';
@@ -746,7 +782,9 @@ export async function getTest(testId: string): Promise<TitleMetaTest | null> {
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') return null;
+      if (error.code === 'PGRST116') {
+return null;
+}
       console.error('[Behavioural Search] Get test error:', error);
       return null;
     }

@@ -223,10 +223,15 @@ export class SLAMonitor {
     for (const [slaId, sla] of this.slaDefinitions) {
       const status = await this.checkSLACompliance(slaId);
 
-      if (!status) continue;
+      if (!status) {
+continue;
+}
 
-      if (status.is_compliant) compliant++;
-      else nonCompliant++;
+      if (status.is_compliant) {
+compliant++;
+} else {
+nonCompliant++;
+}
 
       // Get violation windows
       const history = await this.datadogClient.getMetricHistory(sla.metric, periodDays * 24);
@@ -249,7 +254,9 @@ export class SLAMonitor {
     } else {
       // Check if any SLAs are at risk (>80% error budget used)
       const atRisk = slaReports.some((r) => r.status.error_budget_used > 80);
-      if (atRisk) overallHealth = 'at_risk';
+      if (atRisk) {
+overallHealth = 'at_risk';
+}
     }
 
     const report: SLAReport = {
@@ -285,7 +292,9 @@ export class SLAMonitor {
    * Calculate availability from metric data
    */
   private calculateAvailability(data: Array<[number, number]>): number {
-    if (data.length === 0) return 100;
+    if (data.length === 0) {
+return 100;
+}
 
     // Assuming 0 = down, 1+ = up
     const upPoints = data.filter((p) => p[1] > 0).length;
@@ -300,7 +309,9 @@ export class SLAMonitor {
     threshold: number,
     percentile: number
   ): number {
-    if (data.length === 0) return 100;
+    if (data.length === 0) {
+return 100;
+}
 
     // Sort values
     const values = data.map((p) => p[1]).sort((a, b) => a - b);
@@ -315,7 +326,9 @@ export class SLAMonitor {
    * Calculate success rate from metric data
    */
   private calculateSuccessRate(data: Array<[number, number]>): number {
-    if (data.length === 0) return 100;
+    if (data.length === 0) {
+return 100;
+}
 
     // Average of success rate values (assuming metric is already a percentage)
     const sum = data.reduce((acc, p) => acc + p[1], 0);
@@ -326,7 +339,9 @@ export class SLAMonitor {
    * Calculate current burn rate (error budget % consumed per hour)
    */
   private calculateBurnRate(data: Array<[number, number]>, target: number): number {
-    if (data.length < 2) return 0;
+    if (data.length < 2) {
+return 0;
+}
 
     // Use last 10% of data to calculate recent burn rate
     const recentCount = Math.max(2, Math.floor(data.length * 0.1));
@@ -360,8 +375,11 @@ export class SLAMonitor {
         const duration = (timestamp - breachStart) / 60; // minutes
         let severity: 'minor' | 'major' | 'critical' = 'minor';
 
-        if (duration > 60) severity = 'critical';
-        else if (duration > 15) severity = 'major';
+        if (duration > 60) {
+severity = 'critical';
+} else if (duration > 15) {
+severity = 'major';
+}
 
         breaches.push({
           start: new Date(breachStart * 1000).toISOString(),

@@ -79,7 +79,9 @@ export const ToastItem = forwardRef<HTMLDivElement, ToastProps>(
     ref
   ) => {
     useEffect(() => {
-      if (duration === 0) return;
+      if (duration === 0) {
+return;
+}
 
       const timer = setTimeout(() => {
         onClose?.();

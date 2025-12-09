@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     const result = await runTask('model-scout');
     return NextResponse.json(result);
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error('[Cron] model-scout failed:', error);
     return NextResponse.json({ error: 'Task failed', details: String(error) }, { status: 500 });
   }

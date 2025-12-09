@@ -90,7 +90,9 @@ export abstract class BaseAgent {
       // Start consuming messages
       this.isRunning = true;
       await this.channel.consume(this.queueName, async (msg) => {
-        if (!msg) return;
+        if (!msg) {
+return;
+}
 
         try {
           const task: AgentTask = JSON.parse(msg.content.toString());
@@ -184,7 +186,9 @@ export abstract class BaseAgent {
    * Requeue a failed task
    */
   protected async requeueTask(task: AgentTask): Promise<void> {
-    if (!this.channel) return;
+    if (!this.channel) {
+return;
+}
 
     await this.channel.sendToQueue(
       this.queueName,
@@ -237,7 +241,9 @@ export abstract class BaseAgent {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data.id;
     } catch (err) {
       console.error('Failed to record execution start:', err);

@@ -34,7 +34,9 @@ export async function getProposals(tenantId: string, status?: string): Promise<M
   }
 
   const { data, error } = await query;
-  if (error) return [];
+  if (error) {
+return [];
+}
 
   return (data || []).map(row => ({
     id: row.id,
@@ -82,7 +84,9 @@ export async function createProposal(
     .select()
     .single();
 
-  if (error) return null;
+  if (error) {
+return null;
+}
 
   return {
     id: data.id,

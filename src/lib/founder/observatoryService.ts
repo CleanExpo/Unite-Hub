@@ -3,7 +3,7 @@
  * Meta-system operational signals
  */
 
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 if (typeof window !== "undefined") {
   throw new Error("observatoryService must only run on server");

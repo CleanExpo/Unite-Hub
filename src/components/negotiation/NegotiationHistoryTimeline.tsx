@@ -34,14 +34,24 @@ export const NegotiationHistoryTimeline: React.FC<NegotiationHistoryTimelineProp
     }
     if (filters.consensusBand) {
       const consensus = session.consensusPercentage;
-      if (filters.consensusBand === 'high' && consensus < 65) return false;
-      if (filters.consensusBand === 'medium' && (consensus < 50 || consensus >= 65)) return false;
-      if (filters.consensusBand === 'low' && consensus >= 50) return false;
+      if (filters.consensusBand === 'high' && consensus < 65) {
+return false;
+}
+      if (filters.consensusBand === 'medium' && (consensus < 50 || consensus >= 65)) {
+return false;
+}
+      if (filters.consensusBand === 'low' && consensus >= 50) {
+return false;
+}
     }
     if (filters.safetyInvolved !== undefined) {
       const hasSafetyVeto = session.riskScore >= 80;
-      if (filters.safetyInvolved && !hasSafetyVeto) return false;
-      if (!filters.safetyInvolved && hasSafetyVeto) return false;
+      if (filters.safetyInvolved && !hasSafetyVeto) {
+return false;
+}
+      if (!filters.safetyInvolved && hasSafetyVeto) {
+return false;
+}
     }
     return true;
   });
@@ -68,8 +78,12 @@ export const NegotiationHistoryTimeline: React.FC<NegotiationHistoryTimelineProp
   };
 
   const getConsensusColor = (consensus: number) => {
-    if (consensus >= 65) return 'bg-green-100 dark:bg-green-900/30';
-    if (consensus >= 50) return 'bg-yellow-100 dark:bg-yellow-900/30';
+    if (consensus >= 65) {
+return 'bg-green-100 dark:bg-green-900/30';
+}
+    if (consensus >= 50) {
+return 'bg-yellow-100 dark:bg-yellow-900/30';
+}
     return 'bg-red-100 dark:bg-red-900/30';
   };
 

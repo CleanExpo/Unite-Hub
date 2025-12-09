@@ -124,7 +124,9 @@ async function runPerformanceAudit(): Promise<RegressionResult> {
   // Check for console.log in production code
   const grepForConsoleLogs = (dir: string): number => {
     let count = 0;
-    if (!fs.existsSync(dir)) return 0;
+    if (!fs.existsSync(dir)) {
+return 0;
+}
 
     const files = fs.readdirSync(dir);
     for (const file of files) {
@@ -135,7 +137,9 @@ async function runPerformanceAudit(): Promise<RegressionResult> {
       } else if (stat.isFile() && (file.endsWith('.ts') || file.endsWith('.tsx'))) {
         const content = fs.readFileSync(filePath, 'utf-8');
         const matches = content.match(/console\.log\(/g);
-        if (matches) count += matches.length;
+        if (matches) {
+count += matches.length;
+}
       }
     }
     return count;
@@ -269,8 +273,11 @@ async function main() {
 
   // Determine overall status
   let overall: 'pass' | 'fail' | 'warn' = 'pass';
-  if (summary.failed > 0) overall = 'fail';
-  else if (summary.warnings > 0) overall = 'warn';
+  if (summary.failed > 0) {
+overall = 'fail';
+} else if (summary.warnings > 0) {
+overall = 'warn';
+}
 
   // Create report
   const report: RegressionReport = {

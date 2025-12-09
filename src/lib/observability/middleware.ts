@@ -151,7 +151,9 @@ export function withMetrics(
 function extractWorkspaceId(req: NextRequest): string | undefined {
   // Try query params first
   const queryWorkspaceId = req.nextUrl.searchParams.get('workspaceId');
-  if (queryWorkspaceId) return queryWorkspaceId;
+  if (queryWorkspaceId) {
+return queryWorkspaceId;
+}
 
   // Try to parse from body (for POST/PUT/PATCH)
   // Note: We can't read body here without consuming it, so skip for now

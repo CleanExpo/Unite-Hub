@@ -57,9 +57,15 @@ export async function runCombatCycle(workspaceId?: string): Promise<CycleResult>
           // Process integrations
           const integrations = await processIntegrations(round.id);
 
-          if (integrations.promoted) result.integrations.promoted++;
-          if (integrations.retired) result.integrations.retired++;
-          if (integrations.evolved) result.integrations.evolved++;
+          if (integrations.promoted) {
+result.integrations.promoted++;
+}
+          if (integrations.retired) {
+result.integrations.retired++;
+}
+          if (integrations.evolved) {
+result.integrations.evolved++;
+}
         } else if (combatResult.resultType === 'inconclusive') {
           result.inconclusives++;
         }

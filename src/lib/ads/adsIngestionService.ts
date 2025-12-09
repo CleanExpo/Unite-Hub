@@ -402,7 +402,9 @@ class AdsIngestionService {
       avgRoas: 0,
     };
 
-    if (!data?.length) return stats;
+    if (!data?.length) {
+return stats;
+}
 
     let ctrSum = 0;
     let cpcSum = 0;

@@ -63,7 +63,9 @@ const STRATEGY_WEIGHTS = {
  * Calculate overall SEO score from individual category scores
  */
 export function calculateOverallSEOScore(scores: SEOScore[]): number {
-  if (scores.length === 0) return 0;
+  if (scores.length === 0) {
+return 0;
+}
 
   let weightedSum = 0;
   let totalWeight = 0;

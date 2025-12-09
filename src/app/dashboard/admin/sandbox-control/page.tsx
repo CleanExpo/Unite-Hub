@@ -126,7 +126,9 @@ export default function SandboxControlPage() {
   }
 
   async function handleDeleteUser(id: string) {
-    if (!confirm("Are you sure you want to remove this user from sandbox?")) return;
+    if (!confirm("Are you sure you want to remove this user from sandbox?")) {
+return;
+}
     try {
       const res = await fetch(`/api/admin/sandbox-users?id=${id}`, {
         method: "DELETE",

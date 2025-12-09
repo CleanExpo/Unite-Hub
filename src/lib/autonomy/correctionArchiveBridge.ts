@@ -364,7 +364,9 @@ class CorrectionArchiveBridge {
         .order('created_at', { ascending: false })
         .limit(20);
 
-      if (!cycles) return [];
+      if (!cycles) {
+return [];
+}
 
       const failureKeywords = failureType.toLowerCase().split('_');
 
@@ -391,7 +393,9 @@ class CorrectionArchiveBridge {
         .filter(c => c.similarity >= 30)
         .sort((a, b) => {
           // Sort by similarity first, then effectiveness
-          if (b.similarity !== a.similarity) return b.similarity - a.similarity;
+          if (b.similarity !== a.similarity) {
+return b.similarity - a.similarity;
+}
           return b.effectivenessScore - a.effectivenessScore;
         })
         .slice(0, limit);

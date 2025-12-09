@@ -471,8 +471,12 @@ export class StrategyValidationModel {
     const approvals = agentValidations.filter((v) => v.recommendation === 'approve').length;
     const approvalRate = approvals / agentValidations.length;
 
-    if (approvalRate >= 0.75) return 'approved';
-    if (approvalRate >= 0.5) return 'needs_revision';
+    if (approvalRate >= 0.75) {
+return 'approved';
+}
+    if (approvalRate >= 0.5) {
+return 'needs_revision';
+}
     return 'rejected';
   }
 

@@ -86,7 +86,9 @@ function ContentCalendarFeature({ clientId }: { clientId: string }) {
   useEffect(() => {
     const fetchCalendarPosts = async () => {
       const { data: { session } } = await supabaseBrowser.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       try {
         const response = await fetch(
@@ -113,7 +115,9 @@ function ContentCalendarFeature({ clientId }: { clientId: string }) {
   useEffect(() => {
     const fetchCalendarStats = async () => {
       const { data: { session } } = await supabaseBrowser.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       try {
         const response = await fetch(`/api/calendar/stats?clientId=${clientId}`, {
@@ -136,7 +140,9 @@ function ContentCalendarFeature({ clientId }: { clientId: string }) {
   useEffect(() => {
     const fetchPerformanceStats = async () => {
       const { data: { session } } = await supabaseBrowser.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       try {
         const response = await fetch(`/api/calendar/performance?clientId=${clientId}`, {
@@ -190,7 +196,9 @@ function ContentCalendarFeature({ clientId }: { clientId: string }) {
         }),
       });
 
-      if (!response.ok) throw new Error("Failed to generate calendar");
+      if (!response.ok) {
+throw new Error("Failed to generate calendar");
+}
 
       const data = await response.json();
       alert(`Successfully generated ${data.postsCreated} posts!`);
@@ -261,7 +269,9 @@ function ContentCalendarFeature({ clientId }: { clientId: string }) {
         },
       });
 
-      if (!response.ok) throw new Error("Failed to regenerate post");
+      if (!response.ok) {
+throw new Error("Failed to regenerate post");
+}
 
       alert("Post regenerated successfully!");
 

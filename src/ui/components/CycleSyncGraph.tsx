@@ -54,8 +54,12 @@ export function CycleSyncGraph({
   };
 
   const getCycleHealthColor = (health: number) => {
-    if (health >= 70) return 'bg-green-500';
-    if (health >= 50) return 'bg-yellow-500';
+    if (health >= 70) {
+return 'bg-green-500';
+}
+    if (health >= 50) {
+return 'bg-yellow-500';
+}
     return 'bg-red-500';
   };
 
@@ -102,7 +106,9 @@ export function CycleSyncGraph({
             const criticalAligns = aligns.filter(
               a => a.status === 'critical_misalignment' || a.status === 'major_drift'
             );
-            if (criticalAligns.length === 0) return null;
+            if (criticalAligns.length === 0) {
+return null;
+}
 
             return (
               <div key={source} className="space-y-1">

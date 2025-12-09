@@ -7,7 +7,9 @@ import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions'
 let sdk: NodeSDK | null = null;
 
 export function initTelemetry() {
-  if (sdk) return sdk;
+  if (sdk) {
+return sdk;
+}
 
   // Only initialize in production or if explicitly enabled
   if (process.env.NODE_ENV !== 'production' && process.env.ENABLE_TELEMETRY !== 'true') {

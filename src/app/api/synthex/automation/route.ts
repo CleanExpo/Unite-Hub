@@ -74,7 +74,9 @@ export async function GET(req: NextRequest) {
       offset: offset ? parseInt(offset) : undefined,
     });
 
-    if (result.error) throw result.error;
+    if (result.error) {
+throw result.error;
+}
 
     const response: {
       status: string;
@@ -154,7 +156,9 @@ export async function POST(req: NextRequest) {
       description
     );
 
-    if (result.error) throw result.error;
+    if (result.error) {
+throw result.error;
+}
 
     return NextResponse.json({
       status: 'ok',

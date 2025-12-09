@@ -36,11 +36,15 @@ const DEFAULT_PREFERENCES: ConsentPreferences = {
  * Get current consent preferences from storage
  */
 export function getConsentPreferences(): ConsentPreferences | null {
-  if (typeof window === "undefined") return null;
+  if (typeof window === "undefined") {
+return null;
+}
 
   try {
     const stored = localStorage.getItem(COOKIE_CONSENT_KEY);
-    if (!stored) return null;
+    if (!stored) {
+return null;
+}
 
     const preferences = JSON.parse(stored) as ConsentPreferences;
 
@@ -59,7 +63,9 @@ export function getConsentPreferences(): ConsentPreferences | null {
  * Save consent preferences to storage
  */
 export function saveConsentPreferences(preferences: ConsentPreferences): void {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined") {
+return;
+}
 
   try {
     localStorage.setItem(COOKIE_CONSENT_KEY, JSON.stringify(preferences));

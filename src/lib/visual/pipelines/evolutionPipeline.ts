@@ -228,7 +228,9 @@ export class EvolutionPipeline {
    * Calculate diversity score
    */
   private calculateDiversity(genomes: EvolutionGenome[]): number {
-    if (genomes.length < 2) return 100;
+    if (genomes.length < 2) {
+return 100;
+}
 
     let differences = 0;
     let comparisons = 0;
@@ -436,7 +438,9 @@ export class EvolutionPipeline {
    */
   getCurrentGeneration(sessionId: string): EvolutionGeneration | null {
     const session = this.sessions.get(sessionId);
-    if (!session || session.generations.length === 0) return null;
+    if (!session || session.generations.length === 0) {
+return null;
+}
     return session.generations[session.generations.length - 1];
   }
 
@@ -445,7 +449,9 @@ export class EvolutionPipeline {
    */
   getEvolutionHistory(sessionId: string): { generation: number; avg_fitness: number; best_fitness: number }[] {
     const session = this.sessions.get(sessionId);
-    if (!session) return [];
+    if (!session) {
+return [];
+}
 
     return session.generations.map(g => ({
       generation: g.generation_number,

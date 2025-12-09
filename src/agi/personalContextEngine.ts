@@ -73,8 +73,8 @@ export interface PersonalContext {
 }
 
 // In-memory storage (wire to Supabase for persistence)
-let contextSnapshots: PersonalContext[] = [];
-let healthMetrics: PersonalMetric[] = [];
+const contextSnapshots: PersonalContext[] = [];
+const healthMetrics: PersonalMetric[] = [];
 
 /**
  * Record health metric
@@ -96,8 +96,12 @@ export function getRecentHealthMetrics(owner: string, metricType?: HealthMetric,
   const cutoff = new Date(Date.now() - hours * 60 * 60 * 1000).toISOString();
 
   return healthMetrics.filter(m => {
-    if (m.owner !== owner) return false;
-    if (metricType && m.metricType !== metricType) return false;
+    if (m.owner !== owner) {
+return false;
+}
+    if (metricType && m.metricType !== metricType) {
+return false;
+}
     return m.timestamp >= cutoff;
   });
 }
@@ -206,32 +210,55 @@ export function deriveCognitiveState(ctx: PersonalContext): CognitiveState {
 
   // Sleep impact (highest factor)
   if (ctx.sleepHours) {
-    if (ctx.sleepHours < 5) score -= 4;
-    else if (ctx.sleepHours < 6) score -= 2;
-    else if (ctx.sleepHours < 7) score -= 1;
-    else if (ctx.sleepHours > 9) score -= 1; // Oversleep can affect focus
+    if (ctx.sleepHours < 5) {
+score -= 4;
+} else if (ctx.sleepHours < 6) {
+score -= 2;
+} else if (ctx.sleepHours < 7) {
+score -= 1;
+} else if (ctx.sleepHours > 9) {
+score -= 1;
+} // Oversleep can affect focus
   }
 
   // Stress impact
-  if (ctx.stressLevel === 'critical') score -= 3;
-  else if (ctx.stressLevel === 'high') score -= 2;
-  else if (ctx.stressLevel === 'moderate') score -= 1;
+  if (ctx.stressLevel === 'critical') {
+score -= 3;
+} else if (ctx.stressLevel === 'high') {
+score -= 2;
+} else if (ctx.stressLevel === 'moderate') {
+score -= 1;
+}
 
   // Energy impact
-  if (ctx.energyLevel === 'low') score -= 2;
-  else if (ctx.energyLevel === 'high') score += 1;
+  if (ctx.energyLevel === 'low') {
+score -= 2;
+} else if (ctx.energyLevel === 'high') {
+score += 1;
+}
 
   // Calendar load
   if (ctx.calendarLoadPercent) {
-    if (ctx.calendarLoadPercent > 80) score -= 1;
-    else if (ctx.calendarLoadPercent > 60) score -= 0.5;
+    if (ctx.calendarLoadPercent > 80) {
+score -= 1;
+} else if (ctx.calendarLoadPercent > 60) {
+score -= 0.5;
+}
   }
 
   // Determine state
-  if (score >= 9) return 'optimal';
-  if (score >= 7) return 'good';
-  if (score >= 5) return 'adequate';
-  if (score >= 3) return 'fatigued';
+  if (score >= 9) {
+return 'optimal';
+}
+  if (score >= 7) {
+return 'good';
+}
+  if (score >= 5) {
+return 'adequate';
+}
+  if (score >= 3) {
+return 'fatigued';
+}
   return 'overwhelmed';
 }
 
@@ -240,16 +267,28 @@ export function deriveCognitiveState(ctx: PersonalContext): CognitiveState {
  */
 export function getContextSummary(owner: string): string {
   const ctx = getPersonalContext(owner);
-  if (!ctx) return 'No context available.';
+  if (!ctx) {
+return 'No context available.';
+}
 
   const lines: string[] = [];
   lines.push(`🧠 Cognitive State: ${ctx.cognitiveState || 'unknown'}`);
 
-  if (ctx.sleepHours) lines.push(`😴 Sleep: ${ctx.sleepHours}h (${ctx.sleepQuality || 'unknown'})`);
-  if (ctx.stressLevel) lines.push(`😰 Stress: ${ctx.stressLevel}`);
-  if (ctx.energyLevel) lines.push(`⚡ Energy: ${ctx.energyLevel}`);
-  if (ctx.calendarLoadPercent) lines.push(`📅 Calendar: ${ctx.calendarLoadPercent}% full`);
-  if (ctx.hrv) lines.push(`💓 HRV: ${ctx.hrv} (recovery: ${ctx.hrv > 50 ? 'excellent' : ctx.hrv > 30 ? 'good' : 'stressed'})`);
+  if (ctx.sleepHours) {
+lines.push(`😴 Sleep: ${ctx.sleepHours}h (${ctx.sleepQuality || 'unknown'})`);
+}
+  if (ctx.stressLevel) {
+lines.push(`😰 Stress: ${ctx.stressLevel}`);
+}
+  if (ctx.energyLevel) {
+lines.push(`⚡ Energy: ${ctx.energyLevel}`);
+}
+  if (ctx.calendarLoadPercent) {
+lines.push(`📅 Calendar: ${ctx.calendarLoadPercent}% full`);
+}
+  if (ctx.hrv) {
+lines.push(`💓 HRV: ${ctx.hrv} (recovery: ${ctx.hrv > 50 ? 'excellent' : ctx.hrv > 30 ? 'good' : 'stressed'})`);
+}
 
   if (ctx.warningFlags?.length) {
     lines.push('\n⚠️ Flags:');
@@ -272,7 +311,9 @@ export function isOptimalFor(ctx: PersonalContext, activity: 'creative' | 'analy
   const stress = ctx.stressLevel || 'moderate';
   const energy = ctx.energyLevel || 'moderate';
 
-  if (stress === 'critical') return false;
+  if (stress === 'critical') {
+return false;
+}
 
   switch (activity) {
     case 'creative':

@@ -41,7 +41,9 @@ let rateLimiters: {
 } | null = null;
 
 function initializeRateLimiters() {
-  if (rateLimiters) return rateLimiters;
+  if (rateLimiters) {
+return rateLimiters;
+}
 
   try {
     const redisClient = getRedisClient();
@@ -196,7 +198,11 @@ export async function rateLimit(
  * Helper function to get user tier (for future premium features)
  */
 export function getUserTier(user: any): RateLimitTier {
-  if (!user) return 'public';
-  if (user.isPremium || user.tier === 'premium') return 'premium';
+  if (!user) {
+return 'public';
+}
+  if (user.isPremium || user.tier === 'premium') {
+return 'premium';
+}
   return 'authenticated';
 }

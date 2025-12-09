@@ -195,7 +195,9 @@ export function getModelsWithCapability(capability: string): ModelCapability[] {
  */
 export function getCheapestModel(capability: string): ModelCapability | null {
   const candidates = getModelsWithCapability(capability);
-  if (candidates.length === 0) return null;
+  if (candidates.length === 0) {
+return null;
+}
   return candidates.reduce((prev, current) =>
     prev.costPerToken < current.costPerToken ? prev : current
   );
@@ -206,7 +208,9 @@ export function getCheapestModel(capability: string): ModelCapability | null {
  */
 export function getFastestModel(capability: string): ModelCapability | null {
   const candidates = getModelsWithCapability(capability);
-  if (candidates.length === 0) return null;
+  if (candidates.length === 0) {
+return null;
+}
   return candidates.reduce((prev, current) =>
     prev.latencyMs < current.latencyMs ? prev : current
   );
@@ -217,7 +221,9 @@ export function getFastestModel(capability: string): ModelCapability | null {
  */
 export function getMostReliableModel(capability: string): ModelCapability | null {
   const candidates = getModelsWithCapability(capability);
-  if (candidates.length === 0) return null;
+  if (candidates.length === 0) {
+return null;
+}
   return candidates.reduce((prev, current) =>
     prev.availabilityScore > current.availabilityScore ? prev : current
   );
@@ -267,9 +273,15 @@ export function scoreModelForUseCase(
   }
 
   // Feature support scoring
-  if (constraints.needsCaching && capability.supportsCaching) score += 5;
-  if (constraints.needsBatching && capability.supportsBatching) score += 5;
-  if (constraints.needsStreaming && capability.supportsStreaming) score += 5;
+  if (constraints.needsCaching && capability.supportsCaching) {
+score += 5;
+}
+  if (constraints.needsBatching && capability.supportsBatching) {
+score += 5;
+}
+  if (constraints.needsStreaming && capability.supportsStreaming) {
+score += 5;
+}
 
   return Math.min(100, score);
 }

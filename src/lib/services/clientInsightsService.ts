@@ -52,7 +52,9 @@ export async function createInsight(
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true, insight };
   } catch (error) {
@@ -90,11 +92,15 @@ export async function getClientInsights(
 
     const { data, error } = await query;
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     // Filter out expired insights
     const validInsights = data?.filter(insight => {
-      if (!insight.valid_until) return true;
+      if (!insight.valid_until) {
+return true;
+}
       return new Date(insight.valid_until) > new Date();
     });
 
@@ -127,7 +133,9 @@ export async function markInsightRead(
       .eq('id', insightId)
       .eq('client_id', clientId);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true };
   } catch (error) {
@@ -158,7 +166,9 @@ export async function dismissInsight(
       .eq('id', insightId)
       .eq('client_id', clientId);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true };
   } catch (error) {
@@ -310,7 +320,9 @@ export async function getUnreadInsightCount(
       .eq('client_id', clientId)
       .eq('status', 'unread');
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true, count: count || 0 };
   } catch (error) {

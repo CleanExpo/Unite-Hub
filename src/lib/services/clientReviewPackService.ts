@@ -140,7 +140,9 @@ export async function generateNarrativeFromMetrics(
     .eq("id", reviewPackId)
     .single();
 
-  if (!pack) return null;
+  if (!pack) {
+return null;
+}
 
   const report = pack.performance_reports;
   const metrics = report?.metrics?.internal;

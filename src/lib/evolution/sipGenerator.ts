@@ -185,7 +185,9 @@ export class SIPGenerator {
       riskySources.includes(s.source)
     );
 
-    if (riskySignals.length === 0) return 20;
+    if (riskySignals.length === 0) {
+return 20;
+}
     return Math.min(100, 30 + riskySignals.length * 20);
   }
 
@@ -219,8 +221,12 @@ export class SIPGenerator {
       mapped.forEach((s) => subsystems.add(s));
     }
 
-    if (subsystems.size <= 1) return 'low';
-    if (subsystems.size <= 3) return 'medium';
+    if (subsystems.size <= 1) {
+return 'low';
+}
+    if (subsystems.size <= 3) {
+return 'medium';
+}
     return 'high';
   }
 

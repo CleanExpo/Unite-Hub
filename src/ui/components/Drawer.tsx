@@ -56,7 +56,9 @@ export function Drawer({
   // Handle escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+onClose();
+}
     };
 
     if (isOpen) {

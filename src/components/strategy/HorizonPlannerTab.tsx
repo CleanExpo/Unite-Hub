@@ -167,7 +167,9 @@ export function HorizonPlannerTab({ organizationId }: HorizonPlannerTabProps) {
   };
 
   const createPlan = async () => {
-    if (!newPlanName) return;
+    if (!newPlanName) {
+return;
+}
 
     setIsLoading(true);
     try {

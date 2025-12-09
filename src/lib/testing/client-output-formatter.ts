@@ -92,10 +92,14 @@ function parseSEOAudit(response: string): SEORecommendation[] {
   const items = response.split(/\d+\.\s*\*\*/);
 
   for (const item of items) {
-    if (item.trim().length < 20) continue;
+    if (item.trim().length < 20) {
+continue;
+}
 
     const lines = item.split('\n').filter(l => l.trim());
-    if (lines.length === 0) continue;
+    if (lines.length === 0) {
+continue;
+}
 
     const action = lines[0].replace(/\*\*/g, '').trim();
     const keywordMatch = item.match(/keyword[s]?[:\s]+["']?([^"'\n,]+)/i);
@@ -133,7 +137,9 @@ function parseCampaignStrategy(response: string): CampaignStep[] {
       expected_result: 'Increased visibility',
     });
 
-    if (stepNum >= 3) break;
+    if (stepNum >= 3) {
+break;
+}
   }
 
   return steps;
@@ -338,7 +344,9 @@ export async function processTestResultsForClients(
   for (const persona of personas) {
     const personaResults = allResults.filter(r => r.persona_id === persona.id);
 
-    if (personaResults.length === 0) continue;
+    if (personaResults.length === 0) {
+continue;
+}
 
     const deliverable = formatForClient(personaResults, {
       business_name: persona.business_name,

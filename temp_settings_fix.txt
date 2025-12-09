@@ -1,0 +1,2 @@
+import BrandVoicePanel from '@/components/synthex/brand/BrandVoicePanel';
+import PlanUsagePanel from '@/components/synthex/settings/PlanUsagePanel';

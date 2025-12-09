@@ -37,16 +37,28 @@ export const CascadeRiskMatrix: React.FC = () => {
   }
 
   const getSeverityColor = (severity: number) => {
-    if (severity >= 5) return 'bg-red-100 dark:bg-red-900/30 border-red-300 dark:border-red-700';
-    if (severity >= 4) return 'bg-orange-100 dark:bg-orange-900/30 border-orange-300 dark:border-orange-700';
-    if (severity >= 3) return 'bg-yellow-100 dark:bg-yellow-900/30 border-yellow-300 dark:border-yellow-700';
+    if (severity >= 5) {
+return 'bg-red-100 dark:bg-red-900/30 border-red-300 dark:border-red-700';
+}
+    if (severity >= 4) {
+return 'bg-orange-100 dark:bg-orange-900/30 border-orange-300 dark:border-orange-700';
+}
+    if (severity >= 3) {
+return 'bg-yellow-100 dark:bg-yellow-900/30 border-yellow-300 dark:border-yellow-700';
+}
     return 'bg-blue-100 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700';
   };
 
   const getSeverityBadgeColor = (severity: number) => {
-    if (severity >= 5) return 'bg-red-600 text-white';
-    if (severity >= 4) return 'bg-orange-600 text-white';
-    if (severity >= 3) return 'bg-yellow-600 text-white';
+    if (severity >= 5) {
+return 'bg-red-600 text-white';
+}
+    if (severity >= 4) {
+return 'bg-orange-600 text-white';
+}
+    if (severity >= 3) {
+return 'bg-yellow-600 text-white';
+}
     return 'bg-blue-600 text-white';
   };
 

@@ -120,7 +120,9 @@ export async function getExecutionById(executionId: string): Promise<ExecutionRe
     .eq('id', executionId)
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+return null;
+}
 
   return mapToExecutionResult(data);
 }

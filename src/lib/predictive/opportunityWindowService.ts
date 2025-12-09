@@ -40,7 +40,9 @@ export async function generateWindow(context: OpportunityContext): Promise<Gener
     const confidence = normalizeConfidence(score.rawScore, signalCollection.dataCompleteness);
 
     // Skip low confidence opportunities
-    if (confidence < 0.3) continue;
+    if (confidence < 0.3) {
+continue;
+}
 
     const uncertaintyNotes = computeUncertaintyNotes(
       score.signals,

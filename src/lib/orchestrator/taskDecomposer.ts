@@ -410,8 +410,12 @@ Provide a structured task breakdown that can be executed sequentially by the ava
     const hasDependencies = decomposition.steps.some((s) => s.dependencies.length > 0);
     const agentCount = new Set(decomposition.steps.map((s) => s.assignedAgent)).size;
 
-    if (stepCount === 1) return 'simple';
-    if (stepCount <= 3 && !hasDependencies && agentCount <= 2) return 'moderate';
+    if (stepCount === 1) {
+return 'simple';
+}
+    if (stepCount <= 3 && !hasDependencies && agentCount <= 2) {
+return 'moderate';
+}
     return 'complex';
   }
 

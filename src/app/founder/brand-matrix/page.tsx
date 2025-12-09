@@ -194,7 +194,9 @@ export default function BrandMatrixPage() {
           <div className="space-y-4">
             {activeBrands.map((brand) => {
               const outgoingRules = getLinkingRulesFrom(brand.id);
-              if (outgoingRules.length === 0) return null;
+              if (outgoingRules.length === 0) {
+return null;
+}
 
               return (
                 <Card key={brand.id}>

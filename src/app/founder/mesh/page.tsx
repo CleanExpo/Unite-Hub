@@ -68,7 +68,9 @@ export default function MeshDashboardPage() {
   const fetchMeshData = async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const response = await fetch('/api/mesh/overview?includeInsights=true&includeTopNodes=true', {
         headers: {
@@ -95,7 +97,9 @@ export default function MeshDashboardPage() {
   const fetchNodeDetails = async (nodeId: string) => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const response = await fetch(`/api/mesh/node/${nodeId}`, {
         headers: {

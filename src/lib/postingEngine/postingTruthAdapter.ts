@@ -226,9 +226,15 @@ export function needsManualReview(notes: TruthNotes): boolean {
   // - Contains "Very low confidence"
   // - Contains "Manual review required"
 
-  if (notes.disclaimers.length > 2) return true;
-  if (notes.confidence_explanation.includes('Very low')) return true;
-  if (notes.confidence_explanation.includes('Manual review')) return true;
+  if (notes.disclaimers.length > 2) {
+return true;
+}
+  if (notes.confidence_explanation.includes('Very low')) {
+return true;
+}
+  if (notes.confidence_explanation.includes('Manual review')) {
+return true;
+}
 
   return false;
 }

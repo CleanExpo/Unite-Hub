@@ -171,14 +171,22 @@ export default function InsightsPage() {
   };
 
   const getInsightIcon = (type: Insight['type']) => {
-    if (type === 'positive') return <TrendingUp className="w-5 h-5 text-green-400" />;
-    if (type === 'negative') return <TrendingDown className="w-5 h-5 text-red-400" />;
+    if (type === 'positive') {
+return <TrendingUp className="w-5 h-5 text-green-400" />;
+}
+    if (type === 'negative') {
+return <TrendingDown className="w-5 h-5 text-red-400" />;
+}
     return <Activity className="w-5 h-5 text-yellow-400" />;
   };
 
   const getInsightColor = (type: Insight['type']) => {
-    if (type === 'positive') return 'border-green-500/30 bg-green-500/10';
-    if (type === 'negative') return 'border-red-500/30 bg-red-500/10';
+    if (type === 'positive') {
+return 'border-green-500/30 bg-green-500/10';
+}
+    if (type === 'negative') {
+return 'border-red-500/30 bg-red-500/10';
+}
     return 'border-yellow-500/30 bg-yellow-500/10';
   };
 

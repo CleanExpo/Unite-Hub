@@ -20,17 +20,31 @@ export function ScoreGauge({
   const percentage = Math.min(100, Math.max(0, (score / maxScore) * 100));
 
   const getColor = () => {
-    if (percentage >= 80) return { stroke: '#22c55e', bg: 'bg-green-50' };
-    if (percentage >= 60) return { stroke: '#eab308', bg: 'bg-yellow-50' };
-    if (percentage >= 40) return { stroke: '#f97316', bg: 'bg-orange-50' };
+    if (percentage >= 80) {
+return { stroke: '#22c55e', bg: 'bg-green-50' };
+}
+    if (percentage >= 60) {
+return { stroke: '#eab308', bg: 'bg-yellow-50' };
+}
+    if (percentage >= 40) {
+return { stroke: '#f97316', bg: 'bg-orange-50' };
+}
     return { stroke: '#ef4444', bg: 'bg-red-50' };
   };
 
   const getLabel = () => {
-    if (label) return label;
-    if (percentage >= 80) return 'Excellent';
-    if (percentage >= 60) return 'Good';
-    if (percentage >= 40) return 'Fair';
+    if (label) {
+return label;
+}
+    if (percentage >= 80) {
+return 'Excellent';
+}
+    if (percentage >= 60) {
+return 'Good';
+}
+    if (percentage >= 40) {
+return 'Fair';
+}
     return 'Poor';
   };
 

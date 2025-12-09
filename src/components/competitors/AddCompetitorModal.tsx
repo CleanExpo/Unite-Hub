@@ -108,7 +108,9 @@ export default function AddCompetitorModal({
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) throw new Error("Failed to save competitor");
+      if (!response.ok) {
+throw new Error("Failed to save competitor");
+}
 
       onSuccess();
     } catch (error) {

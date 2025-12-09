@@ -28,7 +28,9 @@ export function AnalyticsOverviewPanel({ workspaceId, brandSlug }: AnalyticsOver
       setError(null);
 
       const params = new URLSearchParams({ workspaceId });
-      if (brandSlug) params.append('brandSlug', brandSlug);
+      if (brandSlug) {
+params.append('brandSlug', brandSlug);
+}
 
       const response = await fetch(`/api/analytics/overview?${params.toString()}`);
       const data = await response.json();
@@ -52,7 +54,9 @@ export function AnalyticsOverviewPanel({ workspaceId, brandSlug }: AnalyticsOver
 
       const params = new URLSearchParams({ workspaceId });
       const body: any = {};
-      if (brandSlug) body.brandSlug = brandSlug;
+      if (brandSlug) {
+body.brandSlug = brandSlug;
+}
 
       const response = await fetch(`/api/analytics/sync?${params.toString()}`, {
         method: 'POST',

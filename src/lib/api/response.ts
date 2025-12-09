@@ -241,7 +241,9 @@ export function getNumericParam(
   defaultValue: number
 ): number {
   const value = url.searchParams.get(key);
-  if (!value) return defaultValue;
+  if (!value) {
+return defaultValue;
+}
 
   const parsed = parseInt(value, 10);
   return isNaN(parsed) ? defaultValue : parsed;

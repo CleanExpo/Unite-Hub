@@ -394,7 +394,9 @@ export class CrossDomainCoordinatorService {
   private calculateEntropy(allocations: number[]): number {
     // Shannon entropy - higher means more balanced
     const total = allocations.reduce((a, b) => a + b, 0);
-    if (total === 0) return 0;
+    if (total === 0) {
+return 0;
+}
 
     let entropy = 0;
     for (const alloc of allocations) {
@@ -414,7 +416,9 @@ export class CrossDomainCoordinatorService {
     const n = sorted.length;
     const total = sorted.reduce((a, b) => a + b, 0);
 
-    if (total === 0) return 0;
+    if (total === 0) {
+return 0;
+}
 
     let sum = 0;
     for (let i = 0; i < n; i++) {

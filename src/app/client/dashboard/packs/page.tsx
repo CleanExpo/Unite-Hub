@@ -60,7 +60,9 @@ export default function ClientPacksPage() {
   };
 
   const formatPeriod = (start?: string, end?: string) => {
-    if (!start) return 'No period set';
+    if (!start) {
+return 'No period set';
+}
     const startDate = new Date(start);
     const endDate = end ? new Date(end) : null;
 

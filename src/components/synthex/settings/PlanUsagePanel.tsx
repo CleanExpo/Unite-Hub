@@ -94,7 +94,9 @@ export default function PlanUsagePanel() {
   }, [currentTenant]);
 
   const loadData = async () => {
-    if (!currentTenant?.id) return;
+    if (!currentTenant?.id) {
+return;
+}
 
     try {
       setLoading(true);
@@ -161,8 +163,12 @@ export default function PlanUsagePanel() {
   };
 
   const getUsageColor = (percentage: number): string => {
-    if (percentage >= 90) return 'bg-red-500';
-    if (percentage >= 75) return 'bg-yellow-500';
+    if (percentage >= 90) {
+return 'bg-red-500';
+}
+    if (percentage >= 75) {
+return 'bg-yellow-500';
+}
     return 'bg-green-500';
   };
 

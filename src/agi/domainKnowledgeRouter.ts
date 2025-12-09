@@ -154,7 +154,9 @@ export function getDomainProfile(domainId: KnowledgeDomain): DomainProfile | nul
  */
 export function getRoutingConfig(domainId: KnowledgeDomain) {
   const profile = getDomainProfile(domainId);
-  if (!profile) return null;
+  if (!profile) {
+return null;
+}
 
   return {
     domain: domainId,
@@ -172,10 +174,16 @@ export function getRoutingConfig(domainId: KnowledgeDomain) {
  */
 export function isAdviceTypeAllowed(domainId: KnowledgeDomain, adviceType: string): boolean {
   const profile = getDomainProfile(domainId);
-  if (!profile) return false;
+  if (!profile) {
+return false;
+}
 
-  if (profile.blockedAdviceTypes.includes(adviceType)) return false;
-  if (profile.allowedAdviceTypes.length === 0) return true;
+  if (profile.blockedAdviceTypes.includes(adviceType)) {
+return false;
+}
+  if (profile.allowedAdviceTypes.length === 0) {
+return true;
+}
 
   return profile.allowedAdviceTypes.includes(adviceType);
 }
@@ -271,7 +279,9 @@ export function validateAgainstDomain(
  */
 export function selectBestAgent(domainId: KnowledgeDomain, adviceType: string): string | null {
   const profile = getDomainProfile(domainId);
-  if (!profile) return null;
+  if (!profile) {
+return null;
+}
 
   // Map advice types to preferred agents
   const agentPreferences: Record<string, number> = {};
@@ -299,14 +309,18 @@ export function selectBestAgent(domainId: KnowledgeDomain, adviceType: string): 
  */
 export function selectBestModel(domainId: KnowledgeDomain): string | null {
   const profile = getDomainProfile(domainId);
-  if (!profile) return null;
+  if (!profile) {
+return null;
+}
 
   // High-risk domains benefit from extended thinking
   if (profile.riskLevel === 'high' || profile.riskLevel === 'very_high') {
     const extendedThinkingModels = profile.preferredModels.filter(m =>
       ['claude-opus', 'gpt-4', 'deepseek-r1'].some(mt => m.includes(mt))
     );
-    if (extendedThinkingModels.length > 0) return extendedThinkingModels[0];
+    if (extendedThinkingModels.length > 0) {
+return extendedThinkingModels[0];
+}
   }
 
   // Default to first preferred model

@@ -18,7 +18,9 @@ export function OrchestratorConsole({ workspaceId }: OrchestratorConsoleProps) {
   const [isStarting, setIsStarting] = useState(false);
 
   const handleStartExecution = async () => {
-    if (!store.currentTaskId) return;
+    if (!store.currentTaskId) {
+return;
+}
 
     setIsStarting(true);
     store.setIsExecuting(true);
@@ -53,9 +55,15 @@ export function OrchestratorConsole({ workspaceId }: OrchestratorConsoleProps) {
   };
 
   const getRiskColor = (risk: number) => {
-    if (risk >= 80) return 'bg-red-100 text-red-800';
-    if (risk >= 60) return 'bg-orange-100 text-orange-800';
-    if (risk >= 40) return 'bg-yellow-100 text-yellow-800';
+    if (risk >= 80) {
+return 'bg-red-100 text-red-800';
+}
+    if (risk >= 60) {
+return 'bg-orange-100 text-orange-800';
+}
+    if (risk >= 40) {
+return 'bg-yellow-100 text-yellow-800';
+}
     return 'bg-green-100 text-green-800';
   };
 

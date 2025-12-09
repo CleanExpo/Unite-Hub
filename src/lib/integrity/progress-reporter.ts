@@ -117,7 +117,9 @@ export function getCompletionPercentage(
   taskMilestones: TaskMilestones,
   checkpointStatuses: CheckpointStatus[]
 ): number {
-  if (taskMilestones.totalWeightage === 0) return 0;
+  if (taskMilestones.totalWeightage === 0) {
+return 0;
+}
 
   let completedWeight = 0;
 
@@ -150,7 +152,9 @@ export async function getProgressTimeline(taskId: string): Promise<ProgressEvent
       const events: ProgressEvent[] = [];
 
       for (const file of files) {
-        if (!file.startsWith('event-')) continue;
+        if (!file.startsWith('event-')) {
+continue;
+}
 
         try {
           const content = await fs.readFile(

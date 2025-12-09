@@ -58,7 +58,9 @@ export function isWithinRiskEnvelope(
   profile: RiskSafetyProfile
 ): boolean {
   // Critical is never allowed
-  if (currentLevel === 'critical') return false;
+  if (currentLevel === 'critical') {
+return false;
+}
 
   // Check against max allowed level
   const levelOrder = { low: 0, medium: 1, high: 2, critical: 3 };

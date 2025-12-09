@@ -13,7 +13,9 @@ import type { ResearchInsight } from './researchAgent';
  * Summarize insights into actionable text
  */
 export function summariseInsights(insights: ResearchInsight[]): string {
-  if (insights.length === 0) return 'No insights gathered.';
+  if (insights.length === 0) {
+return 'No insights gathered.';
+}
 
   const summary = insights.map((i) => `${i.insight} (confidence: ${i.confidence || 0.75})`).join(' | ');
 
@@ -25,7 +27,9 @@ export function summariseInsights(insights: ResearchInsight[]): string {
  * Returns: 'low' | 'medium' | 'high'
  */
 export function detectThreatLevel(insights: ResearchInsight[]): 'low' | 'medium' | 'high' {
-  if (insights.length === 0) return 'low';
+  if (insights.length === 0) {
+return 'low';
+}
 
   const text = JSON.stringify(insights).toLowerCase();
   const avgConfidence =
@@ -62,20 +66,32 @@ export function detectThreatLevel(insights: ResearchInsight[]): 'low' | 'medium'
 
   // Check for high threat keywords
   highThreatKeywords.forEach((keyword) => {
-    if (text.includes(keyword)) threatCount += 2;
+    if (text.includes(keyword)) {
+threatCount += 2;
+}
   });
 
   // Check for medium threat keywords
   mediumThreatKeywords.forEach((keyword) => {
-    if (text.includes(keyword)) threatCount += 1;
+    if (text.includes(keyword)) {
+threatCount += 1;
+}
   });
 
   // Adjust by confidence
-  if (avgConfidence < 0.7) threatCount = Math.max(0, threatCount - 1);
-  if (avgConfidence > 0.85) threatCount += 1;
+  if (avgConfidence < 0.7) {
+threatCount = Math.max(0, threatCount - 1);
+}
+  if (avgConfidence > 0.85) {
+threatCount += 1;
+}
 
-  if (threatCount >= 4) return 'high';
-  if (threatCount >= 2) return 'medium';
+  if (threatCount >= 4) {
+return 'high';
+}
+  if (threatCount >= 2) {
+return 'medium';
+}
   return 'low';
 }
 

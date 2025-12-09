@@ -28,7 +28,9 @@ export function consolidateWorkingToLongTerm(): MemoryConsolidationEvent | null 
     limit: 100,
   });
 
-  if (workingItems.length === 0) return null;
+  if (workingItems.length === 0) {
+return null;
+}
 
   // Group by topic
   const topicMap = new Map<string, typeof workingItems>();
@@ -49,7 +51,9 @@ export function consolidateWorkingToLongTerm(): MemoryConsolidationEvent | null 
     }
   }
 
-  if (!topTopic || topItems.length === 0) return null;
+  if (!topTopic || topItems.length === 0) {
+return null;
+}
 
   // Calculate average importance
   const avgImportance =
@@ -103,18 +107,24 @@ export function consolidateShortTermBeforeExpiry(): MemoryConsolidationEvent | n
     limit: 100,
   });
 
-  if (shortTermItems.length === 0) return null;
+  if (shortTermItems.length === 0) {
+return null;
+}
 
   // Check if any items are close to expiration (within 30 minutes)
   const now = new Date();
   const expiringItems = shortTermItems.filter(item => {
-    if (!item.expiresAt) return false;
+    if (!item.expiresAt) {
+return false;
+}
     const expiryTime = new Date(item.expiresAt).getTime();
     const timeUntilExpiry = expiryTime - now.getTime();
     return timeUntilExpiry < 30 * 60 * 1000; // Within 30 minutes
   });
 
-  if (expiringItems.length === 0) return null;
+  if (expiringItems.length === 0) {
+return null;
+}
 
   // Group by topic
   const topicMap = new Map<string, typeof expiringItems>();
@@ -135,7 +145,9 @@ export function consolidateShortTermBeforeExpiry(): MemoryConsolidationEvent | n
     }
   }
 
-  if (!topTopic || topItems.length === 0) return null;
+  if (!topTopic || topItems.length === 0) {
+return null;
+}
 
   // Calculate average importance
   const avgImportance =
@@ -218,7 +230,9 @@ export function getConsolidationStats() {
     shortTermMemory: {
       total: shortTermMemory.length,
       expiringIn30Min: shortTermMemory.filter(m => {
-        if (!m.expiresAt) return false;
+        if (!m.expiresAt) {
+return false;
+}
         const expiryTime = new Date(m.expiresAt).getTime();
         const now = new Date().getTime();
         return expiryTime - now < 30 * 60 * 1000;

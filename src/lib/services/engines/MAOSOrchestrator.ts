@@ -264,15 +264,33 @@ export class MAOSOrchestrator {
     }
 
     // Default routing based on action patterns
-    if (action?.includes('risk') || action?.includes('safety')) return 'ASRS';
-    if (action?.includes('forecast') || action?.includes('predict')) return 'UPEWE';
-    if (action?.includes('incident') || action?.includes('remediat')) return 'AIRE';
-    if (action?.includes('compliance') || action?.includes('govern')) return 'EGCBI';
-    if (action?.includes('regulat') || action?.includes('region')) return 'GRH';
-    if (action?.includes('performance') || action?.includes('latency')) return 'GSLPIE';
-    if (action?.includes('scale') || action?.includes('capacity')) return 'AGLBASE';
-    if (action?.includes('quota') || action?.includes('plan')) return 'TCPQEL';
-    if (action?.includes('contract') || action?.includes('sla')) return 'UCSCEL';
+    if (action?.includes('risk') || action?.includes('safety')) {
+return 'ASRS';
+}
+    if (action?.includes('forecast') || action?.includes('predict')) {
+return 'UPEWE';
+}
+    if (action?.includes('incident') || action?.includes('remediat')) {
+return 'AIRE';
+}
+    if (action?.includes('compliance') || action?.includes('govern')) {
+return 'EGCBI';
+}
+    if (action?.includes('regulat') || action?.includes('region')) {
+return 'GRH';
+}
+    if (action?.includes('performance') || action?.includes('latency')) {
+return 'GSLPIE';
+}
+    if (action?.includes('scale') || action?.includes('capacity')) {
+return 'AGLBASE';
+}
+    if (action?.includes('quota') || action?.includes('plan')) {
+return 'TCPQEL';
+}
+    if (action?.includes('contract') || action?.includes('sla')) {
+return 'UCSCEL';
+}
 
     return 'MCSE'; // Default to cognitive engine
   }

@@ -315,7 +315,9 @@ export class EntityEngine {
     entities: EntityWithScore[],
     categories: DomainCategory[]
   ): number {
-    if (entities.length === 0) return 50;
+    if (entities.length === 0) {
+return 50;
+}
 
     // Average relevance score of top entities
     const topEntities = entities.slice(0, 20);
@@ -344,7 +346,9 @@ export class EntityEngine {
     entities: EntityWithScore[],
     keywords: KeywordWithIntent[]
   ): number {
-    if (entities.length === 0 || keywords.length === 0) return 50;
+    if (entities.length === 0 || keywords.length === 0) {
+return 50;
+}
 
     // Check how many entities appear in keywords
     const entityNames = new Set(entities.map((e) => e.name.toLowerCase()));

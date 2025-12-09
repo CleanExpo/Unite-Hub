@@ -25,9 +25,15 @@ export function LaunchProgressGraph({
   const strokeDashoffset = circumference - (progress / 100) * circumference;
 
   const getProgressColor = () => {
-    if (progress >= 100) return '#10b981'; // green
-    if (progress >= 70) return '#3b82f6'; // blue
-    if (progress >= 40) return '#f59e0b'; // amber
+    if (progress >= 100) {
+return '#10b981';
+} // green
+    if (progress >= 70) {
+return '#3b82f6';
+} // blue
+    if (progress >= 40) {
+return '#f59e0b';
+} // amber
     return '#6b7280'; // gray
   };
 

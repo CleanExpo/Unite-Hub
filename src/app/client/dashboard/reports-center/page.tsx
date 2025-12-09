@@ -81,7 +81,9 @@ export default function ClientReportCenterPage() {
   };
 
   const handleCopyMarkdown = async () => {
-    if (!currentReport) return;
+    if (!currentReport) {
+return;
+}
     try {
       const exported = exportReportToMarkdown(currentReport);
       await navigator.clipboard.writeText(exported.content);
@@ -93,7 +95,9 @@ export default function ClientReportCenterPage() {
   };
 
   const handleDownloadHTML = () => {
-    if (!currentReport) return;
+    if (!currentReport) {
+return;
+}
     const exported = exportReportToHTML(currentReport);
     const blob = new Blob([exported.content], { type: 'text/html' });
     const url = URL.createObjectURL(blob);

@@ -552,8 +552,12 @@ Respond with JSON only:
       if (t.importance) {
         byImportance[t.importance] = (byImportance[t.importance] || 0) + 1;
       }
-      if (t.requires_followup) requireingFollowup++;
-      if (t.has_unresolved_items) withUnresolvedItems++;
+      if (t.requires_followup) {
+requireingFollowup++;
+}
+      if (t.has_unresolved_items) {
+withUnresolvedItems++;
+}
     });
 
     return {

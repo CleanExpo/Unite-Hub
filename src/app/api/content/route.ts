@@ -35,7 +35,9 @@ import {
 export async function GET(req: NextRequest) {
   try {
     const rateLimitResult = await apiRateLimit(req);
-    if (rateLimitResult) return rateLimitResult;
+    if (rateLimitResult) {
+return rateLimitResult;
+}
 
     // Get query parameters
     const workspaceId = req.nextUrl.searchParams.get("workspace");
@@ -169,7 +171,9 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const rateLimitResult = await apiRateLimit(req);
-    if (rateLimitResult) return rateLimitResult;
+    if (rateLimitResult) {
+return rateLimitResult;
+}
 
     const body = await req.json();
     const {
@@ -293,7 +297,9 @@ export async function POST(req: NextRequest) {
 export async function PATCH(req: NextRequest) {
   try {
     const rateLimitResult = await apiRateLimit(req);
-    if (rateLimitResult) return rateLimitResult;
+    if (rateLimitResult) {
+return rateLimitResult;
+}
 
     // Get authenticated user
     const authHeader = req.headers.get("authorization");
@@ -324,8 +330,12 @@ export async function PATCH(req: NextRequest) {
 
     // Build update object (only include provided fields)
     const updates: any = {};
-    if (title !== undefined) updates.title = title;
-    if (generatedText !== undefined) updates.generated_text = generatedText;
+    if (title !== undefined) {
+updates.title = title;
+}
+    if (generatedText !== undefined) {
+updates.generated_text = generatedText;
+}
     if (status !== undefined) {
       const validStatuses = ["draft", "approved", "sent"];
       if (!validStatuses.includes(status)) {
@@ -387,7 +397,9 @@ export async function PATCH(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   try {
     const rateLimitResult = await apiRateLimit(req);
-    if (rateLimitResult) return rateLimitResult;
+    if (rateLimitResult) {
+return rateLimitResult;
+}
 
     // Get authenticated user
     const authHeader = req.headers.get("authorization");

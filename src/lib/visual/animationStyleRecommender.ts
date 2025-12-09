@@ -42,11 +42,15 @@ export function calculateScores(answers: WizardAnswer[]): Record<string, number>
 
   for (const answer of answers) {
     const question = wizardData.questions.find(q => q.id === answer.questionId);
-    if (!question) continue;
+    if (!question) {
+continue;
+}
 
     for (const optionId of answer.selectedOptionIds) {
       const option = question.options.find(o => o.id === optionId);
-      if (!option?.scores) continue;
+      if (!option?.scores) {
+continue;
+}
 
       for (const [key, value] of Object.entries(option.scores)) {
         scores[key] = (scores[key] || 0) + (value as number);
@@ -63,7 +67,9 @@ export function calculateScores(answers: WizardAnswer[]): Record<string, number>
 
 export function detectPersona(scores: Record<string, number>): string | null {
   const personaKeys = Object.keys(scores).filter(k => k.startsWith('persona-'));
-  if (personaKeys.length === 0) return null;
+  if (personaKeys.length === 0) {
+return null;
+}
 
   let maxScore = 0;
   let detectedPersona: string | null = null;
@@ -87,8 +93,12 @@ export function detectIntensity(scores: Record<string, number>): 'subtle' | 'nor
   const normalScore = scores['intensity-normal'] || 0;
   const dramaticScore = scores['intensity-dramatic'] || 0;
 
-  if (dramaticScore > subtleScore && dramaticScore > normalScore) return 'dramatic';
-  if (subtleScore > normalScore) return 'subtle';
+  if (dramaticScore > subtleScore && dramaticScore > normalScore) {
+return 'dramatic';
+}
+  if (subtleScore > normalScore) {
+return 'subtle';
+}
   return 'normal';
 }
 
@@ -99,10 +109,18 @@ export function detectIntensity(scores: Record<string, number>): 'subtle' | 'nor
 export function detectFeatures(scores: Record<string, number>): string[] {
   const features: string[] = [];
 
-  if (scores['feature-flashlight'] > 0) features.push('flashlight');
-  if (scores['feature-3d'] > 0) features.push('3d');
-  if (scores['feature-scroll'] > 0) features.push('scroll');
-  if (scores['feature-video'] > 0) features.push('video');
+  if (scores['feature-flashlight'] > 0) {
+features.push('flashlight');
+}
+  if (scores['feature-3d'] > 0) {
+features.push('3d');
+}
+  if (scores['feature-scroll'] > 0) {
+features.push('scroll');
+}
+  if (scores['feature-video'] > 0) {
+features.push('video');
+}
 
   return features;
 }
@@ -120,7 +138,9 @@ export function matchStylesToScores(scores: Record<string, number>): StyleScore[
 
   for (const [mood, styleIds] of Object.entries(mapping)) {
     const moodScore = scores[mood] || 0;
-    if (moodScore === 0) continue;
+    if (moodScore === 0) {
+continue;
+}
 
     for (const styleId of styleIds) {
       if (!moodScores[styleId]) {

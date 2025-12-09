@@ -54,7 +54,9 @@ export function VariationsModal({
   };
 
   const handleGenerateMore = async () => {
-    if (!template || selectedTones.length === 0) return;
+    if (!template || selectedTones.length === 0) {
+return;
+}
 
     setGenerating(true);
     try {
@@ -73,7 +75,9 @@ export function VariationsModal({
     );
   };
 
-  if (!template) return null;
+  if (!template) {
+return null;
+}
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

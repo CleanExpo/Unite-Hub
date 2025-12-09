@@ -155,22 +155,32 @@ export class LoadReportService {
    * Calculate performance score from load tests
    */
   private calculatePerformanceScore(loadTests: LoadTestResult[]): number {
-    if (loadTests.length === 0) return 75; // Default baseline
+    if (loadTests.length === 0) {
+return 75;
+} // Default baseline
 
     let score = 100;
 
     for (const test of loadTests) {
       // Penalize for high response times
       const avgResponseTime = test.metrics.response_time_ms.avg;
-      if (avgResponseTime > 500) score -= 15;
-      else if (avgResponseTime > 300) score -= 10;
-      else if (avgResponseTime > 200) score -= 5;
+      if (avgResponseTime > 500) {
+score -= 15;
+} else if (avgResponseTime > 300) {
+score -= 10;
+} else if (avgResponseTime > 200) {
+score -= 5;
+}
 
       // Penalize for high error rates
       const errorRate = test.summary.error_rate;
-      if (errorRate > 0.05) score -= 20;
-      else if (errorRate > 0.02) score -= 10;
-      else if (errorRate > 0.01) score -= 5;
+      if (errorRate > 0.05) {
+score -= 20;
+} else if (errorRate > 0.02) {
+score -= 10;
+} else if (errorRate > 0.01) {
+score -= 5;
+}
 
       // Penalize for bottlenecks
       score -= test.summary.bottlenecks.length * 3;
@@ -190,16 +200,28 @@ export class LoadReportService {
 
     // Analyze load test failures
     for (const test of loadTests) {
-      if (test.status === 'failed') score -= 10;
-      if (test.status === 'aborted') score -= 5;
-      if (test.summary.error_rate > 0.03) score -= 8;
+      if (test.status === 'failed') {
+score -= 10;
+}
+      if (test.status === 'aborted') {
+score -= 5;
+}
+      if (test.summary.error_rate > 0.03) {
+score -= 8;
+}
     }
 
     // Analyze chaos test recoveries
     for (const event of chaosEvents) {
-      if (!event.recovery_status.fully_recovered) score -= 10;
-      if (event.recovery_status.manual_intervention_required) score -= 15;
-      if (event.metrics.cascading_failures > 2) score -= 8;
+      if (!event.recovery_status.fully_recovered) {
+score -= 10;
+}
+      if (event.recovery_status.manual_intervention_required) {
+score -= 15;
+}
+      if (event.metrics.cascading_failures > 2) {
+score -= 8;
+}
     }
 
     return Math.max(0, Math.min(100, score));
@@ -209,24 +231,34 @@ export class LoadReportService {
    * Calculate resilience score from chaos tests
    */
   private calculateResilienceScore(chaosEvents: ChaosEvent[]): number {
-    if (chaosEvents.length === 0) return 70; // Default baseline
+    if (chaosEvents.length === 0) {
+return 70;
+} // Default baseline
 
     let score = 100;
 
     for (const event of chaosEvents) {
       // Penalize for slow recovery
-      if (event.metrics.recovery_time_seconds > 60) score -= 15;
-      else if (event.metrics.recovery_time_seconds > 30) score -= 8;
-      else if (event.metrics.recovery_time_seconds > 15) score -= 3;
+      if (event.metrics.recovery_time_seconds > 60) {
+score -= 15;
+} else if (event.metrics.recovery_time_seconds > 30) {
+score -= 8;
+} else if (event.metrics.recovery_time_seconds > 15) {
+score -= 3;
+}
 
       // Reward for auto-recovery
-      if (event.metrics.auto_recovery_triggered) score += 5;
+      if (event.metrics.auto_recovery_triggered) {
+score += 5;
+}
 
       // Penalize for cascading failures
       score -= event.metrics.cascading_failures * 5;
 
       // Penalize for high error rate increase
-      if (event.metrics.error_rate_increase > 0.1) score -= 10;
+      if (event.metrics.error_rate_increase > 0.1) {
+score -= 10;
+}
     }
 
     return Math.max(0, Math.min(100, Math.round(score / chaosEvents.length)));
@@ -498,8 +530,11 @@ export class LoadReportService {
     if (recentLoadTests.length >= 2) {
       const first = recentLoadTests[0].metrics.response_time_ms.avg;
       const last = recentLoadTests[recentLoadTests.length - 1].metrics.response_time_ms.avg;
-      if (last < first * 0.9) responseTimeTrend = 'improving';
-      else if (last > first * 1.1) responseTimeTrend = 'degrading';
+      if (last < first * 0.9) {
+responseTimeTrend = 'improving';
+} else if (last > first * 1.1) {
+responseTimeTrend = 'degrading';
+}
     }
 
     // Error rate trend
@@ -507,8 +542,11 @@ export class LoadReportService {
     if (recentLoadTests.length >= 2) {
       const first = recentLoadTests[0].summary.error_rate;
       const last = recentLoadTests[recentLoadTests.length - 1].summary.error_rate;
-      if (last < first * 0.8) errorRateTrend = 'improving';
-      else if (last > first * 1.2) errorRateTrend = 'degrading';
+      if (last < first * 0.8) {
+errorRateTrend = 'improving';
+} else if (last > first * 1.2) {
+errorRateTrend = 'degrading';
+}
     }
 
     // Reliability trend based on recovery success
@@ -516,8 +554,11 @@ export class LoadReportService {
     if (recentChaosEvents.length >= 2) {
       const recentRecoveries = recentChaosEvents.filter(e => e.recovery_status.fully_recovered).length;
       const recoveryRate = recentRecoveries / recentChaosEvents.length;
-      if (recoveryRate >= 0.9) reliabilityTrend = 'improving';
-      else if (recoveryRate < 0.7) reliabilityTrend = 'degrading';
+      if (recoveryRate >= 0.9) {
+reliabilityTrend = 'improving';
+} else if (recoveryRate < 0.7) {
+reliabilityTrend = 'degrading';
+}
     }
 
     return {

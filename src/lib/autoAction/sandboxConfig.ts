@@ -219,7 +219,9 @@ export class SandboxManager {
    */
   recordAction(sessionId: string): void {
     const state = this.sessions.get(sessionId);
-    if (!state) return;
+    if (!state) {
+return;
+}
 
     const now = new Date();
     this.updateMinuteWindow(state, now);

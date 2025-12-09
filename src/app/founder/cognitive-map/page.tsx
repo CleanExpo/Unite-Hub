@@ -29,7 +29,9 @@ export default function CognitiveMapPage() {
   const fetchData = async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session || !currentOrganization) return;
+      if (!session || !currentOrganization) {
+return;
+}
 
       const response = await fetch(`/api/founder/cognitive-map?tenantId=${currentOrganization.org_id}`, {
         headers: { 'Authorization': `Bearer ${session.access_token}` },

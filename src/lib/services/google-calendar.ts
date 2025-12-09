@@ -204,7 +204,9 @@ export class GoogleCalendarService {
 
             // Check if slot conflicts with any events
             const hasConflict = events.some((event) => {
-              if (!event.start?.dateTime || !event.end?.dateTime) return false;
+              if (!event.start?.dateTime || !event.end?.dateTime) {
+return false;
+}
 
               const eventStart = new Date(event.start.dateTime);
               const eventEnd = new Date(event.end.dateTime);

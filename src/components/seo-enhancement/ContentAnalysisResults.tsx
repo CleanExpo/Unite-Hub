@@ -89,23 +89,41 @@ interface ContentRecommendation {
 
 export function ContentAnalysisResults({ result, detailed = false }: ContentAnalysisResultsProps) {
   const getReadabilityLabel = (score: number) => {
-    if (score >= 80) return { label: 'Very Easy', color: 'text-green-600' };
-    if (score >= 60) return { label: 'Easy', color: 'text-green-500' };
-    if (score >= 50) return { label: 'Fairly Easy', color: 'text-yellow-600' };
-    if (score >= 30) return { label: 'Difficult', color: 'text-orange-600' };
+    if (score >= 80) {
+return { label: 'Very Easy', color: 'text-green-600' };
+}
+    if (score >= 60) {
+return { label: 'Easy', color: 'text-green-500' };
+}
+    if (score >= 50) {
+return { label: 'Fairly Easy', color: 'text-yellow-600' };
+}
+    if (score >= 30) {
+return { label: 'Difficult', color: 'text-orange-600' };
+}
     return { label: 'Very Difficult', color: 'text-red-600' };
   };
 
   const getGradeLabel = (grade: number) => {
-    if (grade <= 6) return 'Elementary';
-    if (grade <= 8) return 'Middle School';
-    if (grade <= 12) return 'High School';
+    if (grade <= 6) {
+return 'Elementary';
+}
+    if (grade <= 8) {
+return 'Middle School';
+}
+    if (grade <= 12) {
+return 'High School';
+}
     return 'College';
   };
 
   const getDensityStatus = (density: number): 'good' | 'warning' | 'error' => {
-    if (density >= 0.5 && density <= 2.5) return 'good';
-    if (density < 0.5 || density > 3) return 'warning';
+    if (density >= 0.5 && density <= 2.5) {
+return 'good';
+}
+    if (density < 0.5 || density > 3) {
+return 'warning';
+}
     return 'error';
   };
 

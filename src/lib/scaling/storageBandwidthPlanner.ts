@@ -87,14 +87,20 @@ export class StorageBandwidthPlanner {
     // Storage utilization
     const storageUtil = (metrics.storage_used_gb / config.max_storage_gb) * 100;
     let storageStatus: 'healthy' | 'warning' | 'critical' = 'healthy';
-    if (storageUtil >= 90) storageStatus = 'critical';
-    else if (storageUtil >= 75) storageStatus = 'warning';
+    if (storageUtil >= 90) {
+storageStatus = 'critical';
+} else if (storageUtil >= 75) {
+storageStatus = 'warning';
+}
 
     // Bandwidth utilization
     const bandwidthUtil = (metrics.bandwidth_used_gb / config.max_bandwidth_gb) * 100;
     let bandwidthStatus: 'healthy' | 'warning' | 'critical' = 'healthy';
-    if (bandwidthUtil >= 90) bandwidthStatus = 'critical';
-    else if (bandwidthUtil >= 75) bandwidthStatus = 'warning';
+    if (bandwidthUtil >= 90) {
+bandwidthStatus = 'critical';
+} else if (bandwidthUtil >= 75) {
+bandwidthStatus = 'warning';
+}
 
     // Overall status
     let overallStatus: 'healthy' | 'warning' | 'critical' = 'healthy';

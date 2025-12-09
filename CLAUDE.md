@@ -1,373 +1,399 @@
-# CLAUDE.md - Unite-Hub Development Guide
+# CLAUDE.md
 
-**AI-first CRM & marketing automation** with Next.js 16, React 19, Supabase, Claude API
-
-- **Phase 5**: 16,116 LOC, 235+ tests (100% pass), <100ms latency, 99.5%+ reliability
-- **Core**: AI agents, email sync, drip campaigns, lead scoring, real-time alerts, SEO suite
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ---
 
-## IMPORTANT RULES (YOU MUST FOLLOW)
+## Project Overview
 
-### Workspace Isolation
-**YOU MUST** always filter queries by workspaceId. **NEVER** query without workspace filter.
+Unite-Hub is an **AI-first marketing CRM and automation platform** with two products:
+- **Unite-Hub**: Core CRM for agencies (email, contacts, campaigns, AI agents)
+- **Synthex.social**: White-label AI marketing platform for small businesses
+
+**Tech Stack**: Next.js 16 (App Router), React 19, Supabase PostgreSQL, Anthropic Claude API, TypeScript 5.x
+
+**Port**: 3008 (not 3000) — `npm run dev`
+
+---
+
+## Communication Style (CRITICAL)
+
+- **Extremely concise** — Sacrifice grammar for concision in all interactions and commit messages
+- **End plans with unresolved questions** — List open questions concisely (sacrifice grammar for brevity)
+
+---
+
+## 📚 Specialist Guide Routing (Load On-Demand)
+
+**Context Budget**: Target 3-5k tokens total for CLAUDE.md guidance per session
+
+**This file auto-loads (~3.8k tokens).** Load specialist guides only when needed:
+
+| Task Type | Primary Guide | Tokens | When to Load |
+|-----------|---------------|--------|--------------|
+| **API Routes** | `src/app/api/API-GUIDE.md` | ~400 | Building/fixing REST endpoints |
+| **Core Libraries** | `src/lib/LIB-GUIDE.md` | ~400 | Business logic, utilities |
+| **Agent Development** | `src/lib/agents/AGENT-GUIDE.md` | ~400 | AI agent work |
+| **UI Components** | `src/components/UI-GUIDE.md` | ~450 | Component development |
+| **DB Migrations** | `supabase/DATABASE-GUIDE.md` | ~450 | Schema changes, RLS |
+| **Troubleshooting** | `docs/guides/quick-fix-guide.md` | ~550 | 90% of common issues |
+| **Schema Reference** | `docs/guides/schema-reference.md` | ~280 | Before ANY migration |
+| **Founder OS** | `docs/guides/agent-reference.md` | ~460 | 8-agent system lookup |
+| **Design System** | `/DESIGN-SYSTEM.md` | ~500 | Before ANY UI work |
+
+**Rule**: Load ONLY the guide(s) needed for your current task. Don't load all guides preemptively.
+
+**Verification**: Run `/context` to confirm Memory files ≤ 5k tokens for CLAUDE.md guidance.
+
+---
+
+## Critical Architecture Patterns
+
+### 1. Multi-Tenant Isolation (MANDATORY)
+
+**EVERY database query MUST filter by tenant/workspace:**
+
 ```typescript
-// API Routes
+// API Routes - Get from query params
 const workspaceId = req.nextUrl.searchParams.get("workspaceId");
-.eq("workspace_id", workspaceId)
+if (!workspaceId) throw new ValidationError("workspaceId required");
+await validateUserAndWorkspace(req, workspaceId);
 
-// React Components
-const { currentOrganization } = useAuth();
-const workspaceId = currentOrganization?.org_id;
+// Queries - ALWAYS add workspace filter
+const { data } = await supabase
+  .from("contacts")
+  .select("*")
+  .eq("workspace_id", workspaceId);  // ← MANDATORY
 ```
 
-### Supabase Client Selection
-**YOU MUST** use the correct client per context:
-| Context | Import |
-|---------|--------|
-| Server Components | `import { createClient } from "@/lib/supabase/server"` |
-| Client Components | `import { createClient } from "@/lib/supabase/client"` |
-| API Routes | `import { getSupabaseServer } from "@/lib/supabase"` |
+**Table Prefixes**:
+- Unite-Hub core: No prefix (`contacts`, `campaigns`, `emails`)
+- Synthex: `synthex_*` (`synthex_fin_accounts`, `synthex_exp_experiments`)
+- Founder tools: `founder_*` or specific (`ai_phill_journal`, `cognitive_twin_domains`)
 
-### AI Model Selection
-Use "think", "think hard", "think harder", or "ultrathink" to trigger extended thinking.
-- **Complex reasoning**: claude-opus-4-5-20251101
-- **Standard ops**: claude-sonnet-4-5-20250929 (default)
-- **Quick tasks**: claude-haiku-4-5-20251001
+**RLS Policies**: All tables have `tenant_id` or `workspace_id` with Row Level Security. Check `.claude/SCHEMA_REFERENCE.md` before migrations.
 
-### Before Database Migrations
-**YOU MUST** check `.claude/SCHEMA_REFERENCE.md` first.
-Run `\i scripts/rls-diagnostics.sql` in Supabase SQL Editor.
+### 2. Supabase Client Selection (Context-Specific)
 
-### Design System
-**YOU MUST** read `/DESIGN-SYSTEM.md` before generating UI.
-**NEVER** use: `bg-white`, `text-gray-600`, raw shadcn cards.
+**NEVER mix contexts** — server clients fail in browser, browser clients lack auth in server components:
 
----
+| Context | Import | Usage |
+|---------|--------|-------|
+| **Server Components** | `import { createClient } from "@/lib/supabase/server"` | RSC, layouts |
+| **Client Components** | `import { createClient } from "@/lib/supabase/client"` | Hooks, useState |
+| **API Routes** | `import { getSupabaseServer } from "@/lib/supabase"` | Route handlers |
+| **Admin Ops** | `import { supabaseAdmin } from "@/lib/supabase"` | Bypass RLS |
 
-## Sub-folder CLAUDE.md Guides
+**Pattern**: Server client uses PKCE cookies (dynamic imports to avoid build-time `cookies()` calls), client uses singleton browser client.
 
-| Domain | Location | When to Use |
-|--------|----------|-------------|
-| API Routes | `src/app/api/CLAUDE.md` | Building/fixing REST endpoints |
-| Agents | `src/lib/agents/CLAUDE.md` | AI agent development |
-| Database | `supabase/CLAUDE.md` | Migrations, RLS, schemas |
-| Components | `src/components/CLAUDE.md` | UI component work |
-| Core Lib | `src/lib/CLAUDE.md` | Business logic, utilities |
+### 3. Next.js 15+ Route Context (Async Params)
 
----
+**All dynamic routes receive `params` as a Promise:**
 
-## Quick Commands
+```typescript
+type RouteContext = {
+  params: Promise<{ id: string }>;
+};
 
-**Dev**: `npm run dev` (port 3008) | `npm run build` | `npm start`
-
-**Test**: `npm test` | `npm run test:unit` | `npm run test:e2e` | `npm run test:coverage`
-
-**Agents**: `npm run email-agent` | `npm run content-agent` | `npm run orchestrator` | `npm run workflow`
-
-**SEO**: `npm run seo:research "topic"` | `npm run seo:eeat` | `npm run seo:comprehensive "topic"` | `npm run seo:usage`
-
-**DB**: `npm run check:db` (then Supabase Dashboard → SQL Editor for migrations)
-
-**Docker**: `npm run docker:start` | `npm run docker:stop` | `npm run docker:health`
-
-**Quality**: `npm run quality:assess` | `npm run integrity:check`
-
-**Cost**: Perplexity Sonar ($0.005-0.01/search, 99% cheaper than Semrush) | OpenRouter (70-80% savings)
-
-## Key Architecture Components
-
-### Real-Time & Monitoring (Phase 5 Week 4)
-
-- **WebSocket** (`src/lib/websocket/websocket-server.ts`): <100ms latency, 1000+ connections — `broadcastAlert()` | `getMetrics()`
-- **Redis Cache** (`src/lib/cache/redis-client.ts`): 80%+ hit rate, <5ms ops — `get<T>()` | `set<T>()` | `invalidatePattern()`
-- **Bull Queue** (`src/lib/queue/bull-queue.ts`): 99.5%+ success, 100-500 jobs/sec
-- **Alert Processor** (`src/lib/processing/alert-processor.ts`): 5-min dedup, multi-channel
-- **Scheduled Jobs** (`src/lib/jobs/scheduled-jobs.ts`): Daily aggregation, 6h patterns, hourly checks
-- **Metrics** (`src/lib/monitoring/alert-metrics.ts`): Health score 0-100, Prometheus export
-- **Hook** (`src/hooks/useAlertWebSocket.ts`): Auto-reconnect with backoff
-
-### SEO Suite (`src/lib/seoEnhancement/`)
-
-- **Services**: auditService | contentOptimization | richResults | ctrOptimization | competitorGap
-- **API**: `/audit` | `/content` | `/schema` | `/ctr` | `/competitors`
-- **Agents**: `seo-audit` | `seo-content` | `seo-schema` | `seo-ctr` | `seo-competitor`
-
-## Critical Patterns
-
-### 1. Auth (PKCE Flow)
-
-Sessions in cookies, JWT validation via `getUser()`, no localStorage tokens
-
-- Server: `import { createClient } from "@/lib/supabase/server"`
-- Client: `import { createClient } from "@/lib/supabase/client"`
-- Middleware: `import { createMiddlewareClient } from "@/lib/supabase/middleware"`
-- Admin: `import { supabaseAdmin } from "@/lib/supabase"`
-- Files: `src/middleware.ts`, `src/app/auth/callback/route.ts`
-
-### 2. Workspace Isolation
-
-✅ ALWAYS `.eq("workspace_id", workspaceId)` on queries
-
-- API: `req.nextUrl.searchParams.get("workspaceId")`
-- React: `const { currentOrganization } = useAuth(); const workspaceId = currentOrganization?.org_id;`
-
-### 3. Email Service
-
-Priority: SendGrid → Resend → Gmail SMTP
-
-- Config: `SENDGRID_API_KEY` | `RESEND_API_KEY` | `EMAIL_SERVER_HOST` (smtp.gmail.com) | `EMAIL_SERVER_PORT` (587) | `EMAIL_SERVER_USER` | `EMAIL_SERVER_PASSWORD` | `EMAIL_FROM`
-- Test: `node scripts/test-email-config.mjs`
-
-### 4. Anthropic API
-
-See `docs/ANTHROPIC_PRODUCTION_PATTERNS.md`
-
-- Retry: `import { callAnthropicWithRetry } from '@/lib/anthropic/rate-limiter'`
-- Caching: Add `cache_control: { type: 'ephemeral' }` to system (90% savings)
-- Thinking: Use only for complex reasoning (budget_tokens: 5000-10000, $7.50/MTok = 27x cost)
-
-### 5. Database Migrations
-
-- **Location**: `supabase/migrations/00X_description.sql`
-- **Apply**: Supabase Dashboard → SQL Editor → Copy/paste → Run
-- **Cache**: Wait 1-5 min or run `SELECT * FROM table_name LIMIT 1;`
-- **⚠️ BEFORE ANY MIGRATION**: Check `.claude/SCHEMA_REFERENCE.md`
-- **⚠️ BEFORE RLS**: Run `\i scripts/rls-diagnostics.sql` in Supabase SQL Editor
-- **Common schema**: `organizations`, `user_profiles`, `user_organizations`, `contacts`, `workspaces`
-
-### 5.5. Connection Pooling (P0 Production)
-
-60-80% latency reduction via Supabase connection pooler. See `docs/CONNECTION_POOLING_SETUP.md`
-
-- **Enable**: Add `SUPABASE_POOLER_URL` from Supabase Dashboard > Settings > Database > Connection Pooler
-- **Mode**: `SUPABASE_POOL_MODE=session` (default) or `transaction`
-- **Verify**: Check `/api/health` for `pooling: { enabled: true }`
-- **Files**: `src/lib/supabase/pooling-config.ts` | `src/lib/db/pool.ts` | `src/lib/db/connection-pool.ts`
-
-### 6. OpenRouter Multi-Model Routing
-
-`src/lib/ai/openrouter-intelligence.ts`: Claude 3.5 Sonnet | GPT-4 Turbo | Gemini Pro 1.5 | Llama 3 70B
-
-- **Social**: `generateSocialContent({platform, contentType, topic, brandVoice})` | `analyzeKeywords()` | `analyzeCompetitor()`
-
-### 7. Perplexity Sonar SEO
-
-`src/lib/ai/perplexity-sonar.ts`: `getLatestSEOTrends()` | `search(query, {domains})`
-
-See `docs/MULTI_PLATFORM_MARKETING_INTELLIGENCE.md`
-
-### 8. Founder Intelligence OS
-
-`npm run integrity:check` — 8 agents, 15 DB tables, 23 API routes
-
-- **Agents**: Founder OS | AI Phill | Cognitive Twin | SEO Leak | Social Inbox | Search Suite | Boost Bump | Pre-Client Identity
-- **Tables**: founder_businesses | founder_business_vault_secrets | ai_phill_* | cognitive_twin_* | seo_leak_signal_profiles | social_inbox_* | search_keywords | boost_jobs | pre_clients
-- **Files**: `scripts/run-integrity-check.mjs` | `scripts/INTEGRITY_CHECK_README.md` | Migrations 300-305
-- **Troubleshoot**: Missing tables → migrations 300-305 | Missing routes → `src/app/api/founder/` | Missing services → `src/lib/founder/` or `src/lib/founderOps/`
-
-## Environment & Config
-
-**Port**: 3008 (not 3000)
-
-**Required Env**: `NEXT_PUBLIC_SUPABASE_URL` | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | `SUPABASE_SERVICE_ROLE_KEY` | `ANTHROPIC_API_KEY` | `GOOGLE_CLIENT_ID` | `GOOGLE_CLIENT_SECRET` | `NEXTAUTH_URL` | `NEXTAUTH_SECRET`
-
-**Email**: `SENDGRID_API_KEY` (priority 1) OR `RESEND_API_KEY` (priority 2) OR `EMAIL_SERVER_*` (Gmail SMTP)
-
-**SEO**: `PERPLEXITY_API_KEY` | `OPENROUTER_API_KEY`
-
-**AI Models**: Opus 4.5 (Extended Thinking, 5000-10000 budget) | Sonnet 4.5 (standard) | Haiku 4.5 (quick tasks)
-
-## Production Status
-
-**65% Production-Ready** (See `PRODUCTION_GRADE_ASSESSMENT.md`)
-
-- **Strengths**: Winston logging, Prometheus metrics, Redis caching, type-safe TypeScript
-- **P0 Gaps**: Database connection pooling (2-4h, 60-80% latency) | Anthropic retry logic (2h, prevents outages) | Zero-downtime deployment (8-12h)
-
-## Key Files
-
-**Auth**: `src/middleware.ts` | `src/app/auth/callback/route.ts` | `src/lib/supabase/server.ts` | `src/lib/supabase/client.ts`
-
-**Email**: `src/lib/email/email-service.ts` (535 LOC) | `EMAIL_SERVICE_COMPLETE.md` | `GMAIL_APP_PASSWORD_SETUP.md`
-
-**SEO**: `docs/SEO_ENHANCEMENT_SUITE.md` | `docs/MULTI_PLATFORM_MARKETING_INTELLIGENCE.md` | `docs/SEO_COST_OPTIMIZATION_GUIDE.md`
-
-**Anthropic**: `docs/ANTHROPIC_PRODUCTION_PATTERNS.md` | `src/lib/anthropic/rate-limiter.ts`
-
-**RLS**: `.claude/RLS_WORKFLOW.md` (MANDATORY) | `scripts/rls-diagnostics.sql` | `.claude/SCHEMA_REFERENCE.md`
-
-**Database**: `COMPLETE_DATABASE_SCHEMA.sql` | `supabase/migrations/`
-
-**Agents**: `.claude/agent.md` (CANONICAL) | `.claude/AGENT_REFERENCE.md` (quick lookup) | `src/lib/agents/`
-
-**Components**: 7 Framer Motion components in `src/components/ui/` — Showcase: `/showcases/components`
-
----
-
-**Status**: PKCE auth ✅ | Phase 5 ✅ | 235+ tests ✅ | SEO suite ✅ | Founder OS ✅ | Last: 2025-12-02
-
----
-
-## Design System Enforcement
-
-**⚠️ CRITICAL**: Before generating ANY UI component, read `/DESIGN-SYSTEM.md`
-
-This project enforces strict design compliance to prevent generic LLM UI patterns.
-
-**Key Files**:
-- `/DESIGN-SYSTEM.md` - Complete design enforcement rules
-- `/docs/UI-LIBRARY-INDEX.md` - UI library quick reference
-
-**Quick Reference**:
-- **Forbidden**: `bg-white`, `text-gray-600`, `grid grid-cols-3 gap-4`, unstyled shadcn cards
-- **Required**: Design tokens (`bg-bg-card`, `text-text-primary`, `accent-500`)
-- **Accent**: `#ff6b35` (orange)
-- **Library Priority**: Project components → StyleUI/KokonutUI → shadcn base (never raw)
-
-**Pre-Generation Checklist**:
-1. Read design tokens from `globals.css` @theme block
-2. Check `/src/components/ui/` for existing patterns
-3. Reference `/docs/UI-LIBRARY-INDEX.md` for premium components
-4. Verify no forbidden patterns will be used
-
-**Quality Gates** (minimum 9/10 on all):
-- Visual distinctiveness
-- Brand alignment
-- Code quality
-- Accessibility
-
----
-
-## 5 Whys Image Generation Methodology (MANDATORY)
-
-**⚠️ CRITICAL**: ALL images for Unite-Hub/Synthex MUST follow this methodology. NO exceptions.
-
-### The Story We're Selling
-
-Businesses across Australia (and the world) struggling to get their brand message out to potential customers. **We help them be heard.**
-
-### 5 Whys Framework (Apply to EVERY Image)
-
-Before generating any image, answer these 5 questions:
-
-1. **WHY this image?** - What business problem does it address?
-2. **WHY this style?** - What visual approach best communicates the message?
-3. **WHY this situation?** - What scenario resonates with the target audience?
-4. **WHY this person?** - Who should the audience see themselves as?
-5. **WHY this feeling?** - What emotion do we want to evoke?
-
-### Required Elements
-
-✅ **DO USE**:
-- HUMAN-CENTERED imagery - real people, real emotions
-- Variety of styles: Photorealistic, Warm illustration, Lifestyle, Landscape
-- Coffee shop meetings, success celebrations, human connection
-- Australian/global business context
-- Natural, warm color palettes
-- Genuine expressions and situations
-
-❌ **DO NOT USE**:
-- NO robots, NO cold tech imagery, NO sci-fi elements
-- NO purple/cyan/teal AI default colors
-- NO text, labels, words, or numbers in images
-- NO generic stock photo poses
-- NO vendor names exposed (Gemini, Google, OpenAI, etc.)
-
-### Technical Implementation
-
-**Model**: `gemini-3-pro-image-preview` (Nano Banana 2)
-
-**Package**: `@google/genai`
-
-**Environment**: `GEMINI_API_KEY`
-
-**Script**: `scripts/generate-images-5whys-human.mjs`
-
-**Prompt Structure**:
-```javascript
-{
-  id: 'image-id',
-  category: 'hero|carousel|feature|lifestyle|casestudy|integration|dashboard|pricing',
-  fiveWhys: {
-    why1_image: 'What business problem does it address?',
-    why2_style: 'What visual approach best communicates?',
-    why3_situation: 'What scenario resonates with audience?',
-    why4_person: 'Who should audience see themselves as?',
-    why5_feeling: 'What emotion do we want to evoke?',
-  },
-  prompt: `[Style] description with human focus...
-CRITICAL REQUIREMENTS:
-- NO TEXT, NO LABELS, NO WORDS, NO NUMBERS
-- HUMAN-CENTERED imagery - real people, real emotions
-- NO robots, NO cold tech imagery, NO sci-fi elements
-- Warm, genuine, relatable imagery
-- Australian/global business context`
+export async function GET(request: NextRequest, context: RouteContext) {
+  const { id } = await context.params;  // ← MUST await
+  // ...
 }
 ```
 
-### Style Guide by Category
+**Why**: Next.js 15+ made params async for performance. Forgetting `await` causes runtime errors.
 
-| Category | Style | Example Feeling |
-|----------|-------|-----------------|
-| hero | Photorealistic | Relief, Control, Success |
-| carousel | Soft illustration | Recognition, Possibility |
-| feature | Warm watercolor | Hope, Clarity |
-| lifestyle | Documentary | Connection, Joy |
-| casestudy | Editorial | Trust, Results |
-| integration | Clean minimalist | Simplicity, Ease |
-| dashboard | Modern lifestyle | Empowerment |
-| pricing | Professional | Confidence |
+### 4. Lazy Anthropic Client (AI Services)
 
-### Approval Workflow
+**Pattern for services** (60-second TTL singleton to avoid repeated init):
 
-States: `pending` → `revised` → `approved` / `rejected`
+```typescript
+let anthropicClient: Anthropic | null = null;
+let anthropicClientTimestamp = 0;
+const ANTHROPIC_CLIENT_TTL = 60000;
 
-Migration: `079_image_approvals_multistep_workflow.sql`
+function getAnthropicClient(): Anthropic {
+  const now = Date.now();
+  if (!anthropicClient || now - anthropicClientTimestamp > ANTHROPIC_CLIENT_TTL) {
+    anthropicClient = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+    anthropicClientTimestamp = now;
+  }
+  return anthropicClient;
+}
+```
 
-### Reference Script
+**Model Selection**:
+- `claude-opus-4-5-20251101` — Extended Thinking (complex reasoning, budget: 5000-10000 tokens)
+- `claude-sonnet-4-5-20250929` — Standard operations (default)
+- `claude-haiku-4-5-20251001` — Quick tasks
 
-See `scripts/generate-images-5whys-human.mjs` for complete implementation with 53 image definitions following the 5 Whys methodology.
+**In API routes**: Use rate limiter — `import { callAnthropicWithRetry } from '@/lib/anthropic/rate-limiter'`
+
+### 5. Database Migrations (Idempotent SQL)
+
+**Location**: `supabase/migrations/NNN_description.sql`
+
+**Idempotent ENUMs** (avoid "already exists" errors):
+
+```sql
+DO $$ BEGIN
+  CREATE TYPE synthex_exp_status AS ENUM ('draft', 'running', 'paused', 'completed', 'cancelled');
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
+```
+
+**Apply**: Supabase Dashboard → SQL Editor → Paste migration → Run
+
+**Before ANY migration**: Check `.claude/SCHEMA_REFERENCE.md` for existing schema. Run `\i scripts/rls-diagnostics.sql` for RLS checks.
+
+### 6. Design System Enforcement
+
+**BEFORE generating UI**: Read `/DESIGN-SYSTEM.md`
+
+**Forbidden**:
+- `bg-white`, `text-gray-600`, `grid grid-cols-3 gap-4`
+- Raw shadcn cards without customization
+- Generic icon sets without brand colors
+
+**Required**:
+- Design tokens: `bg-bg-card`, `text-text-primary`, `accent-500` (#ff6b35 orange)
+- Library priority: Project components → StyleUI/KokonutUI → shadcn base (never raw)
+- Hover/focus states, loading states, responsive breakpoints
+
+**Quality gates**: 9/10 minimum on visual distinctiveness, brand alignment, code quality, accessibility.
 
 ---
 
-## Context Window Optimization
+## Common Commands
 
-**📚 Current approach**: `.claude/context-manifest.md` saves 76% context window
+**Development**:
+```bash
+npm run dev              # Start dev server (port 3008)
+npm run build            # Production build
+npm run typecheck        # TypeScript validation
+npm run lint             # ESLint
+npm run test             # Run Vitest tests
+npm run test:e2e         # Playwright E2E tests
+```
 
-- Load CLAUDE.md (147 lines) + 1-2 task-specific docs on-demand
-- Smart routing table for 9 common task types
-- Zero code changes needed, live now
+**Agents & Automation**:
+```bash
+npm run email-agent      # Process emails with AI
+npm run content-agent    # Generate personalized content
+npm run orchestrator     # Multi-agent workflows
+npm run integrity:check  # Founder OS health check
+```
 
-**🚀 Future approach**: See `.claude/ADVANCED_TOOL_USE_STRATEGY.md`
+**Database**:
+```bash
+npm run check:db         # Verify schema
+# Apply migrations: Supabase Dashboard → SQL Editor
+```
 
-- Anthropic Nov 2025 features: Tool Search Tool (85% savings) + Programmatic Tool Calling (75% savings on workflows) + Tool Use Examples (90% accuracy)
-- Phased rollout plan, ROI analysis
-- Migrate when features leave beta for 85-95% savings
+**Docker** (optional):
+```bash
+npm run docker:start     # Start containers
+npm run docker:health    # Health check
+npm run docker:logs      # View logs
+```
 
-**Quick tip**: Load CLAUDE.md + only the 1-2 docs your task needs. Don't load full 1,430 lines.
-
-**Example**: Email task → CLAUDE.md + `EMAIL_SERVICE_COMPLETE.md` = 76% context saved
+**Quality**:
+```bash
+npm run quality:assess   # Assess code quality
+npm run audit:navigation # Check for broken links
+npm run audit:placeholders # Find TODO comments
+```
 
 ---
 
-## Troubleshooting & Support
+## Key File Locations
 
-**Quick fixes** (90% of issues): See `.claude/QUICK_FIX_GUIDE.md`
+**Configuration**:
+- `CLAUDE.md` (this file) — Main guide
+- `DESIGN-SYSTEM.md` — UI design rules
+- `.claude/SCHEMA_REFERENCE.md` — Database schema reference
 
-- workspace_id undefined
-- supabase is not defined
-- Email agent low quality
-- Content generation slow
-- RLS policy errors
-- API 401 Unauthorized
-- And 10+ more common issues
+**Sub-guides** (domain-specific):
+- `src/app/api/API-GUIDE.md` — API route patterns
+- `src/lib/LIB-GUIDE.md` — Core library utilities
+- `src/lib/agents/AGENT-GUIDE.md` — AI agent development
+- `supabase/DATABASE-GUIDE.md` — Migration workflows
 
-**Agent lookup & workflows**: See `.claude/AGENT_REFERENCE.md`
+**Architecture**:
+- `src/lib/supabase/server.ts` — Server client (PKCE cookies)
+- `src/lib/supabase/client.ts` — Browser client (singleton)
+- `src/lib/api-helpers.ts` — Pagination, filtering, responses
+- `src/lib/anthropic/rate-limiter.ts` — AI retry logic
+- `src/middleware.ts` — Auth middleware
 
-- Quick agent lookup table
-- Input/output schemas
-- Common workflows
-- Model selection guide
+**AI Agents**:
+- `.claude/agent.md` — Agent definitions (CANONICAL)
+- `src/lib/agents/` — Agent implementations
+- `scripts/run-*.mjs` — Agent CLI runners
 
-**For debugging**: Use `.claude/context-manifest.md` to find the right doc fast
+---
+
+## Environment Variables
+
+**Required**:
+- `NEXT_PUBLIC_SUPABASE_URL` — Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` — Supabase anonymous key
+- `SUPABASE_SERVICE_ROLE_KEY` — Admin operations (server-only)
+- `ANTHROPIC_API_KEY` — Claude AI
+- `NEXTAUTH_URL` — Auth callback URL (http://localhost:3008)
+- `NEXTAUTH_SECRET` — Session encryption key
+
+**Optional**:
+- `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` — Gmail OAuth
+- `MICROSOFT_CLIENT_ID`, `MICROSOFT_CLIENT_SECRET` — Outlook OAuth
+- `OPENROUTER_API_KEY` — Multi-model routing
+- `PERPLEXITY_API_KEY` — SEO research
+- `SENDGRID_API_KEY` or `RESEND_API_KEY` — Email sending
+
+**Validate**: `npm run validate:env`
+
+---
+
+## Big-Picture Architecture
+
+### Three-Layer Stack
+
+```
+┌─────────────────────────────────────────────────┐
+│ Next.js App Router (React 19 Server Components) │
+│  • /app/(client)   — Unite-Hub CRM dashboard     │
+│  • /app/(synthex)  — Synthex product             │
+│  • /app/founder    — Founder intelligence tools  │
+│  • /app/api        — 100+ API routes             │
+└──────────────────┬──────────────────────────────┘
+                   │
+┌──────────────────▼──────────────────────────────┐
+│ AI Agent Layer (Claude Opus/Sonnet/Haiku)       │
+│  • Email Agent        — Extract intents          │
+│  • Content Agent      — Generate campaigns       │
+│  • Orchestrator       — Coordinate workflows     │
+│  • Contact Intelligence — Lead scoring           │
+│  • SEO Suite          — Keyword research         │
+└──────────────────┬──────────────────────────────┘
+                   │
+┌──────────────────▼──────────────────────────────┐
+│ Supabase PostgreSQL (Multi-tenant + RLS)        │
+│  • 100+ tables with tenant_id isolation          │
+│  • Row Level Security on ALL tables              │
+│  • Table prefixes: none, synthex_*, founder_*    │
+└──────────────────────────────────────────────────┘
+```
+
+### Agent Orchestrator Pattern
+
+```
+User Request → Orchestrator → Specialist Agents
+                    ↓
+           ┌────────┼────────┐
+           ▼        ▼        ▼
+      Email    Content   Frontend
+      Agent     Agent     Agent
+```
+
+**Communication**: Stateless agents, state in database + `aiMemory` table. Orchestrator coordinates, no peer-to-peer calls.
+
+### Founder Intelligence OS
+
+8 specialized agents for founder analytics:
+- **AI Phill** — Strategic advisor with journal entries
+- **Cognitive Twin** — Business health monitoring (13 domains)
+- **SEO Leak** — Competitive SEO intelligence
+- **Social Inbox** — Multi-platform social monitoring
+- **Search Suite** — Keyword tracking
+- **Boost Bump** — Job queue for background tasks
+- **Pre-Client** — Lead clustering and opportunity detection
+- **Founder OS** — Business portfolio management
+
+Tables: `founder_*`, `ai_phill_*`, `cognitive_twin_*`, `seo_leak_*`, etc.
+
+Health check: `npm run integrity:check`
+
+### Synthex Growth Stack
+
+Phases A-E (50+ features):
+- **Phase A**: Foundation (tenant profiles, onboarding, branding)
+- **Phase B**: Core features (content, campaigns, social, SEO, analytics)
+- **Phase C**: Advanced (automation, audience scoring, attribution, revenue tracking)
+- **Phase D**: Intelligence (experiments, finance, market radar, multi-business registry)
+- **Phase E**: Enterprise (white-label, agencies, compliance)
+
+Tables: `synthex_*` prefix (100+ tables)
+
+---
+
+## Troubleshooting
+
+**Quick fixes**: See `.claude/QUICK_FIX_GUIDE.md` for 90% of common issues:
+- "workspace_id undefined" → Check query params in API route
+- "supabase is not defined" → Verify correct client import for context
+- "Type 'params' is missing 'await'" → Add `await context.params` (Next.js 15+)
+- RLS policy errors → Check `.claude/SCHEMA_REFERENCE.md`, run `\i scripts/rls-diagnostics.sql`
+
+**Build fails**:
+- Memory issues → `npm run check:build-memory` (Node 22.x required, 6GB heap configured)
+- Type errors → `npm run typecheck`
+
+**Production gaps**: See `PRODUCTION_GRADE_ASSESSMENT.md` (65% production-ready, P0 gaps documented)
+
+---
+
+## Development Workflow
+
+### Adding a New API Route
+
+1. Read `src/app/api/CLAUDE.md`
+2. Copy pattern from `src/app/api/contacts/route.ts`
+3. Add workspace validation: `validateUserAndWorkspace(req, workspaceId)`
+4. Filter queries: `.eq("workspace_id", workspaceId)`
+5. Use error boundary: `withErrorBoundary(async (req) => { ... })`
+6. Return with helper: `successResponse(data)`
+
+### Adding a New Service (Synthex/Founder)
+
+1. Create file in `src/lib/synthex/` or `src/lib/founder/`
+2. Add lazy Anthropic client (60s TTL pattern)
+3. Use `supabaseAdmin` for cross-tenant queries
+4. Export typed functions with JSDoc
+5. Write migration in `supabase/migrations/NNN_description.sql`
+6. Use idempotent ENUM creation (DO blocks)
+7. Test with `npm run typecheck && npm run test:unit`
+
+### Adding a UI Component
+
+1. **CRITICAL**: Read `/DESIGN-SYSTEM.md` first
+2. Check `/src/components/ui/` for existing patterns
+3. Reference `/docs/UI-LIBRARY-INDEX.md` (StyleUI, KokonutUI, Cult UI)
+4. Use design tokens: `bg-bg-card`, `text-text-primary`, `accent-500`
+5. Add states: hover, focus, loading, disabled
+6. Ensure responsive: `md:`, `lg:` breakpoints
+7. Test accessibility: aria-labels, focus rings
+8. Self-verify: 9/10 on visual distinctiveness, brand alignment, code quality, a11y
+
+---
+
+## Important Notes
+
+**Multi-tenant**: NEVER query without workspace filter. Data leakage = critical bug.
+
+**Client context**: Server components cannot use browser APIs (`useState`, `useEffect`). Client components cannot use async RSC patterns. Mixing contexts causes build failures.
+
+**Migrations**: Always idempotent (DO blocks for ENUMs, CREATE IF NOT EXISTS for tables). Run in Supabase Dashboard SQL Editor, not CLI (easier rollback).
+
+**AI costs**: Extended Thinking (Opus 4) is 27x more expensive than standard. Use sparingly for complex reasoning only. Budget 5000-10000 tokens for thinking.
+
+**Design compliance**: Generic LLM UI patterns (white cards, gray text, uniform grids) will be rejected. Follow DESIGN-SYSTEM.md strictly.
+
+**Testing**: 235+ tests (100% pass). Add tests for new features: `npm run test:unit`, `npm run test:e2e`.
+
+**Phase tracking**: Currently Phase 5 complete (real-time monitoring, WebSocket alerts, Redis caching). Synthex at Phase D45 (market radar). See project status in root CLAUDE.md.
+
+---
+
+*Last Updated: December 8, 2025 | Version: 2.0.2 | Status: Active Development*
+
+**Context Optimization**: Sub-domain guides renamed (2025-12-08) — Only root CLAUDE.md auto-loads (~3.8k tokens)

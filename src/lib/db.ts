@@ -12,7 +12,9 @@ export const db = {
         .insert([data])
         .select()
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return org;
     },
     getById: async (id: string) => {
@@ -21,7 +23,9 @@ export const db = {
         .select("*")
         .eq("id", id)
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data;
     },
     update: async (id: string, data: any) => {
@@ -32,7 +36,9 @@ export const db = {
         .eq("id", id)
         .select()
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return org;
     },
     getByStripeCustomerId: async (customerId: string) => {
@@ -41,7 +47,9 @@ export const db = {
         .select("*")
         .eq("stripe_customer_id", customerId)
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data;
     },
     listAll: async () => {
@@ -49,7 +57,9 @@ export const db = {
         .from("organizations")
         .select("*")
         .order("created_at", { ascending: false });
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return { data };
     },
   },
@@ -63,7 +73,9 @@ export const db = {
         .insert([data])
         .select()
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return workspace;
     },
     getById: async (id: string) => {
@@ -72,7 +84,9 @@ export const db = {
         .select("*")
         .eq("id", id)
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data;
     },
     listByOrg: async (orgId: string) => {
@@ -80,7 +94,9 @@ export const db = {
         .from("workspaces")
         .select("*")
         .eq("org_id", orgId);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data;
     },
   },
@@ -94,7 +110,9 @@ export const db = {
         .insert([data])
         .select()
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return contact;
     },
     update: async (id: string, workspaceId: string, data: any) => {
@@ -109,7 +127,9 @@ export const db = {
         .eq("workspace_id", workspaceId)
         .select()
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return { data: contact, error: null };
     },
     createIfNotExists: async (data: any) => {
@@ -138,7 +158,9 @@ export const db = {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return contact;
     },
     getById: async (id: string, workspaceId: string) => {
@@ -151,7 +173,9 @@ export const db = {
         .eq("id", id)
         .eq("workspace_id", workspaceId)
         .single();
-      if (error && error.code !== "PGRST116") throw error;
+      if (error && error.code !== "PGRST116") {
+throw error;
+}
       return data || null;
     },
     listByWorkspace: async (workspaceId: string) => {
@@ -160,7 +184,9 @@ export const db = {
         .select("*")
         .eq("workspace_id", workspaceId)
         .order("ai_score", { ascending: false });
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data;
     },
     updateScore: async (id: string, workspaceId: string, score: number) => {
@@ -175,7 +201,9 @@ export const db = {
         .eq("workspace_id", workspaceId)
         .select()
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data;
     },
     updateIntelligence: async (id: string, workspaceId: string, intelligence: any) => {
@@ -194,7 +222,9 @@ export const db = {
         .eq("workspace_id", workspaceId)
         .select()
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data;
     },
     getWithEmails: async (id: string, workspaceId: string) => {
@@ -212,7 +242,9 @@ export const db = {
         .eq("workspace_id", workspaceId)
         .order("ai_score", { ascending: false })
         .limit(limit);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data;
     },
     getByEmail: async (email: string, workspaceId: string) => {
@@ -222,7 +254,9 @@ export const db = {
         .eq("email", email)
         .eq("workspace_id", workspaceId)
         .single();
-      if (error && error.code !== "PGRST116") throw error; // PGRST116 = no rows found
+      if (error && error.code !== "PGRST116") {
+throw error;
+} // PGRST116 = no rows found
       return data || null;
     },
   },
@@ -236,7 +270,9 @@ export const db = {
         .insert([data])
         .select()
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return email;
     },
     getByContact: async (contactId: string, workspaceId: string) => {
@@ -249,7 +285,9 @@ export const db = {
         .eq("contact_id", contactId)
         .eq("workspace_id", workspaceId)
         .order("received_at", { ascending: false });
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data || [];
     },
     listByContact: async (contactId: string, workspaceId: string, limit: number = 50) => {
@@ -263,7 +301,9 @@ export const db = {
         .eq("workspace_id", workspaceId)
         .order("received_at", { ascending: false })
         .limit(limit);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data || [];
     },
     getById: async (id: string, workspaceId: string) => {
@@ -276,7 +316,9 @@ export const db = {
         .eq("id", id)
         .eq("workspace_id", workspaceId)
         .single();
-      if (error && error.code !== "PGRST116") throw error;
+      if (error && error.code !== "PGRST116") {
+throw error;
+}
       return data || null;
     },
     getUnprocessed: async (workspaceId: string) => {
@@ -285,7 +327,9 @@ export const db = {
         .select("*")
         .eq("workspace_id", workspaceId)
         .eq("is_processed", false);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data;
     },
     markProcessed: async (id: string) => {
@@ -294,7 +338,9 @@ export const db = {
         .from("emails")
         .update({ is_processed: true, updated_at: new Date() })
         .eq("id", id);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
     },
     updateSentiment: async (id: string, sentiment: any) => {
       const supabaseServer = await getSupabaseServer();
@@ -302,7 +348,9 @@ export const db = {
         .from("emails")
         .update(sentiment)
         .eq("id", id);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
     },
   },
 
@@ -315,7 +363,9 @@ export const db = {
         .insert([data])
         .select()
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return content;
     },
     getDrafts: async (workspaceId: string) => {
@@ -324,7 +374,9 @@ export const db = {
         .select("*")
         .eq("workspace_id", workspaceId)
         .eq("status", "draft");
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data;
     },
     listByWorkspace: async (workspaceId: string) => {
@@ -333,7 +385,9 @@ export const db = {
         .select("*")
         .eq("workspace_id", workspaceId)
         .order("created_at", { ascending: false });
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data || [];
     },
     approve: async (id: string) => {
@@ -342,7 +396,9 @@ export const db = {
         .from("generated_content")
         .update({ status: "approved", updated_at: new Date() })
         .eq("id", id);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
     },
     getById: async (id: string) => {
       const { data, error } = await supabase
@@ -350,7 +406,9 @@ export const db = {
         .select("*")
         .eq("id", id)
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data;
     },
     updateStatus: async (id: string, status: string) => {
@@ -359,7 +417,9 @@ export const db = {
         .from("generated_content")
         .update({ status, updated_at: new Date() })
         .eq("id", id);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
     },
   },
 
@@ -372,7 +432,9 @@ export const db = {
         .insert([data])
         .select()
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return variant;
     },
     getByContent: async (contentId: string) => {
@@ -380,7 +442,9 @@ export const db = {
         .from("email_variants")
         .select("*")
         .eq("content_id", contentId);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data || [];
     },
   },
@@ -394,7 +458,9 @@ export const db = {
         .insert([data])
         .select()
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return campaign;
     },
     listByWorkspace: async (workspaceId: string) => {
@@ -403,7 +469,9 @@ export const db = {
         .select("*")
         .eq("workspace_id", workspaceId)
         .order("created_at", { ascending: false });
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data;
     },
   },
@@ -417,7 +485,9 @@ export const db = {
       const { error } = await supabaseServer
         .from("interactions")
         .insert([data]);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
     },
     /**
      * Get interactions for a contact
@@ -430,7 +500,9 @@ export const db = {
         .select("*")
         .eq("contact_id", contactId)
         .order("interaction_date", { ascending: false });
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data || [];
     },
   },
@@ -442,7 +514,9 @@ export const db = {
       const { error } = await supabaseServer
         .from("audit_logs")
         .insert([data]);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
     },
     getByOrg: async (orgId: string, limit = 50) => {
       const { data, error } = await supabase
@@ -451,7 +525,9 @@ export const db = {
         .eq("org_id", orgId)
         .order("created_at", { ascending: false })
         .limit(limit);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data;
     },
     logAgentRun: async (orgId: string, agentName: string, details: any) => {
@@ -476,7 +552,9 @@ export const db = {
         .insert([data])
         .select()
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return integration;
     },
     getById: async (id: string) => {
@@ -485,7 +563,9 @@ export const db = {
         .select("*")
         .eq("id", id)
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data;
     },
     getByOrg: async (orgId: string) => {
@@ -494,7 +574,9 @@ export const db = {
         .select("*")
         .eq("org_id", orgId)
         .eq("is_active", true);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data || [];
     },
     getByWorkspace: async (workspaceId: string) => {
@@ -503,7 +585,9 @@ export const db = {
         .select("*")
         .eq("workspace_id", workspaceId)
         .eq("is_active", true);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data || [];
     },
     update: async (id: string, data: any) => {
@@ -512,7 +596,9 @@ export const db = {
         .from("email_integrations")
         .update(data)
         .eq("id", id);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
     },
   },
 
@@ -525,7 +611,9 @@ export const db = {
         .insert([data])
         .select()
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return email;
     },
     getById: async (id: string) => {
@@ -534,7 +622,9 @@ export const db = {
         .select("*")
         .eq("id", id)
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data;
     },
     recordOpen: async (sentEmailId: string, metadata: any) => {
@@ -586,7 +676,9 @@ export const db = {
         .insert([data])
         .select()
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return campaign;
     },
 
@@ -596,7 +688,9 @@ export const db = {
         .select("*")
         .eq("id", id)
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data;
     },
 
@@ -606,7 +700,9 @@ export const db = {
         .select("*")
         .eq("workspace_id", workspaceId)
         .order("created_at", { ascending: false });
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data || [];
     },
 
@@ -616,7 +712,9 @@ export const db = {
         .from("drip_campaigns")
         .update(data)
         .eq("id", id);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
     },
 
     delete: async (id: string) => {
@@ -625,7 +723,9 @@ export const db = {
         .from("drip_campaigns")
         .delete()
         .eq("id", id);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
     },
   },
 
@@ -638,7 +738,9 @@ export const db = {
         .insert([data])
         .select()
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return step;
     },
 
@@ -648,7 +750,9 @@ export const db = {
         .select("*")
         .eq("campaign_id", campaignId)
         .order("step_number");
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data || [];
     },
 
@@ -658,7 +762,9 @@ export const db = {
         .from("campaign_steps")
         .update(data)
         .eq("id", id);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
     },
 
     delete: async (id: string) => {
@@ -667,7 +773,9 @@ export const db = {
         .from("campaign_steps")
         .delete()
         .eq("id", id);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
     },
   },
 
@@ -680,7 +788,9 @@ export const db = {
         .insert([data])
         .select()
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return enrollment;
     },
 
@@ -691,7 +801,9 @@ export const db = {
         .eq("contact_id", contactId)
         .eq("campaign_id", campaignId)
         .single();
-      if (error && error.code !== "PGRST116") throw error;
+      if (error && error.code !== "PGRST116") {
+throw error;
+}
       return data;
     },
 
@@ -700,7 +812,9 @@ export const db = {
         .from("campaign_enrollments")
         .select("*")
         .eq("campaign_id", campaignId);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data || [];
     },
 
@@ -710,7 +824,9 @@ export const db = {
         .from("campaign_enrollments")
         .update(data)
         .eq("id", id);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
     },
   },
 
@@ -723,7 +839,9 @@ export const db = {
         .insert([data])
         .select()
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
 
       // Update email count on contact
       await db.clientEmails.updateCount(data.contact_id);
@@ -736,7 +854,9 @@ export const db = {
         .select("*")
         .eq("id", id)
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data;
     },
 
@@ -748,7 +868,9 @@ export const db = {
         .eq("is_active", true)
         .order("is_primary", { ascending: false })
         .order("created_at", { ascending: false });
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data || [];
     },
 
@@ -760,7 +882,9 @@ export const db = {
         .eq("is_primary", true)
         .eq("is_active", true)
         .single();
-      if (error && error.code !== "PGRST116") throw error;
+      if (error && error.code !== "PGRST116") {
+throw error;
+}
       return data;
     },
 
@@ -772,7 +896,9 @@ export const db = {
         .eq("contacts.workspace_id", workspaceId)
         .eq("is_active", true)
         .single();
-      if (error && error.code !== "PGRST116") throw error;
+      if (error && error.code !== "PGRST116") {
+throw error;
+}
       return data;
     },
 
@@ -791,7 +917,9 @@ export const db = {
         .eq("id", id)
         .select()
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data;
     },
 
@@ -803,7 +931,9 @@ export const db = {
         .eq("id", id)
         .select()
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return email;
     },
 
@@ -814,7 +944,9 @@ export const db = {
         .from("client_emails")
         .update({ is_active: false })
         .eq("id", id);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
 
       // Get contact_id to update count
       const email = await db.clientEmails.getById(id);
@@ -829,7 +961,9 @@ export const db = {
         .from("client_emails")
         .update({ last_contacted: new Date() })
         .eq("id", id);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
     },
 
     recordBounce: async (id: string) => {
@@ -844,7 +978,9 @@ export const db = {
           is_active: newBounceCount >= 5 ? false : email.is_active,
         })
         .eq("id", id);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
     },
 
     verify: async (id: string) => {
@@ -853,7 +989,9 @@ export const db = {
         .from("client_emails")
         .update({ is_verified: true, verified_at: new Date() })
         .eq("id", id);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
     },
 
     updateCount: async (contactId: string) => {
@@ -863,7 +1001,9 @@ export const db = {
         .from("contacts")
         .update({ email_count: emails.length })
         .eq("id", contactId);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
     },
   },
 
@@ -876,7 +1016,9 @@ export const db = {
         .insert([data])
         .select()
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return message;
     },
 
@@ -886,7 +1028,9 @@ export const db = {
         .select("*")
         .eq("id", id)
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data;
     },
 
@@ -898,7 +1042,9 @@ export const db = {
         .eq("workspace_id", workspaceId)
         .order("created_at", { ascending: false })
         .limit(limit);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data || [];
     },
 
@@ -909,7 +1055,9 @@ export const db = {
         .eq("contact_id", contactId)
         .order("created_at", { ascending: false })
         .limit(limit);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data || [];
     },
 
@@ -931,7 +1079,9 @@ export const db = {
         .from("whatsapp_messages")
         .update(updateData)
         .eq("id", id);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
     },
 
     getUnprocessed: async (workspaceId: string) => {
@@ -942,7 +1092,9 @@ export const db = {
         .eq("direction", "inbound")
         .is("ai_summary", null)
         .order("created_at", { ascending: true });
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data || [];
     },
   },
@@ -956,7 +1108,9 @@ export const db = {
         .insert([data])
         .select()
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return conversation;
     },
 
@@ -966,7 +1120,9 @@ export const db = {
         .select("*")
         .eq("id", id)
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data;
     },
 
@@ -977,7 +1133,9 @@ export const db = {
         .eq("phone_number", phoneNumber)
         .eq("workspace_id", workspaceId)
         .single();
-      if (error && error.code !== "PGRST116") throw error;
+      if (error && error.code !== "PGRST116") {
+throw error;
+}
       return data || null;
     },
 
@@ -992,7 +1150,9 @@ export const db = {
       }
 
       const { data, error } = await query.order("last_message_at", { ascending: false });
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data || [];
     },
 
@@ -1007,7 +1167,9 @@ export const db = {
         })
         .eq("phone_number", phoneNumber)
         .eq("workspace_id", workspaceId);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
     },
 
     markAsRead: async (id: string) => {
@@ -1016,7 +1178,9 @@ export const db = {
         .from("whatsapp_conversations")
         .update({ unread_count: 0 })
         .eq("id", id);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
     },
 
     archive: async (id: string) => {
@@ -1025,7 +1189,9 @@ export const db = {
         .from("whatsapp_conversations")
         .update({ status: 'archived', archived_at: new Date() })
         .eq("id", id);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
     },
 
     assignTo: async (id: string, userId: string) => {
@@ -1034,7 +1200,9 @@ export const db = {
         .from("whatsapp_conversations")
         .update({ assigned_to: userId })
         .eq("id", id);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
     },
   },
 
@@ -1047,7 +1215,9 @@ export const db = {
         .insert([data])
         .select()
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return template;
     },
 
@@ -1057,7 +1227,9 @@ export const db = {
         .select("*")
         .eq("id", id)
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data;
     },
 
@@ -1072,7 +1244,9 @@ export const db = {
       }
 
       const { data, error } = await query.order("created_at", { ascending: false });
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data || [];
     },
 
@@ -1082,7 +1256,9 @@ export const db = {
         .from("whatsapp_templates")
         .update({ status })
         .eq("id", id);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
     },
 
     recordUse: async (id: string) => {
@@ -1095,7 +1271,9 @@ export const db = {
           last_used_at: new Date()
         })
         .eq("id", id);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
     },
   },
 
@@ -1108,7 +1286,9 @@ export const db = {
         .insert([data])
         .select()
         .single();
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return webhook;
     },
 
@@ -1127,7 +1307,9 @@ export const db = {
         .from("whatsapp_webhooks")
         .update(updateData)
         .eq("id", id);
-      if (updateError) throw updateError;
+      if (updateError) {
+throw updateError;
+}
     },
 
     getUnprocessed: async (limit = 100) => {
@@ -1137,7 +1319,9 @@ export const db = {
         .eq("processed", false)
         .order("received_at", { ascending: true })
         .limit(limit);
-      if (error) throw error;
+      if (error) {
+throw error;
+}
       return data || [];
     },
   },

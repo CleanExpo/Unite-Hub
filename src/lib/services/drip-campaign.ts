@@ -25,7 +25,9 @@ export async function createDripCampaign(
     .select()
     .single();
 
-  if (campaign.error) throw campaign.error;
+  if (campaign.error) {
+throw campaign.error;
+}
   return campaign.data;
 }
 
@@ -60,7 +62,9 @@ export async function addCampaignStep(
     .select()
     .single();
 
-  if (step.error) throw step.error;
+  if (step.error) {
+throw step.error;
+}
   return step.data;
 }
 
@@ -78,7 +82,9 @@ export async function getCampaignWithSteps(
     .eq("id", campaignId)
     .single();
 
-  if (campaign.error) throw campaign.error;
+  if (campaign.error) {
+throw campaign.error;
+}
   return campaign.data;
 }
 
@@ -141,7 +147,9 @@ export async function enrollContactInCampaign(
     .select()
     .single();
 
-  if (enrollment.error) throw enrollment.error;
+  if (enrollment.error) {
+throw enrollment.error;
+}
 
   // Schedule first step
   const campaign = await getCampaignWithSteps(campaignId);
@@ -183,7 +191,9 @@ export async function scheduleStepExecution(
     .select()
     .single();
 
-  if (log.error) throw log.error;
+  if (log.error) {
+throw log.error;
+}
   return log.data;
 }
 
@@ -205,7 +215,9 @@ export async function processPendingCampaignSteps() {
       .lte("scheduled_for", new Date().toISOString())
       .limit(50);
 
-    if (logs.error) throw logs.error;
+    if (logs.error) {
+throw logs.error;
+}
 
     let processed = 0;
     let failed = 0;
@@ -449,7 +461,9 @@ async function getWorkspaceIntegration(campaignId: string) {
     .eq("id", campaignId)
     .single();
 
-  if (campaign.error || !campaign.data?.workspace_id) return null;
+  if (campaign.error || !campaign.data?.workspace_id) {
+return null;
+}
 
   // Get workspace to find org_id
   const workspace = await supabase
@@ -458,7 +472,9 @@ async function getWorkspaceIntegration(campaignId: string) {
     .eq("id", campaign.data.workspace_id)
     .single();
 
-  if (workspace.error || !workspace.data?.org_id) return null;
+  if (workspace.error || !workspace.data?.org_id) {
+return null;
+}
 
   // Get integrations for this org
   const integrations = await db.emailIntegrations.getByOrg(workspace.data.org_id);
@@ -472,7 +488,9 @@ export async function getCampaignMetrics(campaignId: string) {
     .eq("campaign_id", campaignId)
     .single();
 
-  if (metrics.error) throw metrics.error;
+  if (metrics.error) {
+throw metrics.error;
+}
   return metrics.data;
 }
 

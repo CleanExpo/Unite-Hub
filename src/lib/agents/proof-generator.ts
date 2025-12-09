@@ -57,7 +57,9 @@ export function generateHMAC(content: string | Buffer, secret = PROOF_SECRET): s
  * Generates Merkle root from multiple checksums
  */
 export function generateMerkleRoot(checksums: string[]): string {
-  if (checksums.length === 0) return '';
+  if (checksums.length === 0) {
+return '';
+}
 
   // Sort checksums for consistency
   const sorted = [...checksums].sort();

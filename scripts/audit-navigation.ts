@@ -69,7 +69,9 @@ function findDefinedRoutes(appDir: string): RouteInfo[] {
   const routes: RouteInfo[] = [];
 
   function scanDir(dir: string, routePrefix: string = ''): void {
-    if (!fs.existsSync(dir)) return;
+    if (!fs.existsSync(dir)) {
+return;
+}
 
     const entries = fs.readdirSync(dir, { withFileTypes: true });
 
@@ -77,7 +79,9 @@ function findDefinedRoutes(appDir: string): RouteInfo[] {
       const fullPath = path.join(dir, entry.name);
 
       if (entry.isDirectory()) {
-        if (!shouldScanDirectory(fullPath)) continue;
+        if (!shouldScanDirectory(fullPath)) {
+continue;
+}
 
         // Handle route groups (folders starting with parentheses)
         let newPrefix = routePrefix;
@@ -134,7 +138,9 @@ function findLinkedRoutes(srcDir: string): LinkInfo[] {
 
   function scanFile(filePath: string): void {
     const ext = path.extname(filePath).toLowerCase();
-    if (!['.tsx', '.ts', '.jsx', '.js'].includes(ext)) return;
+    if (!['.tsx', '.ts', '.jsx', '.js'].includes(ext)) {
+return;
+}
 
     const content = fs.readFileSync(filePath, 'utf-8');
     const lines = content.split('\n');
@@ -179,7 +185,9 @@ function findLinkedRoutes(srcDir: string): LinkInfo[] {
   }
 
   function scanDir(dir: string): void {
-    if (!fs.existsSync(dir)) return;
+    if (!fs.existsSync(dir)) {
+return;
+}
 
     const entries = fs.readdirSync(dir, { withFileTypes: true });
 
@@ -226,14 +234,18 @@ function routeExists(
     const normalizedDefined = normalizeRoute(defined.route);
 
     // Exact match
-    if (normalizedLink === normalizedDefined) return true;
+    if (normalizedLink === normalizedDefined) {
+return true;
+}
 
     // Dynamic route match
     if (normalizedDefined.includes('*')) {
       const regex = new RegExp(
         '^' + normalizedDefined.replace(/\*/g, '[^/]+') + '$'
       );
-      if (regex.test(normalizedLink)) return true;
+      if (regex.test(normalizedLink)) {
+return true;
+}
     }
 
     return false;
@@ -282,8 +294,12 @@ function generateReport(
 
   const orphanPages = pageRoutes.filter((page) => {
     const normalized = normalizeRoute(page.route);
-    if (commonRoutes.includes(normalized)) return false;
-    if (normalized.includes('*')) return false; // Dynamic routes are usually accessed via params
+    if (commonRoutes.includes(normalized)) {
+return false;
+}
+    if (normalized.includes('*')) {
+return false;
+} // Dynamic routes are usually accessed via params
 
     return !linkedRouteSet.has(normalized);
   });

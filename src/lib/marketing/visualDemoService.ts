@@ -136,7 +136,9 @@ export async function countDemosByCategory() {
     .from('visual_demo_entries')
     .select('category');
 
-  if (error) return { data: null, error };
+  if (error) {
+return { data: null, error };
+}
 
   const counts: Record<string, number> = {};
   data.forEach((demo) => {

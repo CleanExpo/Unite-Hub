@@ -187,7 +187,9 @@ class CascadeFailureModel {
       }
     }
 
-    if (pairCount === 0) return 0;
+    if (pairCount === 0) {
+return 0;
+}
 
     const avgImpact = totalImpact / pairCount;
 
@@ -229,14 +231,18 @@ class CascadeFailureModel {
    * Calculate deadlock risk score
    */
   private calculateDeadlockRisk(runs: any[]): number {
-    if (runs.length === 0) return 0;
+    if (runs.length === 0) {
+return 0;
+}
 
     // Deadlock indicated by multi-agent failures with long execution times
     const multiAgentFailures = runs.filter(
       r => r.active_agents?.length > 2 && (r.failed_steps || 0) > 0
     );
 
-    if (multiAgentFailures.length === 0) return 0;
+    if (multiAgentFailures.length === 0) {
+return 0;
+}
 
     const deadlockLikelyFailures = multiAgentFailures.filter(r => {
       const duration = r.completed_at
@@ -279,7 +285,9 @@ class CascadeFailureModel {
    * Analyze memory corruption risk
    */
   private analyzeMemoryCorruptionRisk(memories: any[]): number {
-    if (memories.length === 0) return 0;
+    if (memories.length === 0) {
+return 0;
+}
 
     // Count low-confidence memories and contradictions
     const lowConfidenceMemories = memories.filter(m => (m.confidence || 70) < 50).length;
@@ -296,7 +304,9 @@ class CascadeFailureModel {
    * Assess orchestration complexity
    */
   private assessOrchestrationComplexity(runs: any[]): number {
-    if (runs.length === 0) return 0;
+    if (runs.length === 0) {
+return 0;
+}
 
     const recentRuns = runs.slice(-10);
 
@@ -321,7 +331,9 @@ class CascadeFailureModel {
    * Detect active failure chains (sequential failures)
    */
   private detectFailureChains(events: any[]): number {
-    if (events.length === 0) return 0;
+    if (events.length === 0) {
+return 0;
+}
 
     let chainCount = 0;
     let currentChain = 0;
@@ -338,16 +350,22 @@ class CascadeFailureModel {
         if (currentChain === 0 || (events[i - 1] && new Date(event.created_at).getTime() - new Date(events[i - 1].created_at).getTime() < failureThreshold)) {
           currentChain++;
         } else {
-          if (currentChain >= 2) chainCount++;
+          if (currentChain >= 2) {
+chainCount++;
+}
           currentChain = 1;
         }
       } else {
-        if (currentChain >= 2) chainCount++;
+        if (currentChain >= 2) {
+chainCount++;
+}
         currentChain = 0;
       }
     }
 
-    if (currentChain >= 2) chainCount++;
+    if (currentChain >= 2) {
+chainCount++;
+}
 
     return chainCount;
   }

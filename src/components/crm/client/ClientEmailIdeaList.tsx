@@ -87,7 +87,9 @@ export function ClientEmailIdeaList({
   const workspaceId = currentOrganization?.org_id;
 
   const fetchIdeas = async () => {
-    if (!workspaceId || !session?.access_token) return;
+    if (!workspaceId || !session?.access_token) {
+return;
+}
 
     try {
       setIsLoading(true);
@@ -97,9 +99,15 @@ export function ClientEmailIdeaList({
         workspaceId,
         limit: String(limit),
       });
-      if (filterType) params.set('category', filterType);
-      if (filterPriority) params.set('priority', filterPriority);
-      if (filterStatus && filterStatus !== 'all') params.set('status', filterStatus);
+      if (filterType) {
+params.set('category', filterType);
+}
+      if (filterPriority) {
+params.set('priority', filterPriority);
+}
+      if (filterStatus && filterStatus !== 'all') {
+params.set('status', filterStatus);
+}
 
       const response = await fetch(
         `/api/email-intel/client/${clientId}/ideas?${params}`,
@@ -130,7 +138,9 @@ export function ClientEmailIdeaList({
   }, [clientId, workspaceId, session?.access_token, filterType, filterPriority, filterStatus]);
 
   const handleStatusChange = async (ideaId: string, newStatus: string) => {
-    if (!workspaceId || !session?.access_token) return;
+    if (!workspaceId || !session?.access_token) {
+return;
+}
 
     try {
       const response = await fetch(`/api/email-intel/client/${clientId}/ideas`, {
@@ -154,13 +164,17 @@ export function ClientEmailIdeaList({
   };
 
   const formatDate = (dateStr: string | null) => {
-    if (!dateStr) return null;
+    if (!dateStr) {
+return null;
+}
     const date = new Date(dateStr);
     return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
   };
 
   const isOverdue = (dueDate: string | null, status: string) => {
-    if (!dueDate || status === 'completed') return false;
+    if (!dueDate || status === 'completed') {
+return false;
+}
     return new Date(dueDate) < new Date();
   };
 
@@ -314,7 +328,9 @@ export function ClientEmailIdeaList({
         // Grouped view
         <div className="space-y-6">
           {Object.entries(grouped).map(([type, typeIdeas]) => {
-            if (!typeIdeas || typeIdeas.length === 0) return null;
+            if (!typeIdeas || typeIdeas.length === 0) {
+return null;
+}
             const config = typeConfig[type] || typeConfig.action_item;
             const Icon = config.icon;
 

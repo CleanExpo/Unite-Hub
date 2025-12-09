@@ -245,7 +245,9 @@ export class AgentRegistry {
       .filter((a) => a.status === 'active' || a.status === 'idle')
       .sort((a, b) => {
         // Sort by priority (desc), then by error rate (asc)
-        if (b.priority !== a.priority) return b.priority - a.priority;
+        if (b.priority !== a.priority) {
+return b.priority - a.priority;
+}
         return a.metrics.error_rate - b.metrics.error_rate;
       });
 

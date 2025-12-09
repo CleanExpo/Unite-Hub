@@ -36,9 +36,15 @@ export function useApprovals({ orgId, status, priority, type }: UseApprovalsPara
 
       // Build query params
       const params = new URLSearchParams({ orgId });
-      if (status) params.append("status", status);
-      if (priority) params.append("priority", priority);
-      if (type) params.append("type", type);
+      if (status) {
+params.append("status", status);
+}
+      if (priority) {
+params.append("priority", priority);
+}
+      if (type) {
+params.append("type", type);
+}
 
       const response = await fetch(`/api/approvals?${params.toString()}`);
 

@@ -34,7 +34,9 @@ export async function getAlignmentSnapshot(tenantId: string): Promise<AlignmentS
     .limit(1)
     .single();
 
-  if (!data) return null;
+  if (!data) {
+return null;
+}
 
   return {
     id: data.id,
@@ -92,7 +94,9 @@ export async function generateAlignmentSnapshot(tenantId: string): Promise<Align
     .select()
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+return null;
+}
 
   return {
     id: data.id,

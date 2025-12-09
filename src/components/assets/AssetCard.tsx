@@ -40,16 +40,24 @@ export function AssetCard({
   const isImage = asset.mimeType.startsWith("image/");
 
   const getIcon = () => {
-    if (isImage) return ImageIcon;
-    if (asset.mimeType.includes("pdf")) return FileText;
+    if (isImage) {
+return ImageIcon;
+}
+    if (asset.mimeType.includes("pdf")) {
+return FileText;
+}
     return File;
   };
 
   const Icon = getIcon();
 
   const formatFileSize = (bytes: number) => {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    if (bytes < 1024) {
+return `${bytes} B`;
+}
+    if (bytes < 1024 * 1024) {
+return `${(bytes / 1024).toFixed(1)} KB`;
+}
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 

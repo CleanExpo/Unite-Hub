@@ -342,7 +342,9 @@ class AutonomyArchiveBridge {
         .order('created_at', { ascending: false })
         .limit(20);
 
-      if (!runs) return [];
+      if (!runs) {
+return [];
+}
 
       const objectiveKeywords = objective.toLowerCase().split(/\s+/);
 

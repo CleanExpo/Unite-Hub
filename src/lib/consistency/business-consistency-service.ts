@@ -286,7 +286,9 @@ export class BusinessConsistencyService {
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') return null;
+      if (error.code === 'PGRST116') {
+return null;
+}
       throw new Error(`Failed to get consistency master: ${error.message}`);
     }
 
@@ -313,7 +315,9 @@ export class BusinessConsistencyService {
     const { data, error } = await query.single();
 
     if (error) {
-      if (error.code === 'PGRST116') return null;
+      if (error.code === 'PGRST116') {
+return null;
+}
       throw new Error(`Failed to get consistency master: ${error.message}`);
     }
 
@@ -478,7 +482,9 @@ export class BusinessConsistencyService {
     const specs: object[] = [];
 
     for (const [day, dayHours] of Object.entries(hours)) {
-      if (day === 'public_holidays' || !dayHours || dayHours.closed) continue;
+      if (day === 'public_holidays' || !dayHours || dayHours.closed) {
+continue;
+}
 
       specs.push({
         '@type': 'OpeningHoursSpecification',
@@ -675,13 +681,19 @@ export class BusinessConsistencyService {
       // Calculate tier scores
       if (listing.platform_tier === 1) {
         tier1Total++;
-        if (isConsistent) tier1Score++;
+        if (isConsistent) {
+tier1Score++;
+}
       } else if (listing.platform_tier === 2) {
         tier2Total++;
-        if (isConsistent) tier2Score++;
+        if (isConsistent) {
+tier2Score++;
+}
       } else if (listing.platform_tier === 3) {
         tier3Total++;
-        if (isConsistent) tier3Score++;
+        if (isConsistent) {
+tier3Score++;
+}
       }
     }
 

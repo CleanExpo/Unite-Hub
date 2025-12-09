@@ -250,7 +250,9 @@ export class ReasoningArchiveBridge {
       .order('recall_priority', { ascending: false })
       .limit(limit);
 
-    if (!memories) return [];
+    if (!memories) {
+return [];
+}
 
     // Score similarity based on keyword overlap
     const objectiveKeywords = new Set(objective.toLowerCase().split(/\s+/));

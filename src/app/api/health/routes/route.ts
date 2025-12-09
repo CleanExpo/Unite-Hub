@@ -1,4 +1,4 @@
-/* eslint-disable no-undef, @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* global process, AbortController, setTimeout, clearInterval, fetch, URL */
 
 /**

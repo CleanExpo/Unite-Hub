@@ -65,7 +65,9 @@ export function TestimonialCarousel({
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    if (!autoPlay || testimonials.length <= 1) return;
+    if (!autoPlay || testimonials.length <= 1) {
+return;
+}
 
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % testimonials.length);
@@ -82,7 +84,9 @@ export function TestimonialCarousel({
     setCurrentIndex((prev) => (prev + 1) % testimonials.length);
   };
 
-  if (testimonials.length === 0) return null;
+  if (testimonials.length === 0) {
+return null;
+}
 
   const currentTestimonial = testimonials[currentIndex];
 

@@ -423,7 +423,9 @@ export class CostOptimizationEngine {
    */
   async getOptimizationRecommendations(workspaceId: string): Promise<string[]> {
     const budget = await this.getBudget(workspaceId);
-    if (!budget) return [];
+    if (!budget) {
+return [];
+}
 
     const now = new Date();
     const currentMonthlyCost = await this.getMonthlyCost(now.getFullYear(), now.getMonth() + 1);

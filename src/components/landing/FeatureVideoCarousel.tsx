@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { ChevronLeft, ChevronRight, Play } from 'lucide-react';
 import type { FeatureVideo } from '@/data/feature-videos-data';
 
-/* eslint-disable no-undef */
+ 
 
 export interface FeatureVideoCarouselProps {
   videos: FeatureVideo[];

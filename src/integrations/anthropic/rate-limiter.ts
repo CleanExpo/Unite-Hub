@@ -129,7 +129,9 @@ export class AnthropicRateLimiter {
    */
   private resetStateIfNeeded(model: ClaudeModel): void {
     const state = this.modelStates.get(model);
-    if (!state) return;
+    if (!state) {
+return;
+}
 
     const now = Date.now();
     const minuteMs = 60 * 1000;
@@ -267,7 +269,9 @@ export class AnthropicRateLimiter {
     const state = this.modelStates.get(model);
     const stats = this.usageStats.get(model);
 
-    if (!state || !stats) return;
+    if (!state || !stats) {
+return;
+}
 
     // Update state
     state.requestCount++;

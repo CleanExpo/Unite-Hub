@@ -35,7 +35,9 @@ export default function FounderAutopilotPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchData = useCallback(async () => {
-    if (!workspaceId || !session?.access_token) return;
+    if (!workspaceId || !session?.access_token) {
+return;
+}
 
     setIsLoading(true);
     try {
@@ -77,7 +79,9 @@ export default function FounderAutopilotPage() {
   }, [fetchData]);
 
   const handleSelectPlaybook = async (playbookId: string) => {
-    if (!session?.access_token || !workspaceId) return;
+    if (!session?.access_token || !workspaceId) {
+return;
+}
 
     setSelectedPlaybook(playbookId);
 
@@ -101,7 +105,9 @@ export default function FounderAutopilotPage() {
   };
 
   const handleGeneratePlaybook = async () => {
-    if (!session?.access_token || !workspaceId) return;
+    if (!session?.access_token || !workspaceId) {
+return;
+}
 
     try {
       const response = await fetch(
@@ -128,7 +134,9 @@ export default function FounderAutopilotPage() {
   };
 
   const handleApproveAction = async (actionId: string) => {
-    if (!session?.access_token) return;
+    if (!session?.access_token) {
+return;
+}
 
     try {
       const response = await fetch(
@@ -154,7 +162,9 @@ export default function FounderAutopilotPage() {
   };
 
   const handleSkipAction = async (actionId: string) => {
-    if (!session?.access_token) return;
+    if (!session?.access_token) {
+return;
+}
 
     try {
       const response = await fetch(
@@ -180,7 +190,9 @@ export default function FounderAutopilotPage() {
   };
 
   const handleSavePreferences = async (updates: Partial<AutopilotPreferences>) => {
-    if (!session?.access_token || !workspaceId) return;
+    if (!session?.access_token || !workspaceId) {
+return;
+}
 
     try {
       const response = await fetch(

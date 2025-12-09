@@ -90,7 +90,9 @@ export default function HealthTrendChart({
 
   // Process data based on date range
   const filteredData = useMemo(() => {
-    if (dateRange === "all") return data;
+    if (dateRange === "all") {
+return data;
+}
 
     const days = dateRange === "7d" ? 7 : dateRange === "30d" ? 30 : 90;
     const cutoffDate = new Date();
@@ -180,7 +182,9 @@ export default function HealthTrendChart({
           <div className="space-y-1">
             {payload.map((entry: any) => {
               const domain = domains.find(d => d.domain_id === entry.dataKey);
-              if (!domain) return null;
+              if (!domain) {
+return null;
+}
 
               return (
                 <div key={entry.dataKey} className="flex items-center justify-between gap-3">
@@ -380,7 +384,9 @@ export default function HealthTrendChart({
 
             {/* Render lines for visible domains */}
             {domains.map((domain, index) => {
-              if (!visibleDomains.has(domain.domain_id)) return null;
+              if (!visibleDomains.has(domain.domain_id)) {
+return null;
+}
 
               const color = domain.color || DOMAIN_COLORS[index % DOMAIN_COLORS.length];
 

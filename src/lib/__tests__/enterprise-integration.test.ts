@@ -74,13 +74,19 @@ describe('EnterpriseSummaryReportService', () => {
       }) => {
         let score = 100;
 
-        if (params.overageRisk === 'high') score -= 15;
-        else if (params.overageRisk === 'medium') score -= 8;
+        if (params.overageRisk === 'high') {
+score -= 15;
+} else if (params.overageRisk === 'medium') {
+score -= 8;
+}
 
         score -= Math.min(15, params.criticalEvents * 3);
 
-        if (params.complianceStatus === 'non_compliant') score -= 10;
-        else if (params.complianceStatus === 'warning') score -= 5;
+        if (params.complianceStatus === 'non_compliant') {
+score -= 10;
+} else if (params.complianceStatus === 'warning') {
+score -= 5;
+}
 
         return Math.max(0, score);
       };
@@ -127,9 +133,15 @@ describe('EnterpriseSummaryReportService', () => {
 
     it('should calculate overage risk correctly', () => {
       const calculateOverageRisk = (usagePercentage: number) => {
-        if (usagePercentage > 90) return 'high';
-        if (usagePercentage > 75) return 'medium';
-        if (usagePercentage > 50) return 'low';
+        if (usagePercentage > 90) {
+return 'high';
+}
+        if (usagePercentage > 75) {
+return 'medium';
+}
+        if (usagePercentage > 50) {
+return 'low';
+}
         return 'none';
       };
 
@@ -185,8 +197,12 @@ describe('EnterpriseSummaryReportService', () => {
       const summary = { emails_sent: 0, ai_requests: 0 };
 
       events.forEach((e) => {
-        if (e.event_category === 'email_sent') summary.emails_sent += e.quantity;
-        if (e.event_category === 'ai_request') summary.ai_requests += e.quantity;
+        if (e.event_category === 'email_sent') {
+summary.emails_sent += e.quantity;
+}
+        if (e.event_category === 'ai_request') {
+summary.ai_requests += e.quantity;
+}
       });
 
       expect(summary.emails_sent).toBe(300);
@@ -202,8 +218,12 @@ describe('EnterpriseReadinessChecks', () => {
         const failCount = checks.filter((c) => c.status === 'fail').length;
         const warningCount = checks.filter((c) => c.status === 'warning').length;
 
-        if (failCount > 0) return 'not_ready';
-        if (warningCount > 0) return 'warning';
+        if (failCount > 0) {
+return 'not_ready';
+}
+        if (warningCount > 0) {
+return 'warning';
+}
         return 'ready';
       };
 
@@ -287,9 +307,13 @@ describe('EnterpriseReadinessChecks', () => {
       const daysUntilExpiry = 5;
       let status: string;
 
-      if (daysUntilExpiry > 7) status = 'pass';
-      else if (daysUntilExpiry > 0) status = 'warning';
-      else status = 'fail';
+      if (daysUntilExpiry > 7) {
+status = 'pass';
+} else if (daysUntilExpiry > 0) {
+status = 'warning';
+} else {
+status = 'fail';
+}
 
       expect(status).toBe('warning');
     });
@@ -300,9 +324,13 @@ describe('EnterpriseReadinessChecks', () => {
       const percentage = (usageCount / limit) * 100;
 
       let status: string;
-      if (percentage < 80) status = 'pass';
-      else if (percentage < 100) status = 'warning';
-      else status = 'fail';
+      if (percentage < 80) {
+status = 'pass';
+} else if (percentage < 100) {
+status = 'warning';
+} else {
+status = 'fail';
+}
 
       expect(status).toBe('warning');
     });
@@ -315,9 +343,13 @@ describe('EnterpriseReadinessChecks', () => {
       const percentage = (contactsWithEmail / totalContacts) * 100;
 
       let status: string;
-      if (percentage === 100) status = 'pass';
-      else if (percentage >= 90) status = 'warning';
-      else status = 'fail';
+      if (percentage === 100) {
+status = 'pass';
+} else if (percentage >= 90) {
+status = 'warning';
+} else {
+status = 'fail';
+}
 
       expect(status).toBe('warning');
     });

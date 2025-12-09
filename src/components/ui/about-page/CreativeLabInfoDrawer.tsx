@@ -19,7 +19,9 @@ export default function CreativeLabInfoDrawer({
   isOpen,
   onClose,
 }: CreativeLabInfoDrawerProps) {
-  if (!isOpen) return null;
+  if (!isOpen) {
+return null;
+}
 
   return (
     <>

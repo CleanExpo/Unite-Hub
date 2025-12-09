@@ -407,20 +407,29 @@ function identifyPrimaryFactors(signals: LifeSignal[]): string[] {
 
   for (const signal of signals) {
     if (signal.signal_type === 'sleep_hours') {
-      if ((signal.value as number) < 5) factors.push('Very low sleep – recovery likely impaired');
-      else if ((signal.value as number) < 7) factors.push('Low sleep – some fatigue expected');
+      if ((signal.value as number) < 5) {
+factors.push('Very low sleep – recovery likely impaired');
+} else if ((signal.value as number) < 7) {
+factors.push('Low sleep – some fatigue expected');
+}
     }
 
     if (signal.signal_type === 'recovery_percent') {
-      if ((signal.value as number) < 30) factors.push('Low recovery score – body needs rest');
+      if ((signal.value as number) < 30) {
+factors.push('Low recovery score – body needs rest');
+}
     }
 
     if (signal.signal_type === 'stress_level') {
-      if ((signal.value as number) > 7) factors.push('High stress levels – recommend stress-relief');
+      if ((signal.value as number) > 7) {
+factors.push('High stress levels – recommend stress-relief');
+}
     }
 
     if (signal.signal_type === 'calendar_load_percent') {
-      if ((signal.value as number) > 80) factors.push('Very high calendar load – limited focus time');
+      if ((signal.value as number) > 80) {
+factors.push('Very high calendar load – limited focus time');
+}
     }
   }
 

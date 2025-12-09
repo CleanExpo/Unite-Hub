@@ -527,7 +527,9 @@ export function calculateCost(
   completionTokens: number
 ): number {
   const model = OPENROUTER_MODELS[modelId];
-  if (!model) return 0;
+  if (!model) {
+return 0;
+}
 
   const promptCost = (promptTokens / 1_000_000) * model.pricing.prompt;
   const completionCost = (completionTokens / 1_000_000) * model.pricing.completion;

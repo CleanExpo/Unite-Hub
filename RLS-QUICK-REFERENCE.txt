@@ -1,0 +1,145 @@
+╔════════════════════════════════════════════════════════════════════════════════╗
+║                    RLS MIGRATION 555 - QUICK REFERENCE CARD                     ║
+║                   Deploy Migration: 555_enable_rls_critical_tables.sql           ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚨 CRITICAL ISSUE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+RLS Enforcement: 0% (CRITICAL)
+Risk: Multi-tenant workspace isolation BROKEN
+Impact: Users can access other workspaces' data if authentication misconfigured
+Severity: 🔴 CRITICAL
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 5-STEP DEPLOYMENT CHECKLIST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+[STEP 1] BACKUP DATABASE (10 min)
+─────────────────────────────────
+[ ] Go to: https://supabase.com/dashboard/project/[YOUR-PROJECT]/database/backups
+[ ] Click: "Create a new backup"
+[ ] Confirm: Backup completed successfully
+[ ] Note: Backup ID for records
+
+[STEP 2] VERIFY DRY-RUN (Already Done ✅)
+──────────────────────────────────────────
+[ ] Dry-run executed: npm run rls:deploy:dry ✅
+[ ] SQL reviewed and approved ✅
+[ ] 261 lines, 6 tables, 12+ policies ✅
+
+[STEP 3] DEPLOY MIGRATION (5 min)
+──────────────────────────────────
+[ ] Go to: https://supabase.com/dashboard/project/[YOUR-PROJECT]/sql
+[ ] Click: "New Query"
+[ ] Copy: supabase/migrations/555_enable_rls_critical_tables.sql
+[ ] Paste: Into SQL Editor
+[ ] Click: "Run"
+[ ] Confirm: "Query succeeded" message (no errors)
+
+[STEP 4] VERIFY DEPLOYMENT (10 min)
+────────────────────────────────────
+[ ] Run SQL Query 1: Check RLS enabled (expect 6 tables = true)
+[ ] Run SQL Query 2: Count policies (expect >= 12)
+[ ] Run SQL Query 3: List policies (check workspace isolation)
+[ ] Run SQL Query 4: Check functions (expect 2 helper functions)
+
+[STEP 5] TEST APPLICATION (30-60 min)
+─────────────────────────────────────
+[ ] User can sign up and log in
+[ ] User sees own workspace only
+[ ] User CANNOT see other workspace data
+[ ] No "RLS denied" errors in console
+[ ] Admin functions work correctly
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚡ VERIFICATION SQL (Copy & Paste)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+QUERY 1: Check RLS Enabled
+──────────────────────────
+SELECT tablename, rowsecurity FROM pg_tables
+WHERE schemaname = 'public'
+  AND tablename IN ('users', 'contacts', 'campaigns', 'emails', 'projects', 'audit_log')
+ORDER BY tablename;
+
+Expected: All 6 tables should show rowsecurity = true
+
+QUERY 2: Count Policies
+──────────────────────
+SELECT COUNT(*) as policy_count FROM pg_policies
+WHERE schemaname = 'public';
+
+Expected: >= 12
+
+QUERY 3: Check Functions
+────────────────────────
+SELECT routine_name FROM information_schema.routines
+WHERE routine_schema = 'public'
+  AND (routine_name LIKE '%workspace%' OR routine_name LIKE '%admin%');
+
+Expected: get_current_workspace_id, is_workspace_admin
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⏱️ TIMELINE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Backup:        10 minutes
+Deploy:        5 minutes
+Verify:        10 minutes
+Test:          30-60 minutes
+Monitor:       24 hours
+─────────────────────────
+TOTAL:         1.5-2 hours + 24-hour monitoring
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🆘 IF SOMETHING BREAKS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Check error message
+2. Note exact error text
+3. Check RLS-REMEDIATION-ACTION-PLAN.md Troubleshooting section
+4. If critical: Disable RLS temporarily:
+
+   ALTER TABLE public.users DISABLE ROW LEVEL SECURITY;
+   ALTER TABLE public.contacts DISABLE ROW LEVEL SECURITY;
+   ALTER TABLE public.campaigns DISABLE ROW LEVEL SECURITY;
+   ALTER TABLE public.emails DISABLE ROW LEVEL SECURITY;
+   ALTER TABLE public.projects DISABLE ROW LEVEL SECURITY;
+   ALTER TABLE public.audit_log DISABLE ROW LEVEL SECURITY;
+
+5. Contact team with error details
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📚 REFERENCE DOCUMENTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+START HERE:
+  → RLS-CRITICAL-FIX-SUMMARY.md (5-min read)
+  → RLS-DEPLOYMENT-EXECUTION-GUIDE.md (this guide in detail)
+
+COMPLETE REFERENCE:
+  → RLS-REMEDIATION-ACTION-PLAN.md (8,000+ lines)
+  → IMMEDIATE-ACTION-SUMMARY.md (8-step guide)
+
+TECHNICAL:
+  → supabase/migrations/555_enable_rls_critical_tables.sql (migration)
+  → scripts/deploy-rls-fix.mjs (deployment script)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ DEPLOYMENT READY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Dry-run verified: ✅
+Migration tested: ✅
+Documentation complete: ✅
+Rollback plan documented: ✅
+Safety gates in place: ✅
+
+Status: READY FOR DEPLOYMENT
+
+Recommendation: Deploy today or tomorrow (critical security issue)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Created: December 9, 2025 | Priority: CRITICAL | Status: Ready

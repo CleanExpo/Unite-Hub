@@ -102,7 +102,9 @@ export class StrategyArchiveBridge {
   private calculateTimeEfficiency(hierarchy: StrategyHierarchy, actualTime: number): number {
     const estimatedTime = hierarchy.L4_Operational_Tasks.items.reduce((sum, item) => sum + item.estimatedDuration, 0);
 
-    if (estimatedTime === 0) return 100;
+    if (estimatedTime === 0) {
+return 100;
+}
 
     const efficiency = (estimatedTime / actualTime) * 100;
     return Math.max(0, Math.min(120, efficiency)); // Cap at 120
@@ -116,7 +118,9 @@ export class StrategyArchiveBridge {
     // Estimate baseline cost: $100 per estimated hour + $500 base
     const estimatedCost = (hierarchy.L4_Operational_Tasks.items.reduce((sum, item) => sum + item.estimatedDuration / 60, 0) * 100) + 500;
 
-    if (estimatedCost === 0) return 100;
+    if (estimatedCost === 0) {
+return 100;
+}
 
     const efficiency = (estimatedCost / actualCost) * 100;
     return Math.max(0, Math.min(100, efficiency));

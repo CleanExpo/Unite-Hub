@@ -274,7 +274,9 @@ export function isProviderEnabled(provider: SocialProvider): boolean {
 }
 
 export function getProviderConfig(provider: SocialProvider): SocialProviderConfig | null {
-  if (!isProviderEnabled(provider)) return null;
+  if (!isProviderEnabled(provider)) {
+return null;
+}
   return socialEngagementConfig.providers[provider];
 }
 

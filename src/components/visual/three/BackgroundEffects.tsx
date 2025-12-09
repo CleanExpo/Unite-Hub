@@ -214,7 +214,11 @@ export function FlowingRibbons({
       {ribbons.map((ribbon, index) => (
         <mesh
           key={index}
-          ref={(el) => { if (el) ribbonRefs.current[index] = el; }}
+          ref={(el) => {
+ if (el) {
+ribbonRefs.current[index] = el;
+} 
+}}
           position={ribbon.position}
           rotation={[0, 0, ribbon.rotation]}
         >

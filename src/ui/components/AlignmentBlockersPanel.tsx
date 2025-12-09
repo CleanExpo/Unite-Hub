@@ -166,7 +166,9 @@ export function BlockerCount({
   blockers: AlignmentBlocker[];
   onClick?: () => void;
 }) {
-  if (blockers.length === 0) return null;
+  if (blockers.length === 0) {
+return null;
+}
 
   const criticalCount = blockers.filter(b => b.severity === 'critical' || b.severity === 'high').length;
   const color = criticalCount > 0 ? 'text-red-500' : 'text-yellow-500';

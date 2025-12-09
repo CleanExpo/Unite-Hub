@@ -71,7 +71,9 @@ export async function generateStrategyPack(
     monthEnd
   );
 
-  if (!pack) return null;
+  if (!pack) {
+return null;
+}
 
   // Update status to generating
   await updatePackStatus(pack.id, 'generating');

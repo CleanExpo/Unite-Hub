@@ -65,10 +65,18 @@ export async function GET(
       sinceDays?: number;
     } = { limit };
 
-    if (category) filters.type = category;
-    if (status) filters.status = status;
-    if (priority) filters.priority = priority;
-    if (sinceDays) filters.sinceDays = parseInt(sinceDays, 10);
+    if (category) {
+filters.type = category;
+}
+    if (status) {
+filters.status = status;
+}
+    if (priority) {
+filters.priority = priority;
+}
+    if (sinceDays) {
+filters.sinceDays = parseInt(sinceDays, 10);
+}
 
     // Get ideas for client
     const ideas = await clientEmailIntelligenceService.getClientIdeas(
@@ -80,7 +88,9 @@ export async function GET(
     // Group by category for convenience
     const grouped = ideas.reduce((acc, idea) => {
       const key = idea.type || 'other';
-      if (!acc[key]) acc[key] = [];
+      if (!acc[key]) {
+acc[key] = [];
+}
       acc[key].push(idea);
       return acc;
     }, {} as Record<string, typeof ideas>);
@@ -94,7 +104,9 @@ export async function GET(
       urgent: ideas.filter((i) => i.priority === 'urgent').length,
       high: ideas.filter((i) => i.priority === 'high').length,
       overdue: ideas.filter((i) => {
-        if (!i.dueDate) return false;
+        if (!i.dueDate) {
+return false;
+}
         return new Date(i.dueDate) < new Date() && i.status !== 'completed';
       }).length,
     };
@@ -146,9 +158,15 @@ export async function PATCH(
     const supabase = await getSupabaseServer();
 
     const updateData: Record<string, unknown> = { updated_at: new Date().toISOString() };
-    if (status) updateData.status = status;
-    if (priority) updateData.priority = priority;
-    if (notes !== undefined) updateData.notes = notes;
+    if (status) {
+updateData.status = status;
+}
+    if (priority) {
+updateData.priority = priority;
+}
+    if (notes !== undefined) {
+updateData.notes = notes;
+}
 
     const { data: updated, error } = await supabase
       .from('email_ideas')

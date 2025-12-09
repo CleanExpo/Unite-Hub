@@ -201,10 +201,18 @@ function buildDisclaimers(
  * Get human-readable completeness label
  */
 function getCompletenessLabel(completeness: number): string {
-  if (completeness >= 0.85) return 'Excellent';
-  if (completeness >= 0.7) return 'Good';
-  if (completeness >= 0.5) return 'Moderate';
-  if (completeness >= 0.3) return 'Limited';
+  if (completeness >= 0.85) {
+return 'Excellent';
+}
+  if (completeness >= 0.7) {
+return 'Good';
+}
+  if (completeness >= 0.5) {
+return 'Moderate';
+}
+  if (completeness >= 0.3) {
+return 'Limited';
+}
   return 'Minimal';
 }
 

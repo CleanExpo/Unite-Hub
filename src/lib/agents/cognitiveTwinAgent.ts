@@ -115,8 +115,11 @@ export async function getDomainSnapshot(
     const current = score.overall_health || 0;
     const previous = recentScores[1].overall_health || 0;
 
-    if (current > previous + 5) trend = 'improving';
-    else if (current < previous - 5) trend = 'declining';
+    if (current > previous + 5) {
+trend = 'improving';
+} else if (current < previous - 5) {
+trend = 'declining';
+}
   }
 
   // Extract top risks and opportunities

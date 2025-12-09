@@ -40,7 +40,9 @@ export function PerformanceRealityStrip({
     setIsLoading(true);
     try {
       const params = new URLSearchParams({ scope });
-      if (clientId) params.set('client_id', clientId);
+      if (clientId) {
+params.set('client_id', clientId);
+}
 
       const res = await fetch(`/api/performance-reality/strip?${params}`);
       if (res.ok) {

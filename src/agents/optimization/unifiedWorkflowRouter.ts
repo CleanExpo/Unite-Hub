@@ -119,7 +119,9 @@ export function enqueueWorkflows(workflows: RoutedWorkflow[]): void {
  * Get next workflow to execute
  */
 export function getNextWorkflow(): RoutedWorkflow | null {
-  if (workflowQueue.length === 0) return null;
+  if (workflowQueue.length === 0) {
+return null;
+}
 
   const workflow = workflowQueue.shift()!;
   workflow.status = 'active';
@@ -131,7 +133,9 @@ export function getNextWorkflow(): RoutedWorkflow | null {
  */
 export function completeWorkflow(workflowId: string): RoutedWorkflow | null {
   const workflow = workflowQueue.find(w => w.id === workflowId);
-  if (!workflow) return null;
+  if (!workflow) {
+return null;
+}
 
   workflow.status = 'completed';
   workflowQueue = workflowQueue.filter(w => w.id !== workflowId);
@@ -145,7 +149,9 @@ export function completeWorkflow(workflowId: string): RoutedWorkflow | null {
  */
 export function failWorkflow(workflowId: string, reason?: string): RoutedWorkflow | null {
   const workflow = workflowQueue.find(w => w.id === workflowId);
-  if (!workflow) return null;
+  if (!workflow) {
+return null;
+}
 
   workflow.status = 'failed';
   workflowQueue = workflowQueue.filter(w => w.id !== workflowId);

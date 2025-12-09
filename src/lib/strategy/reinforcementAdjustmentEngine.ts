@@ -596,15 +596,23 @@ export class ReinforcementAdjustmentEngine {
   private async applyStepAdjustment(adjustment: ReinforcementAdjustment): Promise<void> {
     const supabase = await getSupabaseServer();
 
-    if (!adjustment.target_id) return;
+    if (!adjustment.target_id) {
+return;
+}
 
     const updates: Record<string, unknown> = {};
 
     if (adjustment.new_value && typeof adjustment.new_value === 'object') {
       const newVal = adjustment.new_value as Record<string, unknown>;
-      if (newVal.target_kpis) updates.target_kpis = newVal.target_kpis;
-      if (newVal.estimated_hours) updates.estimated_hours = newVal.estimated_hours;
-      if (newVal.risk_level) updates.risk_level = newVal.risk_level;
+      if (newVal.target_kpis) {
+updates.target_kpis = newVal.target_kpis;
+}
+      if (newVal.estimated_hours) {
+updates.estimated_hours = newVal.estimated_hours;
+}
+      if (newVal.risk_level) {
+updates.risk_level = newVal.risk_level;
+}
     }
 
     if (Object.keys(updates).length > 0) {
@@ -618,7 +626,9 @@ export class ReinforcementAdjustmentEngine {
   private async applyKPIAdjustment(adjustment: ReinforcementAdjustment): Promise<void> {
     const supabase = await getSupabaseServer();
 
-    if (!adjustment.target_id || typeof adjustment.new_value !== 'number') return;
+    if (!adjustment.target_id || typeof adjustment.new_value !== 'number') {
+return;
+}
 
     await supabase
       .from('kpi_snapshots')

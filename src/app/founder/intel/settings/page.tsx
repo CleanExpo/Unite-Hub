@@ -60,7 +60,9 @@ export default function FounderIntelSettingsPage() {
   };
 
   const handleSave = async () => {
-    if (!preferences) return;
+    if (!preferences) {
+return;
+}
 
     setIsSaving(true);
     try {
@@ -86,7 +88,9 @@ export default function FounderIntelSettingsPage() {
   };
 
   const updateThreshold = (engine: SourceEngine, value: number) => {
-    if (!preferences) return;
+    if (!preferences) {
+return;
+}
     setPreferences({
       ...preferences,
       risk_thresholds: {

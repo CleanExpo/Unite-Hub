@@ -195,7 +195,9 @@ export function OperatorPlaybooksDashboard({
   };
 
   const handleCreateRule = async () => {
-    if (!selectedPlaybook) return;
+    if (!selectedPlaybook) {
+return;
+}
 
     try {
       let conditions = {};
@@ -250,7 +252,9 @@ export function OperatorPlaybooksDashboard({
   };
 
   const handleAssignPlaybook = async () => {
-    if (!selectedPlaybook) return;
+    if (!selectedPlaybook) {
+return;
+}
 
     try {
       const res = await fetch("/api/operator/playbooks", {

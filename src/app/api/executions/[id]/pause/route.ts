@@ -69,7 +69,9 @@ export async function POST(
       .update({ status: 'paused' })
       .eq('id', executionId);
 
-    if (updateError) throw updateError;
+    if (updateError) {
+throw updateError;
+}
 
     return NextResponse.json({
       success: true,

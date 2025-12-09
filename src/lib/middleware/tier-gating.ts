@@ -3,7 +3,7 @@
  * Phase 89C: Enforces subscription tier access to Phase 89 features
  */
 
-/* eslint-disable no-undef, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { isFeatureAvailable, SubscriptionTier } from '@/lib/config/tier-config';
 import logger from '@/lib/logger';

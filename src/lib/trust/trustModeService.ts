@@ -66,7 +66,9 @@ export class TrustModeService {
           .select()
           .single();
 
-        if (error) throw error;
+        if (error) {
+throw error;
+}
         return data;
       }
 
@@ -88,7 +90,9 @@ export class TrustModeService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     // Log to audit
     await this.logAuditEvent(clientId, organizationId, {
@@ -137,7 +141,9 @@ export class TrustModeService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     // Log to audit
     await this.logAuditEvent(clientId, request.organization_id, {
@@ -186,7 +192,9 @@ export class TrustModeService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     // Log to audit
     await this.logAuditEvent(clientId, request.organization_id, {
@@ -241,7 +249,9 @@ export class TrustModeService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     // Create default autonomy scopes
     await this.createDefaultScopes(clientId);
@@ -286,7 +296,9 @@ export class TrustModeService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
     return data;
   }
 
@@ -379,7 +391,9 @@ export class TrustModeService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
     return data;
   }
 
@@ -432,10 +446,18 @@ export class TrustModeService {
     // Determine enabled domains
     const enabledDomains: DomainScope[] = [];
     if (scopes) {
-      if (scopes.seo_scope_json?.enabled) enabledDomains.push("SEO");
-      if (scopes.content_scope_json?.enabled) enabledDomains.push("CONTENT");
-      if (scopes.ads_scope_json?.enabled) enabledDomains.push("ADS");
-      if (scopes.cro_scope_json?.enabled) enabledDomains.push("CRO");
+      if (scopes.seo_scope_json?.enabled) {
+enabledDomains.push("SEO");
+}
+      if (scopes.content_scope_json?.enabled) {
+enabledDomains.push("CONTENT");
+}
+      if (scopes.ads_scope_json?.enabled) {
+enabledDomains.push("ADS");
+}
+      if (scopes.cro_scope_json?.enabled) {
+enabledDomains.push("CRO");
+}
     }
 
     return {
@@ -484,7 +506,9 @@ export class TrustModeService {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     // Log to audit
     await this.logAuditEvent(clientId, request.organization_id, {

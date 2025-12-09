@@ -1,0 +1,260 @@
+{
+  "workflowId": "unite-hub-main",
+  "title": "Unite-Hub Development Workflow",
+  "description": "AI-first CRM & marketing automation platform with Next.js 16, React 19, Supabase, and Claude API",
+  "createdAt": "2025-12-06T10:57:00Z",
+  "initiatedBy": "initializer-agent",
+  "status": "active",
+  "features": [
+    {
+      "id": "f1",
+      "category": "infrastructure",
+      "title": "Long-running agent infrastructure",
+      "description": "Set up init.sh, claude-progress.txt, feature_list.json, and session workflow",
+      "acceptance_criteria": [
+        "init.sh successfully sets up dev environment",
+        "claude-progress.txt tracks session history",
+        "feature_list.json follows Anthropic pattern",
+        ".clinerules contains agent prompts"
+      ],
+      "passes": false,
+      "priority": "critical",
+      "estimatedMinutes": 30,
+      "notes": "Foundation for all subsequent work - must complete first"
+    },
+    {
+      "id": "f2",
+      "category": "backend",
+      "title": "API route health check",
+      "description": "Verify all API routes return correct status codes and handle errors properly",
+      "acceptance_criteria": [
+        "All /api routes return 200 or appropriate error codes",
+        "Authentication middleware works correctly",
+        "Error responses include proper error messages",
+        "Rate limiting is configured"
+      ],
+      "passes": false,
+      "priority": "high",
+      "estimatedMinutes": 45
+    },
+    {
+      "id": "f3",
+      "category": "ai-agent",
+      "title": "Email agent workflow integration",
+      "description": "Ensure email agent processes emails incrementally across sessions",
+      "acceptance_criteria": [
+        "Email agent reads from feature list",
+        "Processes emails in batches",
+        "Updates progress file after each batch",
+        "Commits changes to git"
+      ],
+      "passes": false,
+      "priority": "high",
+      "estimatedMinutes": 60
+    },
+    {
+      "id": "f4",
+      "category": "ai-agent",
+      "title": "Content agent workflow integration",
+      "description": "Ensure content agent generates content incrementally",
+      "acceptance_criteria": [
+        "Content agent reads from feature list",
+        "Generates content for contacts in batches",
+        "Saves drafts incrementally",
+        "Updates progress file"
+      ],
+      "passes": false,
+      "priority": "high",
+      "estimatedMinutes": 60
+    },
+    {
+      "id": "f5",
+      "category": "ai-agent",
+      "title": "Orchestrator agent as initializer",
+      "description": "Configure orchestrator to create feature lists and hand off to execution agents",
+      "acceptance_criteria": [
+        "Orchestrator can generate feature lists from high-level requests",
+        "Hands off to appropriate execution agents",
+        "Tracks workflow completion",
+        "Archives completed workflows"
+      ],
+      "passes": false,
+      "priority": "high",
+      "estimatedMinutes": 90
+    },
+    {
+      "id": "f6",
+      "category": "testing",
+      "title": "E2E test suite with browser automation",
+      "description": "Set up Puppeteer/Playwright for end-to-end testing of features",
+      "acceptance_criteria": [
+        "Browser automation configured",
+        "Can test authentication flow",
+        "Can test contact creation",
+        "Can test email processing",
+        "Screenshots saved for verification"
+      ],
+      "passes": false,
+      "priority": "high",
+      "estimatedMinutes": 120
+    },
+    {
+      "id": "f7",
+      "category": "database",
+      "title": "Connection pooling optimization",
+      "description": "Implement Supabase connection pooling for 60-80% latency reduction",
+      "acceptance_criteria": [
+        "SUPABASE_POOLER_URL configured",
+        "Connection pool initialized",
+        "Health check shows pooling enabled",
+        "Reduced response times measured"
+      ],
+      "passes": false,
+      "priority": "critical",
+      "estimatedMinutes": 45
+    },
+    {
+      "id": "f8",
+      "category": "frontend",
+      "title": "Dashboard UI stress testing",
+      "description": "Verify dashboard performs well with large datasets",
+      "acceptance_criteria": [
+        "Dashboard loads with 1000+ contacts",
+        "Analytics update in <500ms",
+        "Charts render without lag",
+        "Infinite scroll works smoothly"
+      ],
+      "passes": false,
+      "priority": "medium",
+      "estimatedMinutes": 90
+    },
+    {
+      "id": "f9",
+      "category": "integration",
+      "title": "OAuth flow verification (Gmail, Google)",
+      "description": "Test and verify OAuth authentication flows work end-to-end",
+      "acceptance_criteria": [
+        "Google OAuth redirects correctly",
+        "Tokens stored in database securely",
+        "Refresh token mechanism works",
+        "Gmail API integration functional"
+      ],
+      "passes": false,
+      "priority": "high",
+      "estimatedMinutes": 60
+    },
+    {
+      "id": "f10",
+      "category": "monitoring",
+      "title": "Workflow metrics dashboard",
+      "description": "Create monitoring dashboard for long-running workflows",
+      "acceptance_criteria": [
+        "Shows active workflows and completion %",
+        "Displays session history",
+        "Shows git commit audit trail",
+        "Exports Prometheus metrics"
+      ],
+      "passes": false,
+      "priority": "medium",
+      "estimatedMinutes": 120
+    },
+    {
+      "id": "f11",
+      "category": "backend",
+      "title": "Anthropic API rate limiting",
+      "description": "Implement proper retry logic and rate limiting for Anthropic API",
+      "acceptance_criteria": [
+        "Retry logic with exponential backoff",
+        "Request throttling respects API limits",
+        "Error handling for 429 responses",
+        "Logging for all API calls"
+      ],
+      "passes": false,
+      "priority": "critical",
+      "estimatedMinutes": 45
+    },
+    {
+      "id": "f12",
+      "category": "database",
+      "title": "RLS policy audit",
+      "description": "Verify all tables have proper Row Level Security policies",
+      "acceptance_criteria": [
+        "All tables have RLS enabled",
+        "Policies prevent unauthorized access",
+        "workspace_id isolation working",
+        "No data leaks in tests"
+      ],
+      "passes": false,
+      "priority": "critical",
+      "estimatedMinutes": 90
+    },
+    {
+      "id": "f13",
+      "category": "testing",
+      "title": "Integration test suite expansion",
+      "description": "Expand test coverage to 90%+ for critical paths",
+      "acceptance_criteria": [
+        "Auth flow covered",
+        "Contact CRUD covered",
+        "Email processing covered",
+        "Campaign creation covered",
+        "Coverage report shows 90%+"
+      ],
+      "passes": false,
+      "priority": "high",
+      "estimatedMinutes": 180
+    },
+    {
+      "id": "f14",
+      "category": "frontend",
+      "title": "Design system enforcement",
+      "description": "Audit all components for design system compliance",
+      "acceptance_criteria": [
+        "No forbidden patterns (bg-white, text-gray-600)",
+        "All use design tokens from globals.css",
+        "Accent color (#ff6b35) used consistently",
+        "Quality score 9/10+ on visual distinctiveness"
+      ],
+      "passes": false,
+      "priority": "medium",
+      "estimatedMinutes": 120
+    },
+    {
+      "id": "f15",
+      "category": "integration",
+      "title": "Stripe payment integration testing",
+      "description": "Verify Stripe integration works end-to-end",
+      "acceptance_criteria": [
+        "Payment flow completes successfully",
+        "Webhooks received and processed",
+        "Subscription status updates in database",
+        "Test mode works correctly"
+      ],
+      "passes": false,
+      "priority": "high",
+      "estimatedMinutes": 90
+    }
+  ],
+  "metadata": {
+    "totalFeatures": 15,
+    "completed": 0,
+    "completionPercentage": 0,
+    "estimatedTotalMinutes": 1230,
+    "estimatedTotalHours": 20.5
+  },
+  "rules": {
+    "immutable": [
+      "Only 'passes' field can be modified after creation",
+      "Cannot add or remove features",
+      "Cannot change acceptance_criteria",
+      "Cannot change category or title"
+    ],
+    "workflow": [
+      "Work on ONE feature per session",
+      "Test thoroughly before marking passes=true",
+      "Update claude-progress.txt after each feature",
+      "Commit changes to git with descriptive message",
+      "Read git log and progress file at session start"
+    ]
+  }
+}

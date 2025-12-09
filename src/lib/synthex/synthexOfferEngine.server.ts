@@ -66,9 +66,13 @@ export async function getCurrentOfferTier(): Promise<{
  */
 export async function isOfferAvailable(offerTier: string): Promise<boolean> {
   const offer = OFFER_TIERS[offerTier];
-  if (!offer) return false;
+  if (!offer) {
+return false;
+}
 
-  if (offer.limit === -1) return true; // Unlimited
+  if (offer.limit === -1) {
+return true;
+} // Unlimited
 
   const { data: counter, error } = await supabaseAdmin
     .from('synthex_offer_counters')
@@ -76,7 +80,9 @@ export async function isOfferAvailable(offerTier: string): Promise<boolean> {
     .eq('counter_key', offer.counterKey)
     .single();
 
-  if (error || !counter) return false;
+  if (error || !counter) {
+return false;
+}
 
   return counter.consumed < counter.limit_count;
 }
@@ -86,9 +92,13 @@ export async function isOfferAvailable(offerTier: string): Promise<boolean> {
  */
 export async function consumeOfferSlot(offerTier: string): Promise<boolean> {
   const offer = OFFER_TIERS[offerTier];
-  if (!offer) return false;
+  if (!offer) {
+return false;
+}
 
-  if (offer.limit === -1) return true; // Unlimited, no need to increment
+  if (offer.limit === -1) {
+return true;
+} // Unlimited, no need to increment
 
   const { data: currentCounter } = await supabaseAdmin
     .from('synthex_offer_counters')

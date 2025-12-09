@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */
+ 
 /**
  * Health Check Validator - Retry logic for health check validation
  *

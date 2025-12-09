@@ -100,9 +100,15 @@ export default function RiskOpportunityPanel({
   // Filtered risks
   const filteredRisks = useMemo(() => {
     return risks.filter(risk => {
-      if (riskDomain !== "all" && risk.domain !== riskDomain) return false;
-      if (riskSeverity !== "all" && risk.severity !== riskSeverity) return false;
-      if (riskStatus !== "all" && risk.status !== riskStatus) return false;
+      if (riskDomain !== "all" && risk.domain !== riskDomain) {
+return false;
+}
+      if (riskSeverity !== "all" && risk.severity !== riskSeverity) {
+return false;
+}
+      if (riskStatus !== "all" && risk.status !== riskStatus) {
+return false;
+}
       return true;
     });
   }, [risks, riskDomain, riskSeverity, riskStatus]);
@@ -110,9 +116,15 @@ export default function RiskOpportunityPanel({
   // Filtered opportunities
   const filteredOpps = useMemo(() => {
     return opportunities.filter(opp => {
-      if (oppDomain !== "all" && opp.domain !== oppDomain) return false;
-      if (oppImpact !== "all" && opp.impact !== oppImpact) return false;
-      if (oppStatus !== "all" && opp.status !== oppStatus) return false;
+      if (oppDomain !== "all" && opp.domain !== oppDomain) {
+return false;
+}
+      if (oppImpact !== "all" && opp.impact !== oppImpact) {
+return false;
+}
+      if (oppStatus !== "all" && opp.status !== oppStatus) {
+return false;
+}
       return true;
     });
   }, [opportunities, oppDomain, oppImpact, oppStatus]);
@@ -153,15 +165,23 @@ export default function RiskOpportunityPanel({
 
   // Get severity badge variant
   const getSeverityVariant = (severity: string): "danger" | "warning" | "default" => {
-    if (severity === "critical" || severity === "high") return "danger";
-    if (severity === "medium") return "warning";
+    if (severity === "critical" || severity === "high") {
+return "danger";
+}
+    if (severity === "medium") {
+return "warning";
+}
     return "default";
   };
 
   // Get impact badge variant
   const getImpactVariant = (impact: string): "success" | "warning" | "default" => {
-    if (impact === "high") return "success";
-    if (impact === "medium") return "warning";
+    if (impact === "high") {
+return "success";
+}
+    if (impact === "medium") {
+return "warning";
+}
     return "default";
   };
 

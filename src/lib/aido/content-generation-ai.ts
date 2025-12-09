@@ -335,7 +335,7 @@ function parseGeneratedContent(responseText: string): GeneratedContent {
   let summary = '';
   let bodyMarkdown = '';
   let qaBlocks: Array<{ question: string; answer: string }> = [];
-  let scores = { authority: 0.5, evergreen: 0.5, aiSource: 0.5 };
+  const scores = { authority: 0.5, evergreen: 0.5, aiSource: 0.5 };
 
   for (let i = 0; i < sections.length; i++) {
     const sectionName = sections[i].trim().toUpperCase();
@@ -368,9 +368,15 @@ function parseGeneratedContent(responseText: string): GeneratedContent {
             const [key, value] = line.split(':').map(s => s.trim());
             if (key && value) {
               const score = parseFloat(value);
-              if (key === 'authority') scores.authority = score;
-              if (key === 'evergreen') scores.evergreen = score;
-              if (key === 'aiSource') scores.aiSource = score;
+              if (key === 'authority') {
+scores.authority = score;
+}
+              if (key === 'evergreen') {
+scores.evergreen = score;
+}
+              if (key === 'aiSource') {
+scores.aiSource = score;
+}
             }
           });
         } catch (e) {
@@ -382,9 +388,13 @@ function parseGeneratedContent(responseText: string): GeneratedContent {
 
   // Generate schema types based on content
   const schemaTypes = [];
-  if (qaBlocks.length > 0) schemaTypes.push('FAQPage');
+  if (qaBlocks.length > 0) {
+schemaTypes.push('FAQPage');
+}
   schemaTypes.push('Article');
-  if (bodyMarkdown.includes('## About the Author')) schemaTypes.push('Person');
+  if (bodyMarkdown.includes('## About the Author')) {
+schemaTypes.push('Person');
+}
 
   return {
     title: title || 'Untitled',
@@ -496,7 +506,9 @@ export function validateAIDOStructure(content: GeneratedContent): void {
   let factualStatements = 0;
   factualPatterns.forEach(pattern => {
     const matches = content.bodyMarkdown.match(pattern);
-    if (matches) factualStatements += matches.length;
+    if (matches) {
+factualStatements += matches.length;
+}
   });
 
   if (factualStatements < 20) {

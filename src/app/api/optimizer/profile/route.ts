@@ -82,9 +82,9 @@ export async function GET(req: NextRequest) {
       .limit(10);
 
     // 3. Calculate trends
-    let trendingParallelismReduction = 0;
-    let trendingReasoningReduction = 0;
-    let trendingContextReduction = 0;
+    const trendingParallelismReduction = 0;
+    const trendingReasoningReduction = 0;
+    const trendingContextReduction = 0;
     let avgAdaptationScore = 0;
 
     if (profileHistory && profileHistory.length > 0) {

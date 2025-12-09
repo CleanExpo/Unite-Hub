@@ -152,7 +152,9 @@ export async function getPlanByCode(code: string): Promise<BillingPlan | null> {
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') return null;
+    if (error.code === 'PGRST116') {
+return null;
+}
     throw new Error(`Failed to fetch plan: ${error.message}`);
   }
 
@@ -172,7 +174,9 @@ export async function getPlanById(planId: string): Promise<BillingPlan | null> {
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') return null;
+    if (error.code === 'PGRST116') {
+return null;
+}
     throw new Error(`Failed to fetch plan: ${error.message}`);
   }
 
@@ -199,7 +203,9 @@ export async function getTenantSubscription(tenantId: string): Promise<Subscript
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') return null;
+    if (error.code === 'PGRST116') {
+return null;
+}
     console.error('[BillingPlanService] Error fetching subscription:', error);
     throw new Error(`Failed to fetch subscription: ${error.message}`);
   }
@@ -444,7 +450,9 @@ export async function classifyUsageAgainstLimits(tenantId: string): Promise<Usag
   const warnings: UsageWarning[] = [];
 
   summary.forEach((item) => {
-    if (item.unlimited) return;
+    if (item.unlimited) {
+return;
+}
 
     const metricLabel = getMetricLabel(item.metric);
 
@@ -597,7 +605,9 @@ export function calculateYearlySavings(
   yearlyPrice: number
 ): number {
   const monthlyTotal = monthlyPrice * 12;
-  if (monthlyTotal === 0) return 0;
+  if (monthlyTotal === 0) {
+return 0;
+}
   const savings = monthlyTotal - yearlyPrice;
   return Math.round((savings / monthlyTotal) * 100);
 }

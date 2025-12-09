@@ -672,7 +672,7 @@ export class OrchestratorEngine {
     }>;
     error?: string;
   }> {
-    let attempts = 0;
+    const attempts = 0;
     let lastError: string | undefined;
 
     // Create timeout promise
@@ -838,7 +838,7 @@ export class OrchestratorEngine {
     }> = [];
 
     let verifiedCount = 0;
-    let evidenceLinks: string[] = [];
+    const evidenceLinks: string[] = [];
 
     for (const step of steps) {
       if (step.verified) {

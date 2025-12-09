@@ -32,7 +32,9 @@ export async function POST(req: NextRequest) {
       p_date: date,
     });
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     logger.info('Queue resumed', { workspaceId, date, userId: user.id });
 

@@ -35,7 +35,9 @@ export default function CoalitionPage() {
 
   // Fetch coalition status
   const fetchStatus = useCallback(async () => {
-    if (!workspaceId) return;
+    if (!workspaceId) {
+return;
+}
 
     try {
       setLoadingCoalition(true);
@@ -64,7 +66,9 @@ export default function CoalitionPage() {
 
   // Fetch history
   const fetchHistory = useCallback(async () => {
-    if (!workspaceId) return;
+    if (!workspaceId) {
+return;
+}
 
     try {
       setLoadingHistory(true);
@@ -79,7 +83,9 @@ export default function CoalitionPage() {
 
   // Polling
   useEffect(() => {
-    if (!pollingActive || !workspaceId) return;
+    if (!pollingActive || !workspaceId) {
+return;
+}
 
     const timer = setInterval(async () => {
       await fetchStatus();
@@ -91,7 +97,9 @@ export default function CoalitionPage() {
 
   // Initial fetch
   useEffect(() => {
-    if (!workspaceId) return;
+    if (!workspaceId) {
+return;
+}
 
     fetchStatus();
     fetchHistory();

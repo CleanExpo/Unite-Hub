@@ -490,7 +490,9 @@ export async function saveBlueOceanStrategy(strategy: BlueOceanStrategy): Promis
       .select('id')
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     logger.info('✅ Blue Ocean Strategy saved', {
       strategyId: data.id,

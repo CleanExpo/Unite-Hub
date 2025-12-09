@@ -121,10 +121,18 @@ export function calculateLeadScore(
  * Get lead grade based on score
  */
 export function getLeadGrade(score: number): string {
-  if (score >= 100) return 'A';
-  if (score >= 75) return 'B';
-  if (score >= 50) return 'C';
-  if (score >= 25) return 'D';
+  if (score >= 100) {
+return 'A';
+}
+  if (score >= 75) {
+return 'B';
+}
+  if (score >= 50) {
+return 'C';
+}
+  if (score >= 25) {
+return 'D';
+}
   return 'F';
 }
 
@@ -352,7 +360,9 @@ export async function upsertLeadModel(
         .single();
     }
 
-    if (result.error) throw result.error;
+    if (result.error) {
+throw result.error;
+}
     return { data: mapLeadModelFromDb(result.data), error: null };
   } catch (error) {
     console.error('[leadEngineService] upsertLeadModel error:', error);
@@ -385,7 +395,9 @@ export async function listLeadModels(
     }
 
     const { data, error } = await query;
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { data: (data || []).map(mapLeadModelFromDb), error: null };
   } catch (error) {
@@ -407,7 +419,9 @@ export async function getLeadModel(
       .eq('contact_id', contactId)
       .single();
 
-    if (error && error.code !== 'PGRST116') throw error;
+    if (error && error.code !== 'PGRST116') {
+throw error;
+}
     return { data: data ? mapLeadModelFromDb(data) : null, error: null };
   } catch (error) {
     console.error('[leadEngineService] getLeadModel error:', error);

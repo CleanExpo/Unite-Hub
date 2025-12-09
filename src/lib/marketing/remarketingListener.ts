@@ -146,7 +146,9 @@ async function updateAudienceMemberships(
           .eq('user_id', userId)
           .single();
 
-        if (!consent?.marketing) continue;
+        if (!consent?.marketing) {
+continue;
+}
       }
 
       // Add to audience
@@ -200,7 +202,9 @@ export async function createSequence(
     .select('id')
     .single();
 
-  if (error) throw error;
+  if (error) {
+throw error;
+}
   return data.id;
 }
 
@@ -221,12 +225,16 @@ export async function executeRemarketingStep(
     .eq('id', sequenceId)
     .single();
 
-  if (!sequence) return false;
+  if (!sequence) {
+return false;
+}
 
   const steps = sequence.steps as SequenceStep[];
   const step = steps[stepIndex];
 
-  if (!step) return false;
+  if (!step) {
+return false;
+}
 
   // Check consent
   const { data: consent } = await supabase
@@ -297,7 +305,9 @@ export async function checkConsent(
     .eq('user_id', userId)
     .single();
 
-  if (!data) return false;
+  if (!data) {
+return false;
+}
 
   switch (channel) {
     case 'email':

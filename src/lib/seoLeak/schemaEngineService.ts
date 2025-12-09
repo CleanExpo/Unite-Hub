@@ -1088,7 +1088,9 @@ export async function getSchema(schemaId: string): Promise<GeneratedSchema | nul
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') return null;
+      if (error.code === 'PGRST116') {
+return null;
+}
       console.error('[Schema Engine] Get schema error:', error);
       return null;
     }

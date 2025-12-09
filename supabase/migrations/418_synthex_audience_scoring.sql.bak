@@ -1,0 +1,133 @@
+-- Phase B11: Synthex Audience Scoring + Smart Tags + Behavioral Intelligence
+-- Date: 2025-12-06
+-- Backlog: SYNTHEX-011
+
+-- =============================================================================
+-- Table: synthex_audience_scores
+-- Tracks engagement scores, activity vectors, personas, and tags per contact
+-- =============================================================================
+
+create table if not exists synthex_audience_scores (
+  id uuid primary key default gen_random_uuid(),
+  contact_id uuid not null references synthex_audience_contacts(id) on delete cascade,
+  tenant_id uuid not null references synthex_tenants(id) on delete cascade,
+
+  -- Engagement scoring
+  engagement_score int default 0,
+  activity_vector jsonb default '{}',
+  last_event_at timestamp with time zone,
+
+  -- AI classification
+  persona text,
+  persona_confidence numeric(5,4),
+  tags text[] default '{}',
+
+  -- Behavioral signals
+  total_events int default 0,
+  positive_signals int default 0,
+  negative_signals int default 0,
+
+  -- Timestamps
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now()
+);
+
+-- Index for fast lookups
+create index if not exists idx_audience_scores_contact on synthex_audience_scores(contact_id);
+create index if not exists idx_audience_scores_tenant on synthex_audience_scores(tenant_id);
+create index if not exists idx_audience_scores_engagement on synthex_audience_scores(engagement_score desc);
+create index if not exists idx_audience_scores_persona on synthex_audience_scores(persona);
+
+-- =============================================================================
+-- Table: synthex_audience_events
+-- Raw event log for behavioral tracking
+-- =============================================================================
+
+create table if not exists synthex_audience_events (
+  id uuid primary key default gen_random_uuid(),
+  contact_id uuid not null references synthex_audience_contacts(id) on delete cascade,
+  tenant_id uuid not null references synthex_tenants(id) on delete cascade,
+
+  -- Event details
+  event_type text not null, -- impression, open, click, conversion, reply, unsubscribe, bounce
+  event_source text, -- email, sms, push, web
+  event_data jsonb default '{}',
+  weight int default 0,
+
+  -- Timestamps
+  created_at timestamp with time zone default now()
+);
+
+create index if not exists idx_audience_events_contact on synthex_audience_events(contact_id);
+create index if not exists idx_audience_events_tenant on synthex_audience_events(tenant_id);
+create index if not exists idx_audience_events_type on synthex_audience_events(event_type);
+create index if not exists idx_audience_events_created on synthex_audience_events(created_at desc);
+
+-- =============================================================================
+-- RLS Policies
+-- =============================================================================
+
+alter table synthex_audience_scores enable row level security;
+alter table synthex_audience_events enable row level security;
+
+-- Scores policies
+create policy "scores_select_own" on synthex_audience_scores
+  for select using (
+    tenant_id in (
+      select id from synthex_tenants where owner_user_id = auth.uid()
+    )
+  );
+
+create policy "scores_insert_own" on synthex_audience_scores
+  for insert with check (
+    tenant_id in (
+      select id from synthex_tenants where owner_user_id = auth.uid()
+    )
+  );
+
+create policy "scores_update_own" on synthex_audience_scores
+  for update using (
+    tenant_id in (
+      select id from synthex_tenants where owner_user_id = auth.uid()
+    )
+  );
+
+create policy "scores_delete_own" on synthex_audience_scores
+  for delete using (
+    tenant_id in (
+      select id from synthex_tenants where owner_user_id = auth.uid()
+    )
+  );
+
+-- Events policies
+create policy "events_select_own" on synthex_audience_events
+  for select using (
+    tenant_id in (
+      select id from synthex_tenants where owner_user_id = auth.uid()
+    )
+  );
+
+create policy "events_insert_own" on synthex_audience_events
+  for insert with check (
+    tenant_id in (
+      select id from synthex_tenants where owner_user_id = auth.uid()
+    )
+  );
+
+-- =============================================================================
+-- Triggers
+-- =============================================================================
+
+-- Auto-update updated_at
+create trigger set_updated_at_audience_scores
+  before update on synthex_audience_scores
+  for each row execute function update_updated_at_column();
+
+-- =============================================================================
+-- Comments
+-- =============================================================================
+
+comment on table synthex_audience_scores is 'Engagement scores, personas, and tags for audience contacts';
+comment on table synthex_audience_events is 'Raw behavioral event log for audience contacts';
+comment on column synthex_audience_scores.activity_vector is 'Count of each event type: { open: 5, click: 2, ... }';
+comment on column synthex_audience_scores.persona is 'AI-classified persona (e.g., "Early Adopter", "Price Conscious")';

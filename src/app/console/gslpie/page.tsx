@@ -22,8 +22,12 @@ export default function GSLPIEPage() {
   ]);
 
   const TrendIcon = ({ trend }: { trend: string }) => {
-    if (trend === 'improving') return <TrendingUp className="text-green-400" size={16} />;
-    if (trend === 'degrading') return <TrendingDown className="text-red-400" size={16} />;
+    if (trend === 'improving') {
+return <TrendingUp className="text-green-400" size={16} />;
+}
+    if (trend === 'degrading') {
+return <TrendingDown className="text-red-400" size={16} />;
+}
     return <Minus className="text-gray-400" size={16} />;
   };
 

@@ -20,7 +20,9 @@ export function ContentPreview({
 }) {
   const [selectedVariant, setSelectedVariant] = useState(0);
 
-  if (!content) return null;
+  if (!content) {
+return null;
+}
 
   const subjectLines = content.subject_lines || [];
   const selectedSubject = subjectLines[selectedVariant];

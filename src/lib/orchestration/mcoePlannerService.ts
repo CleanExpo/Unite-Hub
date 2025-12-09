@@ -176,7 +176,9 @@ export function selectOptimalTimes(
   const times: Date[] = [];
   const daysInWeek = 7;
 
-  if (count === 0) return times;
+  if (count === 0) {
+return times;
+}
 
   // Distribute evenly across the week
   const spacing = Math.floor(daysInWeek / count);

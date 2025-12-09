@@ -59,7 +59,7 @@ class SerpSnapshotService {
     const supabase = await getSupabaseServer();
 
     // Get or create keyword record
-    let keywordRecord = await this.getOrCreateKeyword(projectId, workspaceId, keyword);
+    const keywordRecord = await this.getOrCreateKeyword(projectId, workspaceId, keyword);
 
     // Fetch SERP data (using DataForSEO or similar API)
     const serpData = await this.fetchSerpData(keyword, engine, location, device, language);
@@ -531,21 +531,35 @@ class SerpSnapshotService {
   ): 'high' | 'medium' | 'low' | 'none' {
     // Not ranking = potential opportunity if difficulty is low
     if (!ourPosition) {
-      if (difficulty < 40) return 'high';
-      if (difficulty < 60) return 'medium';
-      if (difficulty < 80) return 'low';
+      if (difficulty < 40) {
+return 'high';
+}
+      if (difficulty < 60) {
+return 'medium';
+}
+      if (difficulty < 80) {
+return 'low';
+}
       return 'none';
     }
 
     // Already top 3 = low opportunity for improvement
-    if (ourPosition <= 3) return 'low';
+    if (ourPosition <= 3) {
+return 'low';
+}
 
     // Position 4-10 with low difficulty = high opportunity
-    if (ourPosition <= 10 && difficulty < 50) return 'high';
-    if (ourPosition <= 10) return 'medium';
+    if (ourPosition <= 10 && difficulty < 50) {
+return 'high';
+}
+    if (ourPosition <= 10) {
+return 'medium';
+}
 
     // Position 11-20 = medium opportunity
-    if (ourPosition <= 20) return 'medium';
+    if (ourPosition <= 20) {
+return 'medium';
+}
 
     // Beyond page 2 = depends on difficulty
     return difficulty < 60 ? 'medium' : 'low';

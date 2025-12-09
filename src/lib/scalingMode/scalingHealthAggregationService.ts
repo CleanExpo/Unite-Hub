@@ -190,7 +190,9 @@ export function calculateConfidence(
   dataCompleteness: Record<string, boolean>
 ): number {
   const keys = Object.keys(dataCompleteness);
-  if (keys.length === 0) return 0;
+  if (keys.length === 0) {
+return 0;
+}
 
   const completedCount = Object.values(dataCompleteness).filter(Boolean).length;
   return Math.round((completedCount / keys.length) * 100) / 100;

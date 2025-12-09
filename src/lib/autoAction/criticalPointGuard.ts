@@ -363,12 +363,24 @@ export class CriticalPointGuard {
         : action.target?.text?.toLowerCase() || '';
 
     // Infer intent from button/link text
-    if (/submit|send|confirm/i.test(targetText)) return 'submit_form';
-    if (/pay|purchase|buy|checkout/i.test(targetText)) return 'make_payment';
-    if (/upload|attach/i.test(targetText)) return 'upload_document';
-    if (/delete|remove/i.test(targetText)) return 'delete_record';
-    if (/sign|agree/i.test(targetText)) return 'sign_agreement';
-    if (/grant|allow|permit/i.test(targetText)) return 'grant_permissions';
+    if (/submit|send|confirm/i.test(targetText)) {
+return 'submit_form';
+}
+    if (/pay|purchase|buy|checkout/i.test(targetText)) {
+return 'make_payment';
+}
+    if (/upload|attach/i.test(targetText)) {
+return 'upload_document';
+}
+    if (/delete|remove/i.test(targetText)) {
+return 'delete_record';
+}
+    if (/sign|agree/i.test(targetText)) {
+return 'sign_agreement';
+}
+    if (/grant|allow|permit/i.test(targetText)) {
+return 'grant_permissions';
+}
 
     return action.type;
   }

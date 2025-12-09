@@ -214,7 +214,9 @@ export async function waitForDbOperation(fn: () => Promise<any>, maxAttempts = 1
   while (attempts < maxAttempts) {
     try {
       const result = await fn();
-      if (result) return result;
+      if (result) {
+return result;
+}
     } catch (error) {
       // Continue waiting
     }

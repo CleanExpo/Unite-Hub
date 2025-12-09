@@ -323,9 +323,15 @@ describe('UsageAnalyticsService', () => {
 
     it('should classify severity correctly', () => {
       const classifySeverity = (zScore: number) => {
-        if (Math.abs(zScore) > 4) return 'critical';
-        if (Math.abs(zScore) > 3) return 'high';
-        if (Math.abs(zScore) > 2.5) return 'medium';
+        if (Math.abs(zScore) > 4) {
+return 'critical';
+}
+        if (Math.abs(zScore) > 3) {
+return 'high';
+}
+        if (Math.abs(zScore) > 2.5) {
+return 'medium';
+}
         return 'low';
       };
 
@@ -348,9 +354,15 @@ describe('UsageAnalyticsService', () => {
   describe('Clustering', () => {
     it('should categorize usage levels', () => {
       const categorize = (total: number) => {
-        if (total < 100) return 'low';
-        if (total < 500) return 'medium';
-        if (total < 2000) return 'high';
+        if (total < 100) {
+return 'low';
+}
+        if (total < 500) {
+return 'medium';
+}
+        if (total < 2000) {
+return 'high';
+}
         return 'very_high';
       };
 

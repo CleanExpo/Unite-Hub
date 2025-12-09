@@ -76,7 +76,9 @@ export function initializeGlassesConnection(owner: string, hardware: GlassesHard
  */
 export function disconnectGlasses(sessionId: string): GlassesSession | null {
   const session = activeSessions.find(s => s.id === sessionId);
-  if (!session) return null;
+  if (!session) {
+return null;
+}
 
   session.isActive = false;
   return session;
@@ -143,10 +145,14 @@ function parseParameters(transcript: string): Record<string, string> {
 
   // Simple parameter extraction
   const timeMatch = transcript.match(/\b(morning|midday|evening|today|tomorrow)\b/i);
-  if (timeMatch) params.timeOfDay = timeMatch[1];
+  if (timeMatch) {
+params.timeOfDay = timeMatch[1];
+}
 
   const domainMatch = transcript.match(/\b(leads|revenue|profit|operations|risk|crypto|market)\b/i);
-  if (domainMatch) params.domain = domainMatch[1];
+  if (domainMatch) {
+params.domain = domainMatch[1];
+}
 
   return params;
 }
@@ -156,7 +162,9 @@ function parseParameters(transcript: string): Record<string, string> {
  */
 export async function sendAudioOutput(sessionId: string, audio: AudioOutput): Promise<boolean> {
   const session = activeSessions.find(s => s.id === sessionId);
-  if (!session || !session.isActive) return false;
+  if (!session || !session.isActive) {
+return false;
+}
 
   // Would integrate with glasses hardware API here
   // Example: Ray-Ban Meta uses Meta's audio API
@@ -172,7 +180,9 @@ export async function sendAudioOutput(sessionId: string, audio: AudioOutput): Pr
  */
 export async function displayNotificationOverlay(sessionId: string, notification: NotificationOverlay): Promise<boolean> {
   const session = activeSessions.find(s => s.id === sessionId);
-  if (!session || !session.isActive) return false;
+  if (!session || !session.isActive) {
+return false;
+}
 
   console.log(`[${session.hardware}] Displaying overlay: ${notification.message}`);
   return true;
@@ -183,7 +193,9 @@ export async function displayNotificationOverlay(sessionId: string, notification
  */
 export async function startCameraStream(sessionId: string, purpose: 'ar' | 'analysis' | 'recording'): Promise<string> {
   const session = activeSessions.find(s => s.id === sessionId);
-  if (!session || !session.isActive) throw new Error('Session not active');
+  if (!session || !session.isActive) {
+throw new Error('Session not active');
+}
 
   const streamId = crypto.randomUUID();
   console.log(`[${session.hardware}] Starting camera stream for ${purpose}`);
@@ -195,7 +207,9 @@ export async function startCameraStream(sessionId: string, purpose: 'ar' | 'anal
  */
 export async function stopCameraStream(sessionId: string, streamId: string): Promise<boolean> {
   const session = activeSessions.find(s => s.id === sessionId);
-  if (!session) return false;
+  if (!session) {
+return false;
+}
 
   console.log(`[${session.hardware}] Stopping camera stream`);
   return true;
@@ -206,7 +220,9 @@ export async function stopCameraStream(sessionId: string, streamId: string): Pro
  */
 export function enableWakeWord(sessionId: string, wakeWord: string = 'hey phill'): boolean {
   const session = activeSessions.find(s => s.id === sessionId);
-  if (!session || !session.isActive) return false;
+  if (!session || !session.isActive) {
+return false;
+}
 
   console.log(`[${session.hardware}] Wake word enabled: "${wakeWord}"`);
   return true;
@@ -303,7 +319,9 @@ export function formatBriefingForGlasses(briefingText: string, format: 'audio' |
  */
 export async function handleGestureInput(sessionId: string, gesture: 'swipe-up' | 'swipe-down' | 'double-tap' | 'pinch'): Promise<string> {
   const session = activeSessions.find(s => s.id === sessionId);
-  if (!session || !session.isActive) return '';
+  if (!session || !session.isActive) {
+return '';
+}
 
   const actions: Record<string, string> = {
     'swipe-up': 'scroll_up',

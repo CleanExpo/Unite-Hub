@@ -263,12 +263,24 @@ function extractIntentTags(transcript: string): string[] {
   const tags: string[] = [];
 
   // Intent detection
-  if (lowerTranscript.includes('remind')) tags.push('reminder');
-  if (lowerTranscript.includes('remind') || lowerTranscript.includes('email')) tags.push('task');
-  if (lowerTranscript.includes('what') || lowerTranscript.includes('how')) tags.push('query');
-  if (lowerTranscript.includes('create') || lowerTranscript.includes('draft')) tags.push('draft');
-  if (lowerTranscript.includes('schedule') || lowerTranscript.includes('meeting')) tags.push('schedule');
-  if (lowerTranscript.includes('goal') || lowerTranscript.includes('progress')) tags.push('goal_check');
+  if (lowerTranscript.includes('remind')) {
+tags.push('reminder');
+}
+  if (lowerTranscript.includes('remind') || lowerTranscript.includes('email')) {
+tags.push('task');
+}
+  if (lowerTranscript.includes('what') || lowerTranscript.includes('how')) {
+tags.push('query');
+}
+  if (lowerTranscript.includes('create') || lowerTranscript.includes('draft')) {
+tags.push('draft');
+}
+  if (lowerTranscript.includes('schedule') || lowerTranscript.includes('meeting')) {
+tags.push('schedule');
+}
+  if (lowerTranscript.includes('goal') || lowerTranscript.includes('progress')) {
+tags.push('goal_check');
+}
 
   return tags.length > 0 ? tags : ['general'];
 }
@@ -276,12 +288,24 @@ function extractIntentTags(transcript: string): string[] {
 function classifyDomain(transcript: string): string {
   const lowerTranscript = transcript.toLowerCase();
 
-  if (lowerTranscript.includes('product') || lowerTranscript.includes('feature')) return 'product';
-  if (lowerTranscript.includes('budget') || lowerTranscript.includes('spend')) return 'financial';
-  if (lowerTranscript.includes('team') || lowerTranscript.includes('hiring')) return 'operational';
-  if (lowerTranscript.includes('goal') || lowerTranscript.includes(' okr')) return 'strategic';
-  if (lowerTranscript.includes('health') || lowerTranscript.includes('feeling')) return 'personal';
-  if (lowerTranscript.includes('email') || lowerTranscript.includes('message')) return 'communication';
+  if (lowerTranscript.includes('product') || lowerTranscript.includes('feature')) {
+return 'product';
+}
+  if (lowerTranscript.includes('budget') || lowerTranscript.includes('spend')) {
+return 'financial';
+}
+  if (lowerTranscript.includes('team') || lowerTranscript.includes('hiring')) {
+return 'operational';
+}
+  if (lowerTranscript.includes('goal') || lowerTranscript.includes(' okr')) {
+return 'strategic';
+}
+  if (lowerTranscript.includes('health') || lowerTranscript.includes('feeling')) {
+return 'personal';
+}
+  if (lowerTranscript.includes('email') || lowerTranscript.includes('message')) {
+return 'communication';
+}
 
   return 'general';
 }
@@ -292,15 +316,23 @@ function scorePriority(
 ): 'low' | 'medium' | 'high' | 'critical' {
   const lowerTranscript = transcript.toLowerCase();
 
-  if (lowerTranscript.includes('urgent') || lowerTranscript.includes('asap')) return 'critical';
-  if (intentTags.includes('reminder') || intentTags.includes('task')) return 'high';
-  if (intentTags.includes('query') || intentTags.includes('draft')) return 'medium';
+  if (lowerTranscript.includes('urgent') || lowerTranscript.includes('asap')) {
+return 'critical';
+}
+  if (intentTags.includes('reminder') || intentTags.includes('task')) {
+return 'high';
+}
+  if (intentTags.includes('query') || intentTags.includes('draft')) {
+return 'medium';
+}
 
   return 'low';
 }
 
 function createSummary(transcript: string): string {
   // Truncate to <200 chars and make summary-like
-  if (transcript.length <= 200) return transcript;
+  if (transcript.length <= 200) {
+return transcript;
+}
   return transcript.substring(0, 197) + '...';
 }

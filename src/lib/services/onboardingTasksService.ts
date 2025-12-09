@@ -131,7 +131,9 @@ export async function createOnboardingTasks(
       .insert(tasksToInsert)
       .select();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true, tasks };
   } catch (error) {
@@ -153,7 +155,9 @@ export async function getClientTasks(
       .eq('client_id', clientId)
       .order('priority', { ascending: true });
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true, tasks: tasks || [] };
   } catch (error) {
@@ -185,7 +189,9 @@ export async function updateTaskStatus(
       .eq('id', taskId)
       .eq('client_id', clientId);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     // Create lifecycle event
     await supabaseAdmin.from('client_lifecycle_events').insert({
@@ -217,7 +223,9 @@ export async function getTaskProgress(
       .select('status')
       .eq('client_id', clientId);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     const total = tasks?.length || 0;
     const completed = tasks?.filter((t) => t.status === 'completed' || t.status === 'skipped').length || 0;
@@ -246,7 +254,9 @@ export async function getNextTask(
       .limit(1)
       .single();
 
-    if (error && error.code !== 'PGRST116') throw error;
+    if (error && error.code !== 'PGRST116') {
+throw error;
+}
 
     return { success: true, task: task || undefined };
   } catch (error) {
@@ -280,7 +290,9 @@ export async function completeTaskByVoice(
     // Update task status
     const result = await updateTaskStatus(task.id, clientId, 'completed');
 
-    if (!result.success) return result;
+    if (!result.success) {
+return result;
+}
 
     // Store voice data in lifecycle event
     await supabaseAdmin.from('client_lifecycle_events').insert({

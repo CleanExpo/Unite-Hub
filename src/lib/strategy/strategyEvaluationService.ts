@@ -286,7 +286,9 @@ export class StrategyEvaluationService {
    * Rank paths using multiple criteria (TOPSIS method)
    */
   rankPathsTOPSIS(paths: PathResult[]): { pathId: string; score: number; rank: number }[] {
-    if (paths.length === 0) return [];
+    if (paths.length === 0) {
+return [];
+}
 
     // Criteria: value (max), probability (max), duration (min), risk (min)
     const criteria = paths.map(p => [
@@ -368,7 +370,9 @@ export class StrategyEvaluationService {
   private analyzeTradeoffs(paths: PathResult[]): TradeoffAnalysis[] {
     const tradeoffs: TradeoffAnalysis[] = [];
 
-    if (paths.length < 2) return tradeoffs;
+    if (paths.length < 2) {
+return tradeoffs;
+}
 
     const metrics = [
       { name: "Expected Value", getter: (p: PathResult) => p.totalExpectedValue },
@@ -502,7 +506,9 @@ export class StrategyEvaluationService {
   }
 
   private normalizeMatrix(matrix: number[][]): number[][] {
-    if (matrix.length === 0) return [];
+    if (matrix.length === 0) {
+return [];
+}
 
     const numCols = matrix[0].length;
     const norms = Array(numCols).fill(0);

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars, no-console */
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars */
 /**
  * Conversion Copywriting Engine
  *
@@ -412,7 +412,9 @@ ${input.customGuidelines ? `CUSTOM GUIDELINES:\n${input.customGuidelines}\n\n` :
 // ============================================
 
 function buildVOCContext(quotes: VOCQuoteRecord[], summary: any): string {
-  if (!quotes.length) return '';
+  if (!quotes.length) {
+return '';
+}
 
   const sections = [];
 
@@ -435,7 +437,9 @@ function buildVOCContext(quotes: VOCQuoteRecord[], summary: any): string {
 }
 
 function buildCompetitorContext(competitors: any[]): string {
-  if (!competitors.length) return '';
+  if (!competitors.length) {
+return '';
+}
 
   const insights = competitors.slice(0, 3).map(c => {
     const mp = c.messaging_patterns as MessagingPattern;
@@ -649,16 +653,32 @@ async function verifyCopy(
 function extractAllText(copy: GeneratedPageCopy): string {
   const parts: string[] = [];
 
-  if (copy.meta_title) parts.push(copy.meta_title);
-  if (copy.meta_description) parts.push(copy.meta_description);
+  if (copy.meta_title) {
+parts.push(copy.meta_title);
+}
+  if (copy.meta_description) {
+parts.push(copy.meta_description);
+}
 
   for (const section of copy.sections) {
-    if (section.headline) parts.push(section.headline);
-    if (section.subheadline) parts.push(section.subheadline);
-    if (section.body_copy) parts.push(section.body_copy);
-    if (section.bullet_points) parts.push(...section.bullet_points);
-    if (section.cta_text) parts.push(section.cta_text);
-    if (section.customer_quote?.quote) parts.push(section.customer_quote.quote);
+    if (section.headline) {
+parts.push(section.headline);
+}
+    if (section.subheadline) {
+parts.push(section.subheadline);
+}
+    if (section.body_copy) {
+parts.push(section.body_copy);
+}
+    if (section.bullet_points) {
+parts.push(...section.bullet_points);
+}
+    if (section.cta_text) {
+parts.push(section.cta_text);
+}
+    if (section.customer_quote?.quote) {
+parts.push(section.customer_quote.quote);
+}
     if (section.steps) {
       parts.push(...section.steps.map(s => `${s.title} ${s.description}`));
     }

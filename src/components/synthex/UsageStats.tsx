@@ -47,13 +47,19 @@ export function UsageStats() {
   }, []);
 
   const formatLimit = (limit: number, isUnlimited: boolean) => {
-    if (isUnlimited) return 'Unlimited';
+    if (isUnlimited) {
+return 'Unlimited';
+}
     return limit.toLocaleString();
   };
 
   const getWarningLevel = (percentage: number) => {
-    if (percentage >= 90) return 'danger';
-    if (percentage >= 75) return 'warning';
+    if (percentage >= 90) {
+return 'danger';
+}
+    if (percentage >= 75) {
+return 'warning';
+}
     return 'normal';
   };
 

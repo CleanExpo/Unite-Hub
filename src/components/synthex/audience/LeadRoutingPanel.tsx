@@ -75,7 +75,9 @@ export function LeadRoutingPanel({ tenantId, className = '' }: LeadRoutingPanelP
 
   // Fetch leads
   const fetchLeads = useCallback(async () => {
-    if (!tenantId) return;
+    if (!tenantId) {
+return;
+}
 
     setLoading(true);
     setError(null);
@@ -88,7 +90,9 @@ export function LeadRoutingPanel({ tenantId, className = '' }: LeadRoutingPanelP
       });
 
       const res = await fetch(`/api/synthex/audience?${params}`);
-      if (!res.ok) throw new Error('Failed to fetch leads');
+      if (!res.ok) {
+throw new Error('Failed to fetch leads');
+}
 
       const data = await res.json();
       const mappedLeads: Lead[] = (data.contacts || []).map((c: Record<string, unknown>) => ({
@@ -112,13 +116,17 @@ export function LeadRoutingPanel({ tenantId, className = '' }: LeadRoutingPanelP
 
   // Fetch routing log
   const fetchRoutingLog = useCallback(async () => {
-    if (!tenantId) return;
+    if (!tenantId) {
+return;
+}
 
     try {
       const res = await fetch(
         `/api/synthex/lead/routing/log?tenantId=${tenantId}&limit=10`
       );
-      if (!res.ok) return;
+      if (!res.ok) {
+return;
+}
 
       const data = await res.json();
       setRoutingLog(data.entries || []);
@@ -162,7 +170,9 @@ export function LeadRoutingPanel({ tenantId, className = '' }: LeadRoutingPanelP
   // Apply routing decision
   const applyRouting = async (leadId: string) => {
     const recommendation = recommendations.get(leadId);
-    if (!recommendation) return;
+    if (!recommendation) {
+return;
+}
 
     setApplyingRouting(leadId);
     setError(null);

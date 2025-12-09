@@ -9,7 +9,7 @@
  * - Configuration management
  */
 
-/* eslint-disable no-undef, no-console, @typescript-eslint/no-unused-vars */
+ 
 
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';

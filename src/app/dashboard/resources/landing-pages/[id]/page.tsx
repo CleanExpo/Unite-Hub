@@ -71,7 +71,9 @@ export default function LandingPageDetailPage() {
   useEffect(() => {
     const fetchChecklist = async () => {
       const { data: { session } } = await supabaseBrowser.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       try {
         const response = await fetch(`/api/landing-pages/${checklistId}`, {
@@ -94,7 +96,9 @@ export default function LandingPageDetailPage() {
   useEffect(() => {
     const fetchCompletion = async () => {
       const { data: { session } } = await supabaseBrowser.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       try {
         const response = await fetch(`/api/landing-pages/${checklistId}/completion`, {

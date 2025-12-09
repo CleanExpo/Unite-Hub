@@ -13,7 +13,9 @@ const mockRedisData = new Map<string, { value: string; expiry: number }>();
 const createMockRedis = () => ({
   get: vi.fn(async (key: string) => {
     const item = mockRedisData.get(key);
-    if (!item) return null;
+    if (!item) {
+return null;
+}
     if (Date.now() > item.expiry) {
       mockRedisData.delete(key);
       return null;
@@ -35,7 +37,9 @@ const createMockRedis = () => ({
   del: vi.fn(async (...keys: string[]) => {
     let deleted = 0;
     for (const key of keys) {
-      if (mockRedisData.delete(key)) deleted++;
+      if (mockRedisData.delete(key)) {
+deleted++;
+}
     }
     return deleted;
   }),
@@ -45,7 +49,9 @@ const createMockRedis = () => ({
   }),
   ttl: vi.fn(async (key: string) => {
     const item = mockRedisData.get(key);
-    if (!item) return -2;
+    if (!item) {
+return -2;
+}
     const remaining = Math.floor((item.expiry - Date.now()) / 1000);
     return remaining > 0 ? remaining : -2;
   }),
@@ -133,15 +139,14 @@ vi.mock('next/headers', () => ({
 
 // Mock next/image
 vi.mock('next/image', () => ({
-  default: vi.fn(({ src, alt, ...props }) => {
-    // eslint-disable-next-line @next/next/no-img-element
+  default: vi.fn(({ src, alt, ..._props }) => {
     return `<img src="${src}" alt="${alt || ''}" />`;
   }),
 }));
 
 // Mock next/link
 vi.mock('next/link', () => ({
-  default: vi.fn(({ children, href, ...props }) => {
+  default: vi.fn(({ children, href, ..._props }) => {
     return `<a href="${href}">${children}</a>`;
   }),
 }));

@@ -89,8 +89,11 @@ export async function selectAssetForChannel(
 
     // Recency boost (newer is slightly better)
     const ageHours = (Date.now() - new Date(asset.created_at).getTime()) / (1000 * 60 * 60);
-    if (ageHours < 24) score += 10;
-    else if (ageHours < 72) score += 5;
+    if (ageHours < 24) {
+score += 10;
+} else if (ageHours < 72) {
+score += 5;
+}
 
     return {
       asset,
@@ -109,9 +112,13 @@ export async function selectAssetForChannel(
 
   // Determine confidence
   let confidence = 0.7;
-  if (selected.score >= 80) confidence = 0.9;
-  else if (selected.score >= 60) confidence = 0.8;
-  else if (selected.score < 40) confidence = 0.5;
+  if (selected.score >= 80) {
+confidence = 0.9;
+} else if (selected.score >= 60) {
+confidence = 0.8;
+} else if (selected.score < 40) {
+confidence = 0.5;
+}
 
   // Add truth notes
   if (recentAssetIds.size === 0) {
@@ -128,8 +135,11 @@ export async function selectAssetForChannel(
 
   // Determine risk level
   let riskLevel: RiskClass = 'low';
-  if (confidence < 0.6) riskLevel = 'high';
-  else if (confidence < 0.75) riskLevel = 'medium';
+  if (confidence < 0.6) {
+riskLevel = 'high';
+} else if (confidence < 0.75) {
+riskLevel = 'medium';
+}
 
   return {
     asset_id: selected.asset.id,

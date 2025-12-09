@@ -182,7 +182,9 @@ class PreClientMapperService {
    * Extract company name from domain
    */
   private extractCompanyFromDomain(domain?: string): string | undefined {
-    if (!domain) return undefined;
+    if (!domain) {
+return undefined;
+}
 
     // Remove common TLDs and convert to company name
     const companyPart = domain
@@ -190,7 +192,9 @@ class PreClientMapperService {
       .split('.')
       .pop();
 
-    if (!companyPart) return undefined;
+    if (!companyPart) {
+return undefined;
+}
 
     return companyPart.charAt(0).toUpperCase() + companyPart.slice(1);
   }
@@ -356,10 +360,18 @@ class PreClientMapperService {
 
     const updateData: Record<string, unknown> = {};
 
-    if (updates.name !== undefined) updateData.name = updates.name;
-    if (updates.company !== undefined) updateData.company = updates.company;
-    if (updates.notes !== undefined) updateData.notes = updates.notes;
-    if (updates.status !== undefined) updateData.status = updates.status;
+    if (updates.name !== undefined) {
+updateData.name = updates.name;
+}
+    if (updates.company !== undefined) {
+updateData.company = updates.company;
+}
+    if (updates.notes !== undefined) {
+updateData.notes = updates.notes;
+}
+    if (updates.status !== undefined) {
+updateData.status = updates.status;
+}
 
     const { data, error } = await supabase
       .from('pre_clients')

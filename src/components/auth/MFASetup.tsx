@@ -115,7 +115,9 @@ export function MFASetup({ isOpen, onClose, onSuccess }: MFASetupProps) {
 
   // Copy secret to clipboard
   const handleCopySecret = async () => {
-    if (!secret) return;
+    if (!secret) {
+return;
+}
 
     try {
       await navigator.clipboard.writeText(secret);
@@ -129,7 +131,9 @@ export function MFASetup({ isOpen, onClose, onSuccess }: MFASetupProps) {
 
   // Copy recovery codes to clipboard
   const handleCopyRecoveryCodes = async () => {
-    if (!recoveryCodes.length) return;
+    if (!recoveryCodes.length) {
+return;
+}
 
     try {
       const codesText = recoveryCodes.join('\n');
@@ -144,7 +148,9 @@ export function MFASetup({ isOpen, onClose, onSuccess }: MFASetupProps) {
 
   // Download recovery codes as text file
   const handleDownloadRecoveryCodes = () => {
-    if (!recoveryCodes.length) return;
+    if (!recoveryCodes.length) {
+return;
+}
 
     const codesText = [
       'Unite-Hub Two-Factor Authentication Recovery Codes',
@@ -280,7 +286,6 @@ export function MFASetup({ isOpen, onClose, onSuccess }: MFASetupProps) {
             {/* QR Code */}
             <div className="flex flex-col items-center space-y-3">
               <div className="rounded-lg border-2 border-dashed border-gray-300 p-4 dark:border-gray-700">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={qrCodeUrl}
                   alt="QR Code for MFA Setup"

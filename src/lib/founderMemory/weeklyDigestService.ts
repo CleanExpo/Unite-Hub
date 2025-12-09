@@ -333,8 +333,11 @@ class WeeklyDigestService {
       momentum.salesTrend +
       momentum.deliveryTrend +
       momentum.clientsTrend;
-    if (trendSum > 1) trend = 'improving';
-    else if (trendSum < -1) trend = 'declining';
+    if (trendSum > 1) {
+trend = 'improving';
+} else if (trendSum < -1) {
+trend = 'declining';
+}
 
     return {
       overall: momentum.overallScore,
@@ -480,10 +483,14 @@ Return JSON:
       });
 
       const textBlock = response.content.find((c) => c.type === 'text');
-      if (!textBlock) throw new Error('No response');
+      if (!textBlock) {
+throw new Error('No response');
+}
 
       const jsonMatch = textBlock.text.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) throw new Error('No JSON');
+      if (!jsonMatch) {
+throw new Error('No JSON');
+}
 
       const result = JSON.parse(jsonMatch[0]);
 
@@ -519,7 +526,9 @@ Return JSON:
       .eq('week_start', weekStart.toISOString().split('T')[0])
       .single();
 
-    if (error || !data) return null;
+    if (error || !data) {
+return null;
+}
     return this.mapDbToDigest(data);
   }
 
@@ -536,7 +545,9 @@ Return JSON:
       .limit(1)
       .single();
 
-    if (error || !data) return null;
+    if (error || !data) {
+return null;
+}
     return this.mapDbToDigest(data);
   }
 
@@ -552,7 +563,9 @@ Return JSON:
       .order('week_start', { ascending: false })
       .limit(limit);
 
-    if (error || !data) return [];
+    if (error || !data) {
+return [];
+}
     return data.map(this.mapDbToDigest);
   }
 

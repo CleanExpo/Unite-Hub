@@ -139,16 +139,24 @@ function extractMemoryFromTurn(turn: DialogueTurn, session: DialogueSessionState
 
   // Extract different types of memory fragments
   const emotionalFragment = extractEmotionalMemory(turn);
-  if (emotionalFragment) fragments.push(emotionalFragment);
+  if (emotionalFragment) {
+fragments.push(emotionalFragment);
+}
 
   const decisionFragment = extractDecisionMemory(turn);
-  if (decisionFragment) fragments.push(decisionFragment);
+  if (decisionFragment) {
+fragments.push(decisionFragment);
+}
 
   const goalFragment = extractGoalMemory(turn);
-  if (goalFragment) fragments.push(goalFragment);
+  if (goalFragment) {
+fragments.push(goalFragment);
+}
 
   const businessFragment = extractBusinessMemory(turn);
-  if (businessFragment) fragments.push(businessFragment);
+  if (businessFragment) {
+fragments.push(businessFragment);
+}
 
   return fragments;
 }
@@ -450,8 +458,12 @@ function determinantDominantEmotion(fragments: MemoryFragment[]): MemoryEmotiona
     counts[fragment.emotional_valence]++;
   }
 
-  if (counts.positive > counts.negative && counts.positive > counts.neutral) return 'positive';
-  if (counts.negative > counts.positive && counts.negative > counts.neutral) return 'negative';
+  if (counts.positive > counts.negative && counts.positive > counts.neutral) {
+return 'positive';
+}
+  if (counts.negative > counts.positive && counts.negative > counts.neutral) {
+return 'negative';
+}
   return 'neutral';
 }
 

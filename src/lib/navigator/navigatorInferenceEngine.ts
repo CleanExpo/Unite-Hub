@@ -322,8 +322,14 @@ function analyzeCrossInputPatterns(inputs: CollectedInput[]): GeneratedInsight[]
 }
 
 export function getConfidenceBand(confidence: number): ConfidenceBand {
-  if (confidence >= 0.7) return 'high';
-  if (confidence >= 0.5) return 'medium';
-  if (confidence >= 0.3) return 'low';
+  if (confidence >= 0.7) {
+return 'high';
+}
+  if (confidence >= 0.5) {
+return 'medium';
+}
+  if (confidence >= 0.3) {
+return 'low';
+}
   return 'exploratory';
 }

@@ -33,8 +33,12 @@ export function CampaignBlueprintCard({ blueprint, onView, onApprove }: Blueprin
   };
 
   const getScoreColor = (score: number) => {
-    if (score >= 7) return 'text-green-600 dark:text-green-400';
-    if (score >= 4) return 'text-orange-600 dark:text-orange-400';
+    if (score >= 7) {
+return 'text-green-600 dark:text-green-400';
+}
+    if (score >= 4) {
+return 'text-orange-600 dark:text-orange-400';
+}
     return 'text-red-600 dark:text-red-400';
   };
 

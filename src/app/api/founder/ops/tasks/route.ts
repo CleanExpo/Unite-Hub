@@ -75,7 +75,9 @@ export async function GET(req: NextRequest) {
 
     const { data: tasks, error: tasksError } = await query;
 
-    if (tasksError) throw tasksError;
+    if (tasksError) {
+throw tasksError;
+}
 
     logger.info('Tasks fetched', { workspaceId, count: tasks?.length || 0 });
 
@@ -176,7 +178,9 @@ export async function POST(req: NextRequest) {
       .select()
       .single();
 
-    if (createError) throw createError;
+    if (createError) {
+throw createError;
+}
 
     logger.info('Task created', { taskId: task.id });
 

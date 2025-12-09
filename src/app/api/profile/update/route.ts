@@ -99,15 +99,30 @@ export async function POST(req: NextRequest) {
     // Build update object (only include fields that were provided)
     const updateData: Record<string, any> = {};
 
-    if (username !== undefined) updateData.username = username || null;
-    if (full_name !== undefined) updateData.full_name = full_name;
-    if (business_name !== undefined) updateData.business_name = business_name || null;
-    if (phone !== undefined) updateData.phone = phone ? sanitizePhone(phone) : null;
-    if (bio !== undefined) updateData.bio = bio || null;
-    if (website !== undefined) updateData.website = website || null;
-    if (timezone !== undefined) updateData.timezone = timezone;
-    if (notification_preferences !== undefined)
-      updateData.notification_preferences = notification_preferences;
+    if (username !== undefined) {
+updateData.username = username || null;
+}
+    if (full_name !== undefined) {
+updateData.full_name = full_name;
+}
+    if (business_name !== undefined) {
+updateData.business_name = business_name || null;
+}
+    if (phone !== undefined) {
+updateData.phone = phone ? sanitizePhone(phone) : null;
+}
+    if (bio !== undefined) {
+updateData.bio = bio || null;
+}
+    if (website !== undefined) {
+updateData.website = website || null;
+}
+    if (timezone !== undefined) {
+updateData.timezone = timezone;
+}
+    if (notification_preferences !== undefined) {
+updateData.notification_preferences = notification_preferences;
+}
 
     // Update profile
     const { data: updatedProfile, error: updateError } = await supabase

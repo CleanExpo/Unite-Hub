@@ -224,7 +224,9 @@ export function ArchiveTimelineStats({
   className?: string;
 }) {
   const formatDate = (dateString: string) => {
-    if (!dateString) return 'N/A';
+    if (!dateString) {
+return 'N/A';
+}
     return new Date(dateString).toLocaleDateString('en-AU', {
       day: 'numeric',
       month: 'short',

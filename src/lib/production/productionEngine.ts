@@ -82,7 +82,9 @@ export async function createJob(
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     // Log creation event
     await logJobEvent(job.id, 'created', null, 'pending');
@@ -112,7 +114,9 @@ export async function getJob(
       .eq('id', jobId)
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true, job: data };
   } catch (error) {
@@ -150,7 +154,9 @@ export async function getClientJobs(
 
     const { data, error } = await query;
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true, jobs: data };
   } catch (error) {
@@ -202,7 +208,9 @@ export async function updateJobStatus(
       .update(updateData)
       .eq('id', jobId);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     // Log event
     await logJobEvent(jobId, statusToEventType(newStatus), previousStatus, newStatus, userId, notes);
@@ -250,7 +258,9 @@ export async function addJobOutput(
       .select('id')
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true, outputId: data.id };
   } catch (error) {
@@ -277,7 +287,9 @@ export async function getJobOutputs(
       .eq('job_id', jobId)
       .order('created_at', { ascending: true });
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true, outputs: data };
   } catch (error) {
@@ -320,7 +332,9 @@ export async function requestRevision(
       })
       .eq('id', jobId);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     await logJobEvent(jobId, 'revision_requested', job.status, 'revision', clientId, notes);
 
@@ -376,7 +390,9 @@ export async function updateJobSafety(
       })
       .eq('id', jobId);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true };
   } catch (error) {

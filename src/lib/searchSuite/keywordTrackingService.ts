@@ -188,13 +188,27 @@ class KeywordTrackingService {
     const supabase = await getSupabaseServer();
 
     const dbUpdates: Record<string, unknown> = {};
-    if (updates.status) dbUpdates.status = updates.status;
-    if (updates.tags) dbUpdates.tags = updates.tags;
-    if (updates.targetUrl !== undefined) dbUpdates.target_url = updates.targetUrl;
-    if (updates.priority !== undefined) dbUpdates.priority = updates.priority;
-    if (updates.searchVolume !== undefined) dbUpdates.search_volume = updates.searchVolume;
-    if (updates.difficulty !== undefined) dbUpdates.difficulty = updates.difficulty;
-    if (updates.cpc !== undefined) dbUpdates.cpc = updates.cpc;
+    if (updates.status) {
+dbUpdates.status = updates.status;
+}
+    if (updates.tags) {
+dbUpdates.tags = updates.tags;
+}
+    if (updates.targetUrl !== undefined) {
+dbUpdates.target_url = updates.targetUrl;
+}
+    if (updates.priority !== undefined) {
+dbUpdates.priority = updates.priority;
+}
+    if (updates.searchVolume !== undefined) {
+dbUpdates.search_volume = updates.searchVolume;
+}
+    if (updates.difficulty !== undefined) {
+dbUpdates.difficulty = updates.difficulty;
+}
+    if (updates.cpc !== undefined) {
+dbUpdates.cpc = updates.cpc;
+}
 
     const { error } = await supabase
       .from('search_keywords')
@@ -336,14 +350,24 @@ class KeywordTrackingService {
         positionSum += k.current_rank;
         positionCount++;
 
-        if (k.current_rank <= 3) stats.top3++;
-        if (k.current_rank <= 10) stats.top10++;
-        if (k.current_rank <= 20) stats.top20++;
+        if (k.current_rank <= 3) {
+stats.top3++;
+}
+        if (k.current_rank <= 10) {
+stats.top10++;
+}
+        if (k.current_rank <= 20) {
+stats.top20++;
+}
 
         if (k.previous_rank) {
           const change = k.previous_rank - k.current_rank;
-          if (change > 2) stats.improvingCount++;
-          if (change < -2) stats.decliningCount++;
+          if (change > 2) {
+stats.improvingCount++;
+}
+          if (change < -2) {
+stats.decliningCount++;
+}
         }
       } else {
         stats.notRanking++;

@@ -24,7 +24,9 @@ export async function computeRevenueForAgency(
     .eq('period_end', periodEnd)
     .single();
 
-  if (!data) return null;
+  if (!data) {
+return null;
+}
 
   return mapToMetrics(data);
 }
@@ -45,7 +47,9 @@ export async function computeClientGrowth(
     .order('period_start', { ascending: false })
     .limit(periods);
 
-  if (!data) return [];
+  if (!data) {
+return [];
+}
 
   return data.reverse().map((row, index, arr) => {
     const prev = index > 0 ? arr[index - 1].total_clients : row.total_clients;

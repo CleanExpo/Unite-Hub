@@ -34,11 +34,15 @@ export async function getLayout(userId: string, tenantId?: string): Promise<Flig
     .select('*')
     .eq('user_id', userId);
 
-  if (tenantId) query = query.eq('tenant_id', tenantId);
+  if (tenantId) {
+query = query.eq('tenant_id', tenantId);
+}
 
   const { data } = await query.single();
 
-  if (!data) return null;
+  if (!data) {
+return null;
+}
 
   return {
     id: data.id,
@@ -95,7 +99,9 @@ export async function saveLayout(
     error = result.error;
   }
 
-  if (error || !data) return null;
+  if (error || !data) {
+return null;
+}
 
   return {
     id: data.id,

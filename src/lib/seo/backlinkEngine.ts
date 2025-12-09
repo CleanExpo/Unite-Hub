@@ -232,7 +232,9 @@ export class BacklinkEngine {
    * Calculate authority score (0-100)
    */
   private calculateAuthorityScore(domains: ReferringDomain[]): number {
-    if (domains.length === 0) return 0;
+    if (domains.length === 0) {
+return 0;
+}
 
     // Average domain rank (higher = better)
     const avgRank =
@@ -248,7 +250,9 @@ export class BacklinkEngine {
    * Calculate toxic score (0-100)
    */
   private calculateToxicScore(domains: ReferringDomain[]): number {
-    if (domains.length === 0) return 0;
+    if (domains.length === 0) {
+return 0;
+}
 
     // Count toxic domains (spam_score > 50)
     const toxicCount = domains.filter((d) => d.spam_score > 50).length;
@@ -261,7 +265,9 @@ export class BacklinkEngine {
    * Calculate average spam score
    */
   private calculateSpamScore(domains: ReferringDomain[]): number {
-    if (domains.length === 0) return 0;
+    if (domains.length === 0) {
+return 0;
+}
 
     const avgSpam =
       domains.reduce((sum, d) => sum + d.spam_score, 0) / domains.length;
@@ -274,18 +280,26 @@ export class BacklinkEngine {
    * Higher = more diverse (better)
    */
   private calculateAnchorDiversity(anchors: AnchorTextItem[]): number {
-    if (anchors.length === 0) return 0;
+    if (anchors.length === 0) {
+return 0;
+}
 
     // Check for over-optimization (single anchor > 50%)
     const totalBacklinks = anchors.reduce((sum, a) => sum + a.backlinks, 0);
-    if (totalBacklinks === 0) return 50;
+    if (totalBacklinks === 0) {
+return 50;
+}
 
     const topAnchorRatio =
       (anchors[0]?.backlinks || 0) / totalBacklinks;
 
     // Penalize if top anchor is too dominant
-    if (topAnchorRatio > 0.5) return Math.round((1 - topAnchorRatio) * 100);
-    if (topAnchorRatio > 0.3) return Math.round(70 + (0.5 - topAnchorRatio) * 60);
+    if (topAnchorRatio > 0.5) {
+return Math.round((1 - topAnchorRatio) * 100);
+}
+    if (topAnchorRatio > 0.3) {
+return Math.round(70 + (0.5 - topAnchorRatio) * 60);
+}
 
     // Good diversity
     return Math.round(Math.min(100, 80 + anchors.length * 0.5));
@@ -297,7 +311,9 @@ export class BacklinkEngine {
   private calculateVelocityTrend(
     history: BacklinkHistoryItem[]
   ): "GROWING" | "STABLE" | "DECLINING" {
-    if (history.length < 2) return "STABLE";
+    if (history.length < 2) {
+return "STABLE";
+}
 
     // Compare first week to last week
     const firstWeek = history.slice(0, 7);
@@ -310,8 +326,12 @@ export class BacklinkEngine {
 
     const changePercent = ((lastAvg - firstAvg) / (firstAvg || 1)) * 100;
 
-    if (changePercent > 5) return "GROWING";
-    if (changePercent < -5) return "DECLINING";
+    if (changePercent > 5) {
+return "GROWING";
+}
+    if (changePercent < -5) {
+return "DECLINING";
+}
     return "STABLE";
   }
 
@@ -321,7 +341,9 @@ export class BacklinkEngine {
   private calculateNewLost(
     history: BacklinkHistoryItem[]
   ): { newCount: number; lostCount: number } {
-    if (history.length < 2) return { newCount: 0, lostCount: 0 };
+    if (history.length < 2) {
+return { newCount: 0, lostCount: 0 };
+}
 
     const first = history[0];
     const last = history[history.length - 1];

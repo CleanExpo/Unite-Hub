@@ -24,7 +24,9 @@ export async function POST(
   try {
     // AI-specific rate limiting
     const rateLimitResult = await aiAgentRateLimit(req);
-    if (rateLimitResult) return rateLimitResult;
+    if (rateLimitResult) {
+return rateLimitResult;
+}
 
     const { postId } = await params;
 

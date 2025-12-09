@@ -81,11 +81,16 @@ export function ClientEmailIntelligencePanel({
   const workspaceId = currentOrganization?.org_id;
 
   const fetchData = async (refresh = false) => {
-    if (!workspaceId || !session?.access_token) return;
+    if (!workspaceId || !session?.access_token) {
+return;
+}
 
     try {
-      if (refresh) setIsRefreshing(true);
-      else setIsLoading(true);
+      if (refresh) {
+setIsRefreshing(true);
+} else {
+setIsLoading(true);
+}
       setError(null);
 
       const response = await fetch(
@@ -148,7 +153,9 @@ export function ClientEmailIntelligencePanel({
   };
 
   const handleUpdateIdeaStatus = async (ideaId: string, status: string) => {
-    if (!workspaceId || !session?.access_token) return;
+    if (!workspaceId || !session?.access_token) {
+return;
+}
 
     try {
       const response = await fetch('/api/email-intel/ideas', {
@@ -171,14 +178,22 @@ export function ClientEmailIntelligencePanel({
   };
 
   const getSentimentColor = (score: number) => {
-    if (score > 0.3) return 'text-green-600';
-    if (score < -0.3) return 'text-red-600';
+    if (score > 0.3) {
+return 'text-green-600';
+}
+    if (score < -0.3) {
+return 'text-red-600';
+}
     return 'text-yellow-600';
   };
 
   const getSentimentLabel = (score: number) => {
-    if (score > 0.3) return 'Positive';
-    if (score < -0.3) return 'Negative';
+    if (score > 0.3) {
+return 'Positive';
+}
+    if (score < -0.3) {
+return 'Negative';
+}
     return 'Neutral';
   };
 

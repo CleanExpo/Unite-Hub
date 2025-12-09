@@ -16,7 +16,7 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
-const WORKSPACE_ID = process.argv[2] || "process.env.TEST_WORKSPACE_ID || "YOUR_WORKSPACE_ID"";
+const WORKSPACE_ID = process.argv[2] || process.env.TEST_WORKSPACE_ID || "YOUR_WORKSPACE_ID";
 const ORG_ID = "adedf006-ca69-47d4-adbf-fc91bd7f225d";
 
 console.log(`\n📝 Creating Sample Data for Email Intelligence Testing\n`);

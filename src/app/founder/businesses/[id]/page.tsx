@@ -134,8 +134,12 @@ export default function BusinessDetailPage() {
   }, [businessId]);
 
   const getHealthColor = (score: number) => {
-    if (score >= 80) return 'text-green-400';
-    if (score >= 60) return 'text-yellow-400';
+    if (score >= 80) {
+return 'text-green-400';
+}
+    if (score >= 60) {
+return 'text-yellow-400';
+}
     return 'text-red-400';
   };
 
@@ -158,8 +162,12 @@ export default function BusinessDetailPage() {
   };
 
   const getSignalIcon = (type: Signal['type']) => {
-    if (type === 'positive') return <TrendingUp className="w-5 h-5 text-green-400" />;
-    if (type === 'negative') return <TrendingDown className="w-5 h-5 text-red-400" />;
+    if (type === 'positive') {
+return <TrendingUp className="w-5 h-5 text-green-400" />;
+}
+    if (type === 'negative') {
+return <TrendingDown className="w-5 h-5 text-red-400" />;
+}
     return <Activity className="w-5 h-5 text-gray-400" />;
   };
 

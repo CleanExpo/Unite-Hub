@@ -156,14 +156,30 @@ export async function updateStrategyRecommendation(
     updated_at: new Date().toISOString(),
   };
 
-  if (updates.pillarId !== undefined) updateData.pillar_id = updates.pillarId;
-  if (updates.title !== undefined) updateData.title = updates.title;
-  if (updates.description !== undefined) updateData.description = updates.description;
-  if (updates.priority !== undefined) updateData.priority = updates.priority;
-  if (updates.actions !== undefined) updateData.actions = updates.actions;
-  if (updates.estimatedImpact !== undefined) updateData.estimated_impact = updates.estimatedImpact;
-  if (updates.assignedToUserId !== undefined) updateData.assigned_to_user_id = updates.assignedToUserId;
-  if (updates.dueDate !== undefined) updateData.due_date = updates.dueDate;
+  if (updates.pillarId !== undefined) {
+updateData.pillar_id = updates.pillarId;
+}
+  if (updates.title !== undefined) {
+updateData.title = updates.title;
+}
+  if (updates.description !== undefined) {
+updateData.description = updates.description;
+}
+  if (updates.priority !== undefined) {
+updateData.priority = updates.priority;
+}
+  if (updates.actions !== undefined) {
+updateData.actions = updates.actions;
+}
+  if (updates.estimatedImpact !== undefined) {
+updateData.estimated_impact = updates.estimatedImpact;
+}
+  if (updates.assignedToUserId !== undefined) {
+updateData.assigned_to_user_id = updates.assignedToUserId;
+}
+  if (updates.dueDate !== undefined) {
+updateData.due_date = updates.dueDate;
+}
 
   const { data, error } = await supabase
     .from('strategy_recommendations')

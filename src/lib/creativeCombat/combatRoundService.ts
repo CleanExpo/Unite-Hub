@@ -122,7 +122,9 @@ export async function getRoundById(roundId: string): Promise<CombatRound | null>
     .eq('id', roundId)
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+return null;
+}
 
   return mapToRound(data);
 }

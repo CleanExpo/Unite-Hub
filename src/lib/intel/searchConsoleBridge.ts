@@ -316,9 +316,15 @@ class SearchConsoleBridge {
    * Determine signal type based on velocity
    */
   private determineSignalType(velocity: number): TopicSignal['signal_type'] {
-    if (velocity > 50) return 'emerging';
-    if (velocity > 15) return 'trending';
-    if (velocity < -20) return 'declining';
+    if (velocity > 50) {
+return 'emerging';
+}
+    if (velocity > 15) {
+return 'trending';
+}
+    if (velocity < -20) {
+return 'declining';
+}
     return 'opportunity';
   }
 

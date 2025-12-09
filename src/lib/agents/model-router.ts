@@ -241,8 +241,12 @@ export class ModelRouter {
       "perplexity-sonar",
     ];
 
-    if (freeModels.includes(model)) return "free";
-    if (premiumModels.includes(model)) return "premium";
+    if (freeModels.includes(model)) {
+return "free";
+}
+    if (premiumModels.includes(model)) {
+return "premium";
+}
     return "budget";
   }
 
@@ -587,7 +591,9 @@ export class ModelRouter {
     tokensUsed: { input: number; output: number }
   ): number {
     const costs = MODEL_COSTS[model];
-    if (!costs) return 0;
+    if (!costs) {
+return 0;
+}
 
     return (
       (tokensUsed.input / 1_000_000) * costs.input +

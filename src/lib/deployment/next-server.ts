@@ -1,4 +1,4 @@
-/* eslint-disable no-undef, no-console, @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * Next.js Server Wrapper with Graceful Shutdown
  *

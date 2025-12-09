@@ -171,9 +171,13 @@ export class EnterpriseSummaryReportService {
     let overageRisk: 'none' | 'low' | 'medium' | 'high' = 'none';
     const usagePercentage = Math.min(100, (totalUsage / 10000) * 100); // Assuming 10k limit
 
-    if (usagePercentage > 90) overageRisk = 'high';
-    else if (usagePercentage > 75) overageRisk = 'medium';
-    else if (usagePercentage > 50) overageRisk = 'low';
+    if (usagePercentage > 90) {
+overageRisk = 'high';
+} else if (usagePercentage > 75) {
+overageRisk = 'medium';
+} else if (usagePercentage > 50) {
+overageRisk = 'low';
+}
 
     return {
       plan_name: plan.name,
@@ -470,23 +474,37 @@ export class EnterpriseSummaryReportService {
     let score = 100;
 
     // Billing factors (-20 max)
-    if (billing.overage_risk === 'high') score -= 15;
-    else if (billing.overage_risk === 'medium') score -= 8;
-    else if (billing.overage_risk === 'low') score -= 3;
+    if (billing.overage_risk === 'high') {
+score -= 15;
+} else if (billing.overage_risk === 'medium') {
+score -= 8;
+} else if (billing.overage_risk === 'low') {
+score -= 3;
+}
 
     // Usage factors (-15 max)
-    if (usage.total_events === 0) score -= 10;
-    if (usage.growth_rate < -20) score -= 5;
+    if (usage.total_events === 0) {
+score -= 10;
+}
+    if (usage.growth_rate < -20) {
+score -= 5;
+}
 
     // Team factors (-15 max)
-    if (teams.total_members === 0) score -= 15;
-    else if (teams.total_members === 1) score -= 5;
+    if (teams.total_members === 0) {
+score -= 15;
+} else if (teams.total_members === 1) {
+score -= 5;
+}
 
     // Audit factors (-30 max)
     score -= Math.min(15, audit.critical_events * 3);
     score -= Math.min(10, audit.security_incidents * 2);
-    if (audit.compliance_status === 'non_compliant') score -= 10;
-    else if (audit.compliance_status === 'warning') score -= 5;
+    if (audit.compliance_status === 'non_compliant') {
+score -= 10;
+} else if (audit.compliance_status === 'warning') {
+score -= 5;
+}
 
     // Alerts (-20 max)
     const criticalAlerts = alerts.filter((a) => a.type === 'critical').length;

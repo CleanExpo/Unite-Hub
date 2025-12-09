@@ -61,8 +61,12 @@ export const ALLOWED_EXTENSIONS: Record<FileType, string[]> = {
 export function detectFileType(file: File): FileType {
   const mimeType = file.type;
 
-  if (mimeType.startsWith('video/')) return 'video';
-  if (mimeType.startsWith('audio/')) return 'audio';
+  if (mimeType.startsWith('video/')) {
+return 'video';
+}
+  if (mimeType.startsWith('audio/')) {
+return 'audio';
+}
   if (mimeType.startsWith('image/')) {
     // SVG can be either image or sketch
     if (mimeType === 'image/svg+xml' && file.name.endsWith('.svg')) {
@@ -70,8 +74,12 @@ export function detectFileType(file: File): FileType {
     }
     return 'image';
   }
-  if (mimeType === 'application/pdf' || mimeType.startsWith('text/')) return 'document';
-  if (mimeType === 'application/json') return 'sketch';
+  if (mimeType === 'application/pdf' || mimeType.startsWith('text/')) {
+return 'document';
+}
+  if (mimeType === 'application/json') {
+return 'sketch';
+}
 
   // Fallback to extension-based detection
   const extension = file.name.split('.').pop()?.toLowerCase() || '';
@@ -140,7 +148,9 @@ export function validateFile(file: File, allowedTypes?: FileType[]): {
  */
 
 export function formatFileSize(bytes: number): string {
-  if (bytes === 0) return '0 Bytes';
+  if (bytes === 0) {
+return '0 Bytes';
+}
   const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
@@ -218,10 +228,18 @@ export function formatRelativeTime(dateString: string): string {
   const diffHours = Math.floor(diffMins / 60);
   const diffDays = Math.floor(diffHours / 24);
 
-  if (diffSecs < 60) return 'just now';
-  if (diffMins < 60) return `${diffMins}m ago`;
-  if (diffHours < 24) return `${diffHours}h ago`;
-  if (diffDays < 7) return `${diffDays}d ago`;
+  if (diffSecs < 60) {
+return 'just now';
+}
+  if (diffMins < 60) {
+return `${diffMins}m ago`;
+}
+  if (diffHours < 24) {
+return `${diffHours}h ago`;
+}
+  if (diffDays < 7) {
+return `${diffDays}d ago`;
+}
 
   return date.toLocaleDateString();
 }
@@ -298,16 +316,22 @@ export function buildSearchQuery(
  */
 
 export function getTranscriptExcerpt(media: MediaFile, maxLength: number = 100): string {
-  if (!media.transcript?.full_text) return '';
+  if (!media.transcript?.full_text) {
+return '';
+}
 
   const text = media.transcript.full_text;
-  if (text.length <= maxLength) return text;
+  if (text.length <= maxLength) {
+return text;
+}
 
   return text.substring(0, maxLength) + '...';
 }
 
 export function getWordCount(media: MediaFile): number {
-  if (!media.transcript?.full_text) return 0;
+  if (!media.transcript?.full_text) {
+return 0;
+}
 
   return media.transcript.full_text.split(/\s+/).filter(w => w.length > 0).length;
 }
@@ -317,10 +341,14 @@ export function getWordCount(media: MediaFile): number {
  */
 
 export function getAnalysisExcerpt(media: MediaFile, maxLength: number = 150): string {
-  if (!media.ai_analysis?.summary) return '';
+  if (!media.ai_analysis?.summary) {
+return '';
+}
 
   const summary = media.ai_analysis.summary;
-  if (summary.length <= maxLength) return summary;
+  if (summary.length <= maxLength) {
+return summary;
+}
 
   return summary.substring(0, maxLength) + '...';
 }
@@ -339,7 +367,9 @@ export function getSentimentEmoji(sentiment: string): string {
  */
 
 export function downloadTranscript(media: MediaFile): void {
-  if (!media.transcript?.full_text) return;
+  if (!media.transcript?.full_text) {
+return;
+}
 
   const blob = new Blob([media.transcript.full_text], { type: 'text/plain' });
   const url = URL.createObjectURL(blob);

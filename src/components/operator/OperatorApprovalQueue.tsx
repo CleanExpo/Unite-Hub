@@ -117,7 +117,9 @@ export function OperatorApprovalQueue({
   };
 
   const handleResolve = async () => {
-    if (!selectedItem) return;
+    if (!selectedItem) {
+return;
+}
 
     setProcessing(true);
     try {
@@ -163,8 +165,12 @@ export function OperatorApprovalQueue({
   };
 
   const getPriorityBadge = (priority: number) => {
-    if (priority >= 8) return <Badge className="bg-red-500">Urgent</Badge>;
-    if (priority >= 5) return <Badge className="bg-yellow-500">Normal</Badge>;
+    if (priority >= 8) {
+return <Badge className="bg-red-500">Urgent</Badge>;
+}
+    if (priority >= 5) {
+return <Badge className="bg-yellow-500">Normal</Badge>;
+}
     return <Badge className="bg-gray-500">Low</Badge>;
   };
 
@@ -173,13 +179,19 @@ export function OperatorApprovalQueue({
     const hours = Math.floor(remaining / (1000 * 60 * 60));
     const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
 
-    if (remaining < 0) return "Expired";
-    if (hours > 0) return `${hours}h ${minutes}m`;
+    if (remaining < 0) {
+return "Expired";
+}
+    if (hours > 0) {
+return `${hours}h ${minutes}m`;
+}
     return `${minutes}m`;
   };
 
   const canApprove = (riskLevel: string) => {
-    if (!operator) return false;
+    if (!operator) {
+return false;
+}
     switch (riskLevel) {
       case "LOW":
         return operator.can_approve_low;

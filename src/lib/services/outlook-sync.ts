@@ -161,7 +161,9 @@ export async function getPrimaryOutlookAccount(orgId: string) {
 
     // Return the primary one if set
     const primary = outlookIntegrations.find((i) => i.is_primary);
-    if (primary) return primary;
+    if (primary) {
+return primary;
+}
 
     // Otherwise return the first active one
     return outlookIntegrations[0] || null;

@@ -118,7 +118,9 @@ export async function GET(req: NextRequest) {
         }
         dailyMetrics[day].count++;
         dailyMetrics[day].avgGain += opt.efficiency_gain || 0;
-        if (opt.workflow_success) dailyMetrics[day].successCount++;
+        if (opt.workflow_success) {
+dailyMetrics[day].successCount++;
+}
       }
 
       // Normalize averages

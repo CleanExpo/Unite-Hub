@@ -62,8 +62,12 @@ export function PerformanceGuardIndicator({
   };
 
   const getMetricStatus = (value: number, warning: number, critical: number) => {
-    if (value >= critical) return 'critical';
-    if (value >= warning) return 'warning';
+    if (value >= critical) {
+return 'critical';
+}
+    if (value >= warning) {
+return 'warning';
+}
     return 'healthy';
   };
 

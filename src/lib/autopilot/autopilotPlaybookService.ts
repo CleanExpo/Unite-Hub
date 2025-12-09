@@ -131,7 +131,9 @@ export async function getPlaybook(playbookId: string): Promise<AutopilotPlaybook
     .eq('id', playbookId)
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+return null;
+}
 
   return mapToPlaybook(data);
 }
@@ -198,7 +200,9 @@ export async function updateActionState(
   if (state === 'auto_executed' || state === 'approved_executed') {
     updates.executed_at = new Date().toISOString();
     updates.execution_result = executionResult;
-    if (executedBy) updates.executed_by = executedBy;
+    if (executedBy) {
+updates.executed_by = executedBy;
+}
   }
 
   const { data, error } = await supabase
@@ -255,7 +259,9 @@ export async function getAutopilotStats(
 // Helper functions
 
 function calculateRiskMix(actions: CreateActionInput[]): number {
-  if (actions.length === 0) return 0;
+  if (actions.length === 0) {
+return 0;
+}
 
   const riskScores = actions.map(a =>
     a.riskClass === 'high' ? 3 : a.riskClass === 'medium' ? 2 : 1

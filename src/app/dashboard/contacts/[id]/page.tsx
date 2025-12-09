@@ -72,7 +72,9 @@ export default function ContactDetailPage() {
   useEffect(() => {
     async function fetchContactData() {
       try {
-        if (workspaceLoading || !workspaceId) return;
+        if (workspaceLoading || !workspaceId) {
+return;
+}
 
         // Fetch contact details
         const { data: contactData, error: contactError } = await supabase
@@ -124,7 +126,9 @@ export default function ContactDetailPage() {
   }, [contactId, workspaceId, workspaceLoading, router]);
 
   const handleDelete = async () => {
-    if (!confirm("Are you sure you want to delete this contact?")) return;
+    if (!confirm("Are you sure you want to delete this contact?")) {
+return;
+}
 
     try {
       const { error } = await supabase
@@ -133,7 +137,9 @@ export default function ContactDetailPage() {
         .eq("id", contactId)
         .eq("workspace_id", workspaceId); // Ensure workspace isolation
 
-      if (error) throw error;
+      if (error) {
+throw error;
+}
 
       router.push("/dashboard/contacts");
     } catch (error) {
@@ -182,9 +188,15 @@ export default function ContactDetailPage() {
   }
 
   const getScoreColor = (score: number) => {
-    if (score >= 80) return "from-green-500 to-emerald-600";
-    if (score >= 60) return "from-blue-500 to-cyan-600";
-    if (score >= 40) return "from-amber-500 to-yellow-600";
+    if (score >= 80) {
+return "from-green-500 to-emerald-600";
+}
+    if (score >= 60) {
+return "from-blue-500 to-cyan-600";
+}
+    if (score >= 40) {
+return "from-amber-500 to-yellow-600";
+}
     return "from-red-500 to-rose-600";
   };
 

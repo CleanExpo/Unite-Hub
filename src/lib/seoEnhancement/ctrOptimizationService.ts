@@ -108,9 +108,15 @@ const EXPECTED_CTR_BY_POSITION: Record<number, number> = {
  * Get expected CTR for a position
  */
 function getExpectedCTR(position: number): number {
-  if (position <= 0) return 0;
-  if (position <= 10) return EXPECTED_CTR_BY_POSITION[Math.round(position)] || 2.5;
-  if (position <= 20) return 1.0;
+  if (position <= 0) {
+return 0;
+}
+  if (position <= 10) {
+return EXPECTED_CTR_BY_POSITION[Math.round(position)] || 2.5;
+}
+  if (position <= 20) {
+return 1.0;
+}
   return 0.5;
 }
 
@@ -122,10 +128,15 @@ function calculateTitleQuality(title: string, keyword: string): number {
 
   // Length check (50-60 chars is optimal)
   const length = title.length;
-  if (length >= 50 && length <= 60) score += 15;
-  else if (length >= 40 && length <= 70) score += 10;
-  else if (length > 70) score -= 10;
-  else if (length < 30) score -= 5;
+  if (length >= 50 && length <= 60) {
+score += 15;
+} else if (length >= 40 && length <= 70) {
+score += 10;
+} else if (length > 70) {
+score -= 10;
+} else if (length < 30) {
+score -= 5;
+}
 
   // Keyword presence
   if (title.toLowerCase().includes(keyword.toLowerCase())) {
@@ -146,10 +157,14 @@ function calculateTitleQuality(title: string, keyword: string): number {
   }
 
   // Numbers
-  if (/\d+/.test(title)) score += 5;
+  if (/\d+/.test(title)) {
+score += 5;
+}
 
   // Brackets/parentheses for CTR
-  if (/[\[\(].*[\]\)]/.test(title)) score += 3;
+  if (/[\[\(].*[\]\)]/.test(title)) {
+score += 3;
+}
 
   return Math.min(100, Math.max(0, score));
 }
@@ -162,10 +177,15 @@ function calculateMetaQuality(meta: string, keyword: string): number {
 
   // Length check (150-160 chars is optimal)
   const length = meta.length;
-  if (length >= 150 && length <= 160) score += 15;
-  else if (length >= 120 && length <= 170) score += 10;
-  else if (length > 170) score -= 10;
-  else if (length < 100) score -= 5;
+  if (length >= 150 && length <= 160) {
+score += 15;
+} else if (length >= 120 && length <= 170) {
+score += 10;
+} else if (length > 170) {
+score -= 10;
+} else if (length < 100) {
+score -= 5;
+}
 
   // Keyword presence
   if (meta.toLowerCase().includes(keyword.toLowerCase())) {
@@ -287,7 +307,9 @@ export async function createTest(params: CreateTestParams): Promise<TitleMetaTes
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to create test: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to create test: ${error.message}`);
+}
   return data;
 }
 
@@ -307,7 +329,9 @@ export async function startTest(testId: string): Promise<TitleMetaTest> {
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to start test: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to start test: ${error.message}`);
+}
   return data;
 }
 
@@ -358,7 +382,9 @@ export async function updateTestResults(
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to update test: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to update test: ${error.message}`);
+}
   return data;
 }
 
@@ -375,7 +401,9 @@ export async function completeTest(testId: string): Promise<TitleMetaTest> {
     .eq('id', testId)
     .single();
 
-  if (fetchError) throw new Error(`Test not found: ${fetchError.message}`);
+  if (fetchError) {
+throw new Error(`Test not found: ${fetchError.message}`);
+}
 
   // Determine winner
   let winner: 'a' | 'b' | 'no_winner' = 'no_winner';
@@ -394,7 +422,9 @@ export async function completeTest(testId: string): Promise<TitleMetaTest> {
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to complete test: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to complete test: ${error.message}`);
+}
   return data;
 }
 
@@ -427,7 +457,9 @@ export async function getTests(
 
   const { data, error } = await query;
 
-  if (error) throw new Error(`Failed to fetch tests: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to fetch tests: ${error.message}`);
+}
   return data || [];
 }
 
@@ -456,8 +488,11 @@ export async function analyzeCTRBenchmark(
 
   // Determine opportunity level
   let opportunityLevel: 'high' | 'medium' | 'low' = 'low';
-  if (ctrDifference < -5) opportunityLevel = 'high';
-  else if (ctrDifference < -2) opportunityLevel = 'medium';
+  if (ctrDifference < -5) {
+opportunityLevel = 'high';
+} else if (ctrDifference < -2) {
+opportunityLevel = 'medium';
+}
 
   // Calculate estimated click gain if CTR improved to expected
   const estimatedClickGain = ctrDifference < 0
@@ -500,7 +535,9 @@ export async function analyzeCTRBenchmark(
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to save benchmark: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to save benchmark: ${error.message}`);
+}
   return data;
 }
 
@@ -529,7 +566,9 @@ export async function getCTRBenchmarks(
 
   const { data, error } = await query;
 
-  if (error) throw new Error(`Failed to fetch benchmarks: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to fetch benchmarks: ${error.message}`);
+}
   return data || [];
 }
 

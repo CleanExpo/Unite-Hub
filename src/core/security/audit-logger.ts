@@ -79,7 +79,9 @@ export class AuditLogger {
    * Start periodic flush of buffered logs
    */
   private startFlushInterval(): void {
-    if (this.flushInterval) return;
+    if (this.flushInterval) {
+return;
+}
 
     this.flushInterval = setInterval(() => {
       this.flush().catch(console.error);
@@ -144,7 +146,9 @@ export class AuditLogger {
    * Flush buffered logs to database
    */
   async flush(): Promise<void> {
-    if (this.buffer.length === 0) return;
+    if (this.buffer.length === 0) {
+return;
+}
     if (!this.supabase) {
       console.warn('[AuditLogger] No Supabase client configured, skipping flush');
       return;

@@ -39,7 +39,9 @@ export async function getFairnessReports(auditType?: string): Promise<FairnessAu
   }
 
   const { data, error } = await query;
-  if (error) return [];
+  if (error) {
+return [];
+}
 
   return (data || []).map(row => ({
     id: row.id,
@@ -65,7 +67,9 @@ export async function getBiasFlags(): Promise<PatternBiasFlag[]> {
     .order('created_at', { ascending: false })
     .limit(100);
 
-  if (error) return [];
+  if (error) {
+return [];
+}
 
   return (data || []).map(row => ({
     id: row.id,
@@ -110,7 +114,9 @@ export async function createAuditReport(
     .select()
     .single();
 
-  if (error) return null;
+  if (error) {
+return null;
+}
 
   return {
     id: data.id,

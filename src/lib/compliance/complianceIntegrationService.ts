@@ -103,7 +103,9 @@ export async function emitAutopilotTasksFromIncidents(
 
   for (const incident of criticalIncidents) {
     // Only unresolved incidents
-    if (incident.resolvedAt) continue;
+    if (incident.resolvedAt) {
+continue;
+}
 
     tasks.push({
       type: 'compliance_review',

@@ -123,13 +123,17 @@ export class TaskRouter {
    * Classify task category based on content
    */
   classifyCategory(task: Task): TaskCategory {
-    if (task.category) return task.category;
+    if (task.category) {
+return task.category;
+}
 
     const text = `${task.title} ${task.description}`.toLowerCase();
 
     // Check each category's patterns
     for (const [category, patterns] of Object.entries(CATEGORY_PATTERNS)) {
-      if (category === 'general') continue;
+      if (category === 'general') {
+continue;
+}
       for (const pattern of patterns) {
         if (pattern.test(text)) {
           return category as TaskCategory;
@@ -144,7 +148,9 @@ export class TaskRouter {
    * Determine task priority based on content and context
    */
   determinePriority(task: Task): TaskPriority {
-    if (task.priority) return task.priority;
+    if (task.priority) {
+return task.priority;
+}
 
     const text = `${task.title} ${task.description}`.toLowerCase();
 

@@ -49,7 +49,9 @@ export interface ContentScore {
 
 function getFrameworkPrompt(framework: string, request: ContentRequest): string {
   const fw = config.copywriting.frameworks[framework as keyof typeof config.copywriting.frameworks];
-  if (!fw) return '';
+  if (!fw) {
+return '';
+}
 
   const industryVoice = config.voice.industry_adaptation[request.industry as keyof typeof config.voice.industry_adaptation];
   const tone = industryVoice?.tone || 'Professional and helpful';
@@ -316,7 +318,9 @@ export function scoreContent(content: string, request: ContentRequest): ContentS
 
 function calculateAvgSentenceLength(text: string): number {
   const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
-  if (sentences.length === 0) return 0;
+  if (sentences.length === 0) {
+return 0;
+}
   const totalWords = sentences.reduce((sum, s) => sum + s.trim().split(/\s+/).length, 0);
   return totalWords / sentences.length;
 }

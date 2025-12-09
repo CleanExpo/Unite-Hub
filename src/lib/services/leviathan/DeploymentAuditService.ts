@@ -390,9 +390,13 @@ export class DeploymentAuditService {
 
     for (const log of logs) {
       // Count by result
-      if (log.actionResult === 'success') successCount++;
-      else if (log.actionResult === 'failure') failureCount++;
-      else if (log.actionResult === 'partial') partialCount++;
+      if (log.actionResult === 'success') {
+successCount++;
+} else if (log.actionResult === 'failure') {
+failureCount++;
+} else if (log.actionResult === 'partial') {
+partialCount++;
+}
 
       // Count by action type
       byActionType[log.actionType] = (byActionType[log.actionType] || 0) + 1;

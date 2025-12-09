@@ -95,13 +95,17 @@ export function AnimatedCounter({ end, duration = 2000, suffix = '', prefix = ''
   }, []);
 
   useEffect(() => {
-    if (!isVisible) return;
+    if (!isVisible) {
+return;
+}
 
     let startTime: number;
     let animationFrameId: number;
 
     const animate = (currentTime: number) => {
-      if (!startTime) startTime = currentTime;
+      if (!startTime) {
+startTime = currentTime;
+}
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
 

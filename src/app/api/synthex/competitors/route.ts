@@ -143,10 +143,18 @@ export async function PATCH(request: NextRequest) {
     }
 
     const updates: Record<string, unknown> = {};
-    if (company_name !== undefined) updates.company_name = company_name;
-    if (competitor_type !== undefined) updates.competitor_type = competitor_type;
-    if (priority !== undefined) updates.priority = priority;
-    if (is_active !== undefined) updates.is_active = is_active;
+    if (company_name !== undefined) {
+updates.company_name = company_name;
+}
+    if (competitor_type !== undefined) {
+updates.competitor_type = competitor_type;
+}
+    if (priority !== undefined) {
+updates.priority = priority;
+}
+    if (is_active !== undefined) {
+updates.is_active = is_active;
+}
 
     const competitor = await updateCompetitor(tenant_id, competitor_id, updates);
 

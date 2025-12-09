@@ -27,12 +27,18 @@ export async function getMessages(
     .order('created_at', { ascending: false })
     .limit(100);
 
-  if (producerEngine) query = query.eq('producer_engine', producerEngine);
-  if (consumerEngine) query = query.eq('consumer_engine', consumerEngine);
+  if (producerEngine) {
+query = query.eq('producer_engine', producerEngine);
+}
+  if (consumerEngine) {
+query = query.eq('consumer_engine', consumerEngine);
+}
 
   const { data } = await query;
 
-  if (!data) return [];
+  if (!data) {
+return [];
+}
 
   return data.map(row => ({
     id: row.id,
@@ -66,7 +72,9 @@ export async function publishMessage(
     .select()
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+return null;
+}
 
   return {
     id: data.id,

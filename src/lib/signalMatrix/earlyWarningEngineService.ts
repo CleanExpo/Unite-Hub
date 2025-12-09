@@ -423,7 +423,9 @@ function calculateOverallRisk(
   warnings: WarningDetection[],
   factors: Map<WarningType, EarlyWarningFactor>
 ): number {
-  if (warnings.length === 0) return 0;
+  if (warnings.length === 0) {
+return 0;
+}
 
   let weightedSum = 0;
   let totalWeight = 0;
@@ -442,9 +444,15 @@ function calculateOverallRisk(
  * Get risk level from score
  */
 function getRiskLevel(score: number): 'low' | 'medium' | 'high' | 'critical' {
-  if (score >= 0.8) return 'critical';
-  if (score >= 0.6) return 'high';
-  if (score >= 0.4) return 'medium';
+  if (score >= 0.8) {
+return 'critical';
+}
+  if (score >= 0.6) {
+return 'high';
+}
+  if (score >= 0.4) {
+return 'medium';
+}
   return 'low';
 }
 
@@ -452,7 +460,11 @@ function getRiskLevel(score: number): 'low' | 'medium' | 'high' | 'critical' {
  * Get severity from score
  */
 function getSeverityFromScore(score: number): WarningSeverity {
-  if (score >= 0.7) return 'high';
-  if (score >= 0.5) return 'medium';
+  if (score >= 0.7) {
+return 'high';
+}
+  if (score >= 0.5) {
+return 'medium';
+}
   return 'low';
 }

@@ -138,9 +138,15 @@ function DimensionRow({ dimension }: { dimension: DimensionScore }) {
   const name = getDimensionDisplayName(dimension.dimension);
 
   const getScoreColor = (score: number) => {
-    if (score >= 70) return 'bg-green-500';
-    if (score >= 50) return 'bg-blue-500';
-    if (score >= 30) return 'bg-yellow-500';
+    if (score >= 70) {
+return 'bg-green-500';
+}
+    if (score >= 50) {
+return 'bg-blue-500';
+}
+    if (score >= 30) {
+return 'bg-yellow-500';
+}
     return 'bg-red-500';
   };
 

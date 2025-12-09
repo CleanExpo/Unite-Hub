@@ -111,7 +111,9 @@ export async function createAudience(
       .select()
       .single();
 
-    if (error) throw new Error(error.message);
+    if (error) {
+throw new Error(error.message);
+}
 
     return {
       data: mapAudience(audience),
@@ -145,7 +147,9 @@ export async function listAudiences(
 
     const { data, error } = await query;
 
-    if (error) throw new Error(error.message);
+    if (error) {
+throw new Error(error.message);
+}
 
     return {
       data: (data || []).map(mapAudience),
@@ -170,7 +174,9 @@ export async function getAudience(
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') return { data: null, error: null };
+      if (error.code === 'PGRST116') {
+return { data: null, error: null };
+}
       throw new Error(error.message);
     }
 
@@ -211,7 +217,9 @@ export async function addContact(
       .select()
       .single();
 
-    if (error) throw new Error(error.message);
+    if (error) {
+throw new Error(error.message);
+}
 
     return { data: mapContact(data), error: null };
   } catch (err) {
@@ -251,7 +259,9 @@ export async function addContacts(
       .insert(rows)
       .select();
 
-    if (error) throw new Error(error.message);
+    if (error) {
+throw new Error(error.message);
+}
 
     return { data: (data || []).map(mapContact), error: null };
   } catch (err) {
@@ -285,7 +295,9 @@ export async function listContacts(
 
     const { data, error } = await query;
 
-    if (error) throw new Error(error.message);
+    if (error) {
+throw new Error(error.message);
+}
 
     return { data: (data || []).map(mapContact), error: null };
   } catch (err) {
@@ -304,7 +316,9 @@ export async function generateSegments(
     // Get audience contacts for analysis
     const { data: contacts, error: contactsError } = await listContacts(audienceId, { limit: 500 });
 
-    if (contactsError) throw contactsError;
+    if (contactsError) {
+throw contactsError;
+}
     if (!contacts || contacts.length === 0) {
       throw new Error('No contacts found in audience');
     }
@@ -399,7 +413,9 @@ export async function saveSegments(
       .insert(rows)
       .select();
 
-    if (error) throw new Error(error.message);
+    if (error) {
+throw new Error(error.message);
+}
 
     return { data: (data || []).map(mapSegment), error: null };
   } catch (err) {
@@ -430,7 +446,9 @@ export async function listSegments(
 
     const { data, error } = await query;
 
-    if (error) throw new Error(error.message);
+    if (error) {
+throw new Error(error.message);
+}
 
     return { data: (data || []).map(mapSegment), error: null };
   } catch (err) {
@@ -452,7 +470,9 @@ export async function getSegment(
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') return { data: null, error: null };
+      if (error.code === 'PGRST116') {
+return { data: null, error: null };
+}
       throw new Error(error.message);
     }
 
@@ -474,7 +494,9 @@ export async function deleteAudience(
       .delete()
       .eq('id', audienceId);
 
-    if (error) throw new Error(error.message);
+    if (error) {
+throw new Error(error.message);
+}
 
     return { success: true, error: null };
   } catch (err) {
@@ -494,7 +516,9 @@ export async function deleteSegment(
       .delete()
       .eq('id', segmentId);
 
-    if (error) throw new Error(error.message);
+    if (error) {
+throw new Error(error.message);
+}
 
     return { success: true, error: null };
   } catch (err) {

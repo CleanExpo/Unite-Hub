@@ -181,7 +181,9 @@ export class ContextUnifier {
         .eq('id', workspaceId)
         .single();
 
-      if (!workspace) return {};
+      if (!workspace) {
+return {};
+}
 
       return {
         workspaceId,
@@ -204,7 +206,9 @@ export class ContextUnifier {
     try {
       const { data: { user } } = await supabase.auth.getUser();
 
-      if (!user) return {};
+      if (!user) {
+return {};
+}
 
       const { data: profile } = await supabase
         .from('user_profiles')

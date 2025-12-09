@@ -120,9 +120,15 @@ export async function PATCH(request: NextRequest) {
     }
 
     const updates: Record<string, unknown> = {};
-    if (label !== undefined) updates.label = label;
-    if (properties !== undefined) updates.properties = properties;
-    if (importance_score !== undefined) updates.importance_score = importance_score;
+    if (label !== undefined) {
+updates.label = label;
+}
+    if (properties !== undefined) {
+updates.properties = properties;
+}
+    if (importance_score !== undefined) {
+updates.importance_score = importance_score;
+}
 
     const node = await updateNode(tenant_id, node_id, updates);
 

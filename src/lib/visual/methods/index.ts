@@ -572,10 +572,18 @@ export function estimateTotalCost(methodIds: string[]): { tier: string; estimate
   const methods = methodIds.map(id => getMethodById(id)).filter(Boolean) as VisualMethod[];
   const tiers = methods.map(m => m.cost_tier);
 
-  if (tiers.includes('premium')) return { tier: 'premium', estimated_range: '$5-15' };
-  if (tiers.filter(t => t === 'high').length > 2) return { tier: 'high', estimated_range: '$2-8' };
-  if (tiers.includes('high')) return { tier: 'medium-high', estimated_range: '$1-5' };
-  if (tiers.includes('medium')) return { tier: 'medium', estimated_range: '$0.50-2' };
+  if (tiers.includes('premium')) {
+return { tier: 'premium', estimated_range: '$5-15' };
+}
+  if (tiers.filter(t => t === 'high').length > 2) {
+return { tier: 'high', estimated_range: '$2-8' };
+}
+  if (tiers.includes('high')) {
+return { tier: 'medium-high', estimated_range: '$1-5' };
+}
+  if (tiers.includes('medium')) {
+return { tier: 'medium', estimated_range: '$0.50-2' };
+}
   return { tier: 'low', estimated_range: '$0.10-0.50' };
 }
 

@@ -424,7 +424,9 @@ export class FounderOpsQueueManager {
       taskList.forEach(t => {
         byBrand[t.brand_slug || 'unknown'] = (byBrand[t.brand_slug || 'unknown'] || 0) + 1;
         const p = t.priority as keyof typeof byPriority;
-        if (p in byPriority) byPriority[p]++;
+        if (p in byPriority) {
+byPriority[p]++;
+}
       });
 
       const dailyCapacityMinutes = 480; // 8 hours

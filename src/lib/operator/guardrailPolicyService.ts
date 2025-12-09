@@ -99,13 +99,17 @@ export class GuardrailPolicyService {
 
     // Evaluate rules in priority order
     for (const rule of rules) {
-      if (!rule.is_active) continue;
+      if (!rule.is_active) {
+continue;
+}
 
       evaluatedRules.push(rule.id);
 
       // Check if conditions match
       const matches = this.evaluateConditions(rule.conditions, context);
-      if (!matches) continue;
+      if (!matches) {
+continue;
+}
 
       // Process based on rule type
       switch (rule.rule_type) {
@@ -243,33 +247,49 @@ export class GuardrailPolicyService {
     for (const [key, value] of Object.entries(conditions)) {
       switch (key) {
         case "operator_score":
-          if (context.operatorScore === undefined) continue;
+          if (context.operatorScore === undefined) {
+continue;
+}
           const scoreCondition = value as string;
           if (scoreCondition.startsWith("<")) {
             const threshold = parseFloat(scoreCondition.substring(1));
-            if (!(context.operatorScore < threshold)) return false;
+            if (!(context.operatorScore < threshold)) {
+return false;
+}
           } else if (scoreCondition.startsWith(">")) {
             const threshold = parseFloat(scoreCondition.substring(1));
-            if (!(context.operatorScore > threshold)) return false;
+            if (!(context.operatorScore > threshold)) {
+return false;
+}
           } else if (scoreCondition.startsWith("<=")) {
             const threshold = parseFloat(scoreCondition.substring(2));
-            if (!(context.operatorScore <= threshold)) return false;
+            if (!(context.operatorScore <= threshold)) {
+return false;
+}
           } else if (scoreCondition.startsWith(">=")) {
             const threshold = parseFloat(scoreCondition.substring(2));
-            if (!(context.operatorScore >= threshold)) return false;
+            if (!(context.operatorScore >= threshold)) {
+return false;
+}
           }
           break;
 
         case "domain":
-          if (context.domain && context.domain !== value) return false;
+          if (context.domain && context.domain !== value) {
+return false;
+}
           break;
 
         case "risk_level":
-          if (context.riskLevel && context.riskLevel !== value) return false;
+          if (context.riskLevel && context.riskLevel !== value) {
+return false;
+}
           break;
 
         case "is_sandbox":
-          if (context.isSandboxMode !== value) return false;
+          if (context.isSandboxMode !== value) {
+return false;
+}
           break;
       }
     }

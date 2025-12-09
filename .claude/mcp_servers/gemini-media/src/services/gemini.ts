@@ -45,7 +45,9 @@ export class GeminiService {
    */
   private isCacheValid(checksum: string): boolean {
     const cachedFile = this.fileCache.get(checksum);
-    if (!cachedFile) return false;
+    if (!cachedFile) {
+return false;
+}
     
     const now = Date.now();
     const isExpired = now - cachedFile.timestamp > this.cacheExpiration;

@@ -222,9 +222,15 @@ export class GenerativePipeline {
    * Infer asset type from method
    */
   private inferAssetType(method: VisualMethod): GeneratedAsset['type'] {
-    if (method.category === 'motion') return 'video';
-    if (method.outputs.some(o => o.includes('svg'))) return 'svg';
-    if (method.outputs.some(o => o.includes('pdf'))) return 'pdf';
+    if (method.category === 'motion') {
+return 'video';
+}
+    if (method.outputs.some(o => o.includes('svg'))) {
+return 'svg';
+}
+    if (method.outputs.some(o => o.includes('pdf'))) {
+return 'pdf';
+}
     return 'image';
   }
 

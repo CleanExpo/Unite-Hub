@@ -152,7 +152,9 @@ function SuggestionCard({
   };
 
   const handleApply = async () => {
-    if (!onApply) return;
+    if (!onApply) {
+return;
+}
     setIsProcessing(true);
     try {
       await onApply(suggestion.id);

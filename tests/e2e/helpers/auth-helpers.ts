@@ -199,7 +199,9 @@ export async function logout(page: Page): Promise<void> {
 export async function getCurrentUser(page: Page): Promise<TestUser | null> {
   return page.evaluate(() => {
     const authData = localStorage.getItem('supabase.auth.token');
-    if (!authData) return null;
+    if (!authData) {
+return null;
+}
 
     try {
       const parsed = JSON.parse(authData);
@@ -216,7 +218,9 @@ export async function getCurrentUser(page: Page): Promise<TestUser | null> {
 export async function isAuthenticated(page: Page): Promise<boolean> {
   return page.evaluate(() => {
     const authData = localStorage.getItem('supabase.auth.token');
-    if (!authData) return false;
+    if (!authData) {
+return false;
+}
 
     try {
       const parsed = JSON.parse(authData);
@@ -233,7 +237,9 @@ export async function isAuthenticated(page: Page): Promise<boolean> {
 export async function getAuthToken(page: Page): Promise<string | null> {
   return page.evaluate(() => {
     const authData = localStorage.getItem('supabase.auth.token');
-    if (!authData) return null;
+    if (!authData) {
+return null;
+}
 
     try {
       const parsed = JSON.parse(authData);

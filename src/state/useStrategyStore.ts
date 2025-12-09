@@ -145,7 +145,9 @@ export const useStrategyStore = create<StrategyStore>((set, get) => ({
 
   getHierarchyHealth: () => {
     const { activeStrategy, validation } = get();
-    if (!activeStrategy || !validation) return 0;
+    if (!activeStrategy || !validation) {
+return 0;
+}
 
     // Health = 60% hierarchy score + 40% validation score
     return activeStrategy.hierarchyScore * 0.6 + validation.validationScore * 0.4;
@@ -153,24 +155,36 @@ export const useStrategyStore = create<StrategyStore>((set, get) => ({
 
   getDecompositionQuality: () => {
     const { decompositionMetrics } = get();
-    if (!decompositionMetrics) return 'poor';
+    if (!decompositionMetrics) {
+return 'poor';
+}
 
     const score = decompositionMetrics.overall;
-    if (score >= 85) return 'excellent';
-    if (score >= 70) return 'good';
-    if (score >= 50) return 'fair';
+    if (score >= 85) {
+return 'excellent';
+}
+    if (score >= 70) {
+return 'good';
+}
+    if (score >= 50) {
+return 'fair';
+}
     return 'poor';
   },
 
   getValidationStatus: () => {
     const { validation } = get();
-    if (!validation) return 'not_validated';
+    if (!validation) {
+return 'not_validated';
+}
     return validation.overallStatus;
   },
 
   getTotalItems: () => {
     const { activeStrategy } = get();
-    if (!activeStrategy) return 0;
+    if (!activeStrategy) {
+return 0;
+}
 
     return (
       activeStrategy.L1_Strategic_Objective.items.length +
@@ -182,7 +196,9 @@ export const useStrategyStore = create<StrategyStore>((set, get) => ({
 
   getRiskDistribution: () => {
     const { activeStrategy } = get();
-    if (!activeStrategy) return { low: 0, medium: 0, high: 0, critical: 0 };
+    if (!activeStrategy) {
+return { low: 0, medium: 0, high: 0, critical: 0 };
+}
 
     const allItems = [
       ...activeStrategy.L2_Strategic_Pillars.items,
@@ -200,7 +216,9 @@ export const useStrategyStore = create<StrategyStore>((set, get) => ({
 
   getAverageEfficiency: () => {
     const { historicalStrategies } = get();
-    if (historicalStrategies.length === 0) return 0;
+    if (historicalStrategies.length === 0) {
+return 0;
+}
 
     const avgTime = historicalStrategies.reduce((sum, s) => sum + s.timeEfficiency, 0) / historicalStrategies.length;
     const avgCost = historicalStrategies.reduce((sum, s) => sum + s.costEfficiency, 0) / historicalStrategies.length;

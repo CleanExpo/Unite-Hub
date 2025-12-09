@@ -52,7 +52,9 @@ export async function POST(req: NextRequest) {
       .select()
       .single();
 
-    if (scanError) throw scanError;
+    if (scanError) {
+throw scanError;
+}
 
     // Perform actual scan (simplified for now)
     const startTime = Date.now();
@@ -86,7 +88,9 @@ export async function POST(req: NextRequest) {
       .select()
       .single();
 
-    if (updateError) throw updateError;
+    if (updateError) {
+throw updateError;
+}
 
     // Update site with latest scan info
     await supabase

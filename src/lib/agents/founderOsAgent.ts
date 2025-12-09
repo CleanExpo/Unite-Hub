@@ -844,7 +844,9 @@ Return 5-10 recommendations. Respond ONLY with valid JSON array.`;
       for (const link of links) {
         try {
           const url = link.url || link.link_url;
-          if (!url) continue;
+          if (!url) {
+continue;
+}
 
           // Attempt to fetch the URL with a timeout
           const controller = new AbortController();
@@ -1077,10 +1079,18 @@ Return 5-10 recommendations. Respond ONLY with valid JSON array.`;
   private determineRiskLevel(
     risks?: RiskAnalysisResult
   ): 'critical' | 'high' | 'medium' | 'low' {
-    if (!risks) return 'low';
-    if (risks.critical_count > 0) return 'critical';
-    if (risks.high_count > 0) return 'high';
-    if (risks.medium_count > 0) return 'medium';
+    if (!risks) {
+return 'low';
+}
+    if (risks.critical_count > 0) {
+return 'critical';
+}
+    if (risks.high_count > 0) {
+return 'high';
+}
+    if (risks.medium_count > 0) {
+return 'medium';
+}
     return 'low';
   }
 }

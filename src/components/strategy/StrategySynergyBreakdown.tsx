@@ -91,16 +91,28 @@ export function StrategySynergyBreakdown({
   ];
 
   const getMetricColor = (value: number): string => {
-    if (value >= 80) return '#10b981'; // Green
-    if (value >= 60) return '#f59e0b'; // Amber
-    if (value >= 40) return '#f97316'; // Orange
+    if (value >= 80) {
+return '#10b981';
+} // Green
+    if (value >= 60) {
+return '#f59e0b';
+} // Amber
+    if (value >= 40) {
+return '#f97316';
+} // Orange
     return '#ef4444'; // Red
   };
 
   const getMetricBgColor = (value: number): string => {
-    if (value >= 80) return '#d1fae5'; // Green light
-    if (value >= 60) return '#fef3c7'; // Amber light
-    if (value >= 40) return '#fed7aa'; // Orange light
+    if (value >= 80) {
+return '#d1fae5';
+} // Green light
+    if (value >= 60) {
+return '#fef3c7';
+} // Amber light
+    if (value >= 40) {
+return '#fed7aa';
+} // Orange light
     return '#fee2e2'; // Red light
   };
 

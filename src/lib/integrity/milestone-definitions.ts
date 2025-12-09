@@ -122,11 +122,21 @@ export function validateMilestoneStructure(milestone: MilestoneDefinition): {
   const errors: string[] = [];
 
   // Required fields
-  if (!milestone.milestoneId) errors.push('milestoneId is required');
-  if (!milestone.taskId) errors.push('taskId is required');
-  if (milestone.stepIndex === undefined) errors.push('stepIndex is required');
-  if (!milestone.stepName) errors.push('stepName is required');
-  if (!milestone.createdBy) errors.push('createdBy is required');
+  if (!milestone.milestoneId) {
+errors.push('milestoneId is required');
+}
+  if (!milestone.taskId) {
+errors.push('taskId is required');
+}
+  if (milestone.stepIndex === undefined) {
+errors.push('stepIndex is required');
+}
+  if (!milestone.stepName) {
+errors.push('stepName is required');
+}
+  if (!milestone.createdBy) {
+errors.push('createdBy is required');
+}
 
   // Weightage validation
   if (milestone.weightage < 0 || milestone.weightage > 100) {
@@ -138,9 +148,15 @@ export function validateMilestoneStructure(milestone: MilestoneDefinition): {
     errors.push('At least one criterion is required');
   } else {
     milestone.criteria.forEach((criterion, idx) => {
-      if (!criterion.id) errors.push(`Criterion ${idx}: id is required`);
-      if (!criterion.type) errors.push(`Criterion ${idx}: type is required`);
-      if (!criterion.description) errors.push(`Criterion ${idx}: description is required`);
+      if (!criterion.id) {
+errors.push(`Criterion ${idx}: id is required`);
+}
+      if (!criterion.type) {
+errors.push(`Criterion ${idx}: type is required`);
+}
+      if (!criterion.description) {
+errors.push(`Criterion ${idx}: description is required`);
+}
       if (!criterion.verificationMethod) {
         errors.push(`Criterion ${idx}: verificationMethod is required`);
       }
@@ -158,8 +174,12 @@ export function validateMilestoneStructure(milestone: MilestoneDefinition): {
     errors.push('At least one proof requirement is required');
   } else {
     milestone.requiredProofs.forEach((proof, idx) => {
-      if (!proof.proofType) errors.push(`Proof ${idx}: proofType is required`);
-      if (!proof.location) errors.push(`Proof ${idx}: location is required`);
+      if (!proof.proofType) {
+errors.push(`Proof ${idx}: proofType is required`);
+}
+      if (!proof.location) {
+errors.push(`Proof ${idx}: location is required`);
+}
     });
   }
 
@@ -326,7 +346,9 @@ export async function getMilestone(
   stepIndex: number
 ): Promise<MilestoneDefinition | null> {
   const taskMilestones = await getMilestones(taskId);
-  if (!taskMilestones) return null;
+  if (!taskMilestones) {
+return null;
+}
 
   return (
     taskMilestones.milestones.find(m => m.stepIndex === stepIndex) || null

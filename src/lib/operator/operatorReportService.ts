@@ -207,7 +207,9 @@ export class OperatorReportService {
     let consensusCount = 0;
     votesByItem.forEach((itemVotes) => {
       const allSame = itemVotes.every((v) => v === itemVotes[0]);
-      if (allSame) consensusCount++;
+      if (allSame) {
+consensusCount++;
+}
     });
 
     const consensusRate =
@@ -317,7 +319,9 @@ export class OperatorReportService {
       { blocked: number; quorumRequired: number; allowed: number }
     > = {};
     evals.forEach((e) => {
-      if (!e.operator_id) return;
+      if (!e.operator_id) {
+return;
+}
       if (!operatorStats[e.operator_id]) {
         operatorStats[e.operator_id] = {
           blocked: 0,

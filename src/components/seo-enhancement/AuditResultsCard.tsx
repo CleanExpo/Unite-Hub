@@ -94,8 +94,12 @@ export function AuditResultsCard({ audit, detailed = false }: AuditResultsCardPr
     value: number
   ): 'good' | 'warning' | 'poor' => {
     const thresholds = CORE_WEB_VITALS[metric];
-    if (value <= thresholds.good) return 'good';
-    if (value <= thresholds.poor) return 'warning';
+    if (value <= thresholds.good) {
+return 'good';
+}
+    if (value <= thresholds.poor) {
+return 'warning';
+}
     return 'poor';
   };
 
@@ -232,7 +236,9 @@ export function AuditResultsCard({ audit, detailed = false }: AuditResultsCardPr
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {(['lcp', 'fid', 'cls'] as const).map((metric) => {
                 const value = audit.results?.performance?.[metric];
-                if (value === undefined) return null;
+                if (value === undefined) {
+return null;
+}
 
                 const config = CORE_WEB_VITALS[metric];
                 const status = getMetricStatus(metric, value);

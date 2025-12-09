@@ -513,15 +513,26 @@ export class LeviathanOrchestratorService {
   }): number {
     let score = 0;
 
-    if (metrics.hasSchema) score += 25;
-    if (metrics.hasOgImage) score += 25;
-    if (metrics.isIndexed) score += 30;
+    if (metrics.hasSchema) {
+score += 25;
+}
+    if (metrics.hasOgImage) {
+score += 25;
+}
+    if (metrics.isIndexed) {
+score += 30;
+}
 
     // Load time score (max 20 points)
-    if (metrics.loadTimeMs < 1000) score += 20;
-    else if (metrics.loadTimeMs < 2000) score += 15;
-    else if (metrics.loadTimeMs < 3000) score += 10;
-    else score += 5;
+    if (metrics.loadTimeMs < 1000) {
+score += 20;
+} else if (metrics.loadTimeMs < 2000) {
+score += 15;
+} else if (metrics.loadTimeMs < 3000) {
+score += 10;
+} else {
+score += 5;
+}
 
     return score;
   }

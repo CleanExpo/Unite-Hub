@@ -325,10 +325,14 @@ export class ComputerUseOrchestrator {
       // Check if paused
       while (this.currentProgress?.status === 'paused') {
         await this.sleep(500);
-        if (this.shouldStop) break;
+        if (this.shouldStop) {
+break;
+}
       }
 
-      if (this.shouldStop) break;
+      if (this.shouldStop) {
+break;
+}
 
       try {
         // Step 1: Take screenshot
@@ -536,7 +540,9 @@ export class ComputerUseOrchestrator {
   }
 
   private async executeAction(action: FaraAction): Promise<boolean> {
-    if (!this.browser) return false;
+    if (!this.browser) {
+return false;
+}
 
     try {
       switch (action.type) {

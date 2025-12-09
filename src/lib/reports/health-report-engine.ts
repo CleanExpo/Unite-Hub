@@ -712,7 +712,9 @@ export class HealthReportEngine {
    * Calculate overall health score from section scores
    */
   private calculateOverallScore(sections: HealthReportSection[]): number {
-    if (sections.length === 0) return 0;
+    if (sections.length === 0) {
+return 0;
+}
     const sum = sections.reduce((acc, s) => acc + s.score, 0);
     return Math.round(sum / sections.length);
   }
@@ -724,8 +726,12 @@ export class HealthReportEngine {
     const keyIndicators =
       (metrics.keywordVisibility + metrics.socialGrowthRate + metrics.reviewVelocity) / 3;
 
-    if (keyIndicators > 70) return 'improving';
-    if (keyIndicators < 40) return 'declining';
+    if (keyIndicators > 70) {
+return 'improving';
+}
+    if (keyIndicators < 40) {
+return 'declining';
+}
     return 'stable';
   }
 
@@ -797,9 +803,15 @@ With focused effort on the 90-day action plan, ${clientName} can expect 30-50% i
    * Convert numeric score to label
    */
   private getScoreLabel(score: number): string {
-    if (score >= 80) return 'Excellent';
-    if (score >= 70) return 'Healthy';
-    if (score >= 50) return 'At Risk';
+    if (score >= 80) {
+return 'Excellent';
+}
+    if (score >= 70) {
+return 'Healthy';
+}
+    if (score >= 50) {
+return 'At Risk';
+}
     return 'Critical';
   }
 }

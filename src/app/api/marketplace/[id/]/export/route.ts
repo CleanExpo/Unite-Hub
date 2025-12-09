@@ -14,7 +14,9 @@ export async function POST(
 ) {
   try {
     const rateLimitResult = await apiRateLimit(request);
-    if (rateLimitResult) return rateLimitResult;
+    if (rateLimitResult) {
+return rateLimitResult;
+}
 
     const componentId = params.id;
     const workspaceId = request.nextUrl.searchParams.get("workspaceId");

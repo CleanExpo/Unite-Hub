@@ -85,13 +85,19 @@ export async function GET(req: NextRequest) {
 
     // Try to infer category from filename
     if (!category) {
-      if (filename.includes("snapshot")) reportCategory = "snapshots";
-      else if (filename.includes("competitor")) reportCategory = "competitors";
-      else if (filename.includes("keyword")) reportCategory = "keywords";
-      else if (filename.includes("backlink")) reportCategory = "backlinks";
-      else if (filename.includes("geo")) reportCategory = "geo";
-      else if (filename.includes("dashboard") || filename.includes("report"))
-        reportCategory = "reports";
+      if (filename.includes("snapshot")) {
+reportCategory = "snapshots";
+} else if (filename.includes("competitor")) {
+reportCategory = "competitors";
+} else if (filename.includes("keyword")) {
+reportCategory = "keywords";
+} else if (filename.includes("backlink")) {
+reportCategory = "backlinks";
+} else if (filename.includes("geo")) {
+reportCategory = "geo";
+} else if (filename.includes("dashboard") || filename.includes("report")) {
+reportCategory = "reports";
+}
     }
 
     // Read the report

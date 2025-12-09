@@ -19,7 +19,9 @@ export class UncertaintyModel {
    * Propagate uncertainty across steps using weighted average
    */
   propagateUncertainty(stepUncertainties: number[]): number {
-    if (stepUncertainties.length === 0) return 0;
+    if (stepUncertainties.length === 0) {
+return 0;
+}
 
     // Weight recent steps more heavily (exponential decay)
     const weights = stepUncertainties.map((_, idx) => {
@@ -100,7 +102,9 @@ export class UncertaintyModel {
   private analyzeTrend(
     stepUncertainties: number[]
   ): 'improving' | 'stable' | 'worsening' {
-    if (stepUncertainties.length < 2) return 'stable';
+    if (stepUncertainties.length < 2) {
+return 'stable';
+}
 
     // Calculate moving average slope
     const midpoint = Math.floor(stepUncertainties.length / 2);
@@ -113,8 +117,12 @@ export class UncertaintyModel {
     const change = secondAvg - firstAvg;
     const threshold = 5; // Change threshold
 
-    if (change > threshold) return 'worsening';
-    if (change < -threshold) return 'improving';
+    if (change > threshold) {
+return 'worsening';
+}
+    if (change < -threshold) {
+return 'improving';
+}
     return 'stable';
   }
 
@@ -125,7 +133,9 @@ export class UncertaintyModel {
     stepUncertainties: number[],
     remainingSteps: number = 0
   ): number {
-    if (stepUncertainties.length === 0) return 50; // Default uncertainty
+    if (stepUncertainties.length === 0) {
+return 50;
+} // Default uncertainty
 
     const currentUncertainty = this.propagateUncertainty(stepUncertainties);
     const trend = this.analyzeTrend(stepUncertainties);

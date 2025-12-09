@@ -1,0 +1,114 @@
+{
+  "timestamp": "2025-12-08T21:06:52.793Z",
+  "schemaFile": "reports/live_schema_snapshot.sql",
+  "totalSize": 2189,
+  "indicators": [
+    {
+      "id": "uuid-adoption",
+      "name": "UUID Primary Keys",
+      "status": "warning",
+      "message": "1 tables use UUID primary keys",
+      "details": "UUID extension: missing",
+      "remediation": "Enable uuid-ossp extension: CREATE EXTENSION IF NOT EXISTS uuid-ossp"
+    },
+    {
+      "id": "timestamp-coverage",
+      "name": "Timestamp Columns",
+      "status": "warning",
+      "message": "created_at: 0, updated_at: 0",
+      "details": "Good practice: track record changes with timestamps",
+      "remediation": "Add created_at and updated_at to all tables"
+    },
+    {
+      "id": "rls-coverage",
+      "name": "Row Level Security",
+      "status": "fail",
+      "message": "0 policies covering 0/1 tables",
+      "details": "Unprotected tables: users",
+      "remediation": "Enable RLS on public tables and define policies for workspace isolation"
+    },
+    {
+      "id": "index-coverage",
+      "name": "Database Indexes",
+      "status": "fail",
+      "message": "0 indexes defined",
+      "details": "Indexes improve query performance and enable unique constraints",
+      "remediation": "Add indexes on frequently queried columns (email, workspace_id, etc.)"
+    },
+    {
+      "id": "automation",
+      "name": "Functions & Triggers",
+      "status": "warning",
+      "message": "0 functions, 0 triggers",
+      "details": "Triggers enforce constraints and maintain data integrity",
+      "remediation": "Use triggers for: updated_at updates, audit logging, denormalization"
+    },
+    {
+      "id": "constraints",
+      "name": "Data Integrity Constraints",
+      "status": "warning",
+      "message": "PKs: 1, FKs: 0, UNIQUEs: 0",
+      "details": "Constraints enforce referential integrity and data quality",
+      "remediation": "Define foreign keys and unique constraints on important columns"
+    },
+    {
+      "id": "enums",
+      "name": "Enum Types",
+      "status": "warning",
+      "message": "0 enum types defined",
+      "details": "Enums prevent invalid status values and improve type safety",
+      "remediation": "Use enums for status columns (status, role, tier)"
+    },
+    {
+      "id": "scalability",
+      "name": "Scalability Features",
+      "status": "warning",
+      "message": "Table partitioning: not configured",
+      "details": "Partitioning improves performance for large tables",
+      "remediation": "Consider partitioning for audit_log, events, and other high-volume tables"
+    },
+    {
+      "id": "documentation",
+      "name": "Schema Documentation",
+      "status": "warning",
+      "message": "0 COMMENT statements in schema",
+      "details": "Comments help developers understand table purposes",
+      "remediation": "Add COMMENT ON TABLE/COLUMN for important entities"
+    },
+    {
+      "id": "sensitive-data",
+      "name": "Sensitive Data Protection",
+      "status": "warning",
+      "message": "Encryption functions: not detected",
+      "details": "Sensitive fields (passwords, tokens) should be hashed/encrypted",
+      "remediation": "Use pgcrypto or similar for sensitive data; avoid storing plaintext secrets"
+    }
+  ],
+  "summary": {
+    "passCount": 0,
+    "warningCount": 8,
+    "failCount": 2,
+    "overallScore": 40
+  },
+  "securityScore": {
+    "rlsEnforcement": 0,
+    "policyCount": 0,
+    "unprotectedTables": [
+      "users"
+    ]
+  },
+  "recommendations": [
+    "UUID Primary Keys: Enable uuid-ossp extension: CREATE EXTENSION IF NOT EXISTS uuid-ossp",
+    "Timestamp Columns: Add created_at and updated_at to all tables",
+    "Row Level Security: Enable RLS on public tables and define policies for workspace isolation",
+    "Database Indexes: Add indexes on frequently queried columns (email, workspace_id, etc.)",
+    "Functions & Triggers: Use triggers for: updated_at updates, audit logging, denormalization",
+    "Data Integrity Constraints: Define foreign keys and unique constraints on important columns",
+    "Enum Types: Use enums for status columns (status, role, tier)",
+    "Scalability Features: Consider partitioning for audit_log, events, and other high-volume tables",
+    "Schema Documentation: Add COMMENT ON TABLE/COLUMN for important entities",
+    "Sensitive Data Protection: Use pgcrypto or similar for sensitive data; avoid storing plaintext secrets",
+    "🔐 Enable RLS on: users",
+    "❌ Schema has critical issues — prioritize remediation"
+  ]
+}

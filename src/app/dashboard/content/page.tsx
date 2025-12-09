@@ -22,7 +22,9 @@ export default function ContentPage() {
   const [generating, setGenerating] = useState(false);
 
   useEffect(() => {
-    if (workspaceLoading) return;
+    if (workspaceLoading) {
+return;
+}
     loadContent();
   }, [workspaceId, workspaceLoading]);
 

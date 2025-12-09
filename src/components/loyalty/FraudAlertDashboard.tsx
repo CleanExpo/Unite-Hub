@@ -61,14 +61,22 @@ export function FraudAlertDashboard({
   }
 
   const getFraudLevelColor = (score: number) => {
-    if (score >= 80) return 'bg-red-100 dark:bg-red-950 text-red-800 dark:text-red-200';
-    if (score >= 50) return 'bg-yellow-100 dark:bg-yellow-950 text-yellow-800 dark:text-yellow-200';
+    if (score >= 80) {
+return 'bg-red-100 dark:bg-red-950 text-red-800 dark:text-red-200';
+}
+    if (score >= 50) {
+return 'bg-yellow-100 dark:bg-yellow-950 text-yellow-800 dark:text-yellow-200';
+}
     return 'bg-orange-100 dark:bg-orange-950 text-orange-800 dark:text-orange-200';
   };
 
   const getFraudLevelLabel = (score: number) => {
-    if (score >= 80) return 'Critical';
-    if (score >= 50) return 'High';
+    if (score >= 80) {
+return 'Critical';
+}
+    if (score >= 50) {
+return 'High';
+}
     return 'Medium';
   };
 

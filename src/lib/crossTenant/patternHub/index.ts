@@ -30,7 +30,9 @@ export async function getGlobalPatterns(category?: string): Promise<GlobalPatter
   }
 
   const { data, error } = await query;
-  if (error) return [];
+  if (error) {
+return [];
+}
 
   return (data || []).map(row => ({
     id: row.id,

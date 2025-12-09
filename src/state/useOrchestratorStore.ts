@@ -98,7 +98,9 @@ export function useOrchestratorPolling(
   const [lastUpdate, setLastUpdate] = React.useState<Date | null>(null);
 
   React.useEffect(() => {
-    if (!enabled || !taskId || !workspaceId) return;
+    if (!enabled || !taskId || !workspaceId) {
+return;
+}
 
     const pollStatus = async () => {
       try {

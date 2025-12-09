@@ -128,7 +128,9 @@ export function DriftPanel({ organizationId }: DriftPanelProps) {
   };
 
   const resolveSignal = async (action: string) => {
-    if (!selectedSignal) return;
+    if (!selectedSignal) {
+return;
+}
 
     try {
       await fetch('/api/strategy/drift', {
@@ -150,7 +152,9 @@ export function DriftPanel({ organizationId }: DriftPanelProps) {
   };
 
   const approveAdjustment = async (approved: boolean) => {
-    if (!selectedAdjustment) return;
+    if (!selectedAdjustment) {
+return;
+}
 
     try {
       await fetch('/api/strategy/drift', {

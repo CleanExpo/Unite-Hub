@@ -363,12 +363,18 @@ export async function batchLogEvents(
     try {
       if ('referrerId' in event) {
         const result = await logReferralEvent(supabaseAdmin, event as ReferralArchiveEvent);
-        if (result.success) logged++;
-        else failed++;
+        if (result.success) {
+logged++;
+} else {
+failed++;
+}
       } else {
         const result = await logLoyaltyEvent(supabaseAdmin, event as LoyaltyArchiveEvent);
-        if (result.success) logged++;
-        else failed++;
+        if (result.success) {
+logged++;
+} else {
+failed++;
+}
       }
     } catch (error) {
       failed++;

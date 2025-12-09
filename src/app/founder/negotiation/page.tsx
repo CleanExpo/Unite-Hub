@@ -48,13 +48,17 @@ export default function NegotiationDashboardPage() {
 
   // Polling effect
   useEffect(() => {
-    if (!orgId) return;
+    if (!orgId) {
+return;
+}
 
     let pollTimeout: NodeJS.Timeout;
     let isActive = true;
 
     const poll = async () => {
-      if (!isActive) return;
+      if (!isActive) {
+return;
+}
 
       setLoadingSessions(true);
       try {
@@ -136,7 +140,9 @@ export default function NegotiationDashboardPage() {
 
   // Handle arbitration decision
   const handlePublishDecision = async () => {
-    if (!selectedSession || !currentDecision || !orgId) return;
+    if (!selectedSession || !currentDecision || !orgId) {
+return;
+}
 
     try {
       const result = await submitArbitrationDecision({

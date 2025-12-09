@@ -108,7 +108,9 @@ export function WorkspaceSwitcher({
   };
 
   const handleCreateWorkspace = async () => {
-    if (!newWorkspaceName.trim() || !currentWorkspace) return;
+    if (!newWorkspaceName.trim() || !currentWorkspace) {
+return;
+}
 
     setIsCreating(true);
     try {

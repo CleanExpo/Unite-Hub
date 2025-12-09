@@ -143,7 +143,9 @@ export async function predictExpenses(
     .eq("transaction_type", "debit")
     .eq("is_duplicate", false);
 
-  if (!transactions) return {};
+  if (!transactions) {
+return {};
+}
 
   // Group by category
   const categoryTotals = new Map<string, number[]>();

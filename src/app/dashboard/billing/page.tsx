@@ -40,7 +40,9 @@ export default function BillingPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (workspaceLoading) return;
+    if (workspaceLoading) {
+return;
+}
     if (workspaceId) {
       fetchSubscription();
     }

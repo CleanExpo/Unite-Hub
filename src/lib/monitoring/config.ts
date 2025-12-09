@@ -147,7 +147,9 @@ export async function initDatadog() {
  * Track custom metric
  */
 export function trackMetric(name: string, value: number, tags?: Record<string, string>) {
-  if (typeof window === "undefined") return;
+  if (typeof window === "undefined") {
+return;
+}
 
   // Log to console in development
   if (process.env.NODE_ENV === "development") {

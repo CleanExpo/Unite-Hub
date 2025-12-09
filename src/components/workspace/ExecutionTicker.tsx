@@ -67,11 +67,15 @@ export function ExecutionTicker({ workspaceId }: ExecutionTickerProps) {
   // Fetch real execution logs
   useEffect(() => {
     const fetchLogs = async () => {
-      if (!workspaceId) return;
+      if (!workspaceId) {
+return;
+}
 
       try {
         const { data: { session } } = await supabase.auth.getSession();
-        if (!session) return;
+        if (!session) {
+return;
+}
 
         const response = await fetch(
           `/api/execution-logs?workspaceId=${workspaceId}&limit=10`,

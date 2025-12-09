@@ -26,7 +26,9 @@ export default function MacroEvolutionPage() {
   useEffect(() => {
     async function fetchProposals() {
       const { data: { session } } = await supabaseBrowser.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const response = await fetch('/api/evolution/macro?tenantId=current', {
         headers: { Authorization: `Bearer ${session.access_token}` }

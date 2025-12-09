@@ -62,7 +62,9 @@ export default function OpportunitiesPanel({
     const effortOrder = { low: 0, medium: 1, high: 2 };
 
     const impactDiff = impactOrder[a.impact] - impactOrder[b.impact];
-    if (impactDiff !== 0) return impactDiff;
+    if (impactDiff !== 0) {
+return impactDiff;
+}
 
     return effortOrder[a.effort] - effortOrder[b.effort];
   });

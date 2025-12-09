@@ -124,7 +124,9 @@ export default function VideoCreationPanel({
 
       // Get session
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error('Not authenticated');
+      if (!session) {
+throw new Error('Not authenticated');
+}
 
       // Fetch video jobs
       const jobsRes = await fetch(`/api/synthex/video/jobs?tenantId=${tenantId}`, {
@@ -161,7 +163,9 @@ export default function VideoCreationPanel({
     try {
       setCreating(true);
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) throw new Error('Not authenticated');
+      if (!session) {
+throw new Error('Not authenticated');
+}
 
       const response = await fetch('/api/synthex/video/generate', {
         method: 'POST',

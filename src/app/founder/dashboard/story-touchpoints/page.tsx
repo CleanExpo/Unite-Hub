@@ -155,7 +155,9 @@ export default function FounderStoryTouchpointsPage() {
     try {
       // Call API to regenerate
       const client = clientStatuses.find(c => c.client_id === clientId);
-      if (!client) return;
+      if (!client) {
+return;
+}
 
       const response = await fetch('/api/storytelling/run', {
         method: 'POST',

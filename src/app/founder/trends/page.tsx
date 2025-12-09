@@ -23,7 +23,9 @@ export default function TrendsPage() {
   const fetchData = async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const response = await fetch(`/api/trends/temporal?tenantId=${currentOrganization?.org_id}`, {
         headers: { 'Authorization': `Bearer ${session.access_token}` },

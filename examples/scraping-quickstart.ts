@@ -295,28 +295,44 @@ function calculateNextRun(frequency: 'daily' | 'weekly' | 'monthly'): Date {
 }
 
 function calculateSEOScore(seoAnalysis: any): number {
-  if (!seoAnalysis) return 0;
+  if (!seoAnalysis) {
+return 0;
+}
 
   let score = 0;
 
   // Title optimization (20 points)
-  if (seoAnalysis.title?.optimal) score += 20;
+  if (seoAnalysis.title?.optimal) {
+score += 20;
+}
 
   // Description optimization (20 points)
-  if (seoAnalysis.description?.optimal) score += 20;
+  if (seoAnalysis.description?.optimal) {
+score += 20;
+}
 
   // H1 count (10 points)
-  if (seoAnalysis.headings?.h1 === 1) score += 10;
+  if (seoAnalysis.headings?.h1 === 1) {
+score += 10;
+}
 
   // Structured data (20 points)
-  if (seoAnalysis.structured_data?.has_json_ld) score += 10;
-  if (seoAnalysis.structured_data?.has_open_graph) score += 10;
+  if (seoAnalysis.structured_data?.has_json_ld) {
+score += 10;
+}
+  if (seoAnalysis.structured_data?.has_open_graph) {
+score += 10;
+}
 
   // Content quality (30 points)
   const wordCount = seoAnalysis.content?.word_count || 0;
-  if (wordCount > 1500) score += 30;
-  else if (wordCount > 1000) score += 20;
-  else if (wordCount > 500) score += 10;
+  if (wordCount > 1500) {
+score += 30;
+} else if (wordCount > 1000) {
+score += 20;
+} else if (wordCount > 500) {
+score += 10;
+}
 
   return Math.min(score, 100);
 }

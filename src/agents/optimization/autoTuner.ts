@@ -29,10 +29,10 @@ export interface TuningChange {
 }
 
 // In-memory tuning profile store (would persist to database)
-let tuningProfile: Record<string, Record<string, any>> = {};
+const tuningProfile: Record<string, Record<string, any>> = {};
 
 // Track applied changes for audit trail
-let changeHistory: TuningChange[] = [];
+const changeHistory: TuningChange[] = [];
 
 /**
  * Get tuning profile for an agent
@@ -156,7 +156,9 @@ export function runAutoTuner(profile: RiskSafetyProfile = defaultRiskSafetyProfi
  */
 export function approveTuningChange(changeId: string, profile: RiskSafetyProfile = defaultRiskSafetyProfile): boolean {
   const change = changeHistory.find(c => c.id === changeId);
-  if (!change || change.autoApplied) return false;
+  if (!change || change.autoApplied) {
+return false;
+}
 
   // Apply the change
   tuningProfile[change.agent] = {
@@ -185,7 +187,9 @@ export function approveTuningChange(changeId: string, profile: RiskSafetyProfile
  */
 export function rejectTuningChange(changeId: string, reason: string): boolean {
   const change = changeHistory.find(c => c.id === changeId);
-  if (!change || change.autoApplied) return false;
+  if (!change || change.autoApplied) {
+return false;
+}
 
   change.requiresFounderApproval = false;
 

@@ -275,7 +275,9 @@ export async function checkGeminiDailyBudget(): Promise<{
       .eq('provider', 'google_gemini')
       .gte('created_at', `${today}T00:00:00`);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     const todayCost = data?.reduce((sum, row) => sum + (row.cost_usd || 0), 0) || 0;
     const GEMINI_DAILY_BUDGET = parseFloat(process.env.GEMINI_DAILY_BUDGET || '20');
@@ -323,7 +325,9 @@ export function extractThoughtSignature(response: any): ThoughtSignature | null 
   // Gemini 3 may return thought signatures in response metadata
   const signature = response.thoughtSignature;
 
-  if (!signature) return null;
+  if (!signature) {
+return null;
+}
 
   return {
     signature,

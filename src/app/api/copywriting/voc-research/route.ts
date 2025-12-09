@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ success: true, data: summaryData });
 
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error("VOC Research GET error:", error);
     return NextResponse.json(
       { error: "Failed to fetch VOC data" },
@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error("VOC Research POST error:", error);
     return NextResponse.json(
       { error: "Failed to run VOC research" },

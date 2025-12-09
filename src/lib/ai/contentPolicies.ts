@@ -149,7 +149,9 @@ export const noBluFFPolicies: ContentPolicy[] = [
       // Allow if specific attribution is present
       const hasAttribution = /(source:|verified on|according to|as of \d{4})/i.test(content);
 
-      if (hasAttribution) return true;
+      if (hasAttribution) {
+return true;
+}
 
       return !patterns.some(p => p.test(content));
     },
@@ -188,7 +190,9 @@ export const noBluFFPolicies: ContentPolicy[] = [
       // These are only allowed if content explicitly clarifies terms
       const hasClarification = /(terms apply|see pricing page|conditions|while supplies last)/i.test(content);
 
-      if (hasClarification) return true;
+      if (hasClarification) {
+return true;
+}
 
       return !patterns.some(p => p.test(content));
     },

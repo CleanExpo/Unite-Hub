@@ -85,7 +85,9 @@ export default function StrategyPage() {
     const initWorkspace = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return;
+        if (!user) {
+return;
+}
 
         // Get workspace from URL or session
         const url = new URL(window.location.href);
@@ -116,7 +118,9 @@ export default function StrategyPage() {
 
   // Load strategy history on mount and when workspace changes
   const loadHistory = useCallback(async () => {
-    if (!workspaceId) return;
+    if (!workspaceId) {
+return;
+}
 
     setIsLoadingHistory(true);
     try {

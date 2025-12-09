@@ -88,7 +88,9 @@ export async function generateBaseline(
   regionId: string,
   values: number[]
 ): Promise<MarketBaseline | null> {
-  if (values.length < 3) return null; // Minimum sample size
+  if (values.length < 3) {
+return null;
+} // Minimum sample size
 
   const supabase = await getSupabaseServer();
 
@@ -109,7 +111,9 @@ export async function generateBaseline(
     .select()
     .single();
 
-  if (error) return null;
+  if (error) {
+return null;
+}
 
   return {
     id: data.id,

@@ -60,7 +60,9 @@ export async function trackEngagementEvent(
       duration_seconds: event.durationSeconds,
     });
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true };
   } catch (error) {
@@ -88,7 +90,9 @@ async function calculateEngagementScore(
     .eq('client_id', clientId)
     .gte('created_at', since);
 
-  if (!events || events.length === 0) return 0;
+  if (!events || events.length === 0) {
+return 0;
+}
 
   // Count unique days with activity
   const uniqueDays = new Set(
@@ -119,7 +123,9 @@ async function calculateActivationScore(clientId: string): Promise<number> {
     .select('status')
     .eq('client_id', clientId);
 
-  if (!tasks || tasks.length === 0) return 0;
+  if (!tasks || tasks.length === 0) {
+return 0;
+}
 
   const completed = tasks.filter(
     t => t.status === 'completed' || t.status === 'skipped'
@@ -167,12 +173,24 @@ async function calculateProgressScore(clientId: string): Promise<number> {
 
   // Score based on milestones
   let score = 0;
-  if ((contentCount || 0) >= 1) score += 20;
-  if ((contentCount || 0) >= 5) score += 20;
-  if ((contentCount || 0) >= 10) score += 10;
-  if (visualCount >= 1) score += 20;
-  if (visualCount >= 5) score += 15;
-  if (visualCount >= 10) score += 15;
+  if ((contentCount || 0) >= 1) {
+score += 20;
+}
+  if ((contentCount || 0) >= 5) {
+score += 20;
+}
+  if ((contentCount || 0) >= 10) {
+score += 10;
+}
+  if (visualCount >= 1) {
+score += 20;
+}
+  if (visualCount >= 5) {
+score += 15;
+}
+  if (visualCount >= 10) {
+score += 15;
+}
 
   return Math.min(score, 100);
 }
@@ -193,23 +211,37 @@ async function calculateMomentumScore(clientId: string): Promise<number> {
     .eq('client_id', clientId)
     .gte('created_at', twoWeeksAgo);
 
-  if (!events || events.length === 0) return 0;
+  if (!events || events.length === 0) {
+return 0;
+}
 
   // Split into weeks
   const thisWeek = events.filter(e => new Date(e.created_at) >= new Date(oneWeekAgo)).length;
   const lastWeek = events.length - thisWeek;
 
   // Calculate trend
-  if (lastWeek === 0) return thisWeek > 0 ? 80 : 0;
+  if (lastWeek === 0) {
+return thisWeek > 0 ? 80 : 0;
+}
 
   const change = ((thisWeek - lastWeek) / lastWeek) * 100;
 
   // Map to score
-  if (change >= 50) return 100;
-  if (change >= 20) return 80;
-  if (change >= 0) return 60;
-  if (change >= -20) return 40;
-  if (change >= -50) return 20;
+  if (change >= 50) {
+return 100;
+}
+  if (change >= 20) {
+return 80;
+}
+  if (change >= 0) {
+return 60;
+}
+  if (change >= -20) {
+return 40;
+}
+  if (change >= -50) {
+return 20;
+}
   return 0;
 }
 
@@ -257,8 +289,11 @@ export async function calculateSuccessScore(
 
     // Determine trend
     let trend: 'rising' | 'stable' | 'declining' = 'stable';
-    if (scoreChange > 5) trend = 'rising';
-    else if (scoreChange < -5) trend = 'declining';
+    if (scoreChange > 5) {
+trend = 'rising';
+} else if (scoreChange < -5) {
+trend = 'declining';
+}
 
     // Store score
     const { data: score, error } = await supabase
@@ -281,7 +316,9 @@ export async function calculateSuccessScore(
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true, score };
   } catch (error) {
@@ -310,7 +347,9 @@ export async function getClientSuccessScore(
       .limit(1)
       .single();
 
-    if (error && error.code !== 'PGRST116') throw error;
+    if (error && error.code !== 'PGRST116') {
+throw error;
+}
 
     return { success: true, score: data };
   } catch (error) {
@@ -339,7 +378,9 @@ export async function getEngagementHistory(
       .eq('client_id', clientId)
       .gte('created_at', since);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     // Group by date
     const counts: Record<string, number> = {};
@@ -383,7 +424,9 @@ export async function getOrgClientScores(
       .eq('organization_id', organizationId)
       .order('calculated_at', { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     // Deduplicate to get latest per client
     const clientMap = new Map();

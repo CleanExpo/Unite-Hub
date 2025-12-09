@@ -386,8 +386,12 @@ export async function getCustomerPaymentMethods(
  * Get plan tier from price ID
  */
 export function getPlanTierFromPriceId(priceId: string): PlanTier | null {
-  if (priceId === PLAN_TIERS.starter.priceId) return "starter";
-  if (priceId === PLAN_TIERS.professional.priceId) return "professional";
+  if (priceId === PLAN_TIERS.starter.priceId) {
+return "starter";
+}
+  if (priceId === PLAN_TIERS.professional.priceId) {
+return "professional";
+}
   return null;
 }
 

@@ -81,12 +81,22 @@ export async function getUserProfile(): Promise<UserProfile | null> {
  * Normalize legacy role strings to UserRole enum
  */
 function normalizeRole(role: string | null | undefined): UserRole {
-  if (!role) return 'CLIENT';
+  if (!role) {
+return 'CLIENT';
+}
   const upperRole = role.toUpperCase();
-  if (upperRole === 'FOUNDER') return 'FOUNDER';
-  if (upperRole === 'ADMIN') return 'ADMIN';
-  if (upperRole === 'STAFF') return 'STAFF';
-  if (upperRole === 'CLIENT' || upperRole === 'CUSTOMER') return 'CLIENT';
+  if (upperRole === 'FOUNDER') {
+return 'FOUNDER';
+}
+  if (upperRole === 'ADMIN') {
+return 'ADMIN';
+}
+  if (upperRole === 'STAFF') {
+return 'STAFF';
+}
+  if (upperRole === 'CLIENT' || upperRole === 'CUSTOMER') {
+return 'CLIENT';
+}
   return 'CLIENT';
 }
 

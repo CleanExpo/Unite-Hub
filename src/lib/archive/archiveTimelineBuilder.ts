@@ -74,7 +74,9 @@ export function buildPhaseTimeline(
   entries: ClientArchiveEntry[],
   journeyStartDate?: string
 ): PhaseTimelineGroup[] {
-  if (entries.length === 0) return [];
+  if (entries.length === 0) {
+return [];
+}
 
   // Use earliest entry or provided start date
   const startDate = journeyStartDate

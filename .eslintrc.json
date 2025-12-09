@@ -1,4 +1,4 @@
-﻿{
+{
   "extends": ["next/core-web-vitals"],
   "env": {
     "browser": true,
@@ -9,9 +9,27 @@
     "React": "readonly",
     "NodeJS": "readonly"
   },
+  "ignorePatterns": [
+    ".next/",
+    "out/",
+    "dist/",
+    "build/",
+    "node_modules/",
+    ".claude/mcp_servers/*/dist/",
+    "*.mjs",
+    "scripts/*.js",
+    "coverage/",
+    "docker/",
+    "examples/",
+    "lib/",
+    "mcp/",
+    "modules/",
+    "next/",
+    "tests/"
+  ],
   "rules": {
     "@typescript-eslint/no-explicit-any": "warn",
-    "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+    "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }],
     "no-unused-vars": "off",
     "curly": "warn",
     "no-console": "off"

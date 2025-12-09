@@ -180,7 +180,9 @@ export function isAdProviderEnabled(provider: AdProvider): boolean {
 }
 
 export function getAdProviderConfig(provider: AdProvider): AdProviderConfig | null {
-  if (!isAdProviderEnabled(provider)) return null;
+  if (!isAdProviderEnabled(provider)) {
+return null;
+}
   return adsAutomationConfig.providers[provider];
 }
 

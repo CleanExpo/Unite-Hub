@@ -102,7 +102,9 @@ export class CampaignEvaluator {
     // Brand-specific adjustments
     const brandAdjustment = this.getBrandDifficultyAdjustment(request.brandSlug);
     score += brandAdjustment.adjustment;
-    if (brandAdjustment.reason) factors.push(brandAdjustment.reason);
+    if (brandAdjustment.reason) {
+factors.push(brandAdjustment.reason);
+}
 
     // Clamp score between 1-10
     score = Math.max(1, Math.min(10, Math.round(score)));
@@ -224,7 +226,9 @@ export class CampaignEvaluator {
    * Formula: (impact * 10) / (difficulty + effort)
    */
   private calculatePriority(difficulty: number, impact: number, effort: number): number {
-    if (difficulty + effort === 0) return 100;
+    if (difficulty + effort === 0) {
+return 100;
+}
     return Math.round(((impact * 10) / (difficulty + effort)) * 100) / 100;
   }
 
@@ -342,13 +346,27 @@ export class CampaignEvaluator {
   private estimateVisualsNeeded(channels: string[]): number {
     let count = 0;
 
-    if (channels.some(c => c.includes('website'))) count += 3; // Hero + sections
-    if (channels.some(c => c.includes('blog'))) count += 5; // Featured + in-content
-    if (channels.includes('facebook_post')) count += 1;
-    if (channels.includes('instagram_post')) count += 2; // Feed + story
-    if (channels.includes('linkedin_post')) count += 1;
-    if (channels.includes('tiktok_video')) count += 3; // Thumbnail + b-roll
-    if (channels.includes('youtube_short')) count += 2; // Thumbnail + end screen
+    if (channels.some(c => c.includes('website'))) {
+count += 3;
+} // Hero + sections
+    if (channels.some(c => c.includes('blog'))) {
+count += 5;
+} // Featured + in-content
+    if (channels.includes('facebook_post')) {
+count += 1;
+}
+    if (channels.includes('instagram_post')) {
+count += 2;
+} // Feed + story
+    if (channels.includes('linkedin_post')) {
+count += 1;
+}
+    if (channels.includes('tiktok_video')) {
+count += 3;
+} // Thumbnail + b-roll
+    if (channels.includes('youtube_short')) {
+count += 2;
+} // Thumbnail + end screen
 
     return count;
   }

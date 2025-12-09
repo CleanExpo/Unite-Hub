@@ -112,19 +112,45 @@ export async function PUT(
       updated_at: new Date().toISOString(),
     };
 
-    if (updates.competitorName) dbUpdates.competitor_name = updates.competitorName;
-    if (updates.website) dbUpdates.website = updates.website;
-    if (updates.description) dbUpdates.description = updates.description;
-    if (updates.category) dbUpdates.category = updates.category;
-    if (updates.strengths) dbUpdates.strengths = updates.strengths;
-    if (updates.weaknesses) dbUpdates.weaknesses = updates.weaknesses;
-    if (updates.pricing) dbUpdates.pricing = updates.pricing;
-    if (updates.targetAudience) dbUpdates.target_audience = updates.targetAudience;
-    if (updates.marketingChannels) dbUpdates.marketing_channels = updates.marketingChannels;
-    if (updates.contentStrategy) dbUpdates.content_strategy = updates.contentStrategy;
-    if (updates.socialPresence) dbUpdates.social_presence = updates.socialPresence;
-    if (updates.logoUrl) dbUpdates.logo_url = updates.logoUrl;
-    if (updates.screenshots) dbUpdates.screenshots = updates.screenshots;
+    if (updates.competitorName) {
+dbUpdates.competitor_name = updates.competitorName;
+}
+    if (updates.website) {
+dbUpdates.website = updates.website;
+}
+    if (updates.description) {
+dbUpdates.description = updates.description;
+}
+    if (updates.category) {
+dbUpdates.category = updates.category;
+}
+    if (updates.strengths) {
+dbUpdates.strengths = updates.strengths;
+}
+    if (updates.weaknesses) {
+dbUpdates.weaknesses = updates.weaknesses;
+}
+    if (updates.pricing) {
+dbUpdates.pricing = updates.pricing;
+}
+    if (updates.targetAudience) {
+dbUpdates.target_audience = updates.targetAudience;
+}
+    if (updates.marketingChannels) {
+dbUpdates.marketing_channels = updates.marketingChannels;
+}
+    if (updates.contentStrategy) {
+dbUpdates.content_strategy = updates.contentStrategy;
+}
+    if (updates.socialPresence) {
+dbUpdates.social_presence = updates.socialPresence;
+}
+    if (updates.logoUrl) {
+dbUpdates.logo_url = updates.logoUrl;
+}
+    if (updates.screenshots) {
+dbUpdates.screenshots = updates.screenshots;
+}
 
     const { error } = await supabase
       .from("competitors")

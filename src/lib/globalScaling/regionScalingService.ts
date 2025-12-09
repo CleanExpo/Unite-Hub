@@ -212,7 +212,9 @@ export async function updatePressureScores(
     .eq('region_id', regionId)
     .single();
 
-  if (!current) return;
+  if (!current) {
+return;
+}
 
   // Calculate new pressures (simple moving average)
   const alpha = 0.3; // Smoothing factor

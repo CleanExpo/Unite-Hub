@@ -105,7 +105,9 @@ export class AnomalyDetector {
       previous.health_score,
       current.health_score
     );
-    if (healthAnomaly) anomalies.push(healthAnomaly);
+    if (healthAnomaly) {
+anomalies.push(healthAnomaly);
+}
 
     // Backlink Anomalies
     if (current.backlink_score !== undefined && previous.backlink_score !== undefined) {
@@ -114,7 +116,9 @@ export class AnomalyDetector {
         previous.backlink_score,
         current.backlink_score
       );
-      if (backlinkAnomaly) anomalies.push(backlinkAnomaly);
+      if (backlinkAnomaly) {
+anomalies.push(backlinkAnomaly);
+}
     }
 
     // Check delta summary for more detailed anomalies
@@ -290,9 +294,15 @@ export class AnomalyDetector {
    * Get severity based on percentage drop
    */
   private getSeverityForDrop(percent: number): Severity {
-    if (percent >= 50) return "CRITICAL";
-    if (percent >= 30) return "HIGH";
-    if (percent >= 20) return "MEDIUM";
+    if (percent >= 50) {
+return "CRITICAL";
+}
+    if (percent >= 30) {
+return "HIGH";
+}
+    if (percent >= 20) {
+return "MEDIUM";
+}
     return "LOW";
   }
 

@@ -136,7 +136,9 @@ export async function countAssetsByType(playbookId: string) {
     .select('asset_type, platform')
     .eq('playbook_id', playbookId);
 
-  if (error) return { data: null, error };
+  if (error) {
+return { data: null, error };
+}
 
   const counts = {
     byType: {} as Record<string, number>,

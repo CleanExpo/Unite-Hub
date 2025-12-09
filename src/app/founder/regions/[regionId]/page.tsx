@@ -35,7 +35,9 @@ export default function RegionDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchData = useCallback(async () => {
-    if (!session?.access_token || !regionId) return;
+    if (!session?.access_token || !regionId) {
+return;
+}
 
     setIsLoading(true);
     try {

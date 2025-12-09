@@ -271,8 +271,12 @@ export class ScalingPolicyEngine {
    * Determine current tier based on client count
    */
   getCurrentTier(clientCount: number): ScalingTier {
-    if (clientCount <= 5) return SCALING_TIERS.soft_launch;
-    if (clientCount <= 50) return SCALING_TIERS.hard_launch;
+    if (clientCount <= 5) {
+return SCALING_TIERS.soft_launch;
+}
+    if (clientCount <= 50) {
+return SCALING_TIERS.hard_launch;
+}
     return SCALING_TIERS.growth_phase;
   }
 
@@ -292,8 +296,12 @@ export class ScalingPolicyEngine {
     const queueUtilization = Math.min(metrics.queue_depth / 100, 1); // Normalize to 100
 
     const getStatus = (util: number): 'healthy' | 'warning' | 'critical' => {
-      if (util >= HEADROOM.critical_at) return 'critical';
-      if (util >= HEADROOM.warning_at) return 'warning';
+      if (util >= HEADROOM.critical_at) {
+return 'critical';
+}
+      if (util >= HEADROOM.warning_at) {
+return 'warning';
+}
       return 'healthy';
     };
 
@@ -307,8 +315,11 @@ export class ScalingPolicyEngine {
     // Overall health is the worst status
     const statuses = [utilization.cpu.status, utilization.errors.status, utilization.ai_latency.status, utilization.queue.status];
     let overallHealth: 'healthy' | 'warning' | 'critical' = 'healthy';
-    if (statuses.includes('critical')) overallHealth = 'critical';
-    else if (statuses.includes('warning')) overallHealth = 'warning';
+    if (statuses.includes('critical')) {
+overallHealth = 'critical';
+} else if (statuses.includes('warning')) {
+overallHealth = 'warning';
+}
 
     // Calculate headroom
     const maxUtilization = Math.max(cpuUtilization, errorUtilization, latencyUtilization, queueUtilization);
@@ -437,8 +448,12 @@ export class ScalingPolicyEngine {
    * Get tier upgrade path
    */
   getTierUpgradePath(currentTier: ScalingTierId): ScalingTierId | null {
-    if (currentTier === 'soft_launch') return 'hard_launch';
-    if (currentTier === 'hard_launch') return 'growth_phase';
+    if (currentTier === 'soft_launch') {
+return 'hard_launch';
+}
+    if (currentTier === 'hard_launch') {
+return 'growth_phase';
+}
     return null;
   }
 

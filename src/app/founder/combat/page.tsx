@@ -66,7 +66,9 @@ export default function FounderCombatPage() {
   }, [workspaceId]);
 
   const loadDashboardData = async () => {
-    if (!workspaceId) return;
+    if (!workspaceId) {
+return;
+}
     setIsLoading(true);
     try {
       const [statsRes, integrationsRes, roundsRes, resultsRes] = await Promise.all([
@@ -103,7 +105,9 @@ export default function FounderCombatPage() {
   };
 
   const runCombatCycle = async () => {
-    if (!workspaceId) return;
+    if (!workspaceId) {
+return;
+}
     setIsRunningCycle(true);
     try {
       const res = await fetch('/api/combat/results', {

@@ -115,7 +115,9 @@ function calculateSignificance(first: CombatEntry, second: CombatEntry): number 
   const scoreDiff = Math.abs(first.score - second.score);
   const avgScore = (first.score + second.score) / 2;
 
-  if (avgScore === 0) return 0;
+  if (avgScore === 0) {
+return 0;
+}
 
   const relativeChange = scoreDiff / avgScore;
 
@@ -135,9 +137,15 @@ function calculateSignificance(first: CombatEntry, second: CombatEntry): number 
  * Get confidence band from significance
  */
 function getConfidenceBand(significance: number): ConfidenceBand {
-  if (significance >= 0.95) return 'very_high';
-  if (significance >= 0.85) return 'high';
-  if (significance >= 0.7) return 'medium';
+  if (significance >= 0.95) {
+return 'very_high';
+}
+  if (significance >= 0.85) {
+return 'high';
+}
+  if (significance >= 0.7) {
+return 'medium';
+}
   return 'low';
 }
 
@@ -245,7 +253,9 @@ export async function getResultByRound(roundId: string): Promise<CombatResult | 
     .eq('round_id', roundId)
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+return null;
+}
 
   return mapToResult(data);
 }

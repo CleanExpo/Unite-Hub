@@ -44,7 +44,9 @@ export class RiskModel {
    * Examines signals, conflicts, and quality issues.
    */
   async assessMemoryRisk(workspaceId: string, memoryIds: string[]): Promise<number> {
-    if (memoryIds.length === 0) return 50; // Medium risk with no context
+    if (memoryIds.length === 0) {
+return 50;
+} // Medium risk with no context
 
     const supabase = await getSupabaseServer();
     let totalRisk = 0;
@@ -122,10 +124,14 @@ export class RiskModel {
    * Assess cumulative risk across multiple factors
    */
   assessCumulativeRisk(factors: Array<{ weight: number; value: number }>): number {
-    if (factors.length === 0) return 50;
+    if (factors.length === 0) {
+return 50;
+}
 
     const totalWeight = factors.reduce((sum, f) => sum + f.weight, 0);
-    if (totalWeight === 0) return 50;
+    if (totalWeight === 0) {
+return 50;
+}
 
     const weightedRisk = factors.reduce((sum, f) => sum + f.value * f.weight, 0) / totalWeight;
     return Math.min(100, Math.round(weightedRisk));
@@ -135,9 +141,15 @@ export class RiskModel {
    * Get risk level category
    */
   getRiskLevel(score: number): 'low' | 'medium' | 'high' | 'critical' {
-    if (score < 30) return 'low';
-    if (score < 60) return 'medium';
-    if (score < 80) return 'high';
+    if (score < 30) {
+return 'low';
+}
+    if (score < 60) {
+return 'medium';
+}
+    if (score < 80) {
+return 'high';
+}
     return 'critical';
   }
 

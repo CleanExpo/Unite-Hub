@@ -114,7 +114,7 @@ export async function POST(req: NextRequest) {
 
     // Determine which Python script to run
     let scriptPath: string;
-    let scriptArgs: string[] = [url];
+    const scriptArgs: string[] = [url];
 
     switch (analysisType) {
       case 'basic':

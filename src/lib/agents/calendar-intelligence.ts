@@ -407,11 +407,15 @@ export async function autoRespondToMeetingRequest(
   try {
     // Get email details
     const email = await db.emails.getById(emailId);
-    if (!email) throw new Error("Email not found");
+    if (!email) {
+throw new Error("Email not found");
+}
 
     // Get contact
     const contact = await db.contacts.getById(email.contact_id);
-    if (!contact) throw new Error("Contact not found");
+    if (!contact) {
+throw new Error("Contact not found");
+}
 
     // Suggest meeting times
     const suggestion = await suggestMeetingTimes(workspaceId, {

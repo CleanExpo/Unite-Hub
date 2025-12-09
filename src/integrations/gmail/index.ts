@@ -399,7 +399,9 @@ export class GmailClient {
     let text = '';
     let html = '';
 
-    if (!payload) return { text, html };
+    if (!payload) {
+return { text, html };
+}
 
     // Single part message
     if (payload.body?.data) {

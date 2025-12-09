@@ -86,7 +86,9 @@ async function fetchDomainMetrics(domain: string): Promise<any> {
  */
 async function fetchTopKeywords(domain: string, limit: number = 20): Promise<any[]> {
   const apiKey = process.env.DATAFORSEO_API_KEY;
-  if (!apiKey) return [];
+  if (!apiKey) {
+return [];
+}
 
   try {
     const response = await fetch('https://api.dataforseo.com/v3/domain_analytics/keywords', {
@@ -106,7 +108,9 @@ async function fetchTopKeywords(domain: string, limit: number = 20): Promise<any
       }),
     });
 
-    if (!response.ok) return [];
+    if (!response.ok) {
+return [];
+}
 
     const data = await response.json();
     return data.tasks?.[0]?.result?.[0]?.keywords || [];
@@ -122,7 +126,9 @@ async function fetchTopKeywords(domain: string, limit: number = 20): Promise<any
  */
 async function fetchCompetitors(domain: string, limit: number = 5): Promise<any[]> {
   const apiKey = process.env.DATAFORSEO_API_KEY;
-  if (!apiKey) return [];
+  if (!apiKey) {
+return [];
+}
 
   try {
     const response = await fetch('https://api.dataforseo.com/v3/domain_analytics/competitors', {
@@ -142,7 +148,9 @@ async function fetchCompetitors(domain: string, limit: number = 5): Promise<any[
       }),
     });
 
-    if (!response.ok) return [];
+    if (!response.ok) {
+return [];
+}
 
     const data = await response.json();
     return data.tasks?.[0]?.result?.[0]?.competitors || [];

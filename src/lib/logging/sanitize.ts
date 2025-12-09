@@ -99,7 +99,9 @@ export const SENSITIVE_PATTERNS = {
  * Sanitize a string by redacting all detected sensitive data
  */
 export function sanitizeString(str: string): string {
-  if (typeof str !== 'string') return str;
+  if (typeof str !== 'string') {
+return str;
+}
 
   let sanitized = str;
 
@@ -261,7 +263,9 @@ export function sanitizeObject(obj: any): any {
  * Sanitize an Error object
  */
 export function sanitizeError(error: unknown): unknown {
-  if (!error) return error;
+  if (!error) {
+return error;
+}
 
   // Handle Error objects
   if (error instanceof Error) {
@@ -363,7 +367,9 @@ export function sanitizeFormat() {
  * Use this to sanitize Express/Next.js request objects before logging
  */
 export function sanitizeRequest(req: any): any {
-  if (!req) return req;
+  if (!req) {
+return req;
+}
 
   const sanitized: Record<string, any> = {
     method: req.method,
@@ -393,7 +399,9 @@ export function sanitizeRequest(req: any): any {
  * Middleware function to sanitize response objects in logs
  */
 export function sanitizeResponse(res: any): any {
-  if (!res) return res;
+  if (!res) {
+return res;
+}
 
   const sanitized: Record<string, any> = {
     statusCode: res.statusCode,

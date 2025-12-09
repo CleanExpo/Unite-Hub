@@ -99,7 +99,9 @@ export function StoryTouchpointList({
 
         {(['weekly', 'monthly', 'ninety_day'] as TouchpointTimeframe[]).map((timeframe) => {
           const groupTouchpoints = groups[timeframe];
-          if (groupTouchpoints.length === 0) return null;
+          if (groupTouchpoints.length === 0) {
+return null;
+}
 
           const config = timeframeConfig[timeframe];
           const Icon = config.icon;

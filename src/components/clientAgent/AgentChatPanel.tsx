@@ -65,7 +65,9 @@ export function AgentChatPanel({
   };
 
   const sendMessage = async () => {
-    if (!input.trim() || isLoading) return;
+    if (!input.trim() || isLoading) {
+return;
+}
 
     const userMessage = input.trim();
     setInput('');

@@ -98,7 +98,9 @@ export const Table = forwardRef<HTMLDivElement, TableProps>(
 
     const handleSort = (columnId: string) => {
       const column = columns.find((col) => col.id === columnId);
-      if (!column?.sortable) return;
+      if (!column?.sortable) {
+return;
+}
 
       setSortConfig((prev) => ({
         key: columnId,
@@ -107,7 +109,9 @@ export const Table = forwardRef<HTMLDivElement, TableProps>(
     };
 
     const sortedData = [...data].sort((a, b) => {
-      if (!sortConfig.key) return 0;
+      if (!sortConfig.key) {
+return 0;
+}
 
       const aValue = a[sortConfig.key];
       const bValue = b[sortConfig.key];

@@ -57,11 +57,16 @@ export function ClientEmailThreadList({
   const workspaceId = currentOrganization?.org_id;
 
   const fetchThreads = async (refresh = false) => {
-    if (!workspaceId || !session?.access_token) return;
+    if (!workspaceId || !session?.access_token) {
+return;
+}
 
     try {
-      if (refresh) setIsRefreshing(true);
-      else setIsLoading(true);
+      if (refresh) {
+setIsRefreshing(true);
+} else {
+setIsLoading(true);
+}
       setError(null);
 
       const response = await fetch(
@@ -101,8 +106,12 @@ export function ClientEmailThreadList({
     if (diffDays === 0) {
       return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
-    if (diffDays === 1) return 'Yesterday';
-    if (diffDays < 7) return date.toLocaleDateString([], { weekday: 'short' });
+    if (diffDays === 1) {
+return 'Yesterday';
+}
+    if (diffDays < 7) {
+return date.toLocaleDateString([], { weekday: 'short' });
+}
     return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
   };
 

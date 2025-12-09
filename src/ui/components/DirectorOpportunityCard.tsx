@@ -93,8 +93,12 @@ export function DirectorOpportunityCard({
   };
 
   const getConfidenceColor = (conf: number) => {
-    if (conf >= 0.8) return 'text-green-500';
-    if (conf >= 0.6) return 'text-yellow-500';
+    if (conf >= 0.8) {
+return 'text-green-500';
+}
+    if (conf >= 0.6) {
+return 'text-yellow-500';
+}
     return 'text-gray-500';
   };
 

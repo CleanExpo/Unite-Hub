@@ -119,27 +119,37 @@ export function detectUserEmotion(transcript: string): UserEmotion {
 
   // Check for urgent markers first
   for (const word of EMOTION_KEYWORDS.urgent) {
-    if (lowerTranscript.includes(word)) return 'urgent';
+    if (lowerTranscript.includes(word)) {
+return 'urgent';
+}
   }
 
   // Check frustration (negative markers)
   for (const word of EMOTION_KEYWORDS.frustrated) {
-    if (lowerTranscript.includes(word)) return 'frustrated';
+    if (lowerTranscript.includes(word)) {
+return 'frustrated';
+}
   }
 
   // Check confusion
   for (const word of EMOTION_KEYWORDS.confused) {
-    if (lowerTranscript.includes(word)) return 'confused';
+    if (lowerTranscript.includes(word)) {
+return 'confused';
+}
   }
 
   // Check curiosity
   for (const word of EMOTION_KEYWORDS.curious) {
-    if (lowerTranscript.includes(word)) return 'curious';
+    if (lowerTranscript.includes(word)) {
+return 'curious';
+}
   }
 
   // Check engagement
   for (const word of EMOTION_KEYWORDS.engaged) {
-    if (lowerTranscript.includes(word)) return 'engaged';
+    if (lowerTranscript.includes(word)) {
+return 'engaged';
+}
   }
 
   // Default: calm
@@ -153,14 +163,20 @@ export function analyzeUserEnergyLevel(transcript: string): 'low' | 'normal' | '
   const wordCount = transcript.split(/\s+/).length;
 
   // Very short responses → low energy or confusion
-  if (wordCount <= 3) return 'low';
+  if (wordCount <= 3) {
+return 'low';
+}
 
   // Very long or intense responses → high energy
-  if (wordCount > 30) return 'high';
+  if (wordCount > 30) {
+return 'high';
+}
 
   // Check for all-caps (high energy indicator)
   const capsWords = (transcript.match(/[A-Z]{2,}/g) || []).length;
-  if (capsWords > 2) return 'high';
+  if (capsWords > 2) {
+return 'high';
+}
 
   // Normal
   return 'normal';
@@ -346,8 +362,12 @@ export function updateSessionAfterUserTurn(
     .filter((t) => t.speaker === 'user')
     .slice(-3)
     .map((t) => {
-      if (t.user_energy_level === 'low') return 30;
-      if (t.user_energy_level === 'high') return 80;
+      if (t.user_energy_level === 'low') {
+return 30;
+}
+      if (t.user_energy_level === 'high') {
+return 80;
+}
       return 60;
     });
 

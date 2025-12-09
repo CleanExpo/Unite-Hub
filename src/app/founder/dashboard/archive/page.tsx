@@ -350,8 +350,12 @@ function buildOverviewStats(
     }
     clientMap.set(entry.client_id, clientData);
 
-    if (!earliest || entry.event_date < earliest) earliest = entry.event_date;
-    if (!latest || entry.event_date > latest) latest = entry.event_date;
+    if (!earliest || entry.event_date < earliest) {
+earliest = entry.event_date;
+}
+    if (!latest || entry.event_date > latest) {
+latest = entry.event_date;
+}
   }
 
   return {

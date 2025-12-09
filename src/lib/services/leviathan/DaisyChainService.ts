@@ -370,7 +370,9 @@ export class DaisyChainService {
    */
   private extractKeyword(pathname: string): string {
     const parts = pathname.split('/').filter(Boolean);
-    if (parts.length === 0) return 'services';
+    if (parts.length === 0) {
+return 'services';
+}
     return parts[parts.length - 1].replace(/-/g, ' ');
   }
 
@@ -379,7 +381,9 @@ export class DaisyChainService {
    */
   private extractPartial(pathname: string): string {
     const parts = pathname.split('/').filter(Boolean);
-    if (parts.length === 0) return 'article';
+    if (parts.length === 0) {
+return 'article';
+}
     const last = parts[parts.length - 1].replace(/-/g, ' ');
     const words = last.split(' ');
     return words.slice(0, Math.min(2, words.length)).join(' ');

@@ -130,13 +130,27 @@ export async function PUT(
     const updateData: UpdateBusinessInput = {};
 
     // Only include fields that were provided
-    if (body.code !== undefined) updateData.code = body.code;
-    if (body.display_name !== undefined) updateData.display_name = body.display_name;
-    if (body.description !== undefined) updateData.description = body.description;
-    if (body.industry !== undefined) updateData.industry = body.industry;
-    if (body.region !== undefined) updateData.region = body.region;
-    if (body.primary_domain !== undefined) updateData.primary_domain = body.primary_domain;
-    if (body.status !== undefined) updateData.status = body.status;
+    if (body.code !== undefined) {
+updateData.code = body.code;
+}
+    if (body.display_name !== undefined) {
+updateData.display_name = body.display_name;
+}
+    if (body.description !== undefined) {
+updateData.description = body.description;
+}
+    if (body.industry !== undefined) {
+updateData.industry = body.industry;
+}
+    if (body.region !== undefined) {
+updateData.region = body.region;
+}
+    if (body.primary_domain !== undefined) {
+updateData.primary_domain = body.primary_domain;
+}
+    if (body.status !== undefined) {
+updateData.status = body.status;
+}
 
     // Update the business
     const result = await updateBusiness(businessId, updateData);

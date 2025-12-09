@@ -44,12 +44,18 @@ export async function getPredictions(
     .order('created_at', { ascending: false })
     .limit(30);
 
-  if (tenantId) query = query.eq('tenant_id', tenantId);
-  if (domain) query = query.eq('domain', domain);
+  if (tenantId) {
+query = query.eq('tenant_id', tenantId);
+}
+  if (domain) {
+query = query.eq('domain', domain);
+}
 
   const { data } = await query;
 
-  if (!data) return [];
+  if (!data) {
+return [];
+}
 
   return data.map(row => ({
     id: row.id,
@@ -114,7 +120,9 @@ export async function generatePrediction(
     .select()
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+return null;
+}
 
   return {
     id: data.id,

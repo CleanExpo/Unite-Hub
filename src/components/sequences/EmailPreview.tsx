@@ -67,7 +67,11 @@ export function EmailPreview({
               <a
                 href={step.cta.url || "#"}
                 className="text-primary hover:underline"
-                onClick={(e) => { if (!step.cta.url) e.preventDefault(); }}
+                onClick={(e) => {
+ if (!step.cta.url) {
+e.preventDefault();
+} 
+}}
               >
                 {step.cta.text}
               </a>

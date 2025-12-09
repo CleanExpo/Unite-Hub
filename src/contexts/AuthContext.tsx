@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+ 
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
@@ -327,7 +327,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // Get initial session from localStorage (persisted session)
     supabaseBrowser.auth.getSession().then(async ({ data: { session }, error }) => {
-      if (!mounted) return;
+      if (!mounted) {
+return;
+}
 
       if (error) {
         console.error('[AuthContext] Error getting session:', error);
@@ -359,7 +361,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const {
       data: { subscription },
     } = supabaseBrowser.auth.onAuthStateChange(async (event, session) => {
-      if (!mounted) return;
+      if (!mounted) {
+return;
+}
 
       console.log('[AuthContext] Auth state change:', event, session?.user?.email);
 

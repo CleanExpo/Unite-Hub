@@ -272,8 +272,12 @@ export class MemoryRetriever {
     const startTime = Date.now();
 
     // Validate
-    if (!request.workspaceId) throw new Error('workspaceId is required');
-    if (!request.query) throw new Error('query is required');
+    if (!request.workspaceId) {
+throw new Error('workspaceId is required');
+}
+    if (!request.query) {
+throw new Error('query is required');
+}
 
     const limit = Math.min(request.limit || 10, 100);
     const offset = request.offset || 0;
@@ -412,8 +416,12 @@ export class MemoryRetriever {
   async findRelated(request: FindRelatedRequest): Promise<RelationshipGraph> {
     const supabase = await getSupabaseServer();
 
-    if (!request.workspaceId) throw new Error('workspaceId is required');
-    if (!request.memoryId) throw new Error('memoryId is required');
+    if (!request.workspaceId) {
+throw new Error('workspaceId is required');
+}
+    if (!request.memoryId) {
+throw new Error('memoryId is required');
+}
 
     const maxDepth = request.maxDepth || 2;
     const limitPerDepth = request.limitPerDepth || 5;
@@ -432,7 +440,9 @@ export class MemoryRetriever {
 
     while (queue.length > 0 && Object.keys(byDepth).length < maxDepth) {
       const current = queue.shift();
-      if (!current || current.depth >= maxDepth) continue;
+      if (!current || current.depth >= maxDepth) {
+continue;
+}
 
       const nextDepth = current.depth + 1;
 
@@ -452,7 +462,9 @@ export class MemoryRetriever {
         .order('strength', { ascending: false })
         .limit(limitPerDepth);
 
-      if (error || !links) continue;
+      if (error || !links) {
+continue;
+}
 
       if (!byDepth[nextDepth]) {
         byDepth[nextDepth] = [];
@@ -514,7 +526,9 @@ export class MemoryRetriever {
   ): Promise<Array<RetrievedMemory & { signals: any[] }>> {
     const supabase = await getSupabaseServer();
 
-    if (!workspaceId) throw new Error('workspaceId is required');
+    if (!workspaceId) {
+throw new Error('workspaceId is required');
+}
 
     // Get unresolved signals
     let query = supabase

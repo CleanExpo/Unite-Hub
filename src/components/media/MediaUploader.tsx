@@ -40,13 +40,23 @@ export function MediaUploader({
   const detectFileType = (file: File): "video" | "audio" | "document" | "image" | "sketch" | null => {
     const mimeType = file.type;
 
-    if (mimeType.startsWith("video/")) return "video";
-    if (mimeType.startsWith("audio/")) return "audio";
-    if (mimeType.startsWith("image/")) return "image";
-    if (["application/pdf", "application/msword", "text/plain", "text/markdown"].includes(mimeType)) return "document";
+    if (mimeType.startsWith("video/")) {
+return "video";
+}
+    if (mimeType.startsWith("audio/")) {
+return "audio";
+}
+    if (mimeType.startsWith("image/")) {
+return "image";
+}
+    if (["application/pdf", "application/msword", "text/plain", "text/markdown"].includes(mimeType)) {
+return "document";
+}
 
     // Sketch detection (usually SVG or specific canvas exports)
-    if (mimeType === "image/svg+xml") return "sketch";
+    if (mimeType === "image/svg+xml") {
+return "sketch";
+}
 
     return null;
   };
@@ -92,9 +102,13 @@ export function MediaUploader({
       formData.append("file", file);
       formData.append("workspace_id", workspaceId);
       formData.append("org_id", orgId);
-      if (projectId) formData.append("project_id", projectId);
+      if (projectId) {
+formData.append("project_id", projectId);
+}
       formData.append("file_type", fileType);
-      if (tags.length > 0) formData.append("tags", JSON.stringify(tags));
+      if (tags.length > 0) {
+formData.append("tags", JSON.stringify(tags));
+}
 
       // Upload via API
       const response = await fetch("/api/media/upload", {

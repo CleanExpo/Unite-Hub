@@ -23,7 +23,9 @@ export default function AgencySwitcherPage() {
   const [creating, setCreating] = useState(false);
 
   const fetchAgencies = useCallback(async () => {
-    if (!session?.access_token) return;
+    if (!session?.access_token) {
+return;
+}
 
     try {
       const response = await fetch('/api/agency/switch', {
@@ -48,7 +50,9 @@ export default function AgencySwitcherPage() {
   }, [fetchAgencies]);
 
   const handleSwitch = async (agencyId: string) => {
-    if (!session?.access_token) return;
+    if (!session?.access_token) {
+return;
+}
 
     try {
       const response = await fetch('/api/agency/switch', {
@@ -73,7 +77,9 @@ export default function AgencySwitcherPage() {
   };
 
   const handleCreate = async () => {
-    if (!session?.access_token || !newName || !newSlug) return;
+    if (!session?.access_token || !newName || !newSlug) {
+return;
+}
 
     setCreating(true);
     try {

@@ -30,7 +30,9 @@ export async function PUT(
   try {
     // Rate limiting
     const rateLimitResult = await apiRateLimit(req);
-    if (rateLimitResult) return rateLimitResult;
+    if (rateLimitResult) {
+return rateLimitResult;
+}
 
     const { postId } = await params;
 
@@ -168,7 +170,9 @@ export async function DELETE(
   try {
     // Rate limiting
     const rateLimitResult = await apiRateLimit(req);
-    if (rateLimitResult) return rateLimitResult;
+    if (rateLimitResult) {
+return rateLimitResult;
+}
 
     const { postId } = await params;
 

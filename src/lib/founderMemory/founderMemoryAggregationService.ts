@@ -328,9 +328,13 @@ class FounderMemoryAggregationService {
 
     emails?.forEach((e) => {
       const score = e.sentiment_score || 0.5;
-      if (score >= 0.6) positiveCount++;
-      else if (score <= 0.4) negativeCount++;
-      else neutralCount++;
+      if (score >= 0.6) {
+positiveCount++;
+} else if (score <= 0.4) {
+negativeCount++;
+} else {
+neutralCount++;
+}
     });
 
     return {
@@ -612,11 +616,17 @@ class FounderMemoryAggregationService {
     sentiment: { positive: number; neutral: number; negative: number }
   ): 'improving' | 'stable' | 'declining' {
     const total = sentiment.positive + sentiment.neutral + sentiment.negative;
-    if (total === 0) return 'stable';
+    if (total === 0) {
+return 'stable';
+}
 
     const positiveRatio = sentiment.positive / total;
-    if (positiveRatio >= 0.6) return 'improving';
-    if (positiveRatio <= 0.3) return 'declining';
+    if (positiveRatio >= 0.6) {
+return 'improving';
+}
+    if (positiveRatio <= 0.3) {
+return 'declining';
+}
     return 'stable';
   }
 
@@ -662,7 +672,9 @@ Provide a concise founder-focused insight about the current state and one priori
     let totalRecords = 0;
 
     aggregatedData.forEach((result) => {
-      if (result.success) successfulSources++;
+      if (result.success) {
+successfulSources++;
+}
       totalRecords += result.recordCount;
     });
 
@@ -685,7 +697,9 @@ Provide a concise founder-focused insight about the current state and one priori
       .limit(1)
       .single();
 
-    if (error || !data) return null;
+    if (error || !data) {
+return null;
+}
     return this.mapDbToSnapshot(data);
   }
 
@@ -700,7 +714,9 @@ Provide a concise founder-focused insight about the current state and one priori
       .eq('workspace_id', workspaceId)
       .single();
 
-    if (error || !data) return null;
+    if (error || !data) {
+return null;
+}
     return this.mapDbToSnapshot(data);
   }
 
@@ -720,7 +736,9 @@ Provide a concise founder-focused insight about the current state and one priori
       .order('snapshot_at', { ascending: false })
       .limit(limit);
 
-    if (error || !data) return [];
+    if (error || !data) {
+return [];
+}
     return data.map(this.mapDbToSnapshot);
   }
 

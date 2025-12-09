@@ -42,7 +42,9 @@ function showToast(options: ToastOptions) {
 
 // Hook for toast container to listen to events
 export function useToastListener(callback: (options: ToastOptions) => void) {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined') {
+return;
+}
 
   const handleToast = (event: Event) => {
     const customEvent = event as CustomEvent<ToastOptions>;

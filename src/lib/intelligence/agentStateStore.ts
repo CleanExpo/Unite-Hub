@@ -84,7 +84,9 @@ export function getUnhealthyAgents(minHealthScore = 70): AgentState[] {
  */
 export function getSystemHealthSummary() {
   const states = Object.values(agentStates);
-  if (states.length === 0) return null;
+  if (states.length === 0) {
+return null;
+}
 
   const avgHealth = states.reduce((sum, s) => sum + s.healthScore, 0) / states.length;
   const totalWorkflows = states.reduce((sum, s) => sum + s.activeWorkflows, 0);

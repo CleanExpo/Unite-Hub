@@ -23,19 +23,33 @@ export function TrialCapabilityBanner({
   trialState,
   onUpgradeClick,
 }: TrialCapabilityBannerProps) {
-  if (!trialState?.isTrialActive) return null;
+  if (!trialState?.isTrialActive) {
+return null;
+}
 
   const getUrgencyColor = (percentUsed: number): string => {
-    if (percentUsed >= 100) return 'text-red-600 dark:text-red-400';
-    if (percentUsed >= 80) return 'text-orange-600 dark:text-orange-400';
-    if (percentUsed >= 50) return 'text-yellow-600 dark:text-yellow-400';
+    if (percentUsed >= 100) {
+return 'text-red-600 dark:text-red-400';
+}
+    if (percentUsed >= 80) {
+return 'text-orange-600 dark:text-orange-400';
+}
+    if (percentUsed >= 50) {
+return 'text-yellow-600 dark:text-yellow-400';
+}
     return 'text-green-600 dark:text-green-400';
   };
 
   const getProgressColor = (percentUsed: number): string => {
-    if (percentUsed >= 100) return 'bg-red-500';
-    if (percentUsed >= 80) return 'bg-orange-500';
-    if (percentUsed >= 50) return 'bg-yellow-500';
+    if (percentUsed >= 100) {
+return 'bg-red-500';
+}
+    if (percentUsed >= 80) {
+return 'bg-orange-500';
+}
+    if (percentUsed >= 50) {
+return 'bg-yellow-500';
+}
     return 'bg-green-500';
   };
 

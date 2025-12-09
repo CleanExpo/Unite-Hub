@@ -560,13 +560,21 @@ export class SeoLeakAgent {
       // Estimate position based on total contribution (simplified model)
       // Higher score = better position (lower number)
       let estimatedPosition: number;
-      if (totalContribution >= 80) estimatedPosition = 1;
-      else if (totalContribution >= 70) estimatedPosition = 3;
-      else if (totalContribution >= 60) estimatedPosition = 5;
-      else if (totalContribution >= 50) estimatedPosition = 8;
-      else if (totalContribution >= 40) estimatedPosition = 12;
-      else if (totalContribution >= 30) estimatedPosition = 20;
-      else estimatedPosition = 30;
+      if (totalContribution >= 80) {
+estimatedPosition = 1;
+} else if (totalContribution >= 70) {
+estimatedPosition = 3;
+} else if (totalContribution >= 60) {
+estimatedPosition = 5;
+} else if (totalContribution >= 50) {
+estimatedPosition = 8;
+} else if (totalContribution >= 40) {
+estimatedPosition = 12;
+} else if (totalContribution >= 30) {
+estimatedPosition = 20;
+} else {
+estimatedPosition = 30;
+}
 
       // Generate improvement opportunities with AI
       const improvements = await this.generateRankingImprovements(keyword, url, estimate, rankingFactors);
@@ -781,14 +789,24 @@ export class SeoLeakAgent {
 
     // Calculate content scores from audit
     let contentDepth = 50;
-    if (crawl.indexablePages && crawl.indexablePages > 100) contentDepth = 70;
-    if (crawl.indexablePages && crawl.indexablePages > 500) contentDepth = 85;
+    if (crawl.indexablePages && crawl.indexablePages > 100) {
+contentDepth = 70;
+}
+    if (crawl.indexablePages && crawl.indexablePages > 500) {
+contentDepth = 85;
+}
 
     // Security impacts trust
     let trustBoost = 0;
-    if (security.hasHttps) trustBoost += 20;
-    if (security.hstsEnabled) trustBoost += 10;
-    if (security.cspEnabled) trustBoost += 10;
+    if (security.hasHttps) {
+trustBoost += 20;
+}
+    if (security.hstsEnabled) {
+trustBoost += 10;
+}
+    if (security.cspEnabled) {
+trustBoost += 10;
+}
 
     return {
       contentDepth,

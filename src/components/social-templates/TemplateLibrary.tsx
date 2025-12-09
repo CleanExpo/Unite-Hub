@@ -39,9 +39,15 @@ export function TemplateLibrary({ clientId }: TemplateLibraryProps) {
     setLoading(true);
     try {
       const params = new URLSearchParams();
-      if (selectedPlatform) params.append("platform", selectedPlatform);
-      if (selectedCategory) params.append("category", selectedCategory);
-      if (showFavorites) params.append("favoriteOnly", "true");
+      if (selectedPlatform) {
+params.append("platform", selectedPlatform);
+}
+      if (selectedCategory) {
+params.append("category", selectedCategory);
+}
+      if (showFavorites) {
+params.append("favoriteOnly", "true");
+}
 
       const response = await fetch(
         `/api/clients/${clientId}/social-templates?${params}`
@@ -112,7 +118,9 @@ export function TemplateLibrary({ clientId }: TemplateLibraryProps) {
   };
 
   const handleDelete = async (templateId: string) => {
-    if (!confirm("Delete this template?")) return;
+    if (!confirm("Delete this template?")) {
+return;
+}
 
     try {
       await fetch(`/api/social-templates/${templateId}`, {

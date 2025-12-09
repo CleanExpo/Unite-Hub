@@ -107,7 +107,9 @@ export default function EnterpriseOverviewDashboard({ orgId }: EnterpriseOvervie
     setLoading(true);
     try {
       const { data: { session } } = await supabaseBrowser.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const response = await fetch(
         `/api/enterprise/summary?orgId=${orgId}&type=full`,
@@ -131,8 +133,12 @@ export default function EnterpriseOverviewDashboard({ orgId }: EnterpriseOvervie
   };
 
   const getHealthColor = (score: number) => {
-    if (score >= 80) return 'text-green-500';
-    if (score >= 60) return 'text-yellow-500';
+    if (score >= 80) {
+return 'text-green-500';
+}
+    if (score >= 60) {
+return 'text-yellow-500';
+}
     return 'text-red-500';
   };
 

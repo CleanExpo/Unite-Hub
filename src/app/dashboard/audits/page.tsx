@@ -36,7 +36,9 @@ export default function AuditsPage() {
   // Fetch audits
   useEffect(() => {
     const fetchAudits = async () => {
-      if (!workspaceId) return;
+      if (!workspaceId) {
+return;
+}
 
       try {
         const { data: { session } } = await supabase.auth.getSession();
@@ -64,7 +66,9 @@ export default function AuditsPage() {
   // Create new audit
   const handleCreateAudit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newUrl || !workspaceId) return;
+    if (!newUrl || !workspaceId) {
+return;
+}
 
     setCreating(true);
     try {
@@ -134,8 +138,12 @@ export default function AuditsPage() {
 
   // Get score color
   const getScoreColor = (score: number) => {
-    if (score >= 80) return "text-green-600";
-    if (score >= 60) return "text-yellow-600";
+    if (score >= 80) {
+return "text-green-600";
+}
+    if (score >= 60) {
+return "text-yellow-600";
+}
     return "text-red-600";
   };
 

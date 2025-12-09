@@ -103,7 +103,9 @@ export default function FinancialDashboard({ orgId }: FinancialDashboardProps) {
     setLoading(true);
     try {
       const { data: { session } } = await supabaseBrowser.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const headers = {
         'Authorization': `Bearer ${session.access_token}`,
@@ -159,7 +161,9 @@ export default function FinancialDashboard({ orgId }: FinancialDashboardProps) {
   const generateReport = async (reportType: string) => {
     try {
       const { data: { session } } = await supabaseBrowser.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const now = new Date();
       const periodEnd = now.toISOString();

@@ -72,7 +72,7 @@ export async function GET() {
       },
     });
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error('[API] Estimate error:', error);
     return NextResponse.json(
       { error: 'Failed to estimate costs', details: String(error) },

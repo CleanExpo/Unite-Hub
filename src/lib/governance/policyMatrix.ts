@@ -283,10 +283,16 @@ export class PolicyMatrix {
     value: number
   ): 'healthy' | 'warning' | 'critical' {
     const thresholds = SCORE_THRESHOLDS[scoreType];
-    if (!thresholds) return 'healthy';
+    if (!thresholds) {
+return 'healthy';
+}
 
-    if (value < thresholds.critical) return 'critical';
-    if (value < thresholds.warning) return 'warning';
+    if (value < thresholds.critical) {
+return 'critical';
+}
+    if (value < thresholds.warning) {
+return 'warning';
+}
     return 'healthy';
   }
 }

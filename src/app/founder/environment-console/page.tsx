@@ -180,14 +180,22 @@ export default function EnvironmentConsole() {
   };
 
   const getScoreBadgeColor = (score: number) => {
-    if (score >= 75) return 'bg-green-500';
-    if (score >= 50) return 'bg-yellow-500';
+    if (score >= 75) {
+return 'bg-green-500';
+}
+    if (score >= 50) {
+return 'bg-yellow-500';
+}
     return 'bg-red-500';
   };
 
   const getSeverityIcon = (severity: string) => {
-    if (severity === 'high') return <AlertCircle className="w-4 h-4 text-red-500" />;
-    if (severity === 'medium') return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
+    if (severity === 'high') {
+return <AlertCircle className="w-4 h-4 text-red-500" />;
+}
+    if (severity === 'medium') {
+return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
+}
     return <CheckCircle2 className="w-4 h-4 text-green-500" />;
   };
 

@@ -48,25 +48,37 @@ export async function GET(req: NextRequest) {
     const filters: JournalFilters = {};
 
     const businessId = req.nextUrl.searchParams.get('businessId');
-    if (businessId) filters.businessId = businessId;
+    if (businessId) {
+filters.businessId = businessId;
+}
 
     const tags = req.nextUrl.searchParams.get('tags');
-    if (tags) filters.tags = tags.split(',').map((t) => t.trim());
+    if (tags) {
+filters.tags = tags.split(',').map((t) => t.trim());
+}
 
     const dateFrom = req.nextUrl.searchParams.get('dateFrom');
-    if (dateFrom) filters.dateFrom = dateFrom;
+    if (dateFrom) {
+filters.dateFrom = dateFrom;
+}
 
     const dateTo = req.nextUrl.searchParams.get('dateTo');
-    if (dateTo) filters.dateTo = dateTo;
+    if (dateTo) {
+filters.dateTo = dateTo;
+}
 
     const searchTerm = req.nextUrl.searchParams.get('search');
-    if (searchTerm) filters.searchTerm = searchTerm;
+    if (searchTerm) {
+filters.searchTerm = searchTerm;
+}
 
     const limit = parseInt(req.nextUrl.searchParams.get('limit') || '20', 10);
     filters.limit = limit;
 
     const offset = parseInt(req.nextUrl.searchParams.get('offset') || '0', 10);
-    if (offset > 0) filters.offset = offset;
+    if (offset > 0) {
+filters.offset = offset;
+}
 
     // Get journal entries
     const result = await getEntries(userId, filters);

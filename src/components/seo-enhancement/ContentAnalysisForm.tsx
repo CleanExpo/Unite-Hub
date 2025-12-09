@@ -50,7 +50,9 @@ export function ContentAnalysisForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!url || !targetKeyword) return;
+    if (!url || !targetKeyword) {
+return;
+}
 
     setLoading(true);
     setError(null);

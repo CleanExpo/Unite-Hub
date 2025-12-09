@@ -121,7 +121,9 @@ async function fetchGSCMetrics(
       .single();
 
     const siteUrl = project?.client_website;
-    if (!siteUrl) return null;
+    if (!siteUrl) {
+return null;
+}
 
     // Check for cached GSC data
     const { data: gscData } = await supabase

@@ -1,0 +1,343 @@
+/**
+ * Phase B10: Synthex Audience Intelligence + Segmentation Engine
+ *
+ * Creates tables for audience management, contacts, and AI-powered segmentation.
+ */
+
+-- =====================================================
+-- Table: synthex_audiences
+-- Stores audience definitions for targeting
+-- =====================================================
+create table if not exists synthex_audiences (
+  id uuid primary key default gen_random_uuid(),
+  tenant_id uuid not null references synthex_tenants(id) on delete cascade,
+  brand_id uuid references synthex_brands(id) on delete set null,
+
+  -- Audience info
+  name text not null,
+  description text,
+  audience_type text default 'static' check (audience_type in ('static', 'dynamic', 'smart')),
+
+  -- Dynamic audience rules (for dynamic/smart types)
+  rules jsonb default '[]',
+
+  -- Stats
+  contact_count int default 0,
+  last_synced_at timestamp with time zone,
+
+  -- Metadata
+  metadata jsonb default '{}',
+
+  -- Timestamps
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now()
+);
+
+-- Performance indexes
+create index if not exists idx_synthex_audiences_tenant on synthex_audiences(tenant_id);
+create index if not exists idx_synthex_audiences_brand on synthex_audiences(brand_id);
+create index if not exists idx_synthex_audiences_type on synthex_audiences(audience_type);
+
+-- Enable RLS
+alter table synthex_audiences enable row level security;
+
+-- RLS Policies
+create policy "audiences_select"
+  on synthex_audiences for select
+  using (
+    auth.uid() in (
+      select owner_user_id from synthex_tenants where id = tenant_id
+    )
+  );
+
+create policy "audiences_insert"
+  on synthex_audiences for insert
+  with check (
+    auth.uid() in (
+      select owner_user_id from synthex_tenants where id = tenant_id
+    )
+  );
+
+create policy "audiences_update"
+  on synthex_audiences for update
+  using (
+    auth.uid() in (
+      select owner_user_id from synthex_tenants where id = tenant_id
+    )
+  );
+
+create policy "audiences_delete"
+  on synthex_audiences for delete
+  using (
+    auth.uid() in (
+      select owner_user_id from synthex_tenants where id = tenant_id
+    )
+  );
+
+-- =====================================================
+-- Table: synthex_audience_contacts
+-- Stores contacts within audiences
+-- =====================================================
+create table if not exists synthex_audience_contacts (
+  id uuid primary key default gen_random_uuid(),
+  audience_id uuid not null references synthex_audiences(id) on delete cascade,
+  tenant_id uuid not null references synthex_tenants(id) on delete cascade,
+
+  -- Contact info
+  email text,
+  phone text,
+  first_name text,
+  last_name text,
+
+  -- Attributes for segmentation
+  attributes jsonb default '{}',
+  tags text[] default '{}',
+
+  -- Engagement data
+  engagement_score numeric(5,2) default 0,
+  last_engaged_at timestamp with time zone,
+
+  -- Status
+  status text default 'active' check (status in ('active', 'unsubscribed', 'bounced', 'suppressed')),
+
+  -- Timestamps
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now()
+);
+
+-- Performance indexes
+create index if not exists idx_synthex_audience_contacts_audience on synthex_audience_contacts(audience_id);
+create index if not exists idx_synthex_audience_contacts_tenant on synthex_audience_contacts(tenant_id);
+create index if not exists idx_synthex_audience_contacts_email on synthex_audience_contacts(email);
+create index if not exists idx_synthex_audience_contacts_status on synthex_audience_contacts(status);
+
+-- Enable RLS
+alter table synthex_audience_contacts enable row level security;
+
+-- RLS Policies
+create policy "audience_contacts_select"
+  on synthex_audience_contacts for select
+  using (
+    auth.uid() in (
+      select owner_user_id from synthex_tenants where id = tenant_id
+    )
+  );
+
+create policy "audience_contacts_insert"
+  on synthex_audience_contacts for insert
+  with check (
+    auth.uid() in (
+      select owner_user_id from synthex_tenants where id = tenant_id
+    )
+  );
+
+create policy "audience_contacts_update"
+  on synthex_audience_contacts for update
+  using (
+    auth.uid() in (
+      select owner_user_id from synthex_tenants where id = tenant_id
+    )
+  );
+
+create policy "audience_contacts_delete"
+  on synthex_audience_contacts for delete
+  using (
+    auth.uid() in (
+      select owner_user_id from synthex_tenants where id = tenant_id
+    )
+  );
+
+-- =====================================================
+-- Table: synthex_segments
+-- AI-generated and manual segments
+-- =====================================================
+create table if not exists synthex_segments (
+  id uuid primary key default gen_random_uuid(),
+  tenant_id uuid not null references synthex_tenants(id) on delete cascade,
+  audience_id uuid references synthex_audiences(id) on delete set null,
+
+  -- Segment info
+  name text not null,
+  description text,
+  segment_type text default 'manual' check (segment_type in ('manual', 'ai_generated', 'behavioral', 'demographic')),
+
+  -- Rules for dynamic membership
+  rules jsonb not null default '[]',
+
+  -- Stats
+  contact_count int default 0,
+  last_computed_at timestamp with time zone,
+
+  -- AI generation metadata
+  ai_confidence numeric(5,4),
+  ai_reasoning text,
+
+  -- Metadata
+  metadata jsonb default '{}',
+
+  -- Timestamps
+  created_at timestamp with time zone default now(),
+  updated_at timestamp with time zone default now()
+);
+
+-- Performance indexes
+create index if not exists idx_synthex_segments_tenant on synthex_segments(tenant_id);
+create index if not exists idx_synthex_segments_audience on synthex_segments(audience_id);
+create index if not exists idx_synthex_segments_type on synthex_segments(segment_type);
+
+-- Enable RLS
+alter table synthex_segments enable row level security;
+
+-- RLS Policies
+create policy "segments_select"
+  on synthex_segments for select
+  using (
+    auth.uid() in (
+      select owner_user_id from synthex_tenants where id = tenant_id
+    )
+  );
+
+create policy "segments_insert"
+  on synthex_segments for insert
+  with check (
+    auth.uid() in (
+      select owner_user_id from synthex_tenants where id = tenant_id
+    )
+  );
+
+create policy "segments_update"
+  on synthex_segments for update
+  using (
+    auth.uid() in (
+      select owner_user_id from synthex_tenants where id = tenant_id
+    )
+  );
+
+create policy "segments_delete"
+  on synthex_segments for delete
+  using (
+    auth.uid() in (
+      select owner_user_id from synthex_tenants where id = tenant_id
+    )
+  );
+
+-- =====================================================
+-- Table: synthex_segment_contacts
+-- Junction table for segment membership
+-- =====================================================
+create table if not exists synthex_segment_contacts (
+  id uuid primary key default gen_random_uuid(),
+  segment_id uuid not null references synthex_segments(id) on delete cascade,
+  contact_id uuid not null references synthex_audience_contacts(id) on delete cascade,
+  tenant_id uuid not null references synthex_tenants(id) on delete cascade,
+
+  -- Match info
+  match_score numeric(5,4) default 1.0,
+  matched_at timestamp with time zone default now(),
+
+  -- Unique constraint
+  unique(segment_id, contact_id)
+);
+
+-- Performance indexes
+create index if not exists idx_synthex_segment_contacts_segment on synthex_segment_contacts(segment_id);
+create index if not exists idx_synthex_segment_contacts_contact on synthex_segment_contacts(contact_id);
+
+-- Enable RLS
+alter table synthex_segment_contacts enable row level security;
+
+-- RLS Policies
+create policy "segment_contacts_select"
+  on synthex_segment_contacts for select
+  using (
+    auth.uid() in (
+      select owner_user_id from synthex_tenants where id = tenant_id
+    )
+  );
+
+create policy "segment_contacts_insert"
+  on synthex_segment_contacts for insert
+  with check (
+    auth.uid() in (
+      select owner_user_id from synthex_tenants where id = tenant_id
+    )
+  );
+
+create policy "segment_contacts_delete"
+  on synthex_segment_contacts for delete
+  using (
+    auth.uid() in (
+      select owner_user_id from synthex_tenants where id = tenant_id
+    )
+  );
+
+-- =====================================================
+-- Function: Update audience contact count
+-- =====================================================
+create or replace function synthex_update_audience_contact_count()
+returns trigger as $$
+begin
+  if TG_OP = 'INSERT' then
+    update synthex_audiences
+    set contact_count = contact_count + 1,
+        updated_at = now()
+    where id = NEW.audience_id;
+  elsif TG_OP = 'DELETE' then
+    update synthex_audiences
+    set contact_count = contact_count - 1,
+        updated_at = now()
+    where id = OLD.audience_id;
+  end if;
+  return null;
+end;
+$$ language plpgsql security definer;
+
+drop trigger if exists trg_synthex_audience_contact_count on synthex_audience_contacts;
+create trigger trg_synthex_audience_contact_count
+  after insert or delete on synthex_audience_contacts
+  for each row execute function synthex_update_audience_contact_count();
+
+-- =====================================================
+-- Function: Update segment contact count
+-- =====================================================
+create or replace function synthex_update_segment_contact_count()
+returns trigger as $$
+begin
+  if TG_OP = 'INSERT' then
+    update synthex_segments
+    set contact_count = contact_count + 1,
+        updated_at = now()
+    where id = NEW.segment_id;
+  elsif TG_OP = 'DELETE' then
+    update synthex_segments
+    set contact_count = contact_count - 1,
+        updated_at = now()
+    where id = OLD.segment_id;
+  end if;
+  return null;
+end;
+$$ language plpgsql security definer;
+
+drop trigger if exists trg_synthex_segment_contact_count on synthex_segment_contacts;
+create trigger trg_synthex_segment_contact_count
+  after insert or delete on synthex_segment_contacts
+  for each row execute function synthex_update_segment_contact_count();
+
+-- Updated at triggers
+create or replace function synthex_audiences_updated_at()
+returns trigger as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$ language plpgsql;
+
+drop trigger if exists trg_synthex_audiences_updated on synthex_audiences;
+create trigger trg_synthex_audiences_updated
+  before update on synthex_audiences
+  for each row execute function synthex_audiences_updated_at();
+
+drop trigger if exists trg_synthex_segments_updated on synthex_segments;
+create trigger trg_synthex_segments_updated
+  before update on synthex_segments
+  for each row execute function synthex_audiences_updated_at();

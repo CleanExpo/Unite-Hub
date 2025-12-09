@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-/* eslint-disable no-console, no-undef */
+ 
 /* global process */
 
 /**
@@ -268,8 +268,11 @@ async function runTests() {
     console.log(`${index + 1}. ${status}: ${result.name}`);
     console.log(`   ${result.message}\n`);
 
-    if (result.passed) passed++;
-    else failed++;
+    if (result.passed) {
+passed++;
+} else {
+failed++;
+}
   });
 
   console.log('════════════════════════════════════════════════════════════');

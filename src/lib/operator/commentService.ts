@@ -133,7 +133,9 @@ export class CommentService {
 
     const { data, error } = await query;
 
-    if (error) return [];
+    if (error) {
+return [];
+}
 
     if (options?.includeReplies) {
       return this.buildThreadTree(data);
@@ -318,7 +320,9 @@ export class CommentService {
       .eq("is_resolved", false)
       .in("comment_type", ["QUESTION", "SUGGESTION"]);
 
-    if (error) return 0;
+    if (error) {
+return 0;
+}
     return count || 0;
   }
 

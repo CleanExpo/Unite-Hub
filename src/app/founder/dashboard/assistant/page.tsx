@@ -122,7 +122,9 @@ export default function FounderAssistantPage() {
   };
 
   const handleVoiceCommand = async () => {
-    if (!voiceCommand.trim()) return;
+    if (!voiceCommand.trim()) {
+return;
+}
 
     try {
       setIsProcessing(true);

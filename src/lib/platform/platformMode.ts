@@ -35,7 +35,9 @@ export interface ServiceModes {
  * Check if user email is admin
  */
 export function isAdmin(email: string | null | undefined): boolean {
-  if (!email) return false;
+  if (!email) {
+return false;
+}
   return ADMIN_EMAILS.includes(email.toLowerCase());
 }
 

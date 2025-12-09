@@ -256,7 +256,9 @@ export function ConvexExecutionPanel({ onRoadmapGenerated }: ConvexExecutionPane
 
   // Copy task list to clipboard
   const handleCopyTasks = () => {
-    if (!roadmap) return;
+    if (!roadmap) {
+return;
+}
 
     const taskList = roadmap.milestones
       .flatMap((m) => m.tasks)
@@ -269,7 +271,9 @@ export function ConvexExecutionPanel({ onRoadmapGenerated }: ConvexExecutionPane
 
   // Export roadmap as JSON
   const handleExportRoadmap = () => {
-    if (!roadmap) return;
+    if (!roadmap) {
+return;
+}
 
     const exportData = JSON.stringify(roadmap, null, 2);
     const blob = new Blob([exportData], { type: 'application/json' });

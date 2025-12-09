@@ -44,7 +44,9 @@ export default function TrendOpportunityCard({
   const [submitting, setSubmitting] = useState(false);
 
   const handleApprove = async () => {
-    if (!onApprove) return;
+    if (!onApprove) {
+return;
+}
     setSubmitting(true);
     try {
       await onApprove(opportunity.id, notes);
@@ -54,7 +56,9 @@ export default function TrendOpportunityCard({
   };
 
   const handleReject = async () => {
-    if (!onReject) return;
+    if (!onReject) {
+return;
+}
     setSubmitting(true);
     try {
       await onReject(opportunity.id, notes);

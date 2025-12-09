@@ -30,9 +30,15 @@ export async function GET(request: NextRequest) {
     }
 
     const filters: { provider?: string; channel?: string; status?: string } = {};
-    if (provider) filters.provider = provider;
-    if (channel) filters.channel = channel;
-    if (status) filters.status = status;
+    if (provider) {
+filters.provider = provider;
+}
+    if (channel) {
+filters.channel = channel;
+}
+    if (status) {
+filters.status = status;
+}
 
     const result = await listIntegrations(tenantId, filters);
 

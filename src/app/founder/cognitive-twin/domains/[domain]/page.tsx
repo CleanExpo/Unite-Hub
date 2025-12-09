@@ -33,14 +33,22 @@ function isDomain(domain: string): domain is Domain {
 }
 
 function getHealthColor(score: number): string {
-  if (score >= 70) return 'text-green-600 dark:text-green-500';
-  if (score >= 40) return 'text-yellow-600 dark:text-yellow-500';
+  if (score >= 70) {
+return 'text-green-600 dark:text-green-500';
+}
+  if (score >= 40) {
+return 'text-yellow-600 dark:text-yellow-500';
+}
   return 'text-red-600 dark:text-red-500';
 }
 
 function getHealthStatus(score: number): string {
-  if (score >= 70) return 'Healthy';
-  if (score >= 40) return 'Warning';
+  if (score >= 70) {
+return 'Healthy';
+}
+  if (score >= 40) {
+return 'Warning';
+}
   return 'Critical';
 }
 

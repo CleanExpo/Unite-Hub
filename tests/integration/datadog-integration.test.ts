@@ -1,4 +1,4 @@
-/* eslint-disable no-undef, @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* global process, global, Response, setTimeout */
 
 /**

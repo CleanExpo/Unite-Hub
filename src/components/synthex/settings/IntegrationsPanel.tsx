@@ -128,7 +128,9 @@ export default function IntegrationsPanel() {
   // =============================================================================
 
   useEffect(() => {
-    if (tenantLoading || !tenantId) return;
+    if (tenantLoading || !tenantId) {
+return;
+}
 
     async function loadIntegrations() {
       try {
@@ -196,7 +198,9 @@ export default function IntegrationsPanel() {
   };
 
   const handleDisconnect = async (provider: string) => {
-    if (!tenantId) return;
+    if (!tenantId) {
+return;
+}
 
     try {
       await fetch('/api/synthex/integrations', {

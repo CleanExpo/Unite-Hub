@@ -171,14 +171,18 @@ export class ReliabilityMatrixService {
    * Generate error type distribution
    */
   private generateErrorTypes(failures: number): Record<string, number> {
-    if (failures === 0) return {};
+    if (failures === 0) {
+return {};
+}
 
     const types: Record<string, number> = {};
     const errorCategories = ['timeout', 'auth_failure', 'rate_limit', 'network', 'validation'];
 
     let remaining = failures;
     for (const category of errorCategories) {
-      if (remaining <= 0) break;
+      if (remaining <= 0) {
+break;
+}
       const count = Math.floor(Math.random() * remaining);
       if (count > 0) {
         types[category] = count;
@@ -219,7 +223,9 @@ export class ReliabilityMatrixService {
    * Calculate overall uptime percentage
    */
   private calculateUptime(subsystems: SubsystemReliability[]): number {
-    if (subsystems.length === 0) return 100;
+    if (subsystems.length === 0) {
+return 100;
+}
 
     const avgSuccessRate = subsystems.reduce((sum, s) => sum + s.successRate, 0) / subsystems.length;
     return Math.min(avgSuccessRate, 100);

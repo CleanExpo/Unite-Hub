@@ -73,13 +73,19 @@ export class MCSEEngine {
     // Check for logical connectors
     const connectors = ['because', 'therefore', 'thus', 'since', 'given that'];
     const hasConnectors = connectors.some(c => reasoning.toLowerCase().includes(c));
-    if (hasConnectors) score += 10;
+    if (hasConnectors) {
+score += 10;
+}
 
     // Check for structured reasoning
-    if (reasoning.includes('1.') || reasoning.includes('Step')) score += 10;
+    if (reasoning.includes('1.') || reasoning.includes('Step')) {
+score += 10;
+}
 
     // Penalize contradictions
-    if (reasoning.includes('but also') && reasoning.includes('however')) score -= 5;
+    if (reasoning.includes('but also') && reasoning.includes('however')) {
+score -= 5;
+}
 
     return Math.min(100, Math.max(0, score));
   }
@@ -90,12 +96,16 @@ export class MCSEEngine {
     // Check for unsubstantiated claims
     const certaintyWords = ['definitely', 'certainly', 'always', 'never', 'absolutely'];
     const hasCertainty = certaintyWords.some(w => reasoning.toLowerCase().includes(w));
-    if (hasCertainty) score += 15;
+    if (hasCertainty) {
+score += 15;
+}
 
     // Check for fabricated details
     const fabricationPatterns = [/\d{3}-\d{3}-\d{4}/, /\$\d+,\d{3}/];
     for (const pattern of fabricationPatterns) {
-      if (pattern.test(output)) score += 10;
+      if (pattern.test(output)) {
+score += 10;
+}
     }
 
     return Math.min(100, score);

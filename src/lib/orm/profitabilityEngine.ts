@@ -86,8 +86,11 @@ export class ProfitabilityEngine {
     if (historicalMargins.length >= 2) {
       const recent = margin_percent;
       const previous = historicalMargins[historicalMargins.length - 1];
-      if (recent > previous + 5) trend = 'improving';
-      else if (recent < previous - 5) trend = 'declining';
+      if (recent > previous + 5) {
+trend = 'improving';
+} else if (recent < previous - 5) {
+trend = 'declining';
+}
     }
 
     // Count unprofitable weeks
@@ -236,20 +239,29 @@ export class ProfitabilityEngine {
     // Margin trend
     let marginTrend: 'improving' | 'stable' | 'declining' = 'stable';
     const marginChange = recent.avg_margin_percent - previous.avg_margin_percent;
-    if (marginChange > 3) marginTrend = 'improving';
-    else if (marginChange < -3) marginTrend = 'declining';
+    if (marginChange > 3) {
+marginTrend = 'improving';
+} else if (marginChange < -3) {
+marginTrend = 'declining';
+}
 
     // Revenue trend
     let revenueTrend: 'growing' | 'stable' | 'shrinking' = 'stable';
     const revenueChange = ((recent.total_revenue - previous.total_revenue) / previous.total_revenue) * 100;
-    if (revenueChange > 5) revenueTrend = 'growing';
-    else if (revenueChange < -5) revenueTrend = 'shrinking';
+    if (revenueChange > 5) {
+revenueTrend = 'growing';
+} else if (revenueChange < -5) {
+revenueTrend = 'shrinking';
+}
 
     // Cost trend
     let costTrend: 'increasing' | 'stable' | 'decreasing' = 'stable';
     const costChange = ((recent.total_cost - previous.total_cost) / previous.total_cost) * 100;
-    if (costChange > 5) costTrend = 'increasing';
-    else if (costChange < -5) costTrend = 'decreasing';
+    if (costChange > 5) {
+costTrend = 'increasing';
+} else if (costChange < -5) {
+costTrend = 'decreasing';
+}
 
     // Simple forecast
     const avgMarginGrowth = marginTrend === 'improving' ? 0.05 : marginTrend === 'declining' ? -0.05 : 0;

@@ -230,8 +230,12 @@ function shouldScanFile(filePath: string): boolean {
   const ext = path.extname(filePath).toLowerCase();
   const fileName = path.basename(filePath);
 
-  if (!SCAN_EXTENSIONS.includes(ext)) return false;
-  if (EXCLUDE_FILES.includes(fileName)) return false;
+  if (!SCAN_EXTENSIONS.includes(ext)) {
+return false;
+}
+  if (EXCLUDE_FILES.includes(fileName)) {
+return false;
+}
 
   return true;
 }
@@ -263,7 +267,9 @@ function scanFile(filePath: string): PlaceholderMatch[] {
         });
 
         // Prevent infinite loops for non-global regex
-        if (!patternDef.pattern.global) break;
+        if (!patternDef.pattern.global) {
+break;
+}
       }
     });
   });

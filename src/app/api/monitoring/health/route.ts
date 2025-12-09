@@ -6,7 +6,7 @@
  * Returns system health status and diagnostics
  */
 
-/* eslint-disable no-unused-vars, no-undef, no-console */
+ 
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getMetrics, getHealthScore, getAverageLatency } from '@/lib/monitoring/error-metrics';

@@ -82,8 +82,12 @@ export class StreamingJSONParser {
     // Track braces to find complete JSON
     if (this.inJSON) {
       for (const char of chunk) {
-        if (char === '{') this.braceCount++;
-        if (char === '}') this.braceCount--;
+        if (char === '{') {
+this.braceCount++;
+}
+        if (char === '}') {
+this.braceCount--;
+}
       }
 
       // Complete JSON found

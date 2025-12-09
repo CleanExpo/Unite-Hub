@@ -44,7 +44,9 @@ export default function ComponentPreview({
   const [accentColor, setAccentColor] = useState("#3B82F6");
   const [showCopyFeedback, setShowCopyFeedback] = useState(false);
 
-  if (!component) return null;
+  if (!component) {
+return null;
+}
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(component.component_code);

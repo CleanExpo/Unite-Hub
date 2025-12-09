@@ -82,16 +82,22 @@ export async function GET(req: NextRequest) {
     let successCount = 0;
     let partialCount = 0;
     let failureCount = 0;
-    let totalValue = 0;
+    const totalValue = 0;
     let totalDuration = 0;
     const agentLeaderStats: Record<string, { coalitions: number; success: number }> = {};
 
     (history || []).forEach((coalition: any) => {
       totalCoalitions++;
 
-      if (coalition.outcome === 'success') successCount++;
-      if (coalition.outcome === 'partial_success') partialCount++;
-      if (coalition.outcome === 'failure') failureCount++;
+      if (coalition.outcome === 'success') {
+successCount++;
+}
+      if (coalition.outcome === 'partial_success') {
+partialCount++;
+}
+      if (coalition.outcome === 'failure') {
+failureCount++;
+}
 
       totalDuration += coalition.execution_time_ms || 0;
 

@@ -10,7 +10,7 @@
  * @module lib/logging/error-logger
  */
 
-/* eslint-disable no-undef, @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import winston from 'winston';
 import path from 'path';
 import { sanitizeFormat } from './sanitize';

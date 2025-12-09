@@ -11,7 +11,7 @@
  * 5. Nested async operations preserve context
  */
 
-/* eslint-disable no-undef */
+ 
 
 import { describe, it, expect, beforeEach } from 'vitest';
 import {

@@ -85,7 +85,9 @@ export async function getModulesWithProgress(
     .eq('is_published', true)
     .order('order_index');
 
-  if (!modules) return [];
+  if (!modules) {
+return [];
+}
 
   // Get user progress
   const { data: progress } = await supabase
@@ -129,7 +131,9 @@ export async function getModuleWithLessons(
     .eq('is_published', true)
     .single();
 
-  if (!module) return null;
+  if (!module) {
+return null;
+}
 
   const { data: lessons } = await supabase
     .from('training_lessons')
@@ -201,7 +205,9 @@ export async function updateLessonProgress(
       }
     );
 
-  if (error) return false;
+  if (error) {
+return false;
+}
 
   // Update module progress
   await recalculateModuleProgress(userId, organizationId, moduleId);
@@ -227,7 +233,9 @@ async function recalculateModuleProgress(
     .eq('module_id', moduleId)
     .eq('is_published', true);
 
-  if (!lessons || lessons.length === 0) return;
+  if (!lessons || lessons.length === 0) {
+return;
+}
 
   // Get completed lessons
   const { data: progress } = await supabase
@@ -275,7 +283,9 @@ async function checkAndAwardBadges(userId: string): Promise<void> {
     .select('*')
     .eq('is_active', true);
 
-  if (!badges) return;
+  if (!badges) {
+return;
+}
 
   // Get user's completed modules
   const { data: progress } = await supabase
@@ -295,7 +305,9 @@ async function checkAndAwardBadges(userId: string): Promise<void> {
 
   // Check each badge
   for (const badge of badges) {
-    if (earnedIds.has(badge.id)) continue;
+    if (earnedIds.has(badge.id)) {
+continue;
+}
 
     const criteria = badge.criteria as any;
     let earned = false;

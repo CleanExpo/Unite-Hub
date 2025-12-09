@@ -23,7 +23,9 @@ export default function FranchiseOpportunitiesPage() {
   const fetchData = async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session || !currentOrganization) return;
+      if (!session || !currentOrganization) {
+return;
+}
 
       const response = await fetch(`/api/franchise/opportunities?parentAgencyId=${currentOrganization.org_id}`, {
         headers: { 'Authorization': `Bearer ${session.access_token}` },

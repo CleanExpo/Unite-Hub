@@ -417,8 +417,12 @@ function requiresImmediateExecution(suggestion: string): boolean {
 function getMaxSeverity(
   factors: Array<{ severity: 'low' | 'medium' | 'high' }>
 ): 'low' | 'medium' | 'high' {
-  if (factors.some((f) => f.severity === 'high')) return 'high';
-  if (factors.some((f) => f.severity === 'medium')) return 'medium';
+  if (factors.some((f) => f.severity === 'high')) {
+return 'high';
+}
+  if (factors.some((f) => f.severity === 'medium')) {
+return 'medium';
+}
   return 'low';
 }
 

@@ -59,7 +59,9 @@ export async function GET(
       .eq('workspace_id', workspaceId)
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return NextResponse.json({ success: true, task });
   } catch (error: any) {
@@ -90,7 +92,9 @@ export async function PATCH(
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     logger.info('Task updated', { taskId: params.taskId });
 
@@ -119,7 +123,9 @@ export async function DELETE(
       .eq('id', params.taskId)
       .eq('workspace_id', workspaceId);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     logger.info('Task deleted', { taskId: params.taskId });
 

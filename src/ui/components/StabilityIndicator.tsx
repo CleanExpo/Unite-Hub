@@ -35,16 +35,28 @@ export function StabilityIndicator({
   showProgress = true,
 }: StabilityIndicatorProps) {
   const getScoreColor = (s: number) => {
-    if (s >= 80) return 'text-green-500';
-    if (s >= 60) return 'text-yellow-500';
-    if (s >= 40) return 'text-orange-500';
+    if (s >= 80) {
+return 'text-green-500';
+}
+    if (s >= 60) {
+return 'text-yellow-500';
+}
+    if (s >= 40) {
+return 'text-orange-500';
+}
     return 'text-red-500';
   };
 
   const getProgressColor = (s: number) => {
-    if (s >= 80) return '[&>div]:bg-green-500';
-    if (s >= 60) return '[&>div]:bg-yellow-500';
-    if (s >= 40) return '[&>div]:bg-orange-500';
+    if (s >= 80) {
+return '[&>div]:bg-green-500';
+}
+    if (s >= 60) {
+return '[&>div]:bg-yellow-500';
+}
+    if (s >= 40) {
+return '[&>div]:bg-orange-500';
+}
     return '[&>div]:bg-red-500';
   };
 
@@ -73,10 +85,18 @@ export function StabilityIndicator({
   };
 
   const getGrade = (s: number) => {
-    if (s >= 90) return 'A';
-    if (s >= 80) return 'B';
-    if (s >= 70) return 'C';
-    if (s >= 60) return 'D';
+    if (s >= 90) {
+return 'A';
+}
+    if (s >= 80) {
+return 'B';
+}
+    if (s >= 70) {
+return 'C';
+}
+    if (s >= 60) {
+return 'D';
+}
     return 'F';
   };
 
@@ -125,9 +145,15 @@ interface CompactStabilityProps {
 
 export function CompactStability({ label, score, icon }: CompactStabilityProps) {
   const getColor = (s: number) => {
-    if (s >= 80) return 'text-green-500 bg-green-500/10';
-    if (s >= 60) return 'text-yellow-500 bg-yellow-500/10';
-    if (s >= 40) return 'text-orange-500 bg-orange-500/10';
+    if (s >= 80) {
+return 'text-green-500 bg-green-500/10';
+}
+    if (s >= 60) {
+return 'text-yellow-500 bg-yellow-500/10';
+}
+    if (s >= 40) {
+return 'text-orange-500 bg-orange-500/10';
+}
     return 'text-red-500 bg-red-500/10';
   };
 
@@ -151,12 +177,24 @@ interface HeatmapCellProps {
 
 export function HeatmapCell({ value, label, size = 'md' }: HeatmapCellProps) {
   const getBackgroundColor = (v: number) => {
-    if (v >= 90) return 'bg-green-500';
-    if (v >= 80) return 'bg-green-400';
-    if (v >= 70) return 'bg-yellow-400';
-    if (v >= 60) return 'bg-yellow-500';
-    if (v >= 50) return 'bg-orange-400';
-    if (v >= 40) return 'bg-orange-500';
+    if (v >= 90) {
+return 'bg-green-500';
+}
+    if (v >= 80) {
+return 'bg-green-400';
+}
+    if (v >= 70) {
+return 'bg-yellow-400';
+}
+    if (v >= 60) {
+return 'bg-yellow-500';
+}
+    if (v >= 50) {
+return 'bg-orange-400';
+}
+    if (v >= 40) {
+return 'bg-orange-500';
+}
     return 'bg-red-500';
   };
 

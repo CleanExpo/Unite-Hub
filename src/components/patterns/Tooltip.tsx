@@ -68,7 +68,9 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
 
     // Handle show with delay
     const handleShow = () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (timeoutRef.current) {
+clearTimeout(timeoutRef.current);
+}
       timeoutRef.current = setTimeout(() => {
         setIsVisible(true);
         updatePosition();
@@ -77,7 +79,9 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
 
     // Handle hide
     const handleHide = () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (timeoutRef.current) {
+clearTimeout(timeoutRef.current);
+}
       setIsVisible(false);
     };
 
@@ -120,13 +124,17 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
     // Cleanup timeout on unmount
     useEffect(() => {
       return () => {
-        if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        if (timeoutRef.current) {
+clearTimeout(timeoutRef.current);
+}
       };
     }, []);
 
     // Reposition on window resize
     useEffect(() => {
-      if (!isVisible) return;
+      if (!isVisible) {
+return;
+}
 
       const handleResize = () => updatePosition();
       window.addEventListener('resize', handleResize);

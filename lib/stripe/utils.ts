@@ -133,7 +133,9 @@ export function canDowngrade(currentPlan: PlanTier): boolean {
  * Get next plan tier for upgrade
  */
 export function getUpgradePlan(currentPlan: PlanTier): PlanTier | null {
-  if (currentPlan === "starter") return "professional";
+  if (currentPlan === "starter") {
+return "professional";
+}
   return null;
 }
 
@@ -141,7 +143,9 @@ export function getUpgradePlan(currentPlan: PlanTier): PlanTier | null {
  * Get previous plan tier for downgrade
  */
 export function getDowngradePlan(currentPlan: PlanTier): PlanTier | null {
-  if (currentPlan === "professional") return "starter";
+  if (currentPlan === "professional") {
+return "starter";
+}
   return null;
 }
 

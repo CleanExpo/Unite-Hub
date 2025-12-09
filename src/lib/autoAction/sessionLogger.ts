@@ -148,7 +148,9 @@ export class SessionLogger {
     outcome?: SessionLog['outcome']
   ): SessionLog | undefined {
     const session = this.sessions.get(sessionId);
-    if (!session) return undefined;
+    if (!session) {
+return undefined;
+}
 
     session.endedAt = new Date();
     session.status = status;
@@ -411,7 +413,9 @@ export class SessionLogger {
     }
 
     const session = this.sessions.get(sessionId);
-    if (!session) return;
+    if (!session) {
+return;
+}
 
     const entry: LogEntry = {
       id: this.generateId(),

@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ success: true, data: copyList });
 
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error("Generate Copy GET error:", error);
     return NextResponse.json(
       { error: "Failed to fetch generated copy" },
@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error("Generate Copy POST error:", error);
     return NextResponse.json(
       { error: "Failed to generate copy" },
@@ -188,7 +188,7 @@ export async function PATCH(request: NextRequest) {
     }
 
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error("Generate Copy PATCH error:", error);
     return NextResponse.json(
       { error: "Failed to update copy" },

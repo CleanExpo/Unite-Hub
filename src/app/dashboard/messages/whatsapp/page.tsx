@@ -46,7 +46,9 @@ export default function WhatsAppMessagesPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (workspaceLoading) return;
+    if (workspaceLoading) {
+return;
+}
     fetchConversations();
   }, [workspaceId, activeTab, workspaceLoading]);
 

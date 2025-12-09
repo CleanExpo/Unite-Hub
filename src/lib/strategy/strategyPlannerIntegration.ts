@@ -345,14 +345,18 @@ export class StrategyPlannerIntegration {
     const visited = new Set<number>();
 
     for (let i = 0; i < steps.length; i++) {
-      if (visited.has(i)) continue;
+      if (visited.has(i)) {
+continue;
+}
 
       const group = [i];
       visited.add(i);
 
       // Find other steps with same dependencies
       for (let j = i + 1; j < steps.length; j++) {
-        if (visited.has(j)) continue;
+        if (visited.has(j)) {
+continue;
+}
 
         const depsI = steps[i].depends_on_steps || [];
         const depsJ = steps[j].depends_on_steps || [];

@@ -139,7 +139,9 @@ export async function getEntryById(entryId: string): Promise<CombatEntry | null>
     .eq('id', entryId)
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+return null;
+}
 
   return mapToEntry(data);
 }
@@ -196,9 +198,15 @@ function calculateRealityAdjustments(
 
   // Confidence adjustment based on data completeness
   let confidenceAdjustment = 1.0;
-  if (!raw.conversions) confidenceAdjustment *= 0.9;
-  if (!raw.cost) confidenceAdjustment *= 0.95;
-  if ((raw.impressions || 0) < 100) confidenceAdjustment *= 0.8;
+  if (!raw.conversions) {
+confidenceAdjustment *= 0.9;
+}
+  if (!raw.cost) {
+confidenceAdjustment *= 0.95;
+}
+  if ((raw.impressions || 0) < 100) {
+confidenceAdjustment *= 0.8;
+}
 
   return {
     adjustedImpressions,
@@ -246,10 +254,18 @@ function computeCompositeScore(
 
 function calculateConfidence(impressions: number): number {
   // Confidence increases with sample size
-  if (impressions < 100) return 0.3;
-  if (impressions < 500) return 0.5;
-  if (impressions < 1000) return 0.7;
-  if (impressions < 5000) return 0.85;
+  if (impressions < 100) {
+return 0.3;
+}
+  if (impressions < 500) {
+return 0.5;
+}
+  if (impressions < 1000) {
+return 0.7;
+}
+  if (impressions < 5000) {
+return 0.85;
+}
   return 0.95;
 }
 

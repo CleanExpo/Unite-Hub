@@ -73,13 +73,17 @@ export async function GET(req: NextRequest) {
 
       // Heartbeat to keep connection alive
       const heartbeatInterval = setInterval(() => {
-        if (!isActive) return;
+        if (!isActive) {
+return;
+}
         controller.enqueue(encoder.encode(`: heartbeat\n\n`));
       }, HEARTBEAT_INTERVAL);
 
       // Poll for new events
       const pollEvents = async () => {
-        if (!isActive) return;
+        if (!isActive) {
+return;
+}
 
         try {
           // Build query for new events
@@ -110,7 +114,9 @@ export async function GET(req: NextRequest) {
           } else if (events && events.length > 0) {
             // Send each event
             for (const event of events.reverse()) {
-              if (!isActive) break;
+              if (!isActive) {
+break;
+}
 
               const eventData = {
                 id: event.id,

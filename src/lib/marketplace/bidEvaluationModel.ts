@@ -63,8 +63,12 @@ class BidEvaluationModelImpl {
     agentSpecialties: string[],
     taskDomains: string[]
   ): number {
-    if (taskDomains.length === 0) return 100;
-    if (agentSpecialties.length === 0) return 0;
+    if (taskDomains.length === 0) {
+return 100;
+}
+    if (agentSpecialties.length === 0) {
+return 0;
+}
 
     const matches = taskDomains.filter((domain) =>
       agentSpecialties.includes(domain)

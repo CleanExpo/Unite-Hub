@@ -83,8 +83,12 @@ export function FounderMemoryGraph({
     : nodes;
 
   const getImportanceColor = (score: number) => {
-    if (score >= 80) return 'text-green-500';
-    if (score >= 60) return 'text-amber-500';
+    if (score >= 80) {
+return 'text-green-500';
+}
+    if (score >= 60) {
+return 'text-amber-500';
+}
     return 'text-gray-500';
   };
 

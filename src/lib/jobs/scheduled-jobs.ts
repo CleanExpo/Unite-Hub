@@ -25,7 +25,9 @@ class ScheduledJobsManager {
    * Initialize all scheduled jobs
    */
   async initialize(): Promise<void> {
-    if (this.isInitialized) return;
+    if (this.isInitialized) {
+return;
+}
 
     console.log('[Scheduled Jobs] Initializing...');
 

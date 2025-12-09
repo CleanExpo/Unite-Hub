@@ -81,8 +81,12 @@ export const SafetyLedgerTable: React.FC = () => {
 
   const getRiskColor = (riskBefore: number, riskAfter: number) => {
     const reduction = riskBefore - riskAfter;
-    if (reduction >= 30) return 'text-green-600 dark:text-green-400';
-    if (reduction >= 15) return 'text-blue-600 dark:text-blue-400';
+    if (reduction >= 30) {
+return 'text-green-600 dark:text-green-400';
+}
+    if (reduction >= 15) {
+return 'text-blue-600 dark:text-blue-400';
+}
     return 'text-text-secondary';
   };
 

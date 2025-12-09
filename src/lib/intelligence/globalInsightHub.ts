@@ -47,9 +47,15 @@ export function listGlobalInsights(opts?: {
   let res = globalInsights;
 
   // Apply filters
-  if (opts?.theme) res = res.filter(i => i.theme === opts.theme);
-  if (opts?.severity) res = res.filter(i => i.severity === opts.severity);
-  if (opts?.minConfidence !== undefined) res = res.filter(i => i.confidence >= opts.minConfidence);
+  if (opts?.theme) {
+res = res.filter(i => i.theme === opts.theme);
+}
+  if (opts?.severity) {
+res = res.filter(i => i.severity === opts.severity);
+}
+  if (opts?.minConfidence !== undefined) {
+res = res.filter(i => i.confidence >= opts.minConfidence);
+}
 
   // Sort
   const sortBy = opts?.sortBy ?? 'recency';
@@ -100,7 +106,9 @@ export function getInsightsByTheme(theme: GlobalInsight['theme']): GlobalInsight
  */
 export function findRelatedInsights(insightId: string): GlobalInsight[] {
   const source = globalInsights.find(i => i.id === insightId);
-  if (!source) return [];
+  if (!source) {
+return [];
+}
 
   return globalInsights
     .filter(i => i.id !== insightId && i.theme === source.theme)
@@ -112,7 +120,9 @@ export function findRelatedInsights(insightId: string): GlobalInsight[] {
  */
 export function updateInsight(id: string, update: Partial<Omit<GlobalInsight, 'id' | 'createdAt'>>): GlobalInsight | null {
   const insight = globalInsights.find(i => i.id === id);
-  if (!insight) return null;
+  if (!insight) {
+return null;
+}
 
   Object.assign(insight, update);
   return insight;

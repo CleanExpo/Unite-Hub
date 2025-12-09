@@ -168,7 +168,9 @@ export function runNavigationAudit(rootDir: string = '.'): NavigationAudit {
     // Check if any defined route matches
     return !definedRoutes.some(defined => {
       // Exact match
-      if (route === defined) return true;
+      if (route === defined) {
+return true;
+}
       // Dynamic route match (e.g., /projects/[id] matches /projects/123)
       if (defined.includes('[')) {
         const pattern = defined.replace(/\[.*?\]/g, '[^/]+');
@@ -182,7 +184,9 @@ export function runNavigationAudit(rootDir: string = '.'): NavigationAudit {
   // Find orphan pages (defined but never linked)
   const orphanPages = definedRoutes.filter(route => {
     // Skip root
-    if (route === '/') return false;
+    if (route === '/') {
+return false;
+}
     // Check if linked anywhere
     return !linked.some(link => link === route || link.startsWith(route + '/'));
   });

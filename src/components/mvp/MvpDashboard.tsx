@@ -296,7 +296,9 @@ export function MvpDashboard({ className }: MvpDashboardProps) {
   const workspaceId = currentOrganization?.org_id;
 
   const fetchDashboard = useCallback(async () => {
-    if (!session?.access_token || !workspaceId) return;
+    if (!session?.access_token || !workspaceId) {
+return;
+}
 
     try {
       const response = await fetch(`/api/mvp/dashboard?workspaceId=${workspaceId}`, {
@@ -349,7 +351,9 @@ export function MvpDashboard({ className }: MvpDashboardProps) {
     );
   }
 
-  if (!data) return null;
+  if (!data) {
+return null;
+}
 
   return (
     <div className={className}>

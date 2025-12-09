@@ -25,7 +25,9 @@ export async function getMandates(tenantId: string): Promise<AgentMandate[]> {
     .eq('is_active', true)
     .order('agent_name');
 
-  if (error) return [];
+  if (error) {
+return [];
+}
 
   return (data || []).map(row => ({
     id: row.id,
@@ -58,7 +60,9 @@ export async function updateMandate(
     .eq('id', mandateId)
     .single();
 
-  if (!current) return false;
+  if (!current) {
+return false;
+}
 
   // Update mandate
   const { error } = await supabase
@@ -69,7 +73,9 @@ export async function updateMandate(
     })
     .eq('id', mandateId);
 
-  if (error) return false;
+  if (error) {
+return false;
+}
 
   // Log the change
   await supabase.from('mandate_change_logs').insert({

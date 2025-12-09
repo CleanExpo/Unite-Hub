@@ -183,9 +183,15 @@ export class OpportunityScoringService {
     const isHighImpact = impact > 50;
     const isLowEffort = effort < 50;
 
-    if (isHighImpact && isLowEffort) return 'quick_win';
-    if (isHighImpact && !isLowEffort) return 'strategic';
-    if (!isHighImpact && !isLowEffort) return 'long_term';
+    if (isHighImpact && isLowEffort) {
+return 'quick_win';
+}
+    if (isHighImpact && !isLowEffort) {
+return 'strategic';
+}
+    if (!isHighImpact && !isLowEffort) {
+return 'long_term';
+}
     return 'low_priority';
   }
 

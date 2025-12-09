@@ -106,7 +106,9 @@ class AnimationOrchestratorClass {
    * Initialize the orchestrator and register all presets
    */
   initialize(customConfig?: Partial<OrchestratorConfig>): void {
-    if (this.initialized) return;
+    if (this.initialized) {
+return;
+}
 
     // Register all animation presets
     registerClipPresets();
@@ -166,11 +168,15 @@ class AnimationOrchestratorClass {
     context?: AnimationContext
   ): AnimationPreset | null {
     // If animations are off, return null
-    if (this.config.mode === 'off') return null;
+    if (this.config.mode === 'off') {
+return null;
+}
 
     // Get presets for category
     const presets = AnimationRegistry.getPresetsByCategory(category);
-    if (presets.length === 0) return null;
+    if (presets.length === 0) {
+return null;
+}
 
     // Filter by intensity based on mode
     let filteredPresets = presets;
@@ -180,7 +186,9 @@ class AnimationOrchestratorClass {
       filteredPresets = presets.filter(p => p.intensity === 'subtle').slice(0, 1);
     }
 
-    if (filteredPresets.length === 0) filteredPresets = presets;
+    if (filteredPresets.length === 0) {
+filteredPresets = presets;
+}
 
     // Check persona preferences
     const personaPrefs = personaPreferences[this.config.persona];

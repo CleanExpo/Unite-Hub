@@ -71,7 +71,9 @@ export default function FounderPostingExecutionPage() {
   }, [workspaceId]);
 
   const loadDashboardData = async () => {
-    if (!workspaceId) return;
+    if (!workspaceId) {
+return;
+}
     setIsLoading(true);
     try {
       const [statsRes, schedulerRes, preflightsRes, executionsRes, rollbacksRes] = await Promise.all([
@@ -114,7 +116,9 @@ export default function FounderPostingExecutionPage() {
   };
 
   const processSchedules = async () => {
-    if (!workspaceId) return;
+    if (!workspaceId) {
+return;
+}
     setIsProcessing(true);
     try {
       const res = await fetch('/api/posting-execution/scheduler', {
@@ -154,7 +158,9 @@ export default function FounderPostingExecutionPage() {
 
   const handleRollback = async (executionId: string) => {
     const reason = prompt('Enter rollback reason:');
-    if (!reason) return;
+    if (!reason) {
+return;
+}
 
     try {
       await fetch('/api/posting-execution/rollback', {

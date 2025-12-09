@@ -165,7 +165,9 @@ export class AnomalyDetectionEngine {
    * Calculate Z-score for a value
    */
   private calculateZScore(value: number, metrics: StatisticalMetrics): number {
-    if (metrics.stdDev === 0) return 0;
+    if (metrics.stdDev === 0) {
+return 0;
+}
     return (value - metrics.mean) / metrics.stdDev;
   }
 
@@ -177,7 +179,9 @@ export class AnomalyDetectionEngine {
     currentIndex: number,
     metrics: StatisticalMetrics
   ): boolean {
-    if (currentIndex < 3) return false;
+    if (currentIndex < 3) {
+return false;
+}
 
     // Calculate recent trend
     const window = Math.min(5, currentIndex);
@@ -200,7 +204,9 @@ export class AnomalyDetectionEngine {
     allPoints: AnomalyDataPoint[],
     currentIndex: number
   ): number {
-    if (!point.context) return 0;
+    if (!point.context) {
+return 0;
+}
 
     const context = point.context;
     let contextScore = 0;
@@ -377,7 +383,9 @@ export class AnomalyDetectionEngine {
     dataPoints: AnomalyDataPoint[],
     anomalies: DetectedAnomaly[]
   ): number {
-    if (dataPoints.length === 0) return 0;
+    if (dataPoints.length === 0) {
+return 0;
+}
     return anomalies.length / dataPoints.length;
   }
 

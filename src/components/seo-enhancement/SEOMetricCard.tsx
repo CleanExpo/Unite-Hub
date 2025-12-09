@@ -42,7 +42,9 @@ export function SEOMetricCard({
   };
 
   const getTrendIcon = () => {
-    if (!trend) return null;
+    if (!trend) {
+return null;
+}
     switch (trend.direction) {
       case 'up':
         return <TrendingUp className="h-4 w-4 text-green-500" />;

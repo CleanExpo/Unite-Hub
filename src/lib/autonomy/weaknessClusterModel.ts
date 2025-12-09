@@ -192,7 +192,9 @@ class WeaknessClusterModel {
       const agentMetrics: Record<string, any> = {};
 
       for (const run of runs) {
-        if (!run.active_agents) continue;
+        if (!run.active_agents) {
+continue;
+}
 
         for (const agent of run.active_agents) {
           if (!agentMetrics[agent]) {
@@ -219,7 +221,9 @@ class WeaknessClusterModel {
 
       const baselineMetrics: Record<string, any> = {};
       for (const run of baselineRuns) {
-        if (!run.active_agents) continue;
+        if (!run.active_agents) {
+continue;
+}
 
         for (const agent of run.active_agents) {
           if (!baselineMetrics[agent]) {
@@ -508,7 +512,9 @@ class WeaknessClusterModel {
    * Private: Calculate trend from risk scores
    */
   private calculateTrend(scores: number[]): 'improving' | 'stable' | 'worsening' {
-    if (scores.length < 3) return 'stable';
+    if (scores.length < 3) {
+return 'stable';
+}
 
     const recent = scores.slice(-3);
     const older = scores.slice(0, 3);
@@ -518,8 +524,12 @@ class WeaknessClusterModel {
 
     const change = ((recentAvg - olderAvg) / olderAvg) * 100;
 
-    if (change > 10) return 'worsening';
-    if (change < -10) return 'improving';
+    if (change > 10) {
+return 'worsening';
+}
+    if (change < -10) {
+return 'improving';
+}
 
     return 'stable';
   }
@@ -528,7 +538,9 @@ class WeaknessClusterModel {
    * Private: Calculate average execution time for tasks
    */
   private calculateAverageExecutionTime(tasks: any[]): number {
-    if (tasks.length === 0) return 0;
+    if (tasks.length === 0) {
+return 0;
+}
 
     const totalTime = tasks.reduce((sum, task) => {
       return sum + this.calculateTaskExecutionTime(task);
@@ -541,7 +553,9 @@ class WeaknessClusterModel {
    * Private: Calculate execution time for a task
    */
   private calculateTaskExecutionTime(task: any): number {
-    if (!task.started_at || !task.completed_at) return 0;
+    if (!task.started_at || !task.completed_at) {
+return 0;
+}
 
     const start = new Date(task.started_at).getTime();
     const end = new Date(task.completed_at).getTime();

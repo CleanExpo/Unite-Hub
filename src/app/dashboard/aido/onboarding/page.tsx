@@ -62,17 +62,23 @@ export default function AIDOOnboardingPage() {
     if (searchParams.get('gsc_connected') === 'true') {
       setGscConnected(true);
       const step = searchParams.get('step');
-      if (step) setCurrentStep(parseInt(step));
+      if (step) {
+setCurrentStep(parseInt(step));
+}
     }
     if (searchParams.get('gbp_connected') === 'true') {
       setGbpConnected(true);
       const step = searchParams.get('step');
-      if (step) setCurrentStep(parseInt(step));
+      if (step) {
+setCurrentStep(parseInt(step));
+}
     }
     if (searchParams.get('ga4_connected') === 'true') {
       setGa4Connected(true);
       const step = searchParams.get('step');
-      if (step) setCurrentStep(parseInt(step));
+      if (step) {
+setCurrentStep(parseInt(step));
+}
     }
   }, [searchParams]);
 

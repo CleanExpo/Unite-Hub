@@ -155,7 +155,9 @@ export function RevenueByStageChart({
         <div className="flex flex-wrap gap-4">
           {Object.entries(STAGE_LABELS).map(([key, label]) => {
             const hasData = stages.some((s) => s.stage === key);
-            if (!hasData && key !== 'unknown') return null;
+            if (!hasData && key !== 'unknown') {
+return null;
+}
 
             return (
               <div key={key} className="flex items-center gap-2 text-xs text-gray-400">

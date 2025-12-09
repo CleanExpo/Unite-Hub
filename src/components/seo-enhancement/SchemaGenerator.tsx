@@ -51,7 +51,9 @@ export function SchemaGenerator({
   const [copied, setCopied] = useState(false);
 
   const handleGenerate = async () => {
-    if (!url || !schemaType) return;
+    if (!url || !schemaType) {
+return;
+}
 
     setLoading(true);
     setError(null);
@@ -94,7 +96,9 @@ export function SchemaGenerator({
   };
 
   const copyToClipboard = async () => {
-    if (!generatedSchema?.scriptTag) return;
+    if (!generatedSchema?.scriptTag) {
+return;
+}
 
     try {
       await navigator.clipboard.writeText(generatedSchema.scriptTag);

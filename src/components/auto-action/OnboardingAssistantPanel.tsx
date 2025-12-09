@@ -81,7 +81,9 @@ export function OnboardingAssistantPanel({
 
   // Fetch logs for current session
   const fetchLogs = useCallback(async () => {
-    if (!sessionId) return;
+    if (!sessionId) {
+return;
+}
 
     try {
       const response = await fetch(

@@ -582,10 +582,18 @@ export function analyzeProfile(profile: LeakSignalProfile): ProfileInsight[] {
 
   const getLevel = (score: number, invertForRisk = false): ProfileInsight['level'] => {
     const effective = invertForRisk ? 100 - score : score;
-    if (effective < 20) return 'critical';
-    if (effective < 40) return 'low';
-    if (effective < 60) return 'medium';
-    if (effective < 80) return 'high';
+    if (effective < 20) {
+return 'critical';
+}
+    if (effective < 40) {
+return 'low';
+}
+    if (effective < 60) {
+return 'medium';
+}
+    if (effective < 80) {
+return 'high';
+}
     return 'excellent';
   };
 

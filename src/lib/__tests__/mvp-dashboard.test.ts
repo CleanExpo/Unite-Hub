@@ -347,8 +347,12 @@ describe('Dashboard Widget Rendering', () => {
 describe('Dashboard Conditional Logic', () => {
   it('should determine health status from score', () => {
     const getStatus = (score: number) => {
-      if (score >= 80) return 'healthy';
-      if (score >= 50) return 'degraded';
+      if (score >= 80) {
+return 'healthy';
+}
+      if (score >= 50) {
+return 'degraded';
+}
       return 'unhealthy';
     };
 
@@ -382,8 +386,12 @@ describe('Dashboard Conditional Logic', () => {
     const sorted = [...defaultWidgets].sort((a, b) => {
       const aIndex = userOrder.indexOf(a);
       const bIndex = userOrder.indexOf(b);
-      if (aIndex === -1) return 1;
-      if (bIndex === -1) return -1;
+      if (aIndex === -1) {
+return 1;
+}
+      if (bIndex === -1) {
+return -1;
+}
       return aIndex - bIndex;
     });
 

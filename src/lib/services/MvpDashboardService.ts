@@ -180,9 +180,14 @@ export class MvpDashboardService {
 
     // Calculate health score
     let score = 100;
-    if (!dbHealthy) score -= 40;
-    if (dbLatency > 2000) score -= 20;
-    else if (dbLatency > 1000) score -= 10;
+    if (!dbHealthy) {
+score -= 40;
+}
+    if (dbLatency > 2000) {
+score -= 20;
+} else if (dbLatency > 1000) {
+score -= 10;
+}
 
     const status = score >= 80 ? 'healthy' : score >= 50 ? 'degraded' : 'unhealthy';
 
@@ -319,7 +324,9 @@ export class MvpDashboardService {
       .eq('is_active', true)
       .order('default_order', { ascending: true });
 
-    if (error) throw new Error(`Failed to fetch widgets: ${error.message}`);
+    if (error) {
+throw new Error(`Failed to fetch widgets: ${error.message}`);
+}
     return widgets || [];
   }
 
@@ -383,7 +390,9 @@ export class MvpDashboardService {
       .select()
       .single();
 
-    if (error) throw new Error(`Failed to update preferences: ${error.message}`);
+    if (error) {
+throw new Error(`Failed to update preferences: ${error.message}`);
+}
 
     return {
       id: prefs.id,
@@ -411,7 +420,9 @@ export class MvpDashboardService {
       .order('created_at', { ascending: false })
       .limit(limit);
 
-    if (error) throw new Error(`Failed to fetch notifications: ${error.message}`);
+    if (error) {
+throw new Error(`Failed to fetch notifications: ${error.message}`);
+}
     return notifications || [];
   }
 
@@ -427,7 +438,9 @@ export class MvpDashboardService {
       .eq('id', notificationId)
       .eq('user_id', userId);
 
-    if (error) throw new Error(`Failed to mark notification read: ${error.message}`);
+    if (error) {
+throw new Error(`Failed to mark notification read: ${error.message}`);
+}
   }
 
   /**
@@ -442,7 +455,9 @@ export class MvpDashboardService {
       .eq('id', notificationId)
       .eq('user_id', userId);
 
-    if (error) throw new Error(`Failed to dismiss notification: ${error.message}`);
+    if (error) {
+throw new Error(`Failed to dismiss notification: ${error.message}`);
+}
   }
 
   /**
@@ -483,7 +498,9 @@ export class MvpDashboardService {
       .select()
       .single();
 
-    if (error) throw new Error(`Failed to create notification: ${error.message}`);
+    if (error) {
+throw new Error(`Failed to create notification: ${error.message}`);
+}
     return data;
   }
 }

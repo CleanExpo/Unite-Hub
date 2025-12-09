@@ -129,7 +129,9 @@ async function fetchOnPageData(domain: string): Promise<{
   duplicateDescriptions: number;
 } | null> {
   const client = getDataForSEOClient();
-  if (!client) return null;
+  if (!client) {
+return null;
+}
 
   try {
     const data = await client.getOnPageScore(domain);
@@ -157,7 +159,9 @@ async function fetchBacklinkData(domain: string): Promise<{
   rank: number;
 } | null> {
   const client = getDataForSEOClient();
-  if (!client) return null;
+  if (!client) {
+return null;
+}
 
   try {
     const data = await client.getBacklinks(domain);
@@ -273,7 +277,7 @@ async function analyzeContentSEO(url: string): Promise<{
   issues: SEOIssue[];
 }> {
   const issues: SEOIssue[] = [];
-  let score = 75; // Default score
+  const score = 75; // Default score
 
   // In production, this would analyze actual page content
   // For now, provide general recommendations
@@ -508,7 +512,9 @@ export async function createAuditJob(params: CreateAuditParams): Promise<SEOAudi
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to create audit job: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to create audit job: ${error.message}`);
+}
 
   // If not scheduled, run immediately
   if (!params.scheduledAt) {
@@ -614,7 +620,9 @@ export async function runAudit(jobId: string): Promise<SEOAuditResult> {
       .select()
       .single();
 
-    if (resultError) throw new Error(`Failed to save audit results: ${resultError.message}`);
+    if (resultError) {
+throw new Error(`Failed to save audit results: ${resultError.message}`);
+}
 
     // Update job status
     await supabase
@@ -649,7 +657,9 @@ export async function getAuditJob(jobId: string): Promise<SEOAuditJob | null> {
     .eq('id', jobId)
     .single();
 
-  if (error) return null;
+  if (error) {
+return null;
+}
   return data;
 }
 
@@ -665,7 +675,9 @@ export async function getAuditResults(jobId: string): Promise<SEOAuditResult | n
     .eq('audit_job_id', jobId)
     .single();
 
-  if (error) return null;
+  if (error) {
+return null;
+}
   return data;
 }
 
@@ -694,7 +706,9 @@ export async function getAuditHistory(
 
   const { data, error } = await query;
 
-  if (error) throw new Error(`Failed to fetch audit history: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to fetch audit history: ${error.message}`);
+}
   return data || [];
 }
 
@@ -723,7 +737,9 @@ export async function getDomainScoreTrends(
     .gte('created_at', startDate.toISOString())
     .order('created_at', { ascending: true });
 
-  if (error) throw new Error(`Failed to fetch score trends: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to fetch score trends: ${error.message}`);
+}
 
   return (data || [])
     .filter((item: { seo_audit_results: Array<{ overall_score: number }> }) => item.seo_audit_results?.length > 0)

@@ -34,7 +34,9 @@ export default function Toast({
     return () => clearTimeout(timer);
   }, [duration, onClose]);
 
-  if (!visible) return null;
+  if (!visible) {
+return null;
+}
 
   const typeStyles = {
     success: 'bg-green-600 text-white',

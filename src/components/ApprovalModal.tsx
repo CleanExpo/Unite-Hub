@@ -29,7 +29,9 @@ export function ApprovalModal({
   const [editedText, setEditedText] = useState(content?.generatedText || "");
   const [isEditing, setIsEditing] = useState(false);
 
-  if (!content) return null;
+  if (!content) {
+return null;
+}
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

@@ -299,7 +299,9 @@ class ExecutionOptimizer {
     }
 
     const visit = (stepId: string) => {
-      if (visited.has(stepId)) return;
+      if (visited.has(stepId)) {
+return;
+}
       visited.add(stepId);
 
       // Visit dependencies first
@@ -334,7 +336,9 @@ class ExecutionOptimizer {
       const agent = selectedAgents[step.stepId];
       const baseline = this.agentBaselines[agent as keyof typeof this.agentBaselines];
 
-      if (!baseline) continue;
+      if (!baseline) {
+continue;
+}
 
       // Risk = complexity * (1 - success rate) * risk weights
       const complexityRisk = step.estimatedComplexity / 10;

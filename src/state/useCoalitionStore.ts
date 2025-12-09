@@ -113,11 +113,17 @@ export const useCoalitionStore = create<CoalitionStore>((set, get) => (
 
     synergyStatus: () => {
       const { activeCoalition } = get();
-      if (!activeCoalition) return 'none';
+      if (!activeCoalition) {
+return 'none';
+}
 
       const score = activeCoalition.synergyScore;
-      if (score >= 80) return 'high';
-      if (score >= 65) return 'medium';
+      if (score >= 80) {
+return 'high';
+}
+      if (score >= 65) {
+return 'medium';
+}
       return 'low';
     },
 

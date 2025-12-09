@@ -253,7 +253,9 @@ export default function StrategyWorkspace({ organizationId }: StrategyWorkspaceP
   // Group nodes by type for visualization
   const nodesByType = nodes.reduce((acc, node) => {
     const type = node.node_type;
-    if (!acc[type]) acc[type] = [];
+    if (!acc[type]) {
+acc[type] = [];
+}
     acc[type].push(node);
     return acc;
   }, {} as Record<string, StrategyNode[]>);

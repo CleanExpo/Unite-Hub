@@ -296,7 +296,6 @@ function DemoCard({ demo, onClick }: { demo: VideoDemo; onClick: () => void }) {
       {/* Thumbnail */}
       <div className="relative aspect-video bg-slate-950">
         {demo.thumbnailUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={demo.thumbnailUrl}
             alt={demo.title}

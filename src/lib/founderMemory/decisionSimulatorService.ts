@@ -225,10 +225,14 @@ Return JSON (IMPORTANT: This is a SIMULATION, not a guarantee):
       });
 
       const textBlock = response.content.find((c) => c.type === 'text');
-      if (!textBlock) throw new Error('No response');
+      if (!textBlock) {
+throw new Error('No response');
+}
 
       const jsonMatch = textBlock.text.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) throw new Error('No JSON found');
+      if (!jsonMatch) {
+throw new Error('No JSON found');
+}
 
       const result = JSON.parse(jsonMatch[0]);
 
@@ -300,7 +304,9 @@ Return JSON (IMPORTANT: This is a SIMULATION, not a guarantee):
       .eq('workspace_id', workspaceId)
       .single();
 
-    if (error || !data) return null;
+    if (error || !data) {
+return null;
+}
     return this.mapDbToScenario(data);
   }
 
@@ -336,7 +342,9 @@ Return JSON (IMPORTANT: This is a SIMULATION, not a guarantee):
 
     const { data, error } = await query;
 
-    if (error || !data) return [];
+    if (error || !data) {
+return [];
+}
     return data.map(this.mapDbToScenario);
   }
 
@@ -376,7 +384,9 @@ Return JSON (IMPORTANT: This is a SIMULATION, not a guarantee):
    */
   async reSimulate(scenarioId: string, workspaceId: string): Promise<DecisionScenario | null> {
     const scenario = await this.getScenario(scenarioId, workspaceId);
-    if (!scenario) return null;
+    if (!scenario) {
+return null;
+}
 
     const outcomes = await this.runSimulation(
       scenario.founderId,
@@ -396,7 +406,9 @@ Return JSON (IMPORTANT: This is a SIMULATION, not a guarantee):
       .select()
       .single();
 
-    if (error || !data) return null;
+    if (error || !data) {
+return null;
+}
     return this.mapDbToScenario(data);
   }
 

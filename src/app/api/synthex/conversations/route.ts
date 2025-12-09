@@ -31,28 +31,44 @@ export async function GET(request: NextRequest) {
     const filters: ConversationFilters = {};
 
     const channel = searchParams.get('channel');
-    if (channel) filters.channel = channel;
+    if (channel) {
+filters.channel = channel;
+}
 
     const status = searchParams.get('status');
-    if (status) filters.status = status;
+    if (status) {
+filters.status = status;
+}
 
     const sentiment = searchParams.get('sentiment');
-    if (sentiment) filters.sentiment = sentiment;
+    if (sentiment) {
+filters.sentiment = sentiment;
+}
 
     const contactId = searchParams.get('contactId');
-    if (contactId) filters.contactId = contactId;
+    if (contactId) {
+filters.contactId = contactId;
+}
 
     const owner = searchParams.get('owner');
-    if (owner) filters.primaryOwner = owner;
+    if (owner) {
+filters.primaryOwner = owner;
+}
 
     const search = searchParams.get('search');
-    if (search) filters.search = search;
+    if (search) {
+filters.search = search;
+}
 
     const limit = searchParams.get('limit');
-    if (limit) filters.limit = parseInt(limit, 10);
+    if (limit) {
+filters.limit = parseInt(limit, 10);
+}
 
     const offset = searchParams.get('offset');
-    if (offset) filters.offset = parseInt(offset, 10);
+    if (offset) {
+filters.offset = parseInt(offset, 10);
+}
 
     const result = await getConversations(tenantId, filters);
 

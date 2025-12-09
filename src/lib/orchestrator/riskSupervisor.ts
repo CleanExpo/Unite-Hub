@@ -60,7 +60,9 @@ export class RiskSupervisor {
    * Assess overall task risk from step risks
    */
   assessTaskRisk(steps: Array<{ riskScore: number; assignedAgent: string }>): number {
-    if (steps.length === 0) return 0;
+    if (steps.length === 0) {
+return 0;
+}
 
     // Weighted average (later steps weighted more)
     const weights = steps.map((_, idx) => (idx + 1) / steps.length);

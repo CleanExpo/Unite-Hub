@@ -24,7 +24,9 @@ export default function LoadBalancerPage() {
   const fetchData = async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) {
+return;
+}
 
       const response = await fetch('/api/load/snapshots', {
         headers: { 'Authorization': `Bearer ${session.access_token}` },
@@ -42,8 +44,12 @@ export default function LoadBalancerPage() {
   };
 
   const getLoadColor = (load: number) => {
-    if (load >= 0.8) return 'text-red-600';
-    if (load >= 0.6) return 'text-amber-600';
+    if (load >= 0.8) {
+return 'text-red-600';
+}
+    if (load >= 0.6) {
+return 'text-amber-600';
+}
     return 'text-green-600';
   };
 

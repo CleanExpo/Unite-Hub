@@ -144,9 +144,15 @@ function calculateRiskLevel(signals: AggregatedSignals): RiskLevel {
   const criticalAlerts = signals.alerts.filter(a => a.severity === 'critical').length;
   const highAlerts = signals.alerts.filter(a => a.severity === 'high').length;
 
-  if (criticalAlerts > 0) return 'critical';
-  if (highAlerts >= 3) return 'high';
-  if (highAlerts >= 1) return 'medium';
+  if (criticalAlerts > 0) {
+return 'critical';
+}
+  if (highAlerts >= 3) {
+return 'high';
+}
+  if (highAlerts >= 1) {
+return 'medium';
+}
 
   // Check health scores
   const scores = [
@@ -159,8 +165,12 @@ function calculateRiskLevel(signals: AggregatedSignals): RiskLevel {
 
   const avgScore = scores.reduce((a, b) => a + b, 0) / scores.length;
 
-  if (avgScore < 40) return 'high';
-  if (avgScore < 60) return 'medium';
+  if (avgScore < 40) {
+return 'high';
+}
+  if (avgScore < 60) {
+return 'medium';
+}
   return 'low';
 }
 
@@ -171,9 +181,15 @@ function calculateOpportunityLevel(signals: AggregatedSignals): OpportunityLevel
   const highOpportunities = signals.opportunities.filter(o => o.confidence >= 0.8).length;
   const mediumOpportunities = signals.opportunities.filter(o => o.confidence >= 0.6 && o.confidence < 0.8).length;
 
-  if (highOpportunities >= 3) return 'high';
-  if (highOpportunities >= 1 || mediumOpportunities >= 3) return 'medium';
-  if (mediumOpportunities >= 1 || signals.opportunities.length > 0) return 'low';
+  if (highOpportunities >= 3) {
+return 'high';
+}
+  if (highOpportunities >= 1 || mediumOpportunities >= 3) {
+return 'medium';
+}
+  if (mediumOpportunities >= 1 || signals.opportunities.length > 0) {
+return 'low';
+}
   return 'none';
 }
 

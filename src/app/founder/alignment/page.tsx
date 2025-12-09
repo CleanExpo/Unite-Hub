@@ -29,7 +29,9 @@ export default function AlignmentPage() {
   const fetchData = async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session || !currentOrganization) return;
+      if (!session || !currentOrganization) {
+return;
+}
 
       const response = await fetch(`/api/alignment/snapshot?tenantId=${currentOrganization.org_id}`, {
         headers: { 'Authorization': `Bearer ${session.access_token}` },

@@ -463,12 +463,16 @@ export class UsageAnalyticsService {
       // Check for anomalies in each category
       for (const [category, usageByDate] of dailyUsage) {
         const values = Array.from(usageByDate.values());
-        if (values.length < 7) continue;
+        if (values.length < 7) {
+continue;
+}
 
         const mean = values.reduce((a, b) => a + b, 0) / values.length;
         const stdDev = this.calculateStdDev(values);
 
-        if (stdDev === 0) continue;
+        if (stdDev === 0) {
+continue;
+}
 
         // Check latest day
         const latestDate = Array.from(usageByDate.keys()).sort().pop()!;
@@ -617,7 +621,9 @@ export class UsageAnalyticsService {
 
   private linearRegression(values: number[]): number {
     const n = values.length;
-    if (n < 2) return values[values.length - 1] || 0;
+    if (n < 2) {
+return values[values.length - 1] || 0;
+}
 
     let sumX = 0,
       sumY = 0,
@@ -639,7 +645,9 @@ export class UsageAnalyticsService {
 
   private calculateRegression(values: number[]): { slope: number; intercept: number; r2: number } {
     const n = values.length;
-    if (n < 2) return { slope: 0, intercept: values[0] || 0, r2: 0 };
+    if (n < 2) {
+return { slope: 0, intercept: values[0] || 0, r2: 0 };
+}
 
     let sumX = 0,
       sumY = 0,
@@ -675,7 +683,9 @@ export class UsageAnalyticsService {
   }
 
   private calculateStdDev(values: number[]): number {
-    if (values.length < 2) return 0;
+    if (values.length < 2) {
+return 0;
+}
 
     const mean = values.reduce((a, b) => a + b, 0) / values.length;
     const squaredDiffs = values.map((v) => Math.pow(v - mean, 2));
@@ -700,7 +710,7 @@ export class UsageAnalyticsService {
 
     for (const clusterDef of clusterDefs) {
       const clusterWorkspaces: string[] = [];
-      let totalUsage: UsageProfile = {
+      const totalUsage: UsageProfile = {
         emails: 0,
         ai_requests: 0,
         contacts: 0,
@@ -720,7 +730,9 @@ export class UsageAnalyticsService {
         }
       }
 
-      if (clusterWorkspaces.length === 0) continue;
+      if (clusterWorkspaces.length === 0) {
+continue;
+}
 
       // Calculate average
       const avgUsage: UsageProfile = {
@@ -738,10 +750,15 @@ export class UsageAnalyticsService {
       // Determine usage level
       const avgTotal = Object.values(avgUsage).reduce((a, b) => a + b, 0);
       let usageLevel: 'low' | 'medium' | 'high' | 'very_high';
-      if (avgTotal < 100) usageLevel = 'low';
-      else if (avgTotal < 500) usageLevel = 'medium';
-      else if (avgTotal < 2000) usageLevel = 'high';
-      else usageLevel = 'very_high';
+      if (avgTotal < 100) {
+usageLevel = 'low';
+} else if (avgTotal < 500) {
+usageLevel = 'medium';
+} else if (avgTotal < 2000) {
+usageLevel = 'high';
+} else {
+usageLevel = 'very_high';
+}
 
       clusters.push({
         cluster_id: clusterDef.name.toLowerCase().replace(/\s+/g, '_'),

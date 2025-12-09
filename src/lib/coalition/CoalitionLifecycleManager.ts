@@ -250,7 +250,9 @@ export class CoalitionLifecycleManager {
   async dissolveCoalition(coalitionId: string, reason: string): Promise<void> {
     const state = this.activeCoalitions.get(coalitionId);
 
-    if (!state) return;
+    if (!state) {
+return;
+}
 
     state.status = 'dissolved';
     state.completedAt = new Date().toISOString();

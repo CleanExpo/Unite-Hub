@@ -100,8 +100,14 @@ export function calculateRealityScore(inputs: ScoreInputs): RealityScoreResult {
  * Get score label and color
  */
 export function getScoreLabel(score: number): { label: string; color: string } {
-  if (score < 30) return { label: "Early Stage", color: "text-red-600" };
-  if (score < 60) return { label: "Building", color: "text-yellow-600" };
-  if (score < 80) return { label: "Progressing", color: "text-blue-600" };
+  if (score < 30) {
+return { label: "Early Stage", color: "text-red-600" };
+}
+  if (score < 60) {
+return { label: "Building", color: "text-yellow-600" };
+}
+  if (score < 80) {
+return { label: "Progressing", color: "text-blue-600" };
+}
   return { label: "Strong", color: "text-green-600" };
 }

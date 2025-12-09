@@ -53,7 +53,9 @@ export async function createLaunchKit(data: LaunchKitData): Promise<{ success: b
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true, kit };
   } catch (error) {
@@ -83,7 +85,9 @@ export async function generateLaunchKitContent(kitId: string): Promise<{ success
       .eq('id', kitId)
       .single();
 
-    if (fetchError || !kit) throw new Error('Launch kit not found');
+    if (fetchError || !kit) {
+throw new Error('Launch kit not found');
+}
 
     // Generate welcome pack markdown
     const welcomePack = generateWelcomePackMarkdown({
@@ -143,7 +147,9 @@ export async function generateLaunchKitContent(kitId: string): Promise<{ success
       })
       .eq('id', kitId);
 
-    if (updateError) throw updateError;
+    if (updateError) {
+throw updateError;
+}
 
     // Create lifecycle event
     await supabaseAdmin.from('client_lifecycle_events').insert({
@@ -180,7 +186,9 @@ export async function getClientLaunchKit(clientId: string): Promise<{ success: b
       .limit(1)
       .single();
 
-    if (error && error.code !== 'PGRST116') throw error;
+    if (error && error.code !== 'PGRST116') {
+throw error;
+}
 
     return { success: true, kit: kit || undefined };
   } catch (error) {
@@ -203,7 +211,9 @@ export async function markKitViewed(kitId: string): Promise<{ success: boolean; 
       .eq('id', kitId)
       .eq('status', 'ready');
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true };
   } catch (error) {
@@ -231,7 +241,9 @@ export async function updateLaunchKitDetails(
       })
       .eq('id', kitId);
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { success: true };
   } catch (error) {
@@ -294,13 +306,19 @@ export function calculateKitProgress(kit: LaunchKit, tasksCompleted: number, tot
   let progress = 0;
 
   // Kit generation (20%)
-  if (kit.status !== 'pending') progress += 20;
+  if (kit.status !== 'pending') {
+progress += 20;
+}
 
   // Kit viewed (10%)
-  if (kit.status === 'viewed' || kit.status === 'completed') progress += 10;
+  if (kit.status === 'viewed' || kit.status === 'completed') {
+progress += 10;
+}
 
   // Business details (20%)
-  if (kit.business_name && kit.business_url) progress += 20;
+  if (kit.business_name && kit.business_url) {
+progress += 20;
+}
 
   // Tasks completion (50%)
   if (totalTasks > 0) {

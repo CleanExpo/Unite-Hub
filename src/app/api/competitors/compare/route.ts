@@ -105,7 +105,9 @@ export async function POST(request: NextRequest) {
 
 // Helper functions for comparison analysis
 function findCommonItems(arrays: string[][]): string[] {
-  if (arrays.length === 0) return [];
+  if (arrays.length === 0) {
+return [];
+}
   return arrays.reduce((common, arr) =>
     common.filter(item => arr.includes(item))
   );

@@ -60,7 +60,9 @@ function CompetitorFeature({ clientId }: { clientId: string }) {
           "Authorization": `Bearer ${session.access_token}`,
         },
       });
-      if (!response.ok) throw new Error("Failed to fetch competitors");
+      if (!response.ok) {
+throw new Error("Failed to fetch competitors");
+}
       const data = await response.json();
       setCompetitors(data.competitors || []);
     } catch (error) {

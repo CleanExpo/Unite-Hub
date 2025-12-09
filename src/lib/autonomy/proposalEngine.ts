@@ -107,7 +107,9 @@ export class ProposalEngine {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     // Log audit event
     await this.logAuditEvent(options.client_id, options.organization_id, {
@@ -312,7 +314,9 @@ export class ProposalEngine {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     // Log audit event
     await this.logAuditEvent(proposal.client_id, proposal.organization_id, {
@@ -356,7 +360,9 @@ export class ProposalEngine {
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     // Log audit event
     await this.logAuditEvent(proposal.client_id, proposal.organization_id, {
@@ -383,7 +389,9 @@ export class ProposalEngine {
       .eq("status", "PENDING")
       .order("created_at", { ascending: false });
 
-    if (error) return [];
+    if (error) {
+return [];
+}
     return data;
   }
 
@@ -405,7 +413,9 @@ export class ProposalEngine {
 
     const { data, error } = await query;
 
-    if (error) return [];
+    if (error) {
+return [];
+}
     return data;
   }
 

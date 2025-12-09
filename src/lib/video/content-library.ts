@@ -217,7 +217,9 @@ export function getVideosByCategory(category: VideoEntry['category']): VideoEntr
 export function getVideoById(id: string): VideoEntry | undefined {
   for (const videos of Object.values(VIDEO_LIBRARY)) {
     const video = videos.find(v => v.id === id);
-    if (video) return video;
+    if (video) {
+return video;
+}
   }
   return undefined;
 }

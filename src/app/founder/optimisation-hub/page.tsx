@@ -130,14 +130,22 @@ export default function FounderOptimisationHubPage() {
   }, []);
 
   const getRewardColor = (value: number) => {
-    if (value >= 0.8) return 'bg-green-100 text-green-800';
-    if (value >= 0.6) return 'bg-yellow-100 text-yellow-800';
+    if (value >= 0.8) {
+return 'bg-green-100 text-green-800';
+}
+    if (value >= 0.6) {
+return 'bg-yellow-100 text-yellow-800';
+}
     return 'bg-red-100 text-red-800';
   };
 
   const getTrendIcon = (trend: string) => {
-    if (trend === 'improving') return <TrendingUp className="w-4 h-4 text-green-600" />;
-    if (trend === 'declining') return <AlertTriangle className="w-4 h-4 text-red-600" />;
+    if (trend === 'improving') {
+return <TrendingUp className="w-4 h-4 text-green-600" />;
+}
+    if (trend === 'declining') {
+return <AlertTriangle className="w-4 h-4 text-red-600" />;
+}
     return <Gauge className="w-4 h-4 text-gray-600" />;
   };
 

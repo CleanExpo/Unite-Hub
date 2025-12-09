@@ -83,14 +83,18 @@ export default function CompetitorsList({
   };
 
   const handleDelete = async (competitorId: string) => {
-    if (!confirm("Are you sure you want to delete this competitor?")) return;
+    if (!confirm("Are you sure you want to delete this competitor?")) {
+return;
+}
 
     try {
       const response = await fetch(`/api/competitors/${competitorId}`, {
         method: "DELETE",
       });
 
-      if (!response.ok) throw new Error("Failed to delete competitor");
+      if (!response.ok) {
+throw new Error("Failed to delete competitor");
+}
 
       onRefresh();
     } catch (error) {

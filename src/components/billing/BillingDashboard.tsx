@@ -95,9 +95,15 @@ export function BillingDashboard({ orgId }: BillingDashboardProps) {
         invoiceRes.json(),
       ]);
 
-      if (subData.success) setSubscription(subData.subscription);
-      if (usageData.success) setUsage(usageData.usage);
-      if (invoiceData.success) setInvoices(invoiceData.invoices);
+      if (subData.success) {
+setSubscription(subData.subscription);
+}
+      if (usageData.success) {
+setUsage(usageData.usage);
+}
+      if (invoiceData.success) {
+setInvoices(invoiceData.invoices);
+}
     } catch (error) {
       console.error('Error fetching billing data:', error);
     } finally {
@@ -256,15 +262,25 @@ export function BillingDashboard({ orgId }: BillingDashboardProps) {
 
 function UsageCard({ label, metric }: { label: string; metric: UsageMetric }) {
   const getStatusColor = () => {
-    if (metric.is_unlimited) return 'text-green-600';
-    if (!metric.is_within_limit) return 'text-red-600';
-    if (metric.is_warning) return 'text-yellow-600';
+    if (metric.is_unlimited) {
+return 'text-green-600';
+}
+    if (!metric.is_within_limit) {
+return 'text-red-600';
+}
+    if (metric.is_warning) {
+return 'text-yellow-600';
+}
     return 'text-green-600';
   };
 
   const getStatusIcon = () => {
-    if (!metric.is_within_limit) return <AlertTriangle className="h-4 w-4 text-red-600" />;
-    if (metric.is_warning) return <AlertTriangle className="h-4 w-4 text-yellow-600" />;
+    if (!metric.is_within_limit) {
+return <AlertTriangle className="h-4 w-4 text-red-600" />;
+}
+    if (metric.is_warning) {
+return <AlertTriangle className="h-4 w-4 text-yellow-600" />;
+}
     return <CheckCircle className="h-4 w-4 text-green-600" />;
   };
 

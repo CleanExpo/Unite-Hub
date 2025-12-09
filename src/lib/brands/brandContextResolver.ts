@@ -274,7 +274,9 @@ ${basePrompt}
   } | null> {
     const context = await this.resolveBrandContext(brandSlug);
 
-    if (!context) return null;
+    if (!context) {
+return null;
+}
 
     // Determine recommended channels based on brand
     const recommendedChannels = this.getRecommendedChannels(context.brand);
@@ -329,13 +331,19 @@ ${basePrompt}
   ): Promise<boolean> {
     const context = await this.resolveBrandContext(brandSlug);
 
-    if (!context) return true; // Safe default
+    if (!context) {
+return true;
+} // Safe default
 
     // Brand updates always require approval
-    if (operationType === 'brand_update') return true;
+    if (operationType === 'brand_update') {
+return true;
+}
 
     // Cross-linking requires approval
-    if (operationType === 'cross_link') return true;
+    if (operationType === 'cross_link') {
+return true;
+}
 
     // Hub brand (unite-group) has more autonomy
     if (brandSlug === 'unite-group' && operationType === 'content_publish') {

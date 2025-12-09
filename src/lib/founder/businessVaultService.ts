@@ -62,7 +62,9 @@ export async function listFounderBusinesses(): Promise<BusinessIdentityProfile[]
   const supabase = await getSupabaseServer();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) return [];
+  if (!user) {
+return [];
+}
 
   const { data, error } = await supabase
     .from('business_identity_profiles')
@@ -85,7 +87,9 @@ export async function getBusinessWithChannels(businessKey: string): Promise<Busi
   const supabase = await getSupabaseServer();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) return null;
+  if (!user) {
+return null;
+}
 
   // Get the business profile
   const { data: business, error: businessError } = await supabase
@@ -137,7 +141,9 @@ export async function upsertBusinessProfile(input: {
   const supabase = await getSupabaseServer();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) throw new Error('Not authenticated');
+  if (!user) {
+throw new Error('Not authenticated');
+}
 
   const payload = {
     owner_profile_id: user.id,
@@ -183,7 +189,9 @@ export async function createBusinessSnapshot(businessKey: string, snapshot: {
   const supabase = await getSupabaseServer();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) throw new Error('Not authenticated');
+  if (!user) {
+throw new Error('Not authenticated');
+}
 
   // Get the business ID first
   const { data: business, error: businessError } = await supabase
@@ -236,7 +244,9 @@ export async function addBusinessChannel(businessKey: string, channel: {
   const supabase = await getSupabaseServer();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user) throw new Error('Not authenticated');
+  if (!user) {
+throw new Error('Not authenticated');
+}
 
   // Get the business ID first
   const { data: business, error: businessError } = await supabase

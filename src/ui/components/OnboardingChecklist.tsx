@@ -78,7 +78,9 @@ export function OnboardingChecklist({
   };
 
   const getTaskIcon = (iconName: string | null) => {
-    if (!iconName) return null;
+    if (!iconName) {
+return null;
+}
     const IconComponent = (LucideIcons as any)[iconName];
     return IconComponent ? <IconComponent className="h-4 w-4" /> : null;
   };

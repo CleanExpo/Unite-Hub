@@ -185,7 +185,9 @@ export const SYNTHEX_PERSONAS: Record<string, VisualPersona> = {
  * Get persona by ID with fallback to anonymous
  */
 export function getPersona(personaId: string | null | undefined): VisualPersona {
-  if (!personaId) return SYNTHEX_PERSONAS.anonymous;
+  if (!personaId) {
+return SYNTHEX_PERSONAS.anonymous;
+}
   return SYNTHEX_PERSONAS[personaId] || SYNTHEX_PERSONAS.anonymous;
 }
 

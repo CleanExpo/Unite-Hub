@@ -54,7 +54,9 @@ export async function createSession(
     .select()
     .single();
 
-  if (error) return null;
+  if (error) {
+return null;
+}
 
   return {
     id: data.id,
@@ -90,7 +92,9 @@ export async function submitVote(
     .select()
     .single();
 
-  if (error) return null;
+  if (error) {
+return null;
+}
 
   return {
     id: data.id,
@@ -114,7 +118,9 @@ export async function resolveSession(sessionId: string): Promise<CouncilRecommen
     .select('*')
     .eq('session_id', sessionId);
 
-  if (!votes || votes.length === 0) return null;
+  if (!votes || votes.length === 0) {
+return null;
+}
 
   // Calculate consensus
   const recommendations = votes.map(v => v.recommendation);
@@ -149,7 +155,9 @@ export async function resolveSession(sessionId: string): Promise<CouncilRecommen
     .select()
     .single();
 
-  if (error) return null;
+  if (error) {
+return null;
+}
 
   // Update session status
   await supabase
@@ -180,7 +188,9 @@ export async function getSessions(tenantId: string): Promise<CouncilSession[]> {
     .order('created_at', { ascending: false })
     .limit(50);
 
-  if (error) return [];
+  if (error) {
+return [];
+}
 
   return (data || []).map(row => ({
     id: row.id,

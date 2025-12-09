@@ -23,23 +23,26 @@ export async function POST(req: NextRequest) {
     if (token) {
       const { supabaseBrowser } = await import("@/lib/supabase");
       const { data, error } = await supabaseBrowser.auth.getUser(token);
-      if (error || !data.user)
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      if (error || !data.user) {
+return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+}
       userId = data.user.id;
     } else {
       const supabase = await getSupabaseServer();
       const { data, error } = await supabase.auth.getUser();
-      if (error || !data.user)
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      if (error || !data.user) {
+return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+}
       userId = data.user.id;
     }
 
     workspaceId = req.nextUrl.searchParams.get("workspaceId") || "";
-    if (!workspaceId)
-      return NextResponse.json(
+    if (!workspaceId) {
+return NextResponse.json(
         { error: "workspaceId is required" },
         { status: 400 }
       );
+}
 
     const body = await req.json();
     const { dataPoints, k } = body;
@@ -52,7 +55,9 @@ export async function POST(req: NextRequest) {
     }
 
     const engine = new PatternDetectionEngine();
-    if (k) engine.setK(k);
+    if (k) {
+engine.setK(k);
+}
 
     const patterns = engine.detectPatterns(dataPoints, k);
 

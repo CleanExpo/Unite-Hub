@@ -156,7 +156,9 @@ export function calculateAISourceScore(content: ContentForScoring): number {
   let factualStatements = 0;
   factualPatterns.forEach(pattern => {
     const matches = content.body_markdown.match(pattern);
-    if (matches) factualStatements += matches.length;
+    if (matches) {
+factualStatements += matches.length;
+}
   });
 
   if (factualStatements >= 40) {
@@ -202,7 +204,9 @@ export function calculateAuthorityScore(content: ContentForScoring): number {
   let technicalCount = 0;
   technicalTerms.forEach(pattern => {
     const matches = content.body_markdown.match(pattern);
-    if (matches) technicalCount += matches.length;
+    if (matches) {
+technicalCount += matches.length;
+}
   });
 
   if (technicalCount >= 30) {
@@ -242,7 +246,9 @@ export function calculateAuthorityScore(content: ContentForScoring): number {
   let citationCount = 0;
   citationPatterns.forEach(pattern => {
     const matches = content.body_markdown.match(pattern);
-    if (matches) citationCount += matches.length;
+    if (matches) {
+citationCount += matches.length;
+}
   });
 
   if (citationCount >= 10) {
@@ -265,7 +271,9 @@ export function calculateAuthorityScore(content: ContentForScoring): number {
   let structureCount = 0;
   structuralElements.forEach(pattern => {
     const matches = content.body_markdown.match(pattern);
-    if (matches) structureCount += matches.length;
+    if (matches) {
+structureCount += matches.length;
+}
   });
 
   if (structureCount >= 30) {
@@ -300,7 +308,9 @@ export function calculateEvergreenScore(content: ContentForScoring): number {
   let timeSensitiveCount = 0;
   timeSensitivePhrases.forEach(pattern => {
     const matches = content.body_markdown.match(pattern);
-    if (matches) timeSensitiveCount += matches.length;
+    if (matches) {
+timeSensitiveCount += matches.length;
+}
   });
 
   // Deduct based on time-sensitive content

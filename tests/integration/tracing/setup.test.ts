@@ -11,7 +11,7 @@
  * 5. Singleton pattern prevents re-initialization
  */
 
-/* eslint-disable no-undef */
+ 
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import {

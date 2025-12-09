@@ -249,7 +249,9 @@ export async function generateSocialFromMoment(
       },
     });
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     const generated: GeneratedContent = {
       id: asset?.id || '',

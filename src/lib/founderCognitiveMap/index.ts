@@ -41,7 +41,9 @@ export async function getCognitiveMap(tenantId: string): Promise<CognitiveMapSna
     .limit(1)
     .single();
 
-  if (!data) return null;
+  if (!data) {
+return null;
+}
 
   return {
     id: data.id,
@@ -85,7 +87,9 @@ export async function generateCognitiveMap(tenantId: string): Promise<CognitiveM
     .select()
     .single();
 
-  if (error || !data) return null;
+  if (error || !data) {
+return null;
+}
 
   return {
     id: data.id,

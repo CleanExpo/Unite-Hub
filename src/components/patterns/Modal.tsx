@@ -86,7 +86,9 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
 
     // Focus trap
     useEffect(() => {
-      if (!isOpen) return;
+      if (!isOpen) {
+return;
+}
 
       const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === 'Escape' && closeOnEscape) {
@@ -115,7 +117,9 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
       return () => document.removeEventListener('keydown', handleKeyDown);
     }, [isOpen, closeOnEscape, onClose]);
 
-    if (!isOpen) return null;
+    if (!isOpen) {
+return null;
+}
 
     return (
       <>

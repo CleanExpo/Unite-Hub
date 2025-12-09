@@ -175,7 +175,9 @@ export async function ingestConversationEvent(
           externalId: payload.externalId,
           contactId: payload.contactId,
         });
-        if (convResult.error) throw convResult.error;
+        if (convResult.error) {
+throw convResult.error;
+}
         conversationId = convResult.data!.id;
       }
     } else {
@@ -186,7 +188,9 @@ export async function ingestConversationEvent(
         subjectOrTitle: payload.subjectOrTitle,
         contactId: payload.contactId,
       });
-      if (convResult.error) throw convResult.error;
+      if (convResult.error) {
+throw convResult.error;
+}
       conversationId = convResult.data!.id;
     }
 
@@ -212,7 +216,9 @@ export async function ingestConversationEvent(
       .select()
       .single();
 
-    if (msgError) throw msgError;
+    if (msgError) {
+throw msgError;
+}
 
     // Get updated conversation
     const { data: conversation } = await supabaseAdmin
@@ -266,7 +272,9 @@ async function createConversation(
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     return { data: mapConversationFromDb(data), error: null };
   } catch (error) {
@@ -317,7 +325,9 @@ export async function getConversations(
 
     const { data, error } = await query;
 
-    if (error) throw error;
+    if (error) {
+throw error;
+}
 
     const conversations = (data || []).map(mapConversationFromDb);
     return { data: conversations, error: null };
@@ -344,8 +354,12 @@ export async function getConversationDetail(
       .eq('tenant_id', tenantId)
       .single();
 
-    if (convError) throw convError;
-    if (!convData) throw new Error('Conversation not found');
+    if (convError) {
+throw convError;
+}
+    if (!convData) {
+throw new Error('Conversation not found');
+}
 
     // Get messages
     const { data: msgData, error: msgError } = await supabaseAdmin
@@ -354,7 +368,9 @@ export async function getConversationDetail(
       .eq('conversation_id', conversationId)
       .order('occurred_at', { ascending: true });
 
-    if (msgError) throw msgError;
+    if (msgError) {
+throw msgError;
+}
 
     // Get latest insight
     const { data: insightData } = await supabaseAdmin
@@ -390,7 +406,9 @@ export async function analyzeConversationWithAI(
   try {
     // Get conversation and messages
     const detailResult = await getConversationDetail(tenantId, conversationId);
-    if (detailResult.error) throw detailResult.error;
+    if (detailResult.error) {
+throw detailResult.error;
+}
 
     const { conversation, messages } = detailResult.data!;
 
@@ -483,7 +501,9 @@ Provide analysis in JSON format:
       .select()
       .single();
 
-    if (insightError) throw insightError;
+    if (insightError) {
+throw insightError;
+}
 
     // Update conversation with sentiment
     await supabaseAdmin

@@ -39,7 +39,9 @@ export class RAAOEEngine {
     const region = await this.determineRegion(tenantId);
     const profile = await this.getRegionProfile(region);
 
-    if (!profile) return params;
+    if (!profile) {
+return params;
+}
 
     const adjustedParams = { ...params };
     let reason = '';

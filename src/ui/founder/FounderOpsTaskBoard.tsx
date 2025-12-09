@@ -58,8 +58,12 @@ export default function FounderOpsTaskBoard({ workspaceId }: FounderOpsTaskBoard
 
     try {
       const params = new URLSearchParams({ workspaceId });
-      if (filterBrand !== 'all') params.append('brand', filterBrand);
-      if (filterPriority !== 'all') params.append('priority', filterPriority);
+      if (filterBrand !== 'all') {
+params.append('brand', filterBrand);
+}
+      if (filterPriority !== 'all') {
+params.append('priority', filterPriority);
+}
 
       const response = await fetch(`/api/founder/ops/tasks?${params}`);
 

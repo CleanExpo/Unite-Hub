@@ -612,15 +612,23 @@ class SelfCorrectionEngine {
     predictions: FailurePrediction[],
     clusters: WeaknessCluster[]
   ): 'low' | 'medium' | 'high' | 'critical' {
-    if (predictions.length === 0) return 'low';
+    if (predictions.length === 0) {
+return 'low';
+}
 
     const avgFailureProbability =
       predictions.reduce((sum, p) => sum + p.probability, 0) / predictions.length;
     const maxClusterSeverity = clusters.length > 0 ? Math.max(...clusters.map(c => c.severity)) : 0;
 
-    if (avgFailureProbability >= 80 || maxClusterSeverity >= 5) return 'critical';
-    if (avgFailureProbability >= 60 || maxClusterSeverity >= 4) return 'high';
-    if (avgFailureProbability >= 40 || maxClusterSeverity >= 3) return 'medium';
+    if (avgFailureProbability >= 80 || maxClusterSeverity >= 5) {
+return 'critical';
+}
+    if (avgFailureProbability >= 60 || maxClusterSeverity >= 4) {
+return 'high';
+}
+    if (avgFailureProbability >= 40 || maxClusterSeverity >= 3) {
+return 'medium';
+}
 
     return 'low';
   }

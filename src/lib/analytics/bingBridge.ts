@@ -215,14 +215,22 @@ export class BingBridge {
    */
   private mapSeverity(severity: number | string): 'error' | 'warning' | 'info' {
     if (typeof severity === 'number') {
-      if (severity >= 3) return 'error';
-      if (severity >= 2) return 'warning';
+      if (severity >= 3) {
+return 'error';
+}
+      if (severity >= 2) {
+return 'warning';
+}
       return 'info';
     }
 
     const severityStr = severity.toLowerCase();
-    if (severityStr.includes('error') || severityStr.includes('critical')) return 'error';
-    if (severityStr.includes('warning')) return 'warning';
+    if (severityStr.includes('error') || severityStr.includes('critical')) {
+return 'error';
+}
+    if (severityStr.includes('warning')) {
+return 'warning';
+}
     return 'info';
   }
 

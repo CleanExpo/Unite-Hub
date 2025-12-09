@@ -92,7 +92,9 @@ export function ReportExportBar({
   } | null>(null);
 
   const handleExport = async () => {
-    if (disabled || isExporting) return;
+    if (disabled || isExporting) {
+return;
+}
 
     setIsExporting(true);
     try {
@@ -250,7 +252,9 @@ export function ReportExportButtons({
   const [isExporting, setIsExporting] = useState<ExportFormat | null>(null);
 
   const handleExport = async (format: ExportFormat) => {
-    if (disabled || isExporting) return;
+    if (disabled || isExporting) {
+return;
+}
 
     setIsExporting(format);
     try {

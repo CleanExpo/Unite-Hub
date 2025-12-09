@@ -512,16 +512,16 @@ export class ContentPipeline {
     const results: PipelineResult[] = [];
 
     for (const spec of specs) {
-      // eslint-disable-next-line no-console
+       
       console.log(`[Pipeline] Generating: ${spec.url}`);
       const result = await this.generatePage(spec);
       results.push(result);
 
       if (result.success) {
-        // eslint-disable-next-line no-console
+         
         console.log(`[Pipeline] ✓ ${spec.url} - ${result.page?.generation.total_cost_usd.toFixed(4)} USD`);
       } else {
-        // eslint-disable-next-line no-console
+         
         console.log(`[Pipeline] ✗ ${spec.url} - ${result.errors.join(', ')}`);
       }
     }

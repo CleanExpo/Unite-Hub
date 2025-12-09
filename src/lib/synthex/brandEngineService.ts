@@ -290,35 +290,93 @@ export async function updateBrandVoice(
     }
 
     const updateData: Record<string, unknown> = {};
-    if (input.name !== undefined) updateData.name = input.name;
-    if (input.isDefault !== undefined) updateData.is_default = input.isDefault;
-    if (input.isActive !== undefined) updateData.is_active = input.isActive;
-    if (input.brandName !== undefined) updateData.brand_name = input.brandName;
-    if (input.tagline !== undefined) updateData.tagline = input.tagline;
-    if (input.missionStatement !== undefined) updateData.mission_statement = input.missionStatement;
-    if (input.formalityLevel !== undefined) updateData.formality_level = input.formalityLevel;
-    if (input.humorLevel !== undefined) updateData.humor_level = input.humorLevel;
-    if (input.enthusiasmLevel !== undefined) updateData.enthusiasm_level = input.enthusiasmLevel;
-    if (input.empathyLevel !== undefined) updateData.empathy_level = input.empathyLevel;
-    if (input.technicalLevel !== undefined) updateData.technical_level = input.technicalLevel;
-    if (input.toneKeywords !== undefined) updateData.tone_keywords = input.toneKeywords;
-    if (input.avoidKeywords !== undefined) updateData.avoid_keywords = input.avoidKeywords;
-    if (input.preferredSentenceLength !== undefined) updateData.preferred_sentence_length = input.preferredSentenceLength;
-    if (input.useContractions !== undefined) updateData.use_contractions = input.useContractions;
-    if (input.useEmoji !== undefined) updateData.use_emoji = input.useEmoji;
-    if (input.useExclamation !== undefined) updateData.use_exclamation = input.useExclamation;
-    if (input.firstPerson !== undefined) updateData.first_person = input.firstPerson;
-    if (input.audienceDescription !== undefined) updateData.audience_description = input.audienceDescription;
-    if (input.audiencePainPoints !== undefined) updateData.audience_pain_points = input.audiencePainPoints;
-    if (input.audienceGoals !== undefined) updateData.audience_goals = input.audienceGoals;
-    if (input.sampleGreetings !== undefined) updateData.sample_greetings = input.sampleGreetings;
-    if (input.sampleClosings !== undefined) updateData.sample_closings = input.sampleClosings;
-    if (input.sampleParagraphs !== undefined) updateData.sample_paragraphs = input.sampleParagraphs;
-    if (input.dos !== undefined) updateData.dos = input.dos;
-    if (input.donts !== undefined) updateData.donts = input.donts;
-    if (input.industry !== undefined) updateData.industry = input.industry;
-    if (input.competitors !== undefined) updateData.competitors = input.competitors;
-    if (input.differentiators !== undefined) updateData.differentiators = input.differentiators;
+    if (input.name !== undefined) {
+updateData.name = input.name;
+}
+    if (input.isDefault !== undefined) {
+updateData.is_default = input.isDefault;
+}
+    if (input.isActive !== undefined) {
+updateData.is_active = input.isActive;
+}
+    if (input.brandName !== undefined) {
+updateData.brand_name = input.brandName;
+}
+    if (input.tagline !== undefined) {
+updateData.tagline = input.tagline;
+}
+    if (input.missionStatement !== undefined) {
+updateData.mission_statement = input.missionStatement;
+}
+    if (input.formalityLevel !== undefined) {
+updateData.formality_level = input.formalityLevel;
+}
+    if (input.humorLevel !== undefined) {
+updateData.humor_level = input.humorLevel;
+}
+    if (input.enthusiasmLevel !== undefined) {
+updateData.enthusiasm_level = input.enthusiasmLevel;
+}
+    if (input.empathyLevel !== undefined) {
+updateData.empathy_level = input.empathyLevel;
+}
+    if (input.technicalLevel !== undefined) {
+updateData.technical_level = input.technicalLevel;
+}
+    if (input.toneKeywords !== undefined) {
+updateData.tone_keywords = input.toneKeywords;
+}
+    if (input.avoidKeywords !== undefined) {
+updateData.avoid_keywords = input.avoidKeywords;
+}
+    if (input.preferredSentenceLength !== undefined) {
+updateData.preferred_sentence_length = input.preferredSentenceLength;
+}
+    if (input.useContractions !== undefined) {
+updateData.use_contractions = input.useContractions;
+}
+    if (input.useEmoji !== undefined) {
+updateData.use_emoji = input.useEmoji;
+}
+    if (input.useExclamation !== undefined) {
+updateData.use_exclamation = input.useExclamation;
+}
+    if (input.firstPerson !== undefined) {
+updateData.first_person = input.firstPerson;
+}
+    if (input.audienceDescription !== undefined) {
+updateData.audience_description = input.audienceDescription;
+}
+    if (input.audiencePainPoints !== undefined) {
+updateData.audience_pain_points = input.audiencePainPoints;
+}
+    if (input.audienceGoals !== undefined) {
+updateData.audience_goals = input.audienceGoals;
+}
+    if (input.sampleGreetings !== undefined) {
+updateData.sample_greetings = input.sampleGreetings;
+}
+    if (input.sampleClosings !== undefined) {
+updateData.sample_closings = input.sampleClosings;
+}
+    if (input.sampleParagraphs !== undefined) {
+updateData.sample_paragraphs = input.sampleParagraphs;
+}
+    if (input.dos !== undefined) {
+updateData.dos = input.dos;
+}
+    if (input.donts !== undefined) {
+updateData.donts = input.donts;
+}
+    if (input.industry !== undefined) {
+updateData.industry = input.industry;
+}
+    if (input.competitors !== undefined) {
+updateData.competitors = input.competitors;
+}
+    if (input.differentiators !== undefined) {
+updateData.differentiators = input.differentiators;
+}
 
     const { data, error } = await supabaseAdmin
       .from('synthex_brand_voices')
@@ -387,10 +445,14 @@ export async function analyzeContentTone(
         .eq('id', voiceId)
         .eq('tenant_id', tenantId)
         .single();
-      if (data) voice = mapDbToBrandVoice(data);
+      if (data) {
+voice = mapDbToBrandVoice(data);
+}
     } else {
       const result = await getDefaultBrandVoice(tenantId);
-      if (result.success) voice = result.data ?? null;
+      if (result.success) {
+voice = result.data ?? null;
+}
     }
 
     if (!voice) {
@@ -504,10 +566,14 @@ export async function generateBrandedContent(
         .eq('id', voiceId)
         .eq('tenant_id', tenantId)
         .single();
-      if (data) voice = mapDbToBrandVoice(data);
+      if (data) {
+voice = mapDbToBrandVoice(data);
+}
     } else {
       const result = await getDefaultBrandVoice(tenantId);
-      if (result.success) voice = result.data ?? null;
+      if (result.success) {
+voice = result.data ?? null;
+}
     }
 
     if (!voice) {
@@ -630,10 +696,14 @@ export async function getBrandVoicePrompt(
         .eq('id', voiceId)
         .eq('tenant_id', tenantId)
         .single();
-      if (data) voice = mapDbToBrandVoice(data);
+      if (data) {
+voice = mapDbToBrandVoice(data);
+}
     } else {
       const result = await getDefaultBrandVoice(tenantId);
-      if (result.success) voice = result.data ?? null;
+      if (result.success) {
+voice = result.data ?? null;
+}
     }
 
     if (!voice) {

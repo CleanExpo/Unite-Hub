@@ -11,27 +11,39 @@ export async function collectAllInputs(tenantId: string, regionId?: string): Pro
 
   // Collect from intelligence mesh
   const meshInput = await collectFromMesh(tenantId, regionId);
-  if (meshInput) inputs.push(meshInput);
+  if (meshInput) {
+inputs.push(meshInput);
+}
 
   // Collect from opportunity engine
   const oppInput = await collectFromOpportunities(tenantId);
-  if (oppInput) inputs.push(oppInput);
+  if (oppInput) {
+inputs.push(oppInput);
+}
 
   // Collect from performance reality
   const perfInput = await collectFromPerformance(tenantId);
-  if (perfInput) inputs.push(perfInput);
+  if (perfInput) {
+inputs.push(perfInput);
+}
 
   // Collect from early warning
   const warningInput = await collectFromEarlyWarning(tenantId);
-  if (warningInput) inputs.push(warningInput);
+  if (warningInput) {
+inputs.push(warningInput);
+}
 
   // Collect from scaling
   const scalingInput = await collectFromScaling(regionId);
-  if (scalingInput) inputs.push(scalingInput);
+  if (scalingInput) {
+inputs.push(scalingInput);
+}
 
   // Collect from compliance
   const complianceInput = await collectFromCompliance(tenantId);
-  if (complianceInput) inputs.push(complianceInput);
+  if (complianceInput) {
+inputs.push(complianceInput);
+}
 
   return inputs;
 }
@@ -50,7 +62,9 @@ async function collectFromMesh(tenantId: string, regionId?: string): Promise<Col
 
   const { data } = await query.limit(100);
 
-  if (!data || data.length === 0) return null;
+  if (!data || data.length === 0) {
+return null;
+}
 
   const avgConfidence = data.reduce((sum, n) => sum + n.confidence, 0) / data.length;
   const nodesByType: Record<string, number> = {};
@@ -80,7 +94,9 @@ async function collectFromOpportunities(tenantId: string): Promise<CollectedInpu
     .eq('tenant_id', tenantId)
     .eq('status', 'active');
 
-  if (!data || data.length === 0) return null;
+  if (!data || data.length === 0) {
+return null;
+}
 
   const avgConfidence = data.reduce((sum, o) => sum + o.confidence, 0) / data.length;
   const byCategory: Record<string, number> = {};
@@ -115,7 +131,9 @@ async function collectFromPerformance(tenantId: string): Promise<CollectedInput 
     .order('created_at', { ascending: false })
     .limit(5);
 
-  if (!data || data.length === 0) return null;
+  if (!data || data.length === 0) {
+return null;
+}
 
   const latestMetrics = data[0]?.metrics || {};
   const avgConfidence = data.reduce((sum, p) => sum + (p.confidence || 0.5), 0) / data.length;
@@ -170,7 +188,9 @@ async function collectFromEarlyWarning(tenantId: string): Promise<CollectedInput
 }
 
 async function collectFromScaling(regionId?: string): Promise<CollectedInput | null> {
-  if (!regionId) return null;
+  if (!regionId) {
+return null;
+}
 
   const supabase = await getSupabaseServer();
 
@@ -180,7 +200,9 @@ async function collectFromScaling(regionId?: string): Promise<CollectedInput | n
     .eq('id', regionId)
     .single();
 
-  if (!data) return null;
+  if (!data) {
+return null;
+}
 
   const budgetUtilization = data.ai_budget_allocated_cents > 0
     ? data.ai_budget_spent_cents / data.ai_budget_allocated_cents

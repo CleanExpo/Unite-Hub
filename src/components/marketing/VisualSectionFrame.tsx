@@ -154,7 +154,9 @@ export function VisualSectionFrame({
 
   // Intersection observer for scroll animations
   useEffect(() => {
-    if (!animateOnScroll) return;
+    if (!animateOnScroll) {
+return;
+}
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -166,7 +168,9 @@ export function VisualSectionFrame({
     );
 
     const element = document.getElementById(sectionId);
-    if (element) observer.observe(element);
+    if (element) {
+observer.observe(element);
+}
 
     return () => observer.disconnect();
   }, [sectionId, animateOnScroll, animationDelay]);
@@ -218,7 +222,9 @@ export function VisualSectionFrame({
 
   // Get text color based on background type and profile
   const getTextColorClass = (): string => {
-    if (!profile) return "text-gray-900";
+    if (!profile) {
+return "text-gray-900";
+}
 
     const background = profile.cssVariables["--background"] || "#ffffff";
     const isDark = isColorDark(background);

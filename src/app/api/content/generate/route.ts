@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
       warnings: result.warnings,
     });
   } catch (error) {
-    // eslint-disable-next-line no-console
+     
     console.error('[API] Content generate error:', error);
     return NextResponse.json(
       { error: 'Failed to generate content', details: String(error) },

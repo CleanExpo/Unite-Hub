@@ -45,7 +45,9 @@ export function VeoVideoPlayer({
 
   // Handle play/pause
   const togglePlay = async () => {
-    if (!videoRef.current) return;
+    if (!videoRef.current) {
+return;
+}
 
     if (isPlaying) {
       videoRef.current.pause();
@@ -60,7 +62,9 @@ export function VeoVideoPlayer({
 
   // Handle mute/unmute
   const toggleMute = () => {
-    if (!videoRef.current) return;
+    if (!videoRef.current) {
+return;
+}
     const newMuted = !isMuted;
     videoRef.current.muted = newMuted;
     setIsMuted(newMuted);
@@ -68,7 +72,9 @@ export function VeoVideoPlayer({
 
   // Handle fullscreen
   const toggleFullscreen = async () => {
-    if (!containerRef.current) return;
+    if (!containerRef.current) {
+return;
+}
 
     if (!isFullscreen) {
       await containerRef.current.requestFullscreen();
@@ -81,13 +87,17 @@ export function VeoVideoPlayer({
 
   // Handle progress update
   const handleTimeUpdate = () => {
-    if (!videoRef.current) return;
+    if (!videoRef.current) {
+return;
+}
     setCurrentTime(videoRef.current.currentTime);
   };
 
   // Handle metadata loaded
   const handleLoadedMetadata = () => {
-    if (!videoRef.current) return;
+    if (!videoRef.current) {
+return;
+}
     setDuration(videoRef.current.duration);
   };
 
@@ -99,7 +109,9 @@ export function VeoVideoPlayer({
 
   // Handle progress bar seek
   const handleProgressClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!videoRef.current) return;
+    if (!videoRef.current) {
+return;
+}
     const rect = e.currentTarget.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
     const percentage = clickX / rect.width;
