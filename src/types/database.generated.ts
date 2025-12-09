@@ -38198,6 +38198,9 @@ export type Database = {
           priority_support: boolean
           seo_reports: boolean
           storage_limit_mb: number
+          visual_images_monthly: number | null
+          visual_videos_monthly: number | null
+          visual_video_max_duration_seconds: number | null
           tier: string
           updated_at: string
           white_label: boolean

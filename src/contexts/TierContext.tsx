@@ -58,6 +58,9 @@ interface TierLimits {
   ai_extended_thinking: boolean;
   ai_agent_access: boolean;
   storage_limit_mb: number;
+  visual_images_monthly?: number;
+  visual_videos_monthly?: number;
+  visual_video_max_duration_seconds?: number;
 }
 
 interface WorkspaceTierInfo {
