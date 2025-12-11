@@ -8,7 +8,7 @@
 import { NextRequest } from 'next/server';
 import { successResponse, errorResponse } from '@/lib/api/response';
 
-export const maxDuration = 3600; // 1 hour timeout for cron job
+export const maxDuration = 300; // 5 minutes - within Vercel Pro limits
 
 export async function GET(req: NextRequest) {
   try {
