@@ -220,6 +220,7 @@
     "dompurify": "^3.3.1",
     "dotenv": "^17.2.3",
     "elkjs": "^0.11.0",
+    "execa": "^9.6.1",
     "framer-motion": "^12.23.24",
     "googleapis": "^166.0.0",
     "inngest": "^3.46.0",

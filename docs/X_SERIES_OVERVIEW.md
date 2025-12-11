@@ -1,8 +1,8 @@
 # Guardian X-Series: Network Intelligence Suite Overview
 
-**Status**: Production Ready (X01–X04)
+**Status**: Production Ready (X01–X05)
 **Release Date**: December 2025
-**Version**: 1.0
+**Version**: 1.1
 
 ---
 
@@ -13,6 +13,7 @@ The **X-Series** is a privacy-preserving network intelligence suite that extends
 - **X02**: Anomaly detection and benchmark snapshots
 - **X03**: Pattern-based early-warning signals
 - **X04**: Governance controls and unified console
+- **X05**: Data retention policies, lifecycle cleanup, and compliance audit trails
 
 All X-series features are **opt-in**, **privacy-preserving**, and **non-breaking** to Guardian core.
 
@@ -52,6 +53,7 @@ All X-series features are **opt-in**, **privacy-preserving**, and **non-breaking
 | **X02** | Network Anomalies | Anomaly detection; benchmark analysis | ✅ Complete | `guardian_network_anomaly_signals`, `guardian_network_benchmark_snapshots` |
 | **X03** | Early Warnings | Pattern-based signal derivation; tenant matching | ✅ Complete | `guardian_network_pattern_signatures`, `guardian_network_early_warnings` |
 | **X04** | Governance & Console | Feature flags, audit trail, unified dashboard | ✅ Complete | `guardian_network_feature_flags`, `guardian_network_governance_events` |
+| **X05** | Lifecycle & Compliance | Retention policies, cleanup, audit trails | ✅ Complete | `guardian_network_retention_policies`, `guardian_network_lifecycle_audit` |
 
 ---
 
@@ -278,6 +280,7 @@ Each X-series feature is **opt-in** via feature flags in `guardian_network_featu
 - [X02: Network Anomalies & Benchmarks](./PHASE_X02_GUARDIAN_NETWORK_ANOMALY_DETECTION.md)
 - [X03: Network Early-Warning Signals](./PHASE_X03_GUARDIAN_NETWORK_EARLY_WARNING_SIGNALS_AND_HINTS.md)
 - [X04: Network Intelligence Console & Governance](./PHASE_X04_GUARDIAN_NETWORK_INTELLIGENCE_CONSOLE_AND_GOVERNANCE.md)
+- [X05: Network Lifecycle & Compliance](./PHASE_X05_GUARDIAN_NETWORK_LIFECYCLE_AND_COMPLIANCE.md)
 
 ---
 

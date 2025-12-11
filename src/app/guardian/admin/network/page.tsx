@@ -21,6 +21,8 @@ import {
   BarChart3,
   Eye,
   Clock,
+  Trash2,
+  Shield,
 } from "lucide-react";
 
 interface GuardianNetworkFeatureFlags {
@@ -63,6 +65,23 @@ interface GuardianNetworkGovernanceEvent {
   detailsSummary?: string;
 }
 
+interface GuardianNetworkRetentionPolicy {
+  telemetryRetentionDays: number;
+  aggregatesRetentionDays: number;
+  anomaliesRetentionDays: number;
+  benchmarksRetentionDays: number;
+  earlyWarningsRetentionDays: number;
+  governanceRetentionDays: number;
+}
+
+interface GuardianNetworkLifecycleEvent {
+  occurredAt: string;
+  scope: string;
+  action: string;
+  itemsAffected: number;
+  detail: string;
+}
+
 interface GuardianNetworkOverview {
   flags: GuardianNetworkFeatureFlags;
   stats: GuardianNetworkStats;
@@ -81,17 +100,25 @@ const SEVERITY_COLORS = {
 export default function NetworkIntelligencePage() {
   const [overview, setOverview] = useState<GuardianNetworkOverview | null>(null);
   const [flags, setFlags] = useState<GuardianNetworkFeatureFlags | null>(null);
+  const [retention, setRetention] = useState<GuardianNetworkRetentionPolicy | null>(null);
+  const [lifecycleEvents, setLifecycleEvents] = useState<GuardianNetworkLifecycleEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
+  const [cleanupRunning, setCleanupRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedTab, setSelectedTab] = useState<"overview" | "insights" | "settings">(
+  const [selectedTab, setSelectedTab] = useState<"overview" | "insights" | "settings" | "compliance">(
     "overview"
   );
 
   const workspaceId = "00000000-0000-0000-0000-000000000000"; // TODO: Get from auth context
 
   useEffect(() => {
-    loadOverview();
+    const loadAllData = async () => {
+      await loadOverview();
+      await loadRetention();
+      await loadLifecycleEvents();
+    };
+    loadAllData();
   }, []);
 
   const loadOverview = async () => {
@@ -151,6 +178,91 @@ return;
       setError(err instanceof Error ? err.message : "Update failed");
     } finally {
       setUpdating(false);
+    }
+  };
+
+  const loadRetention = async () => {
+    try {
+      const res = await fetch(
+        `/api/guardian/admin/network/retention?workspaceId=${workspaceId}`
+      );
+      if (res.ok) {
+        const data = await res.json();
+        setRetention(data.data);
+      }
+    } catch (err) {
+      console.error('Failed to load retention policy:', err);
+    }
+  };
+
+  const loadLifecycleEvents = async () => {
+    try {
+      const res = await fetch(
+        `/api/guardian/admin/network/lifecycle?workspaceId=${workspaceId}&limit=20`
+      );
+      if (res.ok) {
+        const data = await res.json();
+        setLifecycleEvents(data.data || []);
+      }
+    } catch (err) {
+      console.error('Failed to load lifecycle events:', err);
+    }
+  };
+
+  const handleRetentionUpdate = async (key: keyof GuardianNetworkRetentionPolicy, value: number) => {
+    if (!retention) {
+return;
+}
+
+    try {
+      setUpdating(true);
+      const patch = { [key]: Math.max(30, Math.min(3650, value)) };
+
+      const res = await fetch(
+        `/api/guardian/admin/network/retention?workspaceId=${workspaceId}`,
+        {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ patch }),
+        }
+      );
+
+      if (res.ok) {
+        const data = await res.json();
+        setRetention(data.data);
+        await loadLifecycleEvents();
+      } else {
+        setError('Failed to update retention policy');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Update failed');
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  const handleCleanupDryRun = async () => {
+    try {
+      setCleanupRunning(true);
+      const res = await fetch(
+        `/api/guardian/admin/network/cleanup?workspaceId=${workspaceId}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ mode: 'tenant', dryRun: true, limitPerTable: 1000 }),
+        }
+      );
+
+      if (res.ok) {
+        const data = await res.json();
+        alert(`Dry-run: Would delete ${data.data.totalAffected} rows total`);
+      } else {
+        setError('Failed to run cleanup dry-run');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Cleanup failed');
+    } finally {
+      setCleanupRunning(false);
     }
   };
 
@@ -244,6 +356,17 @@ return;
         >
           <Settings className="w-4 h-4" />
           Settings
+        </button>
+        <button
+          onClick={() => setSelectedTab("compliance")}
+          className={`px-4 py-2 font-medium border-b-2 transition-colors flex items-center gap-2 ${
+            selectedTab === "compliance"
+              ? "border-accent-500 text-accent-600"
+              : "border-transparent text-gray-600 hover:text-gray-900"
+          }`}
+        >
+          <Shield className="w-4 h-4" />
+          Compliance
         </button>
       </div>
 
@@ -571,6 +694,130 @@ return;
                 <strong>Privacy Guarantee:</strong> Your tenant's individual metrics are never
                 shared with other tenants. All X-series features use anonymized cohort-level
                 aggregations without cross-tenant identifiers.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* COMPLIANCE TAB */}
+      {selectedTab === "compliance" && (
+        <div className="space-y-6">
+          {/* Retention Policy Configuration */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Clock className="w-4 h-4" />
+                Data Retention Policy
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {retention ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {[
+                    { key: 'telemetryRetentionDays' as const, label: 'Telemetry (X01)', desc: 'Hourly metrics' },
+                    { key: 'aggregatesRetentionDays' as const, label: 'Aggregates', desc: 'Cohort data' },
+                    { key: 'anomaliesRetentionDays' as const, label: 'Anomalies (X02)', desc: 'Detection signals' },
+                    { key: 'benchmarksRetentionDays' as const, label: 'Benchmarks', desc: 'Snapshots' },
+                    { key: 'earlyWarningsRetentionDays' as const, label: 'Early Warnings (X03)', desc: 'Patterns matched' },
+                    { key: 'governanceRetentionDays' as const, label: 'Governance Events', desc: 'Audit trail' },
+                  ].map((item) => (
+                    <div key={item.key} className="p-4 border rounded">
+                      <label className="block mb-2">
+                        <p className="font-medium text-sm">{item.label}</p>
+                        <p className="text-xs text-gray-500">{item.desc}</p>
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="number"
+                          min="30"
+                          max="3650"
+                          value={retention[item.key]}
+                          onChange={(e) => handleRetentionUpdate(item.key, parseInt(e.target.value, 10))}
+                          disabled={updating}
+                          className="flex-1 px-2 py-1 border rounded text-sm"
+                          placeholder={`Enter ${item.label} retention days`}
+                          aria-label={`${item.label} retention days`}
+                        />
+                        <span className="text-xs text-gray-500 w-8">days</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-gray-500">Loading retention policy...</p>
+              )}
+              <p className="text-xs text-gray-500 mt-4">
+                Range: 30–3650 days. Automatic cleanup runs daily for data older than the retention period.
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Cleanup Operations */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Trash2 className="w-4 h-4" />
+                Lifecycle Cleanup
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="p-4 border rounded bg-gray-50">
+                <h4 className="font-medium text-sm mb-2">Cleanup Actions</h4>
+                <p className="text-xs text-gray-600 mb-4">
+                  Preview what will be deleted based on retention policy. Dry-run mode counts rows without deleting.
+                </p>
+                <Button
+                  onClick={handleCleanupDryRun}
+                  disabled={cleanupRunning || updating}
+                  variant="outline"
+                  className="text-orange-600 border-orange-200 hover:bg-orange-50"
+                >
+                  {cleanupRunning ? 'Running...' : 'Run Dry-Run Cleanup'}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Lifecycle Audit Log */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-sm">Recent Lifecycle Events</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {lifecycleEvents.length === 0 ? (
+                <p className="text-sm text-gray-500">No lifecycle events recorded</p>
+              ) : (
+                <div className="space-y-2">
+                  {lifecycleEvents.slice(0, 10).map((event, idx) => (
+                    <div key={idx} className="text-xs p-3 border rounded bg-gray-50">
+                      <div className="flex justify-between items-start mb-1">
+                        <div>
+                          <p className="font-medium">{event.scope.toUpperCase()}</p>
+                          <p className="text-gray-600">{event.action}</p>
+                        </div>
+                        <Badge className="bg-blue-100 text-blue-800">
+                          {event.itemsAffected} rows
+                        </Badge>
+                      </div>
+                      <p className="text-gray-500 mt-1">{event.detail}</p>
+                      <p className="text-gray-400 text-xs mt-1">
+                        {new Date(event.occurredAt).toLocaleDateString()} {new Date(event.occurredAt).toLocaleTimeString()}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Compliance Info */}
+          <Card className="border-green-200 bg-green-50">
+            <CardContent className="pt-6">
+              <p className="text-sm text-green-900">
+                <strong>Retention & Compliance:</strong> All lifecycle operations are immutable and auditable.
+                Retention policies apply only to X-series artifacts; Guardian core runtime tables are never touched.
+                Governance events are preserved according to your retention setting.
               </p>
             </CardContent>
           </Card>
