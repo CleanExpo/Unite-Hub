@@ -16,7 +16,11 @@
 6. Verify: Tables `guardian_simulation_events` and `guardian_simulation_pipeline_traces` appear in Schema
 7. ✅ If successful, both tables should appear with RLS policies enabled
 
-**Note**: Migration requires `guardian_simulation_runs` table to exist (from I01). If you get a foreign key error, apply I01 migration first.
+**Note**:
+
+- Migration requires `guardian_simulation_runs` table to exist (from I01). If you get a foreign key error, apply I01 migration first.
+- RLS policies use `get_user_workspaces()` function (standard in codebase)
+- If you see "function get_user_workspaces does not exist" error, ensure migration 020 has been applied first
 
 #### Option B: Supabase CLI (Recommended for production)
 
