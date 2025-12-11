@@ -124,8 +124,6 @@ export async function runQaSchedule(
     'regression_pack'
   );
 
-  let baselineId: string | undefined;
-
   if (!baseline) {
     // Create new baseline from this run if none exists
     baseline = await createBaselineFromRegressionRun(
@@ -140,7 +138,7 @@ export async function runQaSchedule(
     );
   }
 
-  baselineId = baseline.id;
+  const baselineId = baseline.id;
 
   // Step 4: Extract current metrics
   const currentMetrics = await extractMetricsFromRegressionRun(tenantId, regressionRunId);

@@ -57,19 +57,25 @@ export default function QaDashboard() {
 
   // Load schedules
   useEffect(() => {
-    if (!workspaceId) return;
+    if (!workspaceId) {
+return;
+}
     loadSchedules();
   }, [workspaceId, activeTab]);
 
   // Load baselines
   useEffect(() => {
-    if (!workspaceId || activeTab !== 'baselines') return;
+    if (!workspaceId || activeTab !== 'baselines') {
+return;
+}
     loadBaselines();
   }, [workspaceId, activeTab]);
 
   // Load drift reports
   useEffect(() => {
-    if (!workspaceId || activeTab !== 'drift') return;
+    if (!workspaceId || activeTab !== 'drift') {
+return;
+}
     loadDriftReports();
   }, [workspaceId, activeTab]);
 
@@ -80,7 +86,9 @@ export default function QaDashboard() {
       const res = await fetch(
         `/api/guardian/admin/qa/schedules?workspaceId=${workspaceId}&isActive=true`
       );
-      if (!res.ok) throw new Error('Failed to load schedules');
+      if (!res.ok) {
+throw new Error('Failed to load schedules');
+}
       const data = await res.json();
       setSchedules(data.data || []);
     } catch (err) {
@@ -95,7 +103,9 @@ export default function QaDashboard() {
     setError(null);
     try {
       const res = await fetch(`/api/guardian/admin/qa/baselines?workspaceId=${workspaceId}`);
-      if (!res.ok) throw new Error('Failed to load baselines');
+      if (!res.ok) {
+throw new Error('Failed to load baselines');
+}
       const data = await res.json();
       setBaselines(data.data || []);
     } catch (err) {
@@ -110,7 +120,9 @@ export default function QaDashboard() {
     setError(null);
     try {
       const res = await fetch(`/api/guardian/admin/qa/drift?workspaceId=${workspaceId}&limit=20`);
-      if (!res.ok) throw new Error('Failed to load drift reports');
+      if (!res.ok) {
+throw new Error('Failed to load drift reports');
+}
       const data = await res.json();
       setDriftReports(data.data || []);
     } catch (err) {
@@ -129,7 +141,9 @@ export default function QaDashboard() {
           body: JSON.stringify({ actorId: 'manual_trigger' }),
         }
       );
-      if (!res.ok) throw new Error('Failed to run schedule');
+      if (!res.ok) {
+throw new Error('Failed to run schedule');
+}
       // Reload schedules and reports
       loadSchedules();
       loadDriftReports();
@@ -147,7 +161,9 @@ export default function QaDashboard() {
           body: JSON.stringify({ is_reference: true }),
         }
       );
-      if (!res.ok) throw new Error('Failed to update baseline');
+      if (!res.ok) {
+throw new Error('Failed to update baseline');
+}
       loadBaselines();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update baseline');

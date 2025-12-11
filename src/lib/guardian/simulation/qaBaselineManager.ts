@@ -325,11 +325,11 @@ export async function getBaseline(
 export async function findReferenceBaseline(
   tenantId: string,
   scope: string,
-  nameLike?: string
+  _nameLike?: string
 ): Promise<GuardianQaBaseline | null> {
   const supabase = getSupabaseServer();
 
-  let query = supabase
+  const query = supabase
     .from('guardian_qa_baselines')
     .select('*')
     .eq('tenant_id', tenantId)

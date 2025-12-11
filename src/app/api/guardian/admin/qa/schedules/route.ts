@@ -4,13 +4,11 @@
  */
 
 import { NextRequest } from 'next/server';
-import { getSupabaseServer } from '@/lib/supabase';
 import { validateUserAndWorkspace, successResponse, errorResponse } from '@/lib/api-helpers';
 import { withErrorBoundary } from '@/lib/error-boundary';
 import {
   listQaSchedules,
   createQaSchedule,
-  type GuardianQaSchedule,
 } from '@/lib/guardian/simulation/qaScheduleExecutor';
 
 /**
@@ -92,8 +90,7 @@ export const POST = withErrorBoundary(async (req: NextRequest) => {
 });
 
 /**
- * Basic cron expression validation
- * Accepts patterns like: '0 3 * * *', '*/15 * * * *', etc.
+ * Validate cron expression format
  */
 function isValidCron(expr: string): boolean {
   const parts = expr.trim().split(/\s+/);
@@ -117,7 +114,9 @@ function isValidCron(expr: string): boolean {
  * Check if a single cron part is valid
  */
 function isValidCronPart(part: string, min: number, max: number): boolean {
-  if (part === '*') return true;
+  if (part === '*') {
+    return true;
+  }
   if (part.startsWith('*/')) {
     const step = parseInt(part.substring(2), 10);
     return !isNaN(step) && step > 0;
