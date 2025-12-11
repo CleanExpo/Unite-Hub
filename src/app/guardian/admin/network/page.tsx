@@ -82,6 +82,19 @@ interface GuardianNetworkLifecycleEvent {
   detail: string;
 }
 
+interface GuardianNetworkRecommendation {
+  id: string;
+  status: 'open' | 'in_progress' | 'implemented' | 'dismissed';
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  recommendationType: string;
+  suggestionTheme: string;
+  title: string;
+  summary: string;
+  rationale?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 interface GuardianNetworkOverview {
   flags: GuardianNetworkFeatureFlags;
   stats: GuardianNetworkStats;
@@ -102,11 +115,14 @@ export default function NetworkIntelligencePage() {
   const [flags, setFlags] = useState<GuardianNetworkFeatureFlags | null>(null);
   const [retention, setRetention] = useState<GuardianNetworkRetentionPolicy | null>(null);
   const [lifecycleEvents, setLifecycleEvents] = useState<GuardianNetworkLifecycleEvent[]>([]);
+  const [recommendations, setRecommendations] = useState<GuardianNetworkRecommendation[]>([]);
+  const [recommendationDetail, setRecommendationDetail] = useState<GuardianNetworkRecommendation | null>(null);
+  const [recommendationFilter, setRecommendationFilter] = useState<'all' | 'open' | 'in_progress'>('open');
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
   const [cleanupRunning, setCleanupRunning] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedTab, setSelectedTab] = useState<"overview" | "insights" | "settings" | "compliance">(
+  const [selectedTab, setSelectedTab] = useState<"overview" | "insights" | "settings" | "compliance" | "recommendations">(
     "overview"
   );
 
@@ -117,6 +133,7 @@ export default function NetworkIntelligencePage() {
       await loadOverview();
       await loadRetention();
       await loadLifecycleEvents();
+      await loadRecommendations();
     };
     loadAllData();
   }, []);
@@ -206,6 +223,49 @@ return;
       }
     } catch (err) {
       console.error('Failed to load lifecycle events:', err);
+    }
+  };
+
+  const loadRecommendations = async () => {
+    try {
+      const statusFilter = recommendationFilter === 'all' ? '' : `&status=${recommendationFilter}`;
+      const res = await fetch(
+        `/api/guardian/network/recommendations?workspaceId=${workspaceId}&limit=50${statusFilter}`
+      );
+      if (res.ok) {
+        const data = await res.json();
+        setRecommendations(data.recommendations || []);
+      }
+    } catch (err) {
+      console.error('Failed to load recommendations:', err);
+    }
+  };
+
+  const updateRecommendationStatus = async (id: string, status: 'in_progress' | 'implemented' | 'dismissed') => {
+    try {
+      setUpdating(true);
+      const res = await fetch(
+        `/api/guardian/network/recommendations?workspaceId=${workspaceId}`,
+        {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, status }),
+        }
+      );
+
+      if (res.ok) {
+        const data = await res.json();
+        if (recommendationDetail && recommendationDetail.id === id) {
+          setRecommendationDetail(data.data);
+        }
+        await loadRecommendations();
+      } else {
+        setError('Failed to update recommendation');
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Update failed');
+    } finally {
+      setUpdating(false);
     }
   };
 
@@ -367,6 +427,20 @@ return;
         >
           <Shield className="w-4 h-4" />
           Compliance
+        </button>
+        <button
+          onClick={() => {
+            setSelectedTab("recommendations");
+            loadRecommendations();
+          }}
+          className={`px-4 py-2 font-medium border-b-2 transition-colors flex items-center gap-2 ${
+            selectedTab === "recommendations"
+              ? "border-accent-500 text-accent-600"
+              : "border-transparent text-gray-600 hover:text-gray-900"
+          }`}
+        >
+          <CheckCircle className="w-4 h-4" />
+          Recommendations
         </button>
       </div>
 
@@ -821,6 +895,199 @@ return;
               </p>
             </CardContent>
           </Card>
+        </div>
+      )}
+
+      {/* RECOMMENDATIONS TAB */}
+      {selectedTab === "recommendations" && (
+        <div className="space-y-6">
+          {/* Advisory Banner */}
+          <Card className="border-blue-200 bg-blue-50">
+            <CardContent className="pt-6">
+              <p className="text-sm text-blue-900 flex items-start gap-2">
+                <TrendingUp className="w-4 h-4 mt-0.5 shrink-0" />
+                <span>
+                  <strong>Advisory-Only:</strong> Recommendations are non-binding guidance derived from network
+                  intelligence. You decide when and how to apply them. No automatic configuration changes occur.
+                </span>
+              </p>
+            </CardContent>
+          </Card>
+
+          {!flags?.enableNetworkEarlyWarnings && !flags?.enableNetworkAnomalies ? (
+            <Card className="border-yellow-200 bg-yellow-50">
+              <CardContent className="pt-6">
+                <p className="text-sm text-yellow-900">
+                  Enable "Anomalies" or "Early Warnings" in Settings to see recommendations
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <>
+              {/* Filter & Actions */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Recommendations</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <Select value={recommendationFilter} onValueChange={(val) => {
+                      setRecommendationFilter(val as 'all' | 'open' | 'in_progress');
+                      setTimeout(() => loadRecommendations(), 0);
+                    }}>
+                      <SelectTrigger className="w-32">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="open">Open</SelectItem>
+                        <SelectItem value="in_progress">In Progress</SelectItem>
+                        <SelectItem value="all">All</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {recommendations.length === 0 ? (
+                    <div className="p-6 bg-gray-50 border border-gray-200 rounded text-center">
+                      <CheckCircle className="w-8 h-8 mx-auto text-gray-400 mb-2" />
+                      <p className="text-gray-600">No {recommendationFilter !== 'all' ? recommendationFilter : ''} recommendations</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {recommendations.map((rec) => (
+                        <div
+                          key={rec.id}
+                          className="p-4 border rounded hover:bg-gray-50 cursor-pointer transition-colors"
+                          onClick={() => setRecommendationDetail(rec)}
+                        >
+                          <div className="flex justify-between items-start mb-2">
+                            <div className="flex-1">
+                              <p className="font-medium text-sm">{rec.title}</p>
+                              <p className="text-xs text-gray-500 mt-1">{rec.summary}</p>
+                            </div>
+                            <div className="flex gap-2 ml-4">
+                              <Badge
+                                className={
+                                  SEVERITY_COLORS[rec.severity] || "bg-gray-100 text-gray-800"
+                                }
+                              >
+                                {rec.severity}
+                              </Badge>
+                              <Badge
+                                className={
+                                  rec.status === 'open'
+                                    ? 'bg-blue-100 text-blue-800'
+                                    : rec.status === 'in_progress'
+                                    ? 'bg-orange-100 text-orange-800'
+                                    : rec.status === 'implemented'
+                                    ? 'bg-green-100 text-green-800'
+                                    : 'bg-gray-100 text-gray-800'
+                                }
+                              >
+                                {rec.status}
+                              </Badge>
+                            </div>
+                          </div>
+                          <div className="flex gap-1 text-xs mt-3">
+                            <span className="text-gray-500">{rec.recommendationType}</span>
+                            <span className="text-gray-400">•</span>
+                            <span className="text-gray-500">{rec.suggestionTheme}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Detail Panel */}
+              {recommendationDetail && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="text-base flex items-center justify-between">
+                      <span>{recommendationDetail.title}</span>
+                      <Badge
+                        className={
+                          SEVERITY_COLORS[recommendationDetail.severity] || "bg-gray-100 text-gray-800"
+                        }
+                      >
+                        {recommendationDetail.severity}
+                      </Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div>
+                      <p className="text-xs text-gray-500 mb-1">Summary</p>
+                      <p className="text-sm">{recommendationDetail.summary}</p>
+                    </div>
+
+                    {recommendationDetail.rationale && (
+                      <div>
+                        <p className="text-xs text-gray-500 mb-1">Rationale</p>
+                        <p className="text-sm">{recommendationDetail.rationale}</p>
+                      </div>
+                    )}
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-xs text-gray-500">Type</p>
+                        <p className="text-sm font-medium">{recommendationDetail.recommendationType}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500">Theme</p>
+                        <p className="text-sm font-medium">{recommendationDetail.suggestionTheme}</p>
+                      </div>
+                    </div>
+
+                    {recommendationDetail.status === 'open' && (
+                      <div className="flex gap-2 pt-4 border-t">
+                        <Button
+                          onClick={() => updateRecommendationStatus(recommendationDetail.id, 'in_progress')}
+                          disabled={updating}
+                          size="sm"
+                          className="bg-orange-600 hover:bg-orange-700"
+                        >
+                          Start Work
+                        </Button>
+                        <Button
+                          onClick={() => updateRecommendationStatus(recommendationDetail.id, 'dismissed')}
+                          disabled={updating}
+                          variant="outline"
+                          size="sm"
+                        >
+                          Dismiss
+                        </Button>
+                      </div>
+                    )}
+
+                    {recommendationDetail.status === 'in_progress' && (
+                      <div className="flex gap-2 pt-4 border-t">
+                        <Button
+                          onClick={() => updateRecommendationStatus(recommendationDetail.id, 'implemented')}
+                          disabled={updating}
+                          size="sm"
+                          className="bg-green-600 hover:bg-green-700"
+                        >
+                          Mark Implemented
+                        </Button>
+                        <Button
+                          onClick={() => updateRecommendationStatus(recommendationDetail.id, 'open')}
+                          disabled={updating}
+                          variant="outline"
+                          size="sm"
+                        >
+                          Revert to Open
+                        </Button>
+                      </div>
+                    )}
+
+                    <p className="text-xs text-gray-400 pt-4 border-t">
+                      Updated: {new Date(recommendationDetail.updatedAt).toLocaleDateString()}
+                    </p>
+                  </CardContent>
+                </Card>
+              )}
+            </>
+          )}
         </div>
       )}
     </div>
