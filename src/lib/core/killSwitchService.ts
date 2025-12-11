@@ -9,7 +9,7 @@
  * @module killSwitchService
  */
 
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export type KillSwitchCategory =
   | "delivery"

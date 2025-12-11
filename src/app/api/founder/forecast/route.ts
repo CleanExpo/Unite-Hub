@@ -4,7 +4,7 @@ import {
   getLatestForecasts,
   recordForecast,
   getForecastAccuracy,
-} from "@/src/lib/founder/governanceForecastService";
+} from "@/lib/founder/governanceForecastService";
 
 export async function GET(req: NextRequest) {
   try {

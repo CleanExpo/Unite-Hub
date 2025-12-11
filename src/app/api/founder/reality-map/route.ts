@@ -11,7 +11,7 @@ import {
   recordRealityPanel,
   recordRealitySnapshot,
   getRealityMapSummary,
-} from "@/src/lib/founder/realityMapService";
+} from "@/lib/founder/realityMapService";
 
 export async function GET(req: NextRequest) {
   try {

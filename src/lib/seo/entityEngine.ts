@@ -99,7 +99,16 @@ export class EntityEngine {
   private client: DataForSEOClient;
 
   constructor(login: string, password: string) {
-    this.client = new DataForSEOClient(login, password);
+    const DataForSEOImpl: any = DataForSEOClient as any;
+
+    // Support both class-style SDK and function-style test mocks
+    try {
+      this.client = new DataForSEOImpl(login, password);
+    } catch (error) {
+      // Fallback: treat mocked client as a factory function that
+      // returns an object implementing the expected interface.
+      this.client = DataForSEOImpl(login, password);
+    }
   }
 
   /**

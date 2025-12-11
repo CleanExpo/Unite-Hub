@@ -5,22 +5,29 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { getSupabaseServer, supabaseAdmin } from "@/lib/supabase";
+import { getSupabaseServer } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { hasPermission } from "@/lib/core/permissionService";
 
 export async function GET(req: NextRequest) {
   try {
     const supabase = getSupabaseServer();
     const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (authError || !user) {
+return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+}
 
     const searchParams = req.nextUrl.searchParams;
     const workspaceId = searchParams.get("workspaceId");
     const action = searchParams.get("action");
-    if (!workspaceId) return NextResponse.json({ error: "workspaceId required" }, { status: 400 });
+    if (!workspaceId) {
+return NextResponse.json({ error: "workspaceId required" }, { status: 400 });
+}
 
     const canView = await hasPermission(user.id, workspaceId, "settings", "read");
-    if (!canView) return NextResponse.json({ error: "Permission denied" }, { status: 403 });
+    if (!canView) {
+return NextResponse.json({ error: "Permission denied" }, { status: 403 });
+}
 
     // Get timeline statistics
     if (action === "stats") {
@@ -29,7 +36,9 @@ export async function GET(req: NextRequest) {
         p_tenant_id: workspaceId,
         p_days: days,
       });
-      if (error) throw new Error(`Failed to get timeline stats: ${error.message}`);
+      if (error) {
+throw new Error(`Failed to get timeline stats: ${error.message}`);
+}
       return NextResponse.json({ stats });
     }
 
@@ -47,7 +56,9 @@ export async function GET(req: NextRequest) {
       p_limit: limit,
     });
 
-    if (error) throw new Error(`Failed to get timeline: ${error.message}`);
+    if (error) {
+throw new Error(`Failed to get timeline: ${error.message}`);
+}
     return NextResponse.json({ events });
   } catch (error: any) {
     console.error("[API] /founder/timeline GET error:", error);

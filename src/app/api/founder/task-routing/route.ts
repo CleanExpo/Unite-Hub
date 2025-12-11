@@ -11,7 +11,7 @@ import {
   updateTaskStatus,
   listTasks,
   getQueueSummary,
-} from "@/src/lib/founder/taskRoutingService";
+} from "@/lib/founder/taskRoutingService";
 
 export async function GET(req: NextRequest) {
   try {

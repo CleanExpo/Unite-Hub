@@ -7,7 +7,7 @@
  * @module eventBus
  */
 
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export type EventType =
   | "user.created"

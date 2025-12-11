@@ -9,7 +9,7 @@ import {
   recordPriorityDecision,
   listPriorityDecisions,
   getPrioritySummary,
-} from "@/src/lib/founder/priorityArbiterService";
+} from "@/lib/founder/priorityArbiterService";
 
 export async function GET(req: NextRequest) {
   try {

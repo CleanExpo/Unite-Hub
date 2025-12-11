@@ -12,7 +12,7 @@ import {
   linkRemediationTask,
   getRemediationSummary,
   getRemediationDetails,
-} from "@/src/lib/founder/remediationService";
+} from "@/lib/founder/remediationService";
 
 export async function GET(req: NextRequest) {
   try {

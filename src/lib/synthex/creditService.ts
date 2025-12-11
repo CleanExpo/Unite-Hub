@@ -6,7 +6,7 @@
  * and billing integration for AI operations.
  */
 
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 // =====================================================
 // Types

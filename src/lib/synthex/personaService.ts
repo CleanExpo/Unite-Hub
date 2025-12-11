@@ -5,7 +5,7 @@
  * AI-powered persona generation, management, and matching.
  */
 
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 // =====================================================
 // Types

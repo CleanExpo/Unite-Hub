@@ -15,7 +15,7 @@
  * {
  *   "crons": [{
  *     "path": "/api/cron/process-exports",
- *     "schedule": "*/10 * * * *"
+ *     "schedule": "* /10 * * * *" // every 10 minutes
  *   }]
  * }
  */
@@ -60,7 +60,7 @@ async function processExportJob(job: ExportJob): Promise<void> {
 
     // Fetch data based on export type
     let exportData: any[] = [];
-    let exportUrl: string | null = null;
+    const exportUrl: string | null = null;
     let fileSizeBytes = 0;
 
     switch (job.type) {
@@ -148,7 +148,9 @@ async function fetchAudienceData(tenantId: string): Promise<any[]> {
     .eq("workspace_id", tenantId)
     .order("created_at", { ascending: false });
 
-  if (error) throw error;
+  if (error) {
+throw error;
+}
   return data || [];
 }
 
@@ -162,7 +164,9 @@ async function fetchCampaignsData(tenantId: string): Promise<any[]> {
     .eq("workspace_id", tenantId)
     .order("created_at", { ascending: false });
 
-  if (error) throw error;
+  if (error) {
+throw error;
+}
   return data || [];
 }
 
@@ -176,7 +180,9 @@ async function fetchContentData(tenantId: string): Promise<any[]> {
     .eq("workspace_id", tenantId)
     .order("created_at", { ascending: false });
 
-  if (error) throw error;
+  if (error) {
+throw error;
+}
   return data || [];
 }
 
@@ -220,7 +226,9 @@ async function fetchCustomExport(tenantId: string, metadata: Record<string, any>
  * Generate CSV from data
  */
 function generateCSV(data: any[]): string {
-  if (data.length === 0) return "";
+  if (data.length === 0) {
+return "";
+}
 
   // Get all unique keys
   const keys = Array.from(new Set(data.flatMap(Object.keys)));
@@ -232,7 +240,9 @@ function generateCSV(data: any[]): string {
   const rows = data.map((row) =>
     keys.map((key) => {
       const value = row[key];
-      if (value === null || value === undefined) return "";
+      if (value === null || value === undefined) {
+return "";
+}
       if (typeof value === "string" && value.includes(",")) {
         return `"${value.replace(/"/g, '""')}"`;
       }

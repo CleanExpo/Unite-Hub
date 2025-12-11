@@ -11,7 +11,7 @@ import {
   computeHeatmapRange,
   recordHeatmapEvent,
   listHeatmapItems,
-} from "@/src/lib/founder/heatmapService";
+} from "@/lib/founder/heatmapService";
 
 export async function GET(req: NextRequest) {
   try {

@@ -12,7 +12,7 @@ import {
   addDebtUpdate,
   getDebtSummary,
   getDebtDetails,
-} from "@/src/lib/founder/debtService";
+} from "@/lib/founder/debtService";
 
 export async function GET(req: NextRequest) {
   try {

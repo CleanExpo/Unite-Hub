@@ -10,7 +10,7 @@ import {
   listPerformanceMetrics,
   getPerformanceSummary,
   getMetricHistory,
-} from "@/src/lib/founder/performanceTelemetryService";
+} from "@/lib/founder/performanceTelemetryService";
 
 export async function GET(req: NextRequest) {
   try {

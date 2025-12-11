@@ -1,50 +1,121 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
-import { getUserTrustedDevices, revokeTrustedDevice } from "@/lib/rbac/deviceAuthorization";
-import { isUserAdmin } from "@/lib/rbac/getUserRole";
+import {
+  generateDeviceFingerprint,
+  logAdminAccess,
+} from "@/lib/rbac/deviceAuthorization";
 
-/**
- * GET /api/admin/trusted-devices
- * Returns list of trusted devices for authenticated user
- *
- * Response:
- * {
- *   devices: Array<{
- *     id: string
- *     ip_address: string
- *     user_agent: string
- *     last_used: string
- *     expires_at: string
- *     created_at: string
- *   }>
- * }
- */
+type AdminContext = {
+  supabase: Awaited<ReturnType<typeof getSupabaseServer>>;
+  user: { id: string };
+  email: string;
+};
+
+async function requireAdmin(): Promise<
+  | { context: AdminContext }
+  | { response: NextResponse }
+> {
+  const supabase = await getSupabaseServer();
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !user) {
+    return {
+      response: NextResponse.json({ error: "Unauthorized" }, { status: 401 }),
+    };
+  }
+
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("role, email")
+    .eq("id", user.id)
+    .single();
+
+  if (profileError || !profile) {
+    return {
+      response: NextResponse.json(
+        { error: "Unable to load user profile" },
+        { status: 500 }
+      ),
+    };
+  }
+
+  if (profile.role !== "admin") {
+    return {
+      response: NextResponse.json(
+        { error: "Only admins can manage trusted devices" },
+        { status: 403 }
+      ),
+    };
+  }
+
+  return { context: { supabase, user, email: profile.email } };
+}
+
+function getClientIp(req: NextRequest) {
+  const forwarded = req.headers.get("x-forwarded-for");
+  if (forwarded) {
+    return forwarded.split(",")[0]?.trim() || "";
+  }
+  return req.headers.get("x-real-ip") || "";
+}
+
+function normalizeDevice(device: any) {
+  const lastUsed =
+    device?.last_used ||
+    device?.last_used_at ||
+    device?.trusted_at ||
+    device?.created_at;
+
+  return {
+    id: device.id,
+    ip_address: device.ip_address ? String(device.ip_address) : "",
+    user_agent: device.user_agent || device.device_name || "Unknown device",
+    last_used: lastUsed,
+    expires_at: device.expires_at,
+    created_at: device.created_at || device.trusted_at || device.last_used_at,
+  };
+}
+
 export async function GET(req: NextRequest) {
   try {
-    const supabase = await getSupabaseServer();
+    const auth = await requireAdmin();
+    if ("response" in auth) {
+      return auth.response;
+    }
 
-    // Get current user
-    const { data: { user } } = await supabase.auth.getUser();
+    const { supabase, user } = auth.context;
 
-    if (!user) {
+    const { data, error } = await supabase
+      .from("admin_trusted_devices")
+      .select("*")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Failed to fetch trusted devices:", error);
       return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
+        { error: "Failed to fetch trusted devices" },
+        { status: 500 }
       );
     }
 
-    // Verify user is admin
-    const isAdmin = await isUserAdmin(user.id);
-
-    if (!isAdmin) {
-      return NextResponse.json(
-        { error: "Only admins can view trusted devices" },
-        { status: 403 }
-      );
-    }
-
-    // Get trusted devices
-    const devices = await getUserTrustedDevices(user.id);
+    const now = Date.now();
+    const devices =
+      data
+        ?.filter((device: any) => {
+          const isTrusted =
+            device?.is_trusted ??
+            device?.is_active ??
+            true; // Support both schema variants
+          const expiresAt = device?.expires_at
+            ? new Date(device.expires_at).getTime()
+            : Infinity;
+          return Boolean(isTrusted) && expiresAt > now;
+        })
+        .map(normalizeDevice) || [];
 
     return NextResponse.json({
       success: true,
@@ -60,83 +131,117 @@ export async function GET(req: NextRequest) {
   }
 }
 
-/**
- * DELETE /api/admin/trusted-devices?device_id=...
- * Revokes trust for a specific device
- *
- * Query Parameters:
- * - device_id: UUID of the device to revoke
- *
- * Response:
- * {
- *   success: boolean
- *   message: string
- * }
- */
+async function revokeDevice(req: NextRequest) {
+  let deviceId =
+    req.nextUrl.searchParams.get("device_id") ||
+    req.nextUrl.searchParams.get("deviceId");
+
+  if (!deviceId && req.method === "POST") {
+    try {
+      const body = await req.json();
+      deviceId = body?.device_id || body?.deviceId || body?.id;
+    } catch {
+      // ignore JSON parse errors for POST without body
+    }
+  }
+
+  if (!deviceId) {
+    return NextResponse.json(
+      { error: "device_id is required" },
+      { status: 400 }
+    );
+  }
+
+  const auth = await requireAdmin();
+  if ("response" in auth) {
+    return auth.response;
+  }
+
+  const { supabase, user } = auth.context;
+
+  const { data: device, error: fetchError } = await supabase
+    .from("admin_trusted_devices")
+    .select("*")
+    .eq("id", deviceId)
+    .single();
+
+  if (fetchError || !device) {
+    return NextResponse.json(
+      { error: "Trusted device not found" },
+      { status: 404 }
+    );
+  }
+
+  if (device.user_id && device.user_id !== user.id) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  const updatePayload: Record<string, any> = {};
+  if (Object.prototype.hasOwnProperty.call(device, "is_trusted")) {
+    updatePayload.is_trusted = false;
+  }
+  if (Object.prototype.hasOwnProperty.call(device, "is_active")) {
+    updatePayload.is_active = false;
+  }
+  if (Object.keys(updatePayload).length === 0) {
+    updatePayload.is_trusted = false;
+  }
+
+  const { error: updateError } = await supabase
+    .from("admin_trusted_devices")
+    .update(updatePayload)
+    .eq("id", deviceId);
+
+  if (updateError) {
+    console.error("Failed to revoke trusted device:", updateError);
+    return NextResponse.json(
+      { error: "Failed to revoke trusted device" },
+      { status: 500 }
+    );
+  }
+
+  const ipForLog =
+    (device.ip_address && String(device.ip_address)) || getClientIp(req) || "";
+  const uaForLog =
+    device.user_agent || req.headers.get("user-agent") || "unknown";
+  const fingerprint =
+    device.device_fingerprint ||
+    generateDeviceFingerprint(uaForLog, ipForLog || "unknown");
+
+  await logAdminAccess(
+    user.id,
+    "admin_device_revoked",
+    ipForLog,
+    uaForLog,
+    fingerprint,
+    true,
+    `Device ${deviceId} revoked`
+  );
+
+  return NextResponse.json({
+    success: true,
+    message: "Trusted device revoked",
+  });
+}
+
 export async function DELETE(req: NextRequest) {
   try {
-    const { searchParams } = req.nextUrl;
-    const deviceId = searchParams.get("device_id");
-
-    if (!deviceId) {
-      return NextResponse.json(
-        { error: "Missing device_id parameter" },
-        { status: 400 }
-      );
-    }
-
-    const supabase = await getSupabaseServer();
-
-    // Get current user
-    const { data: { user } } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    // Verify user is admin
-    const isAdmin = await isUserAdmin(user.id);
-
-    if (!isAdmin) {
-      return NextResponse.json(
-        { error: "Only admins can revoke devices" },
-        { status: 403 }
-      );
-    }
-
-    // Verify device belongs to user
-    const { data: device } = await supabase
-      .from("admin_trusted_devices")
-      .select("id, user_id")
-      .eq("id", deviceId)
-      .single();
-
-    if (!device || device.user_id !== user.id) {
-      return NextResponse.json(
-        { error: "Device not found or does not belong to you" },
-        { status: 404 }
-      );
-    }
-
-    // Revoke device
-    const revoked = await revokeTrustedDevice(deviceId);
-
-    if (!revoked) {
-      return NextResponse.json(
-        { error: "Failed to revoke device" },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json({
-      success: true,
-      message: "Device access revoked successfully",
-    });
+    return await revokeDevice(req);
   } catch (error) {
     console.error("Error in DELETE /api/admin/trusted-devices:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(req: NextRequest) {
+  // Keep POST for compatibility with older clients that used POST to revoke devices.
+  try {
+    return await revokeDevice(req);
+  } catch (error) {
+    console.error("Error in POST /api/admin/trusted-devices:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

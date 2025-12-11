@@ -14,7 +14,7 @@ import {
   listRecoveryActions,
   getRecoverySummary,
   autoRecommendRecovery,
-} from "@/src/lib/founder/recoveryProtocolsService";
+} from "@/lib/founder/recoveryProtocolsService";
 
 export async function GET(req: NextRequest) {
   try {

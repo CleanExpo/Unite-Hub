@@ -11,7 +11,7 @@ import {
   recordCoherenceNode,
   recordCoherenceEdge,
   getCoherenceSummary,
-} from "@/src/lib/founder/coherenceService";
+} from "@/lib/founder/coherenceService";
 
 export async function GET(req: NextRequest) {
   try {

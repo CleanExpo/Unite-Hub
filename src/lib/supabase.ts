@@ -51,6 +51,9 @@ export const supabase = new Proxy({} as ReturnType<typeof createClient<Database>
 
 export const supabaseBrowser = supabase; // Alias for clarity
 
+// Admin client re-export for server-side use only
+export { supabaseAdmin, getSupabaseAdmin } from '@/lib/supabase/admin';
+
 // Server-side (API routes) - creates a client that reads session from cookies
 // NOTE: This uses '@supabase/ssr' to properly read session from cookies
 export async function getSupabaseServer() {

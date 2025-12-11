@@ -13,13 +13,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Toast } from "@/components/patterns/Toast";
 import {
-  ShieldExclamationIcon,
-  ComputerDesktopIcon,
-  ExclamationTriangleIcon,
-  CheckCircleIcon,
-  XCircleIcon,
-  ClockIcon,
-} from "@heroicons/react/24/outline";
+  ShieldAlert as ShieldExclamationIcon,
+  Monitor as ComputerDesktopIcon,
+  AlertTriangle as ExclamationTriangleIcon,
+  CheckCircle as CheckCircleIcon,
+  XCircle as XCircleIcon,
+  Clock as ClockIcon,
+} from "lucide-react";
 
 type SessionStatus = "active" | "expired" | "revoked" | "logged_out";
 type SecurityEventType = "login_success" | "login_failure" | "logout" | "mfa_enabled" | "mfa_disabled" |
@@ -149,7 +149,9 @@ export default function SecurityCenterPage() {
         }),
       });
 
-      if (!res.ok) throw new Error("Failed to invalidate session");
+      if (!res.ok) {
+throw new Error("Failed to invalidate session");
+}
 
       setToast({ message: "Session invalidated", type: "success" });
       loadData();
@@ -505,15 +507,6 @@ export default function SecurityCenterPage() {
           </TabsContent>
         </Tabs>
       </div>
-
-      {/* Toast */}
-      {toast && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          onClose={() => setToast(null)}
-        />
-      )}
     </div>
   );
 }

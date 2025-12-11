@@ -10,7 +10,7 @@ import {
   listLoadEvents,
   getLoadSummary,
   getStreamLoad,
-} from "@/src/lib/founder/loadBalancerService";
+} from "@/lib/founder/loadBalancerService";
 
 export async function GET(req: NextRequest) {
   try {

@@ -10,7 +10,7 @@ import {
   recordTrendMetric,
   getTrendSummary,
   getMetricTrend,
-} from "@/src/lib/founder/trendService";
+} from "@/lib/founder/trendService";
 
 export async function GET(req: NextRequest) {
   try {

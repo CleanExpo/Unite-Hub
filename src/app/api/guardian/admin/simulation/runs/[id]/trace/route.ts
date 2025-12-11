@@ -7,7 +7,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabase';
-import { validateUserAndWorkspace } from '@/lib/api-helpers';
+import { validateUserAndWorkspace } from '@/lib/workspace-validation';
 
 export async function GET(
   req: NextRequest,

@@ -7,7 +7,7 @@
  * @module backupService
  */
 
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export type BackupScope = "global" | "tenant" | "database" | "storage";
 export type BackupStatus = "pending" | "running" | "completed" | "failed" | "cancelled";

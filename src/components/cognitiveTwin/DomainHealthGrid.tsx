@@ -295,3 +295,6 @@ return <TrendingDown className="w-4 h-4 text-red-500" />;
     </div>
   );
 }
+
+// Named export for compatibility with consumers expecting { DomainHealthGrid }
+export { DomainHealthGrid };

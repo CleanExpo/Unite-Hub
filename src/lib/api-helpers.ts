@@ -83,6 +83,30 @@ export async function authenticateRequest(req: NextRequest): Promise<{
 }
 
 /**
+ * Simple error boundary wrapper for API handlers.
+ * Ensures exceptions are converted to 500 JSON responses.
+ */
+export function withErrorBoundary<T>(
+  handler: () => Promise<NextResponse<T>> | NextResponse<T>
+): Promise<NextResponse<T>> {
+  return Promise.resolve()
+    .then(() => handler())
+    .catch((err: any) => {
+      console.error('[API] Unhandled error', err);
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: 'INTERNAL_ERROR',
+            message: err?.message || 'Unexpected error',
+          },
+        },
+        { status: 500 }
+      ) as unknown as NextResponse<T>;
+    });
+}
+
+/**
  * Gets the user ID from an API request (convenience wrapper)
  *
  * @example

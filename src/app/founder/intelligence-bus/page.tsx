@@ -6,7 +6,7 @@
  */
 
 import { useEffect, useState, useMemo } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface IntelligenceSignal {
   id: string;
@@ -64,7 +64,9 @@ export default function IntelligenceBusPage() {
     const groups: Record<string, IntelligenceSignal[]> = {};
     for (const signal of signals) {
       const key = signal.domain || "other";
-      if (!groups[key]) groups[key] = [];
+      if (!groups[key]) {
+groups[key] = [];
+}
       groups[key].push(signal);
     }
     return groups;

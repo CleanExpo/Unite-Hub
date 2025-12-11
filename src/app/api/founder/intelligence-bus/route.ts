@@ -9,7 +9,7 @@ import {
   listIntelligenceSignals,
   recordIntelligenceSignal,
   getIntelligenceSummary,
-} from "@/src/lib/founder/intelligenceBusService";
+} from "@/lib/founder/intelligenceBusService";
 
 export async function GET(req: NextRequest) {
   try {

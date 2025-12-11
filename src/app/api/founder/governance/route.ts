@@ -11,7 +11,7 @@ import {
   computeGovernanceScorecard,
   recordGovernanceMetric,
   listGovernanceMetrics,
-} from "@/src/lib/founder/governanceScoreService";
+} from "@/lib/founder/governanceScoreService";
 
 export async function GET(req: NextRequest) {
   try {

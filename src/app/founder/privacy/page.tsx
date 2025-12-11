@@ -14,14 +14,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Modal } from "@/components/patterns/Modal";
 import { Toast } from "@/components/patterns/Toast";
 import {
-  ShieldCheckIcon,
-  DocumentTextIcon,
-  CheckCircleIcon,
-  ClockIcon,
-  ExclamationCircleIcon,
-  PlusIcon,
-  ChevronRightIcon,
-} from "@heroicons/react/24/outline";
+  ShieldCheck as ShieldCheckIcon,
+  FileText as DocumentTextIcon,
+  CheckCircle as CheckCircleIcon,
+  Clock as ClockIcon,
+  AlertCircle as ExclamationCircleIcon,
+  Plus as PlusIcon,
+  ChevronRight as ChevronRightIcon,
+} from "lucide-react";
 
 type DSRType = "access" | "rectification" | "erasure" | "export" | "restriction" | "portability" | "objection" | "other";
 type DSRStatus = "open" | "in_progress" | "resolved" | "rejected" | "cancelled";
@@ -155,7 +155,9 @@ export default function PrivacyCompliancePage() {
         }),
       });
 
-      if (!res.ok) throw new Error("Failed to create DSR");
+      if (!res.ok) {
+throw new Error("Failed to create DSR");
+}
 
       setToast({ message: "Data subject request created", type: "success" });
       setShowCreateDSRModal(false);
@@ -184,7 +186,9 @@ export default function PrivacyCompliancePage() {
         }),
       });
 
-      if (!res.ok) throw new Error("Failed to record consent");
+      if (!res.ok) {
+throw new Error("Failed to record consent");
+}
 
       setToast({ message: "Consent recorded", type: "success" });
       setShowConsentModal(false);
@@ -215,7 +219,9 @@ export default function PrivacyCompliancePage() {
         }),
       });
 
-      if (!res.ok) throw new Error("Failed to update DSR");
+      if (!res.ok) {
+throw new Error("Failed to update DSR");
+}
 
       setToast({ message: "Status updated", type: "success" });
       loadData();
@@ -673,14 +679,6 @@ export default function PrivacyCompliancePage() {
         </div>
       </Modal>
 
-      {/* Toast */}
-      {toast && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          onClose={() => setToast(null)}
-        />
-      )}
     </div>
   );
 }

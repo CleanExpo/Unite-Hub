@@ -7,7 +7,7 @@
  * @module rbacService
  */
 
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export interface RBACRole {
   id: string;

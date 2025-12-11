@@ -11,7 +11,7 @@ import {
   updateIntentRouting,
   listIntentSignals,
   getIntentRoutingSummary,
-} from "@/src/lib/founder/intentRouterService";
+} from "@/lib/founder/intentRouterService";
 
 export async function GET(req: NextRequest) {
   try {

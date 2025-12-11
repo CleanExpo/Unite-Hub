@@ -6,7 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createH15Manager } from '@/lib/founder/h15/modelLifecycleManager';
-import { validateUserAndWorkspace } from '@/lib/api-helpers';
+import { validateUserAndWorkspace } from '@/lib/workspace-validation';
 
 const manager = createH15Manager();
 

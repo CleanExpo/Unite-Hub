@@ -11,7 +11,7 @@ import {
   recordOpsStream,
   recordOpsNode,
   getOpsSummary,
-} from "@/src/lib/founder/opsGraphService";
+} from "@/lib/founder/opsGraphService";
 
 export async function GET(req: NextRequest) {
   try {

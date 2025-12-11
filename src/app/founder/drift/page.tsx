@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/card";
-import { Badge } from "@/src/components/ui/badge";
-import { Button } from "@/src/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/src/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 type DriftEvent = {
   id: string;
@@ -51,18 +51,28 @@ export default function DriftPage() {
       const summaryRes = await fetch(
         `/api/founder/drift?workspaceId=${workspaceId}&action=summary`
       );
-      if (!summaryRes.ok) throw new Error("Failed to load summary");
+      if (!summaryRes.ok) {
+throw new Error("Failed to load summary");
+}
       const summaryData = await summaryRes.json();
       setSummary(summaryData.summary);
 
       // Load events
       const params = new URLSearchParams({ workspaceId });
-      if (driftTypeFilter !== "all") params.append("driftType", driftTypeFilter);
-      if (statusFilter !== "all") params.append("status", statusFilter);
-      if (severityFilter !== "all") params.append("severity", severityFilter);
+      if (driftTypeFilter !== "all") {
+params.append("driftType", driftTypeFilter);
+}
+      if (statusFilter !== "all") {
+params.append("status", statusFilter);
+}
+      if (severityFilter !== "all") {
+params.append("severity", severityFilter);
+}
 
       const eventsRes = await fetch(`/api/founder/drift?${params}`);
-      if (!eventsRes.ok) throw new Error("Failed to load events");
+      if (!eventsRes.ok) {
+throw new Error("Failed to load events");
+}
       const eventsData = await eventsRes.json();
       setEvents(eventsData.items || []);
     } catch (err: any) {
@@ -79,7 +89,9 @@ export default function DriftPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ eventId, status: newStatus }),
       });
-      if (!res.ok) throw new Error("Failed to update status");
+      if (!res.ok) {
+throw new Error("Failed to update status");
+}
       await loadData();
     } catch (err: any) {
       setError(err.message);

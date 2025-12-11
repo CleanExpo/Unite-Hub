@@ -7,7 +7,7 @@
  * @module auditService
  */
 
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export type AuditEventType =
   | "auth.login.success"

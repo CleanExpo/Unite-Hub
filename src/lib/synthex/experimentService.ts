@@ -802,3 +802,7 @@ Return ONLY the JSON array, no other text.`,
     },
   ];
 }
+
+// Compatibility aliases for legacy API handlers expecting alternate names
+export const getExperimentById = getExperiment;
+export const recordEvent = recordExperimentEvent;

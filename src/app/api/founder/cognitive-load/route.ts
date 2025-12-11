@@ -10,7 +10,7 @@ import {
   listCognitiveLoadEvents,
   getCognitiveLoadSummary,
   getCurrentCognitiveLoad,
-} from "@/src/lib/founder/cognitiveLoadService";
+} from "@/lib/founder/cognitiveLoadService";
 
 export async function GET(req: NextRequest) {
   try {

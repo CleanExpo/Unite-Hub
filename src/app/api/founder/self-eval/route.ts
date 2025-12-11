@@ -12,7 +12,7 @@ import {
   recordEvaluationFactor,
   completeEvaluationCycle,
   getEvaluationSummary,
-} from "@/src/lib/founder/selfEvaluationService";
+} from "@/lib/founder/selfEvaluationService";
 
 export async function GET(req: NextRequest) {
   try {

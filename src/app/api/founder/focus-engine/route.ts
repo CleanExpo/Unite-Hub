@@ -10,7 +10,7 @@ import {
   updateFocusSession,
   listFocusSessions,
   getFocusSummary,
-} from "@/src/lib/founder/focusEngineService";
+} from "@/lib/founder/focusEngineService";
 
 export async function GET(req: NextRequest) {
   try {

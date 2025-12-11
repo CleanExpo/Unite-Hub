@@ -4,7 +4,7 @@ import {
   recordWarningEvent,
   updateWarningStatus,
   getWarningSummary,
-} from "@/src/lib/founder/earlyWarningService";
+} from "@/lib/founder/earlyWarningService";
 
 export async function GET(req: NextRequest) {
   try {

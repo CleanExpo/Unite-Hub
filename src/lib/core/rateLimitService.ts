@@ -7,7 +7,7 @@
  * @module rateLimitService
  */
 
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export type RateLimitWindow = "second" | "minute" | "hour" | "day";
 

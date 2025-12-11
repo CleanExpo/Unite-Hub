@@ -7,7 +7,7 @@
  * @module incidentService
  */
 
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export type IncidentType =
   | "outage"
@@ -465,13 +465,27 @@ export async function updateIncident(
     }
 
     const updateData: any = {};
-    if (updates.title !== undefined) updateData.title = updates.title;
-    if (updates.description !== undefined) updateData.description = updates.description;
-    if (updates.severity !== undefined) updateData.severity = updates.severity;
-    if (updates.assignedTo !== undefined) updateData.assigned_to = updates.assignedTo;
-    if (updates.rootCause !== undefined) updateData.root_cause = updates.rootCause;
-    if (updates.resolutionNotes !== undefined) updateData.resolution_notes = updates.resolutionNotes;
-    if (updates.impactDescription !== undefined) updateData.impact_description = updates.impactDescription;
+    if (updates.title !== undefined) {
+updateData.title = updates.title;
+}
+    if (updates.description !== undefined) {
+updateData.description = updates.description;
+}
+    if (updates.severity !== undefined) {
+updateData.severity = updates.severity;
+}
+    if (updates.assignedTo !== undefined) {
+updateData.assigned_to = updates.assignedTo;
+}
+    if (updates.rootCause !== undefined) {
+updateData.root_cause = updates.rootCause;
+}
+    if (updates.resolutionNotes !== undefined) {
+updateData.resolution_notes = updates.resolutionNotes;
+}
+    if (updates.impactDescription !== undefined) {
+updateData.impact_description = updates.impactDescription;
+}
 
     const { error } = await supabaseAdmin
       .from("incidents")

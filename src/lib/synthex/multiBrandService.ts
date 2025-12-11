@@ -6,7 +6,7 @@
  * asset management, guidelines, and brand switching.
  */
 
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 // =====================================================
 // Types

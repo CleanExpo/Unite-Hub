@@ -278,4 +278,7 @@ export const ToastContainer = forwardRef<HTMLDivElement, ToastContainerProps>(
 
 ToastContainer.displayName = 'ToastContainer';
 
+// Backwards compatibility: some imports expect a named `Toast` export.
+export const Toast = ToastContainer;
+
 export default ToastItem;

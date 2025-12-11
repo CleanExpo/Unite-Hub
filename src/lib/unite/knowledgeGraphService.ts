@@ -6,7 +6,7 @@
  * Vector embeddings for similarity queries.
  */
 
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { getAnthropicClient } from '@/lib/anthropic/lazy-client';
 
 // ============================================================================
@@ -55,7 +55,9 @@ export async function createEntity(
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to create entity: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to create entity: ${error.message}`);
+}
   return data as Entity;
 }
 
@@ -70,13 +72,23 @@ export async function listEntities(filters?: {
     .select('*')
     .order('created_at', { ascending: false });
 
-  if (filters?.tenant_id) query = query.eq('tenant_id', filters.tenant_id);
-  if (filters?.type) query = query.eq('type', filters.type);
-  if (filters?.name) query = query.ilike('name', `%${filters.name}%`);
-  if (filters?.limit) query = query.limit(filters.limit);
+  if (filters?.tenant_id) {
+query = query.eq('tenant_id', filters.tenant_id);
+}
+  if (filters?.type) {
+query = query.eq('type', filters.type);
+}
+  if (filters?.name) {
+query = query.ilike('name', `%${filters.name}%`);
+}
+  if (filters?.limit) {
+query = query.limit(filters.limit);
+}
 
   const { data, error } = await query;
-  if (error) throw new Error(`Failed to list entities: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to list entities: ${error.message}`);
+}
   return data as Entity[];
 }
 
@@ -88,7 +100,9 @@ export async function getEntity(entityId: string): Promise<Entity | null> {
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') return null;
+    if (error.code === 'PGRST116') {
+return null;
+}
     throw new Error(`Failed to get entity: ${error.message}`);
   }
 
@@ -106,7 +120,9 @@ export async function updateEntity(
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to update entity: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to update entity: ${error.message}`);
+}
   return data as Entity;
 }
 
@@ -116,7 +132,9 @@ export async function deleteEntity(entityId: string): Promise<void> {
     .delete()
     .eq('id', entityId);
 
-  if (error) throw new Error(`Failed to delete entity: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to delete entity: ${error.message}`);
+}
 }
 
 // ============================================================================
@@ -132,7 +150,9 @@ export async function createRelationship(
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to create relationship: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to create relationship: ${error.message}`);
+}
   return data as Relationship;
 }
 
@@ -148,14 +168,26 @@ export async function listRelationships(filters?: {
     .select('*')
     .order('created_at', { ascending: false });
 
-  if (filters?.tenant_id) query = query.eq('tenant_id', filters.tenant_id);
-  if (filters?.source_id) query = query.eq('source_id', filters.source_id);
-  if (filters?.target_id) query = query.eq('target_id', filters.target_id);
-  if (filters?.type) query = query.eq('type', filters.type);
-  if (filters?.limit) query = query.limit(filters.limit);
+  if (filters?.tenant_id) {
+query = query.eq('tenant_id', filters.tenant_id);
+}
+  if (filters?.source_id) {
+query = query.eq('source_id', filters.source_id);
+}
+  if (filters?.target_id) {
+query = query.eq('target_id', filters.target_id);
+}
+  if (filters?.type) {
+query = query.eq('type', filters.type);
+}
+  if (filters?.limit) {
+query = query.limit(filters.limit);
+}
 
   const { data, error } = await query;
-  if (error) throw new Error(`Failed to list relationships: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to list relationships: ${error.message}`);
+}
   return data as Relationship[];
 }
 
@@ -165,7 +197,9 @@ export async function deleteRelationship(relationshipId: string): Promise<void> 
     .delete()
     .eq('id', relationshipId);
 
-  if (error) throw new Error(`Failed to delete relationship: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to delete relationship: ${error.message}`);
+}
 }
 
 // ============================================================================
@@ -204,8 +238,12 @@ export async function getEntityNeighbors(
   // Get connected entity IDs
   const connectedIds = new Set<string>();
   relationships.forEach((rel) => {
-    if (rel.source_id !== entityId) connectedIds.add(rel.source_id);
-    if (rel.target_id !== entityId) connectedIds.add(rel.target_id);
+    if (rel.source_id !== entityId) {
+connectedIds.add(rel.source_id);
+}
+    if (rel.target_id !== entityId) {
+connectedIds.add(rel.target_id);
+}
   });
 
   // Fetch connected entities
@@ -244,7 +282,9 @@ export async function createEmbedding(
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to create embedding: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to create embedding: ${error.message}`);
+}
   return data as GraphEmbedding;
 }
 
@@ -401,4 +441,55 @@ function generatePlaceholderEmbedding(text: string): number[] {
     vector[i] = (text.charCodeAt(i) % 256) / 256;
   }
   return vector;
+}
+
+// Placeholder implementations for legacy imports expecting edge-level functions
+export async function getEdge(id: string) {
+  const { data } = await supabaseAdmin.from('unite_relationships').select('*').eq('id', id).single();
+  return data;
+}
+
+export async function getNeighbors(entityId: string) {
+  const { data } = await supabaseAdmin
+    .from('unite_relationships')
+    .select('*')
+    .or(`source_id.eq.${entityId},target_id.eq.${entityId}`);
+  return data || [];
+}
+
+export async function getGraphStats(tenantId?: string) {
+  const { data } = await supabaseAdmin
+    .from('unite_relationships')
+    .select('id', { count: 'exact', head: true })
+    .eq('tenant_id', tenantId || '');
+  return { total_edges: data };
+}
+
+export async function listEdges(tenantId?: string) {
+  const { data } = await supabaseAdmin
+    .from('unite_relationships')
+    .select('*')
+    .maybeSingle();
+  return data ? (Array.isArray(data) ? data : [data]) : [];
+}
+
+export async function deleteEdge(id: string) {
+  const { error } = await supabaseAdmin.from('unite_relationships').delete().eq('id', id);
+  if (error) {
+throw error;
+}
+  return true;
+}
+
+export async function aiDiscoverRelationships(_: string) {
+  // Placeholder AI discovery stub
+  return [];
+}
+
+export async function createEdge(input: Partial<Relationship>) {
+  const { data, error } = await supabaseAdmin.from('unite_relationships').insert(input).select().single();
+  if (error) {
+throw error;
+}
+  return data;
 }

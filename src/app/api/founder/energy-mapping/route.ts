@@ -11,7 +11,7 @@ import {
   getEnergySummary,
   detectEnergyPatterns,
   getOptimalWorkWindows,
-} from "@/src/lib/founder/energyMappingService";
+} from "@/lib/founder/energyMappingService";
 
 export async function GET(req: NextRequest) {
   try {

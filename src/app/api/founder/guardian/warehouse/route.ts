@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import {
   listWarehouseEvents,
   listHourlyRollups,
@@ -6,23 +6,19 @@ import {
   getWarehouseEventCount,
   getDistinctStreamKeys,
 } from '@/lib/founder/guardian/telemetryWarehouseService';
+import { getGuardianTenantContext } from '@/lib/founder/guardian/tenant';
 
 /**
- * Guardian G26: Telemetry Warehouse API
- * GET /api/founder/guardian/warehouse?tenantId=<UUID>&streamKey=<optional>
- * Returns warehouse events, hourly rollups, daily rollups, and summary metrics
+ * Guardian G26 + G30: Telemetry Warehouse API
+ * GET /api/founder/guardian/warehouse?streamKey=<optional>
+ * Returns warehouse events, hourly/daily rollups using centralized tenant context
  */
-export async function GET(req: NextRequest) {
+export async function GET(req: Request) {
   try {
-    const tenantId = req.nextUrl.searchParams.get('tenantId');
-    if (!tenantId) {
-      return NextResponse.json(
-        { error: 'tenantId query parameter is required' },
-        { status: 400 }
-      );
-    }
+    const url = new URL(req.url);
+    const streamKey = url.searchParams.get('streamKey') || undefined;
 
-    const streamKey = req.nextUrl.searchParams.get('streamKey') || undefined;
+    const { tenantId } = await getGuardianTenantContext();
 
     const [events, hourly, daily, totalCount, streamKeys] = await Promise.all([
       listWarehouseEvents(tenantId, { streamKey, limit: 300 }),

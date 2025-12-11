@@ -3,7 +3,7 @@ import {
   listObservatoryEvents,
   recordObservatoryEvent,
   getObservatorySummary,
-} from "@/src/lib/founder/observatoryService";
+} from "@/lib/founder/observatoryService";
 
 export async function GET(req: NextRequest) {
   try {

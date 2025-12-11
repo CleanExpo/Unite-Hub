@@ -12,7 +12,7 @@ import {
   recordCriticalNode,
   updateNodeState,
   getCriticalPathSummary,
-} from "@/src/lib/founder/criticalPathService";
+} from "@/lib/founder/criticalPathService";
 
 export async function GET(req: NextRequest) {
   try {

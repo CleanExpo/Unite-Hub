@@ -12,19 +12,38 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Modal } from "@/components/patterns/Modal";
-import { Toast } from "@/components/patterns/Toast";
 import {
-  ExclamationTriangleIcon,
-  CheckCircleIcon,
-  ClockIcon,
-  PlusIcon,
-  ChevronRightIcon,
-} from "@heroicons/react/24/outline";
+  AlertTriangle as ExclamationTriangleIcon,
+  CheckCircle as CheckCircleIcon,
+  Clock as ClockIcon,
+  Plus as PlusIcon,
+  ChevronRight as ChevronRightIcon,
+} from "lucide-react";
 
-type IncidentType = "outage" | "performance_degradation" | "data_breach" | "security_incident" | "delivery_failure" |
-  "integration_failure" | "compliance_violation" | "api_error" | "payment_failure" | "email_bounce" |
-  "spam_complaint" | "user_complaint" | "other";
-type IncidentStatus = "open" | "investigating" | "identified" | "monitoring" | "resolved" | "closed" | "cancelled";
+type IncidentType =
+  | "outage"
+  | "performance_degradation"
+  | "data_breach"
+  | "security_incident"
+  | "delivery_failure"
+  | "integration_failure"
+  | "compliance_violation"
+  | "api_error"
+  | "payment_failure"
+  | "email_bounce"
+  | "spam_complaint"
+  | "user_complaint"
+  | "other";
+
+type IncidentStatus =
+  | "open"
+  | "investigating"
+  | "identified"
+  | "monitoring"
+  | "resolved"
+  | "closed"
+  | "cancelled";
+
 type IncidentSeverity = "low" | "medium" | "high" | "critical";
 
 interface Incident {
@@ -72,7 +91,6 @@ export default function IncidentsPage() {
   const [severityFilter, setSeverityFilter] = useState<IncidentSeverity | "all">("all");
 
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [toast, setToast] = useState<{ message: string; type: "success" | "error" } | null>(null);
 
   const [newIncident, setNewIncident] = useState({
     title: "",
@@ -93,8 +111,12 @@ export default function IncidentsPage() {
       setLoading(true);
 
       const incidentParams = new URLSearchParams({ workspaceId: workspaceId! });
-      if (statusFilter !== "all") incidentParams.append("status", statusFilter);
-      if (severityFilter !== "all") incidentParams.append("severity", severityFilter);
+      if (statusFilter !== "all") {
+incidentParams.append("status", statusFilter);
+}
+      if (severityFilter !== "all") {
+incidentParams.append("severity", severityFilter);
+}
 
       const incidentRes = await fetch(`/api/founder/incidents?${incidentParams}`);
       const incidentData = await incidentRes.json();
@@ -102,14 +124,13 @@ export default function IncidentsPage() {
 
       const statsParams = new URLSearchParams({
         workspaceId: workspaceId!,
-        action: "statistics"
+        action: "statistics",
       });
       const statsRes = await fetch(`/api/founder/incidents?${statsParams}`);
       const statsData = await statsRes.json();
       setStatistics(statsData.statistics || null);
     } catch (error) {
       console.error("[Incidents] Load error:", error);
-      setToast({ message: "Failed to load incidents", type: "error" });
     } finally {
       setLoading(false);
     }
@@ -127,15 +148,21 @@ export default function IncidentsPage() {
         }),
       });
 
-      if (!res.ok) throw new Error("Failed to create incident");
+      if (!res.ok) {
+throw new Error("Failed to create incident");
+}
 
-      setToast({ message: "Incident created", type: "success" });
       setShowCreateModal(false);
-      setNewIncident({ title: "", description: "", type: "outage", severity: "medium", impactDescription: "" });
+      setNewIncident({
+        title: "",
+        description: "",
+        type: "outage",
+        severity: "medium",
+        impactDescription: "",
+      });
       loadData();
     } catch (error) {
       console.error("[Incidents] Create error:", error);
-      setToast({ message: "Failed to create incident", type: "error" });
     }
   }
 
@@ -152,25 +179,46 @@ export default function IncidentsPage() {
         }),
       });
 
-      if (!res.ok) throw new Error("Failed to update status");
+      if (!res.ok) {
+throw new Error("Failed to update status");
+}
 
-      setToast({ message: "Status updated", type: "success" });
       loadData();
     } catch (error) {
       console.error("[Incidents] Update error:", error);
-      setToast({ message: "Failed to update status", type: "error" });
     }
   }
 
   function getStatusBadge(status: IncidentStatus) {
     const variants: Record<IncidentStatus, { color: string; icon: React.ReactNode }> = {
-      open: { color: "bg-red-500/10 text-red-400 border-red-500/20", icon: <ExclamationTriangleIcon className="w-3 h-3" /> },
-      investigating: { color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20", icon: <ClockIcon className="w-3 h-3" /> },
-      identified: { color: "bg-orange-500/10 text-orange-400 border-orange-500/20", icon: <ExclamationTriangleIcon className="w-3 h-3" /> },
-      monitoring: { color: "bg-blue-500/10 text-blue-400 border-blue-500/20", icon: <ClockIcon className="w-3 h-3" /> },
-      resolved: { color: "bg-green-500/10 text-green-400 border-green-500/20", icon: <CheckCircleIcon className="w-3 h-3" /> },
-      closed: { color: "bg-gray-500/10 text-gray-400 border-gray-500/20", icon: <CheckCircleIcon className="w-3 h-3" /> },
-      cancelled: { color: "bg-gray-500/10 text-gray-400 border-gray-500/20", icon: <CheckCircleIcon className="w-3 h-3" /> },
+      open: {
+        color: "bg-red-500/10 text-red-400 border-red-500/20",
+        icon: <ExclamationTriangleIcon className="w-3 h-3" />,
+      },
+      investigating: {
+        color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20",
+        icon: <ClockIcon className="w-3 h-3" />,
+      },
+      identified: {
+        color: "bg-orange-500/10 text-orange-400 border-orange-500/20",
+        icon: <ExclamationTriangleIcon className="w-3 h-3" />,
+      },
+      monitoring: {
+        color: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+        icon: <ClockIcon className="w-3 h-3" />,
+      },
+      resolved: {
+        color: "bg-green-500/10 text-green-400 border-green-500/20",
+        icon: <CheckCircleIcon className="w-3 h-3" />,
+      },
+      closed: {
+        color: "bg-gray-500/10 text-gray-400 border-gray-500/20",
+        icon: <CheckCircleIcon className="w-3 h-3" />,
+      },
+      cancelled: {
+        color: "bg-gray-500/10 text-gray-400 border-gray-500/20",
+        icon: <CheckCircleIcon className="w-3 h-3" />,
+      },
     };
 
     const variant = variants[status];
@@ -198,7 +246,7 @@ export default function IncidentsPage() {
   }
 
   function formatType(type: IncidentType): string {
-    return type.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase());
+    return type.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
   }
 
   if (loading) {
@@ -225,7 +273,10 @@ export default function IncidentsPage() {
               Track outages, breaches, delivery failures
             </p>
           </div>
-          <Button onClick={() => setShowCreateModal(true)} className="bg-accent-500 hover:bg-accent-600 text-white">
+          <Button
+            onClick={() => setShowCreateModal(true)}
+            className="bg-accent-500 hover:bg-accent-600 text-white"
+          >
             <PlusIcon className="w-4 h-4 mr-2" />
             New Incident
           </Button>
@@ -254,7 +305,9 @@ export default function IncidentsPage() {
                 <CardTitle className="text-text-secondary text-sm">Investigating</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-3xl font-bold text-yellow-400">{statistics.investigating}</p>
+                <p className="text-3xl font-bold text-yellow-400">
+                  {statistics.investigating}
+                </p>
               </CardContent>
             </Card>
             <Card className="bg-bg-card border-border-primary">
@@ -292,25 +345,31 @@ export default function IncidentsPage() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {incidents.filter(i => ["open", "investigating"].includes(i.status)).slice(0, 5).map((incident) => (
-                    <div
-                      key={incident.id}
-                      className="flex items-center justify-between p-4 bg-bg-secondary border border-border-primary rounded-lg hover:border-accent-500/50 transition-colors"
-                    >
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-2">
-                          {getSeverityBadge(incident.severity)}
-                          {getStatusBadge(incident.status)}
+                  {incidents
+                    .filter((i) => ["open", "investigating"].includes(i.status))
+                    .slice(0, 5)
+                    .map((incident) => (
+                      <div
+                        key={incident.id}
+                        className="flex items-center justify-between p-4 bg-bg-secondary border border-border-primary rounded-lg hover:border-accent-500/50 transition-colors"
+                      >
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-2">
+                            {getSeverityBadge(incident.severity)}
+                            {getStatusBadge(incident.status)}
+                          </div>
+                          <h3 className="font-semibold text-text-primary mb-1">
+                            {incident.title}
+                          </h3>
+                          <p className="text-sm text-text-secondary">
+                            {formatType(incident.type)} • {new Date(incident.detected_at).toLocaleString()}
+                          </p>
                         </div>
-                        <h3 className="font-semibold text-text-primary mb-1">{incident.title}</h3>
-                        <p className="text-sm text-text-secondary">
-                          {formatType(incident.type)} • {new Date(incident.detected_at).toLocaleString()}
-                        </p>
+                        <ChevronRightIcon className="w-5 h-5 text-text-tertiary" />
                       </div>
-                      <ChevronRightIcon className="w-5 h-5 text-text-tertiary" />
-                    </div>
-                  ))}
-                  {incidents.filter(i => ["open", "investigating"].includes(i.status)).length === 0 && (
+                    ))}
+                  {incidents.filter((i) => ["open", "investigating"].includes(i.status)).length ===
+                    0 && (
                     <p className="text-center py-8 text-text-secondary">No active incidents</p>
                   )}
                 </div>
@@ -330,7 +389,11 @@ export default function IncidentsPage() {
                         onClick={() => setStatusFilter(status)}
                         variant={statusFilter === status ? "default" : "outline"}
                         size="sm"
-                        className={statusFilter === status ? "bg-accent-500 text-white" : "bg-bg-secondary text-text-secondary"}
+                        className={
+                          statusFilter === status
+                            ? "bg-accent-500 text-white"
+                            : "bg-bg-secondary text-text-secondary"
+                        }
                       >
                         {status === "all" ? "All" : status}
                       </Button>
@@ -341,47 +404,69 @@ export default function IncidentsPage() {
               <CardContent>
                 <div className="space-y-3">
                   {incidents.map((incident) => (
-                    <div key={incident.id} className="p-4 bg-bg-secondary border border-border-primary rounded-lg">
+                    <div
+                      key={incident.id}
+                      className="p-4 bg-bg-secondary border border-border-primary rounded-lg"
+                    >
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-2">
                             {getSeverityBadge(incident.severity)}
                             {getStatusBadge(incident.status)}
                           </div>
-                          <h3 className="font-semibold text-text-primary mb-1">{incident.title}</h3>
+                          <h3 className="font-semibold text-text-primary mb-1">
+                            {incident.title}
+                          </h3>
                           <p className="text-sm text-text-secondary mb-2">
                             {formatType(incident.type)}
                           </p>
                           {incident.description && (
-                            <p className="text-sm text-text-secondary mb-2">{incident.description}</p>
+                            <p className="text-sm text-text-secondary mb-2">
+                              {incident.description}
+                            </p>
                           )}
                         </div>
                       </div>
 
                       <div className="flex items-center justify-between text-xs text-text-tertiary mb-3">
-                        <span>Detected: {new Date(incident.detected_at).toLocaleString()}</span>
+                        <span>
+                          Detected: {new Date(incident.detected_at).toLocaleString()}
+                        </span>
                         {incident.resolved_at && (
-                          <span>Resolved: {new Date(incident.resolved_at).toLocaleString()}</span>
+                          <span>
+                            Resolved: {new Date(incident.resolved_at).toLocaleString()}
+                          </span>
                         )}
                       </div>
 
                       {incident.status !== "resolved" && incident.status !== "closed" && (
                         <div className="flex gap-2">
                           {incident.status === "open" && (
-                            <Button size="sm" onClick={() => handleUpdateStatus(incident.id, "investigating")}
-                              className="bg-yellow-500/10 text-yellow-400 hover:bg-yellow-500/20 border border-yellow-500/20">
+                            <Button
+                              size="sm"
+                              onClick={() => handleUpdateStatus(incident.id, "investigating")}
+                              className="bg-yellow-500/10 text-yellow-400 hover:bg-yellow-500/20 border border-yellow-500/20"
+                            >
                               Start Investigating
                             </Button>
                           )}
                           {incident.status === "investigating" && (
-                            <Button size="sm" onClick={() => handleUpdateStatus(incident.id, "identified")}
-                              className="bg-orange-500/10 text-orange-400 hover:bg-orange-500/20 border border-orange-500/20">
+                            <Button
+                              size="sm"
+                              onClick={() => handleUpdateStatus(incident.id, "identified")}
+                              className="bg-orange-500/10 text-orange-400 hover:bg-orange-500/20 border border-orange-500/20"
+                            >
                               Mark Identified
                             </Button>
                           )}
-                          {["investigating", "identified", "monitoring"].includes(incident.status) && (
-                            <Button size="sm" onClick={() => handleUpdateStatus(incident.id, "resolved")}
-                              className="bg-green-500/10 text-green-400 hover:bg-green-500/20 border border-green-500/20">
+                          {["investigating", "identified", "monitoring"].includes(
+                            incident.status
+                          ) && (
+                            <Button
+                              size="sm"
+                              onClick={() => handleUpdateStatus(incident.id, "resolved")}
+                              className="bg-green-500/10 text-green-400 hover:bg-green-500/20 border border-green-500/20"
+                            >
                               Mark Resolved
                             </Button>
                           )}
@@ -396,10 +481,16 @@ export default function IncidentsPage() {
         </Tabs>
       </div>
 
-      <Modal isOpen={showCreateModal} onClose={() => setShowCreateModal(false)} title="Create Incident">
+      <Modal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        title="Create Incident"
+      >
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-2">Title</label>
+            <label className="block text-sm font-medium text-text-primary mb-2">
+              Title
+            </label>
             <input
               type="text"
               value={newIncident.title}
@@ -409,10 +500,14 @@ export default function IncidentsPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-2">Type</label>
+            <label className="block text-sm font-medium text-text-primary mb-2">
+              Type
+            </label>
             <select
               value={newIncident.type}
-              onChange={(e) => setNewIncident({ ...newIncident, type: e.target.value as IncidentType })}
+              onChange={(e) =>
+                setNewIncident({ ...newIncident, type: e.target.value as IncidentType })
+              }
               className="w-full px-3 py-2 bg-bg-secondary border border-border-primary rounded-lg text-text-primary focus:outline-none focus:border-accent-500"
             >
               <option value="outage">Outage</option>
@@ -431,10 +526,17 @@ export default function IncidentsPage() {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-2">Severity</label>
+            <label className="block text-sm font-medium text-text-primary mb-2">
+              Severity
+            </label>
             <select
               value={newIncident.severity}
-              onChange={(e) => setNewIncident({ ...newIncident, severity: e.target.value as IncidentSeverity })}
+              onChange={(e) =>
+                setNewIncident({
+                  ...newIncident,
+                  severity: e.target.value as IncidentSeverity,
+                })
+              }
               className="w-full px-3 py-2 bg-bg-secondary border border-border-primary rounded-lg text-text-primary focus:outline-none focus:border-accent-500"
             >
               <option value="low">Low</option>
@@ -444,30 +546,35 @@ export default function IncidentsPage() {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-text-primary mb-2">Description</label>
+            <label className="block text-sm font-medium text-text-primary mb-2">
+              Description
+            </label>
             <textarea
               value={newIncident.description}
-              onChange={(e) => setNewIncident({ ...newIncident, description: e.target.value })}
+              onChange={(e) =>
+                setNewIncident({ ...newIncident, description: e.target.value })
+              }
               rows={3}
               className="w-full px-3 py-2 bg-bg-secondary border border-border-primary rounded-lg text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-accent-500 resize-none"
             />
           </div>
           <div className="flex gap-3 pt-4">
-            <Button onClick={() => setShowCreateModal(false)}
-              className="flex-1 bg-bg-secondary text-text-primary hover:bg-bg-tertiary border border-border-primary">
+            <Button
+              onClick={() => setShowCreateModal(false)}
+              className="flex-1 bg-bg-secondary text-text-primary hover:bg-bg-tertiary border border-border-primary"
+            >
               Cancel
             </Button>
-            <Button onClick={handleCreateIncident} disabled={!newIncident.title}
-              className="flex-1 bg-accent-500 text-white hover:bg-accent-600">
+            <Button
+              onClick={handleCreateIncident}
+              disabled={!newIncident.title}
+              className="flex-1 bg-accent-500 text-white hover:bg-accent-600"
+            >
               Create
             </Button>
           </div>
         </div>
       </Modal>
-
-      {toast && (
-        <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />
-      )}
     </div>
   );
 }

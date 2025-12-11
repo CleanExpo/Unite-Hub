@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/card";
-import { Badge } from "@/src/components/ui/badge";
-import { Button } from "@/src/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/src/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 type ObservatoryEvent = {
   id: string;
@@ -47,18 +47,26 @@ export default function ObservatoryPage() {
       const summaryRes = await fetch(
         `/api/founder/observatory?workspaceId=${workspaceId}&action=summary&days=${days}`
       );
-      if (!summaryRes.ok) throw new Error("Failed to load summary");
+      if (!summaryRes.ok) {
+throw new Error("Failed to load summary");
+}
       const summaryData = await summaryRes.json();
       setSummary(summaryData.summary);
 
       // Load events
       const params = new URLSearchParams({ workspaceId });
-      if (eventTypeFilter !== "all") params.append("eventType", eventTypeFilter);
-      if (severityFilter !== "all") params.append("severity", severityFilter);
+      if (eventTypeFilter !== "all") {
+params.append("eventType", eventTypeFilter);
+}
+      if (severityFilter !== "all") {
+params.append("severity", severityFilter);
+}
       params.append("limit", "50");
 
       const eventsRes = await fetch(`/api/founder/observatory?${params}`);
-      if (!eventsRes.ok) throw new Error("Failed to load events");
+      if (!eventsRes.ok) {
+throw new Error("Failed to load events");
+}
       const eventsData = await eventsRes.json();
       setEvents(eventsData.items || []);
     } catch (err: any) {

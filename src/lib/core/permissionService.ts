@@ -7,7 +7,7 @@
  * @module permissionService
  */
 
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export interface Permission {
   module: string;

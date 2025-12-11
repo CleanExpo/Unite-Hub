@@ -7,7 +7,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabase';
-import { validateUserAndWorkspace } from '@/lib/api-helpers';
+import { validateUserAndWorkspace } from '@/lib/workspace-validation';
 import { generateSimulationTraceSummary } from '@/lib/guardian/ai/simulationTraceSummarizer';
 
 export async function GET(

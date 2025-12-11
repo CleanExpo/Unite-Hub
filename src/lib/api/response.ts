@@ -133,6 +133,10 @@ export function error(
   return NextResponse.json(response, { status });
 }
 
+// Legacy aliases to maintain backwards compatibility with older imports
+export const successResponse = success;
+export const errorResponse = error;
+
 // Convenience error methods
 export const errors = {
   unauthorized: (message = "Authentication required") =>

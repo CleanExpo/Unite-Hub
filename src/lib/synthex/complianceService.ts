@@ -6,7 +6,7 @@
  * including CAN-SPAM, GDPR, ACMA, CCPA, and CASL.
  */
 
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { createHash } from "crypto";
 
 // =====================================================

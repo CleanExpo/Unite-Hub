@@ -10,7 +10,7 @@ import {
   recordIntegrityEvent,
   updateIntegrityEventStatus,
   getIntegritySummary,
-} from "@/src/lib/founder/runtimeIntegrityService";
+} from "@/lib/founder/runtimeIntegrityService";
 
 export async function GET(req: NextRequest) {
   try {

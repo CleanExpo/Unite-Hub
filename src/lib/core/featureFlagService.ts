@@ -7,7 +7,7 @@
  * @module featureFlagService
  */
 
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export interface FlagContext {
   tenantId?: string;
@@ -127,7 +127,9 @@ export async function getVariant(
  */
 export async function listFlagsForTenant(tenantId?: string): Promise<FlagSummary[]> {
   try {
-    if (typeof window !== "undefined") return [];
+    if (typeof window !== "undefined") {
+return [];
+}
 
     const { data: flags, error } = await supabaseAdmin
       .from("feature_flags")

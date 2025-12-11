@@ -8,8 +8,8 @@
  */
 
 // Store - Write layer
-export {
-  MemoryStore,
+export { MemoryStore, createMemoryStore, memoryStore } from './memoryStore';
+export type {
   MemoryType,
   RelationshipType,
   SignalType,
@@ -17,43 +17,30 @@ export {
   StoreMemoryResponse,
   LinkMemoryRequest,
   AddSignalRequest,
-  createMemoryStore,
-  memoryStore,
 } from './memoryStore';
 
 // Retriever - Read layer with hybrid ranking
-export {
-  MemoryRetriever,
+export { MemoryRetriever, createMemoryRetriever, memoryRetriever } from './memoryRetriever';
+export type {
   RetrievedMemory,
   RetrieveRequest,
   RetrieveResponse,
   FindRelatedRequest,
   RelationshipGraph,
   RelatedMemory,
-  createMemoryRetriever,
-  memoryRetriever,
 } from './memoryRetriever';
 
 // Ranker - Relevance scoring
-export {
-  MemoryRanker,
-  RankedMemory,
-  RankingRequest,
-  RankingResponse,
-  createMemoryRanker,
-  memoryRanker,
-} from './memoryRanker';
+export { MemoryRanker, createMemoryRanker, memoryRanker } from './memoryRanker';
+export type { RankedMemory, RankingRequest, RankingResponse } from './memoryRanker';
 
 // Archive Bridge - Cross-system integration
-export {
-  MemoryArchiveBridge,
-  AgentEvent,
-  LinkEventToMemoryRequest,
-  WorkflowCheckpoint,
-  SaveCheckpointRequest,
-  createMemoryArchiveBridge,
-  memoryArchiveBridge,
-} from './memoryArchiveBridge';
+export { MemoryArchiveBridge, createMemoryArchiveBridge, memoryArchiveBridge } from './memoryArchiveBridge';
+// Placeholder types for compatibility (memoryArchiveBridge does not expose these currently)
+export type AgentEvent = unknown;
+export type LinkEventToMemoryRequest = unknown;
+export type WorkflowCheckpoint = unknown;
+export type SaveCheckpointRequest = unknown;
 
 /**
  * Complete memory system with all components

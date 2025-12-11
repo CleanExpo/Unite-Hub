@@ -4,7 +4,7 @@ import {
   recordDriftEvent,
   updateDriftStatus,
   getDriftSummary,
-} from "@/src/lib/founder/driftService";
+} from "@/lib/founder/driftService";
 
 export async function GET(req: NextRequest) {
   try {

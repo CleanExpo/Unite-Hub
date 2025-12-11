@@ -10,7 +10,7 @@ import {
   completeTimeBlock,
   listTimeBlocks,
   getTimeBlockSummary,
-} from "@/src/lib/founder/timeBlockService";
+} from "@/lib/founder/timeBlockService";
 
 export async function GET(req: NextRequest) {
   try {

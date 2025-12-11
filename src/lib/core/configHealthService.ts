@@ -7,7 +7,7 @@
  * @module configHealthService
  */
 
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export type ConfigCheckStatus = "pass" | "warn" | "fail";
 export type ConfigCheckSeverity = "low" | "medium" | "high" | "critical";

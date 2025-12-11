@@ -13,12 +13,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Toast } from "@/components/patterns/Toast";
 import {
-  DocumentTextIcon,
-  ShieldCheckIcon,
-  ClockIcon,
-  FunnelIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/24/outline";
+  FileText as DocumentTextIcon,
+  ShieldCheck as ShieldCheckIcon,
+  Clock as ClockIcon,
+  Filter as FunnelIcon,
+  Search as MagnifyingGlassIcon,
+} from "lucide-react";
 
 type AuditCategory =
   | "authentication"
@@ -146,14 +146,6 @@ export default function AuditLogCenterPage() {
 
   return (
     <div className="min-h-screen bg-bg-primary p-6">
-      {toast && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          onClose={() => setToast(null)}
-        />
-      )}
-
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">

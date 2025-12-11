@@ -6,7 +6,7 @@
  * Integration with analytics for metric collection.
  */
 
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { createHash } from 'crypto';
 
 // ============================================================================
@@ -68,7 +68,9 @@ export async function createExperiment(
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to create experiment: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to create experiment: ${error.message}`);
+}
   return data as Experiment;
 }
 
@@ -82,12 +84,20 @@ export async function listExperiments(filters?: {
     .select('*')
     .order('created_at', { ascending: false });
 
-  if (filters?.tenant_id) query = query.eq('tenant_id', filters.tenant_id);
-  if (filters?.status) query = query.eq('status', filters.status);
-  if (filters?.limit) query = query.limit(filters.limit);
+  if (filters?.tenant_id) {
+query = query.eq('tenant_id', filters.tenant_id);
+}
+  if (filters?.status) {
+query = query.eq('status', filters.status);
+}
+  if (filters?.limit) {
+query = query.limit(filters.limit);
+}
 
   const { data, error } = await query;
-  if (error) throw new Error(`Failed to list experiments: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to list experiments: ${error.message}`);
+}
   return data as Experiment[];
 }
 
@@ -99,7 +109,9 @@ export async function getExperiment(experimentKey: string): Promise<Experiment |
     .single();
 
   if (error) {
-    if (error.code === 'PGRST116') return null; // Not found
+    if (error.code === 'PGRST116') {
+return null;
+} // Not found
     throw new Error(`Failed to get experiment: ${error.message}`);
   }
 
@@ -117,7 +129,9 @@ export async function updateExperiment(
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to update experiment: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to update experiment: ${error.message}`);
+}
   return data as Experiment;
 }
 
@@ -127,7 +141,9 @@ export async function deleteExperiment(experimentKey: string): Promise<void> {
     .delete()
     .eq('experiment_key', experimentKey);
 
-  if (error) throw new Error(`Failed to delete experiment: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to delete experiment: ${error.message}`);
+}
 }
 
 // ============================================================================
@@ -274,7 +290,9 @@ export async function recordExperimentMetric(
     .select()
     .single();
 
-  if (error) throw new Error(`Failed to record metric: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to record metric: ${error.message}`);
+}
   return data as ExperimentMetric;
 }
 
@@ -299,14 +317,26 @@ export async function getExperimentMetrics(
     .eq('experiment_id', experiment.id)
     .order('recorded_at', { ascending: false });
 
-  if (filters?.variant_key) query = query.eq('variant_key', filters.variant_key);
-  if (filters?.metric_key) query = query.eq('metric_key', filters.metric_key);
-  if (filters?.start_date) query = query.gte('recorded_at', filters.start_date);
-  if (filters?.end_date) query = query.lte('recorded_at', filters.end_date);
-  if (filters?.limit) query = query.limit(filters.limit);
+  if (filters?.variant_key) {
+query = query.eq('variant_key', filters.variant_key);
+}
+  if (filters?.metric_key) {
+query = query.eq('metric_key', filters.metric_key);
+}
+  if (filters?.start_date) {
+query = query.gte('recorded_at', filters.start_date);
+}
+  if (filters?.end_date) {
+query = query.lte('recorded_at', filters.end_date);
+}
+  if (filters?.limit) {
+query = query.limit(filters.limit);
+}
 
   const { data, error } = await query;
-  if (error) throw new Error(`Failed to get experiment metrics: ${error.message}`);
+  if (error) {
+throw new Error(`Failed to get experiment metrics: ${error.message}`);
+}
   return data as ExperimentMetric[];
 }
 
@@ -388,4 +418,20 @@ export async function getExperimentSummary(
     experiment,
     variants: variantSummaries,
   };
+}
+
+// Compatibility helpers for AI-powered experiment flows
+export async function aiSuggestExperiment(
+  experimentKey: string
+): Promise<{ variants: string[] }> {
+  // Placeholder implementation; returns existing variant keys when present.
+  const experiment = await getExperiment(experimentKey);
+  return { variants: experiment?.variants?.map((v) => v.key) || [] };
+}
+
+export async function aiAnalyzeExperiment(
+  experimentKey: string
+): Promise<{ summary: string }> {
+  // Placeholder implementation; replace with real analysis in future.
+  return { summary: `AI analysis not yet implemented for experiment ${experimentKey}` };
 }

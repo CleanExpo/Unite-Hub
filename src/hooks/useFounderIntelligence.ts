@@ -6,7 +6,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { useAuth } from "@/src/contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 /**
  * Hook for triggering cognitive load signals from client components
@@ -16,7 +16,9 @@ export function useCognitiveLoad() {
 
   const recordTaskCount = useCallback(
     async (taskCount: number, context?: string) => {
-      if (!user?.id) return;
+      if (!user?.id) {
+return;
+}
 
       try {
         await fetch("/api/founder/cognitive-load-integration", {
@@ -38,7 +40,9 @@ export function useCognitiveLoad() {
 
   const recordContextSwitch = useCallback(
     async (switchCount: number) => {
-      if (!user?.id) return;
+      if (!user?.id) {
+return;
+}
 
       try {
         await fetch("/api/founder/cognitive-load-integration", {
@@ -59,7 +63,9 @@ export function useCognitiveLoad() {
 
   const recordInterruption = useCallback(
     async (interruptionCount: number, context?: string) => {
-      if (!user?.id) return;
+      if (!user?.id) {
+return;
+}
 
       try {
         await fetch("/api/founder/cognitive-load-integration", {
@@ -94,7 +100,9 @@ export function useEnergyMapping() {
 
   const recordEnergyLevel = useCallback(
     async (energyLevel: number, measurementType: string, context?: string) => {
-      if (!user?.id) return;
+      if (!user?.id) {
+return;
+}
 
       try {
         await fetch("/api/founder/energy-mapping", {
@@ -116,7 +124,9 @@ export function useEnergyMapping() {
 
   const recordFocusDepth = useCallback(
     async (focusDepth: number) => {
-      if (!user?.id) return;
+      if (!user?.id) {
+return;
+}
 
       try {
         await fetch("/api/founder/energy-mapping-integration", {
@@ -154,7 +164,9 @@ export function useIntentRouter() {
       signalData: any,
       confidenceScore: number
     ) => {
-      if (!user?.id) return;
+      if (!user?.id) {
+return;
+}
 
       try {
         await fetch("/api/founder/intent-router", {
@@ -177,7 +189,9 @@ export function useIntentRouter() {
 
   const recordBreakRequest = useCallback(
     async (reason: string, urgency: string = "moderate") => {
-      if (!user?.id) return;
+      if (!user?.id) {
+return;
+}
 
       await recordIntent(
         "break_request",
@@ -191,7 +205,9 @@ export function useIntentRouter() {
 
   const recordDeepWorkRequest = useCallback(
     async (duration: number, task: string) => {
-      if (!user?.id) return;
+      if (!user?.id) {
+return;
+}
 
       await recordIntent(
         "deep_work_request",
@@ -223,7 +239,9 @@ export function useRecoveryProtocols() {
       stressLevel?: number,
       sleepQuality?: number
     ) => {
-      if (!user?.id) return;
+      if (!user?.id) {
+return;
+}
 
       try {
         await fetch("/api/founder/recovery-protocols", {
@@ -246,7 +264,9 @@ export function useRecoveryProtocols() {
 
   const markActionTaken = useCallback(
     async (actionId: string, effectivenessRating: number, notes?: string) => {
-      if (!user?.id) return;
+      if (!user?.id) {
+return;
+}
 
       try {
         await fetch("/api/founder/recovery-protocols", {

@@ -9,7 +9,7 @@ import {
   recordDistractionEvent,
   listDistractionEvents,
   getDistractionSummary,
-} from "@/src/lib/founder/distractionShieldService";
+} from "@/lib/founder/distractionShieldService";
 
 export async function GET(req: NextRequest) {
   try {

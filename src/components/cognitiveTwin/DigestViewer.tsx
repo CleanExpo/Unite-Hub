@@ -432,3 +432,6 @@ return 0;
     </div>
   );
 }
+
+// Named export for compatibility with consumers expecting { DigestViewer }
+export { DigestViewer };

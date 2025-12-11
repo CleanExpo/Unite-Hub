@@ -7,7 +7,7 @@
  * @module logService
  */
 
-import { supabaseAdmin } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 
 export type LogLevel = "debug" | "info" | "warn" | "error" | "critical";
 export type LogSource =
@@ -168,7 +168,9 @@ async function logEvent(
  */
 export async function startRequestTrace(metadata: RequestTraceMetadata): Promise<void> {
   try {
-    if (typeof window !== "undefined") return;
+    if (typeof window !== "undefined") {
+return;
+}
 
     // Store context for later use
     if (metadata.tenant_id || metadata.user_id) {
@@ -199,7 +201,9 @@ export async function startRequestTrace(metadata: RequestTraceMetadata): Promise
  */
 export async function completeRequestTrace(completion: RequestTraceCompletion): Promise<void> {
   try {
-    if (typeof window !== "undefined") return;
+    if (typeof window !== "undefined") {
+return;
+}
 
     await supabaseAdmin.rpc("complete_request_trace", {
       p_request_id: completion.request_id,

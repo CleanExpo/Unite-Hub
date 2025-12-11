@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/card";
-import { Badge } from "@/src/components/ui/badge";
-import { Button } from "@/src/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/src/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { TrendingUp, TrendingDown, Activity, Target } from "lucide-react";
 
 type Forecast = {
@@ -53,16 +53,22 @@ export default function ForecastPage() {
       const accuracyRes = await fetch(
         `/api/founder/forecast?workspaceId=${workspaceId}&action=accuracy`
       );
-      if (!accuracyRes.ok) throw new Error("Failed to load accuracy");
+      if (!accuracyRes.ok) {
+throw new Error("Failed to load accuracy");
+}
       const accuracyData = await accuracyRes.json();
       setAccuracy(accuracyData.accuracy);
 
       // Load forecasts
       const params = new URLSearchParams({ workspaceId });
-      if (viewMode === "all") params.append("includeExpired", "true");
+      if (viewMode === "all") {
+params.append("includeExpired", "true");
+}
 
       const forecastsRes = await fetch(`/api/founder/forecast?${params}`);
-      if (!forecastsRes.ok) throw new Error("Failed to load forecasts");
+      if (!forecastsRes.ok) {
+throw new Error("Failed to load forecasts");
+}
       const forecastsData = await forecastsRes.json();
 
       let items = forecastsData.items || [];
@@ -101,9 +107,13 @@ export default function ForecastPage() {
   };
 
   const getForecastTrend = (forecast: Forecast) => {
-    if (forecast.actual_value === null) return null;
+    if (forecast.actual_value === null) {
+return null;
+}
     const diff = forecast.actual_value - forecast.forecast_value;
-    if (Math.abs(diff) < 0.01) return <Activity className="h-4 w-4 text-gray-500" />;
+    if (Math.abs(diff) < 0.01) {
+return <Activity className="h-4 w-4 text-gray-500" />;
+}
     return diff > 0 ? (
       <TrendingUp className="h-4 w-4 text-green-500" />
     ) : (

@@ -8,42 +8,43 @@
  */
 
 export {
-  PassType,
-  PassInput,
-  PassOutput,
-  ReasoningTrace,
   PassEngine,
   createPassEngine,
   passEngine,
 } from './passEngine';
+// Placeholder types for compatibility (passEngine does not currently export them)
+export type PassType = unknown;
+export type PassInput = unknown;
+export type PassOutput = unknown;
+export type ReasoningTrace = unknown;
 
 export {
-  ContextPacket,
   ContextAssembler,
   createContextAssembler,
   contextAssembler,
 } from './contextAssembler';
+export type ContextPacket = unknown;
 
 export {
-  RiskAssessment,
   RiskModel,
   createRiskModel,
   riskModel,
 } from './riskModel';
+export type RiskAssessment = unknown;
 
 export {
-  PassUncertainty,
   UncertaintyPropagator,
   createUncertaintyPropagator,
   uncertaintyPropagator,
 } from './uncertaintyPropagator';
+export type PassUncertainty = unknown;
 
 export {
-  ArchiveRequest,
   ReasoningArchiveBridge,
   createReasoningArchiveBridge,
   reasoningArchiveBridge,
 } from './reasoningArchiveBridge';
+export type ArchiveRequest = unknown;
 
 /**
  * Complete reasoning system with all components

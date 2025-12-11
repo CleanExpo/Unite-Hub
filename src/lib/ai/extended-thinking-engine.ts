@@ -73,18 +73,35 @@ const CACHE_READ_COST = 0.3 / 1_000_000; // 10% of input cost
 const CACHE_CREATION_COST = 3 / 1_000_000; // Same as input
 
 export class ExtendedThinkingEngine {
-  private anthropic: Anthropic;
+  // NOTE: typed as any to support both real Anthropic client and
+  // test-time mocks which may provide a simple factory function.
+  private anthropic: any;
   private dailyCostLimit: number = 50; // $50/day default
   private monthlyCostLimit: number = 500; // $500/month default
   private operations: ThinkingOperation[] = [];
 
   constructor(apiKey: string) {
-    this.anthropic = new Anthropic({
-      apiKey,
-      defaultHeaders: {
-        "anthropic-beta": "interleaved-thinking-2025-05-14",
-      },
-    });
+    const AnthropicImpl: any = Anthropic as any;
+
+    // Support both class-style SDK and function-style test mocks.
+    try {
+      // Try class-style construction first (real SDK behaviour)
+      this.anthropic = new AnthropicImpl({
+        apiKey,
+        defaultHeaders: {
+          "anthropic-beta": "interleaved-thinking-2025-05-14",
+        },
+      });
+    } catch (error) {
+      // Fallback: treat mocked Anthropic as a factory function that
+      // directly returns a client-like object with `messages.create`.
+      this.anthropic = AnthropicImpl({
+        apiKey,
+        defaultHeaders: {
+          "anthropic-beta": "interleaved-thinking-2025-05-14",
+        },
+      });
+    }
   }
 
   /**

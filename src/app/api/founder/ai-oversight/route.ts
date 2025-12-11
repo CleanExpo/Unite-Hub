@@ -11,7 +11,7 @@ import {
   recordOversightPolicy,
   recordOversightEvent,
   getOversightSummary,
-} from "@/src/lib/founder/aiOversightService";
+} from "@/lib/founder/aiOversightService";
 
 export async function GET(req: NextRequest) {
   try {

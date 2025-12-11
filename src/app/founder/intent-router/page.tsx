@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card } from "@/src/components/ui/card";
-import { useAuth } from "@/src/contexts/AuthContext";
+import { Card } from "@/components/ui/card";
+import { useAuth } from "@/contexts/AuthContext";
 
 type IntentSignal = {
   id: string;

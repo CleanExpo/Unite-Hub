@@ -202,9 +202,10 @@ return null;
               );
             })}
           </div>
-        </div>
-      );
-    }
+    </div>
+  );
+}
+
     return null;
   };
 
@@ -441,3 +442,6 @@ return null;
     </Card>
   );
 }
+
+// Named export for compatibility with consumers expecting { HealthTrendChart }
+export { HealthTrendChart };
