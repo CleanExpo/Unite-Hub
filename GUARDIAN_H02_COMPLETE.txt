@@ -1,0 +1,275 @@
+Guardian Phase H02: AI-Powered Anomaly Detection Engine (MVP) - COMPLETE
+===========================================================================
+
+Implementation Date: December 10, 2025
+Phase Type: AI-Powered Analytics
+Status: ✅ Code Complete (Ready for Testing)
+
+SUMMARY:
+--------
+Introduced AI-powered anomaly detection using Claude Sonnet 4.5. Analyzes recent Guardian
+activity (alerts, incidents, correlations, risk scores) and detects anomalous patterns.
+Provides confidence-scored detections with AI-generated explanations. Privacy-friendly:
+only aggregated metrics sent to AI.
+
+FILES CREATED (6):
+------------------
+1. supabase/migrations/552_guardian_anomaly_scores.sql
+   - guardian_anomaly_scores table
+   - Fields: anomaly_score, confidence, contributing IDs, explanation
+   - 2 indexes, 2 RLS policies
+
+2. src/lib/guardian/ai/anomalyEngine.ts
+   - generateAnomalyDetection() - Main AI service
+   - fetchRecentActivityMetrics() - Privacy-friendly aggregation
+   - Reuses existing Anthropic client
+   - Type-safe interfaces
+
+3. src/app/api/guardian/anomaly/run/route.ts
+   - POST endpoint for anomaly detection
+   - Analyst+ access required
+   - Window parameter (1-168 hours)
+   - Stores results in database
+
+4. src/app/guardian/anomalies/page.tsx
+   - Anomaly dashboard UI
+   - Latest score display
+   - "✨ Run Detection" button
+   - Historical trend table
+
+5. tests/guardian/ai.anomalyEngine.test.ts
+   - 5 test cases for anomaly engine
+   - Response validation
+   - Score range validation
+   - Empty activity handling
+
+6. docs/PHASE_H02_ANOMALY_ENGINE_STATUS.md
+   - Complete phase documentation
+   - Use cases and examples
+   - Privacy notes
+
+7. GUARDIAN_H02_COMPLETE.txt (THIS FILE)
+
+FEATURES IMPLEMENTED:
+----------------------
+**AI Anomaly Engine:**
+- Claude Sonnet 4.5 integration
+- Privacy-friendly aggregation (counts only, no raw data)
+- 0-1 anomaly score (0=normal, 1=highly anomalous)
+- 0-1 confidence score (AI certainty)
+- AI-generated explanations (1-2 sentences)
+- Historical tracking
+
+**Anomaly Detection:**
+- Analyzes alerts (by severity)
+- Analyzes incidents (total, open)
+- Considers correlation clusters
+- Factors in risk score trends
+- Configurable time window (1-168 hours)
+
+**API Endpoint:**
+- POST /api/guardian/anomaly/run
+- Analyst+ access
+- Returns anomaly score + explanation
+- Stores result in database
+- Graceful error handling
+
+**UI Dashboard:**
+- /guardian/anomalies page
+- Latest anomaly score (0-1 scale)
+- Confidence percentage
+- AI explanation display
+- Contributing alerts/incidents counts
+- Historical trend table
+- "Run Detection" button
+
+**Anomaly Levels:**
+- 0-0.24: Low Anomaly (cyan)
+- 0.25-0.49: Medium Anomaly (amber)
+- 0.50-0.74: High Anomaly (orange)
+- 0.75-1.00: Critical Anomaly (red)
+
+ANOMALY DETECTION ALGORITHM:
+-----------------------------
+**Step 1: Fetch Recent Activity**
+- Alerts from last N hours
+- Incidents from last N hours
+- Correlation clusters
+- Latest risk score
+
+**Step 2: Aggregate Metrics** (privacy-friendly):
+```
+Alerts: 45 total
+- Critical: 5
+- High: 15
+- Medium: 20
+- Low: 5
+
+Incidents: 12 total
+- Open: 8
+
+Correlation clusters: 3
+Latest risk score: 67
+```
+
+**Step 3: AI Analysis**
+- Send aggregated metrics to Claude Sonnet 4.5
+- No raw logs, no PII, no user data
+- AI detects patterns (spikes, anomalies, trends)
+
+**Step 4: Parse Response**
+```json
+{
+  "anomaly_score": 0.78,
+  "confidence": 0.82,
+  "explanation": "High spike in critical alerts (5 vs baseline 1-2)"
+}
+```
+
+**Step 5: Store Result**
+- Insert into guardian_anomaly_scores
+- Link contributing alert/incident IDs
+- Available in UI immediately
+
+NORMAL VS ANOMALOUS PATTERNS:
+------------------------------
+**Normal Patterns:**
+- Steady low alert count
+- Occasional medium alerts
+- Few critical alerts (1-2 per week)
+- Consistent incident resolution
+- Stable risk score
+
+**Anomalous Patterns:**
+- Sudden spike in critical/high alerts
+- Multiple open incidents simultaneously
+- Rapid risk score increase
+- Unusual correlation cluster formation
+- Off-hours alert spikes
+- Sustained high alert rates
+
+GUARDIAN SYSTEM STATUS:
+-----------------------
+Total Phases: G01-G52 + H01-H02 ✅ (54 phases)
+Total Tables: 45 (+1 new: guardian_anomaly_scores)
+Total Migrations: 552 (anomaly scores) + 551 (AI suggestions) + 550 (G49) + 547-549 (G45-G47)
+Total API Routes: 26 (+1 new: POST /api/guardian/anomaly/run)
+Total UI Pages: 12 (+1 new: /guardian/anomalies)
+AI Features: 2 (Rule Assistant H01, Anomaly Detection H02) ✅
+
+NEW API ROUTES (H02):
+---------------------
+26. POST /api/guardian/anomaly/run - Analyst+ ✅ (NEW H02)
+
+NEW UI PAGES (H02):
+-------------------
+12. /guardian/anomalies - Anomaly dashboard ✅ (NEW H02)
+
+BEFORE (H01):
+-------------
+- No anomaly detection
+- Manual pattern analysis
+- Reactive monitoring only
+- No AI insights beyond rule suggestions
+
+AFTER (H02):
+------------
+- ✅ AI-powered anomaly detection
+- ✅ Automatic pattern analysis
+- ✅ Confidence-scored detections
+- ✅ AI-generated explanations
+- ✅ Historical anomaly tracking
+- ✅ Privacy-friendly (aggregated metrics only)
+- ✅ Proactive monitoring capabilities
+
+BREAKING CHANGES:
+-----------------
+✅ None - Purely additive AI features
+
+No changes to:
+- Existing Guardian tables (G01-G52)
+- Existing alert/incident flows
+- Existing API contracts
+- Core Guardian architecture
+
+New behavior:
+- Anomaly detection available on demand
+- Anomaly scores tracked historically
+- New /guardian/anomalies UI page
+
+TESTING CHECKLIST:
+------------------
+[ ] Apply migration 552 (guardian_anomaly_scores)
+[ ] Verify ANTHROPIC_API_KEY configured
+[ ] Navigate to /guardian/anomalies
+[ ] Click "✨ Run Detection"
+[ ] Wait 3-5 seconds for AI analysis
+[ ] Verify anomaly score displays (0-1)
+[ ] Check confidence percentage
+[ ] Read AI explanation
+[ ] Verify contributing counts
+[ ] Check history table populates
+[ ] Test with analyst role (should work)
+[ ] Test with viewer role (should get 403)
+[ ] Test without ANTHROPIC_API_KEY (should show friendly error)
+[ ] Run: npm test tests/guardian/ai.anomalyEngine.test.ts
+
+MANUAL TESTING SCRIPT:
+----------------------
+```bash
+# 1. Apply migration
+# Supabase Dashboard → SQL Editor → Run 552_guardian_anomaly_scores.sql
+
+# 2. Test API directly
+curl -X POST http://localhost:3008/api/guardian/anomaly/run \
+  -H "Cookie: sb-access-token=<TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{"windowHours": 24}' | jq
+
+# 3. Test in UI
+# Navigate to: http://localhost:3008/guardian/anomalies
+# Click "✨ Run Detection"
+# Verify:
+# - Anomaly score displays (0-1)
+# - Confidence shows as percentage
+# - Explanation text appears
+# - Contributing counts show
+# - History table updates
+
+# 4. Query database
+SELECT * FROM guardian_anomaly_scores
+WHERE tenant_id = 'your-tenant-uuid'
+ORDER BY created_at DESC
+LIMIT 10;
+
+# Expected: 1 row with anomaly_score, confidence, explanation
+```
+
+GUARDIAN H-SERIES STATUS:
+--------------------------
+H01: AI-Assisted Rule Authoring ✅ COMPLETE
+H02: AI-Powered Anomaly Detection ✅ COMPLETE
+H03-H10: Advanced AI Features - Planned
+
+Total H-Series Phases Implemented: 2 of 30 planned
+
+NEXT STEPS:
+-----------
+1. Apply migration 552
+2. Test anomaly detection in UI
+3. Run test suite
+4. Review anomaly scores over time
+
+NEXT PHASE: H03 - Automated Anomaly Alerts
+-------------------------------------------
+Planned Features:
+- Auto-create alerts when anomaly_score > threshold
+- Anomaly-triggered incident escalation
+- Anomaly notifications via email/Slack
+- Anomaly trend monitoring
+
+---
+Generated: 2025-12-10
+Phase: Guardian H02 - AI-Powered Anomaly Detection Engine (MVP)
+Type: AI Analytics
+Status: ✅ Complete

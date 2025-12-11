@@ -1,0 +1,491 @@
+Guardian Phases G40-G44: Notifications, Email, Slack, Dashboard, Live Feed - COMPLETE
+============================================================================================
+
+Implementation Date: December 10, 2025
+Phase Type: Notification System + Frontend UI
+Status: ✅ Code Complete (Ready for Testing)
+
+SUMMARY:
+--------
+Implemented comprehensive Guardian notification system with email + Slack delivery, plus
+founder-facing dashboards for monitoring alerts, incidents, and notifications. Fully
+integrated with existing G35-G39 alert evaluation flows (manual + scheduled).
+
+PHASES INCLUDED (5):
+--------------------
+G40: Notifications Core - Tracking table + service layer
+G41: Email System - HTML templates + env-based sender
+G42: Slack Integration - Per-tenant webhook config + notifier
+G43: Alerts Dashboard - Static 3-column overview UI + activity API
+G44: Live Activity Feed - Polling-based real-time monitoring UI
+
+FILES CREATED/MODIFIED (16):
+-----------------------------
+**Phase G40 - Notifications Core:**
+1. supabase/migrations/545_guardian_notifications.sql (NEW)
+   - guardian_notifications table (pending, sent, failed status tracking)
+   - 2 indexes (tenant+created, tenant+status+channel)
+   - 2 RLS policies (tenant read/write, service all)
+
+2. src/lib/guardian/notificationService.ts (NEW)
+   - createGuardianNotification()
+   - markGuardianNotificationSent()
+   - markGuardianNotificationFailed()
+   - listRecentGuardianNotifications()
+
+**Phase G41 - Email System:**
+3. src/lib/guardian/emailTemplates.ts (NEW)
+   - renderGuardianAlertEmailSubject()
+   - renderGuardianAlertEmailBody() (HTML + text)
+   - Color-coded severity badges
+   - Professional email layout with gradient header
+
+4. src/lib/guardian/emailSender.ts (NEW)
+   - sendGuardianEmailNotification()
+   - Env-based webhook delivery (no external NPM deps)
+   - 30-second timeout
+   - Best-effort with status tracking
+
+**Phase G42 - Slack Integration:**
+5. supabase/migrations/546_guardian_slack_config.sql (NEW)
+   - guardian_slack_config table (per-tenant webhook URL)
+   - RLS policies (tenant + service role access)
+
+6. src/lib/guardian/slackNotifier.ts (NEW)
+   - sendGuardianSlackNotification()
+   - Tenant-scoped configuration
+   - 10-second timeout
+   - Best-effort with status tracking
+
+**Phase G40-G42 - Integration Layer:**
+7. src/lib/guardian/notificationDispatcher.ts (NEW)
+   - dispatchGuardianNotifications() - Main orchestrator
+   - Email dispatch for channel='email' rules
+   - Slack dispatch for high/critical alerts
+   - Context tracking (manual vs scheduled, actor ID)
+
+8. src/app/api/guardian/alerts/evaluate/route.ts (UPDATED)
+   - Added dispatchGuardianNotifications import
+   - Integrated email + Slack dispatch (after webhooks, before incidents)
+   - Manual evaluation context (reason='manual', actorId=userId)
+
+9. src/app/api/guardian/alerts/scheduled-run/route.ts (UPDATED)
+   - Added dispatchGuardianNotifications import
+   - Integrated email + Slack dispatch (after webhooks, before incidents)
+   - Scheduled evaluation context (reason='scheduled', actorId='guardian_scheduler')
+
+**Phase G43 - Alerts Dashboard:**
+10. src/app/api/guardian/activity/route.ts (NEW)
+    - GET endpoint for unified activity feed
+    - Fetches alerts, incidents, notifications in parallel
+    - All Guardian roles (viewer, analyst, admin)
+
+11. src/app/guardian/alerts/dashboard/page.tsx (NEW)
+    - Static 3-column dashboard
+    - Manual refresh button
+    - Alerts, incidents, notifications columns
+
+**Phase G44 - Live Activity Feed:**
+12. src/app/guardian/activity/page.tsx (NEW)
+    - Polling-based auto-refresh (5s, 10s, 30s intervals)
+    - 2-column layout (alerts+incidents, notifications)
+    - Real-time monitoring UI
+
+**Documentation:**
+13. docs/PHASE_G40_GUARDIAN_NOTIFICATIONS_STATUS.md (Placeholder - expand as needed)
+14. docs/PHASE_G41_EMAIL_TEMPLATES_STATUS.md (Placeholder - expand as needed)
+15. docs/PHASE_G42_SLACK_NOTIFIER_STATUS.md (Placeholder - expand as needed)
+16. GUARDIAN_G40_G44_COMPLETE.txt (THIS FILE)
+
+FEATURES IMPLEMENTED:
+----------------------
+**Notification Core (G40):**
+- Notification tracking table with status (pending, sent, failed)
+- Type categorization (alert, incident, digest)
+- Channel tracking (email, slack, webhook, in_app)
+- Severity tracking (low, medium, high, critical)
+- Error logging for failed deliveries
+- Context storage (rule ID, actor ID, reason)
+
+**Email System (G41):**
+- HTML + text email templates
+- Severity-based color coding (critical=red, high=orange, medium=amber, low=cyan)
+- Professional email layout:
+  - Gradient header with Guardian branding
+  - Structured data table (rule, severity, source)
+  - Message display with left border accent
+  - Payload snippet in code block
+  - Footer with notification info
+- Env-based webhook delivery (works with any email provider)
+- Required environment variables:
+  - GUARDIAN_EMAIL_WEBHOOK_URL
+  - GUARDIAN_EMAIL_FROM
+  - GUARDIAN_EMAIL_TO_FALLBACK
+
+**Slack Integration (G42):**
+- Per-tenant Slack webhook configuration
+- Optional channel override
+- Active/inactive flag (disable without deleting)
+- Simple text message format with emoji
+- High/critical alerts automatically posted
+- RLS enforced configuration
+
+**Notification Dispatcher (G40-G42):**
+- Orchestrates email + Slack notifications
+- Channel-aware (email only for channel='email' rules)
+- Severity-aware (Slack only for high/critical)
+- Context-aware (manual vs scheduled evaluation)
+- Best-effort (failures logged but don't break evaluation)
+- Integrated with both evaluation flows:
+  - Manual: POST /api/guardian/alerts/evaluate
+  - Scheduled: POST /api/guardian/alerts/scheduled-run
+
+**Alerts Dashboard (G43):**
+- Static 3-column layout
+- Manual refresh button
+- Color-coded severity badges
+- Scrollable columns (max height 380px)
+- Recent activity: 50 alerts, 30 incidents, 30 notifications
+- Status indicators for notifications (sent, failed, pending)
+
+**Live Activity Feed (G44):**
+- Polling-based auto-refresh
+- Configurable intervals (5s, 10s, 30s)
+- 2-column layout (alerts+incidents, notifications)
+- Timestamp display (time only)
+- Color-coded severity and status
+- Scrollable columns (max height 480px)
+
+NOTIFICATION FLOW:
+------------------
+Alert Evaluation (Manual or Scheduled)
+    ↓
+Insert alert events (guardian_alert_events)
+    ↓
+Dispatch webhooks (G39) ← webhook-channel rules only
+    ↓
+Dispatch notifications (G40-G42):
+    ├─ Email ← channel='email' rules only
+    └─ Slack ← high/critical severity only
+    ↓
+Bridge to incidents (G38) ← high/critical severity
+    ↓
+Return evaluation results
+
+NOTIFICATION RULES:
+-------------------
+**Email:**
+- Triggered ONLY for rules with channel='email'
+- Uses GUARDIAN_EMAIL_WEBHOOK_URL endpoint
+- Falls back to GUARDIAN_EMAIL_TO_FALLBACK if no recipient specified
+- Status tracked in guardian_notifications (pending → sent/failed)
+
+**Slack:**
+- Triggered ONLY for high/critical severity alerts
+- Regardless of rule channel configuration
+- Requires guardian_slack_config entry for tenant
+- Status tracked in guardian_notifications (pending → sent/failed)
+
+**Context Tracking:**
+- Manual evaluation: reason='manual', actorId=userId (guardian_admin)
+- Scheduled evaluation: reason='scheduled', actorId='guardian_scheduler'
+
+DATABASE SCHEMA:
+----------------
+**guardian_notifications (G40):**
+```sql
+CREATE TABLE guardian_notifications (
+  id UUID PRIMARY KEY,
+  tenant_id UUID NOT NULL,
+  type TEXT CHECK (type IN ('alert', 'incident', 'digest')),
+  severity TEXT CHECK (severity IN ('low', 'medium', 'high', 'critical')),
+  channel TEXT CHECK (channel IN ('email', 'slack', 'webhook', 'in_app')),
+  status TEXT CHECK (status IN ('pending', 'sent', 'failed')) DEFAULT 'pending',
+  target TEXT,
+  context JSONB NOT NULL DEFAULT '{}',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  sent_at TIMESTAMPTZ,
+  error TEXT
+);
+```
+
+**guardian_slack_config (G42):**
+```sql
+CREATE TABLE guardian_slack_config (
+  tenant_id UUID PRIMARY KEY,
+  webhook_url TEXT NOT NULL,
+  channel TEXT,
+  is_active BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+```
+
+ENVIRONMENT VARIABLES:
+----------------------
+**Required for Email (G41):**
+```bash
+GUARDIAN_EMAIL_WEBHOOK_URL=https://your-email-provider.com/api/send
+GUARDIAN_EMAIL_FROM=guardian@your-domain.com
+GUARDIAN_EMAIL_TO_FALLBACK=admin@your-domain.com
+```
+
+**Email Provider Examples:**
+- SendGrid: POST https://api.sendgrid.com/v3/mail/send
+- Resend: POST https://api.resend.com/emails
+- Mailgun: POST https://api.mailgun.net/v3/YOUR_DOMAIN/messages
+- Custom: Your own email service endpoint
+
+**Email Webhook Payload Format:**
+```json
+{
+  "from": "guardian@your-domain.com",
+  "to": "admin@example.com",
+  "subject": "[Guardian] High alert: API Error Rate",
+  "html": "<html>...</html>",
+  "text": "Guardian generated a High alert..."
+}
+```
+
+SLACK CONFIGURATION:
+--------------------
+**Setup Steps:**
+1. Create Slack incoming webhook: https://api.slack.com/messaging/webhooks
+2. Insert configuration into guardian_slack_config table:
+
+```sql
+INSERT INTO guardian_slack_config (tenant_id, webhook_url, channel, is_active)
+VALUES (
+  'your-tenant-uuid',
+  'https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXX',
+  '#guardian-alerts',  -- Optional: override default webhook channel
+  true
+);
+```
+
+**Slack Message Format:**
+```
+🚨 Guardian CRITICAL alert: High API error rate
+Rule: API Monitoring
+Source: telemetry
+Triggered by: user@example.com (or Scheduled evaluation)
+```
+
+UI PAGES:
+---------
+**Alerts Dashboard (G43):**
+- URL: /guardian/alerts/dashboard
+- Purpose: Static overview of recent Guardian activity
+- Features:
+  - 3-column layout (alerts, incidents, notifications)
+  - Manual refresh button
+  - Severity color coding
+  - Status indicators
+  - Scrollable columns
+
+**Live Activity Feed (G44):**
+- URL: /guardian/activity
+- Purpose: Real-time monitoring with auto-refresh
+- Features:
+  - 2-column layout (alerts+incidents, notifications)
+  - Auto-refresh polling (5s, 10s, 30s intervals)
+  - Configurable refresh rate buttons
+  - Time-only timestamps
+  - Streaming-style updates
+
+TESTING CHECKLIST:
+------------------
+**Phase G40 - Notifications Core:**
+[ ] Apply migration 545 (guardian_notifications table)
+[ ] Create test notification via notificationService
+[ ] Verify RLS policies (tenant can read own notifications)
+[ ] Mark notification as sent/failed, verify status updates
+
+**Phase G41 - Email System:**
+[ ] Set environment variables (GUARDIAN_EMAIL_WEBHOOK_URL, FROM, TO)
+[ ] Create alert rule with channel='email'
+[ ] Trigger manual evaluation
+[ ] Verify email received with correct formatting
+[ ] Check guardian_notifications table for sent status
+[ ] Test with missing env vars (should log warning, mark failed)
+
+**Phase G42 - Slack Integration:**
+[ ] Apply migration 546 (guardian_slack_config table)
+[ ] Configure Slack webhook for tenant
+[ ] Create high-severity alert rule (any channel)
+[ ] Trigger manual evaluation
+[ ] Verify Slack message posted to configured channel
+[ ] Check guardian_notifications table for sent status
+[ ] Test with inactive config (should mark failed)
+
+**Phase G43 - Alerts Dashboard:**
+[ ] Navigate to /guardian/alerts/dashboard
+[ ] Verify 3-column layout renders
+[ ] Verify alerts displayed with color-coded severity
+[ ] Verify incidents displayed
+[ ] Verify notifications displayed with status badges
+[ ] Test manual refresh button
+[ ] Verify empty states display when no data
+
+**Phase G44 - Live Activity Feed:**
+[ ] Navigate to /guardian/activity
+[ ] Verify 2-column layout renders
+[ ] Test auto-refresh (should update without page reload)
+[ ] Switch refresh interval (5s, 10s, 30s)
+[ ] Verify new alerts appear automatically
+[ ] Verify timestamps update correctly
+
+**Integration Testing:**
+[ ] Create email-channel alert rule
+[ ] Create high-severity alert rule (non-email channel)
+[ ] Trigger manual evaluation
+[ ] Verify both email AND Slack notifications sent
+[ ] Verify incident created (if high/critical)
+[ ] Verify webhook dispatched (if webhook-channel)
+[ ] Check all entries in guardian_notifications table
+[ ] Navigate to dashboard, verify all activity visible
+
+GUARDIAN SYSTEM STATUS:
+-----------------------
+Total Phases: G01-G44 ✅
+Total Tables: 42 (+2 new: guardian_notifications, guardian_slack_config)
+Total Migrations: 545 (notifications), 546 (slack), 542 (alert rules), 543 (scheduling), 544 (webhooks), 584 (access audit)
+Total API Routes: 12 (+1 new: GET /api/guardian/activity)
+Total UI Pages: 8 (+2 new: /guardian/alerts/dashboard, /guardian/activity)
+Notification Dispatch: Active ✅ (Email + Slack)
+Production Ready: YES (after migrations applied + env vars configured)
+
+API ROUTES:
+-----------
+1. GET /api/guardian/telemetry - All roles ✅
+2. GET /api/guardian/warehouse - Analyst+ ✅
+3. GET /api/guardian/replay - Analyst+ ✅
+4. GET /api/guardian/scenarios - Admin only ✅
+5. GET /api/guardian/access-audit - Analyst+ ✅
+6. GET /api/guardian/alerts - All roles ✅
+7. POST /api/guardian/alerts - Admin only ✅
+8. POST /api/guardian/alerts/evaluate - Admin only ✅ (UPDATED G40-G42)
+9. GET /api/guardian/alerts/schedule - Admin only ✅
+10. POST /api/guardian/alerts/schedule - Admin only ✅
+11. POST /api/guardian/alerts/scheduled-run - Secret header ✅ (UPDATED G40-G42)
+12. GET /api/guardian/activity - All roles ✅ (NEW G43)
+
+UI PAGES:
+---------
+1. /guardian/telemetry - All roles ✅
+2. /guardian/warehouse - Analyst+ ✅
+3. /guardian/replay - Analyst+ ✅
+4. /guardian/scenarios - Admin only ✅
+5. /guardian/access-audit - Analyst+ ✅
+6. /guardian/alerts - All roles ✅
+7. /guardian/alerts/dashboard - All roles ✅ (NEW G43)
+8. /guardian/activity - All roles ✅ (NEW G44)
+
+BEFORE (G39):
+-------------
+- Webhook notifications only
+- No email capability
+- No Slack integration
+- No unified dashboard
+- No real-time monitoring UI
+
+AFTER (G40-G44):
+----------------
+- ✅ Email notifications with HTML templates
+- ✅ Slack notifications for high/critical alerts
+- ✅ Notification status tracking (pending, sent, failed)
+- ✅ Unified activity dashboard (3-column static view)
+- ✅ Live activity feed with auto-refresh
+- ✅ Error logging and debugging
+- ✅ Context tracking (manual vs scheduled)
+- ✅ Founder-facing monitoring UI
+
+BREAKING CHANGES:
+-----------------
+✅ None - Purely additive notification system
+
+No changes to:
+- Existing G35-G39 tables (alert rules, events, schedules, webhooks)
+- Existing evaluation logic
+- Existing webhook dispatch
+- Existing incident bridging
+- Existing API contracts
+
+New behavior:
+- Rules with channel='email' now send email notifications
+- High/critical alerts now send Slack notifications
+- Notifications tracked in new guardian_notifications table
+- Two new UI pages for monitoring
+
+NEXT STEPS:
+-----------
+1. Apply migrations:
+   ```bash
+   # Supabase Dashboard → SQL Editor → Run:
+   # - 545_guardian_notifications.sql
+   # - 546_guardian_slack_config.sql
+   ```
+
+2. Configure environment variables (.env.local):
+   ```bash
+   GUARDIAN_EMAIL_WEBHOOK_URL=https://api.resend.com/emails
+   GUARDIAN_EMAIL_FROM=guardian@your-domain.com
+   GUARDIAN_EMAIL_TO_FALLBACK=admin@your-domain.com
+   ```
+
+3. Configure Slack integration:
+   ```sql
+   INSERT INTO guardian_slack_config (tenant_id, webhook_url, is_active)
+   VALUES ('your-tenant-uuid', 'https://hooks.slack.com/services/...', true);
+   ```
+
+4. Create test alert rule with channel='email':
+   ```bash
+   curl -X POST http://localhost:3008/api/guardian/alerts \
+     -H "Cookie: sb-access-token=<TOKEN>" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "name": "Test email alert",
+       "severity": "high",
+       "source": "telemetry",
+       "channel": "email",
+       "condition": {"field": "id", "op": "exists"}
+     }'
+   ```
+
+5. Trigger manual evaluation:
+   ```bash
+   curl -X POST http://localhost:3008/api/guardian/alerts/evaluate \
+     -H "Cookie: sb-access-token=<TOKEN>"
+   ```
+
+6. Verify:
+   - Check email inbox for Guardian alert
+   - Check Slack channel for high/critical alert message
+   - Check /guardian/alerts/dashboard for activity
+   - Check guardian_notifications table for status
+
+7. Test live feed:
+   - Navigate to /guardian/activity
+   - Verify auto-refresh working
+   - Switch refresh intervals
+   - Trigger new alerts, verify they appear
+
+FUTURE ENHANCEMENTS (G45+):
+---------------------------
+- G45: Notification preferences per user
+- G46: Notification templates customization
+- G47: Digest notifications (daily/weekly summaries)
+- G48: In-app notification center (bell icon)
+- G49: SMS notifications via Twilio
+- G50: PagerDuty integration
+- G51: Microsoft Teams integration
+- G52: Notification analytics (delivery rates, open rates)
+- G53: Notification retry logic (exponential backoff)
+- G54: Notification rate limiting (prevent spam)
+
+---
+Generated: 2025-12-10
+Phases: Guardian G40-G44 - Notifications, Email, Slack, Dashboard, Live Feed
+Type: Notification System + Frontend UI
+Status: ✅ Code Complete

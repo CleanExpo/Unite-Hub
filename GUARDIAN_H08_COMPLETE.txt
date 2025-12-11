@@ -1,0 +1,57 @@
+Guardian Phase H08: AI Investigation & Natural-Language Query Console - COMPLETE
+==================================================================================
+
+Implementation Date: December 10, 2025
+Phase Type: AI-Powered Interactive Investigation
+Status: ✅ Code Complete
+
+SUMMARY:
+--------
+Introduced AI-powered investigation console with natural-language query interface. Operators
+can ask questions about Guardian data (alerts, incidents, risk, anomalies) in plain English
+and receive AI-generated narrative answers. Chat-style multi-turn conversations with session
+management.
+
+FILES CREATED (6):
+------------------
+1. supabase/migrations/557_guardian_ai_investigation.sql
+2. src/lib/guardian/ai/aiConfig.ts (UPDATED - added investigation support)
+3. src/lib/guardian/ai/investigationConsole.ts
+4. src/app/api/guardian/ai/investigate/route.ts
+5. src/app/guardian/investigate/page.tsx
+6. src/app/guardian/admin/ai/page.tsx (UPDATED - added investigation toggle)
+7. tests/guardian/ai.investigation.test.ts
+8. docs/PHASE_H08_AI_INVESTIGATION_CONSOLE_STATUS.md
+9. GUARDIAN_H08_COMPLETE.txt (THIS FILE)
+
+FEATURES:
+---------
+✅ Natural-language query interface
+✅ Chat-style Q&A (multi-turn sessions)
+✅ Deterministic intent classification
+✅ Privacy-friendly data queries
+✅ AI-powered narrative answers
+✅ Session management
+✅ Suggested starter questions
+✅ Governed by H05 (toggles, quotas)
+
+GUARDIAN STATUS:
+----------------
+Total Phases: 60 (G01-G52 + H01-H03, H05-H08) ✅
+Total Tables: 50 (+1 guardian_ai_investigations)
+Total API Routes: 35 (+1 investigation endpoint)
+Total UI Pages: 16 (+1 /guardian/investigate)
+AI Features: 7 (Complete H-Series)
+
+NEW ROUTES:
+-----------
+35. POST /api/guardian/ai/investigate - Analyst+ ✅
+
+NEW PAGES:
+----------
+16. /guardian/investigate - Investigation console ✅
+
+---
+Generated: 2025-12-10
+Phase: H08 - AI Investigation Console
+Status: ✅ Complete

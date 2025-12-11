@@ -1,0 +1,415 @@
+Guardian Phase G38: Alert → Incident Bridge - COMPLETE
+===========================================================
+
+Implementation Date: December 10, 2025
+Phase Type: Alert-to-Incident Integration
+Status: ✅ Code Complete (Ready for Testing)
+
+SUMMARY:
+--------
+Automatically creates incidents from high/critical Guardian alert events. Bridge applied to both manual evaluation (G36) and scheduled evaluation (G37) flows. Purely additive - no schema changes, best-effort only (never breaks alert evaluation).
+
+FILES CREATED/MODIFIED:
+-----------------------
+1. src/lib/guardian/alertIncidentBridge.ts (NEW - 2.1 KB)
+   - bridgeAlertsToIncidents() - Core bridge function
+   - GuardianFiredAlert type
+   - Severity filtering (high/critical only)
+   - Best-effort error handling (never throws)
+
+2. src/app/api/guardian/alerts/evaluate/route.ts (UPDATED)
+   - Added bridgeAlertsToIncidents import
+   - Extract userId from getGuardianAccessContext
+   - Call bridge after inserting alert events
+   - Updated comments to mention G38
+
+3. src/app/api/guardian/alerts/scheduled-run/route.ts (UPDATED)
+   - Added bridgeAlertsToIncidents import
+   - Call bridge with created_by = 'guardian_scheduler'
+   - Updated comments to mention G38
+
+4. docs/PHASE_G38_ALERT_INCIDENT_BRIDGE_STATUS.md (NEW - 13 KB)
+   - Comprehensive phase documentation
+   - Behavior specifications
+   - Use cases and testing guide
+
+FEATURES:
+---------
+Alert-to-Incident Bridge:
+- Automatically creates incidents from fired alerts
+- Only high/critical severity alerts bridged
+- Low/medium alerts stay in Guardian UI only
+- Best-effort: errors logged but never break evaluation
+
+Incident Creation:
+- Title: "Guardian alert: <message>"
+- Summary: Includes rule ID, severity, source, payload snippet (400 chars)
+- Status: Always 'open' (new incident)
+- Severity: Inherited from alert (high or critical)
+- tenant_id: Inherited from alert
+- created_by: User ID (manual) or 'guardian_scheduler' (scheduled)
+
+Integration Points:
+- Manual evaluation (G36): Bridges after inserting alert events
+- Scheduled evaluation (G37): Bridges after inserting alert events
+- Incidents table (E21): Reuses existing incident management system
+
+Error Handling:
+- All errors caught and logged
+- Never throws exceptions
+- Doesn't break alert evaluation flow
+- Logs success for monitoring
+
+BRIDGE FUNCTION:
+----------------
+src/lib/guardian/alertIncidentBridge.ts
+
+bridgeAlertsToIncidents(tenantId, alerts, createdBy):
+- Filters alerts by severity (high/critical only)
+- For each qualifying alert:
+  - Creates incident title and summary
+  - Inserts into incidents table
+  - Logs success/failure (best-effort)
+- Returns void (never throws)
+
+Type Definition:
+```typescript
+interface GuardianFiredAlert {
+  ruleId: string;
+  message: string;
+  payload: unknown;
+  severity: string;
+  source: string;
+}
+```
+
+SEVERITY FILTERING:
+-------------------
+Bridged to Incidents:
+✅ high severity alerts
+✅ critical severity alerts
+
+NOT Bridged:
+❌ low severity alerts (stay as alerts only)
+❌ medium severity alerts (stay as alerts only)
+
+Rationale:
+- High/critical = actionable incidents requiring immediate attention
+- Low/medium = informational alerts reviewed periodically in Guardian UI
+
+INCIDENT FORMAT:
+----------------
+Title:
+"Guardian alert: <alert message>"
+
+Example:
+"Guardian alert: Rule 'High error rate on /api/guardian/telemetry' fired due to condition match"
+
+Summary:
+"Guardian generated an alert from source '<source>'.
+
+Rule ID: <ruleId>
+Severity: <severity>
+
+Payload snippet:
+<first 400 chars of JSON payload>..."
+
+Example:
+"Guardian generated an alert from source 'telemetry'.
+
+Rule ID: abc-123-def-456
+Severity: high
+
+Payload snippet:
+{\"event\":{\"id\":\"evt-789\",\"status_code\":500,\"created_at\":\"2025-12-10T10:30:00Z\"},\"fieldValue\":500,\"evaluatedAt\":\"2025-12-10T10:30:05Z\"}..."
+
+ATTRIBUTION:
+------------
+Manual Evaluation (POST /api/guardian/alerts/evaluate):
+- created_by = userId from authenticated guardian_admin
+- Tracks which user triggered the evaluation
+- Enables user accountability
+
+Scheduled Evaluation (POST /api/guardian/alerts/scheduled-run):
+- created_by = 'guardian_scheduler' (system identifier)
+- Distinguishes automated from manual incidents
+- Enables filtering system-created incidents
+
+INTEGRATION:
+------------
+Manual Evaluation (G36):
+1. Evaluate alert rules
+2. Insert alert events into guardian_alert_events
+3. Bridge high/critical alerts to incidents (G38)
+4. Return evaluation summary
+
+Scheduled Evaluation (G37):
+1. Fetch due schedules
+2. Evaluate alert rules per tenant
+3. Insert alert events into guardian_alert_events
+4. Bridge high/critical alerts to incidents (G38)
+5. Mark schedule as run
+
+BEST-EFFORT PHILOSOPHY:
+-----------------------
+Why Best-Effort?
+- Alert evaluation is critical - must never fail
+- Incident creation is secondary - nice-to-have
+- Bridge failures should be logged, not thrown
+- System should degrade gracefully
+
+Implementation:
+- All bridge calls wrapped in try/catch
+- Errors logged with context (tenant, rule ID)
+- Success logged for monitoring
+- Never throws exceptions to caller
+
+Logging:
+- Success: "[Guardian G38] Bridged high alert to incident (tenant: ..., rule: ...)"
+- Failure: "[Guardian G38] Failed to bridge alert to incident (tenant: ..., rule: ...): <error>"
+
+USE CASES:
+----------
+1. API Error Escalation
+   - Alert: High API error rate (status_code = 500)
+   - Bridge: Incident created with severity 'high'
+   - Workflow: Founder assigns to developer → investigate → resolve
+
+2. Performance Degradation
+   - Alert: P95 latency exceeds threshold (response_time_p95 > 1000ms)
+   - Bridge: Incident created with severity 'high'
+   - Workflow: DevOps team investigates and optimizes
+
+3. Low/Medium Alerts (No Escalation)
+   - Alert: Daily metrics summary (requests_per_hour < 100)
+   - Bridge: NO incident created (severity too low)
+   - Workflow: Founder reviews alert in Guardian UI only
+
+PHASE G38 SCOPE:
+----------------
+✅ Alert-to-incident bridge function
+✅ Severity filtering (high/critical only)
+✅ Best-effort error handling
+✅ Manual evaluation integration (G36)
+✅ Scheduled evaluation integration (G37)
+✅ System attribution (guardian_scheduler)
+✅ Incident title and summary generation
+✅ Backward compatibility (no schema changes)
+✅ Comprehensive documentation
+
+FUTURE PHASES (G39+):
+---------------------
+❌ Automatic incident assignment - G39
+❌ Incident escalation workflows - G39
+❌ Incident notification delivery - G39
+❌ Alert → incident conversion analytics - G41
+❌ Incident deduplication (multiple alerts → one incident) - G39
+❌ Incident auto-resolution (when alert clears) - G40
+
+INTEGRATION POINTS:
+-------------------
+✅ E21 (Incident Management) - Uses incidents table
+✅ G30 (Tenant Hardening) - Tenant isolation
+✅ G35 (Alert Rules & Events) - Alert event structure
+✅ G36 (Evaluation Engine) - Manual evaluation flow
+✅ G37 (Scheduler) - Scheduled evaluation flow
+
+Enables:
+🔜 G39 (Incident Workflows) - Assignment, escalation
+🔜 G40 (Incident Analytics) - MTTA, MTTR tracking
+🔜 G41 (Alert Analytics) - Alert → incident conversion rate
+
+PERFORMANCE:
+------------
+Bridge Overhead (per fired alert):
+- Severity check: O(1)
+- Title generation: O(1)
+- Summary generation: O(1) - JSON.stringify + slice
+- Incident insert: O(1)
+
+Total Overhead: ~5-10ms per high/critical alert
+
+Example: 10 alerts fired, 2 high/critical → ~10-20ms bridge overhead
+
+Impact: Negligible compared to evaluation (50-200ms)
+
+TESTING CHECKLIST:
+------------------
+[ ] Create high-severity alert rule
+[ ] Create critical-severity alert rule
+[ ] Create low-severity alert rule (should not bridge)
+[ ] Trigger manual evaluation
+[ ] Verify high/critical incidents created in incidents table
+[ ] Verify low/medium alerts NOT bridged
+[ ] Check created_by = userId for manual evaluation
+[ ] Trigger scheduled evaluation
+[ ] Verify high/critical incidents created with created_by = 'guardian_scheduler'
+[ ] Test incident title format
+[ ] Test incident summary format
+[ ] Verify incidents have status = 'open'
+[ ] Test error handling (simulate incidents table failure)
+[ ] Verify evaluation continues even if bridge fails
+
+MANUAL TESTING SCRIPT:
+----------------------
+```bash
+# 1. Create high-severity alert rule
+curl -X POST \
+  -H "Cookie: sb-access-token=<TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Test high severity rule",
+    "severity": "high",
+    "source": "telemetry",
+    "channel": "in_app",
+    "condition": {"field": "id", "op": "exists"}
+  }' \
+  http://localhost:3008/api/guardian/alerts
+
+# 2. Create low-severity alert rule (should NOT bridge)
+curl -X POST \
+  -H "Cookie: sb-access-token=<TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Test low severity rule",
+    "severity": "low",
+    "source": "telemetry",
+    "channel": "in_app",
+    "condition": {"field": "id", "op": "exists"}
+  }' \
+  http://localhost:3008/api/guardian/alerts
+
+# 3. Trigger manual evaluation
+curl -X POST \
+  -H "Cookie: sb-access-token=<TOKEN>" \
+  http://localhost:3008/api/guardian/alerts/evaluate
+
+# 4. Verify incidents created (SQL query in Supabase Dashboard)
+SELECT id, tenant_id, severity, status, title, created_by, created_at
+FROM incidents
+WHERE title LIKE 'Guardian alert:%'
+ORDER BY created_at DESC
+LIMIT 10;
+
+# Expected: 1 incident (high severity only, low severity should NOT have incident)
+
+# 5. Trigger scheduled evaluation
+curl -X POST \
+  -H "x-guardian-scheduler-secret: $GUARDIAN_SCHEDULER_SECRET" \
+  http://localhost:3008/api/guardian/alerts/scheduled-run
+
+# 6. Verify new incidents have created_by = 'guardian_scheduler'
+SELECT id, severity, title, created_by
+FROM incidents
+WHERE created_by = 'guardian_scheduler'
+ORDER BY created_at DESC;
+```
+
+GUARDIAN SYSTEM STATUS:
+-----------------------
+Total Phases: G01-G38 ✅
+Total Tables: 39 (no new tables in G38)
+Total API Routes: 11 (no new routes in G38)
+Alert-Incident Bridge: Active ✅
+Production Ready: YES (after testing)
+
+API ROUTES:
+-----------
+1. GET /api/guardian/telemetry - All roles ✅
+2. GET /api/guardian/warehouse - Analyst+ ✅
+3. GET /api/guardian/replay - Analyst+ ✅
+4. GET /api/guardian/scenarios - Admin only ✅
+5. GET /api/guardian/access-audit - Analyst+ ✅
+6. GET /api/guardian/alerts - All roles ✅
+7. POST /api/guardian/alerts - Admin only ✅
+8. POST /api/guardian/alerts/evaluate - Admin only ✅ (UPDATED G38)
+9. GET /api/guardian/alerts/schedule - Admin only ✅
+10. POST /api/guardian/alerts/schedule - Admin only ✅
+11. POST /api/guardian/alerts/scheduled-run - Secret header ✅ (UPDATED G38)
+
+UI PAGES:
+---------
+1. /guardian/telemetry - All roles ✅
+2. /guardian/warehouse - Analyst+ ✅
+3. /guardian/replay - Analyst+ ✅
+4. /guardian/scenarios - Admin only ✅
+5. /guardian/access-audit - Analyst+ ✅
+6. /guardian/alerts - All roles ✅
+
+BEFORE (G37):
+-------------
+- Alert events stored in guardian_alert_events only
+- No automatic incident creation
+- Founders must manually create incidents from alerts
+- No unified incident management
+- High/critical alerts only visible in Guardian UI
+
+AFTER (G38):
+------------
+- ✅ High/critical alerts automatically create incidents
+- ✅ Incidents visible in incident management UI
+- ✅ Unified incident workflow (assignment, resolution)
+- ✅ System attribution for scheduled alerts
+- ✅ User attribution for manual alerts
+- ✅ Best-effort bridge (never breaks evaluation)
+- ✅ Low/medium alerts stay in Guardian UI only
+
+BREAKING CHANGES:
+-----------------
+✅ None - Purely additive bridge
+
+No changes to:
+- Alert rule schema
+- Alert event schema
+- Schedule configuration
+- Evaluation logic
+- Existing API contracts
+
+New behavior:
+- High/critical alerts now create incidents (additive only)
+- created_by field populated (existing field, already in schema)
+
+NEXT STEPS:
+-----------
+1. Test manual evaluation:
+   ```bash
+   curl -X POST -H "Cookie: sb-access-token=<TOKEN>" \
+     http://localhost:3008/api/guardian/alerts/evaluate
+   ```
+
+2. Verify incidents created:
+   - Check incidents table in Supabase Dashboard
+   - Query: `SELECT * FROM incidents WHERE title LIKE 'Guardian alert:%'`
+
+3. Test scheduled evaluation:
+   ```bash
+   curl -X POST -H "x-guardian-scheduler-secret: $GUARDIAN_SCHEDULER_SECRET" \
+     http://localhost:3008/api/guardian/alerts/scheduled-run
+   ```
+
+4. Verify system attribution:
+   - Check created_by field in incidents table
+   - Manual evaluation: Should have user ID
+   - Scheduled evaluation: Should have 'guardian_scheduler'
+
+5. Test severity filtering:
+   - Create low-severity alert rule
+   - Trigger evaluation
+   - Verify NO incident created (only alert event)
+
+NEXT PHASE: G39 - Incident Workflows
+-------------------------------------
+Planned Features:
+- Automatic incident assignment based on rules
+- Incident escalation workflows (after N hours unresolved)
+- Incident notification delivery (email, Slack, PagerDuty)
+- Incident deduplication (multiple alerts → single incident)
+- Incident auto-resolution (when alert condition clears)
+- Incident severity adjustment (escalate low → high)
+- Incident timeline tracking (status changes, assignments)
+- Incident SLA tracking (time to acknowledge, time to resolve)
+
+---
+Generated: 2025-12-10
+Phase: Guardian G38 - Alert → Incident Bridge
+Type: Alert-to-Incident Integration

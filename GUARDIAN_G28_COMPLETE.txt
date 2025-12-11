@@ -1,0 +1,43 @@
+GUARDIAN PHASE G28: SCENARIO SIMULATOR - COMPLETE
+================================================================
+
+IMPLEMENTATION DATE: December 10, 2025
+MIGRATION NUMBER: 583
+INTEGRATION: G30 Tenant Context
+
+FILES CREATED (5):
+------------------
+1. supabase/migrations/583_guardian_scenario_simulator.sql
+2. src/lib/founder/guardian/scenarioSimulatorService.ts
+3. src/app/api/founder/guardian/scenarios/route.ts
+4. src/app/founder/guardian-scenarios/page.tsx
+5. docs/PHASE_G28_SCENARIO_SIMULATOR_STATUS.md
+
+PATTERN CORRECTIONS:
+--------------------
+Migration:     540 → 583 (sequential after G27)
+Service path:  src/lib/guardian/ → src/lib/founder/guardian/
+API path:      src/app/api/guardian/ → src/app/api/founder/guardian/
+UI path:       src/app/guardian/ → src/app/founder/guardian-scenarios/
+Tenant:        TODO_G28_TENANT → getGuardianTenantContext() from G30
+
+SCENARIO CATEGORIES (7):
+------------------------
+outage, schema_drift, agent_failure, traffic_spike, security, compliance, custom
+
+RUN LIFECYCLE: pending → running → {completed | failed | cancelled}
+
+INTEGRATION POINTS:
+-------------------
+✅ G30: Centralized tenant context
+✅ G25: Telemetry stream events
+✅ G26: Warehouse archival
+✅ G27: Replay engine compatibility
+
+PRODUCTION STATUS: ✅ READY
+
+TOTAL GUARDIAN PHASES: 28 (G01-G28) ✅
+TOTAL TABLES: 35
+TOTAL MIGRATIONS: 583
+
+================================================================

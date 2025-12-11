@@ -1,0 +1,204 @@
+Guardian Phase H03: AI-Enhanced Correlation Refinement - COMPLETE
+========================================================================
+
+Implementation Date: December 10, 2025
+Phase Type: AI-Powered Correlation Analytics
+Status: ✅ Code Complete (Ready for Testing)
+
+SUMMARY:
+--------
+Introduced AI-enhanced correlation refinement using Claude Sonnet 4.5. Analyzes existing
+correlation clusters and suggests improvements (merge, split, relabel, rank). Advisory only -
+humans retain final control. No automatic mutations to correlation data in H03.
+
+FILES CREATED (7):
+------------------
+1. supabase/migrations/553_guardian_ai_correlation_reviews.sql
+   - guardian_ai_correlation_reviews table
+   - Fields: cluster_ids, suggested_action, ai_score, confidence, applied
+   - 2 indexes, 2 RLS policies
+
+2. src/lib/guardian/ai/correlationRefiner.ts
+   - generateCorrelationRecommendations() - Main AI service
+   - fetchRecentCorrelationClusters() - Privacy-friendly aggregation
+   - Reuses existing Anthropic client
+   - Type-safe interfaces
+
+3. src/app/api/guardian/ai/correlation/review/route.ts
+   - POST endpoint for AI correlation review
+   - Analyst+ access required
+   - Window parameter (1-720 hours)
+   - Stores recommendations in database
+
+4. src/app/api/guardian/ai/correlation/decision/route.ts
+   - POST endpoint for recording user decisions
+   - Telemetry only (no auto-apply)
+   - Updates applied flag in reviews table
+
+5. src/app/guardian/correlations/page.tsx
+   - Correlation clusters list + AI recommendations panel
+   - "✨ AI Review" button
+   - Suggestion display (action, score, confidence, rationale)
+   - Apply/Dismiss placeholders (H04+)
+
+6. tests/guardian/ai.correlationRefiner.test.ts
+   - 5 test cases for correlation refiner
+   - Recommendation validation
+   - Action type validation
+   - Empty clusters handling
+
+7. docs/PHASE_H03_AI_CORRELATION_REFINEMENT_STATUS.md
+   - Complete phase documentation
+   - Use cases and examples
+   - Privacy notes
+
+8. GUARDIAN_H03_COMPLETE.txt (THIS FILE)
+
+FEATURES IMPLEMENTED:
+----------------------
+**AI Correlation Refiner:**
+- Claude Sonnet 4.5 integration
+- Privacy-friendly cluster aggregation
+- Merge suggestions (combine related clusters)
+- Split suggestions (separate unrelated events)
+- Relabel suggestions (correct severity/status)
+- Rank suggestions (adjust priority)
+
+**Recommendations:**
+- Action types: merge, split, relabel, rank
+- Relevance score (0-1)
+- Confidence score (0-1)
+- Rationale (1 sentence explanation)
+- Target cluster IDs
+
+**API Endpoints:**
+- POST /api/guardian/ai/correlation/review - Generate recommendations
+- POST /api/guardian/ai/correlation/decision - Record user decisions
+- Analyst+ access required
+- Graceful error handling
+
+**UI Integration:**
+- /guardian/correlations page (NEW)
+- Clusters list (left column)
+- AI recommendations panel (right sidebar)
+- "✨ AI Review" button
+- Suggestion cards with Apply/Dismiss (disabled in H03)
+- Fully optional AI feature
+
+**Decision Tracking:**
+- Records whether suggestions accepted/dismissed
+- Telemetry for AI improvement
+- No auto-apply (advisory only)
+
+GUARDIAN SYSTEM STATUS:
+-----------------------
+Total Phases: G01-G52 + H01-H03 ✅ (55 phases)
+Total Tables: 46 (+1 new: guardian_ai_correlation_reviews)
+Total Migrations: 553 (correlation reviews) + 552 (anomaly scores) + 551 (AI suggestions)
+Total API Routes: 28 (+2 new: review, decision)
+Total UI Pages: 13 (+1 new: /guardian/correlations)
+AI Features: 3 (Rule Assistant, Anomaly Detection, Correlation Refinement) ✅
+
+NEW API ROUTES (H03):
+---------------------
+27. POST /api/guardian/ai/correlation/review - Analyst+ ✅ (NEW H03)
+28. POST /api/guardian/ai/correlation/decision - Analyst+ ✅ (NEW H03)
+
+NEW UI PAGES (H03):
+-------------------
+13. /guardian/correlations - Clusters + AI recommendations ✅ (NEW H03)
+
+RECOMMENDATION TYPES:
+---------------------
+**Merge:**
+- Combine related clusters that should be grouped
+- Example: "Both clusters critical severity, same API errors"
+
+**Split:**
+- Separate unrelated events wrongly clustered together
+- Example: "Cluster mixes API errors and database errors"
+
+**Relabel:**
+- Correct misclassified severity or status
+- Example: "Cluster marked medium but contains critical incidents"
+
+**Rank:**
+- Adjust cluster priority/importance
+- Example: "12 open incidents should escalate from monitoring to open"
+
+BEFORE (H02):
+-------------
+- Basic correlation clustering (G46)
+- Manual cluster management
+- No AI insights for correlations
+- No refinement suggestions
+
+AFTER (H03):
+------------
+- ✅ AI-powered correlation analysis
+- ✅ Automatic refinement suggestions
+- ✅ Confidence-scored recommendations
+- ✅ Privacy-friendly (aggregated metrics only)
+- ✅ User decision tracking
+- ✅ Advisory only (no auto-mutations)
+- ✅ /guardian/correlations UI page
+
+BREAKING CHANGES:
+-----------------
+✅ None - Purely additive AI features
+
+No changes to:
+- Existing Guardian tables (G01-G52)
+- Existing correlation engine (G46)
+- Existing API contracts
+- Core Guardian architecture
+
+New behavior:
+- AI can review correlation clusters (opt-in)
+- Recommendations stored for telemetry
+- New UI page for correlations
+
+TESTING CHECKLIST:
+------------------
+[ ] Apply migration 553 (guardian_ai_correlation_reviews)
+[ ] Verify ANTHROPIC_API_KEY configured
+[ ] Navigate to /guardian/correlations
+[ ] Click "Run Correlation" (G46)
+[ ] Verify clusters appear
+[ ] Click "✨ AI Review" (H03)
+[ ] Wait 3-5 seconds
+[ ] Verify recommendations appear
+[ ] Check recommendation scores/confidence
+[ ] Read AI rationales
+[ ] Note Apply/Dismiss buttons disabled (H04+)
+[ ] Run: npm test tests/guardian/ai.correlationRefiner.test.ts
+
+GUARDIAN H-SERIES STATUS:
+--------------------------
+H01: AI-Assisted Rule Authoring ✅ COMPLETE
+H02: AI-Powered Anomaly Detection ✅ COMPLETE
+H03: AI-Enhanced Correlation Refinement ✅ COMPLETE
+H04-H10: Advanced AI Features - Planned
+
+Total H-Series Phases Implemented: 3 of 30 planned
+
+NEXT STEPS:
+-----------
+1. Apply migration 553
+2. Test AI correlation review
+3. Run test suite
+4. Review recommendations in UI
+
+NEXT PHASE: H04 - Automated AI Actions
+---------------------------------------
+Planned Features:
+- Auto-apply high-confidence AI suggestions
+- Batch apply multiple recommendations
+- Undo/rollback applied suggestions
+- AI suggestion history and audit trail
+
+---
+Generated: 2025-12-10
+Phase: Guardian H03 - AI-Enhanced Correlation Refinement
+Type: AI Correlation Analytics
+Status: ✅ Complete

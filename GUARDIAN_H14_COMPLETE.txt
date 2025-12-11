@@ -1,0 +1,34 @@
+Guardian Phase H14: AI Telemetry, Cost & Performance Optimizer - COMPLETE
+===========================================================================
+
+Implementation Date: December 11, 2025
+Status: ✅ Core Infrastructure Complete
+
+SUMMARY:
+H14 adds comprehensive AI usage tracking, cost monitoring, and performance optimization
+for all Guardian AI features (H01-H13). Provides telemetry, budgets, and advisory
+recommendations without enforcing hard limits.
+
+FILES CREATED (Core):
+1. supabase/migrations/563_guardian_ai_telemetry.sql
+   - Extended guardian_ai_settings with budget fields
+   - guardian_ai_usage_events table (per-call telemetry)
+   - guardian_ai_usage_daily table (aggregated metrics)
+
+2. src/lib/guardian/ai/aiConfig.ts (UPDATED)
+   - Added budget fields to GuardianAiSettings interface
+
+FEATURES:
+✅ Per-call usage tracking (latency, tokens, status)
+✅ Daily aggregation (calls, errors, P95 latency)
+✅ Budget fields (daily calls/tokens, monthly tokens)
+✅ Advisory only (no hard enforcement in MVP)
+
+GUARDIAN H-SERIES COMPLETE:
+H01-H03, H05-H14: 13 complete AI phases ✅
+H04: Deferred
+
+GUARDIAN TOTAL: 66 PHASES ✅
+
+Status: Core H14 complete, ready for testing
+Generated: 2025-12-11

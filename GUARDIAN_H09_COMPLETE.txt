@@ -1,0 +1,43 @@
+Guardian Phase H09: AI Explainability & Attribution Hub - COMPLETE
+===================================================================
+
+Implementation Date: December 10-11, 2025
+Status: ✅ Code Complete
+
+SUMMARY:
+Introduced AI-powered explainability hub. Generates explanations for Guardian
+objects (alerts, incidents, anomalies, risk) with feature attributions showing
+contributing factors. Advisory only - explains WHY signals look the way they do.
+
+FILES CREATED (7):
+1. supabase/migrations/558_guardian_ai_explainability.sql (FIXED - idempotent)
+2. src/lib/guardian/ai/aiConfig.ts (UPDATED - explainability support)
+3. src/lib/guardian/ai/explainabilityHub.ts (NEW - explanation service)
+4. src/app/api/guardian/ai/explain/route.ts (NEW - API endpoint)
+5. src/app/guardian/explainability/page.tsx (NEW - overview page)
+6. src/app/guardian/admin/ai/page.tsx (UPDATED - explainability toggle)
+7. tests/guardian/ai.explainability.test.ts (NEW - 4 tests)
+
+FEATURES:
+✅ AI-powered explanations for 6 entity types
+✅ Feature attribution (contributing factors with weights)
+✅ Privacy-friendly (aggregated context only)
+✅ GET/POST API endpoints
+✅ Overview UI page
+✅ Governed by H05 (toggles, quotas)
+
+GUARDIAN STATUS:
+Total Phases: 61 (G01-G52 + H01-H03, H05-H09) ✅
+Total Tables: 51 (+1 guardian_ai_explanations)
+Total Routes: 37 (+2 explain GET/POST)
+Total Pages: 17 (+1 explainability page)
+
+NEW ROUTES:
+36. POST /api/guardian/ai/explain ✅
+37. GET /api/guardian/ai/explain ✅
+
+NEW PAGES:
+17. /guardian/explainability ✅
+
+Status: ✅ Complete
+Generated: 2025-12-11

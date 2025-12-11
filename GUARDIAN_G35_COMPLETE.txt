@@ -1,0 +1,424 @@
+Guardian Phase G35: Alert Rules & Events Foundation - COMPLETE
+================================================================
+
+Implementation Date: December 10, 2025
+Phase Type: Alerting & Monitoring
+Status: ✅ Code Complete (Needs Migration 542 + Rebuild)
+
+SUMMARY:
+--------
+Added Guardian alert rules and event storage foundation. Provides database schema, service layer, API routes, and founder-facing UI for defining alert rules and viewing alert events across Guardian system (telemetry, warehouse, replay, scenarios).
+
+FILES CREATED (5):
+------------------
+1. supabase/migrations/542_guardian_alert_rules.sql
+   - guardian_alert_rules table (rule definitions per-tenant)
+   - guardian_alert_events table (event history per-tenant)
+   - RLS policies for tenant-scoped access
+   - Indexes for efficient queries
+
+2. src/lib/guardian/alertRulesService.ts
+   - listGuardianAlertRules() - Query all rules for tenant
+   - listGuardianAlertEvents() - Query recent events (limit 10-500)
+   - createGuardianAlertRule() - Create new alert rule
+   - TypeScript types for Severity, Source, Channel
+
+3. src/app/api/guardian/alerts/route.ts
+   - GET /api/guardian/alerts - List rules + events (all roles)
+   - POST /api/guardian/alerts - Create rule (admin only)
+   - Role enforcement: viewer/analyst/admin for GET, admin-only for POST
+
+4. src/app/guardian/alerts/page.tsx
+   - Guardian Alerts UI at /guardian/alerts
+   - Create rule form (name, severity, source, channel, description)
+   - Alert rules table
+   - Recent alert events table
+
+5. docs/PHASE_G35_GUARDIAN_ALERT_RULES_STATUS.md
+   - Comprehensive phase documentation
+   - API examples, use cases, testing guide
+
+FEATURES:
+---------
+Database Schema:
+- guardian_alert_rules: name, description, severity, source, channel, is_active, condition, timestamps
+- guardian_alert_events: rule_id, severity, source, message, payload, timestamp
+- 2 indexes for efficient tenant + time queries
+- RLS policies for tenant isolation
+
+Service Layer:
+- List rules ordered by severity + created_at
+- List events with configurable limit (10-500, default 100)
+- Create rule with full validation
+- TypeScript type safety throughout
+
+API Layer:
+- RESTful GET endpoint (all Guardian roles)
+- RESTful POST endpoint (guardian_admin only)
+- Comprehensive error handling (401/403/400/500)
+- Parallel queries for rules + events on GET
+
+UI Layer:
+- Inline create rule form (no modal)
+- Rules table with severity badges, status indicators
+- Events table with time, rule ID, severity, message
+- Empty states for no rules/events
+- Error messages for insufficient access (403)
+- Responsive grid layout
+
+ACCESS CONTROL:
+---------------
+GET /api/guardian/alerts:
+- guardian_viewer ✅
+- guardian_analyst ✅
+- guardian_admin ✅
+
+POST /api/guardian/alerts:
+- guardian_viewer ❌ (403)
+- guardian_analyst ❌ (403)
+- guardian_admin ✅
+
+Rationale:
+- All Guardian roles should view alert rules/events for awareness
+- Only admins can define new rules (prevent alert fatigue)
+
+ALERT SEVERITIES:
+-----------------
+- low: Informational notices (e.g. unusual pattern detected)
+- medium: Noteworthy events (e.g. error rate 3-5%)
+- high: Actionable issues (e.g. error rate 5-10%)
+- critical: Urgent incidents (e.g. error rate >10%, system down)
+
+ALERT SOURCES:
+--------------
+- telemetry: Guardian telemetry streams
+- warehouse: Guardian warehouse queries
+- replay: Guardian replay sessions
+- scenarios: Guardian scenario simulations
+- guardian: Guardian system health
+
+ALERT CHANNELS:
+---------------
+- in_app: In-app notification only (G35 implemented)
+- email: Email notification (placeholder - G37+)
+- webhook: Webhook POST (placeholder - G37+)
+- pager: PagerDuty/Opsgenie (placeholder - G37+)
+
+API ENDPOINTS:
+--------------
+1. GET /api/guardian/alerts
+   Returns: { rules: AlertRule[], events: AlertEvent[] }
+
+   Response Example:
+   {
+     "rules": [
+       {
+         "id": "uuid",
+         "tenant_id": "uuid",
+         "name": "High error rate on /api/guardian/telemetry",
+         "description": "Trigger when error rate exceeds 5% over 5 minutes",
+         "severity": "high",
+         "source": "telemetry",
+         "channel": "email",
+         "is_active": true,
+         "condition": {},
+         "created_by": "uuid",
+         "created_at": "2025-12-10T10:00:00Z",
+         "updated_at": "2025-12-10T10:00:00Z"
+       }
+     ],
+     "events": [
+       {
+         "id": "uuid",
+         "tenant_id": "uuid",
+         "rule_id": "uuid",
+         "severity": "high",
+         "source": "telemetry",
+         "message": "Error rate 7.2% over last 5 minutes",
+         "payload": { "errorRate": 0.072, "windowMinutes": 5 },
+         "created_at": "2025-12-10T10:05:00Z"
+       }
+     ]
+   }
+
+2. POST /api/guardian/alerts
+   Body: { name, description?, severity, source, channel, condition? }
+   Returns: { rule: AlertRule } (201 Created)
+
+   Request Example:
+   {
+     "name": "Warehouse stream key missing",
+     "description": "Alert when warehouse queries fail due to missing streamKey",
+     "severity": "critical",
+     "source": "warehouse",
+     "channel": "pager"
+   }
+
+   Response Example:
+   {
+     "rule": {
+       "id": "uuid",
+       "tenant_id": "uuid",
+       "name": "Warehouse stream key missing",
+       "description": "Alert when warehouse queries fail due to missing streamKey",
+       "severity": "critical",
+       "source": "warehouse",
+       "channel": "pager",
+       "is_active": true,
+       "condition": {},
+       "created_by": "uuid",
+       "created_at": "2025-12-10T10:10:00Z",
+       "updated_at": "2025-12-10T10:10:00Z"
+     }
+   }
+
+UI PAGE:
+--------
+URL: /guardian/alerts
+
+Sections:
+1. Header - Title and description
+2. Create Rule Form - Inline form with inputs for name, severity, source, channel, description
+3. Alert Rules Table - Name, Severity, Source, Channel, Status columns
+4. Recent Alert Events Table - Time, Rule ID, Severity, Message columns
+
+Form Fields:
+- Name: TEXT (required) - "High error rate on /api/guardian/telemetry"
+- Severity: SELECT (required) - low | medium | high | critical
+- Source: SELECT (required) - telemetry | warehouse | replay | scenarios | guardian
+- Channel: SELECT (required) - in_app | email | webhook | pager
+- Description: TEXTAREA (optional) - Explain when/how alert should fire
+
+Table Features:
+- Rules: Ordered by severity DESC, created_at DESC
+- Events: Ordered by created_at DESC (100 recent)
+- Empty states: "No Guardian alert rules defined yet."
+- Status badges: Active (green) / Disabled (gray)
+- Severity badges: Color-coded by severity level
+
+USAGE EXAMPLES:
+---------------
+List all rules and recent events:
+```bash
+curl -H "Cookie: sb-access-token=<TOKEN>" \
+  http://localhost:3008/api/guardian/alerts
+```
+
+Create new alert rule:
+```bash
+curl -X POST \
+  -H "Cookie: sb-access-token=<TOKEN>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "High telemetry error rate",
+    "description": "Trigger when error rate exceeds 5% over 5 minutes",
+    "severity": "high",
+    "source": "telemetry",
+    "channel": "email"
+  }' \
+  http://localhost:3008/api/guardian/alerts
+```
+
+USE CASES:
+----------
+1. Telemetry Monitoring
+   - Rule: "High error rate on /api/guardian/telemetry"
+   - Severity: high, Source: telemetry, Channel: email
+   - Future (G36+): Condition: errorRate > 0.05 OVER 5m
+
+2. Warehouse Health
+   - Rule: "Warehouse query failures"
+   - Severity: critical, Source: warehouse, Channel: pager
+   - Future (G36+): Condition: failureCount > 10 OVER 1m
+
+3. Replay Anomalies
+   - Rule: "Unusually long replay sessions"
+   - Severity: medium, Source: replay, Channel: webhook
+   - Future (G36+): Condition: sessionDuration > 3600s
+
+4. Scenario Failures
+   - Rule: "Scenario simulation failures"
+   - Severity: high, Source: scenarios, Channel: in_app
+   - Future (G36+): Condition: runStatus = 'failed'
+
+5. Guardian System Health
+   - Rule: "Guardian API availability"
+   - Severity: critical, Source: guardian, Channel: pager
+   - Future (G36+): Condition: responseTime > 5000ms OR errorRate > 0.10
+
+PHASE G35 SCOPE:
+----------------
+✅ Database schema (tables, indexes, RLS)
+✅ Service layer (list, create functions)
+✅ API routes (GET/POST with role enforcement)
+✅ UI page (create form, rules table, events table)
+✅ TypeScript types (Severity, Source, Channel)
+✅ Documentation
+
+FUTURE PHASES (G36+):
+---------------------
+❌ Automated rule evaluation (conditions not evaluated yet)
+❌ External notification delivery (email/webhook/pager placeholders)
+❌ Rule enable/disable toggle in UI
+❌ Rule update/delete operations
+❌ Event filtering and search in UI
+❌ Alert analytics (frequency, false positives, MTTA/MTTR)
+❌ Alert suppression (silence rules for maintenance)
+❌ Alert aggregation (group similar alerts)
+❌ Condition language parser/evaluator
+❌ Background job to evaluate rules every minute
+
+INTEGRATION POINTS:
+-------------------
+✅ G30 (Tenant Hardening) - Uses getGuardianTenantContext()
+✅ G31 (Tenant Enforcement) - Returns 401 if unauthenticated
+✅ G32 (Access Levels) - Enforces role-based access (admin for POST)
+✅ G33 (Access Audit Trail) - Could audit alert rule changes in future
+✅ G34 (Access Audit Viewer) - Founders can correlate alerts with access patterns
+
+Enables:
+🔜 G36 (Alert Rule Evaluation) - Evaluate conditions against telemetry/warehouse data
+🔜 G37 (Alert Notifications) - Send alerts via email, webhook, pager channels
+🔜 G38 (Alert Analytics) - Track alert frequency, false positive rates, MTTA/MTTR
+
+TESTING CHECKLIST:
+------------------
+[ ] Apply migration 542 in Supabase Dashboard
+[ ] Set user role to guardian_admin
+[ ] Access /guardian/alerts UI
+[ ] Create alert rule with all fields
+[ ] Verify rule appears in rules table
+[ ] Test with guardian_viewer role (should see rules, cannot create)
+[ ] Test with guardian_analyst role (should see rules, cannot create)
+[ ] Test POST endpoint with curl (admin only)
+[ ] Verify 403 error when viewer/analyst tries to POST
+[ ] Manually insert guardian_alert_event via SQL (test event display)
+[ ] Verify event appears in events table
+
+MANUAL SQL TEST (INSERT EVENT):
+--------------------------------
+```sql
+-- Set your tenant_id
+DO $$
+DECLARE
+  v_tenant_id UUID := auth.uid();
+  v_rule_id UUID;
+BEGIN
+  -- Get first rule ID
+  SELECT id INTO v_rule_id
+  FROM guardian_alert_rules
+  WHERE tenant_id = v_tenant_id
+  LIMIT 1;
+
+  -- Insert test event
+  INSERT INTO guardian_alert_events (
+    tenant_id,
+    rule_id,
+    severity,
+    source,
+    message,
+    payload
+  ) VALUES (
+    v_tenant_id,
+    v_rule_id,
+    'high',
+    'telemetry',
+    'Test alert event - error rate exceeded threshold',
+    '{"errorRate": 0.072, "windowMinutes": 5}'::jsonb
+  );
+END $$;
+```
+
+GUARDIAN SYSTEM STATUS:
+-----------------------
+Total Phases: G01-G35 ✅
+Total Tables: 38 (added 2: guardian_alert_rules, guardian_alert_events)
+Total Migrations: 542 (guardian alerts) + 584 (access audit)
+Access Control: Enforced (6/6 routes)
+Audit Logging: Active (5/5 routes)
+Alerting Foundation: Complete ✅
+Production Ready: YES (after migration 542 applied)
+
+API ROUTES:
+-----------
+1. GET /api/guardian/telemetry - All roles ✅
+2. GET /api/guardian/warehouse - Analyst+ ✅
+3. GET /api/guardian/replay - Analyst+ ✅
+4. GET /api/guardian/scenarios - Admin only ✅
+5. GET /api/guardian/access-audit - Analyst+ ✅
+6. GET /api/guardian/alerts - All roles ✅ (NEW)
+7. POST /api/guardian/alerts - Admin only ✅ (NEW)
+
+UI PAGES:
+---------
+1. /guardian/telemetry - All roles ✅
+2. /guardian/warehouse - Analyst+ ✅
+3. /guardian/replay - Analyst+ ✅
+4. /guardian/scenarios - Admin only ✅
+5. /guardian/access-audit - Analyst+ ✅
+6. /guardian/alerts - All roles ✅ (NEW)
+
+BEFORE (G34):
+-------------
+- Guardian system had telemetry, warehouse, replay, scenarios
+- Access audit logging tracked all Guardian API usage
+- No alerting capabilities
+- Founders manually monitored dashboards
+- No threshold definitions or notification preferences
+
+AFTER (G35):
+------------
+- ✅ Guardian alert rules stored per-tenant
+- ✅ Guardian alert events recorded per-tenant
+- ✅ Guardian Alerts API (GET/POST) with role-based access
+- ✅ Guardian Alerts UI for rule management and event viewing
+- ✅ Foundation for automated alerting (G36+)
+- ✅ Foundation for external notifications (G37+)
+
+BREAKING CHANGES:
+-----------------
+✅ None - Pure addition of new tables, services, API, and UI
+✅ No changes to existing Guardian APIs or tables
+✅ Fully backward compatible
+
+NEXT STEPS:
+-----------
+1. Apply migration 542 in Supabase Dashboard:
+   - Open Supabase Dashboard → SQL Editor
+   - Paste contents of supabase/migrations/542_guardian_alert_rules.sql
+   - Click "Run"
+
+2. Restart dev server (or full rebuild):
+   - Server currently has missing .next manifest files
+   - Run: npm run dev (will regenerate manifests)
+   - Or: npm run build && npm run dev
+
+3. Set your user role to guardian_admin:
+   ```sql
+   UPDATE profiles
+   SET guardian_role = 'guardian_admin'
+   WHERE id = auth.uid();
+   ```
+
+4. Test Guardian Alerts UI:
+   - Visit: http://localhost:3008/guardian/alerts
+   - Create a test alert rule
+   - Verify rule appears in table
+
+5. Test API endpoints:
+   - GET /api/guardian/alerts (all roles)
+   - POST /api/guardian/alerts (admin only)
+
+NEXT PHASE: G36 - Alert Rule Evaluation
+----------------------------------------
+Planned Features:
+- Condition language parser (e.g. "errorRate > 0.05 OVER 5m")
+- Background job to evaluate rules against telemetry/warehouse data
+- Auto-insert guardian_alert_events when conditions met
+- Alert deduplication (prevent spam)
+- Alert cooldown period (rate limiting)
+
+---
+Generated: 2025-12-10
+Phase: Guardian G35 - Alert Rules & Events Foundation
+Type: Alerting & Monitoring
