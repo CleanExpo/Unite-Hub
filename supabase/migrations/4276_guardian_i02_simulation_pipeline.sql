@@ -88,18 +88,18 @@ CREATE INDEX IF NOT EXISTS idx_guardian_simulation_pipeline_traces_event
 ALTER TABLE guardian_simulation_events ENABLE ROW LEVEL SECURITY;
 ALTER TABLE guardian_simulation_pipeline_traces ENABLE ROW LEVEL SECURITY;
 
--- RLS Policy: Tenants can only see their own simulation events
+-- RLS Policy: Users can only see their workspace's simulation events
 DROP POLICY IF EXISTS "tenant_isolation_events" ON guardian_simulation_events;
 CREATE POLICY "tenant_isolation_events" ON guardian_simulation_events
   FOR ALL
-  USING (tenant_id = get_current_workspace_id());
+  USING (tenant_id IN (SELECT get_user_workspaces()));
 
--- RLS Policy: Tenants can only see their own simulation traces
+-- RLS Policy: Users can only see their workspace's simulation traces
 DROP POLICY IF EXISTS "tenant_isolation_traces" ON guardian_simulation_pipeline_traces;
 
 CREATE POLICY "tenant_isolation_traces" ON guardian_simulation_pipeline_traces
 FOR ALL
-USING (tenant_id = get_current_workspace_id());
+USING (tenant_id IN (SELECT get_user_workspaces()));
 
 -- Comment on tables for documentation
 COMMENT ON TABLE guardian_simulation_events IS
