@@ -95,9 +95,11 @@ CREATE POLICY "tenant_isolation_events" ON guardian_simulation_events
   USING (tenant_id = get_current_workspace_id());
 
 -- RLS Policy: Tenants can only see their own simulation traces
-DROP POLICY IF EXISTS "tenant_isolation_traces" ON guardian_simulation_pipeline_traces
-  FOR ALL
-  USING (tenant_id = get_current_workspace_id());
+DROP POLICY IF EXISTS "tenant_isolation_traces" ON guardian_simulation_pipeline_traces;
+
+CREATE POLICY "tenant_isolation_traces" ON guardian_simulation_pipeline_traces
+FOR ALL
+USING (tenant_id = get_current_workspace_id());
 
 -- Comment on tables for documentation
 COMMENT ON TABLE guardian_simulation_events IS
