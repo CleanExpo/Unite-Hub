@@ -257,7 +257,7 @@
     "winston-daily-rotate-file": "^5.0.0",
     "xero-node": "^13.3.0",
     "zod": "^3.25.76",
-    "zustand": "^4.5.7"
+    "zustand": "^5.0.9"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.3",
