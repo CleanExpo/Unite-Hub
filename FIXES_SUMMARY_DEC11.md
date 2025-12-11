@@ -90,11 +90,14 @@ npm install framer-motion@latest @sentry/nextjs@latest
 ### **3. Hydration Mismatch Warnings**
 **Warning**: "A tree hydrated but some attributes didn't match"
 
-**Cause**: Browser extensions adding `rtrvr-` attributes before React loads
+**Cause**:
+- CookieConsent component state changes in useEffect (server renders null, client renders banner)
+- StructuredData uses dynamic timestamps that differ between server/client
+- Fixed in commit: 2e0ded1e (Guardian X02)
 
-**Impact**: Cosmetic warning, no functional issue
+**Impact**: Console warnings, potential rendering bugs
 
-**Recommendation**: Ignore (external to codebase) or add suppressHydrationWarning to affected components
+**Fixed**: See commit 2e0ded1e for implementation details
 
 ---
 
