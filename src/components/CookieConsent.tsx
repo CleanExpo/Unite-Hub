@@ -103,11 +103,20 @@ export function CookieConsent() {
   const [showSettings, setShowSettings] = useState(false);
   const [preferences, setPreferences] = useState<ConsentPreferences>(DEFAULT_PREFERENCES);
 
-  // Check for existing consent on mount
+  // Check for existing consent on mount + auto-dismiss after 15s
   useEffect(() => {
     const existing = getConsentPreferences();
     if (!existing) {
       setShowBanner(true);
+
+      // Auto-dismiss after 15 seconds to prevent blocking UI
+      const timer = setTimeout(() => {
+        if (showBanner && !showSettings) {
+          handleAcceptNecessary();
+        }
+      }, 15000);
+
+      return () => clearTimeout(timer);
     } else {
       setPreferences(existing);
     }
@@ -174,8 +183,8 @@ export function CookieConsent() {
   }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 p-4">
-      <Card className="max-w-2xl mx-auto shadow-lg border-2">
+    <div className="fixed bottom-0 left-0 right-0 z-40 p-4 pointer-events-none">
+      <Card className="max-w-2xl mx-auto shadow-lg border-2 pointer-events-auto">
         <CardContent className="p-4">
           {!showSettings ? (
             // Main Banner
