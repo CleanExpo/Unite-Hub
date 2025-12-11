@@ -12,9 +12,10 @@ echo ""
 echo "📦 Checking Node.js version..."
 NODE_VERSION=$(node -v)
 echo "   Node: $NODE_VERSION"
-REQUIRED_VERSION="v22"
-if [[ ! "$NODE_VERSION" == v22* ]]; then
-  echo "   ⚠️  Warning: Node.js 22.x recommended (current: $NODE_VERSION)"
+REQUIRED_VERSION="v20.19.4"
+if [[ ! "$NODE_VERSION" == $REQUIRED_VERSION ]]; then
+  echo "   ⚠️  Warning: Node.js $REQUIRED_VERSION is recommended (current: $NODE_VERSION)"
+  echo "      Please switch Node versions (e.g. via nvm use) to match .nvmrc before running heavy tasks."
 fi
 echo ""
 

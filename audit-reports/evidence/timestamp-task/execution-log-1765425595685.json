@@ -1,0 +1,14 @@
+{
+  "taskId": "timestamp-task",
+  "captured_at": 1765425595685,
+  "steps": [
+    {
+      "step_id": "verify-file_exists: D:\\Unite-Hub\\.test-verification\\timestamp-test.ts",
+      "description": "file_exists: D:\\Unite-Hub\\.test-verification\\timestamp-test.ts",
+      "status": "completed",
+      "start_time": 1765425594684,
+      "end_time": 1765425595684,
+      "duration_ms": 1000
+    }
+  ]
+}

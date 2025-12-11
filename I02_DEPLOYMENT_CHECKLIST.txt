@@ -1,0 +1,247 @@
+================================================================================
+        GUARDIAN I02 DEPLOYMENT CHECKLIST - PRINT THIS PAGE
+================================================================================
+
+Date: __________ | Time Started: __________ | Deployed By: __________________
+
+================================================================================
+PHASE 1: PRE-FLIGHT CHECKS (5 min)
+================================================================================
+
+[ ] 1.1 Open Supabase Console: https://app.supabase.com
+[ ] 1.2 Select project: lksfwktwtmyznckodsau
+[ ] 1.3 Open SQL Editor
+[ ] 1.4 Run prerequisite check:
+
+    SELECT
+      (SELECT COUNT(*) FROM pg_proc WHERE proname = 'get_user_workspaces') > 0 as ok1,
+      (SELECT COUNT(*) FROM information_schema.tables WHERE table_name = 'guardian_simulation_runs') > 0 as ok2;
+
+[ ] 1.5 Result: Both should be TRUE
+[ ] 1.6 If any FALSE: Stop. Fix prerequisite. Do not proceed.
+
+================================================================================
+PHASE 2: APPLY MIGRATION (10 min)
+================================================================================
+
+[ ] 2.1 Open file: supabase/migrations/4276_guardian_i02_simulation_pipeline.sql
+[ ] 2.2 Select ALL content (Ctrl+A)
+[ ] 2.3 Copy (Ctrl+C)
+[ ] 2.4 In Supabase SQL Editor: Click "New query"
+[ ] 2.5 Paste content (Ctrl+V)
+[ ] 2.6 Click RUN button
+[ ] 2.7 Wait for green checkmark (5-10 seconds)
+[ ] 2.8 Verify success message appears
+
+NOTES: _______________________________________________________________________
+
+================================================================================
+PHASE 3: VERIFY TABLES (5 min)
+================================================================================
+
+[ ] 3.1 Run in SQL Editor:
+
+    SELECT COUNT(*) FROM information_schema.tables
+    WHERE table_name IN ('guardian_simulation_events', 'guardian_simulation_pipeline_traces');
+
+[ ] 3.2 Result should be: 2
+[ ] 3.3 Run:
+
+    SELECT COUNT(*) FROM pg_tables
+    WHERE tablename IN ('guardian_simulation_events', 'guardian_simulation_pipeline_traces')
+    AND rowsecurity = true;
+
+[ ] 3.4 Result should be: 2 (RLS enabled)
+[ ] 3.5 Run:
+
+    SELECT COUNT(*) FROM pg_indexes
+    WHERE tablename IN ('guardian_simulation_events', 'guardian_simulation_pipeline_traces');
+
+[ ] 3.6 Result should be: 6 (all indexes created)
+
+NOTES: _______________________________________________________________________
+
+================================================================================
+PHASE 4: PRODUCTION ISOLATION CHECK (5 min)
+================================================================================
+
+[ ] 4.1 Run in SQL Editor:
+
+    SELECT COUNT(*) FROM guardian_rules;
+    SELECT COUNT(*) FROM guardian_alerts;
+    SELECT COUNT(*) FROM guardian_incidents;
+
+[ ] 4.2 Record counts:
+    guardian_rules: _____________
+    guardian_alerts: _____________
+    guardian_incidents: _____________
+
+[ ] 4.3 Counts unchanged from before? YES [ ] NO [ ]
+[ ] 4.4 If NO: Migration may have bug. Contact support immediately.
+
+NOTES: _______________________________________________________________________
+
+================================================================================
+PHASE 5: START DEV SERVER (5 min)
+================================================================================
+
+[ ] 5.1 Open terminal
+[ ] 5.2 Run: cd /d/Unite-Hub && npm run dev
+[ ] 5.3 Wait for "Ready" message
+[ ] 5.4 Should show: ready - started server on 0.0.0.0:3008
+[ ] 5.5 If error: See troubleshooting section
+
+NOTES: _______________________________________________________________________
+
+================================================================================
+PHASE 6: TEST UI (15 min)
+================================================================================
+
+[ ] 6.1 Open browser: http://localhost:3008/guardian/admin/simulation
+
+[ ] 6.2 OVERVIEW TAB:
+    [ ] Page loads (no 404 error)
+    [ ] "Guardian Simulation Studio" title visible
+    [ ] 4 tabs visible: Overview, Runs, Pipeline, Traces
+    [ ] Mock data displays:
+        [ ] Estimated Alerts: 2500
+        [ ] Estimated Incidents: 45
+        [ ] Correlation Groups: 12
+        [ ] Risk Adjustments: 8
+    [ ] Pipeline execution summary visible
+    [ ] Timestamps show recent dates
+
+[ ] 6.3 SIMULATION RUNS TAB:
+    [ ] Click "Simulation Runs" tab
+    [ ] At least 1 mock run listed
+    [ ] Run displays status (completed)
+    [ ] Can click run to select
+
+[ ] 6.4 PIPELINE TIMELINE TAB:
+    [ ] Click "Pipeline Timeline" tab
+    [ ] Timeline shows 5+ phases
+    [ ] Each phase shows event count and severity breakdown
+    [ ] Click "Generate AI Summary" button
+    [ ] Summary appears (or graceful fallback)
+
+[ ] 6.5 TRACES TAB:
+    [ ] Click "Traces" tab
+    [ ] Trace entries display with phase, step, message, timestamp
+    [ ] Can click "Details" to expand JSON
+    [ ] Scrollable list
+
+NOTES: _______________________________________________________________________
+
+================================================================================
+PHASE 7: TEST API ROUTES (10 min)
+================================================================================
+
+[ ] 7.1 Get JWT token from browser console:
+    - Open DevTools (F12)
+    - Go to Application → Cookies
+    - Find sb_* cookie or use current session token
+
+Token: ________________________________________________________________
+
+[ ] 7.2 Test Trace API:
+    curl -X GET \
+      "http://localhost:3008/api/guardian/admin/simulation/runs/sim_run_001/trace?workspaceId=kh72b1cng9h88691sx4x7krt2h7v7deh&page=1&pageSize=50" \
+      -H "Authorization: Bearer YOUR_JWT_TOKEN"
+
+    [ ] Returns HTTP 200
+    [ ] Response has structure: runId, traces, meta
+
+[ ] 7.3 Test Timeline API:
+    curl -X GET \
+      "http://localhost:3008/api/guardian/admin/simulation/runs/sim_run_001/timeline?workspaceId=kh72b1cng9h88691sx4x7krt2h7v7deh" \
+      -H "Authorization: Bearer YOUR_JWT_TOKEN"
+
+    [ ] Returns HTTP 200
+    [ ] Response has timeline array with phases
+
+[ ] 7.4 Test Summary API:
+    curl -X GET \
+      "http://localhost:3008/api/guardian/admin/simulation/runs/sim_run_001/summary?workspaceId=kh72b1cng9h88691sx4x7krt2h7v7deh" \
+      -H "Authorization: Bearer YOUR_JWT_TOKEN"
+
+    [ ] Returns HTTP 200
+    [ ] Response has summaryMarkdown, keyFindings, potentialRisks
+
+NOTES: _______________________________________________________________________
+
+================================================================================
+PHASE 8: FINAL CHECKS (5 min)
+================================================================================
+
+[ ] 8.1 Verify browser console has no errors (F12 → Console tab)
+[ ] 8.2 Verify server logs have no errors
+[ ] 8.3 Tables created and RLS enabled: YES [ ] NO [ ]
+[ ] 8.4 Production tables unchanged: YES [ ] NO [ ]
+[ ] 8.5 UI loads without 404: YES [ ] NO [ ]
+[ ] 8.6 All 4 tabs work: YES [ ] NO [ ]
+[ ] 8.7 APIs respond with HTTP 200: YES [ ] NO [ ]
+
+NOTES: _______________________________________________________________________
+
+================================================================================
+PHASE 9: SIGN-OFF (5 min)
+================================================================================
+
+I02 DEPLOYMENT STATUS:
+
+Start Time: __________________
+End Time: __________________
+Total Duration: __________________
+
+[ ] All 8 phases completed successfully
+[ ] All checks passed
+[ ] No critical issues
+
+ISSUES FOUND (if any):
+1. _____________________________________________________________________
+2. _____________________________________________________________________
+3. _____________________________________________________________________
+
+RESOLUTION:
+__________________________________________________________________________
+
+SIGNED BY: ________________________  DATE: ________________
+
+================================================================================
+TROUBLESHOOTING QUICK LOOKUP
+================================================================================
+
+ERROR: "function get_user_workspaces does not exist"
+FIX: Apply migration 020 first, then I02
+
+ERROR: "relation guardian_simulation_runs does not exist"
+FIX: Apply I01 migration first, then I02
+
+ERROR: Page returns 404
+FIX: Run: rm -rf .next && npm run dev
+
+ERROR: API returns 401 Unauthorized
+FIX: Ensure JWT token is valid and included in Authorization header
+
+ERROR: "Generate AI Summary" fails
+FIX: Check ANTHROPIC_API_KEY is set in .env.local
+
+ERROR: Port 3008 in use
+FIX: netstat -ano | findstr :3008 → taskkill /PID <ID> /F
+
+COULDN'T FIND YOUR ERROR?
+→ See I02_LIVE_DEPLOYMENT_STEPS.md troubleshooting section
+→ Contact Claude Code for live assistance
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+[ ] I02 successfully deployed
+[ ] Ready to implement I03 (Regression Pack Orchestrator)
+[ ] Ready to implement I04 (Auto-Remediation Playbook)
+[ ] Both can run in parallel if desired
+
+Questions? Check I02_QUICK_REFERENCE.md or reach out to Claude Code.
+
+================================================================================
