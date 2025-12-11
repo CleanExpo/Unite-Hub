@@ -36,7 +36,8 @@
       "Bash(timeout 120 npm run test -- tests/guardian/i08_qa_coverage_map.test.ts)",
       "Bash(git reset:*)",
       "Bash(timeout 120 npm run test -- tests/guardian/i09_performance_and_cost.test.ts)",
-      "Bash(timeout 180 npm run test:*)"
+      "Bash(timeout 180 npm run test:*)",
+      "Bash(timeout 120 npm run test:*)"
     ],
     "deny": [],
     "ask": []
