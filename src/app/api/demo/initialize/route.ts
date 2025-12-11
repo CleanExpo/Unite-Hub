@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSupabaseServer } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase/admin";
 import { publicRateLimit } from "@/lib/rate-limit";
 
 /**
  * DEMO INITIALIZATION API
  * Creates complete demo environment with organization, workspace, contacts, and sample data
+ * Uses admin client to bypass RLS for demo data creation
  */
 
 export async function POST(request: NextRequest) {
@@ -15,7 +16,7 @@ export async function POST(request: NextRequest) {
       return rateLimitResult;
     }
 
-    const supabase = await getSupabaseServer();
+    const supabase = supabaseAdmin;
 
     console.log("Starting demo initialization...");
 

@@ -1,17 +1,21 @@
 'use client';
 
-import { AlertCircle, Bell, ShieldAlert, Zap } from 'lucide-react';
+import { useEffect } from 'react';
+import { AlertCircle, Bell, ShieldAlert, Zap, Wifi } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Badge } from '@/components/ui/badge';
 import useSWR from 'swr';
 import Link from 'next/link';
+import { useAuth } from '@/contexts/AuthContext';
+import { useGuardianRealtime } from '@/hooks/useGuardianRealtime';
 
 /**
  * Guardian Alerts Dashboard (G43)
  * /guardian/alerts/dashboard
  *
- * Static dashboard view with auto-refresh via SWR
- * Displays recent Guardian activity in three columns
+ * Real-time dashboard with live updates via Supabase Realtime
+ * Auto-refreshes data via SWR every 30s
  */
 
 interface AlertEventItem {
@@ -89,6 +93,9 @@ function EmptyState({
 }
 
 export default function GuardianAlertsDashboardPage() {
+  const { user } = useAuth();
+  const { stats, isConnected } = useGuardianRealtime(user?.id || null);
+
   const { data, error, isLoading, mutate } = useSWR<ActivityResponse>(
     '/api/guardian/activity',
     fetcher,
@@ -98,6 +105,13 @@ export default function GuardianAlertsDashboardPage() {
       revalidateOnFocus: true,      // Refresh on tab focus
     }
   );
+
+  // Auto-refresh when realtime events occur
+  useEffect(() => {
+    if (stats.lastUpdate) {
+      mutate();
+    }
+  }, [stats.lastUpdate, mutate]);
 
   const alerts = data?.alerts ?? [];
   const incidents = data?.incidents ?? [];
@@ -115,9 +129,15 @@ export default function GuardianAlertsDashboardPage() {
       </header>
 
       <div className="flex items-center justify-between gap-2">
-        <p className="text-xs text-muted-foreground">
-          Auto-refreshes every 30 seconds. Click refresh for immediate update.
-        </p>
+        <div className="flex items-center gap-3">
+          <p className="text-xs text-muted-foreground">
+            Live updates enabled. Data refreshes automatically.
+          </p>
+          <Badge variant={isConnected ? 'default' : 'secondary'} className="text-xs">
+            <Wifi className={`h-3 w-3 mr-1 ${isConnected ? 'animate-pulse' : ''}`} />
+            {isConnected ? 'Live' : 'Connecting...'}
+          </Badge>
+        </div>
         <Button
           size="sm"
           onClick={() => mutate()}
