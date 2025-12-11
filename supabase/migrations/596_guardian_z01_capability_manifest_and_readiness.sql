@@ -42,8 +42,14 @@ ALTER TABLE guardian_capability_manifest ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "capability_manifest_read_all" ON guardian_capability_manifest
 FOR SELECT USING (true);
 
-CREATE POLICY "capability_manifest_write_disabled" ON guardian_capability_manifest
-FOR INSERT, UPDATE, DELETE USING (false);
+CREATE POLICY "capability_manifest_insert_disabled" ON guardian_capability_manifest
+FOR INSERT WITH CHECK (false);
+
+CREATE POLICY "capability_manifest_update_disabled" ON guardian_capability_manifest
+FOR UPDATE USING (false) WITH CHECK (false);
+
+CREATE POLICY "capability_manifest_delete_disabled" ON guardian_capability_manifest
+FOR DELETE USING (false);
 
 -- ============================================================================
 -- guardian_tenant_readiness_scores
