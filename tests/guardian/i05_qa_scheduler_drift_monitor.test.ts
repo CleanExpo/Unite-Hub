@@ -210,7 +210,7 @@ describe('Guardian I05: QA Scheduler & Drift Monitor', () => {
         ...mockBaselineMetrics,
         incidents: {
           ...mockBaselineMetrics.incidents,
-          total: 52, // 15.5% increase
+          total: 55, // 22.2% increase (exceeds 20% threshold for incidents)
         },
       };
 
