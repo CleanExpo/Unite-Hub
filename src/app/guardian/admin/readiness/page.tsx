@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, AlertCircle, TrendingUp, BookOpen } from 'lucide-react';
+import { CheckCircle, AlertCircle, TrendingUp, BookOpen, Lightbulb, ChevronDown, ChevronUp, Plus } from 'lucide-react';
 
 interface CapabilityScore {
   key: string;
@@ -23,6 +23,33 @@ interface ReadinessOverview {
     status: 'baseline' | 'operational' | 'mature' | 'network_intelligent';
   };
   capabilities: CapabilityScore[];
+}
+
+interface UpliftTask {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  priority: string;
+  status: 'todo' | 'in_progress' | 'blocked' | 'done';
+  effortEstimate: string;
+  dueDate: string | null;
+  owner: string | null;
+  hints: Record<string, unknown>;
+}
+
+interface UpliftPlan {
+  id: string;
+  name: string;
+  description: string;
+  status: 'draft' | 'active' | 'completed' | 'archived';
+  targetOverallScore: number;
+  targetOverallStatus: string;
+  readinessSnapshotAt: string;
+  source: string;
+  createdAt: string;
+  updatedAt: string;
+  tasks?: UpliftTask[];
 }
 
 const STATUS_COLORS = {
@@ -58,6 +85,10 @@ export default function GuardianReadinessPage() {
   const [readiness, setReadiness] = useState<ReadinessOverview | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [upliftPlans, setUpliftPlans] = useState<UpliftPlan[]>([]);
+  const [plansLoading, setPlansLoading] = useState(false);
+  const [expandedPlanId, setExpandedPlanId] = useState<string | null>(null);
+  const [generating, setGenerating] = useState(false);
 
   const workspaceId = '00000000-0000-0000-0000-000000000000'; // TODO: Get from auth
 
@@ -86,6 +117,72 @@ export default function GuardianReadinessPage() {
 
     loadReadiness();
   }, []);
+
+  const loadUpliftPlans = async () => {
+    try {
+      setPlansLoading(true);
+      const res = await fetch(
+        `/api/guardian/meta/uplift/plans?workspaceId=${workspaceId}&limit=20`
+      );
+
+      if (!res.ok) {
+        throw new Error(`Failed to load uplift plans: ${res.status}`);
+      }
+
+      const data = await res.json();
+      setUpliftPlans(data.data?.plans || []);
+    } catch (err) {
+      console.error('Failed to load uplift plans:', err);
+    } finally {
+      setPlansLoading(false);
+    }
+  };
+
+  const handleGeneratePlan = async () => {
+    try {
+      setGenerating(true);
+      const res = await fetch(
+        `/api/guardian/meta/uplift/plans?workspaceId=${workspaceId}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ includeRecommendations: true }),
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error(`Failed to generate plan: ${res.status}`);
+      }
+
+      await loadUpliftPlans();
+    } catch (err) {
+      console.error('Failed to generate plan:', err);
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  const handleTaskStatusChange = async (planId: string, taskId: string, newStatus: string) => {
+    try {
+      const res = await fetch(
+        `/api/guardian/meta/uplift/tasks/${taskId}?workspaceId=${workspaceId}`,
+        {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus }),
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error(`Failed to update task: ${res.status}`);
+      }
+
+      // Reload plans to reflect changes
+      await loadUpliftPlans();
+    } catch (err) {
+      console.error('Failed to update task:', err);
+    }
+  };
 
   if (loading) {
     return (
@@ -254,6 +351,176 @@ export default function GuardianReadinessPage() {
           </CardContent>
         </Card>
       ))}
+
+      {/* Guided Uplift Section */}
+      <Card className="border-accent-500 border-2">
+        <CardHeader>
+          <div className="flex justify-between items-center">
+            <CardTitle className="flex items-center gap-2">
+              <Lightbulb className="w-5 h-5 text-accent-600" />
+              Guided Uplift & Adoption Playbooks
+            </CardTitle>
+            <Button
+              onClick={() => {
+                if (upliftPlans.length === 0 && !plansLoading) {
+                  loadUpliftPlans();
+                } else {
+                  setExpandedPlanId(expandedPlanId ? null : 'list');
+                }
+              }}
+              variant="outline"
+              size="sm"
+            >
+              {expandedPlanId === 'list' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            </Button>
+          </div>
+          <p className="text-sm text-gray-600 mt-1">
+            AI-generated adoption plans tailored to your readiness level. Generate actionable tasks to advance Guardian maturity.
+          </p>
+        </CardHeader>
+
+        {(expandedPlanId === 'list' || upliftPlans.length > 0) && (
+          <CardContent className="space-y-4">
+            {/* Advisory Banner */}
+            <div className="p-3 bg-blue-50 border border-blue-200 rounded text-xs text-blue-900">
+              <strong>Advisory-Only:</strong> Uplift plans are suggestions for improving Guardian adoption. Implementation is entirely optional and under your control.
+            </div>
+
+            {/* Generate Plan Button */}
+            <div className="flex gap-2">
+              <Button
+                onClick={handleGeneratePlan}
+                disabled={generating}
+                className="bg-accent-600 hover:bg-accent-700"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                {generating ? 'Generating...' : 'Generate New Plan'}
+              </Button>
+              <Button onClick={loadUpliftPlans} disabled={plansLoading} variant="outline">
+                {plansLoading ? 'Loading...' : 'Refresh Plans'}
+              </Button>
+            </div>
+
+            {/* Plans List */}
+            {upliftPlans.length === 0 && !plansLoading ? (
+              <div className="p-6 text-center text-gray-600 text-sm">
+                <p>No uplift plans yet. Generate one to get started.</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {upliftPlans.map((plan) => (
+                  <div
+                    key={plan.id}
+                    className="border rounded-lg overflow-hidden bg-gray-50 hover:bg-white transition-colors"
+                  >
+                    {/* Plan Header */}
+                    <div
+                      className="p-4 flex justify-between items-start cursor-pointer hover:bg-gray-100"
+                      onClick={() => setExpandedPlanId(expandedPlanId === plan.id ? null : plan.id)}
+                    >
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <h4 className="font-medium">{plan.name}</h4>
+                          <Badge className={`text-xs ${
+                            plan.status === 'draft' ? 'bg-gray-200 text-gray-800' :
+                            plan.status === 'active' ? 'bg-green-200 text-green-800' :
+                            plan.status === 'completed' ? 'bg-blue-200 text-blue-800' :
+                            'bg-gray-300 text-gray-900'
+                          }`}>
+                            {plan.status.replace(/_/g, ' ')}
+                          </Badge>
+                        </div>
+                        <p className="text-xs text-gray-600">{plan.description}</p>
+                        <div className="mt-2 text-xs text-gray-500">
+                          Target: {plan.targetOverallScore} ({plan.targetOverallStatus.replace(/_/g, ' ')}) • {plan.tasks?.length || 0} tasks
+                        </div>
+                      </div>
+                      <div>
+                        {expandedPlanId === plan.id ? (
+                          <ChevronUp className="w-5 h-5 text-gray-600" />
+                        ) : (
+                          <ChevronDown className="w-5 h-5 text-gray-600" />
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Expanded Task List */}
+                    {expandedPlanId === plan.id && plan.tasks && (
+                      <div className="border-t bg-white">
+                        <div className="p-4 space-y-3">
+                          {plan.tasks.length === 0 ? (
+                            <p className="text-xs text-gray-600">No tasks in this plan.</p>
+                          ) : (
+                            plan.tasks.map((task) => (
+                              <div key={task.id} className="p-3 bg-gray-50 rounded border text-xs space-y-2">
+                                <div className="flex justify-between items-start">
+                                  <div className="flex-1">
+                                    <p className="font-medium">{task.title}</p>
+                                    <p className="text-gray-600 text-xs mt-1">{task.description}</p>
+                                  </div>
+                                  <Badge className={`text-xs ml-2 ${
+                                    task.status === 'todo' ? 'bg-gray-200 text-gray-800' :
+                                    task.status === 'in_progress' ? 'bg-blue-200 text-blue-800' :
+                                    task.status === 'blocked' ? 'bg-red-200 text-red-800' :
+                                    'bg-green-200 text-green-800'
+                                  }`}>
+                                    {task.status.replace(/_/g, ' ')}
+                                  </Badge>
+                                </div>
+
+                                <div className="flex gap-2 text-xs">
+                                  <span className="px-2 py-1 bg-white border rounded">
+                                    {task.category}
+                                  </span>
+                                  <span className="px-2 py-1 bg-white border rounded">
+                                    Priority: {task.priority}
+                                  </span>
+                                  {task.effortEstimate && (
+                                    <span className="px-2 py-1 bg-white border rounded">
+                                      Effort: {task.effortEstimate}
+                                    </span>
+                                  )}
+                                </div>
+
+                                {/* Status Dropdown */}
+                                <div className="flex gap-2">
+                                  <label className="flex items-center gap-2 text-xs">
+                                    <span className="font-medium">Status:</span>
+                                    <select
+                                      value={task.status}
+                                      onChange={(e) =>
+                                        handleTaskStatusChange(plan.id, task.id, e.target.value)
+                                      }
+                                      className="px-2 py-1 border rounded text-xs bg-white"
+                                      aria-label="Change task status"
+                                    >
+                                    <option value="todo">Todo</option>
+                                    <option value="in_progress">In Progress</option>
+                                    <option value="blocked">Blocked</option>
+                                    <option value="done">Done</option>
+                                    </select>
+                                  </label>
+                                </div>
+
+                                {/* Hints */}
+                                {task.hints && Object.keys(task.hints).length > 0 && (
+                                  <div className="p-2 bg-blue-50 border border-blue-200 rounded text-xs text-blue-900">
+                                    <strong>Hints:</strong> {JSON.stringify(task.hints).slice(0, 200)}...
+                                  </div>
+                                )}
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        )}
+      </Card>
 
       {/* Navigation & Next Steps */}
       <Card className="border-green-200 bg-green-50">
