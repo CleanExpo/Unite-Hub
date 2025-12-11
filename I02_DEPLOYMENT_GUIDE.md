@@ -14,6 +14,9 @@
 4. Paste into SQL Editor
 5. Click "Run"
 6. Verify: Tables `guardian_simulation_events` and `guardian_simulation_pipeline_traces` appear in Schema
+7. ✅ If successful, both tables should appear with RLS policies enabled
+
+**Note**: Migration requires `guardian_simulation_runs` table to exist (from I01). If you get a foreign key error, apply I01 migration first.
 
 #### Option B: Supabase CLI (Recommended for production)
 
@@ -60,17 +63,20 @@ Navigate to: `http://localhost:3008/guardian/admin/simulation`
 #### Features to Test
 
 **Overview Tab**:
+
 - ✅ Displays impact estimate metrics (Alerts, Incidents, Correlations, Risk Adjustments)
 - ✅ Shows pipeline execution summary
 - ✅ Displays run timestamps and status
 
 **Simulation Runs Tab**:
+
 - ✅ Shows list of simulation runs
 - ✅ Click run to select and view in Overview
 - ✅ Displays run status (running, completed, failed)
 - ✅ Shows scenario_id and start time
 
 **Pipeline Timeline Tab**:
+
 - ✅ Displays phase timeline (rule_eval, alert_aggregate, correlation, incident, notification)
 - ✅ Shows event count per phase
 - ✅ Displays severity breakdown (critical, high, medium, low)
@@ -78,6 +84,7 @@ Navigate to: `http://localhost:3008/guardian/admin/simulation`
 - ✅ AI summary shows findings, risks, and suggested next scenarios
 
 **Trace Details Tab**:
+
 - ✅ Shows detailed execution logs
 - ✅ Each trace entry displays: phase, step_index, message, timestamp
 - ✅ Click "Details" to expand JSON details
@@ -137,8 +144,11 @@ WHERE tenant_id = current_setting('jwt.claims.workspace_id');
 curl -X GET \
   "http://localhost:3008/api/guardian/admin/simulation/runs/sim_run_001/trace?workspaceId=default&page=1&pageSize=50" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
 
-# Expected response:
+Expected response:
+
+```json
 {
   "runId": "sim_run_001",
   "traces": [
@@ -167,8 +177,11 @@ curl -X GET \
 curl -X GET \
   "http://localhost:3008/api/guardian/admin/simulation/runs/sim_run_001/timeline?workspaceId=default" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
 
-# Expected response:
+Expected response:
+
+```json
 {
   "timeline": [
     {
@@ -194,24 +207,24 @@ curl -X GET \
 curl -X GET \
   "http://localhost:3008/api/guardian/admin/simulation/runs/sim_run_001/summary?workspaceId=default" \
   -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
 
-# Expected response (from Claude Sonnet):
+Expected response (from Claude Sonnet):
+
+```json
 {
   "summaryMarkdown": "# Simulation Analysis\n\n...",
   "keyFindings": [
     "High event volume detected in rule_eval phase",
-    "Correlation clustering performed efficiently",
-    ...
+    "Correlation clustering performed efficiently"
   ],
   "potentialRisks": [
     "⚠️ Critical events: 20 detected",
-    "⚠️ Correlation clusters: 12 formed",
-    ...
+    "⚠️ Correlation clusters: 12 formed"
   ],
   "suggestedNextScenarios": [
     "Test correlation refinement with AI",
-    "Run incident routing under high volume",
-    ...
+    "Run incident routing under high volume"
   ]
 }
 ```
@@ -259,6 +272,7 @@ const patterns = scenarios?.patterns || [];
 **Cause**: Page file missing or Next.js not rebuilt.
 
 **Fix**:
+
 ```bash
 npm run build
 npm run dev
@@ -273,10 +287,12 @@ npm run dev
 ### Timeline/Traces Show Empty
 
 **Cause**:
+
 - Migration applied but no simulation runs exist yet
 - OR database queries not returning data due to RLS
 
 **Fix**:
+
 1. Create simulation run: POST `/api/guardian/admin/simulation/create`
 2. Run simulation: POST `/api/guardian/admin/simulation/runs/[id]/execute`
 3. Verify data in DB: `SELECT COUNT(*) FROM guardian_simulation_events WHERE tenant_id = ...`
@@ -286,8 +302,9 @@ npm run dev
 **Cause**: ANTHROPIC_API_KEY not set or Claude API rate limited.
 
 **Fix**:
+
 - Verify `ANTHROPIC_API_KEY` in `.env.local`
-- Check Claude API status at https://status.anthropic.com
+- Check Claude API status at [https://status.anthropic.com](https://status.anthropic.com)
 - Fallback summary should display if API unavailable
 
 ---
