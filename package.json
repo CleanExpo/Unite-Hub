@@ -126,6 +126,7 @@
     "generate:thumbnails": "node scripts/generate-veo-thumbnails.mjs",
     "generate:thumbnails:overlay": "node scripts/add-thumbnail-text-overlays.mjs",
     "generate:thumbnails:full": "npm run generate:thumbnails && npm run generate:thumbnails:overlay",
+    "generate:assets": "node scripts/generate-assets.mjs",
     "security:key-check": "node scripts/check-key-age.mjs",
     "security:key-check:json": "node scripts/check-key-age.mjs --json",
     "security:key-check:slack": "node scripts/check-key-age.mjs --slack",
