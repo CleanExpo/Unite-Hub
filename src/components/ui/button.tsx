@@ -222,6 +222,27 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       </svg>
     );
 
+    // When using asChild, pass children directly without wrapping
+    if (asChild) {
+      return (
+        <Comp
+          ref={ref}
+          disabled={isDisabled}
+          className={`
+            ${baseStyles}
+            ${variantStyles[variant]}
+            ${sizeStyles[size]}
+            ${fullWidthStyle}
+            ${className}
+          `.trim()}
+          {...props}
+        >
+          {children}
+        </Comp>
+      );
+    }
+
+    // Normal button rendering with icons and loading states
     return (
       <Comp
         ref={ref}
@@ -235,17 +256,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         `.trim()}
         {...props}
       >
-        {isLoading ? (
-          <LoadingSpinner />
-        ) : (
-          icon && <span className="flex items-center justify-center">{icon}</span>
-        )}
-
+        {isLoading && <LoadingSpinner />}
+        {!isLoading && icon && <span className="flex items-center justify-center">{icon}</span>}
         {children && <span>{children}</span>}
-
-        {iconRight && !isLoading && (
-          <span className="flex items-center justify-center">{iconRight}</span>
-        )}
+        {!isLoading && iconRight && <span className="flex items-center justify-center">{iconRight}</span>}
       </Comp>
     );
   }
