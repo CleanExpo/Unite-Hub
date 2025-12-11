@@ -99,28 +99,37 @@ export function hasMarketingConsent(): boolean {
  * Cookie Consent Banner Component
  */
 export function CookieConsent() {
+  // Hydration-safe: Prevent SSR/CSR mismatch by deferring render until client mount
+  const [hasMounted, setHasMounted] = useState(false);
   const [showBanner, setShowBanner] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [preferences, setPreferences] = useState<ConsentPreferences>(DEFAULT_PREFERENCES);
 
-  // Check for existing consent on mount + auto-dismiss after 15s
+  // Phase 1: Hydration - Just mark as mounted
   useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  // Phase 2: After mount - Check consent and show banner
+  useEffect(() => {
+    if (!hasMounted) {
+      return;
+    }
+
     const existing = getConsentPreferences();
     if (!existing) {
       setShowBanner(true);
 
       // Auto-dismiss after 15 seconds to prevent blocking UI
       const timer = setTimeout(() => {
-        if (showBanner && !showSettings) {
-          handleAcceptNecessary();
-        }
+        handleAcceptNecessary();
       }, 15000);
 
       return () => clearTimeout(timer);
     } else {
       setPreferences(existing);
     }
-  }, []);
+  }, [hasMounted]);
 
   const handleAcceptAll = () => {
     const newPreferences: ConsentPreferences = {
@@ -178,7 +187,8 @@ export function CookieConsent() {
     }
   };
 
-  if (!showBanner) {
+  // Don't render until mounted (prevents hydration mismatch)
+  if (!hasMounted || !showBanner) {
     return null;
   }
 

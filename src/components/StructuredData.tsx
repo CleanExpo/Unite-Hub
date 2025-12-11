@@ -223,7 +223,7 @@ export function PricingStructuredData() {
         },
         "availability": "https://schema.org/InStock",
         "itemCondition": "https://schema.org/NewCondition",
-        "validFrom": new Date().toISOString(),
+        "validFrom": "2025-01-01T00:00:00.000Z",
         "url": "https://synthex.social/pricing",
         "seller": {
           "@type": "Organization",
@@ -267,7 +267,7 @@ export function PricingStructuredData() {
         },
         "availability": "https://schema.org/InStock",
         "itemCondition": "https://schema.org/NewCondition",
-        "validFrom": new Date().toISOString(),
+        "validFrom": "2025-01-01T00:00:00.000Z",
         "url": "https://synthex.social/pricing",
         "seller": {
           "@type": "Organization",
@@ -311,7 +311,7 @@ export function PricingStructuredData() {
         },
         "availability": "https://schema.org/InStock",
         "itemCondition": "https://schema.org/NewCondition",
-        "validFrom": new Date().toISOString(),
+        "validFrom": "2025-01-01T00:00:00.000Z",
         "url": "https://synthex.social/pricing",
         "seller": {
           "@type": "Organization",
