@@ -94,6 +94,10 @@ export async function auth() {
  * const { userId, user } = authResult;
  * ```
  */
+/**
+ * @deprecated Prefer `requireExecutionContext()` from `@/lib/execution-context` for API route entry.
+ * This function remains for compatibility with code paths that still depend on NextAuth-style request auth.
+ */
 export async function authenticateRequest(req: Request) {
   try {
     // Try to get token from Authorization header (client-side requests with implicit OAuth)

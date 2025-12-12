@@ -6,7 +6,6 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { getSupabaseServer } from "@/lib/supabase";
 import {
   listAuditEvents,
   listApiRequests,
@@ -15,34 +14,33 @@ import {
   type AuditEventType,
 } from "@/lib/core/auditService";
 import { hasPermission } from "@/lib/core/permissionService";
+import { requireExecutionContext } from "@/lib/execution-context";
 
 export async function GET(req: NextRequest) {
   try {
-    const supabase = getSupabaseServer();
+    // Canonical execution context (auth + workspace)
+    // Workspace must be provided via header/body/route-param; NOT query params.
+    const ctxResult = await requireExecutionContext(req, undefined, {
+      requireWorkspace: true,
+      allowWorkspaceFromHeader: true,
+      allowWorkspaceFromBody: false,
+      allowWorkspaceFromRouteParam: false,
+      allowDefaultWorkspace: false,
+    });
 
-    // Authenticate user
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!ctxResult.ok) {
+      return ctxResult.response;
     }
 
+    const { user, workspace } = ctxResult.ctx;
+
     const searchParams = req.nextUrl.searchParams;
-    const workspaceId = searchParams.get("workspaceId");
     const action = searchParams.get("action"); // 'events', 'requests', 'summary', 'metrics'
     const eventType = searchParams.get("eventType") as AuditEventType | null;
     const route = searchParams.get("route");
     const limit = parseInt(searchParams.get("limit") || "100");
 
-    if (!workspaceId) {
-      return NextResponse.json(
-        { error: "workspaceId required" },
-        { status: 400 }
-      );
-    }
+    const workspaceId = workspace.id;
 
     // Check permission (settings.read or owner role)
     const canView = await hasPermission(user.id, workspaceId, "settings", "read");

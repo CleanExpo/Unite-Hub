@@ -41,6 +41,10 @@ import { NextRequest, NextResponse } from "next/server";
  *   // user is authenticated, supabase client has their context
  * }
  */
+/**
+ * @deprecated Prefer `requireExecutionContext()` from `@/lib/execution-context` for API route entry.
+ * This function remains for backward compatibility during incremental migration.
+ */
 export async function authenticateRequest(req: NextRequest): Promise<{
   user: { id: string; email?: string } | null;
   supabase: any;

@@ -109,7 +109,7 @@ export const NUDGE_DEFINITIONS: GuardianNudgeDefinition[] = [
   {
     nudgeKey: 'generate_executive_report',
     title: 'Generate Your Monthly Report',
-    bodyTemplate: 'It's time to check in on your Guardian health. A monthly executive report will show your progress and highlight next steps.',
+    bodyTemplate: "It's time to check in on your Guardian health. A monthly executive report will show your progress and highlight next steps.",
     category: 'habit',
     severity: 'info',
     priority: 'low',
@@ -163,7 +163,7 @@ function checkNudgeTrigger(
 export async function generateNudgesForTenant(
   tenantId: string
 ): Promise<GuardianNudgeDefinition[]> {
-  const supabase = getSupabaseServer();
+  const supabase = await getSupabaseServer();
 
   try {
     // Load latest adoption scores
@@ -227,7 +227,7 @@ export async function generateNudgesForTenant(
  * Upsert nudges: create new, update existing, expire old
  */
 export async function upsertInappNudgesForTenant(tenantId: string): Promise<void> {
-  const supabase = getSupabaseServer();
+  const supabase = await getSupabaseServer();
   const now = new Date();
 
   try {
@@ -294,7 +294,7 @@ export async function loadActiveNudgesForTenant(
   tenantId: string,
   limit: number = 10
 ): Promise<any[]> {
-  const supabase = getSupabaseServer();
+  const supabase = await getSupabaseServer();
 
   const { data, error } = await supabase
     .from('guardian_inapp_coach_nudges')

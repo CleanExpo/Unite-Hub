@@ -1,136 +1,115 @@
-/**
- * /api/admin/health
- *
- * Config health & sanity checks (Phase E15)
- * GET: Fetch latest check results
- * POST: Trigger check re-run
- */
-
-import { NextRequest, NextResponse } from "next/server";
-import { getSupabaseServer } from "@/lib/supabase";
+import { NextRequest, NextResponse } from "next/server"
+import { requireExecutionContext } from "@/lib/execution-context"
 import {
-  runTenantChecks,
-  getLatestResults,
   getHealthSummary,
-  listAllChecks,
-} from "@/lib/core/configHealthService";
-import { hasPermission } from "@/lib/core/permissionService";
+  getLatestResults,
+  runTenantChecks,
+} from "@/lib/admin/health-service"
+import { hasPermission } from "@/lib/auth/permissions"
 
+/**
+ * GET /api/admin/health
+ *
+ * Supported actions:
+ * - action=checks   → auth required, NO workspace
+ * - action=summary  → auth + workspace required
+ * - action=results  → auth + workspace required
+ */
 export async function GET(req: NextRequest) {
-  try {
-    const supabase = getSupabaseServer();
+  const { searchParams } = new URL(req.url)
+  const action = searchParams.get("action")
 
-    // Authenticate user
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
+  // Only "checks" is allowed without workspace
+  const requireWorkspace = action !== "checks"
 
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  const ctxResult = await requireExecutionContext(req, undefined, {
+    requireWorkspace,
+    allowWorkspaceFromHeader: true,
+  })
 
-    const searchParams = req.nextUrl.searchParams;
-    const workspaceId = searchParams.get("workspaceId");
-    const action = searchParams.get("action"); // 'results', 'summary', 'checks'
-    const category = searchParams.get("category"); // for checks filtering
+  if (!ctxResult.ok) return ctxResult.response
 
-    // Check permission (settings.read or owner role)
-    if (workspaceId) {
-      const canView = await hasPermission(user.id, workspaceId, "settings", "read");
-      if (!canView) {
-        return NextResponse.json({ error: "Permission denied" }, { status: 403 });
-      }
-    }
+  const { user, workspace } = ctxResult.ctx
 
-    // Handle different actions
-    if (action === "results" && workspaceId) {
-      const results = await getLatestResults(workspaceId);
-      return NextResponse.json({ results });
-    }
-
-    if (action === "summary" && workspaceId) {
-      const summary = await getHealthSummary(workspaceId);
-      return NextResponse.json({ summary });
-    }
-
-    if (action === "checks") {
-      const checks = await listAllChecks(category || undefined);
-      return NextResponse.json({ checks });
-    }
-
-    // Default: return summary + results
-    if (!workspaceId) {
-      return NextResponse.json(
-        { error: "workspaceId required" },
-        { status: 400 }
-      );
-    }
-
-    const summary = await getHealthSummary(workspaceId);
-    const results = await getLatestResults(workspaceId);
-
-    return NextResponse.json({
-      summary,
-      results,
-      total: results.length,
-    });
-  } catch (error: any) {
-    console.error("[API] /admin/health GET error:", error);
-    return NextResponse.json(
-      { error: error.message || "Internal server error" },
-      { status: 500 }
-    );
+  // ---- NO-WORKSPACE CHECKS ----
+  if (action === "checks") {
+    const results = await runTenantChecks(undefined)
+    return NextResponse.json({ success: true, results })
   }
+
+  // ---- WORKSPACE-REQUIRED ACTIONS ----
+  if (!workspace) {
+    return NextResponse.json(
+      { success: false, error: "workspace required" },
+      { status: 400 }
+    )
+  }
+
+  const workspaceId = workspace.id
+
+  const canView = await hasPermission(
+    user.id,
+    workspaceId,
+    "settings",
+    "read"
+  )
+
+  if (!canView) {
+    return NextResponse.json(
+      { success: false, error: "Forbidden" },
+      { status: 403 }
+    )
+  }
+
+  if (action === "results") {
+    const results = await getLatestResults(workspaceId)
+    return NextResponse.json({ success: true, results })
+  }
+
+  // default = summary
+  const summary = await getHealthSummary(workspaceId)
+  return NextResponse.json({ success: true, summary })
 }
 
+/**
+ * POST /api/admin/health
+ *
+ * Always requires:
+ * - authenticated user
+ * - workspace (via x-workspace-id)
+ */
 export async function POST(req: NextRequest) {
-  try {
-    const supabase = getSupabaseServer();
+  const ctxResult = await requireExecutionContext(req, undefined, {
+    requireWorkspace: true,
+    allowWorkspaceFromHeader: true,
+  })
 
-    // Authenticate user
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
+  if (!ctxResult.ok) return ctxResult.response
 
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  const { user, workspace } = ctxResult.ctx
 
-    const body = await req.json();
-    const { workspaceId } = body;
+  const workspaceId = workspace.id
 
-    if (!workspaceId) {
-      return NextResponse.json(
-        { error: "workspaceId required" },
-        { status: 400 }
-      );
-    }
+  const canWrite = await hasPermission(
+    user.id,
+    workspaceId,
+    "settings",
+    "write"
+  )
 
-    // Check permission (settings.write or owner role)
-    const canWrite = await hasPermission(user.id, workspaceId, "settings", "write");
-    if (!canWrite) {
-      return NextResponse.json({ error: "Permission denied" }, { status: 403 });
-    }
-
-    // Trigger health checks
-    const results = await runTenantChecks(workspaceId);
-
-    // Get updated summary
-    const summary = await getHealthSummary(workspaceId);
-
-    return NextResponse.json({
-      success: true,
-      results,
-      summary,
-      message: `Ran ${results.length} health checks`,
-    });
-  } catch (error: any) {
-    console.error("[API] /admin/health POST error:", error);
+  if (!canWrite) {
     return NextResponse.json(
-      { error: error.message || "Internal server error" },
-      { status: 500 }
-    );
+      { success: false, error: "Forbidden" },
+      { status: 403 }
+    )
   }
+
+  const results = await runTenantChecks(workspaceId)
+  const summary = await getHealthSummary(workspaceId)
+
+  return NextResponse.json({
+    success: true,
+    results,
+    summary,
+  })
 }

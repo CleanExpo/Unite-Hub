@@ -24,6 +24,10 @@ export interface AuthResult {
  * Authenticate a request and extract user/workspace context
  * Supports both Bearer token and cookie-based authentication
  */
+/**
+ * @deprecated Prefer `requireExecutionContext()` from `@/lib/execution-context` for API route entry.
+ * This module contains legacy patterns (query-param workspaceId, supabaseBrowser token usage).
+ */
 export async function authenticateRequest(
   req: NextRequest,
   options?: {

@@ -1,0 +1,144 @@
+{
+  "features": {
+    "headline": "Features to Automate Your Growth",
+    "description": "Synthex provides a complete suite of autonomous tools designed to elevate your online presence without the manual effort.",
+    "items": [
+      {
+        "icon": "TrendingUp",
+        "title": "Autonomous SEO",
+        "description": "Let our AI handle on-page optimizations, keyword tracking, and backlink opportunities to climb the search rankings."
+      },
+      {
+        "icon": "MapPin",
+        "title": "GBP Management",
+        "description": "Automated posts, Q&A monitoring, and intelligent review responses to keep your Google Business Profile active and engaging."
+      },
+      {
+        "icon": "Share2",
+        "title": "Social Media Automation",
+        "description": "Generate and schedule compelling content across your social platforms, tailored to your brand and audience."
+      },
+      {
+        "icon": "BarChart3",
+        "title": "AI-Powered Analytics",
+        "description": "Get clear, actionable insights from your marketing data. Our AI surfaces what matters most, without the noise."
+      },
+      {
+        "icon": "MessageSquareQuote",
+        "title": "Review Auto-Response",
+        "description": "Instantly and intelligently respond to customer reviews on multiple platforms, building trust and saving you time."
+      },
+      {
+        "icon": "Building2",
+        "title": "Citation Building",
+        "description": "Automatically build and manage your local citations across the web, ensuring consistency and boosting local SEO."
+      }
+    ]
+  },
+  "pricing": {
+    "headline": "Simple, Transparent Pricing",
+    "description": "Choose the right plan for your business. No hidden fees, cancel anytime.",
+    "plans": [
+      {
+        "name": "Starter",
+        "price": "$495",
+        "frequency": "/ month",
+        "description": "For new businesses getting started with autonomous marketing.",
+        "features": ["Autonomous SEO (Basic)", "GBP Management (1 Location)", "Social Media Automation (2 Profiles)", "Basic Analytics", "Email Support"],
+        "cta": "Get Started",
+        "href": "/signup?plan=starter",
+        "popular": false
+      },
+      {
+        "name": "Pro",
+        "price": "$895",
+        "frequency": "/ month",
+        "description": "For growing businesses ready to scale their online presence.",
+        "features": ["Everything in Starter, plus:", "Autonomous SEO (Advanced)", "GBP Management (3 Locations)", "AI-Powered Analytics & Insights", "Review Auto-Response", "Priority Email & Chat Support"],
+        "cta": "Start Free Trial",
+        "href": "/free-trial?plan=pro",
+        "popular": true
+      },
+      {
+        "name": "Enterprise",
+        "price": "$1295",
+        "frequency": "/ month",
+        "description": "For large organizations with custom needs and dedicated support.",
+        "features": ["Everything in Pro, plus:", "Unlimited Locations & Profiles", "Citation Building & Management", "API Access", "Dedicated Account Manager", "Custom Integrations"],
+        "cta": "Get Started",
+        "href": "/signup?plan=enterprise",
+        "popular": false
+      }
+    ]
+  },
+  "faq": {
+    "headline": "Frequently Asked Questions",
+    "description": "Have questions? We have answers. If you can't find what you're looking for, feel free to contact us.",
+    "questions": [
+      {
+        "question": "What is autonomous marketing?",
+        "answer": "Autonomous marketing uses AI to perform marketing tasks like SEO, content creation, and social media management with minimal human intervention. Synthex automates these processes to save you time and improve results."
+      },
+      {
+        "question": "Is Synthex suitable for my small business?",
+        "answer": "Absolutely. Synthex is designed specifically for Australian small and medium-sized businesses (SMBs) to help them compete online without needing a large marketing team or budget."
+      },
+      {
+        "question": "Can I cancel my subscription at any time?",
+        "answer": "Yes, you can cancel your subscription at any time. Our plans are flexible, and we don't believe in long-term contracts. You have full control over your subscription."
+      },
+      {
+        "question": "What kind of support do you offer?",
+        "answer": "We offer email support on our Starter plan, and priority email and chat support on our Pro plan. Our Enterprise plan includes a dedicated account manager for personalized assistance."
+      },
+      {
+        "question": "How long does it take to see results?",
+        "answer": "While some results like social media posts are immediate, SEO and GBP improvements can take a few weeks to a few months to become noticeable. Our platform is designed for long-term, sustainable growth."
+      }
+    ]
+  },
+  "finalCta": {
+    "headline": "Ready to Automate Your Growth?",
+    "description": "Stop spending hours on manual marketing tasks. Let Synthex take the wheel and drive your business forward. Start your free trial today and see the difference.",
+    "buttonText": "Start Your Free Trial",
+    "buttonHref": "/free-trial"
+  },
+  "footer": {
+    "logo": {
+      "src": "/logos/synthex-light.svg",
+      "alt": "Synthex",
+      "href": "/"
+    },
+    "tagline": "Autonomous marketing for Australian SMBs.",
+    "copyright": "© 2025 Synthex. All rights reserved.",
+    "navigation": [
+      {
+        "title": "Product",
+        "links": [
+          { "name": "Features", "href": "#" },
+          { "name": "Pricing", "href": "#" },
+          { "name": "Free Trial", "href": "/free-trial" }
+        ]
+      },
+      {
+        "title": "Company",
+        "links": [
+          { "name": "About Us", "href": "/about" },
+          { "name": "Blog", "href": "/blog" },
+          { "name": "Contact", "href": "/contact" }
+        ]
+      },
+      {
+        "title": "Legal",
+        "links": [
+          { "name": "Privacy Policy", "href": "/privacy" },
+          { "name": "Terms of Service", "href": "/terms" }
+        ]
+      }
+    ],
+    "socials": [
+      { "name": "Twitter", "href": "#", "icon": "Twitter" },
+      { "name": "LinkedIn", "href": "#", "icon": "Linkedin" }
+    ]
+  }
+}

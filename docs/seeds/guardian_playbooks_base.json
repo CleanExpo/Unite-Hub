@@ -1,0 +1,157 @@
+{
+  "playbooks": [
+    {
+      "key": "enable_network_intelligence_safely",
+      "title": "Enable Network Intelligence Safely",
+      "summary": "Step-by-step guide to enabling Guardian's network intelligence features while maintaining security and compliance standards.",
+      "category": "network_meta",
+      "complexity": "medium",
+      "is_global": true,
+      "estimated_duration_minutes": 45,
+      "sections": [
+        {
+          "heading": "Why this matters",
+          "body": "Network intelligence provides visibility into network topology, traffic patterns, and anomalies. Enabling it safely ensures you maintain compliance while gaining operational benefits.\n\n**Key benefits:**\n- Real-time network visibility\n- Anomaly detection and alerting\n- Traffic analysis and optimization",
+          "section_type": "guide"
+        },
+        {
+          "heading": "Prerequisites",
+          "body": "Before enabling network intelligence, ensure:\n- Network isolation requirements are understood\n- Compliance team approval is obtained\n- Data retention policies are defined\n- Network monitoring tools are prepared",
+          "section_type": "checklist"
+        },
+        {
+          "heading": "Step-by-step implementation",
+          "body": "1. **Access Network Settings**: Navigate to Guardian Admin → Network → Intelligent Monitoring\n2. **Review Security Posture**: Run the pre-flight security check (takes ~5 minutes)\n3. **Configure Data Retention**: Set retention policy (default: 30 days)\n4. **Enable Gradual Rollout**: Start with 10% of network traffic, monitor, increase to 100%\n5. **Set Up Alerts**: Configure network anomaly thresholds and notification channels\n6. **Monitor Dashboard**: Check Network Intelligence Dashboard daily for first week",
+          "section_type": "checklist"
+        },
+        {
+          "heading": "Common pitfalls",
+          "body": "**Pitfall 1: Enabling at 100% immediately**\n- Causes: Risk of overwhelming alerting system\n- Solution: Use gradual rollout feature (10% → 30% → 100%)\n\n**Pitfall 2: Insufficient data retention planning**\n- Causes: Storage costs, compliance violations\n- Solution: Align retention with compliance requirements before enabling\n\n**Pitfall 3: Missing alert configuration**\n- Causes: Important anomalies go unnoticed\n- Solution: Configure baseline thresholds using first week of data",
+          "section_type": "faq"
+        }
+      ],
+      "tags": [
+        {
+          "tag_key": "low_network_adoption",
+          "source_domain": "network_meta"
+        }
+      ]
+    },
+    {
+      "key": "improve_overall_readiness_foundation",
+      "title": "Improve Overall Readiness Foundation",
+      "summary": "Foundational steps to increase Guardian's overall readiness score from low to moderate levels.",
+      "category": "readiness",
+      "complexity": "intro",
+      "is_global": true,
+      "estimated_duration_minutes": 60,
+      "sections": [
+        {
+          "heading": "Understanding readiness",
+          "body": "Guardian readiness score measures how well your organization is prepared to use advanced Guardian features.\n\n**Readiness score breakdown:**\n- **0-30**: Foundation needed (basic setup incomplete)\n- **30-60**: Growing foundation (core capabilities active)\n- **60-80**: Solid readiness (most features leveraged)\n- **80-100**: Expert readiness (all capabilities optimized)",
+          "section_type": "guide"
+        },
+        {
+          "heading": "Quick wins to improve readiness",
+          "body": "✓ Enable all core detection modules (takes 15 minutes)\n✓ Configure at least 3 alert channels (takes 20 minutes)\n✓ Set up executive dashboard (takes 10 minutes)\n✓ Complete team onboarding for 5+ users (takes 30 minutes)\n✓ Run compliance baseline report (takes 5 minutes)",
+          "section_type": "checklist"
+        },
+        {
+          "heading": "Implementation roadmap",
+          "body": "**Week 1: Foundation (Target: 40-50 readiness)**\n- Day 1-2: Enable core detection modules\n- Day 3-4: Configure alert channels and thresholds\n- Day 5: Team training and initial onboarding\n\n**Week 2-4: Expansion (Target: 50-70 readiness)**\n- Set up integration with SIEM\n- Configure advanced threat hunting dashboards\n- Establish incident response workflows\n\n**Week 5-8: Optimization (Target: 70+ readiness)**\n- Fine-tune detection rules based on 4 weeks of data\n- Implement automated response actions\n- Complete executive reporting setup",
+          "section_type": "guide"
+        },
+        {
+          "heading": "Measuring progress",
+          "body": "**Track these metrics weekly:**\n- Overall readiness score (target: +5 points/week)\n- Number of active detection rules (target: 90%+)\n- Alert volume and quality (target: <10% false positives)\n- Team adoption (target: 80%+ monthly active users)",
+          "section_type": "reference"
+        }
+      ],
+      "tags": [
+        {
+          "tag_key": "low_readiness_overall",
+          "source_domain": "readiness"
+        }
+      ]
+    },
+    {
+      "key": "increase_adoption_across_teams",
+      "title": "Increase Adoption Across Teams",
+      "summary": "Drive consistent Guardian adoption by breaking adoption barriers and building team champions.",
+      "category": "adoption",
+      "complexity": "medium",
+      "is_global": true,
+      "estimated_duration_minutes": 90,
+      "sections": [
+        {
+          "heading": "Understanding adoption challenges",
+          "body": "Low adoption typically stems from:\n- **Knowledge gaps**: Teams don't understand Guardian capabilities\n- **Integration friction**: Guardian tools don't fit existing workflows\n- **Alert fatigue**: Too many alerts → teams ignore them\n- **Lack of ownership**: No clear champion responsible for adoption\n\n**This playbook addresses all four challenges.**",
+          "section_type": "guide"
+        },
+        {
+          "heading": "Phase 1: Build awareness (Week 1-2)",
+          "body": "1. Identify team champions (1-2 per team)\n2. Conduct department-level demo sessions (30 min each)\n3. Share Guardian value prop docs: 'Guardian in 5 Minutes' guide\n4. Set up Slack/Teams integration for quick tips\n5. Create usage dashboard visible to all teams",
+          "section_type": "checklist"
+        },
+        {
+          "heading": "Phase 2: Enable workflows (Week 3-4)",
+          "body": "1. Map Guardian features to team workflows\n2. Customize dashboards for each team's use case\n3. Set up team-specific alert channels\n4. Create team playbooks (incident response, threat hunting, compliance)\n5. Schedule 1-on-1 onboarding with key users",
+          "section_type": "checklist"
+        },
+        {
+          "heading": "Phase 3: Drive engagement (Week 5-8)",
+          "body": "1. Run weekly 'Guardian Tips' sessions\n2. Share wins: 'Threat caught by team X', 'Incident resolved in 10 minutes'\n3. Implement Guardian adoption metrics in team OKRs\n4. Reward top adopters (recognition, swag)\n5. Monthly town halls showcasing team usage",
+          "section_type": "checklist"
+        },
+        {
+          "heading": "Success metrics",
+          "body": "**Measure adoption with:**\n- % of team members with >2 logins/month (target: 75%+)\n- % of teams using Guardian dashboards (target: 90%+)\n- Avg. incident detection-to-response time (target: <30 min)\n- NPS for Guardian (target: >40)",
+          "section_type": "reference"
+        }
+      ],
+      "tags": [
+        {
+          "tag_key": "low_adoption_core",
+          "source_domain": "adoption"
+        }
+      ]
+    },
+    {
+      "key": "create_executive_reporting_cadence",
+      "title": "Create Executive Reporting Cadence",
+      "summary": "Establish monthly executive reports to demonstrate Guardian ROI and drive organizational alignment.",
+      "category": "executive",
+      "complexity": "medium",
+      "is_global": true,
+      "estimated_duration_minutes": 75,
+      "sections": [
+        {
+          "heading": "Why executive reporting matters",
+          "body": "Executive reports demonstrate:\n- **Security value**: Threats detected and mitigated\n- **Operational efficiency**: MTTR improvements, incident volume trends\n- **Compliance posture**: Coverage gaps closed, audit readiness\n- **Investment justification**: ROI from Guardian deployment",
+          "section_type": "guide"
+        },
+        {
+          "heading": "Monthly report components",
+          "body": "Every executive report should include:\n\n1. **Executive Summary** (1 page)\n   - Key metrics: Threats detected, incidents resolved, MTTR\n   - Month-over-month trends\n   - Critical highlights or concerns\n\n2. **Threat Landscape** (1 page)\n   - Top threats detected this month\n   - Attack vectors, affected assets\n   - Response actions taken\n\n3. **Operational Metrics** (1 page)\n   - Team adoption and engagement\n   - Alert accuracy and false positive rate\n   - Incident handling statistics\n\n4. **Compliance & Coverage** (1 page)\n   - Compliance gaps addressed\n   - Detection coverage by asset class\n   - Audit readiness status",
+          "section_type": "reference"
+        },
+        {
+          "heading": "Create first report",
+          "body": "1. Access Guardian Dashboard → Reports → Executive Summary\n2. Select date range (e.g., last 30 days)\n3. Customize sections relevant to leadership (security/ops/compliance focus)\n4. Add insights: Notable trends, team highlights, forward recommendations\n5. Export as PDF or schedule monthly delivery\n6. Distribute to leadership team by 5th of month",
+          "section_type": "checklist"
+        },
+        {
+          "heading": "Sustain cadence",
+          "body": "**To maintain consistent reporting:**\n- Set calendar reminder for report generation (1st of month)\n- Assign one owner to customize each month\n- Track recommendations from previous reports\n- Share highlights with broader teams (builds visibility)\n- Adjust metrics based on leadership feedback",
+          "section_type": "checklist"
+        }
+      ],
+      "tags": [
+        {
+          "tag_key": "no_executive_reports",
+          "source_domain": "executive"
+        }
+      ]
+    }
+  ]
+}
