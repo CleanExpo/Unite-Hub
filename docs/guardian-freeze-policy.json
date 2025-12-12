@@ -1,0 +1,163 @@
+{
+  "version": "1.0.0",
+  "effective_date": "2025-12-12",
+  "status": "FROZEN",
+  "frozen_paths": [
+    "supabase/migrations/[0-5][0-9][0-9]_*.sql",
+    "supabase/migrations/6[0-1][0-9]_*.sql",
+    "src/lib/guardian/governance/**",
+    "src/lib/guardian/rules/**",
+    "src/lib/guardian/correlation/**",
+    "src/lib/guardian/incident/**",
+    "src/lib/guardian/response/**",
+    "src/lib/guardian/trace/**",
+    "src/app/api/guardian/**",
+    "src/app/guardian/admin/**"
+  ],
+  "frozen_paths_exceptions": [
+    "supabase/migrations/guardian_plugins_*.sql",
+    "src/lib/guardian/plugins/**",
+    "**/*.test.ts",
+    "**/README.md",
+    "**/docs/**"
+  ],
+  "allowed_paths": [
+    "src/lib/guardian/plugins/**",
+    "docs/**",
+    "tests/**",
+    "README.md",
+    ".github/**",
+    "scripts/**"
+  ],
+  "allowed_changes": {
+    "migrations": [
+      "add_new_nullable_columns",
+      "add_new_indices",
+      "add_new_tables_with_rls",
+      "add_new_rls_policies_additive_only",
+      "add_new_enum_values_if_non_breaking"
+    ],
+    "schemas": [
+      "column_additions",
+      "index_creation",
+      "policy_additions",
+      "constraint_additions"
+    ],
+    "code": [
+      "bug_fixes",
+      "security_patches",
+      "performance_improvements",
+      "documentation_updates",
+      "test_additions",
+      "plugin_framework_usage"
+    ]
+  },
+  "forbidden_changes": {
+    "migrations": [
+      "modify_locked_migrations",
+      "drop_columns",
+      "rename_columns",
+      "change_column_types",
+      "remove_tables",
+      "remove_rls_policies",
+      "weaken_rls_logic"
+    ],
+    "schemas": [
+      "core_table_deletions",
+      "breaking_rls_changes",
+      "constraint_removals"
+    ],
+    "code": [
+      "api_endpoint_removals",
+      "breaking_api_changes",
+      "governance_logic_overhauls",
+      "core_service_refactors"
+    ]
+  },
+  "override_mechanism": {
+    "enabled": true,
+    "requirements": [
+      "environment_variable_GUARDIAN_FREEZE_OVERRIDE_equals_1",
+      "commit_message_contains_GUARDIAN_FREEZE_OVERRIDE_token",
+      "referenced_ticket_id_present"
+    ],
+    "ticket_prefix_allowed": [
+      "INCIDENT",
+      "SECURITY",
+      "HOTFIX",
+      "CVE",
+      "CWE"
+    ],
+    "audit_trail": "docs/guardian-gates-report.json"
+  },
+  "phases": {
+    "G": {
+      "name": "Core Guardian Rules Engine",
+      "frozen": true,
+      "frozen_tables": [
+        "guardian_rules",
+        "guardian_generated_alerts",
+        "guardian_generated_incidents",
+        "guardian_incident_timeline",
+        "guardian_incident_links",
+        "guardian_rule_evaluation_trace"
+      ]
+    },
+    "H": {
+      "name": "Intelligence & Aggregation",
+      "frozen": true,
+      "frozen_tables": [
+        "guardian_h_series_*",
+        "guardian_heuristics_*"
+      ]
+    },
+    "I": {
+      "name": "Simulation & Analysis",
+      "frozen": true,
+      "frozen_tables": [
+        "guardian_remediation_playbooks",
+        "guardian_remediation_simulation_runs",
+        "guardian_*_simulation_*"
+      ]
+    },
+    "Z": {
+      "name": "Governance & Policy",
+      "frozen": true,
+      "frozen_tables": [
+        "guardian_z_*"
+      ],
+      "frozen_logic": [
+        "src/lib/guardian/governance/**"
+      ]
+    },
+    "plugins": {
+      "name": "Plugin Framework",
+      "frozen": false,
+      "additive": true,
+      "location": "src/lib/guardian/plugins/**"
+    }
+  },
+  "breaking_changes_allowed_in": "v2.0+",
+  "compliance_tools": {
+    "migration_guard": {
+      "script": "scripts/guardian/guard-migrations.ts",
+      "purpose": "Prevent modification of locked migrations",
+      "runs_in": ["ci", "pre_commit"]
+    },
+    "gates_runner": {
+      "script": "scripts/guardian/run-guardian-gates.ts",
+      "purpose": "Validate freeze policy + docs completeness",
+      "runs_in": ["ci", "pre_release"]
+    },
+    "docs_checker": {
+      "script": "scripts/guardian/check-docs.ts",
+      "purpose": "Ensure required FINAL docs present",
+      "runs_in": ["ci"]
+    },
+    "release_notes": {
+      "script": "scripts/guardian/generate-release-notes.ts",
+      "purpose": "Generate release notes from completion record",
+      "runs_in": ["manual", "release"]
+    }
+  }
+}

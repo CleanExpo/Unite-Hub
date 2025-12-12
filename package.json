@@ -147,6 +147,10 @@
     "shadow:schema:health": "tsx shadow-observer/schema-guardian/schemaHealthScan.ts",
     "shadow:schema-full": "tsx shadow-observer/run-schema-guardian.ts",
     "rls:deploy": "node scripts/deploy-rls-fix.mjs",
+    "guardian:gates": "tsx scripts/guardian/run-guardian-gates.ts",
+    "guardian:lock": "tsx scripts/guardian/generate-migration-lock.ts",
+    "guardian:docs": "tsx scripts/guardian/check-docs.ts",
+    "guardian:release-notes": "tsx scripts/guardian/generate-release-notes.ts",
     "rls:deploy:dry": "node scripts/deploy-rls-fix.mjs --dry",
     "agent:audit": "npm run shadow:scan",
     "agent:refactor": "npm run shadow:agent"
