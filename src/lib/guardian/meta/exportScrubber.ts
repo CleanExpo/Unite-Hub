@@ -12,7 +12,7 @@
  * - created_by, updated_by, actor: User identities
  * - owner: Cycle/resource ownership (potentially sensitive)
  * - email, phone: Contact information
- * - notes, commentary, free_text: User-generated content (may contain PII)
+ * - notes, commentary, free_text: User-generated content (may contain PII, including H04 triage notes)
  * - webhook_url, webhook_secret, api_key, token, password: Credentials
  * - headers, payload, body: Raw request/response data (likely PII)
  */
