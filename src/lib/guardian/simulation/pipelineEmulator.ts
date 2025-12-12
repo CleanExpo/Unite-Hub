@@ -410,3 +410,71 @@ export async function emulatePipelineForRun(
     warnings: events.length === 0 ? ['No synthetic events generated'] : [],
   };
 }
+
+/**
+ * Pipeline emulation with virtual overrides (for I04 remediation simulation)
+ * Applies remediation overrides in-memory; no production tables modified
+ */
+export async function pipelineEmulateWithOverrides(
+  tenantId: string,
+  baselineMetrics: {
+    alerts_total: number;
+    alerts_by_severity: Record<string, number>;
+    incidents_total: number;
+    incidents_by_status: Record<string, number>;
+    correlations_total: number;
+    notifications_total: number;
+    avg_risk_score: number;
+    window_days: number;
+  },
+  overrides: Record<string, unknown>
+): Promise<{
+  alerts_total: number;
+  alerts_by_severity: Record<string, number>;
+  incidents_total: number;
+  incidents_by_status: Record<string, number>;
+  correlations_total: number;
+  notifications_total: number;
+  avg_risk_score: number;
+  window_days: number;
+  computed_at: string;
+}> {
+  // For now, return a simplified simulation
+  // In practice, this would re-run the full pipeline with overrides applied
+  // This is a placeholder that estimates impact based on override types
+
+  const disabledRules = (overrides.disabledRules as Set<string>) || new Set();
+  const suppressedChannels = (overrides.suppressedNotificationChannels as Set<string>) || new Set();
+  const ruleThresholdAdjustments = (overrides.ruleThresholdAdjustments as Map<string, number>) || new Map();
+
+  // Estimate: disabling rules reduces alerts/incidents by ~10-15% per rule
+  const rulesDisabledReduction = Math.min(disabledRules.size * 0.12, 0.5);
+
+  // Estimate: increasing min link count reduces incidents/correlations by ~5-10%
+  const minLinkCountReduction = (overrides.minLinkCountOverride as number) ? Math.min((overrides.minLinkCountOverride as number) * 0.05, 0.3) : 0;
+
+  // Estimate: suppressing channels reduces notifications by ~80% per channel
+  const notificationReduction = Math.min(suppressedChannels.size * 0.8, 1.0);
+
+  // Apply reductions to baseline metrics
+  const alertsReduced = Math.round(baselineMetrics.alerts_total * (1 - rulesDisabledReduction));
+  const incidentsReduced = Math.round(baselineMetrics.incidents_total * (1 - rulesDisabledReduction - minLinkCountReduction));
+  const correlationsReduced = Math.round(baselineMetrics.correlations_total * (1 - minLinkCountReduction));
+  const notificationsReduced = Math.round(baselineMetrics.notifications_total * (1 - notificationReduction));
+
+  // Estimate: risk score reduction proportional to alert/incident reduction
+  const avgRiskReduction = (alertsReduced / baselineMetrics.alerts_total + incidentsReduced / baselineMetrics.incidents_total) / 2;
+  const avgRiskScoreReduced = baselineMetrics.avg_risk_score * (1 - avgRiskReduction);
+
+  return {
+    alerts_total: alertsReduced,
+    alerts_by_severity: baselineMetrics.alerts_by_severity, // Simplified: keep same distribution
+    incidents_total: incidentsReduced,
+    incidents_by_status: baselineMetrics.incidents_by_status,
+    correlations_total: correlationsReduced,
+    notifications_total: notificationsReduced,
+    avg_risk_score: avgRiskScoreReduced,
+    window_days: baselineMetrics.window_days,
+    computed_at: new Date().toISOString(),
+  };
+}
