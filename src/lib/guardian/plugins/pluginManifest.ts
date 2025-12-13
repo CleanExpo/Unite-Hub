@@ -132,7 +132,8 @@ return false;
  */
 export function definePluginManifest(manifest: GuardianPluginManifest): GuardianPluginManifest {
   if (!validatePluginManifest(manifest)) {
-    throw new Error(`Invalid plugin manifest for key "${manifest.key}"`);
+    const key = (manifest as any).key || 'unknown';
+    throw new Error(`Invalid plugin manifest for key "${key}"`);
   }
   return manifest;
 }

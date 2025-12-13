@@ -12,6 +12,7 @@ import { manifest as industryInsurancePackManifest } from './industry-insurance-
 import { manifest as industryHealthcareAgedcarePackManifest } from './industry-healthcare-agedcare/manifest';
 import { manifest as industryGovernmentRegulatoryPackManifest } from './industry-government-regulatory/manifest';
 import { manifest as industryEducationCampusPackManifest } from './industry-education-campus/manifest';
+import { manifest as crossIndustryBenchmarkingPackManifest } from './cross-industry-benchmarking/manifest';
 
 /**
  * All registered plugins (static, build-time)
@@ -21,7 +22,8 @@ const REGISTERED_PLUGINS: GuardianPluginManifest[] = [
   industryInsurancePackManifest,
   industryHealthcareAgedcarePackManifest,
   industryGovernmentRegulatoryPackManifest,
-  industryEducationCampusPackManifest
+  industryEducationCampusPackManifest,
+  crossIndustryBenchmarkingPackManifest
   // Future plugins added here
 ];
 
