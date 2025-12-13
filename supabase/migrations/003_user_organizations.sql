@@ -15,10 +15,8 @@ CREATE TABLE IF NOT EXISTS user_profiles (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
-
 -- Index for email lookups
 CREATE INDEX IF NOT EXISTS idx_user_profiles_email ON user_profiles(email);
-
 -- =====================================================
 -- 2. USER ORGANIZATIONS TABLE (Many-to-Many)
 -- =====================================================
@@ -37,12 +35,10 @@ CREATE TABLE IF NOT EXISTS user_organizations (
   -- Ensure unique user-org combination
   UNIQUE(user_id, org_id)
 );
-
 -- Indexes for efficient queries
 CREATE INDEX IF NOT EXISTS idx_user_orgs_user_id ON user_organizations(user_id);
 CREATE INDEX IF NOT EXISTS idx_user_orgs_org_id ON user_organizations(org_id);
 CREATE INDEX IF NOT EXISTS idx_user_orgs_role ON user_organizations(role);
-
 -- =====================================================
 -- 3. ORGANIZATION INVITES TABLE
 -- =====================================================
@@ -62,11 +58,9 @@ CREATE TABLE IF NOT EXISTS organization_invites (
   -- Prevent duplicate pending invites
   UNIQUE(org_id, email)
 );
-
 -- Index for token lookups
 CREATE INDEX IF NOT EXISTS idx_org_invites_token ON organization_invites(token);
 CREATE INDEX IF NOT EXISTS idx_org_invites_email ON organization_invites(email);
-
 -- =====================================================
 -- 4. TRIGGERS FOR UPDATED_AT
 -- =====================================================
@@ -79,12 +73,26 @@ BEGIN
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trigger_update_user_profile_timestamp
-  BEFORE UPDATE ON user_profiles
-  FOR EACH ROW
-  EXECUTE FUNCTION update_user_profile_timestamp();
-
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_trigger t
+    JOIN pg_class c ON c.oid = t.tgrelid
+    JOIN pg_namespace n ON n.oid = c.relnamespace
+    WHERE t.tgname = 'trigger_update_user_profile_timestamp'
+      AND n.nspname = 'public'
+      AND c.relname = 'user_profiles'
+      AND NOT t.tgisinternal
+  ) THEN
+    EXECUTE $trg$
+      CREATE TRIGGER trigger_update_user_profile_timestamp
+        BEFORE UPDATE ON user_profiles
+        FOR EACH ROW
+        EXECUTE FUNCTION update_user_profile_timestamp();
+    $trg$;
+  END IF;
+END $$;
 -- Auto-update updated_at for user_organizations
 CREATE OR REPLACE FUNCTION update_user_org_timestamp()
 RETURNS TRIGGER AS $$
@@ -93,12 +101,26 @@ BEGIN
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trigger_update_user_org_timestamp
-  BEFORE UPDATE ON user_organizations
-  FOR EACH ROW
-  EXECUTE FUNCTION update_user_org_timestamp();
-
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_trigger t
+    JOIN pg_class c ON c.oid = t.tgrelid
+    JOIN pg_namespace n ON n.oid = c.relnamespace
+    WHERE t.tgname = 'trigger_update_user_org_timestamp'
+      AND n.nspname = 'public'
+      AND c.relname = 'user_organizations'
+      AND NOT t.tgisinternal
+  ) THEN
+    EXECUTE $trg$
+      CREATE TRIGGER trigger_update_user_org_timestamp
+        BEFORE UPDATE ON user_organizations
+        FOR EACH ROW
+        EXECUTE FUNCTION update_user_org_timestamp();
+    $trg$;
+  END IF;
+END $$;
 -- =====================================================
 -- 5. FUNCTION: CREATE USER PROFILE ON SIGNUP
 -- =====================================================
@@ -116,13 +138,27 @@ BEGIN
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
-
 -- Trigger on auth.users insert
-CREATE TRIGGER on_auth_user_created
-  AFTER INSERT ON auth.users
-  FOR EACH ROW
-  EXECUTE FUNCTION handle_new_user();
-
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_trigger t
+    JOIN pg_class c ON c.oid = t.tgrelid
+    JOIN pg_namespace n ON n.oid = c.relnamespace
+    WHERE t.tgname = 'on_auth_user_created'
+      AND n.nspname = 'auth'
+      AND c.relname = 'users'
+      AND NOT t.tgisinternal
+  ) THEN
+    EXECUTE $trg$
+      CREATE TRIGGER on_auth_user_created
+        AFTER INSERT ON auth.users
+        FOR EACH ROW
+        EXECUTE FUNCTION handle_new_user();
+    $trg$;
+  END IF;
+END $$;
 -- =====================================================
 -- 6. FUNCTION: AUTO-ASSIGN TO ORGANIZATION
 -- =====================================================
@@ -155,13 +191,27 @@ BEGIN
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
-
 -- Trigger on user_profiles insert
-CREATE TRIGGER on_user_profile_created
-  AFTER INSERT ON user_profiles
-  FOR EACH ROW
-  EXECUTE FUNCTION handle_user_organization_assignment();
-
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_trigger t
+    JOIN pg_class c ON c.oid = t.tgrelid
+    JOIN pg_namespace n ON n.oid = c.relnamespace
+    WHERE t.tgname = 'on_user_profile_created'
+      AND n.nspname = 'public'
+      AND c.relname = 'user_profiles'
+      AND NOT t.tgisinternal
+  ) THEN
+    EXECUTE $trg$
+      CREATE TRIGGER on_user_profile_created
+        AFTER INSERT ON user_profiles
+        FOR EACH ROW
+        EXECUTE FUNCTION handle_user_organization_assignment();
+    $trg$;
+  END IF;
+END $$;
 -- =====================================================
 -- 7. ROW LEVEL SECURITY POLICIES
 -- =====================================================
@@ -170,111 +220,242 @@ CREATE TRIGGER on_user_profile_created
 ALTER TABLE user_profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_organizations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE organization_invites ENABLE ROW LEVEL SECURITY;
-
 -- USER PROFILES POLICIES
 -- Users can read their own profile
-CREATE POLICY "Users can view own profile"
-  ON user_profiles FOR SELECT
-  USING (auth.uid() = id);
-
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'user_profiles'
+      AND policyname = 'Users can view own profile'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can view own profile"
+        ON user_profiles FOR SELECT
+        USING (auth.uid() = id);
+    $policy$;
+  END IF;
+END $$;
 -- Users can update their own profile
-CREATE POLICY "Users can update own profile"
-  ON user_profiles FOR UPDATE
-  USING (auth.uid() = id);
-
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'user_profiles'
+      AND policyname = 'Users can update own profile'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can update own profile"
+        ON user_profiles FOR UPDATE
+        USING (auth.uid() = id);
+    $policy$;
+  END IF;
+END $$;
 -- USER ORGANIZATIONS POLICIES
 -- Users can view their own organization memberships
-CREATE POLICY "Users can view own org memberships"
-  ON user_organizations FOR SELECT
-  USING (auth.uid() = user_id);
-
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'user_organizations'
+      AND policyname = 'Users can view own org memberships'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can view own org memberships"
+        ON user_organizations FOR SELECT
+        USING (auth.uid() = user_id);
+    $policy$;
+  END IF;
+END $$;
 -- Org owners/admins can view all members of their orgs
-CREATE POLICY "Org admins can view org members"
-  ON user_organizations FOR SELECT
-  USING (
-    org_id IN (
-      SELECT org_id FROM user_organizations
-      WHERE user_id = auth.uid()
-        AND role IN ('owner', 'admin')
-    )
-  );
-
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'user_organizations'
+      AND policyname = 'Org admins can view org members'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Org admins can view org members"
+        ON user_organizations FOR SELECT
+        USING (
+          org_id IN (
+            SELECT org_id FROM user_organizations
+            WHERE user_id = auth.uid()
+              AND role IN ('owner', 'admin')
+          )
+        );
+    $policy$;
+  END IF;
+END $$;
 -- Org owners can manage members
-CREATE POLICY "Org owners can manage members"
-  ON user_organizations FOR ALL
-  USING (
-    org_id IN (
-      SELECT org_id FROM user_organizations
-      WHERE user_id = auth.uid()
-        AND role = 'owner'
-    )
-  );
-
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'user_organizations'
+      AND policyname = 'Org owners can manage members'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Org owners can manage members"
+        ON user_organizations FOR ALL
+        USING (
+          org_id IN (
+            SELECT org_id FROM user_organizations
+            WHERE user_id = auth.uid()
+              AND role = 'owner'
+          )
+        );
+    $policy$;
+  END IF;
+END $$;
 -- ORGANIZATION INVITES POLICIES
 -- Org owners/admins can create invites
-CREATE POLICY "Org admins can create invites"
-  ON organization_invites FOR INSERT
-  WITH CHECK (
-    org_id IN (
-      SELECT org_id FROM user_organizations
-      WHERE user_id = auth.uid()
-        AND role IN ('owner', 'admin')
-    )
-  );
-
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'organization_invites'
+      AND policyname = 'Org admins can create invites'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Org admins can create invites"
+        ON organization_invites FOR INSERT
+        WITH CHECK (
+          org_id IN (
+            SELECT org_id FROM user_organizations
+            WHERE user_id = auth.uid()
+              AND role IN ('owner', 'admin')
+          )
+        );
+    $policy$;
+  END IF;
+END $$;
 -- Org owners/admins can view invites for their org
-CREATE POLICY "Org admins can view invites"
-  ON organization_invites FOR SELECT
-  USING (
-    org_id IN (
-      SELECT org_id FROM user_organizations
-      WHERE user_id = auth.uid()
-        AND role IN ('owner', 'admin')
-    )
-  );
-
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'organization_invites'
+      AND policyname = 'Org admins can view invites'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Org admins can view invites"
+        ON organization_invites FOR SELECT
+        USING (
+          org_id IN (
+            SELECT org_id FROM user_organizations
+            WHERE user_id = auth.uid()
+              AND role IN ('owner', 'admin')
+          )
+        );
+    $policy$;
+  END IF;
+END $$;
 -- Users can view invites sent to their email
-CREATE POLICY "Users can view own invites"
-  ON organization_invites FOR SELECT
-  USING (email = (SELECT email FROM user_profiles WHERE id = auth.uid()));
-
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'organization_invites'
+      AND policyname = 'Users can view own invites'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can view own invites"
+        ON organization_invites FOR SELECT
+        USING (email = (SELECT email FROM user_profiles WHERE id = auth.uid()));
+    $policy$;
+  END IF;
+END $$;
 -- =====================================================
 -- 8. UPDATE EXISTING TABLES RLS
 -- =====================================================
 
 -- Update team_members RLS to use user_organizations
 DROP POLICY IF EXISTS "Users can view team members in their org" ON team_members;
-CREATE POLICY "Users can view team members in their org"
-  ON team_members FOR SELECT
-  USING (
-    org_id IN (
-      SELECT org_id FROM user_organizations
-      WHERE user_id = auth.uid()
-    )
-  );
-
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'team_members'
+      AND policyname = 'Users can view team members in their org'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can view team members in their org"
+        ON team_members FOR SELECT
+        USING (
+          org_id IN (
+            SELECT org_id FROM user_organizations
+            WHERE user_id = auth.uid()
+          )
+        );
+    $policy$;
+  END IF;
+END $$;
 -- Update projects RLS
 DROP POLICY IF EXISTS "Users can view projects in their org" ON projects;
-CREATE POLICY "Users can view projects in their org"
-  ON projects FOR SELECT
-  USING (
-    org_id IN (
-      SELECT org_id FROM user_organizations
-      WHERE user_id = auth.uid()
-    )
-  );
-
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'projects'
+      AND policyname = 'Users can view projects in their org'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can view projects in their org"
+        ON projects FOR SELECT
+        USING (
+          org_id IN (
+            SELECT org_id FROM user_organizations
+            WHERE user_id = auth.uid()
+          )
+        );
+    $policy$;
+  END IF;
+END $$;
 -- Update approvals RLS
 DROP POLICY IF EXISTS "Users can view approvals in their org" ON approvals;
-CREATE POLICY "Users can view approvals in their org"
-  ON approvals FOR SELECT
-  USING (
-    org_id IN (
-      SELECT org_id FROM user_organizations
-      WHERE user_id = auth.uid()
-    )
-  );
-
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'approvals'
+      AND policyname = 'Users can view approvals in their org'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can view approvals in their org"
+        ON approvals FOR SELECT
+        USING (
+          org_id IN (
+            SELECT org_id FROM user_organizations
+            WHERE user_id = auth.uid()
+          )
+        );
+    $policy$;
+  END IF;
+END $$;
 -- =====================================================
 -- 9. HELPER FUNCTIONS
 -- =====================================================
@@ -294,7 +475,6 @@ BEGIN
   RETURN user_role;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
-
 -- Check if user has permission in org
 CREATE OR REPLACE FUNCTION user_has_org_permission(
   user_uuid UUID,
@@ -328,7 +508,6 @@ BEGIN
   RETURN user_level >= required_level;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
-
 -- =====================================================
 -- MIGRATION COMPLETE
 -- =====================================================

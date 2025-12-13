@@ -47,28 +47,103 @@ CREATE INDEX IF NOT EXISTS idx_user_profiles_phone ON user_profiles(phone) WHERE
 -- =====================================================
 
 -- Username validation: alphanumeric, underscores, hyphens, 3-30 chars
-ALTER TABLE user_profiles ADD CONSTRAINT IF NOT EXISTS username_format
-  CHECK (username IS NULL OR (username ~ '^[a-zA-Z0-9_-]{3,30}$'));
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_constraint con
+    JOIN pg_class rel ON rel.oid = con.conrelid
+    JOIN pg_namespace n ON n.oid = rel.relnamespace
+    WHERE n.nspname = 'public'
+      AND rel.relname = 'user_profiles'
+      AND con.conname = 'username_format'
+  ) THEN
+    EXECUTE $c$
+      ALTER TABLE user_profiles ADD CONSTRAINT username_format
+        CHECK (username IS NULL OR (username ~ '^[a-zA-Z0-9_-]{3,30}$'));
+    $c$;
+  END IF;
+END $$;
 
 -- Phone validation: basic format (allowing international)
-ALTER TABLE user_profiles ADD CONSTRAINT IF NOT EXISTS phone_format
-  CHECK (phone IS NULL OR (phone ~ '^\+?[1-9]\d{1,14}$'));
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_constraint con
+    JOIN pg_class rel ON rel.oid = con.conrelid
+    JOIN pg_namespace n ON n.oid = rel.relnamespace
+    WHERE n.nspname = 'public'
+      AND rel.relname = 'user_profiles'
+      AND con.conname = 'phone_format'
+  ) THEN
+    EXECUTE $c$
+      ALTER TABLE user_profiles ADD CONSTRAINT phone_format
+        CHECK (phone IS NULL OR (phone ~ '^\+?[1-9]\d{1,14}$'));
+    $c$;
+  END IF;
+END $$;
 
 -- Website validation: must be valid URL
-ALTER TABLE user_profiles ADD CONSTRAINT IF NOT EXISTS website_format
-  CHECK (website IS NULL OR (website ~ '^https?://'));
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_constraint con
+    JOIN pg_class rel ON rel.oid = con.conrelid
+    JOIN pg_namespace n ON n.oid = rel.relnamespace
+    WHERE n.nspname = 'public'
+      AND rel.relname = 'user_profiles'
+      AND con.conname = 'website_format'
+  ) THEN
+    EXECUTE $c$
+      ALTER TABLE user_profiles ADD CONSTRAINT website_format
+        CHECK (website IS NULL OR (website ~ '^https?://'));
+    $c$;
+  END IF;
+END $$;
 
 -- Bio length limit
-ALTER TABLE user_profiles ADD CONSTRAINT IF NOT EXISTS bio_length
-  CHECK (bio IS NULL OR (LENGTH(bio) <= 500));
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_constraint con
+    JOIN pg_class rel ON rel.oid = con.conrelid
+    JOIN pg_namespace n ON n.oid = rel.relnamespace
+    WHERE n.nspname = 'public'
+      AND rel.relname = 'user_profiles'
+      AND con.conname = 'bio_length'
+  ) THEN
+    EXECUTE $c$
+      ALTER TABLE user_profiles ADD CONSTRAINT bio_length
+        CHECK (bio IS NULL OR (LENGTH(bio) <= 500));
+    $c$;
+  END IF;
+END $$;
 
 -- Timezone validation (sample common timezones)
-ALTER TABLE user_profiles ADD CONSTRAINT IF NOT EXISTS timezone_valid
-  CHECK (timezone IN (
-    'UTC', 'America/New_York', 'America/Chicago', 'America/Denver', 'America/Los_Angeles',
-    'America/Toronto', 'Europe/London', 'Europe/Paris', 'Europe/Berlin', 'Asia/Tokyo',
-    'Asia/Shanghai', 'Asia/Singapore', 'Australia/Sydney', 'Pacific/Auckland'
-  ));
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_constraint con
+    JOIN pg_class rel ON rel.oid = con.conrelid
+    JOIN pg_namespace n ON n.oid = rel.relnamespace
+    WHERE n.nspname = 'public'
+      AND rel.relname = 'user_profiles'
+      AND con.conname = 'timezone_valid'
+  ) THEN
+    EXECUTE $c$
+      ALTER TABLE user_profiles ADD CONSTRAINT timezone_valid
+        CHECK (timezone IN (
+          'UTC', 'America/New_York', 'America/Chicago', 'America/Denver', 'America/Los_Angeles',
+          'America/Toronto', 'Europe/London', 'Europe/Paris', 'Europe/Berlin', 'Asia/Tokyo',
+          'Asia/Shanghai', 'Asia/Singapore', 'Australia/Sydney', 'Pacific/Auckland'
+        ));
+    $c$;
+  END IF;
+END $$;
 
 -- =====================================================
 -- 4. CREATE STORAGE BUCKET FOR AVATARS
@@ -146,9 +221,22 @@ CREATE POLICY "Users can update own profile"
   WITH CHECK (auth.uid() = id);
 
 -- Allow users to check if username is available (for validation)
-CREATE POLICY "Users can check username availability"
-  ON user_profiles FOR SELECT
-  USING (true); -- Public read for username uniqueness checks
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'user_profiles'
+      AND policyname = 'Users can check username availability'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can check username availability"
+        ON user_profiles FOR SELECT
+        USING (true);
+    $policy$;
+  END IF;
+END $$;
 
 -- =====================================================
 -- 7. BACKFILL USERNAMES FOR EXISTING USERS
