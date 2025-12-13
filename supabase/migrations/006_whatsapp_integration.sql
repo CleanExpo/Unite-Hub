@@ -39,7 +39,6 @@ CREATE TABLE IF NOT EXISTS whatsapp_messages (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
-
 -- Create whatsapp_templates table (pre-approved message templates)
 CREATE TABLE IF NOT EXISTS whatsapp_templates (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -69,7 +68,6 @@ CREATE TABLE IF NOT EXISTS whatsapp_templates (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
-
 -- Create whatsapp_conversations table (thread management)
 CREATE TABLE IF NOT EXISTS whatsapp_conversations (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -99,7 +97,6 @@ CREATE TABLE IF NOT EXISTS whatsapp_conversations (
   -- Unique constraint
   CONSTRAINT unique_workspace_phone UNIQUE(workspace_id, phone_number)
 );
-
 -- Create whatsapp_webhooks table (webhook logs)
 CREATE TABLE IF NOT EXISTS whatsapp_webhooks (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -118,7 +115,6 @@ CREATE TABLE IF NOT EXISTS whatsapp_webhooks (
   received_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   processed_at TIMESTAMP WITH TIME ZONE
 );
-
 -- Create indexes for fast queries
 CREATE INDEX IF NOT EXISTS idx_whatsapp_messages_workspace ON whatsapp_messages(workspace_id);
 CREATE INDEX IF NOT EXISTS idx_whatsapp_messages_contact ON whatsapp_messages(contact_id);
@@ -126,28 +122,23 @@ CREATE INDEX IF NOT EXISTS idx_whatsapp_messages_phone ON whatsapp_messages(phon
 CREATE INDEX IF NOT EXISTS idx_whatsapp_messages_direction ON whatsapp_messages(direction);
 CREATE INDEX IF NOT EXISTS idx_whatsapp_messages_created ON whatsapp_messages(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_whatsapp_messages_whatsapp_id ON whatsapp_messages(whatsapp_message_id);
-
 CREATE INDEX IF NOT EXISTS idx_whatsapp_templates_workspace ON whatsapp_templates(workspace_id);
 CREATE INDEX IF NOT EXISTS idx_whatsapp_templates_status ON whatsapp_templates(status);
 CREATE INDEX IF NOT EXISTS idx_whatsapp_templates_name ON whatsapp_templates(template_name);
-
 CREATE INDEX IF NOT EXISTS idx_whatsapp_conversations_workspace ON whatsapp_conversations(workspace_id);
 CREATE INDEX IF NOT EXISTS idx_whatsapp_conversations_contact ON whatsapp_conversations(contact_id);
 CREATE INDEX IF NOT EXISTS idx_whatsapp_conversations_phone ON whatsapp_conversations(phone_number);
 CREATE INDEX IF NOT EXISTS idx_whatsapp_conversations_status ON whatsapp_conversations(status);
 CREATE INDEX IF NOT EXISTS idx_whatsapp_conversations_assigned ON whatsapp_conversations(assigned_to);
 CREATE INDEX IF NOT EXISTS idx_whatsapp_conversations_last_message ON whatsapp_conversations(last_message_at DESC);
-
 CREATE INDEX IF NOT EXISTS idx_whatsapp_webhooks_workspace ON whatsapp_webhooks(workspace_id);
 CREATE INDEX IF NOT EXISTS idx_whatsapp_webhooks_processed ON whatsapp_webhooks(processed);
 CREATE INDEX IF NOT EXISTS idx_whatsapp_webhooks_received ON whatsapp_webhooks(received_at DESC);
-
 -- Enable Row Level Security
 ALTER TABLE whatsapp_messages ENABLE ROW LEVEL SECURITY;
 ALTER TABLE whatsapp_templates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE whatsapp_conversations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE whatsapp_webhooks ENABLE ROW LEVEL SECURITY;
-
 -- RLS Policies for whatsapp_messages
 DO $$
 BEGIN
@@ -171,7 +162,6 @@ BEGIN
     $policy$;
   END IF;
 END $$;
-
 DO $$
 BEGIN
   IF NOT EXISTS (
@@ -188,7 +178,6 @@ BEGIN
     $policy$;
   END IF;
 END $$;
-
 DO $$
 BEGIN
   IF NOT EXISTS (
@@ -205,7 +194,6 @@ BEGIN
     $policy$;
   END IF;
 END $$;
-
 -- RLS Policies for whatsapp_templates
 DO $$
 BEGIN
@@ -229,7 +217,6 @@ BEGIN
     $policy$;
   END IF;
 END $$;
-
 DO $$
 BEGIN
   IF NOT EXISTS (
@@ -246,7 +233,6 @@ BEGIN
     $policy$;
   END IF;
 END $$;
-
 -- RLS Policies for whatsapp_conversations
 DO $$
 BEGIN
@@ -270,7 +256,6 @@ BEGIN
     $policy$;
   END IF;
 END $$;
-
 DO $$
 BEGIN
   IF NOT EXISTS (
@@ -287,7 +272,6 @@ BEGIN
     $policy$;
   END IF;
 END $$;
-
 -- RLS Policies for whatsapp_webhooks
 DO $$
 BEGIN
@@ -305,7 +289,6 @@ BEGIN
     $policy$;
   END IF;
 END $$;
-
 -- Create updated_at trigger function
 CREATE OR REPLACE FUNCTION update_whatsapp_updated_at()
 RETURNS TRIGGER AS $$
@@ -314,7 +297,6 @@ BEGIN
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-
 -- Add triggers
 DO $$
 BEGIN
@@ -336,7 +318,6 @@ BEGIN
     $trg$;
   END IF;
 END $$;
-
 DO $$
 BEGIN
   IF NOT EXISTS (
@@ -357,7 +338,6 @@ BEGIN
     $trg$;
   END IF;
 END $$;
-
 DO $$
 BEGIN
   IF NOT EXISTS (
@@ -378,7 +358,6 @@ BEGIN
     $trg$;
   END IF;
 END $$;
-
 -- Add comment
 COMMENT ON TABLE whatsapp_messages IS 'WhatsApp Business messages with AI intelligence';
 COMMENT ON TABLE whatsapp_templates IS 'Pre-approved WhatsApp message templates';

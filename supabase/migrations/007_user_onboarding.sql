@@ -30,7 +30,27 @@ CREATE TABLE IF NOT EXISTS user_onboarding (
 
 -- Ensure expected columns exist when table already exists (safe re-apply on legacy schemas).
 ALTER TABLE IF EXISTS user_onboarding
+  ADD COLUMN IF NOT EXISTS step_1_complete BOOLEAN DEFAULT FALSE,
+  ADD COLUMN IF NOT EXISTS step_2_complete BOOLEAN DEFAULT FALSE,
+  ADD COLUMN IF NOT EXISTS step_3_complete BOOLEAN DEFAULT FALSE,
+  ADD COLUMN IF NOT EXISTS step_4_complete BOOLEAN DEFAULT FALSE,
+  ADD COLUMN IF NOT EXISTS step_5_complete BOOLEAN DEFAULT FALSE,
   ADD COLUMN IF NOT EXISTS completed_at TIMESTAMP WITH TIME ZONE;
+
+ALTER TABLE IF EXISTS user_onboarding
+  ADD COLUMN IF NOT EXISTS skipped BOOLEAN DEFAULT FALSE;
+
+ALTER TABLE IF EXISTS user_onboarding
+  ADD COLUMN IF NOT EXISTS current_step INTEGER DEFAULT 1;
+
+ALTER TABLE IF EXISTS user_onboarding
+  ADD COLUMN IF NOT EXISTS onboarding_data JSONB DEFAULT '{}'::jsonb;
+
+ALTER TABLE IF EXISTS user_onboarding
+  ADD COLUMN IF NOT EXISTS created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW();
+
+ALTER TABLE IF EXISTS user_onboarding
+  ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW();
 
 -- Create index for faster lookups
 CREATE INDEX IF NOT EXISTS idx_user_onboarding_user_id ON user_onboarding(user_id);
@@ -139,9 +159,80 @@ END $$;
 
 -- Comments
 COMMENT ON TABLE user_onboarding IS 'Tracks user onboarding progress and completion status';
-COMMENT ON COLUMN user_onboarding.step_1_complete IS 'Welcome & Profile Setup completed';
-COMMENT ON COLUMN user_onboarding.step_2_complete IS 'Connect First Integration completed';
-COMMENT ON COLUMN user_onboarding.step_3_complete IS 'Import Contacts completed';
-COMMENT ON COLUMN user_onboarding.step_4_complete IS 'Create First Campaign completed (optional)';
-COMMENT ON COLUMN user_onboarding.step_5_complete IS 'Dashboard Tour completed';
-COMMENT ON COLUMN user_onboarding.onboarding_data IS 'Additional data collected during onboarding (preferences, choices, etc.)';
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.columns
+    WHERE table_schema = 'public'
+      AND table_name = 'user_onboarding'
+      AND column_name = 'step_1_complete'
+  ) THEN
+    EXECUTE $c$COMMENT ON COLUMN user_onboarding.step_1_complete IS 'Welcome & Profile Setup completed'$c$;
+  END IF;
+END $$;
+
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.columns
+    WHERE table_schema = 'public'
+      AND table_name = 'user_onboarding'
+      AND column_name = 'step_2_complete'
+  ) THEN
+    EXECUTE $c$COMMENT ON COLUMN user_onboarding.step_2_complete IS 'Connect First Integration completed'$c$;
+  END IF;
+END $$;
+
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.columns
+    WHERE table_schema = 'public'
+      AND table_name = 'user_onboarding'
+      AND column_name = 'step_3_complete'
+  ) THEN
+    EXECUTE $c$COMMENT ON COLUMN user_onboarding.step_3_complete IS 'Import Contacts completed'$c$;
+  END IF;
+END $$;
+
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.columns
+    WHERE table_schema = 'public'
+      AND table_name = 'user_onboarding'
+      AND column_name = 'step_4_complete'
+  ) THEN
+    EXECUTE $c$COMMENT ON COLUMN user_onboarding.step_4_complete IS 'Create First Campaign completed (optional)'$c$;
+  END IF;
+END $$;
+
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.columns
+    WHERE table_schema = 'public'
+      AND table_name = 'user_onboarding'
+      AND column_name = 'step_5_complete'
+  ) THEN
+    EXECUTE $c$COMMENT ON COLUMN user_onboarding.step_5_complete IS 'Dashboard Tour completed'$c$;
+  END IF;
+END $$;
+
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.columns
+    WHERE table_schema = 'public'
+      AND table_name = 'user_onboarding'
+      AND column_name = 'onboarding_data'
+  ) THEN
+    EXECUTE $c$COMMENT ON COLUMN user_onboarding.onboarding_data IS 'Additional data collected during onboarding (preferences, choices, etc.)'$c$;
+  END IF;
+END $$;

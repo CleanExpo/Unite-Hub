@@ -36,17 +36,13 @@ CREATE TABLE IF NOT EXISTS email_integrations (
   -- Ensure one account per email per workspace
   UNIQUE(workspace_id, provider, email_address)
 );
-
 -- Ensure expected columns exist when table already exists (safe re-apply on legacy schemas).
 ALTER TABLE IF EXISTS public.email_integrations
   ADD COLUMN IF NOT EXISTS is_primary BOOLEAN NOT NULL DEFAULT FALSE;
-
 ALTER TABLE IF EXISTS public.email_integrations
   ADD COLUMN IF NOT EXISTS sync_enabled BOOLEAN NOT NULL DEFAULT TRUE;
-
 ALTER TABLE IF EXISTS public.email_integrations
   ADD COLUMN IF NOT EXISTS is_active BOOLEAN NOT NULL DEFAULT TRUE;
-
 -- Sent Emails table (for tracking sent emails with open/click tracking)
 CREATE TABLE IF NOT EXISTS sent_emails (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -74,7 +70,6 @@ CREATE TABLE IF NOT EXISTS sent_emails (
   sent_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
-
 -- Email Opens tracking
 CREATE TABLE IF NOT EXISTS email_opens (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -89,7 +84,6 @@ CREATE TABLE IF NOT EXISTS email_opens (
   -- Timestamp
   opened_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
-
 -- Email Clicks tracking
 CREATE TABLE IF NOT EXISTS email_clicks (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -107,7 +101,6 @@ CREATE TABLE IF NOT EXISTS email_clicks (
   -- Timestamp
   clicked_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
-
 -- Indexes for better query performance
 CREATE INDEX IF NOT EXISTS idx_email_integrations_workspace_id ON email_integrations(workspace_id);
 CREATE INDEX IF NOT EXISTS idx_email_integrations_org_id ON email_integrations(org_id);
@@ -125,7 +118,6 @@ BEGIN
     EXECUTE 'CREATE INDEX IF NOT EXISTS idx_email_integrations_is_primary ON email_integrations(is_primary)';
   END IF;
 END $$;
-
 DO $$
 BEGIN
   IF EXISTS (
@@ -138,18 +130,14 @@ BEGIN
     EXECUTE 'CREATE INDEX IF NOT EXISTS idx_email_integrations_sync_enabled ON email_integrations(sync_enabled)';
   END IF;
 END $$;
-
 CREATE INDEX IF NOT EXISTS idx_sent_emails_workspace_id ON sent_emails(workspace_id);
 CREATE INDEX IF NOT EXISTS idx_sent_emails_contact_id ON sent_emails(contact_id);
 CREATE INDEX IF NOT EXISTS idx_sent_emails_integration_id ON sent_emails(integration_id);
 CREATE INDEX IF NOT EXISTS idx_sent_emails_sent_at ON sent_emails(sent_at DESC);
-
 CREATE INDEX IF NOT EXISTS idx_email_opens_sent_email_id ON email_opens(sent_email_id);
 CREATE INDEX IF NOT EXISTS idx_email_opens_opened_at ON email_opens(opened_at DESC);
-
 CREATE INDEX IF NOT EXISTS idx_email_clicks_sent_email_id ON email_clicks(sent_email_id);
 CREATE INDEX IF NOT EXISTS idx_email_clicks_clicked_at ON email_clicks(clicked_at DESC);
-
 -- Triggers to automatically update updated_at
 DO $$
 BEGIN
@@ -169,7 +157,6 @@ BEGIN
     $trg$;
   END IF;
 END $$;
-
 -- Function to ensure only one primary account per workspace
 CREATE OR REPLACE FUNCTION ensure_single_primary_integration()
 RETURNS TRIGGER AS $$
@@ -186,7 +173,6 @@ BEGIN
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-
 -- Trigger to enforce single primary account
 DO $$
 BEGIN
@@ -208,13 +194,11 @@ BEGIN
     $trg$;
   END IF;
 END $$;
-
 -- Enable Row Level Security (RLS)
 ALTER TABLE email_integrations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE sent_emails ENABLE ROW LEVEL SECURITY;
 ALTER TABLE email_opens ENABLE ROW LEVEL SECURITY;
 ALTER TABLE email_clicks ENABLE ROW LEVEL SECURITY;
-
 -- RLS Policies
 DO $$
 BEGIN
@@ -231,7 +215,6 @@ BEGIN
     $policy$;
   END IF;
 END $$;
-
 DO $$
 BEGIN
   IF NOT EXISTS (
@@ -247,7 +230,6 @@ BEGIN
     $policy$;
   END IF;
 END $$;
-
 DO $$
 BEGIN
   IF NOT EXISTS (
@@ -263,7 +245,6 @@ BEGIN
     $policy$;
   END IF;
 END $$;
-
 DO $$
 BEGIN
   IF NOT EXISTS (
@@ -279,7 +260,6 @@ BEGIN
     $policy$;
   END IF;
 END $$;
-
 DO $$
 BEGIN
   IF NOT EXISTS (
@@ -295,7 +275,6 @@ BEGIN
     $policy$;
   END IF;
 END $$;
-
 DO $$
 BEGIN
   IF NOT EXISTS (
@@ -311,7 +290,6 @@ BEGIN
     $policy$;
   END IF;
 END $$;
-
 DO $$
 BEGIN
   IF NOT EXISTS (
@@ -327,7 +305,6 @@ BEGIN
     $policy$;
   END IF;
 END $$;
-
 DO $$
 BEGIN
   IF NOT EXISTS (

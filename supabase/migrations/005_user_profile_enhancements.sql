@@ -8,22 +8,16 @@
 
 -- Username (unique, for @mentions, URLs, etc.)
 ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS username TEXT UNIQUE;
-
 -- Business/Company name
 ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS business_name TEXT;
-
 -- Phone number
 ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS phone TEXT;
-
 -- Biography/About me
 ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS bio TEXT;
-
 -- Website URL
 ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS website TEXT;
-
 -- Timezone preference (defaults to UTC)
 ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS timezone TEXT DEFAULT 'UTC';
-
 -- Notification preferences (JSON for flexibility)
 ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS notification_preferences JSONB DEFAULT '{
   "email_notifications": true,
@@ -31,17 +25,14 @@ ALTER TABLE user_profiles ADD COLUMN IF NOT EXISTS notification_preferences JSON
   "product_updates": true,
   "weekly_digest": false
 }'::jsonb;
-
 -- =====================================================
 -- 2. CREATE INDEXES FOR PERFORMANCE
 -- =====================================================
 
 -- Index for username lookups (unique already creates index, but explicit for clarity)
 CREATE INDEX IF NOT EXISTS idx_user_profiles_username ON user_profiles(username) WHERE username IS NOT NULL;
-
 -- Index for phone lookups (if needed for search)
 CREATE INDEX IF NOT EXISTS idx_user_profiles_phone ON user_profiles(phone) WHERE phone IS NOT NULL;
-
 -- =====================================================
 -- 3. ADD CONSTRAINTS
 -- =====================================================
@@ -64,7 +55,6 @@ BEGIN
     $c$;
   END IF;
 END $$;
-
 -- Phone validation: basic format (allowing international)
 DO $$
 BEGIN
@@ -83,7 +73,6 @@ BEGIN
     $c$;
   END IF;
 END $$;
-
 -- Website validation: must be valid URL
 DO $$
 BEGIN
@@ -102,7 +91,6 @@ BEGIN
     $c$;
   END IF;
 END $$;
-
 -- Bio length limit
 DO $$
 BEGIN
@@ -121,7 +109,6 @@ BEGIN
     $c$;
   END IF;
 END $$;
-
 -- Timezone validation (sample common timezones)
 DO $$
 BEGIN
@@ -144,7 +131,6 @@ BEGIN
     $c$;
   END IF;
 END $$;
-
 -- =====================================================
 -- 4. CREATE STORAGE BUCKET FOR AVATARS
 -- =====================================================
@@ -199,7 +185,6 @@ BEGIN
   RETURN final_username;
 END;
 $$ LANGUAGE plpgsql;
-
 -- Function to validate and sanitize phone number
 CREATE OR REPLACE FUNCTION sanitize_phone(phone_input TEXT)
 RETURNS TEXT AS $$
@@ -208,7 +193,6 @@ BEGIN
   RETURN REGEXP_REPLACE(phone_input, '[^\+\d]', '', 'g');
 END;
 $$ LANGUAGE plpgsql;
-
 -- =====================================================
 -- 6. UPDATE RLS POLICIES
 -- =====================================================
@@ -219,7 +203,6 @@ CREATE POLICY "Users can update own profile"
   ON user_profiles FOR UPDATE
   USING (auth.uid() = id)
   WITH CHECK (auth.uid() = id);
-
 -- Allow users to check if username is available (for validation)
 DO $$
 BEGIN
@@ -237,7 +220,6 @@ BEGIN
     $policy$;
   END IF;
 END $$;
-
 -- =====================================================
 -- 7. BACKFILL USERNAMES FOR EXISTING USERS
 -- =====================================================
@@ -246,7 +228,6 @@ END $$;
 UPDATE user_profiles
 SET username = generate_username_from_email(email)
 WHERE username IS NULL;
-
 -- =====================================================
 -- 8. ADD COMMENTS FOR DOCUMENTATION
 -- =====================================================
@@ -258,10 +239,8 @@ COMMENT ON COLUMN user_profiles.bio IS 'User biography or about me section (max 
 COMMENT ON COLUMN user_profiles.website IS 'Personal or business website URL';
 COMMENT ON COLUMN user_profiles.timezone IS 'User timezone for scheduling and notifications';
 COMMENT ON COLUMN user_profiles.notification_preferences IS 'JSON object containing notification preferences';
-
 COMMENT ON FUNCTION generate_username_from_email IS 'Generates unique username from email address';
 COMMENT ON FUNCTION sanitize_phone IS 'Removes non-digit characters from phone number';
-
 -- =====================================================
 -- MIGRATION COMPLETE
--- =====================================================
+-- =====================================================;
