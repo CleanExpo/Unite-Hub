@@ -28,30 +28,73 @@ CREATE TABLE IF NOT EXISTS user_onboarding (
   UNIQUE(user_id)
 );
 
+-- Ensure expected columns exist when table already exists (safe re-apply on legacy schemas).
+ALTER TABLE IF EXISTS user_onboarding
+  ADD COLUMN IF NOT EXISTS completed_at TIMESTAMP WITH TIME ZONE;
+
 -- Create index for faster lookups
-CREATE INDEX idx_user_onboarding_user_id ON user_onboarding(user_id);
-CREATE INDEX idx_user_onboarding_completed ON user_onboarding(completed_at) WHERE completed_at IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_user_onboarding_user_id ON user_onboarding(user_id);
+CREATE INDEX IF NOT EXISTS idx_user_onboarding_completed ON user_onboarding(completed_at) WHERE completed_at IS NOT NULL;
 
 -- Enable Row Level Security
 ALTER TABLE user_onboarding ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies
 -- Users can only view/update their own onboarding record
-CREATE POLICY "Users can view own onboarding"
-  ON user_onboarding
-  FOR SELECT
-  USING (auth.uid() = user_id);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'user_onboarding'
+      AND policyname = 'Users can view own onboarding'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can view own onboarding"
+        ON user_onboarding
+        FOR SELECT
+        USING (auth.uid() = user_id);
+    $policy$;
+  END IF;
+END $$;
 
-CREATE POLICY "Users can insert own onboarding"
-  ON user_onboarding
-  FOR INSERT
-  WITH CHECK (auth.uid() = user_id);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'user_onboarding'
+      AND policyname = 'Users can insert own onboarding'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can insert own onboarding"
+        ON user_onboarding
+        FOR INSERT
+        WITH CHECK (auth.uid() = user_id);
+    $policy$;
+  END IF;
+END $$;
 
-CREATE POLICY "Users can update own onboarding"
-  ON user_onboarding
-  FOR UPDATE
-  USING (auth.uid() = user_id)
-  WITH CHECK (auth.uid() = user_id);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'user_onboarding'
+      AND policyname = 'Users can update own onboarding'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can update own onboarding"
+        ON user_onboarding
+        FOR UPDATE
+        USING (auth.uid() = user_id)
+        WITH CHECK (auth.uid() = user_id);
+    $policy$;
+  END IF;
+END $$;
 
 -- Trigger to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_user_onboarding_updated_at()
@@ -73,10 +116,26 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trigger_update_user_onboarding_updated_at
-  BEFORE UPDATE ON user_onboarding
-  FOR EACH ROW
-  EXECUTE FUNCTION update_user_onboarding_updated_at();
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_trigger t
+    JOIN pg_class c ON c.oid = t.tgrelid
+    JOIN pg_namespace n ON n.oid = c.relnamespace
+    WHERE t.tgname = 'trigger_update_user_onboarding_updated_at'
+      AND n.nspname = 'public'
+      AND c.relname = 'user_onboarding'
+      AND NOT t.tgisinternal
+  ) THEN
+    EXECUTE $trg$
+      CREATE TRIGGER trigger_update_user_onboarding_updated_at
+        BEFORE UPDATE ON user_onboarding
+        FOR EACH ROW
+        EXECUTE FUNCTION update_user_onboarding_updated_at();
+    $trg$;
+  END IF;
+END $$;
 
 -- Comments
 COMMENT ON TABLE user_onboarding IS 'Tracks user onboarding progress and completion status';

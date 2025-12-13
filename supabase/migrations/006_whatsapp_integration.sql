@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS whatsapp_conversations (
 
   -- Conversation state
   status TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'archived', 'blocked')),
-  assigned_to UUID REFERENCES users(id) ON DELETE SET NULL,
+  assigned_to UUID REFERENCES auth.users(id) ON DELETE SET NULL,
 
   -- Conversation metadata
   last_message_at TIMESTAMP WITH TIME ZONE,
@@ -149,58 +149,162 @@ ALTER TABLE whatsapp_conversations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE whatsapp_webhooks ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies for whatsapp_messages
-CREATE POLICY "Users can view messages in their workspace"
-  ON whatsapp_messages FOR SELECT
-  USING (
-    workspace_id IN (
-      SELECT w.id FROM workspaces w
-      INNER JOIN user_organizations uo ON uo.org_id = w.org_id
-      WHERE uo.user_id = auth.uid()
-    )
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'whatsapp_messages'
+      AND policyname = 'Users can view messages in their workspace'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can view messages in their workspace"
+        ON whatsapp_messages FOR SELECT
+        USING (
+          workspace_id IN (
+            SELECT w.id FROM workspaces w
+            INNER JOIN user_organizations uo ON uo.org_id = w.org_id
+            WHERE uo.user_id = auth.uid()
+          )
+        );
+    $policy$;
+  END IF;
+END $$;
 
-CREATE POLICY "Service role can insert messages"
-  ON whatsapp_messages FOR INSERT
-  WITH CHECK (true);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'whatsapp_messages'
+      AND policyname = 'Service role can insert messages'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Service role can insert messages"
+        ON whatsapp_messages FOR INSERT
+        WITH CHECK (true);
+    $policy$;
+  END IF;
+END $$;
 
-CREATE POLICY "Service role can update messages"
-  ON whatsapp_messages FOR UPDATE
-  USING (true);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'whatsapp_messages'
+      AND policyname = 'Service role can update messages'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Service role can update messages"
+        ON whatsapp_messages FOR UPDATE
+        USING (true);
+    $policy$;
+  END IF;
+END $$;
 
 -- RLS Policies for whatsapp_templates
-CREATE POLICY "Users can view templates in their workspace"
-  ON whatsapp_templates FOR SELECT
-  USING (
-    workspace_id IN (
-      SELECT w.id FROM workspaces w
-      INNER JOIN user_organizations uo ON uo.org_id = w.org_id
-      WHERE uo.user_id = auth.uid()
-    )
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'whatsapp_templates'
+      AND policyname = 'Users can view templates in their workspace'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can view templates in their workspace"
+        ON whatsapp_templates FOR SELECT
+        USING (
+          workspace_id IN (
+            SELECT w.id FROM workspaces w
+            INNER JOIN user_organizations uo ON uo.org_id = w.org_id
+            WHERE uo.user_id = auth.uid()
+          )
+        );
+    $policy$;
+  END IF;
+END $$;
 
-CREATE POLICY "Service role can manage templates"
-  ON whatsapp_templates FOR ALL
-  USING (true);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'whatsapp_templates'
+      AND policyname = 'Service role can manage templates'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Service role can manage templates"
+        ON whatsapp_templates FOR ALL
+        USING (true);
+    $policy$;
+  END IF;
+END $$;
 
 -- RLS Policies for whatsapp_conversations
-CREATE POLICY "Users can view conversations in their workspace"
-  ON whatsapp_conversations FOR SELECT
-  USING (
-    workspace_id IN (
-      SELECT w.id FROM workspaces w
-      INNER JOIN user_organizations uo ON uo.org_id = w.org_id
-      WHERE uo.user_id = auth.uid()
-    )
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'whatsapp_conversations'
+      AND policyname = 'Users can view conversations in their workspace'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can view conversations in their workspace"
+        ON whatsapp_conversations FOR SELECT
+        USING (
+          workspace_id IN (
+            SELECT w.id FROM workspaces w
+            INNER JOIN user_organizations uo ON uo.org_id = w.org_id
+            WHERE uo.user_id = auth.uid()
+          )
+        );
+    $policy$;
+  END IF;
+END $$;
 
-CREATE POLICY "Service role can manage conversations"
-  ON whatsapp_conversations FOR ALL
-  USING (true);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'whatsapp_conversations'
+      AND policyname = 'Service role can manage conversations'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Service role can manage conversations"
+        ON whatsapp_conversations FOR ALL
+        USING (true);
+    $policy$;
+  END IF;
+END $$;
 
 -- RLS Policies for whatsapp_webhooks
-CREATE POLICY "Service role can manage webhooks"
-  ON whatsapp_webhooks FOR ALL
-  USING (true);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'whatsapp_webhooks'
+      AND policyname = 'Service role can manage webhooks'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Service role can manage webhooks"
+        ON whatsapp_webhooks FOR ALL
+        USING (true);
+    $policy$;
+  END IF;
+END $$;
 
 -- Create updated_at trigger function
 CREATE OR REPLACE FUNCTION update_whatsapp_updated_at()
@@ -212,20 +316,68 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Add triggers
-CREATE TRIGGER update_whatsapp_messages_updated_at
-  BEFORE UPDATE ON whatsapp_messages
-  FOR EACH ROW
-  EXECUTE FUNCTION update_whatsapp_updated_at();
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_trigger t
+    JOIN pg_class c ON c.oid = t.tgrelid
+    JOIN pg_namespace n ON n.oid = c.relnamespace
+    WHERE t.tgname = 'update_whatsapp_messages_updated_at'
+      AND n.nspname = 'public'
+      AND c.relname = 'whatsapp_messages'
+      AND NOT t.tgisinternal
+  ) THEN
+    EXECUTE $trg$
+      CREATE TRIGGER update_whatsapp_messages_updated_at
+        BEFORE UPDATE ON whatsapp_messages
+        FOR EACH ROW
+        EXECUTE FUNCTION update_whatsapp_updated_at();
+    $trg$;
+  END IF;
+END $$;
 
-CREATE TRIGGER update_whatsapp_templates_updated_at
-  BEFORE UPDATE ON whatsapp_templates
-  FOR EACH ROW
-  EXECUTE FUNCTION update_whatsapp_updated_at();
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_trigger t
+    JOIN pg_class c ON c.oid = t.tgrelid
+    JOIN pg_namespace n ON n.oid = c.relnamespace
+    WHERE t.tgname = 'update_whatsapp_templates_updated_at'
+      AND n.nspname = 'public'
+      AND c.relname = 'whatsapp_templates'
+      AND NOT t.tgisinternal
+  ) THEN
+    EXECUTE $trg$
+      CREATE TRIGGER update_whatsapp_templates_updated_at
+        BEFORE UPDATE ON whatsapp_templates
+        FOR EACH ROW
+        EXECUTE FUNCTION update_whatsapp_updated_at();
+    $trg$;
+  END IF;
+END $$;
 
-CREATE TRIGGER update_whatsapp_conversations_updated_at
-  BEFORE UPDATE ON whatsapp_conversations
-  FOR EACH ROW
-  EXECUTE FUNCTION update_whatsapp_updated_at();
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_trigger t
+    JOIN pg_class c ON c.oid = t.tgrelid
+    JOIN pg_namespace n ON n.oid = c.relnamespace
+    WHERE t.tgname = 'update_whatsapp_conversations_updated_at'
+      AND n.nspname = 'public'
+      AND c.relname = 'whatsapp_conversations'
+      AND NOT t.tgisinternal
+  ) THEN
+    EXECUTE $trg$
+      CREATE TRIGGER update_whatsapp_conversations_updated_at
+        BEFORE UPDATE ON whatsapp_conversations
+        FOR EACH ROW
+        EXECUTE FUNCTION update_whatsapp_updated_at();
+    $trg$;
+  END IF;
+END $$;
 
 -- Add comment
 COMMENT ON TABLE whatsapp_messages IS 'WhatsApp Business messages with AI intelligence';

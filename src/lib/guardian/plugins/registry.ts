@@ -10,6 +10,7 @@ import type { GuardianPluginManifest, GuardianTier } from './pluginManifest';
 import { manifest as industryRestorationPackManifest } from './industry-restoration-pack/manifest';
 import { manifest as industryInsurancePackManifest } from './industry-insurance-pack/manifest';
 import { manifest as industryHealthcareAgedcarePackManifest } from './industry-healthcare-agedcare/manifest';
+import { manifest as industryGovernmentRegulatoryPackManifest } from './industry-government-regulatory/manifest';
 
 /**
  * All registered plugins (static, build-time)
@@ -17,7 +18,8 @@ import { manifest as industryHealthcareAgedcarePackManifest } from './industry-h
 const REGISTERED_PLUGINS: GuardianPluginManifest[] = [
   industryRestorationPackManifest,
   industryInsurancePackManifest,
-  industryHealthcareAgedcarePackManifest
+  industryHealthcareAgedcarePackManifest,
+  industryGovernmentRegulatoryPackManifest
   // Future plugins added here
 ];
 
