@@ -1,0 +1,39 @@
+{
+  "routes": {
+    "email_intelligence": {
+      "primary": "anthropic:claude-sonnet-4-5-20250929",
+      "fallback": "openrouter:anthropic/claude-sonnet",
+      "cost_limit_per_request": 0.05,
+      "timeout_ms": 60000
+    },
+    "video_generation": {
+      "primary": "google:veo-3",
+      "fallback": "google:gemini-video-pro",
+      "cost_limit_per_request": 0.30,
+      "timeout_ms": 600000
+    },
+    "extended_thinking": {
+      "primary": "anthropic:claude-opus-4-5-20251101",
+      "thinking_budget_tokens": 10000,
+      "cost_limit_per_request": 0.50,
+      "timeout_ms": 180000
+    },
+    "seo_analysis": {
+      "primary": "google:gemini-3-pro",
+      "fallback": "perplexity:sonar-pro",
+      "cost_limit_per_request": 0.02,
+      "timeout_ms": 30000
+    },
+    "social_copy_generation": {
+      "primary": "openrouter:meta-llama/llama-3.3-70b-instruct",
+      "fallback": "anthropic:claude-haiku-4-5-20251001",
+      "cost_limit_per_request": 0.01,
+      "timeout_ms": 15000
+    }
+  },
+  "metadata": {
+    "last_updated": "2025-12-14T00:00:00Z",
+    "version": "1.0.0",
+    "description": "Hot-swappable AI model routing configuration. Update this file to switch models without redeploying."
+  }
+}
