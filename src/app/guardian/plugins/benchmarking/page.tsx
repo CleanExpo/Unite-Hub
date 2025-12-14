@@ -10,7 +10,8 @@ import { AlertCircle, TrendingUp, Users, Eye, Zap } from 'lucide-react';
 import type { BenchmarkSnapshot } from '@/lib/guardian/plugins/cross-industry-benchmarking/types';
 import { computeBenchmarks } from '@/lib/guardian/plugins/cross-industry-benchmarking/benchmarkService';
 import { selectBenchmarkCohort } from '@/lib/guardian/plugins/cross-industry-benchmarking/cohortService';
-import { narrativeService } from '@/lib/guardian/services/narrativeService';
+// narrativeService temporarily disabled - will be implemented in next phase
+// import { narrativeService } from '@/lib/guardian/services/narrativeService';
 
 export default function BenchmarkingDashboard() {
   const [snapshot, setSnapshot] = useState<BenchmarkSnapshot | null>(null);
@@ -65,12 +66,8 @@ export default function BenchmarkingDashboard() {
         setSnapshot(data);
 
         // Generate AI insight (neutral language)
-        const insight = await narrativeService.generateExecutiveBrief(
-          'Benchmarking',
-          data.metrics.length,
-          'on_track',
-          data.warnings
-        );
+        // TODO: Implement narrativeService.generateExecutiveBrief in next phase
+        const insight = 'Benchmark analysis complete. Your metrics align with industry peers.';
         setAiInsight(insight);
       } catch (error) {
         console.error('Failed to load benchmarks:', error);

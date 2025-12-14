@@ -9,7 +9,7 @@ import React, { useState, useEffect } from 'react';
 import { AlertCircle, TrendingUp, Users, Zap, Shield, Clock } from 'lucide-react';
 import type { CampusOversightSnapshot } from '@/lib/guardian/plugins/industry-education-campus/types';
 import { deriveCampusSignals } from '@/lib/guardian/plugins/industry-education-campus/signalService';
-import { narrativeService } from '@/lib/guardian/services/narrativeService';
+import { generateNarrative, formatNarrativeForUI } from '@/lib/guardian/plugins/narrativeService';
 
 export default function CampusOperationsDashboard() {
   const [snapshot, setSnapshot] = useState<CampusOversightSnapshot | null>(null);
@@ -44,13 +44,12 @@ export default function CampusOperationsDashboard() {
         setSnapshot(data);
 
         // Generate narrative summary
-        const summary = await narrativeService.generateExecutiveBrief(
-          'Campus Operations',
-          data.signals.length,
-          data.overview.responseStatus,
-          data.warnings
-        );
-        setNarrative(summary);
+        const narrativeData = await generateNarrative('Campus Operations', {
+          signalCount: data.signals.length,
+          status: data.overview.responseStatus,
+          warnings: data.warnings
+        });
+        setNarrative(formatNarrativeForUI(narrativeData));
       } catch (error) {
         console.error('Failed to load campus operations data:', error);
       } finally {

@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { useWorkspace } from "@/lib/hooks/useWorkspace";
+import { useWorkspace } from "@/hooks/useWorkspace";
 
 interface TriageItem {
   incidentId: string;
