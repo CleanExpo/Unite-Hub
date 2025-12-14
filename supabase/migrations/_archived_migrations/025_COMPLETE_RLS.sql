@@ -98,19 +98,19 @@ ALTER TABLE contacts ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "contacts_workspace_select"
   ON contacts FOR SELECT
-  USING (workspace_id IN (SELECT get_user_workspaces()));
+  USING (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "contacts_workspace_insert"
   ON contacts FOR INSERT
-  WITH CHECK (workspace_id IN (SELECT get_user_workspaces()));
+  WITH CHECK (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "contacts_workspace_update"
   ON contacts FOR UPDATE
-  USING (workspace_id IN (SELECT get_user_workspaces()));
+  USING (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "contacts_workspace_delete"
   ON contacts FOR DELETE
-  USING (workspace_id IN (SELECT get_user_workspaces()));
+  USING (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 -- =====================================================
 -- EMAILS
@@ -124,19 +124,19 @@ ALTER TABLE emails ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "emails_workspace_select"
   ON emails FOR SELECT
-  USING (workspace_id IN (SELECT get_user_workspaces()));
+  USING (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "emails_workspace_insert"
   ON emails FOR INSERT
-  WITH CHECK (workspace_id IN (SELECT get_user_workspaces()));
+  WITH CHECK (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "emails_workspace_update"
   ON emails FOR UPDATE
-  USING (workspace_id IN (SELECT get_user_workspaces()));
+  USING (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "emails_workspace_delete"
   ON emails FOR DELETE
-  USING (workspace_id IN (SELECT get_user_workspaces()));
+  USING (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 -- =====================================================
 -- CAMPAIGNS
@@ -150,19 +150,19 @@ ALTER TABLE campaigns ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "campaigns_workspace_select"
   ON campaigns FOR SELECT
-  USING (workspace_id IN (SELECT get_user_workspaces()));
+  USING (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "campaigns_workspace_insert"
   ON campaigns FOR INSERT
-  WITH CHECK (workspace_id IN (SELECT get_user_workspaces()));
+  WITH CHECK (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "campaigns_workspace_update"
   ON campaigns FOR UPDATE
-  USING (workspace_id IN (SELECT get_user_workspaces()));
+  USING (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "campaigns_workspace_delete"
   ON campaigns FOR DELETE
-  USING (workspace_id IN (SELECT get_user_workspaces()));
+  USING (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 -- =====================================================
 -- DRIP_CAMPAIGNS
@@ -176,19 +176,19 @@ ALTER TABLE drip_campaigns ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "drip_campaigns_workspace_select"
   ON drip_campaigns FOR SELECT
-  USING (workspace_id IN (SELECT get_user_workspaces()));
+  USING (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "drip_campaigns_workspace_insert"
   ON drip_campaigns FOR INSERT
-  WITH CHECK (workspace_id IN (SELECT get_user_workspaces()));
+  WITH CHECK (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "drip_campaigns_workspace_update"
   ON drip_campaigns FOR UPDATE
-  USING (workspace_id IN (SELECT get_user_workspaces()));
+  USING (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "drip_campaigns_workspace_delete"
   ON drip_campaigns FOR DELETE
-  USING (workspace_id IN (SELECT get_user_workspaces()));
+  USING (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 -- =====================================================
 -- SUBSCRIPTIONS

@@ -39,7 +39,11 @@
       "Bash(timeout 180 npm run test:*)",
       "Bash(timeout 120 npm run test:*)",
       "Bash(wc:*)",
-      "Bash(timeout 240 npm run test -- tests/guardian/)"
+      "Bash(timeout 240 npm run test -- tests/guardian/)",
+      "Bash(supabase:*)",
+      "Bash(tee:*)",
+      "Bash(for:*)",
+      "Bash(git checkout:*)"
     ],
     "deny": [],
     "ask": []

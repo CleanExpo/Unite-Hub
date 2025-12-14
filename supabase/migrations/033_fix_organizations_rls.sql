@@ -13,40 +13,113 @@ DROP POLICY IF EXISTS "Organization members can view organizations" ON organizat
 -- Create permissive policies for organization management
 
 -- SELECT: Users can view organizations they're members of
-CREATE POLICY "Users can view their organizations"
-  ON organizations
-  FOR SELECT
-  USING (
-    -- User is the owner
-    created_by = auth.uid()
-    OR
-    -- User is a member of this organization
-    id IN (
-      SELECT org_id
-      FROM user_organizations
-      WHERE user_id = auth.uid()
-    )
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'organizations'
+      AND policyname = 'Users can view their organizations'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can view their organizations"
+        ON public.organizations
+        FOR SELECT
+        USING (
+          id IN (
+            SELECT org_id
+            FROM public.user_organizations
+            WHERE user_id = auth.uid()
+              AND is_active = true
+          )
+        )
+    $policy$;
+  END IF;
+END $$;
 
 -- INSERT: Authenticated users can create organizations
 -- (Critical for first-time user initialization)
-CREATE POLICY "Users can create organizations"
-  ON organizations
-  FOR INSERT
-  WITH CHECK (auth.uid() = created_by);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'organizations'
+      AND policyname = 'Users can create organizations'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can create organizations"
+        ON public.organizations
+        FOR INSERT
+        WITH CHECK (auth.uid() IS NOT NULL)
+    $policy$;
+  END IF;
+END $$;
 
 -- UPDATE: Organization owners can update their organizations
-CREATE POLICY "Organization owners can update"
-  ON organizations
-  FOR UPDATE
-  USING (created_by = auth.uid())
-  WITH CHECK (created_by = auth.uid());
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'organizations'
+      AND policyname = 'Organization owners can update'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Organization owners can update"
+        ON public.organizations
+        FOR UPDATE
+        USING (
+          id IN (
+            SELECT org_id
+            FROM public.user_organizations
+            WHERE user_id = auth.uid()
+              AND role = 'owner'
+              AND is_active = true
+          )
+        )
+        WITH CHECK (
+          id IN (
+            SELECT org_id
+            FROM public.user_organizations
+            WHERE user_id = auth.uid()
+              AND role = 'owner'
+              AND is_active = true
+          )
+        )
+    $policy$;
+  END IF;
+END $$;
 
 -- DELETE: Organization owners can delete their organizations
-CREATE POLICY "Organization owners can delete"
-  ON organizations
-  FOR DELETE
-  USING (created_by = auth.uid());
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'organizations'
+      AND policyname = 'Organization owners can delete'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Organization owners can delete"
+        ON public.organizations
+        FOR DELETE
+        USING (
+          id IN (
+            SELECT org_id
+            FROM public.user_organizations
+            WHERE user_id = auth.uid()
+              AND role = 'owner'
+              AND is_active = true
+          )
+        )
+    $policy$;
+  END IF;
+END $$;
 
 -- Ensure RLS is enabled
 ALTER TABLE organizations ENABLE ROW LEVEL SECURITY;

@@ -122,10 +122,10 @@ END $$;
 
 -- Function: Get all workspace IDs user has access to
 CREATE OR REPLACE FUNCTION get_user_workspaces()
-RETURNS SETOF UUID AS $$
+RETURNS SETOF TEXT AS $$
 BEGIN
   RETURN QUERY
-  SELECT DISTINCT w.id
+  SELECT DISTINCT w.id::text
   FROM workspaces w
   INNER JOIN user_organizations uo ON uo.org_id = w.org_id
   WHERE uo.user_id = auth.uid()
@@ -342,15 +342,15 @@ CREATE POLICY "Org owners can delete workspaces"
 -- CONTACTS TABLE
 CREATE POLICY "Users can view contacts in their workspaces"
   ON contacts FOR SELECT
-  USING (workspace_id IN (SELECT get_user_workspaces()));
+  USING (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "Members can create contacts in their workspaces"
   ON contacts FOR INSERT
-  WITH CHECK (workspace_id IN (SELECT get_user_workspaces()));
+  WITH CHECK (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "Members can update contacts in their workspaces"
   ON contacts FOR UPDATE
-  USING (workspace_id IN (SELECT get_user_workspaces()));
+  USING (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "Admins can delete contacts in their workspaces"
   ON contacts FOR DELETE
@@ -367,11 +367,11 @@ CREATE POLICY "Admins can delete contacts in their workspaces"
 -- EMAILS TABLE
 CREATE POLICY "Users can view emails in their workspaces"
   ON emails FOR SELECT
-  USING (workspace_id IN (SELECT get_user_workspaces()));
+  USING (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "Members can create emails in their workspaces"
   ON emails FOR INSERT
-  WITH CHECK (workspace_id IN (SELECT get_user_workspaces()));
+  WITH CHECK (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "Service role can update emails"
   ON emails FOR UPDATE
@@ -391,15 +391,15 @@ CREATE POLICY "Admins can delete emails"
 -- GENERATED_CONTENT TABLE
 CREATE POLICY "Users can view content in their workspaces"
   ON generated_content FOR SELECT
-  USING (workspace_id IN (SELECT get_user_workspaces()));
+  USING (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "Members can create content"
   ON generated_content FOR INSERT
-  WITH CHECK (workspace_id IN (SELECT get_user_workspaces()));
+  WITH CHECK (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "Members can update their content"
   ON generated_content FOR UPDATE
-  USING (workspace_id IN (SELECT get_user_workspaces()));
+  USING (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "Admins can delete content"
   ON generated_content FOR DELETE
@@ -415,15 +415,15 @@ CREATE POLICY "Admins can delete content"
 -- CAMPAIGNS TABLE
 CREATE POLICY "Users can view campaigns in their workspaces"
   ON campaigns FOR SELECT
-  USING (workspace_id IN (SELECT get_user_workspaces()));
+  USING (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "Members can create campaigns"
   ON campaigns FOR INSERT
-  WITH CHECK (workspace_id IN (SELECT get_user_workspaces()));
+  WITH CHECK (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "Members can update campaigns"
   ON campaigns FOR UPDATE
-  USING (workspace_id IN (SELECT get_user_workspaces()));
+  USING (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "Admins can delete campaigns"
   ON campaigns FOR DELETE
@@ -439,15 +439,15 @@ CREATE POLICY "Admins can delete campaigns"
 -- DRIP_CAMPAIGNS TABLE
 CREATE POLICY "Users can view drip campaigns in their workspaces"
   ON drip_campaigns FOR SELECT
-  USING (workspace_id IN (SELECT get_user_workspaces()));
+  USING (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "Members can create drip campaigns"
   ON drip_campaigns FOR INSERT
-  WITH CHECK (workspace_id IN (SELECT get_user_workspaces()));
+  WITH CHECK (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "Members can update drip campaigns"
   ON drip_campaigns FOR UPDATE
-  USING (workspace_id IN (SELECT get_user_workspaces()));
+  USING (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "Admins can delete drip campaigns"
   ON drip_campaigns FOR DELETE
@@ -463,15 +463,15 @@ CREATE POLICY "Admins can delete drip campaigns"
 -- INTERACTIONS TABLE
 CREATE POLICY "Users can view interactions in their workspaces"
   ON interactions FOR SELECT
-  USING (workspace_id IN (SELECT get_user_workspaces()));
+  USING (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "Members can create interactions in their workspaces"
   ON interactions FOR INSERT
-  WITH CHECK (workspace_id IN (SELECT get_user_workspaces()));
+  WITH CHECK (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "Members can update interactions in their workspaces"
   ON interactions FOR UPDATE
-  USING (workspace_id IN (SELECT get_user_workspaces()));
+  USING (workspace_id IN (SELECT get_user_workspaces()::uuid));
 
 CREATE POLICY "Admins can delete interactions in their workspaces"
   ON interactions FOR DELETE

@@ -22,7 +22,6 @@ CREATE TABLE IF NOT EXISTS drip_campaigns (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
-
 -- Campaign Steps table (formerly emailSequenceSteps)
 CREATE TABLE IF NOT EXISTS campaign_steps (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -45,7 +44,6 @@ CREATE TABLE IF NOT EXISTS campaign_steps (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   UNIQUE (campaign_id, step_number)
 );
-
 -- Campaign Enrollments table (formerly emailSequenceContacts)
 CREATE TABLE IF NOT EXISTS campaign_enrollments (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -65,7 +63,6 @@ CREATE TABLE IF NOT EXISTS campaign_enrollments (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   UNIQUE (campaign_id, contact_id)
 );
-
 -- Campaign Execution Logs table
 CREATE TABLE IF NOT EXISTS campaign_execution_logs (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -79,62 +76,198 @@ CREATE TABLE IF NOT EXISTS campaign_execution_logs (
   metadata JSONB DEFAULT '{}',
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
-
 -- Indexes for better query performance
 CREATE INDEX IF NOT EXISTS idx_drip_campaigns_workspace_id ON drip_campaigns(workspace_id);
 CREATE INDEX IF NOT EXISTS idx_drip_campaigns_status ON drip_campaigns(status);
 CREATE INDEX IF NOT EXISTS idx_drip_campaigns_is_template ON drip_campaigns(is_template);
-
 CREATE INDEX IF NOT EXISTS idx_campaign_steps_campaign_id ON campaign_steps(campaign_id);
 CREATE INDEX IF NOT EXISTS idx_campaign_steps_step_number ON campaign_steps(step_number);
-
 CREATE INDEX IF NOT EXISTS idx_campaign_enrollments_campaign_id ON campaign_enrollments(campaign_id);
 CREATE INDEX IF NOT EXISTS idx_campaign_enrollments_contact_id ON campaign_enrollments(contact_id);
 CREATE INDEX IF NOT EXISTS idx_campaign_enrollments_status ON campaign_enrollments(status);
 CREATE INDEX IF NOT EXISTS idx_campaign_enrollments_next_scheduled ON campaign_enrollments(next_email_scheduled_at);
-
 CREATE INDEX IF NOT EXISTS idx_campaign_execution_logs_campaign_id ON campaign_execution_logs(campaign_id);
 CREATE INDEX IF NOT EXISTS idx_campaign_execution_logs_enrollment_id ON campaign_execution_logs(enrollment_id);
 CREATE INDEX IF NOT EXISTS idx_campaign_execution_logs_contact_id ON campaign_execution_logs(contact_id);
 CREATE INDEX IF NOT EXISTS idx_campaign_execution_logs_created_at ON campaign_execution_logs(created_at DESC);
-
 -- Triggers to automatically update updated_at
-CREATE TRIGGER update_drip_campaigns_updated_at BEFORE UPDATE ON drip_campaigns
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-
-CREATE TRIGGER update_campaign_steps_updated_at BEFORE UPDATE ON campaign_steps
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-
-CREATE TRIGGER update_campaign_enrollments_updated_at BEFORE UPDATE ON campaign_enrollments
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_trigger t
+    JOIN pg_class c ON c.oid = t.tgrelid
+    JOIN pg_namespace n ON n.oid = c.relnamespace
+    WHERE t.tgname = 'update_drip_campaigns_updated_at'
+      AND n.nspname = 'public'
+      AND c.relname = 'drip_campaigns'
+      AND NOT t.tgisinternal
+  ) THEN
+    EXECUTE $trg$
+      CREATE TRIGGER update_drip_campaigns_updated_at BEFORE UPDATE ON drip_campaigns
+        FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+    $trg$;
+  END IF;
+END $$;
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_trigger t
+    JOIN pg_class c ON c.oid = t.tgrelid
+    JOIN pg_namespace n ON n.oid = c.relnamespace
+    WHERE t.tgname = 'update_campaign_steps_updated_at'
+      AND n.nspname = 'public'
+      AND c.relname = 'campaign_steps'
+      AND NOT t.tgisinternal
+  ) THEN
+    EXECUTE $trg$
+      CREATE TRIGGER update_campaign_steps_updated_at BEFORE UPDATE ON campaign_steps
+        FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+    $trg$;
+  END IF;
+END $$;
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_trigger t
+    JOIN pg_class c ON c.oid = t.tgrelid
+    JOIN pg_namespace n ON n.oid = c.relnamespace
+    WHERE t.tgname = 'update_campaign_enrollments_updated_at'
+      AND n.nspname = 'public'
+      AND c.relname = 'campaign_enrollments'
+      AND NOT t.tgisinternal
+  ) THEN
+    EXECUTE $trg$
+      CREATE TRIGGER update_campaign_enrollments_updated_at BEFORE UPDATE ON campaign_enrollments
+        FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+    $trg$;
+  END IF;
+END $$;
 -- Enable Row Level Security
 ALTER TABLE drip_campaigns ENABLE ROW LEVEL SECURITY;
 ALTER TABLE campaign_steps ENABLE ROW LEVEL SECURITY;
 ALTER TABLE campaign_enrollments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE campaign_execution_logs ENABLE ROW LEVEL SECURITY;
-
 -- RLS Policies
-CREATE POLICY "Users can view drip campaigns" ON drip_campaigns
-  FOR SELECT USING (true);
-
-CREATE POLICY "Service role can manage drip campaigns" ON drip_campaigns
-  FOR ALL USING (true);
-
-CREATE POLICY "Users can view campaign steps" ON campaign_steps
-  FOR SELECT USING (true);
-
-CREATE POLICY "Service role can manage campaign steps" ON campaign_steps
-  FOR ALL USING (true);
-
-CREATE POLICY "Users can view campaign enrollments" ON campaign_enrollments
-  FOR SELECT USING (true);
-
-CREATE POLICY "Service role can manage campaign enrollments" ON campaign_enrollments
-  FOR ALL USING (true);
-
-CREATE POLICY "Users can view campaign execution logs" ON campaign_execution_logs
-  FOR SELECT USING (true);
-
-CREATE POLICY "Service role can manage campaign execution logs" ON campaign_execution_logs
-  FOR ALL USING (true);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'drip_campaigns'
+      AND policyname = 'Users can view drip campaigns'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can view drip campaigns" ON drip_campaigns
+        FOR SELECT USING (true);
+    $policy$;
+  END IF;
+END $$;
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'drip_campaigns'
+      AND policyname = 'Service role can manage drip campaigns'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Service role can manage drip campaigns" ON drip_campaigns
+        FOR ALL USING (true);
+    $policy$;
+  END IF;
+END $$;
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'campaign_steps'
+      AND policyname = 'Users can view campaign steps'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can view campaign steps" ON campaign_steps
+        FOR SELECT USING (true);
+    $policy$;
+  END IF;
+END $$;
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'campaign_steps'
+      AND policyname = 'Service role can manage campaign steps'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Service role can manage campaign steps" ON campaign_steps
+        FOR ALL USING (true);
+    $policy$;
+  END IF;
+END $$;
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'campaign_enrollments'
+      AND policyname = 'Users can view campaign enrollments'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can view campaign enrollments" ON campaign_enrollments
+        FOR SELECT USING (true);
+    $policy$;
+  END IF;
+END $$;
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'campaign_enrollments'
+      AND policyname = 'Service role can manage campaign enrollments'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Service role can manage campaign enrollments" ON campaign_enrollments
+        FOR ALL USING (true);
+    $policy$;
+  END IF;
+END $$;
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'campaign_execution_logs'
+      AND policyname = 'Users can view campaign execution logs'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can view campaign execution logs" ON campaign_execution_logs
+        FOR SELECT USING (true);
+    $policy$;
+  END IF;
+END $$;
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'campaign_execution_logs'
+      AND policyname = 'Service role can manage campaign execution logs'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Service role can manage campaign execution logs" ON campaign_execution_logs
+        FOR ALL USING (true);
+    $policy$;
+  END IF;
+END $$;

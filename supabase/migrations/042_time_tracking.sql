@@ -19,8 +19,8 @@ CREATE TABLE IF NOT EXISTS time_sessions (
   organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
 
   -- What are they working on
-  project_id TEXT REFERENCES projects(id) ON DELETE SET NULL,
-  task_id TEXT REFERENCES project_tasks(id) ON DELETE SET NULL,
+  project_id TEXT,
+  task_id TEXT,
 
   -- Session details
   description TEXT,
@@ -42,6 +42,57 @@ CREATE TABLE IF NOT EXISTS time_sessions (
   CHECK (duration_seconds IS NULL OR duration_seconds > 0)
 );
 
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.columns p
+    JOIN information_schema.columns s
+      ON s.table_schema = p.table_schema
+     AND s.table_name = 'time_sessions'
+     AND s.column_name = 'project_id'
+    WHERE p.table_schema = 'public'
+      AND p.table_name = 'projects'
+      AND p.column_name = 'id'
+      AND p.udt_name = s.udt_name
+  ) AND NOT EXISTS (
+    SELECT 1
+    FROM pg_constraint c
+    JOIN pg_class r ON r.oid = c.conrelid
+    JOIN pg_namespace n ON n.oid = r.relnamespace
+    WHERE c.contype = 'f'
+      AND n.nspname = 'public'
+      AND r.relname = 'time_sessions'
+      AND c.conname = 'time_sessions_project_id_fkey'
+  ) THEN
+    EXECUTE 'ALTER TABLE public.time_sessions ADD CONSTRAINT time_sessions_project_id_fkey FOREIGN KEY (project_id) REFERENCES public.projects(id) ON DELETE SET NULL';
+  END IF;
+
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.columns t
+    JOIN information_schema.columns s
+      ON s.table_schema = t.table_schema
+     AND s.table_name = 'time_sessions'
+     AND s.column_name = 'task_id'
+    WHERE t.table_schema = 'public'
+      AND t.table_name = 'project_tasks'
+      AND t.column_name = 'id'
+      AND t.udt_name = s.udt_name
+  ) AND NOT EXISTS (
+    SELECT 1
+    FROM pg_constraint c
+    JOIN pg_class r ON r.oid = c.conrelid
+    JOIN pg_namespace n ON n.oid = r.relnamespace
+    WHERE c.contype = 'f'
+      AND n.nspname = 'public'
+      AND r.relname = 'time_sessions'
+      AND c.conname = 'time_sessions_task_id_fkey'
+  ) THEN
+    EXECUTE 'ALTER TABLE public.time_sessions ADD CONSTRAINT time_sessions_task_id_fkey FOREIGN KEY (task_id) REFERENCES public.project_tasks(id) ON DELETE SET NULL';
+  END IF;
+END $$;
+
 -- Indexes for time_sessions
 CREATE INDEX IF NOT EXISTS idx_time_sessions_staff_id ON time_sessions(staff_id);
 CREATE INDEX IF NOT EXISTS idx_time_sessions_organization_id ON time_sessions(organization_id);
@@ -61,8 +112,8 @@ CREATE TABLE IF NOT EXISTS time_entries (
   organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
 
   -- What they worked on
-  project_id TEXT REFERENCES projects(id) ON DELETE SET NULL,
-  task_id TEXT REFERENCES project_tasks(id) ON DELETE SET NULL,
+  project_id TEXT,
+  task_id TEXT,
 
   -- Time details
   description TEXT NOT NULL,
@@ -96,6 +147,57 @@ CREATE TABLE IF NOT EXISTS time_entries (
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.columns p
+    JOIN information_schema.columns e
+      ON e.table_schema = p.table_schema
+     AND e.table_name = 'time_entries'
+     AND e.column_name = 'project_id'
+    WHERE p.table_schema = 'public'
+      AND p.table_name = 'projects'
+      AND p.column_name = 'id'
+      AND p.udt_name = e.udt_name
+  ) AND NOT EXISTS (
+    SELECT 1
+    FROM pg_constraint c
+    JOIN pg_class r ON r.oid = c.conrelid
+    JOIN pg_namespace n ON n.oid = r.relnamespace
+    WHERE c.contype = 'f'
+      AND n.nspname = 'public'
+      AND r.relname = 'time_entries'
+      AND c.conname = 'time_entries_project_id_fkey'
+  ) THEN
+    EXECUTE 'ALTER TABLE public.time_entries ADD CONSTRAINT time_entries_project_id_fkey FOREIGN KEY (project_id) REFERENCES public.projects(id) ON DELETE SET NULL';
+  END IF;
+
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.columns t
+    JOIN information_schema.columns e
+      ON e.table_schema = t.table_schema
+     AND e.table_name = 'time_entries'
+     AND e.column_name = 'task_id'
+    WHERE t.table_schema = 'public'
+      AND t.table_name = 'project_tasks'
+      AND t.column_name = 'id'
+      AND t.udt_name = e.udt_name
+  ) AND NOT EXISTS (
+    SELECT 1
+    FROM pg_constraint c
+    JOIN pg_class r ON r.oid = c.conrelid
+    JOIN pg_namespace n ON n.oid = r.relnamespace
+    WHERE c.contype = 'f'
+      AND n.nspname = 'public'
+      AND r.relname = 'time_entries'
+      AND c.conname = 'time_entries_task_id_fkey'
+  ) THEN
+    EXECUTE 'ALTER TABLE public.time_entries ADD CONSTRAINT time_entries_task_id_fkey FOREIGN KEY (task_id) REFERENCES public.project_tasks(id) ON DELETE SET NULL';
+  END IF;
+END $$;
 
 -- Indexes for time_entries
 CREATE INDEX IF NOT EXISTS idx_time_entries_staff_id ON time_entries(staff_id);
@@ -150,7 +252,7 @@ CREATE POLICY "Users can view sessions in their organization"
   ON time_sessions FOR SELECT
   USING (
     organization_id IN (
-      SELECT organization_id FROM user_organizations
+      SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
     )
   );
@@ -160,7 +262,7 @@ CREATE POLICY "Staff can insert own sessions"
   WITH CHECK (
     staff_id = auth.uid()
     AND organization_id IN (
-      SELECT organization_id FROM user_organizations
+      SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
     )
   );
@@ -170,7 +272,7 @@ CREATE POLICY "Staff can update own sessions"
   USING (
     staff_id = auth.uid()
     AND organization_id IN (
-      SELECT organization_id FROM user_organizations
+      SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
     )
   );
@@ -180,7 +282,7 @@ CREATE POLICY "Users can view entries in their organization"
   ON time_entries FOR SELECT
   USING (
     organization_id IN (
-      SELECT organization_id FROM user_organizations
+      SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
     )
   );
@@ -190,7 +292,7 @@ CREATE POLICY "Staff can insert own entries"
   WITH CHECK (
     staff_id = auth.uid()
     AND organization_id IN (
-      SELECT organization_id FROM user_organizations
+      SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
     )
   );
@@ -201,7 +303,7 @@ CREATE POLICY "Staff can update own pending entries"
     staff_id = auth.uid()
     AND status = 'pending'
     AND organization_id IN (
-      SELECT organization_id FROM user_organizations
+      SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
     )
   );
@@ -210,7 +312,7 @@ CREATE POLICY "Admins can update all entries"
   ON time_entries FOR UPDATE
   USING (
     organization_id IN (
-      SELECT organization_id FROM user_organizations
+      SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
       AND role IN ('owner', 'admin')
     )
@@ -221,7 +323,7 @@ CREATE POLICY "Users can view approvals in their organization"
   ON time_approvals FOR SELECT
   USING (
     organization_id IN (
-      SELECT organization_id FROM user_organizations
+      SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
     )
   );
@@ -230,7 +332,7 @@ CREATE POLICY "Admins can insert approvals"
   ON time_approvals FOR INSERT
   WITH CHECK (
     organization_id IN (
-      SELECT organization_id FROM user_organizations
+      SELECT org_id FROM user_organizations
       WHERE user_id = auth.uid()
       AND role IN ('owner', 'admin')
     )

@@ -10,7 +10,6 @@ BEGIN
     ALTER TABLE contacts ADD COLUMN custom_fields JSONB DEFAULT '{}';
   END IF;
 END $$;
-
 -- Add industry column if it doesn't exist
 DO $$
 BEGIN
@@ -21,7 +20,6 @@ BEGIN
     ALTER TABLE contacts ADD COLUMN industry TEXT;
   END IF;
 END $$;
-
 -- Add source column if it doesn't exist
 DO $$
 BEGIN
@@ -32,7 +30,6 @@ BEGIN
     ALTER TABLE contacts ADD COLUMN source TEXT;
   END IF;
 END $$;
-
 -- Add last_contacted_at column if it doesn't exist
 DO $$
 BEGIN
@@ -43,7 +40,6 @@ BEGIN
     ALTER TABLE contacts ADD COLUMN last_contacted_at TIMESTAMP WITH TIME ZONE;
   END IF;
 END $$;
-
 -- Add unique constraint on workspace_id + email (for upsert operations)
 DO $$
 BEGIN
@@ -54,12 +50,9 @@ BEGIN
     ALTER TABLE contacts ADD CONSTRAINT contacts_workspace_id_email_key UNIQUE (workspace_id, email);
   END IF;
 END $$;
-
 -- Add index on email for faster lookups
 CREATE INDEX IF NOT EXISTS idx_contacts_email ON contacts(email);
-
 -- Add index on source
 CREATE INDEX IF NOT EXISTS idx_contacts_source ON contacts(source);
-
 -- Add index on industry
 CREATE INDEX IF NOT EXISTS idx_contacts_industry ON contacts(industry);

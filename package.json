@@ -152,6 +152,11 @@
     "guardian:docs": "tsx scripts/guardian/check-docs.ts",
     "guardian:release-notes": "tsx scripts/guardian/generate-release-notes.ts",
     "rls:deploy:dry": "node scripts/deploy-rls-fix.mjs --dry",
+    "db:migrate": "tsx scripts/db/migrate.ts",
+    "db:migrate:dry": "tsx scripts/db/migrate.ts --dry-run",
+    "db:status": "tsx scripts/db/state-tracker.ts --status",
+    "db:status:detail": "tsx scripts/db/state-tracker.ts --detail",
+    "db:check": "tsx scripts/guardian/pre-flight-checks.ts",
     "agent:audit": "npm run shadow:scan",
     "agent:refactor": "npm run shadow:agent"
   },

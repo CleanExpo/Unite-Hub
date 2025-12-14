@@ -3,20 +3,54 @@
 -- Date: 2025-11-19
 
 -- Create proposal_scopes table
-CREATE TABLE IF NOT EXISTS proposal_scopes (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  idea_id UUID NOT NULL REFERENCES ideas(id) ON DELETE CASCADE,
-  organization_id UUID NOT NULL REFERENCES organizations(id),
-  client_id UUID REFERENCES contacts(id),
-  scope_data JSONB NOT NULL,
-  status TEXT NOT NULL CHECK (status IN ('draft', 'sent')),
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW(),
-  created_by TEXT,
-  updated_by TEXT,
-
-  CONSTRAINT unique_idea_scope UNIQUE (idea_id)
-);
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM information_schema.tables
+    WHERE table_schema = 'public'
+      AND table_name = 'proposal_scopes'
+  ) THEN
+    IF EXISTS (
+      SELECT 1
+      FROM information_schema.tables
+      WHERE table_schema = 'public'
+        AND table_name = 'ideas'
+    ) THEN
+      EXECUTE $ddl$
+        CREATE TABLE IF NOT EXISTS public.proposal_scopes (
+          id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+          idea_id UUID NOT NULL REFERENCES public.ideas(id) ON DELETE CASCADE,
+          organization_id UUID NOT NULL REFERENCES public.organizations(id),
+          client_id UUID REFERENCES public.contacts(id),
+          scope_data JSONB NOT NULL,
+          status TEXT NOT NULL CHECK (status IN ('draft', 'sent')),
+          created_at TIMESTAMPTZ DEFAULT NOW(),
+          updated_at TIMESTAMPTZ DEFAULT NOW(),
+          created_by TEXT,
+          updated_by TEXT,
+          CONSTRAINT unique_idea_scope UNIQUE (idea_id)
+        )
+      $ddl$;
+    ELSE
+      EXECUTE $ddl$
+        CREATE TABLE IF NOT EXISTS public.proposal_scopes (
+          id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+          idea_id UUID NOT NULL,
+          organization_id UUID NOT NULL REFERENCES public.organizations(id),
+          client_id UUID REFERENCES public.contacts(id),
+          scope_data JSONB NOT NULL,
+          status TEXT NOT NULL CHECK (status IN ('draft', 'sent')),
+          created_at TIMESTAMPTZ DEFAULT NOW(),
+          updated_at TIMESTAMPTZ DEFAULT NOW(),
+          created_by TEXT,
+          updated_by TEXT,
+          CONSTRAINT unique_idea_scope UNIQUE (idea_id)
+        )
+      $ddl$;
+    END IF;
+  END IF;
+END $$;
 
 -- Indexes for performance
 CREATE INDEX IF NOT EXISTS idx_proposal_scopes_org ON proposal_scopes(organization_id);

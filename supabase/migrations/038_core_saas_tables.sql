@@ -309,7 +309,52 @@ CREATE INDEX IF NOT EXISTS idx_sent_emails_workspace_id ON sent_emails(workspace
 CREATE INDEX IF NOT EXISTS idx_sent_emails_org_id ON sent_emails(org_id);
 CREATE INDEX IF NOT EXISTS idx_sent_emails_contact_id ON sent_emails(contact_id);
 CREATE INDEX IF NOT EXISTS idx_sent_emails_campaign_id ON sent_emails(campaign_id);
-CREATE INDEX IF NOT EXISTS idx_sent_emails_drip_campaign_id ON sent_emails(drip_campaign_id);
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.tables
+    WHERE table_schema = 'public'
+      AND table_name = 'sent_emails'
+  ) THEN
+    IF NOT EXISTS (
+      SELECT 1
+      FROM information_schema.columns
+      WHERE table_schema = 'public'
+        AND table_name = 'sent_emails'
+        AND column_name = 'drip_campaign_id'
+    ) THEN
+      EXECUTE 'ALTER TABLE public.sent_emails ADD COLUMN drip_campaign_id UUID';
+    END IF;
+
+    IF EXISTS (
+      SELECT 1
+      FROM information_schema.tables
+      WHERE table_schema = 'public'
+        AND table_name = 'drip_campaigns'
+    ) AND NOT EXISTS (
+      SELECT 1
+      FROM pg_constraint c
+      JOIN pg_class t ON t.oid = c.conrelid
+      JOIN pg_namespace n ON n.oid = t.relnamespace
+      WHERE c.contype = 'f'
+        AND n.nspname = 'public'
+        AND t.relname = 'sent_emails'
+        AND EXISTS (
+          SELECT 1
+          FROM unnest(c.conkey) AS k(attnum)
+          JOIN pg_attribute a ON a.attrelid = t.oid AND a.attnum = k.attnum
+          WHERE a.attname = 'drip_campaign_id'
+        )
+    ) THEN
+      EXECUTE 'ALTER TABLE public.sent_emails
+        ADD CONSTRAINT sent_emails_drip_campaign_id_fkey
+        FOREIGN KEY (drip_campaign_id) REFERENCES public.drip_campaigns(id) ON DELETE SET NULL';
+    END IF;
+
+    EXECUTE 'CREATE INDEX IF NOT EXISTS idx_sent_emails_drip_campaign_id ON public.sent_emails(drip_campaign_id)';
+  END IF;
+END $$;
 CREATE INDEX IF NOT EXISTS idx_sent_emails_status ON sent_emails(status);
 CREATE INDEX IF NOT EXISTS idx_sent_emails_sent_at ON sent_emails(sent_at DESC);
 CREATE INDEX IF NOT EXISTS idx_sent_emails_to_email ON sent_emails(to_email);
@@ -474,7 +519,27 @@ CREATE INDEX IF NOT EXISTS idx_client_emails_integration_id ON client_emails(int
 CREATE INDEX IF NOT EXISTS idx_client_emails_direction ON client_emails(direction);
 CREATE INDEX IF NOT EXISTS idx_client_emails_received_at ON client_emails(received_at DESC);
 CREATE INDEX IF NOT EXISTS idx_client_emails_from_email ON client_emails(from_email);
-CREATE INDEX IF NOT EXISTS idx_client_emails_provider_thread_id ON client_emails(provider_thread_id);
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.tables
+    WHERE table_schema = 'public'
+      AND table_name = 'client_emails'
+  ) THEN
+    IF NOT EXISTS (
+      SELECT 1
+      FROM information_schema.columns
+      WHERE table_schema = 'public'
+        AND table_name = 'client_emails'
+        AND column_name = 'provider_thread_id'
+    ) THEN
+      EXECUTE 'ALTER TABLE public.client_emails ADD COLUMN provider_thread_id TEXT';
+    END IF;
+
+    EXECUTE 'CREATE INDEX IF NOT EXISTS idx_client_emails_provider_thread_id ON public.client_emails(provider_thread_id)';
+  END IF;
+END $$;
 
 -- RLS Policies
 ALTER TABLE client_emails ENABLE ROW LEVEL SECURITY;

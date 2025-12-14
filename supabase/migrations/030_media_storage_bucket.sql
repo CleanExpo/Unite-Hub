@@ -111,14 +111,44 @@ CREATE POLICY "Service role full access"
 -- 4. COMMENTS
 -- ============================================================================
 
-COMMENT ON POLICY "Users can upload to workspace folders" ON storage.objects IS
-  'Allows authenticated users to upload files to folders matching their workspace IDs';
+DO $$
+BEGIN
+  BEGIN
+    EXECUTE $ddl$
+      COMMENT ON POLICY "Users can upload to workspace folders" ON storage.objects IS
+        'Allows authenticated users to upload files to folders matching their workspace IDs'
+    $ddl$;
+  EXCEPTION
+    WHEN undefined_object OR insufficient_privilege THEN
+      NULL;
+  END;
+END $$;
 
-COMMENT ON POLICY "Users can read workspace files" ON storage.objects IS
-  'Allows authenticated users to read files from folders matching their workspace IDs';
+DO $$
+BEGIN
+  BEGIN
+    EXECUTE $ddl$
+      COMMENT ON POLICY "Users can read workspace files" ON storage.objects IS
+        'Allows authenticated users to read files from folders matching their workspace IDs'
+    $ddl$;
+  EXCEPTION
+    WHEN undefined_object OR insufficient_privilege THEN
+      NULL;
+  END;
+END $$;
 
-COMMENT ON POLICY "Service role full access" ON storage.objects IS
-  'Allows service role (background workers) full access to all files in media-uploads bucket';
+DO $$
+BEGIN
+  BEGIN
+    EXECUTE $ddl$
+      COMMENT ON POLICY "Service role full access" ON storage.objects IS
+        'Allows service role (background workers) full access to all files in media-uploads bucket'
+    $ddl$;
+  EXCEPTION
+    WHEN undefined_object OR insufficient_privilege THEN
+      NULL;
+  END;
+END $$;
 
 -- ============================================================================
 -- 5. VERIFICATION QUERY

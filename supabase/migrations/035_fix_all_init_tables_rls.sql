@@ -22,12 +22,11 @@ CREATE POLICY "Users can view their organizations"
   ON organizations
   FOR SELECT
   USING (
-    created_by = auth.uid()
-    OR
     id IN (
       SELECT org_id
       FROM user_organizations
       WHERE user_id = auth.uid()
+        AND is_active = true
     )
   );
 
@@ -35,20 +34,44 @@ CREATE POLICY "Users can view their organizations"
 CREATE POLICY "Users can create organizations"
   ON organizations
   FOR INSERT
-  WITH CHECK (auth.uid() = created_by);
+  WITH CHECK (auth.uid() IS NOT NULL);
 
 -- UPDATE: Organization owners can update
 CREATE POLICY "Organization owners can update"
   ON organizations
   FOR UPDATE
-  USING (created_by = auth.uid())
-  WITH CHECK (created_by = auth.uid());
+  USING (
+    id IN (
+      SELECT org_id
+      FROM user_organizations
+      WHERE user_id = auth.uid()
+        AND role = 'owner'
+        AND is_active = true
+    )
+  )
+  WITH CHECK (
+    id IN (
+      SELECT org_id
+      FROM user_organizations
+      WHERE user_id = auth.uid()
+        AND role = 'owner'
+        AND is_active = true
+    )
+  );
 
 -- DELETE: Organization owners can delete
 CREATE POLICY "Organization owners can delete"
   ON organizations
   FOR DELETE
-  USING (created_by = auth.uid());
+  USING (
+    id IN (
+      SELECT org_id
+      FROM user_organizations
+      WHERE user_id = auth.uid()
+        AND role = 'owner'
+        AND is_active = true
+    )
+  );
 
 ALTER TABLE organizations ENABLE ROW LEVEL SECURITY;
 
@@ -78,10 +101,13 @@ CREATE POLICY "Users and owners can create memberships"
   WITH CHECK (
     user_id = auth.uid()
     OR
-    org_id IN (
-      SELECT id
-      FROM organizations
-      WHERE created_by = auth.uid()
+    EXISTS (
+      SELECT 1
+      FROM user_organizations uo_owner
+      WHERE uo_owner.org_id = user_organizations.org_id
+        AND uo_owner.user_id = auth.uid()
+        AND uo_owner.role = 'owner'
+        AND uo_owner.is_active = true
     )
   );
 
@@ -92,19 +118,25 @@ CREATE POLICY "Users and owners can update memberships"
   USING (
     user_id = auth.uid()
     OR
-    org_id IN (
-      SELECT id
-      FROM organizations
-      WHERE created_by = auth.uid()
+    EXISTS (
+      SELECT 1
+      FROM user_organizations uo_owner
+      WHERE uo_owner.org_id = user_organizations.org_id
+        AND uo_owner.user_id = auth.uid()
+        AND uo_owner.role = 'owner'
+        AND uo_owner.is_active = true
     )
   )
   WITH CHECK (
     user_id = auth.uid()
     OR
-    org_id IN (
-      SELECT id
-      FROM organizations
-      WHERE created_by = auth.uid()
+    EXISTS (
+      SELECT 1
+      FROM user_organizations uo_owner
+      WHERE uo_owner.org_id = user_organizations.org_id
+        AND uo_owner.user_id = auth.uid()
+        AND uo_owner.role = 'owner'
+        AND uo_owner.is_active = true
     )
   );
 
@@ -115,10 +147,13 @@ CREATE POLICY "Users and owners can delete memberships"
   USING (
     user_id = auth.uid()
     OR
-    org_id IN (
-      SELECT id
-      FROM organizations
-      WHERE created_by = auth.uid()
+    EXISTS (
+      SELECT 1
+      FROM user_organizations uo_owner
+      WHERE uo_owner.org_id = user_organizations.org_id
+        AND uo_owner.user_id = auth.uid()
+        AND uo_owner.role = 'owner'
+        AND uo_owner.is_active = true
     )
   );
 
@@ -134,61 +169,128 @@ DROP POLICY IF EXISTS "Organization owners can manage workspaces" ON workspaces;
 DROP POLICY IF EXISTS "Users can create workspaces" ON workspaces;
 DROP POLICY IF EXISTS "Users can update workspaces" ON workspaces;
 DROP POLICY IF EXISTS "Users can delete workspaces" ON workspaces;
+DROP POLICY IF EXISTS "Users can view workspaces in their orgs" ON workspaces;
+DROP POLICY IF EXISTS "Users can create workspaces in their orgs" ON workspaces;
+DROP POLICY IF EXISTS "Org owners can update workspaces" ON workspaces;
+DROP POLICY IF EXISTS "Org owners can delete workspaces" ON workspaces;
 
 -- SELECT: Users can view workspaces in their organizations
-CREATE POLICY "Users can view workspaces in their orgs"
-  ON workspaces
-  FOR SELECT
-  USING (
-    org_id IN (
-      SELECT org_id
-      FROM user_organizations
-      WHERE user_id = auth.uid()
-    )
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'workspaces'
+      AND policyname = 'Users can view workspaces in their orgs'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can view workspaces in their orgs"
+        ON public.workspaces
+        FOR SELECT
+        USING (
+          org_id IN (
+            SELECT org_id
+            FROM public.user_organizations
+            WHERE user_id = auth.uid()
+              AND is_active = true
+          )
+        )
+    $policy$;
+  END IF;
+END $$;
 
 -- INSERT: Authenticated users can create workspaces in their orgs (CRITICAL for init)
-CREATE POLICY "Users can create workspaces in their orgs"
-  ON workspaces
-  FOR INSERT
-  WITH CHECK (
-    org_id IN (
-      SELECT org_id
-      FROM user_organizations
-      WHERE user_id = auth.uid()
-    )
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'workspaces'
+      AND policyname = 'Users can create workspaces in their orgs'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can create workspaces in their orgs"
+        ON public.workspaces
+        FOR INSERT
+        WITH CHECK (
+          org_id IN (
+            SELECT org_id
+            FROM public.user_organizations
+            WHERE user_id = auth.uid()
+              AND is_active = true
+          )
+        )
+    $policy$;
+  END IF;
+END $$;
 
 -- UPDATE: Org owners can update workspaces
-CREATE POLICY "Org owners can update workspaces"
-  ON workspaces
-  FOR UPDATE
-  USING (
-    org_id IN (
-      SELECT id
-      FROM organizations
-      WHERE created_by = auth.uid()
-    )
-  )
-  WITH CHECK (
-    org_id IN (
-      SELECT id
-      FROM organizations
-      WHERE created_by = auth.uid()
-    )
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'workspaces'
+      AND policyname = 'Org owners can update workspaces'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Org owners can update workspaces"
+        ON public.workspaces
+        FOR UPDATE
+        USING (
+          EXISTS (
+            SELECT 1
+            FROM public.user_organizations uo_owner
+            WHERE uo_owner.org_id = workspaces.org_id
+              AND uo_owner.user_id = auth.uid()
+              AND uo_owner.role = 'owner'
+              AND uo_owner.is_active = true
+          )
+        )
+        WITH CHECK (
+          EXISTS (
+            SELECT 1
+            FROM public.user_organizations uo_owner
+            WHERE uo_owner.org_id = workspaces.org_id
+              AND uo_owner.user_id = auth.uid()
+              AND uo_owner.role = 'owner'
+              AND uo_owner.is_active = true
+          )
+        )
+    $policy$;
+  END IF;
+END $$;
 
 -- DELETE: Org owners can delete workspaces
-CREATE POLICY "Org owners can delete workspaces"
-  ON workspaces
-  FOR DELETE
-  USING (
-    org_id IN (
-      SELECT id
-      FROM organizations
-      WHERE created_by = auth.uid()
-    )
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'workspaces'
+      AND policyname = 'Org owners can delete workspaces'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Org owners can delete workspaces"
+        ON public.workspaces
+        FOR DELETE
+        USING (
+          EXISTS (
+            SELECT 1
+            FROM public.user_organizations uo_owner
+            WHERE uo_owner.org_id = workspaces.org_id
+              AND uo_owner.user_id = auth.uid()
+              AND uo_owner.role = 'owner'
+              AND uo_owner.is_active = true
+          )
+        )
+    $policy$;
+  END IF;
+END $$;
 
 ALTER TABLE workspaces ENABLE ROW LEVEL SECURITY;
 

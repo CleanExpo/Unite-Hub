@@ -38,7 +38,6 @@ CREATE TABLE IF NOT EXISTS generated_images (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
-
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_generated_images_workspace_id ON generated_images(workspace_id);
 CREATE INDEX IF NOT EXISTS idx_generated_images_contact_id ON generated_images(contact_id);
@@ -46,26 +45,21 @@ CREATE INDEX IF NOT EXISTS idx_generated_images_calendar_post_id ON generated_im
 CREATE INDEX IF NOT EXISTS idx_generated_images_status ON generated_images(status);
 CREATE INDEX IF NOT EXISTS idx_generated_images_created_at ON generated_images(created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_generated_images_parent_image_id ON generated_images(parent_image_id);
-
 -- Trigger for updated_at
 DROP TRIGGER IF EXISTS update_generated_images_updated_at ON generated_images;
 CREATE TRIGGER update_generated_images_updated_at
   BEFORE UPDATE ON generated_images
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
-
 -- Enable RLS
 ALTER TABLE generated_images ENABLE ROW LEVEL SECURITY;
-
 -- RLS Policies
 DROP POLICY IF EXISTS "Users can view generated images" ON generated_images;
 CREATE POLICY "Users can view generated images" ON generated_images
   FOR SELECT USING (true);
-
 DROP POLICY IF EXISTS "Service role can manage generated images" ON generated_images;
 CREATE POLICY "Service role can manage generated images" ON generated_images
   FOR ALL USING (true);
-
 -- Comments
 COMMENT ON TABLE generated_images IS 'AI-generated images for contacts and calendar posts';
 COMMENT ON COLUMN generated_images.prompt IS 'The prompt used to generate the image';

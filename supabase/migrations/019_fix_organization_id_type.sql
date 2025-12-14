@@ -29,7 +29,6 @@ BEGIN
     ALTER TABLE subscriptions DROP CONSTRAINT subscriptions_org_id_fkey;
   END IF;
 END $$;
-
 -- Change org_id column type from TEXT to UUID
 DO $$
 BEGIN
@@ -46,7 +45,6 @@ BEGIN
     ALTER COLUMN org_id TYPE UUID USING org_id::uuid;
   END IF;
 END $$;
-
 -- Re-add foreign key constraint
 DO $$
 BEGIN
@@ -60,7 +58,6 @@ BEGIN
     FOREIGN KEY (org_id) REFERENCES organizations(id) ON DELETE CASCADE;
   END IF;
 END $$;
-
 -- =====================================================
 -- STEP 2: ALTER INVOICES TABLE
 -- =====================================================
@@ -75,7 +72,6 @@ BEGIN
     ALTER TABLE invoices DROP CONSTRAINT invoices_org_id_fkey;
   END IF;
 END $$;
-
 -- Change org_id column type from TEXT to UUID
 DO $$
 BEGIN
@@ -89,7 +85,6 @@ BEGIN
     ALTER COLUMN org_id TYPE UUID USING org_id::uuid;
   END IF;
 END $$;
-
 -- Re-add foreign key constraint
 DO $$
 BEGIN
@@ -103,7 +98,6 @@ BEGIN
     FOREIGN KEY (org_id) REFERENCES organizations(id) ON DELETE CASCADE;
   END IF;
 END $$;
-
 -- =====================================================
 -- STEP 3: ALTER PAYMENT_METHODS TABLE
 -- =====================================================
@@ -118,7 +112,6 @@ BEGIN
     ALTER TABLE payment_methods DROP CONSTRAINT payment_methods_org_id_fkey;
   END IF;
 END $$;
-
 -- Change org_id column type from TEXT to UUID
 DO $$
 BEGIN
@@ -132,7 +125,6 @@ BEGIN
     ALTER COLUMN org_id TYPE UUID USING org_id::uuid;
   END IF;
 END $$;
-
 -- Re-add foreign key constraint
 DO $$
 BEGIN
@@ -146,7 +138,6 @@ BEGIN
     FOREIGN KEY (org_id) REFERENCES organizations(id) ON DELETE CASCADE;
   END IF;
 END $$;
-
 -- =====================================================
 -- VERIFICATION QUERY
 -- =====================================================
@@ -160,7 +151,6 @@ FROM information_schema.columns
 WHERE column_name = 'org_id'
   AND table_schema = 'public'
 ORDER BY table_name;
-
 -- =====================================================
 -- EXPECTED OUTPUT
 -- =====================================================

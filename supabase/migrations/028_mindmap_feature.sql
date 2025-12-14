@@ -31,10 +31,24 @@ CREATE INDEX IF NOT EXISTS idx_project_mindmaps_workspace_id ON project_mindmaps
 CREATE INDEX IF NOT EXISTS idx_project_mindmaps_org_id ON project_mindmaps(org_id);
 
 -- Trigger for updated_at
-CREATE TRIGGER update_project_mindmaps_updated_at
-  BEFORE UPDATE ON project_mindmaps
-  FOR EACH ROW
-  EXECUTE FUNCTION update_updated_at_column();
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_trigger t
+    JOIN pg_class c ON c.oid = t.tgrelid
+    JOIN pg_namespace n ON n.oid = c.relnamespace
+    WHERE t.tgname = 'update_project_mindmaps_updated_at'
+      AND c.relname = 'project_mindmaps'
+      AND n.nspname = 'public'
+      AND NOT t.tgisinternal
+  ) THEN
+    EXECUTE 'CREATE TRIGGER update_project_mindmaps_updated_at
+      BEFORE UPDATE ON public.project_mindmaps
+      FOR EACH ROW
+      EXECUTE FUNCTION update_updated_at_column()';
+  END IF;
+END $$;
 
 -- =====================================================
 -- TABLE 2: mindmap_nodes
@@ -81,10 +95,24 @@ CREATE INDEX IF NOT EXISTS idx_mindmap_nodes_status ON mindmap_nodes(status);
 CREATE INDEX IF NOT EXISTS idx_mindmap_nodes_metadata ON mindmap_nodes USING GIN (metadata);
 
 -- Trigger for updated_at
-CREATE TRIGGER update_mindmap_nodes_updated_at
-  BEFORE UPDATE ON mindmap_nodes
-  FOR EACH ROW
-  EXECUTE FUNCTION update_updated_at_column();
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_trigger t
+    JOIN pg_class c ON c.oid = t.tgrelid
+    JOIN pg_namespace n ON n.oid = c.relnamespace
+    WHERE t.tgname = 'update_mindmap_nodes_updated_at'
+      AND c.relname = 'mindmap_nodes'
+      AND n.nspname = 'public'
+      AND NOT t.tgisinternal
+  ) THEN
+    EXECUTE 'CREATE TRIGGER update_mindmap_nodes_updated_at
+      BEFORE UPDATE ON public.mindmap_nodes
+      FOR EACH ROW
+      EXECUTE FUNCTION update_updated_at_column()';
+  END IF;
+END $$;
 
 -- =====================================================
 -- TABLE 3: mindmap_connections
@@ -166,192 +194,426 @@ ALTER TABLE ai_suggestions ENABLE ROW LEVEL SECURITY;
 -- =====================================================
 
 -- SELECT: Users can view mindmaps in their workspaces
-CREATE POLICY "Users can view mindmaps in their workspaces"
-  ON project_mindmaps
-  FOR SELECT
-  USING (
-    workspace_id IN (SELECT get_user_workspaces())
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'project_mindmaps'
+      AND policyname = 'Users can view mindmaps in their workspaces'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can view mindmaps in their workspaces"
+        ON public.project_mindmaps
+        FOR SELECT
+        USING (
+          workspace_id IN (SELECT get_user_workspaces()::uuid)
+        )
+    $policy$;
+  END IF;
+END $$;
 
 -- INSERT: Users can create mindmaps in their workspaces
-CREATE POLICY "Users can create mindmaps in their workspaces"
-  ON project_mindmaps
-  FOR INSERT
-  WITH CHECK (
-    workspace_id IN (SELECT get_user_workspaces())
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'project_mindmaps'
+      AND policyname = 'Users can create mindmaps in their workspaces'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can create mindmaps in their workspaces"
+        ON public.project_mindmaps
+        FOR INSERT
+        WITH CHECK (
+          workspace_id IN (SELECT get_user_workspaces()::uuid)
+        )
+    $policy$;
+  END IF;
+END $$;
 
 -- UPDATE: Users can update mindmaps in their workspaces
-CREATE POLICY "Users can update mindmaps in their workspaces"
-  ON project_mindmaps
-  FOR UPDATE
-  USING (
-    workspace_id IN (SELECT get_user_workspaces())
-  )
-  WITH CHECK (
-    workspace_id IN (SELECT get_user_workspaces())
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'project_mindmaps'
+      AND policyname = 'Users can update mindmaps in their workspaces'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can update mindmaps in their workspaces"
+        ON public.project_mindmaps
+        FOR UPDATE
+        USING (
+          workspace_id IN (SELECT get_user_workspaces()::uuid)
+        )
+        WITH CHECK (
+          workspace_id IN (SELECT get_user_workspaces()::uuid)
+        )
+    $policy$;
+  END IF;
+END $$;
 
 -- DELETE: Users can delete mindmaps in their workspaces
-CREATE POLICY "Users can delete mindmaps in their workspaces"
-  ON project_mindmaps
-  FOR DELETE
-  USING (
-    workspace_id IN (SELECT get_user_workspaces())
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'project_mindmaps'
+      AND policyname = 'Users can delete mindmaps in their workspaces'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can delete mindmaps in their workspaces"
+        ON public.project_mindmaps
+        FOR DELETE
+        USING (
+          workspace_id IN (SELECT get_user_workspaces()::uuid)
+        )
+    $policy$;
+  END IF;
+END $$;
 
 -- Service role has full access
-CREATE POLICY "Service role can manage all mindmaps"
-  ON project_mindmaps
-  FOR ALL
-  USING (auth.jwt()->>'role' = 'service_role');
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'project_mindmaps'
+      AND policyname = 'Service role can manage all mindmaps'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Service role can manage all mindmaps"
+        ON public.project_mindmaps
+        FOR ALL
+        USING (auth.jwt()->>'role' = 'service_role')
+    $policy$;
+  END IF;
+END $$;
 
 -- =====================================================
 -- RLS POLICIES: mindmap_nodes
 -- =====================================================
 
 -- SELECT: Users can view nodes if they can view the mindmap
-CREATE POLICY "Users can view nodes in their mindmaps"
-  ON mindmap_nodes
-  FOR SELECT
-  USING (
-    mindmap_id IN (
-      SELECT id FROM project_mindmaps
-      WHERE workspace_id IN (SELECT get_user_workspaces())
-    )
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'mindmap_nodes'
+      AND policyname = 'Users can view nodes in their mindmaps'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can view nodes in their mindmaps"
+        ON public.mindmap_nodes
+        FOR SELECT
+        USING (
+          mindmap_id IN (
+            SELECT id FROM public.project_mindmaps
+            WHERE workspace_id IN (SELECT get_user_workspaces()::uuid)
+          )
+        )
+    $policy$;
+  END IF;
+END $$;
 
 -- INSERT: Users can create nodes if they can update the mindmap
-CREATE POLICY "Users can create nodes in their mindmaps"
-  ON mindmap_nodes
-  FOR INSERT
-  WITH CHECK (
-    mindmap_id IN (
-      SELECT id FROM project_mindmaps
-      WHERE workspace_id IN (SELECT get_user_workspaces())
-    )
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'mindmap_nodes'
+      AND policyname = 'Users can create nodes in their mindmaps'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can create nodes in their mindmaps"
+        ON public.mindmap_nodes
+        FOR INSERT
+        WITH CHECK (
+          mindmap_id IN (
+            SELECT id FROM public.project_mindmaps
+            WHERE workspace_id IN (SELECT get_user_workspaces()::uuid)
+          )
+        )
+    $policy$;
+  END IF;
+END $$;
 
 -- UPDATE: Users can update nodes if they can update the mindmap
-CREATE POLICY "Users can update nodes in their mindmaps"
-  ON mindmap_nodes
-  FOR UPDATE
-  USING (
-    mindmap_id IN (
-      SELECT id FROM project_mindmaps
-      WHERE workspace_id IN (SELECT get_user_workspaces())
-    )
-  )
-  WITH CHECK (
-    mindmap_id IN (
-      SELECT id FROM project_mindmaps
-      WHERE workspace_id IN (SELECT get_user_workspaces())
-    )
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'mindmap_nodes'
+      AND policyname = 'Users can update nodes in their mindmaps'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can update nodes in their mindmaps"
+        ON public.mindmap_nodes
+        FOR UPDATE
+        USING (
+          mindmap_id IN (
+            SELECT id FROM public.project_mindmaps
+            WHERE workspace_id IN (SELECT get_user_workspaces()::uuid)
+          )
+        )
+        WITH CHECK (
+          mindmap_id IN (
+            SELECT id FROM public.project_mindmaps
+            WHERE workspace_id IN (SELECT get_user_workspaces()::uuid)
+          )
+        )
+    $policy$;
+  END IF;
+END $$;
 
 -- DELETE: Users can delete nodes if they can update the mindmap
-CREATE POLICY "Users can delete nodes in their mindmaps"
-  ON mindmap_nodes
-  FOR DELETE
-  USING (
-    mindmap_id IN (
-      SELECT id FROM project_mindmaps
-      WHERE workspace_id IN (SELECT get_user_workspaces())
-    )
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'mindmap_nodes'
+      AND policyname = 'Users can delete nodes in their mindmaps'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can delete nodes in their mindmaps"
+        ON public.mindmap_nodes
+        FOR DELETE
+        USING (
+          mindmap_id IN (
+            SELECT id FROM public.project_mindmaps
+            WHERE workspace_id IN (SELECT get_user_workspaces()::uuid)
+          )
+        )
+    $policy$;
+  END IF;
+END $$;
 
 -- Service role has full access
-CREATE POLICY "Service role can manage all nodes"
-  ON mindmap_nodes
-  FOR ALL
-  USING (auth.jwt()->>'role' = 'service_role');
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'mindmap_nodes'
+      AND policyname = 'Service role can manage all nodes'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Service role can manage all nodes"
+        ON public.mindmap_nodes
+        FOR ALL
+        USING (auth.jwt()->>'role' = 'service_role')
+    $policy$;
+  END IF;
+END $$;
 
 -- =====================================================
 -- RLS POLICIES: mindmap_connections
 -- =====================================================
 
 -- SELECT: Users can view connections if they can view the mindmap
-CREATE POLICY "Users can view connections in their mindmaps"
-  ON mindmap_connections
-  FOR SELECT
-  USING (
-    mindmap_id IN (
-      SELECT id FROM project_mindmaps
-      WHERE workspace_id IN (SELECT get_user_workspaces())
-    )
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'mindmap_connections'
+      AND policyname = 'Users can view connections in their mindmaps'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can view connections in their mindmaps"
+        ON public.mindmap_connections
+        FOR SELECT
+        USING (
+          mindmap_id IN (
+            SELECT id FROM public.project_mindmaps
+            WHERE workspace_id IN (SELECT get_user_workspaces()::uuid)
+          )
+        )
+    $policy$;
+  END IF;
+END $$;
 
 -- INSERT: Users can create connections if they can update the mindmap
-CREATE POLICY "Users can create connections in their mindmaps"
-  ON mindmap_connections
-  FOR INSERT
-  WITH CHECK (
-    mindmap_id IN (
-      SELECT id FROM project_mindmaps
-      WHERE workspace_id IN (SELECT get_user_workspaces())
-    )
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'mindmap_connections'
+      AND policyname = 'Users can create connections in their mindmaps'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can create connections in their mindmaps"
+        ON public.mindmap_connections
+        FOR INSERT
+        WITH CHECK (
+          mindmap_id IN (
+            SELECT id FROM public.project_mindmaps
+            WHERE workspace_id IN (SELECT get_user_workspaces()::uuid)
+          )
+        )
+    $policy$;
+  END IF;
+END $$;
 
 -- DELETE: Users can delete connections if they can update the mindmap
-CREATE POLICY "Users can delete connections in their mindmaps"
-  ON mindmap_connections
-  FOR DELETE
-  USING (
-    mindmap_id IN (
-      SELECT id FROM project_mindmaps
-      WHERE workspace_id IN (SELECT get_user_workspaces())
-    )
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'mindmap_connections'
+      AND policyname = 'Users can delete connections in their mindmaps'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can delete connections in their mindmaps"
+        ON public.mindmap_connections
+        FOR DELETE
+        USING (
+          mindmap_id IN (
+            SELECT id FROM public.project_mindmaps
+            WHERE workspace_id IN (SELECT get_user_workspaces()::uuid)
+          )
+        )
+    $policy$;
+  END IF;
+END $$;
 
 -- Service role has full access
-CREATE POLICY "Service role can manage all connections"
-  ON mindmap_connections
-  FOR ALL
-  USING (auth.jwt()->>'role' = 'service_role');
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'mindmap_connections'
+      AND policyname = 'Service role can manage all connections'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Service role can manage all connections"
+        ON public.mindmap_connections
+        FOR ALL
+        USING (auth.jwt()->>'role' = 'service_role')
+    $policy$;
+  END IF;
+END $$;
 
 -- =====================================================
 -- RLS POLICIES: ai_suggestions
 -- =====================================================
 
 -- SELECT: Users can view suggestions for their mindmaps
-CREATE POLICY "Users can view suggestions for their mindmaps"
-  ON ai_suggestions
-  FOR SELECT
-  USING (
-    mindmap_id IN (
-      SELECT id FROM project_mindmaps
-      WHERE workspace_id IN (SELECT get_user_workspaces())
-    )
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'ai_suggestions'
+      AND policyname = 'Users can view suggestions for their mindmaps'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can view suggestions for their mindmaps"
+        ON public.ai_suggestions
+        FOR SELECT
+        USING (
+          mindmap_id IN (
+            SELECT id FROM public.project_mindmaps
+            WHERE workspace_id IN (SELECT get_user_workspaces()::uuid)
+          )
+        )
+    $policy$;
+  END IF;
+END $$;
 
 -- INSERT: Service role can create suggestions (AI-generated)
-CREATE POLICY "Service role can create suggestions"
-  ON ai_suggestions
-  FOR INSERT
-  WITH CHECK (auth.jwt()->>'role' = 'service_role');
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'ai_suggestions'
+      AND policyname = 'Service role can create suggestions'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Service role can create suggestions"
+        ON public.ai_suggestions
+        FOR INSERT
+        WITH CHECK (auth.jwt()->>'role' = 'service_role')
+    $policy$;
+  END IF;
+END $$;
 
 -- UPDATE: Users can update suggestion status (accept/dismiss)
-CREATE POLICY "Users can update suggestions in their mindmaps"
-  ON ai_suggestions
-  FOR UPDATE
-  USING (
-    mindmap_id IN (
-      SELECT id FROM project_mindmaps
-      WHERE workspace_id IN (SELECT get_user_workspaces())
-    )
-  )
-  WITH CHECK (
-    mindmap_id IN (
-      SELECT id FROM project_mindmaps
-      WHERE workspace_id IN (SELECT get_user_workspaces())
-    )
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'ai_suggestions'
+      AND policyname = 'Users can update suggestions in their mindmaps'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can update suggestions in their mindmaps"
+        ON public.ai_suggestions
+        FOR UPDATE
+        USING (
+          mindmap_id IN (
+            SELECT id FROM public.project_mindmaps
+            WHERE workspace_id IN (SELECT get_user_workspaces()::uuid)
+          )
+        )
+        WITH CHECK (
+          mindmap_id IN (
+            SELECT id FROM public.project_mindmaps
+            WHERE workspace_id IN (SELECT get_user_workspaces()::uuid)
+          )
+        )
+    $policy$;
+  END IF;
+END $$;
 
 -- Service role has full access
-CREATE POLICY "Service role can manage all suggestions"
-  ON ai_suggestions
-  FOR ALL
-  USING (auth.jwt()->>'role' = 'service_role');
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'ai_suggestions'
+      AND policyname = 'Service role can manage all suggestions'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Service role can manage all suggestions"
+        ON public.ai_suggestions
+        FOR ALL
+        USING (auth.jwt()->>'role' = 'service_role')
+    $policy$;
+  END IF;
+END $$;
 
 -- =====================================================
 -- HELPER FUNCTIONS

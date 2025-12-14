@@ -27,7 +27,6 @@ CREATE TABLE IF NOT EXISTS user_onboarding (
   -- Ensure one onboarding record per user
   UNIQUE(user_id)
 );
-
 -- Ensure expected columns exist when table already exists (safe re-apply on legacy schemas).
 ALTER TABLE IF EXISTS user_onboarding
   ADD COLUMN IF NOT EXISTS step_1_complete BOOLEAN DEFAULT FALSE,
@@ -36,29 +35,21 @@ ALTER TABLE IF EXISTS user_onboarding
   ADD COLUMN IF NOT EXISTS step_4_complete BOOLEAN DEFAULT FALSE,
   ADD COLUMN IF NOT EXISTS step_5_complete BOOLEAN DEFAULT FALSE,
   ADD COLUMN IF NOT EXISTS completed_at TIMESTAMP WITH TIME ZONE;
-
 ALTER TABLE IF EXISTS user_onboarding
   ADD COLUMN IF NOT EXISTS skipped BOOLEAN DEFAULT FALSE;
-
 ALTER TABLE IF EXISTS user_onboarding
   ADD COLUMN IF NOT EXISTS current_step INTEGER DEFAULT 1;
-
 ALTER TABLE IF EXISTS user_onboarding
   ADD COLUMN IF NOT EXISTS onboarding_data JSONB DEFAULT '{}'::jsonb;
-
 ALTER TABLE IF EXISTS user_onboarding
   ADD COLUMN IF NOT EXISTS created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW();
-
 ALTER TABLE IF EXISTS user_onboarding
   ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW();
-
 -- Create index for faster lookups
 CREATE INDEX IF NOT EXISTS idx_user_onboarding_user_id ON user_onboarding(user_id);
 CREATE INDEX IF NOT EXISTS idx_user_onboarding_completed ON user_onboarding(completed_at) WHERE completed_at IS NOT NULL;
-
 -- Enable Row Level Security
 ALTER TABLE user_onboarding ENABLE ROW LEVEL SECURITY;
-
 -- RLS Policies
 -- Users can only view/update their own onboarding record
 DO $$
@@ -78,7 +69,6 @@ BEGIN
     $policy$;
   END IF;
 END $$;
-
 DO $$
 BEGIN
   IF NOT EXISTS (
@@ -96,7 +86,6 @@ BEGIN
     $policy$;
   END IF;
 END $$;
-
 DO $$
 BEGIN
   IF NOT EXISTS (
@@ -115,7 +104,6 @@ BEGIN
     $policy$;
   END IF;
 END $$;
-
 -- Trigger to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_user_onboarding_updated_at()
 RETURNS TRIGGER AS $$
@@ -135,7 +123,6 @@ BEGIN
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-
 DO $$
 BEGIN
   IF NOT EXISTS (
@@ -156,7 +143,6 @@ BEGIN
     $trg$;
   END IF;
 END $$;
-
 -- Comments
 COMMENT ON TABLE user_onboarding IS 'Tracks user onboarding progress and completion status';
 DO $$
@@ -171,7 +157,6 @@ BEGIN
     EXECUTE $c$COMMENT ON COLUMN user_onboarding.step_1_complete IS 'Welcome & Profile Setup completed'$c$;
   END IF;
 END $$;
-
 DO $$
 BEGIN
   IF EXISTS (
@@ -184,7 +169,6 @@ BEGIN
     EXECUTE $c$COMMENT ON COLUMN user_onboarding.step_2_complete IS 'Connect First Integration completed'$c$;
   END IF;
 END $$;
-
 DO $$
 BEGIN
   IF EXISTS (
@@ -197,7 +181,6 @@ BEGIN
     EXECUTE $c$COMMENT ON COLUMN user_onboarding.step_3_complete IS 'Import Contacts completed'$c$;
   END IF;
 END $$;
-
 DO $$
 BEGIN
   IF EXISTS (
@@ -210,7 +193,6 @@ BEGIN
     EXECUTE $c$COMMENT ON COLUMN user_onboarding.step_4_complete IS 'Create First Campaign completed (optional)'$c$;
   END IF;
 END $$;
-
 DO $$
 BEGIN
   IF EXISTS (
@@ -223,7 +205,6 @@ BEGIN
     EXECUTE $c$COMMENT ON COLUMN user_onboarding.step_5_complete IS 'Dashboard Tour completed'$c$;
   END IF;
 END $$;
-
 DO $$
 BEGIN
   IF EXISTS (

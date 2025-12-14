@@ -1,0 +1,285 @@
+name: Migration Validation
+
+on:
+  pull_request:
+    paths:
+      - 'supabase/migrations/**'
+      - '.github/workflows/migration-check.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'supabase/migrations/**'
+
+concurrency:
+  group: migration-check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-migrations:
+    name: Validate Migrations
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.19.4'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+        continue-on-error: true
+
+      - name: Run Guardian checks
+        id: guardian
+        run: npm run guardian:gates
+        continue-on-error: true
+
+      - name: Run pre-flight checks
+        id: preflight
+        run: npm run db:check
+        continue-on-error: true
+
+      - name: Check for unsafe patterns
+        id: safety
+        run: |
+          # Check for dangerous SQL patterns in new migrations
+          MIGRATIONS=$(git diff --name-only origin/main...HEAD -- 'supabase/migrations/*.sql' || echo "")
+
+          if [ -z "$MIGRATIONS" ]; then
+            echo "No new migrations to check"
+            exit 0
+          fi
+
+          echo "Checking migrations: $MIGRATIONS"
+
+          UNSAFE_FOUND=0
+          for migration in $MIGRATIONS; do
+            if grep -E "(DROP TABLE|DROP COLUMN|ALTER.*RENAME)" "$migration"; then
+              echo "❌ Found unsafe SQL operation in $migration"
+              UNSAFE_FOUND=1
+            fi
+          done
+
+          if [ $UNSAFE_FOUND -eq 1 ]; then
+            echo "⚠️ Unsafe SQL operations detected"
+            exit 1
+          fi
+        continue-on-error: true
+
+      - name: Validate migration syntax
+        id: syntax
+        run: |
+          # Basic SQL syntax validation
+          MIGRATIONS=$(git diff --name-only origin/main...HEAD -- 'supabase/migrations/*.sql' || echo "")
+
+          if [ -z "$MIGRATIONS" ]; then
+            echo "No new migrations to validate"
+            exit 0
+          fi
+
+          echo "Validating syntax of: $MIGRATIONS"
+          SYNTAX_ERRORS=0
+
+          for migration in $MIGRATIONS; do
+            # Check for unclosed BEGIN/END blocks
+            BEGIN_COUNT=$(grep -c "^BEGIN" "$migration" || echo "0")
+            END_COUNT=$(grep -c "^END" "$migration" || echo "0")
+
+            if [ "$BEGIN_COUNT" -ne "$END_COUNT" ]; then
+              echo "❌ Unbalanced BEGIN/END in $migration"
+              SYNTAX_ERRORS=$((SYNTAX_ERRORS + 1))
+            fi
+
+            # Check for unclosed quotes (basic)
+            SINGLE_QUOTES=$(grep -o "'" "$migration" | wc -l)
+            if [ $((SINGLE_QUOTES % 2)) -ne 0 ]; then
+              echo "⚠️ Possible unclosed quote in $migration"
+            fi
+          done
+
+          if [ $SYNTAX_ERRORS -gt 0 ]; then
+            exit 1
+          fi
+        continue-on-error: true
+
+      - name: Comment PR with results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const guardian = '${{ steps.guardian.outcome }}' === 'success' ? '✅' : '⚠️';
+            const preflight = '${{ steps.preflight.outcome }}' === 'success' ? '✅' : '⚠️';
+            const safety = '${{ steps.safety.outcome }}' === 'success' ? '✅' : '❌';
+            const syntax = '${{ steps.syntax.outcome }}' === 'success' ? '✅' : '❌';
+
+            const comment = `## 🔍 Migration Validation Results
+
+| Check | Status |
+|-------|--------|
+| Guardian Safety | ${guardian} |
+| Pre-Flight Checks | ${preflight} |
+| SQL Safety Patterns | ${safety} |
+| SQL Syntax | ${syntax} |
+
+### Details
+- **Guardian**: Enforces frozen migration policy and safety rules
+- **Pre-Flight**: Validates environment, Node version, RLS policies
+- **Safety**: Detects unsafe operations (DROP, ALTER RENAME, etc.)
+- **Syntax**: Basic SQL syntax validation
+
+**Next Step**: Run \`npm run db:migrate\` to apply these migrations to production.
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      - name: Set final status
+        id: final
+        run: |
+          GUARDIAN=${{ steps.guardian.outcome }}
+          PREFLIGHT=${{ steps.preflight.outcome }}
+          SAFETY=${{ steps.safety.outcome }}
+          SYNTAX=${{ steps.syntax.outcome }}
+
+          echo "guardian=$GUARDIAN" >> $GITHUB_OUTPUT
+          echo "preflight=$PREFLIGHT" >> $GITHUB_OUTPUT
+          echo "safety=$SAFETY" >> $GITHUB_OUTPUT
+          echo "syntax=$SYNTAX" >> $GITHUB_OUTPUT
+
+          if [[ "$SAFETY" == "failure" ]] || [[ "$SYNTAX" == "failure" ]]; then
+            echo "❌ Validation failed - unsafe operations or syntax errors detected"
+            exit 1
+          fi
+
+          echo "✅ Migration validation passed"
+
+  summary:
+    name: Migration Validation Summary
+    runs-on: ubuntu-latest
+    needs: validate-migrations
+    if: always()
+
+    steps:
+      - name: Check results
+        run: |
+          RESULT=${{ needs.validate-migrations.result }}
+          if [ "$RESULT" == "success" ]; then
+            echo "✅ All migration checks passed"
+            exit 0
+          else
+            echo "⚠️ Some migration checks need review"
+            exit 0
+          fi
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: validate-migrations
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.validate-migrations.result == 'success'
+
+    environment:
+      name: staging
+      url: ${{ secrets.STAGING_URL }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.19.4'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+        continue-on-error: true
+
+      - name: Deploy migrations to Staging
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          echo "🚀 Deploying migrations to Staging..."
+          npm run db:migrate:dry
+          echo "✅ Staging dry-run successful"
+
+      - name: Create deployment record
+        run: |
+          echo "Deployment to staging approved and ready for validation"
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [validate-migrations, deploy-staging]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    environment:
+      name: production
+      url: ${{ secrets.PRODUCTION_URL }}
+
+    permissions:
+      contents: read
+      deployments: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.19.4'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+        continue-on-error: true
+
+      - name: Run pre-flight checks
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.PRODUCTION_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PRODUCTION_SUPABASE_SERVICE_ROLE_KEY }}
+        run: npm run db:check
+
+      - name: Apply migrations to Production
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.PRODUCTION_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PRODUCTION_SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          echo "🔐 Applying migrations to Production..."
+          npm run db:migrate
+          echo "✅ Production migrations applied successfully"
+
+      - name: Record deployment
+        if: success()
+        run: |
+          echo "timestamp=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
+          echo "✅ Deployment completed at ${{ env.timestamp }}"
+
+      - name: Notify on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '❌ **PRODUCTION DEPLOYMENT FAILED**\n\nMigrations could not be applied to production. Check logs for details.'
+            })

@@ -14,6 +14,7 @@ DROP POLICY IF EXISTS "Users can delete their organizations" ON organizations;
 DROP POLICY IF EXISTS "Organization owners can manage organizations" ON organizations;
 DROP POLICY IF EXISTS "Organization members can view organizations" ON organizations;
 DROP POLICY IF EXISTS "Users can create organizations" ON organizations;
+DROP POLICY IF EXISTS "Authenticated users can create organizations" ON organizations;
 DROP POLICY IF EXISTS "Organization owners can update" ON organizations;
 DROP POLICY IF EXISTS "Organization owners can delete" ON organizations;
 
@@ -159,6 +160,7 @@ DROP POLICY IF EXISTS "Users can view workspaces in their orgs" ON workspaces;
 DROP POLICY IF EXISTS "Users can create workspaces in their orgs" ON workspaces;
 DROP POLICY IF EXISTS "Org owners can update workspaces" ON workspaces;
 DROP POLICY IF EXISTS "Org owners can delete workspaces" ON workspaces;
+DROP POLICY IF EXISTS "Users can view their workspaces" ON workspaces;
 
 -- SELECT: Users can view workspaces in their organizations
 CREATE POLICY "Users can view their workspaces"

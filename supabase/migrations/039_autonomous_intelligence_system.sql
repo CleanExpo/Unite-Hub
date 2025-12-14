@@ -85,7 +85,37 @@ CREATE TABLE IF NOT EXISTS autonomous_tasks (
 );
 
 CREATE INDEX IF NOT EXISTS idx_tasks_workspace ON autonomous_tasks(workspace_id);
-CREATE INDEX IF NOT EXISTS idx_tasks_contact ON autonomous_tasks(contact_id);
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.tables
+    WHERE table_schema = 'public'
+      AND table_name = 'autonomous_tasks'
+  ) THEN
+    EXECUTE 'ALTER TABLE public.autonomous_tasks ADD COLUMN IF NOT EXISTS contact_id UUID';
+
+    IF EXISTS (
+      SELECT 1
+      FROM information_schema.tables
+      WHERE table_schema = 'public'
+        AND table_name = 'contacts'
+    ) AND NOT EXISTS (
+      SELECT 1
+      FROM pg_constraint c
+      JOIN pg_class r ON r.oid = c.conrelid
+      JOIN pg_namespace n ON n.oid = r.relnamespace
+      WHERE c.contype = 'f'
+        AND n.nspname = 'public'
+        AND r.relname = 'autonomous_tasks'
+        AND c.conname = 'autonomous_tasks_contact_id_fkey'
+    ) THEN
+      EXECUTE 'ALTER TABLE public.autonomous_tasks ADD CONSTRAINT autonomous_tasks_contact_id_fkey FOREIGN KEY (contact_id) REFERENCES public.contacts(id) ON DELETE CASCADE';
+    END IF;
+
+    EXECUTE 'CREATE INDEX IF NOT EXISTS idx_tasks_contact ON public.autonomous_tasks(contact_id)';
+  END IF;
+END $$;
 CREATE INDEX IF NOT EXISTS idx_tasks_status ON autonomous_tasks(status);
 
 -- 5. MARKETING STRATEGIES
@@ -128,8 +158,57 @@ CREATE TABLE IF NOT EXISTS knowledge_graph_nodes (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
-CREATE INDEX IF NOT EXISTS idx_knowledge_nodes_workspace ON knowledge_graph_nodes(workspace_id);
-CREATE INDEX IF NOT EXISTS idx_knowledge_nodes_contact ON knowledge_graph_nodes(contact_id);
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.tables
+    WHERE table_schema = 'public'
+      AND table_name = 'knowledge_graph_nodes'
+  ) THEN
+    EXECUTE 'ALTER TABLE public.knowledge_graph_nodes ADD COLUMN IF NOT EXISTS workspace_id UUID';
+    EXECUTE 'ALTER TABLE public.knowledge_graph_nodes ADD COLUMN IF NOT EXISTS contact_id UUID';
+
+    IF EXISTS (
+      SELECT 1
+      FROM information_schema.tables
+      WHERE table_schema = 'public'
+        AND table_name = 'workspaces'
+    ) AND NOT EXISTS (
+      SELECT 1
+      FROM pg_constraint c
+      JOIN pg_class r ON r.oid = c.conrelid
+      JOIN pg_namespace n ON n.oid = r.relnamespace
+      WHERE c.contype = 'f'
+        AND n.nspname = 'public'
+        AND r.relname = 'knowledge_graph_nodes'
+        AND c.conname = 'knowledge_graph_nodes_workspace_id_fkey'
+    ) THEN
+      EXECUTE 'ALTER TABLE public.knowledge_graph_nodes ADD CONSTRAINT knowledge_graph_nodes_workspace_id_fkey FOREIGN KEY (workspace_id) REFERENCES public.workspaces(id) ON DELETE CASCADE';
+    END IF;
+
+    IF EXISTS (
+      SELECT 1
+      FROM information_schema.tables
+      WHERE table_schema = 'public'
+        AND table_name = 'contacts'
+    ) AND NOT EXISTS (
+      SELECT 1
+      FROM pg_constraint c
+      JOIN pg_class r ON r.oid = c.conrelid
+      JOIN pg_namespace n ON n.oid = r.relnamespace
+      WHERE c.contype = 'f'
+        AND n.nspname = 'public'
+        AND r.relname = 'knowledge_graph_nodes'
+        AND c.conname = 'knowledge_graph_nodes_contact_id_fkey'
+    ) THEN
+      EXECUTE 'ALTER TABLE public.knowledge_graph_nodes ADD CONSTRAINT knowledge_graph_nodes_contact_id_fkey FOREIGN KEY (contact_id) REFERENCES public.contacts(id) ON DELETE CASCADE';
+    END IF;
+
+    EXECUTE 'CREATE INDEX IF NOT EXISTS idx_knowledge_nodes_workspace ON public.knowledge_graph_nodes(workspace_id)';
+    EXECUTE 'CREATE INDEX IF NOT EXISTS idx_knowledge_nodes_contact ON public.knowledge_graph_nodes(contact_id)';
+  END IF;
+END $$;
 
 -- 7. KNOWLEDGE GRAPH EDGES
 CREATE TABLE IF NOT EXISTS knowledge_graph_edges (
@@ -143,8 +222,57 @@ CREATE TABLE IF NOT EXISTS knowledge_graph_edges (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
-CREATE INDEX IF NOT EXISTS idx_knowledge_edges_workspace ON knowledge_graph_edges(workspace_id);
-CREATE INDEX IF NOT EXISTS idx_knowledge_edges_source ON knowledge_graph_edges(source_node_id);
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.tables
+    WHERE table_schema = 'public'
+      AND table_name = 'knowledge_graph_edges'
+  ) THEN
+    EXECUTE 'ALTER TABLE public.knowledge_graph_edges ADD COLUMN IF NOT EXISTS workspace_id UUID';
+    EXECUTE 'ALTER TABLE public.knowledge_graph_edges ADD COLUMN IF NOT EXISTS source_node_id UUID';
+
+    IF EXISTS (
+      SELECT 1
+      FROM information_schema.tables
+      WHERE table_schema = 'public'
+        AND table_name = 'workspaces'
+    ) AND NOT EXISTS (
+      SELECT 1
+      FROM pg_constraint c
+      JOIN pg_class r ON r.oid = c.conrelid
+      JOIN pg_namespace n ON n.oid = r.relnamespace
+      WHERE c.contype = 'f'
+        AND n.nspname = 'public'
+        AND r.relname = 'knowledge_graph_edges'
+        AND c.conname = 'knowledge_graph_edges_workspace_id_fkey'
+    ) THEN
+      EXECUTE 'ALTER TABLE public.knowledge_graph_edges ADD CONSTRAINT knowledge_graph_edges_workspace_id_fkey FOREIGN KEY (workspace_id) REFERENCES public.workspaces(id) ON DELETE CASCADE';
+    END IF;
+
+    IF EXISTS (
+      SELECT 1
+      FROM information_schema.tables
+      WHERE table_schema = 'public'
+        AND table_name = 'knowledge_graph_nodes'
+    ) AND NOT EXISTS (
+      SELECT 1
+      FROM pg_constraint c
+      JOIN pg_class r ON r.oid = c.conrelid
+      JOIN pg_namespace n ON n.oid = r.relnamespace
+      WHERE c.contype = 'f'
+        AND n.nspname = 'public'
+        AND r.relname = 'knowledge_graph_edges'
+        AND c.conname = 'knowledge_graph_edges_source_node_id_fkey'
+    ) THEN
+      EXECUTE 'ALTER TABLE public.knowledge_graph_edges ADD CONSTRAINT knowledge_graph_edges_source_node_id_fkey FOREIGN KEY (source_node_id) REFERENCES public.knowledge_graph_nodes(id) ON DELETE CASCADE';
+    END IF;
+
+    EXECUTE 'CREATE INDEX IF NOT EXISTS idx_knowledge_edges_workspace ON public.knowledge_graph_edges(workspace_id)';
+    EXECUTE 'CREATE INDEX IF NOT EXISTS idx_knowledge_edges_source ON public.knowledge_graph_edges(source_node_id)';
+  END IF;
+END $$;
 
 -- TRIGGERS (reuse existing function)
 DROP TRIGGER IF EXISTS update_email_intelligence_updated_at ON email_intelligence;

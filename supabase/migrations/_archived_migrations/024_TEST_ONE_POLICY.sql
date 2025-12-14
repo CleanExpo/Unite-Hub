@@ -22,28 +22,40 @@ CREATE POLICY "Users can view their organizations"
     )
   );
 
-RAISE NOTICE '✅ Policy 1 created: SELECT';
+DO $$
+BEGIN
+  RAISE NOTICE '✅ Policy 1 created: SELECT';
+END $$;
 
 -- Test Policy 2: INSERT (service role only, no joins)
 CREATE POLICY "Service role can create organizations"
   ON organizations FOR INSERT
   WITH CHECK (auth.jwt()->>'role' = 'service_role');
 
-RAISE NOTICE '✅ Policy 2 created: INSERT';
+DO $$
+BEGIN
+  RAISE NOTICE '✅ Policy 2 created: INSERT';
+END $$;
 
 -- Test Policy 3: UPDATE (uses helper function with UUID parameter)
 CREATE POLICY "Org owners and admins can update organization"
   ON organizations FOR UPDATE
   USING (user_has_role_in_org_simple(id, 'admin'));
 
-RAISE NOTICE '✅ Policy 3 created: UPDATE';
+DO $$
+BEGIN
+  RAISE NOTICE '✅ Policy 3 created: UPDATE';
+END $$;
 
 -- Test Policy 4: DELETE (uses helper function with UUID parameter)
 CREATE POLICY "Org owners can delete organization"
   ON organizations FOR DELETE
   USING (user_has_role_in_org_simple(id, 'owner'));
 
-RAISE NOTICE '✅ Policy 4 created: DELETE';
+DO $$
+BEGIN
+  RAISE NOTICE '✅ Policy 4 created: DELETE';
+END $$;
 
 -- Verification
 DO $$

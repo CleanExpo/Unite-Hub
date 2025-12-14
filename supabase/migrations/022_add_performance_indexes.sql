@@ -55,12 +55,32 @@ CREATE INDEX IF NOT EXISTS idx_emails_workspace_processed
   WHERE is_processed = false;
 
 -- Index for email sender lookups
-CREATE INDEX IF NOT EXISTS idx_emails_from
-  ON emails("from");
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.columns
+    WHERE table_schema = 'public'
+      AND table_name = 'emails'
+      AND column_name = 'from'
+  ) THEN
+    EXECUTE 'CREATE INDEX IF NOT EXISTS idx_emails_from ON emails("from")';
+  END IF;
+END $$;
 
 -- Index for email recipient lookups
-CREATE INDEX IF NOT EXISTS idx_emails_to
-  ON emails("to");
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.columns
+    WHERE table_schema = 'public'
+      AND table_name = 'emails'
+      AND column_name = 'to'
+  ) THEN
+    EXECUTE 'CREATE INDEX IF NOT EXISTS idx_emails_to ON emails("to")';
+  END IF;
+END $$;
 
 -- Full-text search index for email subject (if needed)
 -- CREATE INDEX IF NOT EXISTS idx_emails_subject_search
@@ -107,8 +127,18 @@ CREATE INDEX IF NOT EXISTS idx_generated_content_created_at
 -- ============================================================
 
 -- Index for workspace lookups by organization
-CREATE INDEX IF NOT EXISTS idx_workspaces_org_id
-  ON workspaces(org_id);
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.columns
+    WHERE table_schema = 'public'
+      AND table_name = 'workspaces'
+      AND column_name = 'org_id'
+  ) THEN
+    EXECUTE 'CREATE INDEX IF NOT EXISTS idx_workspaces_org_id ON workspaces(org_id)';
+  END IF;
+END $$;
 
 -- ============================================================
 -- USER_ORGANIZATIONS TABLE INDEXES
@@ -119,8 +149,18 @@ CREATE INDEX IF NOT EXISTS idx_user_organizations_user_id
   ON user_organizations(user_id);
 
 -- Index for organization's users queries
-CREATE INDEX IF NOT EXISTS idx_user_organizations_org_id
-  ON user_organizations(org_id);
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.columns
+    WHERE table_schema = 'public'
+      AND table_name = 'user_organizations'
+      AND column_name = 'org_id'
+  ) THEN
+    EXECUTE 'CREATE INDEX IF NOT EXISTS idx_user_organizations_org_id ON user_organizations(org_id)';
+  END IF;
+END $$;
 
 -- Composite index for user role queries
 CREATE INDEX IF NOT EXISTS idx_user_organizations_user_role
@@ -131,24 +171,80 @@ CREATE INDEX IF NOT EXISTS idx_user_organizations_user_role
 -- ============================================================
 
 -- Index for audit log queries by organization
-CREATE INDEX IF NOT EXISTS idx_audit_logs_org_id
-  ON audit_logs(org_id);
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.columns
+    WHERE table_schema = 'public'
+      AND table_name = 'audit_logs'
+      AND column_name = 'org_id'
+  ) THEN
+    EXECUTE 'CREATE INDEX IF NOT EXISTS idx_audit_logs_org_id ON audit_logs(org_id)';
+  ELSIF EXISTS (
+    SELECT 1
+    FROM information_schema.columns
+    WHERE table_schema = 'public'
+      AND table_name = 'audit_logs'
+      AND column_name = 'workspace_id'
+  ) THEN
+    EXECUTE 'CREATE INDEX IF NOT EXISTS idx_audit_logs_workspace_id ON audit_logs(workspace_id)';
+  END IF;
+END $$;
 
 -- Index for audit log date queries
 CREATE INDEX IF NOT EXISTS idx_audit_logs_created_at
   ON audit_logs(created_at DESC);
 
 -- Composite index for org + date (common query pattern)
-CREATE INDEX IF NOT EXISTS idx_audit_logs_org_created
-  ON audit_logs(org_id, created_at DESC);
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.columns
+    WHERE table_schema = 'public'
+      AND table_name = 'audit_logs'
+      AND column_name = 'org_id'
+  ) THEN
+    EXECUTE 'CREATE INDEX IF NOT EXISTS idx_audit_logs_org_created ON audit_logs(org_id, created_at DESC)';
+  ELSIF EXISTS (
+    SELECT 1
+    FROM information_schema.columns
+    WHERE table_schema = 'public'
+      AND table_name = 'audit_logs'
+      AND column_name = 'workspace_id'
+  ) THEN
+    EXECUTE 'CREATE INDEX IF NOT EXISTS idx_audit_logs_workspace_created ON audit_logs(workspace_id, created_at DESC)';
+  END IF;
+END $$;
 
 -- Index for filtering by agent
-CREATE INDEX IF NOT EXISTS idx_audit_logs_agent
-  ON audit_logs(agent);
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.columns
+    WHERE table_schema = 'public'
+      AND table_name = 'audit_logs'
+      AND column_name = 'agent'
+  ) THEN
+    EXECUTE 'CREATE INDEX IF NOT EXISTS idx_audit_logs_agent ON audit_logs(agent)';
+  END IF;
+END $$;
 
 -- Index for filtering by status
-CREATE INDEX IF NOT EXISTS idx_audit_logs_status
-  ON audit_logs(status);
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.columns
+    WHERE table_schema = 'public'
+      AND table_name = 'audit_logs'
+      AND column_name = 'status'
+  ) THEN
+    EXECUTE 'CREATE INDEX IF NOT EXISTS idx_audit_logs_status ON audit_logs(status)';
+  END IF;
+END $$;
 
 -- ============================================================
 -- DRIP_CAMPAIGNS TABLE INDEXES (if exists)
@@ -204,8 +300,18 @@ CREATE INDEX IF NOT EXISTS idx_email_integrations_workspace_active
   WHERE is_active = true;
 
 -- Index for integrations by organization
-CREATE INDEX IF NOT EXISTS idx_email_integrations_org_id
-  ON email_integrations(org_id);
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM information_schema.columns
+    WHERE table_schema = 'public'
+      AND table_name = 'email_integrations'
+      AND column_name = 'org_id'
+  ) THEN
+    EXECUTE 'CREATE INDEX IF NOT EXISTS idx_email_integrations_org_id ON email_integrations(org_id)';
+  END IF;
+END $$;
 
 -- ============================================================
 -- ANALYZE TABLES FOR QUERY PLANNER

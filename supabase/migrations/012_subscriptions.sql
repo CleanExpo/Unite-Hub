@@ -44,7 +44,6 @@ CREATE TABLE IF NOT EXISTS subscriptions (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
-
 -- Create invoices table for Stripe invoices
 CREATE TABLE IF NOT EXISTS invoices (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -85,7 +84,6 @@ CREATE TABLE IF NOT EXISTS invoices (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
-
 -- Create payment_methods table
 CREATE TABLE IF NOT EXISTS payment_methods (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -124,82 +122,67 @@ CREATE TABLE IF NOT EXISTS payment_methods (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
-
 -- Indexes for subscriptions
 CREATE INDEX IF NOT EXISTS idx_subscriptions_org_id ON subscriptions(org_id);
 CREATE INDEX IF NOT EXISTS idx_subscriptions_stripe_customer_id ON subscriptions(stripe_customer_id);
 CREATE INDEX IF NOT EXISTS idx_subscriptions_stripe_subscription_id ON subscriptions(stripe_subscription_id);
 CREATE INDEX IF NOT EXISTS idx_subscriptions_status ON subscriptions(status);
 CREATE INDEX IF NOT EXISTS idx_subscriptions_plan ON subscriptions(plan);
-
 -- Indexes for invoices
 CREATE INDEX IF NOT EXISTS idx_invoices_subscription_id ON invoices(subscription_id);
 CREATE INDEX IF NOT EXISTS idx_invoices_org_id ON invoices(org_id);
 CREATE INDEX IF NOT EXISTS idx_invoices_stripe_invoice_id ON invoices(stripe_invoice_id);
 CREATE INDEX IF NOT EXISTS idx_invoices_status ON invoices(status);
 CREATE INDEX IF NOT EXISTS idx_invoices_invoice_date ON invoices(invoice_date DESC);
-
 -- Indexes for payment_methods
 CREATE INDEX IF NOT EXISTS idx_payment_methods_org_id ON payment_methods(org_id);
 CREATE INDEX IF NOT EXISTS idx_payment_methods_stripe_payment_method_id ON payment_methods(stripe_payment_method_id);
 CREATE INDEX IF NOT EXISTS idx_payment_methods_is_default ON payment_methods(is_default);
-
 -- Triggers for updated_at
 DROP TRIGGER IF EXISTS update_subscriptions_updated_at ON subscriptions;
 CREATE TRIGGER update_subscriptions_updated_at
   BEFORE UPDATE ON subscriptions
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
-
 DROP TRIGGER IF EXISTS update_invoices_updated_at ON invoices;
 CREATE TRIGGER update_invoices_updated_at
   BEFORE UPDATE ON invoices
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
-
 DROP TRIGGER IF EXISTS update_payment_methods_updated_at ON payment_methods;
 CREATE TRIGGER update_payment_methods_updated_at
   BEFORE UPDATE ON payment_methods
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
-
 -- Enable RLS
 ALTER TABLE subscriptions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE invoices ENABLE ROW LEVEL SECURITY;
 ALTER TABLE payment_methods ENABLE ROW LEVEL SECURITY;
-
 -- RLS Policies for subscriptions
 DROP POLICY IF EXISTS "Users can view subscriptions" ON subscriptions;
 CREATE POLICY "Users can view subscriptions" ON subscriptions
   FOR SELECT USING (true);
-
 DROP POLICY IF EXISTS "Service role can manage subscriptions" ON subscriptions;
 CREATE POLICY "Service role can manage subscriptions" ON subscriptions
   FOR ALL USING (true);
-
 -- RLS Policies for invoices
 DROP POLICY IF EXISTS "Users can view invoices" ON invoices;
 CREATE POLICY "Users can view invoices" ON invoices
   FOR SELECT USING (true);
-
 DROP POLICY IF EXISTS "Service role can manage invoices" ON invoices;
 CREATE POLICY "Service role can manage invoices" ON invoices
   FOR ALL USING (true);
-
 -- RLS Policies for payment_methods
 DROP POLICY IF EXISTS "Users can view payment methods" ON payment_methods;
 CREATE POLICY "Users can view payment methods" ON payment_methods
   FOR SELECT USING (true);
-
 DROP POLICY IF EXISTS "Service role can manage payment methods" ON payment_methods;
 CREATE POLICY "Service role can manage payment methods" ON payment_methods
   FOR ALL USING (true);
-
 -- Comments
 COMMENT ON TABLE subscriptions IS 'Stripe subscription data for organizations';
 COMMENT ON TABLE invoices IS 'Stripe invoice records for billing history';
 COMMENT ON TABLE payment_methods IS 'Payment methods attached to organizations';
-
 COMMENT ON COLUMN subscriptions.stripe_customer_id IS 'Stripe customer ID (also stored in organizations table)';
 COMMENT ON COLUMN subscriptions.cancel_at_period_end IS 'Whether subscription will cancel at end of current period';
 COMMENT ON COLUMN subscriptions.usage_limits IS 'Plan-specific limits: emails_per_month, contacts, images, etc.';

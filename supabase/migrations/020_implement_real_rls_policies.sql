@@ -65,6 +65,70 @@ $$ LANGUAGE plpgsql SECURITY DEFINER STABLE;
 -- =====================================================
 -- ORGANIZATIONS TABLE
 -- =====================================================
+-- Idempotency: this migration is safe to re-apply (drop then recreate policies)
+DROP POLICY IF EXISTS "Admins can create team members" ON team_members;
+DROP POLICY IF EXISTS "Admins can delete approvals" ON approvals;
+DROP POLICY IF EXISTS "Admins can delete calendar posts" ON calendar_posts;
+DROP POLICY IF EXISTS "Admins can delete campaigns" ON campaigns;
+DROP POLICY IF EXISTS "Admins can delete contacts in their workspaces" ON contacts;
+DROP POLICY IF EXISTS "Admins can delete content" ON generated_content;
+DROP POLICY IF EXISTS "Admins can delete drip campaigns" ON drip_campaigns;
+DROP POLICY IF EXISTS "Admins can delete emails" ON emails;
+DROP POLICY IF EXISTS "Admins can delete projects" ON projects;
+DROP POLICY IF EXISTS "Admins can manage payment methods" ON payment_methods;
+DROP POLICY IF EXISTS "Admins can update team members" ON team_members;
+DROP POLICY IF EXISTS "Admins can view all audit logs" ON audit_logs;
+DROP POLICY IF EXISTS "Members can create approvals" ON approvals;
+DROP POLICY IF EXISTS "Members can create calendar posts" ON calendar_posts;
+DROP POLICY IF EXISTS "Members can create campaigns" ON campaigns;
+DROP POLICY IF EXISTS "Members can create contacts in their workspaces" ON contacts;
+DROP POLICY IF EXISTS "Members can create content" ON generated_content;
+DROP POLICY IF EXISTS "Members can create drip campaigns" ON drip_campaigns;
+DROP POLICY IF EXISTS "Members can create emails in their workspaces" ON emails;
+DROP POLICY IF EXISTS "Members can create projects" ON projects;
+DROP POLICY IF EXISTS "Members can manage campaign enrollments" ON campaign_enrollments;
+DROP POLICY IF EXISTS "Members can manage campaign steps" ON campaign_steps;
+DROP POLICY IF EXISTS "Members can manage personas" ON marketing_personas;
+DROP POLICY IF EXISTS "Members can manage strategies" ON marketing_strategies;
+DROP POLICY IF EXISTS "Members can update approvals" ON approvals;
+DROP POLICY IF EXISTS "Members can update calendar posts" ON calendar_posts;
+DROP POLICY IF EXISTS "Members can update campaigns" ON campaigns;
+DROP POLICY IF EXISTS "Members can update contacts in their workspaces" ON contacts;
+DROP POLICY IF EXISTS "Members can update drip campaigns" ON drip_campaigns;
+DROP POLICY IF EXISTS "Members can update projects" ON projects;
+DROP POLICY IF EXISTS "Members can update their content" ON generated_content;
+DROP POLICY IF EXISTS "Org admins can create workspaces" ON workspaces;
+DROP POLICY IF EXISTS "Org admins can update workspaces" ON workspaces;
+DROP POLICY IF EXISTS "Org owners and admins can update organization" ON organizations;
+DROP POLICY IF EXISTS "Org owners can delete organization" ON organizations;
+DROP POLICY IF EXISTS "Org owners can delete workspaces" ON workspaces;
+DROP POLICY IF EXISTS "Owners can delete team members" ON team_members;
+DROP POLICY IF EXISTS "Service role can create organizations" ON organizations;
+DROP POLICY IF EXISTS "Service role can insert audit logs" ON audit_logs;
+DROP POLICY IF EXISTS "Service role can insert execution logs" ON campaign_execution_logs;
+DROP POLICY IF EXISTS "Service role can manage invoices" ON invoices;
+DROP POLICY IF EXISTS "Service role can manage subscriptions" ON subscriptions;
+DROP POLICY IF EXISTS "Service role can update emails" ON emails;
+DROP POLICY IF EXISTS "Users can view approvals in their org" ON approvals;
+DROP POLICY IF EXISTS "Users can view audit logs for their orgs" ON audit_logs;
+DROP POLICY IF EXISTS "Users can view calendar posts in their workspaces" ON calendar_posts;
+DROP POLICY IF EXISTS "Users can view campaign enrollments" ON campaign_enrollments;
+DROP POLICY IF EXISTS "Users can view campaign execution logs" ON campaign_execution_logs;
+DROP POLICY IF EXISTS "Users can view campaign steps" ON campaign_steps;
+DROP POLICY IF EXISTS "Users can view campaigns in their workspaces" ON campaigns;
+DROP POLICY IF EXISTS "Users can view contacts in their workspaces" ON contacts;
+DROP POLICY IF EXISTS "Users can view content in their workspaces" ON generated_content;
+DROP POLICY IF EXISTS "Users can view drip campaigns in their workspaces" ON drip_campaigns;
+DROP POLICY IF EXISTS "Users can view emails in their workspaces" ON emails;
+DROP POLICY IF EXISTS "Users can view invoices for their orgs" ON invoices;
+DROP POLICY IF EXISTS "Users can view payment methods for their orgs" ON payment_methods;
+DROP POLICY IF EXISTS "Users can view personas in their workspaces" ON marketing_personas;
+DROP POLICY IF EXISTS "Users can view projects in their org" ON projects;
+DROP POLICY IF EXISTS "Users can view strategies in their workspaces" ON marketing_strategies;
+DROP POLICY IF EXISTS "Users can view subscriptions for their orgs" ON subscriptions;
+DROP POLICY IF EXISTS "Users can view team members in their org" ON team_members;
+DROP POLICY IF EXISTS "Users can view their organizations" ON organizations;
+DROP POLICY IF EXISTS "Users can view workspaces in their orgs" ON workspaces;
 DROP POLICY IF EXISTS "Users can view their organizations" ON organizations;
 DROP POLICY IF EXISTS "Service role can manage organizations" ON organizations;
 
@@ -251,29 +315,130 @@ CREATE POLICY "Admins can delete campaigns"
 DROP POLICY IF EXISTS "Users can view audit logs" ON audit_logs;
 DROP POLICY IF EXISTS "Service role can manage audit logs" ON audit_logs;
 
-CREATE POLICY "Users can view audit logs for their orgs"
-  ON audit_logs FOR SELECT
-  USING (
-    org_id IN (
-      SELECT org_id FROM user_organizations
-      WHERE user_id = auth.uid() AND is_active = true
-    )
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'audit_logs'
+      AND policyname = 'Users can view audit logs for their orgs'
+  ) THEN
+    IF EXISTS (
+      SELECT 1
+      FROM information_schema.columns
+      WHERE table_schema = 'public'
+        AND table_name = 'audit_logs'
+        AND column_name = 'org_id'
+    ) THEN
+      EXECUTE $pol$
+        CREATE POLICY "Users can view audit logs for their orgs"
+          ON audit_logs FOR SELECT
+          USING (
+            org_id IN (
+              SELECT org_id FROM user_organizations
+              WHERE user_id = auth.uid() AND is_active = true
+            )
+          );
+      $pol$;
+    ELSIF EXISTS (
+      SELECT 1
+      FROM information_schema.columns
+      WHERE table_schema = 'public'
+        AND table_name = 'audit_logs'
+        AND column_name = 'workspace_id'
+    ) THEN
+      EXECUTE $pol$
+        CREATE POLICY "Users can view audit logs for their orgs"
+          ON audit_logs FOR SELECT
+          USING (workspace_id IN (SELECT get_user_workspaces()));
+      $pol$;
+    END IF;
+  END IF;
+END $$;
 
-CREATE POLICY "Service role can insert audit logs"
-  ON audit_logs FOR INSERT
-  WITH CHECK (true);  -- All operations logged
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'audit_logs'
+      AND policyname = 'Service role can insert audit logs'
+  ) THEN
+    EXECUTE $pol$
+      CREATE POLICY "Service role can insert audit logs"
+        ON audit_logs FOR INSERT
+        WITH CHECK (true);
+    $pol$;
+  END IF;
+END $$;
 
-CREATE POLICY "Admins can view all audit logs"
-  ON audit_logs FOR SELECT
-  USING (
-    org_id IN (
-      SELECT org_id FROM user_organizations
-      WHERE user_id = auth.uid()
-        AND role IN ('admin', 'owner')
-        AND is_active = true
-    )
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'audit_logs'
+      AND policyname = 'Admins can view all audit logs'
+  ) THEN
+    IF EXISTS (
+      SELECT 1
+      FROM information_schema.columns
+      WHERE table_schema = 'public'
+        AND table_name = 'audit_logs'
+        AND column_name = 'org_id'
+    ) THEN
+      EXECUTE $pol$
+        CREATE POLICY "Admins can view all audit logs"
+          ON audit_logs FOR SELECT
+          USING (
+            org_id IN (
+              SELECT org_id FROM user_organizations
+              WHERE user_id = auth.uid()
+                AND role IN ('admin', 'owner')
+                AND is_active = true
+            )
+          );
+      $pol$;
+    ELSIF EXISTS (
+      SELECT 1
+      FROM information_schema.columns
+      WHERE table_schema = 'public'
+        AND table_name = 'audit_logs'
+        AND column_name = 'workspace_id'
+    ) THEN
+      IF EXISTS (
+        SELECT 1
+        FROM information_schema.columns
+        WHERE table_schema = 'public'
+          AND table_name = 'workspaces'
+          AND column_name = 'org_id'
+      ) THEN
+        EXECUTE $pol$
+          CREATE POLICY "Admins can view all audit logs"
+            ON audit_logs FOR SELECT
+            USING (
+              workspace_id IN (
+                SELECT w.id FROM workspaces w
+                INNER JOIN user_organizations uo ON uo.org_id = w.org_id
+                WHERE uo.user_id = auth.uid()
+                  AND uo.role IN ('admin', 'owner')
+                  AND uo.is_active = true
+              )
+            );
+        $pol$;
+      ELSE
+        EXECUTE $pol$
+          CREATE POLICY "Admins can view all audit logs"
+            ON audit_logs FOR SELECT
+            USING (workspace_id IN (SELECT get_user_workspaces()));
+        $pol$;
+      END IF;
+    END IF;
+  END IF;
+END $$;
 
 -- =====================================================
 -- TEAM_MEMBERS TABLE

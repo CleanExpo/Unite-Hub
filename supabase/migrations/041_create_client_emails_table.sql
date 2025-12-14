@@ -33,45 +33,104 @@ CREATE INDEX IF NOT EXISTS idx_client_emails_direction ON client_emails(directio
 CREATE INDEX IF NOT EXISTS idx_client_emails_is_read ON client_emails(is_read);
 
 -- Add trigger to update updated_at timestamp
-CREATE TRIGGER update_client_emails_updated_at BEFORE UPDATE ON client_emails
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1
+    FROM pg_class c
+    JOIN pg_namespace n ON n.oid = c.relnamespace
+    WHERE n.nspname = 'public'
+      AND c.relname = 'client_emails'
+      AND c.relkind = 'r'
+  ) AND NOT EXISTS (
+    SELECT 1
+    FROM pg_trigger t
+    JOIN pg_class c ON c.oid = t.tgrelid
+    JOIN pg_namespace n ON n.oid = c.relnamespace
+    WHERE n.nspname = 'public'
+      AND c.relname = 'client_emails'
+      AND t.tgname = 'update_client_emails_updated_at'
+      AND NOT t.tgisinternal
+  ) THEN
+    EXECUTE 'CREATE TRIGGER update_client_emails_updated_at BEFORE UPDATE ON public.client_emails FOR EACH ROW EXECUTE FUNCTION update_updated_at_column()';
+  END IF;
+END $$;
 
 -- Enable Row Level Security
 ALTER TABLE client_emails ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies
 -- Users can view client_emails in their workspaces
-CREATE POLICY "Users can view client_emails in their workspaces" ON client_emails
-  FOR SELECT
-  USING (
-    workspace_id IN (
-      SELECT w.id FROM workspaces w
-      INNER JOIN user_organizations uo ON uo.org_id = w.org_id
-      WHERE uo.user_id = auth.uid()
-    )
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'client_emails'
+      AND policyname = 'Users can view client_emails in their workspaces'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can view client_emails in their workspaces" ON public.client_emails
+        FOR SELECT
+        USING (
+          workspace_id IN (
+            SELECT w.id FROM public.workspaces w
+            INNER JOIN public.user_organizations uo ON uo.org_id = w.org_id
+            WHERE uo.user_id = auth.uid()
+          )
+        )
+    $policy$;
+  END IF;
+END $$;
 
 -- Users can insert client_emails in their workspaces
-CREATE POLICY "Users can insert client_emails in their workspaces" ON client_emails
-  FOR INSERT
-  WITH CHECK (
-    workspace_id IN (
-      SELECT w.id FROM workspaces w
-      INNER JOIN user_organizations uo ON uo.org_id = w.org_id
-      WHERE uo.user_id = auth.uid()
-    )
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'client_emails'
+      AND policyname = 'Users can insert client_emails in their workspaces'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can insert client_emails in their workspaces" ON public.client_emails
+        FOR INSERT
+        WITH CHECK (
+          workspace_id IN (
+            SELECT w.id FROM public.workspaces w
+            INNER JOIN public.user_organizations uo ON uo.org_id = w.org_id
+            WHERE uo.user_id = auth.uid()
+          )
+        )
+    $policy$;
+  END IF;
+END $$;
 
 -- Users can update client_emails in their workspaces
-CREATE POLICY "Users can update client_emails in their workspaces" ON client_emails
-  FOR UPDATE
-  USING (
-    workspace_id IN (
-      SELECT w.id FROM workspaces w
-      INNER JOIN user_organizations uo ON uo.org_id = w.org_id
-      WHERE uo.user_id = auth.uid()
-    )
-  );
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_policies
+    WHERE schemaname = 'public'
+      AND tablename = 'client_emails'
+      AND policyname = 'Users can update client_emails in their workspaces'
+  ) THEN
+    EXECUTE $policy$
+      CREATE POLICY "Users can update client_emails in their workspaces" ON public.client_emails
+        FOR UPDATE
+        USING (
+          workspace_id IN (
+            SELECT w.id FROM public.workspaces w
+            INNER JOIN public.user_organizations uo ON uo.org_id = w.org_id
+            WHERE uo.user_id = auth.uid()
+          )
+        )
+    $policy$;
+  END IF;
+END $$;
 
 -- Grant permissions
 GRANT SELECT, INSERT, UPDATE ON client_emails TO authenticated;
