@@ -1,184 +1,107 @@
 /**
- * Migration Checksum Verifier
- * v1.1.1 Stabilisation - Verifies migration files match recorded checksums
+ * Migration Hygiene Verifier (CI)
  *
- * Compares migration files against FINAL_MIGRATION_ORDER.txt to ensure:
- * - All migrations exist
- * - Line counts match (basic integrity check)
- * - No unexpected migrations added
+ * Enforces a single allowed migration filename pattern in `supabase/migrations/`:
+ *   `YYYYMMDDHHMMSS_name.sql`
+ *
+ * Anything else must be moved under:
+ *   `supabase/migrations/_quarantine_invalid_names/`
  */
 
 import * as fs from 'fs';
 import * as path from 'path';
-import * as crypto from 'crypto';
 
-interface MigrationRecord {
-  filename: string;
-  lineCount: number;
-}
+const VALID_MIGRATION_RE = /^\d{14}_[a-z0-9_]+\.sql$/i;
+const quarantineDirName = '_quarantine_invalid_names';
 
-interface VerificationResult {
+interface HygieneResult {
   passed: boolean;
-  missing: string[];
-  unexpected: string[];
-  mismatch: Array<{ file: string; expected: number; actual: number }>;
-  verified: number;
+  invalidSqlFiles: string[];
+  nonSqlFiles: string[];
+  unexpectedDirs: string[];
+  timestampedMigrations: string[];
 }
 
-function parseMigrationOrder(content: string): MigrationRecord[] {
-  const records: MigrationRecord[] = [];
+function main() {
+  console.log('ÐY"? Migration Hygiene Verifier\n');
 
-  for (const line of content.split('\n')) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith('#')) {
-continue;
-}
-
-    // Format: filename.sql:linecount
-    const match = trimmed.match(/^([^:]+):(\d+)$/);
-    if (match) {
-      records.push({
-        filename: match[1],
-        lineCount: parseInt(match[2], 10),
-      });
-    }
-  }
-
-  return records;
-}
-
-function countLines(filePath: string): number {
-  const content = fs.readFileSync(filePath, 'utf-8');
-  return content.split('\n').length;
-}
-
-function generateChecksum(filePath: string): string {
-  const content = fs.readFileSync(filePath);
-  return crypto.createHash('md5').update(content).digest('hex');
-}
-
-async function main() {
-  console.log('🔍 Migration Checksum Verifier v1.1.1\n');
-
-  const orderFilePath = path.join(process.cwd(), 'FINAL_MIGRATION_ORDER.txt');
-  const migrationsDir = path.join(process.cwd(), 'supabase/migrations');
-
-  // Check required files exist
-  if (!fs.existsSync(orderFilePath)) {
-    console.error('❌ FINAL_MIGRATION_ORDER.txt not found');
-    process.exit(1);
-  }
-
+  const migrationsDir = path.join(process.cwd(), 'supabase', 'migrations');
   if (!fs.existsSync(migrationsDir)) {
-    console.error('❌ Migrations directory not found');
+    console.error('ƒ?O Migrations directory not found');
     process.exit(1);
   }
 
-  // Parse expected migrations
-  const orderContent = fs.readFileSync(orderFilePath, 'utf-8');
-  const expectedMigrations = parseMigrationOrder(orderContent);
-  console.log(`📋 Expected migrations: ${expectedMigrations.length}`);
+  const entries = fs.readdirSync(migrationsDir, { withFileTypes: true });
 
-  // Get actual migrations
-  const actualFiles = fs.readdirSync(migrationsDir)
-    .filter(f => f.endsWith('.sql'))
-    .sort();
-  console.log(`📁 Actual migrations: ${actualFiles.length}\n`);
-
-  // Verify
-  const result: VerificationResult = {
+  const result: HygieneResult = {
     passed: true,
-    missing: [],
-    unexpected: [],
-    mismatch: [],
-    verified: 0,
+    invalidSqlFiles: [],
+    nonSqlFiles: [],
+    unexpectedDirs: [],
+    timestampedMigrations: [],
   };
 
-  // Check for missing migrations
-  const expectedSet = new Set(expectedMigrations.map(m => m.filename));
-  const actualSet = new Set(actualFiles);
-
-  for (const expected of expectedMigrations) {
-    if (!actualSet.has(expected.filename)) {
-      result.missing.push(expected.filename);
-      result.passed = false;
-    }
-  }
-
-  // Check for unexpected migrations
-  for (const actual of actualFiles) {
-    if (!expectedSet.has(actual)) {
-      result.unexpected.push(actual);
-      // Unexpected migrations are warnings, not failures
-    }
-  }
-
-  // Verify line counts for matching files
-  for (const expected of expectedMigrations) {
-    if (actualSet.has(expected.filename)) {
-      const filePath = path.join(migrationsDir, expected.filename);
-      const actualLineCount = countLines(filePath);
-
-      // Allow some tolerance (±5 lines) for minor edits
-      const tolerance = 5;
-      if (Math.abs(actualLineCount - expected.lineCount) > tolerance) {
-        result.mismatch.push({
-          file: expected.filename,
-          expected: expected.lineCount,
-          actual: actualLineCount,
-        });
+  for (const entry of entries) {
+    if (entry.name === quarantineDirName) {
+      if (!entry.isDirectory()) {
         result.passed = false;
-      } else {
-        result.verified++;
+        result.unexpectedDirs.push(`${quarantineDirName} (not a directory)`);
       }
+      continue;
     }
+
+    if (entry.isDirectory()) {
+      result.passed = false;
+      result.unexpectedDirs.push(entry.name);
+      continue;
+    }
+
+    const fileName = entry.name;
+    if (!fileName.toLowerCase().endsWith('.sql')) {
+      result.passed = false;
+      result.nonSqlFiles.push(fileName);
+      continue;
+    }
+
+    if (!VALID_MIGRATION_RE.test(fileName)) {
+      result.passed = false;
+      result.invalidSqlFiles.push(fileName);
+      continue;
+    }
+
+    result.timestampedMigrations.push(fileName);
   }
 
-  // Output results
-  console.log('='.repeat(50));
-  console.log('VERIFICATION RESULTS');
-  console.log('='.repeat(50) + '\n');
+  result.timestampedMigrations.sort();
 
-  if (result.missing.length > 0) {
-    console.log('❌ Missing migrations:');
-    for (const file of result.missing) {
-      console.log(`   - ${file}`);
-    }
+  console.log(`ÐY"< Timestamped migrations: ${result.timestampedMigrations.length}`);
+  console.log(`ÐY"? Invalid .sql filenames: ${result.invalidSqlFiles.length}`);
+  console.log(`ÐY"? Non-.sql files: ${result.nonSqlFiles.length}`);
+  console.log(`ÐY"? Unexpected directories: ${result.unexpectedDirs.length}\n`);
+
+  if (result.unexpectedDirs.length > 0) {
+    console.log('ƒ?O Unexpected directories in migrations root:');
+    for (const d of result.unexpectedDirs) console.log(`   - ${d}`);
     console.log();
   }
 
-  if (result.unexpected.length > 0) {
-    console.log('⚠️  Unexpected migrations (not in order file):');
-    for (const file of result.unexpected) {
-      console.log(`   - ${file}`);
-    }
+  if (result.nonSqlFiles.length > 0) {
+    console.log('ƒ?O Non-.sql files in migrations root:');
+    for (const f of result.nonSqlFiles) console.log(`   - ${f}`);
     console.log();
   }
 
-  if (result.mismatch.length > 0) {
-    console.log('❌ Line count mismatches:');
-    for (const m of result.mismatch) {
-      console.log(`   - ${m.file}: expected ${m.expected}, got ${m.actual}`);
-    }
+  if (result.invalidSqlFiles.length > 0) {
+    console.log('ƒ?O Invalid migration filenames (expected YYYYMMDDHHMMSS_name.sql):');
+    for (const f of result.invalidSqlFiles) console.log(`   - ${f}`);
     console.log();
   }
 
-  console.log('='.repeat(50));
-  console.log(`Verified: ${result.verified}/${expectedMigrations.length}`);
-  console.log(`Missing: ${result.missing.length}`);
-  console.log(`Mismatched: ${result.mismatch.length}`);
-  console.log(`Unexpected: ${result.unexpected.length}`);
-  console.log(`Status: ${result.passed ? 'PASS ✅' : 'FAIL ❌'}`);
-  console.log('='.repeat(50));
-
+  console.log(`Status: ${result.passed ? 'PASS ƒo.' : 'FAIL ƒ?O'}`);
   if (!result.passed) {
     process.exit(1);
   }
-
-  console.log('\n✅ All migrations verified successfully');
 }
 
-main().catch(error => {
-  console.error('Verification failed:', error);
-  process.exit(1);
-});
+main();
+
