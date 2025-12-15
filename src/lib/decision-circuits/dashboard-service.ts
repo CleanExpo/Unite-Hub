@@ -85,6 +85,51 @@ export interface ReleaseStateRecord {
 }
 
 /**
+ * A/B test record with latest decision
+ */
+export interface ABTestRecord {
+  id: string;
+  test_id: string;
+  test_name: string;
+  channel: 'email' | 'social' | 'multichannel';
+  status: 'running' | 'paused' | 'completed' | 'terminated';
+  variant_count: number;
+  total_samples: number;
+  avg_engagement_rate: number;
+  max_engagement_rate: number;
+  started_at: string;
+  evaluation_window_end_at?: string;
+  latest_decision?: 'promote' | 'continue_test' | 'terminate';
+  latest_confidence_score?: number;
+  latest_performance_delta?: number;
+}
+
+/**
+ * A/B test variant result
+ */
+export interface ABTestVariantResult {
+  variant_id: string;
+  agent_execution_id: string;
+  engagement_rate: number;
+  click_through_rate: number;
+  sample_size: number;
+  evaluated_at: string;
+}
+
+/**
+ * A/B test evaluation history
+ */
+export interface ABTestEvaluation {
+  id: string;
+  winning_variant_id: string;
+  decision: 'promote' | 'continue_test' | 'terminate';
+  confidence_score: number;
+  performance_delta: number;
+  evaluated_at: string;
+  recommendation?: string;
+}
+
+/**
  * Get system-level health and autonomy status
  */
 export async function getSystemHealthStatus(
@@ -475,5 +520,132 @@ export async function getReleaseState(
   } catch (error) {
     console.error('Failed to get release state:', error);
     throw error;
+  }
+}
+
+/**
+ * Get all A/B tests for a workspace
+ */
+export async function getABTests(
+  workspaceId: string,
+  limit: number = 50
+): Promise<ABTestRecord[]> {
+  const supabase = await createClient();
+
+  try {
+    const { data, error } = await supabase
+      .from('circuit_ab_test_summary')
+      .select('*')
+      .eq('workspace_id', workspaceId)
+      .order('started_at', { ascending: false })
+      .limit(limit);
+
+    if (error) {
+      throw error;
+    }
+
+    return (
+      data?.map((record) => ({
+        id: record.id,
+        test_id: record.test_id,
+        test_name: record.test_name,
+        channel: record.channel,
+        status: record.status,
+        variant_count: record.variant_count || 0,
+        total_samples: record.total_samples || 0,
+        avg_engagement_rate: record.avg_engagement_rate || 0,
+        max_engagement_rate: record.max_engagement_rate || 0,
+        started_at: record.started_at,
+        evaluation_window_end_at: record.evaluation_window_end_at,
+      })) || []
+    );
+  } catch (error) {
+    console.error('Failed to get A/B tests:', error);
+    throw error;
+  }
+}
+
+/**
+ * Get detailed A/B test information including variants and latest decision
+ */
+export async function getABTestDetails(
+  workspaceId: string,
+  testId: string
+): Promise<{
+  test: ABTestRecord;
+  variants: ABTestVariantResult[];
+  evaluations: ABTestEvaluation[];
+} | null> {
+  const supabase = await createClient();
+
+  try {
+    // Get test info
+    const { data: testData, error: testError } = await supabase
+      .from('circuit_ab_tests')
+      .select('*')
+      .eq('workspace_id', workspaceId)
+      .eq('test_id', testId)
+      .single();
+
+    if (testError || !testData) {
+      return null;
+    }
+
+    // Get variant results
+    const { data: variantData } = await supabase
+      .from('circuit_ab_test_results')
+      .select('*')
+      .eq('workspace_id', workspaceId)
+      .eq('ab_test_id', testData.id)
+      .order('evaluated_at', { ascending: false });
+
+    // Get evaluation history
+    const { data: evaluationData } = await supabase
+      .from('circuit_ab_test_winners')
+      .select('*')
+      .eq('workspace_id', workspaceId)
+      .eq('ab_test_id', testData.id)
+      .order('selected_at', { ascending: false });
+
+    return {
+      test: {
+        id: testData.id,
+        test_id: testData.test_id,
+        test_name: testData.test_name,
+        channel: testData.channel,
+        status: testData.status,
+        variant_count: variantData?.length || 0,
+        total_samples: variantData?.reduce((sum, v) => sum + (v.sample_size || 0), 0) || 0,
+        avg_engagement_rate:
+          variantData && variantData.length > 0
+            ? variantData.reduce((sum, v) => sum + (v.engagement_rate || 0), 0) / variantData.length
+            : 0,
+        max_engagement_rate: variantData?.reduce((max, v) => Math.max(max, v.engagement_rate || 0), 0) || 0,
+        started_at: testData.started_at,
+        evaluation_window_end_at: testData.evaluation_window_end_at,
+        latest_decision: evaluationData?.[0]?.decision,
+        latest_confidence_score: evaluationData?.[0]?.confidence_score,
+        latest_performance_delta: evaluationData?.[0]?.performance_delta,
+      },
+      variants: (variantData || []).map((v) => ({
+        variant_id: v.variant_id,
+        agent_execution_id: v.agent_execution_id,
+        engagement_rate: v.engagement_rate || 0,
+        click_through_rate: v.click_through_rate || 0,
+        sample_size: v.sample_size || 0,
+        evaluated_at: v.evaluated_at,
+      })),
+      evaluations: (evaluationData || []).map((e) => ({
+        id: e.id,
+        winning_variant_id: e.winning_variant_id,
+        decision: e.decision,
+        confidence_score: e.confidence_score,
+        performance_delta: e.performance_delta,
+        evaluated_at: e.evaluated_at,
+      })),
+    };
+  } catch (error) {
+    console.error(`Failed to get A/B test details for ${testId}:`, error);
+    return null;
   }
 }

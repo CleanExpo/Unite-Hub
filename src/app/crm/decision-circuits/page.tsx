@@ -68,7 +68,7 @@ export default async function DecisionCircuitsOverviewPage() {
         </div>
 
         {/* Navigation */}
-        <div className="mb-8 grid grid-cols-5 gap-4">
+        <div className="mb-8 grid grid-cols-6 gap-4">
           <Link
             href="/crm/decision-circuits/executions"
             className="block p-4 bg-bg-card border border-border-subtle rounded-lg hover:bg-bg-hover transition-colors"
@@ -82,6 +82,13 @@ export default async function DecisionCircuitsOverviewPage() {
           >
             <div className="text-accent-500 font-semibold mb-1">🏥 Health</div>
             <p className="text-text-muted text-sm">Checks & enforcement</p>
+          </Link>
+          <Link
+            href="/crm/decision-circuits/ab-tests"
+            className="block p-4 bg-bg-card border border-border-subtle rounded-lg hover:bg-bg-hover transition-colors"
+          >
+            <div className="text-accent-500 font-semibold mb-1">🧪 A/B Tests</div>
+            <p className="text-text-muted text-sm">Variant evaluation</p>
           </Link>
           <Link
             href="/crm/decision-circuits/releases"
