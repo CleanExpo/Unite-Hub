@@ -72,6 +72,37 @@ export const notificationQueue: BullQueue = new Queue('notifications', {
   },
 });
 
+export const emailSendQueue: BullQueue = new Queue('emailSend', {
+  redis: redisConfig,
+  defaultJobOptions: {
+    attempts: 3,
+    backoff: {
+      type: 'exponential',
+      delay: 2000,
+    },
+    removeOnComplete: {
+      age: 3600, // Remove after 1 hour
+    },
+    removeOnFail: {
+      age: 86400, // Keep failed jobs for 24 hours
+    },
+  },
+});
+
+export const emailMetricsQueue: BullQueue = new Queue('emailMetrics', {
+  redis: redisConfig,
+  defaultJobOptions: {
+    attempts: 2,
+    backoff: {
+      type: 'exponential',
+      delay: 5000,
+    },
+    removeOnComplete: {
+      age: 7200, // Remove after 2 hours
+    },
+  },
+});
+
 // Queue Event Listeners
 
 // Alert Queue Events
@@ -130,6 +161,36 @@ notificationQueue.on('error', (error: Error) => {
   console.error('[Notification Queue] Error:', error);
 });
 
+// Email Send Queue Events
+emailSendQueue.on('completed', (job: Job) => {
+  console.log(`[Email Send Queue] Job ${job.id} completed`);
+});
+
+emailSendQueue.on('failed', (job: Job | undefined, err: Error) => {
+  console.error(`[Email Send Queue] Job failed:`, err.message);
+});
+
+emailSendQueue.on('error', (error: Error) => {
+  console.error('[Email Send Queue] Error:', error);
+});
+
+emailSendQueue.on('active', (job: Job) => {
+  console.log(`[Email Send Queue] Job ${job.id} started processing`);
+});
+
+// Email Metrics Queue Events
+emailMetricsQueue.on('completed', (job: Job) => {
+  console.log(`[Email Metrics Queue] Job ${job.id} completed`);
+});
+
+emailMetricsQueue.on('failed', (job: Job | undefined, err: Error) => {
+  console.error(`[Email Metrics Queue] Job failed:`, err.message);
+});
+
+emailMetricsQueue.on('error', (error: Error) => {
+  console.error('[Email Metrics Queue] Error:', error);
+});
+
 // Queue Management Functions
 
 /**
@@ -144,6 +205,8 @@ export async function initializeQueues() {
     analyticsQueue.clean(0, 'active'),
     predictionQueue.clean(0, 'active'),
     notificationQueue.clean(0, 'active'),
+    emailSendQueue.clean(0, 'active'),
+    emailMetricsQueue.clean(0, 'active'),
   ]);
 
   console.log('[Queue] All queues initialized');
@@ -160,6 +223,8 @@ export async function shutdownQueues() {
     analyticsQueue.close(),
     predictionQueue.close(),
     notificationQueue.close(),
+    emailSendQueue.close(),
+    emailMetricsQueue.close(),
   ]);
 
   console.log('[Queue] All queues shut down');
@@ -174,6 +239,8 @@ export async function getQueueMetrics() {
     analytics: await analyticsQueue.getStats(),
     prediction: await predictionQueue.getStats(),
     notification: await notificationQueue.getStats(),
+    emailSend: await emailSendQueue.getStats(),
+    emailMetrics: await emailMetricsQueue.getStats(),
   };
 
   return metrics;
@@ -187,12 +254,16 @@ export async function getQueueStatus() {
   const analyticsCounts = await analyticsQueue.getJobCounts();
   const predictionCounts = await predictionQueue.getJobCounts();
   const notificationCounts = await notificationQueue.getJobCounts();
+  const emailSendCounts = await emailSendQueue.getJobCounts();
+  const emailMetricsCounts = await emailMetricsQueue.getJobCounts();
 
   return {
     alert: alertCounts,
     analytics: analyticsCounts,
     prediction: predictionCounts,
     notification: notificationCounts,
+    emailSend: emailSendCounts,
+    emailMetrics: emailMetricsCounts,
   };
 }
 
@@ -206,13 +277,17 @@ export async function getQueueHealth() {
     (status.alert.failed || 0) +
     (status.analytics.failed || 0) +
     (status.prediction.failed || 0) +
-    (status.notification.failed || 0);
+    (status.notification.failed || 0) +
+    (status.emailSend.failed || 0) +
+    (status.emailMetrics.failed || 0);
 
   const delayed =
     (status.alert.delayed || 0) +
     (status.analytics.delayed || 0) +
     (status.prediction.delayed || 0) +
-    (status.notification.delayed || 0);
+    (status.notification.delayed || 0) +
+    (status.emailSend.delayed || 0) +
+    (status.emailMetrics.delayed || 0);
 
   return {
     healthy: failed < 10 && delayed < 50,
@@ -227,6 +302,8 @@ export default {
   analyticsQueue,
   predictionQueue,
   notificationQueue,
+  emailSendQueue,
+  emailMetricsQueue,
   initializeQueues,
   shutdownQueues,
   getQueueMetrics,

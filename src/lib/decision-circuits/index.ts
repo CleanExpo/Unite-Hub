@@ -94,3 +94,13 @@ export {
   collectEngagementMetrics,
   executeSocialPublishing,
 } from './agents/social-executor';
+
+export {
+  type EmailExecutorInput,
+  type EmailExecutorOutput,
+  type CRMContext as EmailCRMContext,
+  type EmailSendOptions,
+  validateRecipientSafety,
+  collectEngagementMetrics as collectEmailEngagementMetrics,
+  executeEmailSending,
+} from './agents/email-executor';
