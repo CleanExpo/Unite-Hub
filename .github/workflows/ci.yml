@@ -80,6 +80,27 @@ jobs:
       - name: Run integration tests
         run: npm run test:integration
 
+      - name: Guardian narrative/unit smoke
+        run: npm run test:guardian
+
+      - name: Guardian API smoke
+        run: npm run test:guardian:api
+
+      - name: Guardian UI smoke
+        run: npm run test:guardian:ui
+
+      - name: Guardian executive UI smoke
+        run: npm run test:guardian:executive
+
+      - name: Guardian scorecard UI smoke
+        run: npm run test:guardian:scorecard
+
+      - name: Guardian readiness contract
+        run: npx vitest run tests/guardian-readiness-contract.test.ts
+
+      - name: Guardian read-only regression
+        run: npm run test -- tests/guardian-readonly-regression.test.ts
+
       - name: Upload coverage
         uses: codecov/codecov-action@v4
         with:

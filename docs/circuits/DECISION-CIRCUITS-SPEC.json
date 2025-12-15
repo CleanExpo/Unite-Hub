@@ -1,0 +1,320 @@
+{
+  "spec_version": "1.0.0",
+  "spec_date": "2025-12-15",
+  "intent": "Introduce circuit-style autonomous decision governance into Unite-Hub and Synthex to enable zero-frontline-staff marketing operations with traceable, self-correcting AI behavior.",
+  "scope": ["Unite-Hub", "Synthex"],
+  "core_principles": {
+    "no_black_box_decisions": true,
+    "all_ai_actions_must_be_explainable": true,
+    "decisions_are_first_class_objects": true,
+    "self_correction_over_human_intervention": true
+  },
+  "system_status": {
+    "phase": "Alpha",
+    "created": "2025-12-15",
+    "last_updated": "2025-12-15",
+    "production_ready": false
+  },
+  "decision_circuit_registry": [
+    {
+      "circuit_id": "CX01_INTENT_DETECTION",
+      "category": "detection",
+      "purpose": "Detect marketing intent from business input",
+      "inputs": ["business_profile", "campaign_goal", "historical_context"],
+      "model_usage": "classification_only",
+      "constraints": {
+        "allowed_intents": [
+          "brand_awareness",
+          "lead_generation",
+          "reputation_building",
+          "authority_positioning"
+        ]
+      },
+      "outputs": ["detected_intent"],
+      "failure_mode": "fallback_to_last_successful_intent",
+      "success_metric": "engagement_lift",
+      "implementation_status": "ready",
+      "implemented_by": "Decision Circuits v1.0.0"
+    },
+    {
+      "circuit_id": "CX02_AUDIENCE_CLASSIFICATION",
+      "category": "classification",
+      "purpose": "Select target audience segment",
+      "inputs": ["detected_intent", "location", "industry", "client_history"],
+      "model_usage": "classification_only",
+      "outputs": ["audience_segment"],
+      "failure_mode": "default_to_primary_segment",
+      "success_metric": "click_through_rate",
+      "implementation_status": "ready",
+      "implemented_by": "Decision Circuits v1.0.0"
+    },
+    {
+      "circuit_id": "CX03_STATE_MEMORY_RETRIEVAL",
+      "category": "state_memory",
+      "purpose": "Retrieve prior successful strategies for this client",
+      "inputs": ["client_id", "audience_segment"],
+      "storage": "unite_hub_state_store",
+      "outputs": ["prior_strategy_signature"],
+      "failure_mode": "proceed_without_state",
+      "success_metric": "strategy_reuse_success",
+      "implementation_status": "ready",
+      "implemented_by": "Decision Circuits v1.0.0"
+    },
+    {
+      "circuit_id": "CX04_CONTENT_STRATEGY_SELECTION",
+      "category": "decision",
+      "purpose": "Choose content strategy based on intent and state",
+      "inputs": ["detected_intent", "audience_segment", "prior_strategy_signature"],
+      "model_usage": "decision_only",
+      "outputs": ["content_strategy_id"],
+      "failure_mode": "rotate_to_alternate_strategy",
+      "success_metric": "engagement_score",
+      "implementation_status": "ready",
+      "implemented_by": "Decision Circuits v1.0.0"
+    },
+    {
+      "circuit_id": "CX05_BRAND_GUARD",
+      "category": "constraint",
+      "purpose": "Ensure brand, tone, and compliance adherence",
+      "inputs": ["draft_content", "brand_rules"],
+      "constraints": {
+        "must_not": [
+          "misleading_claims",
+          "policy_violations",
+          "off_brand_language"
+        ]
+      },
+      "outputs": ["approved_content", "violations"],
+      "failure_mode": "auto_rewrite_with_penalty",
+      "success_metric": "zero_violation_rate",
+      "implementation_status": "ready",
+      "implemented_by": "Decision Circuits v1.0.0"
+    },
+    {
+      "circuit_id": "CX06_GENERATION_EXECUTION",
+      "category": "generation",
+      "purpose": "Generate marketing asset",
+      "inputs": ["content_strategy_id", "approved_content"],
+      "model_usage": "generation",
+      "outputs": ["final_asset"],
+      "failure_mode": "regenerate_with_lower_creativity",
+      "success_metric": "post_performance",
+      "implementation_status": "ready",
+      "implemented_by": "Decision Circuits v1.0.0"
+    },
+    {
+      "circuit_id": "CX07_ENGAGEMENT_EVALUATION",
+      "category": "feedback",
+      "purpose": "Measure performance and feed results back into system",
+      "inputs": ["final_asset", "platform_metrics"],
+      "outputs": ["engagement_score", "conversion_score"],
+      "failure_mode": "mark_as_neutral",
+      "success_metric": "positive_delta",
+      "implementation_status": "ready",
+      "implemented_by": "Decision Circuits v1.0.0"
+    },
+    {
+      "circuit_id": "CX08_SELF_CORRECTION",
+      "category": "autonomy",
+      "purpose": "Adjust strategy without human input",
+      "inputs": ["engagement_score", "historical_baseline"],
+      "rules": {
+        "if_engagement_declines_for": "3_cycles",
+        "then": "rotate_content_strategy"
+      },
+      "outputs": ["updated_strategy_signature"],
+      "failure_mode": "escalate_to_admin_dashboard",
+      "success_metric": "recovery_time",
+      "implementation_status": "ready",
+      "implemented_by": "Decision Circuits v1.0.0"
+    }
+  ],
+  "execution_rules": {
+    "all_synthex_actions_require_circuit": true,
+    "no_direct_model_calls": true,
+    "all_failures_logged": true,
+    "circuits_may_be_disabled_or_frozen": true,
+    "confidence_thresholds_enforced": true,
+    "self_healing_enabled": true
+  },
+  "autonomy_level": {
+    "human_review_required": false,
+    "self_healing_enabled": true,
+    "confidence_thresholds_enforced": true,
+    "max_consecutive_failures_before_escalation": 3,
+    "decline_cycles_before_rotation": 3,
+    "confidence_threshold_for_action": 0.85,
+    "confidence_threshold_for_escalation": 0.5
+  },
+  "audit_and_traceability": {
+    "log_inputs": true,
+    "log_outputs": true,
+    "log_decision_path": true,
+    "log_confidence_scores": true,
+    "log_latency": true,
+    "encrypt_at_rest": true,
+    "retain_days": 365,
+    "tables": [
+      "circuit_execution_logs",
+      "circuit_strategy_states",
+      "circuit_autocorrection_logs"
+    ]
+  },
+  "database_schema": {
+    "circuit_execution_logs": {
+      "purpose": "Full audit trail of circuit executions",
+      "retention_days": 365,
+      "indexed_on": ["workspace_id", "circuit_id", "client_id", "timestamp"],
+      "encryption": "AES-256"
+    },
+    "circuit_strategy_states": {
+      "purpose": "Current strategy state with performance metrics",
+      "retention_days": 365,
+      "indexed_on": ["workspace_id", "client_id", "audience_segment"],
+      "encryption": "AES-256"
+    },
+    "circuit_autocorrection_logs": {
+      "purpose": "Log of autonomous corrections",
+      "retention_days": 365,
+      "indexed_on": ["workspace_id", "client_id", "timestamp"],
+      "encryption": "AES-256"
+    }
+  },
+  "api_endpoints": [
+    {
+      "path": "POST /api/circuits/execute",
+      "purpose": "Execute single circuit with traceability",
+      "auth_required": true,
+      "rate_limit": "1000/hour"
+    },
+    {
+      "path": "PUT /api/circuits/execute",
+      "purpose": "Chain multiple circuits together",
+      "auth_required": true,
+      "rate_limit": "500/hour"
+    },
+    {
+      "path": "GET /api/circuits/audit",
+      "purpose": "Retrieve execution history and metrics",
+      "auth_required": true,
+      "rate_limit": "2000/hour"
+    },
+    {
+      "path": "POST /api/circuits/autonomy",
+      "purpose": "Evaluate strategy health and auto-correct",
+      "auth_required": true,
+      "rate_limit": "100/hour"
+    },
+    {
+      "path": "GET /api/circuits/autonomy",
+      "purpose": "Retrieve autonomy dashboard",
+      "auth_required": true,
+      "rate_limit": "1000/hour"
+    },
+    {
+      "path": "PATCH /api/circuits/autonomy",
+      "purpose": "Update strategy metrics",
+      "auth_required": true,
+      "rate_limit": "500/hour"
+    }
+  ],
+  "integration_points": [
+    {
+      "system": "Email Agent",
+      "circuits": ["CX01", "CX02", "CX03"],
+      "status": "pending_integration"
+    },
+    {
+      "system": "Content Agent",
+      "circuits": ["CX04", "CX05", "CX06"],
+      "status": "pending_integration"
+    },
+    {
+      "system": "Orchestrator",
+      "circuits": ["CX01", "CX02", "CX04", "CX05", "CX06", "CX07", "CX08"],
+      "status": "pending_integration"
+    },
+    {
+      "system": "Frontend Dashboard",
+      "circuits": ["CX07", "CX08"],
+      "status": "pending_integration"
+    }
+  ],
+  "metrics_and_kpis": {
+    "per_circuit": [
+      "total_executions",
+      "success_rate",
+      "avg_latency_ms",
+      "avg_confidence_score",
+      "error_count",
+      "failure_mode_triggers"
+    ],
+    "system_wide": [
+      "total_corrections",
+      "successful_rotations",
+      "escalations",
+      "avg_correction_confidence",
+      "strategy_reuse_success_rate"
+    ],
+    "targets": {
+      "success_rate": "> 95%",
+      "avg_latency_ms": "< 500",
+      "avg_confidence": "> 0.85",
+      "strategy_engagement_lift": "> 20%"
+    }
+  },
+  "roadmap": [
+    {
+      "phase": "Alpha (Current)",
+      "timeline": "2025-12-15 to 2025-12-31",
+      "goals": [
+        "Core circuit registry and executor",
+        "Basic autonomy system",
+        "Audit tables and RLS",
+        "API endpoints",
+        "Documentation"
+      ],
+      "status": "in_progress"
+    },
+    {
+      "phase": "Beta",
+      "timeline": "2026-01-01 to 2026-01-31",
+      "goals": [
+        "Email agent integration",
+        "Content agent integration",
+        "Orchestrator integration",
+        "Performance optimization",
+        "Dashboard UI"
+      ],
+      "status": "pending"
+    },
+    {
+      "phase": "Production",
+      "timeline": "2026-02-01 onwards",
+      "goals": [
+        "Full autonomy with self-healing",
+        "Advanced confidence scoring",
+        "Founder OS agent integration",
+        "SLA guarantees",
+        "Enterprise compliance"
+      ],
+      "status": "pending"
+    }
+  ],
+  "compliance_and_security": {
+    "data_privacy": "GDPR, CCPA compliant",
+    "encryption": "AES-256 at rest, TLS in transit",
+    "audit_trail": "Immutable, 365-day retention",
+    "access_control": "Row-level security (RLS)",
+    "rate_limiting": "Circuit-specific rate limits",
+    "error_handling": "No sensitive data in logs"
+  },
+  "success_criteria": [
+    "All 8 circuits operational and tested",
+    "≥ 95% circuit success rate",
+    "< 500ms avg circuit latency",
+    "Autonomy dashboard shows 10+ successful rotations",
+    "Zero escalations due to logic errors",
+    "Full audit trail accessible and queryable"
+  ]
+}

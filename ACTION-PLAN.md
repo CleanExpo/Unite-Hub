@@ -1207,3 +1207,15 @@ timeZone: "America/New_York", // TODO: Make configurable
 **Action Plan End**
 
 *Use this plan in conjunction with SITE-AUDIT-REPORT.md and INTEGRATION-BLUEPRINT.md for complete implementation guidance.*
+# Guardian Platform Confidence
+- Added `tests/guardian-narrative.test.ts` to cover the narrative generator, readiness snapshot loader, and health checks before scaling P1 Guardian features.
+- Running `npm run test:guardian` proves these helpers operate safely in isolation, creating a confidence baseline ahead of the broader Guardian expansion.
+- Added `tests/guardian-api-contract.test.ts` + `npm run test:guardian:api` to assert the meta playbooks, readiness, and admin health routes degrade gracefully when Supabase returns empty datasets.
+- Added `tests/guardian-ui-smoke.spec.ts` + `npm run test:guardian:ui` to cover Guardian UI entry points, completing unit, API, and UI smoke coverage before scaling to P1 feature work.
+- Added `/guardian/executive` read-only executive report + `npm run test:guardian:executive` so readiness and narrative insights are surfaced before deeper P1 expansion.
+- Added caching, deterministic readiness responses, and regression guards to keep Guardian read-only surfaces stable before advancing P1.
+- Added readiness caching and contract test as an explicit Guardian P1 gate; other meta routes deferred for later phases.
+- Added Guardian Scorecard and readiness contract tests, locking visibility surfaces before broader P1 expansion.
+# Guardian Readiness Contract
+- Readiness/executive UI now consumes deterministic readiness payloads guarded by cache-contract tests.
+- Added `tests/guardian-readiness-cache-contract.test.ts` and `npm run test:guardian:readiness` to keep the pipeline safe before P1 expansion.

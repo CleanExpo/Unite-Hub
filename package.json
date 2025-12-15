@@ -9,6 +9,13 @@
   },
   "scripts": {
     "test": "vitest run",
+    "test:guardian": "vitest tests/guardian-narrative.test.ts",
+    "test:guardian:api": "vitest tests/guardian-api-contract.test.ts",
+    "test:guardian:ui": "playwright test tests/guardian-ui-smoke.spec.ts",
+    "test:guardian:executive": "playwright test tests/guardian-executive-ui-smoke.spec.ts",
+    "test:guardian:readiness": "vitest tests/guardian-readiness-cache-contract.test.ts",
+    "test:guardian:scorecard": "playwright test tests/guardian-scorecard-ui-smoke.spec.ts",
+    "test:guardian:readiness": "vitest tests/guardian-readiness-cache-contract.test.ts",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
