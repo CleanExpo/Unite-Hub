@@ -80,3 +80,17 @@ export {
   monitorCanaryRelease,
   getCanaryReleaseReport,
 } from './release-control';
+
+export {
+  type SocialExecutorInput,
+  type SocialExecutorOutput,
+  type PlatformCredentials,
+  type CRMContext,
+  validateCircuitBinding,
+  getCRMContext,
+  publishToFacebook,
+  publishToInstagram,
+  publishToLinkedIn,
+  collectEngagementMetrics,
+  executeSocialPublishing,
+} from './agents/social-executor';
