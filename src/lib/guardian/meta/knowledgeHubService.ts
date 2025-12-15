@@ -1,4 +1,4 @@
-import { getSupabaseServer } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 import {
   GuardianMetaPattern,
   GuardianPlaybookSummary,
@@ -49,7 +49,7 @@ export interface GuardianKnowledgeHubSummary {
 export async function loadKnowledgeStateForTenant(
   ctx: GuardianKnowledgeHubContext
 ): Promise<GuardianKnowledgeHubState> {
-  const supabase = getSupabaseServer();
+  const supabase = await createClient();
 
   // Load latest readiness (Z01)
   const readinessList = await supabase

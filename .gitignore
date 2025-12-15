@@ -137,6 +137,9 @@ PRICING_PAGE_TEST_RESULTS.md
 # Content dumps
 content-*.txt
 
+# Local-only approvals/notes (do not commit)
+PRODUCTION-APPROVAL-FINAL.md
+
 # Scripts
 find-all-fake-data.sh
 inspect-content.cjs

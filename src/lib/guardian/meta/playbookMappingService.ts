@@ -1,4 +1,4 @@
-import { getSupabaseServer } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 
 // ===== TYPES =====
 
@@ -236,7 +236,7 @@ export async function loadCandidatePlaybooksForDomain(
   tenantId: string,
   domain: GuardianPlaybookTagDomain
 ): Promise<GuardianPlaybookSummary[]> {
-  const supabase = getSupabaseServer();
+  const supabase = await createClient();
 
   const { data: playbooks, error } = await supabase
     .from('guardian_playbooks')
@@ -253,7 +253,9 @@ export async function loadCandidatePlaybooksForDomain(
     .eq('category', domain)
     .eq('is_active', true);
 
-  if (error) throw error;
+  if (error) {
+throw error;
+}
 
   return (playbooks || []).map((p: any) => ({
     id: p.id,

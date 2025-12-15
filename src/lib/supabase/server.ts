@@ -112,6 +112,10 @@ return;
   );
 }
 
+export async function getSupabaseServer() {
+  return createClient();
+}
+
 /**
  * Get the current user from the server-side session
  * Returns null if not authenticated

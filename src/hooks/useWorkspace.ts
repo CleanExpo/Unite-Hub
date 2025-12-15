@@ -75,6 +75,7 @@ export function useWorkspace() {
 
   return {
     workspaceId,
+    workspace: workspaceId ? { id: workspaceId } : null,
     loading: loading || authLoading,
     error,
   };

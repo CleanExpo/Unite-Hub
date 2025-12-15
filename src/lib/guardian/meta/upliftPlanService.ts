@@ -313,3 +313,31 @@ export async function generateAndPersistUpliftPlanForTenant(
   const draft = await generateUpliftPlanDraft(tenantId, options);
   return persistGeneratedUpliftPlan(tenantId, draft.plan, draft.tasks);
 }
+
+export async function loadLatestUpliftPlanForTenant(
+  tenantId: string
+): Promise<{ id: string; title: string; status: string; createdAt: Date } | null> {
+  const supabase = getSupabaseServer();
+
+  const { data, error } = await supabase
+    .from("guardian_tenant_uplift_plans")
+    .select("id, name, status, created_at")
+    .eq("tenant_id", tenantId)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+throw error;
+}
+  if (!data) {
+return null;
+}
+
+  return {
+    id: data.id,
+    title: data.name,
+    status: data.status,
+    createdAt: new Date(data.created_at),
+  };
+}
