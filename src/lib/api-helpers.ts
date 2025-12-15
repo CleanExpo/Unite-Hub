@@ -22,6 +22,7 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+export { validateUserAndWorkspace, validateUserAuth } from "@/lib/workspace-validation";
 
 // ============================================================================
 // AUTHENTICATION HELPERS

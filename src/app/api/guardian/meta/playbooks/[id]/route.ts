@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getSupabaseServer } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 import { validateUserAndWorkspace } from '@/lib/api-helpers';
 import { successResponse, errorResponse } from '@/lib/api-helpers';
 import { withErrorBoundary } from '@/lib/error-boundary';
@@ -17,12 +17,14 @@ export const GET = withErrorBoundary(async (
   context: RouteContext
 ) => {
   const workspaceId = req.nextUrl.searchParams.get('workspaceId');
-  if (!workspaceId) return errorResponse('workspaceId required', 400);
+  if (!workspaceId) {
+return errorResponse('workspaceId required', 400);
+}
 
   await validateUserAndWorkspace(req, workspaceId);
 
   const { id } = await context.params;
-  const supabase = getSupabaseServer();
+  const supabase = await createClient();
 
   const { data: playbook, error } = await supabase
     .from('guardian_playbooks')
@@ -76,7 +78,9 @@ export const PATCH = withErrorBoundary(async (
   context: RouteContext
 ) => {
   const workspaceId = req.nextUrl.searchParams.get('workspaceId');
-  if (!workspaceId) return errorResponse('workspaceId required', 400);
+  if (!workspaceId) {
+return errorResponse('workspaceId required', 400);
+}
 
   await validateUserAndWorkspace(req, workspaceId);
 
@@ -84,7 +88,7 @@ export const PATCH = withErrorBoundary(async (
   const body = await req.json();
   const { title, summary, category, complexity, is_active, metadata } = body;
 
-  const supabase = getSupabaseServer();
+  const supabase = await createClient();
 
   // Verify playbook belongs to workspace
   const { data: existing, error: checkError } = await supabase
@@ -100,12 +104,24 @@ export const PATCH = withErrorBoundary(async (
 
   // Build update object
   const updates: Record<string, any> = { updated_at: new Date().toISOString() };
-  if (title !== undefined) updates.title = title;
-  if (summary !== undefined) updates.summary = summary;
-  if (category !== undefined) updates.category = category;
-  if (complexity !== undefined) updates.complexity = complexity;
-  if (is_active !== undefined) updates.is_active = is_active;
-  if (metadata !== undefined) updates.metadata = metadata;
+  if (title !== undefined) {
+updates.title = title;
+}
+  if (summary !== undefined) {
+updates.summary = summary;
+}
+  if (category !== undefined) {
+updates.category = category;
+}
+  if (complexity !== undefined) {
+updates.complexity = complexity;
+}
+  if (is_active !== undefined) {
+updates.is_active = is_active;
+}
+  if (metadata !== undefined) {
+updates.metadata = metadata;
+}
 
   const { data: playbook, error: updateError } = await supabase
     .from('guardian_playbooks')
@@ -114,7 +130,9 @@ export const PATCH = withErrorBoundary(async (
     .select('*')
     .single();
 
-  if (updateError) throw updateError;
+  if (updateError) {
+throw updateError;
+}
 
   return successResponse({ playbook });
 });
@@ -128,12 +146,14 @@ export const DELETE = withErrorBoundary(async (
   context: RouteContext
 ) => {
   const workspaceId = req.nextUrl.searchParams.get('workspaceId');
-  if (!workspaceId) return errorResponse('workspaceId required', 400);
+  if (!workspaceId) {
+return errorResponse('workspaceId required', 400);
+}
 
   await validateUserAndWorkspace(req, workspaceId);
 
   const { id } = await context.params;
-  const supabase = getSupabaseServer();
+  const supabase = await createClient();
 
   // Verify playbook belongs to workspace
   const { data: existing, error: checkError } = await supabase
@@ -153,7 +173,9 @@ export const DELETE = withErrorBoundary(async (
     .delete()
     .eq('id', id);
 
-  if (deleteError) throw deleteError;
+  if (deleteError) {
+throw deleteError;
+}
 
   return successResponse({ message: 'Playbook deleted successfully' });
 });

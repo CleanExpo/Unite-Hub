@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getSupabaseServer } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/server';
 import { validateUserAndWorkspace } from '@/lib/api-helpers';
 import { successResponse, errorResponse } from '@/lib/api-helpers';
 import { withErrorBoundary } from '@/lib/error-boundary';
@@ -11,14 +11,16 @@ import { withErrorBoundary } from '@/lib/error-boundary';
  */
 export const GET = withErrorBoundary(async (req: NextRequest) => {
   const workspaceId = req.nextUrl.searchParams.get('workspaceId');
-  if (!workspaceId) return errorResponse('workspaceId required', 400);
+  if (!workspaceId) {
+return errorResponse('workspaceId required', 400);
+}
 
   await validateUserAndWorkspace(req, workspaceId);
 
   const domain = req.nextUrl.searchParams.get('domain');
   const complexity = req.nextUrl.searchParams.get('complexity');
 
-  const supabase = getSupabaseServer();
+  const supabase = await createClient();
 
   let query = supabase
     .from('guardian_playbooks')
@@ -38,11 +40,17 @@ export const GET = withErrorBoundary(async (req: NextRequest) => {
     `)
     .eq('is_active', true);
 
-  if (domain) query = query.eq('category', domain);
-  if (complexity) query = query.eq('complexity', complexity);
+  if (domain) {
+query = query.eq('category', domain);
+}
+  if (complexity) {
+query = query.eq('complexity', complexity);
+}
 
   const { data, error } = await query;
-  if (error) throw error;
+  if (error) {
+throw error;
+}
 
   return successResponse({ playbooks: data || [] });
 });
@@ -53,7 +61,9 @@ export const GET = withErrorBoundary(async (req: NextRequest) => {
  */
 export const POST = withErrorBoundary(async (req: NextRequest) => {
   const workspaceId = req.nextUrl.searchParams.get('workspaceId');
-  if (!workspaceId) return errorResponse('workspaceId required', 400);
+  if (!workspaceId) {
+return errorResponse('workspaceId required', 400);
+}
 
   await validateUserAndWorkspace(req, workspaceId);
 
@@ -68,7 +78,7 @@ export const POST = withErrorBoundary(async (req: NextRequest) => {
     );
   }
 
-  const supabase = getSupabaseServer();
+  const supabase = await createClient();
 
   // Create playbook
   const { data: playbook, error: playbookError } = await supabase
@@ -88,7 +98,9 @@ export const POST = withErrorBoundary(async (req: NextRequest) => {
     .select('*')
     .single();
 
-  if (playbookError) throw playbookError;
+  if (playbookError) {
+throw playbookError;
+}
 
   // Create sections if provided
   if (sections && Array.isArray(sections)) {
@@ -102,7 +114,9 @@ export const POST = withErrorBoundary(async (req: NextRequest) => {
     const { error: sectionsError } = await supabase
       .from('guardian_playbook_sections')
       .insert(sectionRows);
-    if (sectionsError) throw sectionsError;
+    if (sectionsError) {
+throw sectionsError;
+}
   }
 
   // Create tags if provided
@@ -115,7 +129,9 @@ export const POST = withErrorBoundary(async (req: NextRequest) => {
     const { error: tagsError } = await supabase
       .from('guardian_playbook_tags')
       .insert(tagRows);
-    if (tagsError) throw tagsError;
+    if (tagsError) {
+throw tagsError;
+}
   }
 
   return successResponse({ playbook }, { status: 201 });
