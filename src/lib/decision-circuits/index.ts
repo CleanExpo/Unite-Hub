@@ -122,3 +122,19 @@ export {
   evaluateABTest,
   logABTestResults,
 } from './circuits/cx09-evaluator';
+
+export {
+  type ApplyAllocationInput,
+  type AllocationResult,
+  type GuardrailValidation,
+  type RateLimitStatus,
+  type HealthMetrics,
+  type RollbackEvent,
+  DEFAULT_GUARDRAILS,
+  validateGuardrails,
+  checkRateLimit,
+  applyAllocation,
+  checkHealthAndRollback,
+  getAllocationState,
+  getAllocationHistory,
+} from './traffic-allocation-engine';
