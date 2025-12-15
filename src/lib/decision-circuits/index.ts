@@ -112,3 +112,13 @@ export {
   checkUnifiedSuppression,
   aggregateMetrics,
 } from './agents/multichannel-coordinator';
+
+export {
+  type ABTestVariant,
+  type ABTestEvaluationInput,
+  type ABTestEvaluationResult,
+  type MetricsSnapshot,
+  type OptimizationSignal,
+  evaluateABTest,
+  logABTestResults,
+} from './circuits/cx09-evaluator';

@@ -169,6 +169,35 @@ export const DECISION_CIRCUITS: Record<string, DecisionCircuit> = {
     failure_mode: 'escalate_to_admin',
     success_metric: 'recovery_time',
   },
+
+  CX09_A_B_TESTING: {
+    circuit_id: 'CX09_A_B_TESTING',
+    category: 'decision',
+    purpose: 'Evaluate variants via statistical testing and determine winner',
+    inputs: [
+      'circuit_execution_id',
+      'test_id',
+      'variants',
+      'confidence_threshold',
+      'primary_metric',
+    ],
+    outputs: ['winning_variant_id', 'confidence_score', 'decision', 'optimization_signal'],
+    model_usage: 'classification_only',
+    constraints: {
+      must_not: [
+        'modify_traffic_allocation',
+        'regenerate_content',
+        'call_ai_models',
+      ],
+    },
+    failure_mode: 'mark_as_neutral',
+    success_metric: 'statistical_significance',
+    rules: {
+      promote_if: 'confidence_score >= threshold AND performance_delta > 0',
+      terminate_if: 'performance_delta < 0',
+      continue_if: 'confidence_score < threshold',
+    },
+  },
 };
 
 /**
