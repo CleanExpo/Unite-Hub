@@ -37,8 +37,8 @@ export default function AwaitApprovalPage() {
   // If user is not a pending staff member, redirect appropriately
   useEffect(() => {
     if (!loading && !isPending && !isActive) {
-      // Not in staff_users at all - redirect to Synthex (client portal)
-      router.push('/synthex/dashboard');
+      // Not in staff_users at all - redirect to Synthex Studio
+      router.push('/synthex/studio');
     }
   }, [isPending, isActive, loading, router]);
 

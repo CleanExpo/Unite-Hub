@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get('code');
-  const next = requestUrl.searchParams.get('next') || '/';
+  const next = requestUrl.searchParams.get('next') || '/synthex/studio';
 
   if (code) {
     const supabase = await createClient();
@@ -16,6 +16,6 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // Redirect to the intended destination or home
+  // Redirect to the intended destination or Synthex Studio
   return NextResponse.redirect(new URL(next, requestUrl.origin));
 }
