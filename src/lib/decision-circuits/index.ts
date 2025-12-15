@@ -1,7 +1,7 @@
 /**
  * Decision Circuits Module
  * Autonomous decision governance for marketing operations
- * v1.1.0: Production enforcement and health monitoring
+ * v1.2.0: Release control with canary rollout and automatic rollback
  */
 
 export {
@@ -60,3 +60,23 @@ export {
   generateHealthReport,
   exportHealthMetrics,
 } from './health-monitor';
+
+export {
+  type CanaryPhase,
+  type CanaryConfiguration,
+  type RollbackTrigger,
+  type CircuitVersion,
+  type ReleaseState,
+  type RollbackEvent,
+  CANARY_PHASES,
+  ROLLBACK_TRIGGERS,
+  createCircuitVersion,
+  getReleaseState,
+  updateReleaseState,
+  startCanaryRollout,
+  progressCanaryPhase,
+  evaluateRollbackTriggers,
+  executeAutomaticRollback,
+  monitorCanaryRelease,
+  getCanaryReleaseReport,
+} from './release-control';
