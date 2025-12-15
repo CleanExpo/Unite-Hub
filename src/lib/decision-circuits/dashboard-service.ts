@@ -649,3 +649,125 @@ export async function getABTestDetails(
     return null;
   }
 }
+
+/**
+ * Get latest metrics rollups for variant
+ * RLS-protected; returns only workspace-visible data
+ */
+export async function getMetricsRollupsSummary(
+  workspaceId: string,
+  abTestId: string,
+  variantId: string,
+  channel?: 'email' | 'social'
+): Promise<{
+  ab_test_id: string;
+  variant_id: string;
+  channel: string;
+  latest_rollup: {
+    time_bucket: string;
+    email_delivered?: number;
+    email_opened?: number;
+    email_clicked?: number;
+    delivery_rate?: number;
+    open_rate?: number;
+    engagement_rate?: number;
+    social_impressions?: number;
+    social_engagement_rate?: number;
+  } | null;
+  total_buckets: number;
+} | null> {
+  const supabase = await createClient();
+
+  try {
+    // Query latest rollup per channel
+    const query = supabase
+      .from('metrics_rollups')
+      .select('*')
+      .eq('workspace_id', workspaceId)
+      .eq('ab_test_id', abTestId)
+      .eq('variant_id', variantId);
+
+    if (channel) {
+      query.eq('channel', channel);
+    }
+
+    const { data: rollups, error } = await query
+      .order('time_bucket', { ascending: false })
+      .limit(100);
+
+    if (error || !rollups) {
+      return null;
+    }
+
+    const latestRollup = rollups[0] || null;
+    const channelName = channel || (rollups[0]?.channel || 'email');
+
+    return {
+      ab_test_id: abTestId,
+      variant_id: variantId,
+      channel: channelName,
+      latest_rollup: latestRollup ? {
+        time_bucket: latestRollup.time_bucket,
+        email_delivered: latestRollup.email_delivered,
+        email_opened: latestRollup.email_opened,
+        email_clicked: latestRollup.email_clicked,
+        delivery_rate: latestRollup.delivery_rate,
+        open_rate: latestRollup.open_rate,
+        engagement_rate: latestRollup.engagement_rate,
+        social_impressions: latestRollup.social_impressions,
+        social_engagement_rate: latestRollup.social_engagement_rate,
+      } : null,
+      total_buckets: rollups.length,
+    };
+  } catch (error) {
+    console.error(`Failed to get metrics rollups for ${abTestId}/${variantId}:`, error);
+    return null;
+  }
+}
+
+/**
+ * Get channel attribution health for workspace
+ * RLS-protected; shows mapped vs unmapped event rates
+ */
+export async function getChannelAttributionHealth(
+  workspaceId: string,
+  provider?: 'sendgrid' | 'resend' | 'facebook' | 'instagram' | 'linkedin'
+): Promise<{
+  provider: string;
+  total_mappings: number;
+  mapped_count: number;
+  unmapped_count: number;
+  orphaned_count: number;
+  mapped_percentage: number;
+}[] | null> {
+  const supabase = await createClient();
+
+  try {
+    let query = supabase
+      .from('metrics_attribution_health')
+      .select('*')
+      .eq('workspace_id', workspaceId);
+
+    if (provider) {
+      query = query.eq('provider', provider);
+    }
+
+    const { data: health, error } = await query;
+
+    if (error || !health) {
+      return null;
+    }
+
+    return health.map((h) => ({
+      provider: h.provider,
+      total_mappings: h.total_mappings,
+      mapped_count: h.mapped_count,
+      unmapped_count: h.unmapped_count,
+      orphaned_count: h.orphaned_count,
+      mapped_percentage: h.mapped_percentage,
+    }));
+  } catch (error) {
+    console.error('Failed to get attribution health:', error);
+    return null;
+  }
+}
