@@ -104,3 +104,11 @@ export {
   collectEngagementMetrics as collectEmailEngagementMetrics,
   executeEmailSending,
 } from './agents/email-executor';
+
+export {
+  type MultiChannelInput,
+  type MultiChannelOutput,
+  executeMultiChannelWorkflow,
+  checkUnifiedSuppression,
+  aggregateMetrics,
+} from './agents/multichannel-coordinator';
