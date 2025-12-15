@@ -138,3 +138,19 @@ export {
   getAllocationState,
   getAllocationHistory,
 } from './traffic-allocation-engine';
+
+export {
+  type RegenerationInput,
+  type RegenerationResult,
+  type RegenerationEligibility,
+  type RegenerationGuardrailState,
+  type VariantLineageRecord,
+  type RegenerationEventRecord,
+  type RegenerationStatus,
+  type RegenerationFailureReason,
+  DEFAULT_REGENERATION_GUARDRAILS,
+  checkEligibility,
+  enforceGuardrails,
+  runContentRegeneration,
+  getContentLineage,
+} from './content-regeneration-engine';
