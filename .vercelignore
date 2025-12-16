@@ -67,3 +67,10 @@ CONTRIBUTING.md
 tmp/
 temp/
 .tmp/
+
+# Python files (not used in production Next.js deployment)
+requirements.txt
+*.py
+__pycache__/
+*.pyc
+.python-version
