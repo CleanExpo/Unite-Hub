@@ -7,7 +7,8 @@ import { CookieConsent } from "@/components/CookieConsent";
 
 // Force all pages to be dynamically rendered at request time
 // This is required because many pages use getSupabaseServer() which calls cookies()
-export const dynamic = 'force-dynamic';
+// TEMPORARY: Commented out for Vercel deployment debugging
+// export const dynamic = 'force-dynamic';
 
 export const viewport: Viewport = {
   width: 'device-width',
