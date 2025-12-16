@@ -2,6 +2,9 @@ import { NextRequest } from 'next/server';
 import { getSupabaseServer } from '@/lib/supabase';
 import { withErrorBoundary, successResponse, errorResponse } from '@/lib/api-helpers';
 
+// Force dynamic rendering to prevent build-time execution
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/synthex/library/visual/quota
  * Retrieve tier-specific visual library quotas and current usage
