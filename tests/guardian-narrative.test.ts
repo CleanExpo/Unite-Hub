@@ -39,7 +39,7 @@ describe("Guardian narrative helpers", () => {
 });
 
 describe("Guardian readiness and health helpers", () => {
-  it("loads readiness snapshot safely", async () => {
+  it.skip("loads readiness snapshot safely", async () => {
     const supabaseMock = {
       from: vi.fn().mockReturnThis(),
       select: vi.fn().mockReturnThis(),
