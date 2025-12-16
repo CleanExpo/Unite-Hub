@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 import { setTheme } from '@/lib/theme/useTheme';
-import '@unite-hub/ui-industrial/styles';
+
 
 interface ThemeProviderProps {
   children: React.ReactNode;

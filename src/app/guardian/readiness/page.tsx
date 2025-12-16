@@ -3,7 +3,7 @@
  import { useEffect, useMemo, useState } from "react";
  import { useWorkspace } from "@/hooks/useWorkspace";
 
- type GuardianCapability = {
+type GuardianCapability = {
    name: string;
    status: string;
    score: number;

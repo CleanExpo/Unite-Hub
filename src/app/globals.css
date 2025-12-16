@@ -628,3 +628,48 @@
 
  
  
+/* ===== Industrial Theme Override ===== */
+
+/* Industrial theme root variables - only active when theme is enabled */
+@layer base {
+  :root[data-theme='industrial'] {
+    --background: 0 0% 10%;
+    --foreground: 0 0% 95%;
+    --primary: 24 55% 43%;
+    --border: 0 0% 20%;
+    --radius: 1rem;
+  }
+}
+
+/* Industrial utility classes */
+@layer utilities {
+  .textured-metal {
+    @apply bg-[#2a2a2a];
+    background-image: linear-gradient(145deg, #333, #222);
+  }
+
+  .rust-label {
+    @apply bg-[#a85a32]/20 text-[#a85a32] px-2 py-1 rounded-full text-xs font-bold uppercase border border-[#a85a32]/30;
+  }
+
+  /* Metal shine effect */
+  .metal-shine {
+    @apply relative;
+    background: linear-gradient(145deg, rgba(58, 58, 58, 0.5), rgba(26, 26, 26, 0.5));
+  }
+
+  /* Inset metal effect for depth */
+  .metal-depression {
+    box-shadow: inset 3px 3px 6px #151515, inset -2px -2px 4px #353535;
+  }
+
+  /* Outset metal effect for prominence */
+  .metal-raised {
+    box-shadow: 6px 6px 12px #101010, -3px -3px 8px #3a3a3a;
+  }
+
+  /* Rust glow for alerts/active states */
+  .rust-active {
+    box-shadow: 0 0 15px rgba(168, 90, 50, 0.3);
+  }
+}
