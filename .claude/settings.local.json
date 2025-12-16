@@ -73,7 +73,9 @@
       "Bash(npm run test:*)",
       "Bash(npm run test)",
       "Bash(git commit -m \"$(cat <<''EOF''\nfix: Production test and build corrections\n\n- Fixed duplicate test:guardian:readiness key in package.json\n- Fixed missing DEFAULT_GUARDRAILS exports in decision-circuits/index.ts  \n- Fixed backup.scope iteration in metaRestoreService test mock\n- Fixed chainable Supabase query mock in ai-search-monitor test\n- Added Supabase mocks to Z12 test suite\n- Exported buildFallbackNarrative from statusNarrativeAiHelper\n- Exported runStatusSnapshotTask from metaTaskRunner\n- Fixed adoption score normalization in Z05 tests\n- Fixed workspaceId validation test expectation in Z05\n\nBuild: ✅ SUCCESSFUL (0 errors, 2 export warnings fixed)\nTests: 1670/1782 passing (93.7%), 108 failing (Guardian integration tests need DB/mocking)\n\n🤖 Generated with Claude Code\nCo-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>\nEOF\n)\")",
-      "Bash(cut:*)"
+      "Bash(cut:*)",
+      "Bash(git mv:*)",
+      "Bash(timeout 120 npm run test)"
     ],
     "deny": [],
     "ask": []

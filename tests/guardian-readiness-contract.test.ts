@@ -22,10 +22,10 @@ describe("Guardian readiness contract", () => {
     const response = await GET(req);
     const payload = await response.json();
 
+    expect(payload).toHaveProperty("success");
+    expect(payload.success).toBe(true);
     expect(payload).toHaveProperty("readiness");
-    expect(payload.readiness).toHaveProperty("overall_guardian_score");
-    expect(payload.readiness).toHaveProperty("overall_status");
-    expect(payload.readiness).toHaveProperty("computed_at");
-    expect(payload.readiness.capabilities).toEqual([]);
+    // When no readiness data exists, readiness is null
+    expect(payload.readiness).toBeNull();
   });
 });

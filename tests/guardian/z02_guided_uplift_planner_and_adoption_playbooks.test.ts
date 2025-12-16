@@ -14,23 +14,40 @@ vi.mock('@/lib/guardian/meta/upliftAiHelper', async () => {
   return {
     ...actual,
     enrichUpliftTaskHints: vi.fn().mockResolvedValue({
-      task_id: 'task-123',
-      enriched_hints: ['Ensure prerequisites are met', 'Follow documented procedures'],
-      action_steps: ['Step 1', 'Step 2'],
-      priority_score: 85,
+      steps: ['Configure', 'Enable', 'Validate'],
+      success_criteria: ['Feature enabled'],
+      time_estimate_minutes: 30,
+      resources: ['Documentation'],
+      common_pitfalls: ['Missing setup'],
+      validation_checklist: ['Check logs'],
     }),
-    formatEnrichedHints: vi.fn().mockReturnValue({
-      headline: 'Task Enrichment',
-      bulletPoints: ['Hint 1', 'Hint 2'],
-    }),
-    enrichMultipleUpliftTasks: vi.fn().mockResolvedValue([
-      {
-        task_id: 'task-123',
-        enriched_hints: ['Hint 1', 'Hint 2'],
-        action_steps: ['Step 1'],
-        priority_score: 85,
-      },
-    ]),
+    formatEnrichedHints: vi.fn().mockReturnValue(
+      '⏱️ Estimated time: 30 minutes
+📋 Steps:
+  1. Configure
+  2. Enable
+  3. Validate'
+    ),
+    enrichMultipleUpliftTasks: vi.fn().mockResolvedValue(
+      new Map([
+        ['task-1', {
+          steps: ['Configure', 'Enable', 'Validate'],
+          success_criteria: ['Feature enabled'],
+          time_estimate_minutes: 30,
+          resources: ['Documentation'],
+          common_pitfalls: ['Missing setup'],
+          validation_checklist: ['Check logs'],
+        }],
+        ['task-2', {
+          steps: ['Setup', 'Configure', 'Test'],
+          success_criteria: ['No errors'],
+          time_estimate_minutes: 20,
+          resources: ['Docs'],
+          common_pitfalls: ['Config error'],
+          validation_checklist: ['Verify'],
+        }],
+      ])
+    ),
   };
 });
 
