@@ -1790,10 +1790,10 @@
     hls.js "~1.6.15"
     mux-embed "^5.8.3"
 
-"@next/env@15.5.7":
-  version "15.5.7"
-  resolved "https://registry.npmjs.org/@next/env/-/env-15.5.7.tgz"
-  integrity sha512-4h6Y2NyEkIEN7Z8YxkA27pq6zTkS09bUSYC0xjd0NpwFxjnIKeZEeH591o5WECSmjpUhLn3H2QLJcDye3Uzcvg==
+"@next/env@15.5.9":
+  version "15.5.9"
+  resolved "https://registry.npmjs.org/@next/env/-/env-15.5.9.tgz"
+  integrity sha512-4GlTZ+EJM7WaW2HEZcyU317tIQDjkQIyENDLxYJfSWlfqguN+dHkZgyQTV/7ykvobU7yEH5gKvreNrH4B6QgIg==
 
 "@next/eslint-plugin-next@16.0.7":
   version "16.0.7"
@@ -9482,11 +9482,11 @@ next-themes@^0.4.6:
   integrity sha512-pZvgD5L0IEvX5/9GWyHMf3m8BKiVQwsCMHfoFosXtXBMnaS0ZnIJ9ST4b4NqLVKDEm8QBxoNNGNaBv2JNF6XNA==
 
 next@^15.5.7:
-  version "15.5.7"
-  resolved "https://registry.npmjs.org/next/-/next-15.5.7.tgz"
-  integrity sha512-+t2/0jIJ48kUpGKkdlhgkv+zPTEOoXyr60qXe68eB/pl3CMJaLeIGjzp5D6Oqt25hCBiBTt8wEeeAzfJvUKnPQ==
+  version "15.5.9"
+  resolved "https://registry.npmjs.org/next/-/next-15.5.9.tgz"
+  integrity sha512-agNLK89seZEtC5zUHwtut0+tNrc0Xw4FT/Dg+B/VLEo9pAcS9rtTKpek3V6kVcVwsB2YlqMaHdfZL4eLEVYuCg==
   dependencies:
-    "@next/env" "15.5.7"
+    "@next/env" "15.5.9"
     "@swc/helpers" "0.5.15"
     caniuse-lite "^1.0.30001579"
     postcss "8.4.31"
@@ -11476,9 +11476,9 @@ styled-jsx@5.1.6:
     client-only "0.0.1"
 
 supabase@^2.63.1:
-  version "2.65.6"
-  resolved "https://registry.npmjs.org/supabase/-/supabase-2.65.6.tgz"
-  integrity sha512-PKeKFwIpx/H65WZ8BVqvQU1cve2n2Er++Yo0EGjSfV/vNwnLkpdnlpD9o8ZJJLDF/hxlduOCwxHiTnBimnbXdA==
+  version "2.67.1"
+  resolved "https://registry.npmjs.org/supabase/-/supabase-2.67.1.tgz"
+  integrity sha512-d/trGytTjB/Hi625zHh2RFFttjLOkSdRTsY/N1pjxoAfG0blDiHKqPwu12VJYitg4nzgjfhjnD3pLyfU0ko5vg==
   dependencies:
     bin-links "^6.0.0"
     https-proxy-agent "^7.0.2"

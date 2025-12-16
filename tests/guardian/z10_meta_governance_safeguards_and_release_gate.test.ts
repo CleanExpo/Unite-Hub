@@ -4,11 +4,42 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { createMockSupabaseServer } from '../__mocks__/guardianSupabase.mock';
 import type {
   GuardianMetaFeatureFlags,
   GuardianMetaGovernancePrefs,
   GuardianMetaCapabilityProfile,
 } from '@/lib/guardian/meta/metaGovernanceService';
+
+// Setup Supabase mock
+vi.mock('@/lib/supabase', () => ({
+  getSupabaseServer: vi.fn(() => createMockSupabaseServer()),
+}));
+
+// Setup Anthropic mocks
+vi.mock('@/lib/guardian/meta/metaGovernanceAiHelper', () => ({
+  generateMetaGovernanceAdvice: vi.fn().mockResolvedValue({
+    headline: 'System governance is healthy',
+    summary: 'All policies are enforced',
+    recommendations: ['Maintain current configuration'],
+    riskLevel: 'low',
+    aiUsagePolicy: 'advisory',
+  }),
+  getFallbackMetaGovernanceAdvice: vi.fn().mockReturnValue({
+    headline: 'Governance assessment complete',
+    summary: 'Operating with standard safeguards',
+    recommendations: ['Monitor governance compliance'],
+    riskLevel: 'medium',
+  }),
+}));
+
+vi.mock('@/lib/anthropic/rate-limiter', () => ({
+  callAnthropicWithRetry: vi.fn().mockResolvedValue({
+    data: { content: [{ type: 'text', text: '{"result":"ok"}' }] },
+    attempts: 1,
+    totalTime: 100,
+  }),
+}));
 import {
   loadMetaFeatureFlagsForTenant,
   updateMetaFeatureFlags,

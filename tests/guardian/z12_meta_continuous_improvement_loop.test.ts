@@ -34,47 +34,46 @@ import {
   generateDraftActionsWithAi,
 } from '@/lib/guardian/meta/improvementPlannerAiHelper';
 
-// Mock Supabase with chainable query builder
-const createMockQuery = (returnValue = null) => {
-  const mockReturn = {
-    data: returnValue || {
-      id: 'test-id',
-      tenant_id: 'test-tenant-001',
-      cycle_key: 'test-cycle',
-      title: 'Test Cycle',
-      status: 'active',
-      cycles: [],
-      total: 0,
-      count: 0,
-    },
-    error: null,
-  };
+import { createMockSupabaseServer } from '../__mocks__/guardianSupabase.mock';
 
-  return {
-    select: vi.fn().mockReturnValue(createMockQuery(returnValue)),
-    eq: vi.fn().mockReturnValue(createMockQuery(returnValue)),
-    gte: vi.fn().mockReturnValue(createMockQuery(returnValue)),
-    lte: vi.fn().mockReturnValue(createMockQuery(returnValue)),
-    order: vi.fn().mockReturnValue(createMockQuery(returnValue)),
-    limit: vi.fn().mockReturnValue(createMockQuery(returnValue)),
-    offset: vi.fn().mockReturnValue(createMockQuery(returnValue)),
-    range: vi.fn().mockReturnValue(createMockQuery(returnValue)),
-    insert: vi.fn().mockReturnValue(createMockQuery(returnValue)),
-    update: vi.fn().mockReturnValue(createMockQuery(returnValue)),
-    delete: vi.fn().mockReturnValue(createMockQuery(returnValue)),
-    single: vi.fn().mockResolvedValue(mockReturn),
-    count: vi.fn().mockReturnValue(createMockQuery(returnValue)),
-  };
-};
-
+// Setup Supabase mock using centralized helper
 vi.mock('@/lib/supabase', () => ({
-  getSupabaseServer: vi.fn(() => ({
-    from: vi.fn().mockReturnValue(createMockQuery()),
-  })),
+  getSupabaseServer: vi.fn(() => createMockSupabaseServer()),
 }));
 
 vi.mock('@/lib/guardian/meta/metaAuditService', () => ({
   logMetaAuditEvent: vi.fn().mockResolvedValue({}),
+}));
+
+vi.mock('@/lib/guardian/meta/improvementPlannerAiHelper', () => ({
+  generateDraftActionsWithAi: vi.fn().mockResolvedValue([
+    {
+      id: 'action-1',
+      title: 'Test Action',
+      description: 'Test action description',
+      status: 'planned',
+      priority: 'high',
+    },
+  ]),
+}));
+
+vi.mock('@/lib/anthropic/rate-limiter', () => ({
+  callAnthropicWithRetry: vi.fn().mockResolvedValue({
+    data: {
+      content: [
+        {
+          type: 'text',
+          text: JSON.stringify({
+            actions: [
+              { title: 'Test Action', description: 'Action description', priority: 'high' },
+            ],
+          }),
+        },
+      ],
+    },
+    attempts: 1,
+    totalTime: 100,
+  }),
 }));
 
 describe('Z12: Improvement Cycle CRUD', () => {
