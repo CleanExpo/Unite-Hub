@@ -3,25 +3,14 @@
 import { describe, it, expect, vi } from "vitest";
 import { GET } from "@/app/api/guardian/meta/readiness/route";
 import { NextRequest } from "next/server";
+import { createMockSupabaseServer } from "./__mocks__/guardianSupabase.mock";
 
 vi.mock("@/lib/api-helpers", () => ({
   validateUserAndWorkspace: vi.fn().mockResolvedValue(true),
 }));
 
 vi.mock("@/lib/supabase", () => ({
-  getSupabaseServer: vi.fn().mockResolvedValue({
-    from: () => ({
-      select: () => ({
-        eq: () => ({
-          order: () => ({
-            limit: () => ({
-              maybeSingle: () => Promise.resolve({ data: [], error: null }),
-            }),
-          }),
-        }),
-      }),
-    }),
-  }),
+  getSupabaseServer: vi.fn(() => createMockSupabaseServer()),
 }));
 
 describe("Guardian readiness contract", () => {
