@@ -438,3 +438,154 @@ CHANGELOG:
 ---
 
 *Configuration maintained for Unite-Hub, Synthex, and all Unite-Group projects*
+
+---
+
+## PARALLEL DESIGN SYSTEM: INDUSTRIAL THEME
+
+### Overview
+
+**December 2025 Update**: A second design system has been introduced as an **explicit, opt-in parallel** to the Synthex theme.
+
+The **Industrial Theme** provides:
+- Heavy dark metal aesthetic (#1a1a1a - #3a3a3a)
+- Rust accent colors (#a85a32 - #7a3e21)
+- 3D metal textures and shadows
+- Control-panel style UI with uppercase labels
+- Explicit activation via `data-theme="industrial"`
+
+### Why Parallel?
+
+✅ **Non-breaking**: Synthex theme remains default
+✅ **Explicit opt-in**: No implicit conversions
+✅ **Composable**: Both themes can coexist on same page
+✅ **Reversible**: Can be disabled without cleanup
+✅ **Production-safe**: No visual regressions to existing UI
+
+### Location
+
+`packages/ui-industrial/`
+
+**Components:**
+- `IndustrialCard` - Heavy metal card surface
+- `IndustrialButton` - Rust-gradient CTA with metal shadow
+- `IndustrialBadge` - Status indicator with variants
+
+**Theme Management:**
+- `src/lib/theme/useTheme.ts` - Theme switching utilities
+- `src/components/ThemeProvider.tsx` - Layout-level theme wrapper
+
+### Activation
+
+#### Per-Layout (Recommended)
+
+```tsx
+// app/guardian/layout.tsx
+import { ThemeProvider } from '@/components/ThemeProvider';
+
+export default function GuardianLayout({ children }) {
+  return (
+    <ThemeProvider theme="industrial">
+      {children}
+    </ThemeProvider>
+  );
+}
+```
+
+#### Direct JavaScript
+
+```tsx
+import { setTheme } from '@/lib/theme/useTheme';
+
+setTheme('industrial');  // Enable
+setTheme('default');     // Disable
+```
+
+### Current Eligible Surfaces
+
+These surfaces may opt into the industrial theme:
+
+- ✅ Guardian dashboards (Z-series, H-series, I-series)
+- ✅ Executive scorecards
+- ✅ System readiness views
+- ✅ Advanced operations panels
+
+These surfaces should remain on Synthex theme:
+
+- ❌ Synthex marketing pages
+- ❌ Onboarding flows
+- ❌ User-facing dashboards
+- ❌ Public-facing CRM pages
+
+### Tailwind Integration
+
+The industrial preset is **not** automatically loaded. To use industrial colors in Tailwind:
+
+```js
+// tailwind.config.js (optional - only if using industrial across multiple layouts)
+const industrialPreset = require('packages/ui-industrial/tailwind');
+
+module.exports = {
+  presets: [industrialPreset],
+  // ... rest of config
+};
+```
+
+**New color tokens** (when preset loaded):
+- `industrial-bg`, `industrial-metal`, `industrial-metal-light`
+- `industrial-rust`, `industrial-rust-dark`
+- `industrial-text`, `industrial-text-muted`
+
+### Component Usage
+
+```tsx
+import { IndustrialCard, IndustrialButton } from '@unite-hub/ui-industrial/components';
+
+export function GuardianStatus() {
+  return (
+    <IndustrialCard
+      title="System Status"
+      topRightElement={<span>🔧</span>}
+    >
+      <p className="text-industrial-text">All systems nominal</p>
+      <IndustrialButton variant="primary" className="mt-4">
+        Run Diagnostics
+      </IndustrialButton>
+    </IndustrialCard>
+  );
+}
+```
+
+### Migration Path
+
+**Phase 1 (Current)**: Opt-in availability
+- Industrial components available for new features
+- Legacy Synthex theme unaffected
+- Zero breaking changes
+
+**Phase 2 (Q1 2026)**: Selective adoption
+- Guardian dashboards migrate incrementally
+- Executive views adopt industrial aesthetic
+- Synthex theme remains for marketing/onboarding
+
+**Phase 3 (Q2 2026)**: Full unification (optional)
+- Unified platform aesthetic across both apps
+- Option to maintain Synthex theme for specific pages
+- Single design language
+
+### Design Tokens Reference
+
+| Token | Hex | HSL | Usage |
+|-------|-----|-----|-------|
+| `industrial-bg` | #1a1a1a | 0° 0% 10% | Background surfaces |
+| `industrial-metal` | #2a2a2a | 0° 0% 17% | Card/panel surfaces |
+| `industrial-metal-light` | #3a3a3a | 0° 0% 23% | Hover/active states |
+| `industrial-rust` | #a85a32 | 24° 55% 43% | Primary actions |
+| `industrial-rust-dark` | #7a3e21 | 19° 50% 27% | Secondary actions |
+| `industrial-text` | #c0c0c0 | 0° 0% 75% | Primary text |
+| `industrial-text-muted` | #707070 | 0° 0% 44% | Secondary text |
+
+### Documentation
+
+Full documentation: `packages/ui-industrial/README.md`
+
