@@ -27,7 +27,7 @@ export const GUARDIAN_EDITIONS: GuardianEditionProfileDefinition[] = [
     key: 'guardian_core',
     label: 'Guardian Core',
     description:
-      'Essential Guardian capabilities: rule engine, alert routing, incident tracking, and basic risk scoring. Perfect for teams starting their rule-based monitoring journey.',
+      'Essential Guardian capabilities: rule engine, alert routing, incident tracking, and basic risk scoring. Ideal for teams starting their rule-based monitoring journey.',
     tier: 'core',
     category: 'packaging',
     capabilitiesRequired: [
@@ -70,7 +70,7 @@ export const GUARDIAN_EDITIONS: GuardianEditionProfileDefinition[] = [
     key: 'guardian_network_intelligent',
     label: 'Guardian Network Intelligent',
     description:
-      'Full-stack Guardian: Pro + Network Intelligence suite (telemetry, anomalies, early warnings, governance console) + peer benchmarking. For organizations leveraging cohort insights and network-wide observability.',
+      'Full-stack Guardian: Pro + Network Intelligence suite (telemetry, anomalies, early warnings, governance console) + peer benchmarking. Ideal for organizations leveraging cohort insights and network-wide observability.',
     tier: 'elite',
     category: 'packaging',
     capabilitiesRequired: [
@@ -99,7 +99,7 @@ export const GUARDIAN_EDITIONS: GuardianEditionProfileDefinition[] = [
     key: 'guardian_custom',
     label: 'Guardian Custom',
     description:
-      'Flexible packaging for organizations with bespoke capability combinations. Fully configurable; no preset capability requirements.',
+      'Flexible packaging designed for organizations with bespoke capability combinations. Fully configurable; no preset capability requirements.',
     tier: 'custom',
     category: 'packaging',
     capabilitiesRequired: [],
