@@ -1,4 +1,11 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { createMockSupabaseServer } from '../__mocks__/guardianSupabase.mock';
+
+// Mock Supabase
+vi.mock('@/lib/supabase', () => ({
+  getSupabaseServer: vi.fn(() => createMockSupabaseServer()),
+}));
+
 import {
   evaluateKpi,
   evaluateAllKpisForTenant,
@@ -179,7 +186,7 @@ describe('Guardian Z08: Program Goals, OKRs & KPI Alignment', () => {
       expect(goal.goalKey).toMatch(/^[a-z0-9_]+$/);
       expect(goal.status).toMatch(/^(draft|active|paused|completed|archived)$/);
       expect(goal.category).toMatch(/^(governance|security_posture|operations|compliance|adoption)$/);
-      expect(goal.timeframeEnd).toBeGreaterThan(goal.timeframeStart);
+      expect(goal.timeframeEnd.getTime()).toBeGreaterThan(goal.timeframeStart.getTime());
     });
 
     it('should validate unique goal_key per tenant', () => {
@@ -217,7 +224,7 @@ describe('Guardian Z08: Program Goals, OKRs & KPI Alignment', () => {
         category: 'governance',
       };
 
-      expect(validGoal.timeframeEnd).toBeGreaterThanOrEqual(validGoal.timeframeStart);
+      expect(validGoal.timeframeEnd.getTime()).toBeGreaterThanOrEqual(validGoal.timeframeStart.getTime());
     });
 
     it('should have correct OKR structure', () => {

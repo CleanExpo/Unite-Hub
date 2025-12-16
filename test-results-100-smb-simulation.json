@@ -1,0 +1,706 @@
+{
+  "timestamp": "2025-12-15T17:55:31.452Z",
+  "total_personas_tested": 100,
+  "total_tests": 1574,
+  "passed": 1284,
+  "warnings": 194,
+  "failed": 96,
+  "breaking_issues": [
+    {
+      "persona_id": 3,
+      "persona_name": "Web Design Studio",
+      "industry": "web_design",
+      "issue": "Feature match for user needs",
+      "notes": "User needs collaboration but Synthex offers portfolio, client_projects"
+    },
+    {
+      "persona_id": 4,
+      "persona_name": "Business Coach",
+      "industry": "coaching",
+      "issue": "Feature match for user needs",
+      "notes": "User needs landing_pages, scheduling but Synthex offers email"
+    },
+    {
+      "persona_id": 5,
+      "persona_name": "Freelance Writer",
+      "industry": "freelance",
+      "issue": "Feature match for user needs",
+      "notes": "User needs invoicing but Synthex offers content, portfolio"
+    },
+    {
+      "persona_id": 6,
+      "persona_name": "Photography Business",
+      "industry": "photography",
+      "issue": "Feature match for user needs",
+      "notes": "User needs booking, client_gallery but Synthex offers portfolio"
+    },
+    {
+      "persona_id": 7,
+      "persona_name": "SaaS Startup",
+      "industry": "saas",
+      "issue": "Feature match for user needs",
+      "notes": "User needs api, docs, integrations but Synthex offers "
+    },
+    {
+      "persona_id": 8,
+      "persona_name": "Accounting Firm",
+      "industry": "accounting",
+      "issue": "Feature match for user needs",
+      "notes": "User needs crm, compliance but Synthex offers email"
+    },
+    {
+      "persona_id": 9,
+      "persona_name": "Solo Attorney",
+      "industry": "legal",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling, docs but Synthex offers email"
+    },
+    {
+      "persona_id": 9,
+      "persona_name": "Solo Attorney",
+      "industry": "legal",
+      "issue": "AI content trust level",
+      "notes": "Legal/medical content needs human review - Synthex not suitable"
+    },
+    {
+      "persona_id": 10,
+      "persona_name": "Insurance Agent",
+      "industry": "insurance",
+      "issue": "Feature match for user needs",
+      "notes": "User needs crm but Synthex offers email, analytics"
+    },
+    {
+      "persona_id": 11,
+      "persona_name": "Real Estate Agent",
+      "industry": "real_estate",
+      "issue": "Feature match for user needs",
+      "notes": "User needs crm but Synthex offers email, social"
+    },
+    {
+      "persona_id": 12,
+      "persona_name": "Sales Consultant",
+      "industry": "sales",
+      "issue": "Feature match for user needs",
+      "notes": "User needs crm, pipeline but Synthex offers email"
+    },
+    {
+      "persona_id": 13,
+      "persona_name": "Training Specialist",
+      "industry": "training",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling but Synthex offers content, email"
+    },
+    {
+      "persona_id": 14,
+      "persona_name": "Tech Consultant",
+      "industry": "consulting_tech",
+      "issue": "Feature match for user needs",
+      "notes": "User needs blog but Synthex offers content, social"
+    },
+    {
+      "persona_id": 15,
+      "persona_name": "Executive Recruiter",
+      "industry": "executive_search",
+      "issue": "Feature match for user needs",
+      "notes": "User needs crm, automation but Synthex offers email"
+    },
+    {
+      "persona_id": 16,
+      "persona_name": "Dropshipper",
+      "industry": "ecommerce",
+      "issue": "Feature match for user needs",
+      "notes": "User needs marketing but Synthex offers email, social"
+    },
+    {
+      "persona_id": 18,
+      "persona_name": "Amazon Seller",
+      "industry": "amazon_seller",
+      "issue": "Feature match for user needs",
+      "notes": "User needs reviews but Synthex offers content, email"
+    },
+    {
+      "persona_id": 19,
+      "persona_name": "Small Retail Shop",
+      "industry": "retail",
+      "issue": "Feature match for user needs",
+      "notes": "User needs point_of_sale, inventory but Synthex offers email"
+    },
+    {
+      "persona_id": 20,
+      "persona_name": "Fashion Boutique",
+      "industry": "boutique",
+      "issue": "Feature match for user needs",
+      "notes": "User needs inventory but Synthex offers social, email"
+    },
+    {
+      "persona_id": 21,
+      "persona_name": "Antique Shop Owner",
+      "industry": "antique",
+      "issue": "Feature match for user needs",
+      "notes": "User needs catalog but Synthex offers email, social"
+    },
+    {
+      "persona_id": 22,
+      "persona_name": "Jewelry Retailer",
+      "industry": "jewelry",
+      "issue": "Feature match for user needs",
+      "notes": "User needs catalog, customization but Synthex offers email"
+    },
+    {
+      "persona_id": 23,
+      "persona_name": "Gift Shop Owner",
+      "industry": "gift_shop",
+      "issue": "Feature match for user needs",
+      "notes": "User needs inventory, seasonal_campaigns but Synthex offers email"
+    },
+    {
+      "persona_id": 25,
+      "persona_name": "Independent Bookstore",
+      "industry": "books",
+      "issue": "Feature match for user needs",
+      "notes": "User needs inventory, events but Synthex offers email"
+    },
+    {
+      "persona_id": 26,
+      "persona_name": "eBay/Facebook Marketplace Reseller",
+      "industry": "reseller",
+      "issue": "Feature match for user needs",
+      "notes": "User needs listings, inventory but Synthex offers email"
+    },
+    {
+      "persona_id": 27,
+      "persona_name": "Subscription Box Creator",
+      "industry": "subscription_box",
+      "issue": "Feature match for user needs",
+      "notes": "User needs fulfillment but Synthex offers content, email"
+    },
+    {
+      "persona_id": 28,
+      "persona_name": "Print-on-Demand Shop",
+      "industry": "print_on_demand",
+      "issue": "Feature match for user needs",
+      "notes": "User needs design, marketing but Synthex offers email"
+    },
+    {
+      "persona_id": 30,
+      "persona_name": "Wholesale Distributor",
+      "industry": "wholesale",
+      "issue": "Feature match for user needs",
+      "notes": "User needs crm, pricing but Synthex offers email"
+    },
+    {
+      "persona_id": 31,
+      "persona_name": "Gym Owner",
+      "industry": "fitness",
+      "issue": "Feature match for user needs",
+      "notes": "User needs membership, scheduling but Synthex offers email"
+    },
+    {
+      "persona_id": 32,
+      "persona_name": "Personal Trainer",
+      "industry": "personal_trainer",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling, client_portal but Synthex offers email"
+    },
+    {
+      "persona_id": 33,
+      "persona_name": "Yoga Instructor",
+      "industry": "yoga",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling, classes but Synthex offers email"
+    },
+    {
+      "persona_id": 34,
+      "persona_name": "Nutritionist",
+      "industry": "nutrition",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling, meal_plans but Synthex offers email"
+    },
+    {
+      "persona_id": 35,
+      "persona_name": "Therapist/Counselor",
+      "industry": "therapy",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling, confidential_notes but Synthex offers email"
+    },
+    {
+      "persona_id": 36,
+      "persona_name": "Dental Practice",
+      "industry": "dental",
+      "issue": "Feature match for user needs",
+      "notes": "User needs appointment, patient_records but Synthex offers email"
+    },
+    {
+      "persona_id": 37,
+      "persona_name": "Medical Practice",
+      "industry": "medical",
+      "issue": "Feature match for user needs",
+      "notes": "User needs appointment, records, compliance but Synthex offers "
+    },
+    {
+      "persona_id": 37,
+      "persona_name": "Medical Practice",
+      "industry": "medical",
+      "issue": "AI content trust level",
+      "notes": "Legal/medical content needs human review - Synthex not suitable"
+    },
+    {
+      "persona_id": 38,
+      "persona_name": "Chiropractor",
+      "industry": "chiropractic",
+      "issue": "Feature match for user needs",
+      "notes": "User needs appointment, patient_history but Synthex offers email"
+    },
+    {
+      "persona_id": 39,
+      "persona_name": "Massage Therapist",
+      "industry": "massage",
+      "issue": "Feature match for user needs",
+      "notes": "User needs booking, client_list but Synthex offers email"
+    },
+    {
+      "persona_id": 40,
+      "persona_name": "Aesthetics/Spa Owner",
+      "industry": "skincare",
+      "issue": "Feature match for user needs",
+      "notes": "User needs booking, inventory but Synthex offers email"
+    },
+    {
+      "persona_id": 41,
+      "persona_name": "Salon Owner",
+      "industry": "hair",
+      "issue": "Feature match for user needs",
+      "notes": "User needs appointment, inventory but Synthex offers email"
+    },
+    {
+      "persona_id": 42,
+      "persona_name": "Veterinary Clinic",
+      "industry": "veterinary",
+      "issue": "Feature match for user needs",
+      "notes": "User needs appointment, pet_records but Synthex offers email"
+    },
+    {
+      "persona_id": 43,
+      "persona_name": "Online Fitness Coach",
+      "industry": "fitness_digital",
+      "issue": "Feature match for user needs",
+      "notes": "User needs video but Synthex offers content, email"
+    },
+    {
+      "persona_id": 44,
+      "persona_name": "Supplement Shop",
+      "industry": "supplement",
+      "issue": "Feature match for user needs",
+      "notes": "User needs ecommerce, inventory but Synthex offers email"
+    },
+    {
+      "persona_id": 45,
+      "persona_name": "Wellness Retreat Organizer",
+      "industry": "wellness_retreat",
+      "issue": "Feature match for user needs",
+      "notes": "User needs event_mgmt, registration but Synthex offers email"
+    },
+    {
+      "persona_id": 46,
+      "persona_name": "Restaurant Owner",
+      "industry": "restaurant",
+      "issue": "Feature match for user needs",
+      "notes": "User needs online_ordering, menu but Synthex offers email"
+    },
+    {
+      "persona_id": 47,
+      "persona_name": "Coffee Shop Owner",
+      "industry": "cafe",
+      "issue": "Feature match for user needs",
+      "notes": "User needs loyalty but Synthex offers email, social"
+    },
+    {
+      "persona_id": 48,
+      "persona_name": "Bakery Owner",
+      "industry": "bakery",
+      "issue": "Feature match for user needs",
+      "notes": "User needs ordering but Synthex offers email, social"
+    },
+    {
+      "persona_id": 49,
+      "persona_name": "Catering Business",
+      "industry": "catering",
+      "issue": "Feature match for user needs",
+      "notes": "User needs menu, event_mgmt but Synthex offers email"
+    },
+    {
+      "persona_id": 50,
+      "persona_name": "Food Truck Owner",
+      "industry": "food_truck",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling but Synthex offers email, social"
+    },
+    {
+      "persona_id": 51,
+      "persona_name": "Meal Prep Service",
+      "industry": "meal_prep",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling, inventory but Synthex offers email"
+    },
+    {
+      "persona_id": 52,
+      "persona_name": "Food Delivery Coordinator",
+      "industry": "food_delivery",
+      "issue": "Feature match for user needs",
+      "notes": "User needs routing, tracking but Synthex offers email"
+    },
+    {
+      "persona_id": 53,
+      "persona_name": "Craft Brewery",
+      "industry": "brewery",
+      "issue": "Feature match for user needs",
+      "notes": "User needs events but Synthex offers content, email"
+    },
+    {
+      "persona_id": 54,
+      "persona_name": "Winery Owner",
+      "industry": "winery",
+      "issue": "Feature match for user needs",
+      "notes": "User needs tasting_events but Synthex offers email, content"
+    },
+    {
+      "persona_id": 56,
+      "persona_name": "Specialty Food Producer",
+      "industry": "specialty_foods",
+      "issue": "Feature match for user needs",
+      "notes": "User needs wholesale but Synthex offers email, social"
+    },
+    {
+      "persona_id": 57,
+      "persona_name": "Restaurant Franchisee",
+      "industry": "restaurant_franchise",
+      "issue": "Feature match for user needs",
+      "notes": "User needs reporting but Synthex offers email, analytics"
+    },
+    {
+      "persona_id": 58,
+      "persona_name": "Organic Farm/CSA",
+      "industry": "organic_farm",
+      "issue": "Feature match for user needs",
+      "notes": "User needs subscription, scheduling but Synthex offers email"
+    },
+    {
+      "persona_id": 59,
+      "persona_name": "Specialty Spice Shop",
+      "industry": "spice_shop",
+      "issue": "Feature match for user needs",
+      "notes": "User needs ecommerce but Synthex offers email, content"
+    },
+    {
+      "persona_id": 60,
+      "persona_name": "Cooking Class Instructor",
+      "industry": "culinary_school",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling but Synthex offers email, content"
+    },
+    {
+      "persona_id": 61,
+      "persona_name": "Plumber",
+      "industry": "plumbing",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling, invoicing but Synthex offers email"
+    },
+    {
+      "persona_id": 62,
+      "persona_name": "Electrician",
+      "industry": "electrical",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling, invoicing but Synthex offers email"
+    },
+    {
+      "persona_id": 63,
+      "persona_name": "HVAC Contractor",
+      "industry": "hvac",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling, invoicing but Synthex offers email"
+    },
+    {
+      "persona_id": 64,
+      "persona_name": "Construction Company",
+      "industry": "construction",
+      "issue": "Feature match for user needs",
+      "notes": "User needs project_mgmt, invoicing but Synthex offers email"
+    },
+    {
+      "persona_id": 65,
+      "persona_name": "Landscaping Company",
+      "industry": "landscaping",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling, invoicing but Synthex offers email"
+    },
+    {
+      "persona_id": 66,
+      "persona_name": "House Cleaning Service",
+      "industry": "cleaning",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling, client_list but Synthex offers email"
+    },
+    {
+      "persona_id": 67,
+      "persona_name": "Pest Control Service",
+      "industry": "pest_control",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling, billing but Synthex offers email"
+    },
+    {
+      "persona_id": 68,
+      "persona_name": "Handyman",
+      "industry": "home_repair",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling, client_list but Synthex offers email"
+    },
+    {
+      "persona_id": 69,
+      "persona_name": "Roofing Company",
+      "industry": "roofing",
+      "issue": "Feature match for user needs",
+      "notes": "User needs invoicing, project_tracking but Synthex offers email"
+    },
+    {
+      "persona_id": 70,
+      "persona_name": "Painting Contractor",
+      "industry": "painting",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling, invoicing but Synthex offers email"
+    },
+    {
+      "persona_id": 71,
+      "persona_name": "Carpet/Upholstery Cleaning",
+      "industry": "carpet_cleaning",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling, billing but Synthex offers email"
+    },
+    {
+      "persona_id": 72,
+      "persona_name": "Auto Repair Shop",
+      "industry": "auto_repair",
+      "issue": "Feature match for user needs",
+      "notes": "User needs appointment, inventory but Synthex offers email"
+    },
+    {
+      "persona_id": 73,
+      "persona_name": "Mobile Car Detailer",
+      "industry": "mobile_detailing",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling, client_list but Synthex offers email"
+    },
+    {
+      "persona_id": 74,
+      "persona_name": "Appliance Repair Service",
+      "industry": "appliance_repair",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling, invoicing but Synthex offers email"
+    },
+    {
+      "persona_id": 75,
+      "persona_name": "Locksmith",
+      "industry": "locksmith",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling, billing but Synthex offers email"
+    },
+    {
+      "persona_id": 76,
+      "persona_name": "Tutor/Test Prep",
+      "industry": "tutoring",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling, student_portal but Synthex offers email"
+    },
+    {
+      "persona_id": 77,
+      "persona_name": "Online Course Creator",
+      "industry": "online_course",
+      "issue": "Feature match for user needs",
+      "notes": "User needs lms but Synthex offers content, email"
+    },
+    {
+      "persona_id": 78,
+      "persona_name": "Music Instructor",
+      "industry": "music_lessons",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling, lesson_tracking but Synthex offers email"
+    },
+    {
+      "persona_id": 79,
+      "persona_name": "Language School",
+      "industry": "language_school",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling, student_tracking but Synthex offers email"
+    },
+    {
+      "persona_id": 80,
+      "persona_name": "Daycare Owner",
+      "industry": "daycare",
+      "issue": "Feature match for user needs",
+      "notes": "User needs parent_communication, attendance but Synthex offers email"
+    },
+    {
+      "persona_id": 81,
+      "persona_name": "Dog Walker",
+      "industry": "dog_walking",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling, client_list but Synthex offers email"
+    },
+    {
+      "persona_id": 82,
+      "persona_name": "Pet Sitter",
+      "industry": "pet_sitting",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling, notifications but Synthex offers email"
+    },
+    {
+      "persona_id": 83,
+      "persona_name": "Dog Trainer",
+      "industry": "dog_training",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling but Synthex offers email, content"
+    },
+    {
+      "persona_id": 84,
+      "persona_name": "Pet Groomer",
+      "industry": "pet_grooming",
+      "issue": "Feature match for user needs",
+      "notes": "User needs appointment, client_list but Synthex offers email"
+    },
+    {
+      "persona_id": 85,
+      "persona_name": "Pet Boarding Facility",
+      "industry": "pet_boarding",
+      "issue": "Feature match for user needs",
+      "notes": "User needs reservation, client_info but Synthex offers email"
+    },
+    {
+      "persona_id": 86,
+      "persona_name": "Event Planner",
+      "industry": "event_planner",
+      "issue": "Feature match for user needs",
+      "notes": "User needs project_mgmt, vendor_mgmt but Synthex offers email"
+    },
+    {
+      "persona_id": 87,
+      "persona_name": "DJ Service",
+      "industry": "dj",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling, client_list but Synthex offers email"
+    },
+    {
+      "persona_id": 88,
+      "persona_name": "Event Photographer",
+      "industry": "photographer_events",
+      "issue": "Feature match for user needs",
+      "notes": "User needs booking but Synthex offers portfolio, email"
+    },
+    {
+      "persona_id": 89,
+      "persona_name": "Videographer",
+      "industry": "videographer",
+      "issue": "Feature match for user needs",
+      "notes": "User needs booking but Synthex offers portfolio, email"
+    },
+    {
+      "persona_id": 90,
+      "persona_name": "Florist",
+      "industry": "florist",
+      "issue": "Feature match for user needs",
+      "notes": "User needs ordering, delivery but Synthex offers email"
+    },
+    {
+      "persona_id": 91,
+      "persona_name": "Wedding Planner",
+      "industry": "wedding_planner",
+      "issue": "Feature match for user needs",
+      "notes": "User needs project_mgmt, vendor, timeline, budget but Synthex offers email"
+    },
+    {
+      "persona_id": 92,
+      "persona_name": "Property Manager",
+      "industry": "property_mgmt",
+      "issue": "Feature match for user needs",
+      "notes": "User needs crm, tenant_portal, invoicing but Synthex offers email"
+    },
+    {
+      "persona_id": 93,
+      "persona_name": "Home Stager",
+      "industry": "home_staging",
+      "issue": "Feature match for user needs",
+      "notes": "User needs before_after but Synthex offers portfolio, email, social"
+    },
+    {
+      "persona_id": 94,
+      "persona_name": "Moving Company",
+      "industry": "moving_company",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling, quotes, invoicing but Synthex offers email"
+    },
+    {
+      "persona_id": 95,
+      "persona_name": "Self-Storage Operator",
+      "industry": "storage_facility",
+      "issue": "Feature match for user needs",
+      "notes": "User needs reservations, billing, access but Synthex offers email"
+    },
+    {
+      "persona_id": 96,
+      "persona_name": "Translator/Interpreter",
+      "industry": "translation",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling, invoicing but Synthex offers email"
+    },
+    {
+      "persona_id": 97,
+      "persona_name": "Bookkeeper",
+      "industry": "bookkeeping",
+      "issue": "Feature match for user needs",
+      "notes": "User needs software, invoicing, client_portal but Synthex offers email"
+    },
+    {
+      "persona_id": 98,
+      "persona_name": "VAT/Tax Advisor",
+      "industry": "vat_compliance",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling, documentation but Synthex offers email"
+    },
+    {
+      "persona_id": 99,
+      "persona_name": "Mobile Notary",
+      "industry": "notary",
+      "issue": "Feature match for user needs",
+      "notes": "User needs scheduling, document_mgmt but Synthex offers email"
+    },
+    {
+      "persona_id": 100,
+      "persona_name": "Virtual Assistant Service",
+      "industry": "virtual_assistant",
+      "issue": "Feature match for user needs",
+      "notes": "User needs crm, automation, communication, invoicing but Synthex offers "
+    }
+  ],
+  "support_priority_users": 0,
+  "key_findings": [
+    {
+      "issue": "Low-tech user base",
+      "count": 17,
+      "impact": "17% of SMBs have very low tech proficiency",
+      "recommendation": "Implement guided onboarding, video tutorials, and live chat support",
+      "priority": "HIGH"
+    },
+    {
+      "issue": "Unmet feature needs",
+      "count": 19,
+      "impact": "19 personas need scheduling/booking/inventory features not mentioned",
+      "recommendation": "Clarify what Synthex is best for or add roadmap to marketing",
+      "priority": "MEDIUM"
+    },
+    {
+      "issue": "Regulated industries",
+      "count": 3,
+      "impact": "Legal/medical businesses need content verification",
+      "recommendation": "Market toward creative/service businesses, not regulated sectors",
+      "priority": "HIGH"
+    }
+  ]
+}

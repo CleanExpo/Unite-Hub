@@ -325,7 +325,7 @@ async function runExportBundleTask(
 /**
  * Task: Capture status snapshots for stakeholder views (Z14)
  */
-async function runStatusSnapshotTask(
+export async function runStatusSnapshotTask(
   tenantId: string,
   config: Record<string, any>,
   actor: string

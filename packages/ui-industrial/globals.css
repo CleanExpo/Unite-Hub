@@ -1,0 +1,53 @@
+/**
+ * Industrial Theme Global Styles
+ * Opt-in design system for dark, metal-inspired UI
+ * Applied only when data-theme="industrial" is set on root element
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Industrial theme root variables - only active when theme is enabled */
+@layer base {
+  :root[data-theme='industrial'] {
+    --background: 0 0% 10%;
+    --foreground: 0 0% 95%;
+    --primary: 24 55% 43%;
+    --border: 0 0% 20%;
+    --radius: 1rem;
+  }
+}
+
+/* Industrial utility classes */
+@layer utilities {
+  .textured-metal {
+    @apply bg-industrial-metal;
+    background-image: linear-gradient(145deg, #333, #222);
+  }
+
+  .rust-label {
+    @apply bg-industrial-rust/20 text-industrial-rust px-2 py-1 rounded-full text-xs font-bold uppercase border border-industrial-rust/30;
+  }
+
+  /* Metal shine effect */
+  .metal-shine {
+    @apply relative;
+    background: linear-gradient(145deg, rgba(58, 58, 58, 0.5), rgba(26, 26, 26, 0.5));
+  }
+
+  /* Inset metal effect for depth */
+  .metal-depression {
+    @apply shadow-metal-inset;
+  }
+
+  /* Outset metal effect for prominence */
+  .metal-raised {
+    @apply shadow-metal-outset;
+  }
+
+  /* Rust glow for alerts/active states */
+  .rust-active {
+    @apply shadow-rust-glow;
+  }
+}

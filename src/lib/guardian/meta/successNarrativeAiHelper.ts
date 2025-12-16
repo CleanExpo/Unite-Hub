@@ -141,7 +141,7 @@ Output JSON:
 /**
  * generateFallbackNarrative — Deterministic fallback when AI is unavailable or fails.
  */
-function generateFallbackNarrative(
+export function generateFallbackNarrative(
   ctx: GuardianSuccessNarrativeContext
 ): {
   headline: string;

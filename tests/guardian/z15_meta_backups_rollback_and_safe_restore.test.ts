@@ -24,6 +24,8 @@ vi.mock('@/lib/supabase', () => ({
           adoption_rate: 65,
           cycle_key: 'test-cycle',
           playbook_key: 'test-playbook',
+          backup_key: 'test-backup',
+          scope: ['governance', 'automation'],
         },
         error: null,
       }),

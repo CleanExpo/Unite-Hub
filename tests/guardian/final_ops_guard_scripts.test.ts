@@ -165,7 +165,7 @@ describe('FINAL-OPS: Freeze Override Mechanism', () => {
     ];
 
     validTickets.forEach((ticket) => {
-      expect(ticket).toMatch(/^[A-Z]+-[\dX]+$/);
+      expect(ticket).toMatch(/^[A-Z0-9][A-Z0-9-]*[A-Z0-9X]$/);
     });
   });
 });

@@ -40,6 +40,9 @@ jobs:
         run: npm ci --legacy-peer-deps
         continue-on-error: true
 
+      - name: Migration hygiene check
+        run: npm run migrations:check
+
       - name: Run Guardian checks
         id: guardian
         run: npm run guardian:gates

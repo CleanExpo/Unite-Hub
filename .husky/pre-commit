@@ -1,1 +1,11 @@
+# Prevent accidental package-lock.json deletion
+if git diff --cached --name-only | grep -q "^package-lock.json$"; then
+  if ! git show :package-lock.json > /dev/null 2>&1; then
+    echo "❌ ERROR: package-lock.json is being deleted. This is not allowed."
+    echo "   package-lock.json is critical for deterministic builds."
+    echo "   If you need to regenerate it, use: npm install --package-lock-only"
+    exit 1
+  fi
+fi
+
 npx lint-staged
