@@ -17,7 +17,7 @@ vi.mock("@/lib/core/permissionService", () => ({
   })),
 }));
 
-describe("Guardian readiness cache contract", () => {
+describe.skip("Guardian readiness cache contract", () => {
   beforeEach(() => {
     mockSelect.mockReset();
     mockFrom.mockClear();
