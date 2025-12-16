@@ -240,11 +240,11 @@ describe('Guardian Z14: Meta Status Page Tests', () => {
     });
 
     it('should compute correct period range for quarter_to_date', () => {
-      const now = new Date('2025-12-12'); // Q4
-      const q = Math.floor((now.getMonth() + 1) / 3);
-      const start = new Date(now.getFullYear(), (q - 1) * 3, 1);
+      const now = new Date('2025-12-12'); // Q4 (December)
+      const q = Math.floor((now.getMonth() + 1) / 3); // (11+1)/3 = 4
+      const start = new Date(now.getFullYear(), (q - 1) * 3, 1); // (4-1)*3 = 9, so October (0-indexed month 9)
 
-      expect(start.getMonth()).toBe(8); // September (month 9 is Oct 1 in 0-indexed)
+      expect(start.getMonth()).toBe(9); // October (Q4 starts Oct, 0-indexed)
       expect(q).toBe(4); // Q4
     });
   });
