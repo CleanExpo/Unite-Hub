@@ -1,18 +1,15 @@
-{
+﻿{
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "nextjs",
-  "installCommand": "npm install --legacy-peer-deps --ignore-scripts",
-  "buildCommand": "next build",
-  "crons": [
-    { "path": "/api/cron/health-check", "schedule": "*/5 * * * *" },
-    { "path": "/api/agents/continuous-intelligence", "schedule": "*/30 * * * *" },
-    { "path": "/api/aido/google-curve/monitor", "schedule": "0 */6 * * *" },
-    { "path": "/api/seo/sync-rankings", "schedule": "0 6 * * *" },
-    { "path": "/api/managed/scheduler/weekly", "schedule": "0 9 * * 1" },
-    { "path": "/api/cron/model-scout", "schedule": "0 */6 * * *" },
-    { "path": "/api/cron/cost-report", "schedule": "0 8 * * *" },
-    { "path": "/api/cron/content-queue", "schedule": "*/15 * * * *" },
-    { "path": "/api/cron/seo-health", "schedule": "0 6 * * *" }
+  "rewrites": [
+    { "source": "/", "destination": "/synthex" },
+    { "source": "/(.*)", "destination": "/synthex/$1" }
   ],
-  "regions": ["iad1"]
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "x-app-surface", "value": "synthex" }
+      ]
+    }
+  ]
 }
