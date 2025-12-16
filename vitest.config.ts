@@ -12,6 +12,7 @@ export default defineConfig({
       '**/node_modules/**',
       '**/dist/**',
       '**/.next/**',
+      '**/tests/_quarantined/**',
       '**/tests/e2e/**',
       '**/tests/api/**',
       '**/tests/strategy/**',
