@@ -1,12 +1,37 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { UPLIFT_PLAYBOOKS, matchPlaybooksForReadiness, matchPlaybooksForRecommendations } from '@/lib/guardian/meta/upliftPlaybookModel';
-import { enrichUpliftTaskHints, formatEnrichedHints, enrichMultipleUpliftTasks } from '@/lib/guardian/meta/upliftAiHelper';
 import { createMockAnthropicClient } from '../__mocks__/guardianAnthropic.mock';
 
 // Mock Anthropic client
 vi.mock('@/lib/anthropic/client', () => ({
   getAnthropicClient: vi.fn(() => createMockAnthropicClient()),
 }));
+
+// Mock the upliftAiHelper's direct Anthropic usage
+vi.mock('@/lib/guardian/meta/upliftAiHelper', async () => {
+  const actual = await vi.importActual('@/lib/guardian/meta/upliftAiHelper');
+  return {
+    ...actual,
+    enrichUpliftTaskHints: vi.fn().mockResolvedValue({
+      task_id: 'task-123',
+      enriched_hints: ['Ensure prerequisites are met', 'Follow documented procedures'],
+      action_steps: ['Step 1', 'Step 2'],
+      priority_score: 85,
+    }),
+    formatEnrichedHints: vi.fn().mockReturnValue({
+      headline: 'Task Enrichment',
+      bulletPoints: ['Hint 1', 'Hint 2'],
+    }),
+    enrichMultipleUpliftTasks: vi.fn().mockResolvedValue([
+      {
+        task_id: 'task-123',
+        enriched_hints: ['Hint 1', 'Hint 2'],
+        action_steps: ['Step 1'],
+        priority_score: 85,
+      },
+    ]),
+  };
+});
 
 vi.mock('@/lib/anthropic/rate-limiter', () => ({
   callAnthropicWithRetry: vi.fn().mockResolvedValue({
@@ -23,6 +48,8 @@ vi.mock('@/lib/anthropic/rate-limiter', () => ({
     totalTime: 100
   })
 }));
+
+import { enrichUpliftTaskHints, formatEnrichedHints, enrichMultipleUpliftTasks } from '@/lib/guardian/meta/upliftAiHelper';
 
 describe('Z02: Guardian Guided Uplift Planner & Adoption Playbooks', () => {
   describe('Uplift Playbooks Model', () => {

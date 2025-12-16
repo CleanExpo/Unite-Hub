@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { createMockSupabaseServer } from '../__mocks__/guardianSupabase.mock';
+import { createMockSupabaseServer, resetMockSupabaseServer } from '../__mocks__/guardianSupabase.mock';
 import type {
   GuardianMetaFeatureFlags,
   GuardianMetaGovernancePrefs,
@@ -110,6 +110,11 @@ import {
 
 const TEST_WORKSPACE_ID = 'test-workspace-' + Math.random().toString(36).slice(2);
 const TEST_ACTOR = 'test-user@example.com';
+
+// Reset mock state before each test to avoid cross-test pollution
+beforeEach(() => {
+  resetMockSupabaseServer();
+});
 
 // ===== FEATURE FLAGS TESTS =====
 
