@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Use standalone output for optimized serverless deployment
-  output: 'standalone',
+  // NOTE: 'standalone' output is for Docker/self-hosted deployments
+  // Vercel requires default output mode (serverless functions)
+  // output: 'standalone',
 
   // MOVED FROM experimental - Now at root level in Next.js 16
   outputFileTracingExcludes: {
