@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "engines": {
-    "node": ">=20.19.4 <21.0.0",
+    "node": ">=20.19.4 <23.0.0",
     "npm": ">=10.8.2 <11.0.0"
   },
   "scripts": {
