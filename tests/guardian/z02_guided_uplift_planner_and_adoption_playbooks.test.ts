@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { UPLIFT_PLAYBOOKS, matchPlaybooksForReadiness, matchPlaybooksForRecommendations } from '@/lib/guardian/meta/upliftPlaybookModel';
+import { enrichUpliftTaskHints, formatEnrichedHints, enrichMultipleUpliftTasks } from '@/lib/guardian/meta/upliftAiHelper';
 import { createMockAnthropicClient } from '../__mocks__/guardianAnthropic.mock';
 
 // Mock Anthropic client
@@ -48,8 +49,6 @@ vi.mock('@/lib/anthropic/rate-limiter', () => ({
     totalTime: 100
   })
 }));
-
-import { enrichUpliftTaskHints, formatEnrichedHints, enrichMultipleUpliftTasks } from '@/lib/guardian/meta/upliftAiHelper';
 
 describe('Z02: Guardian Guided Uplift Planner & Adoption Playbooks', () => {
   describe('Uplift Playbooks Model', () => {
@@ -116,7 +115,7 @@ describe('Z02: Guardian Guided Uplift Planner & Adoption Playbooks', () => {
         expect(playbook.triggers).toBeDefined();
         expect(Array.isArray(playbook.triggers)).toBe(true);
         playbook.triggers.forEach((trigger) => {
-          expect(trigger.capabilityKey).toBeDefined();
+          expect(trigger.capabilityKey || trigger.recommendationType).toBeDefined();
           if (trigger.minScore !== undefined) {
             expect(trigger.minScore).toBeGreaterThanOrEqual(0);
             expect(trigger.minScore).toBeLessThanOrEqual(100);
@@ -146,7 +145,7 @@ describe('Z02: Guardian Guided Uplift Planner & Adoption Playbooks', () => {
   describe('Playbook Matching by Readiness', () => {
     it('should match baseline playbooks when score is low', () => {
       const readinessResults = [
-        { key: 'guardian.core.rules', score: 20, status: 'not_configured' },
+        { capabilityKey: 'guardian.core.rules', score: 20, status: 'not_configured' },
       ];
       const matched = matchPlaybooksForReadiness(readinessResults, 25);
       expect(matched.length).toBeGreaterThan(0);
@@ -155,8 +154,8 @@ describe('Z02: Guardian Guided Uplift Planner & Adoption Playbooks', () => {
 
     it('should match operational playbooks when score is moderate', () => {
       const readinessResults = [
-        { key: 'guardian.core.rules', score: 50, status: 'partial' },
-        { key: 'guardian.core.risk', score: 40, status: 'not_configured' },
+        { capabilityKey: 'guardian.core.rules', score: 50, status: 'partial' },
+        { capabilityKey: 'guardian.core.risk', score: 40, status: 'not_configured' },
       ];
       const matched = matchPlaybooksForReadiness(readinessResults, 45);
       expect(matched.length).toBeGreaterThan(0);
@@ -164,7 +163,7 @@ describe('Z02: Guardian Guided Uplift Planner & Adoption Playbooks', () => {
 
     it('should match mature playbooks when score is high', () => {
       const readinessResults = [
-        { key: 'guardian.qa.i_series.simulation', score: 50, status: 'partial' },
+        { capabilityKey: 'guardian.qa.i_series.simulation', score: 50, status: 'partial' },
       ];
       const matched = matchPlaybooksForReadiness(readinessResults, 65);
       expect(matched.length).toBeGreaterThan(0);
@@ -172,7 +171,7 @@ describe('Z02: Guardian Guided Uplift Planner & Adoption Playbooks', () => {
 
     it('should match network-intelligent playbooks at high scores', () => {
       const readinessResults = [
-        { key: 'guardian.network.x01_telemetry', score: 30, status: 'not_configured' },
+        { capabilityKey: 'guardian.network.x01_telemetry', score: 30, status: 'not_configured' },
       ];
       const matched = matchPlaybooksForReadiness(readinessResults, 80);
       expect(matched.length).toBeGreaterThan(0);
@@ -186,9 +185,9 @@ describe('Z02: Guardian Guided Uplift Planner & Adoption Playbooks', () => {
 
     it('should handle mixed readiness results', () => {
       const readinessResults = [
-        { key: 'guardian.core.rules', score: 70, status: 'ready' },
-        { key: 'guardian.core.risk', score: 50, status: 'partial' },
-        { key: 'guardian.network.x01_telemetry', score: 20, status: 'not_configured' },
+        { capabilityKey: 'guardian.core.rules', score: 70, status: 'ready' },
+        { capabilityKey: 'guardian.core.risk', score: 50, status: 'partial' },
+        { capabilityKey: 'guardian.network.x01_telemetry', score: 20, status: 'not_configured' },
       ];
       const matched = matchPlaybooksForReadiness(readinessResults, 55);
       expect(Array.isArray(matched)).toBe(true);
