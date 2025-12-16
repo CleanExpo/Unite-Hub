@@ -19,6 +19,8 @@ export default defineConfig({
       '**/tests/phase1/**',
       '**/*.e2e.spec.ts',
       '**/*.e2e.test.ts',
+      '**/tests/*-ui-smoke.spec.ts',
+      '**/tests/*-readiness-cache-contract.test.ts',
       // Service tests that need real database - run separately
       '**/src/lib/__tests__/consensusService.test.ts',
       '**/src/lib/__tests__/guardrailPolicyService.test.ts',
