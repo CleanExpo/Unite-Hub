@@ -134,7 +134,7 @@ Write a narrative that summarizes the key insights and concerns.`;
 /**
  * Build fallback narrative when AI is disabled or fails
  */
-function buildFallbackNarrative(view: StatusPageView): string {
+export function buildFallbackNarrative(view: StatusPageView): string {
   const scoreCount = view.cards.filter((c) => c.status === 'good').length;
   const concernCount = view.cards.filter((c) => c.status === 'warn' || c.status === 'bad').length;
   const total = view.cards.length;

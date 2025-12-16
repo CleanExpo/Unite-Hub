@@ -130,7 +130,6 @@ export {
   type RateLimitStatus,
   type HealthMetrics,
   type RollbackEvent,
-  DEFAULT_GUARDRAILS,
   validateGuardrails,
   checkRateLimit,
   applyAllocation,
@@ -138,6 +137,11 @@ export {
   getAllocationState,
   getAllocationHistory,
 } from './traffic-allocation-engine';
+
+export {
+  type AllocationGuardrails,
+  DEFAULT_GUARDRAILS,
+} from './traffic-allocation';
 
 export {
   type RegenerationInput,
@@ -148,12 +152,15 @@ export {
   type RegenerationEventRecord,
   type RegenerationStatus,
   type RegenerationFailureReason,
-  DEFAULT_REGENERATION_GUARDRAILS,
   checkEligibility,
   enforceGuardrails,
   runContentRegeneration,
   getContentLineage,
 } from './content-regeneration-engine';
+
+export {
+  DEFAULT_REGENERATION_GUARDRAILS,
+} from './content-regeneration-types';
 
 export {
   type MetricsProvider,

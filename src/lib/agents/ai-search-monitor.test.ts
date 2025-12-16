@@ -8,21 +8,20 @@ import {
 // Mock Perplexity API
 global.fetch = vi.fn();
 
-// Mock Supabase
+// Mock Supabase with chainable query builder
+const createMockQuery = () => ({
+  eq: vi.fn().mockReturnValue(createMockQuery()),
+  gte: vi.fn().mockReturnValue(createMockQuery()),
+  order: vi.fn().mockResolvedValue({ data: [], error: null }),
+});
+
 vi.mock('@/lib/supabase/admin', () => ({
   supabaseAdmin: {
     from: vi.fn().mockReturnValue({
       insert: vi.fn().mockReturnValue({
         mockResolvedValue: vi.fn().mockResolvedValue({ error: null }),
       }),
-      select: vi.fn().mockReturnValue({
-        eq: vi.fn().mockReturnValue({
-          gte: vi.fn().mockReturnValue({
-            order: vi.fn().mockResolvedValue({ data: [], error: null }),
-          }),
-          order: vi.fn().mockResolvedValue({ data: [], error: null }),
-        }),
-      }),
+      select: vi.fn().mockReturnValue(createMockQuery()),
     }),
   },
 }));

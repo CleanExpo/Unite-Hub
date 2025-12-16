@@ -117,9 +117,11 @@ describe('Guardian Z05: Adoption Signals & In-App Coach', () => {
         'playbooks_total': { value: 5, windowDays: 90 },
       };
 
-      // Simulate scoring: rules (25/30 = 83), alerts (150/200 = 75), playbooks (5/10 = 50)
+      // Simulate scoring: values should be 0-1 range (0.83, 0.75, 0.50) or 0-100 already
       const mockScore = (values: number[], weights: number[]) => {
-        const weighted = values.map((v, i) => v * weights[i]).reduce((a, b) => a + b, 0);
+        // If values are 0-100, divide by 100 first
+        const normalized = values.map(v => v > 1 ? v / 100 : v);
+        const weighted = normalized.map((v, i) => v * weights[i]).reduce((a, b) => a + b, 0);
         const totalWeight = weights.reduce((a, b) => a + b, 0);
         return Math.round((weighted / totalWeight) * 100);
       };
@@ -317,7 +319,8 @@ describe('Guardian Z05: Adoption Signals & In-App Coach', () => {
   describe('API Routes', () => {
     it('should validate workspaceId is required', () => {
       const workspaceId = new URL('http://localhost?workspaceId=').searchParams.get('workspaceId');
-      expect(workspaceId).toBeNull();
+      // URLSearchParams.get() returns empty string if key exists but has no value, not null
+      expect(workspaceId).toBe('');
     });
 
     it('should return adoption scores with computed_at timestamp', () => {

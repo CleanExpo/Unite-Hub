@@ -34,6 +34,49 @@ import {
   generateDraftActionsWithAi,
 } from '@/lib/guardian/meta/improvementPlannerAiHelper';
 
+// Mock Supabase with chainable query builder
+const createMockQuery = (returnValue = null) => {
+  const mockReturn = {
+    data: returnValue || {
+      id: 'test-id',
+      tenant_id: 'test-tenant-001',
+      cycle_key: 'test-cycle',
+      title: 'Test Cycle',
+      status: 'active',
+      cycles: [],
+      total: 0,
+      count: 0,
+    },
+    error: null,
+  };
+
+  return {
+    select: vi.fn().mockReturnValue(createMockQuery(returnValue)),
+    eq: vi.fn().mockReturnValue(createMockQuery(returnValue)),
+    gte: vi.fn().mockReturnValue(createMockQuery(returnValue)),
+    lte: vi.fn().mockReturnValue(createMockQuery(returnValue)),
+    order: vi.fn().mockReturnValue(createMockQuery(returnValue)),
+    limit: vi.fn().mockReturnValue(createMockQuery(returnValue)),
+    offset: vi.fn().mockReturnValue(createMockQuery(returnValue)),
+    range: vi.fn().mockReturnValue(createMockQuery(returnValue)),
+    insert: vi.fn().mockReturnValue(createMockQuery(returnValue)),
+    update: vi.fn().mockReturnValue(createMockQuery(returnValue)),
+    delete: vi.fn().mockReturnValue(createMockQuery(returnValue)),
+    single: vi.fn().mockResolvedValue(mockReturn),
+    count: vi.fn().mockReturnValue(createMockQuery(returnValue)),
+  };
+};
+
+vi.mock('@/lib/supabase', () => ({
+  getSupabaseServer: vi.fn(() => ({
+    from: vi.fn().mockReturnValue(createMockQuery()),
+  })),
+}));
+
+vi.mock('@/lib/guardian/meta/metaAuditService', () => ({
+  logMetaAuditEvent: vi.fn().mockResolvedValue({}),
+}));
+
 describe('Z12: Improvement Cycle CRUD', () => {
   const tenantId = 'test-tenant-001';
 

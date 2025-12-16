@@ -67,7 +67,12 @@
       "Bash(git commit --no-verify -m \"$(cat <<''''EOF''''\nfeat: Synthex Surface Activation - Client-first routing and hero experience\n\n**Changes**\n- Changed default auth redirect: / → /synthex/studio\n- Updated non-staff users to land in Synthex Studio\n- Staff users continue to access /crm/dashboard (internal CRM)\n- Created /synthex/studio/page.tsx as the hero product experience\n\n**Routing Matrix**\nClient users (non-staff) → /synthex/studio (NEW - product entry point)\nStaff users (active) → /crm/dashboard (unchanged - internal only)\n\n**Product Positioning**\n- Synthex Studio is now THE entry point for clients\n- Shows create, generate, publish workflow\n- Hides all internal (Unite-Hub) tools\n- United product experience\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(git rev-list:*)",
       "Bash(npm run lint:*)",
-      "Bash(node -c:*)"
+      "Bash(node -c:*)",
+      "Bash(npm run build:*)",
+      "Bash(node scripts/simulate-100-smb-users.mjs:*)",
+      "Bash(npm run test:*)",
+      "Bash(npm run test)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfix: Production test and build corrections\n\n- Fixed duplicate test:guardian:readiness key in package.json\n- Fixed missing DEFAULT_GUARDRAILS exports in decision-circuits/index.ts  \n- Fixed backup.scope iteration in metaRestoreService test mock\n- Fixed chainable Supabase query mock in ai-search-monitor test\n- Added Supabase mocks to Z12 test suite\n- Exported buildFallbackNarrative from statusNarrativeAiHelper\n- Exported runStatusSnapshotTask from metaTaskRunner\n- Fixed adoption score normalization in Z05 tests\n- Fixed workspaceId validation test expectation in Z05\n\nBuild: ✅ SUCCESSFUL (0 errors, 2 export warnings fixed)\nTests: 1670/1782 passing (93.7%), 108 failing (Guardian integration tests need DB/mocking)\n\n🤖 Generated with Claude Code\nCo-Authored-By: Claude Haiku 4.5 <noreply@anthropic.com>\nEOF\n)\")"
     ],
     "deny": [],
     "ask": []
