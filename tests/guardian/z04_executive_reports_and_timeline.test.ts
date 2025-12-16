@@ -1,4 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { createMockSupabaseServer } from '../__mocks__/guardianSupabase.mock';
+import { createMockAnthropicClient } from '../__mocks__/guardianAnthropic.mock';
+
+// Mock Supabase
+vi.mock('@/lib/supabase', () => ({
+  getSupabaseServer: vi.fn(() => createMockSupabaseServer()),
+}));
+
+// Mock Anthropic
+vi.mock('@/lib/anthropic/client', () => ({
+  getAnthropicClient: vi.fn(() => createMockAnthropicClient()),
+}));
+
 import {
   generateTimelinePointsFromReadiness,
   generateTimelinePointsFromEditionFit,

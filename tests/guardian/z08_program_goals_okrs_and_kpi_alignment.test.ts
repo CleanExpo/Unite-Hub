@@ -1,4 +1,11 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { createMockSupabaseServer } from '../__mocks__/guardianSupabase.mock';
+
+// Mock Supabase
+vi.mock('@/lib/supabase', () => ({
+  getSupabaseServer: vi.fn(() => createMockSupabaseServer()),
+}));
+
 import {
   evaluateKpi,
   evaluateAllKpisForTenant,

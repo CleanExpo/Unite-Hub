@@ -1,4 +1,11 @@
 import { describe, it, expect, vi } from 'vitest';
+import { createMockSupabaseServer } from '../__mocks__/guardianSupabase.mock';
+
+// Mock Supabase
+vi.mock('@/lib/supabase', () => ({
+  getSupabaseServer: vi.fn(() => createMockSupabaseServer()),
+}));
+
 import {
   GUARDIAN_EDITIONS,
   upsertEditionProfiles,

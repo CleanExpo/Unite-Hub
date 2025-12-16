@@ -1,4 +1,27 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { createMockAnthropicClient } from '../__mocks__/guardianAnthropic.mock';
+
+// Mock Anthropic
+vi.mock('@/lib/anthropic/client', () => ({
+  getAnthropicClient: vi.fn(() => createMockAnthropicClient()),
+}));
+
+vi.mock('@/lib/anthropic/rate-limiter', () => ({
+  callAnthropicWithRetry: vi.fn().mockResolvedValue({
+    data: {
+      content: [{
+        type: 'text',
+        text: JSON.stringify({
+          narrative: 'Success narrative generated',
+          summary: 'Readiness trend analysis available'
+        })
+      }]
+    },
+    attempts: 1,
+    totalTime: 100
+  })
+}));
+
 import {
   loadActiveMetaIntegrationsForTenant,
   mapReadinessSnapshotToIntegrationPayload,
