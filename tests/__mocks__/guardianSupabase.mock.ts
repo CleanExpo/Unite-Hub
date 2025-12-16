@@ -62,7 +62,13 @@ export const createMockSupabaseQuery = (defaultData = null, tableName: string = 
     operationType = 'write';
     writeData = data;
     const tid = (data as any)?.tenant_id || filterTenantId || tenantId;
-    tableStates[tableName][tid] = Array.isArray(data) ? data[0] : data;
+    const recordData = Array.isArray(data) ? data[0] : data;
+    // Add auto-generated ID if not present
+    tableStates[tableName][tid] = {
+      ...recordData,
+      id: recordData.id || `id-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
+      created_at: recordData.created_at || new Date().toISOString(),
+    };
     return chain;
   });
 

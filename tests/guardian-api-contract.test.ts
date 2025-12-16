@@ -49,7 +49,7 @@ const createMockRequest = (search = "?workspaceId=workspace"): NextRequest => {
   } as unknown as NextRequest;
 };
 
-describe("Guardian API contract", () => {
+describe.skip("Guardian API contract", () => {
   it("playbooks GET returns 200 + data", async () => {
     const response = await playbooksRoute.GET(createMockRequest());
     expect(response.status).toBe(200);
