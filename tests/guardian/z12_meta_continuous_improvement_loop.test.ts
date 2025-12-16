@@ -46,15 +46,20 @@ vi.mock('@/lib/guardian/meta/metaAuditService', () => ({
 }));
 
 vi.mock('@/lib/guardian/meta/improvementPlannerAiHelper', () => ({
-  generateDraftActionsWithAi: vi.fn().mockResolvedValue([
-    {
-      id: 'action-1',
-      title: 'Test Action',
-      description: 'Test action description',
-      status: 'planned',
-      priority: 'high',
-    },
-  ]),
+  generateDraftActionsWithAi: vi.fn().mockResolvedValue({
+    draftActions: [
+      {
+        actionKey: 'test-action-1',
+        title: 'Test Action',
+        description: 'Test action description',
+        priority: 'high' as const,
+        relatedPlaybookKeys: ['playbook-1'],
+        expectedImpact: { readinessIncrease: 10 },
+        rationale: 'Test rationale',
+      },
+    ],
+    isAdvisory: true,
+  }),
 }));
 
 vi.mock('@/lib/anthropic/rate-limiter', () => ({
@@ -89,9 +94,9 @@ describe('Z12: Improvement Cycle CRUD', () => {
       focusDomains: ['readiness', 'adoption', 'governance'],
     }, 'admin@tenant.com');
 
-    expect(result).toHaveProperty('id');
-    expect(result.status).toBe('active');
-    expect(result.cycleKey).toBe('q1_2026_maturity');
+    expect(result).toHaveProperty('cycleId');
+    expect(typeof result.cycleId).toBe('string');
+    expect(result.cycleId).toBeTruthy();
   });
 
   it('should enforce unique cycle_key per tenant', async () => {
@@ -417,26 +422,27 @@ describe('Z12: AI Helper & Governance Gating', () => {
 
   it('should respect AI disable policy (aiUsagePolicy=off)', async () => {
     // Mock governance prefs with aiUsagePolicy='off'
-    const drafts = await generateDraftActionsWithAi(tenantId, {
+    const result = await generateDraftActionsWithAi(tenantId, {
       readinessScore: 45,
       adoptionRate: 35,
       contextSummary: 'Low readiness and adoption',
     });
 
-    // Should return empty array when disabled
-    expect(Array.isArray(drafts)).toBe(true);
+    // Should return empty draftActions array when disabled
+    expect(result).toHaveProperty('draftActions');
+    expect(Array.isArray(result.draftActions)).toBe(true);
   });
 
   it('should only generate AI drafts when enabled', async () => {
     // With aiUsagePolicy='on', should generate drafts
-    const drafts = await generateDraftActionsWithAi(tenantId, {
+    const result = await generateDraftActionsWithAi(tenantId, {
       readinessScore: 50,
       adoptionRate: 50,
       contextSummary: 'Moderate readiness, targeting growth',
     });
 
-    if (drafts.length > 0) {
-      drafts.forEach((draft) => {
+    if (result.draftActions.length > 0) {
+      result.draftActions.forEach((draft) => {
         expect(draft).toHaveProperty('actionKey');
         expect(draft).toHaveProperty('title');
         expect(draft).toHaveProperty('priority');
@@ -446,27 +452,27 @@ describe('Z12: AI Helper & Governance Gating', () => {
 
   it('should fallback to empty on API error', async () => {
     // Mock API failure scenario
-    const drafts = await generateDraftActionsWithAi(tenantId, {
+    const result = await generateDraftActionsWithAi(tenantId, {
       readinessScore: 50,
       adoptionRate: 50,
       contextSummary: 'Test context',
     });
 
-    // Should never throw, always return array (possibly empty)
-    expect(Array.isArray(drafts)).toBe(true);
+    // Should never throw, always return object with draftActions array
+    expect(result).toHaveProperty('draftActions');
+    expect(Array.isArray(result.draftActions)).toBe(true);
   });
 
   it('should mark AI drafts as advisory', async () => {
-    const drafts = await generateDraftActionsWithAi(tenantId, {
+    const result = await generateDraftActionsWithAi(tenantId, {
       readinessScore: 50,
       adoptionRate: 50,
       contextSummary: 'Test advisory',
     });
 
-    if (drafts.length > 0) {
-      // Should be clearly marked as drafts from AI
-      expect(true).toBe(true); // Placeholder - verify in UI tests
-    }
+    // Should be marked as advisory
+    expect(result).toHaveProperty('isAdvisory');
+    expect(result.isAdvisory).toBe(true);
   });
 });
 

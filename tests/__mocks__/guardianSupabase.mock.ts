@@ -18,22 +18,58 @@ export const createMockSupabaseQuery = (defaultData = null) => {
     error: null,
   };
 
+  // Track query type - needed to determine response shape on await
+  let isCountQuery = false;
+
   // Create the chainable object once - all methods return THE SAME CHAIN
   // This prevents recursive memory explosion
   const chain = {} as any;
 
   const methods = [
-    'select', 'eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'like', 'ilike', 'is', 'in',
+    'eq', 'neq', 'gt', 'gte', 'lt', 'lte', 'like', 'ilike', 'is', 'in',
     'contains', 'containedBy', 'range', 'order', 'limit', 'offset',
-    'insert', 'update', 'delete', 'upsert', 'count'
+    'insert', 'update', 'delete', 'upsert'
   ];
 
   methods.forEach(method => {
     chain[method] = vi.fn().mockReturnValue(chain);
   });
 
+  // select() method - keeps chaining but makes query awaitable
+  chain.select = vi.fn().mockReturnValue(chain);
+
+  // count() method - marks this as a count query
+  chain.count = vi.fn().mockReturnValue((() => {
+    isCountQuery = true;
+    return chain;
+  })());
+
   chain.single = vi.fn().mockResolvedValue(mockData);
   chain.maybeSingle = vi.fn().mockResolvedValue(mockData);
+
+  // Make the chain itself awaitable for both regular queries and count queries
+  chain.then = vi.fn((onFulfilled, onRejected) => {
+    // Return appropriate response shape based on query type
+    let result: any;
+    if (isCountQuery) {
+      result = { count: 0, error: null };
+    } else {
+      // Default to data response format
+      result = { data: mockData.data || [], error: null };
+    }
+    try {
+      return Promise.resolve(result).then(onFulfilled, onRejected);
+    } catch (e) {
+      return Promise.reject(e).catch(onRejected);
+    }
+  });
+
+  chain.catch = vi.fn((onRejected) => {
+    const result = isCountQuery
+      ? { count: 0, error: null }
+      : { data: mockData.data || [], error: null };
+    return Promise.resolve(result).catch(onRejected);
+  });
 
   return chain;
 };
