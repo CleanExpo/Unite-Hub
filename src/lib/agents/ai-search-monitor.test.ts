@@ -9,22 +9,27 @@ import {
 global.fetch = vi.fn();
 
 // Mock Supabase with chainable query builder
-const createMockQuery = () => ({
-  eq: vi.fn().mockReturnValue(createMockQuery()),
-  gte: vi.fn().mockReturnValue(createMockQuery()),
-  order: vi.fn().mockResolvedValue({ data: [], error: null }),
-});
-
-vi.mock('@/lib/supabase/admin', () => ({
-  supabaseAdmin: {
-    from: vi.fn().mockReturnValue({
-      insert: vi.fn().mockReturnValue({
-        mockResolvedValue: vi.fn().mockResolvedValue({ error: null }),
+vi.mock('@/lib/supabase/admin', () => {
+  const chain = {} as any;
+  const filterMethods = ['eq', 'gte', 'lt', 'lte', 'neq', 'gt', 'like', 'ilike', 'is', 'in', 'contains', 'select', 'order'];
+  
+  filterMethods.forEach((method) => {
+    chain[method] = vi.fn().mockReturnValue(chain);
+  });
+  
+  chain.order = vi.fn().mockResolvedValue({ data: [], error: null });
+  
+  return {
+    supabaseAdmin: {
+      from: vi.fn().mockReturnValue({
+        insert: vi.fn().mockReturnValue({
+          mockResolvedValue: vi.fn().mockResolvedValue({ error: null }),
+        }),
+        select: vi.fn().mockReturnValue(chain),
       }),
-      select: vi.fn().mockReturnValue(createMockQuery()),
-    }),
-  },
-}));
+    },
+  };
+});
 
 // Mock Anthropic
 vi.mock('@/lib/anthropic/rate-limiter', () => ({
