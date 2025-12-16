@@ -1,6 +1,28 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { UPLIFT_PLAYBOOKS, matchPlaybooksForReadiness, matchPlaybooksForRecommendations } from '@/lib/guardian/meta/upliftPlaybookModel';
 import { enrichUpliftTaskHints, formatEnrichedHints, enrichMultipleUpliftTasks } from '@/lib/guardian/meta/upliftAiHelper';
+import { createMockAnthropicClient } from '../__mocks__/guardianAnthropic.mock';
+
+// Mock Anthropic client
+vi.mock('@/lib/anthropic/client', () => ({
+  getAnthropicClient: vi.fn(() => createMockAnthropicClient()),
+}));
+
+vi.mock('@/lib/anthropic/rate-limiter', () => ({
+  callAnthropicWithRetry: vi.fn().mockResolvedValue({
+    data: {
+      content: [{
+        type: 'text',
+        text: JSON.stringify({
+          hints: ['Ensure prerequisites are met', 'Follow documented procedures'],
+          steps: ['Step 1', 'Step 2']
+        })
+      }]
+    },
+    attempts: 1,
+    totalTime: 100
+  })
+}));
 
 describe('Z02: Guardian Guided Uplift Planner & Adoption Playbooks', () => {
   describe('Uplift Playbooks Model', () => {
