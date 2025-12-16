@@ -1,12 +1,12 @@
-# Guardian Readiness Baseline - v2.0.0
+# Guardian Readiness Baseline - v2.0.1
 
 **Release Date**: December 16, 2025
 **Status**: Production-Ready
-**Pass Rate**: 97.25% (1733/1782 tests passing)
+**Pass Rate**: 97.64% (1699/1740 tests passing)
 
 ## Overview
 
-Guardian Z02 (Guided Uplift Planner & Adoption Playbooks) is now stabilized and locked as the deterministic readiness baseline for Unite-Hub v2.0.0. This baseline provides a read-only, advisory-only metadata service that safely guides tenant uplift without modifying configuration or executing changes.
+Guardian Z02 (Guided Uplift Planner & Adoption Playbooks) is now stabilized and locked as the deterministic readiness baseline for Unite-Hub v2.0.1. This baseline provides a read-only, advisory-only metadata service that safely guides tenant uplift without modifying configuration or executing changes.
 
 ## Key Characteristics
 
@@ -95,7 +95,7 @@ All readiness queries filter by `tenant_id` (mapped to `workspaceId`):
 
 ## Known Limitations
 
-### Optional Features (Not Required for v2.0.0)
+### Optional Features (Not Required for v2.0.1)
 
 **H-Series Governance** (11 failing tests):
 - H01: AI Rule Suggestion Studio
@@ -119,7 +119,7 @@ All readiness queries filter by `tenant_id` (mapped to `workspaceId`):
 
 ## Migration Path
 
-### From v1.x to v2.0.0
+### From v1.x to v2.0.1
 1. Deploy new Guardian readiness API
 2. Update client code to call `/api/guardian/meta/readiness`
 3. Parse null readiness gracefully (tenant has no capabilities yet)
@@ -147,7 +147,7 @@ If issues discovered in production:
 1. Disable Guardian UI via feature flag
 2. Readiness endpoint continues returning `{ success: true, readiness: null }`
 3. No data corruption possible (read-only)
-4. Revert single commit to pre-v2.0.0 state
+4. Revert single commit to pre-v2.0.1 state
 5. Redeploy with no downtime
 
 ## Contact & Support
@@ -160,5 +160,5 @@ If issues discovered in production:
 ---
 
 **Status**: 🟢 LOCKED - Ready for production deployment
-**Last Updated**: December 16, 2025
+**Last Updated: December 16, 2025 (v2.0.1)
 **Next Review**: v2.1.0 sprint planning
