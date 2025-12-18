@@ -1001,4 +1001,90 @@ export default defineSchema({
     .index("by_type", ["sequenceType"])
     .index("by_premium", ["isPremium"])
     .index("by_popularity", ["popularityScore"]),
+
+  /**
+   * M1 AGENT ARCHITECTURE & CONTROL LAYER
+   * Observability and enforcement for autonomous agent execution
+   * Agents propose actions; CLI enforces execution authority
+   */
+
+  /**
+   * AGENT_RUNS
+   * Metadata for each agent execution with full audit trail
+   */
+  agentRuns: defineTable({
+    runId: v.string(), // Unique run identifier (UUID)
+    agentName: v.string(), // Name of agent (e.g., "orchestrator")
+    goal: v.string(), // What the agent was asked to accomplish
+    constraints: v.object({
+      maxSteps: v.optional(v.number()),
+      maxToolCalls: v.optional(v.number()),
+      maxRuntimeSeconds: v.optional(v.number()),
+    }),
+    stopReason: v.union(
+      v.literal("completed"),
+      v.literal("limit_exceeded"),
+      v.literal("approval_required"),
+      v.literal("policy_denied"),
+      v.literal("error")
+    ),
+    errorMessage: v.optional(v.string()),
+    toolCallsProposed: v.number(), // Total tool calls proposed
+    toolCallsApproved: v.number(), // Total tool calls approved
+    toolCallsExecuted: v.number(), // Total tool calls actually executed
+    approvalTokens: v.array(v.string()), // Approval tokens used in this run
+    startedAt: v.number(),
+    completedAt: v.optional(v.number()),
+    durationMs: v.optional(v.number()),
+    createdAt: v.number(),
+  })
+    .index("by_agent", ["agentName"])
+    .index("by_stop_reason", ["stopReason"])
+    .index("by_created", ["createdAt"])
+    .index("by_run_id", ["runId"]),
+
+  /**
+   * AGENT_TOOL_CALLS
+   * All proposed and executed tool calls with full policy audit
+   */
+  agentToolCalls: defineTable({
+    requestId: v.string(), // Unique request identifier (UUID)
+    runId: v.string(), // Foreign key to agent_runs.runId
+    toolName: v.string(), // Name of the tool being called
+    scope: v.union(
+      v.literal("read"),
+      v.literal("write"),
+      v.literal("execute")
+    ),
+    approvalRequired: v.boolean(), // Does this tool need explicit approval?
+    status: v.union(
+      v.literal("proposed"),
+      v.literal("policy_rejected"),
+      v.literal("approval_pending"),
+      v.literal("approved"),
+      v.literal("executed"),
+      v.literal("execution_failed")
+    ),
+    inputArgs: v.optional(v.any()), // Arguments passed to the tool (JSON)
+    outputResult: v.optional(v.any()), // Result from tool execution (JSON)
+    policyCheckResult: v.optional(
+      v.object({
+        passed: v.boolean(),
+        reason: v.optional(v.string()),
+        checkedAt: v.number(),
+      })
+    ),
+    approvalToken: v.optional(v.string()), // Approval token if used
+    approvedAt: v.optional(v.number()),
+    approvedBy: v.optional(v.string()), // User/system that approved
+    executedAt: v.optional(v.number()),
+    executionError: v.optional(v.string()), // Error message if execution failed
+    createdAt: v.number(),
+  })
+    .index("by_run_id", ["runId"])
+    .index("by_tool_name", ["toolName"])
+    .index("by_status", ["status"])
+    .index("by_approval_required", ["approvalRequired"])
+    .index("by_created", ["createdAt"])
+    .index("by_request_id", ["requestId"]),
 });
