@@ -169,7 +169,9 @@
     "agent:audit": "npm run shadow:scan",
     "agent:refactor": "npm run shadow:agent",
     "m1:run": "tsx src/lib/m1/cli/agent-run.ts",
-    "m1:help": "tsx src/lib/m1/cli/agent-run.ts --help"
+    "m1:help": "tsx src/lib/m1/cli/agent-run.ts --help",
+    "m1:test:integration": "vitest run src/lib/m1/__tests__/integration.test.ts",
+    "m1:test:all": "vitest run src/lib/m1/__tests__/**/*.test.ts"
   },
   "keywords": [],
   "author": "",
