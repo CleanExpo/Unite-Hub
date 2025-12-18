@@ -3,7 +3,10 @@
  *
  * Collects and aggregates metrics for M1 agent operations.
  * Supports counters, gauges, and histograms with Prometheus export.
+ * Integrates with cache engine for cache statistics tracking.
  */
+
+import { cacheEngine, type CacheStats } from "../caching/cache-engine";
 
 /**
  * Metrics collector for M1 agent operations
@@ -141,6 +144,29 @@ return null;
     }
 
     return output;
+  }
+
+  /**
+   * Sync cache statistics from cache engine
+   *
+   * Updates gauges with current cache performance metrics:
+   * - Cache entries count
+   * - Cache hit rate
+   * - Cache size in bytes
+   */
+  syncCacheStatistics(): void {
+    try {
+      const stats = cacheEngine.getStats();
+      this.setGauge("cache_entries", stats.entries);
+      this.setGauge("cache_hits", stats.hits);
+      this.setGauge("cache_misses", stats.misses);
+      this.setGauge("cache_evictions", stats.evictions);
+      this.setGauge("cache_size_bytes", stats.size);
+      this.setGauge("cache_hit_rate", stats.hitRate);
+    } catch (error) {
+      // Silently ignore if cache engine not available
+      // This allows metrics to work independently
+    }
   }
 
   /**
@@ -284,4 +310,19 @@ export function exportMetricsPrometheus(): string {
  */
 export function resetMetrics(): void {
   metricsCollector.reset();
+}
+
+/**
+ * Sync cache statistics from cache engine
+ *
+ * Call this to update cache-related metrics:
+ * - cache_entries
+ * - cache_hits
+ * - cache_misses
+ * - cache_evictions
+ * - cache_size_bytes
+ * - cache_hit_rate
+ */
+export function syncCacheStatistics(): void {
+  metricsCollector.syncCacheStatistics();
 }

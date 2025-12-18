@@ -96,6 +96,7 @@ export {
   getMetrics,
   exportMetricsPrometheus,
   resetMetrics,
+  syncCacheStatistics,
 } from "./monitoring/metrics";
 
 // Cost Tracking (Phase 7)
@@ -129,6 +130,42 @@ export {
   type AlertCallback,
 } from "./monitoring/alerts";
 
+// Caching Engine (Phase 8)
+export {
+  CacheEngine,
+  MultiTierCache,
+  cacheEngine,
+  type CacheEntry,
+  type CacheConfig,
+  type CacheStats,
+  type DistributedCache,
+} from "./caching/cache-engine";
+
+// Cache Strategies (Phase 8)
+export {
+  ToolRegistryCache,
+  PolicyDecisionCache,
+  MetricsCache,
+  AgentRunCache,
+  ApprovalTokenCache,
+  CacheInvalidationEvent,
+  getCacheStats,
+  clearAllCaches,
+} from "./caching/cache-strategies";
+
+// Cache Decorators (Phase 8)
+export {
+  cached,
+  memoize,
+  memoizeAsync,
+  withCache,
+  withAsyncCache,
+  withAdvancedCache,
+  invalidateCache,
+  invalidateCachePrefix,
+  type CacheOptions,
+} from "./caching/cache-decorators";
+
 // Version
-export const M1_VERSION = "2.0.0";
-export const M1_RELEASE = "m1-monitoring-observability-v7";
+export const M1_VERSION = "2.1.0";
+export const M1_RELEASE = "m1-advanced-caching-v8";
