@@ -67,6 +67,68 @@ export {
   getM1Config,
 } from "./config";
 
+// Structured Logging (Phase 7)
+export {
+  m1Logger,
+  logAgentStart,
+  logAgentComplete,
+  logAgentError,
+  logToolExecutionStart,
+  logToolExecutionEnd,
+  logPolicyDecision,
+  logApprovalRequest,
+  logApprovalGrant,
+  logApprovalDenial,
+} from "./logging/structured-logger";
+
+// Metrics Collection (Phase 7)
+export {
+  MetricsCollector,
+  metricsCollector,
+  trackAgentRun,
+  trackToolExecution,
+  trackPolicyDecision,
+  trackApprovalRequest,
+  trackApprovalGrant,
+  trackApprovalDenial,
+  trackClaudeAPICall,
+  setActiveRunsGauge,
+  getMetrics,
+  exportMetricsPrometheus,
+  resetMetrics,
+} from "./monitoring/metrics";
+
+// Cost Tracking (Phase 7)
+export {
+  CostTracker,
+  costTracker,
+  trackClaudeCall,
+  getTotalCost,
+  getCostBreakdown,
+  formatCostAsUSD,
+  getEstimatedMonthlyCost,
+  type CostRecord,
+} from "./monitoring/cost-tracking";
+
+// Alert System (Phase 7)
+export {
+  AlertManager,
+  alertManager,
+  alertPolicyViolation,
+  alertExecutionError,
+  alertHighErrorRate,
+  alertApprovalDenied,
+  alertTokenExpired,
+  alertCostThreshold,
+  alertPerformance,
+  getCriticalAlerts,
+  getAlertStats,
+  type Alert,
+  type AlertLevel,
+  type AlertCategory,
+  type AlertCallback,
+} from "./monitoring/alerts";
+
 // Version
-export const M1_VERSION = "1.5.0";
-export const M1_RELEASE = "m1-persistent-storage-v6";
+export const M1_VERSION = "2.0.0";
+export const M1_RELEASE = "m1-monitoring-observability-v7";
