@@ -34,6 +34,14 @@ export {
   type ToolCallRecord,
 } from "./logging/agentRuns";
 
+// Agents (Phase 2+)
+export {
+  OrchestratorAgent,
+  orchestrate,
+  type OrchestratorConfig,
+  type OrchestratorError,
+} from "./agents";
+
 // Version
-export const M1_VERSION = "1.0.0";
-export const M1_RELEASE = "m1-architecture-control-v1";
+export const M1_VERSION = "1.1.0";
+export const M1_RELEASE = "m1-orchestrator-v1";
