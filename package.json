@@ -167,7 +167,9 @@
     "migrations:check": "node scripts/migrations/check-migrations.mjs",
     "migrations:quarantine": "node scripts/migrations/quarantine-invalid-migrations.mjs",
     "agent:audit": "npm run shadow:scan",
-    "agent:refactor": "npm run shadow:agent"
+    "agent:refactor": "npm run shadow:agent",
+    "m1:run": "tsx src/lib/m1/cli/agent-run.ts",
+    "m1:help": "tsx src/lib/m1/cli/agent-run.ts --help"
   },
   "keywords": [],
   "author": "",

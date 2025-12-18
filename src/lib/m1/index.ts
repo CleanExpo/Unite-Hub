@@ -42,6 +42,17 @@ export {
   type OrchestratorError,
 } from "./agents";
 
+// CLI Command (Phase 3)
+export {
+  runAgent,
+  executeTool,
+  requestApprovalFromUser,
+  checkPreAuthorizedToken,
+  type CLIOptions,
+  type ToolExecutionResult,
+  type ApprovalResult,
+} from "./cli";
+
 // Version
-export const M1_VERSION = "1.1.0";
-export const M1_RELEASE = "m1-orchestrator-v1";
+export const M1_VERSION = "1.2.0";
+export const M1_RELEASE = "m1-cli-executor-v1";
