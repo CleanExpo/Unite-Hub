@@ -166,6 +166,35 @@ export {
   type CacheOptions,
 } from "./caching/cache-decorators";
 
+// Distributed Cache (Phase 9)
+export {
+  RedisBackend,
+  getRedisBackend,
+  resetRedisBackend,
+  type RedisConfig,
+  type RedisStats,
+  type DistributedCacheBackend,
+} from "./caching/redis-backend";
+
+export {
+  DistributedCacheAdapter,
+  createDistributedCacheAdapter,
+  type DistributedCacheAdapterConfig,
+} from "./caching/distributed-cache-adapter";
+
+// Dashboard API (Phase 9)
+export {
+  DashboardAPI,
+  dashboardAPI,
+  createDashboardEndpoints,
+  type DashboardMetrics,
+  type CacheMetrics,
+  type PolicyMetrics,
+  type CostMetrics,
+  type HealthMetrics,
+  type AgentRunsSummary,
+} from "./monitoring/dashboard-api";
+
 // Version
-export const M1_VERSION = "2.1.0";
-export const M1_RELEASE = "m1-advanced-caching-v8";
+export const M1_VERSION = "2.2.0";
+export const M1_RELEASE = "m1-production-hardening-v9";
