@@ -10,5 +10,6 @@ export { executeTool, type ToolExecutionResult } from "./tool-executor";
 export {
   requestApprovalFromUser,
   checkPreAuthorizedToken,
+  verifyApprovalToken,
   type ApprovalResult,
 } from "./approval-handler";

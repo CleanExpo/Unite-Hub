@@ -48,11 +48,24 @@ export {
   executeTool,
   requestApprovalFromUser,
   checkPreAuthorizedToken,
+  verifyApprovalToken,
   type CLIOptions,
   type ToolExecutionResult,
   type ApprovalResult,
 } from "./cli";
 
+// Configuration (Phase 5+)
+export {
+  JWT_CONFIG,
+  APPROVAL_CONFIG,
+  EXECUTION_LIMITS,
+  LOGGING_CONFIG,
+  STORAGE_CONFIG,
+  SECURITY_CONFIG,
+  VALIDATION_CONFIG,
+  getM1Config,
+} from "./config";
+
 // Version
-export const M1_VERSION = "1.3.0";
-export const M1_RELEASE = "m1-integration-testing-v3";
+export const M1_VERSION = "1.4.0";
+export const M1_RELEASE = "m1-jwt-security-v5";

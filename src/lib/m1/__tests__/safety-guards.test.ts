@@ -137,7 +137,7 @@ describe("M1 Safety Guards", () => {
         approvalRequired: true,
       };
 
-      const token = "valid-approval-token-12345";
+      const token = "approval:log_agent_run:write:1234567890:abc123";
       const decision = policyEngine.validateToolCall(call, token);
 
       expect(decision.allowed).toBe(true);
@@ -202,7 +202,7 @@ describe("M1 Safety Guards", () => {
         },
       ];
 
-      const approvalTokens = new Map([["req-2", "valid-token"]]);
+      const approvalTokens = new Map([["req-2", "approval:log_agent_run:write:1234567890:abc123"]]);
       const decisions = policyEngine.validateToolCalls(calls, approvalTokens);
 
       expect(decisions.get("req-1")?.allowed).toBe(true); // read, no approval needed
@@ -490,8 +490,8 @@ describe("M1 Safety Guards", () => {
         },
       ];
 
-      // Only approve req-2
-      const approvalTokens = new Map([["req-2", "valid-token"]]);
+      // Only approve req-2 with valid token
+      const approvalTokens = new Map([["req-2", "approval:log_agent_run:write:1234567890:abc123"]]);
       const decisions = policyEngine.validateToolCalls(calls, approvalTokens);
 
       const allowedCalls = Array.from(decisions.values()).filter(

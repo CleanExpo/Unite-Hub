@@ -1,19 +1,33 @@
 /**
- * M1 Approval Handler - Phase 3
+ * M1 Approval Handler - Phase 5 (JWT Security)
  *
  * Handles approval requests, user prompts, and token generation.
  * Implements the approval flow for write/execute scope operations.
+ * Uses JWT for cryptographic token signing and verification.
  *
  * Flow:
  * 1. User is prompted for approval
- * 2. If approved, generates token
+ * 2. If approved, generates JWT token
  * 3. Token used for policy validation
  * 4. Token expires after 5 minutes
+ *
+ * JWT Structure:
+ * - Header: { alg: "HS256", typ: "JWT" }
+ * - Payload: { toolName, scope, iat, exp, jti }
+ * - Signature: HMAC-SHA256(header + payload, secret)
  */
 
 import * as readline from "readline";
+import jwt from "jsonwebtoken";
 import { registry } from "../tools/registry";
 import { v4 as generateUUID } from "uuid";
+
+// JWT Configuration
+const JWT_SECRET = process.env.M1_JWT_SECRET || "m1-development-secret-key";
+const JWT_ALGORITHM = "HS256" as const;
+const JWT_ISSUER = "m1-agent-control";
+const JWT_SUBJECT = "approval";
+const TOKEN_EXPIRATION_MINUTES = 5;
 
 /**
  * Result of an approval request
@@ -109,24 +123,84 @@ export async function requestApprovalFromUser(
 }
 
 /**
- * Generate approval token (simple format for now)
+ * Generate JWT approval token with cryptographic signature
  *
- * Format: approval:toolName:scope:timestamp:randomId
- *
- * Production: Should use JWT with:
- * - Signature (HMAC-SHA256 or RS256)
- * - Tool name claim
- * - Scope claim
- * - Issued at (iat) and expiration (exp)
- * - Token ID for revocation support
+ * Token Structure:
+ * - Header: { alg: "HS256", typ: "JWT" }
+ * - Payload: {
+ *     toolName,
+ *     scope,
+ *     iat: issued at (seconds),
+ *     exp: expiration (seconds),
+ *     jti: token ID for revocation,
+ *     iss: issuer,
+ *     sub: subject
+ *   }
+ * - Signature: HMAC-SHA256(header + payload, secret)
  */
 function generateApprovalToken(data: {
   toolName: string;
   scope: string;
   grantedAt: number;
 }): string {
-  const randomBytes = generateUUID().split("-")[0];
-  return `approval:${data.toolName}:${data.scope}:${data.grantedAt}:${randomBytes}`;
+  const now = Math.floor(data.grantedAt / 1000); // JWT uses seconds
+  const exp = now + TOKEN_EXPIRATION_MINUTES * 60;
+
+  const payload = {
+    toolName: data.toolName,
+    scope: data.scope,
+    iat: now,
+    exp,
+    jti: generateUUID(), // Token ID for revocation
+    iss: JWT_ISSUER,
+    sub: JWT_SUBJECT,
+  };
+
+  const token = jwt.sign(payload, JWT_SECRET, {
+    algorithm: JWT_ALGORITHM,
+  });
+
+  return token;
+}
+
+/**
+ * Verify JWT approval token with signature validation
+ *
+ * Returns decoded payload if valid, throws error if invalid
+ * Validates:
+ * - Cryptographic signature
+ * - Token expiration
+ * - Issuer and subject claims
+ * - Token ID presence
+ *
+ * @throws Error if token is invalid, expired, or has wrong signature
+ */
+export function verifyApprovalToken(token: string): {
+  toolName: string;
+  scope: string;
+  iat: number;
+  exp: number;
+  jti: string;
+  iss: string;
+  sub: string;
+} {
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET, {
+      algorithms: [JWT_ALGORITHM],
+      issuer: JWT_ISSUER,
+      subject: JWT_SUBJECT,
+    });
+
+    return decoded as any;
+  } catch (error) {
+    if (error instanceof jwt.TokenExpiredError) {
+      throw new Error("Approval token has expired");
+    }
+    if (error instanceof jwt.JsonWebTokenError) {
+      throw new Error(`Invalid approval token: ${error.message}`);
+    }
+    throw error;
+  }
 }
 
 /**

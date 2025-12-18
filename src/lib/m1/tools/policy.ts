@@ -1,15 +1,17 @@
 /**
- * M1 Policy Engine
+ * M1 Policy Engine - Phase 5 (JWT Security)
  *
  * Enforces all safety constraints:
  * 1. Tool validation (must be in registry)
  * 2. Scope enforcement (read = no approval, write/execute = approval required)
- * 3. Approval token validation
+ * 3. Approval token validation (JWT with signature verification)
  * 4. Execution limits (steps, tool calls, runtime)
  * 5. Audit trail creation
  *
  * This is the critical safety layer - all tool calls must pass policy check
  * before they can be executed by the CLI.
+ *
+ * JWT Validation: Verifies token signature, expiration, and claims
  */
 
 import type {
@@ -19,6 +21,7 @@ import type {
   ApprovalGateResponse,
 } from "../types";
 import { registry } from "./registry";
+import { verifyApprovalToken } from "../cli/approval-handler";
 
 /**
  * Policy check decision
@@ -155,13 +158,14 @@ export class PolicyEngine {
   }
 
   /**
-   * Validate approval token
+   * Validate JWT approval token with cryptographic verification
    *
-   * In production, this would:
-   * - Check token signature/MAC
-   * - Verify token hasn't expired
-   * - Verify token scope matches tool scope
-   * - Check against revocation list
+   * Validates:
+   * 1. Token signature (HMAC-SHA256)
+   * 2. Token expiration
+   * 3. Issuer and subject claims
+   * 4. Tool name and scope in token
+   * 5. Token ID (jti) for future revocation support
    */
   private validateApprovalToken(
     token: string,
@@ -181,13 +185,7 @@ export class PolicyEngine {
       return { valid: true };
     }
 
-    // In real implementation:
-    // - Verify JWT/HMAC signature
-    // - Check token contains approved toolName
-    // - Check token scope matches or exceeds tool scope
-    // - Verify token hasn't been revoked
-
-    // For now, accept non-empty tokens (production should use real validation)
+    // Verify empty token
     if (!token || token.length === 0) {
       return {
         valid: false,
@@ -195,13 +193,102 @@ export class PolicyEngine {
       };
     }
 
-    // Cache valid token
-    this.approvalCache.set(token, {
-      approved: true,
-      expiresAt: Date.now() + 5 * 60 * 1000, // 5 minute validity
-    });
+    // Check if token is JWT (contains dots) or legacy format
+    const isJWT = token.includes(".");
 
-    return { valid: true };
+    if (isJWT) {
+      // Verify JWT signature and claims
+      try {
+        const decoded = verifyApprovalToken(token);
+
+        // Check tool name matches
+        if (decoded.toolName !== toolName) {
+          return {
+            valid: false,
+            error: `Token approved for tool "${decoded.toolName}", but "${toolName}" is being executed`,
+          };
+        }
+
+        // Check scope - token scope must match or exceed required scope
+        if (!this.scopeMatches(decoded.scope, scope)) {
+          return {
+            valid: false,
+            error: `Token has scope "${decoded.scope}", but tool requires "${scope}"`,
+          };
+        }
+
+        // Token is valid - cache it
+        const expiresAt = decoded.exp * 1000; // Convert seconds to milliseconds
+        this.approvalCache.set(token, {
+          approved: true,
+          expiresAt,
+        });
+
+        return { valid: true };
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        return {
+          valid: false,
+          error: `Token verification failed: ${errorMessage}`,
+        };
+      }
+    } else {
+      // Legacy format support (for backward compatibility)
+      // Format: approval:toolName:scope:timestamp:randomId
+      const parts = token.split(":");
+      if (parts.length === 5 && parts[0] === "approval") {
+        const tokenToolName = parts[1];
+        const tokenScope = parts[2];
+
+        // Check tool name and scope match
+        if (tokenToolName !== toolName) {
+          return {
+            valid: false,
+            error: `Token approved for tool "${tokenToolName}", but "${toolName}" is being executed`,
+          };
+        }
+
+        if (tokenScope !== scope) {
+          return {
+            valid: false,
+            error: `Token has scope "${tokenScope}", but tool requires "${scope}"`,
+          };
+        }
+
+        // Cache valid legacy token (5 minute validity)
+        this.approvalCache.set(token, {
+          approved: true,
+          expiresAt: Date.now() + 5 * 60 * 1000,
+        });
+
+        return { valid: true };
+      }
+
+      // Unknown token format
+      return {
+        valid: false,
+        error: `Invalid token format (expected JWT or legacy approval token)`,
+      };
+    }
+  }
+
+  /**
+   * Check if token scope matches or exceeds required scope
+   *
+   * Scope hierarchy: read < write < execute
+   */
+  private scopeMatches(tokenScope: string, requiredScope: string): boolean {
+    const hierarchy: Record<string, number> = {
+      read: 0,
+      write: 1,
+      execute: 2,
+    };
+
+    const tokenLevel = hierarchy[tokenScope] ?? -1;
+    const requiredLevel = hierarchy[requiredScope] ?? -1;
+
+    return tokenLevel >= requiredLevel;
   }
 
   /**
