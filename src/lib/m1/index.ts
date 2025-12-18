@@ -238,6 +238,33 @@ export {
   type RevocationQueryResult,
 } from "./security/token-revocation-manager";
 
+// Health Checker (Phase 10 Extended)
+export {
+  HealthChecker,
+  healthChecker,
+  type HealthStatus,
+  type ComponentHealth,
+  type HealthReport,
+  type HealthMetrics,
+} from "./operations/health-checker";
+
+// Self-Healing Handler (Phase 10 Extended)
+export {
+  SelfHealingHandler,
+  selfHealingHandler,
+  type HealingActionType,
+  type HealingAction,
+  type HealingHistoryEntry,
+} from "./operations/self-healing";
+
+// Cost Optimizer (Phase 10 Extended)
+export {
+  CostOptimizer,
+  costOptimizer,
+  type CostAnalysis,
+  type CostRecommendation,
+} from "./operations/cost-optimizer";
+
 // Version
-export const M1_VERSION = "2.3.0";
-export const M1_RELEASE = "m1-production-deployment-v10";
+export const M1_VERSION = "2.3.1";
+export const M1_RELEASE = "m1-production-operations-v10ext";
