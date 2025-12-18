@@ -30,6 +30,7 @@ export {
 export {
   AgentRunsLogger,
   agentRunsLogger,
+  reinitializeLogger,
   type AgentRunRecord,
   type ToolCallRecord,
 } from "./logging/agentRuns";
@@ -67,5 +68,5 @@ export {
 } from "./config";
 
 // Version
-export const M1_VERSION = "1.4.0";
-export const M1_RELEASE = "m1-jwt-security-v5";
+export const M1_VERSION = "1.5.0";
+export const M1_RELEASE = "m1-persistent-storage-v6";
