@@ -195,6 +195,49 @@ export {
   type AgentRunsSummary,
 } from "./monitoring/dashboard-api";
 
+// Configuration Validator (Phase 10)
+export {
+  ConfigValidator,
+  configValidator,
+  type ValidationResult,
+  type ValidationError,
+  type ValidationWarning,
+} from "./deployment/config-validator";
+
+// SSE Handler (Phase 10)
+export {
+  SSEHandler,
+  sseHandler,
+  type MetricEventType,
+  type CacheMetricsEvent,
+  type PolicyDecisionsEvent,
+  type ToolExecutionsEvent,
+  type CostUpdateEvent,
+  type ErrorAlertEvent,
+  type HealthStatusEvent,
+  type MetricEvent,
+} from "./monitoring/sse-handler";
+
+// Analytics Engine (Phase 10)
+export {
+  AnalyticsEngine,
+  analyticsEngine,
+  type AnalyticsQuery,
+  type QueryResult,
+  type MetricDataPoint,
+  type FilterOperator,
+  type AggregationFunction,
+  type QueryFilter,
+} from "./monitoring/analytics-api";
+
+// Token Revocation (Phase 10)
+export {
+  TokenRevocationManager,
+  tokenRevocationManager,
+  type RevokedToken,
+  type RevocationQueryResult,
+} from "./security/token-revocation-manager";
+
 // Version
-export const M1_VERSION = "2.2.0";
-export const M1_RELEASE = "m1-production-hardening-v9";
+export const M1_VERSION = "2.3.0";
+export const M1_RELEASE = "m1-production-deployment-v10";
