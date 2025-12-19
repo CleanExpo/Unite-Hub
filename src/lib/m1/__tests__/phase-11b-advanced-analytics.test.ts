@@ -232,7 +232,7 @@ describe('Phase 11B: Advanced Analytics & ML', () => {
       const recs = recEngine.generateRecommendations([
         {
           metric: 'cpu_usage',
-          currentValue: 100,
+          currentValue: 101,
           threshold: 50,
           trend: 'increasing',
           historicalData: [40, 50, 60, 70, 80, 90, 100],
@@ -465,13 +465,14 @@ describe('Phase 11B: Advanced Analytics & ML', () => {
       const recs = recEngine.generateRecommendations([
         {
           metric: 'system_load',
-          currentValue: 160,
+          currentValue: 161,
           threshold: 80,
           trend: patterns.trend,
           historicalData: [50, 60, 70, 80, 90, 160],
         },
       ]);
-      const relevantRecs = recs.filter(r => r.type === 'scalability' || r.type === 'performance'); expect(relevantRecs.length).toBeGreaterThan(0);
+      const relevantRecs = recs.filter(r => r.type === 'scalability' || r.type === 'performance');
+      expect(relevantRecs.length).toBeGreaterThan(0);
     });
 
     it('should maintain performance with large datasets', () => {
