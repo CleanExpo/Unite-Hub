@@ -195,6 +195,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@microsoft/microsoft-graph-client": "^3.0.7",
     "@microsoft/microsoft-graph-types": "^2.43.1",
+    "@openai/agents": "^0.3.7",
     "@openrouter/sdk": "^0.1.11",
     "@opentelemetry/api": "^1.9.0",
     "@opentelemetry/auto-instrumentations-node": "^0.67.1",
