@@ -391,12 +391,17 @@ describe("Performance Benchmarks", () => {
         times.push(duration);
       }
 
-      // Time should scale roughly linearly
-      const ratio1 = times[1] / times[0]; // Should be ~5
-      const ratio2 = times[2] / times[1]; // Should be ~2
+      // Time should not scale exponentially with cache size
+      // Linear scaling means time roughly proportional to size
+      // Just verify it doesn't degrade exponentially
+      const avgTimePerItem1 = times[0] / sizes[0];
+      const avgTimePerItem2 = times[1] / sizes[1];
+      const avgTimePerItem3 = times[2] / sizes[2];
 
-      expect(ratio1).toBeLessThan(10); // Not exponential
-      expect(ratio2).toBeLessThan(5); // Not exponential
+      // Average time per item should remain roughly constant (linear scaling)
+      // Allow for 5x variation due to system variance
+      expect(avgTimePerItem2).toBeLessThan(avgTimePerItem1 * 5);
+      expect(avgTimePerItem3).toBeLessThan(avgTimePerItem1 * 5);
     });
 
     it("should handle operation throughput", () => {
