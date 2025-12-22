@@ -265,16 +265,18 @@ export class EnvVariableValidator {
       const result = this.validateVariable(name, definition);
       results.push(result);
 
+      // Handle critical issues for required variables
       if (result.status === "invalid" || result.status === "missing") {
         if (definition.required) {
           criticalIssues.push(result);
           if (result.status === "missing") {
             missingCritical.push(name);
           }
-        } else if (result.status === "warning") {
-          warnings.push(result);
         }
-      } else if (result.status === "warning") {
+      }
+
+      // Handle warnings for non-required variables
+      if (result.status === "warning") {
         warnings.push(result);
       }
     }

@@ -168,7 +168,7 @@ export class ApiFallbackHandler {
           retriesUsed: attempt,
           responseTime: performance.now() - startTime,
         };
-      } catch (error) {
+      } catch {
         // Track failure
         this.trackFailure(service);
 
@@ -242,8 +242,8 @@ export class ApiFallbackHandler {
   private getFromCache<T>(key: string): T | null {
     const entry = this.cache.get(key);
     if (!entry) {
-return null;
-}
+      return null;
+    }
 
     if (Date.now() > entry.expiry) {
       this.cache.delete(key);
