@@ -24,7 +24,7 @@ describe('Migration Orchestrator', () => {
         .filter((f) => f.endsWith('.sql'));
 
       expect(files.length).toBeGreaterThan(0);
-      expect(files.some((f) => f.startsWith('900_'))).toBe(true);
+      expect(files.some((f) => f.includes('_migration_state_tracking'))).toBe(true);
     });
 
     it('should sort migrations numerically', () => {
@@ -48,30 +48,30 @@ describe('Migration Orchestrator', () => {
     });
 
     it('should read migration file content correctly', () => {
-      const migration900Path = path.join(
+      const stateTrackingMigrationPath = path.join(
         process.cwd(),
         'supabase',
         'migrations',
-        '900_migration_automation.sql',
+        '20251214115900_migration_state_tracking.sql',
       );
 
-      if (fs.existsSync(migration900Path)) {
-        const content = fs.readFileSync(migration900Path, 'utf-8');
+      if (fs.existsSync(stateTrackingMigrationPath)) {
+        const content = fs.readFileSync(stateTrackingMigrationPath, 'utf-8');
         expect(content).toContain('_migrations');
         expect(content).toContain('CREATE TABLE');
       }
     });
 
     it('should compute SHA256 hash of migration files', () => {
-      const migration900Path = path.join(
+      const stateTrackingMigrationPath = path.join(
         process.cwd(),
         'supabase',
         'migrations',
-        '900_migration_automation.sql',
+        '20251214115900_migration_state_tracking.sql',
       );
 
-      if (fs.existsSync(migration900Path)) {
-        const content = fs.readFileSync(migration900Path, 'utf-8');
+      if (fs.existsSync(stateTrackingMigrationPath)) {
+        const content = fs.readFileSync(stateTrackingMigrationPath, 'utf-8');
         const hash = crypto.createHash('sha256').update(content).digest('hex');
 
         expect(hash).toBeTruthy();

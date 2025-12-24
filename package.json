@@ -157,6 +157,8 @@
     "db:status": "tsx scripts/db/state-tracker.ts --status",
     "db:status:detail": "tsx scripts/db/state-tracker.ts --detail",
     "db:check": "tsx scripts/guardian/pre-flight-checks.ts",
+    "migrations:check": "node scripts/migrations/check-migrations.mjs",
+    "migrations:quarantine": "node scripts/migrations/quarantine-invalid-migrations.mjs",
     "agent:audit": "npm run shadow:scan",
     "agent:refactor": "npm run shadow:agent"
   },
