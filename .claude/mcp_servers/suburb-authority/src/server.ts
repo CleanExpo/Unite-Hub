@@ -5,8 +5,6 @@
 
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
-import type { Request, Response } from 'express';
 import { createLogger } from './utils/logger.js';
 import { SuburbaseService } from './services/supabase.js';
 import { createQuerySuburbAuthorityTool } from './tools/query-suburb-authority.js';
@@ -54,25 +52,25 @@ export class Server {
     const findGeographicGapsTool = createFindGeographicGapsTool(this.supabaseService);
     const findContentGapsTool = createFindContentGapsTool(this.supabaseService);
 
-    // Register tools
+    // Register tools (using .shape to extract Zod object shape)
     this.mcpServer.tool(
       querySuburbAuthorityTool.name,
       querySuburbAuthorityTool.description,
-      querySuburbAuthorityTool.inputSchema.shape,
+      (querySuburbAuthorityTool.inputSchema as any).shape,
       querySuburbAuthorityTool.callback
     );
 
     this.mcpServer.tool(
       findGeographicGapsTool.name,
       findGeographicGapsTool.description,
-      findGeographicGapsTool.inputSchema.shape,
+      (findGeographicGapsTool.inputSchema as any).shape,
       findGeographicGapsTool.callback
     );
 
     this.mcpServer.tool(
       findContentGapsTool.name,
       findContentGapsTool.description,
-      findContentGapsTool.inputSchema.shape,
+      (findContentGapsTool.inputSchema as any).shape,
       findContentGapsTool.callback
     );
 
@@ -110,16 +108,9 @@ export class Server {
    * Start server with SSE transport (for HTTP-based clients)
    */
   private async startWithSSE(): Promise<void> {
-    const port = this.config.port || 3009;
-    const transport = new StreamableHTTPServerTransport('/message', port);
-
-    // Health check endpoint
-    transport.app.get('/health', (_req: Request, res: Response) => {
-      res.json({ status: 'healthy', timestamp: new Date().toISOString() });
-    });
-
-    await this.mcpServer.connect(transport);
-    log.info(`MCP server started with SSE transport on port ${port}`);
+    // SSE transport not fully implemented yet - use stdio instead
+    log.warn('SSE transport not implemented, falling back to stdio');
+    await this.startWithStdio();
   }
 
   /**
