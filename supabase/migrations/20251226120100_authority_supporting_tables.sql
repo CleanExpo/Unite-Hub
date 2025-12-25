@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS information_vacuums (
 
   -- Audit status
   visual_audit_requested BOOLEAN DEFAULT false,
-  visual_audit_id UUID REFERENCES synthex_visual_audits(id) ON DELETE SET NULL,
+  visual_audit_id UUID, -- FK added after synthex_visual_audits table creation
   visual_audit_completed_at TIMESTAMPTZ,
 
   -- Prioritization
@@ -428,3 +428,14 @@ COMMENT ON TABLE synthex_suburb_mapping IS 'Pre-analyzed suburb market data from
 COMMENT ON TABLE synthex_compliance_violations IS 'AU regulatory compliance issues detected by Reflector Agent. Validates GST disclosure, Fair Work compliance, ACL adherence, location accuracy. Auto-fixes when possible, flags for manual review when uncertain.';
 
 COMMENT ON TABLE synthex_gbp_outreach IS 'Automated GBP direct message outreach to prospects identified via gap analysis. Tracks message delivery, responses, and conversion to paying clients. Requires user_approved=true if governance mode enabled.';
+
+-- =====================================================================
+-- Add Foreign Key Constraints (After All Tables Created)
+-- =====================================================================
+
+-- Add FK from information_vacuums to synthex_visual_audits (now that it exists)
+ALTER TABLE information_vacuums
+ADD CONSTRAINT fk_information_vacuums_visual_audit
+FOREIGN KEY (visual_audit_id)
+REFERENCES synthex_visual_audits(id)
+ON DELETE SET NULL;
