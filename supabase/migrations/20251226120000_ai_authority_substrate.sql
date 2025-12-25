@@ -294,27 +294,15 @@ CREATE POLICY "tenant_isolation_delete" ON client_jobs
 -- Comments & Documentation
 -- =====================================================================
 
-COMMENT ON TABLE client_jobs IS
-  'Client job history with AI-native authority metadata. ' ||
-  'Stores job details, geographic data, semantic embeddings (vector(768)), ' ||
-  'and proof points for local market dominance analysis.';
+COMMENT ON TABLE client_jobs IS 'Client job history with AI-native authority metadata. Stores job details, geographic data, semantic embeddings (vector(768)), and proof points for local market dominance analysis.';
 
-COMMENT ON COLUMN client_jobs.embedding IS
-  'Semantic embedding (768-dim) for job similarity search using text-embedding-3-small model.';
+COMMENT ON COLUMN client_jobs.embedding IS 'Semantic embedding (768-dim) for job similarity search using text-embedding-3-small model.';
 
-COMMENT ON COLUMN client_jobs.ai_authority_metadata IS
-  'AI authority signals: proof_points (photos/reviews), locality_signals (suburb metrics), ' ||
-  'seo_signals (content features), content_gap_score (0-1), geographic_gap_score (0-1).';
+COMMENT ON COLUMN client_jobs.ai_authority_metadata IS 'AI authority signals: proof_points (photos/reviews), locality_signals (suburb metrics), seo_signals (content features), content_gap_score (0-1), geographic_gap_score (0-1).';
 
-COMMENT ON VIEW suburb_authority_substrate IS
-  'Aggregates authority signals per suburb for AI-native gap analysis. ' ||
-  'Authority score formula: Jobs (40pts) + Photos (30pts) + Reviews (30pts) = 0-100. ' ||
-  'Used by Scout Agent via MCP to identify geographic and content opportunities. ' ||
-  'Lower authority scores indicate bigger market gaps (opportunities).';
+COMMENT ON VIEW suburb_authority_substrate IS 'Aggregates authority signals per suburb for AI-native gap analysis. Authority score formula: Jobs (40pts) + Photos (30pts) + Reviews (30pts) = 0-100. Used by Scout Agent via MCP to identify geographic and content opportunities. Lower authority scores indicate bigger market gaps (opportunities).';
 
-COMMENT ON COLUMN suburb_authority_substrate.authority_score IS
-  'Composite authority metric (0-100). Higher = stronger local presence. ' ||
-  'Formula: min(completed_jobs, 40) + min(before_after*2 + completion, 30) + min(reviews*3, 30).';
+COMMENT ON COLUMN suburb_authority_substrate.authority_score IS 'Composite authority metric (0-100). Higher = stronger local presence. Formula: min(completed_jobs, 40) + min(before_after*2 + completion, 30) + min(reviews*3, 30).';
 
 -- =====================================================================
 -- Triggers for updated_at Timestamp
@@ -333,20 +321,3 @@ CREATE TRIGGER update_client_jobs_updated_at
   BEFORE UPDATE ON client_jobs
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
-
--- =====================================================================
--- Sample Query Examples (for documentation)
--- =====================================================================
-
-COMMENT ON VIEW suburb_authority_substrate IS
-  E'Aggregates authority signals per suburb for AI-native gap analysis.\n\n' ||
-  E'EXAMPLE QUERIES:\n\n' ||
-  E'-- Find geographic gaps (low authority suburbs)\n' ||
-  E'SELECT * FROM suburb_authority_substrate\n' ||
-  E'WHERE workspace_id = \'...\' AND authority_score < 50\n' ||
-  E'ORDER BY authority_score ASC LIMIT 20;\n\n' ||
-  E'-- Find content gap opportunities\n' ||
-  E'SELECT * FROM suburb_authority_substrate\n' ||
-  E'WHERE workspace_id = \'...\' AND avg_content_gap_score > 0.7\n' ||
-  E'ORDER BY avg_content_gap_score DESC LIMIT 20;\n\n' ||
-  E'Authority score: Jobs (40pts) + Photos (30pts) + Reviews (30pts) = 0-100';
