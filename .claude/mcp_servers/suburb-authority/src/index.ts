@@ -3,8 +3,12 @@
  * Provides suburb authority data to Scout Agent via Model Context Protocol
  */
 
+import { config as loadEnv } from 'dotenv';
 import { Server } from './server.js';
 import { createLogger } from './utils/logger.js';
+
+// Load environment variables
+loadEnv();
 
 const log = createLogger('Main');
 
