@@ -36,6 +36,18 @@
         "STRIPE_SECRET_KEY": "${STRIPE_SECRET_KEY}"
       },
       "description": "Stripe MCP - Create products, prices, checkout sessions, manage subscriptions, invoices, and payments"
+    },
+    "suburb-authority": {
+      "command": "node",
+      "args": [
+        ".claude/mcp_servers/suburb-authority/dist/index.js"
+      ],
+      "env": {
+        "NEXT_PUBLIC_SUPABASE_URL": "${NEXT_PUBLIC_SUPABASE_URL}",
+        "SUPABASE_SERVICE_ROLE_KEY": "${SUPABASE_SERVICE_ROLE_KEY}",
+        "MCP_TRANSPORT": "stdio"
+      },
+      "description": "Suburb Authority MCP - Query suburb_authority_substrate view for geographic and content gap analysis (Scout Agent)"
     }
   }
 }

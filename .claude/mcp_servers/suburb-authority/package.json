@@ -1,0 +1,33 @@
+{
+  "name": "mcp-suburb-authority",
+  "version": "1.0.0",
+  "description": "MCP server for querying suburb authority substrate data from Supabase",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc -w & node --watch dist/index.js",
+    "debug": "tsc & npx @modelcontextprotocol/inspector node dist/index.js"
+  },
+  "keywords": [
+    "mcp",
+    "supabase",
+    "suburb",
+    "authority",
+    "geographic-intelligence"
+  ],
+  "author": "Unite-Hub",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.10.1",
+    "@supabase/supabase-js": "^2.87.1",
+    "express": "^5.1.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.14.1",
+    "typescript": "^5.8.3"
+  }
+}
