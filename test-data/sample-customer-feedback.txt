@@ -1,0 +1,25 @@
+Customer Feedback Data - Unite-Hub Onboarding
+
+User 1 (Interview, 2025-12-15):
+"The onboarding was confusing. I didn't know where to start."
+
+User 2 (Survey, 2025-12-18):
+"Took me forever to figure out how to connect my Gmail account. Had to email support."
+
+User 3 (User Testing, 2025-12-20):
+"The settings page has too many options. I just wanted to add a contact but got lost in menus."
+
+User 4 (Interview, 2025-12-21):
+"Love the AI features but the setup was overwhelming. So many steps."
+
+User 5 (Support Ticket, 2025-12-22):
+"Your documentation doesn't explain the basics. I had to Google 'how to add contacts to Unite-Hub'."
+
+User 6 (Survey, 2025-12-23):
+"The dashboard shows everything at once. I just needed to send one email but saw 50 buttons."
+
+User 7 (Interview, 2025-12-24):
+"First time I logged in, I had no idea what to do. There's no guided tour or anything."
+
+User 8 (User Testing, 2025-12-25):
+"The AI email agent sounds cool but I don't understand how to set it up."
