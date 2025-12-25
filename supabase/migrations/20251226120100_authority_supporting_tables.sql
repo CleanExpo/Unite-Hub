@@ -419,28 +419,12 @@ CREATE TRIGGER update_synthex_gbp_outreach_updated_at
 -- Comments & Documentation
 -- =====================================================================
 
-COMMENT ON TABLE information_vacuums IS
-  'Market gaps discovered by Scout Agent. ' ||
-  'Geographic vacuums: suburbs with low competitor density. ' ||
-  'Content vacuums: missing proof points, testimonials, service pages. ' ||
-  'Priority 1-10 determines Scout processing order.';
+COMMENT ON TABLE information_vacuums IS 'Market gaps discovered by Scout Agent. Geographic vacuums: suburbs with low competitor density. Content vacuums: missing proof points, testimonials, service pages. Priority 1-10 determines Scout processing order.';
 
-COMMENT ON TABLE synthex_visual_audits IS
-  'Visual gap recordings from Auditor Agent using Gemini Computer Use. ' ||
-  'Dual output format: video_url (Loom-style MP4) + static_page_url (Next.js). ' ||
-  'Client chooses preferred format for prospect outreach.';
+COMMENT ON TABLE synthex_visual_audits IS 'Visual gap recordings from Auditor Agent using Gemini Computer Use. Dual output format: video_url (Loom-style MP4) + static_page_url (Next.js). Client chooses preferred format for prospect outreach.';
 
-COMMENT ON TABLE synthex_suburb_mapping IS
-  'Pre-analyzed suburb market data from overnight mapping worker. ' ||
-  'Covers 15,000+ Australian suburbs with service-specific competition analysis. ' ||
-  'Updated daily via Gemini 2.0 Flash batch processing.';
+COMMENT ON TABLE synthex_suburb_mapping IS 'Pre-analyzed suburb market data from overnight mapping worker. Covers 15,000+ Australian suburbs with service-specific competition analysis. Updated daily via Gemini 2.0 Flash batch processing.';
 
-COMMENT ON TABLE synthex_compliance_violations IS
-  'AU regulatory compliance issues detected by Reflector Agent. ' ||
-  'Validates GST disclosure, Fair Work compliance, ACL adherence, location accuracy. ' ||
-  'Auto-fixes when possible, flags for manual review when uncertain.';
+COMMENT ON TABLE synthex_compliance_violations IS 'AU regulatory compliance issues detected by Reflector Agent. Validates GST disclosure, Fair Work compliance, ACL adherence, location accuracy. Auto-fixes when possible, flags for manual review when uncertain.';
 
-COMMENT ON TABLE synthex_gbp_outreach IS
-  'Automated GBP direct message outreach to prospects identified via gap analysis. ' ||
-  'Tracks message delivery, responses, and conversion to paying clients. ' ||
-  'Requires user_approved=true if governance mode enabled.';
+COMMENT ON TABLE synthex_gbp_outreach IS 'Automated GBP direct message outreach to prospects identified via gap analysis. Tracks message delivery, responses, and conversion to paying clients. Requires user_approved=true if governance mode enabled.';
