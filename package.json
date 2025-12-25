@@ -171,7 +171,14 @@
     "m1:run": "tsx src/lib/m1/cli/agent-run.ts",
     "m1:help": "tsx src/lib/m1/cli/agent-run.ts --help",
     "m1:test:integration": "vitest run src/lib/m1/__tests__/integration.test.ts",
-    "m1:test:all": "vitest run src/lib/m1/__tests__/**/*.test.ts"
+    "m1:test:all": "vitest run src/lib/m1/__tests__/**/*.test.ts",
+    "authority:test": "node scripts/test-ai-authority-phase1.mjs",
+    "authority:mcp": "cd .claude/mcp_servers/suburb-authority && npm start",
+    "authority:suburb-mapping": "tsx src/lib/workers/processors/suburb-mapping-processor.ts",
+    "authority:visual-audit": "tsx src/lib/workers/processors/visual-audit-processor.ts",
+    "authority:reflector": "tsx src/lib/workers/processors/reflector-processor.ts",
+    "authority:gbp-outreach": "tsx src/lib/workers/processors/gbp-outreach-processor.ts",
+    "authority:workers": "concurrently \"npm run authority:suburb-mapping\" \"npm run authority:visual-audit\" \"npm run authority:reflector\" \"npm run authority:gbp-outreach\""
   },
   "keywords": [],
   "author": "",

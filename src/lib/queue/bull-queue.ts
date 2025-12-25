@@ -207,9 +207,13 @@ export async function initializeQueues() {
     notificationQueue.clean(0, 'active'),
     emailSendQueue.clean(0, 'active'),
     emailMetricsQueue.clean(0, 'active'),
+    suburbMappingQueue.clean(0, 'active'),
+    visualAuditQueue.clean(0, 'active'),
+    reflectorQueue.clean(0, 'active'),
+    gbpOutreachQueue.clean(0, 'active'),
   ]);
 
-  console.log('[Queue] All queues initialized');
+  console.log('[Queue] All queues initialized (10 queues)');
 }
 
 /**
@@ -225,6 +229,10 @@ export async function shutdownQueues() {
     notificationQueue.close(),
     emailSendQueue.close(),
     emailMetricsQueue.close(),
+    suburbMappingQueue.close(),
+    visualAuditQueue.close(),
+    reflectorQueue.close(),
+    gbpOutreachQueue.close(),
   ]);
 
   console.log('[Queue] All queues shut down');
@@ -270,6 +278,68 @@ export async function getQueueStatus() {
 /**
  * Get queue health
  */
+// =====================================================================
+// AI Authority Layer Queues (Phase 2)
+// =====================================================================
+
+export const suburbMappingQueue: BullQueue = new Queue('suburb-mapping', {
+  redis: redisConfig,
+  defaultJobOptions: {
+    attempts: 3,
+    backoff: {
+      type: 'exponential',
+      delay: 5000,
+    },
+    timeout: 300000, // 5 min per suburb
+    removeOnComplete: {
+      age: 86400, // Keep for 24 hours
+    },
+  },
+});
+
+export const visualAuditQueue: BullQueue = new Queue('visual-audit', {
+  redis: redisConfig,
+  defaultJobOptions: {
+    attempts: 2,
+    backoff: {
+      type: 'exponential',
+      delay: 10000,
+    },
+    timeout: 600000, // 10 min per audit
+    removeOnComplete: {
+      age: 86400,
+    },
+  },
+});
+
+export const reflectorQueue: BullQueue = new Queue('reflector-compliance', {
+  redis: redisConfig,
+  defaultJobOptions: {
+    attempts: 2,
+    priority: 10, // High priority for compliance
+    removeOnComplete: {
+      age: 7200,
+    },
+  },
+});
+
+export const gbpOutreachQueue: BullQueue = new Queue('gbp-outreach', {
+  redis: redisConfig,
+  defaultJobOptions: {
+    attempts: 5, // More retries for external API
+    backoff: {
+      type: 'exponential',
+      delay: 2000,
+    },
+    removeOnComplete: {
+      age: 3600,
+    },
+    removeOnFail: {
+      age: 86400,
+    },
+  },
+});
+
 export async function getQueueHealth() {
   const status = await getQueueStatus();
 
@@ -304,6 +374,10 @@ export default {
   notificationQueue,
   emailSendQueue,
   emailMetricsQueue,
+  suburbMappingQueue,
+  visualAuditQueue,
+  reflectorQueue,
+  gbpOutreachQueue,
   initializeQueues,
   shutdownQueues,
   getQueueMetrics,
