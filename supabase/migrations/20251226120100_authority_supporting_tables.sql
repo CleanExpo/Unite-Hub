@@ -434,6 +434,9 @@ COMMENT ON TABLE synthex_gbp_outreach IS 'Automated GBP direct message outreach 
 -- =====================================================================
 
 -- Add FK from information_vacuums to synthex_visual_audits (now that it exists)
+-- Drop first to make idempotent
+ALTER TABLE information_vacuums DROP CONSTRAINT IF EXISTS fk_information_vacuums_visual_audit;
+
 ALTER TABLE information_vacuums
 ADD CONSTRAINT fk_information_vacuums_visual_audit
 FOREIGN KEY (visual_audit_id)
