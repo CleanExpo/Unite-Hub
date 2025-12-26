@@ -16,7 +16,7 @@ ADD COLUMN IF NOT EXISTS dashboard_mode_updated_at TIMESTAMPTZ;
 
 -- Index for dashboard mode queries
 CREATE INDEX IF NOT EXISTS idx_user_profiles_dashboard_mode
-  ON user_profiles(user_id, dashboard_mode);
+  ON user_profiles(id, dashboard_mode);
 
 -- =====================================================================
 -- Function: Update dashboard mode timestamp
@@ -45,13 +45,12 @@ CREATE TRIGGER update_dashboard_mode_timestamp_trigger
 
 CREATE OR REPLACE VIEW dashboard_mode_analytics AS
 SELECT
-  workspace_id,
   dashboard_mode,
   COUNT(*) as user_count,
   ROUND(AVG(EXTRACT(EPOCH FROM (dashboard_mode_updated_at - created_at))) / 86400, 1) as avg_days_to_switch
 FROM user_profiles
 WHERE dashboard_mode_updated_at IS NOT NULL
-GROUP BY workspace_id, dashboard_mode;
+GROUP BY dashboard_mode;
 
 -- =====================================================================
 -- Comments
