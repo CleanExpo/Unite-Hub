@@ -87,7 +87,7 @@ export function IntegrationPriorityTooltip({
     optional: {
       title: 'Optional Integration',
       description: 'Nice-to-have feature that enhances your workflow.',
-      action: 'Skip if you don''t need this functionality.',
+      action: 'Skip if you don\'t need this functionality.',
     },
   };
 
