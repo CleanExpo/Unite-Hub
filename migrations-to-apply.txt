@@ -1,0 +1,14 @@
+========================================
+MIGRATION 1 OF 2
+========================================
+File: supabase/migrations/20251226120000_ai_authority_substrate.sql
+
+INSTRUCTIONS:
+1. Go to: https://supabase.com/dashboard/project/lksfwktwtmyznckodsau/sql
+2. Click "+ New Query"
+3. Copy from "START MIGRATION 1" to "END MIGRATION 1" below
+4. Paste into Supabase SQL Editor
+5. Click "Run" button
+
+START MIGRATION 1
+====================

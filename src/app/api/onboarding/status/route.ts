@@ -1,80 +1,60 @@
-import { NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
-import { apiRateLimit } from "@/lib/rate-limit";
+import { withErrorBoundary, successResponse, errorResponse } from "@/lib/api-helpers";
 
-export async function GET(request: Request) {
-  try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(request);
-  if (rateLimitResult) {
-    return rateLimitResult;
+export const dynamic = 'force-dynamic';
+
+export const GET = withErrorBoundary(async (req: NextRequest) => {
+  const userId = req.nextUrl.searchParams.get('userId');
+  const workspaceId = req.nextUrl.searchParams.get('workspaceId');
+
+  if (!userId || !workspaceId) {
+    return errorResponse('userId and workspaceId required', 400);
   }
 
-    const supabase = await getSupabaseServer();
+  const supabase = getSupabaseServer();
 
-    // Get authenticated user from session
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader) {
-      return NextResponse.json(
-        { error: "Missing authorization header" },
-        { status: 401 }
-      );
-    }
+  // Fetch onboarding progress
+  const { data, error } = await supabase
+    .from('user_onboarding_progress')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('workspace_id', workspaceId)
+    .maybeSingle();
 
-    const token = authHeader.replace("Bearer ", "");
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser(token);
+  if (error && error.code !== 'PGRST116') {
+    return errorResponse(`Failed to fetch status: ${error.message}`, 500);
+  }
 
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Fetch onboarding status
-    const { data, error } = await supabase
-      .from("user_onboarding")
-      .select("*")
-      .eq("user_id", user.id)
-      .maybeSingle();
-
-    if (error && error.code !== "PGRST116") {
-      // PGRST116 = no rows returned
-      console.error("Error fetching onboarding status:", error);
-      return NextResponse.json(
-        { error: "Failed to fetch onboarding status" },
-        { status: 500 }
-      );
-    }
-
-    if (!data) {
-      return NextResponse.json({
-        message: "Onboarding not started",
-        data: null,
-      });
-    }
-
-    // Calculate completion percentage
-    const completedSteps =
-      (data.step_1_complete ? 1 : 0) +
-      (data.step_2_complete ? 1 : 0) +
-      (data.step_3_complete ? 1 : 0) +
-      (data.step_5_complete ? 1 : 0); // Step 4 is optional
-
-    const completionPercentage = Math.round((completedSteps / 4) * 100);
-
-    const isComplete = data.completed_at !== null || data.skipped === true;
-
-    return NextResponse.json({
-      data,
-      completionPercentage,
-      isComplete,
+  if (!data) {
+    // No progress record yet - onboarding not started
+    return successResponse({
+      started: false,
+      currentStep: 1,
+      progressPercentage: 0,
+      completedSteps: [],
+      wizardCompleted: false,
+      wizardSkipped: false,
     });
-  } catch (error) {
-    console.error("Unexpected error fetching onboarding status:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
   }
-}
+
+  // Build completed steps array
+  const completedSteps: string[] = [];
+  if (data.step_gmail_connected) completedSteps.push('gmail_connected');
+  if (data.step_first_contact_added) completedSteps.push('first_contact_added');
+  if (data.step_first_email_sent) completedSteps.push('first_email_sent');
+  if (data.step_viewed_analytics) completedSteps.push('viewed_analytics');
+  if (data.step_completed_setup) completedSteps.push('completed_setup');
+
+  return successResponse({
+    started: true,
+    currentStep: data.current_step,
+    progressPercentage: data.progress_percentage,
+    completedSteps,
+    completedCount: data.completed_steps,
+    totalSteps: data.total_steps,
+    wizardCompleted: data.wizard_completed,
+    wizardSkipped: data.wizard_skipped,
+    lastActivity: data.last_activity_at,
+  });
+});

@@ -1,63 +1,39 @@
-import { NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
-import { apiRateLimit } from "@/lib/rate-limit";
+import { withErrorBoundary, successResponse, errorResponse } from "@/lib/api-helpers";
 
-export async function POST(request: Request) {
-  try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(request);
-  if (rateLimitResult) {
-    return rateLimitResult;
+export const dynamic = 'force-dynamic';
+
+export const POST = withErrorBoundary(async (req: NextRequest) => {
+  const body = await req.json();
+  const { workspaceId, userId } = body;
+
+  if (!workspaceId || !userId) {
+    return errorResponse('workspaceId and userId required', 400);
   }
 
-    const supabase = await getSupabaseServer();
+  const supabase = getSupabaseServer();
 
-    // Get authenticated user from session
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader) {
-      return NextResponse.json(
-        { error: "Missing authorization header" },
-        { status: 401 }
-      );
-    }
+  // Mark wizard as skipped
+  const { data, error } = await supabase
+    .from('user_onboarding_progress')
+    .upsert({
+      user_id: userId,
+      workspace_id: workspaceId,
+      wizard_skipped: true,
+      wizard_skipped_at: new Date().toISOString(),
+    }, {
+      onConflict: 'user_id,workspace_id',
+    })
+    .select()
+    .single();
 
-    const token = authHeader.replace("Bearer ", "");
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser(token);
-
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Update onboarding to skipped
-    const { data, error } = await supabase
-      .from("user_onboarding")
-      .update({
-        skipped: true,
-      })
-      .eq("user_id", user.id)
-      .select()
-      .single();
-
-    if (error) {
-      console.error("Error skipping onboarding:", error);
-      return NextResponse.json(
-        { error: "Failed to skip onboarding" },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json({
-      message: "Onboarding skipped successfully",
-      data,
-    });
-  } catch (error) {
-    console.error("Unexpected error skipping onboarding:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+  if (error) {
+    return errorResponse(`Failed to skip onboarding: ${error.message}`, 500);
   }
-}
+
+  return successResponse({
+    message: 'Onboarding skipped',
+    progress: data,
+  });
+});

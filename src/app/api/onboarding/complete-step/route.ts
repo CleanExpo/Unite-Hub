@@ -1,106 +1,77 @@
-import { NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
-import { apiRateLimit } from "@/lib/rate-limit";
+import { withErrorBoundary, successResponse, errorResponse } from "@/lib/api-helpers";
 
-export async function POST(request: Request) {
-  try {
-  // Apply rate limiting
-  const rateLimitResult = await apiRateLimit(request);
-  if (rateLimitResult) {
-    return rateLimitResult;
+export const dynamic = 'force-dynamic';
+
+export const POST = withErrorBoundary(async (req: NextRequest) => {
+  const body = await req.json();
+  const { workspaceId, userId, stepId } = body;
+
+  if (!workspaceId || !userId || !stepId) {
+    return errorResponse('workspaceId, userId, and stepId required', 400);
   }
 
-    const supabase = await getSupabaseServer();
+  const supabase = getSupabaseServer();
 
-    // Get authenticated user from session
-    const authHeader = request.headers.get("authorization");
-    if (!authHeader) {
-      return NextResponse.json(
-        { error: "Missing authorization header" },
-        { status: 401 }
-      );
-    }
+  // Map stepId to column name
+  const stepColumnMap: Record<string, string> = {
+    'gmail_connected': 'step_gmail_connected',
+    'first_contact_added': 'step_first_contact_added',
+    'first_email_sent': 'step_first_email_sent',
+    'viewed_analytics': 'step_viewed_analytics',
+    'completed_setup': 'step_completed_setup',
+  };
 
-    const token = authHeader.replace("Bearer ", "");
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser(token);
+  const stepColumn = stepColumnMap[stepId];
+  if (!stepColumn) {
+    return errorResponse(`Invalid stepId: ${stepId}`, 400);
+  }
 
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+  // Get or create onboarding progress record
+  let { data: progress } = await supabase
+    .from('user_onboarding_progress')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('workspace_id', workspaceId)
+    .single();
 
-    // Parse request body
-    const body = await request.json();
-    const { step, data: stepData } = body;
-
-    if (!step || step < 1 || step > 5) {
-      return NextResponse.json(
-        { error: "Invalid step number" },
-        { status: 400 }
-      );
-    }
-
-    // Get current onboarding record
-    const { data: current, error: fetchError } = await supabase
-      .from("user_onboarding")
-      .select("*")
-      .eq("user_id", user.id)
-      .maybeSingle();
-
-    if (fetchError) {
-      console.error("Error fetching onboarding:", fetchError);
-      return NextResponse.json(
-        { error: "Failed to fetch onboarding status" },
-        { status: 500 }
-      );
-    }
-
-    if (!current) {
-      return NextResponse.json(
-        { error: "Onboarding not started" },
-        { status: 404 }
-      );
-    }
-
-    // Update step completion
-    const stepKey = `step_${step}_complete`;
-    const nextStep = step < 5 ? step + 1 : 5;
-
-    const updatedData = {
-      ...current.onboarding_data,
-      ...(stepData || {}),
-    };
-
-    const { data, error } = await supabase
-      .from("user_onboarding")
-      .update({
-        [stepKey]: true,
-        current_step: nextStep,
-        onboarding_data: updatedData,
+  if (!progress) {
+    // Create initial record
+    const { data: newProgress, error: createError } = await supabase
+      .from('user_onboarding_progress')
+      .insert({
+        user_id: userId,
+        workspace_id: workspaceId,
       })
-      .eq("user_id", user.id)
       .select()
       .single();
 
-    if (error) {
-      console.error("Error updating onboarding:", error);
-      return NextResponse.json(
-        { error: "Failed to complete step" },
-        { status: 500 }
-      );
+    if (createError) {
+      return errorResponse(`Failed to create progress: ${createError.message}`, 500);
     }
 
-    return NextResponse.json({
-      message: `Step ${step} completed successfully`,
-      data,
-    });
-  } catch (error) {
-    console.error("Unexpected error completing step:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    progress = newProgress;
   }
-}
+
+  // Update step completion
+  const { data: updated, error } = await supabase
+    .from('user_onboarding_progress')
+    .update({
+      [stepColumn]: true,
+      [`${stepColumn}_at`]: new Date().toISOString(),
+    })
+    .eq('user_id', userId)
+    .eq('workspace_id', workspaceId)
+    .select()
+    .single();
+
+  if (error) {
+    return errorResponse(`Failed to complete step: ${error.message}`, 500);
+  }
+
+  return successResponse({
+    message: `Step ${stepId} completed`,
+    progress: updated,
+  });
+});

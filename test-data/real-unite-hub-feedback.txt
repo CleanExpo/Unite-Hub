@@ -1,0 +1,26 @@
+Feedback 1 (Email to Support, 2025-12-20, John from Brisbane Plumbing):
+"Hi team, I signed up for Unite-Hub but I'm a bit lost. How do I connect my Gmail so the AI can read my emails? I see the integrations page but there's a lot of options and I'm not sure which one is for email intelligence. Also, once connected, does it automatically process emails or do I need to trigger something?"
+
+Feedback 2 (Onboarding Survey, 2025-12-21, Sarah - Local Marketing Agency):
+"The AI content generation is impressive, but the setup process was confusing. I spent 30 minutes trying to figure out how to create my first campaign. Eventually found it but wish there was a 'Start Here' button or guided tour."
+
+Feedback 3 (User Testing Session, 2025-12-22, Mike - Gold Coast Electrician):
+"Dashboard has heaps of features which is great, but honestly overwhelming for a first-time user. I just wanted to add a few contacts and send an email, but the interface showed me campaign analytics, AI agents, founder tools, billing... felt like I needed a manual to get started."
+
+Feedback 4 (Support Chat, 2025-12-23, Emma - Sydney Restoration):
+"Is there a way to simplify the UI? I don't need all the advanced features yet. Just want basic CRM functionality to start. The settings page is huge."
+
+Feedback 5 (Email to Support, 2025-12-23, David - Perth Builder):
+"Tried to set up the email agent but got stuck. The documentation mentions RabbitMQ and agent tasks but I'm just a builder, not a developer. Is there a simpler way to just 'turn on' email intelligence?"
+
+Feedback 6 (Onboarding Survey, 2025-12-24, Lisa - Adelaide Salon Owner):
+"The platform looks powerful but I felt like I was dropped in the deep end. No clear starting point. Would love a checklist or progress tracker showing me what to set up first."
+
+Feedback 7 (User Testing Session, 2025-12-25, Tom - Melbourne Consultant):
+"Integration page is confusing. I see Gmail, Outlook, Xero, Stripe... do I need all of them? Which ones are required vs optional? What happens if I skip some?"
+
+Feedback 8 (Support Ticket, 2025-12-25, Rachel - Brisbane Coach):
+"Help documentation is detailed but hard to navigate. When I searched 'how to add contacts' I got 15 results and none clearly said 'click here, then here, then here'. Just want step-by-step instructions."
+
+Feedback 9 (Email to Support, 2025-12-26, James - Ipswich Contractor):
+"First login showed me a workspace selector, then a dashboard with 20 different sections. I'm just one guy with a small business. Do I really need all this? Can you recommend a 'simple mode' or basic setup?"
