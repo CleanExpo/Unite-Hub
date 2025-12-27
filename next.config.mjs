@@ -80,7 +80,8 @@ const nextConfig = {
     remotePatterns: [
       { protocol: 'https', hostname: '**' }
     ],
-    formats: ['image/avif', 'image/webp']
+    formats: ['image/avif', 'image/webp'],
+    qualities: [50, 75, 85, 90, 100], // Next.js 16 requirement
   },
 
   // Disable production source maps for faster builds
