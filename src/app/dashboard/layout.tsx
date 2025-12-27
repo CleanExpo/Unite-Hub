@@ -27,6 +27,7 @@ export default function DashboardLayout({
   const { user, profile, signOut, currentOrganization, organizations, loading: authLoading } = useAuth();
   const [orgId, setOrgId] = useState<string | null>(null);
   const [loadingTimeout, setLoadingTimeout] = useState(false);
+  const [dashboardMode, setDashboardMode] = useState<'simple' | 'advanced'>('simple');
 
   // Automatically refresh session to keep user logged in
   useSessionRefresh();
@@ -48,6 +49,27 @@ return "U";
       setOrgId(currentOrganization.org_id);
     }
   }, [currentOrganization]);
+
+  // Fetch dashboard mode preference (Pattern 2)
+  useEffect(() => {
+    async function fetchDashboardMode() {
+      if (!user) return;
+
+      try {
+        const res = await fetch(`/api/dashboard/mode?userId=${user.id}`);
+        if (res.ok) {
+          const data = await res.json();
+          setDashboardMode(data.data?.mode || 'simple');
+        }
+      } catch (error) {
+        console.error('Failed to fetch dashboard mode:', error);
+        // Default to simple on error
+        setDashboardMode('simple');
+      }
+    }
+
+    fetchDashboardMode();
+  }, [user]);
 
   // Set timeout for organization loading
   useEffect(() => {
@@ -244,7 +266,8 @@ return "U";
                     </DropdownMenuContent>
                   </DropdownMenu>
 
-                  {/* AI & Intelligence */}
+                  {/* AI & Intelligence - Advanced Mode Only */}
+                  {dashboardMode === 'advanced' && (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className={`${
@@ -289,8 +312,10 @@ return "U";
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
+                  )}
 
-                  {/* Operations */}
+                  {/* Operations - Advanced Mode Only */}
+                  {dashboardMode === 'advanced' && (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className={`${
@@ -330,6 +355,7 @@ return "U";
                       </PermissionGate>
                     </DropdownMenuContent>
                   </DropdownMenu>
+                  )}
                 </div>
               </div>
 

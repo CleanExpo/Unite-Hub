@@ -7,6 +7,7 @@ import { WorkspaceSidebar } from "@/components/workspace/WorkspaceSidebar";
 import { ApprovalCard, ContentType } from "@/components/workspace/ApprovalCard";
 import { NexusAssistant } from "@/components/workspace/NexusAssistant";
 import { ExecutionTicker } from "@/components/workspace/ExecutionTicker";
+import { OnboardingChecklistWidget } from "@/components/dashboard/OnboardingChecklistWidget";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -236,6 +237,16 @@ return;
                 </div>
               </div>
             </header>
+
+            {/* Onboarding Checklist (Pattern 1 Solution) */}
+            {user && workspaceId && (
+              <div className="mb-6">
+                <OnboardingChecklistWidget
+                  userId={user.id}
+                  workspaceId={workspaceId}
+                />
+              </div>
+            )}
 
             {/* Content Section */}
             <section>

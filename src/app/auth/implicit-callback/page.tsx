@@ -38,13 +38,26 @@ export default function ImplicitCallbackPage() {
             console.log('Session confirmed in localStorage');
           }
 
-          setStatus('Success! Redirecting to dashboard...');
+          setStatus('Success! Checking setup status...');
+
+          // Check if user needs onboarding
+          const { data: onboardingProgress } = await supabaseBrowser
+            .from('user_onboarding_progress')
+            .select('wizard_completed, wizard_skipped')
+            .eq('user_id', session.user.id)
+            .maybeSingle();
 
           // Wait a moment to show success message
           await new Promise(resolve => setTimeout(resolve, 500));
 
-          // Hard navigation to trigger AuthContext to pick up the new session
-          window.location.href = '/dashboard/overview';
+          // Route based on onboarding status
+          if (!onboardingProgress || (!onboardingProgress.wizard_completed && !onboardingProgress.wizard_skipped)) {
+            // New user → Onboarding wizard
+            window.location.href = '/onboarding';
+          } else {
+            // Returning user → Dashboard
+            window.location.href = '/dashboard/overview';
+          }
         } else {
           console.error('No session created after implicit flow');
           setStatus('No session created');

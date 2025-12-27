@@ -12,14 +12,21 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Container } from "@/components/layout/Container";
 import { Tabs } from "@/components/patterns/Tabs";
 import { Alert } from "@/components/patterns/Alert";
+import { DashboardModeToggle } from "@/components/dashboard/DashboardModeToggle";
+import { SmartRecommendations } from "@/components/integrations/SmartRecommendations";
+import { IntegrationCard } from "@/components/integrations/IntegrationCard";
+import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabase";
 
 export default function SettingsPage() {
   const { workspaceId, loading: workspaceLoading } = useWorkspace();
+  const { user, profile } = useAuth();
   const [integrations, setIntegrations] = useState<any[]>([]);
+  const [integrationMetadata, setIntegrationMetadata] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [dashboardMode, setDashboardMode] = useState<'simple' | 'advanced'>('simple');
 
   useEffect(() => {
     if (workspaceLoading) {
@@ -27,6 +34,42 @@ return;
 }
     loadIntegrations();
   }, [workspaceLoading]);
+
+  // Fetch dashboard mode
+  useEffect(() => {
+    async function fetchMode() {
+      if (!user) return;
+
+      try {
+        const res = await fetch(`/api/dashboard/mode?userId=${user.id}`);
+        if (res.ok) {
+          const data = await res.json();
+          setDashboardMode(data.data?.mode || 'simple');
+        }
+      } catch (error) {
+        console.error('Failed to fetch mode:', error);
+      }
+    }
+
+    fetchMode();
+  }, [user]);
+
+  // Fetch integration metadata (Pattern 3)
+  useEffect(() => {
+    async function fetchIntegrationMetadata() {
+      try {
+        const res = await fetch('/api/integrations/metadata?businessType=small_business');
+        if (res.ok) {
+          const data = await res.json();
+          setIntegrationMetadata(data.data?.all || []);
+        }
+      } catch (error) {
+        console.error('Failed to fetch integration metadata:', error);
+      }
+    }
+
+    fetchIntegrationMetadata();
+  }, []);
 
   const loadIntegrations = async () => {
     setLoading(true);
@@ -173,10 +216,61 @@ return;
 
   const tabItems = [
     {
+      id: "display",
+      label: "Display",
+      content: (
+        <>
+          <Card className="bg-bg-card border border-border-subtle">
+            <CardHeader>
+              <CardTitle>Dashboard Preferences</CardTitle>
+              <CardDescription>
+                Customize how you want to see your dashboard
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {user && (
+                <DashboardModeToggle
+                  currentMode={dashboardMode}
+                  userId={user.id}
+                  onModeChange={(newMode) => {
+                    setDashboardMode(newMode);
+                  }}
+                />
+              )}
+            </CardContent>
+          </Card>
+        </>
+      ),
+    },
+    {
       id: "integrations",
       label: "Integrations",
       content: (
         <>
+          {/* Smart Recommendations (Pattern 3) */}
+          {integrationMetadata.length > 0 && (
+            <div className="mb-6">
+              <SmartRecommendations
+                businessType="small_business"
+                recommendations={integrationMetadata
+                  .filter(i => i.priority !== 'optional')
+                  .map(i => ({
+                    integrationKey: i.integration_key,
+                    integrationName: i.integration_name,
+                    priority: i.priority,
+                    reason: i.short_description,
+                    connected: integrations.some(int => int.provider === i.integration_key),
+                  }))}
+                onConnectAll={() => {
+                  alert('Bulk connect: Opening Gmail and Google Calendar OAuth flows...');
+                }}
+                onCustomize={() => {
+                  alert('Showing all integration options below');
+                }}
+              />
+            </div>
+          )}
+
           {/* Gmail Integration */}
           <Card className="bg-bg-card border border-border-subtle">
             <CardContent className="pt-6">
