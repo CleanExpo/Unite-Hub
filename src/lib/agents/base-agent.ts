@@ -8,6 +8,7 @@ import * as amqp from 'amqplib';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { getMetricsCollector } from './metrics/metricsCollector';
 import { getRulesEngine, ValidationContext } from './rules/rulesEngine';
+import { getEscalationManager } from './escalation/escalationManager';
 
 export interface AgentTask {
   id: string;
@@ -119,6 +120,27 @@ return;
             console.log(`🚫 Task ${task.id} blocked by business rules`);
             console.log(`   Violations: ${validationResult.violations.map(v => v.message).join(', ')}`);
 
+            // Create escalation if required
+            if (validationResult.should_escalate) {
+              const escalationManager = getEscalationManager();
+              await escalationManager.createEscalation({
+                workspace_id: task.workspace_id,
+                agent_name: this.name,
+                execution_id: executionId,
+                escalation_type: 'rule_violation',
+                severity: 'critical',
+                title: `${this.name} blocked by business rules`,
+                description: validationResult.violations.map(v => v.message).join('; '),
+                context: {
+                  task_id: task.id,
+                  task_type: task.task_type,
+                  violations: validationResult.violations
+                },
+                requires_approval: true
+              });
+              console.log(`📤 Escalated to approval queue`);
+            }
+
             await this.recordExecutionFailure(
               task.id,
               `Blocked by business rules: ${validationResult.violations.map(v => v.message).join('; ')}`,
@@ -131,9 +153,28 @@ return;
             return;
           }
 
-          // Log warnings if any
+          // Log warnings if any (and escalate if configured)
           if (validationResult.violations.length > 0 && validationResult.enforcement === 'warn') {
             console.warn(`⚠️  Task ${task.id} has rule warnings:`, validationResult.violations.map(v => v.message));
+
+            if (validationResult.should_escalate) {
+              const escalationManager = getEscalationManager();
+              await escalationManager.createEscalation({
+                workspace_id: task.workspace_id,
+                agent_name: this.name,
+                execution_id: executionId,
+                escalation_type: 'rule_violation',
+                severity: 'warning',
+                title: `${this.name} rule warnings`,
+                description: validationResult.violations.map(v => v.message).join('; '),
+                context: {
+                  task_id: task.id,
+                  task_type: task.task_type,
+                  violations: validationResult.violations
+                },
+                requires_approval: false
+              });
+            }
           }
 
           // Process task
