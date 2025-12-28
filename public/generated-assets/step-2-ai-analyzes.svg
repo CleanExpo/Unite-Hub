@@ -1,0 +1,12 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title" role="img">
+  <title id="title">AI Analyzes</title>
+  <desc>Brain with magnifying glass</desc>
+  <circle cx="100" cy="100" r="90" fill="rgba(255,107,53,0.1)" stroke="#ff6b35" />
+  <g transform="translate(100,100)" stroke="#ff6b35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M-30,-15 C-30,-30 0,-30 0,-15 C0,-30 30,-30 30,-15 C30,0 0,0 0,15 C0,0 -30,0 -30,-15 Z" aria-label="Brain outline"/>
+    <path d="M-15,-5 C-15,-10 0,-10 0,-5 C0,-10 15,-10 15,-5" aria-hidden="true"/>
+    <path d="M-10,5 C-10,10 0,10 0,5 C0,10 10,10 10,5" aria-hidden="true"/>
+    <circle cx="25" cy="25" r="15" aria-label="Magnifying glass lens"/>
+    <path d="M35,35 L45,45" aria-label="Magnifying glass handle"/>
+  </g>
+</svg>

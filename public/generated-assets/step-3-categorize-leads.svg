@@ -1,0 +1,10 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title" aria-describedby="desc">
+  <title id="title">Categorize Leads</title>
+  <desc id="desc">Folders with star ratings</desc>
+  <circle cx="100" cy="100" r="90" fill="rgba(255,107,53,0.1)" stroke="#ff6b35"/>
+  <path d="M50 75H150V85H50V75Z" stroke="#ff6b35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M50 85H150C155.523 85 160 89.4771 160 95V135C160 140.523 155.523 145 150 145H50C44.4772 145 40 140.523 40 135V95C40 89.4771 44.4772 85 50 85Z" stroke="#ff6b35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M80 65H120V75H80V65Z" stroke="#ff6b35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M80 75H120C125.523 75 130 79.4771 130 85V125C130 130.523 125.523 135 120 135H80C74.4772 135 70 130.523 70 125V85C70 79.4771 74.4772 75 80 75Z" stroke="#ff6b35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M130 60L133 67L140 67L135 71L137 78L130 74L123 78L125 71L120 67L127 67L130 60Z" stroke="#ff6b35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

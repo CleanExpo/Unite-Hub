@@ -1,0 +1,8 @@
+xml
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title" aria-describedby="desc">
+  <title id="title">Track Performance</title>
+  <desc id="desc">Chart/graph with checkmark</desc>
+  <circle cx="100" cy="100" r="90" fill="rgba(255,107,53,0.1)" stroke="#ff6b35"/>
+  <path d="M50 120L70 80L90 100L110 60L130 100" stroke="#ff6b35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M140 120L150 130L160 110" stroke="#ff6b35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

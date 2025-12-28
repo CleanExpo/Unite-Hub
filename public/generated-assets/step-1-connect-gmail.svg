@@ -1,0 +1,15 @@
+xml
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Connect Gmail Icon">
+  <title>Connect Gmail</title>
+  <desc>Envelope with link/connection symbol</desc>
+
+  <circle cx="100" cy="100" r="90" fill="rgba(255,107,53,0.1)" stroke="#ff6b35" stroke-width="3" aria-hidden="true"/>
+
+  <path d="M50 70H150L100 110L50 70Z" stroke="#ff6b35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"/>
+  <path d="M50 70V130H150V70" stroke="#ff6b35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"/>
+
+  <path d="M130 120C130 125.523 125.523 130 120 130C114.477 130 110 125.523 110 120C110 114.477 114.477 110 120 110C125.523 110 130 114.477 130 120Z" stroke="#ff6b35" stroke-width="3" aria-hidden="true"/>
+  <path d="M70 80C70 85.5228 74.4772 90 80 90C85.5228 90 90 85.5228 90 80C90 74.4772 85.5228 70 80 70C74.4772 70 70 74.4772 70 80Z" stroke="#ff6b35" stroke-width="3" aria-hidden="true"/>
+
+  <path d="M85 84L115 116" stroke="#ff6b35" stroke-width="3" stroke-linecap="round" aria-hidden="true"/>
+</svg>

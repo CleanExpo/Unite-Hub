@@ -1,0 +1,14 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-labelledby="title" aria-describedby="desc">
+  <title id="title">Generate Responses</title>
+  <desc id="desc">Sparkles with document/email</desc>
+  <circle cx="100" cy="100" r="90" fill="rgba(255,107,53,0.1)" stroke="#ff6b35"/>
+  <path d="M75 70H125V130H75V70Z" stroke="#ff6b35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M75 75H125" stroke="#ff6b35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M75 85H125" stroke="#ff6b35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M75 95H125" stroke="#ff6b35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M75 105H125" stroke="#ff6b35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M90 60L100 50L110 60" stroke="#ff6b35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M60 90L50 100L60 110" stroke="#ff6b35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M140 90L150 100L140 110" stroke="#ff6b35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M90 140L100 150L110 140" stroke="#ff6b35" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

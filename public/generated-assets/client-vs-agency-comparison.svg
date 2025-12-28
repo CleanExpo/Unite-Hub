@@ -1,0 +1,46 @@
+xml
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- Define colors -->
+  <defs>
+    <linearGradient id="leftGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#fecaca;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fca5a5;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="rightGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#bbf7d0;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#86efac;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Left Side (Traditional Agency) -->
+  <rect width="600" height="570" x="0" y="0" fill="url(#leftGradient)" />
+  <text x="50" y="50" font-size="30" font-weight="bold" fill="#b91c1c">Traditional Agency</text>
+  <path d="M50 70 L100 70 L100 120 L50 120 Z M50 120 L75 140 L100 120" fill="#ef4444" transform="translate(0, 30)" />
+
+  <text x="50" y="200" font-size="40" font-weight="bold" fill="#000">$5,000/month</text>
+  <text x="50" y="260" font-size="20" fill="#000">&#x23F0; 2-3 weeks response time</text>
+  <text x="50" y="320" font-size="20" fill="#000">&#x1F512; Black box process</text>
+  <text x="50" y="380" font-size="20" fill="#000">No code access</text>
+
+  <!-- Center Divider -->
+  <line x1="600" y1="0" x2="600" y2="570" stroke="#000" stroke-width="2" />
+  <path d="M580 285 L620 285 L620 275 L640 290 L620 305 L620 295 L580 295 Z" fill="#000"/>
+  <text x="530" y="270" font-size="20" font-weight="bold" fill="#000" transform="rotate(-90 530,270)">Transform</text>
+
+  <!-- Right Side (Unite-Hub) -->
+  <rect width="600" height="570" x="600" y="0" fill="url(#rightGradient)" />
+  <text x="650" y="50" font-size="30" font-weight="bold" fill="#065f46">Unite-Hub</text>
+  <path d="M650 70 L700 70 L675 130 Z" fill="#10b981" transform="translate(0, 30)" />
+
+  <text x="650" y="200" font-size="40" font-weight="bold" fill="#000">$0.05/email</text>
+  <text x="650" y="260" font-size="20" fill="#000">&#x26A1; Real-time automation</text>
+  <text x="650" y="320" font-size="20" fill="#000">&#x1F441; Full transparency</text>
+  <text x="650" y="380" font-size="20" fill="#000">&#x1F4BB; Open source GitHub</text>
+
+  <!-- Bottom Banner -->
+  <rect width="1200" height="60" x="0" y="570" fill="#1e293b" />
+  <text x="50" y="600" font-size="24" fill="#fff">From Agency Dependency → Client Autonomy</text>
+  <text x="50" y="620" font-size="12" fill="#ddd">Powered by 43 AI Agents + Project Vend Phase 2</text>
+
+</svg>
