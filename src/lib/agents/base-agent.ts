@@ -7,8 +7,9 @@
 import * as amqp from 'amqplib';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { getMetricsCollector } from './metrics/metricsCollector';
-import { getRulesEngine, ValidationContext } from './rules/rulesEngine';
+import { getRulesEngine } from './rules/rulesEngine';
 import { getEscalationManager } from './escalation/escalationManager';
+import { getAgentVerifier } from './verification/verifier';
 
 export interface AgentTask {
   id: string;
@@ -182,8 +183,68 @@ return;
           const result = await this.processTask(task);
           const duration = Date.now() - startTime;
 
-          // Record success
-          await this.recordExecutionSuccess(executionId, result, duration);
+          // Verify output (Project Vend Phase 2)
+          const verifier = getAgentVerifier();
+          let verificationPassed = true;
+          let verificationConfidence = 1.0;
+
+          if (result && typeof result === 'object') {
+            // Determine verification type based on agent name and task type
+            const verificationType = this.getVerificationType(task.task_type);
+
+            if (verificationType && result[verificationType]) {
+              const verificationResult = await this.verifyOutput(
+                verificationType,
+                result,
+                task,
+                verifier
+              );
+
+              verificationPassed = verificationResult.passed;
+              verificationConfidence = verificationResult.confidence;
+
+              // Log verification
+              await verifier.logVerification(
+                task.workspace_id,
+                this.name,
+                executionId,
+                verificationType,
+                verificationResult,
+                task.payload,
+                undefined,
+                result[verificationType]
+              );
+
+              // Escalate if verification failed with low confidence
+              if (!verificationPassed || verificationConfidence < 0.7) {
+                const escalationManager = getEscalationManager();
+                await escalationManager.createEscalation({
+                  workspace_id: task.workspace_id,
+                  agent_name: this.name,
+                  execution_id: executionId,
+                  escalation_type: 'low_confidence',
+                  severity: verificationPassed ? 'warning' : 'critical',
+                  title: `${this.name} output verification ${verificationPassed ? 'warning' : 'failed'}`,
+                  description: `Verification confidence: ${verificationConfidence.toFixed(2)}`,
+                  context: {
+                    task_id: task.id,
+                    verification_type: verificationType,
+                    errors: verificationResult.errors,
+                    warnings: verificationResult.warnings
+                  },
+                  requires_approval: !verificationPassed
+                });
+                console.log(`⚠️  Verification ${verificationPassed ? 'warning' : 'failure'} escalated`);
+              }
+            }
+          }
+
+          // Record success (with verification data)
+          await this.recordExecutionSuccess(executionId, {
+            ...result,
+            verification_passed: verificationPassed,
+            verification_confidence: verificationConfidence
+          }, duration);
 
           // Update task status in database
           await this.updateTaskStatus(task.id, 'completed', result);
@@ -449,6 +510,66 @@ return 'DatabaseError';
     } catch (err) {
       // Heartbeat failures are non-critical
       console.warn('Heartbeat failed:', err);
+    }
+  }
+
+  /**
+   * Determine verification type based on task type (Project Vend Phase 2)
+   */
+  protected getVerificationType(taskType: string): string | null {
+    // Map task types to verification methods
+    const typeMap: Record<string, string> = {
+      'extract_intent': 'intent',
+      'analyze_sentiment': 'sentiment',
+      'create_contact': 'contact',
+      'update_contact': 'contact',
+      'generate_content': 'content',
+      'personalize_content': 'personalization',
+      'update_score': 'score_change',
+      'evaluate_condition': 'campaign_conditions'
+    };
+
+    return typeMap[taskType] || null;
+  }
+
+  /**
+   * Verify agent output based on verification type (Project Vend Phase 2)
+   */
+  protected async verifyOutput(
+    verificationType: string,
+    result: any,
+    task: AgentTask,
+    verifier: any
+  ): Promise<any> {
+    try {
+      switch (verificationType) {
+        case 'intent':
+          return verifier.verifyEmailIntent(result.intent, task.payload.email_body);
+
+        case 'sentiment':
+          return verifier.verifySentimentAccuracy(result.sentiment, task.payload.email_body);
+
+        case 'contact':
+          return verifier.verifyContactData(result.contact || result);
+
+        case 'content':
+          return verifier.verifyContentQuality(result.content, task.payload.template);
+
+        case 'personalization':
+          return verifier.verifyPersonalization(result.content, task.payload.contact_data);
+
+        case 'score_change':
+          return verifier.verifyScoreChangeReasonable(result.score_change, task.payload.contact_history);
+
+        case 'campaign_conditions':
+          return verifier.verifyCampaignConditions(result.conditions);
+
+        default:
+          return { passed: true, confidence: 1.0, errors: [], warnings: [] };
+      }
+    } catch (err) {
+      console.error('Verification error:', err);
+      return { passed: true, confidence: 0.9, errors: [], warnings: ['Verification skipped due to error'] };
     }
   }
 }
