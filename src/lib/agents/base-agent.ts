@@ -1,10 +1,12 @@
 /**
  * Base Agent Class
  * Provides common functionality for all specialized agents
+ * Enhanced with Project Vend Phase 2 metrics collection
  */
 
 import * as amqp from 'amqplib';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { getMetricsCollector } from './metrics/metricsCollector';
 
 export interface AgentTask {
   id: string;
@@ -124,9 +126,15 @@ return;
           console.error(`❌ Task processing failed:`, error);
 
           const task: AgentTask = JSON.parse(msg.content.toString());
+          const executionTime = Date.now() - startTime;
 
-          // Record failure
-          await this.recordExecutionFailure(task.id, error.message);
+          // Record failure (with metrics)
+          await this.recordExecutionFailure(
+            task.id,
+            error.message,
+            executionTime,
+            task.workspace_id
+          );
 
           // Retry logic
           if (task.retry_count < task.max_retries) {
@@ -253,6 +261,7 @@ throw error;
 
   /**
    * Record execution success
+   * Enhanced with metrics collection (Project Vend Phase 2)
    */
   protected async recordExecutionSuccess(
     executionId: string,
@@ -260,6 +269,7 @@ throw error;
     durationMs: number
   ): Promise<void> {
     try {
+      // Update agent_executions table
       await this.supabase
         .from('agent_executions')
         .update({
@@ -269,6 +279,22 @@ throw error;
           completed_at: new Date().toISOString()
         })
         .eq('id', executionId);
+
+      // Record metrics (Project Vend Phase 2)
+      const metricsCollector = getMetricsCollector();
+      await metricsCollector.recordMetrics({
+        workspace_id: result?.workspace_id || 'unknown',
+        agent_name: this.name,
+        execution_id: executionId,
+        execution_time_ms: durationMs,
+        success: true,
+        model_used: result?.model_used,
+        input_tokens: result?.input_tokens,
+        output_tokens: result?.output_tokens,
+        items_processed: result?.items_processed,
+        items_failed: result?.items_failed,
+        confidence_score: result?.confidence_score
+      });
     } catch (err) {
       console.error('Failed to record execution success:', err);
     }
@@ -276,12 +302,16 @@ throw error;
 
   /**
    * Record execution failure
+   * Enhanced with metrics collection (Project Vend Phase 2)
    */
   protected async recordExecutionFailure(
     taskId: string,
-    errorMessage: string
+    errorMessage: string,
+    executionTimeMs: number = 0,
+    workspaceId: string = 'unknown'
   ): Promise<void> {
     try {
+      // Update agent_executions table
       await this.supabase
         .from('agent_executions')
         .update({
@@ -291,9 +321,41 @@ throw error;
         })
         .eq('task_id', taskId)
         .eq('status', 'running');
+
+      // Record metrics (Project Vend Phase 2)
+      const metricsCollector = getMetricsCollector();
+      await metricsCollector.recordMetrics({
+        workspace_id: workspaceId,
+        agent_name: this.name,
+        execution_time_ms: executionTimeMs,
+        success: false,
+        error_type: this.getErrorType(errorMessage)
+      });
     } catch (err) {
       console.error('Failed to record execution failure:', err);
     }
+  }
+
+  /**
+   * Extract error type from error message
+   */
+  private getErrorType(errorMessage: string): string {
+    if (errorMessage.includes('timeout')) {
+return 'TimeoutError';
+}
+    if (errorMessage.includes('network') || errorMessage.includes('connection')) {
+return 'NetworkError';
+}
+    if (errorMessage.includes('API') || errorMessage.includes('401') || errorMessage.includes('403')) {
+return 'APIError';
+}
+    if (errorMessage.includes('validation')) {
+return 'ValidationError';
+}
+    if (errorMessage.includes('database') || errorMessage.includes('SQL')) {
+return 'DatabaseError';
+}
+    return 'UnknownError';
   }
 
   /**
