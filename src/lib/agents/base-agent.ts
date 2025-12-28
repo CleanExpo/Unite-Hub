@@ -10,6 +10,7 @@ import { getMetricsCollector } from './metrics/metricsCollector';
 import { getRulesEngine } from './rules/rulesEngine';
 import { getEscalationManager } from './escalation/escalationManager';
 import { getAgentVerifier } from './verification/verifier';
+import { getBudgetEnforcer } from './cost/budgetEnforcer';
 
 export interface AgentTask {
   id: string;
@@ -105,6 +106,48 @@ return;
 
           // Record execution start
           const executionId = await this.recordExecutionStart(task);
+
+          // Check budget before execution (Project Vend Phase 2)
+          const budgetEnforcer = getBudgetEnforcer();
+          const budgetStatus = await budgetEnforcer.checkBudget(
+            this.name,
+            task.workspace_id,
+            0.05 // Estimated cost, can be refined based on model
+          );
+
+          if (!budgetStatus.within_budget) {
+            console.log(`💰 Task ${task.id} blocked - budget exceeded (${budgetStatus.budget_type})`);
+
+            // Create escalation for budget exceeded
+            const escalationManager = getEscalationManager();
+            await escalationManager.createEscalation({
+              workspace_id: task.workspace_id,
+              agent_name: this.name,
+              execution_id: executionId,
+              escalation_type: 'cost_exceeded',
+              severity: 'critical',
+              title: `${this.name} budget exceeded`,
+              description: `${budgetStatus.budget_type} budget limit reached`,
+              context: {
+                task_id: task.id,
+                budget_type: budgetStatus.budget_type,
+                daily_remaining: budgetStatus.daily_remaining,
+                monthly_remaining: budgetStatus.monthly_remaining
+              },
+              requires_approval: true
+            });
+
+            await this.recordExecutionFailure(
+              task.id,
+              `Budget exceeded: ${budgetStatus.message}`,
+              0,
+              task.workspace_id
+            );
+
+            await this.updateTaskStatus(task.id, 'failed', null, 'Budget exceeded');
+            this.channel!.ack(msg);
+            return;
+          }
 
           // Validate against business rules (Project Vend Phase 2)
           const rulesEngine = getRulesEngine();
