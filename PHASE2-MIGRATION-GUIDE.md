@@ -9,9 +9,17 @@
 
 ### Step 2: Apply Migrations
 
-Copy and paste the contents of `combined_phase2_migrations.sql` into the SQL editor and click **Run**.
+**IMPORTANT**: Use `combined_phase2_migrations_WORKING.sql` (with prerequisite tables)
 
-Alternatively, apply each migration individually in this order:
+Copy and paste the contents of `combined_phase2_migrations_WORKING.sql` into the SQL editor and click **Run**.
+
+Alternatively, apply each migration individually in this **EXACT ORDER**:
+
+#### Migration 0: Base Agent Tables (PREREQUISITE)
+```
+supabase/migrations/20251229110000_agent_base_tables.sql
+```
+**Creates**: agent_tasks, agent_executions (required by later migrations)
 
 #### Migration 1: Agent Execution Metrics
 ```
@@ -36,10 +44,18 @@ supabase/migrations/20251229120300_agent_rule_violations.sql
 ### Step 3: Verify Tables Created
 
 Check Table Editor for new tables:
+- ✅ `agent_tasks` (base table)
+- ✅ `agent_executions` (base table)
 - ✅ `agent_execution_metrics`
 - ✅ `agent_health_status`
 - ✅ `agent_business_rules`
 - ✅ `agent_rule_violations`
+- ✅ `agent_escalations`
+- ✅ `escalation_config`
+- ✅ `agent_verification_logs`
+- ✅ `agent_budgets`
+
+**Total**: 10 new tables + 1 materialized view (agent_kpis)
 
 ### Step 4: Seed Default Rules (Optional)
 
