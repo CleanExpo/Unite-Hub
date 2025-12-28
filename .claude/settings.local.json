@@ -48,7 +48,7 @@
       "Bash(dir:*)",
       "Bash(powershell \"Get-ChildItem -Path ''node_modules'' -Recurse -ErrorAction SilentlyContinue | Where-Object { $_FullName.Length -gt 240 } | Select-Object -First 10 FullName, @{Name=''Length'';Expression={$_FullName.Length}}\")",
       "Bash(wmic process where \"name=''''node.exe'''' OR name=''''TypeScriptLanguageService.exe'''' OR name=''''Code.exe''''\" get ProcessId,CommandLine)",
-      "Bash(powershell \"Get-Process | Where-Object { $_Path -like ''*node*'' -or $_ProcessName -like ''*TypeScript*'' } | Select-Object ProcessName, Id, Path | Format-Table -AutoSize\")",
+      "Bash(powershell:*)",
       "Bash(tasklist:*)",
       "Bash(findstr:*)",
       "Bash(handle node_modules)",

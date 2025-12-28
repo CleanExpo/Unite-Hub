@@ -7,6 +7,7 @@
 import * as amqp from 'amqplib';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { getMetricsCollector } from './metrics/metricsCollector';
+import { getRulesEngine, ValidationContext } from './rules/rulesEngine';
 
 export interface AgentTask {
   id: string;
@@ -102,6 +103,38 @@ return;
 
           // Record execution start
           const executionId = await this.recordExecutionStart(task);
+
+          // Validate against business rules (Project Vend Phase 2)
+          const rulesEngine = getRulesEngine();
+          const validationResult = await rulesEngine.validateAction({
+            agent_name: this.name,
+            workspace_id: task.workspace_id,
+            action_type: task.task_type,
+            action_data: task.payload,
+            execution_id: executionId
+          });
+
+          // If blocked by rules, reject task
+          if (!validationResult.allowed) {
+            console.log(`🚫 Task ${task.id} blocked by business rules`);
+            console.log(`   Violations: ${validationResult.violations.map(v => v.message).join(', ')}`);
+
+            await this.recordExecutionFailure(
+              task.id,
+              `Blocked by business rules: ${validationResult.violations.map(v => v.message).join('; ')}`,
+              0,
+              task.workspace_id
+            );
+
+            await this.updateTaskStatus(task.id, 'failed', null, 'Blocked by business rules');
+            this.channel!.ack(msg);
+            return;
+          }
+
+          // Log warnings if any
+          if (validationResult.violations.length > 0 && validationResult.enforcement === 'warn') {
+            console.warn(`⚠️  Task ${task.id} has rule warnings:`, validationResult.violations.map(v => v.message));
+          }
 
           // Process task
           const startTime = Date.now();

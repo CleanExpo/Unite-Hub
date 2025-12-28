@@ -59,8 +59,9 @@ CREATE POLICY "Users can view their workspace agent health" ON agent_health_stat
   FOR SELECT
   USING (
     workspace_id IN (
-      SELECT workspace_id FROM workspace_members
-      WHERE user_id = auth.uid()
+      SELECT w.id FROM workspaces w
+      INNER JOIN user_organizations uo ON uo.org_id = w.org_id
+      WHERE uo.user_id = auth.uid()
     )
   );
 
