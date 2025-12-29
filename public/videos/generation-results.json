@@ -1,0 +1,20 @@
+[
+  {
+    "success": false,
+    "id": "ai-email-agent-demo",
+    "reason": "Model not accessible",
+    "error": "[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/veo-3.1-fast-generate-preview:generateContent: [404 Not Found] models/veo-3.1-fast-generate-preview is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods."
+  },
+  {
+    "success": false,
+    "id": "content-generator-demo",
+    "reason": "Model not accessible",
+    "error": "[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/veo-3.1-fast-generate-preview:generateContent: [404 Not Found] models/veo-3.1-fast-generate-preview is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods."
+  },
+  {
+    "success": false,
+    "id": "orchestrator-demo",
+    "reason": "Model not accessible",
+    "error": "[GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/veo-3.1-fast-generate-preview:generateContent: [404 Not Found] models/veo-3.1-fast-generate-preview is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods."
+  }
+]
