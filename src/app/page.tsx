@@ -1,1349 +1,329 @@
- 
-"use client";
+/**
+ * Professional SaaS Landing Page
+ * Inspired by Linear, Vercel, Stripe
+ * Modern, minimal, high-converting
+ */
 
-import { useState, useEffect } from "react";
-import { useAuth } from "@/contexts/AuthContext";
-import Link from "next/link";
-import {
-  FloatingGradientBalls,
-  ScrollReveal,
-  AnimatedGradientText,
-  AnimatedCounter,
-  HoverLift,
-  Parallax,
-} from "@/components/AnimatedElements";
-import {
-  OrganizationSchema,
-  SoftwareApplicationSchema,
-  WebSiteSchema,
-  FAQSchema,
-  HowToSchema,
-} from "@/components/seo/JsonLd";
-import { seoConfig } from "@/lib/seo/seoConfig";
-import { PersonaVisual } from "@/components/marketing/PersonaVisual";
-import { detectPersonaFromContext } from "@/lib/visual/visualPersonas";
-import ThreeDPhotoCarousel from "@/components/ui/three-d-carousel";
-import { InfiniteSlider } from "@/components/ui/infinite-slider";
-import { MobileNav } from "@/components/mobile-nav";
-import { HeroVideoPlayer } from "@/components/hero-video-player";
-import { CaseStudyCard } from "@/components/landing/CaseStudyCard";
-import { IntegrationCard, GmailIcon, SlackIcon, ZapierIcon, HubSpotIcon, StripeIcon, SalesforceIcon, MailchimpIcon, PipedriveIcon } from "@/components/landing/IntegrationCard";
-import { FAQAccordion, FAQSchemaMarkup, faqData } from "@/components/landing/FAQAccordion";
-import { FeatureVideoCarousel } from "@/components/landing/FeatureVideoCarousel";
-import { VeoVideoShowcase } from "@/components/video/VeoVideoShowcase";
-import { caseStudies, integrations } from "@/data/landing-data";
-import { featureVideos } from "@/data/feature-videos-data";
-import { veoVideos, getFeaturedVideos } from "@/data/veo-videos-data";
+'use client';
 
-export default function Home() {
-  const { user, loading } = useAuth();
-  const [discountSlotsLeft, setDiscountSlotsLeft] = useState(50);
-  const [personaId, setPersonaId] = useState<string | null>(null);
-  const [isDismissed, setIsDismissed] = useState(false);
+import Link from 'next/link';
 
-  // Detect persona from URL params/context
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const urlParams = new URLSearchParams(window.location.search);
-      const detected = detectPersonaFromContext({
-        queryParam: urlParams.get("persona"),
-        utm_campaign: urlParams.get("utm_campaign"),
-        referrer: document.referrer,
-      });
-      setPersonaId(detected);
-    }
-  }, []);
-
-  // Fetch live offer counter
-  useEffect(() => {
-    const fetchOfferData = async () => {
-      try {
-        const response = await fetch('/api/synthex/offer/summary');
-        if (response.ok) {
-          const data = await response.json();
-          setDiscountSlotsLeft(data.remaining_50_off || 50);
-        }
-      } catch (error) {
-        console.error('Failed to fetch offer data:', error);
-      }
-    };
-    fetchOfferData();
-  }, []);
-
+export default function ProfessionalLanding() {
   return (
-    <div className="min-h-screen bg-[#f4f7fa] overflow-x-hidden">
-      {/* Header / Navbar */}
-      <header className="absolute top-0 left-0 w-full z-50 py-5 bg-transparent">
-        <div className="max-w-[1200px] mx-auto px-5 flex justify-between items-center">
-          <Link href="/" className="logo">
-            <div className="text-white font-bold text-2xl">Synthex.social</div>
-          </Link>
+    <div className="min-h-screen bg-black text-white">
+      {/* Header - Minimal like Linear */}
+      <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-black/50 backdrop-blur-xl">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <Link href="/" className="text-xl font-semibold">Unite-Hub</Link>
 
-          <nav className="hidden md:flex gap-8 items-center">
-            <a href="#how-it-works" className="text-white text-sm font-medium opacity-90 hover:opacity-100 transition-opacity">
-              How it Works
-            </a>
-            <a href="#who-we-help" className="text-white text-sm font-medium opacity-90 hover:opacity-100 transition-opacity">
-              Who We Help
-            </a>
-            <a href="#pricing" className="text-white text-sm font-medium opacity-90 hover:opacity-100 transition-opacity">
-              Pricing
-            </a>
+          <nav className="hidden md:flex items-center gap-8 text-sm">
+            <a href="#product" className="text-gray-400 hover:text-white transition-colors">Product</a>
+            <a href="#technology" className="text-gray-400 hover:text-white transition-colors">Technology</a>
+            <a href="/agents" className="text-gray-400 hover:text-white transition-colors">Dashboard</a>
           </nav>
 
-          <MobileNav user={user} loading={loading} />
-
-          <div className="hidden md:flex gap-4">
-            {loading ? (
-              <div className="h-10 w-20 bg-white/20 rounded animate-pulse" />
-            ) : user ? (
-              <Link
-                href="/synthex/dashboard"
-                className="px-6 py-2.5 rounded-md font-semibold text-sm bg-[#007bff] border border-[#007bff] text-white hover:-translate-y-0.5 transition-transform"
-              >
-                Dashboard
-              </Link>
-            ) : (
-              <>
-                <Link
-                  href="/login"
-                  className="px-6 py-2.5 rounded-md font-semibold text-sm bg-transparent border border-white/50 text-white hover:-translate-y-0.5 transition-transform"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  href="/login"
-                  className="px-6 py-2.5 rounded-md font-semibold text-sm bg-[#007bff] border border-[#007bff] text-white hover:-translate-y-0.5 transition-transform"
-                >
-                  Start Trial
-                </Link>
-              </>
-            )}
+          <div className="flex items-center gap-4">
+            <Link href="/login" className="text-sm text-gray-400 hover:text-white transition-colors">
+              Sign in
+            </Link>
+            <Link href="/login" className="px-4 py-2 bg-white text-black text-sm font-medium rounded-lg hover:bg-gray-100 transition-colors">
+              Start trial
+            </Link>
           </div>
         </div>
       </header>
 
-      {/* Discount Banner */}
-      {discountSlotsLeft > 0 && !isDismissed && (
-        <div className="fixed top-20 right-5 z-40 hidden md:block bg-gradient-to-r from-[#ff5722] to-[#ff784e] text-white rounded-lg p-4 shadow-lg max-w-xs">
-          <button
-            onClick={() => setIsDismissed(true)}
-            className="absolute top-2 right-2 text-white/70 hover:text-white text-xl leading-none"
-            aria-label="Close discount banner"
-          >
-            ×
-          </button>
-          <div className="text-sm font-bold mb-1">🚀 Limited Founder Offer</div>
-          <div className="text-xs mb-2">{discountSlotsLeft} spots left at 50% off</div>
-          <Link href="/login" className="text-xs underline font-semibold">Claim your spot →</Link>
-        </div>
-      )}
-
-      {/* Hero Section */}
-      <section className="relative bg-[radial-gradient(circle_at_center_top,#0d2a5c_0%,#051224_70%)] text-white pt-40 pb-20 text-center overflow-hidden">
-        {/* Animated Floating Gradient Balls */}
-        <FloatingGradientBalls />
-
-        {/* Wave pattern overlay */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            backgroundImage: 'repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0px, transparent 2px, transparent 100px)'
-          }}
-        />
-
-        <div className="max-w-[1200px] mx-auto px-5 relative">
-          <ScrollReveal>
-            <div className="inline-block bg-white/10 text-white px-4 py-2 rounded-full text-sm font-semibold mb-6 backdrop-blur-sm">
-              Finally, an AI platform built for REAL small businesses.
+      {/* Hero - Clean like Vercel */}
+      <section className="pt-32 pb-24 px-6">
+        <div className="max-w-6xl mx-auto">
+          {/* Badge */}
+          <div className="flex justify-center mb-8">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-sm">
+              <div className="w-1.5 h-1.5 rounded-full bg-green-400"></div>
+              <span className="text-gray-300">43 AI Agents • Enhanced with Project Vend Phase 2</span>
             </div>
-          </ScrollReveal>
+          </div>
 
-          <ScrollReveal delay={100}>
-            <h1 className="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
-              <span className="text-white">AI Marketing That Actually Works</span>
-              <br />
-              <AnimatedGradientText text="No Agency. No Team. Just Results." className="bg-gradient-to-r from-[#00d4aa] to-[#ff5722]" />
-            </h1>
-          </ScrollReveal>
+          {/* Headline */}
+          <h1 className="text-center text-6xl md:text-7xl lg:text-8xl font-bold mb-8 leading-[1.1]">
+            <span className="block">Marketing automation</span>
+            <span className="block bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              for $0.05 per email
+            </span>
+          </h1>
 
-          <p className="text-xl opacity-90 max-w-[700px] mx-auto mb-12 leading-relaxed">
-            For trades, local services, non-profits, coaches, and online businesses. Get your website, SEO, branding, and social media handled by AI. No monthly retainer. No confusing tools.
+          {/* Subheadline */}
+          <p className="text-center text-xl text-gray-400 max-w-2xl mx-auto mb-12">
+            Stop paying agencies $5,000/month. AI processes your emails, generates content, and runs campaigns automatically.
           </p>
 
-          <ScrollReveal delay={150}>
-            <HeroVideoPlayer />
-          </ScrollReveal>
-
-          <ScrollReveal delay={200}>
-            <div className="flex flex-col md:flex-row justify-center gap-5 mb-16">
-              <HoverLift className="w-full md:w-auto">
-                <Link
-                  href="/login"
-                  className="block bg-gradient-to-r from-[#347bf7] to-[#5a9dff] text-white py-4 px-8 rounded-lg text-base font-semibold border-none shadow-[0_4px_15px_rgba(52,123,247,0.4)] hover:shadow-[0_6px_20px_rgba(52,123,247,0.6)] transition-all"
-                >
-                  Start Free Trial
-                </Link>
-              </HoverLift>
-              <HoverLift className="w-full md:w-auto">
-                <a
-                  href="#how-it-works"
-                  className="block bg-white/10 backdrop-blur-sm text-white py-4 px-8 rounded-lg text-base font-semibold border border-white/30 hover:border-white/60 transition-all text-center"
-                >
-                  See How It Works
-                </a>
-              </HoverLift>
-            </div>
-          </ScrollReveal>
-
-          {/* Trust Elements */}
-          <ScrollReveal delay={300}>
-            <div className="max-w-[600px] mx-auto bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10 hover:border-white/30 transition-colors">
-              <p className="text-sm text-white/80 mb-4">
-                "Synthex has given us back 20 hours a week that we used to spend on marketing. The AI just works." — Phill McGurk, CARSI
-              </p>
-              <p className="text-xs text-white/60">
-                Built with real restoration & education backgrounds. We know small business challenges.
-              </p>
-            </div>
-          </ScrollReveal>
-        </div>
-      </section>
-
-      {/* Who We Help Section */}
-      <section id="who-we-help" className="py-20 bg-white">
-        <div className="max-w-[1200px] mx-auto px-5">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
-              Built for Small Businesses That Are Busy
-            </h2>
-            <p className="text-xl text-[#666] max-w-[700px] mx-auto">
-              Whether you're swamped with jobs or managing multiple locations, Synthex handles your marketing so you can focus on what you do best.
-            </p>
+          {/* CTAs */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
+            <Link href="/login" className="px-6 py-3 bg-white text-black font-medium rounded-lg hover:bg-gray-100 transition-all">
+              Start free trial →
+            </Link>
+            <Link href="/agents" className="px-6 py-3 border border-white/20 text-white font-medium rounded-lg hover:bg-white/5 transition-all">
+              View live dashboard
+            </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Trades & Contractors */}
-            <ScrollReveal delay={0}>
-              <HoverLift className="h-full">
-                <div className="p-8 rounded-xl border border-[#e0e5ec] hover:border-[#347bf7] transition-colors h-full bg-white">
-                  <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-[#ff5722] to-[#ff784e] flex items-center justify-center mb-4">
-                    <span className="text-white text-xl">🔨</span>
-                  </div>
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-3">Trades & Contractors</h3>
-                  <p className="text-[#666] mb-4">
-                    Plumbers, electricians, builders. Get more local jobs without spending $500+ monthly on ads or hiring a marketer.
-                  </p>
-                  <ul className="space-y-2 text-sm text-[#666]">
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Local SEO & Google Maps ranking
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Before/after galleries auto-created
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Review generation & management
-                    </li>
-                  </ul>
-                </div>
-              </HoverLift>
-            </ScrollReveal>
+          {/* Hero Visual - Comparison */}
+          <div className="relative">
+            {/* Glow effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 blur-3xl"></div>
 
-            {/* Local Services */}
-            <ScrollReveal delay={100}>
-              <HoverLift className="h-full">
-                <div className="p-8 rounded-xl border border-[#e0e5ec] hover:border-[#347bf7] transition-colors h-full bg-white">
-                  <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-[#00d4aa] to-[#00b386] flex items-center justify-center mb-4">
-                    <span className="text-white text-xl">🏢</span>
-                  </div>
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-3">Local Services & Salons</h3>
-                  <p className="text-[#666] mb-4">
-                    Hair salons, spas, cleaning services. Attract more customers in your neighborhood with AI marketing.
-                  </p>
-                  <ul className="space-y-2 text-sm text-[#666]">
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Geo-targeted social posts
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Appointment reminders & follow-ups
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Customer retention campaigns
-                    </li>
-                  </ul>
-                </div>
-              </HoverLift>
-            </ScrollReveal>
-
-            {/* Non-Profits */}
-            <ScrollReveal delay={200}>
-              <HoverLift className="h-full">
-                <div className="p-8 rounded-xl border border-[#e0e5ec] hover:border-[#347bf7] transition-colors h-full bg-white">
-                  <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-[#a78bfa] to-[#8b5cf6] flex items-center justify-center mb-4">
-                    <span className="text-white text-xl">❤️</span>
-                  </div>
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-3">Non-Profits & Churches</h3>
-                  <p className="text-[#666] mb-4">
-                    Tell your story and grow your community without hiring an agency or burning volunteer hours on social media.
-                  </p>
-                  <ul className="space-y-2 text-sm text-[#666]">
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Donor & volunteer recruitment
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Event promotion & registration
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Impact storytelling
-                    </li>
-                  </ul>
-                </div>
-              </HoverLift>
-            </ScrollReveal>
-
-            {/* Coaches & Consultants */}
-            <ScrollReveal delay={300}>
-              <HoverLift className="h-full">
-                <div className="p-8 rounded-xl border border-[#e0e5ec] hover:border-[#347bf7] transition-colors h-full bg-white">
-                  <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-[#fbbf24] to-[#f59e0b] flex items-center justify-center mb-4">
-                    <span className="text-white text-xl">🎓</span>
-                  </div>
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-3">Coaches & Consultants</h3>
-                  <p className="text-[#666] mb-4">
-                    Grow your online coaching or consulting business with consistent, professional content that attracts qualified clients.
-                  </p>
-                  <ul className="space-y-2 text-sm text-[#666]">
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Lead magnets & email sequences
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Social proof & testimonials
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Webinar & launch automation
-                    </li>
-                  </ul>
-                </div>
-              </HoverLift>
-            </ScrollReveal>
-
-            {/* E-Commerce */}
-            <ScrollReveal delay={400}>
-              <HoverLift className="h-full">
-                <div className="p-8 rounded-xl border border-[#e0e5ec] hover:border-[#347bf7] transition-colors h-full bg-white">
-                  <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-[#ef4444] to-[#dc2626] flex items-center justify-center mb-4">
-                    <span className="text-white text-xl">🛍️</span>
-                  </div>
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-3">E-Commerce & Online Stores</h3>
-                  <p className="text-[#666] mb-4">
-                    Sell more online with product photography, descriptions, and targeted social ads—all automated by AI.
-                  </p>
-                  <ul className="space-y-2 text-sm text-[#666]">
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Product image enhancement
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Social commerce integration
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Abandoned cart recovery
-                    </li>
-                  </ul>
-                </div>
-              </HoverLift>
-            </ScrollReveal>
-
-            {/* Agencies & Resellers */}
-            <ScrollReveal delay={500}>
-              <HoverLift className="h-full">
-                <div className="p-8 rounded-xl border border-[#e0e5ec] hover:border-[#347bf7] transition-colors h-full bg-white">
-                  <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-[#06b6d4] to-[#0891b2] flex items-center justify-center mb-4">
-                    <span className="text-white text-xl">🚀</span>
-                  </div>
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-3">Agencies & Resellers</h3>
-                  <p className="text-[#666] mb-4">
-                    White-label Synthex for your clients. Deliver premium marketing services without the overhead or team.
-                  </p>
-                  <ul className="space-y-2 text-sm text-[#666]">
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Client branding & reporting
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Unlimited seats per client
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="text-[#347bf7]">✓</span> Reseller margins available
-                    </li>
-                  </ul>
-                </div>
-              </HoverLift>
-            </ScrollReveal>
+            {/* Visual */}
+            <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
+              <img
+                src="/generated-assets/client-vs-agency-comparison.svg"
+                alt="Cost comparison"
+                className="w-full h-auto rounded-lg"
+              />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Case Studies Section */}
-      <section className="py-20 bg-gradient-to-br from-[#f9fafb] to-[#f4f7fa]">
-        <div className="max-w-[1200px] mx-auto px-5">
-          <div className="text-center mb-16">
-            <ScrollReveal>
-              <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
-                See Synthex In Action
-              </h2>
-            </ScrollReveal>
-            <ScrollReveal delay={100}>
-              <p className="text-xl text-[#666] max-w-[700px] mx-auto">
-                Real results from real businesses just like yours
-              </p>
-            </ScrollReveal>
+      {/* Stats Strip - Clean */}
+      <section className="border-y border-white/10 py-16 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="text-4xl font-bold mb-2">43</div>
+              <div className="text-sm text-gray-400">AI Agents</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold mb-2">$0.05</div>
+              <div className="text-sm text-gray-400">Per Email</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold mb-2">100%</div>
+              <div className="text-sm text-gray-400">Open Source</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold mb-2">Real-time</div>
+              <div className="text-sm text-gray-400">Processing</div>
+            </div>
           </div>
+        </div>
+      </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {caseStudies.map((study, idx) => (
-              <ScrollReveal key={study.company} delay={idx * 100}>
-                <CaseStudyCard {...study} delay={idx * 100} />
-              </ScrollReveal>
+      {/* How It Works - Minimal */}
+      <section id="product" className="py-24 px-6">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-bold mb-20 text-center">
+            Set up in <span className="text-blue-400">15 minutes</span>
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {[
+              { icon: '/generated-assets/step-1-connect-gmail.svg', title: 'Connect', desc: '2 min' },
+              { icon: '/generated-assets/step-2-ai-analyzes.svg', title: 'AI analyzes', desc: 'Automatic' },
+              { icon: '/generated-assets/step-4-generate-responses.svg', title: 'Generate', desc: 'Automatic' },
+              { icon: '/generated-assets/step-5-track-performance.svg', title: 'Monitor', desc: 'Real-time' }
+            ].map((step, i) => (
+              <div key={i} className="group">
+                <div className="mb-6 p-6 bg-white/5 rounded-2xl border border-white/10 group-hover:bg-white/10 group-hover:border-white/20 transition-all">
+                  <img src={step.icon} alt={step.title} className="w-16 h-16" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
+                <p className="text-sm text-gray-400">{step.desc}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Trusted By Section */}
-      <section className="py-16 bg-gradient-to-r from-gray-50 to-gray-100 border-y border-gray-200">
-        <div className="max-w-[1200px] mx-auto px-5">
-          <div className="text-center mb-8">
-            <p className="text-sm font-semibold text-gray-600 uppercase tracking-wider">Trusted by Businesses Across Industries</p>
-          </div>
-          <InfiniteSlider gap={40} duration={25} pauseOnHover>
-            <div className="flex items-center justify-center h-12 px-4 text-gray-600 font-semibold whitespace-nowrap">🏗️ Construction</div>
-            <div className="flex items-center justify-center h-12 px-4 text-gray-600 font-semibold whitespace-nowrap">💇 Hair & Beauty</div>
-            <div className="flex items-center justify-center h-12 px-4 text-gray-600 font-semibold whitespace-nowrap">🔧 Trades</div>
-            <div className="flex items-center justify-center h-12 px-4 text-gray-600 font-semibold whitespace-nowrap">🏥 Healthcare</div>
-            <div className="flex items-center justify-center h-12 px-4 text-gray-600 font-semibold whitespace-nowrap">📚 Education</div>
-            <div className="flex items-center justify-center h-12 px-4 text-gray-600 font-semibold whitespace-nowrap">🛍️ Retail</div>
-            <div className="flex items-center justify-center h-12 px-4 text-gray-600 font-semibold whitespace-nowrap">❤️ Non-Profit</div>
-            <div className="flex items-center justify-center h-12 px-4 text-gray-600 font-semibold whitespace-nowrap">🎓 Coaching</div>
-          </InfiniteSlider>
-        </div>
-      </section>
-
-      {/* The Problem Section */}
-      <section className="py-20 bg-gradient-to-br from-[#051224] to-[#0a1e3b] text-white">
-        <div className="max-w-[1200px] mx-auto px-5">
+      {/* Architecture - Clean */}
+      <section id="technology" className="py-24 px-6 border-t border-white/10">
+        <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              The Small Business Marketing Problem
+              Enterprise technology,
+              <br />
+              <span className="text-gray-400">small business pricing</span>
             </h2>
-            <p className="text-xl text-white/80 max-w-[700px] mx-auto">
-              You're great at your business. Marketing shouldn't be your second job.
-            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div>
-              <div className="space-y-8">
-                {/* Problem 1 */}
-                <ScrollReveal delay={0}>
-                  <div className="flex gap-4">
-                    <div className="flex-shrink-0">
-                      <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-[#ff5722]/20">
-                        <span className="text-[#ff5722] text-xl">✕</span>
-                      </div>
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold mb-2">Too Many Fragmented Tools</h3>
-                      <p className="text-white/70">
-                        Website platform, email tool, social media scheduler, analytics dashboard, CRM... How are you supposed to manage all of this?
-                      </p>
-                    </div>
-                  </div>
-                </ScrollReveal>
-
-                {/* Problem 2 */}
-                <ScrollReveal delay={100}>
-                  <div className="flex gap-4">
-                    <div className="flex-shrink-0">
-                      <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-[#ff5722]/20">
-                        <span className="text-[#ff5722] text-xl">✕</span>
-                      </div>
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold mb-2">Agencies Cost a Fortune</h3>
-                      <p className="text-white/70">
-                        $2,000–$10,000+ per month for someone to manage your marketing. That's $24,000–$120,000 per year. For most small businesses, that's not realistic.
-                      </p>
-                    </div>
-                  </div>
-                </ScrollReveal>
-
-                {/* Problem 3 */}
-                <ScrollReveal delay={200}>
-                  <div className="flex gap-4">
-                    <div className="flex-shrink-0">
-                      <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-[#ff5722]/20">
-                        <span className="text-[#ff5722] text-xl">✕</span>
-                      </div>
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold mb-2">You Don't Have Time</h3>
-                      <p className="text-white/70">
-                        Between running your business and serving customers, you barely have time to think about marketing, let alone execute it.
-                      </p>
-                    </div>
-                  </div>
-                </ScrollReveal>
-
-                {/* Problem 4 */}
-                <ScrollReveal delay={300}>
-                  <div className="flex gap-4">
-                    <div className="flex-shrink-0">
-                      <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-[#ff5722]/20">
-                        <span className="text-[#ff5722] text-xl">✕</span>
-                      </div>
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold mb-2">AI Tools Are Confusing</h3>
-                      <p className="text-white/70">
-                        ChatGPT is great, but it's just a chatbot. You need marketing strategy + content + technical execution—not just AI text generation.
-                      </p>
-                    </div>
-                  </div>
-                </ScrollReveal>
-              </div>
-            </div>
-
-            <ScrollReveal delay={100}>
-              <Parallax offset={30}>
-                <div className="relative rounded-xl shadow-2xl overflow-hidden">
-                  <PersonaVisual
-                    sectionId="hero_main"
-                    personaId={personaId || undefined}
-                    width={600}
-                    height={600}
-                    alt="Business owner discovering AI marketing automation"
-                    className="w-full h-auto"
-                    overlay
-                    overlayOpacity={0.3}
-                  />
-                </div>
-              </Parallax>
-            </ScrollReveal>
-          </div>
-        </div>
-      </section>
-
-      {/* How Synthex Works Section */}
-      <section id="how-it-works" className="py-20 bg-white">
-        <div className="max-w-[1200px] mx-auto px-5">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
-              How Synthex Works
-            </h2>
-            <p className="text-xl text-[#666] max-w-[700px] mx-auto">
-              Four simple steps to automate your marketing and get back 10+ hours per week.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            {/* Step 1 */}
-            <ScrollReveal delay={0}>
-              <div className="relative">
-                <div className="text-center">
-                  <img
-                    src="/generated-assets/step-1-connect-gmail.svg"
-                    alt="Connect Gmail"
-                    className="h-24 w-24 mx-auto mb-6"
-                  />
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-3">Connect Your Business</h3>
-                  <p className="text-[#666] mb-6">
-                    Link your website, social media, Google Analytics, and email. Takes 5 minutes.
-                  </p>
-                </div>
-                {/* Connector Line */}
-                <div className="hidden md:block absolute top-8 left-[calc(50%+30px)] w-[calc(100%-60px)] h-0.5 bg-gradient-to-r from-[#347bf7] to-transparent"></div>
-              </div>
-            </ScrollReveal>
-
-            {/* Step 2 */}
-            <ScrollReveal delay={100}>
-              <div className="relative">
-                <div className="text-center">
-                  <img
-                    src="/generated-assets/step-2-ai-analyzes.svg"
-                    alt="AI Analyzes"
-                    className="h-24 w-24 mx-auto mb-6"
-                  />
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-3">Synthex Diagnoses Your Business</h3>
-                  <p className="text-[#666] mb-6">
-                    AI analyzes your website, competition, and market. Identifies your biggest opportunities.
-                  </p>
-                </div>
-                {/* Connector Line */}
-                <div className="hidden md:block absolute top-8 left-[calc(50%+30px)] w-[calc(100%-60px)] h-0.5 bg-gradient-to-r from-[#347bf7] to-transparent"></div>
-              </div>
-            </ScrollReveal>
-
-            {/* Step 3 */}
-            <ScrollReveal delay={200}>
-              <div className="relative">
-                <div className="text-center">
-                  <img
-                    src="/generated-assets/step-4-generate-responses.svg"
-                    alt="Generate Responses"
-                    className="h-24 w-24 mx-auto mb-6"
-                  />
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-3">AI Generates Your Strategy</h3>
-                  <p className="text-[#666] mb-6">
-                    Website copy, blog posts, social content, email sequences, ad graphics—AI writes it all, on brand.
-                  </p>
-                </div>
-                {/* Connector Line */}
-                <div className="hidden md:block absolute top-8 left-[calc(50%+30px)] w-[calc(100%-60px)] h-0.5 bg-gradient-to-r from-[#347bf7] to-transparent"></div>
-              </div>
-            </ScrollReveal>
-
-            {/* Step 4 */}
-            <ScrollReveal delay={300}>
-              <div className="relative">
-                <div className="text-center">
-                  <img
-                    src="/generated-assets/step-5-track-performance.svg"
-                    alt="Track Performance"
-                    className="h-24 w-24 mx-auto mb-6"
-                  />
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-3">Launch & Monitor</h3>
-                  <p className="text-[#666] mb-6">
-                    Approve, schedule, and publish. Watch real-time analytics and A/B test everything.
-                  </p>
-                </div>
-              </div>
-            </ScrollReveal>
-          </div>
-        </div>
-      </section>
-
-      {/* Unite-Hub Architecture Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-[1200px] mx-auto px-5">
-          <div className="text-center mb-12">
-            <ScrollReveal>
-              <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
-                Built on Enterprise-Grade Technology
-              </h2>
-              <p className="text-xl text-[#666] max-w-[700px] mx-auto">
-                43 AI Agents powered by Project Vend Phase 2 optimization framework
-              </p>
-            </ScrollReveal>
-          </div>
-
-          <ScrollReveal delay={100}>
-            <div className="max-w-[1000px] mx-auto">
-              <img
-                src="/generated-assets/unite-hub-architecture.svg"
-                alt="Unite-Hub 3-Layer Architecture: Next.js + 43 AI Agents + Supabase"
-                className="w-full h-auto rounded-xl shadow-2xl border border-gray-200"
-              />
-              <p className="text-center text-sm text-gray-500 mt-4">
-                Next.js App Router + 43 AI Agents + Supabase PostgreSQL with Project Vend Phase 2 enhancements
-              </p>
-            </div>
-          </ScrollReveal>
-        </div>
-      </section>
-
-      {/* Comparison Visual Section */}
-      <section className="py-20 bg-gradient-to-br from-[#f9fafb] to-[#f4f7fa]">
-        <div className="max-w-[1200px] mx-auto px-5">
-          <div className="text-center mb-12">
-            <ScrollReveal>
-              <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
-                Stop Overpaying for Marketing
-              </h2>
-              <p className="text-xl text-[#666] max-w-[700px] mx-auto">
-                Traditional agencies charge thousands. Unite-Hub costs pennies per email.
-              </p>
-            </ScrollReveal>
-          </div>
-
-          <ScrollReveal delay={100}>
-            <div className="max-w-[1000px] mx-auto">
-              <img
-                src="/generated-assets/client-vs-agency-comparison.svg"
-                alt="Cost Comparison: $5,000/month agency vs $0.05/email with Unite-Hub"
-                className="w-full h-auto rounded-xl shadow-2xl border border-gray-200"
-              />
-            </div>
-          </ScrollReveal>
-        </div>
-      </section>
-
-      {/* What You Get Section */}
-      <section className="py-20 bg-gradient-to-b from-[#f4f7fa] to-[#e8ecf1]">
-        <div className="max-w-[1200px] mx-auto px-5">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
-              What You Get
-            </h2>
-            <p className="text-xl text-[#666] max-w-[700px] mx-auto">
-              Synthex includes everything you need to be found online and convert customers.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Website Enhancements */}
-            <ScrollReveal delay={0}>
-              <HoverLift className="h-full">
-                <div className="bg-white rounded-xl p-8 shadow-sm hover:shadow-lg transition-shadow h-full">
-                  <div className="h-12 w-12 rounded-lg bg-[#347bf7]/10 flex items-center justify-center mb-5">
-                    <span className="text-2xl">🌐</span>
-                  </div>
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-4">Website Optimization</h3>
-                  <ul className="space-y-3 text-[#666]">
-                    <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
-                      <span>SEO-optimized homepage copy</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
-                      <span>Service/product page generation</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
-                      <span>Trust signals & testimonials</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
-                      <span>CTA optimization</span>
-                    </li>
-                  </ul>
-                </div>
-              </HoverLift>
-            </ScrollReveal>
-
-            {/* SEO & Geo Strategy */}
-            <ScrollReveal delay={100}>
-              <HoverLift className="h-full">
-                <div className="bg-white rounded-xl p-8 shadow-sm hover:shadow-lg transition-shadow h-full">
-                  <div className="h-12 w-12 rounded-lg bg-[#00d4aa]/10 flex items-center justify-center mb-5">
-                    <span className="text-2xl">📍</span>
-                  </div>
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-4">SEO & Local Dominance</h3>
-                  <ul className="space-y-3 text-[#666]">
-                    <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
-                      <span>Local SEO setup & optimization</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
-                      <span>Google Business Profile management</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
-                      <span>Geo-targeted keyword research</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
-                      <span>Monthly ranking tracking</span>
-                    </li>
-                  </ul>
-                </div>
-              </HoverLift>
-            </ScrollReveal>
-
-            {/* Social Content Generation */}
-            <ScrollReveal delay={200}>
-              <HoverLift className="h-full">
-                <div className="bg-white rounded-xl p-8 shadow-sm hover:shadow-lg transition-shadow h-full">
-                  <div className="h-12 w-12 rounded-lg bg-[#ff5722]/10 flex items-center justify-center mb-5">
-                    <span className="text-2xl">📱</span>
-                  </div>
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-4">Social Media Automation</h3>
-                  <ul className="space-y-3 text-[#666]">
-                    <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
-                      <span>Platform-specific content (8+ platforms)</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
-                      <span>AI-generated graphics & videos</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
-                      <span>Auto-scheduler (optimal posting times)</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
-                      <span>Engagement monitoring</span>
-                    </li>
-                  </ul>
-                </div>
-              </HoverLift>
-            </ScrollReveal>
-
-            {/* Email Marketing */}
-            <ScrollReveal delay={300}>
-              <HoverLift className="h-full">
-                <div className="bg-white rounded-xl p-8 shadow-sm hover:shadow-lg transition-shadow h-full">
-                  <div className="h-12 w-12 rounded-lg bg-[#a78bfa]/10 flex items-center justify-center mb-5">
-                    <span className="text-2xl">✉️</span>
-                  </div>
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-4">Email & Automation</h3>
-                  <ul className="space-y-3 text-[#666]">
-                    <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
-                      <span>Drip campaign templates</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
-                      <span>Lead nurture sequences</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
-                      <span>A/B testing & optimization</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
-                      <span>Performance tracking</span>
-                    </li>
-                  </ul>
-                </div>
-              </HoverLift>
-            </ScrollReveal>
-
-            {/* AI Marketing Assistants */}
-            <ScrollReveal delay={400}>
-              <HoverLift className="h-full">
-                <div className="bg-white rounded-xl p-8 shadow-sm hover:shadow-lg transition-shadow h-full">
-                  <div className="h-12 w-12 rounded-lg bg-[#fbbf24]/10 flex items-center justify-center mb-5">
-                    <span className="text-2xl">🤖</span>
-                  </div>
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-4">AI Marketing Assistants</h3>
-                  <ul className="space-y-3 text-[#666]">
-                    <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
-                      <span>AI copywriter (unlimited content)</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
-                      <span>Graphic designer (images & videos)</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
-                      <span>Content strategist (planning)</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
-                      <span>Data analyst (insights & reporting)</span>
-                    </li>
-                  </ul>
-                </div>
-              </HoverLift>
-            </ScrollReveal>
-
-            {/* Reporting & Analytics */}
-            <ScrollReveal delay={500}>
-              <HoverLift className="h-full">
-                <div className="bg-white rounded-xl p-8 shadow-sm hover:shadow-lg transition-shadow h-full">
-                  <div className="h-12 w-12 rounded-lg bg-[#ef4444]/10 flex items-center justify-center mb-5">
-                    <span className="text-2xl">📊</span>
-                  </div>
-                  <h3 className="text-xl font-bold text-[#1a1a1a] mb-4">Monthly Reporting</h3>
-                  <ul className="space-y-3 text-[#666]">
-                    <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
-                      <span>Custom performance dashboards</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
-                      <span>ROI tracking & attribution</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
-                      <span>Competitor benchmarking</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <span className="text-[#347bf7] font-bold mt-1">✓</span>
-                      <span>Monthly strategy updates</span>
-                    </li>
-                  </ul>
-                </div>
-              </HoverLift>
-            </ScrollReveal>
-          </div>
-        </div>
-      </section>
-
-      {/* Integrations Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-[1200px] mx-auto px-5">
-          <div className="text-center mb-16">
-            <ScrollReveal>
-              <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
-                Works With Your Stack
-              </h2>
-            </ScrollReveal>
-            <ScrollReveal delay={100}>
-              <p className="text-xl text-[#666] max-w-[700px] mx-auto">
-                Connect the tools you already use
-              </p>
-            </ScrollReveal>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {integrations.map((integration, idx) => {
-              const iconMap: Record<string, React.ReactNode> = {
-                gmail: <GmailIcon />,
-                slack: <SlackIcon />,
-                zapier: <ZapierIcon />,
-                hubspot: <HubSpotIcon />,
-                stripe: <StripeIcon />,
-                salesforce: <SalesforceIcon />,
-                mailchimp: <MailchimpIcon />,
-                pipedrive: <PipedriveIcon />,
-              };
-
-              return (
-                <ScrollReveal key={integration.name} delay={idx * 50}>
-                  <IntegrationCard
-                    {...integration}
-                    icon={iconMap[integration.iconName]}
-                    delay={idx * 50}
-                  />
-                </ScrollReveal>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing Section */}
-      <section id="pricing" className="text-center pb-20 bg-gradient-to-b from-[#051224] via-[#051224] to-[#f4f7fa]" style={{ paddingTop: '1px' }}>
-        <div className="max-w-[1200px] mx-auto px-5">
-          <h2 className="text-white text-3xl font-bold mb-12 pt-12">Choose Your Plan</h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-            {/* Starter Plan - A$495/mo (Canonical from pricing-config.ts) */}
-            <ScrollReveal delay={0}>
-              <HoverLift className="h-full">
-                <div className="bg-white rounded-[20px] p-10 text-center shadow-[0_10px_30px_rgba(0,0,0,0.08)] transition-shadow hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)] h-full">
-                  <div className="h-20 w-20 mx-auto mb-5 rounded-full bg-gradient-to-br from-[#347bf7] to-[#5a9dff] flex items-center justify-center">
-                    <span className="text-white font-bold text-lg">📱</span>
-                  </div>
-                  <h3 className="text-2xl font-bold mb-4 text-[#1a1a1a]">Starter</h3>
-                  <div className="text-[42px] font-extrabold text-[#1a1a1a] mb-2">
-                    A$495<span className="text-base text-[#666] font-medium">/mo</span>
-                  </div>
-                  <p className="text-sm text-[#999] mb-8">GST inclusive • 14-day free trial</p>
-                  <ul className="text-left inline-block mb-9 space-y-3">
-                    <li className="text-[#666] flex items-center">
-                      <span className="text-[#347bf7] text-xl mr-2.5">✓</span>
-                      500 contacts
-                    </li>
-                    <li className="text-[#666] flex items-center">
-                      <span className="text-[#347bf7] text-xl mr-2.5">✓</span>
-                      20,000 AI tokens/month
-                    </li>
-                    <li className="text-[#666] flex items-center">
-                      <span className="text-[#347bf7] text-xl mr-2.5">✓</span>
-                      2 website audits/month
-                    </li>
-                    <li className="text-[#666] flex items-center">
-                      <span className="text-[#347bf7] text-xl mr-2.5">✓</span>
-                      Email support
-                    </li>
-                  </ul>
-                  <Link
-                    href="/login"
-                    className="inline-block w-4/5 py-3 px-8 rounded-md font-semibold bg-transparent border-2 border-[#1a1a1a] text-[#1a1a1a] hover:bg-[#1a1a1a] hover:text-white transition-all"
-                  >
-                    Start Free Trial
-                  </Link>
-                </div>
-              </HoverLift>
-            </ScrollReveal>
-
-            {/* Pro Plan (Highlighted) - A$895/mo (Canonical from pricing-config.ts) */}
-            <ScrollReveal delay={100}>
-              <HoverLift className="h-full">
-                <div className="bg-[#0a1e3b] rounded-[20px] p-10 text-center text-white scale-100 md:scale-105 border-2 border-[#ff5722] shadow-[0_0_30px_rgba(255,87,34,0.3)] hover:shadow-[0_0_50px_rgba(255,87,34,0.5)] z-10 h-full transition-shadow">
-                  <div className="h-20 w-20 mx-auto mb-5 rounded-full bg-[#0a1e3b] border-2 border-[#ff5722] flex items-center justify-center">
-                    <span className="text-[#ff5722] font-bold text-lg">🚀</span>
-                  </div>
-                  <h3 className="text-2xl font-bold mb-4">Pro</h3>
-                  <div className="text-[42px] font-extrabold mb-2">
-                    A$895<span className="text-base text-white/70 font-medium">/mo</span>
-                  </div>
-                  <p className="text-sm text-white/70 mb-8">GST inclusive • 14-day free trial</p>
-                  <div className="inline-block bg-[#ff5722] text-white px-3 py-1 rounded-full text-xs font-bold mb-4">MOST POPULAR</div>
-                  <ul className="text-left inline-block mb-9 space-y-3">
-                    <li className="text-white/90 flex items-center">
-                      <span className="text-[#ff5722] text-xl mr-2.5">✓</span>
-                      5,000 contacts
-                    </li>
-                    <li className="text-white/90 flex items-center">
-                      <span className="text-[#ff5722] text-xl mr-2.5">✓</span>
-                      250,000 AI tokens/month
-                    </li>
-                    <li className="text-white/90 flex items-center">
-                      <span className="text-[#ff5722] text-xl mr-2.5">✓</span>
-                      20 website audits/month
-                    </li>
-                    <li className="text-white/90 flex items-center">
-                      <span className="text-[#ff5722] text-xl mr-2.5">✓</span>
-                      Unlimited campaigns
-                    </li>
-                    <li className="text-white/90 flex items-center">
-                      <span className="text-[#ff5722] text-xl mr-2.5">✓</span>
-                      Priority support + API access
-                    </li>
-                  </ul>
-                  <Link
-                    href="/login"
-                    className="inline-block w-4/5 py-3 px-8 rounded-md font-semibold bg-gradient-to-r from-[#ff5722] to-[#ff784e] text-white border-none shadow-[0_4px_15px_rgba(255,87,34,0.4)] hover:shadow-[0_6px_20px_rgba(255,87,34,0.6)] transition-all"
-                  >
-                    Start Free Trial
-                  </Link>
-                </div>
-              </HoverLift>
-            </ScrollReveal>
-
-            {/* Elite Plan - A$1,295/mo (Canonical from pricing-config.ts) */}
-            <ScrollReveal delay={200}>
-              <HoverLift className="h-full">
-                <div className="bg-white rounded-[20px] p-10 text-center shadow-[0_10px_30px_rgba(0,0,0,0.08)] transition-shadow hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)] h-full">
-                  <div className="h-20 w-20 mx-auto mb-5 rounded-full bg-gradient-to-br from-[#347bf7] to-[#5a9dff] flex items-center justify-center">
-                    <span className="text-white font-bold text-lg">⭐</span>
-                  </div>
-                  <h3 className="text-2xl font-bold mb-4 text-[#1a1a1a]">Elite</h3>
-                  <div className="text-[42px] font-extrabold text-[#1a1a1a] mb-2">
-                    A$1,295<span className="text-base text-[#666] font-medium">/mo</span>
-                  </div>
-                  <p className="text-sm text-[#999] mb-8">GST inclusive • For agencies & scale</p>
-                  <ul className="text-left inline-block mb-9 space-y-3">
-                    <li className="text-[#666] flex items-center">
-                      <span className="text-[#347bf7] text-xl mr-2.5">✓</span>
-                      Unlimited contacts
-                    </li>
-                    <li className="text-[#666] flex items-center">
-                      <span className="text-[#347bf7] text-xl mr-2.5">✓</span>
-                      2,000,000 AI tokens/month
-                    </li>
-                    <li className="text-[#666] flex items-center">
-                      <span className="text-[#347bf7] text-xl mr-2.5">✓</span>
-                      100 website audits/month
-                    </li>
-                    <li className="text-[#666] flex items-center">
-                      <span className="text-[#347bf7] text-xl mr-2.5">✓</span>
-                      White label + custom branding
-                    </li>
-                    <li className="text-[#666] flex items-center">
-                      <span className="text-[#347bf7] text-xl mr-2.5">✓</span>
-                      10 team seats + agency tools
-                    </li>
-                  </ul>
-                  <Link
-                    href="/contact"
-                    className="inline-block w-4/5 py-3 px-8 rounded-md font-semibold bg-transparent border-2 border-[#1a1a1a] text-[#1a1a1a] hover:bg-[#1a1a1a] hover:text-white transition-all"
-                  >
-                    Contact Sales
-                  </Link>
-                </div>
-              </HoverLift>
-            </ScrollReveal>
-          </div>
-        </div>
-      </section>
-
-      {/* Synthex Features - 3D Carousel */}
-      <section className="py-20 bg-white overflow-hidden">
-        <div className="max-w-[1200px] mx-auto px-5">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
-              Synthex in Action
-            </h2>
-            <p className="text-xl text-[#666] max-w-[700px] mx-auto">
-              See how Synthex transforms small businesses with real results.
-            </p>
-          </div>
-
-          <div className="max-w-[900px] mx-auto">
-            <ThreeDPhotoCarousel
-              autoPlay={true}
-              autoPlayInterval={6000}
-              showTitles={true}
-              showDescriptions={true}
-              images={[
-                {
-                  id: "1",
-                  src: "/images/generated/carousel-crm-intelligence.jpg",
-                  alt: "Business owner using CRM intelligence dashboard to understand customers",
-                  title: "CRM Intelligence",
-                  description: "Know your customers better with AI-powered contact insights and lead scoring"
-                },
-                {
-                  id: "2",
-                  src: "/images/generated/carousel-email-automation.jpg",
-                  alt: "Marketing automation showing email sequences running automatically",
-                  title: "Email Automation",
-                  description: "Your marketing runs itself with smart drip campaigns and automated follow-ups"
-                },
-                {
-                  id: "3",
-                  src: "/images/generated/carousel-social-media.jpg",
-                  alt: "Social media content calendar with AI-generated posts scheduled",
-                  title: "Social Media Success",
-                  description: "Post consistently across platforms with AI-generated content that resonates"
-                }
-              ]}
+          {/* Architecture Diagram */}
+          <div className="bg-white/5 rounded-2xl p-8 border border-white/10 mb-16">
+            <img
+              src="/generated-assets/unite-hub-architecture.svg"
+              alt="Architecture"
+              className="w-full h-auto"
             />
           </div>
+
+          {/* Tech Stack */}
+          <div className="grid grid-cols-3 gap-6">
+            <div className="p-6 bg-white/5 rounded-xl border border-white/10">
+              <div className="text-sm text-blue-400 font-medium mb-2">Layer 1</div>
+              <h3 className="text-lg font-semibold mb-2">Next.js 16</h3>
+              <p className="text-sm text-gray-400">App Router, React 19, 100+ API routes</p>
+            </div>
+
+            <div className="p-6 bg-white/5 rounded-xl border border-white/10">
+              <div className="text-sm text-purple-400 font-medium mb-2">Layer 2</div>
+              <h3 className="text-lg font-semibold mb-2">43 AI Agents</h3>
+              <p className="text-sm text-gray-400">Email, Content, Orchestration + Phase 2</p>
+            </div>
+
+            <div className="p-6 bg-white/5 rounded-xl border border-white/10">
+              <div className="text-sm text-pink-400 font-medium mb-2">Layer 3</div>
+              <h3 className="text-lg font-semibold mb-2">Supabase</h3>
+              <p className="text-sm text-gray-400">PostgreSQL, RLS, Real-time</p>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Feature Video Carousel Section */}
-      <section className="py-24 bg-gradient-to-b from-white to-[#f4f7fa]">
-        <div className="max-w-[1400px] mx-auto px-5">
+      {/* Project Vend Phase 2 - Visual */}
+      <section className="py-24 px-6">
+        <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <ScrollReveal>
-              <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
-                See Features in Action
-              </h2>
-            </ScrollReveal>
-            <ScrollReveal delay={100}>
-              <p className="text-xl text-[#404040] max-w-[700px] mx-auto">
-                30-second walkthroughs of Synthex's most powerful features
-              </p>
-            </ScrollReveal>
-          </div>
-          <ScrollReveal delay={200}>
-            <FeatureVideoCarousel videos={featureVideos} />
-          </ScrollReveal>
-        </div>
-      </section>
-
-      {/* VEO Video Showcase Section - Professional 4K Marketing Videos */}
-      <section className="py-24 bg-gradient-to-b from-[#f4f7fa] to-white">
-        <div className="max-w-[1400px] mx-auto px-5">
-          <ScrollReveal>
-            <VeoVideoShowcase
-              videos={getFeaturedVideos()}
-              title="Real Problems. Real Solutions."
-              subtitle="Watch how Synthex solves the biggest marketing challenges facing small businesses today. Each video is 30 seconds."
-              defaultView="carousel"
-              showFilters={true}
-              autoPlay={false}
-            />
-          </ScrollReveal>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-20 bg-gradient-to-b from-white to-[#f4f7fa]">
-        <div className="max-w-[1200px] mx-auto px-5">
-          <div className="text-center mb-16">
-            <ScrollReveal>
-              <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
-                Frequently Asked Questions
-              </h2>
-            </ScrollReveal>
-            <ScrollReveal delay={100}>
-              <p className="text-xl text-[#666] max-w-[700px] mx-auto">
-                Everything you need to know
-              </p>
-            </ScrollReveal>
-          </div>
-
-          <ScrollReveal delay={200}>
-            <FAQAccordion
-              items={faqData}
-              categories={['Getting Started', 'Platform & Security', 'ROI & Results']}
-            />
-          </ScrollReveal>
-        </div>
-      </section>
-
-      {/* GitHub Social Proof Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-[1200px] mx-auto px-5">
-          <div className="text-center mb-12">
-            <ScrollReveal>
-              <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
-                Open Source Transparency
-              </h2>
-              <p className="text-xl text-[#666] max-w-[700px] mx-auto">
-                From GitHub to production - see exactly how Unite-Hub works
-              </p>
-            </ScrollReveal>
-          </div>
-
-          <ScrollReveal delay={100}>
-            <div className="max-w-[1000px] mx-auto mb-16">
-              <img
-                src="/generated-assets/github-social-proof.svg"
-                alt="GitHub to Production: CleanExpo/Unite-Hub powers live platform"
-                className="w-full h-auto rounded-xl shadow-2xl border border-gray-200"
-              />
-            </div>
-          </ScrollReveal>
-
-          <ScrollReveal delay={200}>
-            <div className="max-w-[1000px] mx-auto">
-              <img
-                src="/generated-assets/project-vend-phase2-overview.svg"
-                alt="Project Vend Phase 2: 5 systems enhancing 43 AI agents"
-                className="w-full h-auto rounded-xl shadow-2xl border border-gray-200"
-              />
-              <p className="text-center text-sm text-gray-500 mt-4">
-                Project Vend Phase 2: Metrics, Rules, Verification, Escalations, and Cost Control
-              </p>
-            </div>
-          </ScrollReveal>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="py-12 bg-[#051224] text-white">
-        <div className="max-w-[1200px] mx-auto px-5">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
-            {/* Brand */}
-            <div>
-              <Link href="/" className="logo mb-4 block">
-                <div className="text-white font-bold text-xl">Synthex.social</div>
-              </Link>
-              <p className="text-white/70 text-sm">
-                AI marketing platform built for real small businesses.
-              </p>
-            </div>
-
-            {/* Product */}
-            <div>
-              <h4 className="text-white font-semibold mb-4 text-sm">Product</h4>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <a href="#pricing" className="text-white/70 hover:text-white transition-colors">
-                    Pricing
-                  </a>
-                </li>
-                <li>
-                  <a href="#how-it-works" className="text-white/70 hover:text-white transition-colors">
-                    How It Works
-                  </a>
-                </li>
-                <li>
-                  <a href="#who-we-help" className="text-white/70 hover:text-white transition-colors">
-                    Who We Help
-                  </a>
-                </li>
-                <li>
-                  <Link href="/synthex/dashboard" className="text-white/70 hover:text-white transition-colors">
-                    Dashboard
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* Company */}
-            <div>
-              <h4 className="text-white font-semibold mb-4 text-sm">Company</h4>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <Link href="/about" className="text-white/70 hover:text-white transition-colors">
-                    About Us
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/blog" className="text-white/70 hover:text-white transition-colors">
-                    Blog
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/contact" className="text-white/70 hover:text-white transition-colors">
-                    Contact
-                  </Link>
-                </li>
-                <li>
-                  <a href="mailto:hello@synthex.social" className="text-white/70 hover:text-white transition-colors">
-                    Support
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Legal */}
-            <div>
-              <h4 className="text-white font-semibold mb-4 text-sm">Legal</h4>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <Link href="/privacy" className="text-white/70 hover:text-white transition-colors">
-                    Privacy Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/terms" className="text-white/70 hover:text-white transition-colors">
-                    Terms of Service
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/cookies" className="text-white/70 hover:text-white transition-colors">
-                    Cookie Policy
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          {/* Bottom Section */}
-          <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-5">
-            <p className="text-white/60 text-sm">
-              © 2025 Synthex.social. All rights reserved. Built for small business owners.
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Built on Anthropic's research
+            </h2>
+            <p className="text-xl text-gray-400">
+              Project Vend Phase 2: Self-improving autonomous system
             </p>
-            <div className="flex gap-5">
-              <a href="https://twitter.com" className="text-white/60 hover:text-white transition-colors" title="Twitter">
-                <span className="text-sm font-medium">Twitter</span>
-              </a>
-              <a href="https://linkedin.com" className="text-white/60 hover:text-white transition-colors" title="LinkedIn">
-                <span className="text-sm font-medium">LinkedIn</span>
-              </a>
-              <a href="https://instagram.com" className="text-white/60 hover:text-white transition-colors" title="Instagram">
-                <span className="text-sm font-medium">Instagram</span>
-              </a>
+          </div>
+
+          <div className="bg-white/5 rounded-2xl p-8 border border-white/10">
+            <img
+              src="/generated-assets/project-vend-phase2-overview.svg"
+              alt="Project Vend Phase 2"
+              className="w-full h-auto"
+            />
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-5 gap-6 mt-12">
+            {[
+              { label: 'Metrics', value: '✓' },
+              { label: 'Rules', value: '✓' },
+              { label: 'Verification', value: '✓' },
+              { label: 'Escalations', value: '✓' },
+              { label: 'Budgets', value: '✓' }
+            ].map((item, i) => (
+              <div key={i} className="text-center p-4 bg-white/5 rounded-lg border border-white/10">
+                <div className="text-2xl mb-2">{item.value}</div>
+                <div className="text-sm text-gray-400">{item.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* GitHub - Clean */}
+      <section className="py-24 px-6 border-t border-white/10">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Open source from day one
+            </h2>
+            <p className="text-xl text-gray-400">
+              14,000+ lines of TypeScript. 136 tests. Production-ready.
+            </p>
+          </div>
+
+          <div className="bg-white/5 rounded-2xl p-8 border border-white/10 mb-8">
+            <img
+              src="/generated-assets/github-social-proof.svg"
+              alt="GitHub"
+              className="w-full h-auto"
+            />
+          </div>
+
+          <div className="text-center">
+            <a
+              href="https://github.com/CleanExpo/Unite-Hub"
+              target="_blank"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white text-black font-medium rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+              </svg>
+              View on GitHub
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Simple Pricing */}
+      <section className="py-24 px-6 border-t border-white/10">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            Simple pricing
+          </h2>
+          <p className="text-xl text-gray-400 mb-16">
+            No contracts. Cancel anytime.
+          </p>
+
+          <div className="inline-block p-12 bg-white/5 rounded-2xl border border-white/10">
+            <div className="text-6xl font-bold mb-2">
+              $0.05
+              <span className="text-2xl text-gray-400 font-normal">/email</span>
+            </div>
+            <p className="text-gray-400 mb-8">Plus AI costs (~$0.01/email)</p>
+
+            <div className="space-y-3 text-left mb-8">
+              {[
+                'All 43 AI agents included',
+                'Unlimited emails',
+                'Real-time dashboard',
+                'Full GitHub access',
+                'Cancel anytime'
+              ].map((feature, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                  </svg>
+                  <span className="text-gray-300">{feature}</span>
+                </div>
+              ))}
+            </div>
+
+            <Link href="/login" className="block w-full px-6 py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition-colors">
+              Start 14-day free trial
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA - Clean */}
+      <section className="py-32 px-6 border-t border-white/10">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-5xl md:text-6xl font-bold mb-6">
+            Start automating today
+          </h2>
+          <p className="text-xl text-gray-400 mb-8">
+            Join Logan, Brisbane, and Queensland businesses using AI
+          </p>
+          <Link href="/login" className="inline-block px-8 py-4 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition-colors text-lg">
+            Start free trial
+          </Link>
+          <p className="mt-6 text-sm text-gray-500">
+            No credit card required • 14-day free trial • Cancel anytime
+          </p>
+        </div>
+      </section>
+
+      {/* Footer - Minimal */}
+      <footer className="border-t border-white/10 py-12 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-sm text-gray-400">
+              © 2025 Unite-Hub • Logan, Brisbane, QLD • Open Source
+            </div>
+            <div className="flex items-center gap-6 text-sm text-gray-400">
+              <Link href="/agents" className="hover:text-white transition-colors">Dashboard</Link>
+              <a href="https://github.com/CleanExpo/Unite-Hub" target="_blank" className="hover:text-white transition-colors">GitHub</a>
+              <Link href="/login" className="hover:text-white transition-colors">Sign in</Link>
             </div>
           </div>
         </div>
       </footer>
-
-      {/* Structured Data for SEO */}
-      <OrganizationSchema />
-      <WebSiteSchema />
-      <SoftwareApplicationSchema ratingValue="4.8" ratingCount="128" />
-      <FAQSchema faqItems={seoConfig.commonFAQs} />
-      <FAQSchemaMarkup items={faqData} />
-      <HowToSchema
-        howto={{
-          name: 'How to Automate Your Marketing with Synthex',
-          description: 'Four simple steps to automate your marketing and get back 10+ hours per week',
-          image: '/how-to-synthex.png',
-          totalTime: 'PT5M',
-          steps: [
-            {
-              name: 'Connect Your Business',
-              text: 'Link your website, social media, Google Analytics, and email. Takes 5 minutes.',
-            },
-            {
-              name: 'Synthex Diagnoses Your Business',
-              text: 'AI analyzes your website, competition, and market. Identifies your biggest opportunities.',
-            },
-            {
-              name: 'AI Generates Your Strategy',
-              text: 'Website copy, blog posts, social content, email sequences, ad graphics—AI writes it all, on brand.',
-            },
-            {
-              name: 'Launch & Monitor',
-              text: 'Approve, schedule, and publish. Watch real-time analytics and A/B test everything.',
-            },
-          ],
-        }}
-      />
     </div>
   );
 }
