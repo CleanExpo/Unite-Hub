@@ -549,9 +549,11 @@ export default function Home() {
             <ScrollReveal delay={0}>
               <div className="relative">
                 <div className="text-center">
-                  <div className="h-16 w-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#347bf7] to-[#5a9dff] flex items-center justify-center text-white font-bold text-2xl">
-                    <AnimatedCounter end={1} duration={800} />
-                  </div>
+                  <img
+                    src="/generated-assets/step-1-connect-gmail.svg"
+                    alt="Connect Gmail"
+                    className="h-24 w-24 mx-auto mb-6"
+                  />
                   <h3 className="text-xl font-bold text-[#1a1a1a] mb-3">Connect Your Business</h3>
                   <p className="text-[#666] mb-6">
                     Link your website, social media, Google Analytics, and email. Takes 5 minutes.
@@ -566,9 +568,11 @@ export default function Home() {
             <ScrollReveal delay={100}>
               <div className="relative">
                 <div className="text-center">
-                  <div className="h-16 w-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#347bf7] to-[#5a9dff] flex items-center justify-center text-white font-bold text-2xl">
-                    <AnimatedCounter end={2} duration={800} />
-                  </div>
+                  <img
+                    src="/generated-assets/step-2-ai-analyzes.svg"
+                    alt="AI Analyzes"
+                    className="h-24 w-24 mx-auto mb-6"
+                  />
                   <h3 className="text-xl font-bold text-[#1a1a1a] mb-3">Synthex Diagnoses Your Business</h3>
                   <p className="text-[#666] mb-6">
                     AI analyzes your website, competition, and market. Identifies your biggest opportunities.
@@ -583,9 +587,11 @@ export default function Home() {
             <ScrollReveal delay={200}>
               <div className="relative">
                 <div className="text-center">
-                  <div className="h-16 w-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#347bf7] to-[#5a9dff] flex items-center justify-center text-white font-bold text-2xl">
-                    <AnimatedCounter end={3} duration={800} />
-                  </div>
+                  <img
+                    src="/generated-assets/step-4-generate-responses.svg"
+                    alt="Generate Responses"
+                    className="h-24 w-24 mx-auto mb-6"
+                  />
                   <h3 className="text-xl font-bold text-[#1a1a1a] mb-3">AI Generates Your Strategy</h3>
                   <p className="text-[#666] mb-6">
                     Website copy, blog posts, social content, email sequences, ad graphics—AI writes it all, on brand.
@@ -600,9 +606,11 @@ export default function Home() {
             <ScrollReveal delay={300}>
               <div className="relative">
                 <div className="text-center">
-                  <div className="h-16 w-16 mx-auto mb-6 rounded-full bg-gradient-to-br from-[#347bf7] to-[#5a9dff] flex items-center justify-center text-white font-bold text-2xl">
-                    <AnimatedCounter end={4} duration={800} />
-                  </div>
+                  <img
+                    src="/generated-assets/step-5-track-performance.svg"
+                    alt="Track Performance"
+                    className="h-24 w-24 mx-auto mb-6"
+                  />
                   <h3 className="text-xl font-bold text-[#1a1a1a] mb-3">Launch & Monitor</h3>
                   <p className="text-[#666] mb-6">
                     Approve, schedule, and publish. Watch real-time analytics and A/B test everything.
@@ -611,6 +619,61 @@ export default function Home() {
               </div>
             </ScrollReveal>
           </div>
+        </div>
+      </section>
+
+      {/* Unite-Hub Architecture Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-[1200px] mx-auto px-5">
+          <div className="text-center mb-12">
+            <ScrollReveal>
+              <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
+                Built on Enterprise-Grade Technology
+              </h2>
+              <p className="text-xl text-[#666] max-w-[700px] mx-auto">
+                43 AI Agents powered by Project Vend Phase 2 optimization framework
+              </p>
+            </ScrollReveal>
+          </div>
+
+          <ScrollReveal delay={100}>
+            <div className="max-w-[1000px] mx-auto">
+              <img
+                src="/generated-assets/unite-hub-architecture.svg"
+                alt="Unite-Hub 3-Layer Architecture: Next.js + 43 AI Agents + Supabase"
+                className="w-full h-auto rounded-xl shadow-2xl border border-gray-200"
+              />
+              <p className="text-center text-sm text-gray-500 mt-4">
+                Next.js App Router + 43 AI Agents + Supabase PostgreSQL with Project Vend Phase 2 enhancements
+              </p>
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* Comparison Visual Section */}
+      <section className="py-20 bg-gradient-to-br from-[#f9fafb] to-[#f4f7fa]">
+        <div className="max-w-[1200px] mx-auto px-5">
+          <div className="text-center mb-12">
+            <ScrollReveal>
+              <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
+                Stop Overpaying for Marketing
+              </h2>
+              <p className="text-xl text-[#666] max-w-[700px] mx-auto">
+                Traditional agencies charge thousands. Unite-Hub costs pennies per email.
+              </p>
+            </ScrollReveal>
+          </div>
+
+          <ScrollReveal delay={100}>
+            <div className="max-w-[1000px] mx-auto">
+              <img
+                src="/generated-assets/client-vs-agency-comparison.svg"
+                alt="Cost Comparison: $5,000/month agency vs $0.05/email with Unite-Hub"
+                className="w-full h-auto rounded-xl shadow-2xl border border-gray-200"
+              />
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
@@ -1095,6 +1158,45 @@ export default function Home() {
               items={faqData}
               categories={['Getting Started', 'Platform & Security', 'ROI & Results']}
             />
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* GitHub Social Proof Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-[1200px] mx-auto px-5">
+          <div className="text-center mb-12">
+            <ScrollReveal>
+              <h2 className="text-4xl md:text-5xl font-bold text-[#1a1a1a] mb-4">
+                Open Source Transparency
+              </h2>
+              <p className="text-xl text-[#666] max-w-[700px] mx-auto">
+                From GitHub to production - see exactly how Unite-Hub works
+              </p>
+            </ScrollReveal>
+          </div>
+
+          <ScrollReveal delay={100}>
+            <div className="max-w-[1000px] mx-auto mb-16">
+              <img
+                src="/generated-assets/github-social-proof.svg"
+                alt="GitHub to Production: CleanExpo/Unite-Hub powers live platform"
+                className="w-full h-auto rounded-xl shadow-2xl border border-gray-200"
+              />
+            </div>
+          </ScrollReveal>
+
+          <ScrollReveal delay={200}>
+            <div className="max-w-[1000px] mx-auto">
+              <img
+                src="/generated-assets/project-vend-phase2-overview.svg"
+                alt="Project Vend Phase 2: 5 systems enhancing 43 AI agents"
+                className="w-full h-auto rounded-xl shadow-2xl border border-gray-200"
+              />
+              <p className="text-center text-sm text-gray-500 mt-4">
+                Project Vend Phase 2: Metrics, Rules, Verification, Escalations, and Cost Control
+              </p>
+            </div>
           </ScrollReveal>
         </div>
       </section>
