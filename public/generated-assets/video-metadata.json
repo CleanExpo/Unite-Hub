@@ -1,0 +1,128 @@
+[
+  {
+    "@type": "VideoObject",
+    "name": "AI Email Agent: Autonomous Lead Processing",
+    "identifier": "ai-email-agent-demo",
+    "duration": "PT8S",
+    "estimatedCost": 2.8,
+    "hasPart": [
+      {
+        "@type": "Clip",
+        "name": "Email Arrival",
+        "description": "New email detected and queued for AI processing",
+        "startOffset": 0,
+        "endOffset": 2
+      },
+      {
+        "@type": "Clip",
+        "name": "AI Analysis",
+        "description": "Intent extraction and sentiment analysis by AI Email Agent",
+        "startOffset": 2,
+        "endOffset": 5
+      },
+      {
+        "@type": "Clip",
+        "name": "Score Update",
+        "description": "Contact score automatically increased by 15 points",
+        "startOffset": 5,
+        "endOffset": 7
+      },
+      {
+        "@type": "Clip",
+        "name": "Categorization",
+        "description": "Lead categorized as Hot and added to follow-up campaign",
+        "startOffset": 7,
+        "endOffset": 8
+      }
+    ],
+    "overlayType": "mermaid",
+    "keywords": "AI email processing, intent extraction, sentiment analysis, lead scoring",
+    "generationStatus": "metadata-ready",
+    "model": "veo-2",
+    "pricing": "$0.35/second via Gemini API"
+  },
+  {
+    "@type": "VideoObject",
+    "name": "AI Content Generator: Personalized Email Creation",
+    "identifier": "content-generator-demo",
+    "duration": "PT8S",
+    "estimatedCost": 2.8,
+    "hasPart": [
+      {
+        "@type": "Clip",
+        "name": "Contact Selection",
+        "description": "Review contact history and engagement score",
+        "startOffset": 0,
+        "endOffset": 2
+      },
+      {
+        "@type": "Clip",
+        "name": "AI Generation",
+        "description": "Claude Opus 4 creates personalized email content",
+        "startOffset": 2,
+        "endOffset": 5
+      },
+      {
+        "@type": "Clip",
+        "name": "Personalization",
+        "description": "Template tokens replaced with real contact data",
+        "startOffset": 5,
+        "endOffset": 7
+      },
+      {
+        "@type": "Clip",
+        "name": "Preview Ready",
+        "description": "Email ready to send with call-to-action button",
+        "startOffset": 7,
+        "endOffset": 8
+      }
+    ],
+    "overlayType": "json",
+    "keywords": "AI content generation, personalization, Claude Opus 4, email marketing",
+    "generationStatus": "metadata-ready",
+    "model": "veo-2",
+    "pricing": "$0.35/second via Gemini API"
+  },
+  {
+    "@type": "VideoObject",
+    "name": "Campaign Orchestrator: Automated Drip Sequences",
+    "identifier": "orchestrator-demo",
+    "duration": "PT8S",
+    "estimatedCost": 2.8,
+    "hasPart": [
+      {
+        "@type": "Clip",
+        "name": "Campaign Setup",
+        "description": "Multi-step drip sequence configuration",
+        "startOffset": 0,
+        "endOffset": 2
+      },
+      {
+        "@type": "Clip",
+        "name": "Automation Trigger",
+        "description": "Contact enters campaign based on score threshold",
+        "startOffset": 2,
+        "endOffset": 5
+      },
+      {
+        "@type": "Clip",
+        "name": "Execution",
+        "description": "First email sent automatically with wait condition",
+        "startOffset": 5,
+        "endOffset": 7
+      },
+      {
+        "@type": "Clip",
+        "name": "Branching",
+        "description": "Conditional routing based on email engagement",
+        "startOffset": 7,
+        "endOffset": 8
+      }
+    ],
+    "overlayType": "mermaid",
+    "keywords": "drip campaigns, marketing automation, workflow orchestration, conditional logic",
+    "generationStatus": "metadata-ready",
+    "model": "veo-2",
+    "pricing": "$0.35/second via Gemini API"
+  }
+]

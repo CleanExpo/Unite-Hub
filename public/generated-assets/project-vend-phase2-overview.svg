@@ -1,0 +1,74 @@
+<svg width="1200" height="800" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- Background -->
+  <rect width="1200" height="800" fill="#f0f4f8" />
+
+  <!-- Title -->
+  <text x="600" y="50" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#333">Project Vend Phase 2: Agent Optimization Framework</text>
+
+  <!-- Feature Circles -->
+
+  <!-- METRICS -->
+  <g transform="translate(600, 150)">
+    <circle cx="0" cy="0" r="70" fill="#673ab7" />
+    <text x="0" y="-15" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white">Real-time Metrics</text>
+    <text x="0" y="15" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white">Track costs, performance, health</text>
+    <!-- Chart Icon (Replace with your SVG icon) -->
+     <path d="M-25,-40 l0,80 l50,0 l0,-60 l-20,0 l0,-20 z M-25,40 l0,10 l50,0 l0,-10 z" fill="white"/>
+  </g>
+
+  <!-- RULES -->
+  <g transform="translate(950, 300)">
+    <circle cx="0" cy="0" r="70" fill="#3f51b5" />
+    <text x="0" y="-15" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white">Business Rules</text>
+    <text x="0" y="15" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white">18 constraints prevent naive decisions</text>
+    <!-- Checklist Icon (Replace with your SVG icon) -->
+     <path d="M-25,-30 l0,60 l15,0 l0,-60 z M-8, -18 l25,0 l0,12 l-25,0 z M-8,10 l25,0 l0,12 l-25,0 z" fill="white"/>
+  </g>
+
+  <!-- VERIFICATION -->
+  <g transform="translate(950, 550)">
+    <circle cx="0" cy="0" r="70" fill="#2196f3" />
+    <text x="0" y="-15" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white">Output Verification</text>
+    <text x="0" y="15" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white">7 methods catch errors</text>
+    <!-- Shield Icon (Replace with your SVG icon) -->
+    <path d="M-25,-35 a25,25 0 0 1 50,0 l-25,30 l-25,-30 z M-25,10 l0,30 l25,0 l25,-30 z" fill="white"/>
+  </g>
+
+  <!-- ESCALATIONS -->
+  <g transform="translate(250, 550)">
+    <circle cx="0" cy="0" r="70" fill="#ff9800" />
+    <text x="0" y="-15" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white">Smart Escalations</text>
+    <text x="0" y="15" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white">Approval workflows</text>
+     <!-- Bell Icon (Replace with your SVG icon) -->
+     <path d="M-15,-35 a15,15 0 0 1 30,0 l-5,10 l-20,0 l-5,-10 z M-5,0 l0,30 l10,0 l0,-30 z" fill="white"/>
+  </g>
+
+  <!-- BUDGETS -->
+  <g transform="translate(250, 300)">
+    <circle cx="0" cy="0" r="70" fill="#795548" />
+    <text x="0" y="-15" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white">Cost Control</text>
+    <text x="0" y="15" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="white">Auto-pause at limits</text>
+     <!-- Dollar Icon (Replace with your SVG icon) -->
+     <path d="M-5,-40 l0,10 l-12,0 l0,10 l12,0 l0,10 l-12,0 l0,10 l12,0 l0,10 l-12,0 l0,10 l5,0 z M3, -40 l0,80" fill="white"/>
+  </g>
+
+  <!-- Center Hub -->
+  <g transform="translate(600, 400)">
+    <circle cx="0" cy="0" r="100" fill="#9575cd" />
+    <text x="0" y="-25" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="white">43 Agents</text>
+    <text x="0" y="10" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="white">Enhanced Automatically</text>
+  </g>
+
+  <!-- Connection Lines -->
+  <line x1="600" y1="400" x2="600" y2="150" stroke="#9575cd" stroke-width="3" />
+  <line x1="600" y1="400" x2="950" y2="300" stroke="#9575cd" stroke-width="3" />
+  <line x1="600" y1="400" x2="950" y2="550" stroke="#9575cd" stroke-width="3" />
+  <line x1="600" y1="400" x2="250" y2="550" stroke="#9575cd" stroke-width="3" />
+  <line x1="600" y1="400" x2="250" y2="300" stroke="#9575cd" stroke-width="3" />
+
+  <!-- Footer -->
+  <text x="600" y="750" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#666">Transform: tool-with-agents → self-improving autonomous system</text>
+  <text x="600" y="780" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#666">136 tests passing • 8 systems operational</text>
+
+</svg>

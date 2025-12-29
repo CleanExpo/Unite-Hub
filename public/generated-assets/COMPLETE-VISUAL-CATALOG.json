@@ -1,0 +1,314 @@
+{
+  "@context": "https://schema.org",
+  "catalog": {
+    "name": "Unite-Hub Visual Assets Catalog",
+    "description": "Complete catalog of visual assets optimized for Google's Extractable Logic ranking system",
+    "dateCreated": "2025-12-29",
+    "totalAssets": 12,
+    "generationMethod": "Google AI (Gemini 2.0 Flash, VEO 2, Nano Banana 2 Pro)",
+    "optimization": "AI-parseable, GEO-targeted, schema-wrapped"
+  },
+  "images": [
+    {
+      "@type": "ImageObject",
+      "identifier": "unite-hub-architecture",
+      "name": "Unite-Hub 3-Layer Architecture Diagram",
+      "contentUrl": "/generated-assets/unite-hub-architecture.svg",
+      "caption": "Next.js App Router + 43 AI Agents + Supabase PostgreSQL with Project Vend Phase 2 enhancements",
+      "width": 1200,
+      "height": 800,
+      "encodingFormat": "image/svg+xml",
+      "about": "System architecture visualization showing 3-layer stack with AI agent middleware",
+      "associatedMedia": {
+        "@type": "SoftwareSourceCode",
+        "codeRepository": "https://github.com/CleanExpo/Unite-Hub",
+        "programmingLanguage": "TypeScript"
+      },
+      "keywords": ["architecture", "AI agents", "Next.js", "Supabase", "Project Vend Phase 2"]
+    },
+    {
+      "@type": "ImageObject",
+      "identifier": "client-vs-agency-comparison",
+      "name": "Client Control vs Traditional Agency Comparison",
+      "contentUrl": "/generated-assets/client-vs-agency-comparison.svg",
+      "caption": "Cost and speed comparison: $5,000/month agency vs $0.05/email with Unite-Hub",
+      "width": 1200,
+      "height": 630,
+      "encodingFormat": "image/svg+xml",
+      "about": "Before/after comparison showing transformation from agency dependency to client autonomy",
+      "contentLocation": [
+        {
+          "@type": "Place",
+          "name": "Logan, QLD",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Logan",
+            "addressRegion": "QLD",
+            "addressCountry": "AU"
+          }
+        },
+        {
+          "@type": "Place",
+          "name": "Brisbane, QLD",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Brisbane",
+            "addressRegion": "QLD",
+            "addressCountry": "AU"
+          }
+        }
+      ],
+      "keywords": ["cost comparison", "marketing automation", "agency alternative", "transparent pricing"]
+    },
+    {
+      "@type": "ImageObject",
+      "identifier": "github-social-proof",
+      "name": "GitHub Open Source to Production Pipeline",
+      "contentUrl": "/generated-assets/github-social-proof.svg",
+      "caption": "CleanExpo/Unite-Hub: From open source development to production excellence",
+      "width": 1200,
+      "height": 630,
+      "encodingFormat": "image/svg+xml",
+      "about": "Visual proof connecting GitHub repository to live production system",
+      "associatedMedia": {
+        "@type": "SoftwareSourceCode",
+        "name": "Unite-Hub",
+        "codeRepository": "https://github.com/CleanExpo/Unite-Hub",
+        "programmingLanguage": "TypeScript",
+        "runtimePlatform": "Next.js 16, React 19",
+        "license": "Open Source"
+      },
+      "keywords": ["open source", "GitHub", "production ready", "technical credibility", "transparent development"]
+    },
+    {
+      "@type": "ImageObject",
+      "identifier": "project-vend-phase2-overview",
+      "name": "Project Vend Phase 2: Agent Optimization Framework",
+      "contentUrl": "/generated-assets/project-vend-phase2-overview.svg",
+      "caption": "5 systems enhancing 43 AI agents: Metrics, Rules, Verification, Escalations, Cost Control",
+      "width": 1200,
+      "height": 800,
+      "encodingFormat": "image/svg+xml",
+      "about": "Comprehensive overview of Project Vend Phase 2 agent optimization systems",
+      "keywords": ["Project Vend", "agent optimization", "self-improving system", "AI governance", "cost control"]
+    }
+  ],
+  "stepIcons": [
+    {
+      "@type": "ImageObject",
+      "identifier": "step-1-connect-gmail",
+      "name": "Step 1: Connect Gmail",
+      "contentUrl": "/generated-assets/step-1-connect-gmail.svg",
+      "caption": "Connect your Gmail account via OAuth for automatic email monitoring",
+      "width": 200,
+      "height": 200,
+      "encodingFormat": "image/svg+xml",
+      "position": 1
+    },
+    {
+      "@type": "ImageObject",
+      "identifier": "step-2-ai-analyzes",
+      "name": "Step 2: AI Analyzes Emails",
+      "contentUrl": "/generated-assets/step-2-ai-analyzes.svg",
+      "caption": "AI automatically extracts intent and analyzes sentiment from emails",
+      "width": 200,
+      "height": 200,
+      "encodingFormat": "image/svg+xml",
+      "position": 2
+    },
+    {
+      "@type": "ImageObject",
+      "identifier": "step-3-categorize-leads",
+      "name": "Step 3: Categorize Leads",
+      "contentUrl": "/generated-assets/step-3-categorize-leads.svg",
+      "caption": "Contacts automatically scored and categorized based on engagement",
+      "width": 200,
+      "height": 200,
+      "encodingFormat": "image/svg+xml",
+      "position": 3
+    },
+    {
+      "@type": "ImageObject",
+      "identifier": "step-4-generate-responses",
+      "name": "Step 4: Generate Personalized Responses",
+      "contentUrl": "/generated-assets/step-4-generate-responses.svg",
+      "caption": "AI creates personalized emails using Claude Opus 4 and contact history",
+      "width": 200,
+      "height": 200,
+      "encodingFormat": "image/svg+xml",
+      "position": 4
+    },
+    {
+      "@type": "ImageObject",
+      "identifier": "step-5-track-performance",
+      "name": "Step 5: Track Performance",
+      "contentUrl": "/generated-assets/step-5-track-performance.svg",
+      "caption": "Monitor agent health, costs, and performance with Project Vend Phase 2 dashboard",
+      "width": 200,
+      "height": 200,
+      "encodingFormat": "image/svg+xml",
+      "position": 5
+    }
+  ],
+  "videos": [
+    {
+      "@type": "VideoObject",
+      "identifier": "ai-email-agent-demo",
+      "name": "AI Email Agent: Autonomous Lead Processing",
+      "description": "8-second demonstration of Unite-Hub's AI Email Agent autonomously processing incoming emails, extracting intent, analyzing sentiment, and categorizing leads",
+      "duration": "PT8S",
+      "estimatedProductionCost": 2.80,
+      "model": "veo-2",
+      "pricing": "$0.35/second via Gemini API",
+      "hasPart": [
+        {
+          "@type": "Clip",
+          "name": "Email Arrival",
+          "description": "New email detected and queued for AI processing",
+          "startOffset": 0,
+          "endOffset": 2
+        },
+        {
+          "@type": "Clip",
+          "name": "AI Analysis",
+          "description": "Intent extraction and sentiment analysis by AI Email Agent",
+          "startOffset": 2,
+          "endOffset": 5
+        },
+        {
+          "@type": "Clip",
+          "name": "Score Update",
+          "description": "Contact score automatically increased by 15 points",
+          "startOffset": 5,
+          "endOffset": 7
+        },
+        {
+          "@type": "Clip",
+          "name": "Categorization",
+          "description": "Lead categorized as Hot and added to follow-up campaign",
+          "startOffset": 7,
+          "endOffset": 8
+        }
+      ],
+      "overlayFeature": "Mermaid diagram showing: Email → Intent → Sentiment → Score → Category",
+      "keywords": "AI email processing, intent extraction, sentiment analysis, lead scoring, marketing automation",
+      "generationStatus": "metadata-ready",
+      "contentUrl": "/videos/ai-email-agent-demo.mp4"
+    },
+    {
+      "@type": "VideoObject",
+      "identifier": "content-generator-demo",
+      "name": "AI Content Generator: Personalized Email Creation",
+      "description": "8-second demonstration of Claude Opus 4 generating personalized marketing emails with automatic token replacement and CTA optimization",
+      "duration": "PT8S",
+      "estimatedProductionCost": 2.80,
+      "model": "veo-2",
+      "pricing": "$0.35/second via Gemini API",
+      "hasPart": [
+        {
+          "@type": "Clip",
+          "name": "Contact Selection",
+          "description": "Review contact history and engagement score",
+          "startOffset": 0,
+          "endOffset": 2
+        },
+        {
+          "@type": "Clip",
+          "name": "AI Generation",
+          "description": "Claude Opus 4 creates personalized email content",
+          "startOffset": 2,
+          "endOffset": 5
+        },
+        {
+          "@type": "Clip",
+          "name": "Personalization",
+          "description": "Template tokens replaced with real contact data",
+          "startOffset": 5,
+          "endOffset": 7
+        },
+        {
+          "@type": "Clip",
+          "name": "Preview Ready",
+          "description": "Email ready to send with call-to-action button",
+          "startOffset": 7,
+          "endOffset": 8
+        }
+      ],
+      "overlayFeature": "JSON API request/response showing Claude Opus 4 processing",
+      "keywords": "AI content generation, personalization, Claude Opus 4, email marketing, template automation",
+      "generationStatus": "metadata-ready",
+      "contentUrl": "/videos/content-generator-demo.mp4"
+    },
+    {
+      "@type": "VideoObject",
+      "identifier": "orchestrator-demo",
+      "name": "Campaign Orchestrator: Automated Drip Sequences",
+      "description": "8-second demonstration of Unite-Hub's Orchestrator managing multi-step drip campaigns with conditional branching and automated execution",
+      "duration": "PT8S",
+      "estimatedProductionCost": 2.80,
+      "model": "veo-2",
+      "pricing": "$0.35/second via Gemini API",
+      "hasPart": [
+        {
+          "@type": "Clip",
+          "name": "Campaign Setup",
+          "description": "Multi-step drip sequence configuration",
+          "startOffset": 0,
+          "endOffset": 2
+        },
+        {
+          "@type": "Clip",
+          "name": "Automation Trigger",
+          "description": "Contact enters campaign based on score threshold",
+          "startOffset": 2,
+          "endOffset": 5
+        },
+        {
+          "@type": "Clip",
+          "name": "Execution",
+          "description": "First email sent automatically with wait condition",
+          "startOffset": 5,
+          "endOffset": 7
+        },
+        {
+          "@type": "Clip",
+          "name": "Branching",
+          "description": "Conditional routing based on email engagement",
+          "startOffset": 7,
+          "endOffset": 8
+        }
+      ],
+      "overlayFeature": "Mermaid diagram: Trigger → Step 1 → Wait → Condition → Branch",
+      "keywords": "drip campaigns, marketing automation, workflow orchestration, conditional logic, engagement tracking",
+      "generationStatus": "metadata-ready",
+      "contentUrl": "/videos/orchestrator-demo.mp4"
+    }
+  ],
+  "costEstimate": {
+    "images": {
+      "existing": 9,
+      "cost": "Generated via Gemini 2.0 Flash (included in API usage)"
+    },
+    "videos": {
+      "planned": 3,
+      "duration": "24 seconds total",
+      "costPerSecond": 0.35,
+      "totalEstimatedCost": 8.40,
+      "model": "VEO 2 via Gemini API or Vertex AI"
+    }
+  },
+  "sources": [
+    {
+      "title": "VEO 2 Video Generation - Google Developers Blog",
+      "url": "https://developers.googleblog.com/en/veo-2-video-generation-now-generally-available/"
+    },
+    {
+      "title": "Nano Banana Pro - Gemini API Documentation",
+      "url": "https://ai.google.dev/gemini-api/docs/image-generation"
+    },
+    {
+      "title": "VEO 2 API Complete Guide",
+      "url": "https://www.cursor-ide.com/blog/veo2-api-complete-guide-2025"
+    }
+  ]
+}

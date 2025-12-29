@@ -1,0 +1,103 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font-size: 24px; font-weight: bold; fill: #333; }
+      .subtitle { font-size: 16px; fill: #666; }
+      .text { font-size: 14px; fill: #333; }
+      .accent { color: #ff6b35; }
+      .badge { font-size: 12px; padding: 5px 10px; border-radius: 5px; color: white; font-weight: bold; }
+      .open-source { background-color: #007bff; }
+      .active-dev { background-color: #28a745; }
+      .production-ready { background-color: #28a745; }
+      .deployed { background-color: #6c757d; }
+      .code-box { background-color: #f8f8f8; border: 1px solid #ddd; padding: 10px; border-radius: 5px; font-family: monospace; font-size: 12px; color: #222; }
+      .metrics { font-size: 13px; color: #555; }
+      .connector-arrow { font-size: 48px; fill: #333; }
+      .bottom-banner { background-color: #eee; color: #333; text-align: center; padding: 10px; }
+      .live { color: #28a745; }
+      .github-logo { fill: #333; } /* Ensure Github logo color */
+
+    </style>
+  </defs>
+
+  <!-- LEFT SECTION (GitHub) -->
+  <g transform="translate(20, 20)">
+    <path class="github-logo" d="M12 2.97c-6.63 0-12 5.37-12 12 0 5.3 3.44 9.8 8.2 11.38 0.6 0.11 0.82-0.26 0.82-0.58 0-0.28-0.01-1.04-0.01-1.86-3.37 0.73-4.08-1.68-4.08-1.68-0.55-1.41-1.33-1.79-1.33-1.79-1.09-0.75 0.08-0.73 0.08-0.73 1.21 0.08 1.85 1.24 1.85 1.24 1.07 1.81 2.8 1.29 3.49 0.98 0.11-0.76 0.42-1.29 0.76-1.57-2.66-0.3-5.46-1.33-5.46-5.93 0-1.31 0.47-2.38 1.24-3.22-0.12-0.3-0.54-1.52 0.12-3.17 0 0 0.98-0.32 3.21 1.23-0.95-0.29-1.98-0.43-3.02-0.43-1.04 0-2.07 0.14-3.02 0.43 2.23-1.55 3.21-1.23 3.21-1.23 0.66 1.65 0.24 2.87 0.12 3.17 0.77 0.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.62-5.47 5.92 0.43 0.37 0.81 1.1 0.81 2.22 0 1.61-0.01 2.89-0.01 3.3 0 0.32 0.22 0.69 0.83 0.57 8.15-1.54 11.59-6.08 11.59-11.38 0-6.63-5.37-12-12-12z"/>
+    <text x="0" y="70" class="title">CleanExpo/Unite-Hub</text>
+    <div style="width: 460px;">
+    <foreignObject x="0" y="90" width="460" height="200">
+      <body xmlns="http://www.w3.org/1999/xhtml">
+        <div class="code-box">
+          <pre style="margin:0; font-size: 12px;">
+<code style="white-space: pre;">
+interface Agent {
+  name: string;
+  description: string;
+  process: (input: string) => string;
+}
+
+const aiAgent: Agent = {
+  name: "ExampleAgent",
+  description: "A simple example.",
+  process: (input) => input.toUpperCase(),
+};
+</code>
+          </pre>
+        </div>
+      </body>
+    </foreignObject>
+    </div>
+
+    <rect x="0" y="300" width="100" height="25" class="badge open-source" rx="5"/>
+    <text x="10" y="317" fill="white" style="font-size:12px; font-weight: bold">⭐ Open Source</text>
+
+    <rect x="120" y="300" width="130" height="25" class="badge active-dev" rx="5"/>
+    <text x="130" y="317" fill="white" style="font-size:12px; font-weight: bold">🔧 Active Development</text>
+
+    <text x="0" y="360" class="metrics">43 AI Agents • 14K+ lines • 136 tests</text>
+  </g>
+
+  <!-- CENTER CONNECTOR -->
+  <g transform="translate(480, 220)">
+    <text x="50" y="25" class="connector-arrow">→</text>
+    <text x="0" y="70" class="subtitle">Powers</text>
+      <!-- Data flow visualization: simplified circles -->
+        <circle cx="50" cy="100" r="10" fill="#ff6b35" opacity="0.7"/>
+        <circle cx="70" cy="110" r="10" fill="#ff6b35" opacity="0.7"/>
+        <circle cx="30" cy="110" r="10" fill="#ff6b35" opacity="0.7"/>
+  </g>
+
+  <!-- RIGHT SECTION (Production) -->
+  <g transform="translate(700, 20)">
+    <rect x="0" y="0" width="460" height="250" fill="#fff" stroke="#ccc" stroke-width="1" rx="5"/>
+    <rect x="10" y="10" width="440" height="20" fill="#eee" rx="3"/>
+    <circle cx="20" cy="20" r="5" fill="#f00"/>
+    <circle cx="35" cy="20" r="5" fill="#fc0"/>
+    <circle cx="50" cy="20" r="5" fill="#34c759"/>
+    <text x="70" y="22" class="text">unite-group.in</text>
+
+    <rect x="10" y="40" width="440" height="200" fill="#f0f0f0" rx="0" />
+    <!-- Simplified Dashboard Preview -->
+    <rect x="30" y="60" width="400" height="30" fill="#ddd" rx="3" />
+    <rect x="30" y="110" width="180" height="20" fill="#eee" rx="3" />
+    <rect x="30" y="140" width="150" height="20" fill="#eee" rx="3" />
+    <rect x="30" y="170" width="200" height="20" fill="#eee" rx="3" />
+    <rect x="240" y="110" width="180" height="20" fill="#eee" rx="3" />
+    <rect x="240" y="140" width="150" height="20" fill="#eee" rx="3" />
+
+    <text x="0" y="270" class="subtitle"><tspan class="live">●</tspan> Live in Production</text>
+
+    <rect x="0" y="300" width="140" height="25" class="badge production-ready" rx="5"/>
+    <text x="10" y="317" fill="white" style="font-size:12px; font-weight: bold">✅ Production Ready</text>
+
+    <rect x="160" y="300" width="90" height="25" class="badge deployed" rx="5"/>
+    <text x="170" y="317" fill="white" style="font-size:12px; font-weight: bold">🚀 Deployed</text>
+  </g>
+
+  <!-- BOTTOM BANNER -->
+  <g transform="translate(0, 560)">
+    <rect width="1200" height="70" fill="#f8f9fa"/>
+    <text x="600" y="590" text-anchor="middle" class="title">Open Source Transparency → Production Excellence</text>
+    <text x="600" y="615" text-anchor="middle" class="subtitle">From GitHub to your business</text>
+  </g>
+</svg>
