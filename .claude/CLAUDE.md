@@ -100,4 +100,26 @@ npm run integrity:check  # Founder OS health check
 
 ---
 
+## Agentic Layer (NEW - December 2025)
+
+**What**: Autonomous engineering team in the codebase (43 AI agents)
+**Goal**: Codebase singularity — agents run Unite-Hub better than humans
+
+**For AI Coding Agents**: Read `@AGENTS.md` (root)
+**Framework**: See `@.claude/AGENTIC-LAYER.md`
+**Registry**: All agents in `@.claude/agents/registry.json`
+**Skills**: Progressive disclosure in `@.claude/skills/`
+
+**Current**: Class 1 Grade 4 (verification + feedback loops) ✅
+**Target**: Class 2-3 (parallel subagents + autonomous workflows)
+
+**Key Standards**:
+- All agents filter by `workspace_id` (multi-tenant isolation)
+- Independent verification prevents self-attestation
+- Budget enforcement (daily/monthly limits)
+- 100% test pass rate required
+
+---
+
 *Context Optimization: Modular rules system (2025-12-11) — Core guide ~1.2k tokens, rules load conditionally*
+*Agentic Layer: Building self-driving codebase (2025-12-30) — 43 agents, Class 2-3 in progress*
