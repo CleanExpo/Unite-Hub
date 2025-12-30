@@ -131,8 +131,9 @@ DROP POLICY IF EXISTS "elite_tier_only" ON custom_integrations;
 CREATE POLICY "elite_tier_only" ON custom_integrations
 FOR INSERT WITH CHECK (
   workspace_id IN (
-    SELECT s.workspace_id FROM subscriptions s
-    WHERE s.tier = 'elite' AND s.status = 'active'
+    SELECT w.id FROM workspaces w
+    INNER JOIN subscriptions s ON s.org_id = w.org_id
+    WHERE s.plan IN ('enterprise', 'custom') AND s.status = 'active'
   )
 );
 
