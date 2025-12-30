@@ -1,0 +1,32 @@
+{
+  "timestamp": "2025-12-30T07:44:01.957Z",
+  "total_tests": 3055,
+  "passed": 3034,
+  "failed": 12,
+  "warnings": 9,
+  "gaps": [
+    "Missing table: synthex_content_queue",
+    "Missing API endpoint: /api/auth/session",
+    "Missing API endpoint: /api/content-agent",
+    "Missing API endpoint: /api/email-agent",
+    "Missing API endpoint: /api/orchestrator",
+    "Missing API endpoint: /api/synthex/content-generator",
+    "Missing API endpoint: /api/subscriptions",
+    "Cannot deliver: AI content generation (Missing content agent)",
+    "Cannot deliver: 10 social posts/week (Missing social post generator)",
+    "Cannot deliver: 25 social posts/week (Missing social post generator)",
+    "Cannot deliver: Unlimited social posts (Missing social post generator)",
+    "Cannot deliver: Custom integrations (Custom integration framework not yet implemented)"
+  ],
+  "recommendations": [
+    "Create billing route: src/app/api/billing/create-checkout/route.ts",
+    "Create billing route: src/app/api/billing/webhook/route.ts",
+    "Create billing route: src/app/api/subscriptions/route.ts",
+    "Verify White-label options implementation",
+    "Implement Auto-schedule social posts: src/lib/agents/content-agent.ts",
+    "Implement Auto-generate content: src/lib/agents/content-agent.ts",
+    "Implement Auto-respond to emails: src/lib/agents/email-agent.ts",
+    "Implement Auto-campaign creation: src/lib/agents/orchestrator.ts",
+    "Implement Auto-performance tracking: src/lib/agents/analytics-agent.ts"
+  ]
+}
