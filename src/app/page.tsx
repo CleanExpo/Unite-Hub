@@ -46,7 +46,7 @@ export default function SynthexLanding() {
           <div className="flex justify-center mb-8">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-orange-200 text-sm shadow-sm">
               <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-              <span className="text-gray-700 font-medium">AI Marketing for Queensland Small Businesses</span>
+              <span className="text-gray-700 font-medium">AI Marketing for Australia & New Zealand</span>
             </div>
           </div>
 
@@ -127,7 +127,7 @@ export default function SynthexLanding() {
               From marketing chaos to <span className="text-accent-500">automated success</span>
             </h2>
             <p className="text-xl text-gray-600">
-              See how Queensland businesses transformed their marketing
+              See how Australian & NZ businesses transformed their marketing
             </p>
           </div>
 
@@ -334,10 +334,10 @@ export default function SynthexLanding() {
       <section className="py-24 px-6">
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
-            Trusted by Queensland businesses
+            Trusted across Australia & New Zealand
           </h2>
           <p className="text-xl text-gray-600 mb-16">
-            Join trades, salons, and local services across Logan and Brisbane
+            Join trades, salons, and local services from Sydney to Auckland
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -371,7 +371,7 @@ export default function SynthexLanding() {
             Start Free Trial →
           </Link>
           <p className="mt-6 text-sm text-gray-500">
-            14-day free trial • No credit card required • Cancel anytime • Australian support
+            14-day free trial • No credit card required • Cancel anytime • AU/NZ support
           </p>
         </div>
       </section>
@@ -381,7 +381,7 @@ export default function SynthexLanding() {
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="text-sm text-gray-600">
-              © 2025 Synthex.social • Logan, Brisbane, Queensland • All rights reserved
+              © 2025 Synthex.social • Australia & New Zealand • All rights reserved
             </div>
             <div className="flex items-center gap-6 text-sm">
               <Link href="/login" className="text-gray-600 hover:text-gray-900 transition-colors">Sign in</Link>
