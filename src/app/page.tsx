@@ -1,82 +1,93 @@
 /**
- * Professional SaaS Landing Page
- * Inspired by Linear, Vercel, Stripe
- * Modern, minimal, high-converting
+ * Synthex.social Landing Page
+ * AI Marketing for Small Businesses
+ * Light theme, SMB-focused, Queensland market
  */
 
 'use client';
 
 import Link from 'next/link';
 
-export default function ProfessionalLanding() {
+export default function SynthexLanding() {
   return (
-    <div className="min-h-screen bg-bg-base text-text-primary">
-      {/* Header - Minimal like Linear */}
-      <header className="fixed top-0 left-0 right-0 z-50 border-b border-border-subtle bg-bg-base/50 backdrop-blur-xl">
+    <div className="min-h-screen bg-white text-gray-900">
+      {/* Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="text-xl font-semibold" aria-label="Unite-Hub homepage">Unite-Hub</Link>
+          <Link href="/" className="text-xl font-bold text-gray-900" aria-label="Synthex.social homepage">
+            Synthex<span className="text-accent-500">.social</span>
+          </Link>
 
           <nav className="hidden md:flex items-center gap-8 text-sm" aria-label="Main navigation">
-            <a href="#product" className="text-text-secondary hover:text-text-primary transition-colors">Product</a>
-            <a href="#technology" className="text-text-secondary hover:text-text-primary transition-colors">Technology</a>
-            <a href="/agents" className="text-text-secondary hover:text-text-primary transition-colors">Dashboard</a>
+            <a href="#how-it-works" className="text-gray-600 hover:text-gray-900 transition-colors">How It Works</a>
+            <a href="#business-types" className="text-gray-600 hover:text-gray-900 transition-colors">For Your Business</a>
+            <a href="#pricing" className="text-gray-600 hover:text-gray-900 transition-colors">Pricing</a>
           </nav>
 
           <div className="flex items-center gap-4">
-            <Link href="/login" className="text-sm text-text-secondary hover:text-text-primary transition-colors">
+            <Link href="/login" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
               Sign in
             </Link>
-            <Link href="/login" className="px-4 py-2 bg-bg-card text-text-primary text-sm font-medium rounded-lg hover:bg-bg-subtle transition-colors border border-border-base" aria-label="Start your free trial">
-              Start trial
+            <Link
+              href="/login"
+              className="px-5 py-2.5 bg-accent-500 text-white text-sm font-medium rounded-lg hover:bg-accent-600 transition-colors shadow-sm"
+              aria-label="Start your 14-day free trial"
+            >
+              Start Free Trial
             </Link>
           </div>
         </div>
       </header>
 
-      {/* Hero - Clean like Vercel */}
-      <section className="pt-32 pb-24 px-6">
+      {/* Hero */}
+      <section className="pt-32 pb-20 px-6 bg-gradient-to-b from-orange-50 to-white">
         <div className="max-w-6xl mx-auto">
           {/* Badge */}
           <div className="flex justify-center mb-8">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-bg-subtle border border-border-subtle text-sm">
-              <div className="w-1.5 h-1.5 rounded-full bg-green-400"></div>
-              <span className="text-text-secondary">43 AI Agents • Enhanced with Project Vend Phase 2</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-orange-200 text-sm shadow-sm">
+              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+              <span className="text-gray-700 font-medium">AI Marketing for Queensland Small Businesses</span>
             </div>
           </div>
 
           {/* Headline */}
-          <h1 className="text-center text-4xl md:text-6xl lg:text-7xl font-bold mb-8 leading-[1.1]">
-            <span className="block">Marketing automation</span>
-            <span className="block bg-gradient-to-r from-accent-400 via-accent-500 to-accent-600 bg-clip-text text-transparent">
-              for $0.05 per email
-            </span>
+          <h1 className="text-center text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-[1.1] text-gray-900">
+            No agency bill.
+            <br />
+            <span className="text-accent-500">No complexity.</span>
           </h1>
 
           {/* Subheadline */}
-          <p className="text-center text-xl text-text-secondary max-w-2xl mx-auto mb-12">
-            Stop paying agencies $5,000/month. AI processes your emails, generates content, and runs campaigns automatically.
+          <p className="text-center text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto mb-12">
+            AI creates your social posts, manages your content, and handles your marketing — automatically.
+            <br />
+            <span className="font-semibold text-gray-900">From A$495/month.</span>
           </p>
 
           {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
-            <Link href="/login" className="px-6 py-3 bg-accent-500 text-text-primary font-medium rounded-lg hover:bg-accent-600 transition-all" aria-label="Start your 14-day free trial">
-              Start free trial →
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+            <Link
+              href="/login"
+              className="px-8 py-4 bg-accent-500 text-white text-lg font-semibold rounded-lg hover:bg-accent-600 transition-all shadow-lg hover:shadow-xl"
+              aria-label="Start your 14-day free trial"
+            >
+              Start 14-Day Free Trial →
             </Link>
-            <Link href="/agents" className="px-6 py-3 border border-border-base text-text-primary font-medium rounded-lg hover:bg-bg-subtle transition-all" aria-label="View our live agent performance dashboard">
-              View live dashboard
+            <Link
+              href="#pricing"
+              className="px-8 py-4 border-2 border-gray-300 text-gray-900 text-lg font-semibold rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-all"
+            >
+              View Pricing
             </Link>
           </div>
 
-          {/* Hero Visual - Comparison */}
+          {/* Hero Visual */}
           <div className="relative">
-            {/* Glow effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-accent-500/20 via-accent-400/20 to-accent-600/20 blur-3xl"></div>
-
-            {/* Visual */}
-            <div className="relative bg-bg-subtle backdrop-blur-sm border border-border-subtle rounded-2xl p-8">
+            <div className="absolute inset-0 bg-gradient-to-r from-orange-200/30 via-orange-300/30 to-orange-200/30 blur-3xl"></div>
+            <div className="relative bg-white rounded-2xl p-4 shadow-2xl border border-gray-200">
               <img
-                src="/generated-assets/client-vs-agency-comparison.svg"
-                alt="Cost comparison showing traditional marketing agencies at $5,000 per month versus Unite-Hub AI automation at only $0.05 per email processed"
+                src="/synthex-assets/synthex-hero-dashboard.svg"
+                alt="Synthex dashboard showing AI content generation, social media scheduling, and analytics for small businesses"
                 className="w-full h-auto rounded-lg"
               />
             </div>
@@ -84,242 +95,298 @@ export default function ProfessionalLanding() {
         </div>
       </section>
 
-      {/* Stats Strip - Clean */}
-      <section className="border-y border-border-subtle py-16 px-6">
+      {/* Stats Strip */}
+      <section className="border-y border-gray-200 py-12 px-6 bg-gray-50">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div className="text-center">
-              <div className="text-4xl font-bold mb-2">43</div>
-              <div className="text-sm text-text-secondary">AI Agents</div>
+              <div className="text-4xl font-bold text-gray-900 mb-1">$5K+</div>
+              <div className="text-sm text-gray-600">Traditional Agency Cost</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold mb-2">$0.05</div>
-              <div className="text-sm text-text-secondary">Per Email</div>
+              <div className="text-4xl font-bold text-accent-500 mb-1">A$495</div>
+              <div className="text-sm text-gray-600">Synthex Starter Plan</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold mb-2">100%</div>
-              <div className="text-sm text-text-secondary">Open Source</div>
+              <div className="text-4xl font-bold text-gray-900 mb-1">14 Days</div>
+              <div className="text-sm text-gray-600">Free Trial</div>
             </div>
             <div className="text-center">
-              <div className="text-4xl font-bold mb-2">Real-time</div>
-              <div className="text-sm text-text-secondary">Processing</div>
+              <div className="text-4xl font-bold text-gray-900 mb-1">No Lock-In</div>
+              <div className="text-sm text-gray-600">Cancel Anytime</div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* How It Works - Minimal */}
-      <section id="product" className="py-24 px-6">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold mb-20 text-center">
-            Set up in <span className="text-blue-400">15 minutes</span>
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {[
-              { icon: '/generated-assets/step-1-connect-gmail.svg', title: 'Connect', desc: '2 min' },
-              { icon: '/generated-assets/step-2-ai-analyzes.svg', title: 'AI analyzes', desc: 'Automatic' },
-              { icon: '/generated-assets/step-4-generate-responses.svg', title: 'Generate', desc: 'Automatic' },
-              { icon: '/generated-assets/step-5-track-performance.svg', title: 'Monitor', desc: 'Real-time' }
-            ].map((step, i) => (
-              <div key={i} className="group">
-                <div className="mb-6 p-6 bg-bg-subtle rounded-2xl border border-border-subtle group-hover:bg-white/10 group-hover:border-border-base transition-all">
-                  <img src={step.icon} alt={step.title} className="w-16 h-16" />
-                </div>
-                <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
-                <p className="text-sm text-text-secondary">{step.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Architecture - Clean */}
-      <section id="technology" className="py-24 px-6 border-t border-border-subtle">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Enterprise technology,
-              <br />
-              <span className="text-text-secondary">small business pricing</span>
-            </h2>
-          </div>
-
-          {/* Architecture Diagram */}
-          <div className="bg-bg-subtle rounded-2xl p-8 border border-border-subtle mb-16">
-            <img
-              src="/generated-assets/unite-hub-architecture.svg"
-              alt="Architecture"
-              className="w-full h-auto"
-            />
-          </div>
-
-          {/* Tech Stack */}
-          <div className="grid grid-cols-3 gap-6">
-            <div className="p-6 bg-bg-subtle rounded-xl border border-border-subtle">
-              <div className="text-sm text-blue-400 font-medium mb-2">Layer 1</div>
-              <h3 className="text-lg font-semibold mb-2">Next.js 16</h3>
-              <p className="text-sm text-text-secondary">App Router, React 19, 100+ API routes</p>
-            </div>
-
-            <div className="p-6 bg-bg-subtle rounded-xl border border-border-subtle">
-              <div className="text-sm text-purple-400 font-medium mb-2">Layer 2</div>
-              <h3 className="text-lg font-semibold mb-2">43 AI Agents</h3>
-              <p className="text-sm text-text-secondary">Email, Content, Orchestration + Phase 2</p>
-            </div>
-
-            <div className="p-6 bg-bg-subtle rounded-xl border border-border-subtle">
-              <div className="text-sm text-pink-400 font-medium mb-2">Layer 3</div>
-              <h3 className="text-lg font-semibold mb-2">Supabase</h3>
-              <p className="text-sm text-text-secondary">PostgreSQL, RLS, Real-time</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Project Vend Phase 2 - Visual */}
+      {/* Before/After Transformation */}
       <section className="py-24 px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Built on Anthropic's research
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
+              From marketing chaos to <span className="text-accent-500">automated success</span>
             </h2>
-            <p className="text-xl text-text-secondary">
-              Project Vend Phase 2: Self-improving autonomous system
+            <p className="text-xl text-gray-600">
+              See how Queensland businesses transformed their marketing
             </p>
           </div>
 
-          <div className="bg-bg-subtle rounded-2xl p-8 border border-border-subtle">
+          <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-200">
             <img
-              src="/generated-assets/project-vend-phase2-overview.svg"
-              alt="Project Vend Phase 2"
-              className="w-full h-auto"
+              src="/synthex-assets/synthex-before-after-transformation.svg"
+              alt="Before and after comparison showing manual marketing chaos versus automated Synthex system for small businesses"
+              className="w-full h-auto rounded-lg"
             />
           </div>
+        </div>
+      </section>
 
-          {/* Stats */}
-          <div className="grid grid-cols-5 gap-6 mt-12">
+      {/* How It Works */}
+      <section id="how-it-works" className="py-24 px-6 bg-gray-50">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-center text-gray-900">
+            Set up in <span className="text-accent-500">15 minutes</span>
+          </h2>
+          <p className="text-xl text-gray-600 text-center mb-16">
+            No technical skills required. We guide you through everything.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
-              { label: 'Metrics', value: '✓' },
-              { label: 'Rules', value: '✓' },
-              { label: 'Verification', value: '✓' },
-              { label: 'Escalations', value: '✓' },
-              { label: 'Budgets', value: '✓' }
-            ].map((item, i) => (
-              <div key={i} className="text-center p-4 bg-bg-subtle rounded-lg border border-border-subtle">
-                <div className="text-2xl mb-2">{item.value}</div>
-                <div className="text-sm text-text-secondary">{item.label}</div>
+              {
+                step: '1',
+                title: 'Tell us about your business',
+                desc: 'Trades, salon, coaching, or restaurant? We customize for you.',
+                icon: '🏢'
+              },
+              {
+                step: '2',
+                title: 'AI learns your style',
+                desc: 'Our AI understands your brand voice and creates content automatically.',
+                icon: '🤖'
+              },
+              {
+                step: '3',
+                title: 'Marketing runs itself',
+                desc: 'Social posts, SEO, content — all handled. You focus on your business.',
+                icon: '🚀'
+              }
+            ].map((item) => (
+              <div key={item.step} className="bg-white rounded-xl p-8 shadow-md border border-gray-200 hover:shadow-lg transition-shadow">
+                <div className="text-5xl mb-4">{item.icon}</div>
+                <div className="text-sm font-semibold text-accent-500 mb-2">STEP {item.step}</div>
+                <h3 className="text-xl font-bold mb-3 text-gray-900">{item.title}</h3>
+                <p className="text-gray-600">{item.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* GitHub - Clean */}
-      <section className="py-24 px-6 border-t border-border-subtle">
-        <div className="max-w-5xl mx-auto">
+      {/* Business Types */}
+      <section id="business-types" className="py-24 px-6">
+        <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Open source from day one
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
+              Built for <span className="text-accent-500">your</span> business
             </h2>
-            <p className="text-xl text-text-secondary">
-              14,000+ lines of TypeScript. 136 tests. Production-ready.
+            <p className="text-xl text-gray-600">
+              Synthex adapts to your industry and customer base
             </p>
           </div>
 
-          <div className="bg-bg-subtle rounded-2xl p-8 border border-border-subtle mb-8">
-            <img
-              src="/generated-assets/github-social-proof.svg"
-              alt="GitHub"
-              className="w-full h-auto"
-            />
-          </div>
-
-          <div className="text-center">
-            <a
-              href="https://github.com/CleanExpo/Unite-Hub"
-              target="_blank"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-accent-500 text-text-primary font-medium rounded-lg hover:bg-accent-600 transition-colors"
-            >
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-              </svg>
-              View on GitHub
-            </a>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { icon: '🔨', title: 'Trades & Contractors', desc: 'Plumbers, electricians, builders' },
+              { icon: '💇', title: 'Salons & Spas', desc: 'Hair, beauty, wellness' },
+              { icon: '📚', title: 'Coaches & Consultants', desc: 'Business, life, fitness' },
+              { icon: '🍽️', title: 'Restaurants & Cafes', desc: 'Food service, hospitality' }
+            ].map((biz, i) => (
+              <div key={i} className="bg-white rounded-xl p-6 border-2 border-gray-200 hover:border-accent-500 transition-all">
+                <div className="text-4xl mb-3">{biz.icon}</div>
+                <h3 className="text-lg font-bold mb-2 text-gray-900">{biz.title}</h3>
+                <p className="text-sm text-gray-600">{biz.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Simple Pricing */}
-      <section className="py-24 px-6 border-t border-border-subtle">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Simple pricing
+      {/* Pricing */}
+      <section id="pricing" className="py-24 px-6 bg-gray-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
+              Simple, transparent pricing
+            </h2>
+            <p className="text-xl text-gray-600">
+              All prices include GST. 14-day free trial. No credit card required.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Starter */}
+            <div className="bg-white rounded-2xl p-8 shadow-lg border-2 border-gray-200 hover:border-accent-500 transition-all">
+              <div className="text-sm font-semibold text-gray-600 mb-2">STARTER</div>
+              <div className="text-5xl font-bold mb-2 text-gray-900">
+                A$495
+                <span className="text-xl text-gray-600 font-normal">/month</span>
+              </div>
+              <p className="text-gray-600 mb-6">Perfect for getting started</p>
+
+              <ul className="space-y-3 mb-8">
+                {[
+                  'AI content generation',
+                  '10 social posts/week',
+                  'Basic SEO tools',
+                  'Email support',
+                  '1 business location'
+                ].map((feature, i) => (
+                  <li key={i} className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                    </svg>
+                    <span className="text-gray-700">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <Link href="/login" className="block w-full text-center px-6 py-3 bg-gray-900 text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors">
+                Start Free Trial
+              </Link>
+            </div>
+
+            {/* Professional */}
+            <div className="bg-white rounded-2xl p-8 shadow-2xl border-2 border-accent-500 hover:shadow-3xl transition-all relative">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1 bg-accent-500 text-white text-xs font-bold rounded-full">
+                MOST POPULAR
+              </div>
+
+              <div className="text-sm font-semibold text-accent-500 mb-2">PROFESSIONAL</div>
+              <div className="text-5xl font-bold mb-2 text-gray-900">
+                A$895
+                <span className="text-xl text-gray-600 font-normal">/month</span>
+              </div>
+              <p className="text-gray-600 mb-6">For growing businesses</p>
+
+              <ul className="space-y-3 mb-8">
+                {[
+                  'Everything in Starter',
+                  '25 social posts/week',
+                  'Advanced SEO & analytics',
+                  'Priority support',
+                  '3 business locations',
+                  'Video generation',
+                  'Custom branding'
+                ].map((feature, i) => (
+                  <li key={i} className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                    </svg>
+                    <span className="text-gray-700">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <Link href="/login" className="block w-full text-center px-6 py-3 bg-accent-500 text-white font-semibold rounded-lg hover:bg-accent-600 transition-colors">
+                Start Free Trial
+              </Link>
+            </div>
+
+            {/* Elite */}
+            <div className="bg-white rounded-2xl p-8 shadow-lg border-2 border-gray-200 hover:border-accent-500 transition-all">
+              <div className="text-sm font-semibold text-gray-600 mb-2">ELITE</div>
+              <div className="text-5xl font-bold mb-2 text-gray-900">
+                A$1,295
+                <span className="text-xl text-gray-600 font-normal">/month</span>
+              </div>
+              <p className="text-gray-600 mb-6">Maximum automation</p>
+
+              <ul className="space-y-3 mb-8">
+                {[
+                  'Everything in Professional',
+                  'Unlimited social posts',
+                  'Multi-channel campaigns',
+                  'Dedicated account manager',
+                  'Unlimited locations',
+                  'API access',
+                  'White-label options',
+                  'Custom integrations'
+                ].map((feature, i) => (
+                  <li key={i} className="flex items-start gap-3">
+                    <svg className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                    </svg>
+                    <span className="text-gray-700">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <Link href="/login" className="block w-full text-center px-6 py-3 bg-gray-900 text-white font-semibold rounded-lg hover:bg-gray-800 transition-colors">
+                Start Free Trial
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Social Proof */}
+      <section className="py-24 px-6">
+        <div className="max-w-5xl mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
+            Trusted by Queensland businesses
           </h2>
-          <p className="text-xl text-text-secondary mb-16">
-            No contracts. Cancel anytime.
+          <p className="text-xl text-gray-600 mb-16">
+            Join trades, salons, and local services across Logan and Brisbane
           </p>
 
-          <div className="inline-block p-12 bg-bg-subtle rounded-2xl border border-border-subtle">
-            <div className="text-6xl font-bold mb-2">
-              $0.05
-              <span className="text-2xl text-text-secondary font-normal">/email</span>
-            </div>
-            <p className="text-text-secondary mb-8">Plus AI costs (~$0.01/email)</p>
-
-            <div className="space-y-3 text-left mb-8">
-              {[
-                'All 43 AI agents included',
-                'Unlimited emails',
-                'Real-time dashboard',
-                'Full GitHub access',
-                'Cancel anytime'
-              ].map((feature, i) => (
-                <div key={i} className="flex items-center gap-3">
-                  <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-                  </svg>
-                  <span className="text-text-secondary">{feature}</span>
-                </div>
-              ))}
-            </div>
-
-            <Link href="/login" className="block w-full px-6 py-3 bg-accent-500 text-text-primary font-semibold rounded-lg hover:bg-accent-600 transition-colors">
-              Start 14-day free trial
-            </Link>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { metric: '100+', label: 'Active Businesses' },
+              { metric: '10K+', label: 'Posts Generated' },
+              { metric: '4.9/5', label: 'Customer Rating' }
+            ].map((stat, i) => (
+              <div key={i} className="bg-gradient-to-br from-orange-50 to-white rounded-xl p-8 border border-orange-200">
+                <div className="text-5xl font-bold text-accent-500 mb-2">{stat.metric}</div>
+                <div className="text-gray-700 font-medium">{stat.label}</div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Final CTA - Clean */}
-      <section className="py-32 px-6 border-t border-border-subtle">
+      {/* Final CTA */}
+      <section className="py-32 px-6 bg-gradient-to-b from-orange-50 to-white">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-5xl md:text-6xl font-bold mb-6">
-            Start automating today
+          <h2 className="text-5xl md:text-6xl font-bold mb-6 text-gray-900">
+            Ready to automate your marketing?
           </h2>
-          <p className="text-xl text-text-secondary mb-8">
-            Join Logan, Brisbane, and Queensland businesses using AI
+          <p className="text-xl text-gray-600 mb-8">
+            Start your 14-day free trial. No credit card required.
           </p>
-          <Link href="/login" className="inline-block px-8 py-4 bg-accent-500 text-text-primary font-semibold rounded-lg hover:bg-accent-600 transition-colors text-lg">
-            Start free trial
+          <Link
+            href="/login"
+            className="inline-block px-10 py-5 bg-accent-500 text-white font-bold rounded-lg hover:bg-accent-600 transition-all text-lg shadow-xl hover:shadow-2xl transform hover:-translate-y-1"
+          >
+            Start Free Trial →
           </Link>
-          <p className="mt-6 text-sm text-text-tertiary">
-            No credit card required • 14-day free trial • Cancel anytime
+          <p className="mt-6 text-sm text-gray-500">
+            14-day free trial • No credit card required • Cancel anytime • Australian support
           </p>
         </div>
       </section>
 
-      {/* Footer - Minimal */}
-      <footer className="border-t border-border-subtle py-12 px-6">
+      {/* Footer */}
+      <footer className="border-t border-gray-200 py-12 px-6 bg-gray-50">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="text-sm text-text-secondary">
-              © 2025 Unite-Hub • Logan, Brisbane, QLD • Open Source
+            <div className="text-sm text-gray-600">
+              © 2025 Synthex.social • Logan, Brisbane, Queensland • All rights reserved
             </div>
-            <div className="flex items-center gap-6 text-sm text-text-secondary">
-              <Link href="/agents" className="hover:text-text-primary transition-colors">Dashboard</Link>
-              <a href="https://github.com/CleanExpo/Unite-Hub" target="_blank" className="hover:text-text-primary transition-colors">GitHub</a>
-              <Link href="/login" className="hover:text-text-primary transition-colors">Sign in</Link>
+            <div className="flex items-center gap-6 text-sm">
+              <Link href="/login" className="text-gray-600 hover:text-gray-900 transition-colors">Sign in</Link>
+              <a href="#pricing" className="text-gray-600 hover:text-gray-900 transition-colors">Pricing</a>
+              <a href="#how-it-works" className="text-gray-600 hover:text-gray-900 transition-colors">How It Works</a>
             </div>
           </div>
         </div>
