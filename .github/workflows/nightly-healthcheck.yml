@@ -50,7 +50,7 @@ jobs:
 
       - name: Check Database Connectivity
               continue-on-error: true
-        run: |
+         run: |
           if [ -f health-report.json ] && jq -e . health-report.json >/dev/null 2>&1; then
             STATUS=$(jq -r '.checks.database.status // "unknown"' health-report.json)
           else
