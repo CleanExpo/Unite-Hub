@@ -1,23 +1,12 @@
 {
-  "timestamp": "2025-12-30T08:39:29.951Z",
+  "timestamp": "2025-12-31T03:23:59.694Z",
   "total_tests": 3055,
-  "passed": 3043,
-  "failed": 6,
-  "warnings": 6,
+  "passed": 1055,
+  "failed": 2000,
+  "warnings": 1,
   "gaps": [
-    "Missing table: synthex_content_queue",
-    "Cannot deliver: AI content generation (Missing content agent)",
-    "Cannot deliver: 10 social posts/week (Missing social post generator)",
-    "Cannot deliver: 25 social posts/week (Missing social post generator)",
-    "Cannot deliver: Unlimited social posts (Missing social post generator)",
-    "Cannot deliver: Custom integrations (Custom integration framework not yet implemented)"
+    "Anthropic API usage limit reached during content generation simulation (resets 2026-01-01 00:00 UTC)",
+    "Anthropic API usage limit reached during industry customization simulation (resets 2026-01-01 00:00 UTC)"
   ],
-  "recommendations": [
-    "Verify White-label options implementation",
-    "Implement Auto-schedule social posts: src/lib/agents/content-agent.ts",
-    "Implement Auto-generate content: src/lib/agents/content-agent.ts",
-    "Implement Auto-respond to emails: src/lib/agents/email-agent.ts",
-    "Implement Auto-campaign creation: src/lib/agents/orchestrator.ts",
-    "Implement Auto-performance tracking: src/lib/agents/analytics-agent.ts"
-  ]
+  "recommendations": []
 }

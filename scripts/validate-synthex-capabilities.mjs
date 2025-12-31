@@ -6,7 +6,14 @@
  */
 
 import { config } from 'dotenv';
-config({ path: '.env.local' });
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const rootDir = join(__dirname, '..');
+
+config({ path: join(rootDir, '.env.local') });
 
 import { createClient } from '@supabase/supabase-js';
 import Anthropic from '@anthropic-ai/sdk';
@@ -93,6 +100,66 @@ const results = {
   recommendations: []
 };
 
+const AI_THROTTLE_MS = Number(process.env.ANTHROPIC_THROTTLE_MS ?? '250');
+const AI_MAX_RETRIES = Number(process.env.ANTHROPIC_MAX_RETRIES ?? '3');
+const AI_RETRY_BASE_DELAY_MS = Number(process.env.ANTHROPIC_RETRY_BASE_DELAY_MS ?? '750');
+const SIM_CONTENT_GENERATION_COUNT = Number(process.env.SYNTHEX_SIM_CONTENT_COUNT ?? '1000');
+const SIM_SIGNUP_JOURNEYS_COUNT = Number(process.env.SYNTHEX_SIM_SIGNUP_COUNT ?? '1000');
+const SIM_INDUSTRY_CUSTOMIZATION_COUNT = Number(process.env.SYNTHEX_SIM_INDUSTRY_COUNT ?? '1000');
+const SHOULD_WRITE_REPORT = !['1', 'true', 'yes'].includes(
+  String(process.env.SYNTHEX_NO_WRITE_REPORT ?? '').toLowerCase()
+);
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function formatError(err) {
+  const status = err?.status;
+  const message = err?.message ?? String(err);
+  const normalized = message
+    .replace(/"request_id":"[^"]+"/g, '"request_id":"<redacted>"')
+    .replace(/\breq_[A-Za-z0-9]+\b/g, 'req_<redacted>');
+  return status ? `HTTP ${status}: ${normalized}` : normalized;
+}
+
+function parseAnthropicUsageLimitReset(message) {
+  const match = message.match(/regain access on ([0-9-]+) at ([0-9:]+ UTC)/i);
+  if (!match) return null;
+  return `${match[1]} ${match[2]}`;
+}
+
+function isRetryableAnthropicError(err) {
+  const status = err?.status;
+  if (status === 429 || status === 408 || status === 500 || status === 503 || status === 529) return true;
+  const message = err?.message ?? '';
+  return /rate|timeout|overload|temporarily|capacity/i.test(message);
+}
+
+function isAnthropicUsageLimitError(err) {
+  const message = err?.message ?? '';
+  return /reached your specified api usage limits/i.test(message);
+}
+
+async function callAnthropicWithRetry(fn) {
+  let lastError;
+  for (let attempt = 0; attempt <= AI_MAX_RETRIES; attempt++) {
+    try {
+      return await fn();
+    } catch (err) {
+      lastError = err;
+      if (!isRetryableAnthropicError(err) || attempt === AI_MAX_RETRIES) throw err;
+
+      const backoffMs = Math.min(
+        15000,
+        AI_RETRY_BASE_DELAY_MS * Math.pow(2, attempt) + Math.floor(Math.random() * 250)
+      );
+      await sleep(backoffMs);
+    }
+  }
+  throw lastError;
+}
+
 // ============================================
 // 1. DATABASE SCHEMA VALIDATION
 // ============================================
@@ -172,6 +239,8 @@ async function simulateContentGeneration(count = 1000) {
   let successful = 0;
   let failed = 0;
   const errors = new Set();
+  let abortedDueToUsageLimit = false;
+  let usageLimitResetAt = null;
 
   for (let i = 0; i < count; i++) {
     const industry = industries[Math.floor(Math.random() * industries.length)];
@@ -179,14 +248,16 @@ async function simulateContentGeneration(count = 1000) {
 
     try {
       // Simulate content generation
-      const message = await anthropic.messages.create({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 500,
-        messages: [{
-          role: 'user',
-          content: `Create a ${postType} post for a ${industry} business. One sentence only.`
-        }]
-      });
+      const message = await callAnthropicWithRetry(() =>
+        anthropic.messages.create({
+          model: 'claude-haiku-4-5-20251001',
+          max_tokens: 500,
+          messages: [{
+            role: 'user',
+            content: `Create a ${postType} post for a ${industry} business. One sentence only.`
+          }]
+        })
+      );
 
       if (message.content[0]?.text && message.content[0].text.length > 10) {
         successful++;
@@ -196,8 +267,19 @@ async function simulateContentGeneration(count = 1000) {
       }
     } catch (error) {
       failed++;
-      errors.add(error.message);
+
+      if (isAnthropicUsageLimitError(error)) {
+        abortedDueToUsageLimit = true;
+        usageLimitResetAt = parseAnthropicUsageLimitReset(error?.message ?? '');
+        errors.add('Anthropic API usage limit reached');
+        failed += (count - i - 1);
+        break;
+      }
+
+      errors.add(formatError(error));
     }
+
+    if (AI_THROTTLE_MS > 0) await sleep(AI_THROTTLE_MS);
 
     // Progress indicator every 100 tests
     if ((i + 1) % 100 === 0) {
@@ -217,7 +299,10 @@ async function simulateContentGeneration(count = 1000) {
     results.warnings++;
   }
 
-  if (successful / count < 0.95) {
+  if (abortedDueToUsageLimit) {
+    const resetText = usageLimitResetAt ? ` (resets ${usageLimitResetAt})` : '';
+    results.gaps.push(`Anthropic API usage limit reached during content generation simulation${resetText}`);
+  } else if (successful / count < 0.95) {
     results.gaps.push(`Content generation success rate below 95%: ${(successful/count*100).toFixed(2)}%`);
   }
 }
@@ -232,25 +317,24 @@ async function simulateSignupJourneys(count = 1000) {
   const tiers = ['starter', 'professional', 'elite'];
   let successful = 0;
   let failed = 0;
+  let subscriptionsHealthy = true;
+
+  try {
+    const { error: subError } = await supabase
+      .from('subscriptions')
+      .select('id')
+      .limit(1);
+
+    if (subError) throw new Error('Subscription table check failed');
+  } catch (error) {
+    subscriptionsHealthy = false;
+  }
 
   for (let i = 0; i < count; i++) {
     const tier = tiers[Math.floor(Math.random() * tiers.length)];
 
     try {
-      // Step 1: Create workspace
-      const workspace = {
-        id: `test-workspace-${Date.now()}-${i}`,
-        name: `Test Business ${i}`,
-        business_type: PROMISES.industries[Math.floor(Math.random() * PROMISES.industries.length)]
-      };
-
-      // Step 2: Check subscription table structure
-      const { error: subError } = await supabase
-        .from('subscriptions')
-        .select('id')
-        .limit(1);
-
-      if (subError) throw new Error('Subscription table check failed');
+      if (!subscriptionsHealthy) throw new Error('Subscription table check failed');
 
       // Step 3: Verify tier features exist in code
       const tierFeatures = PROMISES.features[tier];
@@ -405,20 +489,24 @@ async function simulateIndustryCustomization(count = 1000) {
 
   let successful = 0;
   let failed = 0;
+  let abortedDueToUsageLimit = false;
+  let usageLimitResetAt = null;
 
   for (let i = 0; i < count; i++) {
     const industry = PROMISES.industries[Math.floor(Math.random() * PROMISES.industries.length)];
 
     try {
       // Simulate AI understanding industry context
-      const message = await anthropic.messages.create({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 200,
-        messages: [{
-          role: 'user',
-          content: `Generate a marketing tagline for a ${industry} business. One sentence.`
-        }]
-      });
+      const message = await callAnthropicWithRetry(() =>
+        anthropic.messages.create({
+          model: 'claude-haiku-4-5-20251001',
+          max_tokens: 200,
+          messages: [{
+            role: 'user',
+            content: `Generate a marketing tagline for a ${industry} business. One sentence.`
+          }]
+        })
+      );
 
       const content = message.content[0]?.text || '';
 
@@ -440,7 +528,15 @@ async function simulateIndustryCustomization(count = 1000) {
       }
     } catch (error) {
       failed++;
+      if (isAnthropicUsageLimitError(error)) {
+        abortedDueToUsageLimit = true;
+        usageLimitResetAt = parseAnthropicUsageLimitReset(error?.message ?? '');
+        failed += (count - i - 1);
+        break;
+      }
     }
+
+    if (AI_THROTTLE_MS > 0) await sleep(AI_THROTTLE_MS);
 
     if ((i + 1) % 100 === 0) {
       console.log(`Progress: ${i + 1}/${count} (${successful} successful, ${failed} failed)`);
@@ -454,7 +550,10 @@ async function simulateIndustryCustomization(count = 1000) {
   console.log(`\n✅ Successful: ${successful}/${count} (${(successful/count*100).toFixed(2)}%)`);
   console.log(`❌ Failed: ${failed}/${count} (${(failed/count*100).toFixed(2)}%)`);
 
-  if (successful / count < 0.90) {
+  if (abortedDueToUsageLimit) {
+    const resetText = usageLimitResetAt ? ` (resets ${usageLimitResetAt})` : '';
+    results.gaps.push(`Anthropic API usage limit reached during industry customization simulation${resetText}`);
+  } else if (successful / count < 0.90) {
     results.gaps.push(`Industry customization success rate below 90%: ${(successful/count*100).toFixed(2)}%`);
   }
 }
@@ -576,8 +675,12 @@ function generateReport() {
 
   // Save report to file
   const reportPath = 'SYNTHEX-CAPABILITY-REPORT.json';
-  fs.writeFileSync(reportPath, JSON.stringify(results, null, 2));
-  console.log(`📄 Full report saved to: ${reportPath}\n`);
+  if (SHOULD_WRITE_REPORT) {
+    fs.writeFileSync(reportPath, JSON.stringify(results, null, 2));
+    console.log(`Full report saved to: ${reportPath}\n`);
+  } else {
+    console.log(`Report write skipped (SYNTHEX_NO_WRITE_REPORT set)\n`);
+  }
 }
 
 // ============================================
@@ -597,9 +700,9 @@ async function main() {
     await validateAutomatedMarketing();
 
     // Run simulations
-    await simulateContentGeneration(1000);
-    await simulateSignupJourneys(1000);
-    await simulateIndustryCustomization(1000);
+    await simulateContentGeneration(SIM_CONTENT_GENERATION_COUNT);
+    await simulateSignupJourneys(SIM_SIGNUP_JOURNEYS_COUNT);
+    await simulateIndustryCustomization(SIM_INDUSTRY_CUSTOMIZATION_COUNT);
 
     generateReport();
   } catch (error) {

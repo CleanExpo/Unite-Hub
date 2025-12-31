@@ -157,6 +157,11 @@ Once migrations applied, all landing page promises become deliverable:
 
 ## 📊 Validation Results
 
+Note: Use `SYNTHEX-CAPABILITY-REPORT.json` for the current snapshot; the AI simulations call Anthropic and can fail if your `ANTHROPIC_API_KEY` is rate/usage limited.
+
+Quick smoke run (no report overwrite):
+`SYNTHEX_NO_WRITE_REPORT=1 SYNTHEX_SIM_CONTENT_COUNT=10 SYNTHEX_SIM_SIGNUP_COUNT=10 SYNTHEX_SIM_INDUSTRY_COUNT=10 node scripts/validate-synthex-capabilities.mjs`
+
 **3,055 Tests Run:**
 - ✅ 99.61% success rate
 - ✅ 1,000/1,000 AI content generation (100%)
@@ -175,6 +180,7 @@ Once migrations applied, all landing page promises become deliverable:
 
 1. **Apply migrations** (manually via Dashboard)
 2. **Re-run validation:** `node scripts/validate-synthex-capabilities.mjs`
+   - If AI sims fail: wait for Anthropic limit reset or swap `ANTHROPIC_API_KEY`, then re-run.
 3. **Expected result:** 100% capability coverage, 0 gaps
 4. **Production ready:** Launch Synthex.social to AU/NZ market
 
