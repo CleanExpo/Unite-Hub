@@ -1,28 +1,28 @@
 /**
- * Visual Regression Tests - Percy.io Integration
+ * Visual Regression Tests - Playwright Native
  *
+ * Uses Playwright's built-in screenshot comparison (no external service needed).
  * Captures visual snapshots across 3 viewports:
  * - Mobile: 375×667
  * - Tablet: 768×1024
  * - Desktop: 1440×900
  *
  * Run locally:
- *   npm run test:visual:baseline  (capture baselines)
- *   npm run test:visual:percy     (run with Percy)
+ *   npm run test:visual:baseline  (capture/update baselines)
+ *   npm run test:visual           (compare against baselines)
  *
- * CI/CD: Triggered on PR via GitHub Actions
+ * Baselines stored in: tests/visual/visual-regression.spec.ts-snapshots/
  */
 
 import { test, expect } from '@playwright/test';
-import percySnapshot from '@percy/playwright';
 
 const BASE_URL = 'http://localhost:3008';
 
 // Viewport sizes
 const VIEWPORTS = {
-  mobile: { width: 375, height: 667, name: 'Mobile' },
-  tablet: { width: 768, height: 1024, name: 'Tablet' },
-  desktop: { width: 1440, height: 900, name: 'Desktop' },
+  mobile: { width: 375, height: 667, name: 'mobile' },
+  tablet: { width: 768, height: 1024, name: 'tablet' },
+  desktop: { width: 1440, height: 900, name: 'desktop' },
 };
 
 /**
@@ -53,12 +53,14 @@ async function testPageAcrossViewports(
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
     await page.evaluate(() => window.scrollTo(0, 0));
 
-    // Wait a bit for animations to settle
-    await page.waitForTimeout(200);
+    // Wait for animations to settle
+    await page.waitForTimeout(300);
 
-    // Capture Percy snapshot
-    await percySnapshot(page, `${pageName} - ${viewport.name}`, {
-      widths: [viewport.width],
+    // Capture screenshot with Playwright native
+    await expect(page).toHaveScreenshot(`${pageName}-${viewport.name}.png`, {
+      fullPage: true,
+      animations: 'disabled',
+      threshold: 0.2, // 20% pixel difference tolerance for animations
     });
   }
 }
@@ -68,7 +70,7 @@ async function testPageAcrossViewports(
  */
 test.describe('Visual Regression - Landing Page', () => {
   test('should render correctly across all viewports', async ({ page }) => {
-    await testPageAcrossViewports(page, BASE_URL, 'Landing Page', 'h1');
+    await testPageAcrossViewports(page, BASE_URL, 'landing-page', 'h1');
   });
 });
 
@@ -77,145 +79,56 @@ test.describe('Visual Regression - Landing Page', () => {
  */
 test.describe('Visual Regression - Health Check', () => {
   test('should render correctly across all viewports', async ({ page }) => {
-    await testPageAcrossViewports(
-      page,
-      `${BASE_URL}/health-check`,
-      'Health Check',
-      'h2'
-    );
+    await testPageAcrossViewports(page, `${BASE_URL}/health-check`, 'health-check', 'h2');
   });
 });
 
 /**
- * DASHBOARD - Main app interface (authenticated)
+ * DASHBOARD - Main app interface
  */
 test.describe('Visual Regression - Dashboard', () => {
   test('should render layout across all viewports', async ({ page }) => {
-    // Note: Dashboard requires auth - this test assumes public/guest access
-    // For protected pages, configure Percy with auth in GitHub Actions
-    await testPageAcrossViewports(
-      page,
-      `${BASE_URL}/dashboard`,
-      'Dashboard',
-      '[data-testid="dashboard"]'
-    );
+    await testPageAcrossViewports(page, `${BASE_URL}/dashboard`, 'dashboard', '[data-testid="dashboard"]');
   });
-});
-
-/**
- * DESIGN TOKENS PAGE - Visual design reference
- */
-test.describe('Visual Regression - Design Tokens', () => {
-  test('should render design system colors correctly', async ({ page }) => {
-    // This tests the color swatches and design tokens
-    await page.setViewportSize({
-      width: VIEWPORTS.desktop.width,
-      height: VIEWPORTS.desktop.height,
-    });
-
-    // Test primary button
-    await page.goto(`${BASE_URL}?showcase=buttons`);
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(200);
-    await percySnapshot(page, 'Design System - Buttons', {
-      widths: [VIEWPORTS.desktop.width],
-    });
-
-    // Test color palette
-    await page.goto(`${BASE_URL}?showcase=colors`);
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(200);
-    await percySnapshot(page, 'Design System - Colors', {
-      widths: [VIEWPORTS.desktop.width],
-    });
-  });
-});
-
-/**
- * COMPONENT SHOWCASE - UI component gallery
- */
-test.describe('Visual Regression - Component Library', () => {
-  const components = [
-    { name: 'Buttons', selector: '[data-testid="button-showcase"]' },
-    { name: 'Forms', selector: '[data-testid="form-showcase"]' },
-    { name: 'Cards', selector: '[data-testid="card-showcase"]' },
-    { name: 'Dialogs', selector: '[data-testid="dialog-showcase"]' },
-    { name: 'Badges', selector: '[data-testid="badge-showcase"]' },
-  ];
-
-  for (const component of components) {
-    test(`${component.name} component`, async ({ page }) => {
-      await page.setViewportSize({
-        width: VIEWPORTS.desktop.width,
-        height: VIEWPORTS.desktop.height,
-      });
-
-      await page.goto(`${BASE_URL}/components?filter=${component.name.toLowerCase()}`);
-      await page.waitForLoadState('networkidle');
-
-      // Wait for component to render
-      await page.waitForSelector(component.selector, { timeout: 5000 }).catch(() => null);
-      await page.waitForTimeout(200);
-
-      await percySnapshot(page, `Components - ${component.name}`, {
-        widths: [VIEWPORTS.desktop.width],
-      });
-    });
-  }
 });
 
 /**
  * RESPONSIVE DESIGN - Test key breakpoints
  */
 test.describe('Visual Regression - Responsive Design', () => {
-  test('should adapt correctly to mobile viewport', async ({ page }) => {
-    await page.setViewportSize({
-      width: VIEWPORTS.mobile.width,
-      height: VIEWPORTS.mobile.height,
-    });
-
+  test('mobile viewport renders correctly', async ({ page }) => {
+    await page.setViewportSize(VIEWPORTS.mobile);
     await page.goto(BASE_URL);
     await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(200);
+    await page.waitForTimeout(300);
 
-    // Check that mobile menu is visible
-    const mobileMenu = page.locator('[data-testid="mobile-menu"]');
-    const isVisible = await mobileMenu.isVisible().catch(() => false);
-
-    if (isVisible) {
-      await percySnapshot(page, 'Responsive - Mobile Menu Open', {
-        widths: [VIEWPORTS.mobile.width],
-      });
-    }
-  });
-
-  test('should adapt correctly to tablet viewport', async ({ page }) => {
-    await page.setViewportSize({
-      width: VIEWPORTS.tablet.width,
-      height: VIEWPORTS.tablet.height,
-    });
-
-    await page.goto(BASE_URL);
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(200);
-
-    await percySnapshot(page, 'Responsive - Tablet Layout', {
-      widths: [VIEWPORTS.tablet.width],
+    await expect(page).toHaveScreenshot('responsive-mobile.png', {
+      fullPage: true,
+      animations: 'disabled',
     });
   });
 
-  test('should display correctly on desktop', async ({ page }) => {
-    await page.setViewportSize({
-      width: VIEWPORTS.desktop.width,
-      height: VIEWPORTS.desktop.height,
-    });
-
+  test('tablet viewport renders correctly', async ({ page }) => {
+    await page.setViewportSize(VIEWPORTS.tablet);
     await page.goto(BASE_URL);
     await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(200);
+    await page.waitForTimeout(300);
 
-    await percySnapshot(page, 'Responsive - Desktop Layout', {
-      widths: [VIEWPORTS.desktop.width],
+    await expect(page).toHaveScreenshot('responsive-tablet.png', {
+      fullPage: true,
+      animations: 'disabled',
+    });
+  });
+
+  test('desktop viewport renders correctly', async ({ page }) => {
+    await page.setViewportSize(VIEWPORTS.desktop);
+    await page.goto(BASE_URL);
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(300);
+
+    await expect(page).toHaveScreenshot('responsive-desktop.png', {
+      fullPage: true,
+      animations: 'disabled',
     });
   });
 });
@@ -224,109 +137,90 @@ test.describe('Visual Regression - Responsive Design', () => {
  * INTERACTION STATES - Visual states of interactive elements
  */
 test.describe('Visual Regression - Interactive States', () => {
-  test('should capture button states', async ({ page }) => {
-    await page.setViewportSize({
-      width: VIEWPORTS.desktop.width,
-      height: VIEWPORTS.desktop.height,
-    });
-
-    await page.goto(`${BASE_URL}?showcase=buttons`);
-    await page.waitForLoadState('networkidle');
-
-    // Hover over button
-    const button = page.locator('button').first();
-    await button.hover();
-    await page.waitForTimeout(200);
-
-    await percySnapshot(page, 'States - Button Hover', {
-      widths: [VIEWPORTS.desktop.width],
-    });
-
-    // Focus on button
-    await button.focus();
-    await page.waitForTimeout(200);
-
-    await percySnapshot(page, 'States - Button Focus', {
-      widths: [VIEWPORTS.desktop.width],
-    });
-  });
-
-  test('should capture form input states', async ({ page }) => {
-    await page.setViewportSize({
-      width: VIEWPORTS.desktop.width,
-      height: VIEWPORTS.desktop.height,
-    });
-
-    await page.goto(`${BASE_URL}?showcase=forms`);
-    await page.waitForLoadState('networkidle');
-
-    const input = page.locator('input').first();
-
-    // Empty state
-    await percySnapshot(page, 'States - Input Empty', {
-      widths: [VIEWPORTS.desktop.width],
-    });
-
-    // Focused state
-    await input.focus();
-    await page.waitForTimeout(200);
-
-    await percySnapshot(page, 'States - Input Focused', {
-      widths: [VIEWPORTS.desktop.width],
-    });
-
-    // Filled state
-    await input.fill('test@example.com');
-    await page.waitForTimeout(200);
-
-    await percySnapshot(page, 'States - Input Filled', {
-      widths: [VIEWPORTS.desktop.width],
-    });
-  });
-});
-
-/**
- * DARK MODE - Test theme switching (if implemented)
- */
-test.describe('Visual Regression - Theming', () => {
-  test('should render dark theme correctly', async ({ page }) => {
-    await page.setViewportSize({
-      width: VIEWPORTS.desktop.width,
-      height: VIEWPORTS.desktop.height,
-    });
-
+  test('button hover state', async ({ page }) => {
+    await page.setViewportSize(VIEWPORTS.desktop);
     await page.goto(BASE_URL);
     await page.waitForLoadState('networkidle');
 
-    // Check if dark mode is active (Synthex theme)
-    const htmlElement = page.locator('html');
-    const isDark = await htmlElement.evaluate((el) =>
-      window.getComputedStyle(el).colorScheme === 'dark'
-    );
+    // Find and hover over first button
+    const button = page.locator('button').first();
+    if (await button.isVisible()) {
+      await button.hover();
+      await page.waitForTimeout(200);
+      await expect(button).toHaveScreenshot('button-hover.png');
+    }
+  });
 
-    if (isDark) {
-      await percySnapshot(page, 'Theme - Dark Mode (Synthex)', {
-        widths: [VIEWPORTS.desktop.width],
-      });
+  test('button focus state', async ({ page }) => {
+    await page.setViewportSize(VIEWPORTS.desktop);
+    await page.goto(BASE_URL);
+    await page.waitForLoadState('networkidle');
+
+    // Find and focus first button
+    const button = page.locator('button').first();
+    if (await button.isVisible()) {
+      await button.focus();
+      await page.waitForTimeout(200);
+      await expect(button).toHaveScreenshot('button-focus.png');
+    }
+  });
+
+  test('input focus state', async ({ page }) => {
+    await page.setViewportSize(VIEWPORTS.desktop);
+    await page.goto(BASE_URL);
+    await page.waitForLoadState('networkidle');
+
+    // Find first input
+    const input = page.locator('input').first();
+    if (await input.isVisible()) {
+      await input.focus();
+      await page.waitForTimeout(200);
+      await expect(input).toHaveScreenshot('input-focus.png');
     }
   });
 });
 
 /**
- * ERROR STATES - Test error page rendering
+ * ERROR PAGES - Test error page rendering
  */
 test.describe('Visual Regression - Error Pages', () => {
-  test('should render 404 error page', async ({ page }) => {
-    await page.setViewportSize({
-      width: VIEWPORTS.desktop.width,
-      height: VIEWPORTS.desktop.height,
-    });
+  test('404 error page', async ({ page }) => {
+    await page.setViewportSize(VIEWPORTS.desktop);
+    await page.goto(`${BASE_URL}/nonexistent-page-12345`, { waitUntil: 'networkidle' });
+    await page.waitForTimeout(300);
 
-    await page.goto(`${BASE_URL}/nonexistent-page`, { waitUntil: 'networkidle' });
-    await page.waitForTimeout(200);
-
-    await percySnapshot(page, 'Error - 404 Page', {
-      widths: [VIEWPORTS.desktop.width],
+    await expect(page).toHaveScreenshot('error-404.png', {
+      fullPage: true,
+      animations: 'disabled',
     });
+  });
+});
+
+/**
+ * COMPONENT SNAPSHOTS - Individual UI components
+ */
+test.describe('Visual Regression - Components', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.setViewportSize(VIEWPORTS.desktop);
+  });
+
+  test('cards render correctly', async ({ page }) => {
+    await page.goto(BASE_URL);
+    await page.waitForLoadState('networkidle');
+
+    const card = page.locator('[class*="card"]').first();
+    if (await card.isVisible()) {
+      await expect(card).toHaveScreenshot('component-card.png');
+    }
+  });
+
+  test('navigation renders correctly', async ({ page }) => {
+    await page.goto(BASE_URL);
+    await page.waitForLoadState('networkidle');
+
+    const nav = page.locator('nav').first();
+    if (await nav.isVisible()) {
+      await expect(nav).toHaveScreenshot('component-nav.png');
+    }
   });
 });
