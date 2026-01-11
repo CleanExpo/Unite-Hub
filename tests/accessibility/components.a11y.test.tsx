@@ -50,7 +50,7 @@ describe('Button Accessibility', () => {
 
   it('should have loading state aria-busy attribute', async () => {
     const { container } = render(
-      <Button loading>
+      <Button isLoading>
         Loading...
       </Button>
     );
@@ -383,7 +383,7 @@ describe('ARIA Attributes', () => {
 
   it('loading button should have aria-busy', async () => {
     const { container } = render(
-      <Button loading>Processing...</Button>
+      <Button isLoading>Processing...</Button>
     );
     const button = screen.getByRole('button');
     expect(button).toHaveAttribute('aria-busy', 'true');

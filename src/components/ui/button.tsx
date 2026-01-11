@@ -228,6 +228,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         <Comp
           ref={ref}
           disabled={isDisabled}
+          aria-busy={isLoading}
           className={`
             ${baseStyles}
             ${variantStyles[variant]}
@@ -247,6 +248,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <Comp
         ref={ref}
         disabled={isDisabled}
+        aria-busy={isLoading}
         className={`
           ${baseStyles}
           ${variantStyles[variant]}

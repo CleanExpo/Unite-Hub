@@ -135,6 +135,14 @@ export const Input = forwardRef<
       relative
       flex
       items-center
+      focus-within:ring-2
+      focus-within:ring-accent-500
+      focus-within:ring-offset-2
+      focus-within:ring-offset-bg-base
+      rounded-md
+      transition-all
+      duration-normal
+      ease-out
       ${fullWidthStyle}
     `;
 
