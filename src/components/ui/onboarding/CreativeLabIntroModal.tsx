@@ -72,7 +72,7 @@ return null;
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-border-subtle">
           <div className="flex items-center gap-3">
-            <Sparkles className="w-6 h-6 text-teal-600" />
+            <Sparkles className="w-6 h-6 text-accent-600" />
             <h2 className="text-xl font-bold text-text-primary">
               Welcome to Your Creative Lab
             </h2>
@@ -130,7 +130,7 @@ return null;
         <div className="p-6 border-t border-border-subtle">
           <button
             onClick={handleDismiss}
-            className="w-full px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 font-medium"
+            className="w-full px-6 py-3 bg-accent-600 text-white rounded-lg hover:bg-accent-700 font-medium"
           >
             Start Exploring
           </button>

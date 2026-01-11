@@ -53,7 +53,7 @@ export default function ProgressAndImpactGraphs() {
   return (
     <div className="bg-bg-card rounded-lg border border-border-subtle p-6">
       <div className="flex items-center gap-2 mb-4">
-        <BarChart3 className="w-5 h-5 text-teal-600" />
+        <BarChart3 className="w-5 h-5 text-accent-600" />
         <h3 className="text-lg font-semibold text-text-primary">
           Progress & Impact
         </h3>

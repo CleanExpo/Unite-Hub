@@ -69,7 +69,7 @@ export default function AgencyPresencePanel() {
   return (
     <div className="bg-bg-card rounded-lg border border-border-subtle p-6">
       <div className="flex items-center gap-2 mb-4">
-        <Users className="w-5 h-5 text-teal-600" />
+        <Users className="w-5 h-5 text-accent-600" />
         <h3 className="text-lg font-semibold text-text-primary">
           Your Team
         </h3>
@@ -85,7 +85,7 @@ export default function AgencyPresencePanel() {
             key={index}
             className="flex items-start gap-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg"
           >
-            <div className="flex-shrink-0 p-2 bg-teal-100 dark:bg-teal-900/30 rounded-lg text-teal-600 dark:text-teal-400">
+            <div className="flex-shrink-0 p-2 bg-accent-100 dark:bg-accent-900/30 rounded-lg text-accent-600 dark:text-accent-400">
               {member.icon}
             </div>
             <div className="flex-1 min-w-0">

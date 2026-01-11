@@ -67,7 +67,7 @@ export default function VisionPage() {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <User className="w-8 h-8 text-teal-600" />
+            <User className="w-8 h-8 text-accent-600" />
             <h1 className="text-2xl font-bold text-text-primary">
               Your Vision & Persona
             </h1>
@@ -96,7 +96,7 @@ export default function VisionPage() {
             <button
               onClick={handleUpdatePersona}
               disabled={updating}
-              className="flex items-center gap-2 px-3 py-1.5 text-sm text-teal-600 hover:bg-teal-50 dark:hover:bg-teal-900/20 rounded-lg disabled:opacity-50"
+              className="flex items-center gap-2 px-3 py-1.5 text-sm text-accent-600 hover:bg-accent-50 dark:hover:bg-accent-900/20 rounded-lg disabled:opacity-50"
             >
               <RefreshCw className={`w-4 h-4 ${updating ? "animate-spin" : ""}`} />
               {updating ? "Updating..." : "Update Persona"}
@@ -112,7 +112,7 @@ export default function VisionPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {persona.goals && (
               <div className="flex items-start gap-3">
-                <Target className="w-5 h-5 text-teal-600 flex-shrink-0 mt-0.5" />
+                <Target className="w-5 h-5 text-accent-600 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium text-text-primary">Goals</p>
                   <p className="text-sm text-text-secondary">{persona.goals}</p>
@@ -121,7 +121,7 @@ export default function VisionPage() {
             )}
             {persona.audience && (
               <div className="flex items-start gap-3">
-                <Users className="w-5 h-5 text-teal-600 flex-shrink-0 mt-0.5" />
+                <Users className="w-5 h-5 text-accent-600 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium text-text-primary">Audience</p>
                   <p className="text-sm text-text-secondary">{persona.audience}</p>
@@ -130,7 +130,7 @@ export default function VisionPage() {
             )}
             {persona.brand_notes && (
               <div className="flex items-start gap-3 md:col-span-2">
-                <Palette className="w-5 h-5 text-teal-600 flex-shrink-0 mt-0.5" />
+                <Palette className="w-5 h-5 text-accent-600 flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium text-text-primary">Brand Notes</p>
                   <p className="text-sm text-text-secondary">{persona.brand_notes}</p>

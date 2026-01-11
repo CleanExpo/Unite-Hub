@@ -103,7 +103,7 @@ export default function FounderFinancialsPage() {
               type="button"
               onClick={syncXero}
               disabled={syncing}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-lg hover:bg-teal-700 disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-accent-600 rounded-lg hover:bg-accent-700 disabled:opacity-50"
             >
               {syncing ? (
                 <>
@@ -139,7 +139,7 @@ export default function FounderFinancialsPage() {
         {loading ? (
           <Section className="mt-6">
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-8 h-8 text-teal-600 animate-spin" />
+              <Loader2 className="w-8 h-8 text-accent-600 animate-spin" />
             </div>
           </Section>
         ) : (
@@ -186,8 +186,8 @@ export default function FounderFinancialsPage() {
                   </CardHeader>
                   <CardContent>
                     <div className="flex items-center gap-6">
-                      <div className="flex items-center justify-center w-24 h-24 rounded-full border-4 border-teal-500">
-                        <span className="text-3xl font-bold text-teal-600">
+                      <div className="flex items-center justify-center w-24 h-24 rounded-full border-4 border-accent-500">
+                        <span className="text-3xl font-bold text-accent-600">
                           {healthScore.score}
                         </span>
                       </div>
@@ -199,7 +199,7 @@ export default function FounderFinancialsPage() {
                             </span>
                             <div className="flex-1 h-2 bg-bg-hover rounded-full overflow-hidden">
                               <div
-                                className="h-full bg-teal-500 rounded-full"
+                                className="h-full bg-accent-500 rounded-full"
                                 style={{ width: `${factor.score}%` }}
                               />
                             </div>
@@ -297,7 +297,7 @@ function PeriodButton({ active, onClick, label }: PeriodButtonProps) {
       onClick={onClick}
       className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition-colors ${
         active
-          ? "bg-bg-input text-teal-600 dark:text-teal-400 shadow-sm"
+          ? "bg-bg-input text-accent-600 dark:text-accent-400 shadow-sm"
           : "text-text-secondary hover:text-gray-900 dark:hover:text-white"
       }`}
     >

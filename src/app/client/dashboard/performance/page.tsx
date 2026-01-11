@@ -129,7 +129,7 @@ return;
               type="button"
               onClick={generateReport}
               disabled={generating}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-lg hover:bg-teal-700 disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-accent-600 rounded-lg hover:bg-accent-700 disabled:opacity-50"
             >
               {generating ? (
                 <>
@@ -178,7 +178,7 @@ return;
         {loading && (
           <Section className="mt-6">
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-8 h-8 text-teal-600 animate-spin" />
+              <Loader2 className="w-8 h-8 text-accent-600 animate-spin" />
             </div>
           </Section>
         )}
@@ -198,7 +198,7 @@ return;
                 type="button"
                 onClick={generateReport}
                 disabled={generating}
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-lg hover:bg-teal-700"
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-accent-600 rounded-lg hover:bg-accent-700"
               >
                 <FileText className="w-4 h-4" />
                 Generate Report
@@ -303,7 +303,7 @@ function TabButton({ active, onClick, icon: Icon, label }: TabButtonProps) {
       onClick={onClick}
       className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition-colors ${
         active
-          ? "bg-bg-input text-teal-600 dark:text-teal-400 shadow-sm"
+          ? "bg-bg-input text-accent-600 dark:text-accent-400 shadow-sm"
           : "text-text-secondary hover:text-gray-900 dark:hover:text-white"
       }`}
     >

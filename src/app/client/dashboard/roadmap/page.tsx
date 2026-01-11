@@ -76,7 +76,7 @@ export default function RoadmapPage() {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <Calendar className="w-8 h-8 text-teal-600" />
+            <Calendar className="w-8 h-8 text-accent-600" />
             <h1 className="text-2xl font-bold text-text-primary">
               Your Roadmap
             </h1>

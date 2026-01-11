@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useWorkspace } from "@/hooks/useWorkspace";
 
 type ObservatoryEvent = {
   id: string;
@@ -32,13 +33,16 @@ export default function ObservatoryPage() {
   const [severityFilter, setSeverityFilter] = useState<string>("all");
   const [days, setDays] = useState(7);
 
-  const workspaceId = "00000000-0000-0000-0000-000000000000"; // TODO: Get from auth context
+  const { workspaceId, loading: workspaceLoading, error: workspaceError } = useWorkspace();
 
   useEffect(() => {
+    if (!workspaceId) return;
     loadData();
-  }, [eventTypeFilter, severityFilter, days]);
+  }, [workspaceId, eventTypeFilter, severityFilter, days]);
 
   const loadData = async () => {
+    if (!workspaceId) return;
+
     try {
       setLoading(true);
       setError(null);
@@ -75,6 +79,26 @@ throw new Error("Failed to load events");
       setLoading(false);
     }
   };
+
+  if (workspaceLoading) {
+    return (
+      <div className="min-h-screen bg-bg-primary p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-text-primary">Loading workspace...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (workspaceError || !workspaceId) {
+    return (
+      <div className="min-h-screen bg-bg-primary p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-red-600">{workspaceError || "No workspace selected"}</div>
+        </div>
+      </div>
+    );
+  }
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {

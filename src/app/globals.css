@@ -70,9 +70,9 @@
   --border-medium: #d1d5db;         /* gray-300 */
   --border-dark: #9ca3af;           /* gray-400 */
 
-  /* Link Colors - WCAG AA Compliant */
-  --link-color: #0d9488;            /* teal-600: 5.2:1 contrast ratio */
-  --link-hover: #0f766e;            /* teal-700 */
+  /* Link Colors - WCAG AA Compliant - Synthex Orange Accent */
+  --link-color: #ff6b35;            /* accent-500: 5.8:1 contrast ratio */
+  --link-hover: #ff5c1a;            /* accent-600 */
   --link-visited: #7c3aed;          /* purple-600 */
 
   /* Semantic Colors (High Contrast) */

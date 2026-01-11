@@ -88,7 +88,7 @@ export default function KnowledgeHubPage() {
       editions: 'bg-indigo-100 text-indigo-800',
       uplift: 'bg-orange-100 text-orange-800',
       executive: 'bg-pink-100 text-pink-800',
-      goals_okrs: 'bg-teal-100 text-teal-800',
+      goals_okrs: 'bg-accent-100 text-accent-800',
       network_meta: 'bg-cyan-100 text-cyan-800',
     };
     return colors[domain] || 'bg-gray-100 text-gray-800';

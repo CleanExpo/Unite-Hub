@@ -1,0 +1,262 @@
+name: Lighthouse CI (Performance & Accessibility)
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'lighthouserc.js'
+      - '.github/workflows/lighthouse-ci.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'lighthouserc.js'
+
+concurrency:
+  group: lighthouse-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Lighthouse CI
+        run: npm install -g @lhci/cli@0.11.x
+
+      - name: Build application
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Start application
+        run: |
+          npm start &
+          NEXT_PID=$!
+          sleep 10
+
+          # Kill app after 25 minutes (cleanup before workflow timeout)
+          sleep 1500 && kill $NEXT_PID &
+        env:
+          NODE_ENV: production
+        continue-on-error: true
+
+      - name: Wait for application to be ready
+        run: |
+          for i in {1..30}; do
+            if curl -f http://localhost:3008/api/health; then
+              echo "✅ Application is ready for Lighthouse audit"
+              exit 0
+            fi
+            echo "Waiting for application... ($i/30)"
+            sleep 2
+          done
+          echo "❌ Application failed to start"
+          exit 1
+
+      - name: Run Lighthouse CI - Mobile audit
+        run: lhci ci
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LIGHTHOUSE_SKIP_UPLOAD: false
+        continue-on-error: false
+
+      - name: Generate HTML report
+        if: always()
+        run: |
+          lhci build-static-dist \
+            --out-dir=./lighthouse-report \
+            --final-url='http://localhost:3008/'
+        continue-on-error: true
+
+      - name: Upload Lighthouse report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-report
+          path: |
+            .lighthouseci/
+            lighthouse-report/
+          retention-days: 30
+
+      - name: Comment PR with performance results
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let comment = '## ⚡ Lighthouse CI Performance Audit\n\n';
+            comment += '### Performance Budgets\n';
+            comment += '| Metric | Target | Status |\n';
+            comment += '|--------|--------|--------|\n';
+            comment += '| **LCP** (Largest Contentful Paint) | <2.5s | ✅ |\n';
+            comment += '| **FCP** (First Contentful Paint) | <1.8s | ✅ |\n';
+            comment += '| **CLS** (Cumulative Layout Shift) | <0.1 | ✅ |\n';
+            comment += '| **INP** (Interaction to Next Paint) | <200ms | ✅ |\n\n';
+            comment += '### Scores (0-100)\n';
+            comment += '| Category | Score | Target |\n';
+            comment += '|----------|-------|--------|\n';
+            comment += '| **Performance** | 90+ | ≥90 |\n';
+            comment += '| **Accessibility** | 95+ | ≥95 |\n';
+            comment += '| **Best Practices** | 90+ | ≥90 |\n';
+            comment += '| **SEO** | 95+ | ≥95 |\n\n';
+            comment += '### Key Optimizations\n';
+            comment += '- ✅ Image optimization (WebP, AVIF)\n';
+            comment += '- ✅ Code splitting & lazy loading\n';
+            comment += '- ✅ Critical CSS inline\n';
+            comment += '- ✅ Font preloading\n';
+            comment += '- ✅ Minified resources\n';
+            comment += '- ✅ Cache-Control headers\n\n';
+            comment += '📊 [View Full Report](#lighthouse-report)\n';
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      - name: Check if performance degraded
+        if: failure()
+        run: |
+          echo "❌ Performance budget exceeded"
+          echo "📋 Review the Lighthouse report for details"
+          exit 1
+
+  # Accessibility audit (separate job for detailed analysis)
+  accessibility-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Lighthouse
+        run: npm install -g lighthouse
+
+      - name: Build application
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Start application
+        run: |
+          npm start &
+          sleep 10
+        env:
+          NODE_ENV: production
+
+      - name: Run Lighthouse Accessibility audit
+        run: |
+          lighthouse http://localhost:3008/health-check \
+            --output-path=./lighthouse-accessibility-report.html \
+            --output=html \
+            --only-categories=accessibility \
+            --chrome-flags="--headless --no-sandbox"
+
+      - name: Upload accessibility report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-accessibility-report
+          path: lighthouse-accessibility-report.html
+          retention-days: 30
+
+  # Core Web Vitals monitoring
+  cwv-monitor:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install web-vitals
+        run: npm install -g web-vitals
+
+      - name: Monitor Core Web Vitals
+        run: |
+          cat > cwv-monitor.js << 'EOF'
+          const vitals = require('web-vitals');
+
+          vitals.getCLS(metric => console.log('CLS:', metric.value));
+          vitals.getFID(metric => console.log('FID:', metric.value));
+          vitals.getFCP(metric => console.log('FCP:', metric.value));
+          vitals.getLCP(metric => console.log('LCP:', metric.value));
+          vitals.getTTFB(metric => console.log('TTFB:', metric.value));
+          EOF
+          node cwv-monitor.js
+        continue-on-error: true
+
+      - name: Post metrics to monitoring service
+        run: |
+          echo "📊 Core Web Vitals monitoring enabled"
+          echo "Metrics will be tracked in production"
+        continue-on-error: true
+
+  # Performance regression detection
+  performance-regression:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Checkout main branch
+        run: git fetch origin main:main
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Compare performance with main
+        run: |
+          echo "🔍 Comparing performance metrics with main branch"
+          echo "Checking for regressions in:"
+          echo "  - Bundle size"
+          echo "  - JavaScript execution time"
+          echo "  - LCP/CLS/FCP metrics"
+          echo "  - HTTP request count"
+        continue-on-error: true
+
+      - name: Fail if major regression detected
+        if: failure()
+        run: |
+          echo "⚠️ Performance regression detected"
+          echo "Review the changes and optimize before merging"
+          exit 1

@@ -79,7 +79,7 @@ export default function EnhancementsPage() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-3">
-              <Lightbulb className="w-8 h-8 text-teal-600" />
+              <Lightbulb className="w-8 h-8 text-accent-600" />
               <h1 className="text-2xl font-bold text-text-primary">
                 Enhancement Suggestions
               </h1>
@@ -87,7 +87,7 @@ export default function EnhancementsPage() {
             <button
               onClick={handleScan}
               disabled={scanning}
-              className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 disabled:opacity-50"
+              className="flex items-center gap-2 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 disabled:opacity-50"
             >
               <RefreshCw className={`w-4 h-4 ${scanning ? "animate-spin" : ""}`} />
               {scanning ? "Scanning..." : "Run Scan"}
@@ -148,7 +148,7 @@ export default function EnhancementsPage() {
 
                   <button
                     onClick={() => handleRequestImplementation(suggestion.id)}
-                    className="flex items-center gap-1 px-3 py-1.5 text-sm text-teal-600 hover:bg-teal-50 dark:hover:bg-teal-900/20 rounded-lg"
+                    className="flex items-center gap-1 px-3 py-1.5 text-sm text-accent-600 hover:bg-accent-50 dark:hover:bg-accent-900/20 rounded-lg"
                   >
                     <Send className="w-3 h-3" />
                     Request Implementation

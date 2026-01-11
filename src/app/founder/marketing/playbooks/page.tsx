@@ -142,7 +142,7 @@ export default function PlaybooksListPage() {
                   placeholder="Search playbooks..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 text-sm border border-border-subtle rounded-lg bg-bg-card focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2 text-sm border border-border-subtle rounded-lg bg-bg-card focus:ring-2 focus:ring-accent-500 focus:border-transparent"
                 />
               </div>
               <select
@@ -158,7 +158,7 @@ export default function PlaybooksListPage() {
             </div>
             <button
               onClick={() => setShowCreateModal(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 transition-colors"
             >
               <Plus className="w-4 h-4" />
               New Playbook
@@ -170,7 +170,7 @@ export default function PlaybooksListPage() {
         <Section className="mt-6">
           {loading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-8 h-8 text-teal-600 animate-spin" />
+              <Loader2 className="w-8 h-8 text-accent-600 animate-spin" />
             </div>
           ) : filteredPlaybooks.length === 0 ? (
             <Card>
@@ -184,7 +184,7 @@ export default function PlaybooksListPage() {
                 </p>
                 <button
                   onClick={() => setShowCreateModal(true)}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700"
                 >
                   <Plus className="w-4 h-4" />
                   Create Playbook
@@ -228,7 +228,7 @@ function PlaybookCard({ playbook, onStatusChange }: PlaybookCardProps) {
   };
 
   return (
-    <Card className="group hover:border-teal-500 transition-colors">
+    <Card className="group hover:border-accent-500 transition-colors">
       <CardContent className="pt-5">
         <div className="flex items-start justify-between mb-3">
           <span className={`px-2 py-1 text-xs font-medium rounded ${statusColors[playbook.status]}`}>
@@ -270,7 +270,7 @@ function PlaybookCard({ playbook, onStatusChange }: PlaybookCardProps) {
         </div>
 
         <Link href={`/founder/marketing/playbooks/${playbook.id}`}>
-          <h3 className="text-lg font-semibold text-text-primary mb-2 group-hover:text-teal-600 transition-colors">
+          <h3 className="text-lg font-semibold text-text-primary mb-2 group-hover:text-accent-600 transition-colors">
             {playbook.name}
           </h3>
         </Link>
@@ -420,7 +420,7 @@ function CreatePlaybookModal({ onClose, onCreated }: CreatePlaybookModalProps) {
                   onClick={() => togglePlatform(platform.id)}
                   className={`flex items-center gap-2 px-3 py-2 rounded-lg border transition-colors ${
                     platforms.includes(platform.id)
-                      ? "border-teal-500 bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-400"
+                      ? "border-accent-500 bg-accent-50 dark:bg-accent-900/30 text-accent-700 dark:text-accent-400"
                       : "border-border-subtle text-text-secondary"
                   }`}
                 >
@@ -441,7 +441,7 @@ function CreatePlaybookModal({ onClose, onCreated }: CreatePlaybookModalProps) {
             <button
               type="submit"
               disabled={saving || !name}
-              className="px-4 py-2 text-sm bg-teal-600 text-white rounded-lg hover:bg-teal-700 disabled:opacity-50"
+              className="px-4 py-2 text-sm bg-accent-600 text-white rounded-lg hover:bg-accent-700 disabled:opacity-50"
             >
               {saving ? "Creating..." : "Create Playbook"}
             </button>

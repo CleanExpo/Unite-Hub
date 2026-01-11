@@ -15,11 +15,11 @@ export function AnimationShowcase() {
     <div className="w-full bg-white">
       {/* Scroll Progress Bar */}
       <div className="fixed top-0 left-0 right-0 h-1 bg-gray-100 z-50">
-        <ScrollProgress className="h-full bg-gradient-to-r from-blue-500 to-teal-500" />
+        <ScrollProgress className="h-full bg-gradient-to-r from-blue-500 to-accent-500" />
       </div>
 
       {/* TextLoop Showcase */}
-      <section className="py-20 px-5 bg-gradient-to-br from-blue-50 to-teal-50">
+      <section className="py-20 px-5 bg-gradient-to-br from-blue-50 to-accent-50">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl font-bold mb-6 text-center">TextLoop Component</h2>
           <div className="text-center text-2xl font-semibold text-gray-800">
@@ -27,7 +27,7 @@ export function AnimationShowcase() {
             <div className="inline-block">
               <TextLoop interval={3000}>
                 <span className="text-blue-600">Increase Engagement</span>
-                <span className="text-teal-600">Show Multiple Benefits</span>
+                <span className="text-accent-600">Show Multiple Benefits</span>
                 <span className="text-purple-600">Rotate Value Props</span>
                 <span className="text-orange-600">Keep Visitors Interested</span>
               </TextLoop>
@@ -163,7 +163,7 @@ export function AnimationShowcase() {
       </section>
 
       {/* Summary Section */}
-      <section className="py-20 px-5 bg-gradient-to-br from-blue-50 to-teal-50 border-t">
+      <section className="py-20 px-5 bg-gradient-to-br from-blue-50 to-accent-50 border-t">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl font-bold mb-6">Component Library Summary</h2>
           <p className="text-gray-700 text-lg mb-8 leading-relaxed">
@@ -177,7 +177,7 @@ export function AnimationShowcase() {
               <p className="text-gray-600">Rotating text</p>
             </div>
             <div className="bg-white p-4 rounded-lg">
-              <p className="font-semibold text-teal-600">InfiniteSlider</p>
+              <p className="font-semibold text-accent-600">InfiniteSlider</p>
               <p className="text-gray-600">Endless carousel</p>
             </div>
             <div className="bg-white p-4 rounded-lg">

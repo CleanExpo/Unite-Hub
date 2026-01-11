@@ -73,7 +73,7 @@ export function LoyaltyStatusBanner({
   if (compact) {
     return (
       <div className="flex items-center gap-2 text-sm">
-        <Award className="w-4 h-4 text-teal-600" />
+        <Award className="w-4 h-4 text-accent-600" />
         <span className="font-semibold">{balance.balance} Credits</span>
         {!balance.canEarnMore && (
           <AlertTriangle className="w-4 h-4 text-yellow-600" />
@@ -83,14 +83,14 @@ export function LoyaltyStatusBanner({
   }
 
   return (
-    <Card className="bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-950/30 dark:to-cyan-950/30 border-teal-200 dark:border-teal-800">
+    <Card className="bg-gradient-to-br from-accent-50 to-cyan-50 dark:from-accent-950/30 dark:to-cyan-950/30 border-accent-200 dark:border-accent-800">
       <CardHeader>
         <div className="flex items-start justify-between">
           <div>
             <CardTitle className="text-lg">Your Loyalty Credits</CardTitle>
             <CardDescription>Earn rewards and unlock features</CardDescription>
           </div>
-          <Award className="w-6 h-6 text-teal-600 dark:text-teal-400" />
+          <Award className="w-6 h-6 text-accent-600 dark:text-accent-400" />
         </div>
       </CardHeader>
 
@@ -101,7 +101,7 @@ export function LoyaltyStatusBanner({
             <div className="flex justify-between items-end">
               <div>
                 <p className="text-sm text-muted-foreground">Current Balance</p>
-                <p className="text-3xl font-bold text-teal-600 dark:text-teal-400">
+                <p className="text-3xl font-bold text-accent-600 dark:text-accent-400">
                   {balance.balance}
                 </p>
               </div>
@@ -125,7 +125,7 @@ export function LoyaltyStatusBanner({
                 className={`h-2 rounded-full transition-all ${
                   !balance.canEarnMore
                     ? 'bg-yellow-500'
-                    : 'bg-teal-500'
+                    : 'bg-accent-500'
                 }`}
                 style={{ width: `${monthlyPercent}%` }}
               />

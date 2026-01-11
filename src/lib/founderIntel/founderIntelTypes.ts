@@ -270,7 +270,7 @@ export function getSourceEngineDisplay(engine: SourceEngine): {
     marketing_engine: { label: 'Marketing', color: 'bg-emerald-500/10' },
     performance: { label: 'Performance', color: 'bg-green-500/10' },
     reports: { label: 'Reports', color: 'bg-blue-500/10' },
-    touchpoints: { label: 'Touchpoints', color: 'bg-teal-500/10' },
+    touchpoints: { label: 'Touchpoints', color: 'bg-accent-500/10' },
   };
   return displays[engine];
 }

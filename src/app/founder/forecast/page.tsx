@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { TrendingUp, TrendingDown, Activity, Target } from "lucide-react";
+import { useWorkspace } from "@/hooks/useWorkspace";
 
 type Forecast = {
   id: string;
@@ -38,13 +39,16 @@ export default function ForecastPage() {
   const [viewMode, setViewMode] = useState<"active" | "all">("active");
   const [forecastTypeFilter, setForecastTypeFilter] = useState<string>("all");
 
-  const workspaceId = "00000000-0000-0000-0000-000000000000"; // TODO: Get from auth context
+  const { workspaceId, loading: workspaceLoading, error: workspaceError } = useWorkspace();
 
   useEffect(() => {
+    if (!workspaceId) return;
     loadData();
-  }, [viewMode, forecastTypeFilter]);
+  }, [workspaceId, viewMode, forecastTypeFilter]);
 
   const loadData = async () => {
+    if (!workspaceId) return;
+
     try {
       setLoading(true);
       setError(null);
@@ -120,6 +124,26 @@ return <Activity className="h-4 w-4 text-gray-500" />;
       <TrendingDown className="h-4 w-4 text-red-500" />
     );
   };
+
+  if (workspaceLoading) {
+    return (
+      <div className="min-h-screen bg-bg-primary p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-text-primary">Loading workspace...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (workspaceError || !workspaceId) {
+    return (
+      <div className="min-h-screen bg-bg-primary p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-red-600">{workspaceError || "No workspace selected"}</div>
+        </div>
+      </div>
+    );
+  }
 
   if (loading && !accuracy) {
     return (

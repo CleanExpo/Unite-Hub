@@ -52,7 +52,7 @@ function AnimationPreviewBox({ styleId, mood }: { styleId: string; mood: string 
   const moodColors: Record<string, string> = {
     professional: 'from-blue-500/20 to-cyan-500/20',
     playful: 'from-amber-500/20 to-orange-500/20',
-    calm: 'from-emerald-500/20 to-teal-500/20',
+    calm: 'from-emerald-500/20 to-accent-500/20',
     bold: 'from-red-500/20 to-rose-500/20',
     futuristic: 'from-violet-500/20 to-purple-500/20',
     immersive: 'from-pink-500/20 to-fuchsia-500/20',

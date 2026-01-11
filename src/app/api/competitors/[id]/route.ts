@@ -1,242 +1,83 @@
-import { NextRequest, NextResponse } from "next/server";
+/**
+ * GET /api/competitors/[id]?workspaceId=...
+ * DELETE /api/competitors/[id]?workspaceId=...
+ *
+ * Get competitor data or delete competitor
+ */
+
+import { NextRequest } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase";
-import { apiRateLimit } from "@/lib/rate-limit";
-import { validateUserAuth } from "@/lib/workspace-validation";
+import { validateUserAndWorkspace } from "@/lib/api-helpers";
+import { successResponse, errorResponse } from "@/lib/api-helpers";
+import { withErrorBoundary } from "@/lib/error-boundary";
+import { supabaseAdmin } from "@/lib/supabase/admin";
+import { getCompetitorData, getScrapeJobs } from "@/lib/scraping/competitor-scraper-agent";
 
-/**
- * GET /api/competitors/[id]
- * Get a single competitor
- */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    // Apply rate limiting
-    const rateLimitResult = await apiRateLimit(request);
-    if (rateLimitResult) {
-      return rateLimitResult;
-    }
+type RouteContext = {
+  params: Promise<{ id: string }>;
+};
 
-    // Validate user authentication
-    await validateUserAuth(request);
+export const GET = withErrorBoundary(async (req: NextRequest, context: RouteContext) => {
+  const workspaceId = req.nextUrl.searchParams.get("workspaceId");
+  if (!workspaceId) return errorResponse("workspaceId required", 400);
 
-    const { id } = await params;
-    const supabase = await getSupabaseServer();
+  await validateUserAndWorkspace(req, workspaceId);
 
-    const { data: competitor, error } = await supabase
-      .from("competitors")
-      .select("*")
-      .eq("id", id)
-      .single();
+  const { id: competitorId } = await context.params;
 
-    if (error || !competitor) {
-      return NextResponse.json(
-        { error: "Competitor not found" },
-        { status: 404 }
-      );
-    }
+  // Get competitor info
+  const supabase = getSupabaseServer();
+  const { data: competitor, error: compError } = await supabase
+    .from("competitors")
+    .select("*")
+    .eq("id", competitorId)
+    .eq("workspace_id", workspaceId)
+    .single();
 
-    // Transform to camelCase
-    const transformedCompetitor = {
-      id: competitor.id,
-      clientId: competitor.client_id,
-      competitorName: competitor.competitor_name,
-      website: competitor.website,
-      description: competitor.description,
-      category: competitor.category,
-      strengths: competitor.strengths,
-      weaknesses: competitor.weaknesses,
-      pricing: competitor.pricing,
-      targetAudience: competitor.target_audience,
-      marketingChannels: competitor.marketing_channels,
-      contentStrategy: competitor.content_strategy,
-      socialPresence: competitor.social_presence,
-      logoUrl: competitor.logo_url,
-      screenshots: competitor.screenshots,
-      createdAt: competitor.created_at,
-      updatedAt: competitor.updated_at,
-    };
-
-    return NextResponse.json({ success: true, competitor: transformedCompetitor });
-  } catch (error: any) {
-    if (error instanceof Error) {
-      if (error.message.includes("Unauthorized")) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-      if (error.message.includes("Forbidden")) {
-        return NextResponse.json({ error: "Access denied" }, { status: 403 });
-      }
-    }
-    console.error("Error fetching competitor:", error);
-    return NextResponse.json(
-      { error: error.message || "Failed to fetch competitor" },
-      { status: 500 }
-    );
+  if (compError || !competitor) {
+    return errorResponse("Competitor not found", 404);
   }
-}
 
-/**
- * PUT /api/competitors/[id]
- * Update a competitor
- */
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    // Apply rate limiting
-    const rateLimitResult = await apiRateLimit(request);
-    if (rateLimitResult) {
-      return rateLimitResult;
-    }
+  // Get latest scrape data
+  const competitorData = await getCompetitorData(workspaceId, competitorId);
 
-    // Validate user authentication
-    await validateUserAuth(request);
+  // Get scrape jobs
+  const scrapeJobs = await getScrapeJobs(workspaceId, competitorId);
 
-    const body = await request.json();
-    const { updates } = body;
+  return successResponse({
+    competitor,
+    latestData: competitorData,
+    scrapeJobs: scrapeJobs || [],
+  });
+});
 
-    if (!updates) {
-      return NextResponse.json(
-        { error: "updates object is required" },
-        { status: 400 }
-      );
-    }
+export const DELETE = withErrorBoundary(async (req: NextRequest, context: RouteContext) => {
+  const workspaceId = req.nextUrl.searchParams.get("workspaceId");
+  if (!workspaceId) return errorResponse("workspaceId required", 400);
 
-    const { id } = await params;
-    const supabase = await getSupabaseServer();
+  await validateUserAndWorkspace(req, workspaceId);
 
-    // Transform camelCase to snake_case for database
-    const dbUpdates: Record<string, any> = {
-      updated_at: new Date().toISOString(),
-    };
+  const { id: competitorId } = await context.params;
 
-    if (updates.competitorName) {
-dbUpdates.competitor_name = updates.competitorName;
-}
-    if (updates.website) {
-dbUpdates.website = updates.website;
-}
-    if (updates.description) {
-dbUpdates.description = updates.description;
-}
-    if (updates.category) {
-dbUpdates.category = updates.category;
-}
-    if (updates.strengths) {
-dbUpdates.strengths = updates.strengths;
-}
-    if (updates.weaknesses) {
-dbUpdates.weaknesses = updates.weaknesses;
-}
-    if (updates.pricing) {
-dbUpdates.pricing = updates.pricing;
-}
-    if (updates.targetAudience) {
-dbUpdates.target_audience = updates.targetAudience;
-}
-    if (updates.marketingChannels) {
-dbUpdates.marketing_channels = updates.marketingChannels;
-}
-    if (updates.contentStrategy) {
-dbUpdates.content_strategy = updates.contentStrategy;
-}
-    if (updates.socialPresence) {
-dbUpdates.social_presence = updates.socialPresence;
-}
-    if (updates.logoUrl) {
-dbUpdates.logo_url = updates.logoUrl;
-}
-    if (updates.screenshots) {
-dbUpdates.screenshots = updates.screenshots;
-}
+  // Verify ownership
+  const { data: competitor, error: checkError } = await supabaseAdmin
+    .from("competitors")
+    .select("id")
+    .eq("id", competitorId)
+    .eq("workspace_id", workspaceId)
+    .single();
 
-    const { error } = await supabase
-      .from("competitors")
-      .update(dbUpdates)
-      .eq("id", id);
-
-    if (error) {
-      console.error("Error updating competitor:", error);
-      return NextResponse.json(
-        { error: error.message || "Failed to update competitor" },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json({
-      success: true,
-      message: "Competitor updated successfully",
-    });
-  } catch (error: any) {
-    if (error instanceof Error) {
-      if (error.message.includes("Unauthorized")) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-      if (error.message.includes("Forbidden")) {
-        return NextResponse.json({ error: "Access denied" }, { status: 403 });
-      }
-    }
-    console.error("Error updating competitor:", error);
-    return NextResponse.json(
-      { error: error.message || "Failed to update competitor" },
-      { status: 500 }
-    );
+  if (checkError || !competitor) {
+    return errorResponse("Competitor not found", 404);
   }
-}
 
-/**
- * DELETE /api/competitors/[id]
- * Delete a competitor
- */
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  try {
-    // Apply rate limiting
-    const rateLimitResult = await apiRateLimit(request);
-    if (rateLimitResult) {
-      return rateLimitResult;
-    }
+  // Delete (cascades to related records)
+  const { error } = await supabaseAdmin
+    .from("competitors")
+    .delete()
+    .eq("id", competitorId);
 
-    // Validate user authentication
-    await validateUserAuth(request);
+  if (error) return errorResponse(error.message, 500);
 
-    const { id } = await params;
-    const supabase = await getSupabaseServer();
-
-    const { error } = await supabase
-      .from("competitors")
-      .delete()
-      .eq("id", id);
-
-    if (error) {
-      console.error("Error deleting competitor:", error);
-      return NextResponse.json(
-        { error: error.message || "Failed to delete competitor" },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json({
-      success: true,
-      message: "Competitor deleted successfully",
-    });
-  } catch (error: any) {
-    if (error instanceof Error) {
-      if (error.message.includes("Unauthorized")) {
-        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-      }
-      if (error.message.includes("Forbidden")) {
-        return NextResponse.json({ error: "Access denied" }, { status: 403 });
-      }
-    }
-    console.error("Error deleting competitor:", error);
-    return NextResponse.json(
-      { error: error.message || "Failed to delete competitor" },
-      { status: 500 }
-    );
-  }
-}
+  return successResponse({ deleted: true });
+});

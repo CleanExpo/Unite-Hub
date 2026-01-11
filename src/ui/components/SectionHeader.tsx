@@ -23,7 +23,7 @@ export function SectionHeader({
   description,
   action,
   className = "",
-  iconColor = "text-teal-600",
+  iconColor = "text-accent-600",
 }: SectionHeaderProps) {
   return (
     <div className={`mb-6 ${className}`}>

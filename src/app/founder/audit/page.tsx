@@ -125,7 +125,7 @@ export default function AuditLogCenterPage() {
       policy: "bg-violet-500/10 text-violet-500",
       notification: "bg-cyan-500/10 text-cyan-500",
       rate_limit: "bg-amber-500/10 text-amber-500",
-      integration: "bg-teal-500/10 text-teal-500",
+      integration: "bg-accent-500/10 text-accent-500",
       export: "bg-lime-500/10 text-lime-500",
       import: "bg-fuchsia-500/10 text-fuchsia-500",
       other: "bg-gray-500/10 text-gray-500",

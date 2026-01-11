@@ -75,6 +75,8 @@ export async function POST(req: NextRequest) {
     const project_id = formData.get("project_id") as string | null;
     const file_type = formData.get("file_type") as string;
     const tagsString = formData.get("tags") as string | null;
+    const contribution_type = formData.get("contribution_type") as string | null;
+    const client_user_id = formData.get("client_user_id") as string | null;
 
     // Validation
     if (!file) {
@@ -264,6 +266,40 @@ export async function POST(req: NextRequest) {
     } catch (auditError) {
       // Don't fail upload if audit logging fails, just log the error
       console.error('Failed to create audit log:', auditError);
+    }
+
+    // ========================================================================
+    // 7.5. CLIENT CONTRIBUTION CREATION (PHASE 1 - Gamification)
+    // ========================================================================
+    // If this is a client contribution, create contribution record and award points
+    if (contribution_type && client_user_id) {
+      try {
+        const { createContribution } = await import("@/lib/services/client-contribution");
+        const validContributionTypes = ['video', 'photo', 'voice', 'text', 'review', 'faq'];
+
+        if (validContributionTypes.includes(contribution_type)) {
+          // Create contribution record
+          await createContribution(
+            workspace_id,
+            client_user_id,
+            {
+              media_file_id: fileId,
+              contribution_type: contribution_type as any,
+              content_text: null,
+            }
+          );
+
+          console.log('Client contribution created:', {
+            fileId,
+            workspace_id,
+            client_user_id,
+            contribution_type,
+          });
+        }
+      } catch (error) {
+        console.error('Failed to create client contribution:', error);
+        // Don't fail the upload if contribution creation fails
+      }
     }
 
     // ========================================================================

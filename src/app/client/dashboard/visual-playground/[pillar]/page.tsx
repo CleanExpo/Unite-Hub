@@ -24,7 +24,7 @@ export default function PillarPage() {
           <p className="text-text-secondary">Pillar not found</p>
           <button
             onClick={() => router.push("/client/dashboard/visual-playground")}
-            className="mt-4 text-teal-600 hover:text-teal-700"
+            className="mt-4 text-accent-600 hover:text-accent-700"
           >
             Back to Playground
           </button>
@@ -48,7 +48,7 @@ export default function PillarPage() {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <Sparkles className="w-8 h-8 text-teal-600" />
+            <Sparkles className="w-8 h-8 text-accent-600" />
             <h1 className="text-2xl font-bold text-text-primary">
               {pillar.title}
             </h1>
@@ -71,7 +71,7 @@ export default function PillarPage() {
           {pillar.subPillars.map((subPillar) => (
             <div
               key={subPillar.id}
-              className="bg-bg-card rounded-lg border border-border-subtle p-6 hover:border-teal-500 dark:hover:border-teal-500 transition-colors cursor-pointer"
+              className="bg-bg-card rounded-lg border border-border-subtle p-6 hover:border-accent-500 dark:hover:border-accent-500 transition-colors cursor-pointer"
               onClick={() =>
                 router.push(
                   `/client/dashboard/visual-playground/${pillarId}/${subPillar.id}`

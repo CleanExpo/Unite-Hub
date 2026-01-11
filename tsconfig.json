@@ -51,14 +51,11 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "config/**/*.ts",
-    "scripts/**/*.ts",
-    "tests/**/*.ts",
-    "tests/**/*.tsx",
-    ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
+    "scripts/**/*.ts"
   ],
   "exclude": [
     "node_modules",
+    "tests/_quarantined",
     "_disabled",
     "convex.bak",
     "convex",

@@ -21,7 +21,7 @@ export default function CapabilitiesPage() {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <Shield className="w-8 h-8 text-teal-600" />
+            <Shield className="w-8 h-8 text-accent-600" />
             <h1 className="text-2xl font-bold text-text-primary">
               Capability Ledger
             </h1>
@@ -32,8 +32,8 @@ export default function CapabilitiesPage() {
         </div>
 
         {/* Philosophy */}
-        <div className="mb-8 bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-800 rounded-lg p-4">
-          <p className="text-sm text-teal-700 dark:text-teal-300">
+        <div className="mb-8 bg-accent-50 dark:bg-accent-900/20 border border-accent-200 dark:border-accent-800 rounded-lg p-4">
+          <p className="text-sm text-accent-700 dark:text-accent-300">
             We&apos;d rather under-promise and over-deliver than claim features we can&apos;t support. This page transparently shows what&apos;s available today, what we&apos;re testing, and what&apos;s planned.
           </p>
         </div>

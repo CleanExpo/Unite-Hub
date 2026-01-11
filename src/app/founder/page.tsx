@@ -275,7 +275,7 @@ return 'text-yellow-400';
           </Link>
 
           <Link href="/founder/insights">
-            <Card className="bg-gradient-to-br from-green-600/20 to-teal-600/20 border-green-500/30 p-6 hover:from-green-600/30 hover:to-teal-600/30 transition-all cursor-pointer">
+            <Card className="bg-gradient-to-br from-green-600/20 to-accent-600/20 border-green-500/30 p-6 hover:from-green-600/30 hover:to-accent-600/30 transition-all cursor-pointer">
               <BarChart3 className="w-8 h-8 text-green-400 mb-3" />
               <h3 className="text-lg font-semibold text-gray-100">Insights</h3>
               <p className="text-sm text-gray-400 mt-1">

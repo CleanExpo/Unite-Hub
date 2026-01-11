@@ -38,7 +38,7 @@ export function PerformanceCard({ report, onRefresh, onApprove, className = "" }
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <BarChart3 className="w-5 h-5 text-teal-600" />
+            <BarChart3 className="w-5 h-5 text-accent-600" />
             <CardTitle>{periodLabel}</CardTitle>
           </div>
           <span
@@ -100,7 +100,7 @@ export function PerformanceCard({ report, onRefresh, onApprove, className = "" }
               <button
                 type="button"
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="text-xs text-teal-600 hover:text-teal-700 mt-1"
+                className="text-xs text-accent-600 hover:text-accent-700 mt-1"
               >
                 {isExpanded ? "Show less" : "Read more"}
               </button>
@@ -130,7 +130,7 @@ export function PerformanceCard({ report, onRefresh, onApprove, className = "" }
           <button
             type="button"
             onClick={() => onApprove(report.id)}
-            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-white bg-teal-600 rounded hover:bg-teal-700"
+            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-white bg-accent-600 rounded hover:bg-accent-700"
           >
             Approve Report
           </button>
@@ -167,7 +167,7 @@ function MetricBox({ label, value, total, type, trend }: MetricBoxProps) {
       {type === "progress" && total !== undefined && total > 0 && (
         <div className="mt-2 h-1.5 bg-bg-hover rounded-full overflow-hidden">
           <div
-            className="h-full bg-teal-500 rounded-full transition-all duration-300"
+            className="h-full bg-accent-500 rounded-full transition-all duration-300"
             style={{ width: `${Math.min((value / total) * 100, 100)}%` }}
           />
         </div>

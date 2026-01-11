@@ -222,7 +222,7 @@ return;
           onClick={handleSeek}
         >
           <div
-            className="h-full bg-teal-500 rounded-full relative"
+            className="h-full bg-accent-500 rounded-full relative"
             style={{ width: `${progress}%` }}
           >
             <div className="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full opacity-0 group-hover/progress:opacity-100 transition-opacity" />
@@ -235,7 +235,7 @@ return;
             {/* Skip Back */}
             <button
               onClick={() => skip(-10)}
-              className="text-white hover:text-teal-400 transition-colors"
+              className="text-white hover:text-accent-400 transition-colors"
               title="Skip back 10 seconds"
             >
               <SkipBack className="w-5 h-5" />
@@ -244,7 +244,7 @@ return;
             {/* Play/Pause */}
             <button
               onClick={togglePlay}
-              className="text-white hover:text-teal-400 transition-colors"
+              className="text-white hover:text-accent-400 transition-colors"
             >
               {isPlaying ? (
                 <Pause className="w-6 h-6" fill="currentColor" />
@@ -256,7 +256,7 @@ return;
             {/* Skip Forward */}
             <button
               onClick={() => skip(10)}
-              className="text-white hover:text-teal-400 transition-colors"
+              className="text-white hover:text-accent-400 transition-colors"
               title="Skip forward 10 seconds"
             >
               <SkipForward className="w-5 h-5" />
@@ -265,7 +265,7 @@ return;
             {/* Volume */}
             <button
               onClick={toggleMute}
-              className="text-white hover:text-teal-400 transition-colors"
+              className="text-white hover:text-accent-400 transition-colors"
             >
               {isMuted ? (
                 <VolumeX className="w-5 h-5" />
@@ -282,14 +282,14 @@ return;
 
           <div className="flex items-center gap-3">
             {/* Settings (placeholder) */}
-            <button className="text-white hover:text-teal-400 transition-colors">
+            <button className="text-white hover:text-accent-400 transition-colors">
               <Settings className="w-5 h-5" />
             </button>
 
             {/* Fullscreen */}
             <button
               onClick={toggleFullscreen}
-              className="text-white hover:text-teal-400 transition-colors"
+              className="text-white hover:text-accent-400 transition-colors"
             >
               {isFullscreen ? (
                 <Minimize className="w-5 h-5" />

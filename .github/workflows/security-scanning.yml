@@ -1,0 +1,235 @@
+name: Security Scanning (OWASP ZAP + Snyk + Trivy)
+
+on:
+  push:
+    branches: [main, develop]
+  schedule:
+    - cron: '0 2 * * 0'  # Weekly Sunday 2am UTC
+  workflow_dispatch:
+
+jobs:
+  # OWASP ZAP Dynamic Security Testing
+  zap-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+        env:
+          NODE_ENV: test
+
+      - name: Start application in background
+        run: |
+          npm start &
+          sleep 10
+        env:
+          NODE_ENV: test
+
+      - name: Wait for application to be ready
+        run: |
+          for i in {1..30}; do
+            if curl -f http://localhost:3008/api/health; then
+              echo "✅ Application is ready for ZAP scan"
+              exit 0
+            fi
+            echo "Waiting for application... ($i/30)"
+            sleep 2
+          done
+          echo "❌ Application failed to start"
+          exit 1
+
+      - name: Run OWASP ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.10.0
+        with:
+          target: 'http://localhost:3008'
+          rules_file_name: '.zap/rules.tsv'
+          cmd_options: '-a -d'
+          allow_issue_writing: true
+        continue-on-error: true
+
+      - name: Upload ZAP report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-scan-report
+          path: |
+            report_html.html
+            report_md.md
+          retention-days: 30
+
+      - name: Publish ZAP results to GitHub Security tab
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'report_sarif.sarif'
+          category: 'OWASP ZAP'
+        continue-on-error: true
+
+      - name: Comment PR with ZAP results
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let comment = '## 🔐 OWASP ZAP Security Scan Results\n\n';
+            comment += '### Scan Configuration\n';
+            comment += '- **Target**: http://localhost:3008\n';
+            comment += '- **Scan Type**: Baseline (spider + passive scan)\n';
+            comment += '- **Duration**: ~30 minutes\n\n';
+            comment += '### Findings Categories\n';
+            comment += '- 🔴 Critical Issues (CVSS >= 9.0)\n';
+            comment += '- 🟠 High Issues (CVSS 7.0-8.9)\n';
+            comment += '- 🟡 Medium Issues (CVSS 4.0-6.9)\n';
+            comment += '- 🟢 Low Issues (CVSS < 4.0)\n\n';
+            comment += '### Common Checks\n';
+            comment += '- SQL Injection\n';
+            comment += '- Cross-Site Scripting (XSS)\n';
+            comment += '- Cross-Site Request Forgery (CSRF)\n';
+            comment += '- Insecure Direct Object References (IDOR)\n';
+            comment += '- Security Headers (CSP, HSTS, X-Frame-Options)\n';
+            comment += '- Authentication & Session Management\n';
+            comment += '- Sensitive Data Exposure\n';
+            comment += '- XML External Entities (XXE)\n\n';
+            comment += '📄 **Full Report**: See artifacts (zap-scan-report)\n';
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+  # Snyk Dependency Vulnerability Scanning
+  snyk-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Snyk Vulnerability Scan
+        uses: snyk/actions/node@master
+        with:
+          args: '--severity-threshold=high'
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        continue-on-error: true
+
+      - name: Upload Snyk results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'snyk.sarif'
+          category: 'Snyk'
+        continue-on-error: true
+
+  # Trivy Container Image Vulnerability Scanning
+  trivy-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Trivy Filesystem Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Upload Trivy results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+          category: 'Trivy'
+        continue-on-error: true
+
+      - name: Build and scan Docker image
+        run: |
+          docker build -t unite-hub:latest .
+          echo "Docker image built successfully"
+        continue-on-error: true
+
+      - name: Scan Docker image with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'unite-hub:latest'
+          format: 'sarif'
+          output: 'trivy-docker-results.sarif'
+          severity: 'CRITICAL,HIGH'
+        continue-on-error: true
+
+      - name: Upload Docker scan results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-docker-results.sarif'
+          category: 'Trivy Docker'
+        continue-on-error: true
+
+  # Security Summary Report
+  security-report:
+    runs-on: ubuntu-latest
+    needs: [zap-scan, snyk-scan, trivy-scan]
+    if: always()
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create Security Report
+        run: |
+          cat > SECURITY_REPORT.md << 'EOF'
+          # 🔐 Security Scan Summary
+
+          ## Scan Components
+          - ✅ **OWASP ZAP**: Dynamic security scanning (web app vulnerabilities)
+          - ✅ **Snyk**: Dependency vulnerability scanning (npm packages)
+          - ✅ **Trivy**: Container and filesystem scanning (CVEs)
+
+          ## Success Criteria
+          - [ ] 0 Critical/High vulnerabilities from ZAP
+          - [ ] 0 Critical/High vulnerabilities from Snyk
+          - [ ] 0 Critical/High vulnerabilities from Trivy
+          - [ ] All security headers configured (CSP, HSTS, X-Frame-Options)
+          - [ ] HTTPS enforced across all endpoints
+          - [ ] No secrets in code or Docker images
+          - [ ] API authentication on all protected routes
+
+          ## Next Steps
+          1. Review findings in GitHub Security tab
+          2. File issues for any vulnerabilities found
+          3. Schedule remediation based on severity
+          4. Re-run scans after fixes
+
+          ## References
+          - [OWASP Top 10](https://owasp.org/www-project-top-ten/)
+          - [Snyk Vulnerability DB](https://snyk.io/vuln)
+          - [Trivy Database](https://github.com/aquasecurity/trivy)
+          EOF
+          cat SECURITY_REPORT.md
+
+      - name: Upload Security Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-report
+          path: SECURITY_REPORT.md
+
+      - name: Fail if security issues found
+        if: failure()
+        run: |
+          echo "❌ Security scan failed"
+          echo "📋 Review the Security tab for detailed findings"
+          exit 1

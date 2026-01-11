@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, AlertCircle, TrendingUp, BookOpen, Lightbulb, ChevronDown, ChevronUp, Plus } from 'lucide-react';
+import { useWorkspace } from '@/hooks/useWorkspace';
 
 interface CapabilityScore {
   key: string;
@@ -90,9 +91,11 @@ export default function GuardianReadinessPage() {
   const [expandedPlanId, setExpandedPlanId] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
 
-  const workspaceId = '00000000-0000-0000-0000-000000000000'; // TODO: Get from auth
+  const { workspaceId, loading: workspaceLoading, error: workspaceError } = useWorkspace();
 
   useEffect(() => {
+    if (!workspaceId) return;
+
     const loadReadiness = async () => {
       try {
         setLoading(true);
@@ -116,9 +119,11 @@ export default function GuardianReadinessPage() {
     };
 
     loadReadiness();
-  }, []);
+  }, [workspaceId]);
 
   const loadUpliftPlans = async () => {
+    if (!workspaceId) return;
+
     try {
       setPlansLoading(true);
       const res = await fetch(
@@ -139,6 +144,8 @@ export default function GuardianReadinessPage() {
   };
 
   const handleGeneratePlan = async () => {
+    if (!workspaceId) return;
+
     try {
       setGenerating(true);
       const res = await fetch(
@@ -163,6 +170,8 @@ export default function GuardianReadinessPage() {
   };
 
   const handleTaskStatusChange = async (planId: string, taskId: string, newStatus: string) => {
+    if (!workspaceId) return;
+
     try {
       const res = await fetch(
         `/api/guardian/meta/uplift/tasks/${taskId}?workspaceId=${workspaceId}`,
@@ -183,6 +192,26 @@ export default function GuardianReadinessPage() {
       console.error('Failed to update task:', err);
     }
   };
+
+  if (workspaceLoading) {
+    return (
+      <div className="space-y-6 p-6">
+        <div className="text-center py-12 text-gray-500">Loading workspace...</div>
+      </div>
+    );
+  }
+
+  if (workspaceError || !workspaceId) {
+    return (
+      <div className="space-y-6 p-6">
+        <Card className="border-red-200 bg-red-50">
+          <CardContent className="pt-6">
+            <p className="text-sm text-red-900">{workspaceError || 'No workspace selected'}</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   if (loading) {
     return (

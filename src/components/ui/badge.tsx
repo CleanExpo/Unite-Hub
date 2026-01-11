@@ -80,12 +80,12 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
       accent: 'bg-accent-100 text-accent-500',
       neutral: 'bg-bg-hover text-text-secondary',
       default: 'bg-bg-hover text-text-secondary',
-      secondary: 'bg-bg-hover text-gray-600 dark:text-gray-300',
+      secondary: 'bg-bg-hover text-text-secondary dark:text-text-secondary',
       outline: 'bg-transparent border border-border-subtle text-text-secondary',
-      destructive: 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400',
-      danger: 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400',
-      info: 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400',
-      error: 'bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400',
+      destructive: 'bg-error-100 dark:bg-error-900/30 text-error-500 dark:text-error-400',
+      danger: 'bg-error-100 dark:bg-error-900/30 text-error-500 dark:text-error-400',
+      info: 'bg-info-100 dark:bg-info-900/30 text-info-500 dark:text-info-400',
+      error: 'bg-error-100 dark:bg-error-900/30 text-error-500 dark:text-error-400',
     };
 
     const sizeStyles = {

@@ -110,7 +110,7 @@ setSystem(await sysRes.json());
         {loading ? (
           <Section className="mt-6">
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-8 h-8 text-teal-600 animate-spin" />
+              <Loader2 className="w-8 h-8 text-accent-600 animate-spin" />
             </div>
           </Section>
         ) : (
@@ -121,7 +121,7 @@ setSystem(await sysRes.json());
                 <h2 className="text-sm font-medium text-gray-500">Financial Snapshot</h2>
                 <Link
                   href="/founder/dashboard/financials"
-                  className="text-xs text-teal-600 hover:text-teal-700 flex items-center gap-1"
+                  className="text-xs text-accent-600 hover:text-accent-700 flex items-center gap-1"
                 >
                   View Details <ArrowRight className="w-3 h-3" />
                 </Link>
@@ -160,7 +160,7 @@ setSystem(await sysRes.json());
                 <h2 className="text-sm font-medium text-gray-500">Time Tracking</h2>
                 <Link
                   href="/founder/dashboard/timecard"
-                  className="text-xs text-teal-600 hover:text-teal-700 flex items-center gap-1"
+                  className="text-xs text-accent-600 hover:text-accent-700 flex items-center gap-1"
                 >
                   View Timecard <ArrowRight className="w-3 h-3" />
                 </Link>
@@ -206,7 +206,7 @@ setSystem(await sysRes.json());
                 <Card>
                   <CardContent className="pt-4">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 rounded-lg bg-teal-100 text-teal-600">
+                      <div className="p-2 rounded-lg bg-accent-100 text-accent-600">
                         <Activity className="w-5 h-5" />
                       </div>
                       <div>
@@ -243,7 +243,7 @@ setSystem(await sysRes.json());
                 <h2 className="text-sm font-medium text-gray-500">Client Journeys</h2>
                 <Link
                   href="/founder/dashboard/first-client-journey"
-                  className="text-xs text-teal-600 hover:text-teal-700 flex items-center gap-1"
+                  className="text-xs text-accent-600 hover:text-accent-700 flex items-center gap-1"
                 >
                   View All <ArrowRight className="w-3 h-3" />
                 </Link>
@@ -251,7 +251,7 @@ setSystem(await sysRes.json());
               <Card>
                 <CardContent className="pt-4">
                   <div className="flex items-center gap-4">
-                    <div className="p-3 rounded-lg bg-teal-100 text-teal-600">
+                    <div className="p-3 rounded-lg bg-accent-100 text-accent-600">
                       <Users className="w-6 h-6" />
                     </div>
                     <div className="flex-1">
@@ -264,7 +264,7 @@ setSystem(await sysRes.json());
                     </div>
                     <Link
                       href="/founder/dashboard/first-client-journey"
-                      className="px-3 py-1.5 text-xs font-medium text-teal-600 bg-teal-50 rounded-lg hover:bg-teal-100"
+                      className="px-3 py-1.5 text-xs font-medium text-accent-600 bg-accent-50 rounded-lg hover:bg-accent-100"
                     >
                       Monitor Progress
                     </Link>
@@ -341,7 +341,7 @@ function QuickLink({ href, label }: QuickLinkProps) {
   return (
     <Link
       href={href}
-      className="flex items-center justify-between p-3 bg-bg-card border border-border-subtle rounded-lg hover:border-teal-500 transition-colors"
+      className="flex items-center justify-between p-3 bg-bg-card border border-border-subtle rounded-lg hover:border-accent-500 transition-colors"
     >
       <span className="text-sm font-medium text-text-secondary">{label}</span>
       <ArrowRight className="w-4 h-4 text-gray-400" />

@@ -37,7 +37,7 @@ return null;
         <div className="sticky top-0 bg-bg-card border-b border-border-subtle p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Info className="w-5 h-5 text-teal-600" />
+              <Info className="w-5 h-5 text-accent-600" />
               <h2 className="text-lg font-bold text-text-primary">
                 About This Page
               </h2>

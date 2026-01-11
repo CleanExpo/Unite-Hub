@@ -72,7 +72,7 @@ export default function MarketingDashboardPage() {
         {loading ? (
           <Section className="mt-6">
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-8 h-8 text-teal-600 animate-spin" />
+              <Loader2 className="w-8 h-8 text-accent-600 animate-spin" />
             </div>
           </Section>
         ) : (
@@ -211,8 +211,8 @@ export default function MarketingDashboardPage() {
 
             {/* Info Notice */}
             <Section className="mt-8">
-              <div className="p-4 bg-teal-50 dark:bg-teal-900/20 rounded-lg border border-teal-200 dark:border-teal-800">
-                <p className="text-sm text-teal-700 dark:text-teal-300">
+              <div className="p-4 bg-accent-50 dark:bg-accent-900/20 rounded-lg border border-accent-200 dark:border-accent-800">
+                <p className="text-sm text-accent-700 dark:text-accent-300">
                   <strong>Synthex Marketing Engine:</strong> This unified hub connects social playbooks,
                   decision moment mapping, and visual experience design for cohesive multi-channel campaigns.
                 </p>
@@ -298,7 +298,7 @@ function ModuleCard({ href, icon: Icon, title, description, stats, color }: Modu
               </div>
             ))}
           </div>
-          <div className="mt-4 flex items-center text-sm text-teal-600 font-medium">
+          <div className="mt-4 flex items-center text-sm text-accent-600 font-medium">
             Open Module <ArrowRight className="w-4 h-4 ml-1" />
           </div>
         </CardContent>
@@ -317,9 +317,9 @@ function QuickAction({ href, icon: Icon, label }: QuickActionProps) {
   return (
     <Link
       href={href}
-      className="flex items-center gap-3 p-3 bg-bg-card border border-border-subtle rounded-lg hover:border-teal-500 transition-colors"
+      className="flex items-center gap-3 p-3 bg-bg-card border border-border-subtle rounded-lg hover:border-accent-500 transition-colors"
     >
-      <div className="p-2 rounded-lg bg-teal-100 dark:bg-teal-900/30 text-teal-600">
+      <div className="p-2 rounded-lg bg-accent-100 dark:bg-accent-900/30 text-accent-600">
         <Icon className="w-4 h-4" />
       </div>
       <span className="text-sm font-medium text-text-secondary">{label}</span>

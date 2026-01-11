@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { AlertCircle, CheckCircle, XCircle, TrendingUp } from "lucide-react";
+import { useWorkspace } from "@/hooks/useWorkspace";
 
 type EarlyWarning = {
   id: string;
@@ -71,13 +72,16 @@ export default function NetworkPage() {
     "warnings"
   );
 
-  const workspaceId = "00000000-0000-0000-0000-000000000000"; // TODO: Get from auth context
+  const { workspaceId, loading: workspaceLoading, error: workspaceError } = useWorkspace();
 
   useEffect(() => {
+    if (!workspaceId) return;
     loadData();
-  }, [severityFilter, statusFilter]);
+  }, [workspaceId, severityFilter, statusFilter]);
 
   const loadData = async () => {
+    if (!workspaceId) return;
+
     try {
       setLoading(true);
       setError(null);
@@ -124,6 +128,26 @@ export default function NetworkPage() {
       setLoading(false);
     }
   };
+
+  if (workspaceLoading) {
+    return (
+      <div className="p-6">
+        <div className="text-center py-12 text-gray-500">Loading workspace...</div>
+      </div>
+    );
+  }
+
+  if (workspaceError || !workspaceId) {
+    return (
+      <div className="p-6">
+        <Card className="border-red-200 bg-red-50">
+          <CardContent className="pt-6">
+            <p className="text-sm text-red-900">{workspaceError || "No workspace selected"}</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   const handleStatusUpdate = async (
     id: string,

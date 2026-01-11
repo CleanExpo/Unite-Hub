@@ -77,7 +77,7 @@ export default function ClientReviewPacksPage() {
         {loading ? (
           <Section className="mt-6">
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-8 h-8 text-teal-600 animate-spin" />
+              <Loader2 className="w-8 h-8 text-accent-600 animate-spin" />
             </div>
           </Section>
         ) : selectedPack ? (
@@ -86,7 +86,7 @@ export default function ClientReviewPacksPage() {
             <button
               type="button"
               onClick={() => setSelectedPack(null)}
-              className="text-sm text-teal-600 hover:text-teal-700 mb-4 flex items-center gap-1"
+              className="text-sm text-accent-600 hover:text-accent-700 mb-4 flex items-center gap-1"
             >
               ← Back to list
             </button>
@@ -107,7 +107,7 @@ export default function ClientReviewPacksPage() {
                 <div>
                   <h3 className="text-sm font-medium text-gray-500 mb-2">Review Period</h3>
                   <div className="flex items-center gap-2 text-text-primary">
-                    <Calendar className="w-5 h-5 text-teal-600" />
+                    <Calendar className="w-5 h-5 text-accent-600" />
                     {formatDate(selectedPack.startDate)} - {formatDate(selectedPack.endDate)}
                   </div>
                 </div>
@@ -130,7 +130,7 @@ export default function ClientReviewPacksPage() {
                     <h3 className="text-sm font-medium text-gray-500 mb-2">Performance Report</h3>
                     <a
                       href={`/client/dashboard/reports/${selectedPack.performanceReportId}`}
-                      className="flex items-center gap-2 p-3 bg-teal-50 dark:bg-teal-900/20 rounded-lg text-teal-700 dark:text-teal-300 hover:bg-teal-100 dark:hover:bg-teal-900/30 transition-colors"
+                      className="flex items-center gap-2 p-3 bg-accent-50 dark:bg-accent-900/20 rounded-lg text-accent-700 dark:text-accent-300 hover:bg-accent-100 dark:hover:bg-accent-900/30 transition-colors"
                     >
                       <BarChart3 className="w-5 h-5" />
                       <span className="text-sm font-medium">View Detailed Report</span>

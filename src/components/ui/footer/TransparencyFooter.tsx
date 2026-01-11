@@ -47,7 +47,7 @@ export default function TransparencyFooter({
     >
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center gap-2 mb-4">
-          <Shield className="w-4 h-4 text-teal-600" />
+          <Shield className="w-4 h-4 text-accent-600" />
           <h4 className="text-sm font-semibold text-text-primary">
             Our Transparency Commitment
           </h4>
@@ -78,7 +78,7 @@ export function TransparencyStatement({
 }) {
   return (
     <div className={`flex items-center gap-2 ${className}`}>
-      <Shield className="w-3 h-3 text-teal-600 flex-shrink-0" />
+      <Shield className="w-3 h-3 text-accent-600 flex-shrink-0" />
       <p className="text-xs text-text-secondary">{statement}</p>
     </div>
   );
@@ -88,7 +88,7 @@ export function TransparencyStatement({
 export function TransparencyBadge({ className = "" }: { className?: string }) {
   return (
     <div
-      className={`inline-flex items-center gap-1.5 px-2 py-1 bg-teal-50 dark:bg-teal-900/20 border border-teal-200 dark:border-teal-800 rounded text-xs text-teal-700 dark:text-teal-300 ${className}`}
+      className={`inline-flex items-center gap-1.5 px-2 py-1 bg-accent-50 dark:bg-accent-900/20 border border-accent-200 dark:border-accent-800 rounded text-xs text-accent-700 dark:text-accent-300 ${className}`}
     >
       <Shield className="w-3 h-3" />
       <span>Honest AI Concepts</span>

@@ -30,7 +30,7 @@ services:
       # Config files
       - ./unite-hub/package.json:/app/package.json:ro
       - ./unite-hub/tsconfig.json:/app/tsconfig.json:ro
-      - ./unite-hub/next.config.js:/app/next.config.js:ro
+      - ./unite-hub/next.config.mjs:/app/next.config.mjs:ro
 
       # Performance optimization
       - unite_hub_node_modules:/app/node_modules

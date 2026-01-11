@@ -25,7 +25,7 @@ services:
       # Config files (read-only)
       - ./package.json:/app/package.json:ro
       - ./tsconfig.json:/app/tsconfig.json:ro
-      - ./next.config.js:/app/next.config.js:ro
+      - ./next.config.mjs:/app/next.config.mjs:ro
       - ./.env.local:/app/.env.local:ro
 
       # Performance optimization

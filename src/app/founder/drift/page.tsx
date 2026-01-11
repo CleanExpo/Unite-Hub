@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useWorkspace } from "@/hooks/useWorkspace";
 
 type DriftEvent = {
   id: string;
@@ -36,13 +37,16 @@ export default function DriftPage() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [severityFilter, setSeverityFilter] = useState<string>("all");
 
-  const workspaceId = "00000000-0000-0000-0000-000000000000"; // TODO: Get from auth context
+  const { workspaceId, loading: workspaceLoading, error: workspaceError } = useWorkspace();
 
   useEffect(() => {
+    if (!workspaceId) return;
     loadData();
-  }, [driftTypeFilter, statusFilter, severityFilter]);
+  }, [workspaceId, driftTypeFilter, statusFilter, severityFilter]);
 
   const loadData = async () => {
+    if (!workspaceId) return;
+
     try {
       setLoading(true);
       setError(null);
@@ -83,6 +87,8 @@ throw new Error("Failed to load events");
   };
 
   const updateStatus = async (eventId: string, newStatus: string) => {
+    if (!workspaceId) return;
+
     try {
       const res = await fetch(`/api/founder/drift?workspaceId=${workspaceId}&action=update-status`, {
         method: "POST",
@@ -117,6 +123,26 @@ throw new Error("Failed to update status");
       default: return "bg-gray-500";
     }
   };
+
+  if (workspaceLoading) {
+    return (
+      <div className="min-h-screen bg-bg-primary p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-text-primary">Loading workspace...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (workspaceError || !workspaceId) {
+    return (
+      <div className="min-h-screen bg-bg-primary p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-red-600">{workspaceError || "No workspace selected"}</div>
+        </div>
+      </div>
+    );
+  }
 
   if (loading && !summary) {
     return (

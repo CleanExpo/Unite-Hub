@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Package, TrendingUp, AlertCircle, ChevronRight } from 'lucide-react';
+import { useWorkspace } from '@/hooks/useWorkspace';
 
 interface EditionProfile {
   key: string;
@@ -58,10 +59,12 @@ export default function EditionsPage() {
   const [computing, setComputing] = useState(false);
   const [expandedEdition, setExpandedEdition] = useState<string | null>(null);
 
-  const workspaceId = '00000000-0000-0000-0000-000000000000'; // TODO: Get from auth
+  const { workspaceId, loading: workspaceLoading, error: workspaceError } = useWorkspace();
 
   // Load editions and fits on mount
   useEffect(() => {
+    if (!workspaceId) return;
+
     const loadData = async () => {
       try {
         setLoading(true);
@@ -88,9 +91,11 @@ export default function EditionsPage() {
     };
 
     loadData();
-  }, []);
+  }, [workspaceId]);
 
   const handleComputeFit = async () => {
+    if (!workspaceId) return;
+
     try {
       setComputing(true);
       const res = await fetch(
@@ -107,6 +112,26 @@ export default function EditionsPage() {
       setComputing(false);
     }
   };
+
+  if (workspaceLoading) {
+    return (
+      <div className="space-y-6 p-6">
+        <div className="text-center py-12 text-gray-500">Loading workspace...</div>
+      </div>
+    );
+  }
+
+  if (workspaceError || !workspaceId) {
+    return (
+      <div className="space-y-6 p-6">
+        <Card className="border-red-200 bg-red-50">
+          <CardContent className="pt-6">
+            <p className="text-sm text-red-900">{workspaceError || 'No workspace selected'}</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   if (loading) {
     return (

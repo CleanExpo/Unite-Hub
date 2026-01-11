@@ -6,7 +6,7 @@ import { AnimationShowcase } from "@/components/showcases/animation-showcase"
 export default function ComponentsShowcasePage() {
   return (
     <main className="min-h-screen bg-white">
-      <header className="bg-gradient-to-r from-blue-600 to-teal-600 text-white py-16">
+      <header className="bg-gradient-to-r from-blue-600 to-accent-600 text-white py-16">
         <div className="max-w-4xl mx-auto px-5">
           <h1 className="text-5xl font-bold mb-4">Animation Components Showcase</h1>
           <p className="text-xl text-white/90">

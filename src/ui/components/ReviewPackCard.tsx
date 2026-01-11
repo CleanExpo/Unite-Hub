@@ -35,7 +35,7 @@ export function ReviewPackCard({ pack, onClick }: ReviewPackCardProps) {
 
   return (
     <Card
-      className={`cursor-pointer hover:border-teal-500 transition-colors ${onClick ? "" : "cursor-default"}`}
+      className={`cursor-pointer hover:border-accent-500 transition-colors ${onClick ? "" : "cursor-default"}`}
       onClick={onClick}
     >
       <CardHeader className="pb-2">

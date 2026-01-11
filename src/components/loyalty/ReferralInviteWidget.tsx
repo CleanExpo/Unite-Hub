@@ -133,7 +133,7 @@ export function ReferralInviteWidget({
                 className="bg-bg-raised rounded-lg p-4 flex items-center justify-between"
               >
                 <div className="flex-1">
-                  <p className="font-mono font-bold text-teal-600 dark:text-teal-400">
+                  <p className="font-mono font-bold text-accent-600 dark:text-accent-400">
                     {code.code}
                   </p>
                   <div className="flex gap-4 mt-2 text-xs text-muted-foreground">

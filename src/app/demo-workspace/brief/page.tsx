@@ -64,7 +64,7 @@ export default function SmartBriefPage() {
             </header>
 
             {/* Create New Brief */}
-            <Card className="bg-gradient-to-r from-cyan-500/10 to-teal-500/10 border-cyan-500/30 mb-8">
+            <Card className="bg-gradient-to-r from-cyan-500/10 to-accent-500/10 border-cyan-500/30 mb-8">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">

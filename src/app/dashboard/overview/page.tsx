@@ -225,7 +225,7 @@ return;
                   <span className="absolute top-1 right-1 w-2 h-2 bg-orange-500 rounded-full" />
                 </button>
                 <div className="flex items-center gap-3 bg-bg-card/60 backdrop-blur-sm rounded-lg px-3 py-2 border border-cyan-900/30">
-                  <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-teal-500 rounded-lg shadow-lg shadow-cyan-500/20" />
+                  <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-accent-500 rounded-lg shadow-lg shadow-cyan-500/20" />
                   <div>
                     <span className="text-sm font-medium text-white block">
                       {user?.email?.split("@")[0] || "Demo User"}

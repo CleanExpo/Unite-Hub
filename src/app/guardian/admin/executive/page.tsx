@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { useWorkspace } from '@/hooks/useWorkspace';
 import {
   TrendingUp,
   TrendingDown,
@@ -73,10 +74,12 @@ export default function ExecutiveDashboard() {
   const [generating, setGenerating] = useState(false);
   const [expandedSectionId, setExpandedSectionId] = useState<string | null>(null);
 
-  const workspaceId = '00000000-0000-0000-0000-000000000000'; // TODO: Get from auth
+  const { workspaceId, loading: workspaceLoading, error: workspaceError } = useWorkspace();
 
   // Load reports and timeline on mount
   useEffect(() => {
+    if (!workspaceId) return;
+
     const loadData = async () => {
       try {
         setLoading(true);
@@ -110,9 +113,11 @@ export default function ExecutiveDashboard() {
     };
 
     loadData();
-  }, []);
+  }, [workspaceId]);
 
   const handleGenerateReport = async () => {
+    if (!workspaceId) return;
+
     try {
       setGenerating(true);
       const res = await fetch(`/api/guardian/meta/reports?workspaceId=${workspaceId}`, {
@@ -154,6 +159,26 @@ export default function ExecutiveDashboard() {
     link.click();
     URL.revokeObjectURL(url);
   };
+
+  if (workspaceLoading) {
+    return (
+      <div className="space-y-6 p-6">
+        <div className="text-center py-12 text-gray-500">Loading workspace...</div>
+      </div>
+    );
+  }
+
+  if (workspaceError || !workspaceId) {
+    return (
+      <div className="space-y-6 p-6">
+        <Card className="border-red-200 bg-red-50">
+          <CardContent className="pt-6">
+            <p className="text-sm text-red-900">{workspaceError || 'No workspace selected'}</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   if (loading) {
     return (

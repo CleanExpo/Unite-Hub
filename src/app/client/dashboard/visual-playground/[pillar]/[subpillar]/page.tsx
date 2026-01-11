@@ -39,7 +39,7 @@ export default function SubPillarPage() {
           <p className="text-text-secondary">Content not found</p>
           <button
             onClick={() => router.push("/client/dashboard/visual-playground")}
-            className="mt-4 text-teal-600 hover:text-teal-700"
+            className="mt-4 text-accent-600 hover:text-accent-700"
           >
             Back to Playground
           </button>
@@ -93,7 +93,7 @@ Remember: This is a starting point for exploration, not a final deliverable.`,
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <Sparkles className="w-8 h-8 text-teal-600" />
+            <Sparkles className="w-8 h-8 text-accent-600" />
             <h1 className="text-2xl font-bold text-text-primary">
               {subPillar.title}
             </h1>
@@ -123,7 +123,7 @@ Remember: This is a starting point for exploration, not a final deliverable.`,
           <button
             onClick={handleGenerate}
             disabled={generating}
-            className="flex items-center gap-2 px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-6 py-3 bg-accent-600 text-white rounded-lg hover:bg-accent-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {generating ? (
               <>

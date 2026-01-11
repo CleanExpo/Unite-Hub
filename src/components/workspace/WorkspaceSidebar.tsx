@@ -56,7 +56,7 @@ export function WorkspaceSidebar() {
       <div>
         {/* Logo */}
         <div className="font-bold text-lg text-white mb-10 flex items-center gap-2.5">
-          <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-teal-500 rounded-lg flex items-center justify-center text-white text-xs font-bold shadow-lg shadow-cyan-500/20">
+          <div className="w-8 h-8 bg-gradient-to-br from-accent-300 to-accent-500 rounded-lg flex items-center justify-center text-white text-xs font-bold shadow-lg shadow-accent-500/20">
             UH
           </div>
           <span className="bg-gradient-to-r from-white to-cyan-200 bg-clip-text text-transparent">

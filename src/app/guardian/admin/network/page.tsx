@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { useWorkspace } from "@/hooks/useWorkspace";
 import {
   Select,
   SelectContent,
@@ -126,9 +127,11 @@ export default function NetworkIntelligencePage() {
     "overview"
   );
 
-  const workspaceId = "00000000-0000-0000-0000-000000000000"; // TODO: Get from auth context
+  const { workspaceId, loading: workspaceLoading, error: workspaceError } = useWorkspace();
 
   useEffect(() => {
+    if (!workspaceId) return;
+
     const loadAllData = async () => {
       await loadOverview();
       await loadRetention();
@@ -136,7 +139,7 @@ export default function NetworkIntelligencePage() {
       await loadRecommendations();
     };
     loadAllData();
-  }, []);
+  }, [workspaceId]);
 
   const loadOverview = async () => {
     try {
@@ -325,6 +328,26 @@ return;
       setCleanupRunning(false);
     }
   };
+
+  if (workspaceLoading) {
+    return (
+      <div className="space-y-6 p-6">
+        <div className="text-center py-12 text-gray-500">Loading workspace...</div>
+      </div>
+    );
+  }
+
+  if (workspaceError || !workspaceId) {
+    return (
+      <div className="space-y-6 p-6">
+        <Card className="border-red-200 bg-red-50">
+          <CardContent className="pt-6">
+            <p className="text-sm text-red-900">{workspaceError || "No workspace selected"}</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   if (loading) {
     return (

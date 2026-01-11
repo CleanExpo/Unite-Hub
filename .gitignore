@@ -20,6 +20,8 @@ screenshot_*.png
 /.next/
 /out/
 next-env.d.ts
+next.config.js/
+external/
 
 # Production
 /build

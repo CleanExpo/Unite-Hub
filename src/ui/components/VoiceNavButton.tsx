@@ -138,7 +138,7 @@ export function VoiceNavButton({ userRole, onResult }: VoiceNavButtonProps) {
             ? "bg-red-500 text-white animate-pulse"
             : isProcessing
             ? "bg-gray-300 text-gray-500"
-            : "bg-teal-500 text-white hover:bg-teal-600"
+            : "bg-accent-500 text-white hover:bg-accent-600"
           }
         `}
         aria-label={isListening ? "Stop listening" : "Start voice navigation"}

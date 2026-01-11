@@ -186,7 +186,7 @@ export default function PlaybookDetailPage() {
       <PageContainer>
         <ChatbotSafeZone>
           <div className="flex items-center justify-center py-24">
-            <Loader2 className="w-8 h-8 text-teal-600 animate-spin" />
+            <Loader2 className="w-8 h-8 text-accent-600 animate-spin" />
           </div>
         </ChatbotSafeZone>
       </PageContainer>
@@ -201,7 +201,7 @@ export default function PlaybookDetailPage() {
             <h2 className="text-xl font-semibold text-text-primary mb-2">
               Playbook not found
             </h2>
-            <Link href="/founder/marketing/playbooks" className="text-teal-600 hover:underline">
+            <Link href="/founder/marketing/playbooks" className="text-accent-600 hover:underline">
               Back to playbooks
             </Link>
           </div>
@@ -216,7 +216,7 @@ export default function PlaybookDetailPage() {
         {/* Back Link */}
         <Link
           href="/founder/marketing/playbooks"
-          className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-teal-600 mb-4"
+          className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-accent-600 mb-4"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Playbooks
@@ -256,7 +256,7 @@ export default function PlaybookDetailPage() {
             </button>
             <button
               onClick={() => setShowAssetModal(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700"
+              className="flex items-center gap-2 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700"
             >
               <Plus className="w-4 h-4" />
               Add Asset
@@ -340,7 +340,7 @@ export default function PlaybookDetailPage() {
                 </p>
                 <button
                   onClick={() => setShowAssetModal(true)}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700"
                 >
                   <Plus className="w-4 h-4" />
                   Add Asset
@@ -358,16 +358,16 @@ export default function PlaybookDetailPage() {
 
         {/* AI Generate Button */}
         <Section className="mt-8">
-          <Card className="border-2 border-dashed border-teal-200 dark:border-teal-800 bg-teal-50/50 dark:bg-teal-900/10">
+          <Card className="border-2 border-dashed border-accent-200 dark:border-accent-800 bg-accent-50/50 dark:bg-accent-900/10">
             <CardContent className="py-6 text-center">
-              <Sparkles className="w-8 h-8 mx-auto text-teal-600 mb-3" />
+              <Sparkles className="w-8 h-8 mx-auto text-accent-600 mb-3" />
               <h3 className="text-lg font-medium text-text-primary mb-2">
                 AI Asset Generator
               </h3>
               <p className="text-sm text-gray-500 mb-4">
                 Generate hooks, scripts, and thumbnails automatically based on your playbook strategy.
               </p>
-              <button className="inline-flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700">
+              <button className="inline-flex items-center gap-2 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700">
                 <Sparkles className="w-4 h-4" />
                 Generate Content Pack
               </button>
@@ -403,7 +403,7 @@ function StatPill({
     gray: "bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300",
     green: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
     amber: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
-    teal: "bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400",
+    teal: "bg-accent-100 text-accent-700 dark:bg-accent-900/30 dark:text-accent-400",
   };
 
   return (
@@ -430,7 +430,7 @@ function FilterTab({
       onClick={onClick}
       className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
         active
-          ? "bg-teal-600 text-white"
+          ? "bg-accent-600 text-white"
           : "bg-bg-hover text-gray-600 dark:text-gray-300 hover:bg-bg-hover"
       }`}
     >
@@ -453,7 +453,7 @@ function AssetCard({ asset, onUpdate }: { asset: SocialAsset; onUpdate: () => vo
   };
 
   return (
-    <Card className="hover:border-teal-500 transition-colors">
+    <Card className="hover:border-accent-500 transition-colors">
       <CardContent className="pt-5">
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-2">
@@ -631,7 +631,7 @@ function CreateAssetModal({ playbookId, platforms, onClose, onCreated }: CreateA
             <button
               type="submit"
               disabled={saving || !title}
-              className="px-4 py-2 text-sm bg-teal-600 text-white rounded-lg hover:bg-teal-700 disabled:opacity-50"
+              className="px-4 py-2 text-sm bg-accent-600 text-white rounded-lg hover:bg-accent-700 disabled:opacity-50"
             >
               {saving ? "Creating..." : "Add Asset"}
             </button>

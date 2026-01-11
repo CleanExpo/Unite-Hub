@@ -1,0 +1,89 @@
+coverage:
+  precision: 2
+  round: down
+  range:
+    - 75
+    - 90
+  status:
+    project:
+      default:
+        target: 80
+        threshold: 5
+        base: auto
+        flags:
+          - unit
+          - integration
+          - e2e
+    patch:
+      default:
+        target: 80
+        threshold: 5
+    changes:
+      default:
+        target: 80
+        threshold: 5
+
+flags:
+  unit:
+    carryforward: true
+    paths:
+      - tests/unit/**
+    statuses:
+      - unit-tests
+  integration:
+    carryforward: true
+    paths:
+      - tests/integration/**
+    statuses:
+      - integration-tests
+  e2e:
+    carryforward: false
+    paths:
+      - tests/e2e/**
+    statuses:
+      - e2e-tests
+
+ignore:
+  - '**/*.d.ts'
+  - '**/*.config.js'
+  - '**/*.config.ts'
+  - '**/tests/**'
+  - '**/node_modules/**'
+  - '**/.next/**'
+  - '**/coverage/**'
+  - 'src/types/**'
+
+fixes:
+  - 'D:\\' => './'
+
+comment:
+  layout: 'reach,diff,files'
+  behavior: 'default'
+  require_changes: false
+  require_base: false
+  require_head: true
+  hide_project_coverage: false
+  hide_branch_coverage: false
+
+codecov:
+  require_ci_to_pass: true
+  patch_coverage_rules:
+    default:
+      informational: true
+
+github:
+  checks:
+    annotations: true
+    lines: true
+
+slack:
+  default:
+    url: $CODECOV_SLACK_WEBHOOK
+    only_pulls: false
+    threshold: 5
+    branches:
+      - main
+      - develop
+
+archive:
+  uploads: true

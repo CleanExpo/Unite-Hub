@@ -44,7 +44,7 @@ export default function VisualPlaygroundPage() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-3">
-              <Sparkles className="w-8 h-8 text-teal-600" />
+              <Sparkles className="w-8 h-8 text-accent-600" />
               <h1 className="text-2xl font-bold text-text-primary">
                 Your Creative Lab
               </h1>
@@ -52,7 +52,7 @@ export default function VisualPlaygroundPage() {
             <CreativeLabInfoTrigger onClick={() => setDrawerOpen(true)} />
           </div>
           {/* Official Slogan */}
-          <p className="text-teal-600 dark:text-teal-400 font-medium mb-2">
+          <p className="text-accent-600 dark:text-accent-400 font-medium mb-2">
             This is your Creative Lab — everything you see is generated in real time based on your inputs.
           </p>
           <p className="text-text-secondary text-sm">
@@ -81,13 +81,13 @@ export default function VisualPlaygroundPage() {
           {pillars.map((pillar) => (
             <div
               key={pillar.id}
-              className="bg-bg-card rounded-lg border border-border-subtle p-6 hover:border-teal-500 dark:hover:border-teal-500 transition-colors cursor-pointer"
+              className="bg-bg-card rounded-lg border border-border-subtle p-6 hover:border-accent-500 dark:hover:border-accent-500 transition-colors cursor-pointer"
               onClick={() =>
                 router.push(`/client/dashboard/visual-playground/${pillar.id}`)
               }
             >
               <div className="flex items-start gap-4">
-                <div className="p-3 bg-teal-100 dark:bg-teal-900/30 rounded-lg text-teal-600 dark:text-teal-400">
+                <div className="p-3 bg-accent-100 dark:bg-accent-900/30 rounded-lg text-accent-600 dark:text-accent-400">
                   {ICON_MAP[pillar.icon] || <Sparkles className="w-6 h-6" />}
                 </div>
                 <div className="flex-1">

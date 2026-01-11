@@ -56,7 +56,7 @@ const demoStyles = [
     name: 'Soft Morph',
     description: 'Gentle organic transitions',
     mood: 'Trustworthy',
-    color: 'from-emerald-500 to-teal-500',
+    color: 'from-emerald-500 to-accent-500',
   },
   {
     id: 'split-reveal',

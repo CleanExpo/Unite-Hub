@@ -17,8 +17,8 @@ interface IconBadgeProps {
 
 const variantStyles = {
   primary: {
-    bg: "bg-teal-100 dark:bg-teal-900/30",
-    icon: "text-teal-600 dark:text-teal-400",
+    bg: "bg-accent-100 dark:bg-accent-900/30",
+    icon: "text-accent-600 dark:text-accent-400",
   },
   success: {
     bg: "bg-green-100 dark:bg-green-900/30",

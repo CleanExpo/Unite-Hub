@@ -120,7 +120,7 @@ return;
       {/* Header */}
       <div className="px-4 py-3 flex justify-between items-center border-b border-cyan-900/30 bg-bg-card/50">
         <div className="flex items-center font-semibold gap-2 text-white text-sm">
-          <div className="w-6 h-6 bg-gradient-to-br from-cyan-400 to-teal-500 rounded-md flex justify-center items-center shadow-lg shadow-cyan-500/20">
+          <div className="w-6 h-6 bg-gradient-to-br from-cyan-400 to-accent-500 rounded-md flex justify-center items-center shadow-lg shadow-cyan-500/20">
             <Sparkles className="w-3.5 h-3.5 text-white" />
           </div>
           NEXUS Assistant
@@ -143,7 +143,7 @@ return;
           >
             {message.role === "assistant" && (
               <div className="flex items-center gap-2 mb-2 pb-2 border-b border-cyan-900/30">
-                <div className="w-4 h-4 bg-gradient-to-br from-cyan-400 to-teal-500 rounded flex items-center justify-center">
+                <div className="w-4 h-4 bg-gradient-to-br from-cyan-400 to-accent-500 rounded flex items-center justify-center">
                   <Bot className="w-2.5 h-2.5 text-white" />
                 </div>
                 <span className="text-[10px] text-cyan-400 font-medium">NEXUS</span>
@@ -155,7 +155,7 @@ return;
         {isLoading && (
           <div className="self-start bg-bg-card/80 border border-cyan-900/30 text-gray-300 rounded-xl rounded-tl-sm p-3">
             <div className="flex items-center gap-2 mb-2 pb-2 border-b border-cyan-900/30">
-              <div className="w-4 h-4 bg-gradient-to-br from-cyan-400 to-teal-500 rounded flex items-center justify-center">
+              <div className="w-4 h-4 bg-gradient-to-br from-cyan-400 to-accent-500 rounded flex items-center justify-center">
                 <Bot className="w-2.5 h-2.5 text-white" />
               </div>
               <span className="text-[10px] text-cyan-400 font-medium">NEXUS</span>

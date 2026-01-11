@@ -56,7 +56,7 @@ const CATEGORY_COLORS: Record<Category, string> = {
   admin: "bg-gray-500",
   coding: "bg-blue-500",
   meetings: "bg-purple-500",
-  strategy: "bg-teal-500",
+  strategy: "bg-accent-500",
   finance: "bg-green-500",
   ops: "bg-orange-500",
   sales: "bg-pink-500",
@@ -237,7 +237,7 @@ export default function FounderTimecardPage() {
                       <button
                         type="button"
                         onClick={startTimer}
-                        className="flex items-center gap-2 px-6 py-2 text-sm font-medium text-white bg-teal-600 rounded-lg hover:bg-teal-700"
+                        className="flex items-center gap-2 px-6 py-2 text-sm font-medium text-white bg-accent-600 rounded-lg hover:bg-accent-700"
                       >
                         <Play className="w-4 h-4" />
                         Start Timer
@@ -269,7 +269,7 @@ export default function FounderTimecardPage() {
                 onClick={() => setPeriod(p)}
                 className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md transition-colors ${
                   period === p
-                    ? "bg-bg-input text-teal-600 shadow-sm"
+                    ? "bg-bg-input text-accent-600 shadow-sm"
                     : "text-text-secondary hover:text-gray-900"
                 }`}
               >
@@ -283,7 +283,7 @@ export default function FounderTimecardPage() {
         {loading ? (
           <Section className="mt-6">
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-8 h-8 text-teal-600 animate-spin" />
+              <Loader2 className="w-8 h-8 text-accent-600 animate-spin" />
             </div>
           </Section>
         ) : (

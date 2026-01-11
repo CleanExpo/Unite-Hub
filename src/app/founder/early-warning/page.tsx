@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AlertTriangle, TrendingUp, Shield, Zap } from "lucide-react";
+import { useWorkspace } from "@/hooks/useWorkspace";
 
 type WarningEvent = {
   id: string;
@@ -38,13 +39,16 @@ export default function EarlyWarningPage() {
   const [riskLevelFilter, setRiskLevelFilter] = useState<string>("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
 
-  const workspaceId = "00000000-0000-0000-0000-000000000000"; // TODO: Get from auth context
+  const { workspaceId, loading: workspaceLoading, error: workspaceError } = useWorkspace();
 
   useEffect(() => {
+    if (!workspaceId) return;
     loadData();
-  }, [signalTypeFilter, riskLevelFilter, statusFilter]);
+  }, [workspaceId, signalTypeFilter, riskLevelFilter, statusFilter]);
 
   const loadData = async () => {
+    if (!workspaceId) return;
+
     try {
       setLoading(true);
       setError(null);
@@ -85,6 +89,8 @@ throw new Error("Failed to load events");
   };
 
   const updateStatus = async (eventId: string, newStatus: string) => {
+    if (!workspaceId) return;
+
     try {
       const res = await fetch(`/api/founder/early-warning?workspaceId=${workspaceId}&action=update-status`, {
         method: "POST",
@@ -119,6 +125,26 @@ throw new Error("Failed to update status");
       default: return null;
     }
   };
+
+  if (workspaceLoading) {
+    return (
+      <div className="min-h-screen bg-bg-primary p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-text-primary">Loading workspace...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (workspaceError || !workspaceId) {
+    return (
+      <div className="min-h-screen bg-bg-primary p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-red-600">{workspaceError || "No workspace selected"}</div>
+        </div>
+      </div>
+    );
+  }
 
   if (loading && !summary) {
     return (

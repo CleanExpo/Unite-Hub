@@ -5,14 +5,12 @@
  */
 
 import { BaseAgent, AgentTask } from '../base-agent';
-import { getSupabaseServer } from '@/lib/supabase';
 import { getGeminiSearchGrounding } from '@/lib/integrations/gemini/search-grounding';
 import type {
   ScoutTaskPayload,
   ScoutResult,
   GeographicVacuum,
   ContentVacuum,
-  PathwayType
 } from './types';
 
 interface SuburbAuthorityData {
@@ -40,6 +38,10 @@ export class ScoutAgent extends BaseAgent {
    */
   protected async processTask(task: AgentTask): Promise<any> {
     const payload = task.payload as ScoutTaskPayload;
+    const workspaceId = task.workspace_id;
+    if (!workspaceId) {
+      throw new Error('[Scout] workspace_id is required');
+    }
     const startTime = Date.now();
 
     console.log(`[Scout] Starting ${payload.pathway} pathway analysis for client ${payload.clientId}`);
@@ -55,17 +57,17 @@ export class ScoutAgent extends BaseAgent {
     try {
       // Execute pathway-specific analysis
       if (payload.pathway === 'geographic' || payload.pathway === 'hybrid') {
-        result.geographicVacuums = await this.findGeographicVacuums(payload);
+        result.geographicVacuums = await this.findGeographicVacuums(workspaceId, payload);
         result.totalVacuumsFound += result.geographicVacuums.length;
       }
 
       if (payload.pathway === 'content' || payload.pathway === 'hybrid') {
-        result.contentVacuums = await this.findContentVacuums(payload);
+        result.contentVacuums = await this.findContentVacuums(workspaceId, payload);
         result.totalVacuumsFound += result.contentVacuums.length;
       }
 
       // Store discovered vacuums in database
-      await this.storeVacuums(task.workspace_id, payload.clientId, result);
+      await this.storeVacuums(workspaceId, payload.clientId, result);
 
       result.analysisComplete = true;
       result.processingTimeMs = Date.now() - startTime;
@@ -82,18 +84,16 @@ export class ScoutAgent extends BaseAgent {
   /**
    * Find geographic vacuums (low authority suburbs)
    */
-  private async findGeographicVacuums(payload: ScoutTaskPayload): Promise<GeographicVacuum[]> {
+  private async findGeographicVacuums(workspaceId: string, payload: ScoutTaskPayload): Promise<GeographicVacuum[]> {
     console.log('[Scout] Finding geographic vacuums...');
 
     // Step 1: Query MCP server for low authority suburbs
     // TODO: Once MCP is integrated, use: await mcp.call('find_geographic_gaps', {...})
-    // For now, query Supabase directly
-    const supabase = getSupabaseServer();
-
-    const { data: suburbData, error } = await supabase
+    // For now, query Supabase directly (service role; always filter by workspace_id)
+    const { data: suburbData, error } = await this.supabase
       .from('suburb_authority_substrate')
       .select('*')
-      .eq('workspace_id', this.supabase.auth.getUser().then(u => u.data.user?.id)) // TODO: Fix workspace context
+      .eq('workspace_id', workspaceId)
       .lte('authority_score', 50) // Gaps only
       .order('authority_score', { ascending: true })
       .limit(payload.maxGaps || 20);
@@ -157,15 +157,14 @@ export class ScoutAgent extends BaseAgent {
   /**
    * Find content vacuums (missing proof points)
    */
-  private async findContentVacuums(payload: ScoutTaskPayload): Promise<ContentVacuum[]> {
+  private async findContentVacuums(workspaceId: string, payload: ScoutTaskPayload): Promise<ContentVacuum[]> {
     console.log('[Scout] Finding content vacuums...');
 
     // Query MCP server or Supabase directly
-    const supabase = getSupabaseServer();
-
-    const { data: suburbData, error } = await supabase
+    const { data: suburbData, error } = await this.supabase
       .from('suburb_authority_substrate')
       .select('*')
+      .eq('workspace_id', workspaceId)
       .gte('avg_content_gap_score', 0.7) // High content gap only
       .order('avg_content_gap_score', { ascending: false })
       .limit(payload.maxGaps || 20);
@@ -345,17 +344,17 @@ export class ScoutAgent extends BaseAgent {
    */
   private calculatePriority(opportunityScore: number): number {
     if (opportunityScore >= 80) {
-return 10;
-}
+      return 10;
+    }
     if (opportunityScore >= 60) {
-return 8;
-}
+      return 8;
+    }
     if (opportunityScore >= 40) {
-return 6;
-}
+      return 6;
+    }
     if (opportunityScore >= 20) {
-return 4;
-}
+      return 4;
+    }
     return 2;
   }
 }

@@ -161,7 +161,7 @@ export default function DecisionMapsPage() {
                   placeholder="Search maps..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 text-sm border border-border-subtle rounded-lg bg-bg-card focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2 text-sm border border-border-subtle rounded-lg bg-bg-card focus:ring-2 focus:ring-accent-500 focus:border-transparent"
                 />
               </div>
               <select
@@ -179,7 +179,7 @@ export default function DecisionMapsPage() {
             </div>
             <button
               onClick={() => setShowCreateModal(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 transition-colors"
             >
               <Plus className="w-4 h-4" />
               New Map
@@ -198,7 +198,7 @@ export default function DecisionMapsPage() {
                   onClick={() => setStageFilter(stageFilter === stage ? "all" : stage)}
                   className={`p-4 rounded-lg border transition-all ${
                     stageFilter === stage
-                      ? "border-teal-500 bg-teal-50 dark:bg-teal-900/20"
+                      ? "border-accent-500 bg-accent-50 dark:bg-accent-900/20"
                       : "border-border-subtle hover:border-gray-300"
                   }`}
                 >
@@ -217,7 +217,7 @@ export default function DecisionMapsPage() {
         <Section className="mt-6">
           {loading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-8 h-8 text-teal-600 animate-spin" />
+              <Loader2 className="w-8 h-8 text-accent-600 animate-spin" />
             </div>
           ) : filteredMaps.length === 0 ? (
             <Card>
@@ -231,7 +231,7 @@ export default function DecisionMapsPage() {
                 </p>
                 <button
                   onClick={() => setShowCreateModal(true)}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700"
                 >
                   <Plus className="w-4 h-4" />
                   Create Map
@@ -266,7 +266,7 @@ function DecisionMapCard({ map, onDuplicate }: DecisionMapCardProps) {
   const stageConfig = STAGE_CONFIG[map.funnel_stage];
 
   return (
-    <Card className="group hover:border-teal-500 transition-colors">
+    <Card className="group hover:border-accent-500 transition-colors">
       <CardContent className="pt-5">
         <div className="flex items-start justify-between mb-4">
           <div className={`w-10 h-10 rounded-lg ${stageConfig.color} flex items-center justify-center`}>
@@ -302,7 +302,7 @@ function DecisionMapCard({ map, onDuplicate }: DecisionMapCardProps) {
         </div>
 
         <Link href={`/founder/marketing/decision-maps/${map.id}`}>
-          <h3 className="text-lg font-semibold text-text-primary mb-2 group-hover:text-teal-600 transition-colors">
+          <h3 className="text-lg font-semibold text-text-primary mb-2 group-hover:text-accent-600 transition-colors">
             {map.name}
           </h3>
         </Link>
@@ -321,7 +321,7 @@ function DecisionMapCard({ map, onDuplicate }: DecisionMapCardProps) {
           </div>
           <Link
             href={`/founder/marketing/decision-maps/${map.id}`}
-            className="text-sm text-teal-600 hover:text-teal-700 flex items-center gap-1"
+            className="text-sm text-accent-600 hover:text-accent-700 flex items-center gap-1"
           >
             View <ArrowRight className="w-3 h-3" />
           </Link>
@@ -415,7 +415,7 @@ function CreateMapModal({ onClose, onCreated }: CreateMapModalProps) {
                   onClick={() => setFunnelStage(stage as DecisionMap["funnel_stage"])}
                   className={`flex items-center gap-2 px-3 py-2 rounded-lg border transition-colors ${
                     funnelStage === stage
-                      ? "border-teal-500 bg-teal-50 dark:bg-teal-900/30"
+                      ? "border-accent-500 bg-accent-50 dark:bg-accent-900/30"
                       : "border-border-subtle"
                   }`}
                 >
@@ -438,7 +438,7 @@ function CreateMapModal({ onClose, onCreated }: CreateMapModalProps) {
             <button
               type="submit"
               disabled={saving || !name}
-              className="px-4 py-2 text-sm bg-teal-600 text-white rounded-lg hover:bg-teal-700 disabled:opacity-50"
+              className="px-4 py-2 text-sm bg-accent-600 text-white rounded-lg hover:bg-accent-700 disabled:opacity-50"
             >
               {saving ? "Creating..." : "Create Map"}
             </button>

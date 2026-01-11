@@ -122,7 +122,7 @@ export default function ClientDashboardOverview() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-600"></div>
       </div>
     );
   }
@@ -169,11 +169,11 @@ export default function ClientDashboardOverview() {
             {/* Journey Entry Point */}
             <div
               onClick={() => router.push("/client/dashboard/journey")}
-              className="bg-gradient-to-br from-teal-50 to-blue-50 dark:from-teal-900/20 dark:to-blue-900/20 rounded-lg border border-teal-200 dark:border-teal-800 p-6 cursor-pointer hover:shadow-md transition-shadow"
+              className="bg-gradient-to-br from-accent-50 to-blue-50 dark:from-accent-900/20 dark:to-blue-900/20 rounded-lg border border-accent-200 dark:border-accent-800 p-6 cursor-pointer hover:shadow-md transition-shadow"
             >
               <div className="flex items-start gap-3">
-                <div className="p-2 bg-teal-100 dark:bg-teal-800 rounded-lg">
-                  <Compass className="w-5 h-5 text-teal-600 dark:text-teal-300" />
+                <div className="p-2 bg-accent-100 dark:bg-accent-800 rounded-lg">
+                  <Compass className="w-5 h-5 text-accent-600 dark:text-accent-300" />
                 </div>
                 <div className="flex-1">
                   <h3 className="text-sm font-semibold text-text-primary">
@@ -182,7 +182,7 @@ export default function ClientDashboardOverview() {
                   <p className="text-xs text-text-secondary mt-1">
                     Track your progress from onboarding to optimization
                   </p>
-                  <div className="flex items-center gap-1 mt-2 text-xs text-teal-600 dark:text-teal-400">
+                  <div className="flex items-center gap-1 mt-2 text-xs text-accent-600 dark:text-accent-400">
                     View Journey <ArrowRight className="w-3 h-3" />
                   </div>
                 </div>

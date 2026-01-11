@@ -236,7 +236,7 @@ return
             }}
             className={`relative flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden transition-all ${
               index === currentIndex
-                ? "ring-2 ring-teal-600 scale-105"
+                ? "ring-2 ring-accent-600 scale-105"
                 : "hover:scale-105"
             }`}
             whileHover={{ scale: 1.05 }}
@@ -252,7 +252,7 @@ return
             {index === currentIndex && (
               <motion.div
                 layoutId="indicator"
-                className="absolute inset-0 bg-teal-600/20 border-2 border-teal-600 rounded-lg"
+                className="absolute inset-0 bg-accent-600/20 border-2 border-accent-600 rounded-lg"
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
               />
             )}

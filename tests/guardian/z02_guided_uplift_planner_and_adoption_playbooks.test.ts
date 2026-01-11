@@ -21,13 +21,7 @@ vi.mock('@/lib/guardian/meta/upliftAiHelper', async () => {
       common_pitfalls: ['Missing setup'],
       validation_checklist: ['Check logs'],
     }),
-    formatEnrichedHints: vi.fn().mockReturnValue(
-      '⏱️ Estimated time: 30 minutes
-📋 Steps:
-  1. Configure
-  2. Enable
-  3. Validate'
-    ),
+    formatEnrichedHints: vi.fn().mockReturnValue("Estimated time: 30 minutes"),
     enrichMultipleUpliftTasks: vi.fn().mockResolvedValue(
       new Map([
         ['task-1', {

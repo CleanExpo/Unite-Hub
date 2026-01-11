@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "static": {
+    "cleanUrls": true,
+    "include": "**/*.html",
+    "exclude": []
+  },
+  "discovery": {
+    "allowed-hosts": ["localhost", "staging.unite-hub.com", "app.unite-hub.com"],
+    "network-idle-timeout": 750
+  },
+  "agent": {
+    "asset-discovery": {
+      "allowed-hosts": ["localhost", "staging.unite-hub.com"],
+      "request-headers": {}
+    }
+  },
+  "static-snapshots": {
+    "include": "**/*.html",
+    "exclude": ["node_modules/**", ".next/**"]
+  }
+}

@@ -223,7 +223,7 @@ export default function VisualDemosPage() {
                   placeholder="Search demos..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 text-sm border border-border-subtle rounded-lg bg-bg-card focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-2 text-sm border border-border-subtle rounded-lg bg-bg-card focus:ring-2 focus:ring-accent-500 focus:border-transparent"
                 />
               </div>
               <select
@@ -247,7 +247,7 @@ export default function VisualDemosPage() {
                 <Wand2 className="w-4 h-4" />
                 Style Wizard
               </Link>
-              <button className="flex items-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors">
+              <button className="flex items-center gap-2 px-4 py-2 bg-accent-600 text-white rounded-lg hover:bg-accent-700 transition-colors">
                 <Plus className="w-4 h-4" />
                 Add Demo
               </button>
@@ -259,7 +259,7 @@ export default function VisualDemosPage() {
         <Section className="mt-6">
           {loading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="w-8 h-8 text-teal-600 animate-spin" />
+              <Loader2 className="w-8 h-8 text-accent-600 animate-spin" />
             </div>
           ) : filteredDemos.length === 0 ? (
             <Card>
@@ -329,7 +329,7 @@ function CategoryPill({ active, onClick, label, count, icon: Icon, color }: Cate
       onClick={onClick}
       className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
         active
-          ? "bg-teal-600 text-white"
+          ? "bg-accent-600 text-white"
           : "bg-bg-hover text-gray-600 dark:text-gray-300 hover:bg-bg-hover"
       }`}
     >
@@ -362,7 +362,7 @@ function DemoCard({ demo, onPreview }: DemoCardProps) {
 
   return (
     <Card
-      className="group hover:border-teal-500 transition-all overflow-hidden"
+      className="group hover:border-accent-500 transition-all overflow-hidden"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -371,7 +371,7 @@ function DemoCard({ demo, onPreview }: DemoCardProps) {
         {/* Animated Preview Placeholder */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div
-            className={`w-24 h-24 rounded-lg bg-gradient-to-r from-teal-500 to-purple-500 opacity-50 transition-transform duration-700 ${
+            className={`w-24 h-24 rounded-lg bg-gradient-to-r from-accent-500 to-purple-500 opacity-50 transition-transform duration-700 ${
               isHovered ? "scale-110 rotate-6" : "scale-100 rotate-0"
             }`}
           />
@@ -406,7 +406,7 @@ function DemoCard({ demo, onPreview }: DemoCardProps) {
       </div>
 
       <CardContent className="pt-4">
-        <h3 className="font-semibold text-text-primary mb-1 group-hover:text-teal-600 transition-colors">
+        <h3 className="font-semibold text-text-primary mb-1 group-hover:text-accent-600 transition-colors">
           {demo.title}
         </h3>
         <p className="text-sm text-text-secondary mb-3 line-clamp-2">
@@ -452,7 +452,7 @@ function DemoPreviewModal({ demo, onClose }: DemoPreviewModalProps) {
         <div className="relative h-80 bg-gradient-to-br from-gray-900 to-gray-800 overflow-hidden">
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="relative">
-              <div className="w-48 h-48 rounded-2xl bg-gradient-to-r from-teal-500 to-purple-500 animate-pulse" />
+              <div className="w-48 h-48 rounded-2xl bg-gradient-to-r from-accent-500 to-purple-500 animate-pulse" />
               <div className="absolute inset-0 flex items-center justify-center">
                 <Play className="w-16 h-16 text-white" />
               </div>
@@ -516,7 +516,7 @@ function DemoPreviewModal({ demo, onClose }: DemoPreviewModalProps) {
               <Copy className="w-4 h-4" />
               Copy Config
             </button>
-            <button className="flex items-center gap-2 px-4 py-2 text-sm bg-teal-600 text-white rounded-lg hover:bg-teal-700">
+            <button className="flex items-center gap-2 px-4 py-2 text-sm bg-accent-600 text-white rounded-lg hover:bg-accent-700">
               <Zap className="w-4 h-4" />
               Use This Style
             </button>
