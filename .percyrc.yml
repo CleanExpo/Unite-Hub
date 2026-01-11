@@ -1,0 +1,45 @@
+version: 2
+
+# Percy visual regression testing configuration
+# Captures snapshots on every PR, compares against main branch
+
+static:
+  cleanUrls: true
+
+discovery:
+  allowed-hosts:
+    - localhost
+  network-idle-timeout: 750
+
+# Snapshot configuration
+snapshot:
+  # Wait for network to be idle before capturing
+  network-idle: true
+  wait-for-fonts: true
+
+  # Handling for dynamic content
+  min-height: 1024
+  widths:
+    - 375   # Mobile
+    - 768   # Tablet
+    - 1440  # Desktop
+
+# Static site discovery (if using static build)
+static-discovery:
+  allowed-hosts:
+    - localhost:3008
+
+# Comparison settings
+comparison:
+  # Threshold for pixel differences (0-1, where 1 = 100% different)
+  threshold: 0.01
+
+  # Consider multiple samples for consistency
+  min-height: 1024
+
+# Logging
+logging:
+  level: info
+
+# Parallel snapshots
+parallel: 3
