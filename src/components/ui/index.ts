@@ -58,3 +58,13 @@ export {
   DrawerTitle,
   DrawerDescription,
 } from './drawer';
+
+// Week 4: Premium Landing Page Components (StyleUI patterns)
+export { HeroSection } from './hero-section';
+export { FeatureGrid } from './feature-grid';
+export { TestimonialCarousel } from './testimonial-carousel';
+export { PricingSection } from './pricing-section';
+export { CTASection } from './cta-section';
+
+// Week 4: Dashboard Micro-Interactions (KokonutUI patterns)
+export { AnimatedStats } from './animated-stats';
