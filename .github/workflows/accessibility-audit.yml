@@ -1,0 +1,190 @@
+name: Accessibility Audit & WCAG 2.1 AA Compliance
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Run daily at 2 AM UTC
+    - cron: '0 2 * * *'
+
+jobs:
+  accessibility:
+    name: WCAG 2.1 AA Accessibility Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Run accessibility unit tests (jest-axe)
+        run: npm run test:a11y:unit
+        continue-on-error: false
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          configPath: './lighthouserc.js'
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          runs: 3
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: Start dev server
+        run: |
+          npm run dev &
+          npx wait-on http://localhost:3008 --timeout 30000
+
+      - name: Run E2E accessibility tests (Playwright + axe)
+        run: npm run test:a11y:e2e
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: accessibility-test-results
+          path: |
+            test-results/
+            coverage/
+            lighthouse/
+
+      - name: Comment accessibility results on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const resultsPath = './test-results/results.json';
+
+            if (fs.existsSync(resultsPath)) {
+              const results = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
+              const passCount = results.stats?.passes || 0;
+              const failCount = results.stats?.failures || 0;
+
+              const comment = `
+            ## ♿ Accessibility Audit Results
+
+            - ✅ Passed: ${passCount}
+            - ❌ Failed: ${failCount}
+
+            **WCAG 2.1 AA Target**: All automated checks pass
+
+            See full results in the artifacts above.
+              `;
+
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            }
+
+  lighthouse-ci:
+    name: Lighthouse Performance & Accessibility CI
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Run Lighthouse CI (3 runs per URL)
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          configPath: './lighthouserc.js'
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          runs: 3
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: Check Lighthouse results
+        run: |
+          # Parse Lighthouse results
+          if [ -f "lh-results.json" ]; then
+            echo "Lighthouse results:"
+            cat lh-results.json | jq '.[] | {url, scores}'
+          fi
+
+  wcag-compliance:
+    name: WCAG 2.1 AA Compliance Report
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download test results
+        uses: actions/download-artifact@v4
+        with:
+          name: accessibility-test-results
+          path: test-results
+
+      - name: Generate compliance report
+        run: |
+          echo "## WCAG 2.1 AA Compliance Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Results" >> $GITHUB_STEP_SUMMARY
+
+          if [ -f "test-results/results.json" ]; then
+            echo "✅ Automated accessibility tests completed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ -f "test-results/lighthouse.json" ]; then
+            echo "✅ Lighthouse accessibility audit completed" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Checklist" >> $GITHUB_STEP_SUMMARY
+          echo "- [ ] Lighthouse accessibility score ≥90" >> $GITHUB_STEP_SUMMARY
+          echo "- [ ] aXe automated checks pass (0 violations)" >> $GITHUB_STEP_SUMMARY
+          echo "- [ ] Keyboard navigation works end-to-end" >> $GITHUB_STEP_SUMMARY
+          echo "- [ ] Color contrast meets WCAG 2.1 AA (4.5:1 text, 3:1 UI)" >> $GITHUB_STEP_SUMMARY
+          echo "- [ ] All interactive elements have proper ARIA" >> $GITHUB_STEP_SUMMARY
+          echo "- [ ] Focus management works in modals/dialogs" >> $GITHUB_STEP_SUMMARY
+
+      - name: Post summary
+        run: cat $GITHUB_STEP_SUMMARY
+
+  a11y-dashboard:
+    name: Accessibility Dashboard (Post Results)
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [accessibility, lighthouse-ci]
+
+    steps:
+      - name: Post accessibility metrics
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Post to workflow run summary
+            core.notice('Accessibility audit complete. Check artifacts for detailed results.');
