@@ -20,28 +20,29 @@ interface AIModelBadgeProps {
 const MODEL_CONFIG: Record<AIModel, { name: string; color: string; bgColor: string }> = {
   openai: {
     name: "OpenAI",
-    color: "text-blue-700 dark:text-blue-400",
-    bgColor: "bg-blue-100 dark:bg-blue-900/30",
+    color: "text-info-700 dark:text-info-400",
+    bgColor: "bg-info-100 dark:bg-info-900/30",
   },
   gemini: {
     name: "Gemini",
-    color: "text-green-700 dark:text-green-400",
-    bgColor: "bg-green-100 dark:bg-green-900/30",
+    color: "text-success-700 dark:text-success-400",
+    bgColor: "bg-success-100 dark:bg-success-900/30",
   },
   nano_banana_2: {
     name: "Nano Banana 2",
+    // Purple kept for brand differentiation (decorative, not semantic)
     color: "text-purple-700 dark:text-purple-400",
     bgColor: "bg-purple-100 dark:bg-purple-900/30",
   },
   elevenlabs: {
     name: "ElevenLabs",
-    color: "text-orange-700 dark:text-orange-400",
-    bgColor: "bg-orange-100 dark:bg-orange-900/30",
+    color: "text-accent-700 dark:text-accent-400",
+    bgColor: "bg-accent-100 dark:bg-accent-900/30",
   },
   anthropic: {
     name: "Anthropic",
-    color: "text-amber-700 dark:text-amber-400",
-    bgColor: "bg-amber-100 dark:bg-amber-900/30",
+    color: "text-warning-700 dark:text-warning-400",
+    bgColor: "bg-warning-100 dark:bg-warning-900/30",
   },
 };
 

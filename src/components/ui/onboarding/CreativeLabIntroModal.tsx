@@ -79,7 +79,7 @@ return null;
           </div>
           <button
             onClick={handleDismiss}
-            className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+            className="text-text-muted hover:text-text-secondary"
           >
             <X className="w-5 h-5" />
           </button>
@@ -87,37 +87,37 @@ return null;
 
         {/* Content */}
         <div className="p-6 space-y-4">
-          <p className="text-gray-600 dark:text-gray-300">
+          <p className="text-text-secondary">
             This is your <strong>Creative Lab</strong> — everything you see is
             generated in real time based on your inputs.
           </p>
 
           <div className="space-y-3">
             <div className="flex items-start gap-3">
-              <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-gray-600 dark:text-gray-300">
+              <CheckCircle className="w-5 h-5 text-success-500 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-text-secondary">
                 AI-generated concepts to spark ideas and give direction
               </p>
             </div>
             <div className="flex items-start gap-3">
-              <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-gray-600 dark:text-gray-300">
+              <CheckCircle className="w-5 h-5 text-success-500 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-text-secondary">
                 Starting points for wireframes, copy, and brand explorations
               </p>
             </div>
             <div className="flex items-start gap-3">
-              <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-gray-600 dark:text-gray-300">
+              <CheckCircle className="w-5 h-5 text-success-500 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-text-secondary">
                 Your approval required before anything goes live
               </p>
             </div>
           </div>
 
           {/* Disclaimer */}
-          <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+          <div className="bg-warning-50 dark:bg-warning-900/20 border border-warning-200 dark:border-warning-800 rounded-lg p-4">
             <div className="flex items-start gap-3">
-              <AlertTriangle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-              <p className="text-sm text-yellow-700 dark:text-yellow-300">
+              <AlertTriangle className="w-5 h-5 text-warning-600 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-warning-700 dark:text-warning-300">
                 All visuals and suggestions shown here are AI-generated concepts
                 for inspiration only. These are not final deliverables or
                 guaranteed outcomes.

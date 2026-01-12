@@ -46,7 +46,7 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 02-01: High-violation components (5 files, 65 violations)
+- [x] 02-01: High-violation components (5 files, 65→5 violations)
 - [ ] 02-02: Medium-violation components (10 files, ~50 violations)
 - [ ] 02-03: Low-violation components (10 files, ~20 violations)
 

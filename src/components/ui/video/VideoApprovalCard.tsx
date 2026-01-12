@@ -92,9 +92,9 @@ export default function VideoApprovalCard({
         )}
 
         {/* Disclaimer */}
-        <div className="flex items-center gap-2 mb-4 p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded">
-          <AlertTriangle className="w-3 h-3 text-yellow-600 flex-shrink-0" />
-          <p className="text-xs text-yellow-700 dark:text-yellow-300">
+        <div className="flex items-center gap-2 mb-4 p-2 bg-warning-50 dark:bg-warning-900/20 rounded">
+          <AlertTriangle className="w-3 h-3 text-warning-600 flex-shrink-0" />
+          <p className="text-xs text-warning-700 dark:text-warning-300">
             {disclaimer}
           </p>
         </div>
@@ -103,19 +103,19 @@ export default function VideoApprovalCard({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             {status === "pending" && (
-              <span className="flex items-center gap-1 text-xs text-yellow-600 dark:text-yellow-400">
+              <span className="flex items-center gap-1 text-xs text-warning-600 dark:text-warning-400">
                 <Clock className="w-3 h-3" />
                 Pending approval
               </span>
             )}
             {status === "approved" && (
-              <span className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
+              <span className="flex items-center gap-1 text-xs text-success-600 dark:text-success-400">
                 <CheckCircle className="w-3 h-3" />
                 Approved
               </span>
             )}
             {status === "rejected" && (
-              <span className="flex items-center gap-1 text-xs text-red-600 dark:text-red-400">
+              <span className="flex items-center gap-1 text-xs text-error-600 dark:text-error-400">
                 <XCircle className="w-3 h-3" />
                 Rejected
               </span>
@@ -127,7 +127,7 @@ export default function VideoApprovalCard({
               {onReject && (
                 <button
                   onClick={() => onReject(id)}
-                  className="p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded"
+                  className="p-1.5 text-error-600 hover:bg-error-50 dark:hover:bg-error-900/20 rounded"
                 >
                   <XCircle className="w-4 h-4" />
                 </button>
@@ -135,7 +135,7 @@ export default function VideoApprovalCard({
               {onApprove && (
                 <button
                   onClick={() => onApprove(id)}
-                  className="p-1.5 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 rounded"
+                  className="p-1.5 text-success-600 hover:bg-success-50 dark:hover:bg-success-900/20 rounded"
                 >
                   <CheckCircle className="w-4 h-4" />
                 </button>
@@ -144,7 +144,7 @@ export default function VideoApprovalCard({
           )}
         </div>
 
-        <p className="text-xs text-gray-400 mt-2">
+        <p className="text-xs text-text-muted mt-2">
           Generated {new Date(generatedAt).toLocaleDateString()}
         </p>
       </div>

@@ -44,7 +44,7 @@ return null;
             </div>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              className="text-text-muted hover:text-text-secondary"
             >
               <X className="w-5 h-5" />
             </button>
@@ -55,11 +55,11 @@ return null;
         <div className="p-6 space-y-6">
           {/* What This Space Is */}
           <section>
-            <h3 className="flex items-center gap-2 text-sm font-semibold text-green-600 dark:text-green-400 mb-3">
+            <h3 className="flex items-center gap-2 text-sm font-semibold text-success-600 dark:text-success-400 mb-3">
               <CheckCircle className="w-4 h-4" />
               What This Space Is
             </h3>
-            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+            <ul className="space-y-2 text-sm text-text-secondary">
               <li>• AI-generated concept exploration</li>
               <li>• Starting points for creative direction</li>
               <li>• Wireframe and layout ideas</li>
@@ -70,11 +70,11 @@ return null;
 
           {/* What This Space Is Not */}
           <section>
-            <h3 className="flex items-center gap-2 text-sm font-semibold text-red-600 dark:text-red-400 mb-3">
+            <h3 className="flex items-center gap-2 text-sm font-semibold text-error-600 dark:text-error-400 mb-3">
               <XCircle className="w-4 h-4" />
               What This Space Is Not
             </h3>
-            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+            <ul className="space-y-2 text-sm text-text-secondary">
               <li>• Final production-ready assets</li>
               <li>• Guaranteed performance results</li>
               <li>• Completed brand identity systems</li>
@@ -91,26 +91,27 @@ return null;
             </h3>
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-blue-500" />
-                <span className="text-sm text-gray-600 dark:text-gray-300">
+                <span className="w-3 h-3 rounded-full bg-info-500" />
+                <span className="text-sm text-text-secondary">
                   OpenAI — Copy drafts, text generation
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-green-500" />
-                <span className="text-sm text-gray-600 dark:text-gray-300">
+                <span className="w-3 h-3 rounded-full bg-success-500" />
+                <span className="text-sm text-text-secondary">
                   Gemini — Design rationale, multimodal
                 </span>
               </div>
               <div className="flex items-center gap-2">
+                {/* Purple kept for brand differentiation */}
                 <span className="w-3 h-3 rounded-full bg-purple-500" />
-                <span className="text-sm text-gray-600 dark:text-gray-300">
+                <span className="text-sm text-text-secondary">
                   Nano Banana 2 — Wireframes, layouts
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-orange-500" />
-                <span className="text-sm text-gray-600 dark:text-gray-300">
+                <span className="w-3 h-3 rounded-full bg-accent-500" />
+                <span className="text-sm text-text-secondary">
                   ElevenLabs — Voice demos (AI labeled)
                 </span>
               </div>
@@ -123,7 +124,7 @@ return null;
               <Shield className="w-4 h-4" />
               Honesty & Transparency
             </h3>
-            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+            <ul className="space-y-2 text-sm text-text-secondary">
               <li>• We never fake results</li>
               <li>• We never generate testimonials</li>
               <li>• We never promise rankings or revenue</li>
@@ -138,11 +139,11 @@ return null;
               <Users className="w-4 h-4" />
               Your Role in Reviewing
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+            <p className="text-sm text-text-secondary mb-3">
               You are the final decision-maker. AI generates ideas; you decide
               what&apos;s useful.
             </p>
-            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+            <ul className="space-y-2 text-sm text-text-secondary">
               <li>• Does this align with my brand voice?</li>
               <li>• Is the direction right for my audience?</li>
               <li>• What would I change before production?</li>
@@ -173,7 +174,7 @@ export function CreativeLabInfoTrigger({
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 border border-border-subtle rounded-lg hover:bg-bg-hover"
+      className="flex items-center gap-2 px-3 py-1.5 text-sm text-text-muted hover:text-text-secondary border border-border-subtle rounded-lg hover:bg-bg-hover"
     >
       <Info className="w-4 h-4" />
       About This Page

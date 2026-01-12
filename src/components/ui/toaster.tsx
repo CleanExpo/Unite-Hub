@@ -21,16 +21,16 @@ export function Toaster() {
             key={toast.id}
             className={`group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all ${
               toast.variant === "destructive"
-                ? "border-red-500 bg-red-950 text-red-100"
-                : "border-slate-700 bg-slate-800 text-slate-100"
+                ? "border-error-500 bg-error-950 text-error-100"
+                : "border-border-subtle bg-bg-raised text-text-primary"
             }`}
           >
             <div className="flex items-start gap-3 flex-1">
               <Icon
                 className={`h-5 w-5 mt-0.5 flex-shrink-0 ${
                   toast.variant === "destructive"
-                    ? "text-red-400"
-                    : "text-green-400"
+                    ? "text-error-400"
+                    : "text-success-400"
                 }`}
               />
               <div className="grid gap-1 flex-1">
@@ -45,14 +45,14 @@ export function Toaster() {
             {toast.action && (
               <button
                 onClick={toast.action.onClick}
-                className="inline-flex h-8 shrink-0 items-center justify-center rounded-md border border-slate-600 bg-transparent px-3 text-sm font-medium ring-offset-background transition-colors hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                className="inline-flex h-8 shrink-0 items-center justify-center rounded-md border border-border-medium bg-transparent px-3 text-sm font-medium ring-offset-background transition-colors hover:bg-bg-hover focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
               >
                 {toast.action.label}
               </button>
             )}
             <button
               onClick={() => dismiss(toast.id)}
-              className="absolute right-2 top-2 rounded-md p-1 text-slate-400 opacity-0 transition-opacity hover:text-slate-100 focus:opacity-100 group-hover:opacity-100"
+              className="absolute right-2 top-2 rounded-md p-1 text-text-muted opacity-0 transition-opacity hover:text-text-primary focus:opacity-100 group-hover:opacity-100"
             >
               <X className="h-4 w-4" />
             </button>
