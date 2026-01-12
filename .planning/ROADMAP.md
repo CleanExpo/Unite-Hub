@@ -36,7 +36,7 @@ Transform Unite-Hub into a fully design-token-compliant application by migrating
 **Plans**: TBD
 
 Plans:
-- [ ] 01-01: TBD (run /gsd:plan-phase 1 to break down)
+- [ ] 01-01: Audit violations, categorize, create migration priority list
 
 #### Phase 2: UI Components
 
@@ -92,7 +92,7 @@ Plans:
 
 | Phase | Milestone | Plans | Status | Completed |
 |-------|-----------|-------|--------|-----------|
-| 1. Audit & Prioritize | v1.1 | 0/? | Not started | - |
+| 1. Audit & Prioritize | v1.1 | 1/1 | Ready | - |
 | 2. UI Components | v1.1 | 0/? | Not started | - |
 | 3. Dashboard Pages | v1.1 | 0/? | Not started | - |
 | 4. CRM Pages | v1.1 | 0/? | Not started | - |
