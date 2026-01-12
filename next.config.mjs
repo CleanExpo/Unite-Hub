@@ -48,6 +48,10 @@ const nextConfig = {
   ],
 
   experimental: {
+    // React Compiler for automatic memoization (Next.js 16+)
+    // Eliminates need for manual useMemo, useCallback, memo()
+    reactCompiler: true,
+
     // CSS optimization
     optimizeCss: true,
 
