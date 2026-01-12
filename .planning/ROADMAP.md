@@ -46,7 +46,9 @@ Plans:
 **Plans**: TBD
 
 Plans:
-- [ ] 02-01: TBD
+- [ ] 02-01: High-violation components (5 files, 65 violations)
+- [ ] 02-02: Medium-violation components (10 files, ~50 violations)
+- [ ] 02-03: Low-violation components (10 files, ~20 violations)
 
 #### Phase 3: Dashboard Pages
 
@@ -93,7 +95,7 @@ Plans:
 | Phase | Milestone | Plans | Status | Completed |
 |-------|-----------|-------|--------|-----------|
 | 1. Audit & Prioritize | v1.1 | 1/1 | Complete | 2026-01-12 |
-| 2. UI Components | v1.1 | 0/? | Not started | - |
+| 2. UI Components | v1.1 | 1/3 | Ready | - |
 | 3. Dashboard Pages | v1.1 | 0/? | Not started | - |
 | 4. CRM Pages | v1.1 | 0/? | Not started | - |
 | 5. Product Pages | v1.1 | 0/? | Not started | - |
