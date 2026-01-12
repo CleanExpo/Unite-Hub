@@ -11,9 +11,9 @@ import Link from 'next/link';
 
 function DigestHeader({ digest }: { digest: any }) {
   const typeColors = {
-    daily: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100',
+    daily: 'bg-info-100 text-info-800 dark:bg-info-900 dark:text-info-100',
     weekly: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-100',
-    monthly: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100',
+    monthly: 'bg-success-100 text-success-800 dark:bg-success-900 dark:text-success-100',
   };
 
   return (
@@ -80,7 +80,7 @@ function ActionItemsTracker({ digest }: { digest: any }) {
               }`}
             >
               {item.completed ? (
-                <CheckCircle2 className="h-5 w-5 text-green-500 mt-0.5" />
+                <CheckCircle2 className="h-5 w-5 text-success-500 mt-0.5" />
               ) : (
                 <Circle className="h-5 w-5 text-muted-foreground mt-0.5" />
               )}
@@ -123,13 +123,13 @@ function KeyMetrics({ digest }: { digest: any }) {
       label: 'Critical Issues',
       value: digest.keyMetrics.criticalIssues || 0,
       icon: Circle,
-      color: 'text-red-500',
+      color: 'text-error-500',
     },
     {
       label: 'Opportunities',
       value: digest.keyMetrics.opportunities || 0,
       icon: Circle,
-      color: 'text-green-500',
+      color: 'text-success-500',
     },
     {
       label: 'Avg Health',

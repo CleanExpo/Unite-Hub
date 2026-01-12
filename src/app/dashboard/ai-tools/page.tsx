@@ -62,8 +62,8 @@ export default function AIToolsPage() {
                 </div>
                 <span className={`text-xs px-2 py-1 rounded-full ${
                   tool.status === "Active"
-                    ? "bg-green-100 text-green-800"
-                    : "bg-gray-100 text-gray-600"
+                    ? "bg-success-100 text-success-800"
+                    : "bg-bg-hover text-text-muted"
                 }`}>
                   {tool.status}
                 </span>

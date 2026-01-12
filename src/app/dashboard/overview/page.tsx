@@ -208,10 +208,10 @@ return;
             {/* Header */}
             <header className="flex justify-between items-center mb-8">
               <div>
-                <h1 className="text-xl font-bold text-white mb-1">
+                <h1 className="text-xl font-bold text-text-primary mb-1">
                   Generative Workspace
                 </h1>
-                <p className="text-sm text-gray-400">
+                <p className="text-sm text-text-muted">
                   {pendingCount} items ready for approval
                 </p>
               </div>
@@ -219,7 +219,7 @@ return;
                 <button
                   type="button"
                   aria-label="Notifications"
-                  className="relative text-gray-400 hover:text-cyan-400 transition-colors p-2 rounded-lg hover:bg-cyan-900/20"
+                  className="relative text-text-muted hover:text-cyan-400 transition-colors p-2 rounded-lg hover:bg-cyan-900/20"
                 >
                   <Bell className="w-5 h-5" />
                   <span className="absolute top-1 right-1 w-2 h-2 bg-orange-500 rounded-full" />
@@ -227,10 +227,10 @@ return;
                 <div className="flex items-center gap-3 bg-bg-card/60 backdrop-blur-sm rounded-lg px-3 py-2 border border-cyan-900/30">
                   <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-accent-500 rounded-lg shadow-lg shadow-cyan-500/20" />
                   <div>
-                    <span className="text-sm font-medium text-white block">
+                    <span className="text-sm font-medium text-text-primary block">
                       {user?.email?.split("@")[0] || "Demo User"}
                     </span>
-                    <span className="text-[10px] text-gray-400">
+                    <span className="text-[10px] text-text-muted">
                       Pro Plan
                     </span>
                   </div>
@@ -251,7 +251,7 @@ return;
             {/* Content Section */}
             <section>
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-semibold text-white">
+                <h2 className="text-lg font-semibold text-text-primary">
                   Ready for Approval
                 </h2>
                 <div className="flex gap-2">
@@ -269,7 +269,7 @@ return;
                   <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
                 </div>
               ) : pendingCount === 0 ? (
-                <div className="flex flex-col items-center justify-center h-64 text-gray-400">
+                <div className="flex flex-col items-center justify-center h-64 text-text-muted">
                   <p className="text-lg">No pending content</p>
                   <p className="text-sm">All content has been reviewed</p>
                 </div>

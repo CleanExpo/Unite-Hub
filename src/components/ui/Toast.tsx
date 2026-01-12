@@ -39,10 +39,10 @@ return null;
 }
 
   const typeStyles = {
-    success: 'bg-green-600 text-white',
-    error: 'bg-red-600 text-white',
-    warning: 'bg-yellow-600 text-white',
-    info: 'bg-blue-600 text-white',
+    success: 'bg-success-600 text-white',
+    error: 'bg-error-600 text-white',
+    warning: 'bg-warning-600 text-white',
+    info: 'bg-info-600 text-white',
   };
 
   const icons = {

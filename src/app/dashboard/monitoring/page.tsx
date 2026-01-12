@@ -121,29 +121,29 @@ export default function MonitoringDashboard() {
     switch (status) {
       case 'healthy':
       case 'pass':
-        return 'text-green-600 bg-green-50 border-green-200';
+        return 'text-success-600 bg-success-50 border-success-200';
       case 'degraded':
       case 'warn':
-        return 'text-yellow-600 bg-yellow-50 border-yellow-200';
+        return 'text-warning-600 bg-warning-50 border-warning-200';
       case 'critical':
       case 'fail':
-        return 'text-red-600 bg-red-50 border-red-200';
+        return 'text-error-600 bg-error-50 border-error-200';
       default:
-        return 'text-gray-600 bg-gray-50 border-gray-200';
+        return 'text-text-secondary bg-bg-hover border-border-medium';
     }
   };
 
   const getPriorityBadge = (priority: string) => {
     const colors: Record<string, string> = {
-      P0_CRITICAL: 'bg-red-600 text-white',
-      P1_HIGH: 'bg-orange-600 text-white',
-      P2_MEDIUM: 'bg-yellow-600 text-white',
-      P3_LOW: 'bg-blue-600 text-white',
-      P4_TRIVIAL: 'bg-gray-600 text-white',
+      P0_CRITICAL: 'bg-error-600 text-text-primary',
+      P1_HIGH: 'bg-accent-600 text-text-primary',
+      P2_MEDIUM: 'bg-warning-600 text-text-primary',
+      P3_LOW: 'bg-info-600 text-text-primary',
+      P4_TRIVIAL: 'bg-bg-subtle text-text-primary',
     };
 
     return (
-      <Badge className={colors[priority] || 'bg-gray-600 text-white'}>
+      <Badge className={colors[priority] || 'bg-bg-subtle text-text-primary'}>
         {priority.replace('_', ' ')}
       </Badge>
     );
@@ -151,14 +151,14 @@ export default function MonitoringDashboard() {
 
   const getSeverityBadge = (severity: string) => {
     const colors: Record<string, string> = {
-      FATAL: 'bg-red-600 text-white',
-      ERROR: 'bg-orange-600 text-white',
-      WARNING: 'bg-yellow-600 text-white',
-      INFO: 'bg-blue-600 text-white',
+      FATAL: 'bg-error-600 text-text-primary',
+      ERROR: 'bg-accent-600 text-text-primary',
+      WARNING: 'bg-warning-600 text-text-primary',
+      INFO: 'bg-info-600 text-text-primary',
     };
 
     return (
-      <Badge className={colors[severity] || 'bg-gray-600 text-white'}>
+      <Badge className={colors[severity] || 'bg-bg-subtle text-text-primary'}>
         {severity}
       </Badge>
     );
@@ -168,8 +168,8 @@ export default function MonitoringDashboard() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="flex flex-col items-center gap-4">
-          <RefreshCw className="h-8 w-8 animate-spin text-blue-600" />
-          <p className="text-gray-600">Loading monitoring data...</p>
+          <RefreshCw className="h-8 w-8 animate-spin text-info-600" />
+          <p className="text-text-secondary">Loading monitoring data...</p>
         </div>
       </div>
     );
@@ -192,14 +192,14 @@ export default function MonitoringDashboard() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">Autonomous Monitoring</h1>
-          <p className="text-gray-600 mt-1">
+          <h1 className="text-3xl font-bold text-text-primary">Autonomous Monitoring</h1>
+          <p className="text-text-secondary mt-1">
             Self-contained system health tracking with database-backed logging
           </p>
         </div>
 
         <div className="flex items-center gap-4">
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-text-secondary">
             Last updated: {lastRefresh.toLocaleTimeString()}
           </div>
           <Button onClick={fetchData} disabled={loading} size="sm">
@@ -222,13 +222,13 @@ export default function MonitoringDashboard() {
               </div>
 
               {data.systemHealth.overallStatus === 'healthy' && (
-                <CheckCircle className="h-12 w-12 text-green-600" />
+                <CheckCircle className="h-12 w-12 text-success-600" />
               )}
               {data.systemHealth.overallStatus === 'degraded' && (
-                <AlertCircle className="h-12 w-12 text-yellow-600" />
+                <AlertCircle className="h-12 w-12 text-warning-600" />
               )}
               {data.systemHealth.overallStatus === 'critical' && (
-                <XCircle className="h-12 w-12 text-red-600" />
+                <XCircle className="h-12 w-12 text-error-600" />
               )}
             </div>
           </CardHeader>
@@ -236,31 +236,31 @@ export default function MonitoringDashboard() {
           <CardContent>
             <div className="grid grid-cols-4 gap-4">
               <div className="text-center">
-                <p className="text-3xl font-bold text-green-600">
+                <p className="text-3xl font-bold text-success-600">
                   {data.systemHealth.passedChecks}
                 </p>
-                <p className="text-sm text-gray-600">Passed</p>
+                <p className="text-sm text-text-secondary">Passed</p>
               </div>
 
               <div className="text-center">
-                <p className="text-3xl font-bold text-red-600">
+                <p className="text-3xl font-bold text-error-600">
                   {data.systemHealth.failedChecks}
                 </p>
-                <p className="text-sm text-gray-600">Failed</p>
+                <p className="text-sm text-text-secondary">Failed</p>
               </div>
 
               <div className="text-center">
-                <p className="text-3xl font-bold text-yellow-600">
+                <p className="text-3xl font-bold text-warning-600">
                   {data.systemHealth.warnings}
                 </p>
-                <p className="text-sm text-gray-600">Warnings</p>
+                <p className="text-sm text-text-secondary">Warnings</p>
               </div>
 
               <div className="text-center">
-                <p className="text-3xl font-bold text-blue-600">
+                <p className="text-3xl font-bold text-info-600">
                   {data.systemHealth.uptime}
                 </p>
-                <p className="text-sm text-gray-600">Uptime</p>
+                <p className="text-sm text-text-secondary">Uptime</p>
               </div>
             </div>
           </CardContent>
@@ -272,62 +272,62 @@ export default function MonitoringDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-gray-600">
+              <CardTitle className="text-sm font-medium text-text-secondary">
                 Total Errors
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
-                <p className="text-3xl font-bold">{data.errorStats.totalErrors}</p>
-                <AlertCircle className="h-8 w-8 text-gray-400" />
+                <p className="text-3xl font-bold text-text-primary">{data.errorStats.totalErrors}</p>
+                <AlertCircle className="h-8 w-8 text-text-muted" />
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-gray-600">
+              <CardTitle className="text-sm font-medium text-text-secondary">
                 Critical Errors
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
-                <p className="text-3xl font-bold text-red-600">
+                <p className="text-3xl font-bold text-error-600">
                   {data.errorStats.criticalErrors}
                 </p>
-                <XCircle className="h-8 w-8 text-red-400" />
+                <XCircle className="h-8 w-8 text-error-400" />
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-gray-600">
+              <CardTitle className="text-sm font-medium text-text-secondary">
                 Resolved
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
-                <p className="text-3xl font-bold text-green-600">
+                <p className="text-3xl font-bold text-success-600">
                   {data.errorStats.resolvedErrors}
                 </p>
-                <CheckCircle className="h-8 w-8 text-green-400" />
+                <CheckCircle className="h-8 w-8 text-success-400" />
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-gray-600">
+              <CardTitle className="text-sm font-medium text-text-secondary">
                 Unresolved
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex items-center justify-between">
-                <p className="text-3xl font-bold text-orange-600">
+                <p className="text-3xl font-bold text-accent-600">
                   {data.errorStats.unresolvedErrors}
                 </p>
-                <Activity className="h-8 w-8 text-orange-400" />
+                <Activity className="h-8 w-8 text-accent-400" />
               </div>
             </CardContent>
           </Card>
@@ -367,7 +367,7 @@ export default function MonitoringDashboard() {
                   {data.recentErrors.map((error) => (
                     <div
                       key={error.id}
-                      className="p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+                      className="p-4 border rounded-lg hover:bg-bg-hover transition-colors"
                     >
                       <div className="flex items-start justify-between">
                         <div className="space-y-2 flex-1">
@@ -375,14 +375,14 @@ export default function MonitoringDashboard() {
                             {getSeverityBadge(error.severity)}
                             {getPriorityBadge(error.priority)}
                             {error.resolved && (
-                              <Badge className="bg-green-600 text-white">Resolved</Badge>
+                              <Badge className="bg-success-600 text-text-primary">Resolved</Badge>
                             )}
                           </div>
 
-                          <p className="font-semibold text-gray-900">{error.error_type}</p>
-                          <p className="text-sm text-gray-600">{error.message}</p>
+                          <p className="font-semibold text-text-primary">{error.error_type}</p>
+                          <p className="text-sm text-text-secondary">{error.message}</p>
 
-                          <div className="flex items-center gap-4 text-xs text-gray-500">
+                          <div className="flex items-center gap-4 text-xs text-text-muted">
                             <div className="flex items-center gap-1">
                               <Clock className="h-3 w-3" />
                               {new Date(error.created_at).toLocaleString()}
@@ -401,8 +401,8 @@ export default function MonitoringDashboard() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-8 text-gray-500">
-                  <CheckCircle className="h-12 w-12 mx-auto mb-2 text-green-500" />
+                <div className="text-center py-8 text-text-muted">
+                  <CheckCircle className="h-12 w-12 mx-auto mb-2 text-success-500" />
                   <p>No errors in the last 24 hours</p>
                 </div>
               )}
@@ -426,12 +426,12 @@ export default function MonitoringDashboard() {
                   {data.slowRequests.map((request) => (
                     <div
                       key={request.id}
-                      className="p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+                      className="p-4 border rounded-lg hover:bg-bg-hover transition-colors"
                     >
                       <div className="flex items-start justify-between">
                         <div className="space-y-2 flex-1">
                           <div className="flex items-center gap-2">
-                            <Badge className="bg-blue-600 text-white">
+                            <Badge className="bg-info-600 text-text-primary">
                               {request.metric_type}
                             </Badge>
                             <Badge variant="outline">
@@ -440,10 +440,10 @@ export default function MonitoringDashboard() {
                           </div>
 
                           {request.route && (
-                            <p className="text-sm font-medium text-gray-900">{request.route}</p>
+                            <p className="text-sm font-medium text-text-primary">{request.route}</p>
                           )}
 
-                          <div className="flex items-center gap-1 text-xs text-gray-500">
+                          <div className="flex items-center gap-1 text-xs text-text-muted">
                             <Clock className="h-3 w-3" />
                             {new Date(request.created_at).toLocaleString()}
                           </div>
@@ -453,8 +453,8 @@ export default function MonitoringDashboard() {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-8 text-gray-500">
-                  <Zap className="h-12 w-12 mx-auto mb-2 text-green-500" />
+                <div className="text-center py-8 text-text-muted">
+                  <Zap className="h-12 w-12 mx-auto mb-2 text-success-500" />
                   <p>No slow requests detected in the last hour</p>
                 </div>
               )}
@@ -511,7 +511,7 @@ export default function MonitoringDashboard() {
         <CardHeader>
           <CardTitle className="text-sm">Autonomous Monitoring System</CardTitle>
         </CardHeader>
-        <CardContent className="text-sm text-gray-600 space-y-2">
+        <CardContent className="text-sm text-text-secondary space-y-2">
           <div className="flex items-center gap-2">
             <Database className="h-4 w-4" />
             <span>Database-backed error tracking with 30-day retention</span>

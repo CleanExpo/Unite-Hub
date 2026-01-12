@@ -314,7 +314,7 @@ return;
           <Card>
             <CardHeader className="pb-3">
               <CardDescription>Completed</CardDescription>
-              <CardTitle className="text-3xl text-green-600">
+              <CardTitle className="text-3xl text-success-600">
                 {stats.byStatus.completed}
               </CardTitle>
             </CardHeader>
@@ -322,7 +322,7 @@ return;
           <Card>
             <CardHeader className="pb-3">
               <CardDescription>In Progress</CardDescription>
-              <CardTitle className="text-3xl text-yellow-600">
+              <CardTitle className="text-3xl text-warning-600">
                 {stats.byStatus.in_progress}
               </CardTitle>
             </CardHeader>

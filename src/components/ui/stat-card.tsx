@@ -56,11 +56,11 @@ export function StatCard({
   const getTrendColor = () => {
     switch (changeType) {
       case 'increase':
-        return 'text-emerald-500';
+        return 'text-success-500';
       case 'decrease':
-        return 'text-red-500';
+        return 'text-error-500';
       default:
-        return 'text-gray-500';
+        return 'text-text-muted';
     }
   };
 
@@ -69,14 +69,14 @@ export function StatCard({
   return (
     <Card
       className={cn(
-        'relative overflow-hidden bg-white dark:bg-slate-800/50 border-gray-200 dark:border-slate-700/50',
+        'relative overflow-hidden bg-bg-card border-border-subtle',
         className
       )}
     >
       <CardContent className="p-6">
         <div className="flex items-start justify-between">
           <div className="space-y-2">
-            <p className="text-sm font-medium text-gray-500 dark:text-slate-400">
+            <p className="text-sm font-medium text-text-muted">
               {title}
             </p>
             <p className="text-3xl font-bold text-text-primary">
@@ -89,11 +89,11 @@ export function StatCard({
                   {changeType === 'increase' ? '+' : changeType === 'decrease' ? '-' : ''}
                   {Math.abs(change)}%
                 </span>
-                <span className="text-gray-500 dark:text-slate-400">vs last period</span>
+                <span className="text-text-muted">vs last period</span>
               </div>
             )}
             {description && (
-              <p className="text-sm text-gray-500 dark:text-slate-400">{description}</p>
+              <p className="text-sm text-text-muted">{description}</p>
             )}
           </div>
 
@@ -115,7 +115,7 @@ export function StatCard({
  */
 export function StatCardSkeleton() {
   return (
-    <Card className="bg-white dark:bg-slate-800/50 border-gray-200 dark:border-slate-700/50">
+    <Card className="bg-bg-card border-border-subtle">
       <CardContent className="p-6">
         <div className="flex items-start justify-between">
           <div className="space-y-3">

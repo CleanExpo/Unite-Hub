@@ -30,7 +30,7 @@ export default function CompetitorsPage() {
     <FeaturePageWrapper
       featureName="Competitor Analysis"
       description="Track competitors, identify market gaps, find opportunities"
-      icon={<Target className="h-20 w-20 text-slate-600" />}
+      icon={<Target className="h-20 w-20 text-text-muted" />}
     >
       {(clientId) => <CompetitorFeature clientId={clientId} />}
     </FeaturePageWrapper>
@@ -159,7 +159,7 @@ throw new Error("Failed to fetch competitors");
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+        <Loader2 className="w-8 h-8 animate-spin text-info-600" />
       </div>
     );
   }
@@ -173,10 +173,10 @@ throw new Error("Failed to fetch competitors");
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-text-primary">
             Competitor Analysis
           </h1>
-          <p className="text-gray-600 mt-1">
+          <p className="text-text-secondary mt-1">
             Track competitors and discover market opportunities
           </p>
         </div>
@@ -212,13 +212,13 @@ throw new Error("Failed to fetch competitors");
         <Card className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Total Competitors</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">
+              <p className="text-sm text-text-secondary">Total Competitors</p>
+              <p className="text-3xl font-bold text-text-primary mt-1">
                 {competitors.length}
               </p>
             </div>
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-              <Users className="w-6 h-6 text-blue-600" />
+            <div className="w-12 h-12 bg-info-100 rounded-lg flex items-center justify-center">
+              <Users className="w-6 h-6 text-info-600" />
             </div>
           </div>
         </Card>
@@ -226,13 +226,13 @@ throw new Error("Failed to fetch competitors");
         <Card className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Direct Competitors</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">
+              <p className="text-sm text-text-secondary">Direct Competitors</p>
+              <p className="text-3xl font-bold text-text-primary mt-1">
                 {competitors.filter((c) => c.category === "direct").length}
               </p>
             </div>
-            <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-              <Target className="w-6 h-6 text-red-600" />
+            <div className="w-12 h-12 bg-error-100 rounded-lg flex items-center justify-center">
+              <Target className="w-6 h-6 text-error-600" />
             </div>
           </div>
         </Card>
@@ -240,8 +240,8 @@ throw new Error("Failed to fetch competitors");
         <Card className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Market Gaps</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">
+              <p className="text-sm text-text-secondary">Market Gaps</p>
+              <p className="text-3xl font-bold text-text-primary mt-1">
                 {latestAnalysis?.marketGaps?.length || 0}
               </p>
             </div>
@@ -254,13 +254,13 @@ throw new Error("Failed to fetch competitors");
         <Card className="p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-600">Opportunities</p>
-              <p className="text-3xl font-bold text-gray-900 mt-1">
+              <p className="text-sm text-text-secondary">Opportunities</p>
+              <p className="text-3xl font-bold text-text-primary mt-1">
                 {latestAnalysis?.differentiationOpportunities?.length || 0}
               </p>
             </div>
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-              <TrendingUp className="w-6 h-6 text-green-600" />
+            <div className="w-12 h-12 bg-success-100 rounded-lg flex items-center justify-center">
+              <TrendingUp className="w-6 h-6 text-success-600" />
             </div>
           </div>
         </Card>
@@ -300,13 +300,13 @@ throw new Error("Failed to fetch competitors");
           {latestAnalysis ? (
             <div className="space-y-6">
               <Card className="p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                <h3 className="text-lg font-semibold text-text-primary mb-4">
                   Analysis Summary
                 </h3>
-                <p className="text-gray-700 whitespace-pre-wrap">
+                <p className="text-text-secondary whitespace-pre-wrap">
                   {latestAnalysis.aiSummary}
                 </p>
-                <div className="mt-4 text-sm text-gray-500">
+                <div className="mt-4 text-sm text-text-muted">
                   Last analyzed:{" "}
                   {new Date(latestAnalysis.analysisDate).toLocaleString()}
                 </div>
@@ -321,11 +321,11 @@ throw new Error("Failed to fetch competitors");
           ) : (
             <div>
               <Card className="p-8 text-center mb-6">
-                <BarChart3 className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                <BarChart3 className="w-12 h-12 text-text-muted mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-text-primary mb-2">
                   No Analysis Yet
                 </h3>
-                <p className="text-gray-600 mb-4">
+                <p className="text-text-secondary mb-4">
                   Add competitors and run your first analysis to get insights
                 </p>
                 <Button onClick={runAnalysis} disabled={competitors.length === 0}>
@@ -349,11 +349,11 @@ throw new Error("Failed to fetch competitors");
             <SWOTAnalysis swot={latestAnalysis.swotAnalysis} />
           ) : (
             <Card className="p-8 text-center">
-              <Target className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <Target className="w-12 h-12 text-text-muted mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-text-primary mb-2">
                 No SWOT Analysis
               </h3>
-              <p className="text-gray-600 mb-4">
+              <p className="text-text-secondary mb-4">
                 Run a competitor analysis to generate SWOT insights
               </p>
               <Button onClick={runAnalysis} disabled={competitors.length === 0}>

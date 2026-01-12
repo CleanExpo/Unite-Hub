@@ -279,9 +279,9 @@ function TransformationSection() {
           >
             {/* Browser Chrome */}
             <div className="absolute top-0 left-0 right-0 h-10 bg-slate-800/50 flex items-center px-4 gap-2">
-              <div className="w-3 h-3 rounded-full bg-red-500/60" />
-              <div className="w-3 h-3 rounded-full bg-yellow-500/60" />
-              <div className="w-3 h-3 rounded-full bg-green-500/60" />
+              <div className="w-3 h-3 rounded-full bg-error-500/60" />
+              <div className="w-3 h-3 rounded-full bg-warning-500/60" />
+              <div className="w-3 h-3 rounded-full bg-success-500/60" />
               <div className="flex-1 mx-4">
                 <div className="h-5 bg-slate-700/50 rounded-lg" />
               </div>

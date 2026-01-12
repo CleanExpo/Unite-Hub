@@ -15,9 +15,9 @@ import { VideoDemoGrid } from '@/components/visual/VideoDemoGrid';
 
 export default function DemosPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950">
+    <div className="min-h-screen bg-gradient-to-br from-bg-base via-bg-raised to-indigo-950">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-md border-b border-white/5">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-bg-base/80 backdrop-blur-md border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link
             href="/inspiration"

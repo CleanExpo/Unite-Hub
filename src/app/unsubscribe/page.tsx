@@ -218,8 +218,8 @@ function UnsubscribeContent() {
           {/* Success State */}
           {state === "success" && (
             <div className="flex flex-col items-center py-8 text-center">
-              <div className="w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mb-4">
-                <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
+              <div className="w-16 h-16 bg-success-100 dark:bg-success-900/20 rounded-full flex items-center justify-center mb-4">
+                <CheckCircle className="w-8 h-8 text-success-600 dark:text-success-400" />
               </div>
               <h3 className="font-semibold text-lg mb-2">Unsubscribed Successfully</h3>
               <p className="text-muted-foreground mb-6">
@@ -238,8 +238,8 @@ function UnsubscribeContent() {
           {/* Error State */}
           {state === "error" && (
             <div className="flex flex-col items-center py-8 text-center">
-              <div className="w-16 h-16 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-4">
-                <XCircle className="w-8 h-8 text-red-600 dark:text-red-400" />
+              <div className="w-16 h-16 bg-error-100 dark:bg-error-900/20 rounded-full flex items-center justify-center mb-4">
+                <XCircle className="w-8 h-8 text-error-600 dark:text-error-400" />
               </div>
               <h3 className="font-semibold text-lg mb-2">Something Went Wrong</h3>
               <p className="text-muted-foreground mb-6">{errorMessage}</p>

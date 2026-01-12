@@ -14,46 +14,46 @@ export default function BillingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-bg-base via-bg-raised to-bg-card p-8">
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Billing & Invoices</h1>
-          <p className="text-slate-400">Manage your subscription and download invoices</p>
+          <h1 className="text-3xl font-bold text-text-primary mb-2">Billing & Invoices</h1>
+          <p className="text-text-muted">Manage your subscription and download invoices</p>
         </div>
 
         {/* Current Plan */}
-        <Card className="bg-slate-800 border-slate-700">
+        <Card className="bg-bg-card border-border-medium">
           <CardHeader>
-            <CardTitle className="text-white">Current Plan</CardTitle>
+            <CardTitle className="text-text-primary">Current Plan</CardTitle>
             <CardDescription>Professional Plan</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div>
-                <p className="text-slate-400 text-sm">Monthly Cost</p>
-                <p className="text-2xl font-bold text-white">A$895</p>
+                <p className="text-text-muted text-sm">Monthly Cost</p>
+                <p className="text-2xl font-bold text-text-primary">A$895</p>
               </div>
               <div>
-                <p className="text-slate-400 text-sm">Billing Cycle</p>
-                <p className="text-2xl font-bold text-white">Monthly</p>
+                <p className="text-text-muted text-sm">Billing Cycle</p>
+                <p className="text-2xl font-bold text-text-primary">Monthly</p>
               </div>
               <div>
-                <p className="text-slate-400 text-sm">Next Renewal</p>
-                <p className="text-2xl font-bold text-white">Dec 1, 2024</p>
+                <p className="text-text-muted text-sm">Next Renewal</p>
+                <p className="text-2xl font-bold text-text-primary">Dec 1, 2024</p>
               </div>
               <div>
-                <p className="text-slate-400 text-sm">Status</p>
-                <Badge className="mt-2 bg-green-600">Active</Badge>
+                <p className="text-text-muted text-sm">Status</p>
+                <Badge className="mt-2 bg-success-600">Active</Badge>
               </div>
             </div>
 
-            <div className="border-t border-slate-700 pt-6 flex gap-3">
-              <Button className="bg-blue-600 hover:bg-blue-700 gap-2">
+            <div className="border-t border-border-medium pt-6 flex gap-3">
+              <Button className="bg-info-600 hover:bg-info-700 gap-2">
                 <CreditCard className="w-4 h-4" />
                 Update Payment Method
               </Button>
-              <Button variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-700">
+              <Button variant="outline" className="border-border-subtle text-text-secondary hover:bg-border-medium">
                 Change Plan
               </Button>
             </div>
@@ -61,37 +61,37 @@ export default function BillingPage() {
         </Card>
 
         {/* Invoice History */}
-        <Card className="bg-slate-800 border-slate-700">
+        <Card className="bg-bg-card border-border-medium">
           <CardHeader>
-            <CardTitle className="text-white">Invoice History</CardTitle>
+            <CardTitle className="text-text-primary">Invoice History</CardTitle>
             <CardDescription>Download and view your past invoices</CardDescription>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
-                <TableRow className="border-slate-700 hover:bg-slate-700/50">
-                  <TableHead className="text-slate-300">Invoice ID</TableHead>
-                  <TableHead className="text-slate-300">Date</TableHead>
-                  <TableHead className="text-slate-300">Amount</TableHead>
-                  <TableHead className="text-slate-300">Status</TableHead>
-                  <TableHead className="text-slate-300">Due Date</TableHead>
-                  <TableHead className="text-slate-300">Action</TableHead>
+                <TableRow className="border-border-medium hover:bg-border-medium/50">
+                  <TableHead className="text-text-secondary">Invoice ID</TableHead>
+                  <TableHead className="text-text-secondary">Date</TableHead>
+                  <TableHead className="text-text-secondary">Amount</TableHead>
+                  <TableHead className="text-text-secondary">Status</TableHead>
+                  <TableHead className="text-text-secondary">Due Date</TableHead>
+                  <TableHead className="text-text-secondary">Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {invoices.map((invoice) => (
-                  <TableRow key={invoice.id} className="border-slate-700 hover:bg-slate-700/50">
-                    <TableCell className="text-white font-mono">{invoice.id}</TableCell>
-                    <TableCell className="text-slate-400">{invoice.date}</TableCell>
-                    <TableCell className="text-white font-semibold">{invoice.amount}</TableCell>
+                  <TableRow key={invoice.id} className="border-border-medium hover:bg-border-medium/50">
+                    <TableCell className="text-text-primary font-mono">{invoice.id}</TableCell>
+                    <TableCell className="text-text-muted">{invoice.date}</TableCell>
+                    <TableCell className="text-text-primary font-semibold">{invoice.amount}</TableCell>
                     <TableCell>
-                      <Badge className="bg-green-600/20 text-green-300 border-green-600/30">
+                      <Badge className="bg-success-600/20 text-success-300 border-success-600/30">
                         {invoice.status}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-slate-400">{invoice.dueDate}</TableCell>
+                    <TableCell className="text-text-muted">{invoice.dueDate}</TableCell>
                     <TableCell>
-                      <Button size="sm" variant="ghost" className="text-blue-400 hover:text-blue-300">
+                      <Button size="sm" variant="ghost" className="text-info-400 hover:text-info-300">
                         <DownloadCloud className="w-4 h-4 mr-1" />
                         PDF
                       </Button>
@@ -105,34 +105,34 @@ export default function BillingPage() {
 
         {/* Billing Details */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="bg-slate-800 border-slate-700">
+          <Card className="bg-bg-card border-border-medium">
             <CardHeader>
-              <CardTitle className="text-white">Billing Address</CardTitle>
+              <CardTitle className="text-text-primary">Billing Address</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-2 text-slate-300">
+              <div className="space-y-2 text-text-secondary">
                 <p className="font-semibold">Duncan's Marketing Agency</p>
                 <p>123 Business St</p>
                 <p>New York, NY 10001</p>
                 <p>United States</p>
-                <Button variant="outline" className="mt-4 border-slate-600 text-slate-300 w-full">
+                <Button variant="outline" className="mt-4 border-border-subtle text-text-secondary w-full">
                   Edit Address
                 </Button>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-slate-800 border-slate-700">
+          <Card className="bg-bg-card border-border-medium">
             <CardHeader>
-              <CardTitle className="text-white">Payment Method</CardTitle>
+              <CardTitle className="text-text-primary">Payment Method</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="bg-slate-700 rounded p-4 border border-slate-600">
-                  <p className="text-sm text-slate-400 mb-2">Visa ending in 4242</p>
-                  <p className="text-white font-semibold">Expires 12/26</p>
+                <div className="bg-border-medium rounded p-4 border border-border-subtle">
+                  <p className="text-sm text-text-muted mb-2">Visa ending in 4242</p>
+                  <p className="text-text-primary font-semibold">Expires 12/26</p>
                 </div>
-                <Button variant="outline" className="w-full border-slate-600 text-slate-300">
+                <Button variant="outline" className="w-full border-border-subtle text-text-secondary">
                   Update Payment Method
                 </Button>
               </div>
@@ -141,26 +141,26 @@ export default function BillingPage() {
         </div>
 
         {/* Billing FAQ */}
-        <Card className="bg-slate-800 border-slate-700">
+        <Card className="bg-bg-card border-border-medium">
           <CardHeader>
-            <CardTitle className="text-white">Billing FAQ</CardTitle>
+            <CardTitle className="text-text-primary">Billing FAQ</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <p className="font-semibold text-white mb-2">When will I be charged?</p>
-              <p className="text-slate-400 text-sm">
+              <p className="font-semibold text-text-primary mb-2">When will I be charged?</p>
+              <p className="text-text-muted text-sm">
                 You'll be charged on the same day each month. For example, if you signed up on the 15th, you'll be charged on the 15th of every month.
               </p>
             </div>
-            <div className="border-t border-slate-700 pt-4">
-              <p className="font-semibold text-white mb-2">Can I change my plan?</p>
-              <p className="text-slate-400 text-sm">
+            <div className="border-t border-border-medium pt-4">
+              <p className="font-semibold text-text-primary mb-2">Can I change my plan?</p>
+              <p className="text-text-muted text-sm">
                 Yes! You can upgrade or downgrade your plan anytime. Changes take effect immediately.
               </p>
             </div>
-            <div className="border-t border-slate-700 pt-4">
-              <p className="font-semibold text-white mb-2">Do you offer annual billing?</p>
-              <p className="text-slate-400 text-sm">
+            <div className="border-t border-border-medium pt-4">
+              <p className="font-semibold text-text-primary mb-2">Do you offer annual billing?</p>
+              <p className="text-text-muted text-sm">
                 Yes! Annual billing is available at a 15% discount. Contact sales for details.
               </p>
             </div>

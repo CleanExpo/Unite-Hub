@@ -10,9 +10,9 @@ import { RecordOutcomeForm } from '@/components/cognitiveTwin/RecordOutcomeForm'
 
 function DecisionHeader({ decision }: { decision: any }) {
   const statusColors = {
-    pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100',
-    decided: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100',
-    archived: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-100',
+    pending: 'bg-warning-100 text-warning-800 dark:bg-warning-900 dark:text-warning-100',
+    decided: 'bg-success-100 text-success-800 dark:bg-success-900 dark:text-success-100',
+    archived: 'bg-bg-subtle text-text-secondary dark:bg-bg-card dark:text-text-secondary',
   };
 
   return (
@@ -93,7 +93,7 @@ function OptionsAnalysis({ decision }: { decision: any }) {
               key={index}
               className={`p-4 border rounded-lg space-y-2 ${
                 decision.selectedOption === option.name
-                  ? 'border-green-500 bg-green-50 dark:bg-green-950'
+                  ? 'border-success-500 bg-success-50 dark:bg-success-950'
                   : ''
               }`}
             >
@@ -101,7 +101,7 @@ function OptionsAnalysis({ decision }: { decision: any }) {
                 <h4 className="font-medium flex items-center gap-2">
                   {option.name}
                   {decision.selectedOption === option.name && (
-                    <CheckCircle2 className="h-5 w-5 text-green-600" />
+                    <CheckCircle2 className="h-5 w-5 text-success-600" />
                   )}
                 </h4>
                 {option.score && (
@@ -117,7 +117,7 @@ function OptionsAnalysis({ decision }: { decision: any }) {
 
               {option.pros && option.pros.length > 0 && (
                 <div>
-                  <p className="text-xs font-medium text-green-600 dark:text-green-500 mb-1">Pros:</p>
+                  <p className="text-xs font-medium text-success-600 dark:text-success-500 mb-1">Pros:</p>
                   <ul className="text-sm text-muted-foreground list-disc list-inside space-y-1">
                     {option.pros.map((pro: string, i: number) => (
                       <li key={i}>{pro}</li>
@@ -128,7 +128,7 @@ function OptionsAnalysis({ decision }: { decision: any }) {
 
               {option.cons && option.cons.length > 0 && (
                 <div>
-                  <p className="text-xs font-medium text-red-600 dark:text-red-500 mb-1">Cons:</p>
+                  <p className="text-xs font-medium text-error-600 dark:text-error-500 mb-1">Cons:</p>
                   <ul className="text-sm text-muted-foreground list-disc list-inside space-y-1">
                     {option.cons.map((con: string, i: number) => (
                       <li key={i}>{con}</li>
@@ -196,10 +196,10 @@ function AIRecommendation({ decision }: { decision: any }) {
   }
 
   return (
-    <Card className="border-blue-500">
+    <Card className="border-info-500">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-blue-600" />
+          <TrendingUp className="h-5 w-5 text-info-600" />
           AI Recommendation
         </CardTitle>
         <CardDescription>Based on your business context and constraints</CardDescription>
@@ -207,8 +207,8 @@ function AIRecommendation({ decision }: { decision: any }) {
       <CardContent>
         <div className="space-y-4">
           {decision.aiAnalysis.recommendation && (
-            <div className="p-4 bg-blue-50 dark:bg-blue-950 rounded-lg">
-              <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
+            <div className="p-4 bg-info-50 dark:bg-info-950 rounded-lg">
+              <p className="text-sm font-medium text-info-900 dark:text-info-100">
                 {decision.aiAnalysis.recommendation}
               </p>
             </div>
@@ -223,11 +223,11 @@ function AIRecommendation({ decision }: { decision: any }) {
 
           {decision.aiAnalysis.risks && decision.aiAnalysis.risks.length > 0 && (
             <div>
-              <h4 className="text-sm font-medium mb-2 text-red-600 dark:text-red-500">Key Risks:</h4>
+              <h4 className="text-sm font-medium mb-2 text-error-600 dark:text-error-500">Key Risks:</h4>
               <ul className="space-y-1">
                 {decision.aiAnalysis.risks.map((risk: string, index: number) => (
                   <li key={index} className="text-sm text-muted-foreground flex items-start gap-2">
-                    <AlertCircle className="h-4 w-4 text-red-500 mt-0.5" />
+                    <AlertCircle className="h-4 w-4 text-error-500 mt-0.5" />
                     <span>{risk}</span>
                   </li>
                 ))}
@@ -255,9 +255,9 @@ function OutcomeDisplay({ decision }: { decision: any }) {
   }
 
   const successColors = {
-    success: 'border-green-500 bg-green-50 dark:bg-green-950',
-    partial: 'border-yellow-500 bg-yellow-50 dark:bg-yellow-950',
-    failure: 'border-red-500 bg-red-50 dark:bg-red-950',
+    success: 'border-success-500 bg-success-50 dark:bg-success-950',
+    partial: 'border-warning-500 bg-warning-50 dark:bg-warning-950',
+    failure: 'border-error-500 bg-error-50 dark:bg-error-950',
   };
 
   return (

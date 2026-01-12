@@ -95,7 +95,7 @@ export function Breadcrumbs({
           <li>
             <Link
               href={homeHref}
-              className="text-gray-400 hover:text-gray-100 transition-colors"
+              className="text-text-muted hover:text-text-primary transition-colors"
               aria-label="Home"
             >
               <Home className="h-4 w-4" />
@@ -111,13 +111,13 @@ export function Breadcrumbs({
             <li key={item.href} className="flex items-center space-x-2">
               {/* Separator */}
               {(showHome || index > 0) && (
-                <ChevronRight className="h-4 w-4 text-gray-600" aria-hidden="true" />
+                <ChevronRight className="h-4 w-4 text-text-muted" aria-hidden="true" />
               )}
 
               {/* Breadcrumb link or text */}
               {isLast ? (
                 <span
-                  className="text-gray-100 font-medium"
+                  className="text-text-primary font-medium"
                   aria-current="page"
                 >
                   {item.label}
@@ -125,7 +125,7 @@ export function Breadcrumbs({
               ) : (
                 <Link
                   href={item.href}
-                  className="text-gray-400 hover:text-gray-100 transition-colors"
+                  className="text-text-muted hover:text-text-primary transition-colors"
                 >
                   {item.label}
                 </Link>

@@ -34,12 +34,12 @@ function isDomain(domain: string): domain is Domain {
 
 function getHealthColor(score: number): string {
   if (score >= 70) {
-return 'text-green-600 dark:text-green-500';
+return 'text-success-600 dark:text-success-500';
 }
   if (score >= 40) {
-return 'text-yellow-600 dark:text-yellow-500';
+return 'text-warning-600 dark:text-warning-500';
 }
-  return 'text-red-600 dark:text-red-500';
+  return 'text-error-600 dark:text-error-500';
 }
 
 function getHealthStatus(score: number): string {
@@ -104,10 +104,10 @@ function RisksList({ risks }: { risks: Array<{ id: string; description: string; 
               <AlertTriangle
                 className={`h-5 w-5 mt-0.5 ${
                   risk.severity === 'high'
-                    ? 'text-red-500'
+                    ? 'text-error-500'
                     : risk.severity === 'medium'
-                    ? 'text-yellow-500'
-                    : 'text-blue-500'
+                    ? 'text-warning-500'
+                    : 'text-info-500'
                 }`}
               />
               <div className="flex-1 space-y-1">
@@ -163,7 +163,7 @@ function OpportunitiesList({
         <div className="space-y-4">
           {opportunities.map((opp) => (
             <div key={opp.id} className="flex items-start gap-3 p-3 border rounded-lg">
-              <Lightbulb className="h-5 w-5 mt-0.5 text-green-500" />
+              <Lightbulb className="h-5 w-5 mt-0.5 text-success-500" />
               <div className="flex-1 space-y-1">
                 <p className="text-sm font-medium">{opp.description}</p>
                 <div className="flex gap-2">
@@ -281,7 +281,7 @@ function RecommendationsList({
               </div>
               <p className="text-sm text-muted-foreground">{rec.description}</p>
               <div className="flex items-center gap-2">
-                <TrendingUp className="h-4 w-4 text-green-500" />
+                <TrendingUp className="h-4 w-4 text-success-500" />
                 <span className="text-xs text-muted-foreground">
                   Estimated impact: {rec.estimatedImpact}
                 </span>

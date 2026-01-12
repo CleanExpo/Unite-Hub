@@ -229,7 +229,7 @@ export default async function ABTestDetailPage({ params }: PageParams) {
             </div>
             {test.evaluation_window_end_at && (
               <div className="flex items-start gap-4">
-                <div className="w-3 h-3 rounded-full bg-blue-500 mt-2" />
+                <div className="w-3 h-3 rounded-full bg-info-500 mt-2" />
                 <div>
                   <p className="font-medium text-text-primary">Evaluation Window Ends</p>
                   <p className="text-sm text-text-secondary">

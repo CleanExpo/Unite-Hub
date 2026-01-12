@@ -166,15 +166,15 @@ export default function ProjectDetailPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active':
-        return 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300';
+        return 'bg-success-100 dark:bg-success-900/30 text-success-700 dark:text-success-300';
       case 'pending':
-        return 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-300';
+        return 'bg-warning-100 dark:bg-warning-900/30 text-warning-700 dark:text-warning-300';
       case 'paused':
-        return 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300';
+        return 'bg-info-100 dark:bg-info-900/30 text-info-700 dark:text-info-300';
       case 'completed':
         return 'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300';
       case 'in_progress':
-        return 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300';
+        return 'bg-info-100 dark:bg-info-900/30 text-info-700 dark:text-info-300';
       default:
         return 'bg-bg-hover text-text-secondary';
     }
@@ -213,8 +213,8 @@ export default function ProjectDetailPage() {
           <ArrowLeft className="w-4 h-4" />
           Back
         </button>
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
-          <p className="text-sm text-red-700 dark:text-red-300">{error || 'Project not found'}</p>
+        <div className="bg-error-50 dark:bg-error-900/20 border border-error-200 dark:border-error-800 rounded-lg p-4">
+          <p className="text-sm text-error-700 dark:text-error-300">{error || 'Project not found'}</p>
         </div>
       </div>
     );
@@ -227,7 +227,7 @@ export default function ProjectDetailPage() {
         <div className="flex items-center gap-4">
           <button
             onClick={() => router.back()}
-            className="text-text-secondary hover:text-gray-900 dark:hover:text-white"
+            className="text-text-secondary hover:text-text-primary"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
@@ -305,7 +305,7 @@ export default function ProjectDetailPage() {
               className={`px-4 py-3 font-medium border-b-2 transition-colors ${
                 activeTab === tab
                   ? 'border-blue-600 text-blue-600 dark:text-blue-400'
-                  : 'border-transparent text-text-secondary hover:text-gray-900 dark:hover:text-white'
+                  : 'border-transparent text-text-secondary hover:text-text-primary'
               }`}
             >
               {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -356,13 +356,13 @@ export default function ProjectDetailPage() {
                   </div>
                   <div>
                     <p className="text-sm text-text-secondary">Pending Tasks</p>
-                    <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
+                    <p className="text-2xl font-bold text-warning-600 dark:text-warning-400">
                       {tasks.filter((t) => t.status === 'pending').length}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm text-text-secondary">In Progress</p>
-                    <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                    <p className="text-2xl font-bold text-info-600 dark:text-info-400">
                       {tasks.filter((t) => t.status === 'in_progress').length}
                     </p>
                   </div>

@@ -1,0 +1,836 @@
+
+> unite-hub@1.0.0 test
+> vitest run tests/design-tokens/token-usage.test.ts
+
+
+[1m[46m RUN [49m[22m [36mv4.0.15 [39m[90mD:/Unite-Hub[39m
+
+[90mstdout[2m | tests/design-tokens/token-usage.test.ts[2m > [22m[2mDesign Token Compliance[2m > [22m[2mshould not use hardcoded Tailwind colors in UI components
+[22m[39m
+⚠️ Design Token Violations Found:
+  📁 src\components\ui\visual\AIModelBadge.tsx
+     Colors: purple-700, purple-400, purple-100, purple-900
+  📁 src\components\ui\about-page\CreativeLabInfoDrawer.tsx
+     Colors: purple-500
+
+
+
+📊 UI Component Violations: 2 (target: 0)
+
+[90mstdout[2m | tests/design-tokens/token-usage.test.ts[2m > [22m[2mDesign Token Compliance[2m > [22m[2mshould not use hardcoded Tailwind colors in page components
+[22m[39m
+⚠️ Design Token Violations in Pages:
+  📁 src\app\page.tsx
+     Colors: gray-900, gray-200, gray-600, gray-700, gray-300, gray-400, gray-50, gray-800, gray-500, green-500
+  📁 src\app\visual-experience-engine\page.tsx
+     Colors: slate-950, slate-900, slate-800, slate-700, red-500, blue-500, cyan-500, emerald-500, green-500, yellow-500, purple-500, pink-500, purple-400, pink-400
+  📁 src\app\unsubscribe\page.tsx
+     Colors: red-100, red-900, red-600, red-400, green-100, green-900, green-600, green-400
+  📁 src\app\test-onboarding\page.tsx
+     Colors: green-600
+  📁 src\app\modern-demo\page.tsx
+     Colors: gray-50, gray-200, gray-400, gray-100, gray-600, red-500
+  📁 src\app\login\page.tsx
+     Colors: gray-950, gray-900, gray-800, gray-400, gray-700, gray-500, gray-100, red-500, red-400
+  📁 src\app\landing\page.tsx
+     Colors: slate-950, slate-900, slate-700, slate-300, slate-400, slate-600, slate-800, blue-950, blue-400, cyan-400, blue-600, blue-700, blue-300, cyan-600, green-500, yellow-400
+  📁 src\app\inspiration\page.tsx
+     Colors: gray-500, slate-500, slate-900, slate-950, red-500, blue-500, cyan-500, sky-500, emerald-500, green-400, amber-500, rose-500, violet-500, purple-500, pink-500, fuchsia-500, purple-400
+  📁 src\app\founder\page.tsx
+     Colors: gray-100, gray-400, gray-800, gray-700, gray-500, red-400, red-500, blue-500, blue-600, blue-700, blue-400, green-400, green-500, green-600, yellow-400, yellow-500, yellow-600, purple-400, purple-600, pink-600, purple-500
+  📁 src\app\demos\page.tsx
+     Colors: slate-950, slate-900, purple-500
+  📁 src\app\demo-workspace\page.tsx
+     Colors: gray-400, cyan-800, cyan-400, cyan-900, cyan-500, emerald-500, emerald-400
+  📁 src\app\demo\page.tsx
+     Colors: slate-950, slate-400, blue-600, blue-500, purple-600
+  📁 src\app\error\page.tsx
+     Colors: gray-100, gray-700, gray-500, blue-600, blue-700, yellow-100, yellow-900, yellow-600, yellow-400
+  📁 src\app\debug-auth\page.tsx
+     Colors: gray-900, gray-800, gray-400, gray-300, red-400, red-600, red-700, blue-600, blue-700, green-400, yellow-400
+  📁 src\app\dashboard\page.tsx
+     Colors: slate-950, slate-400
+  📁 src\app\client-portal-demo\page.tsx
+     Colors: gray-50, gray-200, gray-500, gray-700, gray-100, gray-600, green-100, green-700, green-200
+  📁 src\app\console\page.tsx
+     Colors: gray-400, gray-800, gray-700, gray-500, red-900, red-400, blue-400, green-900, green-400, green-500, yellow-900, yellow-400
+  📁 src\app\brand-demo\page.tsx
+     Colors: slate-50
+  📁 src\app\billing\page.tsx
+     Colors: slate-950, slate-900, slate-800, slate-400, slate-700, slate-600, slate-300, blue-600, blue-700, blue-400, blue-300, green-600, green-300
+  📁 src\app\__examples__\csp-nonce-demo\page.tsx
+     Colors: gray-50, gray-900, gray-600, red-50, red-200, red-900, red-800, blue-50, blue-200, blue-900, blue-800, blue-100, green-50, green-200, green-900, green-800, green-100, green-700, yellow-50, yellow-200, yellow-900, yellow-800, yellow-100, yellow-700, purple-50, purple-200, purple-900, purple-800, purple-100, purple-700, pink-50, pink-200, pink-900, pink-800, pink-100
+  📁 src\app\wizard\animation-style\page.tsx
+     Colors: slate-950, slate-900, purple-500
+  📁 src\app\synthex\projects\page.tsx
+     Colors: slate-950, red-600, blue-900, yellow-600
+  📁 src\app\staff\copywriting\page.tsx
+     Colors: slate-950, slate-400, slate-900, slate-800, slate-500, slate-300, slate-700, slate-600, red-500, red-400, blue-500, blue-600, blue-400, green-400, green-500, green-600, yellow-400, purple-500, purple-600
+  📁 src\app\synthex\studio\page.tsx
+     Colors: slate-950, blue-900
+  📁 src\app\showcases\components\page.tsx
+     Colors: gray-900, gray-400, blue-600
+  📁 src\app\settings\security\page.tsx
+     Colors: green-600, green-400, yellow-600, yellow-400
+  📁 src\app\health-check\components\TechnicalAuditSummary.tsx
+     Colors: red-600, red-50, red-200, green-600, green-50, green-200, amber-600, amber-50, amber-200
+  📁 src\app\health-check\components\RecommendationGrid.tsx
+     Colors: gray-200, gray-50, gray-700, gray-600, blue-200, blue-50, blue-100, blue-700, blue-600, green-200, green-50, green-100, green-700, green-600, purple-200, purple-50, purple-100, purple-700, purple-600
+  📁 src\app\health-check\components\RealTimeThreatFeed.tsx
+     Colors: red-600, red-50, red-200, red-100, red-800, blue-600, blue-50, blue-200, blue-100, blue-800, yellow-600, yellow-50, yellow-200, yellow-100, yellow-800
+  📁 src\app\health-check\components\OverallHealthScore.tsx
+     Colors: red-600, green-600, amber-600
+  📁 src\app\health-check\components\HealthCheckHero.tsx
+     Colors: red-600, red-50, red-200
+  📁 src\app\health-check\components\ConnectionStatus.tsx
+     Colors: red-500, green-500
+  📁 src\app\health-check\components\CompetitorBenchmark.tsx
+     Colors: red-50, red-700, red-600, green-50, green-700, green-600, yellow-50, yellow-700
+  📁 src\app\guardian\rules\page.tsx
+     Colors: green-500, green-400, amber-500, amber-600
+  📁 src\app\guardian\risk\page.tsx
+     Colors: red-400, cyan-400, amber-400
+  📁 src\app\guardian\readiness\page.tsx
+     Colors: slate-100, slate-800, slate-500, slate-400, slate-200, slate-50, emerald-100, emerald-800, amber-100, amber-900, rose-100, rose-800, rose-500
+  📁 src\app\guardian\insights\page.tsx
+     Colors: red-400, cyan-400, amber-400
+  📁 src\app\guardian\briefings\page.tsx
+     Colors: red-500, red-400, cyan-500, cyan-400, amber-500, amber-400
+  📁 src\app\guardian\anomalies\page.tsx
+     Colors: red-400, cyan-400, amber-400
+  📁 src\app\guardian\executive\page.tsx
+     Colors: slate-100, slate-800, slate-500, slate-400, slate-200, slate-50, slate-900, emerald-100, emerald-800, amber-100, amber-900, rose-100, rose-800, rose-500
+  📁 src\app\guardian\alerts\page.tsx
+     Colors: emerald-500, emerald-400, amber-500, amber-400
+  📁 src\app\guardian\activity\page.tsx
+     Colors: red-500, red-400, cyan-500, cyan-400, sky-500, sky-400, green-500, green-400, amber-500, amber-400
+  📁 src\app\guardian\access-audit\page.tsx
+     Colors: emerald-400, emerald-500, rose-400, rose-500
+  📁 src\app\founder\workload-regulator\page.tsx
+     Colors: red-500, red-400, blue-500, blue-400, emerald-500, emerald-400, amber-500, amber-400
+  📁 src\app\founder\trends\page.tsx
+     Colors: gray-600, red-600, green-600, amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\trend-forecast\page.tsx
+     Colors: red-500, red-400, blue-500, blue-400, cyan-500, cyan-400, emerald-500, emerald-400, amber-500, amber-400, purple-500, purple-400
+  📁 src\app\founder\webhooks\page.tsx
+     Colors: red-500, blue-500, green-500, yellow-500
+  📁 src\app\founder\unified-state\page.tsx
+     Colors: red-500, red-400, blue-500, blue-400, cyan-500, cyan-400, emerald-500, emerald-400, amber-500, amber-400, yellow-500, yellow-400, purple-500, purple-400, pink-500, pink-400
+  📁 src\app\founder\usage\page.tsx
+     Colors: gray-500, red-500, red-400, blue-500, blue-400, green-400, green-500, yellow-500, purple-600, purple-700, purple-400
+  📁 src\app\founder\transfer-safety\page.tsx
+     Colors: red-600, amber-500, amber-600, amber-200, amber-50, amber-950, amber-800
+  📁 src\app\founder\telemetry\page.tsx
+     Colors: gray-500, gray-400, red-500, red-400, blue-500, blue-400, green-400, yellow-500, yellow-400, purple-400
+  📁 src\app\founder\training-insights\page.tsx
+     Colors: amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\timeline\page.tsx
+     Colors: red-500, blue-500, yellow-500
+  📁 src\app\founder\templates\page.tsx
+     Colors: gray-500, red-500, red-400, red-300, blue-500, green-500, yellow-500, purple-600, pink-600, purple-500, purple-400
+  📁 src\app\founder\systemic-drift\page.tsx
+     Colors: red-500, red-400, emerald-500, emerald-400, amber-500, amber-400, yellow-500, yellow-400, purple-500, purple-400, pink-500, pink-400
+  📁 src\app\founder\system-health\page.tsx
+     Colors: red-500, blue-500, green-500, yellow-500
+  📁 src\app\founder\synthex-seo\page.tsx
+     Colors: gray-50, gray-600, gray-900, gray-500, gray-200, gray-400, gray-100, gray-800, gray-700, red-600, red-500, red-100, red-700, blue-600, blue-700, blue-100, blue-800, blue-50, blue-200, blue-900, green-600, green-100, green-800, green-500, green-700, yellow-100, yellow-800, yellow-500, yellow-700, purple-600
+  📁 src\app\founder\success-predictions\page.tsx
+     Colors: amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\synthex-portfolio\page.tsx
+     Colors: slate-50, slate-200, slate-900, slate-600, slate-300, red-50, red-600, red-100, red-800, blue-600, green-600, green-100, green-800, yellow-100, yellow-800, amber-50, amber-200, amber-800
+  📁 src\app\founder\stability-horizon\page.tsx
+     Colors: red-500, red-400, blue-500, blue-400, cyan-500, cyan-400, emerald-500, emerald-400, green-500, green-400, amber-500, amber-400, purple-500, purple-400, violet-500, violet-400
+  📁 src\app\founder\stabilisation\page.tsx
+     Colors: amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\stress-tests\page.tsx
+     Colors: gray-500, gray-400, red-500, red-400, blue-500, blue-400, green-500, green-400, yellow-500, yellow-400
+  📁 src\app\founder\strategy\page.tsx
+     Colors: red-50, red-950, red-200, red-800, red-600, red-400, red-900, red-100, blue-600, blue-700, blue-400, green-100, green-900, green-700, green-300, green-600, green-400, purple-600, purple-400
+  📁 src\app\founder\stability-guard\page.tsx
+     Colors: red-500, red-400, blue-500, blue-400, emerald-500, emerald-400, amber-500, amber-400, yellow-500, yellow-400, purple-500, purple-400
+  📁 src\app\founder\slas\page.tsx
+     Colors: red-500, blue-500, green-500, yellow-500
+  📁 src\app\founder\self-healing\page.tsx
+     Colors: gray-500, gray-400, red-500, red-400, blue-500, blue-400, green-500, green-400, yellow-500, yellow-400
+  📁 src\app\founder\simulation\page.tsx
+     Colors: red-400, green-400, yellow-400
+  📁 src\app\founder\signal-purity\page.tsx
+     Colors: amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\settings\page.tsx
+     Colors: gray-900, gray-800, gray-400, gray-700, gray-600, gray-500, gray-300, red-500, red-400, red-600, red-700, blue-500, blue-400, blue-600, blue-700, green-500, green-400, yellow-500, yellow-400
+  📁 src\app\founder\security\page.tsx
+     Colors: gray-500, gray-400, red-500, red-400, blue-500, blue-400, green-500, green-400, yellow-500, yellow-400
+  📁 src\app\founder\scenario\page.tsx
+     Colors: gray-400, red-400, blue-400, green-400
+  📁 src\app\founder\search\page.tsx
+     Colors: gray-500, red-500, red-400, blue-500, green-500, purple-500, purple-400
+  📁 src\app\founder\scaling-mode\page.tsx
+     Colors: blue-500
+  📁 src\app\founder\scheduling-agent\page.tsx
+     Colors: red-200, red-50, red-950, red-600, blue-600, blue-200, blue-50, blue-950, blue-900, green-200, green-50, green-950, green-600, green-900, yellow-200, yellow-50, yellow-950, yellow-900
+  📁 src\app\founder\schema\page.tsx
+     Colors: red-400, blue-400, green-400, yellow-400
+  📁 src\app\founder\runtime-orchestrator\page.tsx
+     Colors: gray-500, gray-400, red-500, red-400, blue-500, blue-400, green-500, green-400, yellow-500, yellow-400, purple-500, purple-400
+  📁 src\app\founder\risk-center\page.tsx
+     Colors: gray-500, red-500, blue-500, green-500, green-600, yellow-500
+  📁 src\app\founder\safety\page.tsx
+     Colors: gray-400, gray-500, red-600, red-700, red-50, red-900, red-200, red-800, red-300, red-400, blue-600, blue-400
+  📁 src\app\founder\runbooks\page.tsx
+     Colors: red-500, blue-500, green-500, yellow-500
+  📁 src\app\founder\roadmap\page.tsx
+     Colors: amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\risk\page.tsx
+     Colors: red-500, green-500, yellow-500
+  📁 src\app\founder\remediation\page.tsx
+     Colors: red-500, blue-500, yellow-500
+  📁 src\app\founder\resilience\page.tsx
+     Colors: red-500, red-400, blue-500, blue-400, emerald-500, emerald-400, amber-500, amber-400, purple-500, purple-400
+  📁 src\app\founder\research-agent\page.tsx
+     Colors: gray-100, gray-800, gray-600, gray-400, gray-700, red-100, red-800, blue-600, blue-700, blue-200, blue-50, blue-400, green-100, green-800, yellow-100, yellow-800, yellow-50
+  📁 src\app\founder\regions\page.tsx
+     Colors: red-500, green-500, yellow-500, amber-500
+  📁 src\app\founder\reports\page.tsx
+     Colors: gray-400, gray-500, red-400, blue-400, cyan-400, green-400, yellow-400, purple-400
+  📁 src\app\founder\reasoning\page.tsx
+     Colors: gray-600, slate-50, slate-100, gray-900, gray-200, gray-50, gray-500, red-600, red-100, red-800, blue-600, blue-100, blue-800, green-600, green-100, green-800, yellow-100, yellow-800
+  📁 src\app\founder\privacy\page.tsx
+     Colors: gray-500, gray-400, red-500, red-400, blue-500, blue-400, green-500, green-400, yellow-500, yellow-400
+  📁 src\app\founder\recovery-protocols\page.tsx
+     Colors: red-500, red-400, emerald-500, emerald-400, amber-500, amber-400, purple-500, purple-400
+  📁 src\app\founder\recovery\page.tsx
+     Colors: gray-400, gray-500, red-400, blue-400, blue-500, green-400, yellow-400
+  📁 src\app\founder\reality-map\page.tsx
+     Colors: red-500, red-400, emerald-500, emerald-400, amber-500, amber-400
+  📁 src\app\founder\preemptive-risk-grid\page.tsx
+     Colors: red-500, red-400, red-600, red-300, blue-500, blue-400, cyan-500, cyan-400, emerald-500, emerald-400, green-500, green-400, amber-500, amber-400, purple-500, purple-400, pink-500, pink-400
+  📁 src\app\founder\posting-engine\page.tsx
+     Colors: red-500, blue-500, green-500, yellow-500
+  📁 src\app\founder\pre-clients\page.tsx
+     Colors: gray-100, gray-800, gray-400, red-600, blue-100, blue-800, blue-500, green-100, green-800, emerald-100, emerald-800, green-600, green-500, yellow-100, yellow-800, yellow-600, purple-100, purple-800
+  📁 src\app\founder\postmortems\page.tsx
+     Colors: amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\posting-execution\page.tsx
+     Colors: red-500, blue-500, green-500, yellow-500
+  📁 src\app\founder\playbooks\page.tsx
+     Colors: amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\performance-envelope\page.tsx
+     Colors: red-500, red-400, blue-500, blue-400, emerald-500, emerald-400, green-400, amber-500, amber-400, purple-500, purple-400
+  📁 src\app\founder\plans\page.tsx
+     Colors: gray-500, red-500, red-400, blue-400, green-500, green-400, yellow-500
+  📁 src\app\founder\patterns\page.tsx
+     Colors: red-500, green-500, amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\performance-reality\page.tsx
+     Colors: blue-500
+  📁 src\app\founder\performance-normalization\page.tsx
+     Colors: amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\orchestrator\page.tsx
+     Colors: gray-600, gray-500, gray-50, red-50, red-200, red-700
+  📁 src\app\founder\optimisation-hub\page.tsx
+     Colors: gray-600, gray-500, gray-200, red-100, red-800, red-600, blue-50, blue-950, blue-200, green-100, green-800, green-600, yellow-100, yellow-800, yellow-200, yellow-50, yellow-950, yellow-600
+  📁 src\app\founder\orchestration\page.tsx
+     Colors: red-500, blue-500, green-500, yellow-500
+  📁 src\app\founder\optimizer\page.tsx
+     Colors: red-600, red-50, red-900, red-200, red-800, red-400, red-700, red-300, blue-100, blue-900, blue-600, blue-400, yellow-600
+  📁 src\app\founder\ops-hub\page.tsx
+     Colors: gray-600, red-600, blue-600, green-600
+  📁 src\app\founder\observability\page.tsx
+     Colors: red-500, red-400, blue-400, blue-500, yellow-400, yellow-500
+  📁 src\app\founder\opportunities\page.tsx
+     Colors: amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\notifications\page.tsx
+     Colors: gray-500, red-500, blue-500, green-500, yellow-500
+  📁 src\app\founder\observatory\page.tsx
+     Colors: gray-500, red-600, red-500, blue-500, yellow-500
+  📁 src\app\founder\navigator\page.tsx
+     Colors: amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\momentum\page.tsx
+     Colors: red-500, red-400, blue-500, blue-400, emerald-500, emerald-400, amber-500, amber-400, purple-500, purple-400
+  📁 src\app\founder\negotiation\page.tsx
+     Colors: gray-400, gray-300, gray-600, gray-700, gray-900, gray-200, blue-600, blue-700, blue-50, blue-900, blue-200, blue-800, blue-300, blue-400, green-50, green-900, green-200, green-800, green-700, green-300, amber-50, amber-900, amber-200, amber-800, amber-600, amber-400, amber-700, amber-300, amber-100, purple-50, purple-900, purple-200, purple-800, purple-700, purple-300
+  📁 src\app\founder\narratives\page.tsx
+     Colors: amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\network\page.tsx
+     Colors: gray-400, gray-500, gray-600, gray-900, gray-700, gray-100, red-100, red-800, red-300, red-600, red-200, red-50, red-900, blue-100, blue-800, blue-300, blue-200, blue-50, blue-900, yellow-100, yellow-800, yellow-300, yellow-600
+  📁 src\app\founder\models\page.tsx
+     Colors: red-400, blue-400, green-400, yellow-400
+  📁 src\app\founder\marketing\page.tsx
+     Colors: gray-500, gray-400, blue-600, blue-100, blue-900, blue-500, green-600, green-100, green-900, amber-600, amber-100, amber-900, amber-500, purple-600, purple-100, purple-900, purple-500
+  📁 src\app\founder\mesh\page.tsx
+     Colors: gray-100, gray-800, gray-200, red-100, red-800, red-200, green-100, green-800, green-200, amber-100, amber-800, amber-200
+  📁 src\app\founder\memory-spine\page.tsx
+     Colors: amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\memory\page.tsx
+     Colors: amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\market-radar\page.tsx
+     Colors: slate-400, slate-500, slate-700, slate-600, slate-800, slate-300, red-400, red-500, blue-500, blue-400, cyan-400, cyan-600, cyan-500, blue-600, emerald-400, emerald-500, yellow-400, yellow-500, yellow-600
+  📁 src\app\founder\load-balance\page.tsx
+     Colors: red-600, red-500, green-600, amber-600, amber-500, amber-200, amber-50, amber-950, amber-800
+  📁 src\app\founder\learning-loop\page.tsx
+     Colors: red-600, green-600
+  📁 src\app\founder\market\page.tsx
+     Colors: gray-600, red-600, green-600, amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\kpi\page.tsx
+     Colors: gray-500, gray-400, red-400, blue-500, green-500, green-400, purple-500, pink-500
+  📁 src\app\founder\intent-router\page.tsx
+     Colors: gray-500, gray-400, red-500, red-400, blue-500, blue-400, emerald-500, emerald-400, amber-500, amber-400
+  📁 src\app\founder\knowledge-graph\page.tsx
+     Colors: blue-400, blue-500, green-400, purple-400
+  📁 src\app\founder\knowledge\page.tsx
+     Colors: amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\intelligence-hub\page.tsx
+     Colors: gray-600, gray-400, gray-500, gray-200, red-600, red-100, red-800, red-200, red-50, red-950, red-700, red-300, blue-600, blue-50, blue-950, blue-200, green-600, green-100, green-800, yellow-600, yellow-100, yellow-800, yellow-200, yellow-50, yellow-950, yellow-300
+  📁 src\app\founder\journal\page.tsx
+     Colors: gray-100, gray-400, gray-800, gray-700, gray-300, gray-900, gray-600, blue-500, purple-600, purple-700, purple-400, purple-500, purple-300
+  📁 src\app\founder\intel\page.tsx
+     Colors: blue-500, green-500, yellow-500
+  📁 src\app\founder\insight-renderer\page.tsx
+     Colors: red-600, green-600, amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\intelligence-exchange\page.tsx
+     Colors: amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\intelligence-bus\page.tsx
+     Colors: red-500, red-400, blue-500, blue-400, cyan-500, cyan-400, emerald-500, emerald-400, purple-500, purple-400
+  📁 src\app\founder\insights\page.tsx
+     Colors: gray-100, gray-400, gray-800, gray-700, gray-900, gray-600, gray-300, gray-500, red-400, red-500, blue-500, blue-600, blue-700, blue-400, green-400, green-500, green-600, green-700, yellow-400, yellow-500, purple-400
+  📁 src\app\founder\incidents\page.tsx
+     Colors: gray-500, gray-400, red-500, red-400, blue-500, blue-400, green-500, green-400, yellow-500, yellow-400
+  📁 src\app\founder\guardian-warehouse\page.tsx
+     Colors: gray-100, gray-800, gray-200, gray-600, gray-50, gray-900, gray-700, gray-500, red-100, red-800, red-200, red-50, red-700, blue-100, blue-800, blue-200, blue-50, blue-600, blue-900, amber-100, amber-800, amber-200, amber-700, purple-50, purple-200, purple-600, purple-900
+  📁 src\app\founder\guardian-scenarios\page.tsx
+     Colors: gray-100, gray-700, gray-200, gray-600, gray-50, gray-500, gray-900, red-100, red-800, red-200, red-700, red-50, blue-100, blue-800, blue-200, blue-50, emerald-100, emerald-800, emerald-200, amber-100, amber-800, amber-200, yellow-100, yellow-700, yellow-200, purple-100, purple-700, purple-200, pink-100, pink-700, pink-200
+  📁 src\app\founder\health-index\page.tsx
+     Colors: red-500, red-400, blue-500, blue-400, emerald-500, emerald-400, amber-500, amber-400
+  📁 src\app\founder\guardian-replay\page.tsx
+     Colors: gray-100, gray-700, gray-200, gray-600, gray-50, gray-500, gray-900, gray-400, red-100, red-800, red-200, red-50, blue-100, blue-800, blue-200, blue-50, emerald-100, emerald-800, emerald-200, amber-100, amber-800, amber-200
+  📁 src\app\founder\graph-fusion\page.tsx
+     Colors: gray-500, gray-400, red-500, red-400, blue-500, blue-400, green-500, green-400, yellow-500, yellow-400
+  📁 src\app\founder\franchise-opportunities\page.tsx
+     Colors: amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\franchise\page.tsx
+     Colors: amber-500
+  📁 src\app\founder\futurecasting\page.tsx
+     Colors: gray-400, red-400, blue-400, green-400, yellow-400, purple-400
+  📁 src\app\founder\governance\page.tsx
+     Colors: red-500, green-500, yellow-500
+  📁 src\app\founder\forecast\page.tsx
+     Colors: gray-500, red-500, red-600, blue-500, green-500, purple-500
+  📁 src\app\founder\focus-windows\page.tsx
+     Colors: red-500, red-400, blue-500, blue-400, emerald-500, emerald-400, green-500, green-400, amber-500, amber-400, purple-500, purple-400
+  📁 src\app\founder\experiments-v2\page.tsx
+     Colors: gray-500, gray-600, blue-500, green-500, yellow-500, purple-600, purple-700
+  📁 src\app\founder\experiments\page.tsx
+     Colors: gray-500, gray-400, gray-600, blue-500, blue-400, green-500, green-400, green-600, yellow-500, yellow-400, purple-400
+  📁 src\app\founder\flight-deck\page.tsx
+     Colors: amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\finance\page.tsx
+     Colors: slate-400, slate-700, slate-600, slate-800, slate-500, slate-300, red-400, emerald-400, emerald-600, emerald-500, yellow-400
+  📁 src\app\founder\evidence-packs\page.tsx
+     Colors: blue-500, green-500, yellow-500
+  📁 src\app\founder\evolution\page.tsx
+     Colors: green-500, amber-600, amber-200, amber-50, amber-950, amber-800
+  📁 src\app\founder\energy-mapping\page.tsx
+     Colors: red-500, red-400, emerald-500, emerald-400, amber-500, amber-400, purple-500, purple-400
+  📁 src\app\founder\email-agent\page.tsx
+     Colors: gray-600, gray-200, gray-500, gray-50, gray-700, red-600, red-50, red-900, blue-600, blue-700, blue-50, blue-200, green-600, green-700, green-50, green-900, yellow-50, yellow-900
+  📁 src\app\founder\engine-health\page.tsx
+     Colors: gray-600, red-600, green-600, amber-600, amber-200, amber-50, amber-950, amber-800
+  📁 src\app\founder\environment-console\page.tsx
+     Colors: gray-500, gray-600, gray-700, gray-200, gray-50, red-500, red-50, blue-500, blue-100, blue-800, blue-600, blue-50, green-500, green-600, green-50, green-100, green-800, yellow-500, purple-100, purple-800, pink-100, pink-800
+  📁 src\app\founder\early-warnings\page.tsx
+     Colors: red-500, blue-500, green-500, yellow-500
+  📁 src\app\founder\early-warning\page.tsx
+     Colors: gray-500, red-600, red-500, blue-500, yellow-500
+  📁 src\app\founder\decision-pipeline\page.tsx
+     Colors: red-500, red-600, amber-500, amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\debt\page.tsx
+     Colors: red-500, blue-500, yellow-500
+  📁 src\app\founder\data-retention\page.tsx
+     Colors: gray-500, red-500, blue-500, green-500, yellow-500
+  📁 src\app\founder\drift\page.tsx
+     Colors: gray-500, red-500, red-600, blue-500, green-500, yellow-500
+  📁 src\app\founder\desktop-agent\page.tsx
+     Colors: red-600, blue-600, blue-200, blue-50, blue-950, green-600, yellow-200, yellow-50, yellow-950, yellow-600, purple-200, purple-50, purple-950, purple-900, purple-100, purple-800
+  📁 src\app\founder\critical-path\page.tsx
+     Colors: red-500, red-400, blue-500, blue-400, emerald-500, emerald-400, amber-500, amber-400
+  📁 src\app\founder\coordination-agent\page.tsx
+     Colors: gray-500, gray-200, gray-600, red-200, red-50, red-950, red-600, blue-600, blue-200, blue-50, blue-950, blue-900, green-200, green-50, green-950, green-600, yellow-200, yellow-50, yellow-950, yellow-600, purple-600
+  📁 src\app\founder\convergence\page.tsx
+     Colors: red-600, blue-600, green-600, amber-500, amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\creative-risk\page.tsx
+     Colors: amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\creative-adaptive\page.tsx
+     Colors: red-500, amber-500, amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\content-agent\page.tsx
+     Colors: gray-100, gray-800, gray-600, gray-400, gray-700, red-100, red-800, blue-600, blue-700, blue-200, blue-50, green-100, green-800, yellow-100, yellow-800, purple-50
+  📁 src\app\founder\compliance\page.tsx
+     Colors: amber-200, amber-50, amber-800
+  📁 src\app\founder\cognitive-twin\page.tsx
+     Colors: green-500, green-600, yellow-500, yellow-600, yellow-50, yellow-950, yellow-900, yellow-100, yellow-800, yellow-200
+  📁 src\app\founder\cognitive-map\page.tsx
+     Colors: gray-600, red-600, green-600, amber-600, amber-200, amber-50, amber-950, amber-800
+  📁 src\app\founder\command-center\page.tsx
+     Colors: red-400, blue-400, green-400, yellow-400
+  📁 src\app\founder\combat\page.tsx
+     Colors: gray-500, blue-500, green-500, yellow-500, purple-500
+  📁 src\app\founder\cognitive-load\page.tsx
+     Colors: red-500, red-400, emerald-500, emerald-400, amber-500, amber-400
+  📁 src\app\founder\coalition\page.tsx
+     Colors: gray-200, gray-700, gray-900, gray-600, gray-400, gray-100, gray-50, gray-950, blue-600, blue-50, blue-900, blue-400
+  📁 src\app\founder\businesses\page.tsx
+     Colors: gray-800, gray-700, gray-100, gray-400, gray-500, gray-900, gray-600, red-400, red-500, red-600, blue-500, blue-600, blue-700, green-400, green-500, green-600, yellow-400, yellow-500, yellow-600
+  📁 src\app\founder\business-vault\page.tsx
+     Colors: blue-500, green-500
+  📁 src\app\founder\coaching\page.tsx
+     Colors: amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\broadcasts\page.tsx
+     Colors: amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\brand-matrix\page.tsx
+     Colors: gray-600, gray-400, gray-700, blue-600, blue-50, blue-200, green-600, yellow-600
+  📁 src\app\founder\billing\page.tsx
+     Colors: gray-400, gray-500, gray-600, red-400, red-500, blue-400, blue-500, green-400, green-500
+  📁 src\app\founder\awareness\page.tsx
+     Colors: red-600, green-600, amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\blue-ocean\page.tsx
+     Colors: gray-900, gray-800, gray-400, gray-700, gray-300, gray-600, gray-500, gray-200, red-400, red-500, blue-400, blue-500, blue-600, blue-700, blue-800, blue-900, blue-300, green-400, green-500, green-700, green-900, green-600, yellow-400, yellow-500, yellow-600, purple-700
+  📁 src\app\founder\audit\page.tsx
+     Colors: gray-500, red-500, blue-500, cyan-500, green-500, emerald-500, yellow-500, amber-500, purple-500, pink-500, violet-500, fuchsia-500
+  📁 src\app\founder\approvals\page.tsx
+     Colors: red-100, red-800, red-600, red-50, blue-600, blue-800, green-100, green-800, green-600, green-700, yellow-100, yellow-800, yellow-600, yellow-50
+  📁 src\app\founder\analysis-agent\page.tsx
+     Colors: gray-600, gray-200, red-200, red-50, red-950, red-600, blue-600, blue-200, blue-50, blue-950, blue-900, green-200, green-50, green-950, green-600, green-900, yellow-200, yellow-50, yellow-950, yellow-600
+  📁 src\app\founder\arbitration\page.tsx
+     Colors: gray-600, blue-600, green-600, amber-600, amber-200, amber-50, amber-950, amber-800
+  📁 src\app\founder\alignment\page.tsx
+     Colors: gray-600, red-600, green-600, amber-500, amber-600, amber-200, amber-50, amber-950, amber-800
+  📁 src\app\founder\ai-phill\page.tsx
+     Colors: gray-100, gray-400, gray-800, gray-700, gray-600, gray-900, gray-300, gray-500, blue-600, blue-700, blue-400, blue-500, green-600, green-500, green-400, yellow-400, purple-600, purple-700, purple-400
+  📁 src\app\founder\ai-governance\page.tsx
+     Colors: gray-500, gray-400, red-500, red-400, blue-500, blue-400, green-400, green-500, yellow-500, yellow-400, purple-600, purple-700
+  📁 src\app\founder\agi-console\page.tsx
+     Colors: gray-100, gray-800, gray-600, gray-500, gray-200, red-100, red-800, red-600, red-200, red-50, red-950, red-700, blue-100, blue-800, blue-600, blue-50, blue-950, blue-200, green-100, green-800, green-600, green-50, green-950, green-700, yellow-100, yellow-800, yellow-50, yellow-950, yellow-700, yellow-600
+  📁 src\app\founder\ai-workload\page.tsx
+     Colors: amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\ai-oversight\page.tsx
+     Colors: red-500, red-400, blue-500, blue-400, emerald-500, emerald-400, amber-500, amber-400
+  📁 src\app\founder\agi-brain\page.tsx
+     Colors: gray-300, gray-600, gray-200, gray-500, gray-50, gray-900, red-900, red-50, red-500, red-300, red-800, red-600, red-100, red-400, red-700, blue-50, blue-300, blue-900, blue-600, blue-800, green-500, green-50, green-300, green-900, yellow-50, yellow-300, yellow-900, purple-50, purple-300, purple-900, purple-600
+  📁 src\app\founder\agents\page.tsx
+     Colors: blue-600, blue-200, blue-50, blue-950, green-600, green-200, green-50, green-950, yellow-200, yellow-50, yellow-950, yellow-600, purple-600, purple-200, purple-50, purple-950, purple-900, purple-100, purple-800
+  📁 src\app\demo-workspace\vault\page.tsx
+     Colors: gray-400, gray-500, cyan-800, cyan-500, cyan-400, cyan-600, cyan-900, cyan-300, emerald-400
+  📁 src\app\founder\agency-switcher\page.tsx
+     Colors: gray-500, blue-500, green-500, purple-500
+  📁 src\app\demo-workspace\settings\page.tsx
+     Colors: gray-400, cyan-800, cyan-500, cyan-400, cyan-900, cyan-600
+  📁 src\app\demo-workspace\queue\page.tsx
+     Colors: gray-400, gray-500, red-500, red-400, cyan-800, cyan-500, cyan-400, cyan-900, yellow-500, yellow-400
+  📁 src\app\demo-workspace\brief\page.tsx
+     Colors: gray-400, gray-500, cyan-800, cyan-500, cyan-400, cyan-600, cyan-900, emerald-500, emerald-400
+  📁 src\app\dashboard\workspaces\page.tsx
+     Colors: slate-800, slate-700, slate-400, slate-300, slate-900, slate-500, slate-600, red-500, red-400, red-900, blue-100, blue-600, blue-700, blue-500, blue-400, cyan-400, green-500, green-400, emerald-400, purple-100, purple-600, purple-700, purple-400, pink-400
+  📁 src\app\dashboard\team\page.tsx
+     Colors: slate-400, slate-800, slate-700, slate-600, slate-300, slate-900, red-100, red-700, red-200, red-500, blue-100, blue-600, blue-700, blue-500, blue-400, cyan-400, green-100, green-700, green-200, green-500, yellow-100, yellow-700, yellow-200, yellow-500, purple-100, purple-600, purple-700, purple-400
+  📁 src\app\dashboard\vault\page.tsx
+     Colors: gray-400, gray-500, cyan-800, cyan-400, cyan-500, cyan-900
+  📁 src\app\dashboard\time-tracker\page.tsx
+     Colors: slate-400, slate-800, slate-700, cyan-600, cyan-700
+  📁 src\app\dashboard\tasks\page.tsx
+     Colors: slate-400, slate-800, slate-700, slate-500, red-500, red-400, cyan-600, cyan-700, cyan-500, emerald-500, yellow-500, yellow-400
+  📁 src\app\dashboard\sites\page.tsx
+     Colors: slate-600, slate-400, slate-800, slate-700, slate-900, slate-500, red-400, red-600, blue-100, blue-600, blue-700, blue-500, blue-400, green-400, green-600, yellow-400, yellow-600, purple-100, purple-600, purple-700
+  📁 src\app\dashboard\seo\page.tsx
+     Colors: slate-400, slate-800, slate-700, red-500, cyan-600, cyan-700, emerald-500
+  📁 src\app\dashboard\scope-review\page.tsx
+     Colors: slate-400, slate-800, slate-700, slate-300, cyan-500, emerald-500, emerald-400, yellow-500, yellow-400
+  📁 src\app\dashboard\showcase\page.tsx
+     Colors: slate-50, slate-100, slate-950, slate-900, gray-200, gray-800, slate-800, gray-100, blue-600, blue-400, blue-100, blue-900, blue-700, blue-800, green-600
+  📁 src\app\dashboard\reports\page.tsx
+     Colors: slate-400, slate-700, slate-300, slate-800, cyan-600, cyan-700, cyan-500, emerald-500, emerald-400
+  📁 src\app\dashboard\settings\page.tsx
+     Colors: slate-800, slate-700, slate-900, blue-100, purple-100
+  📁 src\app\dashboard\projects\page.tsx
+     Colors: slate-400, slate-900, slate-700, slate-500, slate-800, slate-600, red-400, blue-100, blue-600, blue-700, blue-500, blue-400, cyan-400, green-400, emerald-400, purple-100, purple-600, purple-700, purple-400, pink-400
+  📁 src\app\dashboard\profile\page.tsx
+     Colors: slate-800, slate-700, slate-400, slate-300, slate-600, slate-900, red-400, red-300, blue-100, blue-600, blue-700, blue-500, blue-400, green-400, green-950, emerald-400, purple-100, purple-600, purple-700
+  📁 src\app\dashboard\overview\page.tsx
+     Colors: gray-400, cyan-800, cyan-400, cyan-900, cyan-500, emerald-500, emerald-400
+  📁 src\app\dashboard\queue\page.tsx
+     Colors: gray-400, red-400, red-500, cyan-800, cyan-400, cyan-500, cyan-900, emerald-400, emerald-500, yellow-400, yellow-500
+  📁 src\app\dashboard\pair-operator\page.tsx
+     Colors: amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\dashboard\monitoring\page.tsx
+     Colors: gray-600, gray-50, gray-200, gray-400, gray-900, gray-500, red-600, red-50, red-200, red-400, blue-600, green-600, green-50, green-200, green-400, green-500, yellow-600, yellow-50, yellow-200
+  📁 src\app\dashboard\modern\page.tsx
+     Colors: slate-400, slate-900, slate-700, slate-500, slate-800, slate-300, red-500, blue-500, blue-600, blue-100, blue-400, purple-600, purple-100
+  📁 src\app\dashboard\meetings\page.tsx
+     Colors: slate-400, slate-800, slate-700, slate-500, slate-900, slate-300, blue-400, blue-600, blue-700, blue-500, blue-100, purple-600, purple-700, purple-100
+  📁 src\app\dashboard\messages\page.tsx
+     Colors: gray-100, gray-600, red-100, red-800, green-100, green-800
+  📁 src\app\dashboard\marketplace\page.tsx
+     Colors: gray-200, gray-700, gray-900, gray-600, gray-400, gray-100, gray-50, gray-950, red-200, red-50, red-900, red-700, red-300, blue-600, blue-400
+  📁 src\app\dashboard\intelligence\page.tsx
+     Colors: slate-800, slate-700, slate-400, slate-500, red-400, blue-100, blue-400, cyan-400, green-400, emerald-400, purple-100, purple-400, pink-400
+  📁 src\app\dashboard\memory\page.tsx
+     Colors: gray-900, gray-100, gray-400, red-600, blue-600, blue-200, blue-50, blue-950, blue-800, blue-900, blue-100, green-600, yellow-200, yellow-50, yellow-950, yellow-600, yellow-800, amber-600, purple-600
+  📁 src\app\dashboard\emails\page.tsx
+     Colors: blue-500, green-500, yellow-500, purple-500
+  📁 src\app\dashboard\insights\page.tsx
+     Colors: slate-400, slate-800, slate-700, cyan-500, cyan-900, cyan-800, emerald-500, yellow-500
+  📁 src\app\dashboard\drip-campaigns\page.tsx
+     Colors: slate-400, slate-800, slate-700, cyan-600, cyan-700, cyan-500, emerald-500, emerald-400, yellow-500, yellow-400
+  📁 src\app\dashboard\content\page.tsx
+     Colors: slate-400, slate-800, slate-700, slate-300, blue-100, blue-600, cyan-600, blue-700, cyan-700, blue-500, blue-400, amber-500, amber-400, purple-100, purple-600, pink-600, purple-700, pink-700, purple-500, purple-400
+  📁 src\app\dashboard\email-templates\page.tsx
+     Colors: slate-400, slate-800, slate-700, slate-600, slate-300, red-400, cyan-600, cyan-700, cyan-500
+  📁 src\app\dashboard\component-library\page.tsx
+     Colors: gray-50, gray-950, gray-200, gray-700, gray-900
+  📁 src\app\dashboard\client-assistant\page.tsx
+     Colors: blue-500
+  📁 src\app\dashboard\contacts\page.tsx
+     Colors: slate-400, slate-800, slate-700, slate-500, slate-300, slate-600, red-500, red-400, red-300, blue-100, blue-600, blue-700, blue-500, cyan-500, blue-400, blue-300, green-500, emerald-500, green-400, amber-500, amber-400, purple-100, purple-600, purple-700, purple-500, pink-500
+  📁 src\app\dashboard\calendar\page.tsx
+     Colors: slate-600, slate-400, slate-800, slate-700, slate-300, blue-100, blue-600, blue-500, blue-700, blue-400, purple-100, purple-600, purple-700, purple-400
+  📁 src\app\dashboard\brief\page.tsx
+     Colors: gray-400, gray-300, gray-500, cyan-800, cyan-400, cyan-900, cyan-500, green-500, green-400
+  📁 src\app\dashboard\audits\page.tsx
+     Colors: gray-100, gray-600, red-100, red-800, red-600, blue-100, blue-800, green-100, green-800, green-600, yellow-600
+  📁 src\app\dashboard\campaigns\page.tsx
+     Colors: blue-600, blue-700, blue-100, blue-500, purple-600, purple-700, purple-100
+  📁 src\app\dashboard\approvals\page.tsx
+     Colors: slate-400, slate-800, slate-700, slate-600, slate-500, slate-300, gray-600, red-500, red-400, red-300, red-600, blue-100, blue-400, blue-600, blue-500, green-600, emerald-600, green-700, emerald-700, green-500, green-400, emerald-400, yellow-400, yellow-600, amber-600, yellow-500, purple-100, pink-400, purple-600
+  📁 src\app\dashboard\analytics\page.tsx
+     Colors: blue-100, purple-100
+  📁 src\app\dashboard\billing\page.tsx
+     Colors: slate-800, slate-700, slate-900, slate-400, slate-600, slate-300, red-500, blue-500, cyan-500, blue-100, blue-600, blue-700, blue-400, green-500, green-400, yellow-500, yellow-400, purple-500, pink-500, purple-100, purple-600, purple-700, purple-400, pink-600
+  📁 src\app\dashboard\ai-tools\page.tsx
+     Colors: gray-100, gray-600, green-100, green-800
+  📁 src\app\console\ucscel\page.tsx
+     Colors: gray-400, gray-800, gray-700, gray-500, red-900, red-400, green-900, green-400, amber-400, yellow-400
+  📁 src\app\console\tcpqel\page.tsx
+     Colors: gray-400, gray-800, gray-500, gray-700, blue-400, blue-900, blue-200, blue-500, blue-600, blue-700, green-500, yellow-400, yellow-500, purple-900
+  📁 src\app\console\sorie\page.tsx
+     Colors: gray-700, gray-400, gray-800, red-400, blue-900, blue-400, blue-500, green-900, green-400, green-500, yellow-900, yellow-400, yellow-500, purple-900, purple-400
+  📁 src\app\console\upewe\page.tsx
+     Colors: gray-400, gray-800, gray-700, red-400, blue-400, green-400, yellow-400, yellow-900
+  📁 src\app\console\mcse\page.tsx
+     Colors: gray-400, gray-800, gray-700, gray-500, red-400, green-400, yellow-400, purple-400
+  📁 src\app\console\gslpie\page.tsx
+     Colors: gray-400, gray-800, gray-700, gray-300, red-400, red-900, blue-400, green-400, green-900, yellow-900, yellow-400, yellow-700
+  📁 src\app\console\egcbi\page.tsx
+     Colors: gray-400, gray-800, gray-700, gray-500, green-900, green-400, yellow-900, yellow-400
+  📁 src\app\console\raaoe\page.tsx
+     Colors: gray-700, gray-400, gray-800, gray-500, red-400, blue-900, blue-400, green-900, green-400, yellow-900, yellow-400, rose-400
+  📁 src\app\console\asrs\page.tsx
+     Colors: gray-400, gray-800, gray-700, gray-500, red-900, red-400, blue-400, green-900, green-400, yellow-400
+  📁 src\app\console\grh\page.tsx
+     Colors: gray-400, gray-800, gray-700, red-400, cyan-400, green-900, green-400, yellow-400
+  📁 src\app\console\aire\page.tsx
+     Colors: gray-400, gray-800, gray-700, gray-500, red-500, red-400, red-900, blue-400, green-400, green-900, yellow-400, yellow-900
+  📁 src\app\console\aglbase\page.tsx
+     Colors: gray-400, gray-800, gray-700, gray-500, red-400, red-500, blue-900, blue-400, green-900, green-400, green-500, yellow-400, yellow-500
+  📁 src\app\crm\staff\page.tsx
+     Colors: red-500, red-400, red-300, green-500, green-400, green-300, green-600, green-700
+  📁 src\app\crm\dashboard\page.tsx
+     Colors: blue-500, green-500, purple-500
+  📁 src\app\auth\signup\page.tsx
+     Colors: slate-950, slate-900, slate-800, slate-700, slate-400, slate-600, blue-600, blue-700, blue-400, blue-300
+  📁 src\app\auth\signin\page.tsx
+     Colors: slate-950, slate-900, gray-900, gray-600, gray-50, gray-300, gray-200, gray-500, gray-700, red-50, red-200, red-700, blue-900, blue-500, blue-200, blue-50, blue-100, blue-600, blue-700, green-600, purple-500, purple-50
+  📁 src\app\admin\skill-intelligence\page.tsx
+     Colors: slate-900, slate-800, red-900, red-500, red-400, red-300, blue-500, green-500, yellow-500
+  📁 src\app\auth\await-approval\page.tsx
+     Colors: yellow-500
+  📁 src\app\admin\approval-result\page.tsx
+     Colors: slate-700, slate-600, slate-400, slate-300, slate-500, slate-800, slate-900, red-400, red-500, red-200, blue-400, blue-500, blue-200, blue-600, blue-700, blue-300, green-400, green-500, green-200, yellow-400, yellow-500, yellow-200, purple-500
+  📁 src\app\(client)\agents\page.tsx
+     Colors: gray-500, gray-600, red-500, red-600, green-500, green-600, yellow-500, yellow-600
+  📁 src\app\synthex\projects\[projectId]\page.tsx
+     Colors: slate-950, gray-800, gray-200, red-600, blue-900, yellow-600
+  📁 src\app\regions\[country]\[city]\page.tsx
+     Colors: gray-700, gray-900, gray-600, gray-300, gray-200, gray-100, gray-50, blue-50, blue-100, blue-600, blue-700, emerald-50, green-500, emerald-600
+  📁 src\app\guardian\rules\suggestions\page.tsx
+     Colors: gray-100, gray-800, red-100, red-800, blue-100, blue-800, blue-600, green-100, green-800, green-600, yellow-100, yellow-800, amber-100, amber-800, yellow-200, yellow-50, purple-100, purple-800, purple-600
+  📁 src\app\guardian\meta\scorecard\page.tsx
+     Colors: slate-800, slate-200, slate-950, slate-400, slate-900, slate-300, slate-500, slate-700, emerald-900, emerald-300, amber-900, amber-300, rose-900, rose-300, rose-400
+  📁 src\app\guardian\plugins\benchmarking\page.tsx
+     Colors: blue-50, blue-200, blue-900, blue-100, blue-800, green-600, green-100, green-800, green-50, green-200, green-900
+  📁 src\app\guardian\alerts\dashboard\page.tsx
+     Colors: red-500, red-400, cyan-500, cyan-400, sky-500, sky-400, green-500, green-400, amber-500, amber-400
+  📁 src\app\guardian\admin\triage\page.tsx
+     Colors: red-100, red-900, green-100, green-900, yellow-100, yellow-900
+  📁 src\app\guardian\admin\status\page.tsx
+     Colors: gray-100, gray-900, gray-500, red-100, red-900, red-500, red-50, red-200, red-800, blue-100, blue-900, green-100, green-900, green-500, yellow-100, yellow-900, yellow-500, yellow-50, yellow-200, yellow-800
+  📁 src\app\guardian\admin\readiness\page.tsx
+     Colors: gray-100, gray-800, gray-500, gray-600, gray-900, gray-50, gray-200, gray-300, red-100, red-800, red-200, red-50, red-900, blue-100, blue-800, blue-200, blue-50, blue-900, green-100, green-800, green-600, green-200, green-50, green-900, yellow-100, yellow-800
+  📁 src\app\guardian\admin\remediation\page.tsx
+     Colors: gray-600, gray-50, red-600, red-50, green-600, green-50
+  📁 src\app\guardian\admin\qa-coverage\page.tsx
+     Colors: gray-200, gray-100, red-100, red-800, red-50, red-200, red-700, red-600, blue-50, blue-200, blue-900, blue-600, blue-700, green-100, green-800, green-600, yellow-100, yellow-800
+  📁 src\app\guardian\admin\simulation\page.tsx
+     Colors: red-50, red-700, blue-50, blue-700, green-50, green-700, yellow-50, yellow-700, amber-600
+  📁 src\app\guardian\admin\qa\page.tsx
+     Colors: gray-200, gray-800, gray-300, red-50, red-200, red-700, red-100, blue-100, blue-700, blue-200, green-100, green-700, yellow-100, yellow-700
+  📁 src\app\guardian\admin\meta-governance\page.tsx
+     Colors: gray-100, gray-800, red-600, red-100, red-800, red-300, red-50, red-200, red-700, blue-50, blue-200, blue-800, blue-700, green-600, green-100, green-800, green-300, green-50, green-200, green-700, yellow-600, yellow-100, yellow-800, yellow-300, yellow-50, yellow-200, yellow-700
+  📁 src\app\guardian\admin\knowledge-hub\page.tsx
+     Colors: gray-100, gray-800, red-600, red-100, red-800, blue-600, blue-100, blue-800, cyan-100, cyan-800, green-100, green-800, yellow-600, yellow-100, yellow-800, purple-100, purple-800, pink-100, pink-800
+  📁 src\app\guardian\admin\intelligence\page.tsx
+     Colors: blue-500, blue-600, green-500, yellow-500, yellow-600, purple-500
+  📁 src\app\guardian\admin\network\page.tsx
+     Colors: gray-500, gray-600, gray-900, gray-100, gray-800, gray-50, gray-200, gray-400, red-100, red-800, red-300, red-200, red-50, red-900, blue-100, blue-800, blue-300, blue-200, blue-50, blue-900, green-100, green-800, green-200, green-50, green-900, green-600, green-700, yellow-100, yellow-800, yellow-300, yellow-200, yellow-50, yellow-900
+  📁 src\app\guardian\admin\lifecycle\page.tsx
+     Colors: gray-50, gray-900, gray-600, gray-700, gray-200, gray-100, gray-800, gray-500, gray-300, red-600, red-700, red-100, red-800, blue-700, blue-100, blue-800, blue-300, green-300, green-50, green-900, green-200, green-700, green-100, green-800, green-600, amber-50, amber-300, amber-600, amber-900, amber-800
+  📁 src\app\guardian\admin\integrations\page.tsx
+     Colors: gray-50, gray-900, gray-600, gray-300, gray-500, gray-200, gray-100, gray-800, red-50, red-300, red-600, red-800, blue-50, blue-100, blue-200, blue-700, blue-900, blue-600, blue-300, blue-800, green-50, green-100, green-200, green-700, green-900, green-800, green-600, amber-50, amber-100, amber-200, amber-700, amber-900, amber-600, purple-50, purple-100, purple-200, purple-700, purple-900
+  📁 src\app\guardian\admin\improvement\page.tsx
+     Colors: gray-100, gray-800, red-100, red-800, red-600, blue-600, green-600, yellow-100, yellow-800
+  📁 src\app\guardian\admin\exports\page.tsx
+     Colors: gray-600, gray-100, gray-800, gray-300, red-600, red-100, red-800, red-300, red-50, red-200, red-700, blue-600, blue-100, blue-800, blue-300, green-600, green-100, green-800, green-300, yellow-50, yellow-200, yellow-800, yellow-700
+  📁 src\app\guardian\admin\executive\page.tsx
+     Colors: gray-500, gray-600, gray-50, gray-700, gray-400, red-100, red-800, red-300, red-200, red-50, red-900, red-600, blue-50, blue-600, green-100, green-800, green-300, green-600, yellow-100, yellow-800, yellow-300, purple-600
+  📁 src\app\guardian\admin\goals\page.tsx
+     Colors: gray-100, gray-800, red-100, red-800, blue-100, blue-800, green-100, green-800, yellow-100, yellow-800, purple-100, purple-800
+  📁 src\app\guardian\admin\governance-coach\page.tsx
+     Colors: gray-200, gray-900, gray-600, gray-700, gray-500, red-200, red-50, red-700, blue-200, blue-50, blue-900, green-200, green-50, green-900, green-700, amber-200, yellow-50, yellow-200, yellow-900
+  📁 src\app\guardian\admin\editions\page.tsx
+     Colors: gray-100, gray-800, gray-500, gray-600, gray-200, gray-50, gray-900, gray-700, red-100, red-800, red-300, red-200, red-50, red-900, red-500, blue-100, blue-800, blue-300, blue-200, blue-50, blue-900, blue-500, green-100, green-800, green-300, green-500, amber-100, amber-800, yellow-100, yellow-800, yellow-300, yellow-500, purple-100, purple-800
+  📁 src\app\guardian\admin\gatekeeper\page.tsx
+     Colors: gray-100, red-100, red-800, red-50, red-200, red-900, blue-50, blue-200, blue-900, green-100, green-800, yellow-100, yellow-800
+  📁 src\app\guardian\admin\backups\page.tsx
+     Colors: red-50, red-200, red-900, red-800, red-600, red-700, green-100, green-900, green-50, green-200, green-800, green-600, green-700, yellow-100, yellow-900, yellow-50, yellow-200, yellow-800
+  📁 src\app\guardian\admin\correlation-advisor\page.tsx
+     Colors: slate-100, slate-800, red-100, red-800, blue-100, blue-800, green-100, green-800, yellow-100, yellow-800, purple-100, purple-800
+  📁 src\app\guardian\admin\drills\page.tsx
+     Colors: gray-100, red-100, red-800, red-50, red-200, red-700, blue-100, blue-800, blue-50, blue-200, blue-900, blue-500, blue-600, green-100, green-800, green-600, green-700, yellow-100, yellow-800
+  📁 src\app\guardian\admin\anomalies\page.tsx
+     Colors: red-100, red-800, blue-100, blue-800, yellow-100, yellow-800
+  📁 src\app\guardian\admin\automation\page.tsx
+     Colors: gray-100, gray-900, red-100, green-100, green-900, yellow-100
+  📁 src\app\guardian\admin\adoption\page.tsx
+     Colors: gray-300, gray-100, gray-800, gray-50, gray-900, gray-600, gray-700, gray-500, gray-200, red-600, blue-100, blue-800, green-100, green-800, yellow-100, yellow-800
+  📁 src\app\guardian\admin\ai\page.tsx
+     Colors: green-500, green-600, amber-600
+  📁 src\app\founder\synthex\projects\page.tsx
+     Colors: gray-400, red-100, red-900, red-700, red-300, red-50, red-200, red-800, blue-100, blue-900, blue-700, blue-300, blue-600, blue-500, blue-400, green-100, green-900, green-700, green-300, green-600, green-400, green-500, yellow-100, yellow-900, yellow-700, yellow-300, purple-100, purple-900, purple-700, purple-300, purple-600, purple-400, purple-500
+  📁 src\app\founder\regions\[regionId]\page.tsx
+     Colors: red-500, green-500, green-600, yellow-500, amber-600
+  📁 src\app\founder\pre-clients\[id]\page.tsx
+     Colors: gray-500, gray-100, gray-800, gray-400, red-500, red-100, red-800, blue-500, blue-100, blue-800, green-500, green-100, green-800, yellow-500, yellow-100, yellow-800, purple-500
+  📁 src\app\founder\performance-reality\[id]\page.tsx
+     Colors: red-500, blue-500, green-500
+  📁 src\app\founder\ops\research\page.tsx
+     Colors: gray-500, red-500, blue-500, green-500, amber-500, yellow-500, purple-500
+  📁 src\app\founder\ops\metrics\page.tsx
+     Colors: green-500, yellow-500
+  📁 src\app\founder\ops\controls\page.tsx
+     Colors: green-500, green-600, green-400, yellow-500, yellow-600, yellow-400
+  📁 src\app\founder\marketing\playbooks\page.tsx
+     Colors: gray-400, gray-300, gray-500, gray-100, gray-700, green-100, green-700, green-900, green-400, amber-100, amber-700, amber-900, amber-400
+  📁 src\app\founder\marketing\visual-demos\page.tsx
+     Colors: gray-400, gray-300, gray-500, gray-600, gray-200, gray-100, gray-700, gray-800, gray-900, gray-50, blue-600, blue-100, green-600, green-100, amber-600, amber-100, amber-500, purple-600, purple-100, pink-600, pink-100, purple-200, purple-800, purple-50, purple-900, purple-700, purple-500
+  📁 src\app\founder\marketing\decision-maps\page.tsx
+     Colors: gray-400, gray-300, gray-500, red-600, blue-600, blue-100, green-600, green-100, amber-600, amber-100, purple-600, purple-100, pink-600, pink-100
+  📁 src\app\founder\evolution\qa\page.tsx
+     Colors: red-200, red-500, red-600, green-500, amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\evolution\stability\page.tsx
+     Colors: green-500, amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\evolution\planner\page.tsx
+     Colors: amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\evolution\mesh\page.tsx
+     Colors: amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\evolution\adjustments\page.tsx
+     Colors: red-500, red-600, green-500, amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\evolution\kernel\page.tsx
+     Colors: amber-200, amber-50, amber-950, amber-600, amber-800
+  📁 src\app\founder\dashboard\timecard\page.tsx
+     Colors: gray-500, gray-600, gray-50, gray-900, gray-400, red-600, red-100, red-700, red-200, red-800, red-500, blue-500, cyan-500, green-500, emerald-500, green-600, green-100, amber-500, amber-600, amber-100, purple-500, pink-500
+  📁 src\app\founder\dashboard\story-touchpoints\page.tsx
+     Colors: blue-500, yellow-500
+  📁 src\app\founder\dashboard\stability\page.tsx
+     Colors: gray-500, red-500, red-600, blue-100, blue-900, blue-600, blue-500, green-500, yellow-500, yellow-600
+  📁 src\app\founder\dashboard\soft-launch\page.tsx
+     Colors: red-50, red-600, red-500, blue-500, blue-200, blue-50, blue-900, blue-100, blue-800, green-500, emerald-500, green-50, green-600, yellow-50, yellow-600
+  📁 src\app\founder\dashboard\scaling\page.tsx
+     Colors: red-500, blue-500, green-500, yellow-500, violet-500
+  📁 src\app\founder\dashboard\reports-center\page.tsx
+     Colors: blue-500, green-500, yellow-500
+  📁 src\app\founder\dashboard\overview\page.tsx
+     Colors: gray-500, gray-400, red-600, red-100, red-900, blue-600, blue-100, blue-900, green-600, green-100, green-900, amber-600, amber-100, amber-900
+  📁 src\app\founder\dashboard\orm\page.tsx
+     Colors: red-500, blue-500, emerald-100, emerald-900, emerald-600, green-500, yellow-500, violet-500
+  📁 src\app\founder\dashboard\first-client-journey\page.tsx
+     Colors: blue-500, green-500
+  📁 src\app\founder\dashboard\governance\page.tsx
+     Colors: red-500, emerald-100, emerald-900, emerald-600, green-500, yellow-500
+  📁 src\app\founder\dashboard\evolution\page.tsx
+     Colors: blue-500, green-500, yellow-500, violet-100, violet-900, violet-600, violet-500
+  📁 src\app\founder\dashboard\financials\page.tsx
+     Colors: gray-500, gray-900, red-600, red-100, red-900, blue-500, blue-600, blue-100, blue-900, green-600, green-100, green-900, amber-50, amber-900, amber-200, amber-800, amber-600, amber-700, amber-300, amber-100
+  📁 src\app\founder\dashboard\creative-reactor\page.tsx
+     Colors: gray-500, red-500, blue-500, green-500, yellow-500, purple-500
+  📁 src\app\founder\dashboard\executive\page.tsx
+     Colors: gray-200, gray-700, gray-300, blue-500, green-500, green-600, yellow-500, purple-500
+  📁 src\app\founder\dashboard\director\page.tsx
+     Colors: gray-300, red-500, blue-500, green-500, purple-100, purple-900, purple-600
+  📁 src\app\founder\dashboard\creative-director\page.tsx
+     Colors: gray-300, blue-500, green-500, yellow-500, pink-100, pink-900, pink-600
+  📁 src\app\founder\dashboard\creative-ops\page.tsx
+     Colors: red-500, blue-500, green-500, yellow-500, purple-500
+  📁 src\app\founder\dashboard\archive\page.tsx
+     Colors: red-500, blue-500, cyan-500, emerald-500, yellow-500, purple-500, fuchsia-500
+  📁 src\app\founder\dashboard\assistant\page.tsx
+     Colors: blue-500, green-500, amber-500, purple-500
+  📁 src\app\founder\dashboard\client-stories\page.tsx
+     Colors: green-500, yellow-500
+  📁 src\app\founder\dashboard\alignment\page.tsx
+     Colors: red-500, blue-500, green-500
+  📁 src\app\founder\cognitive-twin\digests\page.tsx
+     Colors: blue-100, blue-800, blue-900, green-100, green-800, green-900, purple-100, purple-800, purple-900
+  📁 src\app\founder\cognitive-twin\decisions\page.tsx
+     Colors: gray-100, gray-800, gray-900, red-500, blue-500, green-100, green-800, green-900, green-600, green-500, yellow-100, yellow-800, yellow-900, yellow-500, yellow-600
+  📁 src\app\founder\businesses\[id]\page.tsx
+     Colors: gray-400, gray-800, gray-700, gray-100, gray-500, gray-600, gray-300, red-400, red-500, red-300, blue-600, blue-700, blue-400, blue-500, green-400, green-500, yellow-400, yellow-500, pink-400, purple-600
+  📁 src\app\founder\businesses\new\page.tsx
+     Colors: gray-700, gray-400, gray-300, gray-900, gray-100, gray-800, gray-600, blue-600, blue-500, blue-400, blue-700, green-600, green-700
+  📁 src\app\founder\business-vault\[businessKey]\page.tsx
+     Colors: green-500, green-600
+  📁 src\app\dashboard\seo\services\page.tsx
+     Colors: slate-800, slate-700, slate-300, slate-900, slate-200, slate-400, slate-500, slate-100, amber-400, violet-400
+  📁 src\app\dashboard\seo\visibility\page.tsx
+     Colors: slate-800, slate-700, slate-300, slate-900, slate-200, slate-400, slate-500, slate-100, cyan-400, amber-400
+  📁 src\app\dashboard\seo\schema\page.tsx
+     Colors: slate-800, slate-700, slate-300, slate-900, slate-200, slate-400, slate-500, slate-100, sky-400, emerald-400, amber-400
+  📁 src\app\dashboard\seo\gbp-queue\page.tsx
+     Colors: slate-800, slate-700, slate-300, slate-900, slate-200, slate-400, slate-500, slate-100, cyan-400, amber-400
+  📁 src\app\dashboard\resources\landing-pages\page.tsx
+     Colors: slate-600, green-600, yellow-600
+  📁 src\app\dashboard\settings\connected-apps\page.tsx
+     Colors: blue-200, blue-50, blue-800, blue-900, blue-600, blue-400, blue-700, blue-300
+  📁 src\app\dashboard\settings\integrations\page.tsx
+     Colors: slate-400, slate-800, slate-700, slate-600, slate-500, slate-300, red-400, red-300, blue-600, blue-700, green-600
+  📁 src\app\dashboard\projects\new\page.tsx
+     Colors: slate-400, slate-800, slate-700, slate-900, slate-500, slate-300, red-500, red-400, blue-400, blue-100, blue-600, blue-700, blue-500, purple-100, purple-600, purple-700
+  📁 src\app\dashboard\founder\campaigns\page.tsx
+     Colors: blue-600, green-600
+  📁 src\app\dashboard\emails\sequences\page.tsx
+     Colors: slate-600, green-600
+  📁 src\app\dashboard\insights\competitors\page.tsx
+     Colors: slate-600, gray-900, gray-600, gray-700, gray-500, gray-400, red-100, red-600, blue-600, blue-100, blue-50, green-100, green-600, purple-100, purple-600, purple-50, purple-200, purple-900, purple-800
+  📁 src\app\dashboard\content\templates\page.tsx
+     Colors: slate-600
+  📁 src\app\dashboard\contacts\[id]\page.tsx
+     Colors: slate-950, slate-900, slate-400, slate-800, slate-700, slate-600, slate-500, red-500, red-400, blue-500, blue-600, blue-700, cyan-600, blue-400, cyan-400, green-500, emerald-600, green-400, amber-500, yellow-600, amber-400, purple-600, purple-700, rose-600, purple-500, pink-500, purple-400
+  📁 src\app\dashboard\campaigns\drip\page.tsx
+     Colors: slate-300, slate-400, slate-800, slate-700, slate-600, red-500, blue-500, blue-600, blue-100, cyan-500, blue-700, green-500, emerald-500, purple-600, purple-100, purple-500, pink-500, purple-700
+  📁 src\app\dashboard\ai-tools\marketing-copy\page.tsx
+     Colors: slate-400, slate-800, slate-700, slate-300, slate-900, slate-500, slate-600, red-500, red-400, green-400, purple-500, pink-600, purple-100, pink-100, purple-600, purple-700, pink-700
+  📁 src\app\dashboard\ai-tools\code-generator\page.tsx
+     Colors: slate-400, slate-800, slate-700, slate-300, slate-900, slate-500, slate-100, slate-600, red-500, red-400, blue-500, blue-100, blue-600, blue-700, green-400, purple-600, purple-100, purple-700
+  📁 src\app\dashboard\admin\sandbox-control\page.tsx
+     Colors: slate-700, slate-800, slate-400, slate-900, slate-500, slate-600, red-900, red-700, red-200, red-400, red-300, blue-500, blue-600, blue-700, yellow-500, yellow-900, yellow-300
+  📁 src\app\dashboard\aido\settings\page.tsx
+     Colors: gray-500, blue-600, blue-400, green-600, purple-600
+  📁 src\app\dashboard\aido\reality-loop\page.tsx
+     Colors: gray-100, gray-800, gray-900, gray-400, gray-500, gray-600, gray-700, gray-300, red-500, blue-100, blue-800, blue-900, blue-400, blue-600, blue-700, blue-50, blue-200, blue-300, green-100, green-800, green-900, green-400, green-500, green-600, yellow-100, yellow-800, yellow-900, yellow-400, yellow-500, yellow-600, purple-100, purple-800, purple-900, purple-400, purple-600
+  📁 src\app\dashboard\aido\overview\page.tsx
+     Colors: gray-600, gray-500, red-600, red-400, blue-600, green-600, green-400, yellow-600, yellow-400, purple-600
+  📁 src\app\dashboard\aido\content\page.tsx
+     Colors: gray-500, gray-600, gray-400, red-600, red-400, red-100, red-900, blue-600, blue-700, green-600, green-400, green-100, green-900, green-500, green-800, yellow-600, yellow-400, yellow-100, yellow-900, yellow-500
+  📁 src\app\dashboard\aido\onboarding\page.tsx
+     Colors: gray-200, gray-300, gray-500, gray-700, gray-600, gray-400, blue-600, blue-400, blue-50, blue-900, blue-800, blue-200, green-600, green-500, green-100, green-800, yellow-50, yellow-900, yellow-600, yellow-400, yellow-800, yellow-200, yellow-700, yellow-300, purple-50, purple-900, purple-600, purple-400, purple-800, purple-200, purple-700, purple-300
+  📁 src\app\dashboard\aido\clients\page.tsx
+     Colors: gray-100, gray-800, gray-200, gray-400, gray-500, blue-100, blue-800, blue-900, blue-200, blue-600, blue-400, blue-500, green-600, green-400, green-100, green-800, green-900, green-200, green-500, yellow-600, yellow-400, yellow-100, yellow-800, yellow-900, yellow-200, yellow-500
+  📁 src\app\dashboard\aido\google-curve\page.tsx
+     Colors: gray-500, gray-600, gray-400, red-500, red-100, red-800, red-900, red-400, red-600, blue-600, blue-700, blue-50, blue-900, blue-800, blue-200, green-100, green-800, green-900, green-400, green-600, yellow-500, yellow-100, yellow-800, yellow-900, yellow-400, yellow-600, purple-100, purple-800, purple-900, purple-400
+  📁 src\app\dashboard\aido\intent-clusters\page.tsx
+     Colors: gray-600, gray-500, gray-400, red-600, red-400, red-100, red-900, blue-600, blue-700, blue-50, blue-900, blue-800, blue-200, blue-400, green-600, green-400, green-100, green-900, green-800, yellow-600, yellow-400, yellow-100, yellow-900
+  📁 src\app\dashboard\aido\analytics\page.tsx
+     Colors: gray-500, gray-400, red-500, blue-600, blue-400, blue-500, cyan-500, blue-50, blue-950, green-600, green-500, green-50, green-950, yellow-500, purple-500, purple-50, purple-950, purple-600
+  📁 src\app\client\dashboard\welcome-pack\page.tsx
+     Colors: blue-500, green-500, purple-500, pink-500
+  📁 src\app\client\dashboard\visual-playground\page.tsx
+     Colors: gray-600, gray-300, gray-400, red-600, red-400, green-600, green-400, yellow-50, yellow-900, yellow-200, yellow-800, yellow-600, yellow-700, yellow-300
+  📁 src\app\client\dashboard\visual-intelligence\page.tsx
+     Colors: red-500, blue-500, green-500, yellow-500, purple-100, purple-900, purple-600, purple-500
+  📁 src\app\client\dashboard\training\page.tsx
+     Colors: amber-500, amber-50, amber-900
+  📁 src\app\client\dashboard\vision\page.tsx
+     Colors: gray-600, gray-300, gray-400, yellow-50, yellow-900, yellow-200, yellow-800, yellow-600, yellow-700, yellow-300
+  📁 src\app\client\dashboard\stories\page.tsx
+     Colors: green-500, yellow-500
+  📁 src\app\client\dashboard\timeline\page.tsx
+     Colors: gray-400, gray-500, gray-600, gray-300, gray-50, gray-700
+  📁 src\app\client\dashboard\roadmap\page.tsx
+     Colors: gray-600, gray-200, gray-400, gray-500, blue-600, blue-500, green-600, green-500, yellow-600, yellow-500, yellow-50, yellow-900, yellow-200, yellow-800, yellow-700, yellow-300
+  📁 src\app\client\dashboard\rewards\page.tsx
+     Colors: blue-50, blue-200, purple-50, pink-50, purple-200
+  📁 src\app\client\dashboard\review-packs\page.tsx
+     Colors: gray-100, gray-700, gray-500, gray-400, gray-300, blue-100, blue-700, blue-50, blue-900, blue-300, green-100, green-700, amber-100, amber-700
+  📁 src\app\client\dashboard\reports-center\page.tsx
+     Colors: green-500, yellow-500
+  📁 src\app\client\dashboard\overview\page.tsx
+     Colors: gray-50, gray-700, blue-50, blue-900
+  📁 src\app\client\dashboard\performance\page.tsx
+     Colors: gray-400, gray-900, red-700, red-50, red-900, red-400
+  📁 src\app\client\dashboard\journey\page.tsx
+     Colors: green-500
+  📁 src\app\client\dashboard\enhancements\page.tsx
+     Colors: gray-400, gray-600, gray-300, blue-600, blue-50, blue-900, blue-400, green-600, green-50, green-900, green-400, yellow-600, yellow-50, yellow-900, yellow-400, yellow-200, yellow-800, yellow-700, yellow-300
+  📁 src\app\client\dashboard\approvals\page.tsx
+     Colors: gray-400, gray-500, red-50, red-900, red-600, red-700, red-300, red-400, red-100, green-50, green-900, green-600, green-700, green-300, green-400, green-100, yellow-50, yellow-900, yellow-600, yellow-700, yellow-300, yellow-400, yellow-100
+  📁 src\app\client\dashboard\capabilities\page.tsx
+     Colors: gray-400, green-600, green-500, yellow-600, yellow-500
+  📁 src\app\client\dashboard\archive\page.tsx
+     Colors: blue-500, cyan-500, emerald-500, green-500, yellow-500, fuchsia-500
+  📁 src\app\client\dashboard\alignment\page.tsx
+     Colors: green-500
+  📁 src\app\crm\admin\devices\page.tsx
+     Colors: slate-900, slate-800, slate-700, slate-300, slate-400, slate-600, red-500, red-400, red-200, red-600, red-700, blue-400, blue-300, blue-600, blue-700, blue-500, yellow-400, yellow-500, yellow-200
+  📁 src\app\guardian\plugins\industry\government\page.tsx
+     Colors: gray-100, gray-800, gray-300, gray-700, gray-50, gray-600, gray-400, red-50, red-200, red-800, red-100, red-300, red-700, red-600, blue-100, blue-800, blue-300, blue-500, blue-50, blue-200, blue-600, blue-900, blue-700, green-700, green-50, green-600, green-500, yellow-100, yellow-800, yellow-300, yellow-700, yellow-50, yellow-600, amber-100, amber-300, amber-800, amber-50, amber-200, amber-700, purple-500
+  📁 src\app\guardian\plugins\industry\insurance\page.tsx
+     Colors: gray-100, gray-800, gray-300, red-50, red-200, red-800, red-100, red-300, red-600, red-500, red-700, blue-100, blue-800, blue-300, blue-500, green-600, green-100, green-800, green-300, green-500, yellow-100, yellow-800, yellow-300, amber-100, amber-800, amber-300, yellow-600, amber-700, amber-50, amber-200, amber-900
+  📁 src\app\guardian\plugins\industry\restoration\page.tsx
+     Colors: red-950, red-300, red-700, blue-950, blue-300, blue-700, yellow-950, yellow-300, yellow-700, amber-950, amber-300, amber-700
+  📁 src\app\guardian\plugins\industry\healthcare\page.tsx
+     Colors: gray-100, gray-800, gray-300, gray-700, gray-50, red-50, red-200, red-800, red-100, red-300, red-700, red-500, blue-100, blue-800, blue-300, blue-500, green-700, green-50, yellow-100, yellow-800, yellow-300, yellow-700, yellow-50, amber-100, amber-300, amber-800, yellow-500, amber-50, amber-200, amber-700, purple-500
+  📁 src\app\guardian\plugins\industry\education\page.tsx
+     Colors: red-600, red-50, red-200, red-900, red-800, red-100, blue-500, green-600, green-100, green-800, yellow-600, yellow-500, yellow-100, yellow-800, yellow-50, yellow-200, yellow-900
+  📁 src\app\guardian\admin\qa\performance\page.tsx
+     Colors: gray-100, gray-800, red-50, red-200, red-700, red-600, red-900, red-800, red-100, blue-50, blue-200, blue-900, blue-100, blue-800, green-600, green-700, green-100, green-800, yellow-600, yellow-50, yellow-200, yellow-900, yellow-800, yellow-100
+  📁 src\app\guardian\admin\qa\index\page.tsx
+     Colors: red-200, red-50, red-900, red-600, red-100, red-800, green-100, green-800, yellow-600, yellow-100, yellow-800
+  📁 src\app\founder\synthex\projects\[projectId]\page.tsx
+     Colors: gray-900, red-50, red-900, red-200, red-800, red-700, red-300, blue-100, blue-900, blue-700, blue-300, blue-600, blue-400, green-100, green-900, green-700, green-300, yellow-100, yellow-900, yellow-700, yellow-300, yellow-600, yellow-400, purple-100, purple-900, purple-700, purple-300, purple-600, purple-400
+  📁 src\app\founder\marketing\playbooks\[id]\page.tsx
+     Colors: gray-500, gray-100, gray-700, gray-300, gray-600, gray-400, red-600, blue-100, blue-700, blue-900, blue-400, green-100, green-700, green-900, green-400, amber-100, amber-700, amber-900, amber-400, amber-600
+  📁 src\app\founder\cognitive-twin\domains\[domain]\page.tsx
+     Colors: red-600, red-500, blue-500, green-600, green-500, yellow-600, yellow-500
+  📁 src\app\founder\cognitive-twin\digests\[id]\page.tsx
+     Colors: red-500, blue-100, blue-800, blue-900, green-100, green-800, green-900, green-500, purple-100, purple-800, purple-900
+  📁 src\app\founder\cognitive-twin\decisions\[id]\page.tsx
+     Colors: gray-100, gray-800, gray-900, red-600, red-500, red-50, red-950, blue-500, blue-600, blue-50, blue-950, blue-900, blue-100, green-100, green-800, green-900, green-500, green-50, green-950, green-600, yellow-100, yellow-800, yellow-900, yellow-500, yellow-50, yellow-950
+  📁 src\app\founder\agency\[agencyId]\dashboard\page.tsx
+     Colors: purple-500
+  📁 src\app\dashboard\resources\landing-pages\[id]\page.tsx
+     Colors: green-600
+  📁 src\app\dashboard\projects\[projectId]\mindmap\page.tsx
+     Colors: gray-600
+  📁 src\app\client\dashboard\visual-playground\[pillar]\page.tsx
+     Colors: gray-500, gray-700, gray-300, gray-400, yellow-50, yellow-900, yellow-200, yellow-800, yellow-600, yellow-700, yellow-300, yellow-400
+  📁 src\app\crm\decision-circuits\ab-tests\[test_id]\page.tsx
+     Colors: blue-500
+  📁 src\app\client\dashboard\visual-playground\[pillar]\[subpillar]\page.tsx
+     Colors: gray-500, gray-700, gray-300, gray-600, gray-50, yellow-50, yellow-900, yellow-200, yellow-800, yellow-600, yellow-700, yellow-300, yellow-400
+
+
+
+📊 Page Violations: 401 (target: <100)
+
+ [32m✓[39m tests/design-tokens/token-usage.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 253[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+[2m   Start at [22m 19:01:08
+[2m   Duration [22m 1.48s[2m (transform 79ms, setup 219ms, import 47ms, tests 253ms, environment 784ms)[22m
+

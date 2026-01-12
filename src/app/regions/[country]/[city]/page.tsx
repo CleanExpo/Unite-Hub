@@ -101,21 +101,21 @@ export default function RegionPage({ params }: Props) {
           <ScrollReveal delay={0}>
             {/* Location Badge */}
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm border border-blue-100 mb-6">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-              <span className="text-sm font-medium text-gray-700">
+              <div className="w-2 h-2 bg-success-500 rounded-full animate-pulse" />
+              <span className="text-sm font-medium text-text-secondary">
                 Now serving {content.city}, {content.region}
               </span>
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
+            <h1 className="text-4xl md:text-5xl font-bold text-text-primary mb-4 leading-tight">
               {content.heroTitle}
             </h1>
 
-            <p className="text-xl text-gray-600 mb-6 font-medium">
+            <p className="text-xl text-text-muted mb-6 font-medium">
               {content.heroSubtitle}
             </p>
 
-            <p className="text-lg text-gray-700 leading-relaxed mb-8">
+            <p className="text-lg text-text-secondary leading-relaxed mb-8">
               {content.heroBody}
             </p>
 
@@ -123,7 +123,7 @@ export default function RegionPage({ params }: Props) {
               <button className="px-8 py-3 bg-gradient-to-r from-blue-600 to-emerald-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all duration-300 transform hover:scale-105">
                 Start Free Audit
               </button>
-              <button className="px-8 py-3 bg-white text-gray-700 rounded-lg font-semibold border border-gray-300 hover:border-blue-600 transition-all duration-300">
+              <button className="px-8 py-3 bg-white text-text-secondary rounded-lg font-semibold border border-border-subtle hover:border-blue-600 transition-all duration-300">
                 View Pricing
               </button>
             </div>
@@ -132,7 +132,7 @@ export default function RegionPage({ params }: Props) {
       </section>
 
       {/* Stats Section */}
-      <section className="py-12 bg-white border-b border-gray-200">
+      <section className="py-12 bg-bg-card border-b border-border">
         <div className="max-w-4xl mx-auto px-4">
           <ScrollReveal delay={200}>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -151,7 +151,7 @@ export default function RegionPage({ params }: Props) {
                         stat.value
                       )}
                     </div>
-                    <p className="text-gray-600 font-medium">{stat.label}</p>
+                    <p className="text-text-muted font-medium">{stat.label}</p>
                   </div>
                 </HoverLift>
               ))}
@@ -161,22 +161,22 @@ export default function RegionPage({ params }: Props) {
       </section>
 
       {/* Main Content Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-bg-card">
         <div className="max-w-4xl mx-auto px-4">
           <ScrollReveal delay={300}>
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">
+            <h2 className="text-3xl font-bold text-text-primary mb-6">
               {content.mainSectionTitle}
             </h2>
 
             <div className="prose prose-lg max-w-none mb-12">
-              <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+              <p className="text-text-secondary leading-relaxed whitespace-pre-line">
                 {content.mainContent}
               </p>
             </div>
 
             {/* Why Choose Synthex */}
             <div className="bg-gradient-to-br from-blue-50 to-emerald-50 rounded-xl p-8 mb-12">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">
+              <h3 className="text-2xl font-bold text-text-primary mb-6">
                 Why {content.city} Businesses Choose Synthex
               </h3>
               <ul className="space-y-4">
@@ -187,7 +187,7 @@ export default function RegionPage({ params }: Props) {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
-                    <span className="text-gray-700 leading-relaxed flex-1">{point}</span>
+                    <span className="text-text-secondary leading-relaxed flex-1">{point}</span>
                   </li>
                 ))}
               </ul>
@@ -195,20 +195,20 @@ export default function RegionPage({ params }: Props) {
 
             {/* Challenges Section */}
             <div className="mb-12">
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">
+              <h3 className="text-2xl font-bold text-text-primary mb-4">
                 Local SEO Challenges in {content.city}
               </h3>
-              <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+              <p className="text-text-secondary leading-relaxed whitespace-pre-line">
                 {content.challengesContent}
               </p>
             </div>
 
             {/* Solutions Section */}
-            <div className="bg-white rounded-xl border border-gray-200 p-8 mb-12">
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">
+            <div className="bg-bg-card rounded-xl border border-border p-8 mb-12">
+              <h3 className="text-2xl font-bold text-text-primary mb-4">
                 How Synthex Solves These Challenges
               </h3>
-              <p className="text-gray-700 leading-relaxed whitespace-pre-line">
+              <p className="text-text-secondary leading-relaxed whitespace-pre-line">
                 {content.solutionsContent}
               </p>
             </div>
@@ -233,7 +233,7 @@ export default function RegionPage({ params }: Props) {
               Get your free SEO audit and see exactly what's blocking your rankings.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <button className="px-8 py-4 bg-white text-blue-600 rounded-lg font-bold hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-lg">
+              <button className="px-8 py-4 bg-white text-blue-600 rounded-lg font-bold hover:bg-bg-hover transition-all duration-300 transform hover:scale-105 shadow-lg">
                 Start Free Audit
               </button>
               <button className="px-8 py-4 bg-transparent text-white rounded-lg font-bold border-2 border-white hover:bg-white hover:text-blue-600 transition-all duration-300">
@@ -267,14 +267,14 @@ export default function RegionPage({ params }: Props) {
       </section>
 
       {/* Footer Breadcrumb */}
-      <section className="py-6 bg-gray-50 border-t border-gray-200">
+      <section className="py-6 bg-bg-hover border-t border-border">
         <div className="max-w-4xl mx-auto px-4">
-          <div className="flex items-center gap-2 text-sm text-gray-600">
+          <div className="flex items-center gap-2 text-sm text-text-muted">
             <a href="/" className="hover:text-blue-600 transition-colors">Home</a>
             <span>/</span>
             <a href="/regions" className="hover:text-blue-600 transition-colors">Regions</a>
             <span>/</span>
-            <span className="text-gray-900 font-medium">{content.city}</span>
+            <span className="text-text-primary font-medium">{content.city}</span>
           </div>
         </div>
       </section>

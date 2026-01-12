@@ -125,7 +125,7 @@ export default function VisualPlaygroundPage() {
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <p className="text-sm font-medium text-green-600 dark:text-green-400 mb-2">
+              <p className="text-sm font-medium text-success-600 dark:text-success-400 mb-2">
                 This IS:
               </p>
               <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
@@ -136,7 +136,7 @@ export default function VisualPlaygroundPage() {
               </ul>
             </div>
             <div>
-              <p className="text-sm font-medium text-red-600 dark:text-red-400 mb-2">
+              <p className="text-sm font-medium text-error-600 dark:text-error-400 mb-2">
                 This is NOT:
               </p>
               <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-1">

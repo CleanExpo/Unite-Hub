@@ -164,7 +164,7 @@ export default function ModernDemoPage() {
           <div className="flex items-center gap-4">
             <button className="relative p-2 rounded-lg hover:bg-gray-100 text-gray-600">
               <Bell className="h-5 w-5" />
-              <span className="absolute -top-1 -right-1 h-5 w-5 bg-red-500 rounded-full flex items-center justify-center text-xs text-white">
+              <span className="absolute -top-1 -right-1 h-5 w-5 bg-error-500 rounded-full flex items-center justify-center text-xs text-white">
                 5
               </span>
             </button>

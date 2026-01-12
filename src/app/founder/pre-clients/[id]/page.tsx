@@ -417,13 +417,13 @@ return;
 
   const getInsightIcon = (category: string) => {
     const icons: Record<string, React.ReactNode> = {
-      task: <CheckCircle2 className="h-4 w-4 text-blue-500" />,
-      opportunity: <Target className="h-4 w-4 text-green-500" />,
-      question: <HelpCircle className="h-4 w-4 text-yellow-500" />,
+      task: <CheckCircle2 className="h-4 w-4 text-info-500" />,
+      opportunity: <Target className="h-4 w-4 text-success-500" />,
+      question: <HelpCircle className="h-4 w-4 text-warning-500" />,
       commitment: <Handshake className="h-4 w-4 text-purple-500" />,
-      risk: <AlertTriangle className="h-4 w-4 text-red-500" />,
+      risk: <AlertTriangle className="h-4 w-4 text-error-500" />,
     };
-    return icons[category] || <AlertCircle className="h-4 w-4 text-gray-500" />;
+    return icons[category] || <AlertCircle className="h-4 w-4 text-text-muted" />;
   };
 
   const formatDate = (dateStr?: string) => {
@@ -539,8 +539,8 @@ return '-';
             <Badge
               className={
                 preClient.status === 'analyzed'
-                  ? 'bg-green-100 text-green-800'
-                  : 'bg-blue-100 text-blue-800'
+                  ? 'bg-success-100 text-success-800'
+                  : 'bg-info-100 text-info-800'
               }
             >
               {preClient.status}
@@ -556,10 +556,10 @@ return '-';
             <Badge
               className={
                 preClient.engagementLevel === 'hot' || preClient.engagementLevel === 'active'
-                  ? 'bg-orange-100 text-orange-800'
+                  ? 'bg-accent-100 text-accent-800'
                   : preClient.engagementLevel === 'warm'
-                  ? 'bg-yellow-100 text-yellow-800'
-                  : 'bg-blue-100 text-blue-800'
+                  ? 'bg-warning-100 text-warning-800'
+                  : 'bg-info-100 text-info-800'
               }
             >
               {preClient.engagementLevel}
@@ -742,16 +742,16 @@ return '-';
                               <Badge
                                 className={
                                   thread.importance === 'critical'
-                                    ? 'bg-red-100 text-red-800'
+                                    ? 'bg-error-100 text-error-800'
                                     : thread.importance === 'high'
-                                    ? 'bg-orange-100 text-orange-800'
-                                    : 'bg-gray-100 text-gray-800'
+                                    ? 'bg-accent-100 text-accent-800'
+                                    : 'bg-bg-subtle text-text-secondary'
                                 }
                               >
                                 {thread.importance}
                               </Badge>
                               {thread.requiresFollowup && (
-                                <Badge className="bg-yellow-100 text-yellow-800">
+                                <Badge className="bg-warning-100 text-warning-800">
                                   Needs Follow-up
                                 </Badge>
                               )}
@@ -790,12 +790,12 @@ return '-';
                         <div
                           className={`absolute -left-[25px] w-4 h-4 rounded-full ${
                             event.significance === 'critical'
-                              ? 'bg-red-500'
+                              ? 'bg-error-500'
                               : event.significance === 'major'
-                              ? 'bg-orange-500'
+                              ? 'bg-accent-500'
                               : event.significance === 'moderate'
-                              ? 'bg-blue-500'
-                              : 'bg-gray-400'
+                              ? 'bg-info-500'
+                              : 'bg-text-muted'
                           }`}
                         />
                         <div className="ml-4">
@@ -843,10 +843,10 @@ return '-';
                             <Badge
                               className={
                                 insight.priority === 'urgent'
-                                  ? 'bg-red-100 text-red-800'
+                                  ? 'bg-error-100 text-error-800'
                                   : insight.priority === 'high'
-                                  ? 'bg-orange-100 text-orange-800'
-                                  : 'bg-gray-100 text-gray-800'
+                                  ? 'bg-accent-100 text-accent-800'
+                                  : 'bg-bg-subtle text-text-secondary'
                               }
                             >
                               {insight.priority}

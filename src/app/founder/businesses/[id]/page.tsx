@@ -135,19 +135,19 @@ export default function BusinessDetailPage() {
 
   const getHealthColor = (score: number) => {
     if (score >= 80) {
-return 'text-green-400';
+return 'text-success-400';
 }
     if (score >= 60) {
-return 'text-yellow-400';
+return 'text-warning-400';
 }
-    return 'text-red-400';
+    return 'text-error-400';
   };
 
   const getStatusBadge = (status: Business['status']) => {
     const colors = {
-      healthy: 'bg-green-500/20 text-green-400 border-green-500/30',
-      attention: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-      critical: 'bg-red-500/20 text-red-400 border-red-500/30',
+      healthy: 'bg-success-500/20 text-success-400 border-success-500/30',
+      attention: 'bg-warning-500/20 text-warning-400 border-warning-500/30',
+      critical: 'bg-error-500/20 text-error-400 border-error-500/30',
     };
     const labels = {
       healthy: 'Healthy',
@@ -163,93 +163,93 @@ return 'text-yellow-400';
 
   const getSignalIcon = (type: Signal['type']) => {
     if (type === 'positive') {
-return <TrendingUp className="w-5 h-5 text-green-400" />;
+return <TrendingUp className="w-5 h-5 text-success-400" />;
 }
     if (type === 'negative') {
-return <TrendingDown className="w-5 h-5 text-red-400" />;
+return <TrendingDown className="w-5 h-5 text-error-400" />;
 }
-    return <Activity className="w-5 h-5 text-gray-400" />;
+    return <Activity className="w-5 h-5 text-text-muted" />;
   };
 
   const renderOverview = () => (
     <div className="space-y-6">
-      <Card className="bg-gray-800/50 border-gray-700 p-6">
-        <h3 className="text-lg font-semibold text-gray-100 mb-4">Business Information</h3>
+      <Card className="bg-bg-card/50 border-border p-6">
+        <h3 className="text-lg font-semibold text-text-primary mb-4">Business Information</h3>
         <div className="space-y-4">
           <div>
-            <p className="text-sm text-gray-400">Description</p>
-            <p className="text-gray-100 mt-1">{business?.description}</p>
+            <p className="text-sm text-text-muted">Description</p>
+            <p className="text-text-primary mt-1">{business?.description}</p>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="text-sm text-gray-400">Industry</p>
-              <p className="text-gray-100 mt-1">{business?.industry}</p>
+              <p className="text-sm text-text-muted">Industry</p>
+              <p className="text-text-primary mt-1">{business?.industry}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-400">Created</p>
-              <p className="text-gray-100 mt-1">{business?.createdAt}</p>
+              <p className="text-sm text-text-muted">Created</p>
+              <p className="text-text-primary mt-1">{business?.createdAt}</p>
             </div>
           </div>
         </div>
       </Card>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="bg-gray-800/50 border-gray-700 p-6">
+        <Card className="bg-bg-card/50 border-border p-6">
           <div className="flex items-center justify-between mb-4">
-            <h4 className="text-sm font-semibold text-gray-400">Health Score</h4>
-            <Activity className="w-5 h-5 text-gray-400" />
+            <h4 className="text-sm font-semibold text-text-muted">Health Score</h4>
+            <Activity className="w-5 h-5 text-text-muted" />
           </div>
           <p className={`text-3xl font-bold ${getHealthColor(business?.healthScore || 0)}`}>
             {business?.healthScore}/100
           </p>
-          <div className="w-full bg-gray-700 rounded-full h-2 mt-4">
+          <div className="w-full bg-bg-raised rounded-full h-2 mt-4">
             <div
               className={`h-2 rounded-full ${
                 (business?.healthScore || 0) >= 80
-                  ? 'bg-green-500'
+                  ? 'bg-success-500'
                   : (business?.healthScore || 0) >= 60
-                  ? 'bg-yellow-500'
-                  : 'bg-red-500'
+                  ? 'bg-warning-500'
+                  : 'bg-error-500'
               }`}
               style={{ width: `${business?.healthScore || 0}%` }}
             />
           </div>
         </Card>
 
-        <Card className="bg-gray-800/50 border-gray-700 p-6">
+        <Card className="bg-bg-card/50 border-border p-6">
           <div className="flex items-center justify-between mb-4">
-            <h4 className="text-sm font-semibold text-gray-400">Recent Signals</h4>
-            <TrendingUp className="w-5 h-5 text-gray-400" />
+            <h4 className="text-sm font-semibold text-text-muted">Recent Signals</h4>
+            <TrendingUp className="w-5 h-5 text-text-muted" />
           </div>
-          <p className="text-3xl font-bold text-gray-100">{signals.length}</p>
-          <p className="text-sm text-gray-400 mt-2">Last 7 days</p>
+          <p className="text-3xl font-bold text-text-primary">{signals.length}</p>
+          <p className="text-sm text-text-muted mt-2">Last 7 days</p>
         </Card>
 
-        <Card className="bg-gray-800/50 border-gray-700 p-6">
+        <Card className="bg-bg-card/50 border-border p-6">
           <div className="flex items-center justify-between mb-4">
-            <h4 className="text-sm font-semibold text-gray-400">Last Activity</h4>
-            <AlertCircle className="w-5 h-5 text-gray-400" />
+            <h4 className="text-sm font-semibold text-text-muted">Last Activity</h4>
+            <AlertCircle className="w-5 h-5 text-text-muted" />
           </div>
-          <p className="text-lg font-semibold text-gray-100">{business?.lastActivity}</p>
-          <p className="text-sm text-gray-400 mt-2">System updated</p>
+          <p className="text-lg font-semibold text-text-primary">{business?.lastActivity}</p>
+          <p className="text-sm text-text-muted mt-2">System updated</p>
         </Card>
       </div>
     </div>
   );
 
   const renderSignals = () => (
-    <Card className="bg-gray-800/50 border-gray-700">
-      <div className="divide-y divide-gray-700">
+    <Card className="bg-bg-card/50 border-border">
+      <div className="divide-y divide-border">
         {signals.map((signal) => (
-          <div key={signal.id} className="p-4 hover:bg-gray-800/30 transition-colors">
+          <div key={signal.id} className="p-4 hover:bg-bg-card/30 transition-colors">
             <div className="flex items-start space-x-3">
               {getSignalIcon(signal.type)}
               <div className="flex-1">
-                <h4 className="text-sm font-semibold text-gray-100">{signal.title}</h4>
-                <p className="text-sm text-gray-400 mt-1">{signal.description}</p>
+                <h4 className="text-sm font-semibold text-text-primary">{signal.title}</h4>
+                <p className="text-sm text-text-muted mt-1">{signal.description}</p>
                 <div className="flex items-center space-x-4 mt-2">
-                  <span className="text-xs text-gray-500">{signal.source}</span>
-                  <span className="text-xs text-gray-500">{signal.timestamp}</span>
+                  <span className="text-xs text-text-muted">{signal.source}</span>
+                  <span className="text-xs text-text-muted">{signal.timestamp}</span>
                 </div>
               </div>
             </div>
@@ -260,125 +260,125 @@ return <TrendingDown className="w-5 h-5 text-red-400" />;
   );
 
   const renderVault = () => (
-    <Card className="bg-gray-800/50 border-gray-700 p-12 text-center">
-      <Lock className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-      <h3 className="text-lg font-semibold text-gray-100 mb-2">Secure Vault</h3>
-      <p className="text-gray-400 mb-6">
+    <Card className="bg-bg-card/50 border-border p-12 text-center">
+      <Lock className="w-16 h-16 text-text-muted mx-auto mb-4" />
+      <h3 className="text-lg font-semibold text-text-primary mb-2">Secure Vault</h3>
+      <p className="text-text-muted mb-6">
         Store passwords, API keys, and sensitive credentials for this business
       </p>
-      <Button className="bg-blue-600 hover:bg-blue-700">Add Credential</Button>
+      <Button className="bg-info-600 hover:bg-info-700">Add Credential</Button>
     </Card>
   );
 
   const renderSnapshots = () => (
-    <Card className="bg-gray-800/50 border-gray-700 p-12 text-center">
-      <Camera className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-      <h3 className="text-lg font-semibold text-gray-100 mb-2">Business Snapshots</h3>
-      <p className="text-gray-400 mb-6">
+    <Card className="bg-bg-card/50 border-border p-12 text-center">
+      <Camera className="w-16 h-16 text-text-muted mx-auto mb-4" />
+      <h3 className="text-lg font-semibold text-text-primary mb-2">Business Snapshots</h3>
+      <p className="text-text-muted mb-6">
         Visual timeline of your business evolution with metrics and milestones
       </p>
-      <Button className="bg-blue-600 hover:bg-blue-700">Create Snapshot</Button>
+      <Button className="bg-info-600 hover:bg-info-700">Create Snapshot</Button>
     </Card>
   );
 
   const renderLinks = () => (
     <div className="space-y-4">
       {business?.links.website && (
-        <Card className="bg-gray-800/50 border-gray-700 p-4">
+        <Card className="bg-bg-card/50 border-border p-4">
           <a
             href={business.links.website}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-between hover:bg-gray-800/30 transition-colors"
+            className="flex items-center justify-between hover:bg-bg-card/30 transition-colors"
           >
             <div className="flex items-center space-x-3">
-              <Globe className="w-5 h-5 text-gray-400" />
+              <Globe className="w-5 h-5 text-text-muted" />
               <div>
-                <p className="text-sm font-semibold text-gray-100">Website</p>
-                <p className="text-xs text-gray-400">{business.links.website}</p>
+                <p className="text-sm font-semibold text-text-primary">Website</p>
+                <p className="text-xs text-text-muted">{business.links.website}</p>
               </div>
             </div>
-            <ExternalLink className="w-4 h-4 text-gray-400" />
+            <ExternalLink className="w-4 h-4 text-text-muted" />
           </a>
         </Card>
       )}
 
       {business?.links.linkedIn && (
-        <Card className="bg-gray-800/50 border-gray-700 p-4">
+        <Card className="bg-bg-card/50 border-border p-4">
           <a
             href={business.links.linkedIn}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-between hover:bg-gray-800/30 transition-colors"
+            className="flex items-center justify-between hover:bg-bg-card/30 transition-colors"
           >
             <div className="flex items-center space-x-3">
               <Linkedin className="w-5 h-5 text-blue-400" />
               <div>
-                <p className="text-sm font-semibold text-gray-100">LinkedIn</p>
-                <p className="text-xs text-gray-400">{business.links.linkedIn}</p>
+                <p className="text-sm font-semibold text-text-primary">LinkedIn</p>
+                <p className="text-xs text-text-muted">{business.links.linkedIn}</p>
               </div>
             </div>
-            <ExternalLink className="w-4 h-4 text-gray-400" />
+            <ExternalLink className="w-4 h-4 text-text-muted" />
           </a>
         </Card>
       )}
 
       {business?.links.facebook && (
-        <Card className="bg-gray-800/50 border-gray-700 p-4">
+        <Card className="bg-bg-card/50 border-border p-4">
           <a
             href={business.links.facebook}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-between hover:bg-gray-800/30 transition-colors"
+            className="flex items-center justify-between hover:bg-bg-card/30 transition-colors"
           >
             <div className="flex items-center space-x-3">
               <Facebook className="w-5 h-5 text-blue-500" />
               <div>
-                <p className="text-sm font-semibold text-gray-100">Facebook</p>
-                <p className="text-xs text-gray-400">{business.links.facebook}</p>
+                <p className="text-sm font-semibold text-text-primary">Facebook</p>
+                <p className="text-xs text-text-muted">{business.links.facebook}</p>
               </div>
             </div>
-            <ExternalLink className="w-4 h-4 text-gray-400" />
+            <ExternalLink className="w-4 h-4 text-text-muted" />
           </a>
         </Card>
       )}
 
       {business?.links.instagram && (
-        <Card className="bg-gray-800/50 border-gray-700 p-4">
+        <Card className="bg-bg-card/50 border-border p-4">
           <a
             href={business.links.instagram}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-between hover:bg-gray-800/30 transition-colors"
+            className="flex items-center justify-between hover:bg-bg-card/30 transition-colors"
           >
             <div className="flex items-center space-x-3">
               <Instagram className="w-5 h-5 text-pink-400" />
               <div>
-                <p className="text-sm font-semibold text-gray-100">Instagram</p>
-                <p className="text-xs text-gray-400">{business.links.instagram}</p>
+                <p className="text-sm font-semibold text-text-primary">Instagram</p>
+                <p className="text-xs text-text-muted">{business.links.instagram}</p>
               </div>
             </div>
-            <ExternalLink className="w-4 h-4 text-gray-400" />
+            <ExternalLink className="w-4 h-4 text-text-muted" />
           </a>
         </Card>
       )}
 
       {business?.links.twitter && (
-        <Card className="bg-gray-800/50 border-gray-700 p-4">
+        <Card className="bg-bg-card/50 border-border p-4">
           <a
             href={business.links.twitter}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-between hover:bg-gray-800/30 transition-colors"
+            className="flex items-center justify-between hover:bg-bg-card/30 transition-colors"
           >
             <div className="flex items-center space-x-3">
               <Twitter className="w-5 h-5 text-blue-400" />
               <div>
-                <p className="text-sm font-semibold text-gray-100">X (Twitter)</p>
-                <p className="text-xs text-gray-400">{business.links.twitter}</p>
+                <p className="text-sm font-semibold text-text-primary">X (Twitter)</p>
+                <p className="text-xs text-text-muted">{business.links.twitter}</p>
               </div>
             </div>
-            <ExternalLink className="w-4 h-4 text-gray-400" />
+            <ExternalLink className="w-4 h-4 text-text-muted" />
           </a>
         </Card>
       )}
@@ -390,7 +390,7 @@ return <TrendingDown className="w-5 h-5 text-red-400" />;
       <PageContainer>
         <Section>
           <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500" />
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-info-500" />
           </div>
         </Section>
       </PageContainer>
@@ -401,15 +401,15 @@ return <TrendingDown className="w-5 h-5 text-red-400" />;
     return (
       <PageContainer>
         <Section>
-          <Card className="bg-gray-800/50 border-gray-700 p-12 text-center">
-            <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-gray-100 mb-2">Business not found</h3>
-            <p className="text-gray-400 mb-6">
+          <Card className="bg-bg-card/50 border-border p-12 text-center">
+            <AlertCircle className="w-16 h-16 text-error-400 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-text-primary mb-2">Business not found</h3>
+            <p className="text-text-muted mb-6">
               The business you're looking for doesn't exist or has been removed.
             </p>
             <Button
               onClick={() => router.push('/founder/businesses')}
-              className="bg-blue-600 hover:bg-blue-700"
+              className="bg-info-600 hover:bg-info-700"
             >
               Back to Businesses
             </Button>
@@ -429,22 +429,22 @@ return <TrendingDown className="w-5 h-5 text-red-400" />;
               <Building2 className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-gray-100">{business.name}</h1>
-              <p className="text-gray-400 mt-1">{business.industry}</p>
+              <h1 className="text-3xl font-bold text-text-primary">{business.name}</h1>
+              <p className="text-text-muted mt-1">{business.industry}</p>
               <div className="flex items-center space-x-3 mt-2">
                 {getStatusBadge(business.status)}
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-text-muted">
                   Last updated: {business.lastActivity}
                 </span>
               </div>
             </div>
           </div>
           <div className="flex items-center space-x-2">
-            <Button variant="outline" className="border-gray-600">
+            <Button variant="outline" className="border-border">
               <Edit className="w-4 h-4 mr-2" />
               Edit
             </Button>
-            <Button variant="outline" className="border-gray-600 text-red-400 hover:text-red-300">
+            <Button variant="outline" className="border-border text-error-400 hover:text-error-300">
               <Archive className="w-4 h-4 mr-2" />
               Archive
             </Button>
@@ -454,7 +454,7 @@ return <TrendingDown className="w-5 h-5 text-red-400" />;
 
       {/* Tabs */}
       <Section>
-        <div className="border-b border-gray-700">
+        <div className="border-b border-border">
           <nav className="flex space-x-8">
             {[
               { id: 'overview', label: 'Overview', icon: FileText },
@@ -468,8 +468,8 @@ return <TrendingDown className="w-5 h-5 text-red-400" />;
                 onClick={() => setActiveTab(id as Tab)}
                 className={`flex items-center space-x-2 px-1 py-4 border-b-2 transition-colors ${
                   activeTab === id
-                    ? 'border-blue-500 text-blue-400'
-                    : 'border-transparent text-gray-400 hover:text-gray-300'
+                    ? 'border-info-500 text-info-400'
+                    : 'border-transparent text-text-muted hover:text-text-secondary'
                 }`}
               >
                 <Icon className="w-4 h-4" />

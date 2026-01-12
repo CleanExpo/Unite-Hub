@@ -57,17 +57,17 @@ export default function ConsolePage() {
           <div className="text-sm text-gray-400">Total Engines</div>
           <div className="text-3xl font-bold">{engines.length}</div>
         </div>
-        <div className="bg-green-900/50 rounded-lg p-4">
-          <div className="text-sm text-green-400">Healthy</div>
-          <div className="text-3xl font-bold text-green-400">{healthyCount}</div>
+        <div className="bg-success-900/50 rounded-lg p-4">
+          <div className="text-sm text-success-400">Healthy</div>
+          <div className="text-3xl font-bold text-success-400">{healthyCount}</div>
         </div>
-        <div className="bg-yellow-900/50 rounded-lg p-4">
-          <div className="text-sm text-yellow-400">Warning</div>
-          <div className="text-3xl font-bold text-yellow-400">{warningCount}</div>
+        <div className="bg-warning-900/50 rounded-lg p-4">
+          <div className="text-sm text-warning-400">Warning</div>
+          <div className="text-3xl font-bold text-warning-400">{warningCount}</div>
         </div>
-        <div className="bg-red-900/50 rounded-lg p-4">
-          <div className="text-sm text-red-400">Error</div>
-          <div className="text-3xl font-bold text-red-400">{errorCount}</div>
+        <div className="bg-error-900/50 rounded-lg p-4">
+          <div className="text-sm text-error-400">Error</div>
+          <div className="text-3xl font-bold text-error-400">{errorCount}</div>
         </div>
       </div>
 
@@ -75,13 +75,13 @@ export default function ConsolePage() {
       <div className="bg-gray-800 rounded-lg p-6 mb-8">
         <h2 className="text-xl font-semibold mb-4">System Health Score</h2>
         <div className="flex items-center gap-4">
-          <div className="text-5xl font-bold text-green-400">
+          <div className="text-5xl font-bold text-success-400">
             {Math.round((healthyCount / engines.length) * 100)}%
           </div>
           <div className="flex-1">
             <div className="h-4 bg-gray-700 rounded-full overflow-hidden">
               <div
-                className="h-full bg-green-500 transition-all"
+                className="h-full bg-success-500 transition-all"
                 style={{ width: `${(healthyCount / engines.length) * 100}%` }}
               />
             </div>
@@ -96,14 +96,14 @@ export default function ConsolePage() {
           const Icon = engineIcons[engine.name] || Activity;
           const StatusIcon = engine.status === 'healthy' ? CheckCircle :
                             engine.status === 'warning' ? AlertCircle : AlertCircle;
-          const statusColor = engine.status === 'healthy' ? 'text-green-400' :
-                             engine.status === 'warning' ? 'text-yellow-400' : 'text-red-400';
+          const statusColor = engine.status === 'healthy' ? 'text-success-400' :
+                             engine.status === 'warning' ? 'text-warning-400' : 'text-error-400';
 
           return (
             <div key={engine.name} className="bg-gray-800 rounded-lg p-4">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
-                  <Icon size={20} className="text-blue-400" />
+                  <Icon size={20} className="text-info-400" />
                   <span className="font-semibold">{engine.name}</span>
                 </div>
                 <StatusIcon size={18} className={statusColor} />

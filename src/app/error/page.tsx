@@ -38,8 +38,8 @@ function ErrorContent() {
     <div className="min-h-screen flex items-center justify-center bg-bg-raised px-4">
       <div className="max-w-md w-full text-center">
         <div className="mb-8">
-          <div className="mx-auto w-16 h-16 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center mb-4">
-            <AlertTriangle className="w-8 h-8 text-yellow-600 dark:text-yellow-400" />
+          <div className="mx-auto w-16 h-16 bg-warning-100 dark:bg-warning-900/30 rounded-full flex items-center justify-center mb-4">
+            <AlertTriangle className="w-8 h-8 text-warning-600 dark:text-warning-400" />
           </div>
           <h1 className="text-2xl font-bold text-text-primary mb-2">
             {errorInfo.title}
@@ -52,7 +52,7 @@ function ErrorContent() {
         <div className="space-y-3">
           <button
             onClick={() => window.location.reload()}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-info-600 hover:bg-info-700 text-white rounded-lg transition-colors"
           >
             <RefreshCw className="w-4 h-4" />
             Try Again
@@ -60,7 +60,7 @@ function ErrorContent() {
 
           <Link
             href="/"
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 hover:bg-bg-hover dark:hover:bg-gray-700 text-text-primary rounded-lg transition-colors"
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-bg-hover hover:bg-bg-hover dark:hover:bg-bg-card text-text-primary rounded-lg transition-colors"
           >
             <Home className="w-4 h-4" />
             Go Home
@@ -78,15 +78,15 @@ function ErrorContent() {
 
         <p className="mt-8 text-sm text-text-muted">
           If this problem persists, please contact{' '}
-          <a href="mailto:support@synthex.com" className="text-blue-600 hover:underline">
+          <a href="mailto:support@synthex.com" className="text-info-600 hover:underline">
             support@synthex.com
           </a>
         </p>
 
         {process.env.NODE_ENV === 'development' && code && (
           <div className="mt-4 p-3 bg-bg-hover rounded text-left text-sm font-mono">
-            <p className="text-gray-500">Error Code: {code}</p>
-            {customMessage && <p className="text-gray-500">Message: {customMessage}</p>}
+            <p className="text-text-muted">Error Code: {code}</p>
+            {customMessage && <p className="text-text-muted">Message: {customMessage}</p>}
           </div>
         )}
       </div>
@@ -98,7 +98,7 @@ export default function ErrorPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center bg-bg-raised">
-        <div className="animate-pulse text-gray-500">Loading...</div>
+        <div className="animate-pulse text-text-muted">Loading...</div>
       </div>
     }>
       <ErrorContent />

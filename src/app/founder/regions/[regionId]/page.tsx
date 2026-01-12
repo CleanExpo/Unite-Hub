@@ -18,10 +18,10 @@ import {
 import type { RegionScalingSummary, ScalingMode } from '@/lib/globalScaling';
 
 const modeColors: Record<ScalingMode, string> = {
-  normal: 'bg-green-500',
-  cautious: 'bg-yellow-500',
-  throttled: 'bg-orange-500',
-  frozen: 'bg-red-500',
+  normal: 'bg-success-500',
+  cautious: 'bg-warning-500',
+  throttled: 'bg-accent-500',
+  frozen: 'bg-error-500',
 };
 
 export default function RegionDetailPage() {
@@ -187,13 +187,13 @@ return;
             </div>
             <div>
               <div className="text-sm text-muted-foreground">Remaining</div>
-              <div className="text-xl font-bold text-green-600">
+              <div className="text-xl font-bold text-success-600">
                 ${(summary.budget.remaining / 100).toFixed(2)}
               </div>
             </div>
             <div>
               <div className="text-sm text-muted-foreground">Spent Today</div>
-              <div className="text-xl font-bold text-amber-600">
+              <div className="text-xl font-bold text-warning-600">
                 ${(summary.budget.spentToday / 100).toFixed(2)}
               </div>
             </div>

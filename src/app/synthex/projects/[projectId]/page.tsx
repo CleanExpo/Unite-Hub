@@ -26,7 +26,9 @@ export default function SynthexProjectDetailPage() {
   const [error, setError] = useState<string | null>(null);
 
   const fetchDetail = async (): Promise<void> => {
-    if (!tenantId) return;
+    if (!tenantId) {
+return;
+}
     setLoading(true);
     setError(null);
 
@@ -37,7 +39,9 @@ export default function SynthexProjectDetailPage() {
         latestRun?: SynthexProjectRun | null;
         error?: string;
       };
-      if (!res.ok) throw new Error(json.error || 'Failed to load project');
+      if (!res.ok) {
+throw new Error(json.error || 'Failed to load project');
+}
 
       setProject(json.project ?? null);
       setLatestRun(json.latestRun ?? null);
@@ -55,7 +59,9 @@ export default function SynthexProjectDetailPage() {
   }, [authLoading, tenantLoading, user, tenantId, projectId]);
 
   const prettyArtifact = useMemo(() => {
-    if (!latestRun?.artifact_json) return '';
+    if (!latestRun?.artifact_json) {
+return '';
+}
     try {
       return JSON.stringify(latestRun.artifact_json, null, 2);
     } catch {
@@ -64,7 +70,9 @@ export default function SynthexProjectDetailPage() {
   }, [latestRun]);
 
   const generateDrafts = async (): Promise<void> => {
-    if (!tenantId) return;
+    if (!tenantId) {
+return;
+}
     setBusy(true);
     setError(null);
     try {
@@ -74,7 +82,9 @@ export default function SynthexProjectDetailPage() {
         body: JSON.stringify({ tenantId }),
       });
       const json = (await res.json()) as { error?: string };
-      if (!res.ok) throw new Error(json.error || 'Failed to generate drafts');
+      if (!res.ok) {
+throw new Error(json.error || 'Failed to generate drafts');
+}
       await fetchDetail();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');
@@ -84,7 +94,9 @@ export default function SynthexProjectDetailPage() {
   };
 
   const approve = async (): Promise<void> => {
-    if (!tenantId) return;
+    if (!tenantId) {
+return;
+}
     setBusy(true);
     setError(null);
     try {
@@ -94,7 +106,9 @@ export default function SynthexProjectDetailPage() {
         body: JSON.stringify({ tenantId, approvalType: 'schedule' }),
       });
       const json = (await res.json()) as { error?: string };
-      if (!res.ok) throw new Error(json.error || 'Approval failed');
+      if (!res.ok) {
+throw new Error(json.error || 'Approval failed');
+}
       await fetchDetail();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error');
@@ -116,7 +130,7 @@ export default function SynthexProjectDetailPage() {
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-900 to-slate-950 flex items-center justify-center">
         <Card className="bg-bg-card border-border-subtle">
           <CardContent className="p-6">
-            <div className="flex items-center gap-2 text-red-600">
+            <div className="flex items-center gap-2 text-error-600">
               <AlertCircle className="h-4 w-4" />
               <span>Sign in required</span>
             </div>
@@ -131,7 +145,7 @@ export default function SynthexProjectDetailPage() {
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-900 to-slate-950 flex items-center justify-center">
         <Card className="bg-bg-card border-border-subtle">
           <CardContent className="p-6">
-            <div className="flex items-center gap-2 text-yellow-600">
+            <div className="flex items-center gap-2 text-warning-600">
               <AlertCircle className="h-4 w-4" />
               <span>Select a tenant in Projects first</span>
             </div>
@@ -146,7 +160,7 @@ export default function SynthexProjectDetailPage() {
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-900 to-slate-950 flex items-center justify-center">
         <Card className="bg-bg-card border-border-subtle">
           <CardContent className="p-6 space-y-3">
-            <div className="flex items-center gap-2 text-red-600">
+            <div className="flex items-center gap-2 text-error-600">
               <AlertCircle className="h-4 w-4" />
               <span>{error || 'Project not found'}</span>
             </div>
@@ -192,7 +206,7 @@ export default function SynthexProjectDetailPage() {
                   ))}
                 </div>
               </div>
-              <Badge className="bg-gray-800 text-gray-200">{project.stage.replace('_', ' ')}</Badge>
+              <Badge className="bg-bg-hover text-text-primary">{project.stage.replace('_', ' ')}</Badge>
             </div>
           </CardHeader>
           <CardContent className="flex items-center gap-2">
@@ -221,7 +235,7 @@ export default function SynthexProjectDetailPage() {
                     </span>
                   )}
                 </div>
-                <pre className="text-xs whitespace-pre-wrap rounded-md bg-black/30 border border-border-subtle p-4 text-gray-200">
+                <pre className="text-xs whitespace-pre-wrap rounded-md bg-bg-base/30 border border-border-subtle p-4 text-text-primary">
                   {prettyArtifact || 'No artifacts'}
                 </pre>
               </>

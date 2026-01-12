@@ -53,7 +53,9 @@ return "U";
   // Fetch dashboard mode preference (Pattern 2)
   useEffect(() => {
     async function fetchDashboardMode() {
-      if (!user) return;
+      if (!user) {
+return;
+}
 
       try {
         const res = await fetch(`/api/dashboard/mode?userId=${user.id}`);
@@ -88,8 +90,8 @@ return "U";
   // Show loading while auth is initializing
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 flex items-center justify-center">
-        <div className="text-white">Loading your dashboard...</div>
+      <div className="min-h-screen bg-gradient-to-br from-bg-base via-bg-raised to-bg-card flex items-center justify-center">
+        <div className="text-text-primary">Loading your dashboard...</div>
       </div>
     );
   }
@@ -100,8 +102,8 @@ return "U";
       window.location.href = '/login';
     }
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 flex items-center justify-center">
-        <div className="text-white">Redirecting to login...</div>
+      <div className="min-h-screen bg-gradient-to-br from-bg-base via-bg-raised to-bg-card flex items-center justify-center">
+        <div className="text-text-primary">Redirecting to login...</div>
       </div>
     );
   }
@@ -110,9 +112,9 @@ return "U";
   if (!orgId) {
     if (authLoading) {
       return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 flex items-center justify-center">
+        <div className="min-h-screen bg-gradient-to-br from-bg-base via-bg-raised to-bg-card flex items-center justify-center">
           <div className="text-center">
-            <div className="text-white text-lg">Loading authentication...</div>
+            <div className="text-text-primary text-lg">Loading authentication...</div>
           </div>
         </div>
       );
@@ -120,10 +122,10 @@ return "U";
 
     if (loadingTimeout || (organizations && organizations.length === 0)) {
       return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 flex items-center justify-center">
-          <div className="text-center max-w-md p-8 bg-slate-800/50 backdrop-blur-sm rounded-lg border border-slate-700">
-            <h2 className="text-2xl font-bold text-white mb-4">No Organization Found</h2>
-            <p className="text-slate-300 mb-6">
+        <div className="min-h-screen bg-gradient-to-br from-bg-base via-bg-raised to-bg-card flex items-center justify-center">
+          <div className="text-center max-w-md p-8 bg-bg-raised/50 backdrop-blur-sm rounded-lg border border-border-medium">
+            <h2 className="text-2xl font-bold text-text-primary mb-4">No Organization Found</h2>
+            <p className="text-text-secondary mb-6">
               You need to be part of an organization to access the dashboard.
               {organizations && organizations.length === 0
                 ? " It looks like you haven't been added to any organizations yet."
@@ -136,7 +138,7 @@ return "U";
                     window.location.href = '/onboarding';
                   }
                 }}
-                className="bg-blue-600 hover:bg-blue-700 text-white"
+                className="bg-info-600 hover:bg-info-700 text-white"
               >
                 Create Organization
               </Button>
@@ -148,7 +150,7 @@ return "U";
                     window.location.href = '/login';
                   }
                 }}
-                className="border-slate-600 text-slate-300 hover:bg-slate-700"
+                className="border-border-medium text-text-secondary hover:bg-bg-hover"
               >
                 Sign Out
               </Button>
@@ -159,10 +161,10 @@ return "U";
     }
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-bg-base via-bg-raised to-bg-card flex items-center justify-center">
         <div className="text-center">
-          <div className="text-white text-lg">Loading organization...</div>
-          <div className="text-slate-400 text-sm mt-2">This should only take a moment</div>
+          <div className="text-text-primary text-lg">Loading organization...</div>
+          <div className="text-text-muted text-sm mt-2">This should only take a moment</div>
         </div>
       </div>
     );
@@ -171,7 +173,7 @@ return "U";
   return (
     <PageErrorBoundary>
       <ClientProvider orgId={orgId}>
-        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800">
+        <div className="min-h-screen bg-gradient-to-br from-bg-base via-bg-raised to-bg-card">
           <Toaster />
           <SessionExpiryWarning />
           {/* Top Navigation */}
@@ -191,33 +193,33 @@ return "U";
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className={`${
                         isActive("/dashboard/contacts") || isActive("/dashboard/projects") || isActive("/dashboard/brief")
-                          ? "text-white"
-                          : "text-slate-400 hover:text-white"
+                          ? "text-text-primary"
+                          : "text-text-muted hover:text-text-primary"
                       } h-auto px-2 py-1`}>
                         CRM
                         <ChevronDown className="w-4 h-4 ml-1" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="bg-slate-800 border-slate-700 w-56">
-                      <DropdownMenuLabel className="text-slate-400">Client Management</DropdownMenuLabel>
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                    <DropdownMenuContent className="bg-bg-raised border-border-medium w-56">
+                      <DropdownMenuLabel className="text-text-muted">Client Management</DropdownMenuLabel>
+                      <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                         <Link href="/dashboard/contacts" className="w-full">Contacts</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                      <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                         <Link href="/dashboard/projects" className="w-full">Projects</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                      <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                         <Link href="/dashboard/brief" className="w-full">Client Briefs</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuSeparator className="bg-slate-700" />
-                      <DropdownMenuLabel className="text-slate-400">Communication</DropdownMenuLabel>
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                      <DropdownMenuSeparator className="bg-border-medium" />
+                      <DropdownMenuLabel className="text-text-muted">Communication</DropdownMenuLabel>
+                      <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                         <Link href="/dashboard/emails" className="w-full">Emails</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                      <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                         <Link href="/dashboard/messages" className="w-full">Messages</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                      <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                         <Link href="/dashboard/meetings" className="w-full">Meetings</Link>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
@@ -228,39 +230,39 @@ return "U";
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className={`${
                         isActive("/dashboard/content") || isActive("/dashboard/media") || isActive("/dashboard/calendar")
-                          ? "text-white"
-                          : "text-slate-400 hover:text-white"
+                          ? "text-text-primary"
+                          : "text-text-muted hover:text-text-primary"
                       } h-auto px-2 py-1`}>
                         Content
                         <ChevronDown className="w-4 h-4 ml-1" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="bg-slate-800 border-slate-700 w-56">
-                      <DropdownMenuLabel className="text-slate-400">Content Tools</DropdownMenuLabel>
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                    <DropdownMenuContent className="bg-bg-raised border-border-medium w-56">
+                      <DropdownMenuLabel className="text-text-muted">Content Tools</DropdownMenuLabel>
+                      <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                         <Link href="/dashboard/content" className="w-full">Content Generation</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                      <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                         <Link href="/dashboard/media" className="w-full">Media Library</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                      <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                         <Link href="/dashboard/calendar" className="w-full">Content Calendar</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                      <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                         <Link href="/dashboard/vault" className="w-full">Asset Vault</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuSeparator className="bg-slate-700" />
-                      <DropdownMenuLabel className="text-slate-400">Publishing</DropdownMenuLabel>
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                      <DropdownMenuSeparator className="bg-border-medium" />
+                      <DropdownMenuLabel className="text-text-muted">Publishing</DropdownMenuLabel>
+                      <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                         <Link href="/dashboard/sites" className="w-full">Sites</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                      <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                         <Link href="/dashboard/campaigns" className="w-full">Campaigns</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                      <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                         <Link href="/dashboard/drip-campaigns" className="w-full">Drip Campaigns</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                      <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                         <Link href="/dashboard/email-templates" className="w-full">Email Templates</Link>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
@@ -272,42 +274,42 @@ return "U";
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className={`${
                         isActive("/dashboard/intelligence") || isActive("/dashboard/ai-tools") || isActive("/dashboard/insights")
-                          ? "text-white"
-                          : "text-slate-400 hover:text-white"
+                          ? "text-text-primary"
+                          : "text-text-muted hover:text-text-primary"
                       } h-auto px-2 py-1`}>
                         AI Tools
                         <ChevronDown className="w-4 h-4 ml-1" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="bg-slate-800 border-slate-700 w-56">
-                      <DropdownMenuLabel className="text-slate-400">Intelligence</DropdownMenuLabel>
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                    <DropdownMenuContent className="bg-bg-raised border-border-medium w-56">
+                      <DropdownMenuLabel className="text-text-muted">Intelligence</DropdownMenuLabel>
+                      <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                         <Link href="/dashboard/intelligence" className="w-full">Contact Intelligence</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                      <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                         <Link href="/dashboard/ai-tools" className="w-full">AI Assistants</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                      <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                         <Link href="/dashboard/insights" className="w-full">Analytics Insights</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                      <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                         <Link href="/dashboard/analytics" className="w-full">Analytics</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                      <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                         <Link href="/dashboard/seo" className="w-full">SEO Tools</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                      <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                         <Link href="/dashboard/audits" className="w-full">Website Audits</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuSeparator className="bg-slate-700" />
-                      <DropdownMenuLabel className="text-slate-400">Automation</DropdownMenuLabel>
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                      <DropdownMenuSeparator className="bg-border-medium" />
+                      <DropdownMenuLabel className="text-text-muted">Automation</DropdownMenuLabel>
+                      <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                         <Link href="/dashboard/queue" className="w-full">Task Queue</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                      <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                         <Link href="/dashboard/tasks" className="w-full">Tasks</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                      <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                         <Link href="/dashboard/approvals" className="w-full">Approvals</Link>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
@@ -320,36 +322,36 @@ return "U";
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className={`${
                         isActive("/dashboard/billing") || isActive("/dashboard/team") || isActive("/dashboard/workspaces")
-                          ? "text-white"
-                          : "text-slate-400 hover:text-white"
+                          ? "text-text-primary"
+                          : "text-text-muted hover:text-text-primary"
                       } h-auto px-2 py-1`}>
                         Operations
                         <ChevronDown className="w-4 h-4 ml-1" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="bg-slate-800 border-slate-700 w-56">
-                      <DropdownMenuLabel className="text-slate-400">Business</DropdownMenuLabel>
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                    <DropdownMenuContent className="bg-bg-raised border-border-medium w-56">
+                      <DropdownMenuLabel className="text-text-muted">Business</DropdownMenuLabel>
+                      <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                         <Link href="/dashboard/billing" className="w-full">Billing & Payments</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                      <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                         <Link href="/dashboard/reports" className="w-full">Reports</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                      <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                         <Link href="/dashboard/time-tracker" className="w-full">Time Tracker</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                      <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                         <Link href="/dashboard/resources" className="w-full">Resources</Link>
                       </DropdownMenuItem>
-                      <DropdownMenuSeparator className="bg-slate-700" />
-                      <DropdownMenuLabel className="text-slate-400">Organization</DropdownMenuLabel>
+                      <DropdownMenuSeparator className="bg-border-medium" />
+                      <DropdownMenuLabel className="text-text-muted">Organization</DropdownMenuLabel>
                       <PermissionGate permission="org:view_members">
-                        <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                        <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                           <Link href="/dashboard/team" className="w-full">Team Members</Link>
                         </DropdownMenuItem>
                       </PermissionGate>
                       <PermissionGate permission="workspace:view">
-                        <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                        <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                           <Link href="/dashboard/workspaces" className="w-full">Workspaces</Link>
                         </DropdownMenuItem>
                       </PermissionGate>
@@ -364,7 +366,7 @@ return "U";
 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="flex items-center gap-2 h-auto py-2 px-3 border-slate-700 bg-slate-800 hover:bg-slate-700 text-white">
+                    <Button variant="outline" className="flex items-center gap-2 h-auto py-2 px-3 border-border-medium bg-bg-raised hover:bg-bg-hover text-text-primary">
                       <Avatar className="h-8 w-8 flex-shrink-0">
                         {profile?.avatar_url && (
                           <AvatarImage src={profile.avatar_url} alt={profile.full_name} />
@@ -379,38 +381,38 @@ return "U";
                           </div>
                         )}
                       </div>
-                      <ChevronDown className="h-4 w-4 flex-shrink-0 text-slate-400" />
+                      <ChevronDown className="h-4 w-4 flex-shrink-0 text-text-muted" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="bg-slate-800 border-slate-700 w-64">
-                    <div className="px-2 py-2 border-b border-slate-700">
-                      <p className="text-sm font-medium text-white">{profile?.full_name || 'User'}</p>
-                      <p className="text-xs text-slate-400">{user?.email}</p>
+                  <DropdownMenuContent align="end" className="bg-bg-raised border-border-medium w-64">
+                    <div className="px-2 py-2 border-b border-border-medium">
+                      <p className="text-sm font-medium text-text-primary">{profile?.full_name || 'User'}</p>
+                      <p className="text-xs text-text-muted">{user?.email}</p>
                       {currentOrganization && (
                         <div className="mt-2">
                           <RoleBadge role={currentOrganization.role} showIcon showTooltip />
                         </div>
                       )}
                     </div>
-                    <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                    <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                       <Link href="/dashboard/profile" className="w-full">
                         Profile
                       </Link>
                     </DropdownMenuItem>
                     <PermissionGate permission="settings:view">
-                      <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                      <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                         <Link href="/dashboard/settings" className="w-full">
                           Settings
                         </Link>
                       </DropdownMenuItem>
                     </PermissionGate>
-                    <DropdownMenuItem asChild className="text-slate-300 hover:text-white">
+                    <DropdownMenuItem asChild className="text-text-secondary hover:text-text-primary">
                       <Link href="https://docs.unite-hub.com" target="_blank" rel="noopener noreferrer" className="w-full">
                         Help
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      className="text-red-400 cursor-pointer"
+                      className="text-error-400 cursor-pointer"
                       onClick={async () => {
                         await signOut();
                         if (typeof window !== 'undefined') {
@@ -442,8 +444,8 @@ function NavLink({ href, isActive, children }: { href: string; isActive: boolean
       href={href}
       className={`${
         isActive
-          ? "text-white border-b-2 border-blue-500"
-          : "text-slate-400 hover:text-white"
+          ? "text-text-primary border-b-2 border-info-500"
+          : "text-text-muted hover:text-text-primary"
       } pb-1 transition`}
     >
       {children}

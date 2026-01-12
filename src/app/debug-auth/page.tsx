@@ -25,37 +25,37 @@ export default function DebugAuthPage() {
           <div className="space-y-2 font-mono text-sm">
             <div>
               <span className="text-gray-400">Loading:</span>{" "}
-              <span className={auth.loading ? "text-yellow-400" : "text-green-400"}>
+              <span className={auth.loading ? "text-warning-400" : "text-success-400"}>
                 {auth.loading ? "TRUE" : "FALSE"}
               </span>
             </div>
             <div>
               <span className="text-gray-400">User:</span>{" "}
-              <span className={auth.user ? "text-green-400" : "text-red-400"}>
+              <span className={auth.user ? "text-success-400" : "text-error-400"}>
                 {auth.user ? auth.user.email : "NULL"}
               </span>
             </div>
             <div>
               <span className="text-gray-400">Profile:</span>{" "}
-              <span className={auth.profile ? "text-green-400" : "text-red-400"}>
+              <span className={auth.profile ? "text-success-400" : "text-error-400"}>
                 {auth.profile ? auth.profile.full_name : "NULL"}
               </span>
             </div>
             <div>
               <span className="text-gray-400">Organizations:</span>{" "}
-              <span className={auth.organizations.length > 0 ? "text-green-400" : "text-red-400"}>
+              <span className={auth.organizations.length > 0 ? "text-success-400" : "text-error-400"}>
                 {auth.organizations.length} orgs
               </span>
             </div>
             <div>
               <span className="text-gray-400">Current Org:</span>{" "}
-              <span className={auth.currentOrganization ? "text-green-400" : "text-red-400"}>
+              <span className={auth.currentOrganization ? "text-success-400" : "text-error-400"}>
                 {auth.currentOrganization?.organization?.name || "NULL"}
               </span>
             </div>
             <div>
               <span className="text-gray-400">Workspace ID:</span>{" "}
-              <span className={auth.currentOrganization?.org_id ? "text-green-400" : "text-red-400"}>
+              <span className={auth.currentOrganization?.org_id ? "text-success-400" : "text-error-400"}>
                 {auth.currentOrganization?.org_id || "NULL"}
               </span>
             </div>
@@ -86,7 +86,7 @@ export default function DebugAuthPage() {
           <div className="space-x-4">
             <button
               onClick={() => window.location.reload()}
-              className="px-4 py-2 bg-blue-600 rounded hover:bg-blue-700"
+              className="px-4 py-2 bg-info-600 rounded hover:bg-info-700"
             >
               Refresh Page
             </button>
@@ -95,7 +95,7 @@ export default function DebugAuthPage() {
                 auth.signOut();
                 setTimeout(() => window.location.href = '/login', 500);
               }}
-              className="px-4 py-2 bg-red-600 rounded hover:bg-red-700"
+              className="px-4 py-2 bg-error-600 rounded hover:bg-error-700"
             >
               Sign Out
             </button>
@@ -104,7 +104,7 @@ export default function DebugAuthPage() {
                 localStorage.clear();
                 window.location.reload();
               }}
-              className="px-4 py-2 bg-orange-600 rounded hover:bg-orange-700"
+              className="px-4 py-2 bg-accent-600 rounded hover:bg-accent-700"
             >
               Clear LocalStorage & Reload
             </button>

@@ -71,7 +71,7 @@ export function DockIcon({ children }: DockIconProps) {
 
 export function DockLabel({ children }: DockLabelProps) {
   return (
-    <div className="text-xs font-medium text-center whitespace-nowrap px-2 py-1 rounded bg-gray-900 text-white">
+    <div className="text-xs font-medium text-center whitespace-nowrap px-2 py-1 rounded bg-bg-base text-text-primary">
       {children}
     </div>
   )

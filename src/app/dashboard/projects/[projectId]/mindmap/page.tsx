@@ -134,7 +134,7 @@ export default function MindmapPage() {
   if (!mindmapData) {
     return (
       <div className="p-6 text-center">
-        <p className="text-gray-600">Mindmap not found</p>
+        <p className="text-text-secondary">Mindmap not found</p>
         <Button
           variant="outline"
           onClick={() => router.back()}

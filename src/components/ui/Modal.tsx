@@ -90,7 +90,7 @@ return null;
             {title && (
               <h2
                 id="modal-title"
-                className="text-xl font-semibold text-gray-900 dark:text-gray-100"
+                className="text-xl font-semibold text-text-primary"
               >
                 {title}
               </h2>
@@ -98,7 +98,7 @@ return null;
             {showCloseButton && (
               <button
                 onClick={onClose}
-                className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-lg hover:bg-bg-hover transition-colors"
+                className="p-2 text-text-muted hover:text-text-secondary rounded-lg hover:bg-bg-hover transition-colors"
                 aria-label="Close modal"
               >
                 <svg

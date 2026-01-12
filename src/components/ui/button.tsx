@@ -37,12 +37,12 @@ export const buttonVariants = ({
   const variantStyles: Record<string, string> = {
     primary: 'bg-accent-500 text-white hover:bg-accent-400 shadow-sm',
     secondary: 'bg-bg-card text-text-primary border border-border-subtle hover:bg-bg-hover',
-    destructive: 'bg-red-600 text-white hover:bg-red-700',
+    destructive: 'bg-error-600 text-white hover:bg-error-700',
     outline: 'border border-border-subtle bg-transparent hover:bg-bg-hover text-text-primary',
     ghost: 'hover:bg-bg-hover text-text-primary',
     link: 'text-accent-500 underline-offset-4 hover:underline',
     default: 'bg-accent-500 text-white hover:bg-accent-400 shadow-sm',
-    success: 'bg-green-600 text-white hover:bg-green-700',
+    success: 'bg-success-600 text-white hover:bg-success-700',
   };
 
   const sizeStyles: Record<string, string> = {
@@ -153,10 +153,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         active:bg-bg-input
       `,
       destructive: `
-        bg-red-600
+        bg-error-600
         text-white
-        hover:bg-red-700
-        active:bg-red-800
+        hover:bg-error-700
+        active:bg-error-800
       `,
       outline: `
         border
@@ -183,10 +183,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         hover:shadow-button-primary
       `,
       success: `
-        bg-green-600
+        bg-success-600
         text-white
-        hover:bg-green-700
-        active:bg-green-800
+        hover:bg-success-700
+        active:bg-success-800
       `,
     };
 

@@ -24,15 +24,15 @@ export function MetricsCard({
   trend,
 }: MetricsCardProps) {
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6 hover:border-gray-300 transition-colors">
+    <div className="bg-bg-card rounded-lg border border-border-subtle p-6 hover:border-border-medium transition-colors">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm font-medium text-gray-600">{label}</h3>
+        <h3 className="text-sm font-medium text-text-secondary">{label}</h3>
         {icon && <div className="text-2xl">{icon}</div>}
       </div>
 
       <div className="flex items-baseline gap-2 mb-2">
-        {prefix && <span className="text-sm font-semibold text-gray-700">{prefix}</span>}
-        <div className="text-3xl font-bold text-gray-900">
+        {prefix && <span className="text-sm font-semibold text-text-secondary">{prefix}</span>}
+        <div className="text-3xl font-bold text-text-primary">
           <AnimatedNumber
             value={value}
             precision={0}
@@ -42,11 +42,11 @@ export function MetricsCard({
             damping={30}
           />
         </div>
-        {suffix && <span className="text-sm font-semibold text-gray-700">{suffix}</span>}
+        {suffix && <span className="text-sm font-semibold text-text-secondary">{suffix}</span>}
       </div>
 
       {trend && (
-        <p className={`text-sm font-medium ${trend.direction === "up" ? "text-green-600" : "text-red-600"}`}>
+        <p className={`text-sm font-medium ${trend.direction === "up" ? "text-success-600" : "text-error-600"}`}>
           {trend.direction === "up" ? "↑" : "↓"} {Math.abs(trend.value)}% from last month
         </p>
       )}

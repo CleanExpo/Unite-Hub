@@ -56,7 +56,7 @@ export default function TransparencyFooter({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           {TRANSPARENCY_STATEMENTS.map((statement, index) => (
             <div key={index} className="flex items-start gap-2">
-              <CheckCircle className="w-3 h-3 text-green-500 flex-shrink-0 mt-0.5" />
+              <CheckCircle className="w-3 h-3 text-success-500 flex-shrink-0 mt-0.5" />
               <p className="text-xs text-text-secondary">
                 {statement}
               </p>

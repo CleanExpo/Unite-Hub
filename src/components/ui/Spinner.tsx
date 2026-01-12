@@ -24,8 +24,8 @@ export default function Spinner({
   };
 
   const colorClasses = {
-    primary: 'border-blue-600 border-t-transparent dark:border-blue-400',
-    secondary: 'border-gray-600 border-t-transparent dark:border-gray-400',
+    primary: 'border-info-600 border-t-transparent dark:border-info-400',
+    secondary: 'border-text-muted border-t-transparent',
     white: 'border-white border-t-transparent',
   };
 

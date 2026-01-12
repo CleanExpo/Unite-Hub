@@ -141,7 +141,7 @@ function StyleCard({
             title="Copy style name"
           >
             {copied ? (
-              <Check className="w-3.5 h-3.5 text-green-400" />
+              <Check className="w-3.5 h-3.5 text-success-400" />
             ) : (
               <Copy className="w-3.5 h-3.5 text-white/50" />
             )}

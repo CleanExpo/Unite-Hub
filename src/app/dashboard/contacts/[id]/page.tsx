@@ -189,23 +189,23 @@ throw error;
 
   const getScoreColor = (score: number) => {
     if (score >= 80) {
-return "from-green-500 to-emerald-600";
+return "from-success-500 to-emerald-600";
 }
     if (score >= 60) {
-return "from-blue-500 to-cyan-600";
+return "from-info-500 to-cyan-600";
 }
     if (score >= 40) {
-return "from-amber-500 to-yellow-600";
+return "from-warning-500 to-warning-600";
 }
-    return "from-red-500 to-rose-600";
+    return "from-error-500 to-rose-600";
   };
 
   const getStatusBadge = (status?: string) => {
     const statusColors: Record<string, string> = {
-      hot: "bg-red-500/20 text-red-400 border-red-500/30",
-      warm: "bg-orange-500/20 text-orange-400 border-orange-500/30",
-      cold: "bg-blue-500/20 text-blue-400 border-blue-500/30",
-      new: "bg-green-500/20 text-green-400 border-green-500/30",
+      hot: "bg-error-500/20 text-error-400 border-error-500/30",
+      warm: "bg-accent-500/20 text-accent-400 border-accent-500/30",
+      cold: "bg-info-500/20 text-info-400 border-info-500/30",
+      new: "bg-success-500/20 text-success-400 border-success-500/30",
     };
     return statusColors[status || "new"] || statusColors.new;
   };
@@ -256,7 +256,7 @@ return "from-amber-500 to-yellow-600";
             </Button>
             <Button
               variant="outline"
-              className="bg-red-500/10 border-red-500/30 hover:bg-red-500/20 text-red-400 gap-2"
+              className="bg-error-500/10 border-error-500/30 hover:bg-error-500/20 text-error-400 gap-2"
               onClick={handleDelete}
             >
               <Trash2 className="w-4 h-4" />
@@ -316,7 +316,7 @@ return "from-amber-500 to-yellow-600";
                 <CardContent className="space-y-4">
                   {contact.email && (
                     <div className="flex items-start gap-3">
-                      <Mail className="w-5 h-5 text-blue-400 mt-0.5" />
+                      <Mail className="w-5 h-5 text-info-400 mt-0.5" />
                       <div>
                         <p className="text-sm text-slate-400">Email</p>
                         <a href={`mailto:${contact.email}`} className="text-white hover:text-blue-400 transition-colors">
@@ -327,7 +327,7 @@ return "from-amber-500 to-yellow-600";
                   )}
                   {contact.phone && (
                     <div className="flex items-start gap-3">
-                      <Phone className="w-5 h-5 text-green-400 mt-0.5" />
+                      <Phone className="w-5 h-5 text-success-400 mt-0.5" />
                       <div>
                         <p className="text-sm text-slate-400">Phone</p>
                         <a href={`tel:${contact.phone}`} className="text-white hover:text-green-400 transition-colors">
@@ -452,18 +452,18 @@ return "from-amber-500 to-yellow-600";
                           <div className="flex items-center gap-2">
                             <Badge className={
                               email.direction === 'inbound'
-                                ? "bg-blue-500/20 text-blue-400 border-blue-500/30"
-                                : "bg-green-500/20 text-green-400 border-green-500/30"
+                                ? "bg-info-500/20 text-info-400 border-info-500/30"
+                                : "bg-success-500/20 text-success-400 border-success-500/30"
                             }>
                               {email.direction === 'inbound' ? 'Received' : 'Sent'}
                             </Badge>
                             {email.ai_sentiment && (
                               <Badge className={
                                 email.ai_sentiment === 'positive'
-                                  ? "bg-green-500/20 text-green-400 border-green-500/30"
+                                  ? "bg-success-500/20 text-success-400 border-success-500/30"
                                   : email.ai_sentiment === 'negative'
-                                  ? "bg-red-500/20 text-red-400 border-red-500/30"
-                                  : "bg-slate-500/20 text-slate-400 border-slate-500/30"
+                                  ? "bg-error-500/20 text-error-400 border-error-500/30"
+                                  : "bg-bg-subtle text-text-muted border-border"
                               }>
                                 {email.ai_sentiment}
                               </Badge>

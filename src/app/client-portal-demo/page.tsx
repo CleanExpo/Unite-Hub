@@ -234,7 +234,7 @@ export default function ClientPortalDemo() {
                       <CardTitle className="text-lg mb-1">{project.title}</CardTitle>
                       <p className="text-sm text-gray-600">{project.type}</p>
                     </div>
-                    <Badge className="bg-green-100 text-green-700 border-green-200">
+                    <Badge className="bg-success-100 text-success-700 border-success-200">
                       Completed
                     </Badge>
                   </div>
@@ -300,7 +300,7 @@ export default function ClientPortalDemo() {
                   <div key={invoice.id} className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                     <div className="flex justify-between items-center mb-3">
                       <span className="text-sm font-semibold">{invoice.id}</span>
-                      <Badge className="bg-green-100 text-green-700 text-xs">
+                      <Badge className="bg-success-100 text-success-700 text-xs">
                         {invoice.status}
                       </Badge>
                     </div>

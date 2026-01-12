@@ -36,18 +36,18 @@ export function PageHeader({
         <nav aria-label="Breadcrumb" className="flex items-center space-x-1 text-sm">
           <Link
             href="/dashboard"
-            className="flex items-center text-gray-500 hover:text-gray-700 dark:text-slate-400 dark:hover:text-slate-300 transition-colors"
+            className="flex items-center text-text-muted hover:text-text-secondary transition-colors"
           >
             <Home className="h-4 w-4" />
           </Link>
 
           {breadcrumbs.map((item, index) => (
             <span key={index} className="flex items-center">
-              <ChevronRight className="h-4 w-4 text-gray-400 dark:text-slate-500" />
+              <ChevronRight className="h-4 w-4 text-text-muted" />
               {item.href && index < breadcrumbs.length - 1 ? (
                 <Link
                   href={item.href}
-                  className="ml-1 text-gray-500 hover:text-gray-700 dark:text-slate-400 dark:hover:text-slate-300 transition-colors"
+                  className="ml-1 text-text-muted hover:text-text-secondary transition-colors"
                 >
                   {item.label}
                 </Link>
@@ -68,7 +68,7 @@ export function PageHeader({
             {title}
           </h1>
           {description && (
-            <p className="text-gray-500 dark:text-slate-400 text-sm sm:text-base">
+            <p className="text-text-muted text-sm sm:text-base">
               {description}
             </p>
           )}
@@ -94,16 +94,16 @@ export function PageHeaderSkeleton() {
   return (
     <div className="space-y-4">
       <div className="flex items-center space-x-1">
-        <div className="h-4 w-4 rounded bg-gray-200 dark:bg-slate-700 animate-pulse" />
-        <div className="h-4 w-4 rounded bg-gray-200 dark:bg-slate-700 animate-pulse" />
-        <div className="h-4 w-20 rounded bg-gray-200 dark:bg-slate-700 animate-pulse" />
+        <div className="h-4 w-4 rounded bg-bg-hover animate-pulse" />
+        <div className="h-4 w-4 rounded bg-bg-hover animate-pulse" />
+        <div className="h-4 w-20 rounded bg-bg-hover animate-pulse" />
       </div>
       <div className="flex items-center justify-between">
         <div className="space-y-2">
-          <div className="h-8 w-48 rounded bg-gray-200 dark:bg-slate-700 animate-pulse" />
-          <div className="h-4 w-64 rounded bg-gray-200 dark:bg-slate-700 animate-pulse" />
+          <div className="h-8 w-48 rounded bg-bg-hover animate-pulse" />
+          <div className="h-4 w-64 rounded bg-bg-hover animate-pulse" />
         </div>
-        <div className="h-10 w-32 rounded bg-gray-200 dark:bg-slate-700 animate-pulse" />
+        <div className="h-10 w-32 rounded bg-bg-hover animate-pulse" />
       </div>
     </div>
   );

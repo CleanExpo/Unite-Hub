@@ -64,7 +64,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gray-950">
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-bg-base">
       {/* Background gradient */}
       <div className="absolute inset-0 -z-20 bg-gradient-to-b from-gray-900 via-gray-900 to-gray-950" />
 
@@ -77,20 +77,20 @@ export default function LoginPage() {
       />
 
       <div className="w-full max-w-[480px] px-5">
-        <div className="p-10 rounded-2xl text-center border border-gray-800 bg-gray-900/95 backdrop-blur-sm shadow-2xl">
+        <div className="p-10 rounded-2xl text-center border border-border-medium bg-bg-raised/95 backdrop-blur-sm shadow-2xl">
           {/* Logo */}
           <div className="mb-5">
-            <div className="h-[60px] w-[60px] mx-auto rounded-full bg-gray-800 border-2 border-accent-500 flex items-center justify-center">
+            <div className="h-[60px] w-[60px] mx-auto rounded-full bg-bg-card border-2 border-accent-500 flex items-center justify-center">
               <span className="text-accent-500 font-bold text-xl">UH</span>
             </div>
           </div>
 
-          <h2 className="text-white text-[28px] font-bold mb-2.5">Sign In to Your Hub</h2>
-          <p className="text-gray-400 mb-8 text-[15px]">Welcome back! Please enter your details.</p>
+          <h2 className="text-text-primary text-[28px] font-bold mb-2.5">Sign In to Your Hub</h2>
+          <p className="text-text-muted mb-8 text-[15px]">Welcome back! Please enter your details.</p>
 
           {/* Error Message */}
           {error && (
-            <div className="mb-5 p-4 bg-red-500/10 border border-red-500/30 rounded-xl flex items-center gap-3 text-sm text-red-400 text-left">
+            <div className="mb-5 p-4 bg-error-500/10 border border-error-500/30 rounded-xl flex items-center gap-3 text-sm text-error-400 text-left">
               <AlertCircle className="h-5 w-5 flex-shrink-0" />
               <span>{error}</span>
             </div>
@@ -99,11 +99,11 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit}>
             {/* Email Field */}
             <div className="text-left mb-5">
-              <label htmlFor="email" className="block text-white mb-2 text-sm font-medium">
+              <label htmlFor="email" className="block text-text-primary mb-2 text-sm font-medium">
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
                 <input
                   id="email"
                   type="email"
@@ -113,18 +113,18 @@ export default function LoginPage() {
                   required
                   disabled={loading}
                   autoComplete="email"
-                  className="w-full py-3.5 pl-11 pr-4 bg-gray-800 border border-gray-700 rounded-lg text-white text-[15px] placeholder-gray-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
+                  className="w-full py-3.5 pl-11 pr-4 bg-bg-card border border-border-subtle rounded-lg text-text-primary text-[15px] placeholder-text-muted focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
                 />
               </div>
             </div>
 
             {/* Password Field */}
             <div className="text-left mb-5">
-              <label htmlFor="password" className="block text-white mb-2 text-sm font-medium">
+              <label htmlFor="password" className="block text-text-primary mb-2 text-sm font-medium">
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
                 <input
                   id="password"
                   type={showPassword ? "text" : "password"}
@@ -134,12 +134,12 @@ export default function LoginPage() {
                   required
                   disabled={loading}
                   autoComplete="current-password"
-                  className="w-full py-3.5 pl-11 pr-11 bg-gray-800 border border-gray-700 rounded-lg text-white text-[15px] placeholder-gray-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
+                  className="w-full py-3.5 pl-11 pr-11 bg-bg-card border border-border-subtle rounded-lg text-text-primary text-[15px] placeholder-text-muted focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary transition-colors"
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -148,7 +148,7 @@ export default function LoginPage() {
 
             {/* Actions */}
             <div className="flex justify-between items-center mb-6 text-sm">
-              <label className="flex items-center text-gray-400 cursor-pointer">
+              <label className="flex items-center text-text-muted cursor-pointer">
                 <input
                   type="checkbox"
                   className="mr-2 accent-primary-500"
@@ -164,7 +164,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 bg-primary-500 hover:bg-primary-600 text-white border-none rounded-lg text-base font-semibold cursor-pointer hover:-translate-y-0.5 transition-all shadow-lg shadow-primary-500/25 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              className="w-full py-3.5 bg-primary-500 hover:bg-primary-600 text-text-primary border-none rounded-lg text-base font-semibold cursor-pointer hover:-translate-y-0.5 transition-all shadow-lg shadow-primary-500/25 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -177,13 +177,13 @@ export default function LoginPage() {
             </button>
 
             {/* Divider */}
-            <div className="relative my-6 text-center text-gray-400 text-sm">
+            <div className="relative my-6 text-center text-text-muted text-sm">
               <div className="absolute inset-0 flex items-center">
-                <div className="w-[45%] h-px bg-gray-700" />
+                <div className="w-[45%] h-px bg-border-medium" />
                 <div className="flex-1" />
-                <div className="w-[45%] h-px bg-gray-700" />
+                <div className="w-[45%] h-px bg-border-medium" />
               </div>
-              <span className="relative px-4 bg-gray-900">or continue with</span>
+              <span className="relative px-4 bg-bg-raised">or continue with</span>
             </div>
 
             {/* Google Login Button */}
@@ -191,7 +191,7 @@ export default function LoginPage() {
               type="button"
               onClick={handleGoogleSignIn}
               disabled={googleLoading || loading}
-              className="w-full py-3 bg-white text-gray-900 border-none rounded-lg text-base font-medium cursor-pointer flex items-center justify-center gap-2.5 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3 bg-white text-text-inverse border-none rounded-lg text-base font-medium cursor-pointer flex items-center justify-center gap-2.5 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {googleLoading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -224,7 +224,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="mt-8 text-gray-400 text-sm">
+          <div className="mt-8 text-text-muted text-sm">
             Don&apos;t have an account?{" "}
             <Link href="/register" className="text-primary-500 font-semibold hover:text-primary-400 transition-colors">
               Sign Up Now

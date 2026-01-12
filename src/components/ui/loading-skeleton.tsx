@@ -119,7 +119,7 @@ function CardSkeleton({ size = 'md' }: { size?: SkeletonSize }) {
  */
 function TableRowSkeleton({ columns = 5 }: { columns?: number }) {
   return (
-    <div className="flex items-center gap-4 py-3 border-b border-gray-200 dark:border-slate-700">
+    <div className="flex items-center gap-4 py-3 border-b border-border-subtle">
       {Array.from({ length: columns }).map((_, i) => (
         <Skeleton key={i} className={cn('h-4', i === 0 ? 'w-8' : 'flex-1')} />
       ))}
@@ -180,7 +180,7 @@ function ProjectCardSkeleton() {
         <div className="flex items-center justify-between">
           <div className="flex -space-x-2">
             {Array.from({ length: 3 }).map((_, i) => (
-              <Skeleton key={i} className="h-8 w-8 rounded-full border-2 border-white dark:border-slate-800" />
+              <Skeleton key={i} className="h-8 w-8 rounded-full border-2 border-bg-card" />
             ))}
           </div>
           <Skeleton className="h-4 w-20" />

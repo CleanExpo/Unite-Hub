@@ -115,7 +115,7 @@ return
 
   return (
     <div className="w-full max-w-4xl mx-auto">
-      <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-gradient-to-br from-slate-900 to-slate-800 shadow-2xl">
+      <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-gradient-to-br from-bg-base to-bg-raised shadow-2xl">
         {/* Main carousel container */}
         <div className="relative w-full h-full flex items-center justify-center perspective">
           <AnimatePresence initial={false} custom={direction} mode="wait">

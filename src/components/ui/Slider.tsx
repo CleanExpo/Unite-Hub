@@ -33,7 +33,7 @@ export default function Slider({
       max={max}
       step={step}
       disabled={disabled}
-      className={`w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 ${className}`}
+      className={`w-full h-2 bg-bg-hover rounded-lg appearance-none cursor-pointer dark:bg-bg-raised ${className}`}
     />
   );
 }
