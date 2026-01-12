@@ -191,7 +191,7 @@ export default function LoginPage() {
               type="button"
               onClick={handleGoogleSignIn}
               disabled={googleLoading || loading}
-              className="w-full py-3 bg-white text-text-inverse border-none rounded-lg text-base font-medium cursor-pointer flex items-center justify-center gap-2.5 hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3 bg-white text-text-inverse border-none rounded-lg text-base font-medium cursor-pointer flex items-center justify-center gap-2.5 hover:bg-bg-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {googleLoading ? (
                 <span className="flex items-center justify-center gap-2">

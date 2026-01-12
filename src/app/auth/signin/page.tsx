@@ -40,8 +40,8 @@ export default function SignInPage() {
         {/* Sign In Card */}
         <Card className="border-0 shadow-2xl bg-white">
           <CardHeader className="space-y-1 pb-6">
-            <CardTitle className="text-3xl text-center font-bold text-gray-900">Sign in to continue</CardTitle>
-            <CardDescription className="text-center text-gray-600 text-base">
+            <CardTitle className="text-3xl text-center font-bold text-text-primary">Sign in to continue</CardTitle>
+            <CardDescription className="text-center text-text-muted text-base">
               Access your marketing dashboard
             </CardDescription>
           </CardHeader>
@@ -49,7 +49,7 @@ export default function SignInPage() {
           <CardContent className="space-y-6">
             {/* Error Message */}
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+              <div className="bg-error-50 border border-error-200 text-error-700 px-4 py-3 rounded-lg text-sm">
                 {error}
               </div>
             )}
@@ -60,7 +60,7 @@ export default function SignInPage() {
               disabled={isLoading}
               variant="default"
               size="lg"
-              className="w-full h-16 text-lg font-semibold bg-white hover:bg-gray-50 text-gray-900 border-2 border-gray-300 hover:border-blue-500 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full h-16 text-lg font-semibold bg-white hover:bg-bg-hover text-text-primary border-2 border-border-subtle hover:border-accent-500 transition-all shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <>
@@ -86,29 +86,29 @@ export default function SignInPage() {
             {/* Divider */}
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-gray-200" />
+                <span className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-gray-500">Secure Authentication</span>
+                <span className="bg-white px-2 text-text-muted">Secure Authentication</span>
               </div>
             </div>
 
             {/* Features */}
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg p-5 space-y-3 border border-blue-100">
-              <div className="flex items-start gap-3 text-base font-medium text-gray-900">
-                <svg className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg p-5 space-y-3 border border-accent-100">
+              <div className="flex items-start gap-3 text-base font-medium text-text-primary">
+                <svg className="w-5 h-5 text-success-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 <span>5 AI-Powered Marketing Features</span>
               </div>
-              <div className="flex items-start gap-2 text-sm text-gray-700">
-                <svg className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex items-start gap-2 text-sm text-text-secondary">
+                <svg className="w-5 h-5 text-success-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 <span>Automated Content Generation</span>
               </div>
-              <div className="flex items-start gap-2 text-sm text-gray-700">
-                <svg className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex items-start gap-2 text-sm text-text-secondary">
+                <svg className="w-5 h-5 text-success-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
                 <span>Competitor Intelligence & Analytics</span>
@@ -116,19 +116,19 @@ export default function SignInPage() {
             </div>
 
             {/* Footer */}
-            <p className="text-center text-xs text-gray-500 pt-4">
+            <p className="text-center text-xs text-text-muted pt-4">
               By signing in, you agree to our{" "}
-              <a href="/terms" className="underline hover:text-gray-700">Terms</a>
+              <a href="/terms" className="underline hover:text-text-secondary">Terms</a>
               {" "}and{" "}
-              <a href="/privacy" className="underline hover:text-gray-700">Privacy Policy</a>
+              <a href="/privacy" className="underline hover:text-text-secondary">Privacy Policy</a>
             </p>
           </CardContent>
         </Card>
 
         {/* Additional Info */}
-        <p className="text-center text-sm text-gray-600">
+        <p className="text-center text-sm text-text-muted">
           Need help?{" "}
-          <a href="mailto:support@unite-group.in" className="text-blue-600 hover:text-blue-700 font-medium">
+          <a href="mailto:support@unite-group.in" className="text-accent-600 hover:text-accent-700 font-medium">
             Contact Support
           </a>
         </p>

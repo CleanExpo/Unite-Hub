@@ -102,7 +102,7 @@ export default function SignUpPage() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-blue-600 hover:bg-blue-700"
+              className="w-full bg-accent-500 hover:bg-accent-600"
             >
               {isLoading ? "Creating Account..." : "Create Account"}
             </Button>
@@ -110,7 +110,7 @@ export default function SignUpPage() {
 
           <p className="text-center text-sm text-slate-400 mt-6">
             Already have an account?{" "}
-            <a href="/auth/signin" className="text-blue-400 hover:text-blue-300">
+            <a href="/auth/signin" className="text-accent-400 hover:text-accent-300">
               Sign in
             </a>
           </p>

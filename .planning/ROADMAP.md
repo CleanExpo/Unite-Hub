@@ -74,7 +74,7 @@ Plans:
 - [ ] 04-01: High-impact pages (landing, login, billing, error) - ~150 violations
 - [x] 04-02: Showcase pages (visual-experience-engine) - 6 violations
 - [x] 04-03: Dynamic routes (founder/*, dashboard/*, regions/*) - ~240 violations
-- [ ] 04-04: Landing page & auth completion - ~91 violations
+- [x] 04-04: Landing page & auth completion - ~91 violations
 
 #### Phase 5: Product Pages
 
@@ -103,6 +103,6 @@ Plans:
 | 1. Audit & Prioritize | v1.1 | 1/1 | Complete | 2026-01-12 |
 | 2. UI Components | v1.1 | 3/3 | Complete | 2026-01-12 |
 | 3. Dashboard Pages | v1.1 | 3/3 | Complete | 2026-01-12 |
-| 4. CRM Pages | v1.1 | 2/4 | In progress | - |
+| 4. CRM Pages | v1.1 | 4/4 | Complete | 2026-01-13 |
 | 5. Product Pages | v1.1 | 0/? | Not started | - |
 | 6. Validation & Cleanup | v1.1 | 0/? | Not started | - |

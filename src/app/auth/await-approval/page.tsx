@@ -115,7 +115,7 @@ export default function AwaitApprovalPage() {
                 </div>
                 <div className="flex items-center justify-between text-sm mt-2">
                   <span className="text-text-tertiary">Status</span>
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-500/10 text-yellow-500 border border-yellow-500/20">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-warning-500/10 text-warning-500 border border-warning-500/20">
                     Pending
                   </span>
                 </div>
