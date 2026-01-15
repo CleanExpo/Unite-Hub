@@ -23,6 +23,9 @@ import { createTemplatesCommand } from './commands/templates.js';
 import { createAnalyticsCommand } from './commands/analytics.js';
 import { createAlertsCommand } from './commands/alerts.js';
 import { createHealthCommand } from './commands/health.js';
+import { createScoutCommand } from './commands/scout.js';
+import { createAuditCommand } from './commands/audit.js';
+import { createExportCommand } from './commands/export.js';
 import { logger } from './utils/logger.js';
 
 // Package info
@@ -69,6 +72,15 @@ async function main() {
 
   // Add health command
   program.addCommand(createHealthCommand());
+
+  // Add scout command
+  program.addCommand(createScoutCommand());
+
+  // Add audit command
+  program.addCommand(createAuditCommand());
+
+  // Add export command
+  program.addCommand(createExportCommand());
 
   program
     .command('config')
