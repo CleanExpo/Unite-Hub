@@ -7,6 +7,7 @@
 import { Command } from 'commander';
 import { createProductsCommand } from './products.js';
 import { createOrdersCommand } from './orders.js';
+import { createSyncCommand } from './sync.js';
 
 export function createShopifyCommand(): Command {
   const command = new Command('shopify');
@@ -16,6 +17,7 @@ export function createShopifyCommand(): Command {
   // Add subcommands
   command.addCommand(createProductsCommand());
   command.addCommand(createOrdersCommand());
+  command.addCommand(createSyncCommand());
 
   return command;
 }

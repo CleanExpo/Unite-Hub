@@ -28,6 +28,8 @@ import { createAuditCommand } from './commands/audit.js';
 import { createExportCommand } from './commands/export.js';
 import { createGhostCommand } from './commands/ghost.js';
 import { createGroundCommand } from './commands/ground.js';
+import { createUCPCommand } from './commands/ucp.js';
+import { createTestCommand } from './commands/test-negotiate.js';
 import { logger } from './utils/logger.js';
 
 // Package info
@@ -89,6 +91,12 @@ async function main() {
 
   // Add ground command
   program.addCommand(createGroundCommand());
+
+  // Add UCP command
+  program.addCommand(createUCPCommand());
+
+  // Add test command
+  program.addCommand(createTestCommand());
 
   program
     .command('config')
