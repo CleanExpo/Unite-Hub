@@ -30,6 +30,9 @@ import { createGhostCommand } from './commands/ghost.js';
 import { createGroundCommand } from './commands/ground.js';
 import { createUCPCommand } from './commands/ucp.js';
 import { createTestCommand } from './commands/test-negotiate.js';
+import { createDeployCommand } from './commands/deploy.js';
+import { createSocialCommand } from './commands/social.js';
+import { createMonitorCommand } from './commands/monitor.js';
 import { logger } from './utils/logger.js';
 
 // Package info
@@ -97,6 +100,15 @@ async function main() {
 
   // Add test command
   program.addCommand(createTestCommand());
+
+  // Add deploy command
+  program.addCommand(createDeployCommand());
+
+  // Add social command
+  program.addCommand(createSocialCommand());
+
+  // Add monitor command
+  program.addCommand(createMonitorCommand());
 
   program
     .command('config')
