@@ -14,6 +14,7 @@
 import { Command } from 'commander';
 import { createInitCommand } from './commands/init.js';
 import { createAuthCommand } from './commands/auth/index.js';
+import { createCheckCommand } from './commands/check/index.js';
 import { logger } from './utils/logger.js';
 
 // Package info
@@ -34,13 +35,8 @@ async function main() {
   // Add auth command
   program.addCommand(createAuthCommand());
 
-  program
-    .command('check')
-    .description('Validation commands')
-    .action(async () => {
-      await logger.warn('Check commands coming soon!');
-      await logger.example('synthex check business-id --country AU --id "12345678901"');
-    });
+  // Add check command
+  program.addCommand(createCheckCommand());
 
   program
     .command('config')
