@@ -5,6 +5,7 @@
  * No external dependencies (Sentry, Datadog, etc.)
  */
 
+import * as Sentry from '@sentry/nextjs';
 import { getSupabaseServer, supabaseAdmin } from '@/lib/supabase';
 import { sendEmail } from '@/lib/email/email-service';
 import { log } from '@/lib/logger';
@@ -86,6 +87,25 @@ export async function logError(params: {
 
     // Trigger alert for critical/high priority errors
     if (params.priority === ErrorPriority.P0_CRITICAL || params.priority === ErrorPriority.P1_HIGH) {
+      // Send to Sentry for tracking
+      Sentry.captureException(new Error(params.message), {
+        level: params.priority === ErrorPriority.P0_CRITICAL ? 'fatal' : 'error',
+        tags: {
+          priority: params.priority,
+          severity: params.severity,
+          source: 'autonomous-monitor',
+          route: params.route || 'unknown',
+        },
+        extra: {
+          errorType: params.errorType,
+          stackTrace: params.stackTrace,
+          context: params.context,
+          workspaceId: params.workspaceId,
+          userId: params.userId,
+        },
+      });
+
+      // Send email alert
       await sendCriticalErrorAlert({
         errorId: data,
         severity: params.severity,

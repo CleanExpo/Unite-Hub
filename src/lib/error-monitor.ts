@@ -3,6 +3,7 @@
  * Tracks error priority, severity, and triggers alerts for critical errors
  */
 
+import * as Sentry from '@sentry/nextjs';
 import { ApiError, ErrorPriority, ErrorSeverity } from './errors';
 import { createApiLogger } from './logger';
 import { apiErrors } from './metrics';
@@ -113,6 +114,22 @@ export function monitorError(error: ApiError, context?: Record<string, any>): vo
   const alertConfig = ALERT_CONFIG[priority];
   if (alertConfig.shouldAlert) {
     triggerAlert(error, priority, alertConfig.immediateNotification);
+  }
+
+  // Send P0/P1 errors to Sentry for tracking
+  if (priority === ErrorPriority.P0_CRITICAL || priority === ErrorPriority.P1_HIGH) {
+    Sentry.captureException(error, {
+      level: priority === ErrorPriority.P0_CRITICAL ? 'fatal' : 'error',
+      tags: {
+        priority,
+        severity,
+        route: context?.route || 'unknown',
+      },
+      extra: {
+        problemDetail: error.problemDetail,
+        context,
+      },
+    });
   }
 }
 

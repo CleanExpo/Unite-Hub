@@ -5,6 +5,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import * as Sentry from '@sentry/nextjs';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { AlertCircle } from 'lucide-react';
@@ -17,7 +18,19 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log the error to an error reporting service
+    // Log the error to Sentry
+    Sentry.captureException(error, {
+      contexts: {
+        react: {
+          componentStack: error.digest,
+        },
+      },
+      tags: {
+        section: 'founder-os',
+      },
+    });
+
+    // Also log to console for development
     console.error('Founder OS Dashboard error:', error);
   }, [error]);
 
