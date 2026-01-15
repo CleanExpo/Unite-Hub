@@ -15,6 +15,7 @@ import { Command } from 'commander';
 import { createInitCommand } from './commands/init.js';
 import { createAuthCommand } from './commands/auth/index.js';
 import { createCheckCommand } from './commands/check/index.js';
+import { createShopifyCommand } from './commands/shopify/index.js';
 import { logger } from './utils/logger.js';
 
 // Package info
@@ -37,6 +38,9 @@ async function main() {
 
   // Add check command
   program.addCommand(createCheckCommand());
+
+  // Add shopify command
+  program.addCommand(createShopifyCommand());
 
   program
     .command('config')
