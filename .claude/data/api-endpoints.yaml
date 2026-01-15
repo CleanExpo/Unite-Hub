@@ -1,0 +1,297 @@
+# Unite-Hub API Endpoints Catalog
+# Total: 104 API routes
+# Last Updated: 2026-01-15
+
+authentication:
+  base_path: /api/auth
+  description: Authentication and user management endpoints
+  count: 5
+
+  endpoints:
+    - path: /api/auth/login
+      method: POST
+      description: User login (PKCE flow)
+      auth_required: false
+
+    - path: /api/auth/logout
+      method: POST
+      description: User logout
+      auth_required: true
+
+    - path: /api/auth/callback
+      method: GET
+      description: OAuth callback handler
+      auth_required: false
+
+    - path: /api/auth/initialize-user
+      method: POST
+      description: Initialize user profile on first login
+      auth_required: true
+
+    - path: /api/auth/session
+      method: GET
+      description: Get current session
+      auth_required: true
+
+agents:
+  base_path: /api/agents
+  description: AI agent operation endpoints
+  count: 8
+
+  endpoints:
+    - path: /api/agents/contact-intelligence
+      method: POST
+      description: Contact scoring and intelligence
+      auth_required: true
+      workspace_scoped: true
+
+    - path: /api/agents/email-processor
+      method: POST
+      description: Process emails and extract intents
+      auth_required: true
+      workspace_scoped: true
+
+    - path: /api/agents/content-personalization
+      method: POST
+      description: Generate personalized content
+      auth_required: true
+      workspace_scoped: true
+      extended_thinking: true
+
+    - path: /api/agents/orchestrator
+      method: POST
+      description: Coordinate multi-agent workflows
+      auth_required: true
+      workspace_scoped: true
+
+campaigns:
+  base_path: /api/campaigns
+  description: Campaign management endpoints
+  count: 12
+
+  endpoints:
+    - path: /api/campaigns
+      method: GET
+      description: List all campaigns
+      auth_required: true
+      workspace_scoped: true
+
+    - path: /api/campaigns
+      method: POST
+      description: Create new campaign
+      auth_required: true
+      workspace_scoped: true
+
+    - path: /api/campaigns/{id}
+      method: GET
+      description: Get campaign details
+      auth_required: true
+      workspace_scoped: true
+
+    - path: /api/campaigns/{id}
+      method: PUT
+      description: Update campaign
+      auth_required: true
+      workspace_scoped: true
+
+    - path: /api/campaigns/{id}
+      method: DELETE
+      description: Delete campaign
+      auth_required: true
+      workspace_scoped: true
+
+contacts:
+  base_path: /api/contacts
+  description: Contact management endpoints
+  count: 15
+
+  endpoints:
+    - path: /api/contacts
+      method: GET
+      description: List all contacts
+      auth_required: true
+      workspace_scoped: true
+
+    - path: /api/contacts
+      method: POST
+      description: Create new contact
+      auth_required: true
+      workspace_scoped: true
+
+    - path: /api/contacts/{id}
+      method: GET
+      description: Get contact details
+      auth_required: true
+      workspace_scoped: true
+
+    - path: /api/contacts/{id}
+      method: PUT
+      description: Update contact
+      auth_required: true
+      workspace_scoped: true
+
+    - path: /api/contacts/{id}
+      method: DELETE
+      description: Delete contact
+      auth_required: true
+      workspace_scoped: true
+
+integrations:
+  base_path: /api/integrations
+  description: Third-party integration endpoints
+  count: 10
+
+  endpoints:
+    - path: /api/integrations/gmail/oauth
+      method: GET
+      description: Initiate Gmail OAuth flow
+      auth_required: true
+
+    - path: /api/integrations/gmail/callback
+      method: GET
+      description: Gmail OAuth callback
+      auth_required: true
+
+    - path: /api/integrations/gmail/sync
+      method: POST
+      description: Sync Gmail emails
+      auth_required: true
+      workspace_scoped: true
+
+seo_enhancement:
+  base_path: /api/seo-enhancement
+  description: SEO Enhancement Suite endpoints
+  count: 5
+
+  endpoints:
+    - path: /api/seo-enhancement/audit
+      method: POST
+      description: Technical SEO audits
+      auth_required: true
+      workspace_scoped: true
+
+    - path: /api/seo-enhancement/content
+      method: POST
+      description: Content optimization analysis
+      auth_required: true
+      workspace_scoped: true
+
+    - path: /api/seo-enhancement/schema
+      method: POST
+      description: Schema markup generation
+      auth_required: true
+      workspace_scoped: true
+
+    - path: /api/seo-enhancement/ctr
+      method: POST
+      description: CTR optimization testing
+      auth_required: true
+      workspace_scoped: true
+
+    - path: /api/seo-enhancement/competitors
+      method: POST
+      description: Competitor gap analysis
+      auth_required: true
+      workspace_scoped: true
+
+founder_os:
+  base_path: /api/founder
+  description: Founder Intelligence OS endpoints
+  count: 23
+
+  categories:
+    assistant:
+      - path: /api/founder/assistant
+        description: AI Phill interface
+
+    awareness:
+      - path: /api/founder/awareness
+        description: Situational awareness
+
+    cognitive_map:
+      - path: /api/founder/cognitive-map
+        description: Decision visualization
+
+    operations:
+      base_path: /api/founder/ops
+      count: 10
+      description: Task management endpoints
+
+    memory:
+      base_path: /api/founder/memory
+      count: 10
+      description: Cognitive twin endpoints
+
+alerts_monitoring:
+  base_path: /api/alerts
+  description: Real-time alert system (Phase 5 Week 4)
+  count: 8
+
+  endpoints:
+    - path: /api/alerts/rules
+      method: GET
+      description: List alert rules
+      auth_required: true
+      workspace_scoped: true
+
+    - path: /api/alerts/rules
+      method: POST
+      description: Create alert rule
+      auth_required: true
+      workspace_scoped: true
+
+    - path: /api/alerts/metrics
+      method: GET
+      description: Get alert metrics
+      auth_required: true
+      workspace_scoped: true
+
+other_endpoints:
+  description: Miscellaneous endpoints
+  count: 18
+
+  categories:
+    - drip_campaigns
+    - email_tracking
+    - generated_content
+    - workspaces
+    - analytics
+
+patterns:
+  workspace_isolation:
+    description: ALL queries must filter by workspace_id
+    example: |
+      const { data } = await supabase
+        .from("contacts")
+        .select("*")
+        .eq("workspace_id", workspaceId);
+
+  authentication:
+    description: Server-side auth with PKCE flow
+    example: |
+      import { createClient } from "@/lib/supabase/server";
+      const supabase = await createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+
+  error_handling:
+    description: Standardized error responses
+    formats:
+      success: { success: true, data: result }
+      error: { success: false, error: message }
+
+summary:
+  total_endpoints: 104
+  authenticated: 99
+  workspace_scoped: 95
+  public: 5
+
+notes:
+  - All API routes follow workspace isolation pattern
+  - PKCE flow used for server-side session validation
+  - JWT tokens validated with getUser() not just cookie reading
+  - See CLAUDE.md and architecture/ for implementation patterns
+
+references:
+  - Source: src/app/api/
+  - Documentation: CLAUDE.md, API_DOCUMENTATION.md
+  - Architecture: .claude/architecture/database.md

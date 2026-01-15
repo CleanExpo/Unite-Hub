@@ -1,0 +1,317 @@
+# Unite-Hub Database Schema
+# Platform: Supabase PostgreSQL
+# Total Tables: 15 core tables
+# Last Updated: 2026-01-15
+
+core_tables:
+  organizations:
+    description: Top-level organization entities
+    columns:
+      - id: uuid (PK)
+      - name: text
+      - created_at: timestamp
+      - updated_at: timestamp
+    relationships:
+      - user_organizations (1:many)
+      - workspaces (1:many)
+
+  users:
+    description: User accounts (Supabase Auth)
+    location: auth.users (managed by Supabase)
+    note: DO NOT directly access - use Supabase Auth API
+    relationships:
+      - user_profiles (1:1)
+      - user_organizations (1:many)
+
+  user_profiles:
+    description: Extended user data
+    columns:
+      - id: uuid (PK, FK to auth.users)
+      - email: text
+      - display_name: text
+      - avatar_url: text
+      - created_at: timestamp
+      - updated_at: timestamp
+    note: Does NOT have role column
+    relationships:
+      - users (1:1)
+      - user_organizations (1:many)
+
+  user_organizations:
+    description: User-organization relationships with roles
+    columns:
+      - id: uuid (PK)
+      - user_id: uuid (FK to auth.users)
+      - org_id: uuid (FK to organizations)
+      - role: user_role ENUM
+      - created_at: timestamp
+    enums:
+      user_role:
+        - FOUNDER
+        - STAFF
+        - CLIENT
+        - ADMIN
+    note: Role stored HERE, not in user_profiles
+    relationships:
+      - users (many:1)
+      - organizations (many:1)
+
+  workspaces:
+    description: Team workspaces for workspace isolation
+    columns:
+      - id: uuid (PK)
+      - org_id: uuid (FK to organizations)
+      - name: text
+      - created_at: timestamp
+    note: CRITICAL - All queries must filter by workspace_id
+    relationships:
+      - organizations (many:1)
+      - contacts (1:many)
+      - campaigns (1:many)
+
+contact_email:
+  contacts:
+    description: CRM contacts with AI scoring
+    columns:
+      - id: uuid (PK)
+      - workspace_id: uuid (FK to workspaces)
+      - email: text
+      - name: text
+      - status: text (lead, prospect, customer)
+      - ai_score: integer (0-100)
+      - metadata: jsonb
+      - created_at: timestamp
+      - updated_at: timestamp
+    note: MUST filter by workspace_id
+    relationships:
+      - workspaces (many:1)
+      - emails (1:many)
+      - campaign_enrollments (1:many)
+
+  emails:
+    description: Email messages
+    columns:
+      - id: uuid (PK)
+      - workspace_id: uuid (FK to workspaces)
+      - contact_id: uuid (FK to contacts)
+      - subject: text
+      - body: text
+      - sent_at: timestamp
+      - status: text
+    relationships:
+      - workspaces (many:1)
+      - contacts (many:1)
+      - email_opens (1:many)
+      - email_clicks (1:many)
+
+  email_opens:
+    description: Email open tracking
+    columns:
+      - id: uuid (PK)
+      - email_id: uuid (FK to emails)
+      - opened_at: timestamp
+      - ip_address: text
+      - user_agent: text
+    relationships:
+      - emails (many:1)
+
+  email_clicks:
+    description: Email click tracking
+    columns:
+      - id: uuid (PK)
+      - email_id: uuid (FK to emails)
+      - url: text
+      - clicked_at: timestamp
+    relationships:
+      - emails (many:1)
+
+  integrations:
+    description: OAuth integrations (Gmail, etc.)
+    columns:
+      - id: uuid (PK)
+      - workspace_id: uuid (FK to workspaces)
+      - provider: text (gmail, sendgrid, etc.)
+      - access_token: text (encrypted)
+      - refresh_token: text (encrypted)
+      - expires_at: timestamp
+      - created_at: timestamp
+    relationships:
+      - workspaces (many:1)
+
+campaigns:
+  campaigns:
+    description: Email campaigns
+    columns:
+      - id: uuid (PK)
+      - workspace_id: uuid (FK to workspaces)
+      - name: text
+      - type: text (one-time, drip, automated)
+      - status: text (draft, active, paused, completed)
+      - created_at: timestamp
+    relationships:
+      - workspaces (many:1)
+      - campaign_enrollments (1:many)
+
+  drip_campaigns:
+    description: Drip sequences
+    columns:
+      - id: uuid (PK)
+      - workspace_id: uuid (FK to workspaces)
+      - name: text
+      - trigger_type: text (manual, new_contact, tag, score)
+      - created_at: timestamp
+    relationships:
+      - workspaces (many:1)
+      - campaign_steps (1:many)
+
+  campaign_steps:
+    description: Drip sequence steps
+    columns:
+      - id: uuid (PK)
+      - drip_campaign_id: uuid (FK to drip_campaigns)
+      - step_number: integer
+      - step_type: text (email, wait, condition, tag, score, webhook)
+      - config: jsonb
+    relationships:
+      - drip_campaigns (many:1)
+      - campaign_execution_logs (1:many)
+
+  campaign_enrollments:
+    description: Contact enrollments in campaigns
+    columns:
+      - id: uuid (PK)
+      - campaign_id: uuid (FK to campaigns)
+      - contact_id: uuid (FK to contacts)
+      - status: text (active, completed, cancelled)
+      - enrolled_at: timestamp
+    relationships:
+      - campaigns (many:1)
+      - contacts (many:1)
+
+  campaign_execution_logs:
+    description: Step execution history
+    columns:
+      - id: uuid (PK)
+      - enrollment_id: uuid (FK to campaign_enrollments)
+      - step_id: uuid (FK to campaign_steps)
+      - executed_at: timestamp
+      - status: text (success, failed, skipped)
+      - error_message: text
+    relationships:
+      - campaign_enrollments (many:1)
+      - campaign_steps (many:1)
+
+content_ai:
+  generatedContent:
+    description: AI-generated content drafts
+    columns:
+      - id: uuid (PK)
+      - workspace_id: uuid (FK to workspaces)
+      - contact_id: uuid (FK to contacts, optional)
+      - content_type: text (email, social, blog)
+      - content: text
+      - status: text (draft, approved, rejected)
+      - created_at: timestamp
+    relationships:
+      - workspaces (many:1)
+      - contacts (many:1, optional)
+
+  aiMemory:
+    description: Agent memory storage
+    columns:
+      - id: uuid (PK)
+      - workspace_id: uuid (FK to workspaces)
+      - agent_type: text (orchestrator, email, content)
+      - memory_key: text
+      - memory_value: jsonb
+      - created_at: timestamp
+      - expires_at: timestamp
+    relationships:
+      - workspaces (many:1)
+
+  auditLogs:
+    description: System audit trail
+    columns:
+      - id: uuid (PK)
+      - workspace_id: uuid (FK to workspaces)
+      - user_id: uuid (FK to auth.users)
+      - action: text
+      - resource_type: text
+      - resource_id: uuid
+      - metadata: jsonb
+      - created_at: timestamp
+    relationships:
+      - workspaces (many:1)
+      - users (many:1)
+
+critical_patterns:
+  workspace_isolation:
+    description: MANDATORY for all queries
+    rule: Always filter by workspace_id
+    example: |
+      const { data } = await supabase
+        .from("contacts")
+        .select("*")
+        .eq("workspace_id", workspaceId);
+
+  row_level_security:
+    description: RLS policies enforce workspace isolation
+    workflow: See .claude/rules/database/rls-workflow.md
+    mandatory_steps:
+      1: Run diagnostics (scripts/rls-diagnostics.sql)
+      2: Create helper functions (migration 023)
+      3: Test on ONE table (migration 024)
+      4: Apply to all tables (migration 025)
+
+  schema_reference:
+    description: MANDATORY before migrations
+    file: .claude/SCHEMA_REFERENCE.md
+    contains:
+      - Actual table schemas
+      - Custom types (user_role ENUM)
+      - Supabase restrictions
+      - Correct role check patterns
+
+migrations:
+  location: supabase/migrations/
+  process:
+    1: Create migration file (00X_description.sql)
+    2: Go to Supabase Dashboard → SQL Editor
+    3: Copy/paste SQL and run
+    4: Wait 1-5 min OR run SELECT to force refresh
+
+  idempotent_pattern: |
+    DO $$
+    BEGIN
+      IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint
+        WHERE conname = 'constraint_name'
+      ) THEN
+        ALTER TABLE table_name
+        ADD CONSTRAINT constraint_name CHECK (condition);
+      END IF;
+    END $$;
+
+common_mistakes:
+  - profiles.role uses user_role ENUM not text
+  - user_profiles does NOT have role column
+  - Functions must be in public schema NOT auth
+  - Never access auth.users directly
+  - Always include workspace_id filter
+
+summary:
+  total_tables: 15
+  with_workspace_id: 12
+  with_rls: 15
+  relationships: Many-to-many via junction tables
+
+extensions:
+  - pgvector: Vector embeddings
+  - uuid-ossp: UUID generation
+  - pg_trgm: Full-text search
+
+references:
+  - Complete schema: COMPLETE_DATABASE_SCHEMA.sql
+  - RLS workflow: .claude/rules/database/rls-workflow.md
+  - Schema reference: .claude/SCHEMA_REFERENCE.md
+  - Architecture: .claude/architecture/database.md

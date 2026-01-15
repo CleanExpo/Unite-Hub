@@ -1,0 +1,171 @@
+# Unite-Hub Environment Variables
+# Complete configuration reference
+# Last Updated: 2026-01-15
+
+required:
+  # Supabase
+  - name: NEXT_PUBLIC_SUPABASE_URL
+    value: https://your-project.supabase.co
+    description: Supabase project URL
+
+  - name: NEXT_PUBLIC_SUPABASE_ANON_KEY
+    value: your-anon-key
+    description: Supabase anonymous key (public)
+
+  - name: SUPABASE_SERVICE_ROLE_KEY
+    value: your-service-role-key
+    description: Supabase service role key (private)
+    security: HIGH - Never expose in client code
+
+  # Anthropic Claude AI
+  - name: ANTHROPIC_API_KEY
+    value: sk-ant-your-key
+    description: Anthropic Claude API key
+    security: HIGH - Server-side only
+
+  # Google OAuth
+  - name: GOOGLE_CLIENT_ID
+    value: your-client-id.apps.googleusercontent.com
+    description: Google OAuth 2.0 client ID
+
+  - name: GOOGLE_CLIENT_SECRET
+    value: your-client-secret
+    description: Google OAuth 2.0 client secret
+    security: HIGH - Server-side only
+
+  # NextAuth
+  - name: NEXTAUTH_URL
+    value: http://localhost:3008
+    description: NextAuth base URL
+    production: https://your-domain.com
+
+  - name: NEXTAUTH_SECRET
+    value: your-secret-key
+    description: NextAuth session encryption secret
+    security: HIGH - Generate with: openssl rand -base64 32
+
+email_service:
+  description: Multi-provider email system (at least one required)
+  priority_order:
+    - SendGrid (Priority 1)
+    - Resend (Priority 2)
+    - Gmail SMTP (Priority 3, fallback)
+
+  providers:
+    sendgrid:
+      - name: SENDGRID_API_KEY
+        value: your-key
+        description: SendGrid API key
+        priority: 1
+
+    resend:
+      - name: RESEND_API_KEY
+        value: your-key
+        description: Resend API key
+        priority: 2
+
+    gmail_smtp:
+      - name: EMAIL_SERVER_HOST
+        value: smtp.gmail.com
+        description: SMTP server host
+        priority: 3
+
+      - name: EMAIL_SERVER_PORT
+        value: 587
+        description: SMTP server port
+
+      - name: EMAIL_SERVER_USER
+        value: contact@unite-group.in
+        description: SMTP username/email
+
+      - name: EMAIL_SERVER_PASSWORD
+        value: your-app-password
+        description: Gmail app-specific password
+        security: HIGH
+        guide: See GMAIL_APP_PASSWORD_SETUP.md
+
+      - name: EMAIL_FROM
+        value: contact@unite-group.in
+        description: Default "from" email address
+
+marketing_intelligence:
+  description: SEO & Marketing Intelligence Platform (NEW)
+  cost_savings: 94-98% vs traditional stack
+
+  providers:
+    perplexity:
+      - name: PERPLEXITY_API_KEY
+        value: pplx-your-key
+        description: Perplexity Sonar API key for SEO intelligence
+        cost: $0.005-0.01 per search
+        savings: 99% cheaper than Semrush ($119-449/mo)
+
+    openrouter:
+      - name: OPENROUTER_API_KEY
+        value: sk-or-your-key
+        description: OpenRouter multi-model routing
+        cost_savings: 70-80% vs direct APIs
+        models:
+          - Claude 3.5 Sonnet
+          - GPT-4 Turbo
+          - Gemini Pro 1.5
+          - Llama 3 70B
+
+  total_platform_cost:
+    range: $65-165/mo
+    vs_traditional: $1,066-6,986/mo
+    savings_percent: 94-98%
+
+optional:
+  description: Optional services for production upgrades
+
+  services:
+    - name: SENTRY_DSN
+      value: xxx
+      description: Sentry error tracking DSN
+      category: Monitoring
+
+    - name: POSTHOG_API_KEY
+      value: xxx
+      description: PostHog analytics API key
+      category: Analytics
+
+    - name: CODECOV_TOKEN
+      value: xxx
+      description: Codecov coverage tracking token
+      category: CI/CD
+
+development:
+  - name: PORT
+    value: 3008
+    description: Development server port
+    default: 3008
+    note: Configured in package.json
+
+  - name: NODE_ENV
+    value: development
+    description: Node environment
+    options:
+      - development
+      - production
+      - test
+
+notes:
+  security:
+    - Never commit .env.local to version control
+    - Use .env.example as template
+    - Rotate secrets regularly
+    - Use environment-specific values
+
+  setup:
+    - Copy .env.example to .env.local
+    - Fill in required values
+    - At minimum: Supabase + Anthropic keys required
+    - Email service: At least one provider required
+    - Marketing intelligence: Optional but recommended
+
+references:
+  - CLAUDE.md lines 868-895
+  - .env.example (template file)
+  - docs/GMAIL_APP_PASSWORD_SETUP.md
+  - docs/MARKETING_INTELLIGENCE_ROADMAP.md
