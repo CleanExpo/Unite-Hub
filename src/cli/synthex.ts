@@ -17,6 +17,7 @@ import { createAuthCommand } from './commands/auth/index.js';
 import { createCheckCommand } from './commands/check/index.js';
 import { createShopifyCommand } from './commands/shopify/index.js';
 import { createGoogleMerchantCommand } from './commands/google-merchant/index.js';
+import { createTenantCommand } from './commands/tenant/index.js';
 import { logger } from './utils/logger.js';
 
 // Package info
@@ -45,6 +46,9 @@ async function main() {
 
   // Add google-merchant command
   program.addCommand(createGoogleMerchantCommand());
+
+  // Add tenant command
+  program.addCommand(createTenantCommand());
 
   program
     .command('config')
