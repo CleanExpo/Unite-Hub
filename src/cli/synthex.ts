@@ -26,6 +26,8 @@ import { createHealthCommand } from './commands/health.js';
 import { createScoutCommand } from './commands/scout.js';
 import { createAuditCommand } from './commands/audit.js';
 import { createExportCommand } from './commands/export.js';
+import { createGhostCommand } from './commands/ghost.js';
+import { createGroundCommand } from './commands/ground.js';
 import { logger } from './utils/logger.js';
 
 // Package info
@@ -81,6 +83,12 @@ async function main() {
 
   // Add export command
   program.addCommand(createExportCommand());
+
+  // Add ghost command
+  program.addCommand(createGhostCommand());
+
+  // Add ground command
+  program.addCommand(createGroundCommand());
 
   program
     .command('config')
