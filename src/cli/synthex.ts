@@ -20,6 +20,9 @@ import { createGoogleMerchantCommand } from './commands/google-merchant/index.js
 import { createTenantCommand } from './commands/tenant/index.js';
 import { createBatchCommand } from './commands/batch/index.js';
 import { createTemplatesCommand } from './commands/templates.js';
+import { createAnalyticsCommand } from './commands/analytics.js';
+import { createAlertsCommand } from './commands/alerts.js';
+import { createHealthCommand } from './commands/health.js';
 import { logger } from './utils/logger.js';
 
 // Package info
@@ -57,6 +60,15 @@ async function main() {
 
   // Add templates command
   program.addCommand(createTemplatesCommand());
+
+  // Add analytics command
+  program.addCommand(createAnalyticsCommand());
+
+  // Add alerts command
+  program.addCommand(createAlertsCommand());
+
+  // Add health command
+  program.addCommand(createHealthCommand());
 
   program
     .command('config')
