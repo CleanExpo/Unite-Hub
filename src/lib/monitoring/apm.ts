@@ -1,553 +1,544 @@
 /**
- * APM Monitoring Infrastructure
+ * APM (Application Performance Monitoring) Module
  *
- * Provides comprehensive Application Performance Monitoring with:
- * - Request tracing (distributed tracing support)
- * - Performance metrics (latency, throughput, error rates)
- * - Error tracking with stack traces
- * - Custom business metrics
- * - Health checks
+ * Provides monitoring and observability for production deployments.
+ * Supports multiple backends: Datadog, OpenTelemetry, or custom metrics.
  *
- * SUPPORTED PROVIDERS:
- * - Datadog APM (primary)
- * - Custom metrics (fallback)
- * - Extensible for New Relic, Sentry, etc.
+ * Key Features:
+ * - Request/response tracking
+ * - Database query monitoring
+ * - AI service call tracking
+ * - Error tracking with context
+ * - Custom metrics collection
+ * - Health checks and alerts
  *
- * USAGE:
- * ```typescript
- * import { apm } from '@/lib/monitoring/apm';
+ * Usage:
+ *   import { apm } from '@/lib/monitoring/apm';
  *
- * // Start a trace
- * const span = apm.startSpan('api.contacts.fetch', { workspaceId });
- * try {
- *   const result = await fetchContacts(workspaceId);
- *   span.finish();
- *   return result;
- * } catch (error) {
- *   span.setError(error);
- *   span.finish();
- *   throw error;
- * }
+ *   // Track request
+ *   const span = apm.startSpan('api.request', { method: 'POST', path: '/api/contacts' });
+ *   // ... do work
+ *   span.finish({ statusCode: 200 });
  *
- * // Track custom metrics
- * apm.recordMetric('contacts.fetched', result.length, { workspaceId });
- * ```
+ *   // Track database query
+ *   const dbSpan = apm.startDatabaseSpan('SELECT', 'contacts');
+ *   // ... execute query
+ *   dbSpan.finish({ rowCount: 10 });
+ *
+ *   // Track AI call
+ *   const aiSpan = apm.startAISpan('claude-sonnet-4-5', 'content-generation');
+ *   // ... call AI
+ *   aiSpan.finish({ tokens: 1500, cost: 0.015 });
  */
 
-import { validateEnvironmentOrThrow } from '@/lib/config/environment-validator';
+export type APMProvider = 'datadog' | 'opentelemetry' | 'custom' | 'none';
 
-// APM Provider Types
-export type APMProvider = 'datadog' | 'newrelic' | 'sentry' | 'custom';
-
-// Span Status
-export type SpanStatus = 'ok' | 'error' | 'cancelled';
-
-// Metric Types
-export type MetricType = 'counter' | 'gauge' | 'histogram' | 'distribution';
-
-// Configuration
 export interface APMConfig {
   enabled: boolean;
   provider: APMProvider;
   serviceName: string;
-  environment: string;
-  version: string;
+  environment: 'development' | 'staging' | 'production';
   sampleRate: number; // 0.0 to 1.0
-  errorSampleRate: number; // 0.0 to 1.0
-  enableConsoleLogging: boolean;
+  flushInterval: number; // milliseconds
 }
 
-// Span Interface
-export interface Span {
-  traceId: string;
+export interface SpanContext {
   spanId: string;
+  traceId: string;
   parentSpanId?: string;
-  operationName: string;
+  operation: string;
   startTime: number;
-  endTime?: number;
-  duration?: number;
-  status: SpanStatus;
-  tags: Record<string, string | number | boolean>;
-  error?: Error;
-  finish(): void;
-  setTag(key: string, value: string | number | boolean): void;
-  setError(error: Error): void;
+  tags: Record<string, any>;
 }
 
-// Metric Interface
+export interface SpanResult {
+  duration: number;
+  success: boolean;
+  error?: Error;
+  metadata?: Record<string, any>;
+}
+
 export interface Metric {
   name: string;
-  type: MetricType;
   value: number;
+  type: 'counter' | 'gauge' | 'histogram';
+  tags?: Record<string, string>;
   timestamp: number;
-  tags: Record<string, string>;
 }
 
-// Health Check Result
 export interface HealthCheck {
+  name: string;
   status: 'healthy' | 'degraded' | 'unhealthy';
-  checks: {
-    name: string;
-    status: 'pass' | 'fail';
-    latency?: number;
-    error?: string;
-  }[];
-  timestamp: number;
+  latency?: number;
+  error?: string;
+  lastChecked: number;
 }
 
-// APM Statistics
-export interface APMStats {
-  tracesCollected: number;
-  metricsCollected: number;
-  errorsTracked: number;
-  avgSpanDuration: number;
-  errorRate: number;
-}
-
-// Default configuration
-const DEFAULT_CONFIG: APMConfig = {
-  enabled: process.env.NODE_ENV === 'production',
-  provider: (process.env.APM_PROVIDER as APMProvider) || 'custom',
-  serviceName: process.env.APM_SERVICE_NAME || 'unite-hub',
-  environment: process.env.NODE_ENV || 'development',
-  version: process.env.NEXT_PUBLIC_APP_VERSION || '1.0.0',
-  sampleRate: parseFloat(process.env.APM_SAMPLE_RATE || '1.0'),
-  errorSampleRate: parseFloat(process.env.APM_ERROR_SAMPLE_RATE || '1.0'),
-  enableConsoleLogging: process.env.APM_CONSOLE_LOGGING === 'true',
-};
-
-/**
- * APM Manager
- */
-class APMManager {
+class APMClient {
   private config: APMConfig;
-  private spans: Map<string, Span> = new Map();
-  private metrics: Metric[] = [];
-  private stats = {
-    tracesCollected: 0,
-    metricsCollected: 0,
-    errorsTracked: 0,
-    totalSpanDuration: 0,
-    errorCount: 0,
-  };
-  private datadogInitialized = false;
+  private activeSpans: Map<string, SpanContext>;
+  private metrics: Metric[];
+  private flushTimer?: NodeJS.Timeout;
 
-  constructor(config: Partial<APMConfig> = {}) {
-    this.config = { ...DEFAULT_CONFIG, ...config };
+  constructor() {
+    this.config = this.loadConfig();
+    this.activeSpans = new Map();
+    this.metrics = [];
 
-    if (this.config.enabled) {
-      this.initializeProvider();
+    if (this.config.enabled && this.config.flushInterval > 0) {
+      this.startFlushTimer();
     }
   }
 
   /**
-   * Initialize APM provider
+   * Load APM configuration from environment
    */
-  private initializeProvider(): void {
-    if (this.config.provider === 'datadog') {
-      this.initializeDatadog();
-    } else if (this.config.provider === 'custom') {
-      this.log('Using custom APM implementation');
-    }
+  private loadConfig(): APMConfig {
+    const provider = (process.env.APM_PROVIDER as APMProvider) || 'none';
+    const enabled = process.env.ENABLE_APM === 'true' && provider !== 'none';
+
+    return {
+      enabled,
+      provider,
+      serviceName: process.env.APM_SERVICE_NAME || 'unite-hub',
+      environment: (process.env.NODE_ENV as any) || 'development',
+      sampleRate: parseFloat(process.env.APM_SAMPLE_RATE || '1.0'),
+      flushInterval: parseInt(process.env.APM_FLUSH_INTERVAL || '10000'),
+    };
   }
 
   /**
-   * Initialize Datadog APM
+   * Start a new span for tracking an operation
    */
-  private initializeDatadog(): void {
-    try {
-      // Check if Datadog API key is configured
-      if (!process.env.DATADOG_API_KEY) {
-        this.log('Datadog API key not configured, falling back to custom implementation');
-        this.config.provider = 'custom';
-        return;
-      }
-
-      // Import and initialize Datadog tracer (dynamic import to avoid errors if not installed)
-      // This would require installing 'dd-trace' package
-      // For now, we log that we would initialize it
-      this.log('Datadog APM would be initialized here (requires dd-trace package)');
-      this.log(`Service: ${this.config.serviceName}`);
-      this.log(`Environment: ${this.config.environment}`);
-      this.log(`Version: ${this.config.version}`);
-      this.datadogInitialized = true;
-
-      // In production, this would be:
-      // const tracer = require('dd-trace').init({
-      //   service: this.config.serviceName,
-      //   env: this.config.environment,
-      //   version: this.config.version,
-      //   logInjection: true,
-      //   sampleRate: this.config.sampleRate,
-      // });
-    } catch (error) {
-      this.log('Failed to initialize Datadog APM, falling back to custom implementation');
-      this.config.provider = 'custom';
-    }
-  }
-
-  /**
-   * Start a new span (trace)
-   */
-  startSpan(
-    operationName: string,
-    tags: Record<string, string | number | boolean> = {},
-    parentSpanId?: string
-  ): Span {
-    if (!this.config.enabled) {
-      return this.createNoOpSpan(operationName);
+  startSpan(operation: string, tags: Record<string, any> = {}): Span {
+    if (!this.config.enabled || !this.shouldSample()) {
+      return new NoOpSpan();
     }
 
-    // Sample based on sample rate
-    if (!this.shouldSample()) {
-      return this.createNoOpSpan(operationName);
-    }
-
-    const span = this.createSpan(operationName, tags, parentSpanId);
-    this.spans.set(span.spanId, span);
-
-    this.log(`Started span: ${operationName} (${span.spanId})`);
-
-    return span;
-  }
-
-  /**
-   * Create a new span
-   */
-  private createSpan(
-    operationName: string,
-    tags: Record<string, string | number | boolean>,
-    parentSpanId?: string
-  ): Span {
     const spanId = this.generateId();
-    const traceId = parentSpanId ? this.findTraceId(parentSpanId) : this.generateId();
-    const startTime = Date.now();
+    const traceId = tags.traceId || this.generateId();
 
-    const span: Span = {
-      traceId,
+    const context: SpanContext = {
       spanId,
-      parentSpanId,
-      operationName,
-      startTime,
-      status: 'ok',
+      traceId,
+      parentSpanId: tags.parentSpanId,
+      operation,
+      startTime: Date.now(),
       tags: {
         ...tags,
         service: this.config.serviceName,
         environment: this.config.environment,
-        version: this.config.version,
-      },
-      finish: () => this.finishSpan(span),
-      setTag: (key, value) => {
-        span.tags[key] = value;
-      },
-      setError: (error) => {
-        span.error = error;
-        span.status = 'error';
-        this.stats.errorCount++;
       },
     };
 
-    return span;
+    this.activeSpans.set(spanId, context);
+
+    return new Span(spanId, context, (id, result) => this.finishSpan(id, result));
   }
 
   /**
-   * Finish a span
+   * Start a database query span
    */
-  private finishSpan(span: Span): void {
-    span.endTime = Date.now();
-    span.duration = span.endTime - span.startTime;
-
-    this.stats.tracesCollected++;
-    this.stats.totalSpanDuration += span.duration;
-
-    if (span.error) {
-      this.stats.errorsTracked++;
-    }
-
-    this.log(
-      `Finished span: ${span.operationName} (${span.duration}ms) [${span.status}]`
-    );
-
-    // Send to APM provider
-    this.sendSpanToProvider(span);
-
-    // Clean up
-    this.spans.delete(span.spanId);
+  startDatabaseSpan(operation: string, table: string, tags: Record<string, any> = {}): Span {
+    return this.startSpan('database.query', {
+      ...tags,
+      'db.operation': operation,
+      'db.table': table,
+    });
   }
 
   /**
-   * Send span to APM provider
+   * Start an AI service call span
    */
-  private sendSpanToProvider(span: Span): void {
-    if (this.config.provider === 'datadog' && this.datadogInitialized) {
-      // In production with dd-trace installed:
-      // const tracer = require('dd-trace');
-      // tracer.scope().active()?.setTag('resource.name', span.operationName);
-      this.log(`Would send span to Datadog: ${span.operationName}`);
-    } else if (this.config.provider === 'custom') {
-      // Store for custom metrics collection
-      // Could send to custom backend, log aggregation service, etc.
-    }
+  startAISpan(model: string, purpose: string, tags: Record<string, any> = {}): Span {
+    return this.startSpan('ai.request', {
+      ...tags,
+      'ai.model': model,
+      'ai.purpose': purpose,
+    });
+  }
+
+  /**
+   * Start an HTTP request span
+   */
+  startHTTPSpan(method: string, path: string, tags: Record<string, any> = {}): Span {
+    return this.startSpan('http.request', {
+      ...tags,
+      'http.method': method,
+      'http.path': path,
+    });
   }
 
   /**
    * Record a custom metric
    */
-  recordMetric(
-    name: string,
-    value: number,
-    tags: Record<string, string> = {},
-    type: MetricType = 'gauge'
-  ): void {
+  recordMetric(name: string, value: number, type: Metric['type'] = 'counter', tags?: Record<string, string>): void {
     if (!this.config.enabled) return;
 
-    const metric: Metric = {
+    this.metrics.push({
       name,
-      type,
       value,
-      timestamp: Date.now(),
+      type,
       tags: {
         ...tags,
         service: this.config.serviceName,
         environment: this.config.environment,
       },
-    };
-
-    this.metrics.push(metric);
-    this.stats.metricsCollected++;
-
-    this.log(`Recorded metric: ${name} = ${value} [${type}]`);
-
-    // Send to APM provider
-    this.sendMetricToProvider(metric);
-
-    // Limit metrics array size
-    if (this.metrics.length > 1000) {
-      this.metrics = this.metrics.slice(-1000);
-    }
+      timestamp: Date.now(),
+    });
   }
 
   /**
-   * Send metric to APM provider
+   * Increment a counter metric
    */
-  private sendMetricToProvider(metric: Metric): void {
-    if (this.config.provider === 'datadog' && this.datadogInitialized) {
-      // In production with dd-trace installed:
-      // const { DogStatsD } = require('dd-trace');
-      // const dogstatsd = new DogStatsD();
-      // dogstatsd.gauge(metric.name, metric.value, metric.tags);
-      this.log(`Would send metric to Datadog: ${metric.name}`);
-    }
+  incrementCounter(name: string, value: number = 1, tags?: Record<string, string>): void {
+    this.recordMetric(name, value, 'counter', tags);
   }
 
   /**
-   * Track an error
+   * Set a gauge metric
    */
-  trackError(
-    error: Error,
-    context: Record<string, any> = {}
-  ): void {
-    if (!this.config.enabled) return;
+  setGauge(name: string, value: number, tags?: Record<string, string>): void {
+    this.recordMetric(name, value, 'gauge', tags);
+  }
 
-    // Sample errors based on error sample rate
-    if (Math.random() > this.config.errorSampleRate) {
+  /**
+   * Record a histogram value
+   */
+  recordHistogram(name: string, value: number, tags?: Record<string, string>): void {
+    this.recordMetric(name, value, 'histogram', tags);
+  }
+
+  /**
+   * Track an error with context
+   */
+  trackError(error: Error, context?: Record<string, any>): void {
+    if (!this.config.enabled) {
+      console.error('[APM] Error:', error, context);
       return;
     }
 
-    const errorSpan = this.startSpan('error.tracked', {
-      'error.type': error.name,
-      'error.message': error.message,
-      'error.stack': error.stack?.substring(0, 500) || '', // Limit stack trace
+    this.recordMetric('errors.count', 1, 'counter', {
+      error_type: error.name,
       ...context,
     });
 
-    errorSpan.setError(error);
-    errorSpan.finish();
-
-    this.log(`Tracked error: ${error.name} - ${error.message}`);
+    // Send to APM backend
+    this.sendError(error, context);
   }
 
   /**
    * Perform health check
    */
-  async healthCheck(): Promise<HealthCheck> {
-    const checks: HealthCheck['checks'] = [];
+  async performHealthCheck(name: string, checkFn: () => Promise<boolean>): Promise<HealthCheck> {
+    const startTime = Date.now();
 
-    // Check 1: APM system itself
-    checks.push({
-      name: 'apm_system',
-      status: this.config.enabled ? 'pass' : 'fail',
-    });
+    try {
+      const result = await checkFn();
+      const latency = Date.now() - startTime;
 
-    // Check 2: Metrics collection
-    checks.push({
-      name: 'metrics_collection',
-      status: this.stats.metricsCollected > 0 ? 'pass' : 'fail',
-    });
-
-    // Check 3: Trace collection
-    checks.push({
-      name: 'trace_collection',
-      status: this.stats.tracesCollected > 0 ? 'pass' : 'fail',
-    });
-
-    // Check 4: Error tracking
-    const errorRate = this.getErrorRate();
-    checks.push({
-      name: 'error_rate',
-      status: errorRate < 0.05 ? 'pass' : 'fail', // <5% error rate is healthy
-      latency: errorRate,
-    });
-
-    // Determine overall status
-    const failedChecks = checks.filter((c) => c.status === 'fail').length;
-    const status =
-      failedChecks === 0 ? 'healthy' : failedChecks <= 1 ? 'degraded' : 'unhealthy';
-
-    return {
-      status,
-      checks,
-      timestamp: Date.now(),
-    };
-  }
-
-  /**
-   * Get APM statistics
-   */
-  getStats(): APMStats {
-    return {
-      tracesCollected: this.stats.tracesCollected,
-      metricsCollected: this.stats.metricsCollected,
-      errorsTracked: this.stats.errorsTracked,
-      avgSpanDuration:
-        this.stats.tracesCollected > 0
-          ? this.stats.totalSpanDuration / this.stats.tracesCollected
-          : 0,
-      errorRate: this.getErrorRate(),
-    };
-  }
-
-  /**
-   * Calculate error rate
-   */
-  private getErrorRate(): number {
-    if (this.stats.tracesCollected === 0) return 0;
-    return this.stats.errorCount / this.stats.tracesCollected;
-  }
-
-  /**
-   * Create a no-op span (when sampling or disabled)
-   */
-  private createNoOpSpan(operationName: string): Span {
-    return {
-      traceId: 'noop',
-      spanId: 'noop',
-      operationName,
-      startTime: Date.now(),
-      status: 'ok',
-      tags: {},
-      finish: () => {},
-      setTag: () => {},
-      setError: () => {},
-    };
-  }
-
-  /**
-   * Should sample this trace?
-   */
-  private shouldSample(): boolean {
-    return Math.random() <= this.config.sampleRate;
-  }
-
-  /**
-   * Generate unique ID
-   */
-  private generateId(): string {
-    return `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
-  }
-
-  /**
-   * Find trace ID from parent span ID
-   */
-  private findTraceId(spanId: string): string {
-    const span = this.spans.get(spanId);
-    return span?.traceId || this.generateId();
-  }
-
-  /**
-   * Log message (if console logging enabled)
-   */
-  private log(message: string): void {
-    if (this.config.enableConsoleLogging) {
-      console.log(`[APM] ${message}`);
+      return {
+        name,
+        status: result ? 'healthy' : 'degraded',
+        latency,
+        lastChecked: Date.now(),
+      };
+    } catch (error) {
+      return {
+        name,
+        status: 'unhealthy',
+        error: error instanceof Error ? error.message : String(error),
+        lastChecked: Date.now(),
+      };
     }
   }
 
   /**
-   * Flush metrics and spans (call before shutdown)
+   * Get current metrics
+   */
+  getMetrics(): Metric[] {
+    return [...this.metrics];
+  }
+
+  /**
+   * Clear metrics buffer
+   */
+  clearMetrics(): void {
+    this.metrics = [];
+  }
+
+  /**
+   * Flush metrics to APM backend
    */
   async flush(): Promise<void> {
-    this.log('Flushing APM data...');
-
-    // Finish any open spans
-    for (const span of this.spans.values()) {
-      span.finish();
+    if (!this.config.enabled || this.metrics.length === 0) {
+      return;
     }
 
-    // Send remaining metrics
-    // In production, would send batch to APM provider
+    const metricsToSend = [...this.metrics];
+    this.clearMetrics();
 
-    this.log('APM data flushed');
+    try {
+      await this.sendMetrics(metricsToSend);
+    } catch (error) {
+      console.error('[APM] Error flushing metrics:', error);
+    }
+  }
+
+  /**
+   * Shutdown APM client
+   */
+  async shutdown(): Promise<void> {
+    if (this.flushTimer) {
+      clearInterval(this.flushTimer);
+    }
+
+    await this.flush();
+  }
+
+  // Private methods
+
+  private finishSpan(spanId: string, result: SpanResult): void {
+    const context = this.activeSpans.get(spanId);
+    if (!context) return;
+
+    this.activeSpans.delete(spanId);
+
+    // Record span duration metric
+    this.recordHistogram(`span.duration.${context.operation}`, result.duration, {
+      success: String(result.success),
+    });
+
+    // Send span to APM backend
+    this.sendSpan(context, result);
+  }
+
+  private shouldSample(): boolean {
+    return Math.random() < this.config.sampleRate;
+  }
+
+  private generateId(): string {
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  }
+
+  private startFlushTimer(): void {
+    this.flushTimer = setInterval(() => {
+      this.flush().catch((err) => console.error('[APM] Flush error:', err));
+    }, this.config.flushInterval);
+  }
+
+  private async sendSpan(context: SpanContext, result: SpanResult): Promise<void> {
+    // Implementation depends on provider
+    switch (this.config.provider) {
+      case 'datadog':
+        await this.sendToDatadog('span', { context, result });
+        break;
+      case 'opentelemetry':
+        await this.sendToOpenTelemetry('span', { context, result });
+        break;
+      case 'custom':
+        await this.sendToCustomBackend('span', { context, result });
+        break;
+    }
+  }
+
+  private async sendMetrics(metrics: Metric[]): Promise<void> {
+    // Implementation depends on provider
+    switch (this.config.provider) {
+      case 'datadog':
+        await this.sendToDatadog('metrics', metrics);
+        break;
+      case 'opentelemetry':
+        await this.sendToOpenTelemetry('metrics', metrics);
+        break;
+      case 'custom':
+        await this.sendToCustomBackend('metrics', metrics);
+        break;
+    }
+  }
+
+  private async sendError(error: Error, context?: Record<string, any>): Promise<void> {
+    // Implementation depends on provider
+    switch (this.config.provider) {
+      case 'datadog':
+        await this.sendToDatadog('error', { error, context });
+        break;
+      case 'opentelemetry':
+        await this.sendToOpenTelemetry('error', { error, context });
+        break;
+      case 'custom':
+        await this.sendToCustomBackend('error', { error, context });
+        break;
+    }
+  }
+
+  private async sendToDatadog(type: string, data: any): Promise<void> {
+    // Datadog integration
+    // Implementation would use Datadog SDK
+    console.log('[APM] Datadog:', type, data);
+  }
+
+  private async sendToOpenTelemetry(type: string, data: any): Promise<void> {
+    // OpenTelemetry integration
+    // Implementation would use OpenTelemetry SDK
+    console.log('[APM] OpenTelemetry:', type, data);
+  }
+
+  private async sendToCustomBackend(type: string, data: any): Promise<void> {
+    // Custom backend integration
+    // Implementation would POST to custom endpoint
+    console.log('[APM] Custom:', type, data);
   }
 }
 
-// Export singleton instance
-export const apm = new APMManager();
-
-// Export types
-export type { APMConfig, Span, Metric, HealthCheck, APMStats };
-
-// Export helper functions
-
 /**
- * Wrap an async function with APM tracing
+ * Span class for tracking individual operations
  */
-export function withTrace<T>(
-  operationName: string,
-  fn: () => Promise<T>,
-  tags: Record<string, string | number | boolean> = {}
-): Promise<T> {
-  const span = apm.startSpan(operationName, tags);
+class Span {
+  private spanId: string;
+  private context: SpanContext;
+  private finishCallback: (spanId: string, result: SpanResult) => void;
+  private finished: boolean = false;
 
-  return fn()
-    .then((result) => {
-      span.finish();
-      return result;
-    })
-    .catch((error) => {
-      span.setError(error);
-      span.finish();
-      throw error;
-    });
+  constructor(
+    spanId: string,
+    context: SpanContext,
+    finishCallback: (spanId: string, result: SpanResult) => void
+  ) {
+    this.spanId = spanId;
+    this.context = context;
+    this.finishCallback = finishCallback;
+  }
+
+  /**
+   * Set a tag on the span
+   */
+  setTag(key: string, value: any): void {
+    this.context.tags[key] = value;
+  }
+
+  /**
+   * Finish the span with optional metadata
+   */
+  finish(metadata?: Record<string, any>): void {
+    if (this.finished) return;
+
+    this.finished = true;
+    const duration = Date.now() - this.context.startTime;
+
+    const result: SpanResult = {
+      duration,
+      success: !metadata?.error,
+      error: metadata?.error,
+      metadata,
+    };
+
+    this.finishCallback(this.spanId, result);
+  }
+
+  /**
+   * Finish the span with an error
+   */
+  finishWithError(error: Error): void {
+    this.finish({ error });
+  }
+
+  /**
+   * Get span context for child spans
+   */
+  getContext(): { traceId: string; parentSpanId: string } {
+    return {
+      traceId: this.context.traceId,
+      parentSpanId: this.context.spanId,
+    };
+  }
 }
 
 /**
- * Wrap a synchronous function with APM tracing
+ * No-op span for when APM is disabled
  */
-export function withTraceSync<T>(
-  operationName: string,
-  fn: () => T,
-  tags: Record<string, string | number | boolean> = {}
+class NoOpSpan extends Span {
+  constructor() {
+    super('noop', {} as any, () => {});
+  }
+
+  setTag(): void {}
+  finish(): void {}
+  finishWithError(): void {}
+  getContext(): { traceId: string; parentSpanId: string } {
+    return { traceId: 'noop', parentSpanId: 'noop' };
+  }
+}
+
+// Singleton instance
+export const apm = new APMClient();
+
+// Convenience exports
+export type { Span };
+export { APMClient };
+
+/**
+ * Middleware helper for Next.js API routes
+ */
+export function withAPMTracking<T extends (...args: any[]) => Promise<any>>(
+  handler: T,
+  operationName?: string
 ): T {
-  const span = apm.startSpan(operationName, tags);
+  return (async (...args: any[]) => {
+    const req = args[0];
+    const operation = operationName || `api.${req.method}.${req.nextUrl?.pathname || 'unknown'}`;
+
+    const span = apm.startHTTPSpan(req.method, req.nextUrl?.pathname || '/', {
+      headers: req.headers,
+    });
+
+    try {
+      const result = await handler(...args);
+      span.finish({ statusCode: 200 });
+      return result;
+    } catch (error) {
+      span.finishWithError(error instanceof Error ? error : new Error(String(error)));
+      throw error;
+    }
+  }) as T;
+}
+
+/**
+ * Database query wrapper with APM tracking
+ */
+export async function trackDatabaseQuery<T>(
+  operation: string,
+  table: string,
+  queryFn: () => Promise<T>
+): Promise<T> {
+  const span = apm.startDatabaseSpan(operation, table);
 
   try {
-    const result = fn();
+    const result = await queryFn();
     span.finish();
     return result;
   } catch (error) {
-    span.setError(error as Error);
+    span.finishWithError(error instanceof Error ? error : new Error(String(error)));
+    throw error;
+  }
+}
+
+/**
+ * AI service call wrapper with APM tracking
+ */
+export async function trackAICall<T>(
+  model: string,
+  purpose: string,
+  callFn: () => Promise<T>
+): Promise<T> {
+  const span = apm.startAISpan(model, purpose);
+
+  try {
+    const result = await callFn();
     span.finish();
+    return result;
+  } catch (error) {
+    span.finishWithError(error instanceof Error ? error : new Error(String(error)));
     throw error;
   }
 }

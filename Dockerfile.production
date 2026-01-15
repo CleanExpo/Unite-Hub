@@ -1,0 +1,82 @@
+# Production Dockerfile - Multi-Stage Build
+# Optimized for size and security
+#
+# BUILD:
+# docker build -f Dockerfile.production -t unite-hub:latest .
+#
+# RUN:
+# docker run -p 3000:3000 --env-file .env.production unite-hub:latest
+
+# ============================================
+# Stage 1: Dependencies (Base)
+# ============================================
+FROM node:20-alpine AS deps
+LABEL stage=deps
+
+WORKDIR /app
+
+# Install dependencies only when needed
+COPY package.json package-lock.json* ./
+RUN npm ci --only=production --ignore-scripts
+
+# ============================================
+# Stage 2: Builder
+# ============================================
+FROM node:20-alpine AS builder
+LABEL stage=builder
+
+WORKDIR /app
+
+# Copy dependencies from deps stage
+COPY --from=deps /app/node_modules ./node_modules
+
+# Copy source code
+COPY . .
+
+# Set build-time environment
+ENV NEXT_TELEMETRY_DISABLED 1
+ENV NODE_ENV production
+
+# Build Next.js application
+RUN npm run build
+
+# ============================================
+# Stage 3: Production Runner
+# ============================================
+FROM node:20-alpine AS production
+LABEL stage=production
+
+WORKDIR /app
+
+# Set production environment
+ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
+ENV PORT 3000
+
+# Add non-root user for security
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
+
+# Copy only necessary files
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+
+# Install curl for healthchecks
+RUN apk add --no-cache curl
+
+# Set ownership
+RUN chown -R nextjs:nodejs /app
+
+# Switch to non-root user
+USER nextjs
+
+# Expose port
+EXPOSE 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+  CMD curl -f http://localhost:3000/api/health || exit 1
+
+# Start application
+CMD ["node", "server.js"]

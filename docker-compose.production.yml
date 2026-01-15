@@ -1,0 +1,122 @@
+# Production Docker Compose Configuration
+# Zero-Downtime Deployment with Blue-Green Strategy
+#
+# USAGE:
+# 1. Build production image: docker-compose -f docker-compose.production.yml build
+# 2. Deploy blue: docker-compose -f docker-compose.production.yml up -d unite-hub-blue
+# 3. Health check: curl http://localhost:3008/api/health
+# 4. Switch traffic: Update load balancer to blue
+# 5. Deploy green: docker-compose -f docker-compose.production.yml up -d unite-hub-green
+# 6. Health check green: curl http://localhost:3009/api/health
+# 7. Switch traffic: Update load balancer to green
+# 8. Stop blue: docker-compose -f docker-compose.production.yml stop unite-hub-blue
+
+version: '3.9'
+
+services:
+  # Blue deployment (port 3008)
+  unite-hub-blue:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+      target: production
+      args:
+        - NODE_ENV=production
+    container_name: unite-hub-blue
+    ports:
+      - "3008:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DEPLOYMENT_SLOT=blue
+    env_file:
+      - .env.production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - unite-hub-network
+    labels:
+      - "com.unite-hub.slot=blue"
+      - "com.unite-hub.version=${VERSION:-latest}"
+
+  # Green deployment (port 3009)
+  unite-hub-green:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+      target: production
+      args:
+        - NODE_ENV=production
+    container_name: unite-hub-green
+    ports:
+      - "3009:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DEPLOYMENT_SLOT=green
+    env_file:
+      - .env.production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - unite-hub-network
+    labels:
+      - "com.unite-hub.slot=green"
+      - "com.unite-hub.version=${VERSION:-latest}"
+
+  # Nginx reverse proxy (load balancer)
+  nginx-lb:
+    image: nginx:alpine
+    container_name: unite-hub-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - unite-hub-blue
+    restart: unless-stopped
+    networks:
+      - unite-hub-network
+    healthcheck:
+      test: ["CMD", "nginx", "-t"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Redis (shared cache)
+  redis:
+    image: redis:7-alpine
+    container_name: unite-hub-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - unite-hub-network
+
+networks:
+  unite-hub-network:
+    driver: bridge
+
+volumes:
+  redis-data:
+    driver: local
