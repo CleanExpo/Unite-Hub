@@ -33,6 +33,7 @@ import { createTestCommand } from './commands/test-negotiate.js';
 import { createDeployCommand } from './commands/deploy.js';
 import { createSocialCommand } from './commands/social.js';
 import { createMonitorCommand } from './commands/monitor.js';
+import { createReportCommand } from './commands/report.js';
 import { logger } from './utils/logger.js';
 
 // Package info
@@ -109,6 +110,9 @@ async function main() {
 
   // Add monitor command
   program.addCommand(createMonitorCommand());
+
+  // Add report command
+  program.addCommand(createReportCommand());
 
   program
     .command('config')
