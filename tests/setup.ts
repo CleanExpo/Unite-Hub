@@ -1,131 +1,68 @@
 /**
- * Global Test Setup for Vitest
- * Configures testing environment, mocks, and global utilities
+ * Vitest Test Setup
+ * 
+ * Global test configuration, mocks, and utilities
  */
 
-import { expect, afterEach, vi } from 'vitest';
-import { cleanup } from '@testing-library/react';
-import '@testing-library/jest-dom/vitest';
+import { vi } from 'vitest';
+import { config } from 'dotenv';
 
-// Cleanup after each test
-afterEach(() => {
-  cleanup();
-  vi.clearAllMocks();
-});
+// Load test environment variables
+config({ path: '.env.test' });
 
-// Mock environment variables
-process.env.NEXT_PUBLIC_SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://test.supabase.co';
-process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'test-anon-key';
-process.env.SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || 'test-service-role-key';
-process.env.ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY || 'sk-ant-test-key';
-process.env.NEXTAUTH_URL = process.env.NEXTAUTH_URL || 'http://localhost:3008';
-process.env.NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET || 'test-secret';
-
-// Mock Next.js modules
-vi.mock('next/navigation', () => ({
-  useRouter: () => ({
-    push: vi.fn(),
-    replace: vi.fn(),
-    prefetch: vi.fn(),
-    back: vi.fn(),
-    pathname: '/',
-    query: {},
-  }),
-  usePathname: () => '/',
-  useSearchParams: () => new URLSearchParams(),
-  redirect: vi.fn(),
-}));
-
-vi.mock('next/headers', () => ({
-  cookies: vi.fn(() => ({
-    get: vi.fn(),
-    set: vi.fn(),
-    delete: vi.fn(),
-  })),
-  headers: vi.fn(() => ({
-    get: vi.fn(),
+// Mock Supabase client
+vi.mock('@/lib/supabase/server', () => ({
+  createClient: vi.fn(() => ({
+    from: vi.fn(() => ({
+      select: vi.fn().mockReturnThis(),
+      insert: vi.fn().mockReturnThis(),
+      update: vi.fn().mockReturnThis(),
+      delete: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      neq: vi.fn().mockReturnThis(),
+      gt: vi.fn().mockReturnThis(),
+      gte: vi.fn().mockReturnThis(),
+      lt: vi.fn().mockReturnThis(),
+      lte: vi.fn().mockReturnThis(),
+      like: vi.fn().mockReturnThis(),
+      ilike: vi.fn().mockReturnThis(),
+      in: vi.fn().mockReturnThis(),
+      is: vi.fn().mockReturnThis(),
+      order: vi.fn().mockReturnThis(),
+      limit: vi.fn().mockReturnThis(),
+      single: vi.fn().mockResolvedValue({ data: null, error: null }),
+      maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
+    })),
   })),
 }));
 
-// Mock window.localStorage
-const localStorageMock = (() => {
-  let store: Record<string, string> = {};
-
-  return {
-    getItem: (key: string) => store[key] || null,
-    setItem: (key: string, value: string) => {
-      store[key] = value.toString();
-    },
-    removeItem: (key: string) => {
-      delete store[key];
-    },
-    clear: () => {
-      store = {};
-    },
-  };
-})();
-
-Object.defineProperty(window, 'localStorage', {
-  value: localStorageMock,
-});
-
-// Mock window.matchMedia (for responsive components)
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: vi.fn().mockImplementation((query) => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: vi.fn(),
-    removeListener: vi.fn(),
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn(),
-    dispatchEvent: vi.fn(),
+// Mock Google Secret Manager
+vi.mock('@google-cloud/secret-manager', () => ({
+  SecretManagerServiceClient: vi.fn(() => ({
+    accessSecretVersion: vi.fn().mockResolvedValue([{
+      payload: {
+        data: Buffer.from(JSON.stringify({ access_token: 'mock-token' })),
+      },
+    }]),
+    createSecret: vi.fn().mockResolvedValue([{ name: 'mock-secret' }]),
+    addSecretVersion: vi.fn().mockResolvedValue([{ name: 'mock-version' }]),
+    deleteSecret: vi.fn().mockResolvedValue([{}]),
   })),
-});
+}));
 
-// Mock IntersectionObserver (for lazy loading components)
-global.IntersectionObserver = class IntersectionObserver {
-  constructor() {}
-  disconnect() {}
-  observe() {}
-  takeRecords() {
-    return [];
-  }
-  unobserve() {}
-} as any;
+// Mock console methods to reduce test output noise
+global.console = {
+  ...console,
+  log: vi.fn(),
+  debug: vi.fn(),
+  info: vi.fn(),
+  warn: vi.fn(),
+  error: vi.fn(),
+};
 
-// Mock ResizeObserver (for responsive components)
-global.ResizeObserver = class ResizeObserver {
-  constructor() {}
-  disconnect() {}
-  observe() {}
-  unobserve() {}
-} as any;
-
-// Extended matchers (optional - add custom matchers here)
-expect.extend({
-  toBeWithinRange(received: number, floor: number, ceiling: number) {
-    const pass = received >= floor && received <= ceiling;
-    if (pass) {
-      return {
-        message: () =>
-          `expected ${received} not to be within range ${floor} - ${ceiling}`,
-        pass: true,
-      };
-    } else {
-      return {
-        message: () =>
-          `expected ${received} to be within range ${floor} - ${ceiling}`,
-        pass: false,
-      };
-    }
-  },
-});
-
-// Global test utilities
-export const TEST_USER_ID = 'test-user-123';
-export const TEST_WORKSPACE_ID = 'test-workspace-456';
-export const TEST_ORG_ID = 'test-org-789';
-
-console.log('Vitest test environment initialized');
+// Set test environment variables
+process.env.NODE_ENV = 'test';
+process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://test.supabase.co';
+process.env.SUPABASE_SERVICE_ROLE_KEY = 'test-service-role-key';
+process.env.GOOGLE_APPLICATION_CREDENTIALS = './test-service-account.json';
+process.env.GCP_PROJECT_ID = 'test-project';
